@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.114 2004/09/02 05:07:13 spestov Exp $
+ * @version $Id: View.java,v 1.115 2004/09/10 18:26:56 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -388,7 +388,7 @@ public class View extends JFrame implements EBComponent
 			else if(text.indexOf('\n') != -1)
 				text = null;
 
-			if(SearchAndReplace.getRegexp())
+			if(text != null && SearchAndReplace.getRegexp())
 				text = SearchAndReplace.escapeRegexp(text,false);
 
 			searchBar.getField().setText(text);

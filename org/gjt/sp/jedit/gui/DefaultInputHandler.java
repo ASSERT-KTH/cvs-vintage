@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * The default input handler. It maps sequences of keystrokes into actions
  * and inserts key typed events into the text area.
  * @author Slava Pestov
- * @version $Id: DefaultInputHandler.java,v 1.40 2004/04/19 05:59:31 spestov Exp $
+ * @version $Id: DefaultInputHandler.java,v 1.41 2004/09/10 18:26:56 spestov Exp $
  */
 public class DefaultInputHandler extends InputHandler
 {
@@ -45,12 +45,27 @@ public class DefaultInputHandler extends InputHandler
 	/**
 	 * Creates a new input handler with no key bindings defined.
 	 * @param view The view
+	 * @param bindings An explicitly-specified set of key bindings,
+	 * must not be null.
+	 * @since jEdit 4.3pre1
 	 */
-	public DefaultInputHandler(View view)
+	public DefaultInputHandler(View view, Hashtable bindings)
 	{
 		super(view);
 
-		bindings = currentBindings = new Hashtable();
+		if(bindings == null)
+			throw new NullPointerException();
+		this.bindings = this.currentBindings = bindings;
+	} //}}}
+
+	//{{{ DefaultInputHandler constructor
+	/**
+	 * Creates a new input handler with no key bindings defined.
+	 * @param view The view
+	 */
+	public DefaultInputHandler(View view)
+	{
+		this(view,new Hashtable());
 	} //}}}
 
 	//{{{ DefaultInputHandler constructor
@@ -64,9 +79,7 @@ public class DefaultInputHandler extends InputHandler
 	 */
 	public DefaultInputHandler(View view, DefaultInputHandler copy)
 	{
-		super(view);
-
-		bindings = currentBindings = copy.bindings;
+		this(view,copy.bindings);
 	} //}}}
 
 	//{{{ addKeyBinding() method
