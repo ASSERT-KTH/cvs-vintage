@@ -935,6 +935,7 @@ public class IMAPStore {
 						new ColumbaHeader(imapHeader.getHeader());
 					Object uid = imapHeader.getUid();
 					header.set("columba.uid", uid);
+					header.set("columba.size", imapHeader.getSize());
 					headerList.add(header, uid);
 				}
 

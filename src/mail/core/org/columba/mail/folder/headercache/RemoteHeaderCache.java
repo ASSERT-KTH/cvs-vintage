@@ -99,9 +99,6 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
 			Object uid = (Integer) e.nextElement();
 
 			h = (ColumbaHeader) headerList.getHeader(uid);
-			// this is a hack, until we make the imap code
-			// fetch the message size, too
-			h.set("columba.size", new Integer(0));
 
 			saveHeader(p, h);
 		}
