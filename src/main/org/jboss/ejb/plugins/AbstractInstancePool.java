@@ -25,7 +25,8 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
 
-import org.jboss.management.j2ee.CountStatistic;
+//import org.jboss.management.j2ee.CountStatistic;
+import org.jboss.management.j2ee.SampleData;
 
 import org.w3c.dom.Element;
 
@@ -40,7 +41,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf:</b>
@@ -79,13 +80,16 @@ public abstract class AbstractInstancePool
    protected boolean useFeeder = false;
    
    /** Counter of all the Bean instantiated within the Pool **/
-   protected CountStatistic mInstantiate = new CountStatistic( "Instantiation", "", "Beans instantiated in Pool" );
+   protected SampleData mInstantiate = new SampleData( "InstantiationCount", SampleData.COUNT );
+//   protected CountStatistic mInstantiate = new CountStatistic( "Instantiation", "", "Beans instantiated in Pool" );
 
    /** Counter of all the Bean destroyed within the Pool **/
-   protected CountStatistic mDestroy = new CountStatistic( "Destroy", "", "Beans destroyed in Pool" );
+   protected SampleData mDestroy = new SampleData( "InstantiationCount", SampleData.COUNT );
+//   protected CountStatistic mDestroy = new CountStatistic( "Destroy", "", "Beans destroyed in Pool" );
 
    /** Counter of all the ready Beans within the Pool (which are not used now) **/
-   protected CountStatistic mReadyBean = new CountStatistic( "ReadyBean", "", "Numbers of ready Bean Pool" );
+   protected SampleData mReadyBean = new SampleData( "InstantiationCount", SampleData.COUNT );
+//   protected CountStatistic mReadyBean = new CountStatistic( "ReadyBean", "", "Numbers of ready Bean Pool" );
 
    /**
     * Set the callback to the container. This is for initialization.
@@ -174,7 +178,7 @@ public abstract class AbstractInstancePool
       {
          if (!pool.isEmpty())
          {
-            mReadyBean.remove();
+            mReadyBean.add();
             return (EnterpriseContext) pool.removeFirst();
          }
       }
@@ -229,7 +233,7 @@ public abstract class AbstractInstancePool
 
       // If (!reclaim), we do not reuse but create a brand new instance simplifies the design
       try {
-         mReadyBean.add();
+         mReadyBean.remove();
          if (this.reclaim)
          {
             // Add the unused context back into the pool
@@ -318,9 +322,9 @@ public abstract class AbstractInstancePool
    public Map retrieveStatistic()
    {
       Map lStatistics = new HashMap();
-      lStatistics.put( "InstantiationCount", mInstantiate );
-      lStatistics.put( "DestroyCount", mDestroy );
-      lStatistics.put( "ReadyBeanCount", mReadyBean );
+      lStatistics.put( mInstantiate.getName(), mInstantiate );
+      lStatistics.put( mDestroy.getName(), mDestroy );
+      lStatistics.put( mReadyBean.getName(), mReadyBean );
       return lStatistics;
    }
 
