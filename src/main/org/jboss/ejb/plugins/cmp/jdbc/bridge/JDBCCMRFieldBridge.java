@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashMap;
 import javax.ejb.EJBException;
 import javax.ejb.EJBLocalObject;
 import javax.transaction.Status;
@@ -65,7 +66,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.55 $
+ * @version $Revision: 1.56 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -263,6 +264,10 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          // initialize foreign key fields
          Collection foreignKeys = metadata.getRelatedRole().getKeyFields();
          foreignKeyFields = new ArrayList(foreignKeys.size());
+
+         // FKs mapped to PKs
+         Map fkFieldsByPkFields = new HashMap();
+
          for(Iterator i=foreignKeys.iterator(); i.hasNext(); ) {
 
             JDBCCMPFieldMetaData fkFieldMetaData = 
@@ -284,26 +289,28 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
 
                if(fkColumnName.equals(pkFieldMetaData.getColumnName())) {
 
-                     // mark the fk as being a part of the pk
-                     fkPartOfPk = true;
+                  // mark the fk as being a part of the pk
+                  fkPartOfPk = true;
 
-                     JDBCCMP2xFieldBridge relatedPkField =
-                        (JDBCCMP2xFieldBridge)relatedEntity.
-                           getFieldByName(fkFieldMetaData.getFieldName());
+                  JDBCCMP2xFieldBridge relatedPkField =
+                     (JDBCCMP2xFieldBridge)relatedEntity.
+                        getFieldByName(fkFieldMetaData.getFieldName());
 
-                     // construct the foreign key field
-                     fkField = new JDBCCMP2xFieldBridge(
-                        pkField.getManager(),               // this pk's manager
-                        relatedPkField.getFieldName(),
-                        relatedPkField.getFieldType(),
-                        pkField.getJDBCType(),              // this pk's jdbc type
-                        relatedPkField.isReadOnly(),
-                        relatedPkField.getReadTimeOut(),
-                        false,                              // not a primary key
-                        relatedPkField.getPrimaryKeyClass(),
-                        relatedPkField.getPrimaryKeyField(),
-                        false                               // is not an unknown key
-                     );
+                  // construct the foreign key field
+                  fkField = new JDBCCMP2xFieldBridge(
+                     pkField.getManager(),               // this pk's manager
+                     relatedPkField.getFieldName(),
+                     relatedPkField.getFieldType(),
+                     pkField.getJDBCType(),              // this pk's jdbc type
+                     relatedPkField.isReadOnly(),
+                     relatedPkField.getReadTimeOut(),
+                     false,                              // not a primary key
+                     relatedPkField.getPrimaryKeyClass(),
+                     relatedPkField.getPrimaryKeyField(),
+                     false                               // is not an unknown key
+                  );
+
+                  fkFieldsByPkFields.put(pkField, fkField);
                }
             }
 
@@ -314,10 +321,18 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
                   fkFieldMetaData,
                   manager.getJDBCTypeFactory().getJDBCType(fkFieldMetaData)
                );
+               foreignKeyFields.add(0, fkField);
             }
+         }
 
-            // add the fk field to the list
-            foreignKeyFields.add(fkField);
+         // add FK fields mapped to PK fields in the same order as PK fields
+         // this does matter when using joining
+         if(fkFieldsByPkFields.size() > 0) {
+            for(Iterator iter = entity.getPrimaryKeyFields().iterator(); iter.hasNext();) {
+               Object fkField = fkFieldsByPkFields.get(iter.next());
+               if(fkField != null)
+                  foreignKeyFields.add(fkField);
+            }
          }
 
          foreignKeyFields = Collections.unmodifiableList(foreignKeyFields);
