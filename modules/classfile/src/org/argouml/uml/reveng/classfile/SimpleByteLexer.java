@@ -1,4 +1,4 @@
-// $Id: SimpleByteLexer.java,v 1.1 2002/12/31 09:23:40 mkl Exp $
+// $Id: SimpleByteLexer.java,v 1.2 2004/08/26 18:48:43 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.reveng.classfile;
 
 import antlr.*;
-import antlr.collections.*;
 import java.io.*;
 
 
@@ -41,7 +40,7 @@ public class SimpleByteLexer implements ClassfileTokenTypes, TokenStream {
     //////////////////////
     // Instance variables. 
 
-    InputStream _input = null;
+    private InputStream input = null;
 
 
     ///////////////
@@ -49,9 +48,12 @@ public class SimpleByteLexer implements ClassfileTokenTypes, TokenStream {
 
     /**
      * Create a new bytestream scanner.
+     * The constructor.
+     * 
+     * @param in the given inputstream
      */
     public SimpleByteLexer(InputStream in) {
-        _input = in;
+        input = in;
     }  
     
 
@@ -62,19 +64,23 @@ public class SimpleByteLexer implements ClassfileTokenTypes, TokenStream {
      * Return the next byte as a token.
      *
      * @return The next byte as a token or a EOF token.
+     * @throws TokenStreamException if the next byte cannot be read
+     * @see antlr.TokenStream#nextToken()
      */
-    final public Token nextToken() throws TokenStreamException {
+    public final Token nextToken() throws TokenStreamException {
 	int nextByte;
 
 	try {
-	    nextByte = _input.read();
+	    nextByte = input.read();
 	} catch (IOException ie) {
 	    throw new TokenStreamIOException(ie);  
 	}
 
 	// System.out.println("Generating token for: " + nextByte);
 
-	return (nextByte == -1) ? new ByteToken( Token.EOF_TYPE) : new ByteToken( BYTE, (byte) nextByte);
+	return (nextByte == -1) 
+	    ? new ByteToken( Token.EOF_TYPE) 
+                : new ByteToken( BYTE, (byte) nextByte);
     }
 }
 

@@ -1,4 +1,4 @@
-// $Id: ClassFileFilter.java,v 1.2 2003/06/29 23:16:07 linus Exp $
+// $Id: ClassFileFilter.java,v 1.3 2004/08/26 18:51:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,13 +27,17 @@ package org.argouml.util;
 import java.io.File;
 import javax.swing.filechooser.*;
 
+/**
+ * A class representing a FileFilter for class files (.class, .jar).
+ *
+ */
 public class ClassFileFilter extends FileFilter {
 
     ////////////////////////////////////////////////////////////////
     // instance varaibles
 
-    private final String [] _suffixes = {"class", "jar"};
-    private final String    _desc     = "Java classfiles (*.class, *.jar)";
+    private final String [] suffixes     = {"class", "jar"};
+    private final String    description  = "Java classfiles (*.class, *.jar)";
 
 
     ////////////////////////////////////////////////////////////////
@@ -50,8 +54,8 @@ public class ClassFileFilter extends FileFilter {
 	if (f == null) return false;
 	if (f.isDirectory()) return true;
 	String extension = getExtension(f.getName());
-	for (int i = 0; i < _suffixes.length; i++) {
-	    if (_suffixes[i].equalsIgnoreCase(extension)) return true;
+	for (int i = 0; i < suffixes.length; i++) {
+	    if (suffixes[i].equalsIgnoreCase(extension)) return true;
 	}
 	return false;
     }
@@ -77,7 +81,7 @@ public class ClassFileFilter extends FileFilter {
      * @return The description of this filefilter.
      */
     public String getDescription() {
-	return _desc;
+	return description;
     }
 } /* end class ClassFileFilter */    
 
