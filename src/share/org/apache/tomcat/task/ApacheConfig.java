@@ -129,6 +129,12 @@ public class ApacheConfig  { // implements XXX
 		    pw.println("Alias " + path + " " + 
                                FileUtil.patch(tomcatHome + "/webapps" + path));
 
+		    pw.println("<Directory \"" +
+			       FileUtil.patch(tomcatHome + "/webapps" + path) +
+			       "\">");
+		    pw.println("    Options Indexes FollowSymLinks");
+		    pw.println("</Directory>");
+		    
 		    // Dynamic /servet pages go to tomcat
 		    pw.println("ApJServMount " + path +"/servlet" + " " + path);
 
