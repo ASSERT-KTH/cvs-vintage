@@ -62,10 +62,12 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.ScarabModule class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.6 2002/03/12 19:27:42 elicia Exp $
+ * @version $Id: ScarabModuleTest.java,v 1.7 2002/03/13 01:16:46 elicia Exp $
  */
 public class ScarabModuleTest extends BaseTestCase
 {
+    private ScarabModule newModule = null;
+
     /**
      * Creates a new instance.
      *
@@ -85,12 +87,14 @@ public class ScarabModuleTest extends BaseTestCase
     {
         testGetParents();
         testCreateNew();
+        testIssueTypes();
     }
     
     private void testGetParents() throws Exception
     {
         log("testGetParents()");
-        ModuleEntity module = (ModuleEntity) ScarabModulePeer.retrieveByPK(new NumberKey(7));
+        ModuleEntity module = (ModuleEntity) ScarabModulePeer
+                              .retrieveByPK(new NumberKey(7));
         List parents = module.getAncestors();
         Iterator itr = parents.iterator();
         while (itr.hasNext())
@@ -110,24 +114,39 @@ public class ScarabModuleTest extends BaseTestCase
         me.setParentId(new NumberKey(1));
         me.setDescription("This is the new module description");
         me.save();
-        testInitialData(me);
+        newModule = (ScarabModule)me;
     }
 
-
-    private void testInitialData(ModuleEntity me) throws Exception
+    private void testIssueTypes() throws Exception
     {
-        ScarabModule module = (ScarabModule) me;
-        List issueTypes = module.getRModuleIssueTypes();
+        List issueTypes = newModule.getRModuleIssueTypes();
         for (int i = 0;i<issueTypes.size();i++)
         {
-            IssueType issueType = ((RModuleIssueType)issueTypesi
+            IssueType issueType = ((RModuleIssueType)issueTypes
                   .get(i)).getIssueType();
             System.out.println("ISSUE TYPE = " + issueType.getName());
             Issue issue = new Issue();
-            issue.setModule(me);
+            issue.setModule(newModule);
             issue.setIssueType(issueType);
+
             testGetAllAttributeValuesMap(issue);
-            testGetAttributeGroups(module, issueType);
+            testGetAttributeGroups(issueType);
+            testGetActiveAttributes(issueType);
+            testGetQuickSearchAttributes(issueType);
+            testGetRequiredAttributes(issueType);
+            testGetUserAttributes(issueType);
+        }
+    }
+
+    private void testGetAttributeGroups(IssueType issueType) 
+        throws Exception
+    {
+        System.out.println ("testGetAttributeGroups()");
+        List attrGroups = newModule.getAttributeGroups(issueType);
+        for (int i=0;i<attrGroups.size(); i++)
+        {
+            AttributeGroup group = (AttributeGroup)attrGroups.get(i);
+            System.out.println("attribute group = " + group.getName());
         }
     }
 
@@ -137,29 +156,17 @@ public class ScarabModuleTest extends BaseTestCase
         HashMap attrMap = issue.getAllAttributeValuesMap();
         System.out.println ("getAllAttributeValuesMap().size(): " 
                              + attrMap.size());
-        int expectedSize = 11;
-        switch (Integer.parseInt(issue.getTypeId().toString()))
-        {
-            case 1: expectedSize = 11;break;
-            case 2: expectedSize = 11;break;
-            case 3: expectedSize = 10;break;
-            case 4: expectedSize = 10;break;
-            case 5: expectedSize = 8;break;
-            case 6: expectedSize = 8;break;
-            case 7: expectedSize = 8;break;
-            case 8: expectedSize = 8;break;
-            case 9: expectedSize = 8;break;
-            case 10: expectedSize = 8;
-        }
-        assertEquals (expectedSize, attrMap.size());
+        assertEquals (getExpectedSize(issue.getIssueType()), attrMap.size());
         Iterator iter = attrMap.keySet().iterator();
+        Attribute attr = null;
         while (iter.hasNext())
         {
-            Attribute attr = ((AttributeValue)attrMap.get(iter.next()))
+            attr = ((AttributeValue)attrMap.get(iter.next()))
                              .getAttribute();
             List attrOptions = attr.getAttributeOptions();
             if (attr.isOptionAttribute())
             {
+                int expectedSize = 0;
                 switch (Integer.parseInt(attr.getAttributeId().toString()))
                 {
                     case 3: expectedSize = 7;break;
@@ -175,17 +182,60 @@ public class ScarabModuleTest extends BaseTestCase
         }
     }
 
-    private void testGetAttributeGroups(ScarabModule module, 
-                                        IssueType issueType) 
+    private void testGetActiveAttributes(IssueType issueType)
         throws Exception
     {
-        System.out.println ("testGetAttributeGroups()");
-        List attrGroups = module.getAttributeGroups(issueType);
-        for (int i=0;i<attrGroups.size(); i++)
-        {
-            AttributeGroup group = (AttributeGroup)attrGroups.get(i);
-            System.out.println("attribute group = " + group.getName());
-        }
+        System.out.println ("testGetActiveAttributes");
+        Attribute[] attrs =  newModule.getActiveAttributes(issueType);
+        assertEquals (getExpectedSize(issueType), attrs.length);
     }
+
+    private void testGetQuickSearchAttributes(IssueType issueType)
+        throws Exception
+    {
+        System.out.println ("testGetQuickSearchAttributes");
+        Attribute[] attrs =  newModule.getQuickSearchAttributes(issueType);
+        assertEquals (1, attrs.length);
+    }
+
+    private void testGetRequiredAttributes(IssueType issueType)
+        throws Exception
+    {
+        System.out.println ("testGetRequiredAttributes");
+        List attrs =  newModule.getRequiredAttributes(issueType);
+        int expectedSize = 0;
+        switch (Integer.parseInt(issueType.getIssueTypeId().toString()))
+        {
+            case 1: expectedSize = 4;break;
+            case 3: expectedSize = 4;break;
+            case 5: expectedSize = 2;break;
+            case 7: expectedSize = 2;break;
+            case 9: expectedSize = 2;break;
+        }
+        assertEquals (expectedSize, attrs.size());
+    }
+
+    private void testGetUserAttributes(IssueType issueType)
+        throws Exception
+    {
+        System.out.println ("testGetUserAttributes");
+        List attrs =  newModule.getUserAttributes(issueType);
+        assertEquals (1, attrs.size());
+    }
+
              
+    private int getExpectedSize(IssueType issueType) throws Exception
+
+    {
+        int expectedSize = 0;
+        switch (Integer.parseInt(issueType.getIssueTypeId().toString()))
+        {
+            case 1: expectedSize = 11;break;
+            case 3: expectedSize = 10;break;
+            case 5: expectedSize = 8;break;
+            case 7: expectedSize = 8;break;
+            case 9: expectedSize = 8;break;
+        }
+        return expectedSize;
+    }
 }
