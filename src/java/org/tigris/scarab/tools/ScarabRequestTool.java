@@ -1533,7 +1533,6 @@ try{
         ScarabLocalizationTool l10n = getLocalizationTool();
         ScarabUser user = (ScarabUser)data.getUser();
         String currentQueryString = user.getMostRecentQuery();
-System.out.println(currentQueryString);
         IssueSearch search = getSearch();
         List matchingIssueIds = new ArrayList();
         boolean searchSuccess = true;
@@ -1893,16 +1892,16 @@ System.out.println(currentQueryString);
         
         String name = null;
         String description = null;
-        if (searchField.equals("name"))
+        if (searchField.equals("Name") || searchField.equals("Any"))
         {
             name = searchString;
         }
-        else 
+        if (searchField.equals("Description") || searchField.equals("Any"))
         {
             description = searchString;
         }
 
-        return sortAttributes(AttributePeer.getFilteredAttributes(name, description));
+        return sortAttributes(AttributePeer.getFilteredAttributes(name, description, searchField));
     }
 
     /**

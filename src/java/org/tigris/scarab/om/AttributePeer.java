@@ -159,7 +159,8 @@ public class AttributePeer
      *  Gets a List of all of the Attribute objects filtered
      *  on name or description
      */
-    public static List getFilteredAttributes(String name, String description)
+    public static List getFilteredAttributes(String name, String description,
+                                             String searchField)
         throws Exception
     {
         List result = null;
@@ -177,17 +178,33 @@ public class AttributePeer
             }
             Criteria crit = new Criteria();
             crit.addIn(AttributePeer.ATTRIBUTE_ID, attrIds);
+            Criteria.Criterion c = null;
+            Criteria.Criterion c1 = null;
+            Criteria.Criterion c2 = null;
             
             if (name != null)
             {
-                crit.add(AttributePeer.ATTRIBUTE_NAME, 
+                c1 = crit.getNewCriterion(AttributePeer.ATTRIBUTE_NAME,
                          addWildcards(name), Criteria.LIKE);
             }
             if (description != null)
-            {
-                crit.add(AttributePeer.DESCRIPTION,
+            { 
+                c2 = crit.getNewCriterion(AttributePeer.DESCRIPTION,
                          addWildcards(description), Criteria.LIKE);
             }
+            if (searchField.equals("Name"))
+            {
+                c = c1;
+            } 
+            else if (searchField.equals("Description"))
+            {
+                c = c2;
+            }
+            else if (searchField.equals("Any"))
+            {
+                c = c1.or(c2);
+            }
+            crit.and(c);
             result = AttributePeer.doSelect(crit);
         }
         return result;
