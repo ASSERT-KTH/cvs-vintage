@@ -161,7 +161,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      * This is especially useful when using IMAP. IMAP has a root folder which
      * is labelled with the account name.
      * 
-     * @return FolderTreeNode return root parent folder of this folder
+     * @return root parent folder of this folder
      */
     public FolderTreeNode getRootFolder() {
         FolderTreeNode parent = (FolderTreeNode) getParent();
@@ -172,7 +172,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
         if (parent instanceof RootFolder) {
             return parent;
         } else {
-            return ((Folder) parent).getRootFolder();
+            return ((Folder)parent).getRootFolder();
         }
     }
 
@@ -400,17 +400,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      */
     public boolean isTrashFolder() {
         return false;
-    }
-
-    /**
-     * Parent directory for mail folders.
-     * <p>
-     * For example: /home/donald/.columba/mail
-     * 
-     * @return Returns the parentPath.
-     */
-    public String getParentPath() {
-        return directoryFile.getParent();
     }
 
     /** ********************* update of MessageFolderInfo ******************** */
