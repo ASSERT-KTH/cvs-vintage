@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <!-- $Id: tomcat-ug.html,v 1.22 2001/12/05 11:29:30 larryi Exp $ -->
+    <!-- $Id: tomcat-ug.html,v 1.23 2001/12/31 23:43:28 larryi Exp $ -->
     <!-- Copyright 1999-2001 Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -617,7 +617,7 @@ task as an argument.</p>
       or<br>f&nbsp;<i>&lt;file&gt;</i></td>
     <td>Use specified server configuration file instead of the default
     <code>server.xml</code>.</td></tr>
-  <tr><td>&nbsp;</td><td>debug</td>
+  <tr><td>&nbsp;</td><td>debug <i>&lt;level&gt;</i></td>
     <td>Set the debug level for the ContextManager.</td></tr>
   <tr><td>&nbsp;</td><td>estart</td>
     <td>Starts Tomcat without reading the server.xml file. Instead, the Tomcat
@@ -1112,8 +1112,12 @@ only the <code>&lt;Context&gt;</code> entries.</p>
 	  &nbsp;&nbsp;&nbsp;&nbsp;useJspServlet=&quot;false&quot; /&gt;</td><td>&nbsp;</td>
     <td>Handles translation, compilation, and loading of JSP pages.</td></tr>
   <tr><td>&lt;<a href="serverxml.html#StaticInterceptor">StaticInterceptor</a>
-    listings=&quot;true&quot; /&gt;</td><td>&nbsp;</td>
-    <td>Generates the response for requests for static files and directories.</td></tr>
+    listings=&quot;true&quot;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;useAcceptLanguage=&quot;true&quot;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;useCharset=&quot;locale&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Generates the response for requests for static files and directories.<br>
+      <b>Note:</b> The last two attributes were added in Tomcat 3.3.1 to
+      provide improved behavior with the addition of Japanese resource strings.</td></tr>
   <tr><td>&lt;ReloadInterceptor fullReload=&quot;true&quot; /&gt;</td><td>&nbsp;</td>
     <td>&nbsp;</td></tr>
   <tr><td>&lt;<a href="serverxml.html#SimpleSessionStore">SimpleSessionStore</a>
@@ -1439,7 +1443,7 @@ it may be served as a context using one or both of the following mechanisms.</p>
       settings unless overridden by a context configuration file for that
       context.<br>
       <br>
-      <b>Note:</b> The AutoWebApp module which servers the <code>modules</code>
+      <b>Note:</b> The AutoWebApp module which serves the <code>modules</code>
       directory is reserved for Tomcat Add-on modules and should not be used
       for serving contexts.</li>
 </ol>
@@ -1517,7 +1521,7 @@ substitution by using &quot;${<i>variable</i>}&quot; in the attribute string, i.
 <p>The <i>variable</i> must specify a Context property, a ContextManager
 property, or System property.  The Context properties take precedence, followed
 by ContextManager propertiers, and finally System properties.  If a matching
-property isn't found the attribute string is left as is.  Note that properties
+property isn't found, the attribute string is left as is.  Note that properties
 are not the same as attributes, and attributes are not accessible via
 &quot;variable substitution&quot;.</p>
 
