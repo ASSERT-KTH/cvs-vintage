@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.62 2001/10/19 22:02:22 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.63 2001/10/20 00:22:28 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -929,6 +929,10 @@
     -->
     <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <!--
+        Artifact type.
+    -->
+    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
         Attribute.
     -->
     <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"></column>
@@ -945,6 +949,9 @@
     </foreign-key>
     <foreign-key foreignTable="SCARAB_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
+        <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
