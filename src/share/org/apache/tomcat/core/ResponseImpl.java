@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.31 2000/06/22 19:49:36 costin Exp $
- * $Revision: 1.31 $
- * $Date: 2000/06/22 19:49:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.32 2000/06/26 21:59:30 costin Exp $
+ * $Revision: 1.32 $
+ * $Date: 2000/06/26 21:59:30 $
  *
  * ====================================================================
  *
@@ -192,6 +192,7 @@ public class ResponseImpl implements Response {
 	    request.getContextManager().doAfterBody(request, this);
 	    return;
 	}
+	out.flush();
 	out.reallyFlush();
 	request.getContextManager().doAfterBody(request, this);
 	out.close();
@@ -230,7 +231,7 @@ public class ResponseImpl implements Response {
 	// it already did all the checkings
 	
 	started = true;
-
+	usingWriter = true;
 	
 	writer = new ServletWriterFacade( getConverter(outs), this);
 	return writer;

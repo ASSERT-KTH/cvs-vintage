@@ -663,7 +663,7 @@ public class ContextManager {
      */
     public void service( Request req, Response res ) {
 	internalService( req, res );
-		// clean up
+	// clean up
 	try {
 	    res.finish();
 	    req.recycle();
