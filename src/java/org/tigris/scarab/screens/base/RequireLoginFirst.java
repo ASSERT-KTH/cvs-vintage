@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabConstants;
     logged in. That part isn't a priority yet though.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RequireLoginFirst.java,v 1.4 2001/07/11 07:33:48 jon Exp $    
+    @version $Id: RequireLoginFirst.java,v 1.5 2001/07/17 01:41:55 jmcnally Exp $    
 */
 public abstract class RequireLoginFirst extends TemplateSecureScreen
 {
@@ -76,7 +76,7 @@ public abstract class RequireLoginFirst extends TemplateSecureScreen
             TurbineTemplate.getTemplateContext(data)
                 .put( ScarabConstants.NEXT_TEMPLATE, 
                       data.getTemplateInfo().getScreenTemplate() );
-            doRedirect(data, "Login.vm");
+            setTarget(data, "Login.vm");
             return false;
         }
         return true;

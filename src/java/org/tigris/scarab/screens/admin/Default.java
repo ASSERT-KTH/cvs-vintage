@@ -60,7 +60,7 @@ import org.tigris.scarab.util.ScarabConstants;
     for the Issue Entry templates.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.4 2001/07/11 07:33:48 jon Exp $
+    @version $Id: Default.java,v 1.5 2001/07/17 01:41:55 jmcnally Exp $
 */
 public class Default extends TemplateSecureScreen
 {
@@ -85,7 +85,7 @@ public class Default extends TemplateSecureScreen
             getTemplateContext(data).put( ScarabConstants.NEXT_TEMPLATE, 
                                   data.getTemplateInfo()
                                   .getScreenTemplate().replace('/',',') );
-            doRedirect(data, "Login.vm");
+            setTarget(data, "Login.vm");
             return false;
         }
         return true;
