@@ -5,7 +5,7 @@ New features:
 - replaced attachment editor with iconpanel (fdietz)
 - added Redirect Message action/command (kastanie)
 - POP3: messages can be deleted from server after n days (tstich)
-
+- added stripping of HTML messages (mirion/fdietz)
 
 Fixed bugs:
 - #987481, classcast exception in ToRenderer (fdietz)
@@ -29,6 +29,27 @@ Fixed bugs:
 - Improved handling of unexpected IMAP disconnect and unsolicited reponses (tstich)
 - Added Handling of IMAPExceptions (tstich)
 - add fall-back if filetype is unknown on windows (kastanie)
+- added double click functionality to almost all JList components (cliffb53)
+- added API functionality to allow special processing of various kinds of URLs (cliffb53)
+- #995828 (cliffb53)
+- replaced error dialogs with JOptionPane, added error dialog guidelines to wiki (javaprog)
+- #999920 ClassCastExcpetion on Login: Added fallback and proper error dialog (tstich)
+- #983935 ALT-E hotkey used twice times; replaced all ALT shortcuts with CTRL-SHIFT (fdietz)
+- #997560 reply to all do not work, #1000037 composer doesn't set CC/BCC headerfields (fdietz)
+- #996381, Profiles: Add any file cause Exception on launch (fdietz)
+- URLs with & included didnt start correctly (kastanie)
+- #999990, doubleclick email with attachment, then doubleclick attachment (fdietz)
+- #999986, search dialog twice (fdietz)
+- #999668, contact folder uses wrong UID for new contacts (fdietz)
+- #997513, remove group which isnt empty cause Excep. (fdietz)
+- #997607, mailaccounts not editable when "check every" is empty (fdietz)
+- exception handling cleanups (javaprog)
+- #997599, emailadress in brackets within emailbody wrong displayed : RegExpr replaced (kastanie) 
+- #996412, #995834 (cliffb53)
+- #985283, New Composing window shouldn't have attachment view box.. (fdietz)
+- #995883 Task Manager - empty list - cancel cause Except. (fdietz)
+- #995880 Folder not renameable via properties. (cliffb53)
+- upgrade to jwizz-0.1.2 providing bugfixes for windows laf issues (javaprog)
 
 Columba v1.0 RC1-test4
 
