@@ -24,7 +24,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.14 2001/12/05 21:45:59 thn Exp $
+// $Id: FigClass.java,v 1.15 2001/12/06 19:45:21 thierrylach Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -392,6 +392,7 @@ public class FigClass extends FigNodeModelElement {
     MModelElement me = (MModelElement) getOwner();
     MNamespace m = null;
     ProjectBrowser pb = ProjectBrowser.TheInstance;
+    if (me.getNamespace() == null) {
     if ((encloser == null && me.getNamespace() == null) ||
         (encloser != null && encloser.getOwner() instanceof MPackage)) {
       if (encloser != null) {
@@ -404,6 +405,7 @@ public class FigClass extends FigNodeModelElement {
       } catch (Exception e) {
         Argo.log.error("could not set package", e);
       }
+    }
     }
 
     // The next if-clause is important for the Deployment-diagram
