@@ -24,7 +24,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.40 2002/11/24 15:21:59 kataka Exp $
+// $Id: PropPanel.java,v 1.41 2002/12/07 23:03:01 BobTarling Exp $
 
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
@@ -121,19 +121,24 @@ implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
 
     protected Font smallFont = MetalLookAndFeel.getSubTextFont();
 
-
-    ////////////////////////////////////////////////////////////////
-    // constructors
-
     /**
      *    Constructs the PropPanel.
      *    @param title Title of panel
      *    @param panelCount number of horizontal panels
+     *    @deprecated 7-Dec-2002 by Bob Tarling. Use the constructor
+     *    specifying orientation instead.
      */
     public PropPanel(String title,int panelCount) {
 	this(title, null, panelCount);
     }
 
+    /**
+     *    Constructs the PropPanel - DO NOT USE.
+     *    @param title Title of panel
+     *    @param panelCount number of horizontal panels
+     *    @todo 7-Dec-2002 by Bob Tarling. this constructor should be deprecated once no
+     *    longer in use. Use of GridBagLayout is being dropped in favour of LabelledLayout
+     */
     public PropPanel(String title, ImageIcon icon, int panelCount) {
 	super(title);
         setLayout(new BorderLayout());
@@ -157,20 +162,6 @@ implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
 	buttonPanelWithFlowLayout = new JPanel(new FlowLayout());
 	buttonPanelWithFlowLayout.add(buttonPanel);
 	addField(buttonPanelWithFlowLayout,0,0,0);
-	
-
-	/*JPanel namePanel=new JPanel(new FlowLayout());
-
-	if (icon!=null) captionPanel.add(new JLabel(icon));
-	captionPanel.add(new JLabel(localize(title)));
-	namePanel.add(captionPanel);
-
-	buttonPanel = new JPanel(new GridLayout(1,0));
-	buttonPanelWithFlowLayout = new JPanel(new FlowLayout());
-	buttonPanelWithFlowLayout.add(buttonPanel);
-	namePanel.add(buttonPanelWithFlowLayout);
-
-	add(namePanel, BorderLayout.NORTH);*/
     }
 
     public void setOrientation(Orientation orientation) {
@@ -623,7 +614,8 @@ implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
     public void setNameEventListening(Class[] metaclasses) {
 
         /* 
-          old implementation         
+          old implementation
+         
         // Convert to the third party listening pair list
 
         Vector targetList = new Vector (metaclasses.length * 6);
