@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.24 2004/09/01 15:43:20 mvw Exp $
+// $Id: ExplorerTree.java,v 1.25 2004/10/10 20:44:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -194,7 +194,7 @@ public class ExplorerTree
             // Jeremy Bennett patch
             if (ModelFacade.isATransition(value)
 		    || ModelFacade.isAExtensionPoint(value)) {
-                name = GeneratorDisplay.Generate(value);
+                name = GeneratorDisplay.getInstance().generate(value);
             }
             // changing the label in case of comments
             // this is necessary since the name of the comment is the same as
@@ -228,7 +228,8 @@ public class ExplorerTree
 			ModelFacade.getStereotypes(value).iterator().next();
                 }
                 if (stereo != null) {
-                    name += " " + GeneratorDisplay.Generate(stereo);
+                    name += " " + GeneratorDisplay.getInstance()
+                        .generate(stereo);
                 }
             }
             
