@@ -35,7 +35,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */                            
 public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
    private Field field;
@@ -117,14 +117,19 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
    }
 
    public boolean isReadTimedOut(EntityEnterpriseContext ctx) {
-      if(isReadOnly()) {
-         long readInterval = System.currentTimeMillis() - 
-               getFieldState(ctx).lastRead; 
-         return readInterval > getReadTimeOut();
-      }
-      
       // if we are read/write then we are always timed out
-      return true;
+      if(!isReadOnly()) {
+         return true;
+      }
+
+      // if read-time-out is -1 then we never time out.
+      if(getReadTimeOut() == -1) {
+         return false;
+      }
+
+      long readInterval = System.currentTimeMillis() - 
+            getFieldState(ctx).lastRead; 
+      return readInterval >= getReadTimeOut();
    }
    
    public void resetPersistenceContext(EntityEnterpriseContext ctx) {

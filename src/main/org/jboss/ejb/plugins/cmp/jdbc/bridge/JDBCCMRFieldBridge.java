@@ -57,7 +57,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    // ------ Invocation messages ------
@@ -525,14 +525,19 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
     * Had the read time expired?
     */
    public boolean isReadTimedOut(EntityEnterpriseContext ctx) {
-      if(isReadOnly()) {
-         long readInterval = System.currentTimeMillis() - 
-               getFieldState(ctx).getLastRead(); 
-         return readInterval > getRelationMetaData().getReadTimeOut();
-      }
-      
       // if we are read/write then we are always timed out
-      return true;
+      if(!isReadOnly()) {
+         return true;
+      }
+
+      // if read-time-out is -1 then we never time out.
+      if(getRelationMetaData().getReadTimeOut() == -1) {
+         return false;
+      }
+
+      long readInterval = System.currentTimeMillis() - 
+            getFieldState(ctx).getLastRead(); 
+      return readInterval > getRelationMetaData().getReadTimeOut();
    }
 
    public Object getValue(EntityEnterpriseContext ctx) {
