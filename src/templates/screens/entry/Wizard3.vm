@@ -45,15 +45,14 @@ attributes to submit the issue.</p>
             #attrValueErrorMsg ( $attVal $field )
           </font>
           <br>
-       <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
         #if ($attVal.Attribute.AttributeType.Name == "long-string" )        
 
             <textarea name= "$attrInput.Value.Key" cols="40" 
-               rows="5">$!attrInput.Value.Value</textarea>
+               rows="5">$!attrInput.Value</textarea>
         #else
 
            <input name= "$attrInput.Value.Key"
-                value="$!attrInput.Value.Value" size="20" type="text">
+                value="$!attrInput.Value" size="20" type="text">
 
         #end
     #end
@@ -95,15 +94,14 @@ attributes to submit the issue.</p>
             #attrValueErrorMsg ( $attVal $field )
           </font>
           <br>
-       <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
         #if ($attVal.Attribute.AttributeType.Name == "long-string" )        
 
             <textarea name= "$attrInput.Value.Key" cols="40" 
-               rows="5">$!attrInput.Value.Value</textarea>
+               rows="5">$!attrInput.Value</textarea>
         #else
 
            <input name= "$attrInput.Value.Key"
-                value="$!attrInput.Value.Value" size="20" type="text">
+                value="$!attrInput.Value" size="20" type="text">
 
         #end
     #end
@@ -114,4 +112,6 @@ attributes to submit the issue.</p>
 <p>
             <input type="submit" 
                 name="eventSubmit_doEnterissue" value="Submit Issue">
+
+$intake.declareGroups()
 </FORM>

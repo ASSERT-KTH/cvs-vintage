@@ -81,7 +81,7 @@ import org.tigris.scarab.word.Vocabulary;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.9 2001/04/19 06:28:50 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.10 2001/04/23 06:40:07 jmcnally Exp $
 */
 public class ReportIssue extends VelocityAction
 {
@@ -113,6 +113,7 @@ public class ReportIssue extends VelocityAction
         while ( iter.hasNext() ) 
         {
             aval = (AttributeValue)iter.next();
+            
             group = intake.get("AttributeValue", aval.getQueryKey(), false);
             if ( group != null ) 
             {            

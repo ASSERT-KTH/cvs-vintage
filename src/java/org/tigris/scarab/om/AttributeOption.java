@@ -27,6 +27,20 @@ public class AttributeOption
     extends BaseAttributeOption
     implements Persistent
 {
+    private static HashMap parentChildMap;
+    private static HashMap childParentMap;
+
+    static
+    {
+        try
+        {            
+            buildParentChildMaps();
+        }
+        catch (Exception e)
+        {
+            Log.error("Unable to setup option relationships", e);
+        }
+    }
 
     private static final Comparator comparator = new Comparator()
         {
@@ -77,7 +91,119 @@ public class AttributeOption
         super.setAttribute(v);
     }
 
+    // public AttributeOption
+
+    /**
+     * Is this an ancestor of the option 
+     */
+    public boolean isParentOf(AttributeOption option)
+    {
+        boolean result = false;
+        ObjectKey[] children = (ObjectKey[])
+            parentChildMap.get(getPrimaryKey());
+        if (children != null) 
+        {
+            for ( int i=children.length-1; i>=0; i-- ) 
+            {
+                if (children[i].equals(option.getPrimaryKey()))
+                {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+    /**
+     * Is this an decendent of the option 
+     */
+    public boolean isChildOf(AttributeOption option)
+    {
+        boolean result = false;
+        ObjectKey[] children = (ObjectKey[])
+            parentChildMap.get(option.getPrimaryKey());
+        if (children != null) 
+        {
+            for ( int i=children.length-1; i>=0; i-- ) 
+            {
+                if (children[i].equals(getPrimaryKey()))
+                {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    public boolean hasChildren()
+    {
+        return parentChildMap.containsKey(getPrimaryKey()); 
+    }
+        
+    public static void buildParentChildMaps()
+        throws Exception
+    {
+        HashMap parentChildMap = new HashMap();
+        HashMap childParentMap = new HashMap();
+
+        Criteria crit = new Criteria()
+            .add(ROptionOptionPeer.RELATIONSHIP_ID, 
+                 OptionRelationship.PARENT_CHILD);
+
+        List relations = ROptionOptionPeer.doSelect(crit);
+
+        for ( int i=relations.size()-1; i>=0; i-- ) 
+        {
+            ROptionOption relation = (ROptionOption)relations.get(i);
+            
+            ArrayList children = null; 
+            if ( parentChildMap.containsKey(relation.getOption1Id())) 
+            {
+                children = (ArrayList) 
+                    parentChildMap.get(relation.getOption1Id());
+            }
+            else 
+            {
+                children = new ArrayList();
+            }
+            children.add(relation.getOption2Id());
+
+            ArrayList parents = null; 
+            if ( childParentMap.containsKey(relation.getOption2Id())) 
+            {
+                parents = (ArrayList) 
+                    childParentMap.get(relation.getOption2Id());
+            }
+            else 
+            {
+                parents = new ArrayList();
+            }
+            parents.add(relation.getOption1Id());
+        }
+
+        // clean up, switch to arrays
+        Iterator keys = parentChildMap.keySet().iterator();
+        while ( keys.hasNext() ) 
+        {
+            Object key = keys.next();
+            ArrayList children = (ArrayList)parentChildMap.get(key);
+            Object[] childArray = 
+                children.toArray(new ObjectKey[children.size()]);
+            parentChildMap.put(key, childArray);
+        }
+        keys = childParentMap.keySet().iterator();
+        while ( keys.hasNext() ) 
+        {
+            Object key = keys.next();
+            ArrayList parents = (ArrayList)childParentMap.get(key);
+            Object[] parentArray = 
+                parents.toArray(new ObjectKey[parents.size()]);
+            childParentMap.put(key, parentArray);
+        }
+        
+        AttributeOption.parentChildMap = parentChildMap;
+        AttributeOption.childParentMap = childParentMap;
+    }
 }
-
-
 

@@ -47,29 +47,29 @@ insert into SCARAB_ATTRIBUTE_TYPE(ATTRIBUTE_TYPE_ID, ATTRIBUTE_CLASS_ID, ATTRIBU
  */
 
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Description */
-        values(1, 'description', 12);
+        values(1, 'Description', 12);
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Assigned to */
-        values(2, 'assigned to', 8);
+        values(2, 'Assigned To', 8);
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Status */
-        values(3, 'status', 5);
+        values(3, 'Status', 5);
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* resolution */
-        values(4, 'resolution', 5);
+        values(4, 'Resolution', 5);
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Platform */
-        values(5, 'platform', 5);
+        values(5, 'Platform', 5);
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Operating System */
-        values(6, 'operating system', 5);
+        values(6, 'Operating System', 5);
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Priority select-one*/
-        values(7, 'priority', 5);
+        values(7, 'Priority', 5);
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Priority voted*/
-        values(8, 'vote', 5);
+        values(8, 'Vote', 5);
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Severity */
-        values(9, 'severity', 5);
+        values(9, 'Severity', 5);
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Tracking */
-        values(10, 'tracking', 10);
+        values(10, 'Tracking', 10);
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Brief (one-line) Description */
-        values(11, 'summary', 1);
+        values(11, 'Summary', 1);
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* A relevant pointer */
-        values(13, 'url', 1);
+        values(13, 'Url', 1);
 
 
 /*

@@ -11,52 +11,45 @@
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
     #attrValueErrorMsg( $attrValue "Value" )<br>
     Summary:
-   <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
    <input name= "$attrInput.Value.Key"
-        value="$!attrInput.Value.Value" size="20" type="text">
+        value="$!attrInput.Value" size="20" type="text">
     <br>
-    A short description of the issue.
-
-<p>
-
-        <SPAN CLASS="SectionHeader">Version: (not in db)<BR>
-        <SELECT NAME="selection2">
-          <OPTION SELECTED VALUE="">Version 1</OPTION>
-          <OPTION VALUE="">Option2</OPTION>
-          <OPTION VALUE="">Option3</OPTION>
-        </SELECT>
-<p>
+    A short description of the issue.<br>
+    <br>
 
 
+#foreach ( $attVal in $issue.OrderedModuleAttributeValues )
+  #if ( $attVal.isDedupeAttribute())
 
+     ##set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
+     #if ( $attVal.Attribute.AttributeType.ValidationKey )
+        #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
+     #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+        #set ( $field = "OptionId" )
+     #end
 
-#set ( $attrValue = $issue.ModuleAttributeValuesMap.get("PLATFORM") )
-#set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
-#if ( $attrValue.isRequired() )
-##    $attrInput.OptionId.setRequired(true)
+     #if ( $attVal.isRequired() )
+        ## $attrInput.get($field).setRequired(true)
         <b>*</b>
+     #end
+
+    $attVal.Attribute.Name:
+
+    <font color="red">
+        #attrValueErrorMsg ( $attVal $field )
+    </font>
+    <br>
+    #attrValueSelect ($attVal $field "")
+
+<br><br>
+    #end
 #end
-Platform:<br>
-#attrValueErrorMsg ($attrValue "OptionId") <br>
-#attrValueSelect ($attrValue "OptionId" "")
 
 <p>
-
-#set ( $attrValue = $issue.ModuleAttributeValuesMap.get("OPERATING SYSTEM") )
-#set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
-#if ( $attrValue.isRequired() )
-##    $attrInput.OptionId.setRequired(true)
-        <b>*</b>
-#end
-OS:<br>
-#attrValueErrorMsg ($attrValue "OptionId") <br>
-#attrValueSelect ($attrValue "OptionId" "")
-
-<p>
-
             <input type="submit" 
                 name="eventSubmit_doSubmitattributes" value="Next ->">
 
+$intake.declareGroups()
 </form>
 
 

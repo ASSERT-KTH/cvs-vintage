@@ -101,58 +101,31 @@ public abstract class AttributeValue
 
     //public abstract boolean isEquivalent(AttributeValue aval);
 
-    /* * Creates, initializes and returns a new Attribute.
-     * @return new Attribute instance
-     * @param issue Isuue object which this attribute is associated with
-     * @param intId This Attribute's Id
-     * /
-    public static synchronized AttributeValue getNewInstance(
-        ObjectKey attId, Issue issue) throws Exception
+
+    /**
+     * if the Attribute related to this value is marked as relevant
+     * to checking for duplicates in the module related to the Issue
+     * related to this value.
+     *
+     * @return a <code>boolean</code> value
+     */
+    public boolean isDedupeAttribute()
+        throws Exception
     {
-
-        TurbineGlobalCacheService tgcs = 
-            (TurbineGlobalCacheService)TurbineServices
-            .getInstance().getService(GlobalCacheService.SERVICE_NAME);
-
-        String key = Attribute.getCacheKey(attId);
-        Object[] attRes = (Object[])tgcs.getObject(key);
-        boolean firstTime = (attRes == null);
-        
-        Attribute attribute = null;
-        if (firstTime)
+        boolean result = false;
+        Attribute[] dedupeAttributes = getIssue().getModule()
+            .getDedupeAttributes();
+        for ( int i=dedupeAttributes.length-1; i>=0; i--) 
         {
-            attRes = new Object[2];
-            System.out.println("First time for Attribute: " + attId);
-            attribute = ScarabAttributePeer.retrieveByPK(attId);
-            if ( attribute == null) // is this check needed?
+            if ( dedupeAttributes[i].equals(getAttribute()) ) 
             {
-                throw new Exception("Attribute with ID " + attId + 
-                                    " can not be found"); //FIXME
+                result = true;
+                break;
             }
-            attRes[0] = attribute;
-            tgcs.putObject(key, attRes);
         }
-        else 
-        {
-            attribute = (Attribute)attRes[0];
-        }
-
-        String className = attribute
-            .getAttributeType().getJavaClassName();
-        AttributeValue attv = (AttributeValue)
-            Class.forName(className).newInstance();
-        attv.setAttribute(attribute);
-        attv.setIssue(issue);
-
-        if (firstTime)
-        {
-            attRes[1] = attv.loadResources();
-        }
-        attv.setResources(res[1]);
-        attv.init();
-        return attv;
+        
+        return result;
     }
-    */
 
     private static String className = "AttributeValue";
     static String getCacheKey(ObjectKey key)

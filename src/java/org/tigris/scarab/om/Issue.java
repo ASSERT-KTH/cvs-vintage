@@ -255,6 +255,7 @@ public class Issue
         while (i.hasNext()) 
         {
             AttributeValue aval = (AttributeValue)i.next();
+            
             if ( aval.getOptionId() == null && aval.getValue() == null ) 
             {
                 for ( int j=attributes.length-1; j>=0; j-- ) 
@@ -266,8 +267,10 @@ public class Issue
                         break;
                     }                    
                 }
-
-                break;
+                if ( !result ) 
+                {
+                    break;
+                }
             }
         }
 

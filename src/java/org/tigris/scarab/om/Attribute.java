@@ -37,6 +37,8 @@ public class Attribute
     /** should be cloned to use */
     private static Criteria moduleOptionsCriteria;
 
+    private HashMap optionsMap;
+
     static
     {
         allOptionsCriteria = new Criteria();
@@ -50,6 +52,17 @@ public class Attribute
             .addOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
     }
 
+    public Attribute()
+    {
+        try
+        {            
+            buildOptionsMap();
+        }
+        catch (Exception e)
+        {
+            Log.error("Unable to setup attribute "+getName()+"'s options", e);
+        }
+    }
 
     static String getCacheKey(ObjectKey key)
     {
@@ -64,7 +77,6 @@ public class Attribute
     public static Attribute getInstance(ObjectKey attId) 
         throws Exception
     {
-        boolean firstTime = false;
         TurbineGlobalCacheService tgcs = 
             (TurbineGlobalCacheService)TurbineServices
             .getInstance().getService(GlobalCacheService.SERVICE_NAME);
@@ -77,11 +89,6 @@ public class Attribute
         }
         catch (ObjectExpiredException oee)
         {
-            firstTime = true;
-        }
-        
-        if (firstTime)
-        {
             attribute = AttributePeer.retrieveByPK(attId);
             if ( attribute == null) // is this check needed?
             {
@@ -89,7 +96,8 @@ public class Attribute
                                           " can not be found");
             }
             tgcs.addObject(key, new CachedObject(attribute));
-        } 
+        }
+        
         return attribute;
     }
 
@@ -132,6 +140,35 @@ public class Attribute
 
     }
 
+    public synchronized void buildOptionsMap()
+        throws Exception
+    {
+        // synchronized method due to getAllAttributeOptions, this needs
+        // further investigation !FIXME!
+        HashMap optionsMap = new HashMap();
+        List options = getAllAttributeOptions();
+
+        for ( int i=options.size()-1; i>=0; i-- ) 
+        {
+            AttributeOption option = (AttributeOption)options.get(i);
+            optionsMap.put(option.getOptionId(), option);
+        }
+        
+        this.optionsMap = optionsMap;
+    }
+
+    /**
+     * Gets one of the options belonging to this attribute. if the 
+     * PrimaryKey does not belong to an option in this attribute
+     * null is returned.
+     *
+     * @param pk a <code>NumberKey</code> value
+     * @return an <code>AttributeOption</code> value
+     */
+    public AttributeOption getAttributeOption(NumberKey pk)
+    {
+        return (AttributeOption)optionsMap.get(pk);
+    }
 
     /**
      * Get options associated with this attribute base on 
