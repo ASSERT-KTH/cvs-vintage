@@ -46,14 +46,11 @@ package org.tigris.scarab.attribute;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.turbine.util.*;
-import org.tigris.scarab.om.*;
-import java.util.*;
 /**
  *  This class represents attribute displayed as a combo-box.
  *  used for Severity, Priority, Platform and the like.
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Id: ComboBoxAttribute.java,v 1.5 2001/07/17 21:40:27 jon Exp $ 
+ * @version $Id: ComboBoxAttribute.java,v 1.6 2001/08/02 07:11:37 jon Exp $ 
  */
 public class ComboBoxAttribute extends SelectOneAttribute {}

@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 
-import org.apache.turbine.services.db.om.Persistent;
+import org.apache.torque.om.Persistent;
 
 /** 
  * You should add additional methods to this class to meet the

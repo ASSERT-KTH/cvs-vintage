@@ -46,24 +46,15 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Iterator;
-import java.util.Date;
-import java.util.List;
-import java.util.HashMap;
-import java.math.BigDecimal;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
-import org.apache.turbine.services.db.om.NumberKey;
+import org.apache.torque.om.NumberKey;
 import org.apache.turbine.services.intake.IntakeTool;
-import org.apache.turbine.services.db.util.Criteria;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.intake.model.Field;
-import org.apache.turbine.services.db.om.ObjectKey;
-import org.apache.turbine.util.SequencedHashtable;
-import org.apache.turbine.util.ParameterParser;
 
 // Scarab Stuff
 import org.tigris.scarab.om.Attribute;
@@ -73,14 +64,13 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.om.ScarabModulePeer;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.2 2001/07/19 21:30:06 jon Exp $
+    @version $Id: ConfigureIssueList.java,v 1.3 2001/08/02 07:11:36 jon Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {

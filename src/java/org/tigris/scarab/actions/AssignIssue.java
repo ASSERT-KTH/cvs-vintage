@@ -58,8 +58,8 @@ import org.apache.turbine.RunData;
 
 import org.apache.turbine.util.SequencedHashtable;
 
-import org.apache.turbine.services.db.util.Criteria;
-import org.apache.turbine.services.db.om.NumberKey;
+import org.apache.torque.util.Criteria;
+import org.apache.torque.om.NumberKey;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.intake.model.Field;
@@ -87,7 +87,7 @@ import org.tigris.scarab.util.ScarabLink;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: AssignIssue.java,v 1.2 2001/07/25 23:13:58 jmcnally Exp $
+    @version $Id: AssignIssue.java,v 1.3 2001/08/02 07:11:36 jon Exp $
 */
 public class AssignIssue extends TemplateAction
 {

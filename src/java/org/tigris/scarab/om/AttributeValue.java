@@ -47,17 +47,19 @@ package org.tigris.scarab.om;
  */ 
 
 // JDK classes
-import java.util.*;
+import java.util.List;
 
 // Turbine classes
-import org.apache.turbine.services.db.om.*;
-import org.apache.turbine.services.db.util.Criteria;
-import org.apache.turbine.util.ObjectUtils;
-import org.apache.turbine.util.StringUtils;
-import org.apache.turbine.util.ParameterParser;
+import org.apache.torque.om.Persistent;
+import org.apache.torque.om.ObjectKey;
+import org.apache.torque.om.NumberKey;
 
-import org.apache.turbine.services.cache.*;
-import org.apache.turbine.services.*;
+import org.apache.fulcrum.cache.TurbineGlobalCacheService;
+import org.apache.fulcrum.cache.GlobalCacheService;
+import org.apache.fulcrum.cache.ObjectExpiredException;
+import org.apache.fulcrum.cache.CachedObject;
+
+import org.apache.fulcrum.TurbineServices;
 
 
 /** 

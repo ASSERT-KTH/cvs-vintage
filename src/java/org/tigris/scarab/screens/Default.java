@@ -50,14 +50,13 @@ package org.tigris.scarab.screens;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateScreen;
-import org.apache.turbine.services.template.TurbineTemplate;
 
 /**
     This class is responsible for building the Context up
     for the Default Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.11 2001/07/17 21:40:30 jon Exp $
+    @version $Id: Default.java,v 1.12 2001/08/02 07:11:41 jon Exp $
 */
 public class Default extends TemplateScreen
 {

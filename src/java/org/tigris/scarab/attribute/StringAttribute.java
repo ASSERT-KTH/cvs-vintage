@@ -46,7 +46,7 @@ package org.tigris.scarab.attribute;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.turbine.services.db.pool.DBConnection;
+import org.apache.torque.pool.DBConnection;
 import org.tigris.scarab.util.word.SearchIndex;
 import org.tigris.scarab.util.word.SearchFactory;
 
@@ -54,7 +54,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *  Description of the Class
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.7 $ $Date: 2001/07/17 21:40:27 $
+ * @version $Revision: 1.8 $ $Date: 2001/08/02 07:11:37 $
  */
 public class StringAttribute extends FreeFormAttribute
 {

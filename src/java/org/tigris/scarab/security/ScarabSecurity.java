@@ -46,7 +46,6 @@ package org.tigris.scarab.security;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
 
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.ScarabUser;
@@ -56,7 +55,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Constants for permissions should be grouped here as well.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.5 2001/07/24 20:43:12 jmcnally Exp $
+ * @version $Id: ScarabSecurity.java,v 1.6 2001/08/02 07:11:41 jon Exp $
 */
 public interface ScarabSecurity
 {

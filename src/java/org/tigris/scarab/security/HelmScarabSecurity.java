@@ -46,11 +46,9 @@ package org.tigris.scarab.security;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
 
 // Turbine
 import org.apache.turbine.util.Log;
-import org.apache.turbine.util.TurbineException;
 
 // Helm
 /*
@@ -70,7 +68,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Security wrapper around helm
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: HelmScarabSecurity.java,v 1.5 2001/07/21 00:52:51 jmcnally Exp $
+ * @version $Id: HelmScarabSecurity.java,v 1.6 2001/08/02 07:11:41 jon Exp $
 */
 public class HelmScarabSecurity 
     extends DefaultScarabSecurity

@@ -52,14 +52,13 @@ import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
-import org.apache.turbine.services.security.entity.User;
+import org.apache.fulcrum.security.entity.User;
 import org.apache.turbine.services.pull.ApplicationTool;
-import org.apache.turbine.services.pull.TurbinePull;
-import org.apache.turbine.services.security.TurbineSecurity;
+import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
-import org.apache.turbine.services.security.util.UnknownEntityException;
-import org.apache.turbine.services.security.util.TurbineSecurityException;
+import org.apache.fulcrum.security.util.UnknownEntityException;
+import org.apache.fulcrum.security.util.TurbineSecurityException;
 
 // Scarab Stuff
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -71,7 +70,7 @@ import org.tigris.scarab.om.ScarabUser;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.16 2001/07/17 21:40:27 jon Exp $
+    @version $Id: Login.java,v 1.17 2001/08/02 07:11:36 jon Exp $
 */
 public class Login extends TemplateAction
 {

@@ -52,9 +52,7 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
 import org.apache.turbine.util.Log;
-import org.apache.turbine.util.velocity.VelocityEmail;
 import org.apache.turbine.services.pull.ApplicationTool;
-import org.apache.turbine.services.pull.TurbinePull;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
@@ -68,7 +66,7 @@ import org.tigris.scarab.util.ScarabConstants;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.17 2001/07/17 21:40:27 jon Exp $
+    @version $Id: RegisterConfirm.java,v 1.18 2001/08/02 07:11:37 jon Exp $
 */
 public class RegisterConfirm extends TemplateAction
 {

@@ -54,16 +54,14 @@ import java.util.Map;
 import java.util.HashMap;
 
 // Turbine classes
-import org.apache.turbine.services.db.om.NumberKey;
-import org.apache.turbine.services.db.om.Persistent;
-import org.apache.turbine.services.db.util.Criteria;
-import org.apache.turbine.services.db.util.IDBroker;
-import org.apache.turbine.services.db.util.BasePeer;
-import org.apache.turbine.services.security.util.RoleSet;
-import org.apache.turbine.services.security.util.TurbineSecurityException;
-import org.apache.turbine.services.security.entity.User;
-import org.apache.turbine.services.security.entity.Group;
-import org.apache.turbine.services.security.entity.Role;
+import org.apache.torque.om.NumberKey;
+import org.apache.torque.om.Persistent;
+import org.apache.torque.util.Criteria;
+import org.apache.fulcrum.security.util.RoleSet;
+import org.apache.fulcrum.security.util.TurbineSecurityException;
+import org.apache.fulcrum.security.entity.User;
+import org.apache.fulcrum.security.entity.Group;
+import org.apache.fulcrum.security.entity.Role;
 
 // Scarab classes
 import org.tigris.scarab.services.module.ModuleEntity;

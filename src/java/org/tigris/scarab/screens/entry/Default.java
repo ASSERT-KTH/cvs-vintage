@@ -50,7 +50,6 @@ package org.tigris.scarab.screens.entry;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateSecureScreen;
-import org.apache.turbine.services.template.TurbineTemplate;
 
 // Scarab Stuff
 import org.tigris.scarab.security.ScarabSecurityPull;
@@ -63,7 +62,7 @@ import org.tigris.scarab.pages.ScarabPage;
     for the Issue Entry templates.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.11 2001/07/24 20:43:12 jmcnally Exp $
+    @version $Id: Default.java,v 1.12 2001/08/02 07:11:41 jon Exp $
 */
 public class Default extends TemplateSecureScreen
 {

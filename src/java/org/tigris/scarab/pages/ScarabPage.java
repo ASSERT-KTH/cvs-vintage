@@ -51,8 +51,8 @@ import org.apache.turbine.pipeline.ClassicPipeline;
 import org.apache.turbine.modules.Module;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.services.security.TurbineSecurity;
-import org.apache.turbine.services.db.om.NumberKey;
+import org.apache.fulcrum.security.TurbineSecurity;
+import org.apache.torque.om.NumberKey;
 
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
@@ -68,7 +68,7 @@ import org.tigris.scarab.om.ScarabUserImpl;
     for the Default Page.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabPage.java,v 1.8 2001/07/17 21:40:30 jon Exp $
+    @version $Id: ScarabPage.java,v 1.9 2001/08/02 07:11:41 jon Exp $
 */
 public class ScarabPage extends ClassicPipeline
 {

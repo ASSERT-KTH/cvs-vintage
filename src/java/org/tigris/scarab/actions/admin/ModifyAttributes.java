@@ -51,15 +51,12 @@ import java.util.Vector;
 // Turbine Stuff 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.services.db.om.StringKey;
-import org.apache.turbine.services.db.om.ObjectKey;
-import org.apache.turbine.services.db.om.NumberKey;
+import org.apache.torque.om.ObjectKey;
+import org.apache.torque.om.NumberKey;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.intake.model.Field;
 import org.apache.turbine.services.intake.model.BooleanField;
-import org.apache.turbine.services.pull.ApplicationTool;
-import org.apache.turbine.services.pull.TurbinePull;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -73,7 +70,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyAttributes.java,v 1.13 2001/07/17 21:40:27 jon Exp $
+    @version $Id: ModifyAttributes.java,v 1.14 2001/08/02 07:11:37 jon Exp $
 */
 public class ModifyAttributes extends RequireLoginFirstAction
 {

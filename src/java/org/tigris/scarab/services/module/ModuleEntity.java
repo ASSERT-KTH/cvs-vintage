@@ -53,18 +53,15 @@ import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.ScarabUser;
 
-import org.apache.turbine.services.db.om.ObjectKey;
-import org.apache.turbine.services.db.om.NumberKey;
-import org.apache.turbine.services.security.entity.Role;
-import org.apache.turbine.services.security.entity.User;
-import org.apache.turbine.RunData;
-import org.apache.turbine.services.db.util.Criteria;
+import org.apache.torque.om.ObjectKey;
+import org.apache.torque.om.NumberKey;
+import org.apache.torque.util.Criteria;
 
 /**
  * This class describes a Module
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.10 2001/07/19 21:30:06 jon Exp $
+ * @version $Id: ModuleEntity.java,v 1.11 2001/08/02 07:11:42 jon Exp $
  */
 public interface ModuleEntity
 {

@@ -52,15 +52,10 @@ import java.util.List;
 // Turbine Stuff 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.services.db.om.StringKey;
-import org.apache.turbine.services.db.om.ObjectKey;
-import org.apache.turbine.services.db.om.NumberKey;
+import org.apache.torque.om.NumberKey;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
-import org.apache.turbine.services.intake.model.Field;
 import org.apache.turbine.services.intake.model.BooleanField;
-import org.apache.turbine.services.pull.ApplicationTool;
-import org.apache.turbine.services.pull.TurbinePull;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -69,14 +64,13 @@ import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.7 2001/07/17 21:40:27 jon Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.8 2001/08/02 07:11:37 jon Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {

@@ -51,13 +51,12 @@ import java.util.List;
 
 // Scarab Stuff
 import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.services.module.ModuleEntity;
 
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.9 $ $Date: 2001/07/19 21:30:06 $
+ * @version $Revision: 1.10 $ $Date: 2001/08/02 07:11:37 $
  */
 public class UserAttribute extends AttributeValue
 {

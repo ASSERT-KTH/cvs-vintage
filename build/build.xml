@@ -35,6 +35,7 @@
     <property name="build.webapps" value="${build.dir}/webapps"/>
     <property name="build.project" value="${build.webapps}/${project}"/>
     <property name="build.project.webinf" value="${build.project}/WEB-INF"/>
+    <property name="build.project.webinf.lib" value="${build.project}/WEB-INF/lib"/>
     <property name="build.src.scarab" value="${build.project.webinf}/src"/>
     <property name="build.dest.scarab"
              value="${build.project.webinf}/classes"/>
@@ -130,7 +131,7 @@
             <fileset dir="${lib.dir}/">
                 <exclude name="**/servlet*.jar"/>
                 <exclude name="**/stylebook*.jar"/>
-                <exclude name="**/torque.zip"/>
+                <exclude name="**/${torque.zip}"/>
                 <include name="**/*.jar"/>
             </fileset>
         </copy>
@@ -171,21 +172,29 @@
              the archive has already been expanded because it is expanded
              in the same target as it is copied to the directory -->
         <uptodate property="torque.is.expanded"
-            targetfile="${build.src.scarab}/torque.zip">
-            <srcfiles dir="${lib.dir}" includes="torque.zip"/>
+            targetfile="${build.src.scarab}/${torque.zip}">
+            <srcfiles dir="${lib.dir}" includes="${torque.zip}"/>
         </uptodate>    
     </target>
 
-    <target name="torque-init" depends="torque-expanded-check"
+    <target name="torque-init" depends="prepare,torque-expanded-check"
             unless="torque.is.expanded">
-        <copy file="${lib.dir}/torque.zip" todir="${build.src.scarab}"/>
-        <unzip src="${build.src.scarab}/torque.zip"
-                dest="${build.src.scarab}" />
+        <copy file="${lib.dir}/${torque.zip}" todir="${build.src.scarab}"/>
+        <unzip  src="${build.src.scarab}/${torque.zip}"
+               dest="${build.src.scarab}" />
+        <copy todir="${build.project.webinf.lib}">
+            <fileset dir="${torque.dir.scarab}/lib">
+                <include name="torque*.jar"/>
+            </fileset>
+        </copy>
+        
+<!-- Not needed?
         <copy todir="${build.src.scarab}/torque/lib">
             <fileset dir="${lib.dir}">
                 <include name="mm.mysql-*.jar"/>
             </fileset>
         </copy>
+-->
     </target>
 
     <!-- ================================================================== -->
@@ -324,7 +333,14 @@
             deprecation="${deprecation}"
             optimize="${optimize}">
 
-            <classpath refid="classpath"/>
+        <classpath refid="classpath"/>
+
+        <classpath>
+            <fileset dir="${build.project.webinf.lib}">
+                <include name="**/torque*.jar"/>
+            </fileset>
+        </classpath>
+
         </javac>
     </target>
 
@@ -363,7 +379,7 @@
     <!-- Build our version of Turbine easily                                -->
     <!-- ================================================================== -->
     <target name="build-turbine">
-        <exec executable="ant" dir="${turbine.dir}/build"/>
+        <exec executable="ant" dir="${turbine.dir}"/>
     </target>
 
     <!-- ================================================================== -->
@@ -376,9 +392,21 @@
     </target>
 
     <!-- ================================================================== -->
+    <!-- Build our version of Fulcrum easily                                -->
+    <!-- ================================================================== -->
+    <target name="build-fulcrum">
+        <exec executable="ant" dir="${fulcrum.dir}"/>
+    </target>
+
+    <!-- ================================================================== -->
     <!-- Upgrade our version of Turbine easily                              -->
     <!-- ================================================================== -->
     <target name="upgrade-turbine" depends="build-turbine">
+        <delete>
+            <fileset dir="${lib.dir}">
+                <include name="**/turbine*.jar"/>
+            </fileset>
+        </delete>
         <copy todir="${lib.dir}" filtering="no">
             <fileset dir="${turbine.dir}/bin">
                 <include name="**/turbine*.jar"/>
@@ -390,18 +418,39 @@
     <!-- Upgrade our version of Torque easily                               -->
     <!-- ================================================================== -->
     <target name="upgrade-torque" depends="build-torque">
+        <delete>
+            <fileset dir="${lib.dir}">
+                <include name="**/${torque.zip}"/>
+            </fileset>
+        </delete>
         <copy todir="${lib.dir}" filtering="no">
             <fileset dir="${torque.dir}/bin">
-                <include name="**/torque.zip"/>
+                <include name="**/${torque.zip}"/>
             </fileset>
         </copy>
     </target>
 
     <!-- ================================================================== -->
-    <!-- Upgrade our version of Torque and Turbine easily                   -->
+    <!-- Upgrade our version of Fulcrum easily                              -->
     <!-- ================================================================== -->
-    <target name="upgrade-torque-turbine" 
-            depends="upgrade-torque,upgrade-turbine">
+    <target name="upgrade-fulcrum" depends="build-fulcrum">
+        <delete>
+            <fileset dir="${lib.dir}">
+                <include name="**/${fulcrum.jar}"/>
+            </fileset>
+        </delete>
+        <copy todir="${lib.dir}" filtering="no">
+            <fileset dir="${fulcrum.dir}/bin">
+                <include name="**/fulcrum*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Upgrade our version of Fulcrum, Torque and Turbine easily          -->
+    <!-- ================================================================== -->
+    <target name="upgrade-jakarta" 
+            depends="upgrade-fulcrum,upgrade-torque,upgrade-turbine">
     </target>
 
     <!-- ================================================================== -->

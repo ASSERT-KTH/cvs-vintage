@@ -51,11 +51,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
-import java.sql.Connection;
 
 // Turbine classes
-import org.apache.turbine.services.db.om.NumberKey;
-import org.apache.turbine.services.db.util.Criteria;
+import org.apache.torque.om.NumberKey;
+import org.apache.torque.util.Criteria;
 import org.apache.turbine.util.SequencedHashtable;
 
 // Scarab classes
@@ -67,7 +66,6 @@ import org.tigris.scarab.om.ROptionOptionPeer;
 import org.tigris.scarab.om.AttributeValuePeer;
 import org.tigris.scarab.om.AttributeValue;
 
-import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.StringAttribute;
 

@@ -52,13 +52,13 @@ import java.util.List;
 import java.util.Vector;
 
 import org.apache.turbine.RunData;
-import org.apache.turbine.services.security.entity.User;
-import org.apache.turbine.services.security.entity.Role;
-import org.apache.turbine.services.security.TurbineSecurity;
-import org.apache.turbine.services.db.util.Criteria;
-import org.apache.turbine.services.db.om.BaseObject;
-import org.apache.turbine.services.db.om.ObjectKey;
-import org.apache.turbine.services.db.om.NumberKey;
+import org.apache.fulcrum.security.entity.User;
+import org.apache.fulcrum.security.entity.Role;
+import org.apache.fulcrum.security.TurbineSecurity;
+import org.apache.torque.util.Criteria;
+import org.apache.torque.om.BaseObject;
+import org.apache.torque.om.ObjectKey;
+import org.apache.torque.om.NumberKey;
 import org.apache.turbine.util.GenerateUniqueId;
 
 import org.tigris.scarab.services.module.ModuleEntity;
@@ -71,7 +71,7 @@ import org.tigris.scarab.om.Issue;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.10 2001/07/23 23:11:35 dlr Exp $
+    @version $Id: ScarabUserImpl.java,v 1.11 2001/08/02 07:11:38 jon Exp $
 */
 public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
 {    

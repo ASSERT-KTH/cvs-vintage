@@ -52,7 +52,6 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateSecureScreen;
 
 // Scarab Stuff
-import org.tigris.scarab.om.BaseScarabObject;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.pages.ScarabPage;
 
@@ -61,7 +60,7 @@ import org.tigris.scarab.pages.ScarabPage;
     for the Issue Entry templates.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.7 2001/07/17 21:40:30 jon Exp $
+    @version $Id: Default.java,v 1.8 2001/08/02 07:11:41 jon Exp $
 */
 public class Default extends TemplateSecureScreen
 {

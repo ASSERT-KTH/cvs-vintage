@@ -49,18 +49,18 @@ package org.tigris.scarab.security;
 import java.util.List;
 
 // Turbine
-import org.apache.turbine.services.db.util.Criteria;
+import org.apache.torque.util.Criteria;
 import org.apache.turbine.util.Log;
 import org.apache.turbine.util.TurbineException;
-import org.apache.turbine.services.security.TurbineSecurity;
-import org.apache.turbine.services.db.om.Persistent;
-import org.apache.turbine.services.security.entity.User;
-import org.apache.turbine.services.security.entity.Group;
-import org.apache.turbine.services.security.impl.db.entity
+import org.apache.fulcrum.security.TurbineSecurity;
+import org.apache.torque.om.Persistent;
+import org.apache.fulcrum.security.entity.User;
+import org.apache.fulcrum.security.entity.Group;
+import org.apache.fulcrum.security.impl.db.entity
     .TurbinePermissionPeer;
-import org.apache.turbine.services.security.impl.db.entity
+import org.apache.fulcrum.security.impl.db.entity
     .TurbineUserGroupRolePeer;
-import org.apache.turbine.services.security.impl.db.entity
+import org.apache.fulcrum.security.impl.db.entity
     .TurbineRolePermissionPeer;
 
 import org.tigris.scarab.services.module.ModuleEntity;
@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
  * Security wrapper around turbine's implementation
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TurbineDBScarabSecurityPull.java,v 1.1 2001/07/21 00:52:51 jmcnally Exp $
+ * @version $Id: TurbineDBScarabSecurityPull.java,v 1.2 2001/08/02 07:11:41 jon Exp $
 */
 public class TurbineDBScarabSecurityPull 
     extends DefaultScarabSecurityPull

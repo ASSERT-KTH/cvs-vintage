@@ -54,19 +54,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 // Turbine classes
-import org.apache.turbine.services.db.om.Persistent;
-import org.apache.turbine.services.db.om.ObjectKey;
-import org.apache.turbine.services.db.om.NumberKey;
-import org.apache.turbine.services.db.util.Criteria;
-import org.apache.turbine.services.cache.TurbineGlobalCacheService;
-import org.apache.turbine.services.cache.ObjectExpiredException;
-import org.apache.turbine.services.cache.CachedObject;
-import org.apache.turbine.services.cache.GlobalCacheService;
-import org.apache.turbine.services.TurbineServices;
-import org.apache.turbine.util.ObjectUtils;
-import org.apache.turbine.util.StringUtils;
-import org.apache.turbine.util.ParameterParser;
-import org.apache.turbine.util.Log;
+import org.apache.torque.om.Persistent;
+import org.apache.torque.om.ObjectKey;
+import org.apache.torque.om.NumberKey;
+import org.apache.torque.util.Criteria;
+import org.apache.fulcrum.cache.TurbineGlobalCacheService;
+import org.apache.fulcrum.cache.ObjectExpiredException;
+import org.apache.fulcrum.cache.CachedObject;
+import org.apache.fulcrum.cache.GlobalCacheService;
+import org.apache.fulcrum.TurbineServices;
 
 import org.tigris.scarab.util.ScarabException;
 

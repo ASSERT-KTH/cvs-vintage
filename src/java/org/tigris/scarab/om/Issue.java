@@ -57,16 +57,15 @@ import java.util.Date;
 import java.sql.Connection;
 
 // Turbine classes
-import org.apache.turbine.services.db.om.NumberKey;
-import org.apache.turbine.services.db.om.Persistent;
-import org.apache.turbine.services.db.util.Criteria;
+import org.apache.torque.om.NumberKey;
+import org.apache.torque.om.Persistent;
+import org.apache.torque.util.Criteria;
 import org.apache.turbine.util.SequencedHashtable;
-import org.apache.turbine.services.db.pool.DBConnection;
-import org.apache.turbine.services.db.map.DatabaseMap;
+import org.apache.torque.pool.DBConnection;
+import org.apache.torque.map.DatabaseMap;
 
 // Scarab classes
 import org.tigris.scarab.services.module.ModuleEntity;
-import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.security.ScarabSecurity;
 import org.tigris.scarab.security.SecurityFactory;
 import org.tigris.scarab.util.ScarabException;

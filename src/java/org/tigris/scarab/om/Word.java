@@ -47,19 +47,14 @@ package org.tigris.scarab.om;
  */ 
 
 // JDK classes
-import java.util.*;
+import java.util.Vector;
 
 // Turbine classes
-import org.apache.turbine.services.db.om.*;
-import org.apache.turbine.services.db.util.BasePeer;
-import org.apache.turbine.services.db.util.Criteria;
-import org.apache.turbine.util.ObjectUtils;
-import org.apache.turbine.util.StringUtils;
-import org.apache.turbine.util.ParameterParser;
-import org.apache.turbine.util.Log;
+import org.apache.torque.om.Persistent;
+import org.apache.torque.util.BasePeer;
 
 //Village classes
-import com.workingdogs.village.*;
+import com.workingdogs.village.Record;
 
 // Scarab classes
 import org.tigris.scarab.util.ScarabConstants;

@@ -47,20 +47,18 @@ package org.tigris.scarab.util.word;
  */
 
 // JDK classes
-import java.util.*;
 
 // Turbine classes
-import org.apache.turbine.services.db.om.*;
+import org.apache.torque.om.NumberKey;
 
 // Scarab classes
-import org.tigris.scarab.om.*;
-import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.om.AttributeValue;
 
 /**
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SearchIndex.java,v 1.2 2001/06/29 01:57:27 jmcnally Exp $
+ * @version $Id: SearchIndex.java,v 1.3 2001/08/02 07:11:43 jon Exp $
  */
 public interface SearchIndex
 {

@@ -48,7 +48,6 @@ package org.tigris.scarab.actions;
 
 import java.util.Iterator;
 import java.util.List;
-import java.math.BigDecimal;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateAction;
@@ -57,21 +56,13 @@ import org.apache.turbine.RunData;
 
 import org.apache.turbine.util.SequencedHashtable;
 
-import org.apache.turbine.services.db.util.Criteria;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.intake.model.Field;
 
 // Scarab Stuff
-import org.tigris.scarab.om.BaseScarabObject;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.attribute.OptionAttribute;
-import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.word.IssueSearch;
@@ -80,7 +71,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.15 2001/07/27 21:50:53 elicia Exp $
+    @version $Id: Search.java,v 1.16 2001/08/02 07:11:37 jon Exp $
 */
 public class Search extends TemplateAction
 {

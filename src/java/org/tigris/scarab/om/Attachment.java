@@ -46,16 +46,12 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-// JDK classes
-import java.util.*;
-
 // Turbine classes
-import org.apache.turbine.services.db.util.Criteria;
-import org.apache.turbine.services.db.om.*;
-import org.apache.turbine.util.ObjectUtils;
-import org.apache.turbine.util.StringUtils;
-import org.apache.turbine.util.ParameterParser;
-import org.apache.turbine.services.upload.FileItem;
+import org.apache.torque.util.Criteria;
+import org.apache.torque.om.Persistent;
+import org.apache.torque.om.NumberKey;
+
+import org.apache.fulcrum.upload.FileItem;
 
 import org.tigris.scarab.tool.FormatDate;
 

@@ -47,20 +47,17 @@ package org.tigris.scarab.om;
  */
 
 // JDK classes
-import java.util.*;
+import java.util.Vector;
 
 // Village classes
-import com.workingdogs.village.*;
 
 // Turbine classes
-import org.apache.turbine.services.security.entity.Group;
-import org.apache.turbine.services.db.util.BasePeer;
-import org.apache.turbine.services.db.util.Criteria;
-import org.apache.turbine.util.*;
-import org.apache.turbine.services.security.util.DataBackendException;
+import org.apache.fulcrum.security.entity.Group;
+import org.apache.torque.util.BasePeer;
+import org.apache.torque.util.Criteria;
+import org.apache.fulcrum.security.util.DataBackendException;
 
 // Local classes
-import org.tigris.scarab.om.map.*;
 import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.services.module.ModuleEntity;
 

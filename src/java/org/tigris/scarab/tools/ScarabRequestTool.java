@@ -47,16 +47,14 @@ package org.tigris.scarab.tools;
  */ 
 
 // Turbine
-import org.apache.turbine.services.security.entity.User;
-import org.apache.turbine.services.db.om.NumberKey;
-import org.apache.turbine.services.db.om.ObjectKey;
-import org.apache.turbine.services.db.om.ComboKey;
+import org.apache.torque.om.NumberKey;
+import org.apache.torque.om.ObjectKey;
+import org.apache.torque.om.ComboKey;
 import org.apache.turbine.RunData;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
-import org.apache.turbine.services.velocity.TurbineVelocity;
 import org.apache.turbine.services.template.TurbineTemplate;
-import org.apache.turbine.services.pool.Recyclable;
+import org.apache.fulcrum.pool.Recyclable;
 
 // Scarab
 import org.tigris.scarab.om.ScarabUser;

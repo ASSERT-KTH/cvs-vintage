@@ -46,16 +46,15 @@ package org.tigris.scarab.services.module;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.turbine.services.Service;
-import org.apache.turbine.services.db.om.ObjectKey;
+import org.apache.fulcrum.Service;
+import org.apache.torque.om.ObjectKey;
 
-import org.tigris.scarab.om.ScarabModule;
 
 /**
  * This is the interface that describes a ModuleService implementation
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleService.java,v 1.5 2001/07/19 21:30:07 jon Exp $
+ * @version $Id: ModuleService.java,v 1.6 2001/08/02 07:11:42 jon Exp $
  */
 public interface ModuleService extends Service
 {

@@ -46,13 +46,17 @@ package org.tigris.scarab.services.module;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.turbine.services.InitializationException;
-import org.apache.turbine.services.BaseService;
-import org.apache.turbine.services.db.om.ObjectKey;
-import org.apache.turbine.services.cache.*;
-import org.apache.turbine.services.*;
+import org.apache.fulcrum.InitializationException;
+import org.apache.fulcrum.BaseService;
+import org.apache.fulcrum.TurbineServices;
 
-import org.tigris.scarab.om.ScarabModule;
+import org.apache.torque.om.ObjectKey;
+
+import org.apache.fulcrum.cache.TurbineGlobalCacheService;
+import org.apache.fulcrum.cache.GlobalCacheService;
+import org.apache.fulcrum.cache.ObjectExpiredException;
+import org.apache.fulcrum.cache.CachedObject;
+
 import org.tigris.scarab.om.ScarabModulePeer;
 import org.tigris.scarab.util.ScarabException;
 
@@ -62,7 +66,7 @@ import org.tigris.scarab.util.ScarabException;
  * Scarab.properties file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleServiceImpl.java,v 1.7 2001/07/19 21:30:07 jon Exp $
+ * @version $Id: ModuleServiceImpl.java,v 1.8 2001/08/02 07:11:42 jon Exp $
  */
 public class ModuleServiceImpl extends BaseService 
                             implements ModuleService

@@ -47,7 +47,7 @@ package org.tigris.scarab.security;
  */ 
 
 // Turbine
-import org.apache.turbine.services.pool.InitableRecyclable;
+import org.apache.fulcrum.pool.InitableRecyclable;
 import org.apache.turbine.services.pull.ApplicationTool;
 import org.apache.turbine.RunData;
 //import org.apache.turbine.util.TurbineException;
@@ -61,7 +61,7 @@ import org.tigris.scarab.om.ScarabUser;
  * extends this class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefaultScarabSecurityPull.java,v 1.1 2001/07/21 00:52:51 jmcnally Exp $
+ * @version $Id: DefaultScarabSecurityPull.java,v 1.2 2001/08/02 07:11:41 jon Exp $
 */
 public class DefaultScarabSecurityPull
     implements ScarabSecurityPull, InitableRecyclable, ApplicationTool

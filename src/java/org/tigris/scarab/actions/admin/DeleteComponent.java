@@ -49,7 +49,7 @@ package org.tigris.scarab.actions.admin;
 // Turbine Stuff
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
-import org.apache.turbine.services.db.util.Criteria;
+import org.apache.torque.util.Criteria;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabModulePeer;
@@ -62,7 +62,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
     right now though. :-(
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: DeleteComponent.java,v 1.7 2001/07/19 21:30:06 jon Exp $
+    @version $Id: DeleteComponent.java,v 1.8 2001/08/02 07:11:37 jon Exp $
 */
 public class DeleteComponent extends RequireLoginFirstAction
 {

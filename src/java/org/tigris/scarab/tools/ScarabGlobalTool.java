@@ -47,7 +47,6 @@ package org.tigris.scarab.tools;
  */ 
 
 // Turbine
-import org.apache.turbine.services.pull.ApplicationTool;
 
 // Velocity
 import org.apache.velocity.app.FieldMethodizer;
@@ -64,7 +63,7 @@ import org.apache.velocity.app.FieldMethodizer;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.2 2001/07/17 21:40:31 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.3 2001/08/02 07:11:42 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {

@@ -47,7 +47,7 @@ package org.tigris.scarab.security;
  */ 
 
 // Turbine
-import org.apache.turbine.services.pool.InitableRecyclable;
+import org.apache.fulcrum.pool.InitableRecyclable;
 import org.apache.turbine.services.pull.ApplicationTool;
 import org.apache.turbine.RunData;
 //import org.apache.turbine.util.TurbineException;
@@ -60,7 +60,7 @@ import org.tigris.scarab.om.ScarabUser;
  * external implementation of security should be specified.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefaultScarabSecurity.java,v 1.6 2001/07/21 00:52:51 jmcnally Exp $
+ * @version $Id: DefaultScarabSecurity.java,v 1.7 2001/08/02 07:11:41 jon Exp $
 */
 public class DefaultScarabSecurity 
     implements ScarabSecurity

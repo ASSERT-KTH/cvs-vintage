@@ -58,7 +58,7 @@ import org.apache.turbine.RunData;
 
 import org.apache.turbine.util.SequencedHashtable;
 
-import org.apache.turbine.services.db.util.Criteria;
+import org.apache.torque.util.Criteria;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.intake.model.Field;
@@ -75,7 +75,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 /**
     This class is responsible for user-saved queries.
     @author <a href="mailto:elicai@collab.net">Elicia David</a>
-    @version $Id: SaveQuery.java,v 1.1 2001/07/26 22:32:50 elicia Exp $
+    @version $Id: SaveQuery.java,v 1.2 2001/08/02 07:11:37 jon Exp $
 */
 public class SaveQuery extends RequireLoginFirstAction
 {
