@@ -27,7 +27,9 @@
     <depend project="jsse"/>
     <depend project="jmx"/>
     <work nested="build/tomcat/classes"/>
+
     <home nested="build/tomcat"/>
+    <jar name="tomcat.jar"/>
     <jar name="lib/common/tomcat_core.jar"/>
     <jar name="lib/common/core_util.jar"/>
     <jar name="lib/container/container_util.jar"/>
