@@ -61,6 +61,7 @@ import java.io.StringWriter;
 import java.io.PrintWriter;
 
 import java.util.Date;
+import javax.servlet.ServletException;
 
 import org.apache.tomcat.util.Queue;
 
@@ -72,6 +73,36 @@ import org.apache.tomcat.util.Queue;
  */
 public class TomcatLogger extends Logger {
 
+    /**
+     * Converts a Throwable to a printable stack trace, including the
+     * nested root cause for a ServletException if applicable
+     * 
+     * @param t any Throwable, or ServletException, or null
+     **/
+    public static String throwableToString( Throwable t ) {
+	StringWriter sw = new StringWriter();
+	PrintWriter w = new PrintWriter(sw);
+	
+	if (t != null) {
+	    t.printStackTrace(w);
+	    if (t instanceof ServletException) {
+		Throwable cause = ((ServletException)t).getRootCause();
+		if (cause != null) {
+		    // we could use a StringManager here to get the
+		    // localized translation of "Root cause" , but
+		    // since it's going into a log, no user will see
+		    // it, and it's desirable that the log file is
+		    // predictable, so just use English
+		    String rootmsg = "Root cause:";
+		    w.println(rootmsg);
+		    cause.printStackTrace(w);
+		}
+	    }
+	}
+	w.flush();	// couldn't hurt...
+	return sw.toString();
+    }
+    
     /**
      * This is an entry that is created in response to every
      * Logger.log(...) call.
@@ -98,41 +129,42 @@ public class TomcatLogger extends Logger {
 	    return TomcatLogger.this.sink;
 	}
 
-	private String throwableToString( Throwable t ) {
-	    StringWriter sw = new StringWriter();
-	    PrintWriter w = new PrintWriter(sw);
-
-	    if (t != null)
-		t.printStackTrace(w);
-	    return sw.toString();
-	}
-	
 	/**
 	 * Format the log message nicely into a string.
 	 */
 	public String toString() {
-
-	    // custom output - do nothing
-	    if( TomcatLogger.this.custom )
-		return (t==null) ? message : message + " " + throwableToString( t );
 	    
-	    StringWriter sw = new StringWriter();
-	    PrintWriter w = new PrintWriter(sw);
+	    StringBuffer val = new StringBuffer();
 
-	    w.print("<"+TomcatLogger.this.getName()+"> ");
-	    if (TomcatLogger.this.timeStamp)
-		w.print(new Date(date).toString());
-	    w.print(' ');
+	    // custom output, now with timestamp
+	    // does anyone actually use non-custom logs?
+
+	    if( !TomcatLogger.this.custom ) {
+		val.append("<");
+		val.append(TomcatLogger.this.getName());
+		val.append("> ");
+	    }
+
+	    if (TomcatLogger.this.timeStamp) {
+		val.append(new Date(date).toString());
+		val.append(" ");
+	    }
 
 	    if (message != null)
-		w.print(message);
-	    
-	    if (t != null)
-		t.printStackTrace(w);
+		val.append(message);
 
-	    w.println("</"+TomcatLogger.this.getName()+"> ");
+	    if (t != null) {
+		val.append(" ");
+		val.append(throwableToString( t ));
+	    }
 
-	    return sw.toString();
+	    if( !TomcatLogger.this.custom ) {
+		val.append("</");
+		val.append(TomcatLogger.this.getName());
+		val.append("> ");
+	    }
+
+	    return val.toString();	    
 	}
     }
 
