@@ -24,7 +24,9 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMPMessage;
 import org.jboss.logging.Logger;
+import org.jboss.ejb.plugins.lock.JDBCOptimisticLock;
 
 /**
  * JDBCCreateEntityCommand executes an INSERT INTO query.
@@ -36,13 +38,12 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
+ * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class JDBCCreateEntityCommand
 {
-
    // Attributes ------------------------------------------------------
    protected JDBCStoreManager manager;
    protected JDBCEntityBridge entity;
@@ -105,6 +106,7 @@ public class JDBCCreateEntityCommand
             }
          } 
       }
+
       return insertFields;
    }
 
@@ -205,6 +207,14 @@ public class JDBCCreateEntityCommand
          log.debug("Executing SQL: " + insertEntitySQL);
          ps = con.prepareStatement(insertEntitySQL);
 
+         // set initial values for optimistic locking version field
+         JDBCCMPFieldBridge versionField = entity.getVersionField();
+         if(versionField != null) {
+            versionField.setInstanceValue(
+               ctx, JDBCOptimisticLock.getInitialValue(versionField)
+            );
+         }
+
          // set the parameters
          int index = 1;
          for(Iterator iter = insertFields.iterator(); iter.hasNext(); ) {
@@ -230,10 +240,14 @@ public class JDBCCreateEntityCommand
       }
       log.debug("Rows affected = " + rowsAffected);
 
-      // Mark the inserted fields as clean.
+      // Mark the inserted fields as clean
+      // and notify the optimistic lock
       for(Iterator iter = insertFields.iterator(); iter.hasNext(); ) {
          JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
          field.setClean(ctx);
+
+         // not used
+         // manager.fieldStateEventCallback(ctx, CMPMessage.CREATED, field, field.getInstanceValue(ctx));
       }
    }
 }
