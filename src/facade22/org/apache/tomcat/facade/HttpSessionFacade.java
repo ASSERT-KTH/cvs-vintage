@@ -251,7 +251,6 @@ final class HttpSessionFacade implements HttpSession {
     }
 
     public void setMaxInactiveInterval(int interval) {
-	checkValid();
 	realSession.getTimeStamp().setMaxInactiveInterval( interval );
     }
 
@@ -262,7 +261,7 @@ final class HttpSessionFacade implements HttpSession {
 
     // duplicated code, private
     private void checkValid() {
-	if (!realSession.isValid()) {
+	if (!realSession.getTimeStamp().isValid()) {
 	    throw new IllegalStateException
 		(sm.getString("standardSession.getAttributeNames.ise"));
 	}

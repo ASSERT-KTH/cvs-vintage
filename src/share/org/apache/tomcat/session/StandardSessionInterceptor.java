@@ -104,7 +104,8 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
     // -------------------- Tomcat request events --------------------
     public void engineInit( ContextManager cm ) throws TomcatException {
 	// set-up a per/container note for StandardManager
-	manager_note = cm.getNoteId( ContextManager.CONTAINER_NOTE, "tomcat.standardManager");
+	manager_note = cm.getNoteId( ContextManager.CONTAINER_NOTE,
+				     "tomcat.standardManager");
     }
 
     /**

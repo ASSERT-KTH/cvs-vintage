@@ -485,6 +485,7 @@ public class Request {
 	this.serverSession = serverSession;
     }
 
+    
     public Object getSession(boolean create) {
 	if( serverSession!=null ) {
 	    // if not null, it is validated by the session module

@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.18 2000/09/24 18:10:14 costin Exp $
- * $Revision: 1.18 $
- * $Date: 2000/09/24 18:10:14 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -72,7 +68,6 @@ import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
@@ -97,7 +92,7 @@ import org.apache.tomcat.util.StringManager;
  *
  * @author Craig R. McClanahan
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Revision: 1.18 $ $Date: 2000/09/24 18:10:14 $
+ * @version $Revision: 1.19 $ $Date: 2000/09/24 20:01:46 $
  */
 
 final class StandardSession

@@ -64,6 +64,7 @@ import org.apache.tomcat.util.*;
 import org.apache.tomcat.helper.RequestUtil;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.facade.*;
+import org.apache.tomcat.session.*;
 import java.io.*;
 import java.net.*;
 import java.security.*;
@@ -390,7 +391,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     /** Create the Facade for session.
      */
     public HttpSession getSession(boolean create) {
-	HttpSession realSession = (HttpSession)request.getSession( create );
+	ServerSession realSession = (ServerSession)request.getSession(create);
 	// No real session, return null
 	if( realSession == null ) {
 	    if( sessionFacade!= null) sessionFacade.recycle();

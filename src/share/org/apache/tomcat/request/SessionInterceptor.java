@@ -70,11 +70,16 @@ import javax.servlet.http.Cookie;
 
 /**
  * Will process the request and determine the session Id, and set it
- * in the Request.
- * It also marks the session as accessed.
+ * in the Request. It doesn't marks the session as accessed.
  *
- * This implementation only handles Cookies sessions, please extend or
- * add new interceptors for other methods.
+ * This interceptor doesn't deal with any of the Session internals -
+ * it just works with the sessionID. A pluggable session manager 
+ *  ( or user-space manager !) will deal with marking the session
+ * as accessed or setting the session implementation.
+ *
+ * This implementation only handles Cookies and URL rewriting sessions,
+ * please extend or add new interceptors for other methods.
+ *
  *
  */
 public class SessionInterceptor extends  BaseInterceptor

@@ -61,6 +61,7 @@ package org.apache.tomcat.util;
 
 import java.text.*;
 import java.util.*;
+import java.io.Serializable;
 
 // XXX XXX Need StringBuffer support !
 
@@ -72,7 +73,7 @@ import java.util.*;
  * @author James Todd [gonzo@eng.sun.com]
  * @author Costin Manolache
  */
-public final class MessageBytes implements Cloneable {
+public final class MessageBytes implements Cloneable, Serializable {
     public static final String DEFAULT_CHAR_ENCODING="8859_1";
     
     // primary type ( whatever is set as original value )
