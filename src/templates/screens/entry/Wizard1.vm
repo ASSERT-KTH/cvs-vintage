@@ -18,35 +18,38 @@
 
 <div class="listtable">
     <table width="100%" cellpadding="3" cellspacing="2" border="1">
+#* 
+<!-- Summary is not required here, but is in the ReportIssue Action for now.
+     Eventually, that should be optional as well. We can just not do the dedup
+     search if Summary is not a present attribute for this module.
+     
         <tr>
             <td width="120" class="a">
             #set ( $attrValue = $attrValues.get("SUMMARY") )
             #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
             #attrValueErrorMsg( $attrValue "Value" )<br/>
-            <strong>issue summary:</strong></td>
+            <strong>Summary:</strong></td>
             <td class="b">
-                <textarea name="$attrInput.Value.Key" rows="4" cols="40" class="text">
-                $!attrInput.Value
-                </textarea><br/>
+<textarea name="$attrInput.Value.Key" rows="4" cols="40" class="text">$!attrInput.Value</textarea><br/>
                 A short description of the issue.
             </td>
-        </tr>
-    
-#foreach ( $attKey in $attrValues )
-  
-  #set ( $attVal = $attrValues.get($attKey.toString().toUpperCase()) )
-  #if ( $attVal.isDedupeAttribute())
-     <tr>
+        </tr> -->
+*#
+
+#foreach ( $attVal in $attrValues )
+
+  #if ($attVal.isDedupeAttribute())
+    <tr>
         <td width="120" class="a">
-     ##set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
      #if ( $attVal.Attribute.AttributeType.ValidationKey )
         #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
      #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
         #set ( $field = "OptionId" )
+     #elseif ($attVal.Attribute.AttributeType.Name == "string" )
+        #set ( $field = "Value" )
      #end
 
      #if ( $attVal.isRequired() )
-        ## $attrInput.get($field).setRequired(true)
         <b>*</b>
      #end
      
@@ -54,13 +57,15 @@
      $attVal.Attribute.Name:
      </strong>
      
-
-    <font color="red">
         #attrValueErrorMsg ( $attVal $field )
-    </font>
+
     </td>
     <td class="b">
-    #attrValueLeafSelect ($attVal $field "")
+    #if ( $attVal.Attribute.AttributeType.Name == "string" )
+        #attrValueText ( $attVal "50" )
+    #else
+        #attrValueLeafSelect ($attVal $field "")
+    #end
     </td>
     </tr>
   #end
