@@ -49,7 +49,7 @@ package org.tigris.scarab.util;
 import java.util.Enumeration;
 
 // Turbine
-import org.apache.turbine.tool.RelativeTemplateLink;
+import org.apache.turbine.tool.TemplateLink;
 import org.apache.turbine.RunData;
 import org.apache.turbine.ParameterParser;
 import org.apache.turbine.Turbine;
@@ -64,9 +64,9 @@ import org.tigris.scarab.pages.ScarabPage;
     into the context to replace the $link that Turbine adds.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabLink.java,v 1.17 2001/11/30 23:06:06 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.18 2001/12/03 05:18:13 jmcnally Exp $
 */
-public class ScarabLink extends RelativeTemplateLink
+public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
 {
     private RunData data;
@@ -103,7 +103,7 @@ public class ScarabLink extends RelativeTemplateLink
      * @param t A String with the template name.
      * @return A TemplateLink.
      */
-    public RelativeTemplateLink setPage(String t)
+    public TemplateLink setPage(String t)
     {
         String moduleid = data.getParameters().getString(ScarabConstants.CURRENT_MODULE);
         if (moduleid != null && moduleid.length() > 0)
