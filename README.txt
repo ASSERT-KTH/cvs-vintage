@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.65 2004/02/05 10:13:54 dep4b Exp $
+$Id: README.txt,v 1.66 2004/02/11 12:06:10 dep4b Exp $
 
 Welcome to Scarab!
 
@@ -10,8 +10,8 @@ requirements for setting up the database.
 
 If you are doing development work with Scarab, please make sure to read 
 
-        http://scarab.tigris.org/development.html
         http://scarab-gen.tigris.org/nonav/HEAD/
+        http://scarab-gen.tigris.org/nonav/HEAD/howto/build-howto.html
 
 We appreciate your deciding to try Scarab out and appreciate constructive 
 feedback on your success (or failure...we hope not!) in getting the 
@@ -182,7 +182,7 @@ port settings of the application server
 If you already have an existing webserver or service running on ports
 8080 and 8005, and you are using Scarab's version of Tomcat, you will
 need to change the port number to another unused port number by editing
-the /tomcat/webapps/scarab.xml file.
+the /tomcat/conf/server.xml file.
 
 
 file permission settings
@@ -224,11 +224,11 @@ scarab
   |             <-- Ant task for migrating from b15 to b16
   +- lib
   +- www/repository
-  |             <-- These are the directoris storing .jar files used by Scarab.
+  |             <-- These are the directories storing JAR files used by Scarab.
   +- src        <-- This where the source files are stored.
   +- tomcat     <-- This is the included Tomcat configured to be ready to run with Scarab.
-  +- www        <-- This is where the website is stored.
-  +- xdocs      <-- xml versions of manuals (adminguide, userguide, etc)
+  +- www        <-- This is where the website homepage is stored
+  +- xdocs      <-- xml versions of manuals (admin guide, user guide, howtos etc)
 
 Within the /src directory you find following subdirectories...
 
@@ -501,8 +501,10 @@ NOTE: If you get a 'Server configuration denies access to data source'
 '-----------------------------------------------------------------------'
 
 To run the preconfigured Tomcat that comes with Scarab, all you need to do 
-is verify that the file /tomcat/webapps/scarab.xml is point to where you
-built Scarab (typically the value should be ../../target/scarab).
+is verify that the file /tomcat/webapps/scarab.xml has a <Context> docBase 
+pointing to where you built Scarab (typically the value should be ../../target/scarab).
+There are two different <Context> entries depending on how you are using Scarab for inplace
+development or not.
 
 cd tomcat/bin
 scarab.sh     <-- Unix
@@ -510,24 +512,18 @@ startup.bat <-- Win32
 
 Then, in your web browser, go to:
 
-    <http://my.server.com:8080/issues>
+    <http://localhost:8080/scarab>
 
-The following URL's also work the same by default:
-
-    <http://my.server.com:8080/s>
-    <http://my.server.com:8080/issue>
-    <http://my.server.com:8080/scarab/servlet/scarab>
 
 NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are 
       using the Tomcat that comes with Scarab, you can safely undefine
       this environment variable.
 
-NOTE: Substitute 'my.server.com' for the DNS name that the server is
-      running on.
+NOTE: Substitute 'localhost' for the DNS name that the server is
+      running on for remote access.
 
-NOTE: You can define your own URL by editing tomcat/webapps/scarab.xml or
-      /src/webapp/WEB-INF/web.xml and defining a different servlet mapping
-      and then rebuilding.
+NOTE: You can define your own URL by editing the WEB-INF/web.xml 
+	  and defining a different servlet mapping.
 
 ,-----------------------------------------------------------------------.
 | C U S T O M I Z I N G   S C A R A B                                   |
