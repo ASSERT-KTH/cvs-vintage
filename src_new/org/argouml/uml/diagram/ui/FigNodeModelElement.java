@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.100 2004/01/29 22:28:03 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.101 2004/02/03 07:06:58 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -456,10 +456,16 @@ public abstract class FigNodeModelElement
     /**
      * Overridden to paint shadows. This method supports painting shadows
      * for any FigNodeModelElement. Any Figs that are nested within the
-     * FigNodeModelElement will be shadowed.
-    **/
+     * FigNodeModelElement will be shadowed.<p>
+     *
+     * TODO: If g is not a Graphics2D shadows cannot be painted. This is
+     * a problem when saving the diagram as SVG.
+     *
+     * @param g is a Graphics that we paint this object on.
+     */
     public void paint(Graphics g) {
-        if (_shadowSize > 0) {
+        if (_shadowSize > 0
+	        && g instanceof Graphics2D) {
             int width = getWidth();
             int height = getHeight();
             int x = getX();
