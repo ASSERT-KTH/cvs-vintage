@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.87 2003/10/07 22:01:02 alexb Exp $
+// $Id: Main.java,v 1.88 2003/10/08 18:52:11 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,9 +113,8 @@ public class Main {
         if(javaVersion.startsWith("1.2") ||
            javaVersion.startsWith("1.1")){
             
-                JOptionPane.showMessageDialog(
-                    null, "Please use Java 1.3 or later", 
-                    "Please use Java 1.3 or later", JOptionPane.ERROR_MESSAGE);
+                System.err.println("You are using Java "+javaVersion+", "+
+                    "Please use Java 1.3 or later with ArgoUml");
                 ArgoSecurityManager.getInstance().setAllowExit(true);
                 System.exit(0);
         }
