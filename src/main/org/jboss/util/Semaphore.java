@@ -19,30 +19,40 @@ import java.io.PrintWriter;
  * and can be used instead of synchronized blocks
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class Semaphore 
 	implements Sync
 {
 	// Constants -----------------------------------------------------
+	private static final long DEADLOCK_TIMEOUT = 5*60*1000;
 
 	// Attributes ----------------------------------------------------
-	private boolean m_debug;
+	private final static boolean m_debug = true;
 	private int m_users;
+	private int m_allowed;
 	private Map m_logMap;
 
 	// Static --------------------------------------------------------
 
 	// Constructors --------------------------------------------------
-	public Semaphore(int users)
+	public Semaphore(int allowed)
 	{
-		if (users < 1) throw new IllegalArgumentException();
-		m_users = users;
+		if (allowed < 1) throw new IllegalArgumentException();
+		
+		m_users = 0;
+		m_allowed = allowed;
 		m_logMap = new HashMap();
-		m_debug = false;
 	}
 
 	// Public --------------------------------------------------------
+	public int getUsers() 
+	{
+		synchronized (this)
+		{
+			return m_users;
+		}
+	}
 
 	// Sync implementation ----------------------------------------------
 	public void acquire() throws InterruptedException
@@ -51,34 +61,32 @@ public class Semaphore
 		{
 			logAcquire();
 			
-			while (m_users <= 0)
+			// One user more called acquire, increase users
+			++m_users;
+			boolean waitSuccessful = false;
+			while (m_allowed <= 0)
 			{
-				// Wait (forever) until notified. To discover deadlocks,
-				// turn on debugging of this class
-				long start = System.currentTimeMillis();
-				wait(30000);
-				long end = System.currentTimeMillis();
-
-				if ((end - start) > 29000)
+				waitSuccessful = waitImpl(this);
+				if (!waitSuccessful) 
 				{
-					logDeadlock();
+					// Dealock was detected, restore status, 'cause it's like a release()
+					// that will probably be never called
+					--m_users;
+					++m_allowed;
 				}
 			}
-			--m_users;
+			--m_allowed;
 		}
 	}
-	public boolean attempt(long msecs) throws InterruptedException
-	{
-		// TODO...
-		return false;
-	}
+
 	public void release()
 	{
 		synchronized (this)
 		{
 			logRelease();
 			
-			++m_users;
+			--m_users;
+			++m_allowed;
 			notify();
 		}
 	}
@@ -92,6 +100,22 @@ public class Semaphore
 	// Package protected ---------------------------------------------
 
 	// Protected -----------------------------------------------------
+	protected boolean waitImpl(Object lock) throws InterruptedException
+	{
+		// Wait (forever) until notified. To discover deadlocks,
+		// turn on debugging of this class
+		long start = System.currentTimeMillis();
+		lock.wait(DEADLOCK_TIMEOUT);
+		long end = System.currentTimeMillis();
+
+		if ((end - start) > (DEADLOCK_TIMEOUT - 1000))
+		{
+			logDeadlock();
+			return false;
+		}
+		return true;
+	}
+	
 	protected void logAcquire()
 	{
 		if (m_debug) 
