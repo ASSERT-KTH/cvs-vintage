@@ -74,6 +74,10 @@ import javax.servlet.http.*;
  */
 public interface Request  {
 
+    // -------------------- Multiple JVM support --------------------
+    // GS, used by the load balancing layer
+    public String getJvmRoute();
+
     // -------------------- Basic Request properties --------------------
     public String getScheme() ;
 
@@ -91,9 +95,9 @@ public interface Request  {
     public String getServerName() ;
 
     public void setServerName(String serverName) ;
-    
+
     public int getServerPort() ;
-        
+
     public String getRemoteAddr() ;
 
     /** Expensive - should be implemented as a callback where
@@ -101,11 +105,11 @@ public interface Request  {
     */
     public String getRemoteHost() ;
 
-    // -------------------- Headers -------------------- 
+    // -------------------- Headers --------------------
     public String getHeader(String name) ;
 
     public Enumeration getHeaderNames() ;
-    
+
     public Enumeration getHeaders(String name) ;
 
     //-------------------- "Computed" properties --------------------
@@ -128,7 +132,7 @@ public interface Request  {
     public String getCharacterEncoding() ;
 
     // -------------------- Mapping --------------------
-    // Will be set by mappers or 
+    // Will be set by mappers or
     // by adapter
 
     /** Context - will be set by contextMap stage of request interceptors
@@ -168,7 +172,7 @@ public interface Request  {
 
 
     public Container getContainer() ;
-    
+
     public void setContainer(Container handler) ;
 
     // -------------------- Security --------------------
@@ -183,7 +187,7 @@ public interface Request  {
     void setRemoteUser(String s) ;
 
     boolean isSecure() ;
-    
+
 
     // -------------------- Session --------------------
     // Will be set by session interceptors
@@ -221,7 +225,7 @@ public interface Request  {
 
     // -------------------- Input --------------------
 
-    // XXX review - do we need both reader and IS ? 
+    // XXX review - do we need both reader and IS ?
     public BufferedReader getReader() 	throws IOException;
 
     public ServletInputStream getInputStream() 	throws IOException;
@@ -246,7 +250,7 @@ public interface Request  {
     public void setContextManager( ContextManager cm );
 
     public ContextManager getContextManager();
-    
+
     // -------------------- Internal/deprecated--------------------
     // Derived from parsing query string and body (for POST)
 

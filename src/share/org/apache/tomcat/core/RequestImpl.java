@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.19 2000/02/17 07:52:19 costin Exp $
- * $Revision: 1.19 $
- * $Date: 2000/02/17 07:52:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.20 2000/02/17 12:15:03 shachor Exp $
+ * $Revision: 1.20 $
+ * $Date: 2000/02/17 12:15:03 $
  *
  * ====================================================================
  *
@@ -82,6 +82,11 @@ import javax.servlet.http.*;
  * @author Alex Cruikshank [alex@epitonic.com]
  */
 public class RequestImpl  implements Request {
+
+    // GS, used by the load balancing layer in the Web Servers
+    // jvmRoute == the name of the JVM inside the plugin.
+    protected String jvmRoute;
+
     // XXX used by forward to override, need a better
     // mechanism
     protected String requestURI;
@@ -130,7 +135,7 @@ public class RequestImpl  implements Request {
     protected String servletName;
     protected ServletWrapper handler = null;
     Container container;
-    
+
     protected String mappedPath = null;
 
     protected String scheme;
@@ -138,7 +143,7 @@ public class RequestImpl  implements Request {
     protected String protocol;
     protected MimeHeaders headers;
     protected ServletInputStream in;
-    
+
     protected int serverPort;
     protected String remoteAddr;
     protected String remoteHost;
@@ -152,27 +157,32 @@ public class RequestImpl  implements Request {
  	recycle(); // XXX need better placement-super()
     }
 
+    // GS - return the jvm load balance route
+    public String getJvmRoute() {
+	    return jvmRoute;
+    }
+
     public String getScheme() {
-        return scheme; 
+        return scheme;
     }
 
     public String getMethod() {
-        return method; 
+        return method;
     }
 
     public String getRequestURI() {
         if( requestURI!=null) return requestURI;
-	return requestURI; 
+	return requestURI;
     }
 
     // XXX used by forward
     public String getQueryString() {
 	if( queryString != null ) return queryString;
-        return queryString; 
+        return queryString;
     }
 
     public String getProtocol() {
-        return protocol; 
+        return protocol;
     }
 
     // XXX server IP and/or Host:
@@ -239,7 +249,7 @@ public class RequestImpl  implements Request {
 
     public void setPathTranslated(String s ) {
     }
-    
+
     public String getPathTranslated() {
 	// This is the correct Path_translated, previous implementation returned
 	// the real path for this ( i.e. the URI ).
@@ -264,7 +274,7 @@ public class RequestImpl  implements Request {
     public String getRemoteUser() {
 	if( remoteUser!=null)
 	    return remoteUser;
-	
+
 	// Using the Servlet 2.2 semantics ...
 	//  return request.getRemoteUser();
 	java.security.Principal p = getUserPrincipal();
@@ -340,7 +350,7 @@ public class RequestImpl  implements Request {
 	return sessionIdFromURL;
     }
 
-    
+
     public void setContext(Context context) {
 	this.context = context;
     }
@@ -373,19 +383,19 @@ public class RequestImpl  implements Request {
     }
 
     public HttpSession getSession(boolean create) {
-	// use the cached value 
+	// use the cached value
 	if( serverSession!=null )
 	    return serverSession;
 
 	SessionManager sM=context.getSessionManager();
-	
+
 	// if the interceptors found a request id, use it
 	if( reqSessionId != null ) {
 	    // we have a session !
 	    serverSession=sM.findSession( context, reqSessionId );
 	    if( serverSession!=null) return serverSession;
 	}
-	
+
 	if( ! create )
 	    return null;
 
@@ -399,7 +409,7 @@ public class RequestImpl  implements Request {
 	// request internals.
 	// hardcoded - will change!
 	response.setSessionId( reqSessionId );
-	
+
 	return serverSession;
     }
 
@@ -415,11 +425,11 @@ public class RequestImpl  implements Request {
 	}
     }
 
-    // -------------------- LookupResult 
+    // -------------------- LookupResult
     public ServletWrapper getWrapper() {
 	return handler;
     }
-    
+
     public void setWrapper(ServletWrapper handler) {
 	this.handler=handler;
     }
@@ -427,7 +437,7 @@ public class RequestImpl  implements Request {
     public Container getContainer() {
 	return container;
     }
-    
+
     public void setContainer(Container container) {
 	this.container=container;
     }
@@ -486,7 +496,7 @@ public class RequestImpl  implements Request {
 	// Or - if you alredy have it parsed, call setParameters()
 	this.queryString = queryString;
     }
-    
+
     public void setSession(HttpSession serverSession) {
 	this.serverSession = serverSession;
     }
@@ -575,6 +585,7 @@ public class RequestImpl  implements Request {
 	didCookies = false;
 	container=null;
 	handler=null;
+    jvmRoute = null;
 	scheme = "http";// no need to use Constants
 	method = "GET";
 	requestURI="/";
@@ -594,7 +605,7 @@ public class RequestImpl  implements Request {
     public MimeHeaders getMimeHeaders() {
 	return headers;
     }
-    
+
     public String getHeader(String name) {
         return headers.getHeader(name);
     }
@@ -602,22 +613,22 @@ public class RequestImpl  implements Request {
     public Enumeration getHeaderNames() {
         return headers.names();
     }
-    
+
     public ServletInputStream getInputStream() throws IOException {
-    	return in;    
+    	return in;
     }
 
     public int getServerPort() {
         return serverPort;
     }
-    
+
     public String getRemoteAddr() {
         return remoteAddr;
     }
-    
+
     public String getRemoteHost() {
 	return remoteHost;
-    }    
+    }
 
     /** Fill in the buffer. This method is probably easier to implement than
 	previous.
@@ -626,7 +637,7 @@ public class RequestImpl  implements Request {
      */
     // you need to override this method if you want non-empty InputStream
     public  int doRead( byte b[], int off, int len ) throws IOException {
-	return -1; // not implemented - implement getInputStream 
+	return -1; // not implemented - implement getInputStream
     }
 
 
@@ -637,7 +648,7 @@ public class RequestImpl  implements Request {
     public int doRead() throws IOException {
 	return -1;
     }
-    
+
     // -------------------- "cooked" info --------------------
     // Hints = return null if you don't know,
     // and Tom will find the value. You can also use the static
@@ -666,7 +677,7 @@ public class RequestImpl  implements Request {
     }
 
     public void setBody( StringBuffer body ) {
-	// ??? 
+	// ???
     }
 
     public void setServerPort(int serverPort ) {

@@ -4,7 +4,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -12,7 +12,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -20,15 +20,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -56,7 +56,7 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 
 /*
@@ -77,13 +77,13 @@ import org.apache.tomcat.service.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-/* Deprecated - must be rewriten to the connector model.  
+/* Deprecated - must be rewriten to the connector model.
  */
 public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
     StringManager sm = StringManager.getManager("org.apache.tomcat.service");
-    
+
     ContextManager contextM;
-    
+
     public Ajp12ConnectionHandler() {
     }
 
@@ -96,17 +96,17 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 	    contextM=(ContextManager)value;
 	}
     }
-    
+
     public void setContextManager( ContextManager contextM ) {
 	this.contextM=contextM;
     }
 
     public void processConnection(TcpConnection connection, Object[] theData) {
-	
+
         try {
 	    Socket socket=connection.getSocket();
 	    socket.setSoLinger( true, 100);
-	    //	    socket.setSoTimeout( 1000); // or what ? 
+	    //	    socket.setSoTimeout( 1000); // or what ?
 
 	    //	    RequestImpl request = new RequestImpl();
 	    AJP12RequestAdapter reqA = new AJP12RequestAdapter(contextM, socket);
@@ -116,7 +116,7 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 
 	    InputStream in=socket.getInputStream();
 	    OutputStream out=socket.getOutputStream();
-	    
+
 	    //	    request.setRequestAdapter(reqA);
 	    //	    response.setResponseAdapter( resA );
 	    resA.setOutputStream(socket.getOutputStream());
@@ -129,14 +129,14 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 		return;
 	    if (resA.getStatus() >= 400) {
 		resA.finish();
-		
+
 		socket.close();
 		return;
-	    } 
+	    }
 
 	    // resolve the server that we are for
 
-	    // XXX is this needed ?? 
+	    // XXX is this needed ??
 	    int contentLength = reqA.getFacade().getIntHeader("content-length");
 	    if (contentLength != -1) {
 		BufferedServletInputStream sis =
@@ -164,7 +164,7 @@ class AJP12RequestAdapter extends RequestImpl {
     Ajpv12InputStream ajpin;
     ContextManager contextM;
     boolean shutdown=false;
-    
+
     public int doRead() throws IOException {
 	return ajpin.read();
     }
@@ -180,7 +180,7 @@ class AJP12RequestAdapter extends RequestImpl {
 	in = new BufferedServletInputStream( this );
 	ajpin = new Ajpv12InputStream(sin);
     }
-    
+
     protected void readNextRequest() throws IOException {
 	String dummy,token1,token2;
 	int marker;
@@ -201,72 +201,72 @@ class AJP12RequestAdapter extends RequestImpl {
 		//		System.out.println("AJP: CP=" + contextPath);
 		if( contextPath!= null )
 		    context=contextM.getContext( contextPath );
-		
+
 		servletName = ajpin.readString(null);         //Servlet
-		
+
 		//		System.out.println("AJP: servlet=" + servletName );
-		
+
 		serverName = ajpin.readString(null);            //Server hostname
 
 		dummy = ajpin.readString(null);               //Apache document root
-		
+
 		pathInfo = ajpin.readString(null);               //Apache parsed path-info
 		//		System.out.println("AJP: PI=" + pathInfo );
 
 		// XXX Bug in mod_jserv !!!!!
 		pathTranslated = ajpin.readString(null);               //Apache parsed path-translated
 		//		System.out.println("AJP: PT=" + pathTranslated );
-		
+
 		queryString = ajpin.readString(null);         //query string
 		remoteAddr = ajpin.readString("");            //remote address
 		remoteHost = ajpin.readString("");            //remote host
-		
+
 		remoteUser = ajpin.readString(null);                 //remote user
 		//		System.out.println("Remote User: " + remoteUser);
-		
+
 		authType = ajpin.readString(null);                 //auth type
-		
+
 		dummy = ajpin.readString(null);                 //remote port
-		
+
 		method = ajpin.readString(null);                //request method
 		//		System.out.println("AJP: Meth=" + method );
-		
+
 		requestURI = ajpin.readString("");             //request uri
 		if(contextPath!=null && contextPath.length() >0 )
 		    lookupPath=requestURI.substring( contextPath.length() + 1 );
 		//		System.out.println("AJP: URI: " + requestURI + " CP:" + contextPath + " LP: " + lookupPath);
-		
+
 		dummy = ajpin.readString(null);                   //script filename
 		//		System.out.println("AJP: Script filen=" + dummy);
-		
+
 		dummy = ajpin.readString(null);                   //script name
 		//		System.out.println("AJP: Script name=" + dummy);
-		
+
 		serverName = ajpin.readString("");                //server name
 		try {
 		    serverPort = Integer.parseInt(ajpin.readString("80")); //server port
 		} catch (Exception any) {
 		    serverPort = 80;
 		}
-		
+
 		dummy = ajpin.readString("");                     //server protocol
 		//		System.out.println("AJP: Server proto=" + dummy);
 		dummy = ajpin.readString("");                     //server signature
 		//		System.out.println("AJP: Server sign=" + dummy);
 		dummy = ajpin.readString("");                     //server software
 		//		System.out.println("AJP: Server softw=" + dummy);
-		dummy = ajpin.readString("");                     //JSERV ROUTE
-		//		System.out.println("AJP: JServ Route=" + dummy);
+		jvmRoute = ajpin.readString("");                     //JSERV ROUTE
+
                 /**
-                 * The two following lines are commented out because we don't 
-                 * want to depend on unreleased versions of the jserv module. 
+                 * The two following lines are commented out because we don't
+                 * want to depend on unreleased versions of the jserv module.
                  *                                            - costin
                  */
                 //		dummy = ajpin.readString("");                     //SSL_CLIENT_DN
                 //		dummy = ajpin.readString("");                     //SSL_CLIENT_IDN
 		// XXX all dummy fields will be used after core is changed to make use
 		// of them!
-		
+
 		break;
 
 	    case 3: // Header
@@ -297,7 +297,7 @@ class AJP12RequestAdapter extends RequestImpl {
 			    // stopping everything doesn't work - need to figure
 			    // out what happens with the threads ( XXX )
 			    System.exit(0);
-			    
+
 			    shutdown=true;
 			    return;
 			}
@@ -314,11 +314,11 @@ class AJP12RequestAdapter extends RequestImpl {
 
 	    case -1:
 		throw new java.io.IOException("Stream closed prematurely");
-            
+
 
 	    default:
 		throw new java.io.IOException("Stream broken");
-            
+
 
 	    } // while
             } // switch
@@ -328,8 +328,8 @@ class AJP12RequestAdapter extends RequestImpl {
 	    System.err.println("Uncaught exception" + e);
 	    e.printStackTrace();
         }
-	
-	// REQUEST_URI includes query string 
+
+	// REQUEST_URI includes query string
 	int idQ= requestURI.indexOf("?");
 	if ( idQ > -1) {
 	    requestURI = requestURI.substring(0, idQ);
@@ -344,23 +344,23 @@ class AJP12RequestAdapter extends RequestImpl {
 
 
 	//processCookies();
-	
+
 	contentLength = headers.getIntHeader("content-length");
 	contentType = headers.getHeader("content-type");
-	    
+
 	// XXX
 	// detect for real whether or not we have more requests
 	// coming
-	
+
 	// XXX
 	// Support persistent connection in AJP21
-	//moreRequests = false;	
-    }    
+	//moreRequests = false;
+    }
 
 }
 
 
-// Ajp use Status: instead of Status 
+// Ajp use Status: instead of Status
 class AJP12ResponseAdapter extends HttpResponseAdapter {
     /** Override setStatus
      */
@@ -375,7 +375,7 @@ class Ajpv12InputStream extends BufferedInputStream {
 
     // UTF8 is a strict superset of ASCII.
     final static String CHARSET = "UTF8";
-    
+
     public Ajpv12InputStream(InputStream in) {
         super(in);
     }
@@ -391,7 +391,7 @@ class Ajpv12InputStream extends BufferedInputStream {
             return -1;
 
         int b2 = read();
-        if ( b2==-1) 
+        if ( b2==-1)
             return -1;
 
         return ((int)((b1 << 8) | b2)) & 0xffff;
@@ -400,10 +400,10 @@ class Ajpv12InputStream extends BufferedInputStream {
     public String readString(String def) throws java.io.IOException {
         int len = readWord();
 
-        if( len == 0xffff) 
+        if( len == 0xffff)
             return def;
 
-        if( len == -1) 
+        if( len == -1)
             throw new java.io.IOException("Stream broken");
 
         byte[] b = new byte[len];
