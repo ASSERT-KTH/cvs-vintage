@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.40 2002/02/26 03:53:50 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.41 2002/02/28 03:34:23 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -283,6 +283,9 @@ Bug No.  Description
 	 feature.  Also, the boxes were mis-labeled.
 
 6341	 Fix the "guess home" logic so that it can work on Mac OS
+
+6717	 Fix a problem where the Http10 Connector would fail to parse the 
+	 HTTP headers if the headers are extremely big.
 
 Connectors:
 
