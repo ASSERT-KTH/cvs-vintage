@@ -84,7 +84,11 @@ public class SQL92Schema implements AbstractSchema
     */
    public Relationship addFKConstraint(String name, String parentEndName, Table parent, String childEndName, Table child, String[] fkColumnNames)
    {
-      return addFKConstraint(name, parentEndName, parent, parent.getPkFields(), childEndName, child, fkColumnNames);
+      RelationshipEnd leftEnd = new RelationshipEnd(parentEndName, parent, false, parent.getPkFields());
+      RelationshipEnd rightEnd = new RelationshipEnd(childEndName, child, true, fkColumnNames);
+      parent.addConstraintEnd(leftEnd);
+      child.addConstraintEnd(rightEnd);
+      return addFKConstraint(name, leftEnd, rightEnd);
    }
 
    /**
@@ -99,27 +103,16 @@ public class SQL92Schema implements AbstractSchema
     */
    public Relationship addFKConstraint(String name, String parentEndName, Table parent, String[] fkColumnNames, String childEndName, Table child)
    {
-      return addFKConstraint(name, parentEndName, parent, fkColumnNames, childEndName, child, child.getPkFields());
-   }
-
-   /**
-    * Add a foreign key constraint referencing the a arbitrary unqiue key of the parent
-    * @param name the name of the constraint
-    * @param parentEndName a name used to identify this constraint from the parent
-    * @param parent the parent Table
-    * @param pkColumnNames column names in the parent table in this constraint
-    * @param childEndName a name used to identify this constraint from the child
-    * @param child the child Table
-    * @param fkColumnNames column names in the child table in this constraint
-    * @return a Relationship describing this constraint
-    */
-   public Relationship addFKConstraint(String name, String parentEndName, Table parent, String[] pkColumnNames, String childEndName, Table child, String[] fkColumnNames)
-   {
-      RelationshipEnd leftEnd = new RelationshipEnd(parentEndName, parent, false, pkColumnNames);
-      RelationshipEnd rightEnd = new RelationshipEnd(childEndName, child, true, fkColumnNames);
-      Relationship cons = new Relationship(name, leftEnd, rightEnd);
+      RelationshipEnd leftEnd = new RelationshipEnd(parentEndName, parent, true, fkColumnNames);
+      RelationshipEnd rightEnd = new RelationshipEnd(childEndName, child, false, child.getPkFields());
       parent.addConstraintEnd(leftEnd);
       child.addConstraintEnd(rightEnd);
+      return addFKConstraint(name, leftEnd, rightEnd);
+   }
+
+   private Relationship addFKConstraint(String name, RelationshipEnd leftEnd, RelationshipEnd rightEnd)
+   {
+      Relationship cons = new Relationship(name, leftEnd, rightEnd);
       constraints.put(cons.getName(), cons);
       return cons;
    }

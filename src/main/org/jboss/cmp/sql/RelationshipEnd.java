@@ -12,6 +12,7 @@ package org.jboss.cmp.sql;
 import org.jboss.cmp.schema.AbstractAssociation;
 import org.jboss.cmp.schema.AbstractAssociationEnd;
 import org.jboss.cmp.schema.AbstractClass;
+import org.jboss.cmp.query.Path;
 
 public class RelationshipEnd implements AbstractAssociationEnd
 {
@@ -89,5 +90,43 @@ public class RelationshipEnd implements AbstractAssociationEnd
       }
       buf.append(")");
       return buf.toString();
+   }
+
+   public String getIsNullCondition(boolean not, Path path)
+   {
+      StringBuffer buf = new StringBuffer();
+      if (collection)
+      {
+         // fk end
+         buf.append("(");
+         for (int i = 0; i < columnNames.length; i++)
+         {
+            if (i > 0)
+            {
+               buf.append(" AND ");
+            }
+            buf.append(path.getRoot().getAlias()).append(".").append(columnNames[i]);
+            buf.append(not ? " IS NOT NULL" : " IS NULL");
+         }
+         buf.append(")");
+      }
+      else
+      {
+         // pk end
+         String alias = path.toString("_");
+         if (not == false)
+            buf.append("NOT ");
+         buf.append("EXISTS(SELECT 1 FROM ");
+         buf.append(peer.getType().getName()).append(' ').append(alias);
+         buf.append(" WHERE ");
+         buf.append(getJoinCondition(path.getRoot().getAlias(), alias));
+         buf.append(')');
+      }
+      return buf.toString();
+   }
+
+   public String toString()
+   {
+      return name;
    }
 }

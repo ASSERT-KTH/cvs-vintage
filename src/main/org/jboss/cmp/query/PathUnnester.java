@@ -79,7 +79,10 @@ public class PathUnnester extends QueryCloner
       {
          NamedRelation left = addJoinsFromPath(newQuery, path);
          Path newPath = new Path(left);
-         newPath.addStep((AbstractAttribute) lastStep);
+         if (lastStep instanceof AbstractAttribute)
+            newPath.addStep((AbstractAttribute) lastStep);
+         else
+            newPath.addStep((AbstractAssociationEnd) lastStep);
          return newPath;
       }
    }

@@ -31,7 +31,9 @@ import org.jboss.cmp.query.QueryVisitor;
 import org.jboss.cmp.query.RangeRelation;
 import org.jboss.cmp.query.Relation;
 import org.jboss.cmp.query.SubQuery;
+import org.jboss.cmp.query.Expression;
 import org.jboss.cmp.schema.AbstractType;
+import org.jboss.cmp.schema.AbstractAttribute;
 
 /**
  * Transformer that produces (pure) SQL92 text from a Query
@@ -196,8 +198,22 @@ public class SQL92Generator implements QueryVisitor
    public Object visit(IsNull expression, Object param)
    {
       StringBuffer buf = (StringBuffer) param;
-      expression.getExpr().accept(this, buf);
-      buf.append(expression.isNot() ? " IS NOT NULL" : " IS NULL");
+      Expression expr = expression.getExpr();
+      if (expr instanceof Path == false)
+      {
+         throw new UnsupportedOperationException();
+      }
+      Path path = (Path) expr;
+      if (path.getLastStep() instanceof AbstractAttribute)
+      {
+         expr.accept(this, buf);
+         buf.append(expression.isNot() ? " IS NOT NULL" : " IS NULL");
+      }
+      else
+      {
+         RelationshipEnd end = (RelationshipEnd) path.getLastStep();
+         buf.append(end.getIsNullCondition(expression.isNot(), path));
+      }
       return buf;
    }
 
