@@ -16,7 +16,7 @@
 package org.columba.mail.pop3;
 
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.List;
 
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.WorkerStatusController;
@@ -35,7 +35,6 @@ import org.columba.mail.pop3.parser.SizeListParser;
 import org.columba.mail.pop3.parser.UIDListParser;
 import org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter;
 import org.columba.mail.pop3.protocol.POP3Protocol;
-import java.util.List;
 
 /**
  * @author freddy
@@ -145,7 +144,7 @@ public class POP3Store {
 
 		isLogin(worker);
 
-		 return protocol.deleteMessage(index);
+		return protocol.deleteMessage(index);
 	}
 
 	/** 
@@ -227,8 +226,9 @@ public class POP3Store {
 
 		String rawString =
 			protocol.fetchMessage(new Integer(index).toString(), worker);
-		if ( rawString.length()==0 ) return null;
-		
+		if (rawString.length() == 0)
+			return null;
+
 		// pipe through preprocessing filter
 		if (popItem.getBoolean("enable_pop3preprocessingfilter", false))
 			rawString = modifyMessage(rawString);

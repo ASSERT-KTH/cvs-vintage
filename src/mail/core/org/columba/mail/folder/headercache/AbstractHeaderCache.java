@@ -27,7 +27,6 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.BooleanCompressor;
-import org.columba.mail.folder.Folder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
@@ -44,8 +43,6 @@ public abstract class AbstractHeaderCache {
 	protected File headerFile;
 
 	private boolean headerCacheLoaded;
-
-	protected Folder folder;
 
 	protected String[] columnNames;
 
@@ -64,10 +61,8 @@ public abstract class AbstractHeaderCache {
 	/**
 	 * @param folder
 	 */
-	public AbstractHeaderCache(Folder folder) {
-		this.folder = folder;
-
-		headerFile = new File(folder.getDirectoryFile(), ".header");
+	public AbstractHeaderCache(File headerFile) {
+		this.headerFile = headerFile;
 
 		headerList = new HeaderList();
 
@@ -156,10 +151,10 @@ public abstract class AbstractHeaderCache {
 					load(worker);
 				} catch (Exception e) {
 					e.printStackTrace();
-					
+
 					headerCacheLoaded = true;
 					headerList = new HeaderList();
-					
+
 					return headerList;
 				}
 			}

@@ -23,6 +23,7 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
 
 /**
@@ -33,7 +34,7 @@ import org.columba.mail.message.HeaderList;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class RemoteHeaderCache extends AbstractHeaderCache {
+public class RemoteHeaderCache extends AbstractFolderHeaderCache {
 
 	/**
 	 * Constructor for RemoteHeaderCache.
@@ -62,9 +63,6 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 				worker.setProgressBarValue(i);
 
 			ColumbaHeader h = new ColumbaHeader();
-
-			Object uid = p.readObject();
-			h.set("columba.uid", uid);
 
 			loadHeader(p, h);
 
@@ -102,12 +100,32 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 			// fetch the message size, too
 			h.set("columba.size", new Integer(0));
 
-			p.writeObject(h.get("columba.uid"));
-
 			saveHeader(p, h);
 		}
 
 		closeOutputStream();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.headercache.AbstractHeaderCache#loadHeader(java.io.ObjectInputStream, org.columba.mail.message.HeaderInterface)
+	 */
+	protected void loadHeader(ObjectInputStream p, HeaderInterface h)
+		throws Exception {
+
+		Object uid = p.readObject();
+		h.set("columba.uid", uid);
+		super.loadHeader(p, h);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.headercache.AbstractHeaderCache#saveHeader(java.io.ObjectOutputStream, org.columba.mail.message.HeaderInterface)
+	 */
+	protected void saveHeader(ObjectOutputStream p, HeaderInterface h)
+		throws Exception {
+
+		p.writeObject(h.get("columba.uid"));
+
+		super.saveHeader(p, h);
 	}
 
 }

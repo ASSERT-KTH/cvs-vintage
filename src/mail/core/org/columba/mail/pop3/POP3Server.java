@@ -21,7 +21,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.Config;
@@ -66,7 +65,7 @@ public class POP3Server {
 	}
 
 	public void save() throws Exception {
-		headerCache.save();
+		headerCache.save(null);
 	}
 
 	public File getConfigFile() {
@@ -113,7 +112,7 @@ public class POP3Server {
 	protected boolean existsLocally(Object uid, HeaderList list)
 		throws Exception {
 
-		for (Enumeration e = headerCache.getHeaderList().keys();
+		for (Enumeration e = headerCache.getHeaderList(null).keys();
 			e.hasMoreElements();
 			) {
 			Object localUID = e.nextElement();
@@ -132,7 +131,7 @@ public class POP3Server {
 		throws Exception {
 		for (Iterator it = uidList.iterator(); it.hasNext();) {
 			Object serverUID = it.next();
-		// for (int i = 0; i < uidList.size(); i++) {
+			// for (int i = 0; i < uidList.size(); i++) {
 			// Object serverUID = uidList.get(i);
 
 			//System.out.println("server message uid: " + serverUID);
@@ -146,24 +145,24 @@ public class POP3Server {
 	}
 
 	public List synchronize(List newList) throws Exception {
-		
+
 		LinkedList headerUids = new LinkedList();
-		Enumeration keys = headerCache.getHeaderList().keys();
-		while( keys.hasMoreElements() ) {
+		Enumeration keys = headerCache.getHeaderList(null).keys();
+		while (keys.hasMoreElements()) {
 			headerUids.add(keys.nextElement());
 		}
-			LinkedList newUids = new LinkedList( newList );
-		
-		ListTools.substract(newUids,headerUids);
-		
+		LinkedList newUids = new LinkedList(newList);
+
+		ListTools.substract(newUids, headerUids);
+
 		ListTools.substract(headerUids, new ArrayList(newList));
 		Iterator it = headerUids.iterator();
-		while( it.hasNext() ) {
-			headerCache.getHeaderList().remove(it.next());
+		while (it.hasNext()) {
+			headerCache.getHeaderList(null).remove(it.next());
 		}
-		
+
 		return newUids;
-		
+
 	}
 
 	public void deleteMessages(int[] indexes, WorkerStatusController worker)
@@ -196,7 +195,7 @@ public class POP3Server {
 		header.set("columba.pop3uid", uid);
 		header.set("columba.flags.recent", Boolean.TRUE);
 
-		headerCache.getHeaderList().add(header, uid);
+		headerCache.getHeaderList(null).add(header, uid);
 
 		return message;
 	}

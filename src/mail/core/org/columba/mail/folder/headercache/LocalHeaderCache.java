@@ -39,7 +39,7 @@ import org.columba.mail.parser.Rfc822Parser;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class LocalHeaderCache extends AbstractHeaderCache {
+public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 	public LocalHeaderCache(CachedFolder folder) {
 		super(folder);
@@ -136,9 +136,6 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 			// read current number of message
 			ois.readInt();
 			*/
-			
-			Integer uid = new Integer(ois.readInt());
-			h.set("columba.uid", uid);
 
 			loadHeader(ois, h);
 
@@ -164,12 +161,11 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 		}
 		((LocalFolder) folder).setNextMessageUid(nextUid);
 		//worker.setDisplayText(null);
-		
+
 		worker.setProgressBarValue(capacity);
-		
+
 		closeInputStream();
-		
-	
+
 	}
 
 	/**
@@ -207,11 +203,9 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 
 			h = (ColumbaHeader) headerList.getHeader(uid);
 
-			p.writeInt(((Integer) h.get("columba.uid")).intValue());
-
 			saveHeader(p, h);
 		}
-		
+
 		closeOutputStream();
 	}
 
@@ -283,6 +277,28 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 			}
 
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.headercache.AbstractHeaderCache#loadHeader(java.io.ObjectInputStream, org.columba.mail.message.HeaderInterface)
+	 */
+	protected void loadHeader(ObjectInputStream p, HeaderInterface h)
+		throws Exception {
+		Integer uid = new Integer(p.readInt());
+		h.set("columba.uid", uid);
+
+		super.loadHeader(p, h);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.headercache.AbstractHeaderCache#saveHeader(java.io.ObjectOutputStream, org.columba.mail.message.HeaderInterface)
+	 */
+	protected void saveHeader(ObjectOutputStream p, HeaderInterface h)
+		throws Exception {
+
+		p.writeInt(((Integer) h.get("columba.uid")).intValue());
+
+		super.saveHeader(p, h);
 	}
 
 }
