@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.general;
 
 import java.awt.Component;
@@ -25,7 +26,9 @@ import javax.swing.*;
 
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
+import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -34,7 +37,7 @@ public class GeneralPanel extends JPanel implements ActionListener {
 	JTextField markTextField;
 
 	JLabel codepageLabel;
-	JButton codepageButton;
+	JComboBox codepageComboBox;
 
 	JCheckBox emptyTrashCheckBox;
 
@@ -161,12 +164,22 @@ public class GeneralPanel extends JPanel implements ActionListener {
                                         "general",
                                         "locale"));
 		codepagePanel.add(codepageLabel);
-		codepageButton = new JButton(Locale.getDefault().getDisplayName());
-		codepageButton.setEnabled(false);
-		codepageButton.setActionCommand("CODEPAGE");
-		codepageButton.addActionListener(this);
-		codepageLabel.setLabelFor(codepageButton);
-		codepagePanel.add(codepageButton);
+		codepageComboBox = new JComboBox(GlobalResourceLoader.getAvailableLocales());
+                codepageComboBox.setRenderer(new DefaultListCellRenderer() {
+                        public Component getListCellRendererComponent(
+                                                JList list, Object value,
+                                                int index, boolean isSelected, boolean hasFocus) {
+                                
+                                JLabel label = (JLabel)super.getListCellRendererComponent(
+                                                list, value, index, isSelected, hasFocus);
+                                label.setText(((Locale)value).getDisplayName());
+                                return label;
+                        }
+                });
+		codepageComboBox.setActionCommand("LOCALE");
+		codepageComboBox.addActionListener(this);
+		codepageLabel.setLabelFor(codepageComboBox);
+		codepagePanel.add(codepageComboBox);
 		add(codepagePanel);
 		//LOCALIZE
 		emptyTrashCheckBox = new JCheckBox("Empty trash on exit");
@@ -208,71 +221,13 @@ public class GeneralPanel extends JPanel implements ActionListener {
 		add(Box.createVerticalGlue());
 	}
 
-	protected JMenu createSubMenu(
-		Locale[] locales,
-		int startIndex,
-		int stopIndex) {
-		JMenu menu = new JMenu("more..");
-
-		for (int i = startIndex; i < stopIndex; i++) {
-			JMenuItem item = new JMenuItem(locales[i].getDisplayName());
-			menu.add(item);
-		}
-
-		return menu;
-	}
-
 	public void actionPerformed(ActionEvent ev) {
 		String str = ev.getActionCommand();
 
-		if (str.equals("CODEPAGE")) {
-			JPopupMenu menu = new JPopupMenu();
-			JMenu selectedMenu = null;
-			Locale[] locales = Locale.getAvailableLocales();
-			int counter = 0;
-			boolean firstMenu = true;
-			for (int i = 0; i < locales.length; i++) {
-				Locale locale = (Locale) locales[i];
-
-				if (firstMenu == true) {
-					if (counter < 10) {
-						JMenuItem item = new JMenuItem(locale.getDisplayName());
-						menu.add(item);
-					} else {
-						firstMenu = false;
-					}
-				} else {
-					if (counter % 10 == 0) {
-						JMenu submenu = createSubMenu(locales, i - 10, i);
-						if (menu.getComponents().length <= 10) {
-							menu.add(submenu);
-							selectedMenu = submenu;
-						} else {
-							selectedMenu.add(submenu);
-							selectedMenu = submenu;
-						}
-
-						counter = 0;
-					}
-				}
-
-				counter++;
-
-				/*
-				System.out.println("locale name:"+locale.getDisplayName() );
-				System.out.println("locale language:"+locale.getDisplayLanguage() );
-				System.out.println("locale variant:"+locale.getDisplayVariant() );
-				System.out.println("locale country:"+locale.getCountry() );
-				System.out.println("locale language:"+locale.getLanguage() );
-				System.out.println("locale language2:"+locale.getISO3Country() );
-				System.out.println("locale language3:"+locale.getISO3Language() );
-				System.out.println("locale tostring:"+locale.toString() );
-				*/
-
-			}
-
-			JButton button = (JButton) ev.getSource();
-			menu.show(button, button.getX(), button.getY());
+		if (str.equals("LOCALE")) {
+                        Locale.setDefault((Locale)codepageComboBox.getSelectedItem());
+                        GlobalResourceLoader.reload();
+                        //update GUI
 		}
 	}
 }
