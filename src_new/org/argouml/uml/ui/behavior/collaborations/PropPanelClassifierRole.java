@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.46 2004/12/02 19:30:01 mvw Exp $
+// $Id: PropPanelClassifierRole.java,v 1.47 2004/12/12 21:04:52 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLLinkedList;
-import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLMultiplicityComboBox2;
 import org.argouml.uml.ui.UMLMultiplicityComboBoxModel;
 import org.argouml.uml.ui.UMLMutableLinkedList;
@@ -89,12 +88,6 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 		 getGeneralizationScroll());
 	addField(Translator.localize("label.specializations"),
 		 getSpecializationScroll());
-
-	JList connectList =
-	    new UMLList(new UMLClassifierRoleAssociationRoleListModel(this,
-								      null,
-								      true),
-			true);
 	addField(Translator.localize("label.associationrole-ends"),
 		 getAssociationEndScroll());
 
