@@ -28,7 +28,7 @@
 <input type="submit" value="Done"  name="eventSubmit_doDone" />
 </div>
 
-<h3>Attribute group details</h3>
+<h3>Attribute group information</h3>
 
 #set ($agGroup = $intake.AttributeGroup.mapTo($group))
 <div class="axial">
@@ -52,7 +52,7 @@
 #if (!$group.Attributes.isEmpty())
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th></th>
+<th>Select</th>
 <th>Attribute name</th>
 <th>Per project name</th>
 <th>Active</th>

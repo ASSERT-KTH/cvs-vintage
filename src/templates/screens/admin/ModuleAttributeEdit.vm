@@ -12,10 +12,6 @@ $page.setTitle("Edit Module Attribute '$attribute.Name'")
 $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.</p>
 #else
 
-<p>
-On this screen, one can modify a module's Attribute information.
-</p>
-
 <form action="$link.setPage("admin,ModuleAttributeEdit.vm")" method="post">
 <input type="hidden" name="action" value="admin.ModuleAttributeEdit" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,AttributeOptionSelect.vm" />
@@ -29,7 +25,7 @@ On this screen, one can modify a module's Attribute information.
 <input type="submit" value="Done"  name="eventSubmit_doDone" />
 </div>
 
-<h3>Attribute Info</h3>
+<h3>Attribute Information</h3>
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
@@ -76,9 +72,9 @@ On this screen, one can modify a module's Attribute information.
   </div>
 #else
 
-<table width="70%" border="1" cellspacing="2" cellpadding="2">
+<table width="100%" border="1" cellspacing="2" cellpadding="2">
 <tr>
- <th>&#160;</th>
+ <th>Select</th>
  <th>Parent attribute option(s)</th>
  <th>Display Name</th>
  <th>Active</th>
