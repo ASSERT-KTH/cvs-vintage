@@ -127,7 +127,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 #foreach ($group in $groups)
 ## DEDUPE
 ## Only display dedupe if there are more than one active attribute group
- #if ($velocityCount == $issueDedupeSequence && $module.getAttributeGroups($issueType, true).size() > 1)
+ #if ($velocityCount == $issueDedupeSequence && $module.getAttributeGroups($issueType, false).size() > 1)
  <tr>
 #if (!$issueTypeLock)
    <td>&#160;</td>
