@@ -36,7 +36,7 @@ import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.gui.util.wizard.WizardTextField;
+import org.columba.core.gui.util.WizardTextField;
 import org.columba.core.main.MainInterface;
 
 class LocationStep extends AbstractStep implements ActionListener {

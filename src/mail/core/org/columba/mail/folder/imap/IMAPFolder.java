@@ -477,7 +477,7 @@ public class IMAPFolder extends RemoteFolder {
 			((IMAPFolder) destFolder).getImapPath(),
 			uids,
 			
-			getImapPath());
+		getImapPath());
 
 		//			mailbox was modified
 		changed = true;

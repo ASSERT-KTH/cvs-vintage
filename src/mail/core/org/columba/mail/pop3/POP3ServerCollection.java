@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
-import org.columba.core.event.ModelChangeListener;
-import org.columba.core.event.ModelChangedEvent;
+import org.columba.mail.pop3.event.ModelChangeListener;
+import org.columba.mail.pop3.event.ModelChangedEvent;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;

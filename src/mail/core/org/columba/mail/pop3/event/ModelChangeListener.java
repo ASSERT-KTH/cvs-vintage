@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.core.event;
+package org.columba.mail.pop3.event;
 
 public interface ModelChangeListener {
 	

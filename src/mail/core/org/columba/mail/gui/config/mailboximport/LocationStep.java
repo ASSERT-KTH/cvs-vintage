@@ -33,7 +33,7 @@ import net.javaprog.ui.wizard.DataLookup;
 import net.javaprog.ui.wizard.DataModel;
 
 import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.gui.util.wizard.WizardTextField;
+import org.columba.core.gui.util.WizardTextField;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;

@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.core.gui.util.wizard;
+package org.columba.core.gui.util;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

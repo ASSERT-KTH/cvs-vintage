@@ -32,7 +32,7 @@ import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.DefaultDataLookup;
 
 import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.gui.util.wizard.WizardTextField;
+import org.columba.core.gui.util.WizardTextField;
 import org.columba.mail.util.MailResourceLoader;
 
 class OutgoingServerStep extends AbstractStep {
