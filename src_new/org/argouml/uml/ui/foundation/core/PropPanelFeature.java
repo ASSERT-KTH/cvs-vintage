@@ -1,4 +1,4 @@
-// $Id: PropPanelFeature.java,v 1.9 2004/07/18 12:27:56 mkl Exp $
+// $Id: PropPanelFeature.java,v 1.10 2004/07/24 15:47:16 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,8 +30,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.argouml.i18n.Translator;
 import org.argouml.swingext.Orientation;
-import org.argouml.uml.ui.UMLButtonPanel;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLLinkedList;
 
@@ -121,9 +121,8 @@ public abstract class PropPanelFeature extends PropPanelModelElement {
     
     protected JPanel getVisibilityPanel() {
         if (visibilityPanel == null) {
-            visibilityPanel =
-		new UMLButtonPanel(
-			new UMLElementOwnershipVisibilityButtonGroup(this));
+            visibilityPanel = new UMLModelElementVisibilityRadioButtonPanel(
+                    Translator.localize("UMLMenu", "label.visibility"), true);
         }
         return visibilityPanel;
     }

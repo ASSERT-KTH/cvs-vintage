@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociation.java,v 1.35 2004/07/17 13:10:41 kataka Exp $
+// $Id: PropPanelAssociation.java,v 1.36 2004/07/24 15:47:16 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,13 +27,12 @@ package org.argouml.uml.ui.foundation.core;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.TitledBorder;
 
 import org.argouml.i18n.Translator;
-
-import org.argouml.swingext.Orientation;
 import org.argouml.swingext.GridLayout2;
+import org.argouml.swingext.Orientation;
 import org.argouml.uml.ui.PropPanelButton;
-import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.util.ConfigLoader;
 
@@ -67,7 +66,7 @@ public class PropPanelAssociation extends PropPanelRelationship {
 	// addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
 	addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
 	addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
-        addField(Translator.localize("UMLMenu", "label.modifiers"), _modifiersPanel);
+        add(_modifiersPanel);
 
 	addSeperator();
 
@@ -102,7 +101,9 @@ public class PropPanelAssociation extends PropPanelRelationship {
     private void initialize() { 
 
         _modifiersPanel =
-            new JPanel(new GridLayout2(0, 2, GridLayout2.ROWCOLPREFERRED));          
+            new JPanel(new GridLayout2());        
+        _modifiersPanel.setBorder(
+                new TitledBorder(Translator.localize("UMLMenu", "label.modifiers")));
         _modifiersPanel.add(
             new UMLGeneralizableElementAbstractCheckBox());
         _modifiersPanel.add(

@@ -1,4 +1,4 @@
-// $Id: PropPanelInterface.java,v 1.38 2004/07/24 10:30:47 mkl Exp $
+// $Id: PropPanelInterface.java,v 1.39 2004/07/24 15:47:16 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,7 +59,7 @@ public class PropPanelInterface extends PropPanelClassifier {
 	  modifiersPanel.add(new UMLCheckBox(Translator.localize("UMLMenu", "checkbox.root-uc"),this,new UMLReflectionBooleanProperty("isRoot",mclass,"isRoot","setRoot")));
 	*/
 	add( _modifiersPanel);
-	addField(Translator.localize("UMLMenu", "label.namespace-visibility"), getNamespaceVisibilityPanel());
+	add(getNamespaceVisibilityPanel());
 
 	addSeperator();
 

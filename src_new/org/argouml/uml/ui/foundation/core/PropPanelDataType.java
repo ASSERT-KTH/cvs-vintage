@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.40 2004/07/24 10:30:47 mkl Exp $
+// $Id: PropPanelDataType.java,v 1.41 2004/07/24 15:47:16 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,11 +69,10 @@ public class PropPanelDataType extends PropPanelClassifier {
         addField(Translator.localize("UMLMenu", "label.namespace"),
                 getNamespaceComboBox());
         add(_modifiersPanel);
-        addField(Translator.localize("UMLMenu", "label.namespace-visibility"),
-                getNamespaceVisibilityPanel());
-
+        
         addSeperator();
 
+        add(getNamespaceVisibilityPanel());
         addField(Translator.localize("UMLMenu", "label.client-dependencies"),
                 getClientDependencyScroll());
         addField(Translator.localize("UMLMenu", "label.supplier-dependencies"),

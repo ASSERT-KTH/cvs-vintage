@@ -1,4 +1,4 @@
-// $Id: PropPanelAttribute.java,v 1.41 2004/07/17 13:10:41 kataka Exp $
+// $Id: PropPanelAttribute.java,v 1.42 2004/07/24 15:47:16 mkl Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,14 +26,13 @@
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
 // Refactored by: jaap.branderhorst@xs4all.nl
-// $Id: PropPanelAttribute.java,v 1.41 2004/07/17 13:10:41 kataka Exp $
+// $Id: PropPanelAttribute.java,v 1.42 2004/07/24 15:47:16 mkl Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
-
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
@@ -75,7 +74,7 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
         // but a simple text field. Bob Tarling 12 Feb 2004.
 	addField(Translator.localize("UMLMenu", "label.initial-value"), new UMLInitialValueComboBox(this));
 
-        add(new UMLModelElementVisibilityRadioButtonPanel(Translator.localize("UMLMenu", "label.visibility"), true));
+        add(getVisibilityPanel());
         add(getChangeabilityRadioButtonPanel());
         add(getOwnerScopeCheckbox());
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelClass.java,v 1.50 2004/07/24 10:30:47 mkl Exp $
+// $Id: PropPanelClass.java,v 1.51 2004/07/24 15:47:16 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,7 +69,7 @@ public class PropPanelClass extends PropPanelClassifier {
 	addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 	_modifiersPanel.add(new UMLClassActiveCheckBox());
 	add(_modifiersPanel);
-	addField(Translator.localize("UMLMenu", "label.namespace-visibility"), getNamespaceVisibilityPanel());
+	add(getNamespaceVisibilityPanel());
 
 	addSeperator();
 

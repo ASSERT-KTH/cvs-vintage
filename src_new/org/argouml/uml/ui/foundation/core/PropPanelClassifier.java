@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifier.java,v 1.44 2004/07/24 10:30:47 mkl Exp $
+// $Id: PropPanelClassifier.java,v 1.45 2004/07/24 15:47:16 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -132,7 +132,7 @@ abstract public class PropPanelClassifier extends PropPanelNamespace {
     private void initialize() { 
 
         _modifiersPanel =
-            new JPanel(new GridLayout2(0, 2, GridLayout2.ROWCOLPREFERRED)); 
+            new JPanel(new GridLayout2()); 
         _modifiersPanel.setBorder(
                 new TitledBorder(Translator.localize("UMLMenu", "label.modifiers")));
         _modifiersPanel.add(
@@ -141,7 +141,7 @@ abstract public class PropPanelClassifier extends PropPanelNamespace {
             new UMLGeneralizableElementLeafCheckBox());
         _modifiersPanel.add(
             new UMLGeneralizableElementRootCheckBox());
-
+       
     }
 
     public void addDataType() {
