@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.19 2000/05/20 00:26:56 craigmcc Exp $
- * $Revision: 1.19 $
- * $Date: 2000/05/20 00:26:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.20 2000/06/11 19:08:54 mandar Exp $
+ * $Revision: 1.20 $
+ * $Date: 2000/06/11 19:08:54 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -149,7 +149,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
         }
     }
 
-    TagLibraryInfoImpl(JspCompilationContext ctxt, String prefix, String uriIn) 
+    public TagLibraryInfoImpl(JspCompilationContext ctxt, String prefix, String uriIn) 
         throws IOException, JasperException
     {
         super(prefix, uriIn);

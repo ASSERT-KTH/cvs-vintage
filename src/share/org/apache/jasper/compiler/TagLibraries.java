@@ -71,15 +71,16 @@ import org.apache.jasper.JasperException;
  * the taglib directive. 
  *
  * @author Anil K. Vijendran
+ * @author Mandar Raje
  */
 public class TagLibraries {
     
-    TagLibraries(ClassLoader cl) {
+    public TagLibraries(ClassLoader cl) {
         this.tagLibInfos = new Hashtable();
         this.cl = cl;
     }
     
-    void addTagLibrary(String prefix, TagLibraryInfoImpl tli) {
+    public void addTagLibrary(String prefix, TagLibraryInfoImpl tli) {
         tagLibInfos.put(prefix, tli);
     }
     
