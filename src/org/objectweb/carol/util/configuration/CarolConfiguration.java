@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,12 +22,11 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolConfiguration.java,v 1.16 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: CarolConfiguration.java,v 1.17 2005/02/17 16:48:44 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
 
-//java import
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -38,7 +37,6 @@ import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
-import org.objectweb.carol.jndi.ns.NameServiceException;
 import org.objectweb.carol.jndi.ns.NameServiceManager;
 
 import org.objectweb.util.monolog.api.LoggerFactory;
@@ -127,6 +125,7 @@ public class CarolConfiguration {
      */
     public static final String JNDI_FILE_NAME = "jndi.properties";
 
+
     /**
      * init the Carol configuration, A server can call this static method for
      * instantiate the carol communication layer
@@ -148,7 +147,7 @@ public class CarolConfiguration {
     /**
      * Constructor Read the communication context
      */
-    public CarolConfiguration() throws RMIConfigurationException {
+    private CarolConfiguration() throws RMIConfigurationException {
         if (!configurationLoaded) {
             loadCarolConfiguration();
         }
@@ -406,7 +405,7 @@ public class CarolConfiguration {
         //            if (startJNDI) {
         //                //jvmProps.putAll(((RMIConfiguration)
         // rmiConfigurationTable.get(defaultRMI)).getJndiProperties());
-        //				jvmProps.setProperty("java.naming.factory.initial",
+        //            jvmProps.setProperty("java.naming.factory.initial",
         // CarolDefaultValues.MULTI_JNDI);
         //            }
         //    }
@@ -419,15 +418,8 @@ public class CarolConfiguration {
             if (TraceCarol.isDebugCarol()) {
                 TraceCarol.debugCarol("Start non started Name Servers");
             }
-            try {
-                NameServiceManager.startNonStartedNS();
-            } catch (NameServiceException nse) {
-                String msg = "Can't start Name Servers";
-                TraceCarol.error(msg, nse);
-                throw new RMIConfigurationException(msg);
-            }
+            NameServiceManager.startNonStartedNS();
         }
-
     }
 
     /**

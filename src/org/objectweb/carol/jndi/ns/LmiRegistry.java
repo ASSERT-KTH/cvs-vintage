@@ -22,10 +22,12 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: LmiRegistry.java,v 1.4 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: LmiRegistry.java,v 1.5 2005/02/17 16:48:44 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
+
+import java.util.Properties;
 
 import org.objectweb.carol.util.configuration.TraceCarol;
 
@@ -35,6 +37,11 @@ import org.objectweb.carol.util.configuration.TraceCarol;
  * @version 1.0, 15/01/2003
  */
 public class LmiRegistry implements NameService {
+
+    /**
+     * Hostname to use
+     */
+    private String host = null;
 
     /**
      * port number (0 for default)
@@ -88,4 +95,27 @@ public class LmiRegistry implements NameService {
     public int getPort() {
         return 0;
     }
+
+    /**
+     * Set the address to use for bind
+     * @param host hostname/ip address
+     */
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    /**
+     * @return hostname/ip to use
+     */
+     public String getHost() {
+         return host;
+     }
+
+     /**
+      * Set the configuration properties of the protocol
+      * @param p configuration properties
+      */
+     public void setConfigProperties(Properties p) {
+
+     }
 }

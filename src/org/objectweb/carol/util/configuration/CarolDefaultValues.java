@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,12 +22,11 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolDefaultValues.java,v 1.13 2005/02/04 17:03:23 el-vadimo Exp $
+ * $Id: CarolDefaultValues.java,v 1.14 2005/02/17 16:48:44 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
 
-//java import
 import java.util.Properties;
 import java.util.StringTokenizer;
 
@@ -41,122 +40,137 @@ public class CarolDefaultValues {
     /**
      * Carol prefix
      */
-    public static String CAROL_PREFIX = "carol";
+    public static final String CAROL_PREFIX = "carol";
+
+    /**
+     * Server mode property (if true, this means that carol is running in a server which export objects)
+     */
+    public static final String SERVER_MODE = CAROL_PREFIX + ".server.mode";
+
+    /**
+     * Port number to use in server mode case (iiop)
+     */
+    public static final String  SERVER_IIOP_PORT = CAROL_PREFIX + ".iiop.server.port";
+
+    /**
+     * Ssl Port number to use in server mode case (iiop)
+     */
+    public static final String  SERVER_SSL_IIOP_PORT = CAROL_PREFIX + ".iiop.server.sslport";
 
     /**
      * JNDI Prefix
      */
-    public static String JNDI_PREFIX = "jndi";
+    public static final String JNDI_PREFIX = "jndi";
 
     /**
      * JVM Prefix
      */
-    public static String JVM_PREFIX = "jvm";
+    public static final String JVM_PREFIX = "jvm";
 
     /**
      * name service class prefix
      */
-    public static String NS_PREFIX = "NameServiceClass";
+    public static final String NS_PREFIX = "NameServiceClass";
 
     /**
      * portable remote object Prefix
      */
-    public static String PRO_PREFIX = "PortableRemoteObjectClass";
+    public static final String PRO_PREFIX = "PortableRemoteObjectClass";
 
     /**
      * jndi factory Prefix
      */
-    public static String JNDI_FACTORY_PREFIX = "java.naming.factory.initial";
+    public static final String JNDI_FACTORY_PREFIX = "java.naming.factory.initial";
 
     /**
      * jndi url Prefix
      */
-    public static String JNDI_URL_PREFIX = "java.naming.provider.url";
+    public static final String JNDI_URL_PREFIX = "java.naming.provider.url";
 
     /**
      * jndi pkgs Prefix
      */
-    public static String JNDI_PKGS_PREFIX = "java.naming.factory.url.pkgs";
+    public static final String JNDI_PKGS_PREFIX = "java.naming.factory.url.pkgs";
 
     /**
      * carol url Prefix
      */
-    public static String URL_PREFIX = "url";
+    public static final String URL_PREFIX = "url";
 
     /**
      * carol jrmp local call optimization
      */
-    public static String LOCAL_JRMP_PROPERTY = "rmi.local.call";
+    public static final String LOCAL_JRMP_PROPERTY = "rmi.local.call";
 
     /**
      * carol factory Prefix
      */
-    public static String FACTORY_PREFIX = "context.factory";
+    public static final String FACTORY_PREFIX = "context.factory";
 
     /**
      * start name service Prefix
      */
-    public static String START_NS_PREFIX = "start.ns";
+    public static final String START_NS_PREFIX = "start.ns";
 
     /**
      * start ns key
      */
-    public static String START_NS_KEY = "carol.start.ns";
+    public static final String START_NS_KEY = "carol.start.ns";
 
     /**
      * start rmi key
      */
-    public static String START_RMI_KEY = "carol.start.rmi";
+    public static final String START_RMI_KEY = "carol.start.rmi";
 
     /**
      * start jndi key
      */
-    public static String START_JNDI_KEY = "carol.start.jndi";
+    public static final String START_JNDI_KEY = "carol.start.jndi";
 
     /**
      * default activation key
      */
-    public static String DEFAULT_PROTOCOLS_KEY = "carol.protocols.default";
+    public static final String DEFAULT_PROTOCOLS_KEY = "carol.protocols.default";
 
     /**
      * acativation key
      */
-    public static String PROTOCOLS_KEY = "carol.protocols";
+    public static final String PROTOCOLS_KEY = "carol.protocols";
 
     /**
      * start ns key
      */
-    public static String MULTI_RMI_PREFIX = "multi";
+    public static final String MULTI_RMI_PREFIX = "multi";
 
     /**
      * start prod key
      */
-    public static String MULTI_PROD = "org.objectweb.carol.rmi.multi.MultiPRODelegate";
+    public static final String MULTI_PROD = "org.objectweb.carol.rmi.multi.MultiPRODelegate";
 
     /**
      * start jndi key
      */
-    public static String MULTI_JNDI = "org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory";
+    public static final String MULTI_JNDI = "org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory";
 
     /**
      * interceptor prefix
      */
-    public static String INTERCEPTOR_PKGS_PREFIX = "interceptor.pkgs";
+    public static final String INTERCEPTOR_PKGS_PREFIX = "interceptor.pkgs";
 
     /**
      * interceptor prefix
      */
-    public static String INTERCEPTOR_VALUES_PREFIX = "interceptors";
+    public static final String INTERCEPTOR_VALUES_PREFIX = "interceptors";
 
     /**
      * System port property
      */
-    public static String PORT_NUMBER_PROPERTY = "rmi.server.port";
+    public static final String PORT_NUMBER_PROPERTY = "rmi.server.port";
 
     /**
      * Hashtable mapping between default en rmi name
      */
-    public static Properties mapping = new Properties();
+    private static Properties mapping = new Properties();
 
     static {
         mapping.setProperty("rmi", "jrmp");
@@ -169,7 +183,7 @@ public class CarolDefaultValues {
     /**
      * return protocol name from url
      * @return protocol name
-     * @param protocol jndi url
+     * @param url protocol jndi url
      */
     public static String getRMIProtocol(String url) {
         if (url != null) {
@@ -179,5 +193,12 @@ public class CarolDefaultValues {
         } else {
             return null;
         }
+    }
+
+    /**
+     *  Utility class, no constructor
+     */
+    private CarolDefaultValues() {
+
     }
 }

@@ -22,12 +22,11 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RMIConfiguration.java,v 1.13 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: RMIConfiguration.java,v 1.14 2005/02/17 16:48:44 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
 
-//java import
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -36,14 +35,19 @@ import java.util.StringTokenizer;
  * Class <code> RmiConfiguration </code> implement the Properties way
  * representing the rmi configuration
  * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/07/2002
+ * @author Florent Benoit
  */
 public class RMIConfiguration {
 
     /**
+     * Default hostname
+     */
+    public static final String DEFAULT_HOST = "localhost";
+
+    /**
      * RMI Architecture name
      */
-    public String rmiName = null;
+    private String rmiName = null;
 
     /**
      * Portable Remote Delegate class for this protocol
@@ -51,9 +55,9 @@ public class RMIConfiguration {
     private String pro = null;
 
     /**
-     * Intitail JNDI factory class for this protocol
+     * Host for this protocol name service
      */
-    //private String factory = null;
+    private String host = null;
 
     /**
      * name service for this protocol
@@ -76,15 +80,19 @@ public class RMIConfiguration {
     private Properties jndiProperties = null;
 
     /**
+     * configuration properties
+     */
+    private Properties confProperties = null;
+
+    /**
      * Constructor, This constructor make a validation of the properties
      * @param name the RMI architecture name
-     * @param rmiProperties The rmi properties, can not be null
-     * @param jndiProperties The jndi properties, should be null if the jndi
-     *        properties informations are set in the rmiProperties
+     * @param carolProperties all properties
      * @throws RMIConfigurationException if one of the properties below missing: - -
      *         to be set (see the carol specifications) -
      */
     public RMIConfiguration(String name, Properties carolProperties) throws RMIConfigurationException {
+        this.confProperties = new Properties();
 
         String rmiPref = CarolDefaultValues.CAROL_PREFIX + "." + name;
         String urlPref = CarolDefaultValues.CAROL_PREFIX + "." + name + "." + CarolDefaultValues.URL_PREFIX;
@@ -127,17 +135,24 @@ public class RMIConfiguration {
 
         this.jndiProperties = new Properties();
         for (Enumeration e = carolProperties.propertyNames(); e.hasMoreElements();) {
-            String current = ((String) e.nextElement()).trim();
+            String key = ((String) e.nextElement()).trim();
+
+            // Add in confProperties all matching properties for the protocol
+            if (key.startsWith(rmiPref)) {
+                confProperties.setProperty(key, carolProperties.getProperty(key));
+            }
+
             // jndi configuration
-            if (current.startsWith(urlPref)) {
-                jndiProperties.setProperty(CarolDefaultValues.JNDI_URL_PREFIX, carolProperties.getProperty(current));
-            } else if (current.startsWith(factoryPref)) {
+            if (key.startsWith(urlPref)) {
+                jndiProperties.setProperty(CarolDefaultValues.JNDI_URL_PREFIX, carolProperties.getProperty(key));
+            } else if (key.startsWith(factoryPref)) {
                 jndiProperties
-                        .setProperty(CarolDefaultValues.JNDI_FACTORY_PREFIX, carolProperties.getProperty(current));
+                        .setProperty(CarolDefaultValues.JNDI_FACTORY_PREFIX, carolProperties.getProperty(key));
             }
         }
 
         port = getPortOfUrl(this.jndiProperties.getProperty(CarolDefaultValues.JNDI_URL_PREFIX));
+        host = getHostOfUrl(this.jndiProperties.getProperty(CarolDefaultValues.JNDI_URL_PREFIX));
     }
 
     /**
@@ -186,8 +201,10 @@ public class RMIConfiguration {
     /**
      * Parses the given url, and returns the port number. 0 is given in error
      * case)
+     * @param url given url on which extract port number
+     * @return port number of the url
      */
-    static int getPortOfUrl(String url) {
+    private static int getPortOfUrl(String url) {
         int portNumber = 0;
         try {
             StringTokenizer st = new StringTokenizer(url, ":");
@@ -208,4 +225,47 @@ public class RMIConfiguration {
         }
     }
 
+    /**
+     * Parses the given url, and returns the hostname
+     * If not found, returns localhost
+     * @param url given url on which extract hostname
+     * @return hostname of the url
+     */
+    private static String getHostOfUrl(String url) {
+        String host = null;
+        // this would be simpler with a regexp :)
+        try {
+            // url is of the form protocol://<hostname>:<port>
+            String[] tmpSplitStr = url.split(":");
+
+            // array should be of length = 3
+            // get 2nd element (should be //<hostname>)
+            String tmpHost = tmpSplitStr[1];
+
+            // remove //
+            String[] tmpSplitHost = tmpHost.split("/");
+
+            // Get last element of the array to get hostname
+            host = tmpSplitHost[tmpSplitHost.length - 1];
+        } catch (Exception e) {
+            return DEFAULT_HOST;
+        }
+        return host;
+    }
+
+
+
+    /**
+     * @return the host.
+     */
+    public String getHost() {
+        return host;
+    }
+
+    /**
+     * @return the configuration Properties.
+     */
+    public Properties getConfigProperties() {
+        return confProperties;
+    }
 }

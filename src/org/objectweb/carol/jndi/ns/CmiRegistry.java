@@ -25,6 +25,8 @@
  */
 package org.objectweb.carol.jndi.ns;
 
+import java.util.Properties;
+
 import org.objectweb.carol.cmi.ClusterRegistry;
 import org.objectweb.carol.cmi.ClusterRegistryImpl;
 import org.objectweb.carol.cmi.ClusterRegistryKiller;
@@ -43,9 +45,10 @@ public class CmiRegistry implements NameService {
     private int port = ClusterRegistry.DEFAULT_PORT;
 
     /**
-     * registry
+     * Hostname to use
      */
-    //    public Registry registry = null;
+    private String host = null;
+
     /**
      * Cluster equivalence system
      */
@@ -135,7 +138,7 @@ public class CmiRegistry implements NameService {
 
     /**
      * set port method, set the port for the name service
-     * @param int port
+     * @param p port
      */
     public void setPort(int p) {
         if (TraceCarol.isDebugJndiCarol()) {
@@ -153,4 +156,27 @@ public class CmiRegistry implements NameService {
     public int getPort() {
         return port;
     }
+
+    /**
+     * Set the address to use for bind
+     * @param host hostname/ip address
+     */
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    /**
+     * @return hostname/ip to use
+     */
+     public String getHost() {
+         return host;
+     }
+
+     /**
+      * Set the configuration properties of the protocol
+      * @param p configuration properties
+      */
+     public void setConfigProperties(Properties p) {
+
+     }
 }

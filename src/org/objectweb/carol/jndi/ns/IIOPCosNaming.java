@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IIOPCosNaming.java,v 1.8 2005/02/14 15:09:19 benoitf Exp $
+ * $Id: IIOPCosNaming.java,v 1.9 2005/02/17 16:48:44 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -58,6 +58,11 @@ public class IIOPCosNaming implements NameService {
      * port number
      */
     private int port = DEFAUL_PORT;
+
+    /**
+     * Hostname to use
+     */
+    private String host = null;
 
     /**
      * process of the cosnaming
@@ -195,6 +200,21 @@ public class IIOPCosNaming implements NameService {
     }
 
     /**
+     * Set the address to use for bind
+     * @param host hostname/ip address
+     */
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    /**
+     * @return hostname/ip to use
+     */
+     public String getHost() {
+         return host;
+     }
+
+    /**
      * @return the port number
      */
     public int getPort() {
@@ -218,4 +238,11 @@ public class IIOPCosNaming implements NameService {
         orb = ORB.init(new String[0], null);
     }
 
+    /**
+     * Set the configuration properties of the protocol
+     * @param p configuration properties
+     */
+    public void setConfigProperties(Properties p) {
+
+    }
 }

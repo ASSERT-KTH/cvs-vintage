@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: NameServiceManager.java,v 1.7 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: NameServiceManager.java,v 1.8 2005/02/17 16:48:44 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -45,7 +45,7 @@ public class NameServiceManager {
     /**
      * Name Service Hashtable
      */
-    public static Hashtable nsTable;
+    private static Hashtable nsTable;
 
     /**
      * private constructor for singleton
@@ -69,6 +69,8 @@ public class NameServiceManager {
                 String rmiName = currentConf.getName();
                 NameService nsC = (NameService) Class.forName(currentConf.getNameService()).newInstance();
                 nsC.setPort(currentConf.getPort());
+                nsC.setHost(currentConf.getHost());
+                nsC.setConfigProperties(currentConf.getConfigProperties());
                 // get the Name Service
                 nsTable.put(rmiName, nsC);
             }
@@ -111,9 +113,8 @@ public class NameServiceManager {
 
     /**
      * Start all non-started names service
-     * @throws NameServiceException if an exception occure at starting time
      */
-    public static void startNonStartedNS() throws NameServiceException {
+    public static void startNonStartedNS() {
         if (TraceCarol.isDebugJndiCarol()) {
             TraceCarol.debugJndiCarol("NameServiceManager.startNonStartedNS()");
         }
@@ -155,8 +156,9 @@ public class NameServiceManager {
 
     /**
      * Main function: start all registry and wait for control C function
+     * @param args arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         try {
             NameServiceManager.startNonStartedNS();
             // add a shudown hook for this process

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,49 +22,66 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: NameService.java,v 1.3 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: NameService.java,v 1.4 2005/02/17 16:48:44 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
+
+import java.util.Properties;
 
 /**
  * Interface <code> NameService </code> is the CAROL Name Service generic
  * interface. This is the carol SPI for a Name Service
  * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/01/2003
  */
 public interface NameService {
 
     /**
      * start Method, Start a new NameService or do nothing if the name service
      * is all ready start
-     * @param int port is port number
      * @throws NameServiceException if a problem occure
      */
-    public void start() throws NameServiceException;
+    void start() throws NameServiceException;
 
     /**
      * stop Method, Stop a NameService or do nothing if the name service is all
      * ready stop
      * @throws NameServiceException if a problem occure
      */
-    public void stop() throws NameServiceException;
+    void stop() throws NameServiceException;
 
     /**
      * isStarted Method, check if a name service is started
      * @return boolean true if the name service is started
      */
-    public boolean isStarted();
+    boolean isStarted();
 
     /**
      * set port method, set the port for the name service
-     * @param int port number
+     * @param p port number
      */
-    public void setPort(int p);
+    void setPort(int p);
 
     /**
      * get port method, get the port for the name service
      * @return int port number
      */
-    public int getPort();
+     int getPort();
+
+    /**
+     * Set the address to use for bind
+     * @param host hostname/ip address
+     */
+    void setHost(String host);
+
+    /**
+     * @return hostname/ip to use
+     */
+     String getHost();
+
+     /**
+      * Set the configuration properties of the protocol
+      * @param p configuration properties
+      */
+     void setConfigProperties(Properties p);
 }

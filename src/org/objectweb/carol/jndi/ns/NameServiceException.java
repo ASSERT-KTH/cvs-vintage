@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: NameServiceException.java,v 1.2 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: NameServiceException.java,v 1.3 2005/02/17 16:48:44 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -37,6 +37,7 @@ public class NameServiceException extends Exception {
 
     /**
      * constructor with a the detail message
+     * @param s exception string
      */
     public NameServiceException(String s) {
         super(s);
