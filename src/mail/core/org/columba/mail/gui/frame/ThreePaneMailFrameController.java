@@ -105,6 +105,8 @@ public class ThreePaneMailFrameController
 			"DOWN");
 		DownAction downAction = new DownAction(this);
 		tableController.getView().getActionMap().put("DOWN", downAction);
+		//register the markasread timer as selection listener
+		tableController.getMailFrameController().registerTableSelectionListener(tableController.getMarkAsReadTimer());
 	}
 
 	public AbstractFrameView createView() {

@@ -36,6 +36,7 @@ import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 import org.columba.mail.parser.Rfc822Parser;
+import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
@@ -233,19 +234,18 @@ public class ViewMessageCommand extends FolderCommand {
 				header,
 				bodyPart,
 				mimePartTree);
-				
-				// TODO: cleanup markAsRead-Timer
-				/*
-			if (header.getFlags().getSeen() == false) {
-				// restart timer which marks the message as read
-				// after a user configurable time interval
-				((AbstractMailFrameController) frameController)
-					.tableController
-					.getMarkAsReadTimer()
-					.restart((FolderCommandReference) getReferences()[0]);
-					
+
+			// security check, i dont know if we need this (waffel)
+			if (frameController instanceof ThreePaneMailFrameController) {
+				// if the message it not yet seen
+				if (!header.getFlags().getSeen()) {
+					// restart timer which marks the message as read
+					// after a user configurable time interval
+					((ThreePaneMailFrameController) frameController).getTableController()
+						.getMarkAsReadTimer()
+						.restart((FolderCommandReference) getReferences()[0]);
+				}
 			}
-			*/
 		}
 	}
 
