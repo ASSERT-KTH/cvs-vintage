@@ -4,7 +4,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <!-- $Id: serverxml.html,v 1.11 2001/11/08 21:43:24 bojan Exp $ -->
+  <!-- $Id: serverxml.html,v 1.12 2001/12/05 11:28:49 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
   <link rel="stylesheet" href="style.css">
@@ -40,13 +40,49 @@ configure the server. Additional <code>TOMCAT_HOME/conf/server-<i>name</i>.xml</
 will be read after <code>server.xml</code>, allowing local configurations.</p>
 
 
-<h3>Variable substitution</h3>
+<h3><a name="substitution">Variable substitution</a></h3>
 
-<p>Each attribute value may use the ant-style variable substitution ( ${variable}
-). The values are stored as ContextManager properties, and defined using
-either &lt;property name=&quot;foo&quot; value=&quot;bar&quot; /&gt;, as attributes in the
-&lt;ContextManager&gt; element, or in the command line using &quot;-foo bar&quot; 
-syntax, or as system properties.</p>
+<p>In Tomcat 3.3.1, each attribute value may use the ant-style variable
+substitution by using &quot;${<i>variable</i>}&quot; in the attribute string, i.e.
+<i>attribute</i>=&quot;<i>text</i>${<i>variable</i>}<i>text</i>&quot;. (Note: A
+bug prevented this from working in Tomcat 3.3.)</p>
+
+<p>The <i>variable</i> must specify a ContextManager property or System property,
+with ContextManager properties taking precedence.  If a matching property
+isn't found, the attribute string is left as is.  Note that the properties are
+not the same as attributes, and attributes are not accessible via variable
+substitution.</p>
+
+<p>There are two predefined ContextManager properties,
+&quot;<code>tomcat.home</code>&quot; and &quot;<code>tomcat.install</code>&quot;.
+These correspond to the ContextManager <code>home</code> and <code>installDir</code>
+attributes, respectively. There are three methdos for setting additional
+ContextManager properties.</p>
+
+<ol>
+  <li>Include a <code><i>name</i>=&quot;<i>value</i>&quot;</code>
+    specification on the ContextManager element in <code>server.xml</code>,
+    where <i>name</i> doesn't correspond to a ContextManager attribute. For
+    example:<br>
+    <pre>    &lt;ContextManager ... my.prop="myvalue" ... &gt;</pre></li>
+  <li>Include a <code>Property</code> element within the scope of the
+    ContextManager element in <code>server.xml</code>. For example:<br>
+    <pre>
+    &lt;ContextManager ... &gt;
+        &lt;Property name=&quot;my.prop&quot; value=&quot;myvalue&quot; /&gt;
+        ...
+    &lt;/ContextManager&gt;</pre>
+    This form of setting properties is logged if the ContextManager's debug
+    level is one or greater.<br><br></li>
+  <li>Include &quot;<code>-<i>name</i> <i>value</i></code>&quot; as command line
+    arguments, where <i>name</i> doesn't match any of the arguments supported
+    by the <a href="tomcat-ug.html#tomcat_task_args">&quot;start&quot; task</a>.
+    For example:<br>
+    <pre>    bin/startup.sh -my.prop myvalue</pre></li>
+</ol>
+
+<p><b>Note:</b> The property values may themselves use &quot;variable
+substitution&quot;, provided the specified property is already defined.</p>
 
 <h3>Common Parameters</h3>
 
@@ -133,7 +169,7 @@ some of the childen it supports:</p>
     <th>Default</th>
   </tr>
   <tr valign="top">
-    <td>install</td>
+    <td>installDir</td>
     <td>Base directory for tomcat installation. It is typically guessed by the 
       startup program, but you can override it here.</td>
     <td>TOMCAT_HOME or one level above the location of the startup script or 
@@ -830,8 +866,13 @@ contexts.  Where the context matches a context automatically created by the
 the default context settings.</p>
 
 <p>For details on the syntax of the context configuration file, refer to the
-<a href="tomcat-ug.html#customizing_contexts">Customizing Contexts</a> section
-of the <a href="tomcat-ug.html">Tomcat 3.3 Users Guide</a>.</p>
+<a href="tomcat-ug.html#customizing_contexts">Adding and Customizing Contexts</a>
+section of the <a href="tomcat-ug.html">Tomcat 3.3 Users Guide</a>.</p>
+
+<p><b>Note:</b> In Tomcat 3.3.1, ant-style variable substitution is supported
+in the XML files. Details are included in the &quot;Adding and Customizing Contexts&quot;
+section mentioned above.</p>
+
 <h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
@@ -1404,23 +1445,18 @@ effect if Tomcat was not started in-process by the Tomcat connector.</p>
 
 <h4>Description</h4>
 
-<p>Generate configuration file for mod_jk to be included in Apache's httpd.conf.</p>
+<p>Generate configuration file for mod_jserv to be included in Apache's httpd.conf.</p>
 
-<p>For additional information on connecting Tomcat to Apache via mod_jk, see the
-<a href="mod_jk-howto.html">Working with mod_jk</a> document.</p>
+<p>For additional information on connecting Tomcat to Apache via mod_jserv, see the
+<a href="tomcat-apache-howto.html">Tomcat Apache HowTo</a> document.</p>
 
-<p><b>Important Note:</b> The configuration files are not written as part of a
-normal startup of Tomcat.  To generate the configuration files on demand,
-append:</p>
-<pre>    jkconf</pre>
-<p>or</p>
-<pre>    -jkconf</pre>
-<p>to the startup command.  Tomcat will initialize sufficiently to write the
-configuration files and then exit. This may be done while Tomcat 3.3 is running.
-To generate the configuration files during normal startup, add:</p>
-<pre>    jkconf=&quot;true&quot;</pre>
-<p>to the <code>&lt;ContextManager ... &gt;</code> element in the
-<code>server.xml</code> file.</p>
+<p><b>Important Note:</b> The most stable and robust connector for connecting
+Tomcat 3.3 to Apache is mod_jk.  Its use is recommended over mod_jserv.
+Also, unlike the <code><a href="#ApacheConfig">ApacheConfig</a></code>,
+<code><a href="#IISConfig">IISConfig</a></code>, and
+<code><a href="#NSConfig">NSConfig</a></code> modules, <code>JservConfig</code>
+does not participate in the &quot;jkcont&quot; startup option.  Instead, the
+configuration file is written each time Tomcat is started.</p>
 
 <h4>Attributes</h4>
 
@@ -1662,6 +1698,20 @@ parent.</p>
     <th>Default</th>
   </tr>
   <tr valign="top">
+    <td>additionalJars<br><b>[Tomcat 3.3.1]</td>
+    <td>List of jars to be added to each web application separated by the
+      specified <code>jarSeparator</code>.  If not an absolute path, the path
+      is assumed to be relative to <code>TOMCAT_HOME/lib/container</code>.</td>
+    <td><i>none</i></td>
+  </tr>
+  <tr valign="top">
+    <td>jarSeparator<br><b>[Tomcat 3.3.1]</b></td>
+    <td>String containing the character to be used as a jar separator.  This
+      separator is used by the <code>additionalJars</code> and
+      <code>jaxpJars</code> lists.</td>
+    <td>:</td>
+  </tr>
+  <tr valign="top">
     <td>jaxp</td>
     <td>Enables providing a default XML parser to web applications that don't
       already have one.  If the <code>javax.xml.parsers.SAXParserFactory</code>
@@ -1676,7 +1726,8 @@ parent.</p>
   </tr>
   <tr valign="top">
     <td>jaxpJars</td>
-    <td>List of jars to be added, separated by colons.</td>
+    <td>List of jars to be added. The list is separated by colons in Tomcat 3.3,
+      or by <code>jarSeparator</code> in Tomcat 3.3.1 and later.</td>
     <td>jaxp.jar:crimson.jar:xalan.jar:xerces.jar</td>
   </tr>
   <tr valign="top">
@@ -1706,6 +1757,17 @@ parent.</p>
 <pre>
 &lt;LoaderInterceptor11 jaxp=&quot;true&quot; /&gt;
 </pre>
+
+<h4>Additional Note</h4>
+
+<p>For Tomcat 3.3.1 and later, LoaderInterceptor11 also supports an
+<code>additionalJars</code> Context property that works the same as the module's
+<code>additionalJars</code> attribute for that context only. If
+<code>additionalJars</code> is specified as a Context property and as
+a LoaderInterceptor11 attribute, both lists are added. For information
+on setting Context properties, see
+<a href="tomcat-ug.html#context_addcust">Adding and Customizing Contexts</a>
+in the <a href="tomcat-ug.html">Tomcat 3.3 User's Guide</a>.</p>
 
 <hr size="5">
 
@@ -2115,7 +2177,7 @@ Servlet 2.2 specification.</p>
     <td>false</td>
   </tr>
   <tr valign="top">
-    <td>checkSSLSessionId</td>
+    <td>checkSSLSessionId<br><b>[Tomcat 3.3.1]</b></td>
     <td>If true, Tomcat session will be verified against SSL session to prevent
       (malicious) use of other users' sessions. In order for this to work, SSL
       has to be enabled (through Apache) and SSL Session ID has to be known to
