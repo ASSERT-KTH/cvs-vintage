@@ -26,7 +26,7 @@
 // File: FigTextEditor.java
 // Classes: FigTextEditor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigTextEditor.java,v 1.9 1999/03/17 03:18:41 jrobbins Exp $
+// $Id: FigTextEditor.java,v 1.10 1999/05/31 02:02:48 jrobbins Exp $
 
 package uci.gef;
 
@@ -123,6 +123,10 @@ implements PropertyChangeListener, DocumentListener, KeyListener {
 
 
   public void endEditing() {
+    // Avoid recursion resulting from call to Editor.setActiveTextEditor
+    // at the end of this method.
+    if (_editing == false) return;
+
     _editing = false;
     _target.startTrans();
     updateFigText();
