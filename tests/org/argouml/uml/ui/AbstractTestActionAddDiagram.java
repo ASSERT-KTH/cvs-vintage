@@ -1,5 +1,5 @@
-// $Id: AbstractTestActionAddDiagram.java,v 1.5 2003/05/11 14:13:51 linus Exp $
-// Copyright (c) 2003 The Regents of the University of California. All
+// $Id: AbstractTestActionAddDiagram.java,v 1.6 2004/02/24 08:28:19 linus Exp $
+// Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -29,7 +29,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.argouml.application.security.ArgoSecurityManager;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
@@ -67,7 +66,6 @@ public abstract class AbstractTestActionAddDiagram extends TestCase {
      * Preparations for all test cases.
      */
     protected void setUp() {
-	ArgoSecurityManager.getInstance().setAllowExit(true);
 	_action = getAction();
 
 	_ns = getNamespace();

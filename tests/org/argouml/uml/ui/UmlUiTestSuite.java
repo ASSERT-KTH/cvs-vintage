@@ -1,5 +1,5 @@
-// $Id: UmlUiTestSuite.java,v 1.2 2003/11/08 00:43:51 linus Exp $
-// Copyright (c) 2002-2003 The Regents of the University of California. All
+// $Id: UmlUiTestSuite.java,v 1.3 2004/02/24 08:28:19 linus Exp $
+// Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -32,17 +32,19 @@ import junit.framework.TestSuite;
  */
 public class UmlUiTestSuite {
 
-	/** Test suite for this package
-	 * 
-	 * @return the junit test suite
-	 */
+    /** Test suite for this package
+     * 
+     * @return the junit test suite
+     */
     public static Test suite() {
-        TestSuite suite = new TestSuite("Tests for " + UmlUiTestSuite.class.getPackage().getName());
+        TestSuite suite =
+	    new TestSuite("Tests for "
+			  + UmlUiTestSuite.class.getPackage().getName());
         suite.addTestSuite(TestActionClassDiagram.class);
         suite.addTestSuite(TestActionCollaborationDiagram.class);
-		suite.addTestSuite(TestActionDeploymentDiagram.class);
-		suite.addTestSuite(TestActionStateDiagram.class);
-		suite.addTestSuite(TestActionUseCaseDiagram.class);
+	suite.addTestSuite(TestActionDeploymentDiagram.class);
+	suite.addTestSuite(TestActionStateDiagram.class);
+	suite.addTestSuite(TestActionUseCaseDiagram.class);
         return suite;
     }
 

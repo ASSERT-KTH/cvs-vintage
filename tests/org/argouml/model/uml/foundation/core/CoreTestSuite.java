@@ -1,5 +1,5 @@
-// $Id: CoreTestSuite.java,v 1.1 2003/09/04 19:07:31 thierrylach Exp $
-// Copyright (c) 2002-2003 The Regents of the University of California. All
+// $Id: CoreTestSuite.java,v 1.2 2004/02/24 08:28:18 linus Exp $
+// Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -32,14 +32,16 @@ import junit.framework.TestSuite;
  */
 public class CoreTestSuite {
 
-	/** Test suite for this package
-	 * 
-	 * @return the junit test suite
-	 */
+    /** Test suite for this package
+     * 
+     * @return the junit test suite
+     */
     public static Test suite() {
-        TestSuite suite = new TestSuite("Tests for " + CoreTestSuite.class.getPackage().getName());
-		suite.addTestSuite(TestCoreFactory.class);
-		suite.addTestSuite(TestCoreHelper.class);
+        TestSuite suite =
+	    new TestSuite("Tests for "
+			  + CoreTestSuite.class.getPackage().getName());
+	suite.addTestSuite(TestCoreFactory.class);
+	suite.addTestSuite(TestCoreHelper.class);
         return suite;
     }
 

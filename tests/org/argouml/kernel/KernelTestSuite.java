@@ -1,5 +1,5 @@
-// $Id: KernelTestSuite.java,v 1.1 2003/09/04 19:07:30 thierrylach Exp $
-// Copyright (c) 2002-2003 The Regents of the University of California. All
+// $Id: KernelTestSuite.java,v 1.2 2004/02/24 08:28:16 linus Exp $
+// Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -37,7 +37,9 @@ public class KernelTestSuite {
 	 * @return the junit test suite
 	 */
     public static Test suite() {
-        TestSuite suite = new TestSuite("Tests for " + KernelTestSuite.class.getPackage().getName());
+        TestSuite suite =
+	    new TestSuite("Tests for "
+			  + KernelTestSuite.class.getPackage().getName());
         suite.addTestSuite(TestProject.class);
         suite.addTestSuite(TestProjectManager.class);
         return suite;

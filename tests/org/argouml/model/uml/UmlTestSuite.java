@@ -1,5 +1,5 @@
-// $Id: UmlTestSuite.java,v 1.4 2003/09/09 22:46:57 thierrylach Exp $
-// Copyright (c) 2002-2003 The Regents of the University of California. All
+// $Id: UmlTestSuite.java,v 1.5 2004/02/24 08:28:17 linus Exp $
+// Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -37,17 +37,18 @@ public class UmlTestSuite {
      * @return the junit test suite
      */
     public static Test suite() {
-        TestSuite suite = new TestSuite("Tests for " +
-                              UmlTestSuite.class.getPackage().getName());
+        TestSuite suite =
+	    new TestSuite("Tests for "
+			  + UmlTestSuite.class.getPackage().getName());
         suite.addTestSuite(TestUml.class);
         suite.addTestSuite(TestCopyHelper.class);
         suite.addTestSuite(TestUmlModelEventPump.class);
 
-		suite.addTest(new TestSuite(TestUmlModelElement.class));
-		suite.addTest(new TestSuite(TestUmlNamespace.class));
-		suite.addTest(new TestSuite(TestUmlModel.class));
-		suite.addTest(new TestSuite(TestUmlUseCase.class));
-		suite.addTest(new TestSuite(TestUmlActor.class));
+	suite.addTest(new TestSuite(TestUmlModelElement.class));
+	suite.addTest(new TestSuite(TestUmlNamespace.class));
+	suite.addTest(new TestSuite(TestUmlModel.class));
+	suite.addTest(new TestSuite(TestUmlUseCase.class));
+	suite.addTest(new TestSuite(TestUmlActor.class));
 
         return suite;
     }

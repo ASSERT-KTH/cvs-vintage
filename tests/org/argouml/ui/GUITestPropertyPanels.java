@@ -1,4 +1,4 @@
-// $Id: GUITestPropertyPanels.java,v 1.5 2004/01/25 12:21:32 linus Exp $
+// $Id: GUITestPropertyPanels.java,v 1.6 2004/02/24 08:28:19 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,6 @@ import org.tigris.gef.util.EnumerationEmpty;
 import org.tigris.gef.util.EnumerationSingle;
 import org.tigris.gef.util.ChildGenerator;
 
-import org.argouml.application.security.ArgoSecurityManager;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
@@ -192,12 +191,17 @@ public class GUITestPropertyPanels extends TestCase {
     }
     
     public void testPropertyTab() throws Throwable {
-	System.out.println("testPropertyTab called in " + this + ":" + this.hashCode());
+	System.out.println("testPropertyTab called in "
+			   + this + ":" + this.hashCode());
         TargetEvent e =
 	    new TargetEvent(this,
 			    TargetEvent.TARGET_SET,
-			    new Object[] { null },
-			    new Object[] { _modelElement });
+			    new Object[] {
+				null,
+			    },
+			    new Object[] {
+				_modelElement,
+			    });
         theDetailsPane.targetSet(e);
         
         _propertyPane = /*TabProps */

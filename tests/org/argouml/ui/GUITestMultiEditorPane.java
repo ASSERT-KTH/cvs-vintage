@@ -1,5 +1,5 @@
-// $Id: GUITestMultiEditorPane.java,v 1.1 2003/07/28 21:00:56 kataka Exp $
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// $Id: GUITestMultiEditorPane.java,v 1.2 2004/02/24 08:28:19 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GUITestMultiEditorPane.java,v 1.1 2003/07/28 21:00:56 kataka Exp $
+// $Id: GUITestMultiEditorPane.java,v 1.2 2004/02/24 08:28:19 linus Exp $
 package org.argouml.ui;
 
 import java.awt.Component;
@@ -31,7 +31,6 @@ import javax.swing.JTabbedPane;
 
 import junit.framework.TestCase;
 
-import org.argouml.application.security.ArgoSecurityManager;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
@@ -45,22 +44,11 @@ public class GUITestMultiEditorPane extends TestCase {
 
     /**
      * Constructor for TestMultiEditorPane.
-     * @param arg0
+     *
+     * @param arg0 is the test case name.
      */
     public GUITestMultiEditorPane(String arg0) {
         super(arg0);
-    }
-
-    /**
-     * @see junit.framework.TestCase#setUp()
-     */
-    protected void setUp() throws Exception {
-        super.setUp();
-        ArgoSecurityManager.getInstance().setAllowExit(true);
-    }
-
-    protected void tearDown() throws Exception {
-        super.tearDown();
     }
 
     /**
@@ -84,41 +72,52 @@ public class GUITestMultiEditorPane extends TestCase {
             Object target = new Object();
             boolean[] shouldBeEnabled = getShouldBeEnabled(target, tabs);
             TargetEvent e =
-                new TargetEvent(
-                    this,
-                    TargetEvent.TARGET_SET,
-                    new Object[] { null },
-                    new Object[] { target });
+                new TargetEvent(this,
+				TargetEvent.TARGET_SET,
+				new Object[] {
+				    null,
+				},
+				new Object[] {
+				    target,
+				});
             pane.targetSet(e);
             assertEnabled(pane._tabs, shouldBeEnabled);
             target = new UMLClassDiagram();
             shouldBeEnabled = getShouldBeEnabled(target, tabs);
-            e =
-                new TargetEvent(
-                    this,
-                    TargetEvent.TARGET_SET,
-                    new Object[] { null },
-                    new Object[] { target });
+            e = new TargetEvent(
+				this,
+				TargetEvent.TARGET_SET,
+				new Object[] {
+				    null,
+				},
+				new Object[] {
+				    target
+				});
             pane.targetSet(e);
             assertEnabled(pane._tabs, shouldBeEnabled);
             target = CoreFactory.getFactory().createClass();
             shouldBeEnabled = getShouldBeEnabled(target, tabs);
             e =
-                new TargetEvent(
-                    this,
-                    TargetEvent.TARGET_SET,
-                    new Object[] { null },
-                    new Object[] { target });
+                new TargetEvent(this,
+				TargetEvent.TARGET_SET,
+				new Object[] {
+				    null,
+				},
+				new Object[] {
+				    target,
+				});
             pane.targetSet(e);
             assertEnabled(pane._tabs, shouldBeEnabled);
             target = new FigText(0, 0, 0, 0);
             shouldBeEnabled = getShouldBeEnabled(target, tabs);
-            e =
-                new TargetEvent(
-                    this,
-                    TargetEvent.TARGET_SET,
-                    new Object[] { null },
-                    new Object[] { target });
+            e = new TargetEvent(this,
+				TargetEvent.TARGET_SET,
+				new Object[] {
+				    null,
+				},
+				new Object[] {
+				    target,
+				});
             pane.targetSet(e);
             assertEnabled(pane._tabs, shouldBeEnabled);
         } catch (Exception ex) {
@@ -129,7 +128,7 @@ public class GUITestMultiEditorPane extends TestCase {
     private boolean[] getShouldBeEnabled(Object target, Component[] tabs) {
         boolean[] shouldBeEnabled = new boolean[tabs.length];
         for (int i = 0; i < tabs.length; i++) {
-            shouldBeEnabled[i] = ((TabTarget)tabs[i]).shouldBeEnabled(target);
+            shouldBeEnabled[i] = ((TabTarget) tabs[i]).shouldBeEnabled(target);
         }
         return shouldBeEnabled;
     }

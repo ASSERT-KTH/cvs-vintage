@@ -1,5 +1,5 @@
-// $Id: TestModelFacade.java,v 1.9 2003/11/20 10:35:01 linus Exp $
-// Copyright (c) 2003 The Regents of the University of California. All
+// $Id: TestModelFacade.java,v 1.10 2004/02/24 08:28:17 linus Exp $
+// Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -131,7 +131,7 @@ public class TestModelFacade extends TestCase {
 			       umlClass.isAvailableInFacade());
 		}
 
-		// TODO Make sure ActionExpression and ComponentInstance
+		// TODO: Make sure ActionExpression and ComponentInstance
 		// work properly - currently it does not
 		if ("ActionExpression".equals(umlClass.getName())
 		    || "ComponentInstance".equals(umlClass.getName())) {
