@@ -35,15 +35,21 @@ $page.setTitle("Registration Confirmation")
 </ul>
 
 <P>
-<FORM name="RegisterConfirmForm" action="$link.setPage("Confirm.vm")" method="post">
+<FORM name="RegisterConfirmForm" action="$link.setPage("RegisterConfirm.vm")" method="post">
     <input type="hidden" name="action" value="RegisterConfirm">
+    <input type="hidden" name="cancelTemplate" value="Register.vm">
+    <input type="hidden" name="nextTemplate" value="Confirm.vm">
+
+## get the user out of the temp hashtable
+#set ( $user = $data.User.getTemp("scarab.newUser") )
+
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 	<TR>
 		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
 	</TR>
 	<TR>
 		<TD class="PlainTextHeader">&nbsp;Email Address:</TD>
-		<TD class="PlainText">$email</TD>
+		<TD class="PlainText">$user.Email</TD>
 		<TD class="PlainText">To be verified via email</TD>
 	</TR>
 	<TR>
@@ -57,161 +63,7 @@ $page.setTitle("Registration Confirmation")
 	</TR>
 	<TR>
 		<TD class="PlainTextHeader">&nbsp;Full Name:</TD>
-		<TD class="PlainText">$firstname $lastname</TD>
-		<TD class="PlainText">OK</TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD class="PlainTextHeader">&nbsp;Company Name:</TD>
-		<TD class="PlainText">$companyname</TD>
-		<TD class="PlainText">OK</TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD class="PlainTextHeader">&nbsp;Address 1:</TD>
-		<TD class="PlainText">$address1</TD>
-		<TD class="PlainText">OK</TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD class="PlainTextHeader">&nbsp;Address 2:</TD>
-		<TD class="PlainText">$address2</TD>
-		<TD class="PlainText">OK</TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD class="PlainTextHeader">&nbsp;City:</TD>
-		<TD class="PlainText">$city</TD>
-		<TD class="PlainText">OK</TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD class="PlainTextHeader">&nbsp;State:</TD>
-		<TD class="PlainText">$state</TD>
-		<TD class="PlainText">OK</TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD class="PlainTextHeader">&nbsp;Country:</TD>
-		<TD class="PlainText">$country</TD>
-		<TD class="PlainText">OK</TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD class="PlainTextHeader">&nbsp;Phone:</TD>
-		<TD class="PlainText">$phone</TD>
-		<TD class="PlainText">OK</TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD class="PlainTextHeader">&nbsp;Alt Phone:</TD>
-		<TD class="PlainText">$altphone</TD>
-		<TD class="PlainText">OK</TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD class="PlainTextHeader">&nbsp;Fax:</TD>
-		<TD class="PlainText">$fax</TD>
-		<TD class="PlainText">OK</TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD class="PlainTextHeader">&nbsp;Cell:</TD>
-		<TD class="PlainText">$cell</TD>
-		<TD class="PlainText">OK</TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD class="PlainTextHeader">&nbsp;Pager:</TD>
-		<TD class="PlainText">$pager</TD>
+		<TD class="PlainText">$user.FirstName $user.LastName</TD>
 		<TD class="PlainText">OK</TD>
 	</TR>
 	<TR>

@@ -38,7 +38,8 @@
 
 <FORM name="RegisterForm" action="$link.setPage("Register.vm")" method="POST">
 <input type="hidden" name="action" value="Register">
-<input type="hidden" name="nextTemplate" value="RegisterConfirm">
+<input type="hidden" name="nextTemplate" value="RegisterConfirm.vm">
+<input type="hidden" name="cancelTemplate" value="Login.vm">
 
 ## Attempt to populate the Scarab API User object on re-display
 $data.Parameters.setProperties($scarab.getUser())
