@@ -575,7 +575,10 @@ public class Context {
     public final void log(String msg) {
 	// XXX \n
 	// Custom output -
-	if( contextM == null ) System.out.println( msg );
+	if( contextM == null ) {
+	    System.out.println( msg );
+	    return;
+	}
 	if( msg.startsWith( "<l:" ))
 	    contextM.doLog( msg );
 	else
