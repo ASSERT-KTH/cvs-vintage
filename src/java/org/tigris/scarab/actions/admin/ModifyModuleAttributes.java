@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.22 2001/10/16 08:36:53 jon Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.23 2001/10/16 08:52:14 jon Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -330,22 +330,22 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                     }
                 }
             }
-                if (areThereDupes)
-                {
-                   data.setMessage("Please do not enter duplicate "
-                                    + " sequence numbers for attribute groups.");
-                   isValid = false;
-                }
+            if (areThereDupes)
+            {
+               data.setMessage("Please do not enter duplicate "
+                                + " sequence numbers for attribute groups.");
+               isValid = false;
+            }
   
-               // Check that duplicate check is not at the beginning or end.
-               if (dupeOrder == 1 || dupeOrder == attributeGroups.size() +1)
-               {
-                   data.setMessage("The duplicate check cannot be at the beginning "
-                                     + "or the end.");
-                   isValid = false;
-               }
-       }
-       if ( intake.isAllValid() && isValid) 
+            // Check that duplicate check is not at the beginning or end.
+            if (dupeOrder == 1 || dupeOrder == attributeGroups.size() +1)
+            {
+                data.setMessage("The duplicate check cannot be at the beginning "
+                                  + "or the end.");
+                isValid = false;
+            }
+        }
+        if (intake.isAllValid() && isValid) 
         {
             // Set properties for issue type info
             Group issueTypeGroup = intake.get("IssueType", 
@@ -369,7 +369,6 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                 template.save();
             }
            
-          
             // Set properties for attribute groups
             for (int i=attributeGroups.size()-1; i>=0; i--) 
             {
@@ -378,12 +377,18 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                                  attGroup.getQueryKey(), false);
                 agGroup.setProperties(attGroup);
                 attGroup.save();
-
             }
-
-        } 
+        }
         data.getParameters().add("issueTypeId", 
                                  issueType.getIssueTypeId().toString());
+
+        // this is a new artifact type, so create the default groups for
+        // it so that someone doesn't have to click a button to make it 
+        // happen.
+        if (attributeGroups.size() == 0)
+        {
+            doCreatedefaults(data, context);
+        }
         String nextTemplate = data.getParameters()
             .getString(ScarabConstants.NEXT_TEMPLATE);
         setTarget(data, nextTemplate);            
