@@ -1,5 +1,5 @@
 @echo off
-rem $Id: startup.bat,v 1.6 2000/02/26 19:41:46 rubys Exp $
+rem $Id: startup.bat,v 1.7 2000/03/31 19:40:02 craigmcc Exp $
 rem Startup batch file for tomcat servner.
 
 rem This batch file written and tested under Windows NT
@@ -18,6 +18,6 @@ echo Unable to determine the value of TOMCAT_HOME.
 goto eof
 
 :start
-call %TOMCAT_HOME%\bin\tomcat start %*
+call %TOMCAT_HOME%\bin\tomcat start %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 :eof
