@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
  *            extends="org.jboss.deployment.SubDeployerMBean"
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -98,7 +98,7 @@ public class EARDeployer
             if( repositoryName != null )
             {
                // Get the required object name of the repository
-               di.repositoryClassName = MetaData.getOptionalChildContent(root, "loader-repository-class");
+               di.repositoryClassName = MetaData.getOptionalChildContent(jbossApp, "loader-repository-class");
                di.repositoryName = new ObjectName(repositoryName);
 	    }
 	 }
