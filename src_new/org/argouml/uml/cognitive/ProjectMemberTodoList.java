@@ -1,4 +1,4 @@
-// $Id: ProjectMemberTodoList.java,v 1.6 2004/12/23 18:27:55 bobtarling Exp $
+// $Id: ProjectMemberTodoList.java,v 1.7 2005/01/02 04:08:32 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,12 +40,14 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.ocl.OCLExpander;
+import org.argouml.persistence.OpenException;
 import org.argouml.persistence.ResolvedCriticXMLHelper;
 import org.argouml.persistence.SaveException;
 import org.argouml.persistence.ToDoItemXMLHelper;
 import org.argouml.persistence.TodoParser;
 import org.tigris.gef.ocl.ExpansionException;
 import org.tigris.gef.ocl.TemplateReader;
+import org.xml.sax.SAXException;
 
 
 /**
@@ -143,13 +145,18 @@ public class ProjectMemberTodoList extends ProjectMember {
     	return out;
     }
 
-    /**
-     * @param is an InputStream
-     */
-    public void load(InputStream is) {
-        TodoParser parser = new TodoParser();
-        parser.readTodoList(is, true);
-    }
+//    /**
+//     * @param is an InputStream
+//     * @throws OpenException on any error
+//     */
+//    public void load(InputStream is) throws OpenException {
+//        try {
+//            TodoParser parser = new TodoParser();
+//            parser.readTodoList(is, true);
+//        } catch (SAXException e) {
+//            throw new OpenException(e);
+//        }
+//    }
 
     /**
      * 
@@ -176,7 +183,7 @@ public class ProjectMemberTodoList extends ProjectMember {
         
         if (indent == null) {
             try {
-                expander.expand(writer, this, "", "");
+                expander.expand(writer, this);
             } catch (ExpansionException e) {
                 throw new SaveException(e);
             }
@@ -185,7 +192,7 @@ public class ProjectMemberTodoList extends ProjectMember {
                 File tempFile = File.createTempFile("todo", null);
                 tempFile.deleteOnExit();
                 FileWriter w = new FileWriter(tempFile);
-                expander.expand(w, this, "", "");
+                expander.expand(w, this);
                 w.close();
                 addXmlFileToWriter(
                         (PrintWriter) writer,

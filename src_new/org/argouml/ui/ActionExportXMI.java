@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.12 2004/12/26 11:14:44 mvw Exp $
+// $Id: ActionExportXMI.java,v 1.13 2005/01/02 04:08:33 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.ProjectMember;
+import org.argouml.uml.ProjectMemberModel;
 import org.argouml.uml.ui.UMLAction;
 
 /**
@@ -191,54 +192,49 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
 				       "action.export-project-as-xmi"));
         chooser.setApproveButtonText(Translator.localize(
 					     "filechooser.export"));
-        chooser.setFileFilter(new FileFilter() 
-	{
-	    public boolean accept(File file) {
-		return (file.getName().endsWith(".xmi")
-			|| file.getName().indexOf('.') == -1);
-	    }
-	    public String getDescription() {
-		return "An XMI project file";
-	    }
-
-	});
+        
+        chooser.setFileFilter(new FileFilter() {
+            public boolean accept(File file) {
+                return (file.getName().endsWith(".xmi")
+                	|| file.getName().indexOf('.') == -1);
+            }
+            public String getDescription() {
+                return "An XMI project file";
+            }
+        });
+        
         int result = chooser.showSaveDialog(ProjectBrowser.getInstance());
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = chooser.getSelectedFile();
+            
             Project currentProject =
                 ProjectManager.getManager().getCurrentProject();
-            Iterator it = currentProject.getMembers().iterator();
-            while (it.hasNext()) {
-                ProjectMember member = (ProjectMember) it.next();
-                if (member.getType().equalsIgnoreCase("xmi")) {
-                    try {
-                        member.save(new FileWriter(selectedFile), null);
-                    } catch (Exception ex) {
-                        String sMessage =
-                            MessageFormat.format(Translator.localize(
-				  "optionpane.save-project-general-exception"),
-						 new Object[] {
-						     ex.getMessage()
-						 });
+            ProjectMember member = currentProject.getMembers().getMember(ProjectMemberModel.class);
+            
+            try {
+                member.save(new FileWriter(selectedFile), null);
+            } catch (Exception ex) {
+                String sMessage =
+                    MessageFormat.format(Translator.localize(
+                      "optionpane.save-project-general-exception"),
+                     new Object[] {
+                         ex.getMessage()
+                    });
 
-			String sTitle =
-			    Translator.localize(
-				"optionpane."
-				+ "save-project-general-exception-title"
-			    );
+                String sTitle =
+                    Translator.localize(
+                	"optionpane."
+                	+ "save-project-general-exception-title"
+                    );
 
-                        JOptionPane.showMessageDialog(
-			    ProjectBrowser.getInstance(),
-			    sMessage,
-			    sTitle,
-			    JOptionPane.ERROR_MESSAGE);
-			
-                        LOG.error(sMessage, ex);
-                    }
-                }
+                JOptionPane.showMessageDialog(
+                    ProjectBrowser.getInstance(),
+                    sMessage,
+                    sTitle,
+                    JOptionPane.ERROR_MESSAGE);
+	
+                LOG.error(sMessage, ex);
             }
-
         }
     }
-
 }

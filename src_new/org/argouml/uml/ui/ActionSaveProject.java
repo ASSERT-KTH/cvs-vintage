@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.43 2004/12/29 09:23:32 mvw Exp $
+// $Id: ActionSaveProject.java,v 1.44 2005/01/02 04:08:33 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,6 +99,7 @@ public class ActionSaveProject extends ActionFileOperations {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
+        LOG.info("Performing save action");
         URL url =
             ProjectManager.getManager().getCurrentProject() != null
             ? ProjectManager.getManager().getCurrentProject().getURL() : null;
@@ -126,6 +127,7 @@ public class ActionSaveProject extends ActionFileOperations {
      * @return true if successful
      */
     public boolean trySave(boolean overwrite, File file) {
+        LOG.info("Saving the project");
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 	Project project = ProjectManager.getManager().getCurrentProject();
 	PersistenceManager pm = new PersistenceManager();
