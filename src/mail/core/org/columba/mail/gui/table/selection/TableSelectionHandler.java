@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.gui.table;
+package org.columba.mail.gui.table.selection;
 
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -28,9 +28,10 @@ import org.columba.core.gui.selection.SelectionHandler;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.table.util.MessageNode;
 
-public class HeaderTableSelectionHandler extends SelectionHandler implements TreeSelectionListener {
+public class TableSelectionHandler extends SelectionHandler implements TreeSelectionListener {
 
 	private TableView view;
 	private LinkedList messages;
@@ -41,7 +42,7 @@ public class HeaderTableSelectionHandler extends SelectionHandler implements Tre
 	/**
 	 * @param id
 	 */
-	public HeaderTableSelectionHandler(TableView view) {
+	public TableSelectionHandler(TableView view) {
 		super("mail.table");
 		this.view = view;
 		view.addTreeSelectionListener(this);

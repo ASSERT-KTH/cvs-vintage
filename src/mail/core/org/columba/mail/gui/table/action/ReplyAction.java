@@ -21,7 +21,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.composer.command.ReplyCommand;
 import org.columba.mail.gui.frame.MailFrameController;
-import org.columba.mail.gui.table.TableSelectionChangedEvent;
+import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

@@ -29,7 +29,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangeListener;
 import org.columba.mail.gui.table.TableChangedEvent;
-import org.columba.mail.gui.tree.FolderSelectionChangedEvent;
+import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -142,7 +142,7 @@ public class ThreadedViewAction
 	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
-		Folder[] selection = ((FolderSelectionChangedEvent) e).getSelected();
+		Folder[] selection = ((TreeSelectionChangedEvent) e).getSelected();
 		if (selection.length == 1)
 			setEnabled(true);
 		else

@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.tree;
+package org.columba.mail.gui.tree.selection;
 
 import java.util.Vector;
 
@@ -49,7 +49,7 @@ public class TreeSelectionManager extends SelectionManager {
 		return folder;
 	}
 	
-	public void addFolderSelectionListener(FolderSelectionListener listener) {
+	public void addFolderSelectionListener(TreeSelectionListener listener) {
 		treeListenerList.add(listener);
 	}
 	
@@ -59,8 +59,8 @@ public class TreeSelectionManager extends SelectionManager {
 		folder = newFolder;
 
 		for (int i = 0; i < treeListenerList.size(); i++) {
-			FolderSelectionListener l =
-				(FolderSelectionListener) treeListenerList.get(i);
+			TreeSelectionListener l =
+				(TreeSelectionListener) treeListenerList.get(i);
 			l.folderSelectionChanged(newFolder);
 		}
 	}

@@ -22,7 +22,7 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
-import org.columba.mail.gui.table.TableSelectionChangedEvent;
+import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 public class ViewMessageAction extends InternAction implements SelectionListener {
 

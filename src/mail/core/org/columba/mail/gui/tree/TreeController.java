@@ -18,6 +18,8 @@ package org.columba.mail.gui.tree;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
@@ -30,6 +32,7 @@ import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.action.FolderTreeActionListener;
 import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
+import org.columba.mail.gui.tree.selection.TreeSelectionManager;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
@@ -37,7 +40,7 @@ import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
  * this class shows the the folder hierarchy
  */
 
-public class TreeController implements /*TreeSelectionListener,*/
+public class TreeController implements TreeSelectionListener,
 TreeWillExpandListener //, TreeNodeChangeListener
 {
 	private TreeView folderTree;
@@ -100,6 +103,8 @@ TreeWillExpandListener //, TreeNodeChangeListener
 
 		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer(true);
 		view.setCellRenderer(renderer);
+		
+		getView().addTreeSelectionListener(this);
 
 		//MainInterface.focusManager.registerComponent( new TreeFocusOwner(this) );
 	}
@@ -153,7 +158,7 @@ TreeWillExpandListener //, TreeNodeChangeListener
 
 		//selectedFolder = (FolderTreeNode) view.getLastSelectedPathComponent();
 
-		getActionListener().changeActions();
+		//getActionListener().changeActions();
 
 		MainInterface.processor.addOp(
 			new ViewHeaderListCommand(
@@ -219,4 +224,21 @@ TreeWillExpandListener //, TreeNodeChangeListener
 	public MailFrameController getMailFrameController() {
 		return mailFrameController;
 	}
+
+	/* (non-Javadoc)
+	 * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
+	 */
+	public void valueChanged(TreeSelectionEvent ev) {
+		TreePath path = ev.getPath();
+		
+		if ( path != null )
+		{
+			FolderTreeNode node = (FolderTreeNode) path.getLastPathComponent();
+			
+			getTreeSelectionManager().fireFolderSelectionEvent(null, node);	
+		}
+	
+	}
+	
+
 }

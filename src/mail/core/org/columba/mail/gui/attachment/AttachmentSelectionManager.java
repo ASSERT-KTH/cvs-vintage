@@ -22,7 +22,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.table.MessageSelectionListener;
-import org.columba.mail.gui.table.TableSelectionManager;
+import org.columba.mail.gui.table.selection.TableSelectionManager;
 
 /**
  * @author freddy

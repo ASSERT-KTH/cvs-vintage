@@ -10,10 +10,13 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameController;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -22,7 +25,9 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class FilterPreferencesAction extends FrameAction {
+public class FilterPreferencesAction
+	extends FrameAction
+	implements SelectionListener {
 
 	/**
 	 * @param frameController
@@ -55,7 +60,9 @@ public class FilterPreferencesAction extends FrameAction {
 			null,
 			'U',
 			null);
-
+		setEnabled(false);
+		((MailFrameController) frameController).registerTreeSelectionListener(
+			this);
 	}
 
 	/* (non-Javadoc)
@@ -76,7 +83,17 @@ public class FilterPreferencesAction extends FrameAction {
 		if (item == null)
 			return;
 
-		folder.showFilterDialog(((MailFrameController)getFrameController()));
+		folder.showFilterDialog(((MailFrameController) getFrameController()));
 	}
+	/* (non-Javadoc)
+					 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+					 */
+	public void selectionChanged(SelectionChangedEvent e) {
 
+		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
+			setEnabled(true);
+		else
+			setEnabled(false);
+
+	}
 }

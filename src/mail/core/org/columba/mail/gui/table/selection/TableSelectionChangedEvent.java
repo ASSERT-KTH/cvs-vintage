@@ -14,24 +14,33 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.gui.tree;
+package org.columba.mail.gui.table.selection;
 
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.folder.Folder;
 
-public class FolderSelectionChangedEvent extends SelectionChangedEvent {
-	
-	private Folder[] selected;
-	
-	public FolderSelectionChangedEvent( Folder[] n ) {
-		selected = n; 
-	}	
+public class TableSelectionChangedEvent extends SelectionChangedEvent {
+
+	private Folder folder;
+	private Object[] uids;
+
+	public TableSelectionChangedEvent( Folder folder, Object[] uids) {
+		this.folder = folder;
+		this.uids = uids;
+	}
 
 	/**
-	 * @return FolderTreeNode
+	 * @return Folder
 	 */
-	public Folder[] getSelected() {
-		return selected;
+	public Folder getFolder() {
+		return folder;
+	}
+
+	/**
+	 * @return Object[]
+	 */
+	public Object[] getUids() {
+		return uids;
 	}
 
 }

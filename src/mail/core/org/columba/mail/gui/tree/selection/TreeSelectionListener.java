@@ -13,34 +13,18 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+package org.columba.mail.gui.tree.selection;
 
-package org.columba.mail.gui.table;
+import org.columba.mail.folder.FolderTreeNode;
 
-import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.mail.folder.Folder;
-
-public class TableSelectionChangedEvent extends SelectionChangedEvent {
-
-	private Folder folder;
-	private Object[] uids;
-
-	public TableSelectionChangedEvent( Folder folder, Object[] uids) {
-		this.folder = folder;
-		this.uids = uids;
-	}
-
-	/**
-	 * @return Folder
-	 */
-	public Folder getFolder() {
-		return folder;
-	}
-
-	/**
-	 * @return Object[]
-	 */
-	public Object[] getUids() {
-		return uids;
-	}
-
+/**
+ * @author freddy
+ *
+ * To change this generated comment edit the template variable "typecomment":
+ * Window>Preferences>Java>Templates.
+ * To enable and disable the creation of type comments go to
+ * Window>Preferences>Java>Code Generation.
+ */
+public interface TreeSelectionListener {
+	public void folderSelectionChanged( FolderTreeNode newFolder );
 }

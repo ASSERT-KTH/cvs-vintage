@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.gui.tree;
+package org.columba.mail.gui.tree.selection;
 
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -28,6 +28,7 @@ import org.columba.core.gui.selection.SelectionHandler;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.tree.TreeView;
 
 public class TreeSelectionHandler
 	extends SelectionHandler
@@ -97,7 +98,7 @@ public class TreeSelectionHandler
 		}
 
 		fireSelectionChanged(
-			new FolderSelectionChangedEvent(
+			new TreeSelectionChangedEvent(
 				(Folder[]) selectedFolders.toArray(folderArray)));
 	}
 

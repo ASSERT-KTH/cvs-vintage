@@ -34,6 +34,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.action.HeaderTableActionListener;
+import org.columba.mail.gui.table.selection.*;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.message.HeaderList;

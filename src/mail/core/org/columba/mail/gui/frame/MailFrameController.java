@@ -32,12 +32,12 @@ import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.frame.action.FrameActionListener;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.table.FilterToolbar;
-import org.columba.mail.gui.table.HeaderTableSelectionHandler;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.action.ViewMessageAction;
+import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.TreeController;
-import org.columba.mail.gui.tree.TreeSelectionHandler;
 import org.columba.mail.gui.tree.action.ViewHeaderListAction;
+import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
 
 /**
@@ -65,9 +65,7 @@ public class MailFrameController extends FrameController {
 	private ToolBar toolBar;
 	public GlobalActionCollection globalActionCollection;
 
-	
-	
-	public MailFrameController( String id, MultiViewFrameModel model ) {
+	public MailFrameController(String id, MultiViewFrameModel model) {
 		super(id, model);
 	}
 
@@ -79,16 +77,26 @@ public class MailFrameController extends FrameController {
 		return r;
 	}
 
+	public FolderCommandReference[] getTreeSelection() {
+		FolderCommandReference[] r =
+			(FolderCommandReference[]) getSelectionManager().getSelection(
+				"mail.tree");
+
+		return r;
+	}
+
 	public void registerTableSelectionListener(SelectionListener l) {
 		getSelectionManager().registerSelectionListener("mail.table", l);
 	}
 
+	public void registerTreeSelectionListener(SelectionListener l) {
+		getSelectionManager().registerSelectionListener("mail.tree", l);
+	}
+
 	public FrameView createView() {
 
-		
 		MailFrameView view = new MailFrameView(this);
-		
-		
+
 		view.setFolderInfoPanel(folderInfoPanel);
 
 		view.init(
@@ -102,8 +110,6 @@ public class MailFrameController extends FrameController {
 
 		return view;
 	}
-
-	
 
 	public FrameView getView() {
 		return view;
@@ -121,34 +127,33 @@ public class MailFrameController extends FrameController {
 
 		if (toolbar == true) {
 
-			((MailFrameView)getView()).hideToolbar(folderInfo);
+			((MailFrameView) getView()).hideToolbar(folderInfo);
 			item.set("toolbars", "show_main", false);
 		} else {
 
-			((MailFrameView)getView()).showToolbar(folderInfo);
+			((MailFrameView) getView()).showToolbar(folderInfo);
 			item.set("toolbars", "show_main", true);
 		}
 
 		if (folderInfo == true) {
 
-			((MailFrameView)getView()).hideFolderInfo(toolbar);
+			((MailFrameView) getView()).hideFolderInfo(toolbar);
 			item.set("toolbars", "show_folderinfo", false);
 		} else {
 
-			((MailFrameView)getView()).showFolderInfo(toolbar);
+			((MailFrameView) getView()).showFolderInfo(toolbar);
 			item.set("toolbars", "show_folderinfo", true);
 		}
 
 	}
-	
-	public void close()
-		{
-			ColumbaLogger.log.info("closing MailFrameController");
-			
-			tableController.saveColumnConfig();
-			super.close();
-			
-		}
+
+	public void close() {
+		ColumbaLogger.log.info("closing MailFrameController");
+
+		tableController.saveColumnConfig();
+		super.close();
+
+	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.FrameController#registerSelectionHandlers()
@@ -169,19 +174,21 @@ public class MailFrameController extends FrameController {
 	 */
 	protected void init() {
 		treeController = new TreeController(this, MainInterface.treeModel);
-		selectionManager.addSelectionHandler(new TreeSelectionHandler(treeController.getView()));
+		selectionManager.addSelectionHandler(
+			new TreeSelectionHandler(treeController.getView()));
 
 		tableController = new TableController(this);
-		selectionManager.addSelectionHandler(new HeaderTableSelectionHandler(tableController.getView()));
-		
+		selectionManager.addSelectionHandler(
+			new TableSelectionHandler(tableController.getView()));
+
 		attachmentController = new AttachmentController(this);
 
 		messageController = new MessageController(this);
-			
+
 		folderInfoPanel = new FolderInfoPanel();
 		filterToolbar = new FilterToolbar(tableController);
-		
-		new DialogStore((MailFrameView) view);	
+
+		new DialogStore((MailFrameView) view);
 	}
 
 }
