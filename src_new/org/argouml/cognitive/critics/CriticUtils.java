@@ -24,7 +24,7 @@
 // File: CriticUtils.java
 // Classes: CriticUtils
 // Original Author: mail@jeremybennett.com
-// $Id: CriticUtils.java,v 1.5 2002/08/11 06:52:15 linus Exp $
+// $Id: CriticUtils.java,v 1.6 2002/10/23 13:32:48 mkl Exp $
 
 // 4 Feb 2002: Original version by Jeremy Bennett (mail@jeremybennett.com)
 
@@ -1118,7 +1118,7 @@ public abstract class CriticUtils {
     public static boolean isPrimaryObject(MModelElement element) {
 	for(Iterator i = element.getTaggedValues().iterator(); i.hasNext(); ) {
 	    MTaggedValue tv = (MTaggedValue)i.next();
-	    if (tv.getTag().equals(MMUtil.GENERATED_TAG)) {
+	    if ((MMUtil.GENERATED_TAG).equals(tv.getTag())) {
 		return false;
 	    }
 	}
