@@ -393,8 +393,8 @@ public class ServletWrapper extends Handler {
 	// associated with contexts ( like the session thread)
 
 	// XXX
-	HttpServletRequest reqF= req.getFacade();//new HttpServletRequestFacade( req );
-	HttpServletResponse resF= res.getFacade();//new HttpServletResponseFacade( res );
+	HttpServletRequest reqF= (HttpServletRequest)req.getFacade();//new HttpServletRequestFacade( req );
+	HttpServletResponse resF= (HttpServletResponse)res.getFacade();//new HttpServletResponseFacade( res );
 	doService( reqF, resF );
 
     }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade23/org/apache/tomcat/facade23/Attic/ServletConfigImpl.java,v 1.1 2000/08/23 04:06:42 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/08/23 04:06:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade23/org/apache/tomcat/facade23/Attic/ServletConfigImpl.java,v 1.2 2000/09/24 18:11:27 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/09/24 18:11:27 $
  *
  * ====================================================================
  *
@@ -87,7 +87,7 @@ final class ServletConfigImpl implements ServletConfig {
     // -------------------- public facade -------------------- 
     
     public ServletContext getServletContext() {
-	return servletW.getContext().getFacade();
+	return (ServletContext)servletW.getContext().getFacade();
     }
 
     public String getInitParameter(String name) {
