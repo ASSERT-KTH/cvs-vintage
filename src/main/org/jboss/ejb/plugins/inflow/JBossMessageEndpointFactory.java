@@ -54,7 +54,7 @@ import EDU.oswego.cs.dl.util.concurrent.SynchronizedInt;
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a> .
- * @version <tt>$Revision: 1.7 $</tt>
+ * @version <tt>$Revision: 1.8 $</tt>
  */
 public class JBossMessageEndpointFactory
    extends ServiceMBeanSupport
@@ -418,7 +418,7 @@ public class JBossMessageEndpointFactory
                   "is already in the activation-config.");
             else
             {
-               MessageDestinationMetaData destinationMetaData = metaData.getApplicationMetaData().getMessageDestination(link);
+               MessageDestinationMetaData destinationMetaData = container.getMessageDestination(link);
                if (destinationMetaData == null)
                   throw new DeploymentException("Unresolved message-destination-link '" + link + "' no message-destination in ejb-jar.xml");
                String jndiName = destinationMetaData.getJNDIName();

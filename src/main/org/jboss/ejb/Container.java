@@ -87,7 +87,7 @@ import java.security.PrivilegedActionException;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.163 $
+ * @version $Revision: 1.164 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -1249,7 +1249,7 @@ public abstract class Container
             {
                if (jndiName == null)
                {
-                  MessageDestinationMetaData messageDestination = application.getMessageDestination(link);
+                  MessageDestinationMetaData messageDestination = getMessageDestination(link);
                   if (messageDestination == null)
                      throw new DeploymentException("message-destination-ref '" + refName + 
                         "' message-destination-link '" + link + "' not found and no jndi-name in jboss.xml");
@@ -1301,6 +1301,11 @@ public abstract class Container
 
       if (debug)
          log.debug("End java:comp/env for EJB: " + beanMetaData.getEjbName());
+   }
+   
+   public MessageDestinationMetaData getMessageDestination(String link)
+   {
+      return EjbUtil.findMessageDestination(server, di, link);
    }
 
    /**
