@@ -48,7 +48,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.30 $
+*   @version $Revision: 1.31 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -335,7 +335,6 @@ extends AbstractInterceptor
                     } catch (Exception e)
                     {
                         // Ignore
-                        e.printStackTrace();
                     }
                    }
 
@@ -346,7 +345,9 @@ extends AbstractInterceptor
                  // Object has been removed -- ignore
               }
           }
-          catch (RemoteException e) {
+		  // EJB 1.1 12.3.2: all exceptions from ejbStore must be marked for rollback
+		  // and the instance must be discarded
+          catch (Exception e) {
               Logger.exception(e);
 
               // Store failed -> rollback!
