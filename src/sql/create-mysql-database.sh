@@ -49,9 +49,10 @@ FILES="mysql-scarab.sql \
        mysql-id-table-schema.sql \
        mysql-turbine-id-table-init.sql \
        mysql-scarab-id-table-init.sql \
+       mysql-scarab-security.sql \
+       mysql-scarab-required-data.sql \
        mysql-scarab-default-data.sql \
        mysql-scarab-sample-data.sql \
-       mysql-scarab-security.sql \
        "
 
 for i in ${FILES} ; do
