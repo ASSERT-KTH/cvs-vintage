@@ -45,7 +45,7 @@ import com.dreambean.ejx.ejb.AssemblyDescriptor;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class SecurityInterceptor
    extends AbstractInterceptor
@@ -84,6 +84,10 @@ public class SecurityInterceptor
    private void checkSecurityAssociation( MethodInvocation mi, boolean home)
     throws Exception
    {
+      // if this isn't ok, bean shouldn't deploy
+      if ((securityManager == null) || (realmMapping == null))
+        return;
+
       Principal principal = SecurityAssociation.getPrincipal();
       Object credential = SecurityAssociation.getCredential();
       if (principal == null)
