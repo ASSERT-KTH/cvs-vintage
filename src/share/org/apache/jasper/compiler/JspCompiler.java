@@ -135,7 +135,8 @@ public class JspCompiler extends Compiler implements Mangler {
     public final String getRealClassName() {
 	if( realClassName!=null ) return realClassName;
 
-	loghelper.log("JspCompiler: extract class name and version ", null, Logger.DEBUG);
+	// 	loghelper.log("JspCompiler: extract class name and version ",
+	//                    null, Logger.DEBUG);
         try {
             realClassName = ClassName.getClassName( getClassFileName() );
         } catch( JasperException ex) {
