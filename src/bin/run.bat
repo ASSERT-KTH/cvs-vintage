@@ -4,7 +4,6 @@
 
 
 rem java -DINFO_ALL -jar run.jar
-rem java -Djboss.verifier.isEnabled=true -jar run.jar
 
 set CLASSPATH=%CLASSPATH%;run.jar
 
@@ -27,13 +26,13 @@ set CLASSPATH=%CLASSPATH%;%JAVA_HOME%\lib\tools.jar
 
 :noTomcatHome
 
-if "%SPYDERMQ_HOME%" == "" goto startJBoss
-
-:gotSpyderMQHome
-set CLASSPATH=%CLASSPATH%;%SPYDERMQ_HOME%\lib
-set CLASSPATH=%CLASSPATH%;%SPYDERMQ_HOME%\lib\spydermq.jar
-set CLASSPATH=%CLASSPATH%;%SPYDERMQ_HOME%\lib\jms.jar
-set CLASSPATH=%CLASSPATH%;%SPYDERMQ_HOME%\lib\jnpserver.jar
+REM if "%SPYDERMQ_HOME%" == "" goto startJBoss
+REM
+REM :gotSpyderMQHome
+REM set CLASSPATH=%CLASSPATH%;%SPYDERMQ_HOME%\lib
+REM set CLASSPATH=%CLASSPATH%;%SPYDERMQ_HOME%\lib\spydermq.jar
+REM set CLASSPATH=%CLASSPATH%;%SPYDERMQ_HOME%\lib\jms.jar
+REM set CLASSPATH=%CLASSPATH%;%SPYDERMQ_HOME%\lib\jnpserver.jar
 
 :startJBoss
 REM Add all login modules for JAAS-based security
