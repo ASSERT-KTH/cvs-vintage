@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.1 2001/12/31 23:43:02 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.2 2002/01/01 02:49:52 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -233,10 +233,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         Group attGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
         intake.remove(attGroup);
         scarabR.setAttribute(null);
-        String nextTemplate = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE);
-        setTarget(data, getNextTemplate(data, 
-            "admin,GlobalAttributeEdit.vm"));
+        setTarget(data, getOtherTemplate(data));
     }
 
 

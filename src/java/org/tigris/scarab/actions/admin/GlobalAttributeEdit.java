@@ -59,6 +59,8 @@ import org.apache.fulcrum.intake.model.Field;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributePeer;
+import org.tigris.scarab.om.AttributeType;
+import org.tigris.scarab.om.AttributeTypePeer;
 import org.tigris.scarab.om.ROptionOption;
 import org.tigris.scarab.om.ParentChildAttributeOption;
 import org.tigris.scarab.om.ScarabUser;
@@ -70,7 +72,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.1 2001/12/31 23:43:02 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.2 2002/01/01 02:49:52 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -140,9 +142,17 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         {
             // get the Attribute that we are working on
             Group attGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
-            String attributeID = attGroup.get("Id").toString();
+            Group attributeTypeGroup = intake.get("AttributeType", IntakeTool.DEFAULT_KEY);
+            String attributeTypeId = attributeTypeGroup.get("AttributeTypeId").toString();
+            AttributeType attributeType = (AttributeType)AttributeTypePeer.retrieveByPK(new NumberKey(attributeTypeId));
+
+System.out.println(attributeType.getName());
+if (attributeType.getAttributeClass().getName().equals("select-one"))
+{
+            String attributeId = attGroup.get("Id").toString();
+
             Attribute attribute = Attribute
-                .getInstance((ObjectKey)new NumberKey(attributeID));
+                .getInstance((ObjectKey)new NumberKey(attributeId));
 
             // get the list of ParentChildAttributeOptions's used to display the page
             List pcaoList = attribute.getParentChildAttributeOptions();
@@ -221,7 +231,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 if (newPCAO.getName() != null && newPCAO.getName().length() > 0)
                 {
                     // save the new PCAO
-                    newPCAO.setAttributeId(new NumberKey(attributeID));
+                    newPCAO.setAttributeId(new NumberKey(attributeId));
                     try
                     {
                         newPCAO.save();
@@ -235,6 +245,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 // now remove the group to set the page stuff to null
                 intake.remove(newPCAOGroup);
             }
+        }
         }
     }
 
