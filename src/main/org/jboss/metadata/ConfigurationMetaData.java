@@ -9,6 +9,8 @@ package org.jboss.metadata;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+
 import org.jboss.deployment.DeploymentException;
 import org.jboss.mx.util.ObjectNameFactory;
 import org.w3c.dom.Element;
@@ -16,7 +18,8 @@ import org.w3c.dom.Element;
 /** The configuration information for an EJB container.
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.39 $
+ *   @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
+ *   @version $Revision: 1.40 $
  */
 public class ConfigurationMetaData extends MetaData
 {
@@ -25,6 +28,7 @@ public class ConfigurationMetaData extends MetaData
    public static final String CMP_1x_13 = "Standard CMP EntityBean";
    public static final String BMP_13 = "Standard BMP EntityBean";
    public static final String STATELESS_13 = "Standard Stateless SessionBean";
+   public static final String STATELESS_14 = "Webservice-Enabled Stateless SessionBean";
    public static final String STATEFUL_13 = "Standard Stateful SessionBean";
    public static final String MESSAGE_DRIVEN_13 = "Standard Message Driven Bean";
 
@@ -56,8 +60,8 @@ public class ConfigurationMetaData extends MetaData
    private boolean insertAfterEjbPostCreate = false;
    /** The container level security domain */
    private String securityDomain;
-   /** The container default invoker binding name */
-   private String defaultInvokerName;
+   /** The container invoker binding names */
+   private String[] invokerNames;
    /** The InstancePool configuration */
    private Element containerPoolConf;
    /** The InstanceCache configuration */
@@ -104,9 +108,9 @@ public class ConfigurationMetaData extends MetaData
       return securityDomain;
    }
 
-   public String getDefaultInvokerName()
+   public String[] getInvokers()
    {
-      return defaultInvokerName;
+      return invokerNames;
    }
 
    public String getWebClassLoader()
@@ -201,11 +205,18 @@ public class ConfigurationMetaData extends MetaData
 
       // set the security domain
       securityDomain = getElementContent(getOptionalChild(element, "security-domain"), securityDomain);
-
-      // Get the container default invoker name
-      Element invokerName = getOptionalChild(element, "invoker-proxy-binding-name");
-      defaultInvokerName = MetaData.getElementContent(invokerName, defaultInvokerName);
-
+   
+      //Get configured invokers
+      List invokers=new java.util.ArrayList();
+      
+      for (Iterator invokerElements = getChildrenByTagName(element, "invoker-proxy-binding-name"); invokerElements.hasNext();)
+      {
+         Element invokerElement = (Element) invokerElements.next();
+         String invokerName = getElementContent(invokerElement);
+         invokers.add(invokerName);
+      } // end of for ()
+      invokerNames=(String[]) invokers.toArray(new String[invokers.size()]);
+            
       // set the commit option
       String commit = getElementContent(getOptionalChild(element, "commit-option"), commitOptionToString(commitOption));
 

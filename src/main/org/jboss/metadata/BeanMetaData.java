@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  *
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  */
 public abstract class BeanMetaData
    extends MetaData
@@ -206,11 +206,13 @@ public abstract class BeanMetaData
       if( invokerBindings == null )
       {
          // See if there is a container default invoker name
-         String defaultName = configuration.getDefaultInvokerName();
-         if( defaultName != null )
+         String[] defaultNames = configuration.getInvokers();
+         if( defaultNames.length>0 )
          {
             invokerBindings = new HashMap();
-            invokerBindings.put(defaultName, getJndiName());
+            for(int count=0;count<defaultNames.length;count++) {
+               invokerBindings.put(defaultNames[count], getJndiName());
+            }
          }
          else
          {

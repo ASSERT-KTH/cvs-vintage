@@ -33,7 +33,8 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
  * @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.40 $
+ * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
+ * @version $Revision: 1.41 $
  */
 public class XmlFileLoader
 {
@@ -284,6 +285,16 @@ public class XmlFileLoader
 
          // Enable DTD validation based on our validateDTDs flag
          docBuilderFactory.setValidating(validateDTDs);
+         // make the parser namespace-aware in case we deal 
+         // with ejb2.1 descriptors, will not break dtd parsing in any way
+         // in which case there would be just a default namespace
+         docBuilderFactory.setNamespaceAware(true);
+         // this will (along JAXP in conjunction with 
+         // validation+namespace-awareness) enable xml schema checking. 
+         // Will currently fail because some J2EE1.4/W3C schemas 
+         // are still lacking.
+         //docBuilderFactory.setAttribute
+         //   ("http://java.sun.com/xml/jaxp/properties/schemaLanguage","http://www.w3.org/2001/XMLSchema");
          DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
          JBossEntityResolver lr = new JBossEntityResolver();
          LocalErrorHandler eh = new LocalErrorHandler( inPath, lr );

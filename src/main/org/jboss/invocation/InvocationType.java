@@ -12,7 +12,8 @@ import java.io.ObjectStreamException;
 /** Type safe enumeration used for to identify the invocation types.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.4 $
+ * @author Christoph.Jung@infor.de
+ * @version $Revision: 1.5 $
  */
 public final class InvocationType implements Serializable
 {
@@ -23,7 +24,7 @@ public final class InvocationType implements Serializable
     * new key enum value you must assign it an ordinal value of the current
     * MAX_TYPE_ID+1 and update the MAX_TYPE_ID value.
     */
-   private static final int MAX_TYPE_ID = 3;
+   private static final int MAX_TYPE_ID = 4;
 
    /** The array of InvocationKey indexed by ordinal value of the key */
    private static final InvocationType[] values = new InvocationType[MAX_TYPE_ID+1];
@@ -36,6 +37,8 @@ public final class InvocationType implements Serializable
          new InvocationType("HOME", 2);
    public static final InvocationType LOCALHOME =
          new InvocationType("LOCALHOME", 3);
+   public static final InvocationType SERVICE_ENDPOINT =
+		 new InvocationType("SERVICE_ENDPOINT", 4);
 
    private final transient String name;
 

@@ -28,7 +28,7 @@ import javax.ejb.EntityContext;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  */
 public class EntityEnterpriseContext extends EnterpriseContext
 {
@@ -196,7 +196,7 @@ public class EntityEnterpriseContext extends EnterpriseContext
             if(proxyFactory == null)
             {
                String defaultInvokerName = con.getBeanMetaData().
-                  getContainerConfiguration().getDefaultInvokerName();
+                  getContainerConfiguration().getInvokers()[0];
                proxyFactory = con.lookupProxyFactory(defaultInvokerName);
             }
             ejbObject = (EJBObject)proxyFactory.getEntityEJBObject(cacheKey);

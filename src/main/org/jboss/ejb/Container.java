@@ -65,7 +65,8 @@ import org.jboss.mx.util.ObjectNameConverter;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.123 $
+ * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
+ * @version $Revision: 1.124 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -682,7 +683,9 @@ public abstract class Container
          this.invokeStats.callIn();
 
          if(type == InvocationType.REMOTE ||
-               type == InvocationType.LOCAL)
+               type == InvocationType.LOCAL ||
+                  // web service calls come in as "ordinary" application invocations
+                  type == InvocationType.SERVICE_ENDPOINT)
          {
             if (mi instanceof MarshalledInvocation)
             {

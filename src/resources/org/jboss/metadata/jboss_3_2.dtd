@@ -7,8 +7,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.2//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
 
-$Id: jboss_3_2.dtd,v 1.10 2003/09/18 05:22:42 starksm Exp $
-$Revision: 1.10 $
+$Id: jboss_3_2.dtd,v 1.11 2003/10/31 18:23:51 cgjung Exp $
+$Revision: 1.11 $
 
 Overview of the architecture of jboss.xml
 
@@ -90,6 +90,7 @@ Overview of the architecture of jboss.xml
     <container-configuration>
       <container-name />
       <container-interceptors />
+      <invoker-proxy-binding-name />
       <client-interceptors />
       <instance-pool />
       <instance-cache />
@@ -724,7 +725,7 @@ container or ejb depends.
 <!--
   The container-configurations element declares the different possible
   container configurations that the beans can use. standardjboss.xml
-  provides 15 standard configurations with the following container-names:
+  provides 16 standard configurations with the following container-names:
     - Standard CMP 2.x EntityBean
     - Standard CMP EntityBean
     - Clustered CMP 2.x EntityBean
@@ -732,6 +733,7 @@ container or ejb depends.
     - IIOP CMP 2.x EntityBean
     - IIOP CMP EntityBean
     - Standard Stateless SessionBean
+    - Webservice-Enabled Stateless SessionBean
     - Clustered Stateless SessionBean
     - IIOP Stateless SessionBean
     - Standard Stateful SessionBean
@@ -760,7 +762,7 @@ container or ejb depends.
   Used in: container-configurations
 -->
 <!ELEMENT container-configuration (container-name , call-logging?,
- invoker-proxy-binding-name?, sync-on-commit-only?,
+ invoker-proxy-binding-name*, sync-on-commit-only?,
  insert-after-ejb-post-create?, container-interceptors? ,
  instance-pool? , instance-cache? ,  persistence-manager? , web-class-loader? ,
  locking-policy? ,  container-cache-conf? , container-pool-conf? ,

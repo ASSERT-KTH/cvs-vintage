@@ -38,7 +38,7 @@ import org.jboss.invocation.InvocationType;
  *
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- *   @version $Revision: 1.16 $
+ *   @version $Revision: 1.17 $
  */
 public class MethodMetaData extends MetaData
 {
@@ -127,6 +127,8 @@ public class MethodMetaData extends MetaData
    { return methodType == InvocationType.LOCALHOME ; }
    public boolean isLocalMethod()
    { return methodType == InvocationType.LOCAL ; }
+   public boolean isServiceEndpointMethod()
+   { return methodType == InvocationType.SERVICE_ENDPOINT ; }
    public boolean isUnchecked()
    { return unchecked; }
    public boolean isExcluded()
@@ -226,9 +228,13 @@ public class MethodMetaData extends MetaData
          {
             methodType = InvocationType.LOCAL;
          }
+		else if (methodIntf.equals("ServiceEndpoint"))
+		{
+		   methodType = InvocationType.SERVICE_ENDPOINT;
+		}
          else
          {
-            throw new DeploymentException("method-intf tag should be one of: 'Home', 'Remote', 'LocalHome', 'Local'");
+            throw new DeploymentException("method-intf tag should be one of: 'Home', 'Remote', 'LocalHome', 'Local', 'ServiceEndpoint'");
          }
       }
 

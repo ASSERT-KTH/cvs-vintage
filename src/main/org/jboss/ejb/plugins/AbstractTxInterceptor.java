@@ -36,7 +36,7 @@ import org.jboss.invocation.InvocationType;
  *
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 abstract class AbstractTxInterceptor
    extends AbstractInterceptor
@@ -79,7 +79,7 @@ abstract class AbstractTxInterceptor
       InvocationType type = invocation.getType();
       try 
       {
-         if (type == InvocationType.REMOTE || type == InvocationType.LOCAL) 
+         if (type == InvocationType.REMOTE || type == InvocationType.LOCAL || type==InvocationType.SERVICE_ENDPOINT) 
          {
             return getNext().invoke(invocation);
          }

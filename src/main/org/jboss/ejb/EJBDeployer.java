@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.38 $</tt>
+ * @version <tt>$Revision: 1.39 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -54,6 +54,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
  */
 public class EJBDeployer
    extends SubDeployerSupport
@@ -412,8 +413,11 @@ public class EJBDeployer
       super.init(di);
    }
 
-   /** This is here as a reminder that we may not want to allow ejb jars to
+   /** 
+    * This is here as a reminder that we may not want to allow ejb jars to
     * have arbitrary sub deployments. Currently we do.
+    * It is also here as a temporary solution to get JSR-109 simultaneous
+    * web service deployments going
     * @param di
     * @throws DeploymentException
     */ 
@@ -421,6 +425,13 @@ public class EJBDeployer
       throws DeploymentException
    {
       super.processNestedDeployments(di);
+      // look for web service deployments
+      URL webServiceUrl=di.localCl.getResource("META-INF/webservices.xml");
+      if(webServiceUrl!=null) {
+         DeploymentInfo sub=new DeploymentInfo(webServiceUrl,di,getServer());
+         sub.localCl=di.localCl;
+         sub.localUrl=di.localUrl;
+      }
    }
 
    public synchronized void create(DeploymentInfo di)
