@@ -21,6 +21,7 @@ import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.InvokerInterceptor;
 import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
+import org.jboss.mx.util.JMXExceptionDecoder;
 import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
@@ -31,7 +32,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  * 
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class LocalInvoker
    extends ServiceMBeanSupport
@@ -93,19 +94,21 @@ public class LocalInvoker
       Thread currentThread = Thread.currentThread();
       ClassLoader oldCl = currentThread.getContextClassLoader();
       
+      ObjectName mbean = (ObjectName) Registry.lookup((Integer) invocation.getObjectName());
       try
       {         
-         ObjectName mbean = (ObjectName)
-            Registry.lookup((Integer)invocation.getObjectName());
          
          return server.invoke(mbean,
                               "invoke",
                               new Object[] { invocation },
                               Invocation.INVOKE_SIGNATURE);
       }
-      catch (MBeanException e)
+      catch (Exception e)
       {
-         throw e.getTargetException();
+         e = (Exception) JMXExceptionDecoder.decode(e);
+         if( log.isTraceEnabled() )
+            log.trace("Failed to invoke on mbean: "+mbean, e);
+         throw e;
       }
       finally
       {
