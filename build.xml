@@ -7,6 +7,9 @@
   <property name="debug" value="on"/>
 
   <!-- Directories -->
+  <!-- Where source packages are located -->
+  <property name="ws" value=".." /> 
+
   <!-- work.dir is the place where build places the work
        files created in the build process, including the
        build/ and dist/ dirs. 
@@ -21,7 +24,7 @@
   <!-- Location where various binaries are installed.
        It can be "c:\Program Files" or /usr/share/java or 
        /opt/java. The default is .. ( assuming jakarta-tomcat
-       is installed in the same directory ).
+       is installed in the same directory ) ( backward compat ).
        
        Note that this assumes binary packages ( i.e. dists )
    -->
@@ -43,6 +46,9 @@
   <!-- Binaries checked in ( servlet.jar is not likely to change, 
       the 2.2 spec is final -->
   <property name="servlet22.jar" value="bin/servlet22.jar"/>
+
+  <!-- We can assume tomcat.build will hold a working tomcat -->
+  <property name="tomcat.home" value="${tomcat.build}"/>
  
   <!-- ==================== Initialization - guessing config ========== -->
   <target name="detect">

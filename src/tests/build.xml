@@ -1,39 +1,28 @@
 <?xml version="1.0"?> 
-
-<!-- Emacs indentation & editting support
-    <antstructure output="ant.dtd"/>
-<!DOCTYPE ant SYSTEM "ant.dtd" >
--->
-
 <project name="Tomcat-test" default="main" basedir=".">
 
   <!-- Compilation properties -->
 
   <property name="build.compiler" value="classic"/>
   <property name="optimize" value="false" />
-  <property name="debug" value="off" />
+  <property name="debug" value="on" />
 
   <!-- Directories -->
+  <property name="ws" value="../../.." /> 
+  <property name="work.dir" value="${ws}/jakarta-tomcat" /> 
+  <property name="install.dir" value="${ws}" /> 
 
-  <property name="tomcat.home" value="../../../build/tomcat"/>
-  <property name="watchdog.src" 
-	    value="${tomcat.home}/../../jakarta-watchdog"/>
-  <property name="watchdog.build" 
-	    value="${watchdog.src}/../build/watchdog"/>
+  <property name="tomcat.build" value="${ws}/jakarta-tomcat/build/tomcat"/>
+  <property name="tomcat.dist" value="${ws}/jakarta-tomcat/dist/tomcat"/>
 
-
-  <!-- External packages we depend on -->
-
-  <property name="ant.home" value="../jakarta-ant" />
-  <property name="jaxp" value="../jaxp1.0.1" />
-
-  <!-- set it if not specified as -D or in parent antfile -->
-  <property name="servlet.jar" value="${tomcat.home}/lib/servlet.jar" />
+  <property name="watchdog.src" value="${ws}/jakarta-watchdog"/>
+  <property name="watchdog.build" value="${watchdog.src}/../build/watchdog"/>
 
   <!-- ==================== Initialization - guessing config ========== -->
   <target name="init">
     <available file="${watchdog.src}/build.xml" 
 	       property="watchdog.available" />
+    <echo message="Testing ${watchdog.src}/build.xml ${watchdog.available}" />
   </target>
 
   <!-- ==================== Copy static files ==================== -->
@@ -42,7 +31,7 @@
   </target>
 
   <!-- ==================== Build the internal test app ================== -->
-  <target name="sanity-test" >
+  <target name="sanity-test" depends="init">
     <mkdir dir="${tomcat.build}/webapps/test"/>
     <!-- the golden files will be part of the webapp - no 
          need to have a separate directory or polute lib -->
@@ -94,9 +83,9 @@
       <fileset dir="${watchdog.src}/src/server/servlet-tests" />
     </copy>
 
-    <copyfile src="${watchdog.build}/conf/jsp-gtest.xml"
+    <copyfile src="${watchdog.src}/src/conf/jsp-gtest.xml"
 	      dest="${tomcat.build}/webapps/jsp-tests/WEB-INF/jsp-gtest.xml"/>
-    <copyfile src="${watchdog.build}/conf/servlet-moo.xml"
+    <copyfile src="${watchdog.src}/src/conf/servlet-moo.xml"
   dest="${tomcat.build}/webapps/servlet-tests/WEB-INF/servlet-moo.xml"/>
 
     <javac 
@@ -135,7 +124,6 @@
 
   <target name="clean" depends="init">
     <deltree dir="${tomcat.build}"/>
-    <deltree dir="${tomcat.home}"/>
   </target>
   
   <target name="all" depends=""/>
