@@ -1,4 +1,4 @@
-// $Id: DecoratedIcon.java,v 1.6 2003/06/30 18:00:23 linus Exp $
+// $Id: DecoratedIcon.java,v 1.7 2004/01/15 20:36:44 jjones Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,12 +34,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
-
-import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.UIManager;
 
 /**
  * The base class for adding simple decorations to existing icons.
@@ -100,9 +98,9 @@ public abstract class DecoratedIcon extends ImageIcon {
         // Initialize the color array
         Color[] colors = {
                 c.getBackground(),
-                MetalLookAndFeel.getPrimaryControlDarkShadow(),
-                MetalLookAndFeel.getPrimaryControlInfo(),
-                MetalLookAndFeel.getPrimaryControlHighlight()};
+                UIManager.getColor("controlDkShadow"),
+                UIManager.getColor("infoText"),
+                UIManager.getColor("controlHighlight")};
 
         for (int i = 0; i < _popupIconWidth; i++) {
             for (int j = 0; j < _popupIconHeight; j++) {

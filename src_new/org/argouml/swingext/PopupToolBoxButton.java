@@ -1,4 +1,4 @@
-// $Id: PopupToolBoxButton.java,v 1.8 2003/06/30 18:00:23 linus Exp $
+// $Id: PopupToolBoxButton.java,v 1.9 2004/01/15 20:36:44 jjones Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,20 +30,19 @@
 
 package org.argouml.swingext;
 
-import javax.swing.Action;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPopupMenu;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
-import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPopupMenu;
+import javax.swing.UIManager;
 
 /** An extension of JButton to which alternative actions can be added.
  * The button to trigger these actions become available when a
@@ -151,9 +150,9 @@ public class PopupToolBoxButton extends JButton {
         super.paint(g);
         Color[] colors = {
 	    getBackground(),
-	    MetalLookAndFeel.getPrimaryControlDarkShadow(),
-	    MetalLookAndFeel.getPrimaryControlInfo(),
-	    MetalLookAndFeel.getPrimaryControlHighlight()};
+	    UIManager.getColor("controlDkShadow"),
+	    UIManager.getColor("infoText"),
+	    UIManager.getColor("controlHighlight")};
 
         if (_showSplitter) {
             showSplitter(colors[1], g, getSplitterPosn(),     1,

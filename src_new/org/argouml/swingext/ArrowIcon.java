@@ -1,4 +1,4 @@
-// $Id: ArrowIcon.java,v 1.4 2003/06/30 18:00:23 linus Exp $
+// $Id: ArrowIcon.java,v 1.5 2004/01/15 20:36:44 jjones Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,10 +30,15 @@
 
 package org.argouml.swingext;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.io.Serializable;
-import javax.swing.*;
-import java.awt.*;
-import javax.swing.plaf.metal.MetalLookAndFeel;
+
+import javax.swing.ButtonModel;
+import javax.swing.Icon;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
 /**
  * A metal look and feel arrow icon that can be created to point to a
@@ -96,9 +101,9 @@ public class ArrowIcon implements Icon, Serializable, SwingConstants {
         // Initialize the color array
         Color[] colors = {
 	    c.getBackground(),
-	    MetalLookAndFeel.getPrimaryControlDarkShadow(),
-	    MetalLookAndFeel.getPrimaryControlInfo(),
-	    MetalLookAndFeel.getPrimaryControlHighlight()};
+	    UIManager.getColor("controlDkShadow"),
+	    UIManager.getColor("infoText"),
+	    UIManager.getColor("controlHighlight")};
 
         // Fill the background first ...
         g.setColor(c.getBackground());
