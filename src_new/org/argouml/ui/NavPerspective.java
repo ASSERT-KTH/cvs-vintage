@@ -24,7 +24,7 @@
 // File: NavPerspective.java
 // Classes: NavPerspective
 // Original Author: your email address here
-// $Id: NavPerspective.java,v 1.10 2002/09/04 12:30:49 kataka Exp $
+// $Id: NavPerspective.java,v 1.11 2002/09/05 21:30:00 kataka Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extends/includes and extension points in the package centric
@@ -132,6 +132,11 @@ implements Serializable, TreeModel, Cloneable {
 			     new GoModelToElements(),
 			     new PredAND(new PredInstanceOf(MAssociation.class),
                              new PredNotInstanceOf(MAssociationClass.class)));
+                             
+    GoFilteredChildren modelToGeneralizations = 
+    	new GoFilteredChildren("misc.package.generalizations",
+    			new GoModelToElements(),
+    			new PredInstanceOf(MGeneralization.class));
 
     // Extend and include are traversed via use case.
 
@@ -176,6 +181,7 @@ implements Serializable, TreeModel, Cloneable {
     packageCentric.addSubTreeModel(modelToCollaboration);
     packageCentric.addSubTreeModel(modelToComponentInstance);
     packageCentric.addSubTreeModel(modelToNodeInstance);
+    packageCentric.addSubTreeModel(modelToGeneralizations);
     packageCentric.addSubTreeModel(new GoUseCaseToExtensionPoint());
     packageCentric.addSubTreeModel(new GoClassifierToStr());
     packageCentric.addSubTreeModel(new GoClassifierToBeh());
