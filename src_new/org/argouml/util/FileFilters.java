@@ -1,4 +1,4 @@
-// $Id: FileFilters.java,v 1.11 2004/04/30 19:05:18 mkl Exp $
+// $Id: FileFilters.java,v 1.12 2004/08/25 18:51:47 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FileFilters.java,v 1.11 2004/04/30 19:05:18 mkl Exp $
+// $Id: FileFilters.java,v 1.12 2004/08/25 18:51:47 mvw Exp $
 
 package org.argouml.util;
 
@@ -139,11 +139,12 @@ public class FileFilters {
     /**
      * Returns the suffix for which a FileFilter filters. 
      * @param filter The FileFilter from which we want to know the suffix
-     * @return String The suffix of the FileFilter. Returns null if the FileFilter is not an instance of SuffixFilter.
+     * @return String The suffix of the FileFilter. 
+     * Returns null if the FileFilter is not an instance of SuffixFilter.
      */
     public static String getSuffix(FileFilter filter) {
         if (filter instanceof SuffixFilter) {
-            return ((SuffixFilter) filter)._suffix;
+            return ((SuffixFilter) filter).getSuffix();
         }
         return null;
     }

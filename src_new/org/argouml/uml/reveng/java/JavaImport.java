@@ -1,4 +1,4 @@
-// $Id: JavaImport.java,v 1.28 2004/06/24 06:25:45 linus Exp $
+// $Id: JavaImport.java,v 1.29 2004/08/25 18:51:48 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,8 +69,8 @@ public class JavaImport extends FileImportSupport {
 	    // Create a modeller for the parser
 	    Modeller modeller = new Modeller(p.getModel(),
 					     diagram, _import,
-					     attribute.isSelected(),
-					     datatype.isSelected(),
+					     getAttribute().isSelected(),
+					     getDatatype().isSelected(),
 					     f.getName());
 
 	    // Print the name of the current file, so we can associate
