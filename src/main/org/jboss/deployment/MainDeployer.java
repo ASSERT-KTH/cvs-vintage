@@ -42,7 +42,7 @@ import org.jboss.system.ServiceMBeanSupport;
 * Takes a series of URL to watch, detects changes and calls the appropriate Deployers 
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *
 *
 */
@@ -505,11 +505,11 @@ implements MainDeployerMBean, Runnable
             // Get lastModified of file from file system
             if (deployment.watch.getProtocol().startsWith("file"))
             {
-               lastModified = new File(deployment.watch.getFile()).lastModified();
-               //               File watched = new File(deployment.watch.getFile());
-               //Only scan individual files
-               //               if (!watched.isDirectory()) lastModified = watched.lastModified();
-            }
+               File theFile = new File(deployment.watch.getFile());
+               if ( ! theFile.exists()) modified.add(deployment);
+                  
+               lastModified = theFile.lastModified();
+             }
             
             // Use URL connection to get lastModified on http
             else lastModified = deployment.watch.openConnection().getLastModified();
