@@ -16,10 +16,6 @@
 
 <h3>Search the Scarab Knowledge Base</h3>
 
-#set ( $search = $scarabR.Search )
-#set ( $query = $intake.SearchIssue.mapTo($search) )
-#set ($attrValues = $search.ModuleAttributeValuesMap)
-
 #advancedQuery()
 
 <p class="functnbar">

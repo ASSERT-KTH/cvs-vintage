@@ -1025,35 +1025,43 @@ public class IssueSearch
         // search for issues based on text
         NumberKey[] matchingIssueIds = addTextMatches(crit, attValues);
 
-        // state change query
-        addStateChangeQuery(crit);
-
-        // Add any order by clause
-        addInitialSortCriteria(crit);
-
-        // get matching issues
-        List matchingIssues = IssuePeer.doSelect(crit);
-        
-        // text search can lead to an ordered list according to search engine's
-        // ranking mechanism, so sort the results according to this list
-        // unless another sorting criteria has been specified.
-        if ( getInitialSortAttributeId() == null && matchingIssueIds != null ) 
-        {
-            matchingIssues = 
-                sortByIssueIdList(matchingIssueIds, matchingIssues, 
-                                  limitResults);
-        }
-        // no sorting
-        else
-        {
-            int maxIssues = matchingIssues.size();
-            if ( limitResults > 0 && maxIssues > limitResults )
-            {
-                maxIssues = limitResults;
-            }
-            matchingIssues = matchingIssues.subList(0, maxIssues);
-        }
+        List matchingIssues = null;
+        if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
+        {            
+            // state change query
+            addStateChangeQuery(crit);
             
+            // Add any order by clause
+            addInitialSortCriteria(crit);
+            
+            // get matching issues
+            matchingIssues = IssuePeer.doSelect(crit);
+            
+            // text search can lead to an ordered list according to search 
+            // engine's ranking mechanism, so sort the results according to 
+            // this list unless another sorting criteria has been specified.
+            if ( getInitialSortAttributeId() == null 
+                 && matchingIssueIds != null ) 
+            {
+                matchingIssues = sortByIssueIdList(
+                    matchingIssueIds, matchingIssues, limitResults);
+            }
+            // no sorting
+            else
+            {
+                int maxIssues = matchingIssues.size();
+                if ( limitResults > 0 && maxIssues > limitResults )
+                {
+                    maxIssues = limitResults;
+                }
+                matchingIssues = matchingIssues.subList(0, maxIssues);
+            }
+        }
+        else 
+        {
+            matchingIssues = new ArrayList(0);
+        }
+
         return matchingIssues;
     }
 

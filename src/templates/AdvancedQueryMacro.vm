@@ -1,8 +1,17 @@
 #macro( advancedQuery )
+
+#set ( $search = $scarabR.Search )
+#set ( $query = $intake.SearchIssue.mapTo($search) )
+#set ($attrValues = $search.ModuleAttributeValuesMap)
+
 <div class="axial">
 <table width="100%" cellpadding="3" cellspacing="2" border="1">
     <tr>
-         <th width="120">issue ID# range:</th>
+         <th width="120">
+             issue ID# range:
+             #fieldErrorMsg($query.MinId "")
+             #fieldErrorMsg($query.MaxId "")
+         </th>
 
          <td>
          from:&#160;<input type="text" size="20" 
@@ -13,13 +22,18 @@
     </tr>
 
     <tr>
-         <th width="120">issue creation date range:</th>
+         <th width="120">
+             issue creation date range:
+             #fieldErrorMsg($query.MinDate "")
+             #fieldErrorMsg($query.MaxDate "")
+         </th>
 
          <td>
          from:&#160;<input type="text" size="20"
-             name="$query.MinDate.Key" value="$query.MaxDate" />
+             name="$query.MinDate.Key" value="$query.MinDate.toString()" />
          &#160;&#160;to:&#160;<input type="text" size="20"
-             name="$query.MaxDate.Key" value="$query.MinDate" />
+             name="$query.MaxDate.Key" value="$query.MaxDate.toString()" />
+         (e.g. MM/DD/YYYY hh:mm)
          </td>
     </tr>
 
@@ -162,16 +176,20 @@
         </tr>  
         
         <tr>
-           <th width="120">date range:<br />(e.g. MM/DD/YYYY hh:mm)</th>
+           <th width="120">
+               date range:
+               #fieldErrorMsg($query.StateChangeFromDate "")
+               #fieldErrorMsg($query.StateChangeToDate "")
+           </th>
 
            <td>          
            
-               <input type="text" size=9 name="$query.StateChangeFromDate.Key" 
+               <input type="text" size=20 name="$query.StateChangeFromDate.Key"
                    value="$query.StateChangeFromDate">&nbsp;
                to
-               <input type="text" size=9 name="$query.StateChangeToDate.Key" 
+               <input type="text" size=20 name="$query.StateChangeToDate.Key" 
                    value="$query.StateChangeToDate">
-
+               (e.g. MM/DD/YYYY hh:mm)
            </td>
         </tr>
 

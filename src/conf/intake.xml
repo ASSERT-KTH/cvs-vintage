@@ -128,13 +128,25 @@
         <field name="TextScope" key="ts" type="NumberKey" multiValued="true"/>
         <field name="MinId" key="lid" type="String"/>
         <field name="MaxId" key="hid" type="String"/>
-        <field name="MinDate" key="ld" type="String"/>
-        <field name="MaxDate" key="hd" type="String"/>
+        <field name="MinDate" key="ld" type="String">
+            <rule name="mask" 
+                value="[0-1]?[0-9]/[0-3]?[0-9]/[1-2]?[0-9]?[0-9][0-9]( [0-2]?[0-9]:[0-5][0-9])?">Invalid From Date</rule>
+        </field>
+        <field name="MaxDate" key="hd" type="String">
+            <rule name="mask" 
+                value="[0-1]?[0-9]/[0-3]?[0-9]/[1-2]?[0-9]?[0-9][0-9]( [0-2]?[0-9]:[0-5][0-9])?">Invalid To Date</rule>
+        </field>
         <field name="StateChangeAttributeId" key="scai" type="NumberKey"/>
         <field name="StateChangeFromOptionId" key="scfoi" type="NumberKey"/>
         <field name="StateChangeToOptionId" key="sctoi" type="NumberKey"/>
-        <field name="StateChangeFromDate" key="scfd" type="String"/>
-        <field name="StateChangeToDate" key="sctd" type="String"/>
+        <field name="StateChangeFromDate" key="scfd" type="String">
+            <rule name="mask" 
+                value="[0-1]?[0-9]/[0-3]?[0-9]/[1-2]?[0-9]?[0-9][0-9]( [0-2]?[0-9]:[0-5][0-9])?">Invalid From Date</rule>
+        </field>
+        <field name="StateChangeToDate" key="sctd" type="String">
+            <rule name="mask" 
+                value="[0-1]?[0-9]/[0-3]?[0-9]/[1-2]?[0-9]?[0-9][0-9]( [0-2]?[0-9]:[0-5][0-9])?">Invalid To Date</rule>
+        </field>
         <field name="InitialSortAttributeId" key="isai" type="NumberKey"/>
         <field name="InitialSortPolarity" key="isp" type="String"/>
         <field name="ResultsPerPage" key="rpp" type="int"/>
