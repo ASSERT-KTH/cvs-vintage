@@ -131,13 +131,17 @@ public class ServerXmlReader extends BaseInterceptor {
 	if( f.exists() ){
             cm.setNote( "configFile", f.getAbsolutePath());
 	    loadConfigFile(xh,f,cm);
+	    String s=f.getAbsolutePath();
+	    if( s.startsWith( cm.getHome()))
+		s="$TOMCAT_HOME" + s.substring( cm.getHome().length());
+	    log( "Config=" + s);
             // load server-*.xml
 /*            Vector v = getUserConfigFiles(f);
             for (Enumeration e = v.elements();
                  e.hasMoreElements() ; ) {
                 f = (File)e.nextElement();
                 loadConfigFile(xh,f,cm);
-
+		cm.log(sm.getString("tomcat.loading") + " " + f);
             }
 */
         }
@@ -148,14 +152,12 @@ public class ServerXmlReader extends BaseInterceptor {
     public static void loadConfigFile(XmlMapper xh, File f, ContextManager cm)
 	throws TomcatException
     {
-	cm.log(sm.getString("tomcat.loading") + " " + f);
 	try {
 	    xh.readXml(f,cm);
 	} catch( Exception ex ) {
 	    cm.log( sm.getString("tomcat.fatalconfigerror"), ex );
 	    throw new TomcatException(ex);
 	}
-	cm.log(sm.getString("tomcat.loaded") + " " + f);
     }
 
     public static void setTagRules( XmlMapper xh ) {
