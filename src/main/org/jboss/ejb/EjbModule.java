@@ -8,6 +8,10 @@ package org.jboss.ejb;
 
 
 
+
+
+
+//import org.jboss.system.UnifiedClassLoader;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,12 +24,16 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.StringTokenizer;
 import javax.ejb.EJBLocalHome;
-import javax.naming.InitialContext;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.transaction.TransactionManager;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
+import org.jboss.deployment.MainDeployerMBean;
 import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.plugins.AbstractInstanceCache;
@@ -43,26 +51,20 @@ import org.jboss.metadata.MetaData;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.metadata.XmlLoadable;
+import org.jboss.mx.loading.UnifiedClassLoader;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.system.Service;
 import org.jboss.system.ServiceControllerMBean;
 import org.jboss.system.ServiceMBeanSupport;
-//import org.jboss.system.UnifiedClassLoader;
-import org.jboss.mx.loading.UnifiedClassLoader;
 import org.jboss.util.jmx.MBeanProxy;
+import org.jboss.util.jmx.ObjectNameFactory;
 import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
 import org.jboss.web.WebClassLoader;
 import org.jboss.web.WebServiceMBean;
-
 import org.w3c.dom.Element;
-
-import javax.naming.NamingException;
-import javax.transaction.TransactionManager;
-
-import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  * An EjbModule represents a collection of beans that are deployed as a
@@ -81,7 +83,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -136,11 +138,11 @@ public class EjbModule
    private final Map moduleData = 
          Collections.synchronizedMap(new HashMap());
    
-   //private MBeanServer server;
-   
    // Static --------------------------------------------------------
    
-   /** Stores a map of DeploymentInfos to EjbModules. */
+   /** Stores a map of DeploymentInfos to EjbModules. 
+    * @todo this is silly, do something else.
+    */
    private static HashMap ejbModulesByDeploymentInfo = new HashMap();
 
    // Public --------------------------------------------------------
@@ -261,12 +263,21 @@ public class EjbModule
     *          not found   
     */
    public Container findContainer(String name)
+      throws DeploymentException
    {
       // Quick check
       Container result = (Container)containers.get(name);
       if (result != null)
+      {
+         //It is in this module
          return result;
-
+      }
+      // Does the name include a path?
+      if (name.indexOf('#') != -1) 
+      {
+         return locateContainerByPath(name);
+      } // end of if ()
+      
       // Ok, we have to walk the tree
       return locateContainer(name);
    }
@@ -995,10 +1006,6 @@ public class EjbModule
     */
    private Container locateContainer(String name)
    {
-      // Check for a relative path
-      if (name.startsWith(".."))
-         return locateContainerRelative(name);
-
       // Get the top level deployment
       DeploymentInfo info = deploymentInfo;
       while (info.parent != null)
@@ -1021,25 +1028,21 @@ public class EjbModule
     */
    private Container locateContainer(DeploymentInfo info, String name)
    {
-      Container result = null;
-
       // Try the current EjbModule
-      EjbModule module = (EjbModule) ejbModulesByDeploymentInfo.get(info);
-      if (module != null)
+      Container result = getContainerByDeploymentInfo(info, name);
+      if (result != null)
       {
-         result = module.getContainer(name);
-
-         if (result != null)
-            return result;
+         return result;
       }
 
       // Try the subpackages
-      Iterator iterator = info.subDeployments.iterator();
-      while (iterator.hasNext())
+      for (Iterator iterator = info.subDeployments.iterator(); iterator.hasNext(); )
       {
          result = locateContainer((DeploymentInfo) iterator.next(), name);
          if (result != null)
+         {
             return result;
+         }
       }
 
       // Nothing found
@@ -1057,9 +1060,75 @@ public class EjbModule
     * @return  container for the named bean, or null if the container was
     *          not found   
     */
-   private Container locateContainerRelative(String name)
+   private Container locateContainerByPath(String name)
+      throws DeploymentException
    {
-      log.warn("Not implemented: " + name);
+      String path = name.substring(0, name.indexOf('#'));
+      log.info("path: " + path);
+      String ejbName = name.substring(name.indexOf('#') + 1);
+      log.info("ejbName: " + ejbName);
+      String us = deploymentInfo.url.toString();
+      log.info("us: " + us);
+      //remove our jar name
+      String ourPath = us.substring(0, us.lastIndexOf('/'));
+      log.info("ourPath: " + ourPath);
+      for (StringTokenizer segments = new StringTokenizer(path, "/"); segments.hasMoreTokens(); )
+      {
+         String segment = segments.nextToken();
+         log.info("segment: " + segment);
+         //kind of silly, but takes care of ../s1/s2/../s3/myjar.jar
+         if (segment.equals("..")) 
+         {
+            ourPath = ourPath.substring(0, ourPath.lastIndexOf('/'));
+         } // end of if ()
+         else
+         {
+            ourPath += "/" + segment;
+         } // end of else
+         log.info("ourPath: " + ourPath);
+      }
+      URL target = null;
+      try 
+      {
+         target = new URL(ourPath);
+      }
+      catch (MalformedURLException mfue)
+      {
+         throw new DeploymentException("could not construct URL for: " + ourPath);
+      } // end of try-catch
+      DeploymentInfo targetInfo = null;
+      try 
+      {
+         targetInfo = (DeploymentInfo)server.invoke(MainDeployerMBean.OBJECT_NAME,
+                                                    "getDeployment",
+                                                    new Object[] {target},
+                                                    new String[] {URL.class.getName()});
+
+      }
+      catch (Exception e)
+      {
+         throw new DeploymentException("could not get DeploymentInfo for URL: " + target, e);
+      } // end of try-catch
+      if (targetInfo == null) 
+      {
+         throw new DeploymentException("cannot locate deployment info: " + target);
+      } // end of if ()
+      Container found = getContainerByDeploymentInfo(targetInfo, ejbName);
+      if (found == null) 
+      {
+         throw new DeploymentException("cannot locate container: " + name + " in package at: " + target);
+      } // end of if ()
+      return found;
+   }
+
+   private Container getContainerByDeploymentInfo(DeploymentInfo info, String name)
+   {
+      EjbModule module = (EjbModule) ejbModulesByDeploymentInfo.get(info);
+      if (module != null)
+      {
+         return module.getContainer(name);
+      }
       return null;
    }
+
 }
