@@ -1,4 +1,4 @@
-// $Id: ActionNewActor.java,v 1.1 2004/11/24 22:02:12 mvw Exp $
+// $Id: ActionNewActor.java,v 1.2 2004/12/27 20:56:26 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,10 +29,14 @@ import java.awt.event.ActionEvent;
 import javax.swing.Action;
 
 import org.argouml.i18n.Translator;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UseCasesFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
+
+import ru.novosoft.uml.foundation.core.MNamespace;
+import ru.novosoft.uml.model_management.MModel;
 
 
 /**
@@ -56,8 +60,10 @@ class ActionNewActor extends AbstractActionNewModelElement {
     public void actionPerformed(ActionEvent e) {
         Object target = TargetManager.getInstance().getModelTarget();
         if (ModelFacade.isAActor(target)) {
+            Object model =
+                ProjectManager.getManager().getCurrentProject().getModel();
             TargetManager.getInstance().setTarget(
-                    UseCasesFactory.getFactory().buildActor(target));
+                    UseCasesFactory.getFactory().buildActor(target, model));
             super.actionPerformed(e);
         }
     }
