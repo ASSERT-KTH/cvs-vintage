@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.5 2000/01/13 18:20:33 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/01/13 18:20:33 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.6 2000/01/15 03:52:57 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/01/15 03:52:57 $
  *
  * ====================================================================
  *
@@ -182,6 +182,10 @@ public class ResponseImpl implements Response {
 	    out.reallyFlush();
 	} catch (SocketException e) {
 	    return;  // munch
+	} catch (IOException e) {
+	    if("Broken pipe".equals(e.getMessage()))
+		return;
+	    throw e;
 	}
     }
 

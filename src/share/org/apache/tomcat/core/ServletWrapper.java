@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.14 2000/01/14 19:48:22 costin Exp $
- * $Revision: 1.14 $
- * $Date: 2000/01/14 19:48:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.15 2000/01/15 03:52:57 costin Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/01/15 03:52:57 $
  *
  * ====================================================================
  *
@@ -431,8 +431,9 @@ public class ServletWrapper {
     }
 
     public String toString() {
-	String toS="Wrapper( " + servletClassName + ",";
-	if( servlet!=null ) toS=toS+ servlet.getClass().getName();
+	String toS="Wrapper(";
+	if( servlet!=null ) toS=toS+ "S:" + servlet.getClass().getName();
+	else  toS= toS + servletClassName;
 	return toS + ")";
     }
 

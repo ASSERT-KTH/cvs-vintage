@@ -155,9 +155,13 @@ public class ContextManager {
 
 	if( requestInterceptors.size() == 0 ) {
 	    // nothing set up by starter, add default ones
+	    if(debug>0) log("Setting default interceptors " + requestInterceptors);
 	    addRequestInterceptor(new ContextMapperInterceptor( this ));
 	    addRequestInterceptor(new SessionInterceptor());
-	    addRequestInterceptor(new MapperInterceptor());
+	    //	    addRequestInterceptor(new MapperInterceptor());
+
+	    // Use the simplified mapper - revert if too many bugs and
+	    addRequestInterceptor(new SimpleMapper());
 	}
 	
 	// init contexts
@@ -239,10 +243,12 @@ public class ContextManager {
      * @param con The new server connector
      */
     public synchronized void addServerConnector( ServerConnector con ) {
+	if(debug>0) log(" adding connector " + con.getClass().getName());
 	connectors.addElement( con );
     }
 
     public void addRequestInterceptor( RequestInterceptor ri ) {
+	if(debug>0) log(" adding request intereptor " + ri.getClass().getName());
 	requestInterceptors.addElement( ri );
     }
     
@@ -357,17 +363,17 @@ public class ContextManager {
      */
     int processRequest( Request req ) {
 
-	if(debug>0) log( "ProcessRequest: ");
-	if(debug>0) log( req.toString() );
-	if(debug>0) log("");
+	if(debug>2) log( "ProcessRequest: ");
+	if(debug>2) log( req.toString() );
+	if(debug>2) log("");
 
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).handleRequest( req );
 	}
 
-	if(debug>0) log("After processing: ");
-	if(debug>0) log( req.toString() );
-	if(debug>0) log("");
+	if(debug>2) log("After processing: ");
+	if(debug>2) log( req.toString() );
+	if(debug>2) log("");
 	return 0;
     }
 

@@ -113,18 +113,6 @@ public class MapperInterceptor  implements  RequestInterceptor {
 	    if(debug>0) log("Found wrapper using getMapPath " + req);
 	}
 
-	// XXX Nobody seems to use it, remove if nothing comes out,
-	// Document why it's here if we find a user 
-	// 	if (req.getResolvedServlet() != null) {
-	// 	    req.setAttribute(Constants.Attribute.RESOLVED_SERVLET,
-	// 				 req.getResolvedServlet());
-	// 	} else if (req.getMappedPath() != null) {
-	// 	    req.setAttribute(Constants.Attribute.RESOLVED_SERVLET,
-	// 				 req.getMappedPath());
-	// 	} else {
-	// 	    req.removeAttribute(Constants.Attribute.RESOLVED_SERVLET);
-	// 	}
-
 	return OK;
     }
 
@@ -261,6 +249,8 @@ public class MapperInterceptor  implements  RequestInterceptor {
         if (wrapper != null) {
             String servletPath = req.getServletPath();
             String pathInfo = req.getPathInfo();
+	    if(pathInfo==null) pathInfo="";
+	    
             req.setResourceName( req.getServletPath());
 
             boolean stillSearching = true;
@@ -271,9 +261,10 @@ public class MapperInterceptor  implements  RequestInterceptor {
                 if (wrapper != null &&
                     wrapper instanceof JspWrapper  &&
                     wrapper.getServletClass() == null) {
+		    
                         req.setResourceName( ((JspWrapper)wrapper).getPath() );
                         wrapper = getMatch(context,
-					   ((JspWrapper)wrapper).getPath() + (pathInfo == null ? "" : pathInfo),
+					   ((JspWrapper)wrapper).getPath() + pathInfo,
 					   req);
                         req.setMappedPath(  req.getServletPath() );
 

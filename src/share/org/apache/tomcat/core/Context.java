@@ -152,7 +152,8 @@ public class Context {
     // servlets loaded on startup( String->ServletWrapper )
     private Hashtable loadableServlets = new Hashtable();
 
-
+    int debug=0;
+    
     public Context() {
     }
 	
@@ -171,6 +172,10 @@ public class Context {
     }
 
     public void setPath(String path) {
+	// config believes that the root path is called "/",
+	// 
+	if( "/".equals(path) )
+	    path="";
 	this.path = path;
     }
 
@@ -237,9 +242,12 @@ public class Context {
 	throws MalformedURLException
     {
 	String mappedPath = req.getMappedPath();
+	if( debug>0 ) log( "getResourceURL: " + mappedPath + " " + req.getPathInfo());
 	if( mappedPath == null ) {
 	    mappedPath=req.getPathInfo();
 	}
+	if(mappedPath == null )
+	    mappedPath=req.getLookupPath();
 	
         URL docBase = getDocumentBase();
 
@@ -249,9 +257,10 @@ public class Context {
 	if (docBase.getProtocol().equalsIgnoreCase("war")) {
 	    return WARUtil.createURL( this, mappedPath );
 	}
-
-	return new URL(docBase.getProtocol(), docBase.getHost(),
+	URL url=new URL(docBase.getProtocol(), docBase.getHost(),
 		       docBase.getPort(), docBase.getFile() + mappedPath);
+	if( debug>0) log( "getResourceURL=" + url + " request=" + req );
+	return url;
     }
 
     public RequestDispatcher getRequestDispatcher(String path) {
@@ -335,14 +344,6 @@ public class Context {
 	t.printStackTrace(System.err);
     }
 
-    void log(String msg) {
-        // Can't get this anymore - Harish. A stop-gap arrangement.
-	// context.getLogModule().log(msg);
-	
-	System.err.println(msg);
-    }
-
-    
     String getRealPath( String path) {
         String realPath = null;
 
@@ -362,6 +363,8 @@ public class Context {
  
         try {
             URL url = getResource(path);
+
+	    if( debug>0 ) log( "getRealPath( " + path + ")=" + url);
 	    
             if (url != null) {
                 if (url.getProtocol().equalsIgnoreCase("war")) {
@@ -1091,7 +1094,18 @@ public class Context {
         return cp;
     }
 
-    public String toString() {
-	return "Context( " + path + " , " + getDocumentBase() + " ) ";
+    public void setDebug( int level ) {
+	debug=level;
     }
+
+    void log( String msg ) {
+	System.out.println("Context(" + path  + "): " + msg );
+    }
+    
+    public String toString() {
+	return "Ctx(" + path + ")";
+	// + " , " + getDocumentBase() + " ) ";
+    }
+
+
 }

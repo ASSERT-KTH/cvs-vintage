@@ -64,7 +64,7 @@ public class InvocationHelper {
 	    Method setMethod = (Method)getPropertySetter(o, name);
 	    if( setMethod!= null ) {
 		// System.out.println("Set" + name);
-		setMethod.invoke(o, new Object[] {value});
+		invokeSetProperty( setMethod, o, value );
 		return;
 	    }
 	    setMethod = getMethod( o, "setProperty" );
@@ -90,6 +90,41 @@ public class InvocationHelper {
 	}
     }
 
+    /** Call setXXX( value ) after converting the string to the expected
+     *  type. That allows setting integer properties.
+     */
+    static void invokeSetProperty( Method setMethod, Object o, String value)
+	throws IllegalAccessException, InvocationTargetException
+    {
+	Object v=value;
+	Class[] ma =setMethod.getParameterTypes();	
+	// the method is a setter - it has only one parameter
+	if( ma.length != 1) {
+	    System.out.println("Unexpected number of args in setter");
+	    return;
+	}
+	String paramType=ma[0].getName();
+	//	System.out.println("Set " + value + " " + paramType);
+	if( "java.lang.String".equals( paramType ) ) {
+	    // string type
+	    setMethod.invoke(o, new Object[] {v});
+	    return;
+	}
+	if( "java.lang.Integer".equals( paramType )||
+	    "int".equals( paramType ) ) {
+	    try {
+		Integer vI=new Integer(value);
+		setMethod.invoke( o, new Object[] {vI });
+	    } catch (NumberFormatException nfe) {
+		System.out.println("Error setting " + value + " to an integer property");
+	    }
+	    return ;
+	}
+	System.out.println("Unknown type " + paramType );
+
+	return;
+    }
+    
     /** Set an object property using setter or setAttribute(name).
      */
     public static void setAttribute( Object o, String name, Object v ) {
@@ -151,11 +186,12 @@ public class InvocationHelper {
 	    for( int i=0; i<interF.length; i++ ) {
 		String iName=interF[i].getName();
 		// XXX deal with default package
-		String lastComp = iName.substring( iName.lastIndexOf(".") );
+		String lastComp = iName.substring( iName.lastIndexOf(".")+1 );
+		//		System.out.println("Try add" + lastComp );
 		setMethod = getMethod( o, "add" + lastComp );
 		if( setMethod != null ) {
-		    System.out.println("Found add" + lastComp + " for " +
-				       o.getClass().getName() + " " + v.getClass().getName());
+		    // 		    System.out.println("Found add" + lastComp + " for " +
+		    // 				       o.getClass().getName() + " " + v.getClass().getName());
 		    Class[] ma =setMethod.getParameterTypes();
 		    if ( (ma.length == 1) && (! ma[0].getName().equals("java.lang.String"))) {
 			setMethod.invoke(o, new Object[] {v});

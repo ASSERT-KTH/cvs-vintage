@@ -1,0 +1,7 @@
+<contextManager >
+   <context path="/" docBase="webpages" />
+   <context path="/examples" docBase="examples" />
+
+   <httpAdapter port="8080" />
+
+</contextManager>

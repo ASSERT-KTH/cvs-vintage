@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/ContextMapperInterceptor.java,v 1.1 2000/01/13 18:20:34 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/01/13 18:20:34 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/ContextMapperInterceptor.java,v 1.2 2000/01/15 03:52:58 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/01/15 03:52:58 $
  *
  * ====================================================================
  *
@@ -75,10 +75,17 @@ import java.util.*;
 public class ContextMapperInterceptor implements RequestInterceptor {
     ContextManager cm;
     
+    public ContextMapperInterceptor() {
+    }
+
     public ContextMapperInterceptor(ContextManager cm) {
 	this.cm=cm;
     }
 
+    public void setContextManager( ContextManager cm ) {
+	this.cm=cm;
+    }
+    
     public int handleRequest( Request rrequest ) {
 	// someone else set it up, no need to worry
 	if( rrequest.getContext() != null )
