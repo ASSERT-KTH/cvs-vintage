@@ -14,6 +14,7 @@ import org.columba.core.config.TableItem;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.folder.MessageFolderInfo;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.imap.parser.FlagsParser;
@@ -66,11 +67,12 @@ public class IMAPStore {
 
 	private MimePartTree aktMimePartTree;
 	private String aktMessageUid;
+	
+	private MessageFolderInfo messageFolderInfo;
 
 	public IMAPStore(ImapItem item, IMAPRootFolder root) {
 
 		this.item = item;
-	
 
 		imap = new IMAPProtocol();
 
@@ -78,6 +80,11 @@ public class IMAPStore {
 
 		delimiter = "/";
 
+	}
+	
+	protected void printStatusMessage(String message, WorkerStatusController worker)
+	{
+		worker.setDisplayText(item.get("host")+": "+message);		
 	}
 
 	public String getDelimiter() {
@@ -126,6 +133,7 @@ public class IMAPStore {
 
 		try {
 
+			printStatusMessage("Authenticating...", worker);
 			if (portNumber != -1)
 				openport = getProtocol().openPort(item.get("host"), portNumber);
 			else
@@ -144,7 +152,9 @@ public class IMAPStore {
 				if (first == true) {
 
 					if (item.get("password").length() != 0) {
-						getProtocol().login(item.get("user"), item.get("password"));
+						getProtocol().login(
+							item.get("user"),
+							item.get("password"));
 
 						state = STATE_AUTHENTICATE;
 						answer = true;
@@ -246,21 +256,33 @@ public class IMAPStore {
 
 	public boolean select(WorkerStatusController worker, String path)
 		throws Exception {
-		System.out.println("select");
+		ColumbaLogger.log.info("selecting path="+path);
 
-		System.out.println("path=" + path);
 
 		try {
 
-			getProtocol().select(path);
-
+			printStatusMessage("Selecting "+path+" ...", worker);
+			IMAPResponse[] responses = getProtocol().select(path);
+			StringBuffer buf = new StringBuffer();
+			for ( int i=0; i<responses.length; i++)
+			{
+				buf.append(responses[i].getSource());
+			}
+			
+			messageFolderInfo = Imap4Parser.parseMessageFolderInfo(buf.toString());
+			
+			
+			ColumbaLogger.log.info("exists:"+messageFolderInfo.getExists());
+			
 			state = STATE_SELECTED;
 			selectedFolderPath = path;
 		} catch (BadCommandException ex) {
 			System.out.println("bad command exception");
 			System.out.println("no messages on server");
 			state = STATE_AUTHENTICATE;
-			JOptionPane.showMessageDialog(null, "Error while selection mailbox: "+path);
+			JOptionPane.showMessageDialog(
+				null,
+				"Error while selection mailbox: " + path);
 		} catch (CommandFailedException ex) {
 			System.out.println("command failed exception");
 			state = STATE_AUTHENTICATE;
@@ -294,7 +316,7 @@ public class IMAPStore {
 
 		try {
 
-			IMAPResponse[] responses = imap.fetchUIDList(messageSet);
+			IMAPResponse[] responses = imap.fetchUIDList(messageSet, messageFolderInfo.getExists(), worker);
 
 			result = UIDParser.parse(responses);
 
@@ -323,6 +345,7 @@ public class IMAPStore {
 
 		try {
 
+			printStatusMessage("Fetching folder list...", worker);
 			IMAPResponse[] responses = getProtocol().lsub(reference, pattern);
 			//System.out.println("response-count="+responses.length);
 
@@ -525,7 +548,11 @@ public class IMAPStore {
 
 		try {
 
-			IMAPResponse[] responses = imap.fetchUIDList("1:*");
+			int count = messageFolderInfo.getExists();
+			
+			printStatusMessage("Fetching UID list...", worker);
+			
+			IMAPResponse[] responses = imap.fetchUIDList("1:*", count, worker);
 
 			v = UIDParser.parse(responses);
 
@@ -621,7 +648,8 @@ public class IMAPStore {
 
 		try {
 
-			IMAPResponse[] responses = imap.fetchFlagsList("1:*");
+			printStatusMessage("Fetching FLAGS list...", worker);
+			IMAPResponse[] responses = imap.fetchFlagsList("1:*", messageFolderInfo.getExists(), worker);
 
 			result = FlagsParser.parseFlags(responses);
 
@@ -688,7 +716,7 @@ public class IMAPStore {
 							shortFrom.substring(0, shortFrom.length() - 1);
 				}
 
-			} 
+			}
 
 			h.set("columba.from", shortFrom);
 			//message.setShortFrom( shortFrom );
@@ -756,13 +784,12 @@ public class IMAPStore {
 		Vector v = new Vector();
 		String buffer = new String();
 
-		TableItem items =
-			MailConfig.getMainFrameOptionsConfig().getTableItem();
+		TableItem items = MailConfig.getMainFrameOptionsConfig().getTableItem();
 		StringBuffer headerFields = new StringBuffer();
 
 		for (int i = 0; i < items.count(); i++) {
 			HeaderItem headerItem = items.getHeaderItem(i);
-			
+
 			String name = headerItem.get("name");
 			if ((!name.equals("Status"))
 				|| (!name.equals("Flagged"))
@@ -815,19 +842,18 @@ public class IMAPStore {
 		isLogin(worker);
 
 		isSelected(worker, path);
-		//System.out.println("fetchheaderList");
 
 		worker.setProgressBarMaximum(list.size());
+		worker.setProgressBarValue(0);
 		MessageSet set = new MessageSet(list.toArray());
 
-		TableItem items =
-			MailConfig.getMainFrameOptionsConfig().getTableItem();
+		TableItem items = MailConfig.getMainFrameOptionsConfig().getTableItem();
 		StringBuffer headerFields = new StringBuffer();
 
 		for (int i = 0; i < items.count(); i++) {
 			HeaderItem headerItem = items.getHeaderItem(i);
 
-						String name = headerItem.get("name");
+			String name = headerItem.get("name");
 			if ((!name.equals("Status"))
 				|| (!name.equals("Flagged"))
 				|| (!name.equals("Attachment"))
@@ -854,21 +880,19 @@ public class IMAPStore {
 			// disconnect exception
 			ex.printStackTrace();
 
-			//v.add(IMAPResponse.BYEResponse);
 		}
 
 		int i = 0;
 		while (!finished) {
 			try {
-				imapResponse = getProtocol().getResponse();
+				// we are passing "null" here, because we don't want
+				// any status information printed
+				imapResponse = getProtocol().getResponse(null);
 			} catch (IOException ex) {
 				// disconnect exception	
 				ex.printStackTrace();
 
-				//imapResponse = IMAPResponse.BYEResponse;
 			}
-
-			//v.add(imapResponse);
 
 			if (imapResponse.getStatus() == IMAPResponse.STATUS_BYE)
 				finished = true;
@@ -899,32 +923,17 @@ public class IMAPStore {
 
 						i++;
 						worker.setProgressBarValue(i);
-						worker.setDisplayText(
+						printStatusMessage(
 							item.get("host")
 								+ ": Fetching "
 								+ i
 								+ "/"
 								+ list.size()
-								+ " headers...");
+								+ " headers...",worker);
 					}
 				}
 			}
 		}
-
-		//fetchHeader(set.getString(), worker, path);
-		/*
-		for (int i = 0; i < list.size(); i++) {
-			worker.setProgressBarValue(i);
-		
-			//System.out.println("trying to fetch header number=" + i);
-		
-			ColumbaHeader header = fetchHeader(list.get(i), worker, path);
-			if (header != null) {
-				header.set("columba.uid", list.get(i));
-				headerList.add(header, list.get(i));
-			}
-		}
-		*/
 
 	}
 
@@ -1000,7 +1009,10 @@ public class IMAPStore {
 		try {
 
 			IMAPResponse[] responses =
-				getProtocol().fetchMimePart((String) uid, part.getAddress());
+				getProtocol().fetchMimePart(
+					(String) uid,
+					part.getAddress(),
+					worker);
 
 			part.setBody(MimePartParser.parse(responses));
 
@@ -1037,7 +1049,7 @@ public class IMAPStore {
 		try {
 
 			IMAPResponse[] responses =
-				getProtocol().fetchMessageSource((String) uid);
+				getProtocol().fetchMessageSource((String) uid, worker);
 
 			String source = MessageSourceParser.parse(responses);
 
@@ -1108,8 +1120,11 @@ public class IMAPStore {
 
 		try {
 
+			printStatusMessage("Searching in "+path+" ...", worker);
+			
 			MessageSet set = new MessageSet(uids);
 
+			
 			IMAPResponse[] responses =
 				imap.search(set.getString() + " " + searchString);
 
@@ -1148,7 +1163,8 @@ public class IMAPStore {
 		try {
 
 			//MessageSet set = new MessageSet(uids);
-
+			printStatusMessage("Searching in "+path+" ...", worker);
+			
 			IMAPResponse[] responses = imap.search("ALL " + searchString);
 
 			result = SearchResultParser.parse(responses);

@@ -4,6 +4,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.columba.core.command.WorkerStatusController;
+
 /**
  * @author freddy
  *
@@ -44,17 +46,16 @@ public class IMAPInputStream extends BufferedInputStream {
 	 * Read a Response from the InputStream.
 	 * @return ByteArray that contains the Response
 	 */
-	public String readResponse() throws IOException {
+	public String readResponse(WorkerStatusController worker)
+		throws IOException {
 		buffer = new byte[128];
 		idx = 0;
 		sz = 128;
 
-		readResponseString();
+		readResponseString(worker);
 
 		return new String(buffer, 0, idx, "ISO8859_1");
 	}
-
-	
 
 	/**
 	 * Method read.
@@ -66,7 +67,8 @@ public class IMAPInputStream extends BufferedInputStream {
 	 * @throws IOException
 	 * 
 	 */
-	private void readResponseString() throws IOException {
+	private void readResponseString(WorkerStatusController worker)
+		throws IOException {
 
 		int b = 0;
 		boolean lineHasCRLF = false;
@@ -82,8 +84,6 @@ public class IMAPInputStream extends BufferedInputStream {
 			if (idx >= sz)
 				growBuffer(increment);
 			buffer[idx++] = (byte) b;
-
-			
 
 		}
 
@@ -121,6 +121,13 @@ public class IMAPInputStream extends BufferedInputStream {
 			// read 'count' bytes
 			//  in our example this is 2750
 			if (count > 0) {
+				if (worker != null) {
+
+					worker.setProgressBarMaximum(count);
+
+					worker.setProgressBarValue(0);
+				}
+
 				// space left in buffer
 				int avail = sz - idx;
 
@@ -132,18 +139,21 @@ public class IMAPInputStream extends BufferedInputStream {
 						growBuffer(count - avail);
 				}
 
-				
 				// read all pending bytes from inputstream
 				int actual;
 				while (count > 0) {
 					actual = read(buffer, idx, count);
 					count -= actual;
 					idx += actual;
+
+					if (worker != null) {
+						worker.setProgressBarValue(idx);
+					}
 				}
 			}
 
 			// we don't stop until we find CRLF 
-			readResponseString();
+			readResponseString(worker);
 		}
 		return;
 	}
@@ -163,7 +173,6 @@ public class IMAPInputStream extends BufferedInputStream {
 		sz += i;
 	}
 
-	
 	public static int parseInt(byte[] b, int start, int end)
 		throws NumberFormatException {
 
@@ -198,7 +207,7 @@ public class IMAPInputStream extends BufferedInputStream {
 				}
 			}
 			while (i < end) {
-				
+
 				digit = Character.digit((char) b[i++], radix);
 				if (digit < 0) {
 					throw new NumberFormatException("illegal number");

@@ -397,7 +397,7 @@ public class Imap4Parser {
 
 		while (tok.hasMoreElements()) {
 			str = (String) tok.nextElement();
-
+			
 			if (str.indexOf("EXISTS") != -1) {
 
 				str2 =
