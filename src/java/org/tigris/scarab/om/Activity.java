@@ -27,8 +27,16 @@ public class Activity
     extends BaseActivity
     implements Persistent
 {
-    // need a local reference
     private Attribute aAttribute;                 
+    private Transaction aTransaction;                 
+    private Attachment aAttachment;                 
+    private AttributeOption oldAttributeOption;                 
+    private AttributeOption newAttributeOption;                 
+
+
+    /**
+     * Gets the Attribute that was changed for this Activity record.
+     */
     public Attribute getAttribute() throws Exception
     {
         if ( aAttribute==null && (getAttributeId() != null) )
@@ -40,14 +48,19 @@ public class Activity
         }
         return aAttribute;
     }
+
+    /**
+     * Sets the Attribute that was changed for this Activity record.
+     */
     public void setAttribute(Attribute v) throws Exception
     {
         aAttribute = v;
         super.setAttribute(v);
     }
 
-    // need a local reference
-    private Transaction aTransaction;                 
+    /**
+     * Gets the Transaction object associated with this Activity record
+     */
     public Transaction getTransaction() throws Exception
     {
         if ( aTransaction==null && (getTransactionId() != null) )
@@ -60,14 +73,18 @@ public class Activity
         return aTransaction;
     }
 
+    /**
+     * Sets the Transaction object associated with this Activity record
+     */
     public void setTransaction(Transaction v) throws Exception
     {
         aTransaction = v;
         super.setTransaction(v);
     }
 
-    // returns Attachment object associated with Activity 
-    private Attachment aAttachment;                 
+    /**
+     * Gets the Attachment associated with this Activity record
+     */
     public Attachment getAttachment() throws Exception
     {
         if ( aAttachment==null && (getAttachmentId() != null) )
@@ -80,25 +97,20 @@ public class Activity
         return aAttachment;
     }
 
+    /**
+     * Sets the Attachment associated with this Activity record
+     */
     public void setAttachment(Attachment v) throws Exception
     {
         aAttachment = v;
         super.setAttachment(v);
     }
 
-    // returns AttributeOption object associated with NewValue field
-    private AttributeOption newAttributeOption;                 
-    public AttributeOption getNewAttributeOption() throws Exception
-    {
-        if ( newAttributeOption==null && (getNewValue() != null) )
-        {
-            newAttributeOption = AttributeOptionPeer.retrieveByPK(new NumberKey(getNewValue()));
-        }
-        return newAttributeOption;
-    }
 
-    // returns AttributeOption object associated with OldValue field
-    private AttributeOption oldAttributeOption;                 
+    /**
+     * Gets the AttributeOption object associated with the Old Value field
+     * (i.e., the old value for the attribute before the change.)
+     */
     public AttributeOption getOldAttributeOption() throws Exception
     {
         if ( oldAttributeOption==null && (getOldValue() != null) )
@@ -108,6 +120,36 @@ public class Activity
         return oldAttributeOption;
     }
 
+    /**
+     * Sets the Old Attribute Option associated with this Activity record
+    public void setOldAttributeOption(AttributeOption v) throws Exception
+    {
+        oldAttributeOption  = v;
+        super.setOldValue(v);
+    }
+     */
+
+    /**
+     * Gets the AttributeOption object associated with the New Value field
+     * (i.e., the new value for the attribute after the change.)
+     */
+    public AttributeOption getNewAttributeOption() throws Exception
+    {
+        if ( newAttributeOption==null && (getNewValue() != null) )
+        {
+            newAttributeOption = AttributeOptionPeer.retrieveByPK(new NumberKey(getNewValue()));
+        }
+        return newAttributeOption;
+    }
+
+    /**
+     * Sets the New Attribute Option associated with this Activity record
+    public void setNewAttributeOption(AttributeOption v) throws Exception
+    {
+        newAttributeOption  = v;
+        super.setNewValue(v);
+    }
+     */
 
 }
 
