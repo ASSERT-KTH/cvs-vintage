@@ -60,8 +60,8 @@ public class MessageSetTokenizer implements Iterator {
     }
 
     /* (non-Javadoc)
-     * @see java.util.Iterator#hasNext()
-     */
+ * @see java.util.Iterator#hasNext()
+ */
     public boolean hasNext() {
         if (index < uids.length) {
             return true;
@@ -71,8 +71,8 @@ public class MessageSetTokenizer implements Iterator {
     }
 
     /* (non-Javadoc)
-     * @see java.util.Iterator#next()
-     */
+ * @see java.util.Iterator#next()
+ */
     public Object next() {
         int i = sizeOfPieces;
 
@@ -89,8 +89,8 @@ public class MessageSetTokenizer implements Iterator {
     }
 
     /* (non-Javadoc)
-     * @see java.util.Iterator#remove()
-     */
+ * @see java.util.Iterator#remove()
+ */
     public void remove() {
         // not needed
     }

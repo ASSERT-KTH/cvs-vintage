@@ -16,6 +16,9 @@
 package org.columba.mail.message;
 
 import org.columba.core.gui.util.ColorFactory;
+
+import org.columba.mail.folder.headercache.CachedHeaderfields;
+
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.BasicHeader;
@@ -71,8 +74,6 @@ public class ColumbaHeader {
         attributes.put("columba.priority",
             new Integer(basicHeader.getPriority()));
 
-
-        
         Address from = basicHeader.getFrom();
 
         if (from != null) {
@@ -80,7 +81,6 @@ public class ColumbaHeader {
         } else {
             attributes.put("columba.from", new Address(""));
         }
-
 
         Address[] to = basicHeader.getTo();
 
@@ -90,17 +90,16 @@ public class ColumbaHeader {
         } else {
             attributes.put("columba.to", new Address(""));
         }
-        
+
         Address[] cc = basicHeader.getCc();
 
-        if (cc.length >0) {
+        if (cc.length > 0) {
             //We save only the first item in the cc-list            
             attributes.put("columba.cc", cc[0]);
         } else {
             attributes.put("columba.cc", new Address(""));
         }
-        
-        
+
         attributes.put("columba.host", "");
         attributes.put("columba.date", basicHeader.getDate());
 
@@ -137,24 +136,24 @@ public class ColumbaHeader {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.message.HeaderInterface#count()
-     */
+ * @see org.columba.mail.message.HeaderInterface#count()
+ */
     public int count() {
         return attributes.count() + header.count() + 5;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.message.HeaderInterface#getFlags()
-     */
+ * @see org.columba.mail.message.HeaderInterface#getFlags()
+ */
     public Flags getFlags() {
         return flags;
     }
 
     /**
-     * Note: Don't use this method anymore when accessing
-     * attributes like "columba.size", use getAttribute() instead
-     *
-     */
+ * Note: Don't use this method anymore when accessing
+ * attributes like "columba.size", use getAttribute() instead
+ *
+ */
     public Object get(String s) {
         if (s.startsWith("columba.flags.")) {
             String flag = s.substring("columba.flags.".length());
@@ -182,8 +181,8 @@ public class ColumbaHeader {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.message.HeaderInterface#set(java.lang.String, java.lang.Object)
-     */
+ * @see org.columba.mail.message.HeaderInterface#set(java.lang.String, java.lang.Object)
+ */
     public void set(String s, Object o) {
         if (s.startsWith("columba.flags")) {
             String flag = s.substring("columba.flags.".length());
@@ -232,45 +231,46 @@ public class ColumbaHeader {
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public Header getHeader() {
         return header;
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public Attributes getAttributes() {
         return attributes;
     }
 
     /**
-     * @param attributes
-     */
+ * @param attributes
+ */
     public void setAttributes(Attributes attributes) {
         this.attributes = attributes;
     }
 
     /**
-     * @param flags
-     */
+ * @param flags
+ */
     public void setFlags(Flags flags) {
         this.flags = flags;
     }
 
     /**
-     * @param header
-     */
+ * @param header
+ */
     public void setHeader(Header header) {
         this.header = header;
     }
-    
+
     public Boolean hasAttachments() {
         boolean hasAttachments = false;
         MimeType mimeType = new MimeHeader(header).getMimeType();
-        hasAttachments = !mimeType.getType().equals("text") && !mimeType.getSubtype().equals("alternative");
-        
+        hasAttachments = !mimeType.getType().equals("text") &&
+            !mimeType.getSubtype().equals("alternative");
+
         return Boolean.valueOf(hasAttachments);
     }
 }

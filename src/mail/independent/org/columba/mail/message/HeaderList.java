@@ -17,6 +17,9 @@
 //All Rights Reserved.
 package org.columba.mail.message;
 
+import org.columba.mail.folder.MailboxInterface;
+import org.columba.mail.folder.headercache.CachedHeaderfields;
+
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;

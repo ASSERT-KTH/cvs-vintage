@@ -15,7 +15,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.imap;
 
 import org.columba.core.command.CommandCancelledException;
@@ -26,6 +25,7 @@ import org.columba.mail.config.ImapItem;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
+import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.message.ColumbaHeader;
@@ -75,6 +75,7 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
+
 
 /**
  * IMAPStore encapsulates IMAPProtocol and the parsers for IMAPFolder.
@@ -545,7 +546,7 @@ public class IMAPStore {
      *         Exception
      */
     public ListInfo[] list(String reference, String pattern)
-    throws Exception {
+        throws Exception {
         ensureLoginState();
 
         try {
@@ -1484,14 +1485,13 @@ public class IMAPStore {
 
             break;
         }
-        
+
         case MarkMessageCommand.MARK_AS_SPAM:
         case MarkMessageCommand.MARK_AS_NOTSPAM: {
             arg.add("Junk");
 
             break;
         }
-        
         }
 
         //if (arg.size() > 1)

@@ -15,16 +15,19 @@
 //All Rights Reserved.
 package org.columba.mail.imap;
 
+import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.filter.FilterRule;
+
+import org.columba.ristretto.imap.protocol.Arguments;
+import org.columba.ristretto.imap.protocol.Atom;
+import org.columba.ristretto.message.RFC822Date;
+
 import java.io.UnsupportedEncodingException;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.filter.FilterRule;
-import org.columba.ristretto.imap.protocol.Arguments;
-import org.columba.ristretto.imap.protocol.Atom;
-import org.columba.ristretto.message.RFC822Date;
 
 /**
  * Builds IMAP search request strings, from {@link FilterList}
@@ -136,6 +139,7 @@ public class SearchRequestBuilder {
 
         // transform text to Date representation
         Date date = transformDate(criteria.getPattern());
+
         // transform Date-object to RFC822-Date format
         args.add(RFC822Date.toString(date));
 
@@ -221,27 +225,26 @@ public class SearchRequestBuilder {
     }
 
     /*
-    protected Arguments createSizeArguments(FilterCriteria criteria)
-        throws UnsupportedEncodingException {
-        Arguments args = new Arguments();
+protected Arguments createSizeArguments(FilterCriteria criteria)
+    throws UnsupportedEncodingException {
+    Arguments args = new Arguments();
 
-        if (criteria.getCriteria() == FilterCriteria.SIZE_BIGGER) {
-            args.add(new Atom("LARGER"));
-        } else {
-            args.add(new Atom("SMALLER"));
-        }
-
-        // size in KB
-        String stringSizeInKB = criteria.getPattern();
-        int sizeInKB = Integer.parseInt(stringSizeInKB);
-        // transform to octets
-        int sizeInOctets = sizeInKB * 1024;
-        args.add(Integer.toString(sizeInOctets));
-
-        return args;
+    if (criteria.getCriteria() == FilterCriteria.SIZE_BIGGER) {
+        args.add(new Atom("LARGER"));
+    } else {
+        args.add(new Atom("SMALLER"));
     }
-    */
 
+    // size in KB
+    String stringSizeInKB = criteria.getPattern();
+    int sizeInKB = Integer.parseInt(stringSizeInKB);
+    // transform to octets
+    int sizeInOctets = sizeInKB * 1024;
+    args.add(Integer.toString(sizeInOctets));
+
+    return args;
+}
+*/
     protected Arguments createSubjectArguments(FilterCriteria criteria)
         throws UnsupportedEncodingException {
         Arguments args = new Arguments();
@@ -286,8 +289,8 @@ public class SearchRequestBuilder {
         return args;
     }
 
-    protected Arguments createCustomHeaderfieldsArguments(FilterCriteria criteria)
-        throws UnsupportedEncodingException {
+    protected Arguments createCustomHeaderfieldsArguments(
+        FilterCriteria criteria) throws UnsupportedEncodingException {
         Arguments args = new Arguments();
 
         // we need to append "NOT"
@@ -322,84 +325,73 @@ public class SearchRequestBuilder {
             Arguments args = null;
 
             switch (criteria.getTypeItem()) {
-                case FilterCriteria.SUBJECT :
-                    {
-                        args = createSubjectArguments(criteria);
+            case FilterCriteria.SUBJECT: {
+                args = createSubjectArguments(criteria);
 
-                        break;
-                    }
+                break;
+            }
 
-                case FilterCriteria.TO :
-                    {
-                        args = createToArguments(criteria);
+            case FilterCriteria.TO: {
+                args = createToArguments(criteria);
 
-                        break;
-                    }
+                break;
+            }
 
-                case FilterCriteria.FROM :
-                    {
-                        args = createFromArguments(criteria);
+            case FilterCriteria.FROM: {
+                args = createFromArguments(criteria);
 
-                        break;
-                    }
+                break;
+            }
 
-                case FilterCriteria.CC :
-                    {
-                        args = createCcArguments(criteria);
+            case FilterCriteria.CC: {
+                args = createCcArguments(criteria);
 
-                        break;
-                    }
+                break;
+            }
 
-                case FilterCriteria.BCC :
-                    {
-                        args = createBccArguments(criteria);
+            case FilterCriteria.BCC: {
+                args = createBccArguments(criteria);
 
-                        break;
-                    }
+                break;
+            }
 
-                case FilterCriteria.BODY :
-                    {
-                        args = createBodyArguments(criteria);
+            case FilterCriteria.BODY: {
+                args = createBodyArguments(criteria);
 
-                        break;
-                    }
+                break;
+            }
 
-                /*
-                case FilterCriteria.SIZE :
-                    {
-                        args = createSizeArguments(criteria);
+            /*
+case FilterCriteria.SIZE :
+    {
+        args = createSizeArguments(criteria);
 
-                        break;
-                    }
-                */
-                
-                case FilterCriteria.DATE :
-                    {
-                        args = createDateArguments(criteria);
+        break;
+    }
+*/
+            case FilterCriteria.DATE: {
+                args = createDateArguments(criteria);
 
-                        break;
-                    }
+                break;
+            }
 
-                case FilterCriteria.FLAGS :
-                    {
-                        args = createFlagsArguments(criteria);
+            case FilterCriteria.FLAGS: {
+                args = createFlagsArguments(criteria);
 
-                        break;
-                    }
+                break;
+            }
 
-                case FilterCriteria.PRIORITY :
-                    {
-                        args = createPriorityArguments(criteria);
+            case FilterCriteria.PRIORITY: {
+                args = createPriorityArguments(criteria);
 
-                        break;
-                    }
+                break;
+            }
 
-                case FilterCriteria.CUSTOM_HEADERFIELD :
-                    {
-                        args = createCustomHeaderfieldsArguments(criteria);
+            case FilterCriteria.CUSTOM_HEADERFIELD: {
+                args = createCustomHeaderfieldsArguments(criteria);
 
-                        break;
-                    }
+                break;
+            }
             }
 
             ruleStringList.add(args);
@@ -408,8 +400,7 @@ public class SearchRequestBuilder {
         return ruleStringList;
     }
 
-    public Arguments generateSearchArguments(
-        FilterRule rule,
+    public Arguments generateSearchArguments(FilterRule rule,
         List ruleStringList) {
         Arguments args = new Arguments();
 
@@ -428,8 +419,8 @@ public class SearchRequestBuilder {
             // concatenate all criteria together
             //  -> create one search-request string
             for (int i = 0; i < rule.count(); i++) {
-                if ((i != (rule.count() - 1))
-                    && (conditionString.equals("OR"))) {
+                if ((i != (rule.count() - 1)) &&
+                        (conditionString.equals("OR"))) {
                     args.add(new Atom(conditionString));
                 }
 
@@ -456,15 +447,15 @@ public class SearchRequestBuilder {
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public String getCharset() {
         return charset;
     }
 
     /**
-     * @param string
-     */
+ * @param string
+ */
     public void setCharset(String string) {
         charset = string;
     }

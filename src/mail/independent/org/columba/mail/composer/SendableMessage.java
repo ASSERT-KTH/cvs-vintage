@@ -17,13 +17,16 @@
 //All Rights Reserved.
 package org.columba.mail.composer;
 
+import org.columba.core.io.CloneStreamMaster;
+
+import org.columba.mail.message.ColumbaMessage;
+
+import org.columba.ristretto.message.io.SourceInputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
-import org.columba.core.io.CloneStreamMaster;
-import org.columba.mail.message.ColumbaMessage;
-import org.columba.ristretto.message.io.SourceInputStream;
+import java.util.List;
 
 
 public class SendableMessage extends ColumbaMessage {
@@ -33,25 +36,40 @@ public class SendableMessage extends ColumbaMessage {
         super();
     }
 
+    /**
+ * Constructs the SendableMessage.java.
+ * 
+ * @param m
+ */
+    public SendableMessage(ColumbaMessage m) {
+        super(m);
+
+        try {
+            setSourceStream(new SourceInputStream(m.getSource()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public int getAccountUid() {
-        return ((Integer)columbaHeader.getAttributes().get("columba.accountuid")).intValue();
+        return ((Integer) columbaHeader.getAttributes().get("columba.accountuid")).intValue();
     }
 
     public List getRecipients() {
-        return (List)columbaHeader.getAttributes().get("columba.recipients");
+        return (List) columbaHeader.getAttributes().get("columba.recipients");
     }
 
     public void setAccountUid(int uid) {
-        columbaHeader.getAttributes().put("columba.accountuid",new Integer(uid));
+        columbaHeader.getAttributes().put("columba.accountuid", new Integer(uid));
     }
 
     public void setRecipients(List rcpt) {
-        columbaHeader.getAttributes().put("columba.recipients",rcpt);
+        columbaHeader.getAttributes().put("columba.recipients", rcpt);
     }
 
     /**
-     * @return Returns the sourceStream.
-     */
+ * @return Returns the sourceStream.
+ */
     public InputStream getSourceStream() {
         if (sourceStream == null) {
             return new SourceInputStream(getSource());
@@ -61,25 +79,11 @@ public class SendableMessage extends ColumbaMessage {
     }
 
     /**
-     * @param sourceStream
-     *            The sourceStream to set.
-     */
+ * @param sourceStream
+ *            The sourceStream to set.
+ */
     public void setSourceStream(InputStream sourceStream)
         throws IOException {
         this.sourceStream = new CloneStreamMaster(sourceStream);
     }
-    /**
-     * Constructs the SendableMessage.java.
-     * 
-     * @param m
-     */
-    public SendableMessage(ColumbaMessage m) {
-        super(m);
-        try {
-            setSourceStream( new SourceInputStream(m.getSource() ));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }

@@ -25,16 +25,16 @@ public class PGPMimePart extends MimePart {
     private PGPItem pgpItem;
 
     /**
-     * @param header
-     */
+ * @param header
+ */
     public PGPMimePart(MimeHeader header, PGPItem pgpItem) {
         super(header);
         this.pgpItem = pgpItem;
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public PGPItem getPgpItem() {
         return pgpItem;
     }

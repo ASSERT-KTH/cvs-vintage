@@ -79,7 +79,7 @@ public class ColumbaMessage {
         this.message = m.message;
         this.bodyPart = m.bodyPart;
     }
-    
+
     public void setBodyPart(MimePart body) {
         bodyPart = body;
     }
@@ -110,80 +110,80 @@ public class ColumbaMessage {
     }
 
     /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.ristretto.message.Message#getHeader()
-     */
+ * (non-Javadoc)
+ *
+ * @see org.columba.ristretto.message.Message#getHeader()
+ */
     public ColumbaHeader getHeader() {
         return columbaHeader;
     }
 
     /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.ristretto.message.Message#setHeader(org.columba.ristretto.message.Header)
-     */
+ * (non-Javadoc)
+ *
+ * @see org.columba.ristretto.message.Message#setHeader(org.columba.ristretto.message.Header)
+ */
     public void setHeader(ColumbaHeader h) {
         columbaHeader = h;
     }
 
     /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.ristretto.message.Message#getBodyPart()
-     */
+ * (non-Javadoc)
+ *
+ * @see org.columba.ristretto.message.Message#getBodyPart()
+ */
     public MimePart getBodyPart() {
         return bodyPart;
     }
 
     /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.ristretto.message.Message#getMimePart(int)
-     */
+ * (non-Javadoc)
+ *
+ * @see org.columba.ristretto.message.Message#getMimePart(int)
+ */
     public MimePart getMimePart(int number) {
         return message.getMimePart(number);
     }
 
     /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.ristretto.message.Message#getMimePartCount()
-     */
+ * (non-Javadoc)
+ *
+ * @see org.columba.ristretto.message.Message#getMimePartCount()
+ */
     public int getMimePartCount() {
         return message.getMimePartCount();
     }
 
     /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.ristretto.message.Message#getSource()
-     */
+ * (non-Javadoc)
+ *
+ * @see org.columba.ristretto.message.Message#getSource()
+ */
     public Source getSource() {
         return message.getSource();
     }
 
     /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.ristretto.message.Message#setHeader(org.columba.ristretto.message.Header)
-     */
+ * (non-Javadoc)
+ *
+ * @see org.columba.ristretto.message.Message#setHeader(org.columba.ristretto.message.Header)
+ */
     public void setHeader(Header h) {
         message.setHeader(h);
     }
 
     /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.ristretto.message.Message#setSource(org.columba.ristretto.message.io.Source)
-     */
+ * (non-Javadoc)
+ *
+ * @see org.columba.ristretto.message.Message#setSource(org.columba.ristretto.message.io.Source)
+ */
     public void setSource(Source source) {
         message.setSource(source);
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public Flags getFlags() {
         return flags;
     }

@@ -13,24 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.composer;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.parser.ListParser;
+
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.PGPItem;
@@ -39,6 +29,7 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.PGPMimePart;
 import org.columba.mail.message.SendableHeader;
 import org.columba.mail.parser.text.HtmlParser;
+
 import org.columba.ristretto.coder.EncodedWord;
 import org.columba.ristretto.composer.MimeTreeRenderer;
 import org.columba.ristretto.message.Address;
@@ -49,6 +40,19 @@ import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.RFC822Date;
 import org.columba.ristretto.message.StreamableMimePart;
 import org.columba.ristretto.message.io.CharSequenceSource;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
 
 public class MessageComposer {
     private ComposerModel model;
@@ -75,15 +79,14 @@ public class MessageComposer {
         }
 
         header.set("columba.subject", model.getSubject());
-        
-		//header.set("Subject",
-		//	EncodedWord.encode(model.getSubject(),
-		//		Charset.forName(model.getCharsetName()),
-		//		EncodedWord.QUOTED_PRINTABLE).toString());
-		header.set("Subject",
-			EncodedWord.encode(model.getSubject(),
-				model.getCharset(),
-				EncodedWord.QUOTED_PRINTABLE).toString());
+
+        //header.set("Subject",
+        //	EncodedWord.encode(model.getSubject(),
+        //		Charset.forName(model.getCharsetName()),
+        //		EncodedWord.QUOTED_PRINTABLE).toString());
+        header.set("Subject",
+            EncodedWord.encode(model.getSubject(), model.getCharset(),
+                EncodedWord.QUOTED_PRINTABLE).toString());
 
         AccountItem item = model.getAccountItem();
         IdentityItem identity = item.getIdentityItem();
@@ -92,14 +95,14 @@ public class MessageComposer {
         header.set("X-Priority", model.getPriority());
 
         /*
-        String priority = controller.getModel().getPriority();
+String priority = controller.getModel().getPriority();
 
-        if (priority != null) {
-                header.set("columba.priority", new Integer(priority));
-        } else {
-                header.set("columba.priority", new Integer(3));
-        }
-        */
+if (priority != null) {
+        header.set("columba.priority", new Integer(priority));
+} else {
+        header.set("columba.priority", new Integer(3));
+}
+*/
         header.set("Mime-Version", "1.0");
 
         String organisation = identity.get("organisation");
@@ -133,7 +136,7 @@ public class MessageComposer {
         header.set("X-Mailer",
             "Columba v" + org.columba.core.main.MainInterface.version);
 
-         header.set("columba.from", new Address(identity.get("address")));
+        header.set("columba.from", new Address(identity.get("address")));
 
         // date
         Date date = new Date();
@@ -154,11 +157,11 @@ public class MessageComposer {
     }
 
     /**
-     * gives the signature for this Mail back. This signature is NOT a pgp-signature but a real mail-signature.
-     * @param item The item wich holds the signature-file
-     * @return The signature for the mail as a String. The Signature is character encoded with the caracter set from the
-     * model
-     */
+ * gives the signature for this Mail back. This signature is NOT a pgp-signature but a real mail-signature.
+ * @param item The item wich holds the signature-file
+ * @return The signature for the mail as a String. The Signature is character encoded with the caracter set from the
+ * model
+ */
     protected String getSignature(IdentityItem item) {
         File file = new File(item.get("signature_file"));
         StringBuffer strbuf = new StringBuffer();
@@ -167,12 +170,12 @@ public class MessageComposer {
             BufferedReader in = new BufferedReader(new FileReader(file));
 
             /*
-            BufferedReader in =
-                    new BufferedReader(
-                            new InputStreamReader(
-                                    new FileInputStream(file),
-                                    model.getCharsetName()));
-                            */
+BufferedReader in =
+        new BufferedReader(
+                new InputStreamReader(
+                        new FileInputStream(file),
+                        model.getCharsetName()));
+                */
             String str;
 
             while ((str = in.readLine()) != null) {
@@ -187,10 +190,10 @@ public class MessageComposer {
         }
 
         try {
-			//return new String(strbuf.toString().getBytes(),
-			//	model.getCharsetName());
-			return new String(strbuf.toString().getBytes(),
-					model.getCharset().name());
+            //return new String(strbuf.toString().getBytes(),
+            //	model.getCharsetName());
+            return new String(strbuf.toString().getBytes(),
+                model.getCharset().name());
         } catch (UnsupportedEncodingException e) {
         }
 
@@ -198,47 +201,47 @@ public class MessageComposer {
     }
 
     /*
-            protected String getSignature(IdentityItem item) {
+        protected String getSignature(IdentityItem item) {
 
-                    File file = new File(item.getSignatureFile());
-                    StringBuffer strbuf = new StringBuffer();
-                    try {
-                            //BufferedReader in = new BufferedReader(new FileReader(file));
-                            BufferedReader in =
-                                    new BufferedReader(
-                                            new InputStreamReader(
-                                                    new FileInputStream(file),
-                                                    model.getCharsetName()));
-                            String str;
+                File file = new File(item.getSignatureFile());
+                StringBuffer strbuf = new StringBuffer();
+                try {
+                        //BufferedReader in = new BufferedReader(new FileReader(file));
+                        BufferedReader in =
+                                new BufferedReader(
+                                        new InputStreamReader(
+                                                new FileInputStream(file),
+                                                model.getCharsetName()));
+                        String str;
 
-                            while ((str = in.readLine()) != null) {
-                                    strbuf.append(str + "\n");
-                            }
+                        while ((str = in.readLine()) != null) {
+                                strbuf.append(str + "\n");
+                        }
 
-                            in.close();
-                    } catch (IOException ex) {
-                            ex.printStackTrace();
-                            return "";
-                    }
+                        in.close();
+                } catch (IOException ex) {
+                        ex.printStackTrace();
+                        return "";
+                }
 
-                    return strbuf.toString();
+                return strbuf.toString();
 
-            }
-    */
+        }
+*/
 
     /**
-     * Composes a multipart/alternative mime part for the body of a message
-     * containing a text part and a html part.
-     * <br>
-     * This is to be used for sending html messages, when an alternative
-     * text part - to be read by users not able to read html - is required.
-     * <br>
-     * Pre-condition: It is assumed that the model contains a message
-     * in html format.
-     *
-     * @return        The composed mime part for the message body
-     * @author        Karl Peder Olesen (karlpeder)
-     */
+ * Composes a multipart/alternative mime part for the body of a message
+ * containing a text part and a html part.
+ * <br>
+ * This is to be used for sending html messages, when an alternative
+ * text part - to be read by users not able to read html - is required.
+ * <br>
+ * Pre-condition: It is assumed that the model contains a message
+ * in html format.
+ *
+ * @return        The composed mime part for the message body
+ * @author        Karl Peder Olesen (karlpeder)
+ */
     private StreamableMimePart composeMultipartAlternativeMimePart() {
         // compose text part
         StreamableMimePart textPart = composeTextMimePart();
@@ -256,24 +259,25 @@ public class MessageComposer {
     }
 
     /**
-     * Composes a text/html mime part from the body contained in
-     * the composer model. This could be for a pure html message or
-     * for the html part of a multipart/alternative.
-     * <br>
-     * If a signature is defined, it is added to the body.
-     * <br>
-     * Pre-condition: It is assumed that the model contains
-     * a html message.
-     *
-     * @return        The composed text/html mime part
-     * @author        Karl Peder Olesen (karlpeder)
-     */
+ * Composes a text/html mime part from the body contained in
+ * the composer model. This could be for a pure html message or
+ * for the html part of a multipart/alternative.
+ * <br>
+ * If a signature is defined, it is added to the body.
+ * <br>
+ * Pre-condition: It is assumed that the model contains
+ * a html message.
+ *
+ * @return        The composed text/html mime part
+ * @author        Karl Peder Olesen (karlpeder)
+ */
     private StreamableMimePart composeHtmlMimePart() {
         LocalMimePart bodyPart = new LocalMimePart(new MimeHeader("text", "html"));
 
         // Init Mime-Header with Default-Values (text/html)	
         // Set Default Charset or selected		
         String charsetName = model.getCharset().name();
+
         //String charsetName = model.getCharsetName();
         bodyPart.getHeader().putContentParameter("charset", charsetName);
 
@@ -358,17 +362,17 @@ public class MessageComposer {
     }
 
     /**
-     * Composes a text/plain mime part from the body contained in
-     * the composer model. This could be for a pure text message or
-     * for the text part of a multipart/alternative.
-     * <br>
-     * If the model contains a html message, tags are stripped to
-     * get plain text.
-     * <br>
-     * If a signature is defined, it is added to the body.
-     *
-     * @return        The composed text/plain mime part
-     */
+ * Composes a text/plain mime part from the body contained in
+ * the composer model. This could be for a pure text message or
+ * for the text part of a multipart/alternative.
+ * <br>
+ * If the model contains a html message, tags are stripped to
+ * get plain text.
+ * <br>
+ * If a signature is defined, it is added to the body.
+ *
+ * @return        The composed text/plain mime part
+ */
     private StreamableMimePart composeTextMimePart() {
         LocalMimePart bodyPart = new LocalMimePart(new MimeHeader("text",
                     "plain"));
@@ -376,16 +380,17 @@ public class MessageComposer {
         // Init Mime-Header with Default-Values (text/plain)	
         // Set Default Charset or selected		
         String charsetName = model.getCharset().name();
+
         //String charsetName = model.getCharsetName();
         bodyPart.getHeader().putContentParameter("charset", charsetName);
 
         String body = model.getBodyText();
 
         /*
-         * *20030918, karlpeder* Tags are stripped if the model
-         * contains a html message (since we are composing
-         * a plain text message here.
-         */
+ * *20030918, karlpeder* Tags are stripped if the model
+ * contains a html message (since we are composing
+ * a plain text message here.
+ */
         if (model.isHtml()) {
             body = HtmlParser.htmlToText(body);
         }
@@ -431,10 +436,10 @@ public class MessageComposer {
         MimePart root = null;
 
         /*
-         * *20030921, karlpeder* The old code was (accidentially!?) modifying
-         * the attachment list of the model. This affects the composing
-         * when called a second time for saving the message after sending!
-         */
+ * *20030921, karlpeder* The old code was (accidentially!?) modifying
+ * the attachment list of the model. This affects the composing
+ * when called a second time for saving the message after sending!
+ */
 
         //List mimeParts = model.getAttachments();
         List attachments = model.getAttachments();
@@ -451,7 +456,8 @@ public class MessageComposer {
         if (model.isHtml()) {
             // compose message body as multipart/alternative
             XmlElement composerOptions = MailInterface.config.getComposerOptionsConfig()
-                                                   .getRoot().getElement("/options");
+                                                             .getRoot()
+                                                             .getElement("/options");
             XmlElement html = composerOptions.getElement("html");
 
             if (html == null) {
@@ -511,9 +517,11 @@ public class MessageComposer {
             // Set recipients from the  recipients vector
             List recipientList = model.getRCPTVector();
             StringBuffer recipientBuf = new StringBuffer();
+
             for (Iterator it = recipientList.iterator(); it.hasNext();) {
-                recipientBuf.append((String)it.next());
+                recipientBuf.append((String) it.next());
             }
+
             item.set("recipients", recipientBuf.toString());
 
             PGPMimePart signPart = new PGPMimePart(new MimeHeader("multipart",
@@ -524,19 +532,25 @@ public class MessageComposer {
         }
 
         header.setRecipients(model.getRCPTVector());
-        
+
         List headerItemList;
-        
-        headerItemList =  model.getToList();
-        if( headerItemList.size() > 0 ) {
-            header.set("columba.to", new Address((String) ((HeaderItem)headerItemList.get(0)).get("displayname") ));
+
+        headerItemList = model.getToList();
+
+        if (headerItemList.size() > 0) {
+            header.set("columba.to",
+                new Address((String) ((HeaderItem) headerItemList.get(0)).get(
+                        "displayname")));
         }
 
-        headerItemList =  model.getCcList();
-        if( headerItemList.size() > 0 ) {
-            header.set("columba.cc", new Address((String) ((HeaderItem)headerItemList.get(0)).get("displayname") ));
+        headerItemList = model.getCcList();
+
+        if (headerItemList.size() > 0) {
+            header.set("columba.cc",
+                new Address((String) ((HeaderItem) headerItemList.get(0)).get(
+                        "displayname")));
         }
-        
+
         String composedBody;
 
         header.set("columba.attachment", Boolean.TRUE);
@@ -544,7 +558,7 @@ public class MessageComposer {
         root.getHeader().getHeader().merge(header.getHeader());
 
         InputStream in = renderer.renderMimePart(root);
-        
+
         // size
         int size = in.available() / 1024;
         header.set("columba.size", new Integer(size));
