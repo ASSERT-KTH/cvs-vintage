@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.113 2002/03/24 06:11:16 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.114 2002/03/27 10:35:43 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5599,8 +5599,8 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 
 			g.setColor(MetalLookAndFeel.getControlDarkShadow());
 			g.drawRect(0,0,width-2,height-2);
-			g.setColor(MetalLookAndFeel.getControlHighlight());
 
+			g.setColor(MetalLookAndFeel.getControlHighlight());
 			g.drawLine(width-1,1,width-1,height-1);
 			g.drawLine(1,height-1,width-1,height-1);
 

@@ -39,7 +39,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.30 2002/03/10 04:12:50 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.31 2002/03/27 10:35:43 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -338,13 +338,6 @@ public class PanelWindowContainer implements DockableWindowContainer
 		//{{{ DockBorder constructor
 		DockBorder(String position)
 		{
-			if(UIManager.getLookAndFeel() instanceof MetalLookAndFeel)
-			{
-				color1 = MetalLookAndFeel.getControlHighlight();
-				color2 = MetalLookAndFeel.getControlDarkShadow();
-				color3 = MetalLookAndFeel.getControl();
-			}
-
 			this.position = position;
 			insets = new Insets(
 				position.equals(DockableWindowManager.BOTTOM)
@@ -361,6 +354,8 @@ public class PanelWindowContainer implements DockableWindowContainer
 		public void paintBorder(Component c, Graphics g,
 			int x, int y, int width, int height)
 		{
+			updateColors();
+
 			if(color1 == null || color2 == null || color3 == null)
 				return;
 
@@ -435,6 +430,21 @@ public class PanelWindowContainer implements DockableWindowContainer
 				g.setColor(color2);
 				g.drawLine(x + 6,y + i * 4 + 5,
 					x + 6,y + i * 4 + 5);
+			}
+		} //}}}
+
+		//{{{ updateColors() method
+		private void updateColors()
+		{
+			if(UIManager.getLookAndFeel() instanceof MetalLookAndFeel)
+			{
+				color1 = MetalLookAndFeel.getControlHighlight();
+				color2 = MetalLookAndFeel.getControlDarkShadow();
+				color3 = MetalLookAndFeel.getControl();
+			}
+			else
+			{
+				color1 = color2 = color3 = null;
 			}
 		} //}}}
 	} //}}}
