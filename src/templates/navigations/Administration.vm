@@ -21,7 +21,11 @@
     $renderer.render("navigations", "ModuleAdmin.vm")
     </div>
   #else
-    <div><small>$link.setPage("admin,ManageArtifactTypes.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "4").setLabel("Modules")</small></div>
+    #if ($link.isAllowed("admin,ManageModules.vm") && ! $link.isAllowed("admin,ManageArtifactTypes.vm"))
+      <div><small>$link.setPage("admin,ManageModules.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "4").setLabel("Modules")</small></div>
+    #else
+      <div><small>$link.setPage("admin,ManageArtifactTypes.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "4").setLabel("Modules")</small></div>
+    #end
   #end
 #end
 
