@@ -757,8 +757,6 @@ try{
                 data.getParameters()
                 .getString(ScarabConstants.CURRENT_ISSUE_TYPE));
         }
-        // temp work around
-        currentIssueType = (IssueType)IssueTypePeer.retrieveByPK(new NumberKey("5"));
         return currentIssueType;
     }
 
