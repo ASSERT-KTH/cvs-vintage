@@ -122,18 +122,20 @@ public class Reaper extends Thread {
 
     public synchronized void stopReaper() {
 	running=false;
-	this.notify();
+	System.out.println("Stop reaper ");
+	this.interrupt(); // notify() doesn't stop sleep
     }
     
     public void run() {
 	while (running) {
+	    if( !running) break;
 	    try {
 		this.sleep(interval);
 	    } catch (InterruptedException ie) {
 		// sometimes will happen
 	    }
 
-	    if( !running) return;
+	    if( !running) break;
 	    for( int i=0; i< count; i++ ) {
 		ThreadPoolRunnable callB=cbacks[i];
 		// it may be null if a callback is removed.
@@ -141,6 +143,7 @@ public class Reaper extends Thread {
 		if( callB!= null ) {
 		    callB.runIt( tdata[i] );
 		}
+		if( !running) break;
 	    }
 	}
     }
