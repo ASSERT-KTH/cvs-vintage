@@ -336,7 +336,7 @@ public class JspInterceptor extends BaseInterceptor {
 	}
 
 	Handler wrapper=req.getHandler();
-
+	
 	if( wrapper==null )
 	    return 0;
 

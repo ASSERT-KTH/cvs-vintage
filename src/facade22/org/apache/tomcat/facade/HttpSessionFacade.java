@@ -107,7 +107,7 @@ final class HttpSessionFacade implements HttpSession {
     /** Package-level method - accessible only by core
      */
     void recycle() {
-	realSession=null;
+	//	realSession=null;
     }
 
     // -------------------- public facade --------------------

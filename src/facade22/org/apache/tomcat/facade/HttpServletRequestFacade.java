@@ -111,7 +111,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	usingReader=false;
 	usingStream=false;
 	parametersProcessed=false;
-	if( sessionFacade!=null) sessionFacade.recycle();
+	sessionFacade=null;
 	if( isFacade != null ) isFacade.recycle();
 	isFacadeInitialized=false;
     }
@@ -437,12 +437,17 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 
 	// No real session, return null
 	if( realSession == null ) {
-	    if( sessionFacade!= null) sessionFacade.recycle();
+	    sessionFacade=null;
 	    return null;
 	}
-	if(sessionFacade==null)
+
+	
+	sessionFacade=(HttpSessionFacade)realSession.getFacade();
+	if( sessionFacade==null ) {
 	    sessionFacade=new HttpSessionFacade();
-	sessionFacade.setRealSession( realSession );
+	    sessionFacade.setRealSession( realSession );
+	    realSession.setFacade( sessionFacade );
+	}
         return sessionFacade;
     }
 
