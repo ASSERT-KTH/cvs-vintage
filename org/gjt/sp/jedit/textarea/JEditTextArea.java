@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.45 2001/12/03 10:52:27 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.46 2001/12/11 06:32:54 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -62,7 +62,7 @@ public class JEditTextArea extends JComponent
 
 		//{{{ Initialize some misc. stuff
 		selection = new Vector();
-		renderer = TextRenderer.createTextRenderer();
+		renderer = new TextRenderer();
 		painter = new TextAreaPainter(this);
 		gutter = new Gutter(view,this);
 		bufferHandler = new BufferChangeHandler();

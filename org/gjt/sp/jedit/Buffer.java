@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.44 2001/12/11 00:05:54 spestov Exp $
+ * @version $Id: Buffer.java,v 1.45 2001/12/11 06:32:54 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -203,7 +203,7 @@ public class Buffer implements EBComponent
 
 		int lineNumberWidth = 0;
 
-		TextRenderer renderer = TextRenderer.createPrintTextRenderer();
+		TextRenderer renderer = new TextRenderer();
 
 		renderer.configure(false,false);
 
