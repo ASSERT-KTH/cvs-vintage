@@ -54,6 +54,7 @@ import java.util.HashMap;
 // Turbine Stuff 
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
+import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
 
 import org.apache.torque.om.NumberKey; 
@@ -92,7 +93,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.28 2001/08/30 23:00:06 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.29 2001/08/31 01:48:54 jmcnally Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -235,7 +236,7 @@ public class ModifyIssue extends TemplateAction
                 } 
             }
             intake.removeAll();
-            transaction.sendEmail(issue);
+            transaction.sendEmail(new ContextAdapter(context), issue);
         } 
         else
         {
@@ -333,7 +334,7 @@ public class ModifyIssue extends TemplateAction
                 intake.remove(group);
                 issue.setModifiedBy(user.getUserId());
                 issue.save();
-                transaction.sendEmail(issue);
+                transaction.sendEmail(new ContextAdapter(context), issue);
 
                 String template = data.getParameters()
                                  .getString(ScarabConstants.NEXT_TEMPLATE);
@@ -389,7 +390,7 @@ public class ModifyIssue extends TemplateAction
                                null, null, "", "");
                issue.setModifiedBy(user.getUserId());
                issue.save();
-               transaction.sendEmail(issue);
+               transaction.sendEmail(new ContextAdapter(context), issue);
             } 
         }
         String template = data.getParameters()
@@ -461,7 +462,8 @@ public class ModifyIssue extends TemplateAction
                activity.create(currentIssue, null, desc,
                                transaction, null, null,
                                oldValue, newValue);
-               transaction.sendEmail(currentIssue);
+               transaction.sendEmail(new ContextAdapter(context), 
+                                     currentIssue);
   
                break;
             }
@@ -529,7 +531,7 @@ public class ModifyIssue extends TemplateAction
                                oldValue, newValue);
                issue.setModifiedBy(user.getUserId());
                issue.save();
-               transaction.sendEmail(issue);
+               transaction.sendEmail(new ContextAdapter(context), issue);
 
             }
         }
@@ -614,7 +616,7 @@ public class ModifyIssue extends TemplateAction
                             transaction, null, null, "", "");
             issue.setModifiedBy(user.getUserId());
             issue.save();
-            transaction.sendEmail(issue);
+            transaction.sendEmail(new ContextAdapter(context), issue);
         }
         else
         {

@@ -53,9 +53,9 @@ import java.util.HashMap;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateAction;
-import org.apache.fulcrum.template.TemplateContext;
-import org.apache.fulcrum.template.DefaultTemplateContext;
 import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.modules.ContextAdapter;
 
 import org.apache.torque.om.NumberKey; 
 import org.apache.torque.util.Criteria;
@@ -85,7 +85,7 @@ import org.tigris.scarab.attribute.OptionAttribute;
     This class is responsible for moving/copying an issue from one module to another.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: MoveIssue.java,v 1.7 2001/08/30 23:00:06 jmcnally Exp $
+    @version $Id: MoveIssue.java,v 1.8 2001/08/31 01:48:55 jmcnally Exp $
 */
 public class MoveIssue extends TemplateAction
 {
@@ -220,11 +220,10 @@ public class MoveIssue extends TemplateAction
         activity.create(newIssue, zeroAttribute, desc, transaction, 
                         null, null, oldModule.getName(), newModule.getName());
 
-        TemplateContext messageParams = new DefaultTemplateContext();
-        messageParams.put("action", selectAction);
-        messageParams.put("oldModule", oldModule.getName());
-        messageParams.put("newModule", newModule.getName());
-        transaction.sendEmail(messageParams, newIssue, 
+        context.put("action", selectAction);
+        context.put("oldModule", oldModule.getName());
+        context.put("newModule", newModule.getName());
+        transaction.sendEmail(new ContextAdapter(context), newIssue, 
                               "issue " +  newIssue.getIssueId() + desc,
                               "email/MoveIssue.vm");
 

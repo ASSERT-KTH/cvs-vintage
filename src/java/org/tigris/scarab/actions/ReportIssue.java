@@ -53,6 +53,7 @@ import java.util.List;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
+import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
 
 import org.apache.commons.util.SequencedHashtable;
@@ -84,7 +85,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.42 2001/08/30 23:00:06 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.43 2001/08/31 01:48:54 jmcnally Exp $
 */
 public class ReportIssue extends TemplateAction
 {
@@ -356,7 +357,8 @@ public class ReportIssue extends TemplateAction
                 }
                 StringBuffer subj = new StringBuffer("Issue ");
                 subj.append(issue.getIssueId()).append(" - ").append(summary);
-                transaction.sendEmail(issue, subj.toString(),
+                transaction.sendEmail(new ContextAdapter(context), issue, 
+                                      subj.toString(),
                                       "email/NewIssueNotification.vm"); 
                 setTarget(data, template);
 
