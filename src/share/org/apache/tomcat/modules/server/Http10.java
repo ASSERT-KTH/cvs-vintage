@@ -259,16 +259,18 @@ public class Http10 {
 
 	methodMB.setBytes( buf, startMethod, endMethod - startMethod );
 	// optimization - detect common strings, no allocations
-	if( buf[startMethod] == 'g' ||
-	    buf[startMethod] == 'G') {
-	    if( methodMB.equalsIgnoreCase( "get" ))
+	// buf[startMethod] == 'g' ||, ignoreCase
+
+	// the idea is that we don't allocate new strings - but set
+	// to constants. ( probably not needed, it's has a tiny impact )
+	if( buf[startMethod] == 'G') {
+	    if( methodMB.equals( "GET" ))
 		methodMB.setString("GET");
 	}
-	if( buf[startMethod] == 'p' ||
-	    buf[startMethod] == 'P' ) {
-	    if( methodMB.equalsIgnoreCase( "post" ))
+	if( buf[startMethod] == 'P' ) {
+	    if( methodMB.equals( "POST" ))
 		methodMB.setString("POST");
-	    if( methodMB.equalsIgnoreCase( "put" ))
+	    if( methodMB.equals( "PUT" ))
 		methodMB.setString("PUT");
 	}
 

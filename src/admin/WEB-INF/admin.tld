@@ -20,7 +20,8 @@
     <tagclass>tadm.TomcatAdmin</tagclass>
     <teiclass>tadm.TomcatAdminTEI</teiclass>
     <info>
-      Admin
+      The admin tag will perform various tomcat admin tasks. It'll also
+      make available the "cm" and "ctx" variables.
     </info>
     <attribute>
        <name>action</name>

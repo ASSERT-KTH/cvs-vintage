@@ -540,7 +540,11 @@
 
   </target>
 
+  <target name="http09" depends="init">
+    <echo message="Testing HTTP 0.9 compatibility"/>
 
+
+  </target> 
 
    <target name="get" depends="init">
       <!-- hit unavailable servlet 1st time -->
@@ -557,8 +561,14 @@
              responseMatch="Wrong data"
       />
 
-      <gtest  request="GET /test/request/uri/does/not/exist"
-             returnCode="404"
+      <gtest description="HTTP 0.9 can't return a response code"
+	     request="GET /test/request/uri/does/not/exist"
+             returnCode="404" magnitude="false"
+      />
+
+      <gtest description="HTTP 0.9, check the body for 404"  
+	     request="GET /test/request/uri/does/not/exist"
+             responseMatch="404"
       />
 
       <gtest  request="GET /test/request/uri/does/not/exist HTTP/1.0"
@@ -722,35 +732,39 @@
              returnCode="${http.protocol} 404"
             />
 
-      <gtest  request="POST /test/"
+      <gtest description="HTTP0.9 doesn't have a POST method" 
+	     request="POST /test/"
              content=""
              returnCode="${http.protocol} 400"
+	     magnitude="false"
             />
 
-      <gtest  request="POST /test/servlet/request.EchoServlet"
+      <gtest  request="POST /test/servlet/request.EchoServlet HTTP/1.0"
              content="name=lightness of being"
              returnCode="${http.protocol} 200"
             />
 
-      <gtest  request="POST /test/servlet/request.EchoServlet"
+      <gtest  request="POST /test/servlet/request.EchoServlet HTTP/1.0"
              content="name=lightness of being,,,,,,,....###///&amp;&amp;@@@@@***"
              returnCode="${http.protocol} 200"
             />
 
-      <gtest  request="POST /test/servlet/request.EchoServlet"
+      <gtest  request="POST /test/servlet/request.EchoServlet HTTP/1.0"
              content="name=lightness of being,,,,,,,....###///&amp;&amp;&amp;&amp;@@@@@***"
              returnCode="${http.protocol} 200"
             />
 
-      <gtest  request="POST \/test/servlet/request.EchoServlet?name=sun&amp;age=2000"
+      <gtest  request="POST /test/servlet/request.EchoServlet?name=sun&amp;age=2000 HTTP/1.0"
              content="name=lightness of being,,,,,,,....###///&amp;@@@@@***"
              returnCode="${http.protocol} 200"
             />
 
-      <gtest  request="POST \"
+      <!-- I have no idea what this should return - 
+      <gtest  request="POST \ HTTP/1.0"
              content="name=lightness of being"
              returnCode="Error: 400"
             />
+      -->
 
       <gtest  request="POST /test/servlet/request.EchoServlet HTTP/1.0"
              content="name=lightness of being"

@@ -349,8 +349,6 @@ public class Response {
      */
     public void notifyEndHeaders() throws IOException {
 	commited=true;
-	if(request.protocol().isNull()) // HTTP/0.9 
-	    return;
 
 	// let CM notify interceptors and give a chance to fix
 	// the headers

@@ -307,6 +307,10 @@ class HttpResponse extends  Response {
 
     public void endHeaders()  throws IOException {
 	super.endHeaders();
+	if(request.protocol().isNull() ||
+	   request.protocol().equals("") ) // HTTP/0.9 
+	    return;
+
 	http.sendStatus( status, HttpMessages.getMessage( status ));
 	http.sendHeaders( getMimeHeaders() );
     }

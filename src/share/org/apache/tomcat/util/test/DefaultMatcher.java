@@ -83,7 +83,7 @@ public class DefaultMatcher {
     Vector headerVector=new Vector(); // workaround for introspection problems
     Hashtable expectHeaders=new Hashtable();
     // Match request line
-    String returnCode="";
+    String returnCode=null;
     String description;
     int debug;
 

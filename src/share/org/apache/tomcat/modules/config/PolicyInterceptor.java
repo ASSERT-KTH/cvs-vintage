@@ -72,8 +72,8 @@ import org.apache.tomcat.util.log.*;
  * Set policy-based access to tomcat.
  * Must be hooked before class loader setter.
  * The context will have a single protection domain, pointing to the doc root.
- *  That will include all classes loaded that belong to the context ( jsps, WEB-INF/classes,
- * WEB-INF/lib/
+ *  That will include all classes loaded that belong to the context
+ * ( jsps, WEB-INF/classes, WEB-INF/lib/
  *
  * @author  Glenn Nielsen 
  * @author costin@dnt.ro
