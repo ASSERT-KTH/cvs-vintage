@@ -478,37 +478,44 @@ public final class JDBCUtil
          else
          {
             final Reader reader = clob.getCharacterStream();
-            int intLength = (int)clob.length();
+            if(reader != null)
+            {
+               int intLength = (int)clob.length();
 
-            char[] chars;
-            try
-            {
-               if(intLength <= clob.length())
+               char[] chars;
+               try
                {
-                  chars = new char[intLength];
-                  reader.read(chars);
-                  content = String.valueOf(chars);
-               }
-               else
-               {
-                  StringBuffer buf = new StringBuffer(intLength);
-                  chars = new char[8192];
-                  int i = reader.read(chars);
-                  while(i > 0)
+                  if(intLength <= 8192)
                   {
-                     buf.append(chars, 0, i);
-                     i = reader.read(chars);
+                     chars = new char[intLength];
+                     reader.read(chars);
+                     content = String.valueOf(chars);
                   }
-                  content = buf.toString();
+                  else
+                  {
+                     StringBuffer buf = new StringBuffer(intLength);
+                     chars = new char[8192];
+                     int i = reader.read(chars);
+                     while(i > 0)
+                     {
+                        buf.append(chars, 0, i);
+                        i = reader.read(chars);
+                     }
+                     content = buf.toString();
+                  }
+               }
+               catch(IOException e)
+               {
+                  throw new SQLException("Failed to read CLOB character stream: " + e.getMessage());
+               }
+               finally
+               {
+                  safeClose(reader);
                }
             }
-            catch(IOException e)
+            else
             {
-               throw new SQLException("Failed to read CLOB character stream: " + e.getMessage());
-            }
-            finally
-            {
-               safeClose(reader);
+               content = null;
             }
          }
 
