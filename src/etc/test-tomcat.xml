@@ -416,6 +416,10 @@
 
 
    <target name="get">
+      <gtest request="GET /test/servlet/Cookie25 HTTP/1.0"
+             expectHeaders="Set-Cookie2: foo=bar;Version=1;MaxAge=8640000"
+      />
+
       <gtest request="GET /test/request/uri/does/not/exist"
              responseMatch="Error: 404"
       />

@@ -15,7 +15,8 @@ public class Cookie25 extends HttpServlet {
     {
         res.setContentType("text/plain");
 	Cookie c=new Cookie("foo", "bar");
-	c.setMaxAge( 60 * 60 * 24 * 26 );
+	c.setVersion(1);
+	c.setMaxAge( 60 * 60 * 24 * 100 );
 	res.addCookie( c );
 
         ServletOutputStream out = res.getOutputStream();
