@@ -24,7 +24,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.17 2003/04/29 19:25:07 kataka Exp $
+// $Id: FigPackage.java,v 1.18 2003/05/03 09:24:18 mkl Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -60,7 +60,7 @@ import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 import ru.novosoft.uml.model_management.MPackage;
 
-/** Class to display graphics for a UML MState in a diagram. */
+/** Class to display graphics for a UML package in a class diagram. */
 
 public class FigPackage extends FigNodeModelElement {
     protected static Category cat = Category.getInstance(FigPackage.class);
@@ -185,10 +185,8 @@ public class FigPackage extends FigNodeModelElement {
                                         lsDefaultName)) {
                                     me.consume();
                                     super.mouseClicked(me);
-                                    ProjectBrowser
-                                        .getInstance()
-                                        .getNavigatorPane()
-                                        .addToHistory(
+                                    lPB.getNavigatorPane()
+                                       .addToHistory(
                                         lDiagram);
                                     lPB.setTarget(lDiagram);
                                     return;
@@ -201,11 +199,9 @@ public class FigPackage extends FigNodeModelElement {
                             me.consume();
                             super.mouseClicked(me);
 
-                            ProjectBrowser
-                                .getInstance()
-                                .getNavigatorPane()
-                                .addToHistory(
-                                lFirst);
+                            lPB.getNavigatorPane()
+                               .addToHistory(
+                               lFirst);
                             lPB.setTarget(lFirst);
                             return;
                         } else {
@@ -236,10 +232,8 @@ public class FigPackage extends FigNodeModelElement {
 
                                     lP.addMember(lNew);
 
-                                    ProjectBrowser
-                                        .getInstance()
-                                        .getNavigatorPane()
-                                        .addToHistory(
+                                    lPB.getNavigatorPane()
+                                       .addToHistory(
                                         lNew);
                                     lPB.setTarget(lNew);
                                     /* change prefix */
