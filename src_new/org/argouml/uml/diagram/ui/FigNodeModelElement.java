@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.66 2003/05/31 13:50:36 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.67 2003/06/25 14:07:16 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -167,14 +167,26 @@ public abstract class FigNodeModelElement
         _bigPort = new FigRect(10, 10, 0, 0, Color.cyan, Color.cyan) {
             public void paint(Graphics g) {
                 super.paint(g);
-                g.setColor(Color.black);
+                
+                // Draw the shadow                
                 if (_shadowSize > 0) {
-                    g.fillRect(
-                        _x + _shadowSize,
-                        _y + _h,
-                        _w - _shadowSize,
-                        _shadowSize);
-                    g.fillRect(_x + _w, _y + _shadowSize, _shadowSize, _h);
+                    for (int i = 0; i < _shadowSize; ++i) {
+                        Color shadow = new Color(0.1f, 0.1f, 0.1f, 
+                            0.5f * (((float) _shadowSize - i) / (float) _shadowSize));                        
+                        g.setColor(shadow);
+
+                        g.drawLine(
+                            _x + _shadowSize,
+                            _y + _h + i,
+                            _x + _w + i,
+                            _y + _h + i);
+
+                        g.drawLine(
+                            _x + _w + i,
+                            _y + _shadowSize,
+                            _x + _w + i,
+                            _y + _h + i - 1);                        
+                    }
                 }
             }
         };

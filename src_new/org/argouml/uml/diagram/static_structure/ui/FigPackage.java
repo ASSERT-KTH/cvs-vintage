@@ -24,7 +24,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.20 2003/05/05 11:25:39 kataka Exp $
+// $Id: FigPackage.java,v 1.21 2003/06/25 14:07:37 jjones Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -113,40 +113,52 @@ public class FigPackage extends FigNodeModelElement {
         _bigPort = new FigRect(x, y, width, height, null, null) {
             public void paint(Graphics g) {
                 super.paint(g);
-                g.setColor(Color.black);
-                g.fillRect(
-                    _body.getX() + _shadowSize,
-                    _body.getY() + _body.getHeight(),
-                    _body.getWidth() - _shadowSize,
-                    _shadowSize);
-                g.fillRect(
-                    _body.getX() + _body.getWidth(),
-                    _body.getY() + _shadowSize,
-                    _shadowSize,
-                    _body.getHeight());
-                if (_stereo.getHeight() > _shadowSize) {
-                    g.fillRect(
-                        _stereo.getX() + _stereo.getWidth(),
-                        _stereo.getY() + _shadowSize,
-                        _shadowSize,
-                        _stereo.getHeight());
-                    int blinderheight =
-                        (_name.getY()
-                            - 1
-                            - (_stereo.getY() + _stereo.getHeight() + 1));
-                    if (blinderheight > 0) {
-                        //					g.fillRect(_stereo.getX()+_stereo.getWidth(),
-                        //							   _stereo.getY()+_stereo.getHeight(),
-                        //							   _shadowSize,
-                        //							   blinderheight);
+                
+                // Draw the shadow                
+                if (_shadowSize > 0) {
+                    for (int i = 0; i < _shadowSize; ++i) {
+                        Color shadow = new Color(0.1f, 0.1f, 0.1f, 
+                            0.5f * (((float) _shadowSize - i) / (float) _shadowSize));                        
+                        g.setColor(shadow);
+
+                        g.drawLine(
+                            _body.getX() + _shadowSize,
+                            _body.getY() + _body.getHeight() + i,
+                            _body.getX() + _body.getWidth() + i,
+                            _body.getY() + _body.getHeight() + i);
+
+                        g.drawLine(
+                            _body.getX() + _body.getWidth() + i,
+                            _body.getY() + _shadowSize,
+                            _body.getX() + _body.getWidth() + i,
+                            _body.getY() + _body.getHeight() + i - 1);                        
+                    
+                        if (_stereo.getHeight() > _shadowSize) {
+                            g.drawLine(
+                                _stereo.getX() + _stereo.getWidth() + i,
+                                _stereo.getY() + _shadowSize,
+                                _stereo.getX() + _stereo.getWidth() + i,
+                                _stereo.getY() + _stereo.getHeight() + _name.getHeight() + _shadowSize - 2);
+                                
+                            //int blinderheight =
+                            //    (_name.getY()
+                            //        - 1
+                            //        - (_stereo.getY() + _stereo.getHeight() + 1));
+                            //if (blinderheight > 0) {
+                            //                  g.fillRect(_stereo.getX()+_stereo.getWidth(),
+                            //                             _stereo.getY()+_stereo.getHeight(),
+                            //                             _shadowSize,
+                            //                             blinderheight);
+                            //}
+                        }
+                        else if (_name.getHeight() > _shadowSize) {
+                            g.drawLine(
+                                _name.getX() + _name.getWidth() + i,
+                                _name.getY() + _shadowSize,
+                                _name.getX() + _name.getWidth() + i,
+                                _name.getY() + _name.getHeight());
+                        }
                     }
-                }
-                if (_name.getHeight() > _shadowSize) {
-                    g.fillRect(
-                        _name.getX() + _name.getWidth(),
-                        _name.getY() + _shadowSize,
-                        _shadowSize,
-                        _name.getHeight() - _shadowSize);
                 }
             }
         };
