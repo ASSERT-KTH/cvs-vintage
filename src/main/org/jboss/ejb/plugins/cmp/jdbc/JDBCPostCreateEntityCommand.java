@@ -8,7 +8,8 @@
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.lang.reflect.Method;
-import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
 import javax.ejb.CreateException;
 import javax.ejb.EJBLocalObject;
 
@@ -22,29 +23,46 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCPostCreateEntityCommand
 {
    // Attributes ------------------------------------
    private JDBCEntityBridge entity;
+   private final JDBCCMRFieldBridge[] cmrWithFKMappedToCMP;
 
    // Constructors ----------------------------------
    public JDBCPostCreateEntityCommand(JDBCStoreManager manager)
    {
       entity = manager.getEntityBridge();
-   }
-
-   // Public ----------------------------------------
-   public Object execute(Method m,
-                         Object[] args,
-                         EntityEnterpriseContext ctx)
-      throws CreateException
-   {
-      java.util.List cmrFields = entity.getCMRFields();
+      List cmrFields = entity.getCMRFields();
+      List fkToCMPList = new ArrayList(4);
       for(int i = 0; i < cmrFields.size(); ++i)
       {
          JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)cmrFields.get(i);
+         if(cmrField.hasFKFieldsMappedToCMPFields()
+            || cmrField.getRelatedCMRField().hasFKFieldsMappedToCMPFields())
+         {
+            fkToCMPList.add(cmrField);
+         }
+      }
+      if(fkToCMPList.isEmpty())
+         cmrWithFKMappedToCMP = null;
+      else
+         cmrWithFKMappedToCMP = (JDBCCMRFieldBridge[])cmrFields
+            .toArray(new JDBCCMRFieldBridge[fkToCMPList.size()]);
+   }
+
+   // Public ----------------------------------------
+   public Object execute(Method m, Object[] args, EntityEnterpriseContext ctx)
+      throws CreateException
+   {
+      if(cmrWithFKMappedToCMP == null)
+         return null;
+
+      for(int i = 0; i < cmrWithFKMappedToCMP.length; ++i)
+      {
+         JDBCCMRFieldBridge cmrField = cmrWithFKMappedToCMP[i];
          if(cmrField.hasFKFieldsMappedToCMPFields())
          {
             Object relatedId = cmrField.getRelatedIdFromContextCMP(ctx);
