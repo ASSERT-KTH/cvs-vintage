@@ -333,7 +333,7 @@ public class TableView extends TreeTable {
                                 } else {
 					registerRenderer(
 						name,
-						new HeaderTableCommonRenderer(getTree(), str),
+						new HeaderTableCommonRenderer(getTree(), name),
 						new CommonHeaderRenderer(
 							name,
 							str,
