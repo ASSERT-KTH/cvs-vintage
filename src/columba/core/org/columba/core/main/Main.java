@@ -23,7 +23,6 @@ import java.net.Socket;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
@@ -130,101 +129,85 @@ public class Main {
 		}
 
 		loadInVMInstance(arg);
-
+		
 		final StartUpFrame frame = new StartUpFrame();
 		frame.setVisible(true);
 
-		final StartUpWorker worker = new StartUpWorker() {
-			JFrame mainFrame;
+		// enable logging 
+		new ColumbaLogger();
 
-			public Object construct() {
+		new Config();
 
-				//MainInterface.addressbookInterface = new AddressbookInterface();
+		AddressbookMain addressbook = new AddressbookMain();
+		addressbook.initConfiguration();
 
-				// enable logging 
-				new ColumbaLogger();
+		MailMain mail = new MailMain();
+		mail.initConfiguration();
 
-				new Config();
+		Config.init();
 
-				AddressbookMain addressbook = new AddressbookMain();
-				addressbook.initConfiguration();
+		new TempFileStore();
 
-				MailMain mail = new MailMain();
-				mail.initConfiguration();
+		ThemeSwitcher.setTheme();
 
-				Config.init();
+		doGuiInits();
 
-				new TempFileStore();
+		MainInterface.clipboardManager = new ClipboardManager();
 
-				ThemeSwitcher.setTheme();
+		new ImageLoader();
 
-				doGuiInits();
-				
-				MainInterface.clipboardManager = new ClipboardManager();
+		MainInterface.charsetManager = new CharsetManager();
 
-				new ImageLoader();
+		MainInterface.processor = new DefaultProcessor();
+		MainInterface.processor.start();
 
-				MainInterface.charsetManager = new CharsetManager();
+		MainInterface.pluginManager = new PluginManager();
+		MainInterface.pluginManager.registerHandler(new InterpreterHandler());
 
-				MainInterface.processor = new DefaultProcessor();
-				MainInterface.processor.start();
+		MainInterface.pluginManager.registerHandler(new ActionPluginHandler());
 
-				MainInterface.pluginManager = new PluginManager();
-				MainInterface.pluginManager.registerHandler(
-					new InterpreterHandler());
+		MainInterface.pluginManager.registerHandler(
+			new MenuPluginHandler("org.columba.core.menu"));
 
-				MainInterface.pluginManager.registerHandler(
-					new ActionPluginHandler());
+		MainInterface.pluginManager.registerHandler(new FramePluginHandler());
 
-				MainInterface.pluginManager.registerHandler(
-					new MenuPluginHandler("org.columba.core.menu"));
+		MainInterface.shutdownManager = new ShutdownManager();
 
-				MainInterface.pluginManager.registerHandler(
-					new FramePluginHandler());
+		MainInterface.shutdownManager.register(new SaveConfigPlugin());
 
-				MainInterface.shutdownManager = new ShutdownManager();
+		addressbook.initPlugins();
+		mail.initPlugins();
 
-				MainInterface.shutdownManager.register(new SaveConfigPlugin());
+		MainInterface.pluginManager.initPlugins();
 
-				addressbook.initPlugins();
-				mail.initPlugins();
+		frame.advance();
 
-				MainInterface.pluginManager.initPlugins();
+		//MainInterface.frameModelManager = new FrameModelManager();
 
-				frame.advance();
+		addressbook.initGui();
 
-				//MainInterface.frameModelManager = new FrameModelManager();
+		frame.advance();
 
-				addressbook.initGui();
+		mail.initGui();
 
-				frame.advance();
+		new FrameModel();
 
-				mail.initGui();
+		if (MailConfig.getAccountList().count() == 0) {
+			try {
 
-				new FrameModel();
+				new AccountWizard(false);
 
-				if (MailConfig.getAccountList().count() == 0) {
-					try {
-
-						new AccountWizard(false);
-
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-
-				}
-				return null;
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
-			public void finished() {
-				frame.setVisible(false);
+		}
 
-				new CmdLineArgumentHandler(args);
-			}
+		new CmdLineArgumentHandler(args);
+		
+		frame.setVisible(false);
 
-		}; // StartupWorker$
-
-		worker.start();
+	
 
 	} // main
 

@@ -68,4 +68,15 @@ public class CInfoPanel extends JPanel {
 
 		panel.setBackground(UIManager.getColor("controlShadow"));
 	}
+	
+	public void updateUI()
+	{
+		super.updateUI();
+		
+		if ( panel != null )
+			panel.setBackground(UIManager.getColor("controlShadow"));
+			
+		revalidate();
+		
+	}
 }
