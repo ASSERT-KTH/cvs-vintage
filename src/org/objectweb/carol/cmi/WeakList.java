@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
+ * Register objects in a list via weak references. It is possible to get an iterator to know
+ * objects still alive. 
  * @author nieuviar
  *
  */
@@ -30,7 +32,7 @@ public class WeakList {
     private final Object listHead = new Object();
     private WeakLink listStart;
 
-    public static class WeakLink extends WeakReference {
+    private static class WeakLink extends WeakReference {
         public WeakLink next;
         public WeakLink prev;
         WeakLink(Object o) {
@@ -47,7 +49,8 @@ public class WeakList {
     public void put(Object o) {
         WeakLink n = new WeakLink(o);
         synchronized (listHead) {
-            WeakLink prev = listStart, next = listStart.next;
+            WeakLink prev = listStart;
+            WeakLink next = listStart.next;
             n.prev = prev;
             n.next = next;
             prev.next = n;
@@ -61,7 +64,7 @@ public class WeakList {
         private boolean isNext = false;
 
         public ListIterator() {
-            pinNext();
+            //pinNext();
         }
 
         private void pinNext() {
@@ -85,10 +88,9 @@ public class WeakList {
         }
 
         public boolean hasNext() {
-            if (isNext) {
-                return true;
+            if (!isNext) {
+                pinNext();
             }
-            pinNext();
             return obj != listHead;
         }
 
