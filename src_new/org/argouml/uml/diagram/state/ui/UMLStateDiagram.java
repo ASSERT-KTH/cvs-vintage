@@ -24,7 +24,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.21 2002/12/29 14:24:45 kataka Exp $
+// $Id: UMLStateDiagram.java,v 1.22 2002/12/30 13:39:17 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -99,6 +99,15 @@ public class UMLStateDiagram extends UMLDiagram {
 
     public UMLStateDiagram(MNamespace m, MStateMachine sm) {
         this();
+        if (sm != null && m == null) {        
+        	MModelElement context = sm.getContext();
+        	if (context instanceof MClassifier) {
+        	    m = (MNamespace)context;
+        	} else
+        	if (context instanceof MBehavioralFeature) {
+        	    m = ((MBehavioralFeature)context).getOwner();
+        	}
+        }
         if (m != null && m.getName() != null) {
             String name = null, diag_name = m.getName();
             Object[] args = { name };
@@ -110,7 +119,7 @@ public class UMLStateDiagram extends UMLDiagram {
             } catch (PropertyVetoException pve) {
             }
         }
-        if (m != null && m.getNamespace() != null)
+        if (m != null)
             setup(m, sm);
 
     }

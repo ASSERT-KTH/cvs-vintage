@@ -21,11 +21,10 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigState.java,v 1.6 2002/12/30 12:43:03 kataka Exp $
+// $Id: FigState.java,v 1.7 2002/12/30 13:39:17 kataka Exp $
 package org.argouml.uml.diagram.state.ui;
 
 import java.awt.Color;
-import java.awt.Rectangle;
 import java.util.Iterator;
 
 import org.argouml.application.api.Notation;

@@ -24,7 +24,7 @@
 // File: NavPerspective.java
 // Classes: NavPerspective
 // Original Author: your email address here
-// $Id: NavPerspective.java,v 1.17 2002/12/25 11:49:38 kataka Exp $
+// $Id: NavPerspective.java,v 1.18 2002/12/30 13:39:17 kataka Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extends/includes and extension points in the package centric
@@ -88,6 +88,7 @@ import org.argouml.uml.diagram.static_structure.ui.GoClassToCompositeClass;
 import org.argouml.uml.diagram.static_structure.ui.GoClassToNavigableClass;
 import org.argouml.uml.diagram.static_structure.ui.GoModelToAssociation;
 import org.argouml.uml.diagram.static_structure.ui.GoModelToClass;
+import org.argouml.uml.diagram.ui.GoBehavioralFeatureToStateDiagram;
 import org.argouml.uml.diagram.ui.GoBehavioralFeatureToStateMachine;
 import org.argouml.uml.diagram.ui.GoChildGenerator;
 import org.argouml.uml.diagram.ui.GoClassifierToBeh;
@@ -269,6 +270,7 @@ implements Serializable, TreeModel, Cloneable {
     
     // rules for statemachinediagram and activitydiagram
     packageCentric.addSubTreeModel(new GoBehavioralFeatureToStateMachine());
+    packageCentric.addSubTreeModel(new GoBehavioralFeatureToStateDiagram());
     packageCentric.addSubTreeModel(new GoClassifierToStateMachine());
     packageCentric.addSubTreeModel(new GoMachineToState());
     packageCentric.addSubTreeModel(new GoStateToSubstate());
