@@ -19,7 +19,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * @see <related>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCBeanExistsCommand extends JDBCQueryCommand
 {
@@ -46,7 +46,7 @@ public class JDBCBeanExistsCommand extends JDBCQueryCommand
          result = ((Boolean)jdbcExecute(id)).booleanValue();
       } catch (Exception e)
       {
-         log.exception(e);
+	      log.debug(e);
       }
       
       return result;

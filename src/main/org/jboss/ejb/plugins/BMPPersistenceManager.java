@@ -14,10 +14,13 @@ import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.HashMap;
 
 import javax.ejb.EntityBean;
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
+import javax.ejb.RemoveException;
+import javax.ejb.EJBException;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
@@ -33,7 +36,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.12 $
+*   @version $Revision: 1.13 $
 */
 public class BMPPersistenceManager
 implements EntityPersistenceManager
@@ -48,6 +51,10 @@ implements EntityPersistenceManager
     Method ejbActivate;
     Method ejbPassivate;
     Method ejbRemove;
+	
+	HashMap createMethods = new HashMap();
+	HashMap postCreateMethods = new HashMap();
+  	HashMap finderMethods = new HashMap();
     
     // Static --------------------------------------------------------
     
@@ -67,6 +74,26 @@ implements EntityPersistenceManager
        ejbActivate = EntityBean.class.getMethod("ejbActivate", new Class[0]);
        ejbPassivate = EntityBean.class.getMethod("ejbPassivate", new Class[0]);
        ejbRemove = EntityBean.class.getMethod("ejbRemove", new Class[0]);
+	   
+	   // Create cache of create methods
+	   Method[] methods = con.getHomeClass().getMethods();
+	   for (int i = 0; i < methods.length; i++)
+	   {
+	   		if (methods[i].getName().equals("create"))
+			{
+				createMethods.put(methods[i], con.getBeanClass().getMethod("ejbCreate", methods[i].getParameterTypes()));
+				postCreateMethods.put(methods[i], con.getBeanClass().getMethod("ejbPostCreate", methods[i].getParameterTypes()));
+			}
+	   }
+	   
+	   // Create cache of finder methods
+	   for (int i = 0; i < methods.length; i++)
+	   {
+	   		if (methods[i].getName().startsWith("find"))
+			{
+				finderMethods.put(methods[i], con.getBeanClass().getMethod("ejbF" + methods[i].getName().substring(1), methods[i].getParameterTypes()));
+			}
+	   }
     }
     
     public void start()
@@ -84,32 +111,37 @@ implements EntityPersistenceManager
     public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
     throws RemoteException, CreateException
     {
-       // Get methods
-       try
-       {
-         Method createMethod = null;
-         Method postCreateMethod = null;
-         
-         // try to get the create method
-         try {
-          createMethod = con.getBeanClass().getMethod("ejbCreate", m.getParameterTypes());
-         } catch (NoSuchMethodException nsme) {
-          throw new CreateException("corresponding ejbCreate not found " + parametersToString(m.getParameterTypes()) + nsme);
-         }
-         
-         // try to get the post create method
-         try {
-          postCreateMethod = con.getBeanClass().getMethod("ejbPostCreate", m.getParameterTypes());
-         } catch (NoSuchMethodException nsme) {
-          throw new CreateException("corresponding ejbPostCreate not found " + parametersToString(m.getParameterTypes()) + nsme);
-         }
+         Method createMethod = (Method)createMethods.get(m);
+         Method postCreateMethod = (Method)postCreateMethods.get(m);
          
          Object id = null;
          try {
           // Call ejbCreate
           id = createMethod.invoke(ctx.getInstance(), args);
-         } catch (InvocationTargetException ite) {
-          throw new CreateException("Create failed(could not call ejbCreate):"+ite.getTargetException());
+         } catch (IllegalAccessException e)
+		 {
+			// Throw this as a bean exception...(?)
+			throw new EJBException(e);
+		 } catch (InvocationTargetException ite) 
+		 {
+		 	Throwable e = ite.getTargetException();
+			if (e instanceof CreateException)
+			{
+				// Rethrow exception
+				throw (CreateException)e;
+			} else if (e instanceof RemoteException)
+			{
+				// Rethrow exception
+				throw (RemoteException)e;
+			} else if (e instanceof EJBException)
+			{
+				// Rethrow exception
+				throw (EJBException)e;
+			} else if (e instanceof RuntimeException)
+			{
+				// Wrap runtime exceptions
+				throw new EJBException((Exception)e);
+			}
          }
          
          // set the id
@@ -129,20 +161,31 @@ implements EntityPersistenceManager
          
          try {
           postCreateMethod.invoke(ctx.getInstance(), args);
-         } catch (InvocationTargetException ite) {
-          throw new CreateException("Create failed(could not call ejbPostCreate):" + ite.getTargetException());
+         } catch (IllegalAccessException e)
+		 {
+			// Throw this as a bean exception...(?)
+			throw new EJBException(e);
+		 } catch (InvocationTargetException ite) 
+		 {
+		 	Throwable e = ite.getTargetException();
+			if (e instanceof CreateException)
+			{
+				// Rethrow exception
+				throw (CreateException)e;
+			} else if (e instanceof RemoteException)
+			{
+				// Rethrow exception
+				throw (RemoteException)e;
+			} else if (e instanceof EJBException)
+			{
+				// Rethrow exception
+				throw (EJBException)e;
+			} else if (e instanceof RuntimeException)
+			{
+				// Wrap runtime exceptions
+				throw new EJBException((Exception)e);
+			}
          }
-         
-         //      } catch (InvocationTargetException e)
-         //      {
-         //         throw new CreateException("Create failed:"+e);
-         //      } catch (NoSuchMethodException e)
-         //      {
-         //         throw new CreateException("Create methods not found:"+e);
-       } catch (IllegalAccessException e)
-       {
-         throw new CreateException("Could not create entity:"+e);
-       }
     }
     
     public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
@@ -198,13 +241,30 @@ implements EntityPersistenceManager
     public void activateEntity(EntityEnterpriseContext ctx)
     throws RemoteException
     {
-       try
-       {
-         ejbActivate.invoke(ctx.getInstance(), new Object[0]);
-       } catch (Exception e)
-       {
-         throw new ServerException("Activate failed", e);
-       }
+		try
+		{
+			ejbActivate.invoke(ctx.getInstance(), new Object[0]);
+		} catch (IllegalAccessException e)
+		{
+			// Throw this as a bean exception...(?)
+			throw new EJBException(e);
+		} catch (InvocationTargetException ite) 
+		{
+			Throwable e = ite.getTargetException();
+			if (e instanceof RemoteException)
+			{
+				// Rethrow exception
+				throw (RemoteException)e;
+			} else if (e instanceof EJBException)
+			{
+				// Rethrow exception
+				throw (EJBException)e;
+			} else if (e instanceof RuntimeException)
+			{
+				// Wrap runtime exceptions
+				throw new EJBException((Exception)e);
+			}
+		}
     }
     
     public void loadEntity(EntityEnterpriseContext ctx)
@@ -213,10 +273,27 @@ implements EntityPersistenceManager
        try
        {
          ejbLoad.invoke(ctx.getInstance(), new Object[0]);
-       } catch (Exception e)
-       {
-         throw new ServerException("Load failed", e);
-       }
+       } catch (IllegalAccessException e)
+		{
+			// Throw this as a bean exception...(?)
+			throw new EJBException(e);
+		} catch (InvocationTargetException ite) 
+		{
+			Throwable e = ite.getTargetException();
+			if (e instanceof RemoteException)
+			{
+				// Rethrow exception
+				throw (RemoteException)e;
+			} else if (e instanceof EJBException)
+			{
+				// Rethrow exception
+				throw (EJBException)e;
+			} else if (e instanceof RuntimeException)
+			{
+				// Wrap runtime exceptions
+				throw new EJBException((Exception)e);
+			}
+		}
     }
     
     public void storeEntity(EntityEnterpriseContext ctx)
@@ -226,10 +303,27 @@ implements EntityPersistenceManager
        try
        {
          ejbStore.invoke(ctx.getInstance(), new Object[0]);
-       } catch (Exception e)
-       {
-         throw new ServerException("Store failed", e);
-       }
+       } catch (IllegalAccessException e)
+		{
+			// Throw this as a bean exception...(?)
+			throw new EJBException(e);
+		} catch (InvocationTargetException ite) 
+		{
+			Throwable e = ite.getTargetException();
+			if (e instanceof RemoteException)
+			{
+				// Rethrow exception
+				throw (RemoteException)e;
+			} else if (e instanceof EJBException)
+			{
+				// Rethrow exception
+				throw (EJBException)e;
+			} else if (e instanceof RuntimeException)
+			{
+				// Wrap runtime exceptions
+				throw new EJBException((Exception)e);
+			}
+		}
     }
     
     public void passivateEntity(EntityEnterpriseContext ctx)
@@ -238,22 +332,60 @@ implements EntityPersistenceManager
        try
        {
          ejbPassivate.invoke(ctx.getInstance(), new Object[0]);
-       } catch (Exception e)
-       {
-         throw new ServerException("Passivate failed", e);
-       }
+       } catch (IllegalAccessException e)
+		{
+			// Throw this as a bean exception...(?)
+			throw new EJBException(e);
+		} catch (InvocationTargetException ite) 
+		{
+			Throwable e = ite.getTargetException();
+			if (e instanceof RemoteException)
+			{
+				// Rethrow exception
+				throw (RemoteException)e;
+			} else if (e instanceof EJBException)
+			{
+				// Rethrow exception
+				throw (EJBException)e;
+			} else if (e instanceof RuntimeException)
+			{
+				// Wrap runtime exceptions
+				throw new EJBException((Exception)e);
+			}
+		}
     }
     
     public void removeEntity(EntityEnterpriseContext ctx)
-    throws RemoteException
+    throws RemoteException, RemoveException
     {
        try
        {
          ejbRemove.invoke(ctx.getInstance(), new Object[0]);
-       } catch (Exception e)
-       {
-         throw new ServerException("Remove failed", e);
-       }
+       } catch (IllegalAccessException e)
+		{
+			// Throw this as a bean exception...(?)
+			throw new EJBException(e);
+		} catch (InvocationTargetException ite) 
+		{
+			Throwable e = ite.getTargetException();
+			if (e instanceof RemoveException)
+			{
+				// Rethrow exception
+				throw (RemoveException)e;
+			} else if (e instanceof RemoteException)
+			{
+				// Rethrow exception
+				throw (RemoteException)e;
+			} else if (e instanceof EJBException)
+			{
+				// Rethrow exception
+				throw (EJBException)e;
+			} else if (e instanceof RuntimeException)
+			{
+				// Wrap runtime exceptions
+				throw new EJBException((Exception)e);
+			}
+		}
     }
     // Z implementation ----------------------------------------------
     
@@ -266,46 +398,45 @@ implements EntityPersistenceManager
       throws RemoteException, FinderException
    {
        // get the finder method
-       Method callMethod = null;
-       try {
-         callMethod = getFinderMethod(con.getBeanClass(), finderMethod, args);
-       } catch (NoSuchMethodException me) {
-         // debug
-         //Logger.exception(me);
-         throw new RemoteException("couldn't find finder method in bean class. " + me.toString());
+       Method callMethod = (Method)finderMethods.get(finderMethod);
+       
+	   if (callMethod == null) {
+         throw new RemoteException("couldn't find finder method in bean class. " + finderMethod.toString());
        }
        
        // invoke the finder method
        Object result = null;
        try {
          result = callMethod.invoke(ctx.getInstance(), args);
-       } catch (InvocationTargetException e) {
-        Throwable targetException = e.getTargetException();
-        if (targetException instanceof FinderException) {
-          throw (FinderException)targetException;
-        }
-        else {
-          throw new ServerException("exception occured while invoking finder method", (Exception)targetException);
-        }
-      } catch (Exception e) {
-         // debug
-         // DEBUG Logger.exception(e);
-         throw new ServerException("exception occured while invoking finder method",e);
-       }
+       } catch (IllegalAccessException e)
+		{
+			// Throw this as a bean exception...(?)
+			throw new EJBException(e);
+		} catch (InvocationTargetException ite) 
+		{
+			Throwable e = ite.getTargetException();
+			if (e instanceof FinderException)
+			{
+				// Rethrow exception
+				throw (FinderException)e;
+			} else if (e instanceof RemoteException)
+			{
+				// Rethrow exception
+				throw (RemoteException)e;
+			} else if (e instanceof EJBException)
+			{
+				// Rethrow exception
+				throw (EJBException)e;
+			} else if (e instanceof RuntimeException)
+			{
+				// Wrap runtime exceptions
+				throw new EJBException((Exception)e);
+			}
+		}
        
        return result;
     }
     
-    private Method getFinderMethod(Class beanClass, Method finderMethod, Object[] args) throws NoSuchMethodException {
-       String methodName = "ejbF" + finderMethod.getName().substring(1);
-       return beanClass.getMethod(methodName, finderMethod.getParameterTypes());
-    }
-    
-    private String parametersToString(Object []a) {
-       String r = new String();
-       for(int i=0;i<a.length;i++) r = r + ", " + a[i];
-         return r;
-    }
     
     // Inner classes -------------------------------------------------
 }

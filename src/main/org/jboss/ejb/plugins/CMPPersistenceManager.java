@@ -13,11 +13,13 @@ import java.rmi.ServerException;
 import java.util.Collection;                                
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.ejb.EntityBean;
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
+import javax.ejb.EJBException;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
@@ -35,7 +37,7 @@ import org.jboss.ejb.EntityPersistenceStore;
 *      
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.9 $
+*   @version $Revision: 1.10 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {
@@ -53,6 +55,9 @@ implements EntityPersistenceManager {
     Method ejbPassivate;
     Method ejbRemove;
     
+    HashMap createMethods = new HashMap();
+    HashMap postCreateMethods = new HashMap();
+
     // Static --------------------------------------------------------
     
     // Constructors --------------------------------------------------
@@ -81,7 +86,18 @@ implements EntityPersistenceManager {
         ejbPassivate = EntityBean.class.getMethod("ejbPassivate", new Class[0]);
         ejbRemove = EntityBean.class.getMethod("ejbRemove", new Class[0]);
         
-        // Initialize the sto re
+		// Create cache of create methods
+	    Method[] methods = con.getHomeClass().getMethods();
+	    for (int i = 0; i < methods.length; i++)
+	    {
+	   		if (methods[i].getName().equals("create"))
+			{
+				createMethods.put(methods[i], con.getBeanClass().getMethod("ejbCreate", methods[i].getParameterTypes()));
+				postCreateMethods.put(methods[i], con.getBeanClass().getMethod("ejbPostCreate", methods[i].getParameterTypes()));
+			}
+	    }
+	   
+        // Initialize the store
         store.init();
     }
     
@@ -102,43 +118,84 @@ implements EntityPersistenceManager {
     public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
     throws RemoteException, CreateException {
         // Get methods
+        Method createMethod = (Method)createMethods.get(m);
+    	Method postCreateMethod = (Method)postCreateMethods.get(m);
+            
+        // Call ejbCreate on the target bean
         try {
             
-            Method createMethod = con.getBeanClass().getMethod("ejbCreate", m.getParameterTypes());
-            Method postCreateMethod = con.getBeanClass().getMethod("ejbPostCreate", m.getParameterTypes());
-            
-            // Call ejbCreate on the target bean
-            createMethod.invoke(ctx.getInstance(), args);
-            
-            // Have the store persist the new instance, the return is the key
-            Object id = store.createEntity(m, args, ctx);
-            
-            // Set the key on the target context
-            ctx.setId(id);
-            
-            // Create a new CacheKey
-               Object cacheKey = ((EntityInstanceCache) con.getInstanceCache()).createCacheKey( id );
+	        createMethod.invoke(ctx.getInstance(), args);
+		} catch (IllegalAccessException e)
+		{
+			// Throw this as a bean exception...(?)
+			throw new EJBException(e);
+		} catch (InvocationTargetException ite) 
+		{
+		 	Throwable e = ite.getTargetException();
+			if (e instanceof CreateException)
+			{
+				// Rethrow exception
+				throw (CreateException)e;
+			} else if (e instanceof RemoteException)
+			{
+				// Rethrow exception
+				throw (RemoteException)e;
+			} else if (e instanceof EJBException)
+			{
+				// Rethrow exception
+				throw (EJBException)e;
+			} else if (e instanceof RuntimeException)
+			{
+				// Wrap runtime exceptions
+				throw new EJBException((Exception)e);
+			}
+        }
+                 
+        // Have the store persist the new instance, the return is the key
+        Object id = store.createEntity(m, args, ctx);
         
-            // Give it to the context
-            ctx.setCacheKey(cacheKey);
-         
-         	// insert instance in cache, it is safe
-         	((EntityInstanceCache) con.getInstanceCache()).insert(ctx);
-         
-            // Create EJBObject
-            ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(cacheKey));
-            
-            postCreateMethod.invoke(ctx.getInstance(), args);
+        // Set the key on the target context
+        ctx.setId(id);
         
-        } 
-        catch (InvocationTargetException e) {
-            throw new CreateException("Create failed:"+e.getTargetException());
-        } 
-        catch (NoSuchMethodException e) {
-            throw new CreateException("Create methods not found:"+e);
-        } 
-        catch (IllegalAccessException e) {
-            throw new CreateException("Could not create entity:"+e);
+        // Create a new CacheKey
+           Object cacheKey = ((EntityInstanceCache) con.getInstanceCache()).createCacheKey( id );
+    
+        // Give it to the context
+        ctx.setCacheKey(cacheKey);
+     
+     	// insert instance in cache, it is safe
+     	((EntityInstanceCache) con.getInstanceCache()).insert(ctx);
+     
+        // Create EJBObject
+        ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(cacheKey));
+            
+		try 
+		{
+		   postCreateMethod.invoke(ctx.getInstance(), args);
+        } catch (IllegalAccessException e)
+		{
+			// Throw this as a bean exception...(?)
+			throw new EJBException(e);
+		} catch (InvocationTargetException ite) 
+		{
+		 	Throwable e = ite.getTargetException();
+			if (e instanceof CreateException)
+			{
+				// Rethrow exception
+				throw (CreateException)e;
+			} else if (e instanceof RemoteException)
+			{
+				// Rethrow exception
+				throw (RemoteException)e;
+			} else if (e instanceof EJBException)
+			{
+				// Rethrow exception
+				throw (EJBException)e;
+			} else if (e instanceof RuntimeException)
+			{
+				// Wrap runtime exceptions
+				throw new EJBException((Exception)e);
+			}
         }
     }
     
@@ -188,27 +245,62 @@ implements EntityPersistenceManager {
         try
         {
             ejbActivate.invoke(ctx.getInstance(), new Object[0]);
-        } catch (Exception e)
+        } catch (IllegalAccessException e)
         {
-            throw new ServerException("Activation failed", e);
+        	// Throw this as a bean exception...(?)
+        	throw new EJBException(e);
+        } catch (InvocationTargetException ite) 
+        {
+        	Throwable e = ite.getTargetException();
+        	if (e instanceof RemoteException)
+        	{
+        		// Rethrow exception
+        		throw (RemoteException)e;
+        	} else if (e instanceof EJBException)
+        	{
+        		// Rethrow exception
+        		throw (EJBException)e;
+        	} else if (e instanceof RuntimeException)
+        	{
+        		// Wrap runtime exceptions
+        		throw new EJBException((Exception)e);
+        	}
         }
         
-        store.activateEntity(ctx);
+		store.activateEntity(ctx);
     }
     
     public void loadEntity(EntityEnterpriseContext ctx)
     throws RemoteException {
         
+        // Have the store load the fields of the instance
+        store.loadEntity(ctx);
+        
         try {
-            
-            // Have the store deal with create the fields of the instance
-            store.loadEntity(ctx);
             
             // Call ejbLoad on bean instance, wake up!
             ejbLoad.invoke(ctx.getInstance(), new Object[0]);
-        }
-        catch (Exception e) {
-            throw new ServerException("Load failed", e);
+
+        } catch (IllegalAccessException e)
+        {
+        	// Throw this as a bean exception...(?)
+        	throw new EJBException(e);
+        } catch (InvocationTargetException ite) 
+        {
+        	Throwable e = ite.getTargetException();
+        	if (e instanceof RemoteException)
+        	{
+        		// Rethrow exception
+        		throw (RemoteException)e;
+        	} else if (e instanceof EJBException)
+        	{
+        		// Rethrow exception
+        		throw (EJBException)e;
+        	} else if (e instanceof RuntimeException)
+        	{
+        		// Wrap runtime exceptions
+        		throw new EJBException((Exception)e);
+        	}
         }
     }
     
@@ -219,14 +311,31 @@ implements EntityPersistenceManager {
             
             // Prepare the instance for storage
             ejbStore.invoke(ctx.getInstance(), new Object[0]);
-            
-            // Have the store deal with storing the fields of the instance
-            store.storeEntity(ctx);
-        } 
-        
-        catch (Exception e) {
-            throw new ServerException("Store failed", e);
+        } catch (IllegalAccessException e)
+        {
+        	// Throw this as a bean exception...(?)
+        	throw new EJBException(e);
+        } catch (InvocationTargetException ite) 
+        {
+        	Throwable e = ite.getTargetException();
+        	if (e instanceof RemoteException)
+        	{
+        		// Rethrow exception
+        		throw (RemoteException)e;
+        	} else if (e instanceof EJBException)
+        	{
+        		// Rethrow exception
+        		throw (EJBException)e;
+        	} else if (e instanceof RuntimeException)
+        	{
+        		// Wrap runtime exceptions
+        		throw new EJBException((Exception)e);
+        	}
         }
+            
+        // Have the store deal with storing the fields of the instance
+        store.storeEntity(ctx);
+
     }
     
     public void passivateEntity(EntityEnterpriseContext ctx)
@@ -236,10 +345,26 @@ implements EntityPersistenceManager {
             
             // Prepare the instance for passivation 
             ejbPassivate.invoke(ctx.getInstance(), new Object[0]);
-        } 
-        catch (Exception e) {
-            
-            throw new ServerException("Passivation failed", e);
+        } catch (IllegalAccessException e)
+        {
+        	// Throw this as a bean exception...(?)
+        	throw new EJBException(e);
+        } catch (InvocationTargetException ite) 
+        {
+        	Throwable e = ite.getTargetException();
+        	if (e instanceof RemoteException)
+        	{
+        		// Rethrow exception
+        		throw (RemoteException)e;
+        	} else if (e instanceof EJBException)
+        	{
+        		// Rethrow exception
+        		throw (EJBException)e;
+        	} else if (e instanceof RuntimeException)
+        	{
+        		// Wrap runtime exceptions
+        		throw new EJBException((Exception)e);
+        	}
         }
         
         store.passivateEntity(ctx);
@@ -249,17 +374,34 @@ implements EntityPersistenceManager {
     throws RemoteException, RemoveException {
         
         try {
-            
+
             // Call ejbRemove
             ejbRemove.invoke(ctx.getInstance(), new Object[0]);
-        } 
-        catch (Exception e){
-            
-            throw new RemoveException("Could not remove "+ctx.getId());
+        } catch (IllegalAccessException e)
+        {
+        	// Throw this as a bean exception...(?)
+        	throw new EJBException(e);
+        } catch (InvocationTargetException ite) 
+        {
+        	Throwable e = ite.getTargetException();
+        	if (e instanceof RemoteException)
+        	{
+        		// Rethrow exception
+        		throw (RemoteException)e;
+        	} else if (e instanceof EJBException)
+        	{
+        		// Rethrow exception
+        		throw (EJBException)e;
+        	} else if (e instanceof RuntimeException)
+        	{
+        		// Wrap runtime exceptions
+        		throw new EJBException((Exception)e);
+        	}
         }
         
         store.removeEntity(ctx);
     }
+
     // Z implementation ----------------------------------------------
     
     // Package protected ---------------------------------------------

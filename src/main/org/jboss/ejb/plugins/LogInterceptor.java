@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
+import java.rmi.ServerException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Enumeration;
@@ -16,9 +17,11 @@ import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
 import javax.ejb.EJBObject;
 import javax.ejb.EJBMetaData;
+import javax.ejb.EJBException;
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
+import javax.transaction.TransactionRolledbackException;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EnterpriseContext;
@@ -33,7 +36,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class LogInterceptor
    extends AbstractInterceptor
@@ -73,6 +76,9 @@ public class LogInterceptor
 		// Should we log all calls?
 		callLogging = getContainer().getBeanMetaData().getContainerConfiguration().getCallLogging();
 		
+		// DEBUG
+		callLogging = true;
+		
       log = new Log(name);
    }
    
@@ -103,14 +109,40 @@ public class LogInterceptor
          return getNext().invokeHome(mi);
       } catch (Exception e)
       {
-			// Log system exceptions
-         if (e instanceof RemoteException ||
-				 e instanceof RuntimeException)
+		// Log system exceptions
+		if (e instanceof EJBException)
+		{
+			Logger.error("BEAN EXCEPTION:"+e.getMessage());
+			if (((EJBException)e).getCausedByException() != null)
+				Logger.exception(((EJBException)e).getCausedByException());
+			
+			// Client sees RemoteException
+			throw new ServerException("Bean exception. Notify the application administrator", e);
+		} else if (e instanceof RuntimeException)
+		{
+			Logger.error("CONTAINER EXCEPTION:"+e.getMessage());
+			Logger.exception(e);
+			
+			// Client sees RemoteException
+			throw new ServerException("Container exception. Notify the container developers :-)", e);
+		} else if (e instanceof TransactionRolledbackException)
+		{
+			Logger.error("TRANSACTION ROLLBACK EXCEPTION:"+e.getMessage());
+			// Log the rollback cause
+			Logger.exception(((RemoteException)e).detail);
+			
+			throw e;
+		} else
+		{
+			// Application exception, or (in case of RemoteException) already handled system exc
+			// Call debugging -> show exceptions
+			if (callLogging)
 			{
-				Logger.log(e.getMessage());
+				Logger.warning(e.getMessage());
 			}
 			
-         throw e;
+			throw e;
+		}
       } finally
       {
          Log.unsetLog();
@@ -156,11 +188,40 @@ public class LogInterceptor
          return getNext().invoke(mi);
       } catch (Exception e)
       {
-         // RO TODO: make a finer grained exception logging, the app stuff needs to go through and the server stuff needs to be logged
-		 log.exception(e);
-         if (e.getMessage() != null)
-         log.log(e.getMessage());
-         throw e;
+		// Log system exceptions
+		if (e instanceof EJBException)
+		{
+			Logger.error("BEAN EXCEPTION:"+e.getMessage());
+			if (((EJBException)e).getCausedByException() != null)
+				Logger.exception(((EJBException)e).getCausedByException());
+			
+			// Client sees RemoteException
+			throw new ServerException("Bean exception. Notify the application administrator", e);
+		} else if (e instanceof RuntimeException)
+		{
+			Logger.error("CONTAINER EXCEPTION:"+e.getMessage());
+			Logger.exception(e);
+			
+			// Client sees RemoteException
+			throw new ServerException("Container exception. Notify the container developers :-)", e);
+		} else if (e instanceof TransactionRolledbackException)
+		{
+			Logger.error("TRANSACTION ROLLBACK EXCEPTION:"+e.getMessage());
+			// Log the rollback cause
+			Logger.exception(((RemoteException)e).detail);
+			
+			throw e;
+		} else
+		{
+			// Application exception, or (in case of RemoteException) already handled system exc
+			// Call debugging -> show exceptions
+			if (callLogging)
+			{
+				Logger.warning(e.getMessage());
+			}
+			
+			throw e;
+		}
       } finally
       {
          Log.unsetLog();

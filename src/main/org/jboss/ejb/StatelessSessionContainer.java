@@ -19,6 +19,7 @@ import javax.ejb.EJBHome;
 import javax.ejb.EJBMetaData;
 import javax.ejb.CreateException;
 import javax.ejb.RemoveException;
+import javax.ejb.EJBException;
 import org.jboss.logging.Logger;
 
 
@@ -28,7 +29,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.12 $
+*   @version $Revision: 1.13 $
 */
 public class StatelessSessionContainer
     extends Container
@@ -408,19 +409,30 @@ public class StatelessSessionContainer
             try
             {
                return m.invoke(StatelessSessionContainer.this, mi.getArguments());
-            } catch (InvocationTargetException e)
+            } catch (IllegalAccessException e)
+			{
+				// Throw this as a bean exception...(?)
+				throw new EJBException(e);
+			} catch (InvocationTargetException e) 
             {
                 Throwable ex = e.getTargetException();
-               if (ex instanceof Exception)
-                  throw (Exception)ex;
-               else
-                  throw (Error)ex;
+                if (ex instanceof EJBException)
+                   throw (EJBException)ex;
+                else if (ex instanceof RuntimeException)
+                   throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
+                else if (ex instanceof Exception)
+                   throw (Exception)ex;
+                else
+                   throw (Error)ex;
             }
         }
         
         public Object invoke(MethodInvocation mi)
             throws Exception
         {
+            //wire the transaction on the context, this is how the instance remember the tx
+             if (mi.getEnterpriseContext().getTransaction() == null) mi.getEnterpriseContext().setTransaction(mi.getTransaction());
+			 
             // Get method and instance to invoke upon
             Method m = (Method)beanMapping.get(mi.getMethod());
             
@@ -430,28 +442,44 @@ public class StatelessSessionContainer
                 try 
                 {
                     return m.invoke(StatelessSessionContainer.this, new Object[] { mi });
-                } catch (InvocationTargetException e) 
-                {
+                } catch (IllegalAccessException e)
+				{
+					// Throw this as a bean exception...(?)
+					throw new EJBException(e);
+				} catch (InvocationTargetException e) 
+	            {
 	                Throwable ex = e.getTargetException();
-	               
-	                if (ex instanceof Exception) throw (Exception)ex;
-	                    else throw (Error)ex;
-		          }
+	                if (ex instanceof EJBException)
+	                   throw (EJBException)ex;
+	                else if (ex instanceof RuntimeException)
+	                   throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
+	                else if (ex instanceof Exception)
+	                   throw (Exception)ex;
+	                else
+	                   throw (Error)ex;
+	            }
             } else // we have a method that needs to be done by a bean instance
             {    
-			    // MF FIXME we don't need to wire the Transaction to the context?
-				
 				// Invoke and handle exceptions
       		    try 
                 {
             	    return m.invoke(mi.getEnterpriseContext().getInstance(), mi.getArguments());
-                } catch (InvocationTargetException e) 
+                } catch (IllegalAccessException e)
+				{
+					// Throw this as a bean exception...(?)
+					throw new EJBException(e);
+				} catch (InvocationTargetException e) 
                 {
                     Throwable ex = e.getTargetException();
-                    
-                    if (ex instanceof Exception) throw (Exception)ex;
-                    else throw (Error)ex;
-	             }
+                    if (ex instanceof EJBException)
+                       throw (EJBException)ex;
+                    else if (ex instanceof RuntimeException)
+                       throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
+                    else if (ex instanceof Exception)
+                       throw (Exception)ex;
+                    else
+                       throw (Error)ex;
+	            }
   	         }
         }
     }

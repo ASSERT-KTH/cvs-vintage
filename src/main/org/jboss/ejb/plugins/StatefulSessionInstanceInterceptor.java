@@ -32,7 +32,7 @@ import javax.ejb.EJBException;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.8 $
+*   @version $Revision: 1.9 $
 */
 public class StatefulSessionInstanceInterceptor
 extends AbstractInterceptor
@@ -155,11 +155,8 @@ extends AbstractInterceptor
 				
 				//take it!
 				ctx.lock();  
-			}
-			
-			else 
+			} else 
 			{
-				
 				// Calls must be in the same transaction
 				throw new RemoteException("Application Error: no concurrent calls on stateful beans");
 			}

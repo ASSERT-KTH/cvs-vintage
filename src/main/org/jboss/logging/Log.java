@@ -17,7 +17,7 @@ import javax.management.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class Log
 {
@@ -31,7 +31,7 @@ public class Log
    Object source = null;
    
    // Static --------------------------------------------------------
-   static ThreadLocal currentLog = new ThreadLocal();
+   static ThreadLocal currentLog = new InheritedThreadLocal();
    static Log defaultLog = new Log();
    
    public static void setLog(Log log)
@@ -116,6 +116,23 @@ public class Log
       {
          while((error = din.readLine()) != null)
             log("Error", error);
+      } catch (Exception e) {}
+   }
+   
+   public synchronized void debug(Throwable exception)
+   {
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      PrintStream out = new PrintStream(baos);
+      exception.printStackTrace(out);
+      out.close();
+      
+      DataInputStream din = new DataInputStream(new ByteArrayInputStream(baos.toByteArray()));
+      
+      String error;
+      try
+      {
+         while((error = din.readLine()) != null)
+            log("Debug", error);
       } catch (Exception e) {}
    }
    

@@ -33,7 +33,7 @@ import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public abstract class JDBCFinderCommand
    extends JDBCQueryCommand
@@ -60,7 +60,7 @@ public abstract class JDBCFinderCommand
          result = (Collection)jdbcExecute(args);
       } catch (Exception e)
       {
-         log.exception(e);
+         log.debug(e);
          throw new FinderException("Find failed");
       }
 

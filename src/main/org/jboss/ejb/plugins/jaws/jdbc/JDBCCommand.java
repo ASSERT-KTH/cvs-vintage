@@ -52,7 +52,7 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public abstract class JDBCCommand
 {
@@ -153,7 +153,7 @@ public abstract class JDBCCommand
          setParameters(stmt, argOrArgs);
          result = executeStatementAndHandleResult(stmt, argOrArgs);
       } catch(SQLException e) {
-          log.exception(e);
+          log.debug(e);
           throw e;
       } finally
       {
@@ -164,7 +164,7 @@ public abstract class JDBCCommand
                stmt.close();
             } catch (SQLException e)
             {
-               Logger.exception(e);
+               Logger.debug(e);
             }
          }
          if (con != null)
@@ -174,7 +174,7 @@ public abstract class JDBCCommand
                con.close();
             } catch (SQLException e)
             {
-               Logger.exception(e);
+               Logger.debug(e);
             }
          }
       }
@@ -443,7 +443,7 @@ public abstract class JDBCCommand
       } catch (Exception e)
       {
          // JF: Dubious - better to throw a meaningful exception
-         Logger.exception(e);
+         Logger.debug(e);
          return Types.OTHER;
       }
    }
@@ -588,7 +588,7 @@ public abstract class JDBCCommand
             jdbcTypeNames.put(fieldValue, fieldName);
          } catch (IllegalAccessException e) {
             // Should never happen
-            Logger.exception(e);
+            Logger.debug(e);
          }
       }
    }

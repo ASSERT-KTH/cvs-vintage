@@ -18,6 +18,7 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.RollbackException;
 import javax.transaction.TransactionRequiredException;
+import javax.transaction.TransactionRolledbackException;
 import javax.transaction.SystemException;
 
 import javax.ejb.EJBException;
@@ -39,7 +40,7 @@ import org.jboss.metadata.MethodMetaData;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.3 $
+*   @version $Revision: 1.4 $
 */
 public class TxInterceptorCMT
 extends AbstractInterceptor
@@ -126,11 +127,56 @@ extends AbstractInterceptor
     }
     
     private Object invokeNext(boolean remoteInvocation, MethodInvocation mi) throws Exception {
-        if (remoteInvocation) {
-            return getNext().invoke(mi);
-        } else {
-            return getNext().invokeHome(mi);
-        }
+		try
+		{
+	        if (remoteInvocation) {
+	            return getNext().invoke(mi);
+	        } else {
+	            return getNext().invokeHome(mi);
+	        }
+		} catch (RuntimeException e)
+		{
+			// EJB 2.0 17.3, table 15
+			if (mi.getEnterpriseContext().getTransaction() != null)
+			{
+				mi.getEnterpriseContext().getTransaction().setRollbackOnly();
+				RemoteException tre = new TransactionRolledbackException(e.getMessage());
+				tre.detail = e;
+				throw tre;
+			} else
+			{
+				// This exception will be transformed into a RemoteException by the LogInterceptor
+				throw e;
+			}
+		} catch (RemoteException e)
+		{
+			// EJB 2.0 17.3, table 15
+			if (mi.getEnterpriseContext().getTransaction() != null)
+			{
+				mi.getEnterpriseContext().getTransaction().setRollbackOnly();
+				RemoteException tre = new TransactionRolledbackException(e.getMessage());
+				tre.detail = e;
+				throw tre;
+			} else
+			{
+				// This exception will be transformed into a RemoteException by the LogInterceptor
+				throw e;
+			}
+		} catch (Error e)
+		{
+			// EJB 2.0 17.3, table 15
+			if (mi.getEnterpriseContext().getTransaction() != null)
+			{
+				mi.getEnterpriseContext().getTransaction().setRollbackOnly();
+				RemoteException tre = new TransactionRolledbackException(e.getMessage());
+				tre.detail = e;
+				throw tre;
+			} else
+			{
+				// This exception will be transformed into a RemoteException by the LogInterceptor
+				throw e;
+			}
+		} 
     }
     
     /*

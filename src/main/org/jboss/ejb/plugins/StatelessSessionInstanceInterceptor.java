@@ -39,7 +39,7 @@ import org.jboss.ejb.MethodInvocation;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class StatelessSessionInstanceInterceptor
    extends AbstractInterceptor
@@ -68,6 +68,7 @@ public class StatelessSessionInstanceInterceptor
    public Object invokeHome(MethodInvocation mi)
       throws Exception
    {
+   	  // We don't need an instance since the call will be handled by container
       return getNext().invokeHome(mi);
    }
 
@@ -84,12 +85,23 @@ public class StatelessSessionInstanceInterceptor
       {
          // Invoke through interceptors
          return getNext().invoke(mi);
-      } finally
+      } catch (RuntimeException e) // Instance will be GC'ed at MI return
       {
-         // Return context
-         container.getInstancePool().free(mi.getEnterpriseContext());
+	  	throw e;
+      } catch (RemoteException e) // Instance will be GC'ed at MI return
+      {
+    	throw e;
+      } catch (Error e) // Instance will be GC'ed at MI return
+      {
+	    throw e;
+      } catch (Exception e)
+      {
+	  	// Application exception
+		// Return context
+		container.getInstancePool().free(mi.getEnterpriseContext());
+		
+		throw e;
       }
-	  
    }
    
 }

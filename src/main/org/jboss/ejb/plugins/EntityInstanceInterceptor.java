@@ -35,6 +35,7 @@ import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.MethodInvocation;
 import org.jboss.ejb.CacheKey;
 import org.jboss.metadata.EntityMetaData;
+import org.jboss.logging.Logger;
 
 /**
 *   This container acquires the given instance. 
@@ -42,7 +43,7 @@ import org.jboss.metadata.EntityMetaData;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.12 $
+*   @version $Revision: 1.13 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
@@ -131,7 +132,10 @@ extends AbstractInterceptor
 					// Let's put the thread to sleep a lock release will wake the thread
 					synchronized (ctx)
 					{
-						try{ctx.wait();}
+						// Possible deadlock
+						Logger.log("LOCKING-WAITING for id "+ctx.getId()+" ctx.hash "+ctx.hashCode()+" tx.hash "+ctx.hashCode());
+						
+						try{ctx.wait(5000);}
 							catch (InterruptedException ie) {}
 					}
 					
@@ -150,16 +154,9 @@ extends AbstractInterceptor
 				{
 					if (!isCallAllowed(mi)) {
 						
-						// Let's put the thread to sleep a lock release will wake the thread
-						synchronized (ctx)
-						{
-							try{ctx.wait();}
-								catch (InterruptedException ie) {}
-						}
+						// Not allowed reentrant call
+						throw new RemoteException("Reentrant call");
 						
-						// Try your luck again
-						ctx = null;
-						continue;
 					} else
 					{
 						//take it!

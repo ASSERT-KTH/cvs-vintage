@@ -43,7 +43,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 class TxCapsule implements TimeoutTarget
 {
@@ -902,7 +902,7 @@ class TxCapsule implements TimeoutTarget
    private void startResource(XAResource xaRes, int flags)
       throws XAException
    {
-System.err.println("TxCapsule.startResource(" + xid.toString() +
+		Logger.debug("TxCapsule.startResource(" + xid.toString() +
                    ") entered: " + xaRes.toString() +
                    " flags=" + flags);
       unlock();
@@ -910,7 +910,7 @@ System.err.println("TxCapsule.startResource(" + xid.toString() +
          xaRes.start(xid, flags);
       } finally {
          lock();
-System.err.println("TxCapsule.startResource(" + xid.toString() +
+		Logger.debug("TxCapsule.startResource(" + xid.toString() +
                    ") leaving: " + xaRes.toString() +
                    " flags=" + flags);
       }
@@ -923,7 +923,7 @@ System.err.println("TxCapsule.startResource(" + xid.toString() +
    private void endResource(XAResource xaRes, int flag)
       throws XAException
    {
-System.err.println("TxCapsule.endResource(" + xid.toString() +
+		Logger.debug("TxCapsule.endResource(" + xid.toString() +
                    ") entered: " + xaRes.toString() +
                    " flag=" + flag);
       unlock();
@@ -931,7 +931,7 @@ System.err.println("TxCapsule.endResource(" + xid.toString() +
          xaRes.end(xid, flag);
       } finally {
          lock();
-System.err.println("TxCapsule.endResource(" + xid.toString() +
+		Logger.debug("TxCapsule.endResource(" + xid.toString() +
                    ") leaving: " + xaRes.toString() +
                    " flag=" + flag);
       }
@@ -961,13 +961,13 @@ System.err.println("TxCapsule.endResource(" + xid.toString() +
                resourceState[i] = RS_ENLISTED;
             }
             if (resourceState[i] == RS_ENLISTED) {
-System.err.println("endresources("+i+"): state="+resourceState[i]);
+			  Logger.debug("endresources("+i+"): state="+resourceState[i]);
               endResource(resources[i], XAResource.TMSUCCESS);
               resourceState[i] = RS_ENDED;
             }
          } catch(XAException e) {
-System.err.println("endresources: XAException: " + e);
-System.err.println("endresources: XAException: errorCode=" + e.errorCode);
+			Logger.debug("endresources: XAException: " + e);
+			Logger.debug("endresources: XAException: errorCode=" + e.errorCode);
             Logger.exception(e);
             status = Status.STATUS_MARKED_ROLLBACK;
          }
@@ -1204,7 +1204,7 @@ System.err.println("endresources: XAException: errorCode=" + e.errorCode);
       status = Status.STATUS_COMMITTING;
 
       for (int i = 0; i < resourceCount; i++) {
-System.err.println("TxCapsule.commitResources(): resourceStates["+i+"]="+resourceState[i]);
+		Logger.debug("TxCapsule.commitResources(): resourceStates["+i+"]="+resourceState[i]);
          if (!onePhase && resourceState[i] != RS_VOTE_OK)
            continue;
 

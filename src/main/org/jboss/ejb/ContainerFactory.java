@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.43 $
+*   @version $Revision: 1.44 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -647,7 +647,7 @@ public class ContainerFactory
          // Register deployment. Use the original name in the hashtable
          deployments.put(origUrl, app);
        }
-        catch (Throwable e)
+        catch (Exception e)
        {
             if (e instanceof NullPointerException) {
                 // Avoids useless 'null' messages on a server trace.
@@ -662,7 +662,7 @@ public class ContainerFactory
          app.stop();
          app.destroy();
 
-         throw new DeploymentException("Could not deploy "+url.toString());
+         throw new DeploymentException("Could not deploy "+url.toString(), e);
        } finally
        {
          Log.unsetLog();

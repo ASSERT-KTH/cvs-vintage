@@ -20,6 +20,7 @@ import javax.ejb.HomeHandle;
 import javax.ejb.EJBObject;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBMetaData;
+import javax.ejb.EJBException;
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
@@ -35,7 +36,7 @@ import org.jboss.util.SerializableEnumeration;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.27 $
+*   @version $Revision: 1.28 $
 */
 public class EntityContainer
 extends Container
@@ -305,24 +306,14 @@ implements ContainerInvokerContainer, InstancePoolContainer
     public Object invokeHome(MethodInvocation mi)
     throws Exception
     {
-        
-       Logger.debug("invokeHome");
-       try { return getInterceptor().invokeHome(mi); }
-       catch (Exception e) {e.printStackTrace(); throw e;}
-       
-    //	return getInterceptor().invokeHome(mi);
-       
+		return getInterceptor().invokeHome(mi);
     }
     
     public Object invoke(MethodInvocation mi)
     throws Exception
     {
-       try { return getInterceptor().invoke(mi); }
-       catch (Exception e) {e.printStackTrace();throw e;}
-       
-       
-        // Invoke through interceptors
-     //   return getInterceptor().invoke(mi);
+      // Invoke through interceptors
+	  return getInterceptor().invoke(mi);
     }
     
     // EJBObject implementation --------------------------------------
@@ -592,13 +583,21 @@ implements ContainerInvokerContainer, InstancePoolContainer
             try
             {
                 return m.invoke(EntityContainer.this, new Object[] { mi });
-            } catch (InvocationTargetException e)
+            } catch (IllegalAccessException e)
+			{
+				// Throw this as a bean exception...(?)
+				throw new EJBException(e);
+			} catch (InvocationTargetException e) 
             {
                 Throwable ex = e.getTargetException();
-                if (ex instanceof Exception)
-                    throw (Exception)ex;
+                if (ex instanceof EJBException)
+                   throw (Exception)ex;
+                else if (ex instanceof RuntimeException)
+                   throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
+                else if (ex instanceof Exception)
+                   throw (Exception)ex;
                 else
-                    throw (Error)ex;
+                   throw (Error)ex;
             }
         }
         
@@ -615,14 +614,22 @@ implements ContainerInvokerContainer, InstancePoolContainer
                 try
                 {
                     return m.invoke(EntityContainer.this, new Object[] { mi });
-                } catch (InvocationTargetException e)
-                {
-                    Throwable ex = e.getTargetException();
-                    if (ex instanceof Exception)
-                        throw (Exception)ex;
-                    else
-                        throw (Error)ex;
-                } 
+                } catch (IllegalAccessException e)
+				{
+					// Throw this as a bean exception...(?)
+					throw new EJBException(e);
+				} catch (InvocationTargetException e) 
+	            {
+	                Throwable ex = e.getTargetException();
+	                if (ex instanceof EJBException)
+	                   throw (EJBException)ex;
+	                else if (ex instanceof RuntimeException)
+		                throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
+	                else if (ex instanceof Exception)
+	                   throw (Exception)ex;
+	                else
+	                   throw (Error)ex;
+	            } 
             } else
             {
                 //wire the transaction on the context, this is how the instance remember the tx
@@ -632,14 +639,22 @@ implements ContainerInvokerContainer, InstancePoolContainer
                 try
                 {
                     return m.invoke(mi.getEnterpriseContext().getInstance(), mi.getArguments());
-                } catch (InvocationTargetException e)
-                {
-                    Throwable ex = e.getTargetException();
-                    if (ex instanceof Exception)
-                        throw (Exception)ex;
-                    else
-                        throw (Error)ex;
-                } 
+                } catch (IllegalAccessException e)
+				{
+					// Throw this as a bean exception...(?)
+					throw new EJBException(e);
+				} catch (InvocationTargetException e) 
+	            {
+	                Throwable ex = e.getTargetException();
+	                if (ex instanceof EJBException)
+	                   throw (EJBException)ex;
+	                else if (ex instanceof RuntimeException)
+		                throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
+	                else if (ex instanceof Exception)
+	                   throw (Exception)ex;
+	                else
+	                   throw (Error)ex;
+	            } 
             }
         }
     }

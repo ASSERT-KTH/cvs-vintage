@@ -19,7 +19,7 @@ import org.jboss.logging.Logger;
  * Provides a Template Method implementation for
  * <code>executeStatementAndHandleResult</code>.
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public abstract class JDBCQueryCommand extends JDBCCommand
 {
@@ -66,7 +66,7 @@ public abstract class JDBCQueryCommand extends JDBCCommand
                rs.close();
             } catch (SQLException e)
             {
-               Logger.exception(e);
+               Logger.debug(e);
             }
          }
       }

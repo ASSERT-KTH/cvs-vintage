@@ -49,7 +49,7 @@ import org.jboss.metadata.MethodMetaData;
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.4 $
+*   @version $Revision: 1.5 $
 */
 public class TxInterceptorBMT
 extends AbstractInterceptor
@@ -133,6 +133,27 @@ extends AbstractInterceptor
 				
 				return getNext().invokeHome(mi);
 			
+			} catch (RuntimeException e)
+			{
+				// EJB 2.0 17.3, table 16
+				if (mi.getEnterpriseContext().getTransaction() != null)
+					mi.getEnterpriseContext().getTransaction().setRollbackOnly();
+				
+				throw new ServerException("Transaction rolled back", e);	
+			} catch (RemoteException e)
+			{
+				// EJB 2.0 17.3, table 16
+				if (mi.getEnterpriseContext().getTransaction() != null)
+					mi.getEnterpriseContext().getTransaction().setRollbackOnly();
+			
+				throw new ServerException("Transaction rolled back", e);	
+			} catch (Error e)
+			{
+				// EJB 2.0 17.3, table 16
+				if (mi.getEnterpriseContext().getTransaction() != null)
+					mi.getEnterpriseContext().getTransaction().setRollbackOnly();
+			
+				throw new ServerException("Transaction rolled back:"+e.getMessage());	
 			} finally {
 				
 				// Reset user Tx
@@ -207,6 +228,27 @@ extends AbstractInterceptor
 			
 			return getNext().invoke(mi);
 			
+		} catch (RuntimeException e)
+		{
+			// EJB 2.0 17.3, table 16
+			if (mi.getEnterpriseContext().getTransaction() != null)
+				mi.getEnterpriseContext().getTransaction().setRollbackOnly();
+			
+			throw new ServerException("Transaction rolled back", e);	
+		} catch (RemoteException e)
+		{
+			// EJB 2.0 17.3, table 16
+			if (mi.getEnterpriseContext().getTransaction() != null)
+				mi.getEnterpriseContext().getTransaction().setRollbackOnly();
+		
+			throw new ServerException("Transaction rolled back", e);	
+		} catch (Error e)
+		{
+			// EJB 2.0 17.3, table 16
+			if (mi.getEnterpriseContext().getTransaction() != null)
+				mi.getEnterpriseContext().getTransaction().setRollbackOnly();
+		
+			throw new ServerException("Transaction rolled back:"+e.getMessage());	
 		} finally {
 			
 			// Reset user Tx
