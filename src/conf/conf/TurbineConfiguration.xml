@@ -5,6 +5,6 @@
   <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="WEB-INF/conf/ant-generated.properties"/>
   <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="WEB-INF/conf/CustomSettings.properties"/>
   <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="WEB-INF/conf/Scarab.properties"/>
-  <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="WEB-INF/conf/TurbineResources.properties"/>
   <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="WEB-INF/conf/PermissionMapping.properties"/>
+  <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="WEB-INF/conf/TurbineResources.properties"/>
 </configuration>
