@@ -7,18 +7,27 @@ import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.StringTokenizer;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import org.xml.sax.AttributeList;
+import org.xml.sax.DocumentHandler;
+import org.xml.sax.DTDHandler;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.HandlerBase;
 import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
-import org.w3c.dom.*;
+
 
 /**
  * SAX Handler - it will read the XML and construct java objects
  *
  * @author costin@dnt.ro
  */
-public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, DTDHandler  {
+public class XmlMapper
+    extends HandlerBase
+    implements SaxContext {
+
     Locator locator;
 
     // Stack of elements
@@ -182,32 +191,16 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 	    this.root=root;
 	    st.push( root );
 	}
-	InputSource input;
-	Parser parser=null;
+	SAXParser parser=null;
 	try {
-	    if(System.getProperty("org.xml.sax.parser") != null )
-		parser=ParserFactory.makeParser();
-	    else
-		parser=ParserFactory.makeParser("com.sun.xml.parser.Parser");
-
-	    input = new InputSource( new FileReader(xmlFile));
-
-	    parser.setDocumentHandler( this);
-	    parser.setEntityResolver( this);
-	    parser.setDTDHandler( this);
-	    parser.parse( input );
+	    SAXParserFactory factory = SAXParserFactory.newInstance();
+	    factory.setNamespaceAware(false);
+	    factory.setValidating(false);	// FIXME - ?
+	    parser = factory.newSAXParser();
+	    parser.parse(xmlFile, this);
 	    return root;
 	    // assume the stack is in the right position.
 	    // or throw an exception is more than one element is on the stack
-	} catch( IllegalAccessException ex1 ) {
-	    ex1.printStackTrace();
-	    throw new Exception( "Error creating sax parser" );
-	} catch(ClassNotFoundException  ex2 ) {
-	    ex2.printStackTrace();
-	    throw new Exception( "Error creating sax parser" );
-	} catch( InstantiationException ex3)  {
-	    ex3.printStackTrace();
-	    throw new Exception( "Error creating sax parser" );
    	} catch (IOException ioe) {
 	    String msg = "Can't open config file: " + xmlFile +
 		" due to: " + ioe;
@@ -232,32 +225,16 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 	    this.root=root;
 	    st.push( root );
 	}
-	InputSource input;
-	Parser parser=null;
+	SAXParser parser=null;
 	try {
-	    if(System.getProperty("org.xml.sax.parser") != null )
-		parser=ParserFactory.makeParser();
-	    else
-		parser=ParserFactory.makeParser("com.sun.xml.parser.Parser");
-
-	    input = new InputSource( new InputStreamReader(xmlFile));
-
-	    parser.setDocumentHandler( this);
-	    parser.setEntityResolver( this);
-	    parser.setDTDHandler( this);
-	    parser.parse( input );
+	    SAXParserFactory factory = SAXParserFactory.newInstance();
+	    factory.setNamespaceAware(false);
+	    factory.setValidating(false);	// FIXME - ?
+	    parser = factory.newSAXParser();
+	    parser.parse(xmlFile, this);
 	    return root;
 	    // assume the stack is in the right position.
 	    // or throw an exception is more than one element is on the stack
-	} catch( IllegalAccessException ex1 ) {
-	    ex1.printStackTrace();
-	    throw new Exception( "Error creating sax parser" );
-	} catch(ClassNotFoundException  ex2 ) {
-	    ex2.printStackTrace();
-	    throw new Exception( "Error creating sax parser" );
-	} catch( InstantiationException ex3)  {
-	    ex3.printStackTrace();
-	    throw new Exception( "Error creating sax parser" );
    	} catch (IOException ioe) {
 	    String msg = "Can't open config file: " + xmlFile +
 		" due to: " + ioe;
@@ -388,18 +365,18 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
     public void notationDecl (String name,
 			      String publicId,
 			      String systemId)
-	throws SAXException
     {
-	System.out.println("Notation: " + name + " " + publicId + " " + systemId);
+	System.out.println("Notation: " + name + " " + publicId +
+			   " " + systemId);
     }
 
     public  void unparsedEntityDecl (String name,
 				     String publicId,
 				     String systemId,
 				     String notationName)
-	throws SAXException
     {
-	System.out.println("Unparsed: " + name + " " + publicId + " " + systemId + " " + notationName);
+	System.out.println("Unparsed: " + name + " " + publicId +
+			   " " + systemId + " " + notationName);
     }
 
 
