@@ -20,9 +20,26 @@
 
   <property name="javac.deprecation" value="off"/>
   <property name="javac.includes" value="**/*.java"/>
-  <property name="javac.excludes" value="CH/ifa/draw/util/JDOStorageFormat.java"/>
-
+  
   <property name="manifest.name" value="JHotdraw.mf"/>
+
+  <!-- Dependencies on optional packages                                   -->  
+  <property name="needs.batik" value="CH/ifa/draw/contrib/SVG*.java"/>
+  <property name="needs.poet" value="CH/ifa/draw/util/JDOStorageFormat.java"/>
+
+  <property environment="env"/>
+    
+  <target name="init">
+  	<tstamp/>
+  </target>
+  
+  <!-- =================================================================== -->
+  <!-- Set timestamp and check for optional packages                       -->
+  <!-- =================================================================== -->
+  <target name="check-for-optional-packages">
+	<available property="batik.present" classname="org.apache.batik.svggen.SVGGraphics2D"/>
+	<available property="poet.present" classname="com.poet.jdo.PersistenceManagerFactories"/>
+  </target>
 
   <!-- =================================================================== -->
   <!-- Builds a complete package with all files from scratch               -->
@@ -33,20 +50,21 @@
   <!-- =================================================================== -->
   <!-- Builds a package with all essential files                           -->
   <!-- =================================================================== -->
-  <target name="main" depends="compile, copyResources, jar">
+  <target name="main" depends="init, compile, copyResources, jar">
   </target>
 
   <!-- =================================================================== -->
   <!-- Compiles the source code                                            -->
   <!-- =================================================================== -->
-  <target name="compile">
+  <target name="compile" depends="check-for-optional-packages">
     <javac srcdir="${src.dir}"
            destdir="${build.classes}"
            debug="${javac.debug}"
            deprecation="${javac.deprecation}"
-		   includes="${javac.includes}"
-		   excludes="${javac.excludes}"
            optimize="${javac.optimize}" >
+      <include name="${javac.includes}"/>
+      <exclude name="${needs.batik}" unless="batik.present"/>
+      <exclude name="${needs.poet}" unless="poet.present"/> 
     </javac>
   </target>
 
@@ -161,5 +179,9 @@
   <target name="nothing" depends="main">
      <java classname="CH.ifa.draw.samples.nothing.NothingApp" fork="yes" classpath="${classpath};../jhotdraw.jar">
      </java>
+  </target>
+
+  <target name="svgdraw" depends="main" if="batik.present">
+     <java classname="CH.ifa.draw.contrib.SVGDrawApp" fork="yes" classpath="${classpath};../jhotdraw.jar;${env.CLASSPATH}"/>
   </target>
 </project>
