@@ -75,7 +75,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.48 2003/05/03 22:37:24 jon Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.49 2003/05/15 01:11:42 jmcnally Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -208,6 +208,8 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         {
             // get the Attribute that we are working on
             Attribute attribute = scarabR.getAttribute();
+            log().debug("doSaveoptions for attribute id=" + 
+                        attribute.getAttributeId());
             Group attGroup = intake.get("Attribute", attribute.getQueryKey());
             String attributeTypeId = attGroup.get("TypeId").toString();
             AttributeType attributeType = AttributeTypeManager
@@ -216,6 +218,8 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
             if (attributeType.getAttributeClass().getName()
                                                  .equals("select-one"))
             {
+                log().debug("attribute id=" + attribute.getAttributeId() + 
+                            " is an option attribute");
                 boolean somethingSaved = false;
                 // get the list of ParentChildAttributeOptions's 
                 // used to display the page
@@ -243,6 +247,8 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         {
                             AttributeOption option = AttributeOptionPeer
                                 .retrieveByPK(pcao.getOptionId());
+                            log().debug("deleting mappings for option id=" + 
+                                        option.getOptionId());
                             ScarabUser user = (ScarabUser)data.getUser();
                             option.deleteModuleMappings(user);
                             option.deleteIssueTypeMappings(user);
@@ -265,6 +271,9 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         // to remove the old one after the new one is created
                         if (!pcao.getParentId().equals(currentParentId))
                         {
+                            log().debug("removing parent relationship for option id=" + 
+                                        pcao.getOptionId() + ", old parent id="
+                                        + currentParentId);
                             ROptionOption.doRemove(currentParentId, 
                                                    pcao.getOptionId());
                         }
@@ -272,7 +281,10 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                        // also remove the group because we are re-displaying
                        // the form data and we want it fresh
                        intake.remove(pcaoGroup);
-                       
+                       log().debug("Saved pcao for attribute id=" + 
+                                   pcao.getAttributeId() + " and option id="
+                                   + pcao.getOptionId());
+
                        somethingSaved = true;
                     }
                     catch (Exception se)
@@ -280,7 +292,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         // on error, reset to previous values
                         intake.remove(pcaoGroup);
                         scarabR.setAlertMessage(se.getMessage());
-                        log().error(se);
+                        log().error("", se);
                         return;
                     }
                 }
@@ -297,6 +309,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                                                 newPCAO.getQueryKey());
                 if (newPCAOGroup != null) 
                 {
+                    log().debug("Adding a new pcao");
                     try
                     {
                         // assign the form data to the object
@@ -309,6 +322,10 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                             try
                             {
                                 newPCAO.save();
+                                log().debug("Saved NEW pcao for attribute id="
+                                + newPCAO.getAttributeId() + " and option id="
+                                            + newPCAO.getOptionId());
+
                                 pcaoList.add(newPCAO);
                                 IssueType issueType = null;
                                 AttributeOption option = null;
@@ -322,6 +339,12 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                                 {
                                     issueType = scarabR.getIssueType();
                                     option = scarabR.getAttributeOption(newPCAO.getOptionId());
+                                    log().debug("cancelTemplate=" + 
+                                                cancelTemplate + 
+                                                " issuetype id=" + 
+                                                issueType.getIssueTypeId() + 
+                                                " and option id=" + 
+                                                option.getOptionId());
                                 }
                                 // add new option to current module
                                 if (cancelTemplate.equals("admin,AttributeOptionSelect.vm"))
@@ -331,6 +354,9 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                                     data.getParameters().setString(
                                          ScarabConstants.CANCEL_TEMPLATE, 
                                          "admin,ModuleAttributeEdit.vm");
+                                    log().debug("Adding mapping to module id" 
+                                                + scarabR.getCurrentModule()
+                                                .getModuleId());
                                 }
                                 // add new option to current issue type
                                 else if (cancelTemplate.equals("admin,GlobalAttributeOptionSelect.vm"))
@@ -339,6 +365,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                                     data.getParameters().setString(
                                          ScarabConstants.CANCEL_TEMPLATE, 
                                          "admin,IssueTypeAttributeEdit.vm");
+                                    log().debug("Adding mapping to issuetype");
                                 }
                                 scarabR.setConfirmMessage(
                                     l10n.get("AttributeOptionAdded") + 
@@ -346,7 +373,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                             }
                             catch (Exception e)
                             {
-                                log().error(e);
+                                log().error("", e);
                                 scarabR.setAlertMessage(e.getMessage());
                             }
                         }
@@ -355,7 +382,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                     {
                         intake.remove(newPCAOGroup);
                         scarabR.setAlertMessage(se.getMessage());
-                        log().error(se);
+                        log().error("", se);
                         return;
                     }
 
@@ -374,19 +401,24 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
     public void doDone(RunData data, TemplateContext context)
         throws Exception
     {
+        log().debug("called doDone");
         boolean success = doSaveattributedata(data, context);
         if (getScarabRequestTool(context).getAttribute().isOptionAttribute())
         {
+            log().debug("calling doSaveoptions");
             doSaveoptions(data, context);
         }
         if (success)
         {
+            log().debug("calling doCancel");
             doCancel(data, context);
         }
     }
     
     /*
-     * Manages clicking of the cancel button
+     * Manages clicking of the cancel button.
+     * FIXME! document that the doCancel method alters the database
+     * Why does it do this?!!
      */
     public void doCancel(RunData data, TemplateContext context)
         throws Exception
@@ -397,8 +429,10 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         String lastTemplate = getCancelTemplate(data);
         Attribute attribute = scarabR.getAttribute();
+        log().debug("called doCancel; lastTemplate=" + lastTemplate + 
+                    " and attribute id=" + attribute.getAttributeId());
         if (lastTemplate != null && attribute.getAttributeId() != null)
-        { 
+        {
             // Add attribute to group
             if (lastTemplate.equals("admin,AttributeGroupEdit.vm") ||
                 lastTemplate.equals("admin,GlobalAttributeGroupEdit.vm"))
@@ -407,18 +441,23 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 String groupId = data.getParameters().getString("groupId");
                 if (groupId != null)
                 {
+                    log().debug("Adding attribute to group id=" + groupId);
                     scarabR.getAttributeGroup(groupId).addAttribute(attribute);
                     scarabR.setConfirmMessage(l10n.get("AttributeAdded"));
                 }
             }
             else if (lastTemplate.equals("admin,ArtifactTypeEdit.vm"))
             {
+                log().debug("Adding attribute to module id=" + 
+                            scarabR.getCurrentModule().getModuleId());
                 // Add user attribute to module
                 scarabR.getCurrentModule()
                        .addRModuleAttribute(scarabR.getIssueType(), attribute);
             }
             else if (lastTemplate.equals("admin,GlobalArtifactTypeEdit.vm"))
             {
+                log().debug("Assuming user attribute and adding to issuetype id =" + 
+                            scarabR.getCurrentIssueType().getIssueTypeId());
                 // Add user attribute to issue type
                 scarabR.getIssueType().addRIssueTypeAttribute(attribute);
                 scarabR.setConfirmMessage(l10n.get("AttributeAdded"));

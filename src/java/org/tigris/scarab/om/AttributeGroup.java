@@ -63,6 +63,7 @@ import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.workflow.WorkflowFactory;
 
 /** 
@@ -169,6 +170,7 @@ public  class AttributeGroup
         Object obj = getMethodResult().get(this, GET_ATTRIBUTES); 
         if (obj == null) 
         {        
+            Log.get().debug("getAttributes() not cached, getting from db");
             Criteria crit = new Criteria()
                 .add(RAttributeAttributeGroupPeer.GROUP_ID, 
                      getAttributeGroupId())
@@ -187,12 +189,27 @@ public  class AttributeGroup
                 Integer id = ((RAttributeAttributeGroup)i.next())
                     .getAttributeId();
                 result.add(AttributeManager.getInstance(SimpleKey.keyFor(id)));
+                if (Log.get().isDebugEnabled()) 
+                {
+                    Log.get().debug("attribute id=" + id + 
+                                    "'s relationship to group was in db");
+                }
             }
             getMethodResult().put(result, this, GET_ATTRIBUTES);
         }
         else 
         {
             result = (List)obj;
+            if (Log.get().isDebugEnabled()) 
+            {
+                Log.get().debug("getAttributes() returning cached value");
+                for (Iterator i = result.iterator(); i.hasNext();) 
+                {
+                    Log.get().debug("attribute id=" + 
+                                    ((Attribute)i.next()).getAttributeId() + 
+                                    "'s relationship to group was in cache");
+                }
+            }
         }
         return result;
     }
@@ -370,7 +387,8 @@ public  class AttributeGroup
         // add attribute group-attribute mapping
         RAttributeAttributeGroup raag =
             addRAttributeAttributeGroup(attribute);
-        raag.save();          
+        raag.save();
+        Log.get().debug("Calling getAttributes() from addAttribute in order to add attribute id=" + attribute.getAttributeId() + " to the List");
         getAttributes().add(attribute);
 
         List allOptions = attribute.getAttributeOptions(false);
@@ -404,7 +422,17 @@ public  class AttributeGroup
                 rio.setOptionId(option.getOptionId());
                 rio.setOrder(roo.getPreferredOrder());
                 rio.setWeight(roo.getWeight());
-                rio.save();
+                // making sure error is recorded in same log as our other
+                // debugging for pcn 17683.
+                try 
+                {
+                    rio.save();                    
+                }
+                catch (Exception e)
+                {
+                    Log.get().error("Exception saving rio", e);
+                    throw e;
+                }
             }
         }
         else
@@ -561,6 +589,8 @@ public  class AttributeGroup
         RAttributeAttributeGroup raag = new RAttributeAttributeGroup();
         raag.setGroupId(getAttributeGroupId());
         raag.setAttributeId(attribute.getAttributeId());
+        Log.get().debug("Calling getAttributes() from addRAttributeAttributeGroup in order to determine order for attribute id=" + attribute.getAttributeId());
+
         raag.setOrder(getAttributes().size() +1);
         return raag;
     }
