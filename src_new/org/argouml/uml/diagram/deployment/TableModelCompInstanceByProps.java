@@ -1,5 +1,4 @@
-
-// $Id: TableModelCompInstanceByProps.java,v 1.7 2003/08/31 15:19:42 alexb Exp $
+// $Id: TableModelCompInstanceByProps.java,v 1.8 2003/09/11 21:10:10 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,12 +26,13 @@
 // File: TableModelCompInstanceByProps.java
 // Classes: TableModelCompInstanceByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelCompInstanceByProps.java,v 1.7 2003/08/31 15:19:42 alexb Exp $
+// $Id: TableModelCompInstanceByProps.java,v 1.8 2003/09/11 21:10:10 bobtarling Exp $
 
 package org.argouml.uml.diagram.deployment;
 
 import java.util.*;
 import java.beans.*;
+import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.behavior.common_behavior.*;
@@ -77,12 +77,12 @@ public class TableModelCompInstanceByProps extends TableModelComposite {
 	    return res;
 	}
 	else {
-	    MNodeInstance n = (MNodeInstance) t;
+	    Object n = /*(MNodeInstance)*/ t;
 	    Vector res = new Vector();
-	    Collection residences = n.getResidents();
+	    Collection residences = ModelFacade.getResidents(n);
 	    Iterator it = residences.iterator();
 	    while (it.hasNext()) {
-		MInstance inst = (MInstance) it.next();
+		Object inst = /*(MInstance)*/ it.next();
 		if (org.argouml.model.ModelFacade.isAComponentInstance(inst)) res.addElement(inst);
 	    }
 	    return res;

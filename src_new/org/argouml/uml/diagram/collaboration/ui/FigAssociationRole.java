@@ -1,4 +1,4 @@
-// $Id: FigAssociationRole.java,v 1.13 2003/06/30 18:00:30 linus Exp $
+// $Id: FigAssociationRole.java,v 1.14 2003/09/11 21:10:09 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,8 +36,6 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigGroup;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
-
 public class FigAssociationRole extends FigAssociation {
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -70,7 +68,7 @@ public class FigAssociationRole extends FigAssociation {
     protected void modelChanged(MElementEvent e) {
         super.modelChanged(e);
         //change the name
-        MAssociationRole ar = (MAssociationRole) getOwner();
+        Object ar = /*(MAssociationRole)*/ getOwner();
         if (ar == null) return;
         // String asNameStr = ((ar.getName() == null) && (ar.getBase()
         // == null)) ? "" : Notation.generate(this, ar);
@@ -207,5 +205,4 @@ class FigMessageGroup extends FigGroup {
     }
 
 }
-
 

@@ -1,5 +1,4 @@
-
-// $Id: TableModelInterface_in_DeplByProps.java,v 1.8 2003/08/31 15:19:42 alexb Exp $
+// $Id: TableModelInterface_in_DeplByProps.java,v 1.9 2003/09/11 21:10:10 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +30,7 @@ package org.argouml.uml.diagram.deployment;
 
 import java.util.*;
 import java.beans.*;
+import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.behavior.common_behavior.*;
@@ -76,14 +76,14 @@ public class TableModelInterface_in_DeplByProps extends TableModelComposite {
 	    return res;
 	}
 	else {
-	    MComponent d = (MComponent) t;
+	    Object d = /*(MComponent)*/ t;
 	    Vector res = new Vector();
-	    Collection elementResidences = d.getResidentElements();
+	    Collection elementResidences = ModelFacade.getResidentElements(d);
 	    Iterator it = elementResidences.iterator();
 	    while (it.hasNext()) {
-		MElementResidence residence = (MElementResidence) it.next();
-		MModelElement node = (MModelElement) residence.getResident();
-		if (org.argouml.model.ModelFacade.isAInterface(node)) res.addElement(node);
+		Object residence = /*(MElementResidence)*/ it.next();
+		Object node = /*(MModelElement)*/ ModelFacade.getResident(residence);
+		if (ModelFacade.isAInterface(node)) res.addElement(node);
 
 	    }
 	    return res;
