@@ -62,7 +62,7 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.ScarabModule class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.5 2002/03/12 01:35:12 elicia Exp $
+ * @version $Id: ScarabModuleTest.java,v 1.6 2002/03/12 19:27:42 elicia Exp $
  */
 public class ScarabModuleTest extends BaseTestCase
 {
@@ -116,16 +116,18 @@ public class ScarabModuleTest extends BaseTestCase
 
     private void testInitialData(ModuleEntity me) throws Exception
     {
-        for (int j = 1;j<nbrDfltModules+1;j++)
+        ScarabModule module = (ScarabModule) me;
+        List issueTypes = module.getRModuleIssueTypes();
+        for (int i = 0;i<issueTypes.size();i++)
         {
-            ScarabModule module = (ScarabModule) me;
-            IssueType issueType = (IssueType)IssueTypePeer
-                .retrieveByPK(new NumberKey(Integer.toString(j)));
+            IssueType issueType = ((RModuleIssueType)issueTypesi
+                  .get(i)).getIssueType();
             System.out.println("ISSUE TYPE = " + issueType.getName());
             Issue issue = new Issue();
             issue.setModule(me);
             issue.setIssueType(issueType);
             testGetAllAttributeValuesMap(issue);
+            testGetAttributeGroups(module, issueType);
         }
     }
 
@@ -133,7 +135,8 @@ public class ScarabModuleTest extends BaseTestCase
     {
         System.out.println ("testGetAllAttributeValuesMap()");
         HashMap attrMap = issue.getAllAttributeValuesMap();
-        System.out.println ("getAllAttributeValuesMap().size(): " + attrMap.size());
+        System.out.println ("getAllAttributeValuesMap().size(): " 
+                             + attrMap.size());
         int expectedSize = 11;
         switch (Integer.parseInt(issue.getTypeId().toString()))
         {
@@ -152,7 +155,8 @@ public class ScarabModuleTest extends BaseTestCase
         Iterator iter = attrMap.keySet().iterator();
         while (iter.hasNext())
         {
-            Attribute attr = ((AttributeValue)attrMap.get(iter.next())).getAttribute();
+            Attribute attr = ((AttributeValue)attrMap.get(iter.next()))
+                             .getAttribute();
             List attrOptions = attr.getAttributeOptions();
             if (attr.isOptionAttribute())
             {
@@ -171,4 +175,17 @@ public class ScarabModuleTest extends BaseTestCase
         }
     }
 
+    private void testGetAttributeGroups(ScarabModule module, 
+                                        IssueType issueType) 
+        throws Exception
+    {
+        System.out.println ("testGetAttributeGroups()");
+        List attrGroups = module.getAttributeGroups(issueType);
+        for (int i=0;i<attrGroups.size(); i++)
+        {
+            AttributeGroup group = (AttributeGroup)attrGroups.get(i);
+            System.out.println("attribute group = " + group.getName());
+        }
+    }
+             
 }
