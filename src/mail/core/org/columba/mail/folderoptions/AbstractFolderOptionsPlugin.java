@@ -98,7 +98,7 @@ public abstract class AbstractFolderOptionsPlugin implements PluginInterface {
 	 * @param folder       selected folder
 	 */
 	public abstract void loadOptionsFromXml(Folder folder);
-
+	
 	/**
 	 * Get frame mediator
 	 *

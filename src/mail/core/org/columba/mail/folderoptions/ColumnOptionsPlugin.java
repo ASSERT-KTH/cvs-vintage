@@ -224,4 +224,12 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 
 		return column;
 	}
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#restoreUISettings()
+	 */
+	public void restoreUISettings() {
+		// TODO Auto-generated method stub
+
+	}
+
 }

@@ -23,6 +23,7 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.plugin.FolderOptionsPluginHandler;
 
@@ -231,18 +232,60 @@ public class FolderOptionsController {
 	 * @param folder		selected folder
 	 */
 	public void createDefaultSettings(Folder folder) {
-		FolderItem item = folder.getFolderItem();
-		XmlElement parent = item.getElement("property");
-		
+		FolderItem item= folder.getFolderItem();
+		XmlElement parent= item.getElement("property");
+
 		// use global settings
 		String[] ids= handler.getPluginIdList();
 
 		for (int i= 0; i < ids.length; i++) {
 			AbstractFolderOptionsPlugin plugin= getPlugin(ids[i]);
-			XmlElement child = plugin.createDefaultElement(false);
+			XmlElement child= plugin.createDefaultElement(false);
 			parent.addElement(child);
 		}
 
+	}
+
+	/**
+	 * Returns true, if any option is overwritten by folder.
+	 * 
+	 * @param folder		selected folder
+	 * @return				true, if any option is overwritten. False, otherwise.
+	 */
+	private boolean isOverwritingDefaults(Folder folder) {
+		FolderItem item= folder.getFolderItem();
+		XmlElement parent= item.getElement("property");
+		boolean result= false;
+
+		for (int i= 0; i < parent.count(); i++) {
+			XmlElement child= parent.getElement(i);
+			String overwrite= child.getAttribute("overwrite");
+			if (overwrite.equals("true"))
+				return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Save global settings.
+	 * <p>
+	 * Method is called when shutting down Columba. Note, that
+	 * when a folder is selected which overwrites options, calling
+	 * save() will make his settings global. Which is wrong.
+	 * 
+	 * @param folder		selected folder
+	 */
+	public void saveGlobalSettings(FolderTreeNode folder) {
+		if (folder instanceof Folder) {
+			if (isOverwritingDefaults( (Folder) folder)) {
+				// restore global settings in ui
+
+				load(STATE_BEFORE);
+			}
+		}
+		
+		save(null);
 	}
 
 }

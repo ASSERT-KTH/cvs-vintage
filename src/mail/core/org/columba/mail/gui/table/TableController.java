@@ -440,6 +440,22 @@ public class TableController implements FocusOwner, ListSelectionListener {
 		previouslySelectedFolder= folder;
 	}
 
+	/**
+	 * Show empty messagelist with no elements.
+	 *
+	 */
+	public void clear() {
+		//		send an update notification to the table model
+		TableModelChangedEvent ev=
+			new TableModelChangedEvent(TableModelChangedEvent.SET, previouslySelectedFolder, new HeaderList());
+		try {
+			tableChanged(ev);
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+	}
+
 	/************* implement getter/setter methods *********************/
 	/**
 	 * return the table model sorter

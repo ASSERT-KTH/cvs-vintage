@@ -26,7 +26,6 @@ import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.model.TableModelFilter;
 
-
 /**
  * Covers all filter options offered by the message list
  * filter toolbar.
@@ -35,87 +34,91 @@ import org.columba.mail.gui.table.model.TableModelFilter;
  * @author fdietz
  */
 public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
-    /**
-     * Constructor
-     *
-     * @param mediator  mail frame mediator
-     */
-    public FilterOptionsPlugin(MailFrameMediator mediator) {
-        super("filter", "FilterOptions", mediator);
-    }
+	/**
+	 * Constructor
+	 *
+	 * @param mediator  mail frame mediator
+	 */
+	public FilterOptionsPlugin(MailFrameMediator mediator) {
+		super("filter", "FilterOptions", mediator);
+	}
 
-    /**
-     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
-     */
-    public void saveOptionsToXml(Folder folder) {
-        XmlElement parent = getConfigNode(folder);
-        DefaultItem item = new DefaultItem(parent);
+	/**
+	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
+	 */
+	public void saveOptionsToXml(Folder folder) {
+		XmlElement parent= getConfigNode(folder);
+		DefaultItem item= new DefaultItem(parent);
 
-        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
+		TableController tableController=
+			((TableViewOwner) getMediator()).getTableController();
 
-        TableModelFilter model = tableController.getTableModelFilteredView();
+		TableModelFilter model= tableController.getTableModelFilteredView();
 
-        item.set("new_state", model.getNewFlag());
+		item.set("new_state", model.getNewFlag());
 
-        item.set("answered_state", model.getAnsweredFlag());
-        item.set("flagged_state", model.getFlaggedFlag());
-        item.set("attachment_state", model.getAttachmentFlag());
-        item.set("expunged_state", model.getExpungedFlag());
+		item.set("answered_state", model.getAnsweredFlag());
+		item.set("flagged_state", model.getFlaggedFlag());
+		item.set("attachment_state", model.getAttachmentFlag());
+		item.set("expunged_state", model.getExpungedFlag());
 
-        item.set("pattern", model.getPatternString());
-    }
+		item.set("pattern", model.getPatternString());
+	}
 
-    /**
-     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
-     */
-    public void loadOptionsFromXml(Folder folder) {
-        XmlElement parent = getConfigNode(folder);
-        DefaultItem item = new DefaultItem(parent);
+	/**
+	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
+	 */
+	public void loadOptionsFromXml(Folder folder) {
+		XmlElement parent= getConfigNode(folder);
+		DefaultItem item= new DefaultItem(parent);
 
-        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
-        TableModelFilter model = tableController.getTableModelFilteredView();
-        FilterToolbar toolbar = ((MailFrameView) getMediator().getView()).getFilterToolbar();
+		TableController tableController=
+			((TableViewOwner) getMediator()).getTableController();
+		TableModelFilter model= tableController.getTableModelFilteredView();
+		FilterToolbar toolbar=
+			((MailFrameView) getMediator().getView()).getFilterToolbar();
 
-        model.setNewFlag(item.getBoolean("new_state"));
-        toolbar.enableNew(item.getBoolean("new_state"));
+		model.setNewFlag(item.getBoolean("new_state"));
+		toolbar.enableNew(item.getBoolean("new_state"));
 
-        model.setAnsweredFlag(item.getBoolean("answered_state"));
-        toolbar.enableAnswered(item.getBoolean("answered_state"));
+		model.setAnsweredFlag(item.getBoolean("answered_state"));
+		toolbar.enableAnswered(item.getBoolean("answered_state"));
 
-        model.setFlaggedFlag(item.getBoolean("flagged_state"));
-        toolbar.enableFlagged(item.getBoolean("flagged_state"));
+		model.setFlaggedFlag(item.getBoolean("flagged_state"));
+		toolbar.enableFlagged(item.getBoolean("flagged_state"));
 
-        model.setAttachmentFlag(item.getBoolean("attachment_state"));
-        toolbar.enableAttachment(item.getBoolean("attachment_state"));
+		model.setAttachmentFlag(item.getBoolean("attachment_state"));
+		toolbar.enableAttachment(item.getBoolean("attachment_state"));
 
-        model.setExpungedFlag(item.getBoolean("expunged_state"));
-        toolbar.enableExpunged(item.getBoolean("expunged_state"));
+		model.setExpungedFlag(item.getBoolean("expunged_state"));
+		toolbar.enableExpunged(item.getBoolean("expunged_state"));
 
-        String t = item.get("pattern");
+		String t= item.get("pattern");
 
-        if (t == null) {
-            t = "";
-        }
+		if (t == null) {
+			t= "";
+		}
 
-        model.setPatternString(t);
-        toolbar.setPattern(t);
+		model.setPatternString(t);
+		toolbar.setPattern(t);
 
-        // enable filtering
-        model.setDataFiltering(true);
-    }
+		// enable filtering
+		model.setDataFiltering(true);
+	}
 
-    /**
-       * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
-       */
-    public XmlElement createDefaultElement(boolean global) {
-        XmlElement parent = super.createDefaultElement(global);
-        parent.addAttribute("new_state", "false");
-        parent.addAttribute("answered_state", "false");
-        parent.addAttribute("flagged_state", "false");
-        parent.addAttribute("expunged_state", "false");
-        parent.addAttribute("attachment_state", "false");
-        parent.addAttribute("pattern", "");
+	/**
+	   * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
+	   */
+	public XmlElement createDefaultElement(boolean global) {
+		XmlElement parent= super.createDefaultElement(global);
+		parent.addAttribute("new_state", "false");
+		parent.addAttribute("answered_state", "false");
+		parent.addAttribute("flagged_state", "false");
+		parent.addAttribute("expunged_state", "false");
+		parent.addAttribute("attachment_state", "false");
+		parent.addAttribute("pattern", "");
 
-        return parent;
-    }
+		return parent;
+	}
+
 }

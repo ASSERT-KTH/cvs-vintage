@@ -23,7 +23,6 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.TableController;
 
-
 /**
  * Handles sorting state, including sorting order, which can
  * be ascending or descending and the actual column.
@@ -31,61 +30,65 @@ import org.columba.mail.gui.table.TableController;
  * @author fdietz
  */
 public class SortingOptionsPlugin extends AbstractFolderOptionsPlugin {
-    
-    /**
-     * Constructor
-     * 
-     * @param mediator      mail framemediator
-     */
-    public SortingOptionsPlugin(MailFrameMediator mediator) {
-        super("sorting", "SortingOptions",  mediator);
-    }
 
-    /**
-     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.core.xml.XmlElement)
-     */
-    public void loadOptionsFromXml(Folder folder) {
-        XmlElement sorting = getConfigNode(folder);
-        DefaultItem item = new DefaultItem(sorting);
+	/**
+	 * Constructor
+	 * 
+	 * @param mediator      mail framemediator
+	 */
+	public SortingOptionsPlugin(MailFrameMediator mediator) {
+		super("sorting", "SortingOptions", mediator);
+	}
 
-        String column = item.get("column");
+	/**
+	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.core.xml.XmlElement)
+	 */
+	public void loadOptionsFromXml(Folder folder) {
+		XmlElement sorting= getConfigNode(folder);
+		DefaultItem item= new DefaultItem(sorting);
 
-        if (column == null) {
-            column = "Date";
-        }
+		String column= item.get("column");
 
-        boolean order = item.getBoolean("order", true);
+		if (column == null) {
+			column= "Date";
+		}
 
-        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
+		boolean order= item.getBoolean("order", true);
 
-        tableController.getTableModelSorter().setSortingColumn(column);
-        tableController.getTableModelSorter().setSortingOrder(order);
-    }
+		TableController tableController=
+			((TableViewOwner) getMediator()).getTableController();
 
-    /**
-     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml()
-     */
-    public void saveOptionsToXml(Folder folder) {
-        XmlElement sorting = getConfigNode(folder);
-        DefaultItem item = new DefaultItem(sorting);
+		tableController.getTableModelSorter().setSortingColumn(column);
+		tableController.getTableModelSorter().setSortingOrder(order);
+	}
 
-        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
+	/**
+	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml()
+	 */
+	public void saveOptionsToXml(Folder folder) {
+		XmlElement sorting= getConfigNode(folder);
+		DefaultItem item= new DefaultItem(sorting);
 
-        String column = tableController.getTableModelSorter().getSortingColumn();
-        boolean order = tableController.getTableModelSorter().getSortingOrder();
+		TableController tableController=
+			((TableViewOwner) getMediator()).getTableController();
 
-        sorting.addAttribute("column", column);
-        sorting.addAttribute("order", Boolean.toString(order));
-    }
+		String column= tableController.getTableModelSorter().getSortingColumn();
+		boolean order= tableController.getTableModelSorter().getSortingOrder();
 
-    /**
-     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
-     */
-    public XmlElement createDefaultElement(boolean global) {
-        XmlElement sorting = super.createDefaultElement(global);
-        sorting.addAttribute("column", "Date");
-        sorting.addAttribute("order", "true");
+		sorting.addAttribute("column", column);
+		sorting.addAttribute("order", Boolean.toString(order));
+	}
 
-        return sorting;
-    }
+	/**
+	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
+	 */
+	public XmlElement createDefaultElement(boolean global) {
+		XmlElement sorting= super.createDefaultElement(global);
+		sorting.addAttribute("column", "Date");
+		sorting.addAttribute("order", "true");
+
+		return sorting;
+	}
+
+
 }
