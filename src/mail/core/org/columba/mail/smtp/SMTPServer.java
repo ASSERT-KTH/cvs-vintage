@@ -19,7 +19,6 @@ package org.columba.mail.smtp;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,17 +51,17 @@ import org.columba.ristretto.smtp.SMTPException;
 import org.columba.ristretto.smtp.SMTPProtocol;
 
 /**
- *
+ * 
  * SMTPServer makes use of <class>SMTPProtocol</class> to add a higher
  * abstraction layer for sending messages.
- *
+ * 
  * It takes care of authentication all the details.
- *
+ * 
  * To send a message just create a <class>SendableMessage</class> object and
  * use <method>sendMessage</method>.
- *
+ * 
  * @author fdietz, Timo Stich <tstich@users.sourceforge.net>
- *
+ *  
  */
 public class SMTPServer {
     private String[] capas;
@@ -103,7 +102,7 @@ public class SMTPServer {
 
     /**
      * Open connection to SMTP server and login if needed.
-     *
+     * 
      * @return true if connection was successful, false otherwise
      */
     public boolean openConnection()
@@ -201,7 +200,7 @@ public class SMTPServer {
                     smtpItem.set("enable_ssl", false);
 
                     protocol.openPort();
-                    
+
                     initialize();
                 }
             } else {
@@ -248,6 +247,33 @@ public class SMTPServer {
 
         }
 
+        // Do the authentication stuff
+
+        String authMechanism = null;
+        if (!authenticated) {
+            if (authMethod == DEFAULT) {
+                if (!ssl) {
+                    try {
+                        authMechanism = findSecurestMechanism();
+                    } catch (SMTPException e) {
+                        //TODO show message: auth turned off
+                        
+                        //Turn off authentication
+                        accountItem.getSmtpItem().set("login_method","NONE");
+                        
+                        // Server does not support Authentication
+                        authenticated = true;
+                    }
+                } else {                    
+                    // We only need plain since the connection
+                    // is already secure
+                    authMechanism = "PLAIN";
+                }
+            } else {
+                authMechanism = authType.toUpperCase();
+            }
+        }
+
         if (!authenticated) {
             username = accountItem.getSmtpItem().get("user");
             password = accountItem.getSmtpItem().get("password");
@@ -279,17 +305,6 @@ public class SMTPServer {
                 } else {
                     return false;
                 }
-            }
-
-            String authMechanism;
-            if (authMethod == DEFAULT) {
-                if (!ssl) {
-                    authMechanism = findSecurestMechanism();
-                } else {
-                    authMechanism = "PLAIN";
-                }
-            } else {
-                authMechanism = authType.toUpperCase();
             }
 
             // try to authenticate
@@ -357,16 +372,15 @@ public class SMTPServer {
         for (int i = 0; i < serverSupported.size() && mechanism == null; i++) {
             if (AuthenticationFactory
                 .getInstance()
-                .supports((String)serverSupported.get(i))) {
-                mechanism = (String)serverSupported.get(i);
+                .supports((String) serverSupported.get(i))) {
+                mechanism = (String) serverSupported.get(i);
             }
         }
 
         if (mechanism == null) {
-            //fallback to PLAIN
-            return "PLAIN";
+            throw new SMTPException("Server does not support Authentication!");
         }
-        
+
         return mechanism;
     }
 
@@ -389,10 +403,10 @@ public class SMTPServer {
 
     private void initialize() throws IOException, SMTPException {
         try {
-            capas = protocol.ehlo(getLocalhost());
+            capas = protocol.ehlo(InetAddress.getLocalHost());
         } catch (SMTPException e1) {
             // EHLO not supported -> AUTH not supported
-            protocol.helo(getLocalhost());
+            protocol.helo(InetAddress.getLocalHost());
             capas = new String[] {
             };
         }
@@ -419,9 +433,9 @@ public class SMTPServer {
     }
 
     /**
-     *
+     * 
      * close the connection to the SMTP server
-     *
+     *  
      */
     public void closeConnection() {
         // Close Port
@@ -433,13 +447,13 @@ public class SMTPServer {
     }
 
     /**
-     *
+     * 
      * POP-before-SMTP authentication makes use of the POP3 authentication
      * mechanism, before sending mail.
-     *
+     * 
      * Basically you authenticate with the POP3 server, which allows you to use
      * the SMTP server for sending mail for a specific amount of time.
-     *
+     * 
      * @throws Exception
      */
     protected void pop3Authentification()
@@ -451,10 +465,10 @@ public class SMTPServer {
 
     /**
      * Send a message
-     *
+     * 
      * For an complete example of creating a <class>SendableMessage</class>
      * object see <class>MessageComposer</class>
-     *
+     * 
      * @param message
      * @param workerStatusController
      * @throws Exception
@@ -501,20 +515,6 @@ public class SMTPServer {
         protocol.registerInterest(observable);
     }
 
-    private String getLocalhost() {
-        try {
-            InetAddress addr = InetAddress.getLocalHost();
-
-            // Get IP Address
-            byte[] ipAddr = addr.getAddress();
-
-            // Get hostname
-            return addr.getHostName();
-        } catch (UnknownHostException e) {
-        }
-        return "localhost";
-    }
-    
     public String getName() {
         SmtpItem smtpItem = accountItem.getSmtpItem();
         String host = smtpItem.get("host");

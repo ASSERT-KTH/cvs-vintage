@@ -24,6 +24,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -447,13 +448,8 @@ public class OutgoingServerPanel
                 list = getAuthSMTP();
                 ColumbaLogger.log.info("Server supported AUTH types: " +list.toString());
                 
-                // If the server doesn't support an AUTH offer all
-                // types to the user
-                if( list.size() == 0) {
-                    list = AuthenticationFactory.getInstance().getSupportedMechanisms();
-                } else {
-                    ListTools.intersect_astable(list, AuthenticationFactory.getInstance().getSupportedMechanisms());                
-                }
+                // If the server doesn't support an AUTH -> POP before SMTP is only choice
+                ListTools.intersect_astable(list, AuthenticationFactory.getInstance().getSupportedMechanisms());                
             } catch (IOException e1) {
                 String name = e1.getClass().getName();
                 JOptionPane.showMessageDialog(
@@ -482,6 +478,11 @@ public class OutgoingServerPanel
                     "smtpserver",
                     "authentication_methods",
                     authMethods.toString());
+            } else {
+                accountItem.set(
+                        "smtpserver",
+                        "authentication_methods",
+                        "");                
             }
 
             updateAuthenticationComboBox();
@@ -499,7 +500,7 @@ public class OutgoingServerPanel
                              accountItem.getInteger("smtpserver", "port"));
 
              protocol.openPort();
-             String[] capas = protocol.ehlo("localhost");
+             String[] capas = protocol.ehlo(InetAddress.getLocalHost());
              
              ColumbaLogger.log.info("Server CAPAs: " +Arrays.asList(capas).toString());
              

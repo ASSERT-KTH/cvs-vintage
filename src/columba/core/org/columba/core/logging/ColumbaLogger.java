@@ -83,6 +83,9 @@ public class ColumbaLogger {
          We need to connect ristretto's logger with Columba's logger therefore.
          */
         RistrettoLogger.setParentLogger(log);
+        if( MainInterface.DEBUG ) {
+            RistrettoLogger.setLogStream(System.out);
+        }
     }
     
     /**
