@@ -8,11 +8,12 @@
 <input type="hidden" name="nextTemplate" value="IssueList.vm" />
 <input type="hidden" name="action" value="Search" />
 <input type="hidden" name="searchType" value="advanced" />
+<input type="hidden" name="pageNum" value="1" /> 
 
 <p class="functnbar">
     <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;
     <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
-    <input type="submit" name="eventSubmit_doSave" value="Save this Query" />
+    <input type="submit" name="eventSubmit_doSavequery" value="Save this Query" />
 </p>
 
 <h3>Search the Scarab Knowledge Base</h3>
