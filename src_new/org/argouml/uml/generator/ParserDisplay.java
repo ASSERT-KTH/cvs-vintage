@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.65 2003/08/19 22:14:47 thn Exp $
+// $Id: ParserDisplay.java,v 1.66 2003/08/20 20:56:47 thn Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.65 2003/08/19 22:14:47 thn Exp $
+// $Id: ParserDisplay.java,v 1.66 2003/08/20 20:56:47 thn Exp $
 
 
 
@@ -72,8 +72,6 @@ import ru.novosoft.uml.behavior.state_machines.MEvent;
 import ru.novosoft.uml.behavior.state_machines.MGuard;
 import ru.novosoft.uml.behavior.state_machines.MState;
 import ru.novosoft.uml.behavior.state_machines.MTransition;
-import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
-import ru.novosoft.uml.behavior.use_cases.MUseCase;
 import ru.novosoft.uml.foundation.core.MAttribute;
 import ru.novosoft.uml.foundation.core.MBehavioralFeature;
 import ru.novosoft.uml.foundation.core.MClassifier;
@@ -369,8 +367,7 @@ public class ParserDisplay extends Parser {
      *
      */
 
-    public void parseExtensionPointFig(MUseCase useCase, MExtensionPoint ep,
-                                       String text) {
+    public void parseExtensionPointFig(Object useCase, Object ep, String text) {
 
         // We can do nothing if we don't have both the use case and extension
         // point.
@@ -381,18 +378,18 @@ public class ParserDisplay extends Parser {
 
         // Parse the string to creat a new extension point.
 
-        MExtensionPoint newEp = parseExtensionPoint(text);
+        Object newEp = parseExtensionPoint(text);
 
         // If we got back null we interpret this as meaning delete the
         // reference to the extension point from the use case, otherwise we set
         // the fields of the extension point to the values in newEp.
 
         if (newEp == null) {
-            useCase.removeExtensionPoint(ep);
+            ModelFacade.removeExtensionPoint(useCase, ep);
         }
         else {
-            ModelFacade.setName(ep, newEp.getName());
-            ep.setLocation(newEp.getLocation());
+            ModelFacade.setName(ep, ModelFacade.getName(newEp));
+            ModelFacade.setLocation(ep, ModelFacade.getLocation(newEp));
         }
     }
 
@@ -663,7 +660,7 @@ public class ParserDisplay extends Parser {
      *              set both name and location to null.
      */
 
-    public MExtensionPoint parseExtensionPoint(String text) {
+    public Object parseExtensionPoint(String text) {
 
         // If we are given the null string, return immediately
 
@@ -673,7 +670,7 @@ public class ParserDisplay extends Parser {
 
         // Build a new extension point
 
-        MExtensionPoint ep =
+        Object ep =
 	    UmlFactory.getFactory().getUseCases().buildExtensionPoint(null);
 
         StringTokenizer st = new StringTokenizer(text.trim(), ":", true);
@@ -703,11 +700,11 @@ public class ParserDisplay extends Parser {
 
             if (epLocation.equals(":")) {
                 ModelFacade.setName(ep, null);
-                ep.setLocation(null);
+                ModelFacade.setLocation(ep, null);
             }
             else {
                 ModelFacade.setName(ep, null);
-                ep.setLocation(epLocation);
+                ModelFacade.setLocation(ep, epLocation);
             }
 
             break;
@@ -719,7 +716,7 @@ public class ParserDisplay extends Parser {
             epName = st.nextToken().trim();
 
             ModelFacade.setName(ep, epName);
-            ep.setLocation(null);
+            ModelFacade.setLocation(ep, null);
 
             break;
 
@@ -733,7 +730,7 @@ public class ParserDisplay extends Parser {
             epLocation = st.nextToken().trim();
 
             ModelFacade.setName(ep, epName);
-            ep.setLocation(epLocation);
+            ModelFacade.setLocation(ep, epLocation);
 
             break;
         }
