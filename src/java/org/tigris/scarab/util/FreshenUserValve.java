@@ -93,6 +93,7 @@ public class FreshenUserValve
         xmitScreens.put("SaveQuery.vm", null);
         xmitScreens.put("EditQuery.vm", null);
         xmitScreens.put("ConfigureIssueList.vm", null);
+        xmitScreens.put("EditXModuleList.vm", null);
         //xmitScreens.put(, null);
     }
 
