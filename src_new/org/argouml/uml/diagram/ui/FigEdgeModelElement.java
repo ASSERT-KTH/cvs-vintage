@@ -1,6 +1,6 @@
 
 
-// $Id: FigEdgeModelElement.java,v 1.37 2003/09/04 20:11:47 thierrylach Exp $
+// $Id: FigEdgeModelElement.java,v 1.38 2003/09/05 22:35:21 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@
 // Classes: FigEdgeModelElement
 // Original Author: abonner
 
-// $Id: FigEdgeModelElement.java,v 1.37 2003/09/04 20:11:47 thierrylach Exp $
+// $Id: FigEdgeModelElement.java,v 1.38 2003/09/05 22:35:21 bobtarling Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -471,18 +471,22 @@ public abstract class FigEdgeModelElement
     }
 
     protected void updateStereotypeText() {
-        if (getOwner() == null)
+        if (getOwner() == null) {
             return;
-        Object stereos = ModelFacade.getStereotype(getOwner());
-        if (stereos == null) {
+        }
+        Object stereotype = null;
+        if (ModelFacade.getStereotypes(getOwner()).size() > 0) {
+            stereotype = ModelFacade.getStereotypes(getOwner()).iterator().next();
+        }
+        if (stereotype == null) {
             _stereo.setText("");
             return;
         }
-        String stereoStr = ModelFacade.getName(stereos);
+        String stereoStr = ModelFacade.getName(stereotype);
         if (stereoStr.length() == 0)
             _stereo.setText("");
         else {
-            _stereo.setText(Notation.generateStereotype(this, (MStereotype)stereos));
+            _stereo.setText(Notation.generateStereotype(this, (MStereotype)stereotype));
         }
     }
 

@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.51 2003/09/01 21:49:21 bobtarling Exp $
+// $Id: FigAssociation.java,v 1.52 2003/09/05 22:35:21 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -245,7 +245,10 @@ public class FigAssociation extends FigEdgeModelElement {
 	Object multi = ModelFacade.getMultiplicity(end);
 	String name = ModelFacade.getName(end);
 	Object order = ModelFacade.getOrdering(end);
-	MStereotype stereo = (MStereotype)ModelFacade.getStereotype(end);
+        Object stereo = null;
+        if (ModelFacade.getStereotypes(end).size() > 0) {
+            stereo = ModelFacade.getStereotypes(end).iterator().next();
+        }
     
 	multiToUpdate.setText(Notation.generate(this, multi));
 	orderingToUpdate.setText(getOrderingName(order));

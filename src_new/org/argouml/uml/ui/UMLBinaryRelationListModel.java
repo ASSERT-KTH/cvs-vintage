@@ -1,5 +1,5 @@
 
-// $Id: UMLBinaryRelationListModel.java,v 1.10 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: UMLBinaryRelationListModel.java,v 1.11 2003/09/05 22:35:20 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.ModelFacade;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
@@ -264,11 +265,12 @@ abstract public class UMLBinaryRelationListModel
      * </p>
      * @return MModelElement
      */
-    protected MModelElement getSource() {
-        if (org.argouml.model.ModelFacade.isAModelElement(getTarget())) {
-            return (MModelElement) getTarget();
-        } else
+    protected Object getSource() {
+        if (ModelFacade.isAModelElement(getTarget())) {
+            return getTarget();
+        } else {
             throw new IllegalStateException("In getSource: target is not a modelelement");
+        }
     }
 
 }

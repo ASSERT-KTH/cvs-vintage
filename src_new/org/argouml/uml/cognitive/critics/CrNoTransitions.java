@@ -1,4 +1,4 @@
-// $Id: CrNoTransitions.java,v 1.8 2003/09/05 20:39:05 bobtarling Exp $
+// $Id: CrNoTransitions.java,v 1.9 2003/09/05 22:35:21 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrNoTransitions.java
 // Classes: CrNoTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoTransitions.java,v 1.8 2003/09/05 20:39:05 bobtarling Exp $
+// $Id: CrNoTransitions.java,v 1.9 2003/09/05 22:35:21 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -35,7 +35,6 @@ import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
 
 
-import ru.novosoft.uml.behavior.state_machines.MStateMachine;
 import ru.novosoft.uml.behavior.state_machines.MStateVertex;
 import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
 
@@ -56,7 +55,7 @@ public class CrNoTransitions extends CrUML {
 	MStateVertex sv = (MStateVertex) dm;
 	if (ModelFacade.isAState(sv)) {
 	    Object sm = ModelFacade.getStateMachine(sv);
-	    if (sm != null && ((MStateMachine)sm).getTop() == sv) return NO_PROBLEM;
+	    if (sm != null && ModelFacade.getTop(sm) == sv) return NO_PROBLEM;
 	}
 	Collection outgoing = sv.getOutgoings();
 	Collection incoming = sv.getIncomings();

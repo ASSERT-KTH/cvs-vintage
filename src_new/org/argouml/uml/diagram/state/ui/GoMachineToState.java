@@ -1,4 +1,4 @@
-// $Id: GoMachineToState.java,v 1.11 2003/09/05 20:39:04 bobtarling Exp $
+// $Id: GoMachineToState.java,v 1.12 2003/09/05 22:35:21 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,8 +31,6 @@ import java.util.Collection;
 
 import org.argouml.ui.AbstractGoRule;
 
-import ru.novosoft.uml.behavior.state_machines.MStateMachine;
-
 /**
  * Navigation rule for navperspective to navigate from statemachine to
  * its top state.
@@ -49,8 +47,8 @@ public class GoMachineToState extends AbstractGoRule {
     public Collection getChildren(Object parent) {
         
         if (org.argouml.model.ModelFacade.isAStateMachine(parent)) {
-            if ( ((MStateMachine) parent).getTop() != null) { 
-                return ModelFacade.getSubvertices(((MStateMachine)parent).getTop());
+            if (ModelFacade.getTop(parent) != null) { 
+                return ModelFacade.getSubvertices(ModelFacade.getTop(parent));
             }
         }
         return null;

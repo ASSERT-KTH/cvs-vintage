@@ -1,4 +1,4 @@
-// $Id: ArgoFacade.java,v 1.21 2003/09/04 20:18:14 thierrylach Exp $
+// $Id: ArgoFacade.java,v 1.22 2003/09/05 22:35:22 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -163,12 +163,14 @@ class ArgoAny implements Any, Type2 {
 		{
 		    // to do: think about the condition of this if-statement
 		    // ordered association end -> Sequence; otherwise -> Set
-		    if (ModelFacade.getStereotype(ae) != null
-			&& ModelFacade.getStereotype(ae).toString() != null
-			&& "ordered".equals(ModelFacade.getStereotype(ae)
-                            .toString()) )
-		    {
-			isSequence = true;
+                    Object stereotype = null;
+                    if (ModelFacade.getStereotypes(ae).size() > 0) {
+                        stereotype = ModelFacade.getStereotypes(ae).iterator().next();
+                    }
+		    if (stereotype != null
+			&& stereotype.toString() != null
+			&& "ordered".equals(stereotype.toString()) ) {
+                            isSequence = true;
 		    } else {
 			isSet = true;
 		    }

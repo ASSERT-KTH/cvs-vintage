@@ -1,4 +1,4 @@
-// $Id: ColumnDescriptor.java,v 1.32 2003/09/04 20:11:43 thierrylach Exp $
+// $Id: ColumnDescriptor.java,v 1.33 2003/09/05 22:35:22 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,6 @@ import ru.novosoft.uml.foundation.core.MAttribute;
 import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MComponent;
-import ru.novosoft.uml.foundation.core.MElement;
 import ru.novosoft.uml.foundation.core.MElementResidence;
 import ru.novosoft.uml.foundation.core.MFeature;
 import ru.novosoft.uml.foundation.core.MGeneralizableElement;
@@ -196,7 +195,7 @@ class ColumnName extends ColumnDescriptor {
 	    String res = ModelFacade.getName(target);
 	    String ocl = "";
 	    if (ModelFacade.isAElement(target))
-		ocl = ((MElement) target).getUMLClassName();
+		ocl = ModelFacade.getUMLClassName(target);
 	    if (res == null || res.length() == 0) res = "(anon " + ocl + ")";
 	    return res;
 	}
@@ -264,7 +263,10 @@ class ColumnStereotype extends ColumnDescriptor {
   
     public Object getValueFor(Object target) {
 	if (ModelFacade.isAModelElement(target)) {
-	    Object stereotype = ModelFacade.getStereotype(target);
+            Object stereotype = null;
+            if (ModelFacade.getStereotypes(target).size() > 0) {
+                stereotype = ModelFacade.getStereotypes(target).iterator().next();
+            }
 	    if (stereotype != null && ModelFacade.getName(stereotype) != null) {
 		return ModelFacade.getName(stereotype);
             }

@@ -1,4 +1,4 @@
-// $Id: DisplayTextTree.java,v 1.35 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: DisplayTextTree.java,v 1.36 2003/09/05 22:35:21 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -147,9 +147,12 @@ public class DisplayTextTree extends JTree implements TargetListener {
 
             // Look for stereotype
             if (showStereotype) {
-                Object st =  ModelFacade.getStereoType(value);
-                if (st != null) {
-                    name += " " + GeneratorDisplay.Generate(st);
+                Object stereo = null;
+                if (ModelFacade.getStereotypes(value).size() > 0) {
+                    stereo = ModelFacade.getStereotypes(value).iterator().next();
+                }
+                if (stereo != null) {
+                    name += " " + GeneratorDisplay.Generate(stereo);
                 }
             }
 

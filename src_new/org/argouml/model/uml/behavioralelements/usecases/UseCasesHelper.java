@@ -1,4 +1,4 @@
-// $Id: UseCasesHelper.java,v 1.14 2003/08/20 22:27:32 alexb Exp $
+// $Id: UseCasesHelper.java,v 1.15 2003/09/05 22:35:20 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -164,9 +164,9 @@ public class UseCasesHelper {
 	return list;
     }
     
-    public Collection getExtendingUseCases(MUseCase usecase) {
+    public Collection getExtendingUseCases(Object usecase) {
         if (usecase == null) return new ArrayList();
-        Iterator it = usecase.getExtends2().iterator();
+        Iterator it = ((MUseCase)usecase).getExtends2().iterator();
         List list = new ArrayList();
         while (it.hasNext()) {
             MExtend ext = (MExtend) it.next();
