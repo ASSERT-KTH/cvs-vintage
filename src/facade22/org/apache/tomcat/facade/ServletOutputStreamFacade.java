@@ -68,7 +68,7 @@ import javax.servlet.ServletOutputStream;
 /**
  * 
  */
-final class ServletOutputStreamFacade extends ServletOutputStream {
+public final class ServletOutputStreamFacade extends ServletOutputStream {
     protected boolean closed = false;
 
     Response resA;

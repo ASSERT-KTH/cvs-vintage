@@ -86,7 +86,7 @@ import javax.servlet.http.*;
  * @author Ignacio J. Ortega
  *
  */
-final class HttpServletRequestFacade implements HttpServletRequest {
+public final class HttpServletRequestFacade implements HttpServletRequest {
     private static StringManager sm =
 	StringManager.getManager("org.apache.tomcat.resources");
 

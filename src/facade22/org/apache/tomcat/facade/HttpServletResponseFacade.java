@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.27 2002/02/22 06:12:14 billbarker Exp $
- * $Revision: 1.27 $
- * $Date: 2002/02/22 06:12:14 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.28 2002/03/22 02:54:34 larryi Exp $
+ * $Revision: 1.28 $
+ * $Date: 2002/03/22 02:54:34 $
  *
  * ====================================================================
  *
@@ -84,7 +84,7 @@ import javax.servlet.http.Cookie;
  * @author Costin Manolache
  * @author Hans Bergsten [hans@gefionsoftware.com]
  */
-final class HttpServletResponseFacade  implements HttpServletResponse
+public final class HttpServletResponseFacade  implements HttpServletResponse
 {
     // Use the strings from core
     private static StringManager sm =  StringManager.getManager("org.apache.tomcat.resources");

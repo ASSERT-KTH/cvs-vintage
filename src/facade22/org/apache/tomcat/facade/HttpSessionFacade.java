@@ -89,7 +89,7 @@ import javax.servlet.http.*;
  * @author James Todd [gonzo@eng.sun.com]
  * @author costin@eng.sun.com
  */
-final class HttpSessionFacade implements HttpSession {
+public final class HttpSessionFacade implements HttpSession {
     private static StringManager sm =
         StringManager.getManager("org.apache.tomcat.resources");
     ServerSession realSession;
