@@ -29,7 +29,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * clause. This code has been cleaned up to improve readability.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCEJBQLFinderCommand extends JDBCFinderCommand {
 
@@ -54,7 +54,6 @@ public class JDBCEJBQLFinderCommand extends JDBCFinderCommand {
       
       // match the query
       a = ejbql.soleMatch(a);
-      log.debug("Assembly: "+a);
       
       // get the final target
       SQLTarget target = (SQLTarget)a.getTarget();

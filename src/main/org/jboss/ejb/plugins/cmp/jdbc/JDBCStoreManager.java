@@ -54,18 +54,18 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JDBCStoreManager extends CMPStoreManager {
    /**
-    * To simplify null values handling in the preloaded data pool we use this value instead of 'null'
+    * To simplify null values handling in the preloaded data pool we use 
+    * this value instead of 'null'
     */
    private static final Object NULL_VALUE = new Object();
 
    protected DataSource dataSource;
 
    protected JDBCTypeFactory typeFactory;
-   protected boolean debug;
 
    protected JDBCEntityMetaData metaData;
    protected JDBCEntityBridge entityBridge;
@@ -103,31 +103,45 @@ public class JDBCStoreManager extends CMPStoreManager {
 
       metaData = loadJDBCEntityMetaData();
 
-      // set debug flag
-      debug = metaData.isDebug();
-      
       // find the datasource
       try {
-         dataSource = (DataSource)new InitialContext().lookup(metaData.getDataSourceName());
+         dataSource = (DataSource)new InitialContext().lookup(
+               metaData.getDataSourceName());
       } catch(NamingException e) {
-         throw new DeploymentException("Error: can't find data source: " + metaData.getDataSourceName());
+         throw new DeploymentException("Error: can't find data source: " + 
+               metaData.getDataSourceName());
       }
 
-      typeFactory = new JDBCTypeFactory(metaData.getTypeMapping(), metaData.getJDBCApplication().getValueClasses());
+      // setup the type factory, which is used to map java types to sql types.
+      typeFactory = new JDBCTypeFactory(
+            metaData.getTypeMapping(), 
+            metaData.getJDBCApplication().getValueClasses());
+
+      // create the bridge between java land and this engine (sql land)
       entityBridge = new JDBCEntityBridge(metaData, log, this);
 
       super.init();
 
       loadFieldCommand = getCommandFactory().createLoadFieldCommand();
-      findByForeignKeyCommand = getCommandFactory().createFindByForeignKeyCommand();
+
+      findByForeignKeyCommand = 
+            getCommandFactory().createFindByForeignKeyCommand();
+
       loadRelationCommand = getCommandFactory().createLoadRelationCommand();
-      deleteRelationsCommand = getCommandFactory().createDeleteRelationsCommand();
-      insertRelationsCommand = getCommandFactory().createInsertRelationsCommand();
+
+      deleteRelationsCommand = 
+            getCommandFactory().createDeleteRelationsCommand();
+
+      insertRelationsCommand = 
+            getCommandFactory().createInsertRelationsCommand();
+
       readAheadCommand = getCommandFactory().createReadAheadCommand();
+
       readAheadOnLoad = metaData.getReadAhead().isOnLoadUsed();
       if (readAheadOnLoad) {
          readAheadLimit = metaData.getReadAhead().getLimit();
-         readAheadCache = new LRUCachePolicy(2, metaData.getReadAhead().getCacheSize());
+         readAheadCache = 
+               new LRUCachePolicy(2, metaData.getReadAhead().getCacheSize());
          readAheadCache.init();
       }
       tm = (TransactionManager) container.getTransactionManager();
@@ -135,8 +149,15 @@ public class JDBCStoreManager extends CMPStoreManager {
 
    public void start() throws Exception {
       super.start();
-      JDBCFindEntitiesCommand find = (JDBCFindEntitiesCommand)findEntitiesCommand;
+      
+      // Send a start event to the queries
+      // Some queries need to do some work on startup. For example, EJB-QL 
+      // queries perform a translation to SQL.
+      JDBCFindEntitiesCommand find = 
+            (JDBCFindEntitiesCommand)findEntitiesCommand;
       find.start();
+      
+      // If we are using a readAheadCache, start it.
       if (readAheadCache != null) {
          readAheadCache.start();
       }
@@ -144,6 +165,8 @@ public class JDBCStoreManager extends CMPStoreManager {
 
    public void stop() {
       super.stop();
+
+      // Inform the readAhead cache that we are done.
       if (readAheadCache != null) {
          readAheadCache.stop();
       }
@@ -163,10 +186,6 @@ public class JDBCStoreManager extends CMPStoreManager {
 
    public JDBCTypeFactory getJDBCTypeFactory() {
       return typeFactory;
-   }
-
-   public boolean getDebug() {
-      return debug;
    }
 
    public JDBCEntityMetaData getMetaData() {
@@ -290,7 +309,10 @@ public class JDBCStoreManager extends CMPStoreManager {
       Class beanClass = container.getBeanClass();
 
       Class[] classes = new Class[] { beanClass };
-      EntityBridgeInvocationHandler handler = new EntityBridgeInvocationHandler(container, entityBridge, beanClass);
+      EntityBridgeInvocationHandler handler = new EntityBridgeInvocationHandler(
+            container, 
+            entityBridge,
+            beanClass);
       ClassLoader classLoader = beanClass.getClassLoader();
 
       return Proxy.newProxyInstance(classLoader, classes, handler);
@@ -303,7 +325,10 @@ public class JDBCStoreManager extends CMPStoreManager {
       return dataSource.getConnection();
    }
 
-   public Set findByForeignKey(Object foreignKey, JDBCCMPFieldBridge[] foreignKeyFields) {
+   public Set findByForeignKey(
+         Object foreignKey, 
+         JDBCCMPFieldBridge[] foreignKeyFields) {
+
       return findByForeignKeyCommand.execute(foreignKey, foreignKeyFields);
    }
 
@@ -320,14 +345,16 @@ public class JDBCStoreManager extends CMPStoreManager {
    }
 
    public Map getTxDataMap() {
-      ApplicationMetaData amd = container.getBeanMetaData().getApplicationMetaData();
+      ApplicationMetaData amd = 
+            container.getBeanMetaData().getApplicationMetaData();
 
       // Get Tx Hashtable
       return (Map)amd.getPluginData("CMP-JDBC-TX-DATA");
    }
 
    private void initTxDataMap() {
-      ApplicationMetaData amd = container.getBeanMetaData().getApplicationMetaData();
+      ApplicationMetaData amd = 
+            container.getBeanMetaData().getApplicationMetaData();
 
       // Get Tx Hashtable
       Map txDataMap = (Map)amd.getPluginData("CMP-JDBC-TX-DATA");
@@ -338,14 +365,25 @@ public class JDBCStoreManager extends CMPStoreManager {
       }
    }
 
-   private JDBCEntityMetaData loadJDBCEntityMetaData() throws DeploymentException {
-      ApplicationMetaData amd = container.getBeanMetaData().getApplicationMetaData();
+   private JDBCEntityMetaData loadJDBCEntityMetaData() 
+         throws DeploymentException {
+
+      ApplicationMetaData amd = 
+            container.getBeanMetaData().getApplicationMetaData();
 
       // Get JDBC MetaData
-      JDBCApplicationMetaData jamd = (JDBCApplicationMetaData)amd.getPluginData("CMP-JDBC");
+      JDBCApplicationMetaData jamd = 
+            (JDBCApplicationMetaData)amd.getPluginData("CMP-JDBC");
+
       if (jamd == null) {
-         // we are the first cmp entity to need jbosscmp-jdbc. Load jbosscmp-jdbc.xml for the whole application
-         JDBCXmlFileLoader jfl = new JDBCXmlFileLoader(amd, container.getClassLoader(), container.getLocalClassLoader(), log);
+         // we are the first cmp entity to need jbosscmp-jdbc. 
+         // Load jbosscmp-jdbc.xml for the whole application
+         JDBCXmlFileLoader jfl = new JDBCXmlFileLoader(
+               amd, 
+               container.getClassLoader(),
+               container.getLocalClassLoader(),
+               log);
+
          jamd = jfl.load();
          amd.addPluginData("CMP-JDBC", jamd);
       }
@@ -366,7 +404,10 @@ public class JDBCStoreManager extends CMPStoreManager {
    /**
     * Add preloaded data for an entity within the scope of a transaction
     */
-   void addPreloadData(Object entityKey, JDBCCMPFieldBridge field, Object fieldValue)
+   void addPreloadData(
+         Object entityKey,
+         JDBCCMPFieldBridge field,
+         Object fieldValue)
    {
       Transaction trans = null;
       PreloadKey preloadKey;
@@ -374,36 +415,51 @@ public class JDBCStoreManager extends CMPStoreManager {
       try {
          trans = tm.getTransaction();
       } catch (javax.transaction.SystemException sysE) {
-         log.warn("System exception getting transaction for preload - can't preload data for "+entityKey, sysE);
+         log.warn("System exception getting transaction for preload - " +
+               "can't preload data for " + entityKey, sysE);
          return;
       }
 
+      // this is a double check lock and must be removed
       if (trans != null && !transactions.contains(trans)) {
          synchronized (transactions) { // synchronize only if absolutely necessary
             if (!transactions.contains(trans)) {
                try {
                   trans.registerSynchronization(new PreloadClearSynch(trans));
                } catch (javax.transaction.SystemException se) {
-                  log.warn("System exception getting transaction for preload - can't get preloaded data for "+entityKey, se);
+                  log.warn("System exception getting transaction for " +
+                        "preload - can't get preloaded data for " + 
+                        entityKey, se);
                   return;
                } catch (javax.transaction.RollbackException re) {
-                  log.warn("Rollback exception getting transaction for preload - can't get preloaded data for "+entityKey, re);
+                  log.warn("Rollback exception getting transaction for " + 
+                        "preload - can't get preloaded data for " + 
+                        entityKey, re);
                   return;
                }
                transactions.add(trans);
             }
          }
       }
-      preloadKey = new PreloadKey(trans, entityKey, field.getMetaData().getFieldName());
-      preloadedData.put(preloadKey, (fieldValue == null ? NULL_VALUE : fieldValue));
+      preloadKey = new PreloadKey(
+            trans, 
+            entityKey, 
+            field.getMetaData().getFieldName());
+      preloadedData.put(
+            preloadKey, 
+            (fieldValue == null ? NULL_VALUE : fieldValue));
    }
 
    /**
     * Get data that we might have preloaded for an entity in a transaction
     * @param fieldValueRef will be filled with the field value
-    * @return whether the data was found in the pool (null field value doesn't mean that it wasn't).
+    * @return whether the data was found in the pool (null field value doesn't
+    * mean that it wasn't).
     */
-   private boolean getPreloadData(Object entityKey, JDBCCMPFieldBridge field, Object[] fieldValueRef)
+   private boolean getPreloadData(
+         Object entityKey, 
+         JDBCCMPFieldBridge field,
+         Object[] fieldValueRef)
    {
       Transaction trans = null;
       PreloadKey preloadKey;
@@ -413,15 +469,21 @@ public class JDBCStoreManager extends CMPStoreManager {
       try {
          trans = tm.getTransaction();
       } catch (javax.transaction.SystemException sysE) {
-         log.warn("System exception getting transaction for preload - not preloading "+entityKey, sysE);
+         log.warn("System exception getting transaction for preload - not " +
+               "preloading " + entityKey, sysE);
          return false;
       }
 
-      preloadKey = new PreloadKey(trans, entityKey, field.getMetaData().getFieldName());
+      preloadKey = new PreloadKey(
+            trans, entityKey, field.getMetaData().getFieldName());
       fieldValue = preloadedData.remove(preloadKey);
-      log.debug("Getting Preload " + preloadKey + " " + field.getMetaData().getFieldName() + " " + fieldValue);
+      log.debug("Getting Preload " + preloadKey + " " + 
+            field.getMetaData().getFieldName() + " " + fieldValue);
       found = (fieldValue != null);
-      if (fieldValue == NULL_VALUE) { // due to this trick we avoid synchronization on preloadedData
+
+
+      // due to this trick we avoid synchronization on preloadedData
+      if (fieldValue == NULL_VALUE) { 
          fieldValue = null;
       }
       fieldValueRef[0] = fieldValue;
@@ -436,8 +498,8 @@ public class JDBCStoreManager extends CMPStoreManager {
       Map.Entry entry;
       PreloadKey preloadKey;
 
-      if (transactions.remove(trans)) {
-         for (Iterator it = preloadedData.entrySet().iterator(); it.hasNext(); ) {
+      if(transactions.remove(trans)) {
+         for(Iterator it = preloadedData.entrySet().iterator(); it.hasNext();) {
             entry = (Map.Entry) it.next();
             preloadKey = (PreloadKey) entry.getKey();
             if (preloadKey.trans == trans) {
@@ -465,16 +527,22 @@ public class JDBCStoreManager extends CMPStoreManager {
       public boolean equals(Object obj) {
          PreloadKey preloadKey = (PreloadKey) obj;
 
-         return ((trans == preloadKey.trans) && field.equals(preloadKey.field) &&
-                 key.equals(preloadKey.key));
+         return ((trans == preloadKey.trans) &&
+                     field.equals(preloadKey.field) &&
+               key.equals(preloadKey.key));
       }
 
       public int hashCode() {
-         return (key.hashCode() + field.hashCode() + (trans == null ? 0 : trans.hashCode()));
+         return (
+               key.hashCode() +
+               field.hashCode() +
+               (trans == null ? 0 : trans.hashCode()));
       }
    }
 
-   private class PreloadClearSynch implements javax.transaction.Synchronization {
+   private class PreloadClearSynch 
+         implements javax.transaction.Synchronization {
+
       private Transaction forTrans;
       public PreloadClearSynch(Transaction forTrans) {
          this.forTrans = forTrans;

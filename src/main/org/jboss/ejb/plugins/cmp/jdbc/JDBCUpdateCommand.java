@@ -17,7 +17,7 @@ import java.sql.SQLException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public abstract class JDBCUpdateCommand extends JDBCCommand {
    // Constructors --------------------------------------------------
@@ -45,9 +45,7 @@ public abstract class JDBCUpdateCommand extends JDBCCommand {
    
       int rowsAffected = ps.executeUpdate();
    
-      if(debug) {
-         log.debug("Rows affected = " + rowsAffected);
-      }
+      log.debug("Rows affected = " + rowsAffected);
    
       return handleResult(rowsAffected, argOrArgs);
    }

@@ -19,11 +19,11 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class JDBCMappingMetaData
 {
-   static Logger log = Logger.create(JDBCMappingMetaData.class);
+   static Logger log = Logger.getLogger(JDBCMappingMetaData.class.getName());
    /**
     * Gets the JDBC type constant int for the name. The mapping from name to jdbc
     * type is contained in java.sql.Types.

@@ -43,11 +43,11 @@ import org.jboss.logging.Logger;
  * parameters and loading query results.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCUtil
 {
-   static Logger log = Logger.create(JDBCUtil.class);
+   private static Logger log = Logger.getLogger(JDBCUtil.class.getName());
 
    public static void safeClose(Connection con)
    {
@@ -58,7 +58,7 @@ public class JDBCUtil
             con.close();
          } catch(SQLException e)
          {
-            log.debug("SQL error", e);
+            log.error("SQL error", e);
          }
       }
    }
@@ -72,7 +72,7 @@ public class JDBCUtil
             rs.close();
          } catch(SQLException e)
          {
-            log.debug("SQL error", e);
+            log.error("SQL error", e);
          }
       }
    }
@@ -86,7 +86,7 @@ public class JDBCUtil
             statement.close();
          } catch(SQLException e)
          {
-            log.debug("SQL error", e);
+            log.error("SQL error", e);
          }
       }
    }
@@ -100,7 +100,7 @@ public class JDBCUtil
             in.close();
          } catch(IOException e)
          {
-            log.debug("SQL error", e);
+            log.error("SQL error", e);
          }
       }
    }
@@ -114,7 +114,7 @@ public class JDBCUtil
             out.close();
          } catch(IOException e)
          {
-            log.debug("SQL error", e);
+            log.error("SQL error", e);
          }
       }
    }
@@ -132,12 +132,11 @@ public class JDBCUtil
     */
    public static void setParameter(Logger log, PreparedStatement ps, int index, int jdbcType, Object value) throws SQLException
    {
-      if(JDBCCommand.debug)
-      {
+      if(log.isDebugEnabled()) {
          log.debug("Set parameter: " +
-         "index=" + index + ", " +
-         "jdbcType=" + getJDBCTypeName(jdbcType) + ", " +
-         "value=" + ((value == null) ? "NULL" : value));
+               "index=" + index + ", " +
+               "jdbcType=" + getJDBCTypeName(jdbcType) + ", " +
+               "value=" + ((value == null) ? "NULL" : value));
       }
       
       if (value == null)
@@ -194,23 +193,26 @@ public class JDBCUtil
       Object[] returnValue = new Object[1];
       if(getNonBinaryResult(rs, index, destination, returnValue))
       {
-         if(JDBCCommand.debug)
-         {
-            log.debug("Get result: index=" + index + ", javaType=" + destination.getName() + ", S value=" + returnValue[0]);
+         if(log.isDebugEnabled()) {
+            log.debug("Get result: index=" + index + 
+                  ", javaType=" + destination.getName() + 
+                  ", Simple, value=" + returnValue[0]);
          }
          return returnValue[0];
       } else if(getObjectResult(rs, index, destination, returnValue))
       {
-         if(JDBCCommand.debug)
-         {
-            log.debug("Get result: index=" + index + ", javaType=" + destination.getName() + ", O value=" + returnValue[0]);
+         if(log.isDebugEnabled()) {
+            log.debug("Get result: index=" + index + 
+                  ", javaType=" + destination.getName() + 
+                  ", Object, value=" + returnValue[0]);
          }
          return returnValue[0];
       } else if(getBinaryResult(rs, index, destination, returnValue))
       {
-         if(JDBCCommand.debug)
-         {
-            log.debug("Get result: index=" + index + ", javaType=" + destination.getName() + ", B value=" + returnValue[0]);
+         if(log.isDebugEnabled()) {
+            log.debug("Get result: index=" + index + 
+                  ", javaType=" + destination.getName() + 
+                  ", Binary, value=" + returnValue[0]);
          }
          return returnValue[0];
       }
@@ -518,7 +520,7 @@ public class JDBCUtil
       } catch(NoSuchMethodException e)
       {
          // Should never happen
-         log.debug("SQL error", e);
+         log.error("SQL error", e);
       }
       
       // Initializes the map between jdbcType (int) and the name of the type.
@@ -533,7 +535,7 @@ public class JDBCUtil
          } catch (IllegalAccessException e)
          {
             // Should never happen
-            log.debug("SQL error", e);
+            log.error("SQL error", e);
          }
       }
    }

@@ -44,7 +44,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */                            
 public class JDBCCMRFieldBridge implements CMRFieldBridge {
    // ------ Invocation messages ------
@@ -53,7 +53,8 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    protected static final Method GET_RELATED_ID;
    /** tells the related continer to add an id to its list related entities */
    protected static final Method ADD_RELATION;
-   /** tells the related continer to remove an id to its list related entities */
+   /** tells the related continer to remove an id from its list related 
+    * entities */
    protected static final Method REMOVE_RELATION;
    
    // set the message method objects
@@ -156,37 +157,68 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    /**
     * Creates a cmr field for the entity based on the metadata.
     */
-   public JDBCCMRFieldBridge(JDBCEntityBridge entity, JDBCStoreManager manager, JDBCRelationshipRoleMetaData metadata) throws DeploymentException {
+   public JDBCCMRFieldBridge(
+         JDBCEntityBridge entity,
+         JDBCStoreManager manager, 
+         JDBCRelationshipRoleMetaData metadata) throws DeploymentException {
+
       this.entity = entity;
       this.manager = manager;
       this.metadata = metadata;
-      this.log = manager.getLog();
+      
+      String categoryName = this.getClass().getName() + 
+            "." + 
+            manager.getMetaData().getName() +
+            ".";
+      if(metadata.getCMRFieldName() != null) {
+         categoryName += metadata.getCMRFieldName();
+      } else {
+         categoryName +=
+            metadata.getRelatedRole().getEntity().getName() +
+            "-" +
+            metadata.getRelatedRole().getCMRFieldName();
+      }
+
+      this.log = Logger.getLogger(categoryName);
 
       //
-      // Set handles to the related entity's container, cache, manager, and invoker
+      // Set handles to the related entity's container, cache, 
+      // manager, and invoker
       //
       
       // name of the related entity, name used in ejb-jar.xml
       String relatedName = metadata.getRelatedRole().getEntity().getName();
       
       // get the related container
-      Container c = manager.getContainer().getApplication().getContainer(relatedName);
+      Container c = manager.getContainer().getApplication().getContainer(
+            relatedName);
       if( !(c instanceof EntityContainer)) {
-         throw new DeploymentException("Relationships are not allowed entity beans and other types of beans");
+         throw new DeploymentException("Relationships are not allowed " +
+               "between entity beans and other types of beans");
       }      
       relatedContainer = (EntityContainer) c;
       
       // get the related instance cache
       relatedCache = (EntityCache)relatedContainer.getInstanceCache();
    
-      // get the related persistence manager
-      if( !(relatedContainer.getPersistenceManager() instanceof CMPPersistenceManager)) {
-         throw new DeploymentException("Relationships are not allowed between bmp and cmp entity beans");
+      // is the realted persistence manager a cmp persistence manager?
+      if( !(relatedContainer.getPersistenceManager() instanceof 
+               CMPPersistenceManager)) {
+         throw new DeploymentException("Relationships are not allowed " +
+               "between bmp and cmp entity beans");
       }                  
-      CMPPersistenceManager cmpPM = (CMPPersistenceManager)relatedContainer.getPersistenceManager();
+
+      // get the related persistence manager
+      CMPPersistenceManager cmpPM = 
+            (CMPPersistenceManager)relatedContainer.getPersistenceManager();
+
+      // is the realted persistence store manager a jdbc store manager?
       if( !(cmpPM.getPersistenceStore() instanceof JDBCStoreManager)) {
-         throw new DeploymentException("JDBCStoreManager can only manage a relationship with bean managed by another JDBCStoreManager");
+         throw new DeploymentException("JDBCStoreManager can only manage a " +
+               "relationship with bean managed by another JDBCStoreManager");
       }
+
+      // get the related store manager
       relatedManager = (JDBCStoreManager)cmpPM.getPersistenceStore();
       
       // get the related container invoker      
@@ -196,11 +228,12 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
       // Initialize the key fields
       //
       if(metadata.getRelationMetaData().isTableMappingStyle()) {
-         // initialize key fields
+         // initialize relation table key fields
          Collection tableKeys = metadata.getTableKeyFields();
          Set keys = new HashSet();
          for(Iterator i=tableKeys.iterator(); i.hasNext(); ) {
-            JDBCCMPFieldMetaData cmpFieldMetaData = (JDBCCMPFieldMetaData)i.next();
+            JDBCCMPFieldMetaData cmpFieldMetaData = 
+                  (JDBCCMPFieldMetaData)i.next();
             keys.add(new JDBCCMP2xFieldBridge(manager, cmpFieldMetaData));
          }
          tableKeyFields = new JDBCCMPFieldBridge[tableKeys.size()];
@@ -210,7 +243,8 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
          Collection foreignKeys = metadata.getForeignKeyFields();
          Set keys = new HashSet();
          for(Iterator i=foreignKeys.iterator(); i.hasNext(); ) {
-            JDBCCMPFieldMetaData cmpFieldMetaData = (JDBCCMPFieldMetaData)i.next();
+            JDBCCMPFieldMetaData cmpFieldMetaData = 
+                  (JDBCCMPFieldMetaData)i.next();
             keys.add(new JDBCCMP2xFieldBridge(
                      manager,
                      cmpFieldMetaData,
@@ -218,7 +252,8 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
                         cmpFieldMetaData)));
          }
          foreignKeyFields = new JDBCCMPFieldBridge[foreignKeys.size()];
-         foreignKeyFields = (JDBCCMPFieldBridge[])keys.toArray(foreignKeyFields);
+         foreignKeyFields = 
+               (JDBCCMPFieldBridge[])keys.toArray(foreignKeyFields);
          hasForeignKey = foreignKeyFields.length > 0;
       }
    }
@@ -249,7 +284,9 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     * Initialize this half of the relation with data from the related
     * cmr field. See initRelatedData().
     */
-   protected void initRelatedData(JDBCEntityBridge relatedEntity) throws DeploymentException {
+   protected void initRelatedData(JDBCEntityBridge relatedEntity) 
+         throws DeploymentException {
+
       this.relatedEntity = relatedEntity;
       
       // get the related local interface
@@ -293,6 +330,9 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
       return manager;
    }
    
+   /**
+    * Gets bridge for this entity.
+    */
    public JDBCEntityBridge getEntity() {
       return entity;
    }
@@ -340,7 +380,8 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    }
    
    /**
-    * Gets the foreign key fields of this entity (i.e., related entities pk fields)
+    * Gets the foreign key fields of this entity (i.e., related entities 
+    * pk fields)
     */
    public JDBCCMPFieldBridge[] getForeignKeyFields() {
       return foreignKeyFields;
@@ -382,7 +423,8 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    }
 
    /**
-    * Gets the value of the cmr field for the instance associated with the context.
+    * Gets the value of the cmr field for the instance associated with 
+    * the context.
     */
    public Object getValue(EntityEnterpriseContext myCtx) {
       load(myCtx);
@@ -396,7 +438,8 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
       try {
          if(fieldState.getValue().size() > 0) {
             Object fk = fieldState.getValue().iterator().next();
-            return relatedInvoker.getEntityEJBLocalObject(relatedCache.createCacheKey(fk));
+            return relatedInvoker.getEntityEJBLocalObject(
+                  relatedCache.createCacheKey(fk));
          }
          return null;
       } catch(Exception e) {
@@ -406,11 +449,13 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    }
    
    /**
-    * Sets the value of the cmr field for the instance associated with the context.
+    * Sets the value of the cmr field for the instance associated with 
+    * the context.
     */
    public void setValue(EntityEnterpriseContext myCtx, Object newValue) {
       if(isCollectionValued() && newValue == null) {
-         throw new IllegalArgumentException("null cannot be assigned to a collection-valued cmr-field [EJB 2.0 Spec. 10.3.8].");
+         throw new IllegalArgumentException("null cannot be assigned to a " +
+               "collection-valued cmr-field [EJB 2.0 Spec. 10.3.8].");
       }
       
       load(myCtx);
@@ -446,48 +491,61 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    }
 
    /**
-    * Creates the relation links between the instance associated with the context
-    * and the related instance (just the id is passed in).
+    * Creates the relation links between the instance associated with the 
+    * context and the related instance (just the id is passed in).
     *
     * This method calls a.addRelation(b) and b.addRelation(a)
     */
-   public void createRelationLinks(EntityEnterpriseContext myCtx, Object relatedId) {      
+   public void createRelationLinks(
+         EntityEnterpriseContext myCtx, Object relatedId) {      
+
       // If my multiplicity is one, then we need to free the new related context
       // from its old relationship.
       if(metadata.isMultiplicityOne()) {
-         Object oldRelatedId = relatedCMRField.invokeGetRelatedId(myCtx.getTransaction(), relatedId);
+         Object oldRelatedId = relatedCMRField.invokeGetRelatedId(
+               myCtx.getTransaction(), relatedId);
          if(oldRelatedId != null) {
-            invokeRemoveRelation(myCtx.getTransaction(), oldRelatedId, relatedId);
-            relatedCMRField.invokeRemoveRelation(myCtx.getTransaction(), relatedId, oldRelatedId);
+            invokeRemoveRelation(
+                  myCtx.getTransaction(), oldRelatedId, relatedId);
+            relatedCMRField.invokeRemoveRelation(
+                  myCtx.getTransaction(), relatedId, oldRelatedId);
          }
       }
 
       addRelation(myCtx, relatedId);
-      relatedCMRField.invokeAddRelation(myCtx.getTransaction(), relatedId, myCtx.getId());
+      relatedCMRField.invokeAddRelation(
+            myCtx.getTransaction(), relatedId, myCtx.getId());
    }
    
    /**
-    * Destroys the relation links between the instance associated with the context
-    * and the related instance (just the id is passed in).
+    * Destroys the relation links between the instance associated with the 
+    * context and the related instance (just the id is passed in).
     *
     * This method calls a.removeRelation(b) and b.removeRelation(a)
     */
-   public void destroyRelationLinks(EntityEnterpriseContext myCtx, Object relatedId) {
+   public void destroyRelationLinks(
+         EntityEnterpriseContext myCtx, Object relatedId) {
+
       destroyRelationLinks(myCtx, relatedId, true);
    }
    
    /**
-    * Destroys the relation links between the instance associated with the context
-    * and the related instance (just the id is passed in).
+    * Destroys the relation links between the instance associated with the
+    * context and the related instance (just the id is passed in).
     *
     * This method calls a.removeRelation(b) and b.removeRelation(a)
     *
-    * If updateValueCollection is false, the related id collection is not updated. 
-    * This form is only used by the RelationSet iterator.
+    * If updateValueCollection is false, the related id collection is not
+    * updated. This form is only used by the RelationSet iterator.
     */
-   public void destroyRelationLinks(EntityEnterpriseContext myCtx, Object relatedId, boolean updateValueCollection) {
+   public void destroyRelationLinks(
+         EntityEnterpriseContext myCtx,
+         Object relatedId,
+         boolean updateValueCollection) {
+
       removeRelation(myCtx, relatedId, updateValueCollection);      
-      relatedCMRField.invokeRemoveRelation(myCtx.getTransaction(), relatedId, myCtx.getId());
+      relatedCMRField.invokeRemoveRelation(
+            myCtx.getTransaction(), relatedId, myCtx.getId());
    }
    
    /**
@@ -496,8 +554,11 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     */
    protected Object invokeGetRelatedId(Transaction tx, Object myId) {
       try {
+         EntityInstanceCache instanceCache = 
+               (EntityInstanceCache)manager.getContainer().getInstanceCache();
+
          return manager.getContainer().invoke(new MethodInvocation(
-               ((EntityInstanceCache)manager.getContainer().getInstanceCache()).createCacheKey(myId),
+               instanceCache.createCacheKey(myId),
                GET_RELATED_ID,
                new Object[] { this },
                tx, 
@@ -516,10 +577,15 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     * Invokes the addRelation on the related CMR field via the container
     * invocation interceptor chain.
     */
-   protected void invokeAddRelation(Transaction tx, Object myId, Object relatedId) {
+   protected void invokeAddRelation(
+         Transaction tx, Object myId, Object relatedId) {
+
       try {
+         EntityInstanceCache instanceCache = 
+               (EntityInstanceCache)manager.getContainer().getInstanceCache();
+
          manager.getContainer().invoke(new MethodInvocation(
-               ((EntityInstanceCache)manager.getContainer().getInstanceCache()).createCacheKey(myId),
+               instanceCache.createCacheKey(myId),
                ADD_RELATION,
                new Object[] { this, relatedId },
                tx,
@@ -538,10 +604,15 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     * Invokes the removeRelation on the related CMR field via the container
     * invocation interceptor chain.
     */
-   protected void invokeRemoveRelation(Transaction tx, Object myId, Object relatedId) {
+   protected void invokeRemoveRelation(
+         Transaction tx, Object myId, Object relatedId) {
+
       try {
+         EntityInstanceCache instanceCache = 
+               (EntityInstanceCache)manager.getContainer().getInstanceCache();
+
          manager.getContainer().invoke(new MethodInvocation(
-               ((EntityInstanceCache)manager.getContainer().getInstanceCache()).createCacheKey(myId),
+               instanceCache.createCacheKey(myId),
                REMOVE_RELATION,
                new Object[] { this, relatedId },
                tx,
@@ -561,7 +632,8 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     */
    public Object getRelatedId(EntityEnterpriseContext myCtx) {
       if(isCollectionValued()) {
-         throw new EJBException("getRelatedId may only be called on a cmr-field with a multiplicity of one.");
+         throw new EJBException("getRelatedId may only be called on a " +
+               "cmr-field with a multiplicity of one.");
       }
       
       load(myCtx);
@@ -591,7 +663,8 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
       
       // Check that single value relations are current not related to anything.
       if(isSingleValued() && fieldState.getValue().size() > 0) {
-         throw new IllegalStateException("This bean may only be related to one other bean at a time");
+         throw new IllegalStateException("This bean may only be related to " +
+               "one other bean at a time");
       }
       
       // add to current related set
@@ -615,10 +688,14 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     * Removes the foreign key to the set of related ids, and updates
     * any foreign key fields.
     *
-    * If updateValueCollection is false, the related id collection is not updated. 
-    * This form is only used by the RelationSet iterator.
+    * If updateValueCollection is false, the related id collection is not
+    * updated. This form is only used by the RelationSet iterator.
     */
-   public void removeRelation(EntityEnterpriseContext myCtx, Object fk, boolean updateValueCollection) {
+   public void removeRelation(
+         EntityEnterpriseContext myCtx,
+         Object fk,
+         boolean updateValueCollection) {
+
       load(myCtx);
       
       // remove from current related set
@@ -650,7 +727,8 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
             Object fieldValue = foreignKeyFields[i].getInstanceValue(myCtx);
             
             // updated pk object with return from set primary key value to
-            // handle single valued non-composit pks and more complicated behivors.
+            // handle single valued non-composit pks and more complicated
+            // behaviors.
             fk = foreignKeyFields[i].setPrimaryKeyValue(fk, fieldValue);
          }
          
@@ -668,7 +746,8 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
                );
       } else {
          // no FKs, must use relation table
-         fieldState = new FieldState(myCtx, manager.loadRelation(this, myCtx.getId()));
+         fieldState = new FieldState(
+               myCtx, manager.loadRelation(this, myCtx.getId()));
       }      
       setFieldState(myCtx, fieldState);
    }
@@ -676,9 +755,12 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    /**
     * Sets the foreign key field value.
     */
-   protected void setForeignKey(EntityEnterpriseContext myCtx, Object foreignKey) {
+   protected void setForeignKey(
+         EntityEnterpriseContext myCtx, Object foreignKey) {
+
       if(!hasForeignKey()) {
-         throw new EJBException(getFieldName() + " CMR field does not have a foreign key to set.");
+         throw new EJBException(getFieldName() + " CMR field does not have " +
+               "a foreign key to set.");
       }
       
       JDBCCMPFieldBridge[] foreignKeyFields = getForeignKeyFields();
@@ -726,7 +808,9 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    /**
     * Sets the field state object in the persistence context.
     */
-   protected void setFieldState(EntityEnterpriseContext ctx, FieldState fieldState) {
+   protected void setFieldState(
+         EntityEnterpriseContext ctx, FieldState fieldState) {
+
       Map fieldStates = getPersistenceContext(ctx).fieldState;
       
       // invalidate current field state
@@ -742,7 +826,9 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
       }
    }
 
-   private CMPStoreManager.PersistenceContext getPersistenceContext(EntityEnterpriseContext ctx) {
+   private CMPStoreManager.PersistenceContext getPersistenceContext(
+         EntityEnterpriseContext ctx) {
+
       return (CMPStoreManager.PersistenceContext)ctx.getPersistenceContext();
    }
       
@@ -759,7 +845,8 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
       }
       public Set getRelationSet() {
          if(relationSet == null) {
-            relationSet = new RelationSet(JDBCCMRFieldBridge.this, ctx, setHandle);
+            relationSet = new RelationSet(
+                  JDBCCMRFieldBridge.this, ctx, setHandle);
          }
          return relationSet;
       }

@@ -42,17 +42,18 @@ import org.jboss.util.FinderResults;
  * are the classic EntityBean messages (e.g., activate, passivate...). 
  *
  * Dependency:
- *      In general, this package depends as little as possible on other packages.
- * Specifically it depends on container information from org.jboss.ejb, such as
- * EntityEnterpriseContext.  Additionally, implementations of this class, will
- * depend on org.jboss.metadata to aquire information about the entity.
+ *      In general, this package depends as little as possible on other
+ * packages. Specifically it depends on container information from 
+ * org.jboss.ejb, such as EntityEnterpriseContext.  Additionally, 
+ * implementations of this class, will depend on org.jboss.metadata to aquire 
+ * information about the entity.
  *
  * Life-cycle:
  *      Tied to the life-cycle of the entity container.
  *
  * Multiplicity:   
  *      One per cmp entity bean. This could be less if another implementaion of 
- * EntityPersistenceStore is created and thoes beans use the implementation       
+ * EntityPersistenceStore is created and thoes beans use the implementation.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
@@ -61,7 +62,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */                            
 public abstract class CMPStoreManager 
    implements EntityPersistenceStore2
@@ -69,7 +70,7 @@ public abstract class CMPStoreManager
    // Attributes ----------------------------------------------------
 
    protected EntityContainer container;
-   protected Logger log = Logger.create("CMP");
+   protected Logger log;
 
    protected CommandFactory commandFactory;
 
@@ -98,12 +99,12 @@ public abstract class CMPStoreManager
 
    public void setContainer(Container container) {
       this.container = (EntityContainer)container;
+      this.log = Logger.getLogger(
+            this.getClass().getName() + 
+            "." + 
+            container.getBeanMetaData().getEjbName());
    }
    
-   public Logger getLog() {
-      return log;
-   }
-
    protected abstract CommandFactory createCommandFactory()  throws Exception ;
    
    // Container Life cycle commands -------------------------
@@ -144,14 +145,18 @@ public abstract class CMPStoreManager
 
    public void stop()
    {
-      if(stopCommand != null) // On deploy errors, sometimes CMPStoreManager was never initialized!
+      // On deploy errors, sometimes CMPStoreManager was never initialized!
+      if(stopCommand != null) { 
          stopCommand.execute();
+      }
    }
 
    public void destroy()
    {
-      if(destroyCommand != null) // On deploy errors, sometimes CMPStoreManager was never initialized!
+      // On deploy errors, sometimes CMPStoreManager was never initialized!
+      if(destroyCommand != null) {
          destroyCommand.execute();
+      }
    }
 
    // EJB Commands -------------------------

@@ -19,7 +19,7 @@ import org.jboss.logging.Logger;
  * Inserts relations into a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCInsertRelationsCommand {
    protected JDBCStoreManager manager;
@@ -28,19 +28,17 @@ public class JDBCInsertRelationsCommand {
    // Command name, used for debug trace
    protected String name;
 
-   /**
-    * Gives compile-time control of tracing.
-    */
-   protected boolean debug;
-   
    protected JDBCEntityBridge entity;
    
    public JDBCInsertRelationsCommand(JDBCStoreManager manager) {
       this.manager = manager;
       this.name = "InsertRelations";
-      this.log = manager.getLog();
-      this.debug = manager.getDebug();
       this.entity = manager.getEntityBridge();
+
+      this.log = Logger.getLogger(
+            this.getClass().getName() + 
+            "." + 
+            manager.getMetaData().getName());
    }
    
    public void execute(RelationData relationData) {
@@ -57,9 +55,7 @@ public class JDBCInsertRelationsCommand {
          
          // get the sql
          String theSQL = getSQL(relationData);
-         if(debug) {
-            log.debug(name + " command executing: " + theSQL);
-         }
+         log.debug(name + " command executing: " + theSQL);
          
          // get a prepared statement
          ps = con.prepareStatement(theSQL);
@@ -73,13 +69,9 @@ public class JDBCInsertRelationsCommand {
          
             int rowsAffected = ps.executeUpdate();
          
-            if(debug) {
-               log.debug("Rows affected = " + rowsAffected);
-            }
+            log.debug("Rows affected = " + rowsAffected);
          }
       } catch(Exception e) {
-         //log.debug(e);
-         e.printStackTrace();
          throw new EJBException("Could insert relations into " + relationData.getLeftCMRField().getRelationTableName(), e);
       } finally {
          JDBCUtil.safeClose(ps);

@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -44,11 +44,6 @@ public final class JDBCEntityMetaData {
     * type mapping used for this entity
     */
    private final JDBCTypeMappingMetaData typeMapping;
-   
-   /**
-    * should excess debug information be logged
-    */
-   private final boolean debug;
    
    /**
     * the name of this entity
@@ -288,7 +283,6 @@ public final class JDBCEntityMetaData {
       // other default values
       dataSourceName = null;
       typeMapping = null;
-      debug = false;
       createTable = false;
       removeTable = false;
       selectForUpdate = false;
@@ -354,14 +348,6 @@ public final class JDBCEntityMetaData {
          }
       } else {
          typeMapping = defaultValues.getTypeMapping();
-      }
-
-      // enable extra debugging?
-      String debugString = MetaData.getOptionalChildContent(element, "debug");
-      if(debugString != null) {
-         debug = Boolean.valueOf(debugString).booleanValue();
-      } else {
-         debug = defaultValues.isDebug();
       }
 
       // get table name
@@ -614,14 +600,6 @@ public final class JDBCEntityMetaData {
     */
    public JDBCTypeMappingMetaData getTypeMapping() {
       return typeMapping;
-   }
-   
-   /**
-    * Is extra debug info being logged?
-    * @return true if extra debug info is being logged
-    */
-   public boolean isDebug() {
-      return debug;
    }
    
    /**

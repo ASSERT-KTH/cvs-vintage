@@ -24,10 +24,13 @@ import java.sql.ResultSet;
 
 import javax.ejb.FinderException;
 
+import org.jboss.ejb.ContainerInvoker;
+import org.jboss.ejb.LocalContainerInvoker;
 import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.FindEntitiesCommand;
+import org.jboss.logging.Logger;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge; 
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge; 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
@@ -42,7 +45,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public abstract class JDBCFinderCommand
    extends JDBCQueryCommand
@@ -57,6 +60,13 @@ public abstract class JDBCFinderCommand
 
    public JDBCFinderCommand(JDBCStoreManager manager, JDBCQueryMetaData q) {
       super(manager, q.getMethod().getName());
+
+      this.log = Logger.getLogger(
+            this.getClass().getName() + 
+            "." + 
+            manager.getMetaData().getName() +
+            "." + 
+            q.getMethod().getName());
 
       queryMetaData = q;
       selectEntity = entity;
@@ -88,8 +98,7 @@ public abstract class JDBCFinderCommand
                   new Long(result.getListId()), result);
          }
       } catch (Exception e) {
-         e.printStackTrace();
-         log.debug(e);
+         log.error("Find error: " + e);
          throw new FinderException("Find failed");
       }
       return result;
@@ -143,9 +152,13 @@ public abstract class JDBCFinderCommand
                // convert the list of pks into real ejbs
                EntityContainer container = manager.getContainer();
                if(queryMetaData.isResultTypeMappingLocal()) {
-                  result = container.getLocalContainerInvoker().getEntityLocalCollection(result);
+                  LocalContainerInvoker localInvoker;
+                  localInvoker = container.getLocalContainerInvoker();
+                  result = localInvoker.getEntityLocalCollection(result);
                } else {
-                  result = container.getContainerInvoker().getEntityCollection(result);
+                  ContainerInvoker invoker;
+                  invoker = container.getContainerInvoker();
+                  result = invoker.getEntityCollection(result);
                }
             }
          } else {

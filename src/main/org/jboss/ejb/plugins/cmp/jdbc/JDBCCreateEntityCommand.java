@@ -37,7 +37,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCCreateEntityCommand
    extends JDBCUpdateCommand
@@ -66,17 +66,22 @@ public class JDBCCreateEntityCommand
       try {
          // Extract pk
          id = entity.extractPrimaryKeyFromInstance(ctx);
-         if(debug) {
-            log.debug("Create, id is "+id);
-         }
+         log.debug("Create, id is "+id);
       } catch(Exception e) {
-         log.debug(e);
+         log.error(e);
          throw new CreateException("Extract primary key from instance:" + e);
       }
          
       // Check duplicate
-      if(beanExistsCommand.execute(id)) {
-         throw new DuplicateKeyException("Entity with key " + id + " already exists");
+      try {
+         if(beanExistsCommand.execute(id)) {
+            throw new DuplicateKeyException("Entity with key " + id + 
+                  " already exists");
+         }
+      } catch(Exception e) {
+         log.error(e);
+         throw new CreateException("Error while checking if entity already " +
+               "exists: " + e);
       }
          
       // pass this info on 
@@ -90,7 +95,7 @@ public class JDBCCreateEntityCommand
       try {
          jdbcExecute(es);
       } catch(Exception e) {
-         log.debug(e);
+         log.error(e);
          throw new CreateException("Could not create entity:" + e);
       }
 

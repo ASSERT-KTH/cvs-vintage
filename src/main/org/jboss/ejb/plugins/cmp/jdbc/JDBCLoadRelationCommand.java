@@ -19,7 +19,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCLoadRelationCommand extends JDBCQueryCommand {
    // Constructors --------------------------------------------------
@@ -39,7 +39,6 @@ public class JDBCLoadRelationCommand extends JDBCQueryCommand {
       try {
          return (Set)jdbcExecute(es);
       } catch (Exception e) {
-         log.debug(e);
          throw new EJBException("FindByForeignKey failed", e);
       }
    }

@@ -24,7 +24,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public abstract class JDBCCommand {
    // Attributes ----------------------------------------------------
@@ -34,15 +34,9 @@ public abstract class JDBCCommand {
    protected JDBCEntityMetaData entityMetaData;
    protected Logger log;
     
-   // Command name, used for debug trace
    protected String name;
 
    private String sql;
-
-   /**
-    * Gives compile-time control of tracing.
-    */
-   public static boolean debug = false;
 
    // Constructors --------------------------------------------------
 
@@ -53,9 +47,12 @@ public abstract class JDBCCommand {
     * @param name the name to be used when tracing execution.
     */
    public JDBCCommand(JDBCStoreManager manager, String name) {
-      this.log = manager.getLog();
+      this.log = Logger.getLogger(
+            this.getClass().getName() + 
+            "." + 
+            manager.getMetaData().getName());
+
       this.name = name;
-      this.debug = manager.getDebug();
       
       this.manager = manager;
       entity = manager.getEntityBridge();
@@ -88,9 +85,7 @@ public abstract class JDBCCommand {
          
          // get the sql
          String theSQL = getSQL(argOrArgs);
-         if(debug) {
-            log.debug(name + " command executing: " + theSQL);
-         }
+         log.debug(name + " command executing: " + theSQL);
          
          // get a prepared statement
          ps = con.prepareStatement(theSQL);
@@ -100,9 +95,6 @@ public abstract class JDBCCommand {
          
          // execute the command
          return executeStatementAndHandleResult(ps, argOrArgs);
-      } catch(SQLException e) {
-         log.debug(e);
-         throw e;
       } finally {
          JDBCUtil.safeClose(ps);
          JDBCUtil.safeClose(con);
@@ -115,9 +107,7 @@ public abstract class JDBCCommand {
     * @param sql the static SQL to be used by this Command.
     */
    protected void setSQL(String sql) {
-      if(debug) {
-         log.debug(name + " SQL: " + sql);
-      }
+      log.debug(name + " SQL: " + sql);
       this.sql = sql;
    }
 

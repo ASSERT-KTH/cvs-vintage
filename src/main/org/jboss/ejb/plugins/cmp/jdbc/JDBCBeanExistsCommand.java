@@ -21,7 +21,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCBeanExistsCommand extends JDBCQueryCommand
 {
@@ -43,14 +43,8 @@ public class JDBCBeanExistsCommand extends JDBCQueryCommand
 
    // Checks whether the database already holds the entity
 
-   public boolean execute(Object primaryKeyObject) {
-      try {
-         return ((Boolean)jdbcExecute(primaryKeyObject)).booleanValue();
-      } catch (Exception e) {
-         log.debug(e);
-      }
-
-      return false;
+   public boolean execute(Object primaryKeyObject) throws Exception {
+      return ((Boolean)jdbcExecute(primaryKeyObject)).booleanValue();
    }
 
    // JDBCQueryCommand overrides ------------------------------------

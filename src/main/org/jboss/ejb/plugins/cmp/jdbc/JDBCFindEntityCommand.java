@@ -17,6 +17,7 @@ import java.rmi.RemoteException;
 import javax.ejb.FinderException;
 import javax.ejb.ObjectNotFoundException;
 
+import org.jboss.logging.Logger;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.FindEntityCommand;
 import org.jboss.ejb.plugins.cmp.FindEntitiesCommand;
@@ -30,19 +31,20 @@ import org.jboss.ejb.plugins.cmp.FindEntitiesCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCFindEntityCommand implements FindEntityCommand {
-   // Attributes ----------------------------------------------------
-   
-   JDBCBeanExistsCommand beanExistsCommand;
-   FindEntitiesCommand findEntitiesCommand;
+   private JDBCBeanExistsCommand beanExistsCommand;
+   private FindEntitiesCommand findEntitiesCommand;
+   private Logger log;
    
    // Constructors --------------------------------------------------
    
    public JDBCFindEntityCommand(JDBCStoreManager manager) {
       beanExistsCommand = manager.getCommandFactory().createBeanExistsCommand();
       findEntitiesCommand = manager.getCommandFactory().createFindEntitiesCommand();
+      log = Logger.getLogger(this.getClass().getName() + "." +
+            manager.getMetaData().getName());
    }
    
    // FindEntityCommand implementation ---------------------------
@@ -69,12 +71,17 @@ public class JDBCFindEntityCommand implements FindEntityCommand {
    }
    
    // Protected -----------------------------------------------------
-   
    protected Object findByPrimaryKey(Object primaryKey) throws FinderException {
-      if(beanExistsCommand.execute(primaryKey)) {
-         return primaryKey;
-      } else {
-         throw new ObjectNotFoundException("Object with primary key " + primaryKey + " not found in storage");
+      try {
+         if(beanExistsCommand.execute(primaryKey)) {
+            return primaryKey;
+         } else {
+            throw new ObjectNotFoundException("Object with primary key " + 
+                  primaryKey + " not found in storage");
+         }
+      } catch(Exception e) {
+         log.error(e);
+         throw new FinderException("Error while searching for entity: " + e);
       }
    }
 }

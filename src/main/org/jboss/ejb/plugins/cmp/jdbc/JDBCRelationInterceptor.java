@@ -23,8 +23,6 @@ import org.jboss.ejb.plugins.CMPPersistenceManager;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMRMessage;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
-
-// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 /**
@@ -34,14 +32,15 @@ import org.jboss.logging.Logger;
 * relationship.  This interceptor also manages the relation table data.
 *
 * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
-* @version $Revision: 1.5 $
+* @version $Revision: 1.6 $
 */
 public class JDBCRelationInterceptor extends AbstractInterceptor {
    // Constants -----------------------------------------------------
    protected static final Method GET_RELATED_ID;
    protected static final Method ADD_RELATION;
    protected static final Method REMOVE_RELATION;
-   protected static Logger log = Logger.create(JDBCRelationInterceptor.class);
+   protected static Logger log = Logger.create(
+         JDBCRelationInterceptor.class.getName());
 
    static {
       try {

@@ -17,8 +17,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 
 /**
- * JDBCFindByCommand automatic finder used in CMP 1.x.  This should 
- * be disabled for 2.x.  I will finish this command in CMP 2.x phase 3.
+ * JDBCFindByCommand automatic finder used in CMP 1.x.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
@@ -26,7 +25,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCFindByCommand extends JDBCFinderCommand
 {
@@ -59,7 +58,8 @@ public class JDBCFindByCommand extends JDBCFinderCommand
       
       // Compute SQL      
       StringBuffer sql = new StringBuffer();
-      sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(entity.getJDBCPrimaryKeyFields()));
+      sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(
+               entity.getJDBCPrimaryKeyFields()));
       sql.append(" FROM ").append(entityMetaData.getTableName());
       sql.append(" WHERE ").append(SQLUtil.getWhereClause(cmpField));
       
@@ -73,7 +73,7 @@ public class JDBCFindByCommand extends JDBCFinderCommand
    {
       Object[] args = (Object[])argOrArgs;
       
-      if (cmpField != null) {
+      if(cmpField != null) {
          cmpField.setArgumentParameters(ps, 1, args[0]);         
       }
    }

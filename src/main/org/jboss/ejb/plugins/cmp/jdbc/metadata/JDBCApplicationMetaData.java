@@ -17,7 +17,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import org.jboss.ejb.DeploymentException;
-import org.jboss.logging.Logger;
 
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
@@ -32,13 +31,12 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public final class JDBCApplicationMetaData
 {
    public final static String JDBC_PM = 
          "org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager";
-   static Logger log = Logger.create(JDBCApplicationMetaData.class);
 
    /**
     * The class loader for this application.  The class loader is used to 

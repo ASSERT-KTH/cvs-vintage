@@ -20,7 +20,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCStopCommand extends JDBCUpdateCommand implements StopCommand {
 
@@ -58,7 +58,8 @@ public class JDBCStopCommand extends JDBCUpdateCommand implements StopCommand {
             return;
          }
       } catch(SQLException e) {
-         // ignore - bad driver
+         log.debug("Error getting database metadata for DROP TABLE command " +
+               e);
          return;
       } finally {
          JDBCUtil.safeClose(rs);

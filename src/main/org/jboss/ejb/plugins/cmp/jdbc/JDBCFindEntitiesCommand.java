@@ -27,6 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDeclaredQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
 import org.jboss.ejb.plugins.cmp.bmp.CustomFindByEntitiesCommand;
+import org.jboss.logging.Logger;
 import org.jboss.util.FinderResults;
 
 /**
@@ -39,7 +40,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
    private final Map knownFinderCommands = new HashMap();
@@ -50,6 +51,11 @@ public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
    }
    
    public void start() throws DeploymentException {
+      Logger log = Logger.getLogger(
+            this.getClass().getName() + 
+            "." + 
+            manager.getMetaData().getName());
+      
       JDBCCommandFactory factory = manager.getCommandFactory();      
       
       Class homeClass = manager.getContainer().getHomeClass();
@@ -79,7 +85,7 @@ public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
                         interfaceMethod, 
                         new CustomFindByEntitiesCommand(m));
 
-                  manager.getLog().debug("Added custom finder " + methodName +
+                  log.debug("Added custom finder " + methodName +
                         " on home interface");
                } catch(NoSuchMethodException e) {
                   // this is ok method may not be defined on this interface
@@ -98,7 +104,7 @@ public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
                         interfaceMethod, 
                         new CustomFindByEntitiesCommand(m));
 
-                  manager.getLog().debug("Added custom finder " + methodName +
+                  log.debug("Added custom finder " + methodName +
                         " on local home interface");
                } catch(NoSuchMethodException e) {
                   // this is ok method may not be defined on this interface
@@ -130,16 +136,18 @@ public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
       // Automatic finders - The last resort
       //
       if(homeClass != null) {
-         addAutomaticFinders(manager, homeClass.getMethods());
+         addAutomaticFinders(manager, homeClass.getMethods(), log);
       }
       
       if(localHomeClass != null) {
-         addAutomaticFinders(manager, localHomeClass.getMethods());
+         addAutomaticFinders(manager, localHomeClass.getMethods(), log);
       }
    }
    
    protected void addAutomaticFinders(
-         JDBCStoreManager manager, Method[] homeMethods) {
+         JDBCStoreManager manager,
+         Method[] homeMethods,
+         Logger log) {
 
       for (int i = 0; i < homeMethods.length; i++) {
          Method m = homeMethods[i];
@@ -158,7 +166,7 @@ public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
                   knownFinderCommands.put(
                         m, manager.getCommandFactory().createFindByCommand(q));
                } catch (IllegalArgumentException e) {
-                  manager.getLog().debug("Could not create the finder " + name +
+                  log.debug("Could not create the finder " + name +
                         ", because no matching CMP field was found.");
                }
             }

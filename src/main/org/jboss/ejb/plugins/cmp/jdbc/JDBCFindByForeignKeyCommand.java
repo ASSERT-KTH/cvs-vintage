@@ -21,7 +21,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * entity's table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCFindByForeignKeyCommand extends JDBCQueryCommand {
    // Constructors --------------------------------------------------
@@ -42,7 +42,6 @@ public class JDBCFindByForeignKeyCommand extends JDBCQueryCommand {
       try {
          return (Set)jdbcExecute(es);
       } catch (Exception e) {
-         log.debug(e);
          throw new EJBException("FindByForeignKey failed", e);
       }
    }

@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
  * file's relationships elements.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public final class JDBCRelationMetaData {
    private final static int TABLE = 1;
@@ -49,9 +49,6 @@ public final class JDBCRelationMetaData {
    
    /** type mapping used for the relation table */
    private final JDBCTypeMappingMetaData typeMapping;
-   
-   /** should excess debug information be logged */
-   private final boolean debug;
    
    /** the name of the table to use for this bean */
    private final String tableName;
@@ -96,7 +93,6 @@ public final class JDBCRelationMetaData {
 
       dataSourceName = null;
       typeMapping = null;
-      debug = false;
       createTable = false;
       removeTable = false;
       selectForUpdate = false;
@@ -135,14 +131,6 @@ public final class JDBCRelationMetaData {
    public JDBCRelationMetaData(JDBCApplicationMetaData jdbcApplication, Element element, JDBCRelationMetaData defaultValues) throws DeploymentException {
       relationName = defaultValues.getRelationName();
 
-      // enable extra debugging?
-      String debugString = MetaData.getOptionalChildContent(element, "debug");
-      if(debugString != null) {
-         debug = Boolean.valueOf(debugString).booleanValue();
-      } else {
-         debug = defaultValues.isDebug();
-      }   
-      
       // get the mapping element; may be the defaults, table-mapping, or foreigh-key-mapping
       Element mappingElement;
       if("defaults".equals(element.getTagName())) {
@@ -428,14 +416,6 @@ public final class JDBCRelationMetaData {
     */
    public JDBCTypeMappingMetaData getTypeMapping() {
       return typeMapping;
-   }
-   
-   /**
-    * Is extra debug info being logged?
-    * @return true if extra debug info is being logged
-    */
-   public boolean isDebug() {
-      return debug;
    }
    
    /**
