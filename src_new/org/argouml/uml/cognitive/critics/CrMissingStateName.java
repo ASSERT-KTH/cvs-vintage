@@ -1,4 +1,4 @@
-// $Id: CrMissingStateName.java,v 1.8 2003/12/04 09:00:25 mkl Exp $
+// $Id: CrMissingStateName.java,v 1.9 2003/12/04 09:04:57 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrMissingStateName.java
 // Classes: CrMissingStateName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingStateName.java,v 1.8 2003/12/04 09:00:25 mkl Exp $
+// $Id: CrMissingStateName.java,v 1.9 2003/12/04 09:04:57 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -55,6 +55,8 @@ public class CrMissingStateName extends CrUML {
 	if (!ModelFacade.isAStateVertex(dm))
 	    return NO_PROBLEM;   
         if (ModelFacade.isACompositeState(dm) && ModelFacade.isTop(dm))
+            return NO_PROBLEM;
+        if (ModelFacade.isAFinalState(dm))
             return NO_PROBLEM;
         
 	String myName = ModelFacade.getName(dm);
