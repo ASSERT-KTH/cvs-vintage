@@ -9,14 +9,14 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.ui.internal.commands.api;
+package org.eclipse.ui.internal.csm.commands;
 
 /**
  * <p>
  * JAVADOC
  * </p>
  * <p>
- * This interface is not intended to be extended by clients.
+ * This interface is not intended to be extended or implemented by clients.
  * </p>
  * <p>
  * <em>EXPERIMENTAL</em>
@@ -24,12 +24,40 @@ package org.eclipse.ui.internal.commands.api;
  * 
  * @since 3.0
  */
-public interface ICommandRegistryListener {
+public interface IKeyConfigurationDefinition extends Comparable {
 
 	/**
 	 * JAVADOC
 	 * 
-	 * @param commandRegistryEvent
-	 */
-	void commandRegistryChanged(ICommandRegistryEvent commandRegistryEvent);
+	 * @return
+	 */	
+	String getDescription();
+		
+	/**
+	 * JAVADOC
+	 * 
+	 * @return
+	 */	
+	String getId();
+	
+	/**
+	 * JAVADOC
+	 * 
+	 * @return
+	 */	
+	String getName();
+
+	/**
+	 * JAVADOC
+	 * 
+	 * @return
+	 */	
+	String getParentId();
+
+	/**
+	 * JAVADOC
+	 * 
+	 * @return
+	 */	
+	String getPluginId();
 }

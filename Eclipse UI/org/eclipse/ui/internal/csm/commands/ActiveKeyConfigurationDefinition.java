@@ -9,13 +9,11 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.ui.internal.commands;
+package org.eclipse.ui.internal.csm.commands;
 
-import org.eclipse.ui.internal.csm.commands.IActiveKeyConfigurationDefinition;
 import org.eclipse.ui.internal.util.Util;
 
-// TODO private
-public final class ActiveKeyConfigurationDefinition implements IActiveKeyConfigurationDefinition {
+final class ActiveKeyConfigurationDefinition implements IActiveKeyConfigurationDefinition {
 
 	private final static int HASH_FACTOR = 89;
 	private final static int HASH_INITIAL = ActiveKeyConfigurationDefinition.class.getName().hashCode();
@@ -27,8 +25,7 @@ public final class ActiveKeyConfigurationDefinition implements IActiveKeyConfigu
 	private transient boolean hashCodeComputed;
 	private transient String string;
 
-	// TODO private
-	public ActiveKeyConfigurationDefinition(String keyConfigurationId, String pluginId) {
+	ActiveKeyConfigurationDefinition(String keyConfigurationId, String pluginId) {
 		this.keyConfigurationId = keyConfigurationId;
 		this.pluginId = pluginId;
 	}

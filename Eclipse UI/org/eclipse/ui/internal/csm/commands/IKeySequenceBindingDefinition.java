@@ -9,34 +9,23 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.ui.internal.commands.api;
+package org.eclipse.ui.internal.csm.commands;
 
-/**
- * <p>
- * JAVADOC
- * </p>
- * <p>
- * This interface is not intended to be extended or implemented by clients.
- * </p>
- * <p>
- * <em>EXPERIMENTAL</em>
- * </p>
- * 
- * @since 3.0
- */
-public interface IActiveKeyConfigurationDefinition extends Comparable {
+import org.eclipse.ui.keys.KeySequence;
 
-	/**
-	 * JAVADOC
-	 * 
-	 * @return
-	 */	
-	String getKeyConfigurationId();
+public interface IKeySequenceBindingDefinition extends Comparable {
+
+	String getActivityId();
 	
-	/**
-	 * JAVADOC
-	 * 
-	 * @return
-	 */	
+	String getCommandId();
+
+	String getKeyConfigurationId();	
+	
+	KeySequence getKeySequence();
+
+	String getLocale();
+	
+	String getPlatform();
+	
 	String getPluginId();
 }

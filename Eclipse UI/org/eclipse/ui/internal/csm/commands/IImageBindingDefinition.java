@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.ui.internal.commands.api;
+package org.eclipse.ui.internal.csm.commands;
 
 /**
  * <p>
@@ -24,7 +24,7 @@ package org.eclipse.ui.internal.commands.api;
  * 
  * @since 3.0
  */
-public interface IContextBindingDefinition extends Comparable {
+public interface IImageBindingDefinition extends Comparable {
 
 	/**
 	 * JAVADOC
@@ -38,12 +38,33 @@ public interface IContextBindingDefinition extends Comparable {
 	 * 
 	 * @return
 	 */	
-	String getContextId();
+	String getImageStyle();
 
 	/**
 	 * JAVADOC
 	 * 
 	 * @return
 	 */	
-	String getPluginId();		
+	String getImageUri();
+
+	/**
+	 * JAVADOC
+	 * 
+	 * @return
+	 */	
+	String getLocale();
+
+	/**
+	 * JAVADOC
+	 * 
+	 * @return
+	 */	
+	String getPlatform();
+	
+	/**
+	 * JAVADOC
+	 * 
+	 * @return
+	 */	
+	String getPluginId();	
 }

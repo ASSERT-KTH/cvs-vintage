@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.ui.internal.commands.api;
+package org.eclipse.ui.internal.csm.commands;
 
 /**
  * <p>
@@ -24,29 +24,15 @@ package org.eclipse.ui.internal.commands.api;
  * 
  * @since 3.0
  */
-public interface ICategoryDefinition extends Comparable {
+public interface IActiveKeyConfigurationDefinition extends Comparable {
 
 	/**
 	 * JAVADOC
 	 * 
 	 * @return
 	 */	
-	String getDescription();
-		
-	/**
-	 * JAVADOC
-	 * 
-	 * @return
-	 */	
-	String getId();
+	String getKeyConfigurationId();
 	
-	/**
-	 * JAVADOC
-	 * 
-	 * @return
-	 */	
-	String getName();
-
 	/**
 	 * JAVADOC
 	 * 

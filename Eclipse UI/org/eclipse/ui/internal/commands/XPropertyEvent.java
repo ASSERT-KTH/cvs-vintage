@@ -9,15 +9,45 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.ui.internal.csm.commands;
+package org.eclipse.ui.internal.commands;
 
-public interface ICommandPatternBindingDefinition extends Comparable {
+/**
+ * JAVADOC
+ * 
+ * <p>
+ * This class is not intended to be extended by clients.
+ * </p>
+ * <p>
+ * <em>EXPERIMENTAL</em>
+ * </p>
+ * 
+ * @since 3.0
+ */
+public class XPropertyEvent {
 
-	String getCommandId();
+	private String name;
 
-	String getPattern();
+	/**
+	 * JAVADOC
+	 * 
+	 * @param name
+	 */	
+	public XPropertyEvent(String name)
+		throws IllegalArgumentException {		
+		super();
+		
+		if (name == null)
+			throw new NullPointerException();
+		
+		this.name = name;
+	}
 
-	String getPluginId();
-	
-	boolean isInclusive();
+	/**
+	 * JAVADOC
+	 * 
+	 * @return
+	 */		
+	public String getName() {
+		return name;
+	}
 }

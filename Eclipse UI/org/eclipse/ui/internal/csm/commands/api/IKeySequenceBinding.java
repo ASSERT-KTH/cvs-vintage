@@ -7,13 +7,16 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *******************************************************************************/
+ ******************************************************************************/
 
-package org.eclipse.ui.internal.commands.api;
+package org.eclipse.ui.internal.csm.commands.api;
+
+import org.eclipse.ui.keys.KeySequence;
 
 /**
  * <p>
- * JAVADOC
+ * An instance of <code>IKeySequenceBinding</code> represents a binding between 
+ * a command and a key sequence.
  * </p>
  * <p>
  * This interface is not intended to be extended or implemented by clients.
@@ -23,48 +26,14 @@ package org.eclipse.ui.internal.commands.api;
  * </p>
  * 
  * @since 3.0
+ * @see org.eclipse.ui.commands.ICommand
  */
-public interface ICommandDefinition extends Comparable {
+public interface IKeySequenceBinding extends Comparable {
 
 	/**
-	 * JAVADOC
+	 * Returns the key sequence represented in this binding.
 	 * 
-	 * @return
+	 * @return the key sequence. Guaranteed not to be <code>null</code>.
 	 */	
-	String getCategoryId();
-
-	/**
-	 * JAVADOC
-	 * 
-	 * @return
-	 */	
-	String getDescription();
-
-	/**
-	 * JAVADOC
-	 * 
-	 * @return
-	 */	
-	String getHelpId();
-		
-	/**
-	 * JAVADOC
-	 * 
-	 * @return
-	 */	
-	String getId();
-	
-	/**
-	 * JAVADOC
-	 * 
-	 * @return
-	 */	
-	String getName();
-
-	/**
-	 * JAVADOC
-	 * 
-	 * @return
-	 */	
-	String getPluginId();
+	KeySequence getKeySequence();
 }

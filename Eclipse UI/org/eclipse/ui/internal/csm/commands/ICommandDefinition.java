@@ -13,13 +13,13 @@ package org.eclipse.ui.internal.csm.commands;
 
 public interface ICommandDefinition extends Comparable {
 
+	String getCategoryId();
+
 	String getDescription();
 		
 	String getId();
 	
 	String getName();
-
-	String getParentId();
 	
 	String getPluginId();
 }

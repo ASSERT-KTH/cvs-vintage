@@ -9,9 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.ui.internal.commands;
+package org.eclipse.ui.internal.csm.commands;
 
-import org.eclipse.ui.internal.csm.commands.IContextBindingDefinition;
 import org.eclipse.ui.internal.util.Util;
 
 final class ContextBindingDefinition implements IContextBindingDefinition {

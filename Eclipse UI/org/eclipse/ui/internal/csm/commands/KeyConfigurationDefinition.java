@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.ui.internal.commands;
+package org.eclipse.ui.internal.csm.commands;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.ui.internal.csm.commands.IKeyConfigurationDefinition;
 import org.eclipse.ui.internal.util.Util;
 
 final class KeyConfigurationDefinition implements IKeyConfigurationDefinition {
