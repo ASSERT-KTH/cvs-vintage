@@ -31,7 +31,7 @@ import java.util.*;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.67 $
+ * @version $Revision: 1.68 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -570,6 +570,42 @@ public abstract class BeanMetaData
       }
 
       return result;
+   }
+
+   /** Check to see if there was a method-permission or exclude-list statement
+    * for the given method.
+    * 
+    * @param methodName - the method name
+    * @param params - the method parameter signature
+    * @param iface - the method interface type
+    * @return true if a matching method permission exists, false if no match
+    */ 
+   public boolean hasMethodPermission(String methodName, Class[] params,
+                                   InvocationType iface)
+   {
+      // First check the excluded method list as this takes priority
+      Iterator iterator = getExcludedMethods();
+      while (iterator.hasNext())
+      {
+         MethodMetaData m = (MethodMetaData) iterator.next();
+         if (m.patternMatches(methodName, params, iface))
+         {
+            return true;
+         }
+      }
+
+      // Check the permissioned methods list
+      iterator = getPermissionMethods();
+      while (iterator.hasNext())
+      {
+         MethodMetaData m = (MethodMetaData) iterator.next();
+         if (m.patternMatches(methodName, params, iface))
+         {
+            return true;
+         }
+      }
+
+      return false;
    }
 
    // Cluster configuration methods
