@@ -134,14 +134,17 @@ public class ServerXmlReader extends BaseInterceptor {
 
 	// load the config file(s)
 	File f  = null;
-	if (configFile == null)
-	    configFile=DEFAULT_CONFIG;
-
-        f=new File(configFile);
-        if ( !f.isAbsolute())
-	    f=new File( cm.getHome(), File.separator + configFile);
+	if (configFile == null) {
+	    f=new File( cm.getHome(), DEFAULT_CONFIG);
+	} else {
+	    // All other paths are relative to TOMCAT_HOME, except this one.
+	    // The user will either type an absolute path or a path relative
+	    // to his working dir ( relative to TOMCAT_HOME is counterintuitive)
+	    f=new File(configFile);
+	}
 
 	if( f.exists() ){
+	    f=new File( f.getAbsolutePath());
             cm.setNote( "configFile", f.getAbsolutePath());
 	    loadConfigFile(xh,f,cm);
 	    String s=f.getAbsolutePath();
