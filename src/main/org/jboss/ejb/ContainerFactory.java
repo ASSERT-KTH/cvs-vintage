@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.51 $
+*   @version $Revision: 1.52 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -91,7 +91,7 @@ public class ContainerFactory
     // Attributes ----------------------------------------------------
    // Temp directory where deployed jars are stored
     File tmpDir;
-   
+
     // The logger of this service
     Log log = new Log(getName());
 
@@ -102,9 +102,9 @@ public class ContainerFactory
     // Verify EJB-jar contents on deployments
     boolean verifyDeployments = false;
     boolean verifierVerbose   = false;
-    
+
     // Public --------------------------------------------------------
-    
+
     /**
      * Implements the abstract <code>getObjectName()</code> method in superclass
      * to return this service's name.
@@ -140,11 +140,11 @@ public class ContainerFactory
       URL tmpFile = getClass().getResource("/tmp.properties");
       if (tmpFile != null)
       {
-         tmpDir = new File(new File(tmpFile.getFile()).getParent(),"deploy/");    
+         tmpDir = new File(new File(tmpFile.getFile()).getParent(),"deploy/");
          tmpDir.mkdirs();
-         
+
          log.debug("Temporary directory set to:"+tmpDir);
-         
+
          // Clear tmp directory of previously deployed files
          // This is to clear up if jBoss previously crashed, hence not removing files properly
          File[] files = tmpDir.listFiles();
@@ -152,7 +152,7 @@ public class ContainerFactory
          {
             files[i].delete();
          }
-         
+
          if (files.length > 0)
          {
             log.debug("Previous deployments removed");
@@ -162,7 +162,7 @@ public class ContainerFactory
          log.debug("Using the systems temporary directory");
       }
    }
- 
+
     /**
      * Implements the template method in superclass. This method stops all the
      * applications in this server.
@@ -222,7 +222,7 @@ public class ContainerFactory
     {
         verifierVerbose = verbose;
     }
-    
+
     /**
      * Returns the state of the bean verifier (verbose/non-verbose mode)
      *
@@ -232,7 +232,7 @@ public class ContainerFactory
     {
         return verifierVerbose;
     }
-    
+
     /**
     *   Deploy the file at this URL. This method is typically called from remote administration
     *   tools that cannot handle java.net.URL's as parameters to methods
@@ -289,21 +289,21 @@ public class ContainerFactory
          if (deployments.containsKey(url))
           undeploy(url);
 
-            
+
          app.setURL(url);
 
          log.log("Deploying:"+url);
-            
-         // URL's to put in classloader   
+
+         // URL's to put in classloader
          URL[] urls;
-         
+
          // save the name of the jar before copying -> undeploy with the same name
          URL origUrl = url;
-         
+
          // copy the jar file to prevent locking - redeploy failure
-         if (url.getProtocol().startsWith("file") && !url.getFile().endsWith("/")) 
+         if (url.getProtocol().startsWith("file") && !url.getFile().endsWith("/"))
          {
-           
+
           File jarFile = new File(url.getFile());
             File tmp;
             if (tmpDir == null)
@@ -321,7 +321,7 @@ public class ContainerFactory
             fout.write(bytes);
             fin.close();
             fout.close();
-            
+
             // Get the URL's from the deployments Class-Path: manifest file.
             // These should be added to the classloader
             JarFile jar = new JarFile(tmp);
@@ -369,19 +369,19 @@ public class ContainerFactory
                      }
                   }
                }
-            } 
-            
+            }
+
             // Add URL to tmp file
             url = tmp.toURL();
             urlList.add(url);
-            
+
             urls = new URL[urlList.size()];
             urls = (URL[])urlList.toArray(urls);
          } else
          {
             urls = new URL[] { url };
          }
-         
+
          // Create the ClassLoader for this application
          // TODO : the ClassLoader should come from the JMX manager if we want to be able to share it (tomcat)
          ClassLoader cl = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
@@ -395,26 +395,26 @@ public class ContainerFactory
          // Load XML
          ApplicationMetaData metaData = efm.load();
 
-            
+
 
          // Check validity
             Log.setLog(new Log("Verifier"));
-            
+
             // wrapping this into a try - catch block to prevent errors in
             // verifier from stopping the deployment
             try {
-                
+
                 if (verifyDeployments)
                 {
                     BeanVerifier verifier = new BeanVerifier();
-    
+
                     verifier.addVerificationListener(new VerificationListener()
                     {
                        public void beanChecked(VerificationEvent event)
                        {
                            Logger.debug(event.getMessage());
                        }
-                       
+
                        public void specViolation(VerificationEvent event)
                        {
                            if (verifierVerbose)
@@ -423,19 +423,19 @@ public class ContainerFactory
                                Logger.log(event.getMessage());
                        }
                     });
-    
-                    
+
+
                     Logger.log("Verifying " + url);
-                    
+
                     verifier.verify(url, metaData, cl);
                 }
             }
             catch (Throwable t) {
                 Logger.exception(t);
             }
-            
+
             // unset verifier log
-            Log.unsetLog();         
+            Log.unsetLog();
 
          // Get list of beans for which we will create containers
          Iterator beans = metaData.getEnterpriseBeans();
@@ -496,7 +496,12 @@ public class ContainerFactory
                  }
 
                  // Set container invoker
-                 ContainerInvoker ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
+                 ContainerInvoker ci = null;
+                 try {
+                    ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
+                 } catch(Exception e) {
+                    throw new DeploymentException("Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml)");
+                 }
                  if (ci instanceof XmlLoadable) {
                    // the container invoker can load its configuration from the jboss.xml element
                    ((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
@@ -504,7 +509,12 @@ public class ContainerFactory
                  container.setContainerInvoker(ci);
 
                  // Set instance pool
-                 InstancePool ip = (InstancePool)cl.loadClass(conf.getInstancePool()).newInstance();
+                 InstancePool ip = null;
+                 try {
+                    ip = (InstancePool)cl.loadClass(conf.getInstancePool()).newInstance();
+                 } catch(Exception e) {
+                    throw new DeploymentException("Missing or invalid Instance Pool (in jboss.xml or standardjboss.xml)");
+                 }
                   if (ip instanceof XmlLoadable) {
                    ((XmlLoadable)ip).importXml(conf.getContainerPoolConf());
                  }
@@ -514,18 +524,18 @@ public class ContainerFactory
 
                  container.addInterceptor(new LogInterceptor());
                  container.addInterceptor(new SecurityInterceptor());
-                 
+
            if (((SessionMetaData)bean).isContainerManagedTx()) {
               // CMT
               container.addInterceptor(new TxInterceptorCMT());
                     container.addInterceptor(new StatelessSessionInstanceInterceptor());
-               
+
            } else {
               // BMT
               container.addInterceptor(new StatelessSessionInstanceInterceptor());
               container.addInterceptor(new TxInterceptorBMT());
            }
-           
+
                  // Finally we add the last interceptor from the container
                  container.addInterceptor(container.createContainerInterceptor());
 
@@ -576,7 +586,12 @@ public class ContainerFactory
                  }
 
                  // Set container invoker
-                 ContainerInvoker ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
+                 ContainerInvoker ci = null;
+                 try {
+                    ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
+                 } catch(Exception e) {
+                    throw new DeploymentException("Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml)");
+                 }
                  if (ci instanceof XmlLoadable) {
                    // the container invoker can load its configuration from the jboss.xml element
                    ((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
@@ -584,13 +599,18 @@ public class ContainerFactory
                  container.setContainerInvoker(ci);
 
                  // Set instance cache
-                 InstanceCache ic = (InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance(); 
+                 InstanceCache ic = null;
+                 try {
+                    ic = (InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance();
+                 } catch(Exception e) {
+                    throw new DeploymentException("Missing or invalid Instance Cache (in jboss.xml or standardjboss.xml)");
+                 }
                  if (ic instanceof XmlLoadable) {
                    ((XmlLoadable)ic).importXml(conf.getContainerCacheConf());
                  }
                  container.setInstanceCache(ic);
 
-                 // No real instance pool, use the shadow class 
+                 // No real instance pool, use the shadow class
                  container.setInstancePool(new StatefulSessionInstancePool());
 
                  // Set persistence manager
@@ -598,18 +618,18 @@ public class ContainerFactory
 
                  // Create interceptors
                  container.addInterceptor(new LogInterceptor());
-                 
+
            if (((SessionMetaData)bean).isContainerManagedTx()) {
               // CMT
               container.addInterceptor(new TxInterceptorCMT());
                     container.addInterceptor(new StatefulSessionInstanceInterceptor());
-               
+
            } else {
               // BMT : the tx interceptor needs the context from the instance interceptor
               container.addInterceptor(new StatefulSessionInstanceInterceptor());
               container.addInterceptor(new TxInterceptorBMT());
            }
-               
+
                  container.addInterceptor(new SecurityInterceptor());
 
                  container.addInterceptor(container.createContainerInterceptor());
@@ -662,52 +682,67 @@ public class ContainerFactory
               }
 
               // Set container invoker
-              ContainerInvoker ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
+              ContainerInvoker ci = null;
+              try {
+                 ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
+              } catch(Exception e) {
+                 throw new DeploymentException("Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml)");
+              }
               if (ci instanceof XmlLoadable) {
-                 // the container invoker can load its configuration from the jboss.xml element
-                 ((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
+                // the container invoker can load its configuration from the jboss.xml element
+                ((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
               }
               container.setContainerInvoker(ci);
 
               // Set instance cache
-              InstanceCache ic = (InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance(); 
+              InstanceCache ic = null;
+              try {
+                 ic = (InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance();
+              } catch(Exception e) {
+                 throw new DeploymentException("Missing or invalid Instance Cache (in jboss.xml or standardjboss.xml)");
+              }
               if (ic instanceof XmlLoadable) {
-                 ((XmlLoadable)ic).importXml(conf.getContainerCacheConf());
+                ((XmlLoadable)ic).importXml(conf.getContainerCacheConf());
               }
               container.setInstanceCache(ic);
 
               // Set instance pool
-              InstancePool ip = (InstancePool)cl.loadClass(conf.getInstancePool()).newInstance();
-              if (ip instanceof XmlLoadable) {
-                 ((XmlLoadable)ip).importXml(conf.getContainerPoolConf());
+              InstancePool ip = null;
+              try {
+                 ip = (InstancePool)cl.loadClass(conf.getInstancePool()).newInstance();
+              } catch(Exception e) {
+                 throw new DeploymentException("Missing or invalid Instance Pool (in jboss.xml or standardjboss.xml)");
+              }
+               if (ip instanceof XmlLoadable) {
+                ((XmlLoadable)ip).importXml(conf.getContainerPoolConf());
               }
               container.setInstancePool(ip);
 
-              // Set persistence manager 
+              // Set persistence manager
               if (((EntityMetaData) bean).isBMP()) {
-                 
+
                  //Should be BMPPersistenceManager
                  container.setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
               }
               else {
-                 
+
                  // CMP takes a manager and a store
                  org.jboss.ejb.plugins.CMPPersistenceManager persistenceManager = new org.jboss.ejb.plugins.CMPPersistenceManager();
-                  
+
                  //Load the store from configuration
                  persistenceManager.setPersistenceStore((EntityPersistenceStore)cl.loadClass(conf.getPersistenceManager()).newInstance());
-          
+
                  // Set the manager on the container
                  container.setPersistenceManager(persistenceManager);
               }
-              
+
               // Create interceptors
               container.addInterceptor(new LogInterceptor());
               container.addInterceptor(new SecurityInterceptor());
-              
+
            // entity beans are always CMT
            container.addInterceptor(new TxInterceptorCMT());
-              
+
            container.addInterceptor(new EntityInstanceInterceptor());
               container.addInterceptor(new EntitySynchronizationInterceptor());
 
@@ -742,7 +777,7 @@ public class ContainerFactory
                 // NPE should be considered an internal server error anyways.
                 Logger.exception(e);
             }
-            
+
          Logger.exception(e);
          //Logger.debug(e.getMessage());
 
