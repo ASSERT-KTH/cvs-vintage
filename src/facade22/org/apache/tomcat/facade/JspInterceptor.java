@@ -211,7 +211,9 @@ public class JspInterceptor extends BaseInterceptor {
     public void setJavaCompiler( String type ) {
 	if( "jikes".equals( type ) )
 	    type=JIKES;
-
+	if( "javac".equals( type ) )
+	    type="org.apache.jasper.compiler.SunJavaCompiler";
+		
 	args.put( "jspCompilerPlugin", type );
     }
 
@@ -613,10 +615,9 @@ final class JasperLiaison {
 								    jspFile,
 								    options,
 								    mangler);
-		JavaCompiler javaC=createJavaCompiler( options );
-
 		jsp2java( mangler, ctxt );
-		javac( javaC, ctxt, mangler );
+
+		javac( options, ctxt, mangler );
 	    
 		if(debug>0)log.log( "Generated " +
 				    mangler.getClassFileName() );
@@ -671,32 +672,76 @@ final class JasperLiaison {
     String javaEncoding = "UTF8";           // perhaps debatable?
     static String sep = System.getProperty("path.separator");
 
+    private void prepareCompiler( JavaCompiler javac,
+				  Options options, 
+				  JspCompilationContext ctxt )
+	throws JasperException
+    {
+	String compilerPath = options.getJspCompilerPath();
+        if (compilerPath != null)
+            javac.setCompilerPath(compilerPath);
+
+	javac.setClassDebugInfo(options.getClassDebugInfo());
+
+	javac.setEncoding(javaEncoding);
+	String cp=System.getProperty("java.class.path")+ sep + 
+	    ctxt.getClassPath() + sep + ctxt.getOutputDir();
+        javac.setClasspath( cp );
+	javac.setOutputDir(ctxt.getOutputDir());
+
+	if( debug>5) log.log( "ClassPath " + cp);
+    }
+
+    static boolean tryJikes=true;
+    static Class jspCompilerPlugin = null;
+    
     /** Compile a java to class. This should be moved to util, togheter
 	with JavaCompiler - it's a general purpose code, no need to
 	keep it part of jasper
     */
-    void javac(JavaCompiler javac, JspCompilationContext ctxt,
+    void javac(Options options, JspCompilationContext ctxt,
 	       Mangler mangler)
 	throws JasperException
     {
-
-        javac.setEncoding(javaEncoding);
-	String cp=System.getProperty("java.class.path")+ sep + 
-	    ctxt.getClassPath() + sep + ctxt.getOutputDir();
-//        System.out.println("classpath:"+cp);
-        javac.setClasspath( cp );
-	if( debug>5) log.log( "ClassPath " + cp);
-	
-	ByteArrayOutputStream out = new ByteArrayOutputStream (256);
-	javac.setOutputDir(ctxt.getOutputDir());
-        javac.setMsgOutput(out);
-
 	String javaFileName = mangler.getJavaFileName();
 	if( debug>0 ) log.log( "Compiling java file " + javaFileName);
-	/**
-         * Execute the compiler
-         */
-        boolean status = javac.compile(javaFileName);
+
+	boolean status=true;
+	if( jspCompilerPlugin == null ) {
+	    jspCompilerPlugin=options.getJspCompilerPlugin();
+	}
+	// If no explicit compiler, and we never tried before
+	if( jspCompilerPlugin==null && tryJikes ) {
+	    ByteArrayOutputStream out = new ByteArrayOutputStream (256);
+	    try {
+
+		jspCompilerPlugin=Class.
+		    forName("org.apache.jasper.compiler.JikesJavaCompiler");
+		JavaCompiler javaC=createJavaCompiler( jspCompilerPlugin );
+		
+		prepareCompiler( javaC, options, ctxt );
+		javaC.setMsgOutput(out);
+		status = javaC.compile(javaFileName);
+	    } catch( Exception ex ) {	
+		log.log("Guess java compiler: no jikes " + ex.toString());
+		status=false;
+	    }
+	    if( status==false ) {
+		log.log("Guess java compiler: no jikes ");
+		log.log("Guess java compiler: OUT " + out.toString());
+		jspCompilerPlugin=null;
+		tryJikes=false;
+	    } else {
+		log.log("Guess java compiler: using jikes ");
+	    }
+	}
+
+	JavaCompiler javaC=createJavaCompiler( jspCompilerPlugin );
+	prepareCompiler( javaC, options, ctxt );
+	ByteArrayOutputStream out = new ByteArrayOutputStream (256);
+	javaC.setMsgOutput(out);
+	
+	status = javaC.compile(javaFileName);
 
         if (!ctxt.keepGenerated()) {
             File javaFile = new File(javaFileName);
@@ -713,11 +758,9 @@ final class JasperLiaison {
 
     /** tool for customizing javac.
      */
-    public JavaCompiler createJavaCompiler(Options options)
+    public JavaCompiler createJavaCompiler(Class jspCompilerPlugin )
 	throws JasperException
     {
-	String compilerPath = options.getJspCompilerPath();
-	Class jspCompilerPlugin = options.getJspCompilerPlugin();
         JavaCompiler javac;
 
 	if (jspCompilerPlugin != null) {
@@ -732,11 +775,6 @@ final class JasperLiaison {
 	} else {
             javac = new SunJavaCompiler();
 	}
-
-        if (compilerPath != null)
-            javac.setCompilerPath(compilerPath);
-
-	javac.setClassDebugInfo(options.getClassDebugInfo());
 
 	return javac;
     }
