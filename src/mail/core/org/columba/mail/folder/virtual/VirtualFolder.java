@@ -356,7 +356,7 @@ public class VirtualFolder extends Folder {
 		return null;
 	}
 
-	public void add(HeaderInterface header, Folder f, Object uid)
+	public void add(ColumbaHeader header, Folder f, Object uid)
 		throws Exception {
 		Object newUid = generateNextUid();
 

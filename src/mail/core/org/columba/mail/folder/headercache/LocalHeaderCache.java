@@ -38,7 +38,6 @@ import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.message.MessageFolderInfo;
 import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.parser.HeaderParser;
@@ -137,9 +136,10 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 		}
 
-		String[] userDefinedHeaders = CachedHeaderfields.getUserDefinedHeaderfieldArray();
-		if ((userDefinedHeaders != null) && 
-			(userDefinedHeaders.length >= additionalHeaderfieldsCount)) {
+		String[] userDefinedHeaders =
+			CachedHeaderfields.getUserDefinedHeaderfieldArray();
+		if ((userDefinedHeaders != null)
+			&& (userDefinedHeaders.length >= additionalHeaderfieldsCount)) {
 
 			configurationChanged = true;
 		}
@@ -171,7 +171,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 				getObservable().setCurrent(i);
 
 			//ColumbaHeader h = message.getHeader();
-			HeaderInterface h = createHeaderInstance();
+			ColumbaHeader h = createHeaderInstance();
 
 			/*
 			 * // read current number of message ois.readInt();
@@ -267,7 +267,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
 			Object uid = e.nextElement();
 
-			h = (ColumbaHeader) headerList.getHeader(uid);
+			h = (ColumbaHeader) headerList.get(uid);
 
 			saveHeader(h);
 		}
@@ -372,17 +372,15 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 	}
 
-	protected void loadHeader(HeaderInterface h) throws Exception {
-		
+	protected void loadHeader(ColumbaHeader h) throws Exception {
+
 		h.set("columba.uid", reader.readObject());
 
 		super.loadHeader(h);
 	}
 
-	
-	protected void saveHeader(HeaderInterface h) throws Exception {
+	protected void saveHeader(ColumbaHeader h) throws Exception {
 
-		
 		writer.writeObject(h.get("columba.uid"));
 
 		super.saveHeader(h);

@@ -23,28 +23,27 @@ import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.parser.HeaderParser;
 
 /**
- * represents a Rfc822-compliant header
- * every headeritem is saved in a hashtable-structure
- * generally every headeritem is a string,
+ * Represents a RFC822-compliant header
+ * <p>
+ * Every headerfield is saved in {@HeaderList}.
+ * <p>
+ * Generally every headerfield is a string,
  * but for optimization reasons some items
  * are going to change to for example a Date class
- *
- * we added these items:
- *  - a date object
- *  - shortfrom, a parsed from
- *  - alreadyfetched, Boolean
- *  - pop3uid, String
- *  - uid, String
- *  - size, Integer
- *  - attachment, Boolean
- *  - priority, Integer
+ * <p>
+ * These items are saved in {@link Attributes} to separate
+ * them clearly from general RFC822 headerfields.
+ * 
+ * <p>
+ * @see CachedHeaderfields
+ * 
+ * @author tstich, fdietz
  */
 
-public class ColumbaHeader implements HeaderInterface {
+public class ColumbaHeader {
 
 	protected Header header;
 	protected Attributes attributes;
@@ -128,7 +127,7 @@ public class ColumbaHeader implements HeaderInterface {
 
 	/**
 	 * Note: Don't use this method anymore when accessing
-	 * attributes like "columba.size", use getAttrite() instead
+	 * attributes like "columba.size", use getAttribute() instead
 	 *  
 	 */
 	public Object get(String s) {

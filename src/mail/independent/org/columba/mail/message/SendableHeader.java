@@ -22,12 +22,14 @@ import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 
 /**
- * @author freddy
+ * Contains additional attributes useful for sending
+ * messages.
+ * <p>
+ * This includes a list of recipients and a UID uniquely
+ * identifying an account.
+ * <p>
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ *  @author fdietz, tstich
  */
 public class SendableHeader extends ColumbaHeader{
 	

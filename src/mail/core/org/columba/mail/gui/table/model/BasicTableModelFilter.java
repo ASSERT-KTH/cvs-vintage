@@ -20,7 +20,6 @@ package org.columba.mail.gui.table.model;
 
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * @author fdietz
@@ -119,7 +118,7 @@ public class BasicTableModelFilter extends TreeTableModelDecorator{
 		return patternString;
 	}
 
-	protected boolean testString(HeaderInterface header) {
+	protected boolean testString(ColumbaHeader header) {
 		String subject = (String) header.get("Subject");
 		if (subject != null) {
 
@@ -143,7 +142,7 @@ public class BasicTableModelFilter extends TreeTableModelDecorator{
 		return false;
 	}
 
-	public boolean addItem(HeaderInterface header) {
+	public boolean addItem(ColumbaHeader header) {
 		boolean result = true;
 		boolean result2 = false;
 		//boolean result3 = true;

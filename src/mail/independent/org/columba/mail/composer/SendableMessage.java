@@ -46,19 +46,19 @@ public class SendableMessage extends ColumbaMessage {
 	}
 
 	public int getAccountUid() {
-		return ((SendableHeader) getHeaderInterface()).getAccountUid();
+		return ((SendableHeader) getHeader()).getAccountUid();
 	}
 
 	public List getRecipients() {
-		return ((SendableHeader) getHeaderInterface()).getRecipients();
+		return ((SendableHeader) getHeader()).getRecipients();
 	}
 
 	public void setAccountUid(int uid) {
-		((SendableHeader) getHeaderInterface()).setAccountUid(uid);
+		((SendableHeader) getHeader()).setAccountUid(uid);
 	}
 
 	public void setRecipients(List rcpt) {
-		((SendableHeader) getHeaderInterface()).setRecipients(rcpt);
+		((SendableHeader) getHeader()).setRecipients(rcpt);
 	}
 
 	/**

@@ -25,7 +25,6 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.BooleanCompressor;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
-import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * Provides basic support for saving and loading email headers as fast as
@@ -72,7 +71,7 @@ public abstract class AbstractHeaderCache {
 	/**
 	 * @return
 	 */
-	public HeaderInterface createHeaderInstance() {
+	public ColumbaHeader createHeaderInstance() {
 		return new ColumbaHeader();
 	}
 
@@ -89,14 +88,14 @@ public abstract class AbstractHeaderCache {
 	 *         Exception
 	 */
 	public boolean exists(Object uid) throws Exception {
-		return headerList.contains(uid);
+		return headerList.containsKey(uid);
 	}
 
 	/**
 	 * @return
 	 */
 	public int count() {
-		return headerList.size();
+		return headerList.count();
 	}
 
 	/**
@@ -117,7 +116,7 @@ public abstract class AbstractHeaderCache {
 	 * @param header
 	 * @throws Exception
 	 */
-	public void add(HeaderInterface header) throws Exception {
+	public void add(ColumbaHeader header) throws Exception {
 		headerList.add(header, header.get("columba.uid"));
 	}
 
@@ -162,7 +161,7 @@ public abstract class AbstractHeaderCache {
 	 */
 	public abstract void save() throws Exception;
 
-	protected void loadHeader(HeaderInterface h) throws Exception {
+	protected void loadHeader(ColumbaHeader h) throws Exception {
 
 		// load boolean headerfields, which are compressed in one int value
 		int compressedFlags = ((Integer) reader.readObject()).intValue();
@@ -205,7 +204,7 @@ public abstract class AbstractHeaderCache {
 
 	}
 
-	protected void saveHeader(HeaderInterface h) throws Exception {
+	protected void saveHeader(ColumbaHeader h) throws Exception {
 
 		// save boolean headerfields, compressing them to one int value
 		Boolean[] b =

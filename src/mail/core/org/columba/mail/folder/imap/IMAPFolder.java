@@ -619,7 +619,7 @@ public class IMAPFolder extends RemoteFolder {
 	 */
 	public Object[] getUids() throws Exception {
 		headerList = cache.getHeaderList();
-		Object[] uids = new Object[headerList.size()];
+		Object[] uids = new Object[headerList.count()];
 		int i = 0;
 		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
 			Object uid = e.nextElement();
@@ -645,7 +645,7 @@ public class IMAPFolder extends RemoteFolder {
 			for (int i = 0; i < uids.length; i++) {
 				Object uid = uids[i];
 
-				ColumbaHeader h = (ColumbaHeader) headerList.getHeader(uid);
+				ColumbaHeader h = (ColumbaHeader) headerList.get(uid);
 
 				Boolean expunged = (Boolean) h.get("columba.flags.expunged");
 
@@ -682,7 +682,7 @@ public class IMAPFolder extends RemoteFolder {
 	public ColumbaHeader getMessageHeader(Object uid) throws Exception {
 		if (headerList == null)
 			getHeaderList();
-		return (ColumbaHeader) headerList.getHeader(uid);
+		return (ColumbaHeader) headerList.get(uid);
 	}
 
 	/**
@@ -694,8 +694,7 @@ public class IMAPFolder extends RemoteFolder {
 	 * @throws Exception
 	 */
 	public ColumbaMessage getMessage(Object uid) throws Exception {
-		return new ColumbaMessage(
-			(ColumbaHeader) headerList.getHeader((String) uid));
+		return new ColumbaMessage((ColumbaHeader) headerList.get((String) uid));
 	}
 
 	/**

@@ -19,7 +19,6 @@ package org.columba.mail.message;
 
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.message.Message;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
@@ -27,11 +26,12 @@ import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.Source;
 
 /**
- * @author freddy
+ * Adds Columba-specific features to the default {@link Message}
+ * object found in the Ristretto API.
+ * <p>
  * 
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates. To enable and disable the creation of
- * type comments go to Window>Preferences>Java>Code Generation.
+ * 
+ * @author fdietz, tstich
  */
 public class ColumbaMessage {
 
@@ -101,7 +101,7 @@ public class ColumbaMessage {
 	}
 
 	public Object getUID() {
-		return getHeaderInterface().get("columba.uid");
+		return getHeader().get("columba.uid");
 	}
 
 	public MimeTree getMimePartTree() {
@@ -120,7 +120,7 @@ public class ColumbaMessage {
 	 * 
 	 * @see org.columba.ristretto.message.Message#getHeader()
 	 */
-	public HeaderInterface getHeaderInterface() {
+	public ColumbaHeader getHeader() {
 		return columbaHeader;
 	}
 
@@ -140,15 +140,6 @@ public class ColumbaMessage {
 	 */
 	public MimePart getBodyPart() {
 		return bodyPart;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.ristretto.message.Message#getHeader()
-	 */
-	public Header getHeader() {
-		return message.getHeader();
 	}
 
 	/*

@@ -23,14 +23,12 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
-
-import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.filter.Filter;
+import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.MailboxInterface;
 import org.columba.mail.folder.search.AbstractSearchEngine;
@@ -38,12 +36,10 @@ import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
-
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.Message;
-import org.columba.ristretto.message.MessageFolderInfo;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.io.CharSequenceSource;
@@ -133,7 +129,7 @@ public class TempFolder extends Folder {
 		ColumbaLogger.log.debug("new UID=" + newUid);
 
 		ColumbaHeader h =
-			(ColumbaHeader) ((ColumbaHeader) message.getHeaderInterface());
+			(ColumbaHeader) ((ColumbaHeader) message.getHeader());
 
 		h.set("columba.uid", newUid);
 
@@ -320,8 +316,7 @@ public class TempFolder extends Folder {
 	 *      java.lang.String)
 	 */
 	public Object getAttribute(Object uid, String key) throws Exception {
-		return ((ColumbaHeader) headerList.getHeader(uid)).getAttributes().get(
-			key);
+		return ((ColumbaHeader) headerList.get(uid)).getAttributes().get(key);
 	}
 
 	/*
@@ -330,7 +325,7 @@ public class TempFolder extends Folder {
 	 * @see org.columba.mail.folder.MailboxInterface#getFlags(java.lang.Object)
 	 */
 	public Flags getFlags(Object uid) throws Exception {
-		return ((ColumbaHeader) headerList.getHeader(uid)).getFlags();
+		return ((ColumbaHeader) headerList.get(uid)).getFlags();
 	}
 
 	/*

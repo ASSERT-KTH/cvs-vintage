@@ -27,9 +27,9 @@ import org.columba.mail.folder.headercache.AbstractHeaderCache;
 import org.columba.mail.folder.headercache.CachedFolder;
 import org.columba.mail.folder.headercache.LocalHeaderCache;
 import org.columba.mail.folder.mh.CachedMHFolder;
+import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.SendableHeader;
-import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.parser.MessageParser;
 
@@ -141,11 +141,11 @@ public class OutboxFolder extends CachedMHFolder {
 			super(folder);
 		}
 
-		public HeaderInterface createHeaderInstance() {
+		public ColumbaHeader createHeaderInstance() {
 			return new SendableHeader();
 		}
 
-		protected void loadHeader(HeaderInterface h) throws Exception {
+		protected void loadHeader(ColumbaHeader h) throws Exception {
 			super.loadHeader(h);
 
 			int accountUid = ((Integer) reader.readObject()).intValue();
@@ -156,10 +156,11 @@ public class OutboxFolder extends CachedMHFolder {
 
 		}
 
-		protected void saveHeader(HeaderInterface h) throws Exception {
+		protected void saveHeader(ColumbaHeader h) throws Exception {
 			super.saveHeader(h);
 
-			writer.writeObject(new Integer(((SendableHeader) h).getAccountUid()));
+			writer.writeObject(
+				new Integer(((SendableHeader) h).getAccountUid()));
 
 			writer.writeObject(((SendableHeader) h).getRecipients());
 

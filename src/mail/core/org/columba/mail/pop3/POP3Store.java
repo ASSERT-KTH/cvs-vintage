@@ -252,7 +252,7 @@ public class POP3Store {
 		Header header = HeaderParser.parse(source);
 
 		ColumbaMessage m = new ColumbaMessage(header);
-		ColumbaHeader h = (ColumbaHeader) m.getHeaderInterface();
+		ColumbaHeader h = (ColumbaHeader) m.getHeader();
 
 		m.setStringSource(rawString);
 		h.getAttributes().put("columba.host", popItem.get("host"));

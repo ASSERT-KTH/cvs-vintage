@@ -32,7 +32,6 @@ import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.message.Message;
 import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.Source;
@@ -84,7 +83,7 @@ public abstract class CachedFolder extends LocalFolder {
 		// this message was already parsed and so we
 		// re-use the header to save us some cpu time
 		ColumbaHeader h =
-			(ColumbaHeader) ((ColumbaHeader) message.getHeaderInterface())
+			(ColumbaHeader) ((ColumbaHeader) message.getHeader())
 				.clone();
 
 		// decode all headerfields:
@@ -268,10 +267,10 @@ public abstract class CachedFolder extends LocalFolder {
 			ColumbaMessage message = getMessage(uid);
 
 			// number of headerfields
-			int size = message.getHeaderInterface().count();
+			int size = message.getHeader().count();
 
 			// get header from cache
-			HeaderInterface h = (ColumbaHeader) getCachedHeaderList().get(uid);
+			ColumbaHeader h = (ColumbaHeader) getCachedHeaderList().get(uid);
 
 			// message doesn't exist (this shouldn't happen here)
 			if (h == null)
@@ -282,7 +281,7 @@ public abstract class CachedFolder extends LocalFolder {
 
 			// if header contains from fields than the cached header
 			if (size > cachedSize)
-				return (ColumbaHeader) message.getHeaderInterface();
+				return (ColumbaHeader) message.getHeader();
 
 			return (ColumbaHeader) h;
 		} else
@@ -567,7 +566,7 @@ public abstract class CachedFolder extends LocalFolder {
 	 */
 	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
 		// get header with UID
-		Header header = (Header) getHeaderList().get(uid);
+		ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
 
 		Header result = new Header();
 

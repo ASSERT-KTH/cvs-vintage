@@ -125,7 +125,7 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
 			String str = (String) e.nextElement();
 
-			h = (ColumbaHeader) headerList.getHeader(str);
+			h = (ColumbaHeader) headerList.get(str);
 
 			saveHeader(h);
 		}

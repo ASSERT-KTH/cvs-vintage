@@ -1,6 +1,6 @@
 /*
  * Created on 18.07.2003
- *
+ * 
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -19,19 +19,19 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
+import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
-import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * @author frd
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class AddPOP3MessageCommand extends FolderCommand {
 
 	Folder inboxFolder;
-	HeaderInterface[] headerList;
+	ColumbaHeader[] headerList;
 	/**
 	 * @param references
 	 */
@@ -51,7 +51,9 @@ public class AddPOP3MessageCommand extends FolderCommand {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
@@ -66,8 +68,8 @@ public class AddPOP3MessageCommand extends FolderCommand {
 		uids[0] = uid;
 
 		// generate headerlist we need to update the table viewer
-		headerList = new HeaderInterface[1];
-		headerList[0] = message.getHeaderInterface();
+		headerList = new ColumbaHeader[1];
+		headerList[0] = message.getHeader();
 		headerList[0].set("columba.uid", uid);
 
 		// apply filter on message
@@ -86,7 +88,9 @@ public class AddPOP3MessageCommand extends FolderCommand {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {

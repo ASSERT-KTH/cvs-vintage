@@ -19,7 +19,7 @@ import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import org.columba.ristretto.message.HeaderInterface;
+import org.columba.mail.message.ColumbaHeader;
 
 /**
  * Title:
@@ -53,8 +53,8 @@ public class MessageNode extends DefaultMutableTreeNode {
 		return uid;
 	}
 
-	public HeaderInterface getHeader() {
-		return (HeaderInterface) getUserObject();
+	public ColumbaHeader getHeader() {
+		return (ColumbaHeader) getUserObject();
 	}
 
 	public static Object[] toUidArray(Object[] nodes) {

@@ -155,7 +155,7 @@ public class ComposerModel {
 	}
 
 	public void setHeaderField(String key, String value) {
-		message.getHeaderInterface().set(key, value);
+		message.getHeader().set(key, value);
 	}
 	
 	public void setHeader(Header header) {
@@ -163,7 +163,7 @@ public class ComposerModel {
 	}
 
 	public String getHeaderField(String key) {
-		return (String) message.getHeaderInterface().get(key);
+		return (String) message.getHeader().get(key);
 	}
 
 	public void setToList(List v) {
@@ -210,7 +210,7 @@ public class ComposerModel {
 	}
 
 	public String getHeader(String key) {
-		return (String) message.getHeaderInterface().get(key);
+		return (String) message.getHeader().get(key);
 	}
 
 	public void addMimePart(StreamableMimePart mp) {
@@ -236,11 +236,11 @@ public class ComposerModel {
 	}
 
 	public String getSubject() {
-		return (String) message.getHeaderInterface().get("Subject");
+		return (String) message.getHeader().get("Subject");
 	}
 
 	public void setSubject(String s) {
-		message.getHeaderInterface().set("Subject", s);
+		message.getHeader().set("Subject", s);
 	}
 
 	public List getAttachments() {
@@ -305,14 +305,14 @@ public class ComposerModel {
 	}
 
 	public String getPriority() {
-		if (message.getHeaderInterface().get("X-Priority") == null)
+		if (message.getHeader().get("X-Priority") == null)
 			return "Normal";
 		else
-			return (String) message.getHeaderInterface().get("X-Priority");
+			return (String) message.getHeader().get("X-Priority");
 	}
 
 	public void setPriority(String s) {
-		message.getHeaderInterface().set("X-Priority", s);
+		message.getHeader().set("X-Priority", s);
 	}
 
 	/**

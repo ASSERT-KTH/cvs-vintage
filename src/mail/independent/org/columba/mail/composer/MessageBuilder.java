@@ -431,7 +431,7 @@ public class MessageBuilder {
 		int operation)
 		throws IOException {
 
-		ColumbaHeader header = (ColumbaHeader) message.getHeaderInterface();
+		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
 		MimePart bodyPart = message.getBodyPart();
 
@@ -545,7 +545,7 @@ public class MessageBuilder {
 		boolean htmlTemplate)
 		throws IOException {
 
-		ColumbaHeader header = (ColumbaHeader) message.getHeaderInterface();
+		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
 		MimePart bodyPart = message.getBodyPart();
 		String templateBody = createBodyText(templateBodypart);

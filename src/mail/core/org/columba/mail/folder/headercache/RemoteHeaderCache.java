@@ -34,7 +34,6 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * IMAP-specific implementation of a header cache.
@@ -171,7 +170,7 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
 		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
 			Object uid = (Integer) e.nextElement();
 
-			h = (ColumbaHeader) headerList.getHeader(uid);
+			h = (ColumbaHeader) headerList.get(uid);
 
 			saveHeader(h);
 		}
@@ -215,14 +214,14 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
 		}
 	}
 
-	protected void loadHeader(HeaderInterface h) throws Exception {
+	protected void loadHeader(ColumbaHeader h) throws Exception {
 
 		h.set("columba.uid", reader.readObject());
 
 		super.loadHeader(h);
 	}
 
-	protected void saveHeader(HeaderInterface h) throws Exception {
+	protected void saveHeader(ColumbaHeader h) throws Exception {
 
 		writer.writeObject(h.get("columba.uid"));
 

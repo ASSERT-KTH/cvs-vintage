@@ -278,7 +278,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 		ColumbaMessage message = getMessage(uid);
 
 		// get header of message
-		ColumbaHeader header = (ColumbaHeader) message.getHeaderInterface();
+		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
 		return header;
 	}
@@ -406,7 +406,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 		// get message with UID
 		ColumbaMessage message = getMessage(uid);
 
-		Header header = message.getHeader();
+		Header header = message.getHeader().getHeader();
 
 		Header subHeader = new Header();
 		String value;

@@ -32,7 +32,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.HeaderInterface;
 
 public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 
@@ -82,7 +81,7 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 			return this;
 		}
 
-		HeaderInterface header = messageNode.getHeader();
+		ColumbaHeader header = messageNode.getHeader();
 		if (header == null) {
 			return this;
 		}

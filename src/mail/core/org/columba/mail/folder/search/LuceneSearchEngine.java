@@ -360,7 +360,7 @@ public class LuceneSearchEngine
 
 	private Document getDocument(ColumbaMessage message) {
 		Document messageDoc = new Document();
-		ColumbaHeader header = (ColumbaHeader) message.getHeaderInterface();
+		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
 		messageDoc.add(Field.Keyword("uid", message.getUID().toString()));
 
@@ -541,7 +541,7 @@ public class LuceneSearchEngine
 
 				String source = ds.loadMessage(uid );
 
-				ColumbaMessage message = new ColumbaMessage( (ColumbaHeader) hl.getHeader(uid), MessageParser.parse(new CharSequenceSource(source)));
+				ColumbaMessage message = new ColumbaMessage( (ColumbaHeader) hl.get(uid), MessageParser.parse(new CharSequenceSource(source)));
 				message.setStringSource(source);
 				
 				Document doc = getDocument(message);

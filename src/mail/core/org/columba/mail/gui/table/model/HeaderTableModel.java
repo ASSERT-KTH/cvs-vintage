@@ -1,4 +1,5 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -9,7 +10,8 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -21,7 +23,6 @@ import java.util.Enumeration;
 import org.columba.core.config.TableItem;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
-import org.columba.ristretto.message.HeaderInterface;
 
 public class HeaderTableModel
 	extends BasicHeaderTableModel
@@ -32,9 +33,14 @@ public class HeaderTableModel
 
 	}
 
-	/******************************* implements TableModelModifier *******************/
+	/**
+	 * ***************************** implements TableModelModifier
+	 * ******************
+	 */
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
 	 */
 	public void modify(Object[] uids) {
@@ -52,7 +58,9 @@ public class HeaderTableModel
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
 	 */
 	public void remove(Object[] uids) {
@@ -90,13 +98,13 @@ public class HeaderTableModel
 			return;
 		}
 
-		// add every header from HeaderList to the table as MessageNode 
+		// add every header from HeaderList to the table as MessageNode
 		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
 			// get unique id
 			Object uid = e.nextElement();
 
-			// get header 
-			HeaderInterface header = headerList.getHeader(uid);
+			// get header
+			ColumbaHeader header = headerList.get(uid);
 
 			// create MessageNode
 			MessageNode child = new MessageNode(header, uid);
@@ -116,7 +124,9 @@ public class HeaderTableModel
 		fireTableDataChanged();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.gui.table.model.TableModelModifier#set(org.columba.mail.message.HeaderList)
 	 */
 	public void set(HeaderList headerList) {

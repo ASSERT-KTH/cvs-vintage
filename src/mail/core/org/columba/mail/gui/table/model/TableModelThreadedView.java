@@ -28,7 +28,6 @@ import java.util.StringTokenizer;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
-import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * Title:
@@ -208,7 +207,7 @@ public class TableModelThreadedView
 	}
 
 	protected boolean add(MessageNode node, MessageNode rootNode) {
-		HeaderInterface header = node.getHeader();
+		ColumbaHeader header = node.getHeader();
 		String references = (String) header.get("References");
 		String inReply = (String) header.get("In-Reply-To");
 
@@ -261,7 +260,7 @@ public class TableModelThreadedView
 		// save every message-id in hashtable for later reference
 		for (Enumeration enum = rootNode.children(); enum.hasMoreElements();) {
 			MessageNode node = (MessageNode) enum.nextElement();
-			HeaderInterface header = node.getHeader();
+			ColumbaHeader header = node.getHeader();
 
 			String id = (String) header.get("Message-ID");
 			if (id == null)
@@ -483,7 +482,7 @@ public class TableModelThreadedView
 	
 	public MessageNode addItem(MessageNode child) {
 		MessageNode rootNode = getRealModel().getRootNode();
-		HeaderInterface childHeader = child.getHeader();
+		ColumbaHeader childHeader = child.getHeader();
 
 		String id = (String) childHeader.get("Message-ID");
 		if (id == null)
@@ -606,8 +605,8 @@ public class TableModelThreadedView
 			//Message message2 = folder.get( int2.intValue() );
 			//Message message2 =(Message)  node2.getUserObject();
 
-			HeaderInterface header1 = node1.getHeader();
-			HeaderInterface header2 = node2.getHeader();
+			ColumbaHeader header1 = node1.getHeader();
+			ColumbaHeader header2 = node2.getHeader();
 
 			if ((header1 == null) || (header2 == null))
 				return 0;

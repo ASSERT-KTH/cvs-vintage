@@ -133,7 +133,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 				try {
 					smtpServer.sendMessage(message, worker);
 
-					sentList.add(message.getHeaderInterface().get("columba.uid"));
+					sentList.add(message.getHeader().get("columba.uid"));
 				} catch (SMTPException e) {
 					JOptionPane.showMessageDialog(
 						null,
