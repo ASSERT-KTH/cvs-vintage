@@ -1694,7 +1694,7 @@ public class Issue
             
             // If this attribute is not active for the destination module,
             // Add to orphanAttributes list
-            if (modAttr.getActive()) 
+            if (modAttr != null && modAttr.getActive()) 
             {
                 // If attribute is an option attribute,
                 // Check if attribute option is active for destination module.
@@ -1754,7 +1754,7 @@ public class Issue
                 
                 // If this attribute is not active for the destination module,
                 // Add to orphanAttributes list
-                if (!modAttr.getActive()) 
+                if (modAttr == null || !modAttr.getActive()) 
                 {
                     orphanAttributes.add(aval);
                 } 
