@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <themelist>
- <theme name="ThinColumba" class="org.columba.core.gui.themes.plugin.thincolumba.ThinColumbaPlugin" />
  <theme name="Metal" class="org.columba.core.gui.themes.plugin.MetalLookAndFeelPlugin" />
  <theme name="Windows" class="org.columba.core.gui.themes.plugin.WindowsLookAndFeelPlugin" />
  <theme name="Mac" class="org.columba.core.gui.themes.plugin.MacLookAndFeelPlugin" />
  <theme name="CDE/Motif" class="org.columba.core.gui.themes.plugin.MotifLookAndFeelPlugin" />
  <theme name="Gtk" class="org.columba.core.gui.themes.plugin.GtkLookAndFeelPlugin" />
+ <theme name="Plastic" class="org.columba.core.gui.themes.plugin.PlasticLookAndFeelPlugin" />
 </themelist>

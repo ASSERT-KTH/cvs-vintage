@@ -14,7 +14,7 @@ Have fun ... your Columba Team!
 	<!-- here we should use the cvs-verion info for automatic replace the version -->
 	<property name="version" value="0.12.0"/>
 	<property name="dest" value="${basedir}/classes"/>
-	<property name="ownclasspath" value="${dest}:${classpath}:${src}/lib/log4j.jar:${src}/lib/lucene-1.3-rc1.jar:${src}/lib/junit.jar:${src}/lib/jakarta-oro-2.0.6.jar:${src}/lib/jargs.jar:${src}/lib/jwizz-0.1.0.jar"/>
+	<property name="ownclasspath" value="${dest}:${classpath}:${src}/lib/log4j.jar:${src}/lib/lucene-1.3-rc1.jar:${src}/lib/junit.jar:${src}/lib/jakarta-oro-2.0.6.jar:${src}/lib/jargs.jar:${src}/lib/jwizz-0.1.0.jar:${src}/lib/plastic.jar"/>
 
 
 	<!-- definition of the task to check the style of the java-code -->
@@ -157,7 +157,7 @@ Have fun ... your Columba Team!
 			<exclude name="native/**"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.core.main.Main"/>
-				<attribute name="Class-Path" value="lib/log4j.jar lib/junit.jar lib/jakarta-oro-2.0.6.jar lib/lucene-1.3-rc1.jar lib/jargs.jar lib/jwizz-0.1.0.jar"/>
+				<attribute name="Class-Path" value="lib/log4j.jar lib/junit.jar lib/jakarta-oro-2.0.6.jar lib/lucene-1.3-rc1.jar lib/jargs.jar lib/jwizz-0.1.0.jar lib/plastic.jar"/>
 				<attribute name="Sealed" value="false"/>
 			</manifest>
 		</jar>
@@ -330,7 +330,8 @@ else echo "cannot find columba.jar in `pwd`"; fi
            <include name="lib/junit.jar"/>
            <include name="lib/jakarta-oro-2.0.6.jar"/>
            <include name="lib/jargs.jar"/>
-	   <include name="lib/jwizz-0.1.0.jar"/>
+           <include name="lib/plastic.jar"/>
+	       <include name="lib/jwizz-0.1.0.jar"/>
           </fileset>
          </signjar>
         </target>
