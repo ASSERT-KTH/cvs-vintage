@@ -27,7 +27,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.4 1998/07/15 18:18:16 jrobbins Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.5 1998/10/08 00:06:49 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -61,12 +61,12 @@ public class UMLUseCaseDiagram extends UMLDiagram {
   new CmdCreateNode(UseCase.class, "UseCase");
 
   protected static Action _actionAssoc =
-  new CmdSetMode(ModeCreateEdge.class,
+  new CmdSetMode(ModeCreatePolyEdge.class,
 		 "edgeClass", Association.class,
 		 "Association");
 
   protected static Action _actionGeneralize =
-  new CmdSetMode(ModeCreateEdge.class,
+  new CmdSetMode(ModeCreatePolyEdge.class,
 		 "edgeClass", Generalization.class,
 		 "Generalization");
 
@@ -117,7 +117,7 @@ public class UMLUseCaseDiagram extends UMLDiagram {
 
   /** initialize the toolbar for this diagram type */
   protected void initToolBar() {
-    System.out.println("making usecase toolbar");
+    //System.out.println("making usecase toolbar");
     _toolBar = new ToolBar();
 //     _toolBar.add(Actions.Cut);
 //     _toolBar.add(Actions.Copy);

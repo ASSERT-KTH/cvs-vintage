@@ -24,10 +24,10 @@
 
 
 
-// File: CrMultiComposite.java.java
-// Classes: CrMultiComposite.java
+// File: CrMultiComposite.java
+// Classes: CrMultiComposite
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultiComposite.java,v 1.7 1998/07/15 18:16:55 jrobbins Exp $
+// $Id: CrMultiComposite.java,v 1.8 1998/10/08 00:04:33 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -54,6 +54,7 @@ public class CrMultiComposite extends CrUML {
        "of aggregation (e.g., a white diamond is less strict).");
 
     addSupportedDecision(CrUML.decCONTAINMENT);
+    setKnowledgeTypes(Critic.KT_SEMANTICS);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

@@ -27,7 +27,7 @@
 // File: PropPanelTransition.java
 // Classes: PropPanelTransition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelTransition.java,v 1.1 1998/09/17 18:48:47 jrobbins Exp $
+// $Id: PropPanelTransition.java,v 1.2 1998/10/08 00:06:33 jrobbins Exp $
 
 package uci.uml.ui;
 
@@ -126,7 +126,7 @@ implements DocumentListener, ItemListener {
 
   /** Set the values to be shown in all widgets based on model */
   public void setTarget(Object t) {
-    System.out.println("PropPanelTransition setting target to " + t);
+    //System.out.println("PropPanelTransition setting target to " + t);
     super.setTarget(t);
     Transition tt = (Transition) t;
     _triggerField.setText(GeneratorDisplay.Generate(tt.getTrigger()));

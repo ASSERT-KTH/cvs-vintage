@@ -24,10 +24,10 @@
 
 
 
-// File: CrSignatureConflict.java.java
-// Classes: CrAttrNameConflict.java
+// File: CrSignatureConflict.java
+// Classes: CrAttrNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAttrNameConflict.java,v 1.7 1998/08/06 21:21:19 jrobbins Exp $
+// $Id: CrAttrNameConflict.java,v 1.8 1998/10/08 00:04:16 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -45,7 +45,7 @@ import uci.uml.Foundation.Data_Types.*;
 public class CrAttrNameConflict extends CrUML {
 
   public CrAttrNameConflict() {
-    setHeadline("Two Attributes have same Name");
+    setHeadline("Revise Attribute Names to Avoid Conflict");
     sd("Attributes must have distinct names.  This may because of an inherited "+
        "attribute. \n\n"+
        "Clear and unambiguous names are key to code generation and producing an "+
@@ -56,6 +56,7 @@ public class CrAttrNameConflict extends CrUML {
     addSupportedDecision(CrUML.decINHERITANCE);
     addSupportedDecision(CrUML.decSTORAGE);
     addSupportedDecision(CrUML.decNAMING);
+    setKnowledgeTypes(Critic.KT_SYNTAX);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

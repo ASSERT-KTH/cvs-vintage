@@ -24,10 +24,10 @@
 
 
 
-// File: CrOppEndConflict.java.java
-// Classes: CrOppEndConflict.java
+// File: CrOppEndConflict.java
+// Classes: CrOppEndConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOppEndConflict.java,v 1.10 1998/08/06 21:21:34 jrobbins Exp $
+// $Id: CrOppEndConflict.java,v 1.11 1998/10/08 00:04:45 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -59,6 +59,7 @@ public class CrOppEndConflict extends CrUML {
     addSupportedDecision(CrUML.decINHERITANCE);
     addSupportedDecision(CrUML.decRELATIONSHIPS);
     addSupportedDecision(CrUML.decNAMING);
+    setKnowledgeTypes(Critic.KT_SYNTAX);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

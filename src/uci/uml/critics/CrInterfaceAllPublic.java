@@ -24,10 +24,10 @@
 
 
 
-// File: CrInterfaceAllPublic.java.java
-// Classes: CrInterfaceAllPublic.java
+// File: CrInterfaceAllPublic.java
+// Classes: CrInterfaceAllPublic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInterfaceAllPublic.java,v 1.6 1998/07/15 18:16:50 jrobbins Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.7 1998/10/08 00:04:28 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -51,6 +51,7 @@ public class CrInterfaceAllPublic extends CrUML {
        "To fix this, use the FixIt button, or manually select the operations "+
        "of the interface and use the Properties tab add them public.");
     addSupportedDecision(CrUML.decPLANNED_EXTENSIONS);
+    setKnowledgeTypes(Critic.KT_SYNTAX);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

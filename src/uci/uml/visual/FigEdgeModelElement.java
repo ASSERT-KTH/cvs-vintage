@@ -27,7 +27,7 @@
 // File: FigEdgeModelElement.java
 // Classes: FigEdgeModelElement
 // Original Author: abonner
-// $Id: FigEdgeModelElement.java,v 1.5 1998/10/01 20:22:49 jrobbins Exp $
+// $Id: FigEdgeModelElement.java,v 1.6 1998/10/08 00:06:41 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -49,7 +49,7 @@ import uci.uml.Foundation.Extension_Mechanisms.*;
 /** Abstract class to display diagram arcs for UML ModelElements that
  *  look like arcs and that have editiable names. */
 
-public abstract class FigEdgeModelElement extends FigEdgeLine
+public abstract class FigEdgeModelElement extends FigEdgePoly
 implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener, KeyListener, PropertyChangeListener  { 
 
   public static Font LABEL_FONT;
@@ -96,7 +96,7 @@ implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener,
     _stereo.setAllowsTab(false);
 
     setBetweenNearestPoints(true);
-    //((FigPoly)_fig).setRectilinear(false);
+    ((FigPoly)_fig).setRectilinear(false);
   }
 
 

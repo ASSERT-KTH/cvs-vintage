@@ -27,7 +27,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.4 1998/09/17 18:48:57 jrobbins Exp $
+// $Id: UMLStateDiagram.java,v 1.5 1998/10/08 00:06:49 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -74,7 +74,7 @@ public class UMLStateDiagram extends UMLDiagram {
 
 
   protected static Action _actionTransition =
-  new CmdSetMode(ModeCreateEdge.class,
+  new CmdSetMode(ModeCreatePolyEdge.class,
 		 "edgeClass", Transition.class,
 		 "Transition");
 
@@ -132,7 +132,7 @@ public class UMLStateDiagram extends UMLDiagram {
 
   /** initialize the toolbar for this diagram type */
   protected void initToolBar() {
-    System.out.println("making state toolbar");
+    //System.out.println("making state toolbar");
     _toolBar = new ToolBar();
 //     _toolBar.add(Actions.Cut);
 //     _toolBar.add(Actions.Copy);

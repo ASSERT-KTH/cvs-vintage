@@ -24,10 +24,10 @@
 
 
 
-// File: CrMultipleAgg.java.java
-// Classes: CrMultipleAgg.java
+// File: CrMultipleAgg.java
+// Classes: CrMultipleAgg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleAgg.java,v 1.7 1998/08/06 21:21:27 jrobbins Exp $
+// $Id: CrMultipleAgg.java,v 1.8 1998/10/08 00:04:34 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -51,6 +51,7 @@ public class CrMultipleAgg extends CrUML {
        "aggregations to None.");
 
     addSupportedDecision(CrUML.decCONTAINMENT);
+    setKnowledgeTypes(Critic.KT_SEMANTICS);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

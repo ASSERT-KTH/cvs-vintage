@@ -27,7 +27,7 @@
 // File: ModeSelect.java
 // Classes: ModeSelect
 // Original Author: ics125 spring 1996
-// $Id: ModeSelect.java,v 1.12 1998/07/02 02:52:48 jrobbins Exp $
+// $Id: ModeSelect.java,v 1.13 1998/10/08 00:05:55 jrobbins Exp $
 
 package uci.gef;
 
@@ -140,14 +140,21 @@ public class ModeSelect extends Mode {
     _showSelectRect = false;
     Vector selectList = new Vector();
 
-    Enumeration figs = _editor.figs();
     Rectangle hitRect = new Rectangle(x - 4, y - 4, 8, 8);
+    Enumeration figs = _editor.figs();
     while (figs.hasMoreElements()) {
       Fig f = (Fig) figs.nextElement();
       if ((!_toggleSelection && _selectRect.isEmpty() && f.hit(hitRect)) ||
-	  (!_selectRect.isEmpty() && f.intersects(_selectRect))) {
+	  (!_selectRect.isEmpty() && f.within(_selectRect))) {
 	selectList.addElement(f);
       }
+    }
+    if (!_selectRect.isEmpty() && selectList.isEmpty()) {
+       figs = _editor.figs();
+       while (figs.hasMoreElements()) {
+	 Fig f = (Fig) figs.nextElement();
+	 if (f.intersects(_selectRect)) selectList.addElement(f);
+       }
     }
     if (_toggleSelection) _editor.getSelectionManager().toggle(selectList);
     else _editor.getSelectionManager().select(selectList);

@@ -25,7 +25,7 @@
 // File: CrNoAssociations.javoa
 // Classes: CrNoAssociations
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoAssociations.java,v 1.2 1998/10/01 20:22:32 jrobbins Exp $
+// $Id: CrNoAssociations.java,v 1.3 1998/10/08 00:04:39 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -54,6 +54,7 @@ public class CrNoAssociations extends CrUML {
        "from {name} to another node. ");
 
     addSupportedDecision(CrUML.decRELATIONSHIPS);
+    setKnowledgeTypes(Critic.KT_COMPLETENESS);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

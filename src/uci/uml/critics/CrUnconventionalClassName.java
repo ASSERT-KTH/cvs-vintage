@@ -24,10 +24,10 @@
 
 
 
-// File: CrUnconventionalClassName.java.java
-// Classes: CrUnconventionalClassName.java
+// File: CrUnconventionalClassName.java
+// Classes: CrUnconventionalClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalClassName.java,v 1.11 1998/08/06 21:21:40 jrobbins Exp $
+// $Id: CrUnconventionalClassName.java,v 1.12 1998/10/08 00:04:50 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -52,6 +52,7 @@ public class CrUnconventionalClassName extends CrUML {
        "To fix this, use the FixIt button, or manually select {name} "+
        "and use the Properties tab to give it a different name.");
     addSupportedDecision(CrUML.decNAMING);
+    setKnowledgeTypes(Critic.KT_SYNTAX);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

@@ -24,10 +24,10 @@
 
 
 
-// File: CrInterfaceOperOnly.java.java
-// Classes: CrInterfaceOperOnly.java
+// File: CrInterfaceOperOnly.java
+// Classes: CrInterfaceOperOnly
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInterfaceOperOnly.java,v 1.6 1998/07/15 18:16:51 jrobbins Exp $
+// $Id: CrInterfaceOperOnly.java,v 1.7 1998/10/08 00:04:29 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -51,6 +51,7 @@ public class CrInterfaceOperOnly extends CrUML {
        "To fix this, use the FixIt button, or manually select the  \n"+
        "interface and use the Properties tab remove all attributes.");
     addSupportedDecision(CrUML.decPLANNED_EXTENSIONS);
+    setKnowledgeTypes(Critic.KT_SYNTAX);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

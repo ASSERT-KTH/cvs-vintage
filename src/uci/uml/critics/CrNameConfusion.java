@@ -24,10 +24,10 @@
 
 
 
-// File: CrNameConfusion.java.java
-// Classes: CrNameConfusion.java
+// File: CrNameConfusion.java
+// Classes: CrNameConfusion
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConfusion.java,v 1.7 1998/08/06 21:21:33 jrobbins Exp $
+// $Id: CrNameConfusion.java,v 1.8 1998/10/08 00:04:37 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -39,6 +39,7 @@ import uci.util.*;
 import uci.uml.Foundation.Core.*;
 import uci.uml.Foundation.Data_Types.*;
 import uci.uml.Model_Management.*;
+import uci.uml.Behavioral_Elements.State_Machines.*;
 
 /** Well-formedness rule [1] for Namespace. See page 33 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
@@ -56,6 +57,8 @@ public class CrNameConfusion extends CrUML {
        "that differ from other names only in capitalization, or use of \n"+
        "underscore characters, or by only one character.");
     addSupportedDecision(CrUML.decNAMING);
+    setKnowledgeTypes(Critic.KT_PRESENTATION);
+    setKnowledgeTypes(Critic.KT_SYNTAX);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

@@ -27,7 +27,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelState.java,v 1.4 1998/09/17 18:48:46 jrobbins Exp $
+// $Id: PropPanelState.java,v 1.5 1998/10/08 00:06:31 jrobbins Exp $
 
 package uci.uml.ui;
 
@@ -276,7 +276,7 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
   public Object getValueAt(int row, int col) {
     Vector trans = _target.getInternalTransition();
     if (trans == null) return "";
-    if (row == trans.size()) return ""; // blank line allows adding
+    if (row >= trans.size()) return ""; // blank line allows adding
     Transition t = (Transition) trans.elementAt(row);
     String tStr = GeneratorDisplay.Generate(t);
     if (col == 0) return tStr;
@@ -288,29 +288,34 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
     if (columnIndex != 0) return;
     if (!(aValue instanceof String)) return;
     String val = (String) aValue;
+    val = val.trim();
     Vector trans = ((State)_target).getInternalTransition();
     if (trans == null) trans = new Vector();
     Transition newTrans = ParserDisplay.SINGLETON.parseTransition(val);
-    if (rowIndex >= trans.size()) {
+    if (newTrans != null) {
+      try {
+	State st = (State) _target;
+	newTrans.setSource(st);
+	newTrans.setTarget(st);
+	newTrans.setStateMachine(st.getStateMachine());
+	//newTrans.setState(st);
+      }
+      catch (PropertyVetoException pve) {
+	System.out.println("PropertyVetoException in PropPanelState");
+      }
+    }
+    if (rowIndex == trans.size()) {
       trans.addElement(newTrans);
-      fireTableStructureChanged();
     }
     else if (val.equals("")) {
       trans.removeElementAt(rowIndex);
-      fireTableStructureChanged();
     }
     else trans.setElementAt(newTrans, rowIndex);
-    try {
-      State st = (State) _target;
-      newTrans.setSource(st);
-      newTrans.setTarget(st);
-      newTrans.setStateMachine(st.getStateMachine());
-      newTrans.setState(st);
-      st.setInternalTransition(trans);
-    }
+    try { ((State)_target).setInternalTransition(trans); }
     catch (PropertyVetoException pve) {
-      System.out.println("PropertyVetoException in PropPanelState");
+      System.out.println("could not set internal transitions");
     }
+    fireTableStructureChanged();
   }
 
   ////////////////

@@ -29,7 +29,7 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrEmptyPackage.java,v 1.6 1998/09/29 21:50:41 jrobbins Exp $
+// $Id: CrEmptyPackage.java,v 1.7 1998/10/08 00:04:25 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -59,11 +59,10 @@ public class CrEmptyPackage extends CrUML {
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {
-    System.out.println("predicate2 on " + dm);
+    //System.out.println("predicate2 on " + dm);
     if (!(dm instanceof Model)) return NO_PROBLEM;
     Model mod = (Model) dm;
     Vector elms = mod.getOwnedElement();
-    System.out.println("elms = " + elms);
     if (elms == null || elms.size() == 0) return PROBLEM_FOUND;
     return NO_PROBLEM;
     //needs-more-work: different critic for packages consisting only

@@ -25,7 +25,7 @@
 // File: CrNoTransitions.java
 // Classes: CrNoTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoTransitions.java,v 1.1 1998/07/15 18:17:06 jrobbins Exp $
+// $Id: CrNoTransitions.java,v 1.2 1998/10/08 00:04:42 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -51,6 +51,7 @@ public class CrNoTransitions extends CrUML {
        "another state to {name} or from {name} to another state. ");
 
     addSupportedDecision(CrUML.decSTATE_MACHINES);
+    setKnowledgeTypes(Critic.KT_COMPLETENESS);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

@@ -24,10 +24,10 @@
 
 
 
-// File: CrCircularAssocClass.java.java
-// Classes: CrCircularAssocClass.java
+// File: CrCircularAssocClass.java
+// Classes: CrCircularAssocClass
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularAssocClass.java,v 1.6 1998/07/15 18:16:35 jrobbins Exp $
+// $Id: CrCircularAssocClass.java,v 1.7 1998/10/08 00:04:16 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -47,6 +47,7 @@ public class CrCircularAssocClass extends CrUML {
        "back to the AssociationClass.");
 
     addSupportedDecision(CrUML.decRELATIONSHIPS);
+    setKnowledgeTypes(Critic.KT_SEMANTICS);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

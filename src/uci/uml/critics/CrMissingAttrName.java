@@ -24,10 +24,10 @@
 
 
 
-// File:CrMissingAttrName.java.java
-// Classes:CrMissingAttrName.java
+// File:CrMissingAttrName.java
+// Classes:CrMissingAttrName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingAttrName.java,v 1.7 1998/08/06 21:21:24 jrobbins Exp $
+// $Id: CrMissingAttrName.java,v 1.8 1998/10/08 00:04:30 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -49,6 +49,7 @@ public class CrMissingAttrName extends CrUML {
        "To fix this, use the FixIt button, or manually select the \n"+
        "attribute and use the Properties tab to give it a name.");
     addSupportedDecision(CrUML.decNAMING);
+    setKnowledgeTypes(Critic.KT_SYNTAX);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

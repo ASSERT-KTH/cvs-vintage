@@ -24,10 +24,10 @@
 
 
 
-// File: CrNameConflict.java.java
-// Classes: CrNameConflict.java
+// File: CrNameConflict.java
+// Classes: CrNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConflict.java,v 1.10 1998/08/06 21:21:31 jrobbins Exp $
+// $Id: CrNameConflict.java,v 1.11 1998/10/08 00:04:35 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -51,6 +51,7 @@ public class CrNameConflict extends CrUML {
        "To fix this, use the FixIt button, or manually select the elements \n"+
        "and use the Properties tab to change their names.");
     addSupportedDecision(CrUML.decNAMING);
+    setKnowledgeTypes(Critic.KT_SYNTAX);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

@@ -24,10 +24,10 @@
 
 
 
-// File: CrCircularComposition.java.java
-// Classes: CrCircularComposition.java
+// File: CrCircularComposition.java
+// Classes: CrCircularComposition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularComposition.java,v 1.5 1998/07/15 18:16:36 jrobbins Exp $
+// $Id: CrCircularComposition.java,v 1.6 1998/10/08 00:04:17 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -52,6 +52,7 @@ public class CrCircularComposition extends CrUML {
        "to something other than composite.");
 
     addSupportedDecision(CrUML.decCONTAINMENT);
+    setKnowledgeTypes(Critic.KT_SYNTAX);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

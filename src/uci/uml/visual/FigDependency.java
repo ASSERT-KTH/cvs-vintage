@@ -27,7 +27,7 @@
 // File: FigDependency.java
 // Classes: FigDependency
 // Original Author: your email address here
-// $Id: FigDependency.java,v 1.4 1998/07/15 18:18:01 jrobbins Exp $
+// $Id: FigDependency.java,v 1.5 1998/10/08 00:06:40 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -38,20 +38,21 @@ import uci.gef.*;
 import uci.uml.ui.*;
 import uci.uml.Foundation.Core.*;
 
-public class FigDependency extends FigEdgeLine {
+public class FigDependency extends FigEdgePoly {
 
   public FigDependency(Object edge) {
     super();
     setOwner(edge);
-
     // set whatever arrow heads and colors are appropriate
-    _fig.setLineColor(Color.black);
-    ((FigLine)_fig).setDashed(true);
-
     ArrowHeadGreater endArrow = new ArrowHeadGreater();
     endArrow.setFillColor(Color.red);
     setDestArrowHead(endArrow);
     setBetweenNearestPoints(true);
+  }
+
+  public void setFig(Fig f) {
+    super.setFig(f);
+    _fig.setDashed(true);
   }
 
   public void dispose() {
@@ -62,7 +63,7 @@ public class FigDependency extends FigEdgeLine {
     p.moveToTrash(elmt);
     super.dispose();
   }
-  
+
 
 } /* end class FigDependency */
 

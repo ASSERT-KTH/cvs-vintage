@@ -27,12 +27,13 @@
 // File: FigRealization.java
 // Classes: FigRealization
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigRealization.java,v 1.2 1998/09/29 21:50:56 jrobbins Exp $
+// $Id: FigRealization.java,v 1.3 1998/10/08 00:06:44 jrobbins Exp $
 
 
 package uci.uml.visual;
 
 import java.awt.*;
+import java.beans.*;
 
 import uci.gef.*;
 import uci.uml.ui.*;
@@ -43,24 +44,31 @@ public class FigRealization extends FigEdgeModelElement {
   public FigRealization(Object edge) {
     super(edge);
     addPathItem(_stereo, new PathConvPercent(this, 50, 10));
-
-    ((FigLine)_fig).setDashed(true);
-
     ArrowHeadTriangle endArrow = new ArrowHeadTriangle();
     endArrow.setFillColor(Color.white);
-
     setDestArrowHead(endArrow);
     setBetweenNearestPoints(true);
   }
 
-//   public void dispose() {
-//     if (!(getOwner() instanceof Realization)) return;
-//     Realization gen = (Realization) getOwner();
-//     if (gen == null) return;
-//     Project p = ProjectBrowser.TheInstance.getProject();
-//     p.moveToTrash(gen);
-//     super.dispose();
-//   }
+  public void setFig(Fig f) {
+    super.setFig(f);
+    _fig.setDashed(true);
+  }
+
+   public void dispose() {
+     Realization r = (Realization) getOwner();
+     if (r == null) return;
+     Classifier sup = r.getSupertype();
+     Classifier sub = r.getSubtype();
+     try {
+       sup.removeRealization(r);
+       sub.removeSpecification(r);
+     }
+     catch (PropertyVetoException pve) {
+       System.out.println("could not remove Realization");
+     }
+     super.dispose();
+   }
 
 
   protected boolean canEdit(Fig f) { return false; }

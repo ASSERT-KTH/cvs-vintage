@@ -24,10 +24,10 @@
 
 
 
-// File: CrIllegalGeneralization.java.java
-// Classes: CrIllegalGeneralization.java
+// File: CrIllegalGeneralization.java
+// Classes: CrIllegalGeneralization
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrIllegalGeneralization.java,v 1.5 1998/07/15 18:16:48 jrobbins Exp $
+// $Id: CrIllegalGeneralization.java,v 1.6 1998/10/08 00:04:27 jrobbins Exp $
 
 package uci.uml.critics;
 

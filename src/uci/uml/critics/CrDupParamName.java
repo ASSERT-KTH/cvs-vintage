@@ -24,10 +24,10 @@
 
 
 
-// File: CrDupParamName.java.java
-// Classes: CrDupParamName.java
+// File: CrDupParamName.java
+// Classes: CrDupParamName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupParamName.java,v 1.7 1998/08/06 21:21:22 jrobbins Exp $
+// $Id: CrDupParamName.java,v 1.8 1998/10/08 00:04:24 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -51,6 +51,7 @@ public class CrDupParamName extends CrUML {
        "parameters to this operation.");
 
     addSupportedDecision(CrUML.decCONTAINMENT);
+    setKnowledgeTypes(Critic.KT_SYNTAX);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

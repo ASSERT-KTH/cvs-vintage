@@ -29,7 +29,7 @@
 // File: CrNoInstanceVariables.java
 // Classes: CrNoInstanceVariables
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoInstanceVariables.java,v 1.10 1998/07/17 22:54:25 jrobbins Exp $
+// $Id: CrNoInstanceVariables.java,v 1.11 1998/10/08 00:04:40 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -58,8 +58,9 @@ public class CrNoInstanceVariables extends CrUML {
        "To fix this, press the FixIt icon (to left), or add instance "+
        "variables by dobule clicking on {name} in the navigator pane and "+
        "using the Create menu to make a new attribute. ");
-       
+
     addSupportedDecision(CrUML.decSTORAGE);
+    setKnowledgeTypes(Critic.KT_COMPLETENESS);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

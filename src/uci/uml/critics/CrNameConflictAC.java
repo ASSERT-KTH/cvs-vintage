@@ -24,10 +24,10 @@
 
 
 
-// File: CrNameConflictAC.java.java
-// Classes: CrNameConflictAC.java
+// File: CrNameConflictAC.java
+// Classes: CrNameConflictAC
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConflictAC.java,v 1.6 1998/07/15 18:16:59 jrobbins Exp $
+// $Id: CrNameConflictAC.java,v 1.7 1998/10/08 00:04:36 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -48,6 +48,7 @@ public class CrNameConflictAC extends CrUML {
        "of the class.\n");
 
     addSupportedDecision(CrUML.decNAMING);
+    setKnowledgeTypes(Critic.KT_SYNTAX);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

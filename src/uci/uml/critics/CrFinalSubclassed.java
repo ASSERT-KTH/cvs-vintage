@@ -24,10 +24,10 @@
 
 
 
-// File: CrFinalSubclassed.java.java
-// Classes: CrFinalSubclassed.java
+// File: CrFinalSubclassed.java
+// Classes: CrFinalSubclassed
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrFinalSubclassed.java,v 1.11 1998/07/17 22:54:20 jrobbins Exp $
+// $Id: CrFinalSubclassed.java,v 1.12 1998/10/08 00:04:26 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -54,6 +54,7 @@ public class CrFinalSubclassed extends CrUML {
        "tab to remove the 'final' keyword.");
 
     addSupportedDecision(CrUML.decINHERITANCE);
+    setKnowledgeTypes(Critic.KT_SEMANTICS);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

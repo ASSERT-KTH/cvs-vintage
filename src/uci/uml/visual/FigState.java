@@ -27,7 +27,7 @@
 // File: FigState.java
 // Classes: FigState
 // Original Author: ics 125b silverbullet team
-// $Id: FigState.java,v 1.7 1998/09/17 18:48:56 jrobbins Exp $
+// $Id: FigState.java,v 1.8 1998/10/08 00:06:45 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -145,8 +145,9 @@ public class FigState extends FigNodeModelElement {
   /** Update the text labels */
   protected void modelChanged() {
     super.modelChanged();
-    System.out.println("FigState modelChanged");
+    //System.out.println("FigState modelChanged");
     State s = (State) getOwner();
+    if (s == null) return;
     String newText = GeneratorDisplay.SINGLETON.generateStateBody(s);
     _internal.setText(newText);
   }

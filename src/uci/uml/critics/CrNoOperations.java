@@ -31,7 +31,7 @@
 // File: CrNoOperations.javoa
 // Classes: CrNoOperations
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoOperations.java,v 1.6 1998/07/17 22:54:26 jrobbins Exp $
+// $Id: CrNoOperations.java,v 1.7 1998/10/08 00:04:41 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -60,6 +60,7 @@ public class CrNoOperations extends CrUML {
        "using the Create menu to make a new operations. ");
 
     addSupportedDecision(CrUML.decBEHAVIOR);
+    setKnowledgeTypes(Critic.KT_COMPLETENESS);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {
