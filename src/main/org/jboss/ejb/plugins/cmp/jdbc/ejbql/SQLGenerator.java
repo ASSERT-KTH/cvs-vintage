@@ -62,11 +62,9 @@ public class SQLGenerator {
    }
    
    private String getSelectClause(CMRField cmrField) {
-      if(cmrField.isSingleValued()) {
-         String identifier = idManager.getTableAlias(cmrField);
-         return SQLUtil.getColumnNamesClause(cmrField.getEntityBridge().getJDBCPrimaryKeyFields(), identifier);
-      }
-      throw new IllegalArgumentException("Select path is a collection valued cmr field.");
+      String identifier = idManager.getTableAlias(cmrField);
+      return SQLUtil.getColumnNamesClause(
+            cmrField.getEntityBridge().getJDBCPrimaryKeyFields(), identifier);
    }
 
    private String getSelectClause(CMPField cmpField) {

@@ -127,7 +127,7 @@ public class SQLTarget implements DeepCloneable {
          // verify that the abstract schema already exists
          // this method will throw an exception if the identifier
          // is unknown or if the identifer does not map to a schema
-         idManager.getExistingAbstractSchema(identifier);
+         idManager.getExistingEntityPathElement(identifier);
          selectPath = identifier;
       } else {
          // select a.b.c.d style query            
@@ -136,17 +136,29 @@ public class SQLTarget implements DeepCloneable {
             // are we done yet?
             if(i<selectPathList.size()-1) {
                // nope, assure that the next cmr field exists and update path
-               path = getSingleValuedCMRField(path, (String)selectPathList.get(i));
+               String temp  = getSingleValuedCMRField(
+                     path, (String)selectPathList.get(i));
+               if(temp == null) {
+                  throw new IllegalArgumentException("Select path element " +
+                        "is not a single valued cmr field: " + 
+                        path + "." + selectPathList.get(i));
+               }
+               path = temp;
             } else {
-               // get the final cmp field, if possible, otherwise it is a single valued cmr field
-               String cmpFieldPath = getCMPField(path, (String)selectPathList.get(i)); 
+               // get the final cmp field, if possible, otherwise it must be a 
+               // single valued cmr field
+               String cmpFieldPath = getCMPField(
+                     path, (String)selectPathList.get(i)); 
                if(cmpFieldPath != null) {
                   path = cmpFieldPath;
                } else {
                   // create the single valued cmr field object
-                  String cmrFieldPath = getSingleValuedCMRField(path, (String)selectPathList.get(i));
+                  String cmrFieldPath = getSingleValuedCMRField(
+                        path, (String)selectPathList.get(i));
                   if(cmrFieldPath == null) {
-                     throw new IllegalStateException("Unknown path: " + path + "." + selectPathList.get(i));
+                     throw new IllegalArgumentException("Select path is not " +
+                           "a single valued cmr field or a cmp field: " + 
+                           path + "." + selectPathList.get(i));
                   }
                   path = cmrFieldPath;
                }
@@ -161,7 +173,8 @@ public class SQLTarget implements DeepCloneable {
    }
    
    public Object getSelectObject() {
-      PathElement selectPathElement = idManager.getExistingPathElement(selectPath);
+      PathElement selectPathElement = 
+            idManager.getExistingPathElement(selectPath);
       if(selectPathElement instanceof AbstractSchema) {
          AbstractSchema schema = (AbstractSchema)selectPathElement;
          return schema.getEntityBridge();
@@ -170,14 +183,12 @@ public class SQLTarget implements DeepCloneable {
          return cmpField.getCMPFieldBridge();
       } else if(selectPathElement instanceof CMRField) {
          CMRField cmrField = (CMRField)selectPathElement;
-         if(cmrField.isSingleValued()) {
-            return cmrField.getEntityBridge();
-         } 
-         throw new IllegalStateException("Select path is a collection valued cmr field.");
+         return cmrField.getEntityBridge();
       }
       // should never happen
-      throw new IllegalStateException("Select path element is instance of unknown type: " +
-            "selectPath=" + selectPath + " selectPathElement=" + selectPathElement);
+      throw new IllegalStateException("Select path element is instance of " +
+            "unknown type: selectPath=" + selectPath + 
+            " selectPathElement=" + selectPathElement);
    }
    
 
