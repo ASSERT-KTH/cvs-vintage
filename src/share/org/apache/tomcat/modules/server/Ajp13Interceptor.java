@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.10 2001/08/12 03:57:52 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2001/08/12 03:57:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.11 2001/08/24 04:38:50 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2001/08/24 04:38:50 $
  *
  * ====================================================================
  *
@@ -220,6 +220,9 @@ class Ajp13Request extends Request
     
     public int doRead() throws IOException 
     {
+	if( contentLength == -1 ) {
+	    return ajp13.doRead();
+	}
 	if( available <= 0 )
 	    return -1;
 	available--;
@@ -228,6 +231,9 @@ class Ajp13Request extends Request
     
     public int doRead(byte[] b, int off, int len) throws IOException 
     {
+	if( contentLength == -1 ) {
+	    return ajp13.doRead(b,off,len);
+	}
 	if( available <= 0 )
 	    return -1;
 	int rd=ajp13.doRead( b,off, len );

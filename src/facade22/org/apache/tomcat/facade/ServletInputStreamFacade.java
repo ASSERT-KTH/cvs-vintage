@@ -100,34 +100,35 @@ final class ServletInputStreamFacade extends ServletInputStream {
 	limit=-1;
     }
 
-    /** Read a byte. Detect if a ByteBuffer is used, if not
-     *  use the old method.
-     */
-    private int doRead() throws IOException {
-	//System.out.println("DoRead");
-	return reqA.doRead();
-    }
-
-    private int doRead(byte[] b, int off, int len) throws IOException {
-	return reqA.doRead(b,off,len);
-    }
-
     // -------------------- ServletInputStream methods 
 
     public int read() throws IOException {
-	//	System.out.println("Read " + limit );
-	if (limit != -1) {
-	    if (bytesRead < limit) {
-		bytesRead++;
-		return doRead();
+	if( dL>0) debug("read() " + limit + " " + bytesRead );
+	if (limit == -1) {
+	    // Ask the adapter for more data. We are in the 'no content-length'
+	    // case - i.e. chunked encoding ( acording to http spec CL is required
+	    // for everything else.
+	    int rd=reqA.doRead();
+	    if( rd<0 ) {
+		limit=0; // no more bytes can be read.
 	    } else {
-		return -1;
+		bytesRead++; // for statistics
 	    }
-	} else {
-	    return -1;
-	    // no content-length, no body
-	    //	    return doRead();
+	    return rd;
 	}
+
+	// We have a limit
+	if (bytesRead >= limit)
+	    return -1;
+	
+	bytesRead++;
+	int rd=reqA.doRead();
+	if( rd<0 ) {
+	    limit=0; // adapter detected EOF, before C-L finished.
+	    // trust the adapter - if it returns EOF it's unlikely it'll give us
+	    // any more data
+	}
+	return rd;
     }
 
     public int read(byte[] b) throws IOException {
@@ -135,26 +136,40 @@ final class ServletInputStreamFacade extends ServletInputStream {
     }
 
     public int read(byte[] b, int off, int len) throws IOException {
-	if (limit != -1) {
-	    if (bytesRead == limit) {
-		return -1;
-	    }
-	    if (bytesRead + len > limit) {
-		len = limit - bytesRead;
-	    }
-	    int numRead = doRead(b, off, len);
+	if( dL>0) debug("read(" +  len + ") " + limit + " " + bytesRead );
+	if (limit == -1) {
+	    int numRead = reqA.doRead(b, off, len);
 	    if (numRead > 0) {
 		bytesRead += numRead;
 	    }
+	    if( numRead< 0 ) {
+		// EOF - stop reading
+		limit=0;
+	    }
 	    return numRead;
-	} else {
-	    return -1;
-	    //return doRead(b, off, len);
 	}
+
+	if (bytesRead >= limit) {
+	    return -1;
+	}
+
+	if (bytesRead + len > limit) {
+	    len = limit - bytesRead;
+	}
+	int numRead = reqA.doRead(b, off, len);
+	if (numRead > 0) {
+	    bytesRead += numRead;
+	}
+	return numRead;
     }
     
 
     public int readLine(byte[] b, int off, int len) throws IOException {
 	return super.readLine(b, off, len);
+    }
+
+    private static int dL=0;
+    private void debug( String s ) {
+	System.out.println("ServletInputStreamFacade: " + s );
     }
 }
