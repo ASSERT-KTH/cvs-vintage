@@ -4,7 +4,7 @@
 This version applies to the JBoss 4.x releases and the
 j2ee-1.4 application-client_1_4.xsd.
 
-$Id: jboss-client_4_0.dtd,v 1.1 2004/05/04 08:51:49 tdiesler Exp $
+$Id: jboss-client_4_0.dtd,v 1.2 2004/06/15 01:26:28 starksm Exp $
 
    <!DOCTYPE jboss-client PUBLIC
        "-//JBoss//DTD Application Client 4.0//EN"
@@ -13,7 +13,8 @@ $Id: jboss-client_4_0.dtd,v 1.1 2004/05/04 08:51:49 tdiesler Exp $
 
 <!-- The jboss-client element is the root element.
 -->
-<!ELEMENT jboss-client (jndi-name, ejb-ref*, service-ref*, resource-ref*, resource-env-ref*)>
+<!ELEMENT jboss-client (jndi-name, ejb-ref*, service-ref*, resource-ref*,
+ resource-env-ref*)>
 
 <!-- The required jndi-name element specifies the JNDI name of a deployed
 object. It is used in two different contexts:
@@ -112,7 +113,7 @@ Example:
         <wsdl-override>file:/wsdlRepository/organization-service.wsdl</wsdl-override>
     </ejb-local-ref>
 -->
-<!ELEMENT service-ref (service-ref-name, wsdl-override?)>
+<!ELEMENT service-ref (service-ref-name, wsdl-override?, call-property*)>
 
 <!-- The service-ref-name element gives the ENC relative name used
 in the application-client.xml service-ref-name element.
@@ -128,3 +129,16 @@ Used in: service-ref
 -->
 <!ELEMENT wsdl-override (#PCDATA)>
 
+<!-- Arbitrary jaxrpc property values that should be set on a Call object
+before it's returned to the web service client. The valid properties can be any
+properties supported by the jaxrpc Call implementation.
+-->
+<!ELEMENT call-property ( prop-name, prop-value )>
+
+<!-- The string value of a property name
+-->
+<!ELEMENT prop-name (#PCDATA)>
+
+<!-- The string value of a property value
+-->
+<!ELEMENT prop-value (#PCDATA)>

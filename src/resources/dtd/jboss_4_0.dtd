@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 3.2 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.5 2004/05/14 01:26:18 ejort Exp $
+$Id: jboss_4_0.dtd,v 1.6 2004/06/15 01:26:28 starksm Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -535,7 +535,7 @@ Example:
         <wsdl-override>file:/wsdlRepository/organization-service.wsdl</wsdl-override>
     </ejb-local-ref>
 -->
-<!ELEMENT service-ref (service-ref-name, wsdl-override?)>
+<!ELEMENT service-ref (service-ref-name, wsdl-override?, call-property*)>
 
 <!-- The service-ref-name element gives the ENC relative name used
 in the ejb-jar.xml service-ref-name element.
@@ -550,6 +550,20 @@ uses to connect to the remote service. It overrides the value of wsdl-file in ej
 Used in: service-ref
 -->
 <!ELEMENT wsdl-override (#PCDATA)>
+
+<!-- Arbitrary jaxrpc property values that should be set on a Call object
+before it's returned to the web service client. The valid properties can be any
+properties supported by the jaxrpc Call implementation.
+-->
+<!ELEMENT call-property ( prop-name, prop-value )>
+
+<!-- The string value of a property name
+-->
+<!ELEMENT prop-name (#PCDATA)>
+
+<!-- The string value of a property value
+-->
+<!ELEMENT prop-value (#PCDATA)>
 
 <!--
   The security-identity element specifies whether a specific run-as identity is to be
