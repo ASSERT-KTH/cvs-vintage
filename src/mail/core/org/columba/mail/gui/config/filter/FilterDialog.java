@@ -216,9 +216,10 @@ public class FilterDialog implements ActionListener {
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
-		helpButton.setActionCommand("HELP");
-		helpButton.addActionListener(this);
+		
 		helpButton = new HelpButton();
+		helpButton.setActionCommand("HELP");
+				helpButton.addActionListener(this);
 		buttonPanel.add(helpButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
