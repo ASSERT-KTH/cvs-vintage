@@ -63,6 +63,7 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.util.qlog.Logger;
 import org.apache.tomcat.util.http.HttpMessages;
+import org.apache.tomcat.util.http.LocaleToCharsetMap;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -573,7 +574,13 @@ class ExceptionHandler extends Handler {
 
 	// only include <head>...<body> if reset was successful
 	if ( needsHead ) {
-	    res.setContentType("text/html");
+           String charset = LocaleToCharsetMap.getCharset(Locale.getDefault());
+           if (charset == null || charset.equalsIgnoreCase("ISO-8859-1"))
+               res.setContentType("text/html");
+           else {
+               res.setContentType("text/html; charset=" + charset);
+               res.setUsingWriter(true);
+           }
 	    res.setStatus( 500 );
 	
 	    buf.append("<head><title>");
