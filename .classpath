@@ -14,5 +14,6 @@
     <classpathentry kind="lib" path="lib/jakarta-oro-2.0.6.jar"/>
     <classpathentry kind="lib" path="lib/jargs.jar"/>
     <classpathentry kind="lib" path="lib/lucene-1.3-rc1.jar"/>
+    <classpathentry kind="lib" path="lib/jwizz-0.1.0-beta.jar"/>
     <classpathentry kind="output" path="classes"/>
 </classpath>
