@@ -31,10 +31,34 @@
   <mailingLists>
     <mailingList>
       <name>Scarab Dev List</name>
+      <subscribe>dev-subscribe@scarab.tigris.org </subscribe>
+      <unsubscribe>dev-unsubscribe@scarab.tigris.org </unsubscribe>
+      <archive>http://scarab.tigris.org/servlets/SummarizeList?listName=dev</archive>
     </mailingList>
     <mailingList>
-      <name>Scarab User List</name>
+      <name>Scarab Users List</name>
+      <subscribe>users-subscribe@scarab.tigris.org </subscribe>
+      <unsubscribe>users-unsubscribe@scarab.tigris.org </unsubscribe>
+      <archive>http://scarab.tigris.org/servlets/SummarizeList?listName=users</archive>
     </mailingList>
+    <mailingList>
+      <name>Scarab Issues List</name>
+      <subscribe>issues-subscribe@scarab.tigris.org </subscribe>
+      <unsubscribe>issues-unsubscribe@scarab.tigris.org </unsubscribe>
+      <archive>http://scarab.tigris.org/servlets/SummarizeList?listName=issues</archive>      
+    </mailingList>    
+    <mailingList>
+      <name>Scarab CVS List</name>
+      <subscribe>cvs-subscribe@scarab.tigris.org </subscribe>
+      <unsubscribe>cvs-unsubscribe@scarab.tigris.org </unsubscribe>
+      <archive>http://scarab.tigris.org/servlets/SummarizeList?listName=cvs</archive>      
+    </mailingList> 
+    <mailingList>
+      <name>Scarab Announcements List</name>
+      <subscribe>announce-subscribe@scarab.tigris.org </subscribe>
+      <unsubscribe>announce-unsubscribe@scarab.tigris.org </unsubscribe>
+      <archive>http://scarab.tigris.org/servlets/SummarizeList?listName=announce</archive>      
+    </mailingList>     
   </mailingLists>
 
   <developers>
@@ -458,9 +482,9 @@
       </properties>
     </dependency>
     
-	<!-- Begin Database Dependencies -->
-	<!-- MySQL -->
-	<dependency>
+  <!-- Begin Database Dependencies -->
+  <!-- MySQL -->
+  <dependency>
       <groupId>mm.mysql</groupId>
       <artifactId>mm.mysql</artifactId>
       <version>2.0.14-bin</version>
@@ -478,7 +502,7 @@
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
-    </dependency>	
+    </dependency> 
     <!-- Hypersonic (HSQLDB) -->
     <dependency>
       <groupId>hsqldb</groupId>
@@ -491,7 +515,7 @@
     </dependency>        
     
     <!-- Microsoft SQL Server -->
-	 <dependency>
+   <dependency>
       <groupId>mssqlserver</groupId>
       <artifactId>msbase</artifactId>
       <jar>msbase.jar</jar>
@@ -499,9 +523,9 @@
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
-    </dependency>	    
+    </dependency>     
 
-	 <dependency>
+   <dependency>
       <groupId>mssqlserver</groupId>
       <artifactId>mssqlserver</artifactId>
       <jar>mssqlserver.jar</jar>
@@ -509,9 +533,9 @@
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
-    </dependency>	
+    </dependency> 
        
-	 <dependency>
+   <dependency>
       <groupId>mssqlserver</groupId>
       <artifactId>msutil</artifactId>
       <jar>msutil.jar</jar>
@@ -519,9 +543,9 @@
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
-    </dependency>	     
-	
-	<!-- End Database Dependencies -->    
+    </dependency>      
+  
+  <!-- End Database Dependencies -->    
   </dependencies>
 
   <build>
@@ -529,7 +553,7 @@
     <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
     <unitTest>
       <includes>
-      	<include>**/*Test.java</include>
+        <include>**/*Test.java</include>
       </includes>
     </unitTest>
     <resources>      
@@ -541,10 +565,10 @@
   </build>
   
   <reports>    
+  
     <report>maven-faq-plugin</report>
     <report>maven-changes-plugin</report>
     <report>maven-jdepend-plugin</report>    
-    <!--report>maven-checkstyle-plugin</report-->
     <report>maven-changelog-plugin</report>
     <report>maven-developer-activity-plugin</report>
     <report>maven-file-activity-plugin</report>
@@ -556,7 +580,6 @@
     <report>maven-simian-plugin</report>
     <report>maven-junit-report-plugin</report>
     <report>maven-tasklist-plugin</report>
-    
 
   </reports>  
 </project>
