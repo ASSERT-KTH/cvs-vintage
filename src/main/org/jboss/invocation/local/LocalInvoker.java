@@ -8,6 +8,7 @@
 package org.jboss.invocation.local;
 
 import java.net.InetAddress;
+
 import javax.management.ObjectName;
 import javax.management.MBeanException;
 import javax.management.MBeanServer;
@@ -23,13 +24,14 @@ import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
 import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.logging.Logger;
 
 /**
  * The Invoker is a local gate in the JMX system.
- *  
+ *
+ * @jmx:mbean extends="org.jboss.system.ServiceMBean"
+ * 
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class LocalInvoker
    extends ServiceMBeanSupport
