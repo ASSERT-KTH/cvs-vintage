@@ -13,12 +13,17 @@ import  org.jboss.ejb.plugins.jrmp.interfaces.ContainerRemote;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class EntityProxy
 	extends org.jboss.ejb.plugins.jrmp.interfaces.EntityProxy
    implements org.jboss.proxy.InvocationHandler
 {
+   public EntityProxy()
+   {
+      // For externalization to work
+   }
+
    public EntityProxy(String name, ContainerRemote container, Object id, boolean optimize)
    {
 		super(name, container, id, optimize);
