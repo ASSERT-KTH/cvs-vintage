@@ -213,8 +213,9 @@ public class IMAPResponse {
 
 		// start with beginning of string
 		int endOfAtom = skipSpaces(source, 0);
-		if ( endOfAtom == -1) return;
-		
+		if (endOfAtom == -1)
+			return;
+
 		nextAtom = source.substring(0, endOfAtom);
 		index = endOfAtom + 1;
 
@@ -229,8 +230,9 @@ public class IMAPResponse {
 		}
 
 		endOfAtom = skipSpaces(source, index);
-		if ( endOfAtom < index ) return;
-		
+		if (endOfAtom < index)
+			return;
+
 		nextAtom = source.substring(index, endOfAtom);
 		index = endOfAtom;
 
@@ -269,7 +271,7 @@ public class IMAPResponse {
 		if (source.charAt(index + 1) == '[') {
 			int oldIndex = index + 1;
 			index = source.indexOf("]", oldIndex);
-			System.out.println("charAt(index)=" + source.charAt(index));
+
 			nextAtom = source.substring(oldIndex + 1, index);
 
 			for (int i = 0; i < responseCodeString.length; i++) {
@@ -283,17 +285,13 @@ public class IMAPResponse {
 
 			index++;
 
-			System.out.println("nextAtom=\"" + nextAtom + "\"");
-
 		}
 
-		System.out.println("charAt(index)=" + source.charAt(index));
 		if (source.charAt(index) == ' ') {
 			// we found human readable optional message
 
 			nextAtom = source.substring(index + 1, source.length());
 
-			System.out.println("hrm=" + nextAtom);
 		}
 
 	}
