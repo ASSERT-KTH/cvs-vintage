@@ -1,1 +1,11 @@
-body {font-family:lucida,verdana,helvetica,arial,sans-serif;}
+/** $Id: look-and-feel.css,v 1.5 2004/03/25 12:25:06 linus Exp $
+*******************************************************************************
+
+Style sheet for the documentation
+
+******************************************************************************/
+
+/* Set preferred fonts */
+
+body, table {
+  font-family: lucida,verdana,helvetica,arial,sans-serif }
