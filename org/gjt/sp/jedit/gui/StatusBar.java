@@ -46,7 +46,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.5 2001/10/10 10:07:04 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.6 2001/10/11 11:44:27 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -348,6 +348,7 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 				else if(text.equals("explicit"))
 					text = "none";
 
+				JEditTextArea textArea = view.getTextArea();
 				Buffer buffer = view.getBuffer();
 				buffer.putProperty("folding",text);
 				buffer.propertiesChanged();
@@ -355,9 +356,15 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 				Integer collapseFolds = (Integer)buffer.getProperty(
 					"collapseFolds");
 				if(collapseFolds != null && collapseFolds.intValue() != 0)
-					buffer.expandFolds(collapseFolds.intValue());
+				{
+					textArea.getFoldVisibilityManager()
+						.expandFolds(collapseFolds.intValue());
+				}
 				else
-					buffer.expandAllFolds();
+				{
+					textArea.getFoldVisibilityManager()
+						.expandAllFolds();
+				}
 			}
 			else if(source == multiSelect)
 				view.getTextArea().toggleMultipleSelectionEnabled();

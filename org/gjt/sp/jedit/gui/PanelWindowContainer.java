@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.8 2001/10/10 10:07:04 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.9 2001/10/11 11:44:27 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -52,6 +52,7 @@ public class PanelWindowContainer implements DockableWindowContainer
 
 		closeBox = new JButton(CLOSE_BOX);
 		closeBox.setRequestFocusEnabled(false);
+		closeBox.setToolTipText(jEdit.getProperty("view.docking.close-tooltip"));
 		buttons.add(closeBox);
 
 		closeBox.addActionListener(new ActionListener()
