@@ -26,7 +26,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.33 1999/04/20 01:52:57 jrobbins Exp $
+// $Id: FigClass.java,v 1.34 1999/04/22 22:35:12 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -117,6 +117,16 @@ public class FigClass extends FigNodeModelElement {
 
   public Selection makeSelection() {
     return new SelectionClass(this);
+  }
+
+  public Vector getPopUpActions(MouseEvent me) {
+    Vector popUpActions = super.getPopUpActions(me);
+    JMenu addMenu = new JMenu("Add");
+    addMenu.add(Actions.AddAttribute);
+    addMenu.add(Actions.AddOperation);
+    popUpActions.insertElementAt(addMenu,
+				 popUpActions.size() - 1);
+    return popUpActions;
   }
 
   public void setOwner(Object node) {

@@ -26,7 +26,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.18 1999/04/22 20:24:35 jrobbins Exp $
+// $Id: FigNodeModelElement.java,v 1.19 1999/04/22 22:35:15 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -123,10 +123,9 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
     if (items != null && items.size() > 0) {
       JMenu critiques = new JMenu("Critiques");
       ToDoItem itemUnderMouse = hitClarifier(me.getX(), me.getY());
-      if (itemUnderMouse != null) {
+      if (itemUnderMouse != null)
 	critiques.add(new ActionGoToCritique(itemUnderMouse));
-	critiques.addSeparator();
-      }
+      critiques.addSeparator();
       int size = items.size();
       for (int i = 0; i < size; i++) {
 	ToDoItem item = (ToDoItem) items.elementAt(i);
@@ -134,7 +133,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
 	critiques.add(new ActionGoToCritique(item));
       }
       popUpActions.insertElementAt(critiques, 0);
-    } 
+    }
     popUpActions.addElement(Actions.Properties);
     return popUpActions;
   }
