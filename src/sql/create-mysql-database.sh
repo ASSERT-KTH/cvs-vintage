@@ -13,8 +13,12 @@ if [ ! -d "${POPULATION_SCRIPT_DIR}" ] ; then
 fi
 
 echo ""
-echo "Note: .sql files are located in:"
+echo "-----------------------------------------------------"
+echo "Note: The .sql files are imported into the db from:"
 echo "${POPULATION_SCRIPT_DIR}"
+echo "If you change a .sql file in this directory,"
+echo "you need to make sure to re-run the Ant build system."
+echo "-----------------------------------------------------"
 echo ""
 
 # Define these values if you need to
