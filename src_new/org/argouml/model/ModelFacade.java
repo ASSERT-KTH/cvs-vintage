@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.157 2003/11/12 10:00:57 mkl Exp $
+// $Id: ModelFacade.java,v 1.158 2003/11/12 13:30:59 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1807,6 +1807,9 @@ public class ModelFacade {
     public static Object getChangeability(Object handle) {
         if (handle instanceof MStructuralFeature) {
             return ((MStructuralFeature)handle).getChangeability();
+        }
+        if (handle instanceof MAssociationEnd) {
+            return ((MAssociationEnd)handle).getChangeability();
         }
         throw new IllegalArgumentException("Unrecognized object " + 
 					   getClassNull(handle));
