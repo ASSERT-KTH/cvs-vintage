@@ -1,4 +1,4 @@
-// $Id: TestUmlModelEventPump.java,v 1.15 2004/03/27 22:23:48 d00mst Exp $
+// $Id: TestUmlModelEventPump.java,v 1.16 2004/04/23 00:08:25 d00mst Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,7 @@ public class TestUmlModelEventPump extends TestCase {
     private boolean eventcalled;
     private TestListener listener2;
 
-    public static final boolean TEST_PERFORMANCE = true;
+    public static final boolean TEST_PERFORMANCE = false;
     public static final int PERFORMANCE_TEST_SIZE = 5000;
 
     private class TestListener implements MElementListener {
