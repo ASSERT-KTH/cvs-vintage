@@ -34,7 +34,7 @@ import org.jboss.tm.TransactionLocal;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public final class EntityInvocationRegistry
 {
@@ -148,7 +148,7 @@ public final class EntityInvocationRegistry
       }
    }
 
-   public void endInvocation(boolean threwException, Object id, EntityEnterpriseContext ctx, Transaction tx)
+   public void endInvocation(Throwable threw, Object id, EntityEnterpriseContext ctx, Transaction tx)
    {
       EntityContextKey key = new EntityContextKey(
             (EntityContainer)ctx.getContainer(),
@@ -175,13 +175,13 @@ public final class EntityInvocationRegistry
       if(tx == null)
       {
          // only store the entity if an exception was not thrown
-         if(!ctx.isReadOnly() && !threwException)
+         if(!ctx.isReadOnly() && threw == null)
          {
             synchronizeEntity(ctx);
          }
 
          // always disassociate the entity
-         disassociateEntity(threwException, id, ctx);
+         disassociateEntity(threw != null, id, ctx);
          registry.getAssociatedMap().remove(key);
 
          // just to be safe clear the regisry if the invocation is done
@@ -197,7 +197,7 @@ public final class EntityInvocationRegistry
             // a read only entity is not associated after
             // it leaves the invocation
             registry.getAssociatedMap().remove(key);
-            disassociateEntity(threwException, id, ctx);
+            disassociateEntity(threw != null, id, ctx);
          }
          else
          {

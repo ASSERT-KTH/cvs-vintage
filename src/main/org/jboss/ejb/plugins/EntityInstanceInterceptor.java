@@ -7,8 +7,11 @@
 package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.rmi.RemoteException;
+
 import javax.ejb.EJBException;
+import javax.transaction.Transaction;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.BeanLock;
@@ -43,7 +46,7 @@ import org.jboss.invocation.InvocationResponse;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.62 $
+ * @version $Revision: 1.63 $
  */
 public class EntityInstanceInterceptor extends AbstractInterceptor
 {
@@ -54,43 +57,52 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
       EntityEnterpriseContext ctx = null;
       boolean trace = log.isTraceEnabled();
 
-      // Get the context from the pool or cache
-      if(invocation.getType().isHome()) 
+      try
       {
-         if(trace)
+         // Get the context from the pool or cache
+         if(invocation.getType().isHome()) 
          {
-            log.trace("Begin home invoke");
+            if(trace)
+               log.trace("Begin home invoke");
+            ctx = (EntityEnterpriseContext) container.getInstancePool().get();
          }
-         ctx = (EntityEnterpriseContext) container.getInstancePool().get();
-      }
-      else
-      {
-         id = invocation.getId();
-         if(trace)
+         else
          {
-            log.trace("Begin invoke, id=" + id);
+            id = invocation.getId();
+            if(trace)
+               log.trace("Begin invoke, id=" + id);
+            ctx = (EntityEnterpriseContext) container.getInstanceCache().get(id);
          }
-         ctx = (EntityEnterpriseContext) container.getInstanceCache().get(id);
+
+         if(ctx == null)
+         {
+            throw new EJBException("The instance cache returned a null context");
+         }
+
+         // Pass it to the method invocation
+         invocation.setEnterpriseContext(ctx);
+
+         // Set the current security information
+         ctx.setPrincipal(invocation.getPrincipal());
+
+         // Associate transaction, in the new design the lock already has the 
+         // transaction from the previous interceptor.
+         // Don't set the transction if a read-only method.  With a read-only 
+         // method, the ctx can be shared between multiple transactions.
+         if(!isReadOnlyInvocation(invocation)) 
+         {
+            ctx.setTransaction(invocation.getTransaction());
+         }
       }
-
-      if(ctx == null)
+      catch (Throwable t)
       {
-         throw new EJBException("The instance cache returned a null context");
-      }
-
-      // Pass it to the method invocation
-      invocation.setEnterpriseContext(ctx);
-
-      // Set the current security information
-      ctx.setPrincipal(invocation.getPrincipal());
-
-      // Associate transaction, in the new design the lock already has the 
-      // transaction from the previous interceptor.
-      // Don't set the transction if a read-only method.  With a read-only 
-      // method, the ctx can be shared between multiple transactions.
-      if(!isReadOnlyInvocation(invocation)) 
-      {
-         ctx.setTransaction(invocation.getTransaction());
+         clearTxLock(invocation, t, trace);
+         if (t instanceof Exception)
+            throw (Exception) t;
+         else if (t instanceof Error)
+            throw (Error) t;
+         else 
+            throw new UndeclaredThrowableException(t);
       }
 
       Throwable exceptionThrown = null;
@@ -193,5 +205,32 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
       Method method = invocation.getMethod();
       return method == null ||
          !container.getBeanMetaData().isMethodReadOnly(method.getName());
+   }
+
+   private void clearTxLock(Invocation invocation, Throwable t, boolean trace)
+      throws Exception
+   {
+      if (invocation.getType().isHome() == false && isReadOnlyInvocation(invocation) == false)
+      {
+         Object key = invocation.getId();
+         EntityContainer container = (EntityContainer)getContainer();
+         BeanLock lock = container.getLockManager().getLock(key);
+         lock.sync();
+         try
+         {
+            Transaction tx = lock.getTransaction();
+            if (tx != null)
+            {
+               if (trace)
+                  log.trace("Clearing bean lock's tx: " + tx + " key: " + key, t);
+  
+               lock.wontSynchronize(tx);
+            }
+         }
+         finally
+         {
+            lock.releaseSync();
+         }
+      }
    }
 }

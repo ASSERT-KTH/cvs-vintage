@@ -6,9 +6,12 @@
  */
 package org.jboss.ejb.entity;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.UndeclaredThrowableException;
 
 import javax.transaction.Transaction;
 
+import org.jboss.ejb.BeanLock;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.AbstractInterceptor;
@@ -32,46 +35,71 @@ import org.jboss.invocation.InvocationResponse;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class EntitySynchronizationInterceptor extends AbstractInterceptor
 {
    public InvocationResponse invoke(Invocation invocation) throws Exception
    {
-      EntityContainer container = (EntityContainer)getContainer();
-      EntityEnterpriseContext ctx =
-            (EntityEnterpriseContext)invocation.getEnterpriseContext();
-      Transaction tx = invocation.getTransaction();
-
-      // mark the context as read only if this is a readonly method and the context
-      // was not already readonly
+      EntityEnterpriseContext ctx = null;
       boolean didSetReadOnly = false;
-      if(!ctx.isReadOnly() &&
+      Object id = null;
+      boolean trace = log.isTraceEnabled();
+      Transaction tx = null;
+
+      try
+      {
+         EntityContainer container = (EntityContainer)getContainer();
+         ctx = (EntityEnterpriseContext)invocation.getEnterpriseContext();
+         tx = invocation.getTransaction();
+
+         // mark the context as read only if this is a readonly method and the context
+         // was not already readonly
+         if(!ctx.isReadOnly() &&
             (container.isReadOnly() ||
              container.getBeanMetaData().isMethodReadOnly(invocation.getMethod()) ))
-      {
-         ctx.setReadOnly(true);
-         didSetReadOnly = true;
-      }
+         {
+            ctx.setReadOnly(true);
+            didSetReadOnly = true;
+         }
 
-      // if we have an id we need to register the invocation
-      Object id = ctx.getId();
-      if(id != null)
+         // if we have an id we need to register the invocation
+         id = ctx.getId();
+         if(id != null)
+            EntityContainer.getEntityInvocationRegistry().beginInvocation(ctx, tx);
+      }
+      catch (Throwable t)
       {
-         EntityContainer.getEntityInvocationRegistry().beginInvocation(ctx, tx);
+         if (didSetReadOnly)
+            ctx.setReadOnly(false);
+            
+         clearTxLock(invocation, t, trace);
+
+         if (t instanceof Exception)
+            throw (Exception) t;
+         else if (t instanceof Error)
+            throw (Error) t;
+         else 
+            throw new UndeclaredThrowableException(t);
       }
 
       // invoke the next but remember if an exception is thrown
-      boolean exceptionThrown = false;
+      Throwable exceptionThrown = null;
       try
       {
          return getNext().invoke(invocation);
       }
-      catch(Exception e)
+      catch(Throwable t)
       {
-         exceptionThrown = true;
          ctx.setValid(false);
-         throw e;
+
+         exceptionThrown = t;
+         if (t instanceof Exception)
+            throw (Exception) t;
+         else if (t instanceof Error)
+            throw (Error) t;
+         else 
+            throw new UndeclaredThrowableException(t);
       }
       finally
       {
@@ -88,6 +116,45 @@ public class EntitySynchronizationInterceptor extends AbstractInterceptor
          if(didSetReadOnly)
          {
             ctx.setReadOnly(false);
+         }
+      }
+   }
+
+   private boolean isReadOnlyInvocation(Invocation invocation)
+   {
+      EntityContainer container = (EntityContainer)getContainer();
+
+      if(invocation.getType().isHome() || !container.isReadOnly()) 
+         return false;
+
+      Method method = invocation.getMethod();
+      return method == null ||
+         !container.getBeanMetaData().isMethodReadOnly(method.getName());
+   }
+
+   private void clearTxLock(Invocation invocation, Throwable t, boolean trace)
+      throws Exception
+   {
+      if (invocation.getType().isHome() == false && isReadOnlyInvocation(invocation) == false)
+      {
+         Object key = invocation.getId();
+         EntityContainer container = (EntityContainer)getContainer();
+         BeanLock lock = container.getLockManager().getLock(key);
+         lock.sync();
+         try
+         {
+            Transaction tx = lock.getTransaction();
+            if (tx != null)
+            {
+               if (trace)
+                  log.trace("Clearing bean lock's tx: " + tx + " key: " + key, t);
+  
+               lock.wontSynchronize(tx);
+            }
+         }
+         finally
+         {
+            lock.releaseSync();
          }
       }
    }
