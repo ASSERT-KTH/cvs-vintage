@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
+/**
+ * A replacement for the default HTTP URL handler returning instances of the
+ * proxy HttpURLConnection.
+ */
 public class Handler extends sun.net.www.protocol.http.Handler {
     public Handler() {
         super();
