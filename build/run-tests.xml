@@ -3,10 +3,15 @@
 <!-- Testcases for Scarab -->
 <project name="main" default="test-all" basedir=".">
 
-  <property name="build.dest" value="../target/webapps/scarab/WEB-INF/classes"/>
+  <property name="webapps.scarab" value="../target/webapps/scarab"/>
+  <property name="web.inf" value="${webapps.scarab}/WEB-INF"/>
+  <property name="web.inf.lib" value="${web.inf}/lib"/>
+  <property name="build.dest" value="${web.inf}/classes"/>
   <property name="ant.home" value="."/>
   <property name="test.home" value="../test"/>
   <property name="junit.jar" value="../lib/junit-3.7.jar"/>
+  <property name="config.dir"
+           value="-Dconfig.dir=${webapps.scarab}"/>
 
   <!-- JUnit Testbed properties -->
   <property name="test.runner" value="junit.textui.TestRunner"/>
@@ -17,6 +22,9 @@
   <!-- Build classpath -->
   <path id="classpath">
     <fileset dir="../lib">
+      <include name="servlet*.jar"/>
+    </fileset>
+    <fileset dir="${web.inf.lib}">
       <include name="**/*.jar"/>
     </fileset>
     <pathelement location="${build.dest}"/>
@@ -36,6 +44,7 @@
 
     <java     classname="${test.runner}" fork="yes" 
             failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
       <arg value="org.tigris.scarab.om.IssueTest"/>
       <classpath>
         <path refid="classpath"/>

@@ -48,7 +48,13 @@ package org.tigris.scarab.test;
 
 import java.io.File;
 
+import org.apache.turbine.util.TurbineConfig;
+import org.apache.torque.om.NumberKey;
+
 import junit.framework.TestCase;
+
+import org.tigris.scarab.om.ScarabModulePeer;
+import org.tigris.scarab.services.module.ModuleEntity;
 
 /**
  * Base test case that provides a few utility methods for
@@ -56,10 +62,15 @@ import junit.framework.TestCase;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.1 2001/08/21 03:51:59 jon Exp $
+ * @version $Id: BaseTestCase.java,v 1.2 2001/08/21 05:09:02 jon Exp $
  */
 public class BaseTestCase extends TestCase
 {
+    /** name of the TR.props file */
+    private static final String TR_PROPS = "/WEB-INF/conf/TurbineResources.properties";
+
+    private ModuleEntity module = null;
+    
     /**
      * Default constructor.
      */
@@ -68,6 +79,54 @@ public class BaseTestCase extends TestCase
         super(name);
     }
 
+    protected void setUp()
+        throws Exception
+    {
+        String configDir = System.getProperty("config.dir");
+        if (configDir != null)
+        {
+            initTurbine(configDir);
+            initScarab();
+        }
+        else
+        {
+            System.out.println (
+                "config.dir System property was not defined");
+        }
+    }
+
+    /**
+     * We are currently depending on TurbineConfig, but this may go away
+     * in the future or be changed to something else.
+     */
+    private void initTurbine (String configDir)
+        throws Exception
+    {
+        TurbineConfig tc = new TurbineConfig(configDir, TR_PROPS);
+        tc.init();
+    }
+
+    /**
+     * Grab Module #5 for testing. This is the same as what the web
+     * application does and this is setup in ScarabPage.tempWorkAround()
+     */
+    private void initScarab()
+        throws Exception
+    {
+        module = (ModuleEntity) ScarabModulePeer.retrieveByPK(new NumberKey(5));
+    }
+
+    /**
+     * If something like an Issue needs a mapping to a ModuleEntity, then
+     * this is Module #5 that you can use. For example, you should call:
+     * issue.setModuleCast(getModule()) in your Test before you use any
+     * of the rest of the methods on the Issue object.
+     */
+    protected ModuleEntity getModule()
+    {
+        return this.module;
+    }
+    
     /**
      * Concatenates the file name parts together appropriately.
      *
