@@ -1,4 +1,4 @@
-// $Id: TestArgoParser.java,v 1.7 2003/06/29 23:16:09 linus Exp $
+// $Id: TestArgoParser.java,v 1.8 2003/10/13 06:12:12 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,8 +39,11 @@ public class TestArgoParser extends TestCase {
 
     /**
      * Tests that a project is loadable.
+     *
+     * @param filename of the project file to load
+     * @throws Exception if something goes wrong.
      */
-    private void loadProject(String filename) {
+    private void loadProject(String filename) throws Exception {
 	URL url;
 	try {
 	    url = new URL(filename);
@@ -50,16 +53,13 @@ public class TestArgoParser extends TestCase {
 	} catch (java.net.MalformedURLException e) {
 	    assertTrue("Incorrect test case, malformed filename: " 
 		       + filename + ".", false);
-	} catch (Exception io) {
-	    fail("Projectfile corrupted: " + filename);
-	}
-	
+	}	
     }
 
-    public void testLoadProject1() { 
+    public void testLoadProject1() throws Exception { 
 	loadProject("file:testmodels/Empty.zargo");
     }
-    public void testLoadProject2() {
+    public void testLoadProject2() throws Exception {
 	loadProject("file:testmodels/Alittlebitofeverything.zargo");
     }
 
