@@ -15,66 +15,66 @@
 
 <div class="toolgroup">
 <div class="label">
- <strong>$link.setPage("admin,AdminIndex.vm").setLabel("Admin")</strong></div>
+ <strong>$link.setPage("admin,AdminIndex.vm").setLabel("$l10n.Admin")</strong></div>
 
 <div class="body">
 #if ($allowGATS || $allowGAS)
   #if ($adminMenu.equals("1"))
-    <div><strong>Global data</strong>
+    <div><strong>$l10n.GlobalData</strong>
     $renderer.render("navigations", "GlobalAdmin.vm")
     </div>
   #else
-    <div>$link.setPage("admin,GlobalArtifactTypeShow.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "1").setLabel("Global data")</div>
+    <div>$link.setPage("admin,GlobalArtifactTypeShow.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "1").setLabel("$l10n.GlobalData")</div>
   #end
 #end
 
 #if ($allowA)
-  <div>$link.setPage("admin,Approval.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "2").setLabel("Approve")</div>
+  <div>$link.setPage("admin,Approval.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "2").setLabel("$l10n.Approve")</div>
 #end
 
 #if ($allowMAT || $allowMM || $link.isAllowed("admin,XMLExportIssues.vm"))
   #if ($adminMenu.equals("3"))
-    <div><strong>Modules</strong>
+    <div><strong>$l10n.Modules</strong>
     $renderer.render("navigations", "ModuleAdmin.vm")
     </div>
   #else
     #if ($allowMAT && ! $allowMM)
-      <div>$link.setPage("admin,ManageArtifactTypes.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Modules")</div>
+      <div>$link.setPage("admin,ManageArtifactTypes.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("$l10n.Modules")</div>
     #else
-      <div>$link.setPage("admin,ManageModules.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Modules")</div>
+      <div>$link.setPage("admin,ManageModules.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("$l10n.Modules")</div>
     #end
   #end
 #end
 
 #if ($allowMR || $allowAR)
   #if ($adminMenu.equals("4"))
-    <div><strong>Roles</strong>
-    <div>$link.setPage("admin,ManageRoles.vm").setLabel("Role list")</div>
-    <div>$link.setPage("admin,AddRole.vm").setLabel("Add new role")</div>
+    <div><strong>$l10n.Roles</strong>
+    <div>$link.setPage("admin,ManageRoles.vm").setLabel("$l10n.RoleList")</div>
+    <div>$link.setPage("admin,AddRole.vm").setLabel("$l10n.AddNewRole")</div>
     </div>
   #else
-    <div>$link.setPage("admin,ManageRoles.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "4").setLabel("Roles")</div>
+    <div>$link.setPage("admin,ManageRoles.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "4").setLabel("$l10n.Roles")</div>
   #end
 #end
 
 #if ($allowMUS || $allowAU || $allowCP)
   #if ($adminMenu.equals("5"))
-    <div><strong>Users</strong>
+    <div><strong>$l10n.Users</strong>
     #if ($allowMUS)
-    <div>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setLabel("User management")</div>
+    <div>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setLabel("$l10n.UserManagement")</div>
     #end
     #if ($allowAU)
-    <div>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add new user")</div>
+    <div>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("$l10n.AddNewUser")</div>
     #end
     #if ($allowCP)
-    <div>$link.setPage("ChangePassword.vm").setLabel("Change password")</div>
+    <div>$link.setPage("ChangePassword.vm").setLabel("$l10n.ChangePassword")</div>
     #end
     </div>
   #else
     #if (!$allowMUS && $allowCP)
-    <div>$link.setPage("ChangePassword.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "5").setLabel("Users")</div>
+    <div>$link.setPage("ChangePassword.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "5").setLabel("$l10n.Users")</div>
     #else
-    <div>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "5").setLabel("Users")</div>
+    <div>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "5").setLabel("$l10n.Users")</div>
     #end
   #end
 #end

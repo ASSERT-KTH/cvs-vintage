@@ -1,4 +1,4 @@
- <div>$link.setPage("admin,ManageModules.vm").setLabel("Manage modules")</div>
- <div>$link.setPage("admin,ManageArtifactTypes.vm").setLabel("Manage issue types")</div>
- <div>$link.setPage("admin,XMLExportIssues.vm").setLabel("XML export issues")</div>
- <div>$link.setPage("admin,XMLExportSettings.vm").setLabel("XML export settings")</div>
+ <div>$link.setPage("admin,ManageModules.vm").setLabel("$l10n.ManageModules")</div>
+ <div>$link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.NavManageIssueTypes")</div>
+ <div>$link.setPage("admin,XMLExportIssues.vm").setLabel("$l10n.XMLExportIssues")</div>
+ <div>$link.setPage("admin,XMLExportSettings.vm").setLabel("$l10n.XMLExportSettings")</div>
