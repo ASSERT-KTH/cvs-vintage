@@ -20,7 +20,7 @@ import org.jboss.jmx.interfaces.JMXAdaptor;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class Deployer
 {
@@ -43,7 +43,7 @@ public class Deployer
    public void deploy(String url)
 		throws Exception
    {
-	   ObjectName containerFactory = new ObjectName("EJB:service=ContainerFactory");
+	   ObjectName containerFactory = new ObjectName("J2EE:service=J2eeDeployer");
 
 	   URL deploymentUrl;
 	   if (new File(url).exists())
