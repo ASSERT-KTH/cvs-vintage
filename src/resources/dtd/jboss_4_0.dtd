@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.24 2005/01/07 00:06:07 reverbel Exp $
+$Id: jboss_4_0.dtd,v 1.25 2005/01/31 23:35:57 starksm Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -66,7 +66,7 @@ Overview of the architecture of jboss.xml
       <cluster-config>
       <port-component>
         <port-component-name>
-        <port-uri>
+        <port-component-uri>
         <auth-method>
         <transport-guarantee>
       </port-component>
@@ -1099,6 +1099,11 @@ The client-interceptors defines the home and bean client side interceptor chain
 -->
 <!ELEMENT client-interceptors (home , bean, list-entity?)>
 
+<!-- Define whether the ejb proxy should expose an org.jboss.proxy.IClientContainer
+   interface to provide access to the invocation context and interceptors.
+-->
+<!ATTLIST client-interceptors exposeContainer (true | false )  "false">
+
 <!--
 The endpoint-interceptors element gives the chain of interceptors
 (instances of org.jboss.proxy.Interceptor) that are associated with the
@@ -1515,15 +1520,26 @@ port-component whose service-impl-bean/ejb-link value maps to an ejb.
 
 Used in: session
 -->
-<!ELEMENT port-component (port-component-name, port-uri?, auth-method?,
+<!ELEMENT port-component (port-component-name, port-component-uri?, auth-method?,
  transport-guarantee?) >
 
-<!-- Relative path combined with web server root to form fully qualified
-endpoint address for a web service endpoint.
+<!-- Maps to the port-component-name in the webservices.xml descriptor.
 
 Used in: port-component
 -->
-<!ELEMENT port-uri (#PCDATA) >
+<!ELEMENT port-component-name (#PCDATA) >
+
+<!-- Absolute path starting with web context root to form fully qualified
+endpoint address for a web service endpoint. The port component uri, if present
+must contain at least two token seperated by '/'. The first token is the web context root,
+which must be identical among all port component uris in a given deployment.
+
+If this element is not present, the web context root will be derived from the
+deployment canonical name.
+
+Used in: port-component
+-->
+<!ELEMENT port-component-uri (#PCDATA) >
 
 <!--
 The transport-guarantee element specifies that the communication
