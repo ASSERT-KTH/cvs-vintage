@@ -1,8 +1,8 @@
-$Id: readme,v 1.13 2001/05/15 18:52:32 clucas Exp $
+$Id: readme,v 1.14 2001/06/21 04:52:45 larryi Exp $
         
                            Release Notes for:
                            ====================
-                           TOMCAT Version 3.3m3
+                           TOMCAT Version 3.3m4
                            ====================
 
 
@@ -43,19 +43,19 @@ browser at the file "tomcat_ug.html" found in the same directory as this
 file.
 
 IMPORTANT NOTE: Some important changes have been recently added to
-Tomcat 3.3m3 which are not yet covered in the accompanying documentation.
-These changes make Tomcat 3.3m3 quite different from Tomcat 3.2 in a number
+Tomcat 3.3m4 which are not yet covered in the accompanying documentation.
+These changes make Tomcat 3.3m4 quite different from Tomcat 3.2 in a number
 of ways.  These changes include the following:
 
 - Class Loading:
 
-  Tomcat 3.3m3 now uses a new hierarchy of class loaders. It provides for the
+  Tomcat 3.3m4 now uses a new hierarchy of class loaders. It provides for the
   separation of the classes used by the Tomcat container and the classes used
   by web applications.  This solves a major problem in Tomcat 3.2 where all
   web applications had to share Tomcat's XML parser. Now each web applicaton
   can have its own XML parser, or if desired all web applications can share
   an XML parser different from the one used by Tomcat. As a side effect of
-  this change, web applications in Tomcat 3.3m3 are not provided an XML
+  this change, web applications in Tomcat 3.3m4 are not provided an XML
   parser by default.  You must supply one if your web application requires
   one. For details about where to place jar files, see the README files in the
   "lib/container", "lib/common", and "lib/apps" directories of your Tomcat
@@ -65,7 +65,7 @@ of ways.  These changes include the following:
 
   The configuration of Tomcat has been reorganized into separate configuration
   files.  The conf/modules.xml file contains module definitions for the modules
-  (a.k.a Interceptors) available in Tomcat 3.3m3. The conf/server.xml file
+  (a.k.a Interceptors) available in Tomcat 3.3m4. The conf/server.xml file
   specifies which modules and connectors the Tomcat container should use along
   with their settings.
 
@@ -87,17 +87,17 @@ of ways.  These changes include the following:
   Netscape config: <NSConfig />
 
   Note: The old organization used in Tomcat 3.2 where all the configuration is
-  placed in server.xml is still supported by Tomcat 3.3m3.
+  placed in server.xml is still supported by Tomcat 3.3m4.
 
 - Tomcat Testing:
 
   The "test" web application along with the test-tomcat.xml and
-  associated support files are not part of the binary Tomcat 3.3m3 distribution.
+  associated support files are not part of the binary Tomcat 3.3m4 distribution.
   The "test" web application is supplied separately as "test.war".  This file
-  may be downloaded from the "v3.3-m3/apps" directory of the Tomcat 3.3m3
+  may be downloaded from the "v3.3-m4/apps" directory of the Tomcat 3.3m4
   release and placed in the "webapps" directory of your installation.  Running
   the test has been integrated into the Admin web application that is part of
-  the Tomcat 3.3m3 distribution.  A preliminary step to running the test is to
+  the Tomcat 3.3m4 distribution.  A preliminary step to running the test is to
   "trust" the Admin web application.  It is set to "untrusted" by default. This
   change can be accomplished by executing the command from the TOMCAT_HOME
   directory with JAVA_HOME set:
@@ -105,7 +105,7 @@ of ways.  These changes include the following:
 	./bin/tomcat.sh run -enableAdmin    <-- Unix
 	bin\tomcat run -enableAdmin         <-- Windows
 
-  Start or restart Tomcat 3.3m3 and invoke the following URL in your browser:
+  Start or restart Tomcat 3.3m4 and invoke the following URL in your browser:
 
 	http://localhost:8080/admin/test/test.jsp
 
@@ -217,7 +217,7 @@ described in the Servlet API Specification, version 2.2, section 11.
 Please note the following information about this implementation:
 
 - BASIC and FORM based authentication should work correctly.  Please
-  report any bugs you encounter here at <http://jakarta.apache.org/bugs>.
+  report any bugs you encounter here at <http://nagoya.apache.org/bugzilla>.
   The example application has a protected area defined at the following URL:
 
 	http://localhost:8080/examples/jsp/security/protected
