@@ -52,19 +52,20 @@ import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentManager;
+import org.apache.fulcrum.upload.DefaultFileItem;    
+import org.apache.fulcrum.upload.FileItem;    
 
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * A Testing Suite for the om.Attachment class.
  *
- * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: AttachmentTest.java,v 1.1 2002/03/21 21:50:10 elicia Exp $
+ * @author <a href="mailto:elicia@collab.net">Elicia David</a>
+ * @version $Id: AttachmentTest.java,v 1.2 2002/03/22 01:29:07 elicia Exp $
  */
 public class AttachmentTest extends BaseTestCase
 {
     private Attachment comment = null;
+    private Attachment fileAttachment = null;
     private Issue issue = null;
 
     /**
@@ -85,15 +86,19 @@ public class AttachmentTest extends BaseTestCase
             throws Throwable
     {
         comment = AttachmentManager.getInstance();
+        fileAttachment = AttachmentManager.getInstance();
         issue = IssueManager.getInstance(new NumberKey("1"));
 
-        testSave();
+        testSaveComment();
+        testSaveFile();
         testGetRepositoryDirectory();
+        testGetRelativePath();
+        testGetFullPath();
     }
 
-    private void testSave() throws Exception
+    private void testSaveComment() throws Exception
     {
-        System.out.println("\ntestSave()");
+        System.out.println("\ntestSaveComment()");
         // save comment
         comment.setName("comment");
         comment.setDataAsString("Test comment");
@@ -108,11 +113,43 @@ public class AttachmentTest extends BaseTestCase
 
     }
 
+    private void testSaveFile() throws Exception
+    {
+        System.out.println("\ntestSaveFile()");
+        FileItem fileItem = DefaultFileItem.newInstance("scarab/images/", "logo.gif", "image/jpeg", 6480);
+        fileAttachment.setFile(fileItem);
+        fileAttachment.setName(fileItem.getFileName());
+        fileAttachment.setMimeType("image/jpeg");
+        fileAttachment.setCreatedBy(getUser1().getUserId());
+        issue.addFile(fileAttachment);      
+        issue.save();  
+        System.out.println("filename=" + fileAttachment.getFileName());
+    }
+
     private void testGetRepositoryDirectory() throws Exception
     {
         System.out.println("\ntestGetRepositoryDirectory()");
         assertEquals("../target/webapps/scarab/WEB-INF/attachments",
                      Attachment.getRepositoryDirectory());
+    }
+
+    private void testGetRelativePath() throws Exception
+    {
+        System.out.println("\ngetRelativePath()");
+        String path = "mod" + issue.getModuleId().toString() 
+                      + "/" + issue.getIdCount()/1000 + "/" 
+                      + issue.getUniqueId() + "_" 
+                      + fileAttachment.getQueryKey() 
+                      + "_" + fileAttachment.getFileName();
+        assertEquals(path, fileAttachment.getRelativePath());
+    }
+
+    private void testGetFullPath() throws Exception
+    {
+        System.out.println("\ngetFullPath()");
+        String path = fileAttachment.getFullPath();
+        assertEquals(fileAttachment.getRepositoryDirectory() 
+                     + "/" + fileAttachment.getRelativePath(), path);
     }
 
 }
