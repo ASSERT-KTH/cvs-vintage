@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.21 2001/11/08 22:52:08 jon Exp $
+$Id: README.txt,v 1.22 2001/12/06 19:40:00 jon Exp $
 
 Welcome to Scarab!
 
@@ -21,7 +21,7 @@ system running.
 -------------------------------------------------------------------------
 
 JDK 1.2 or higher       --> <http://java.sun.com/>
-Ant 1.3 or higher       --> <http://jakarta.apache.org/ant/>
+Ant 1.4.1 or higher     --> <http://jakarta.apache.org/ant/>
 MySQL 3.22 or higher    --> <http://www.mysql.org/>
 Tomcat 4.0 or higher    --> <http://jakarta.apache.org/tomcat/>
                             (Note: Tomcat is included with Scarab.)
