@@ -83,7 +83,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.41 2003/05/31 00:37:33 elicia Exp $
+ * @version $Id: Approval.java,v 1.42 2003/08/19 06:28:35 venkatesh Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {
@@ -140,7 +140,7 @@ public class Approval extends RequireLoginFirstAction
                if (query.getApproved())
                {
                    success = false;
-                   if (query.getScopeId() == Scope.MODULE__PK)
+                   if (Scope.MODULE__PK.equals(query.getScopeId()))
                    {
                        scarabR.setAlertMessage(l10n.format("ItemAlreadyApproved", artifactName));
                    }
@@ -198,13 +198,13 @@ public class Approval extends RequireLoginFirstAction
                if (info.getApproved())
                {
                    success = false;
-                   if (info.getScopeId() == Scope.MODULE__PK)
+                   if (Scope.MODULE__PK.equals(info.getScopeId()))
                    {
                        scarabR.setAlertMessage(l10n.format("ItemAlreadyApproved", artifactName));
                    }
                    else
                    {
-                       scarabR.setAlertMessage(l10n.format("ItemAlreadyApproved", artifactName));
+                       scarabR.setAlertMessage(l10n.format("ItemAlreadyRejected", artifactName));
                    }
                }
                else
