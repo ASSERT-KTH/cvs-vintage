@@ -6,6 +6,7 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 
+<h3>Issue ID Range</h3>
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
