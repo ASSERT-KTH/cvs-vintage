@@ -12,7 +12,7 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.BeanLock;
 import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 import org.jboss.ejb.CacheKey;
 
 /**
@@ -31,7 +31,7 @@ import org.jboss.ejb.CacheKey;
 *    
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.7 $
+* @version $Revision: 1.8 $
 *
 * <p><b>Revisions:</b><br>
 * <p><b>2001/07/30: marcf</b>
@@ -73,7 +73,7 @@ public class EntityLockInterceptor
  
    // Interceptor implementation --------------------------------------
  
-   public Object invokeHome(MethodInvocation mi)
+   public Object invokeHome(Invocation mi)
       throws Exception
    {  
       // Invoke through interceptors
@@ -81,7 +81,7 @@ public class EntityLockInterceptor
   
    }
  
-   public Object invoke(MethodInvocation mi)
+   public Object invoke(Invocation mi)
       throws Exception
    {
   

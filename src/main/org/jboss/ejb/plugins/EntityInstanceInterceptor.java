@@ -16,7 +16,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 import org.jboss.ejb.CacheKey;
 
 /**
@@ -26,7 +26,7 @@ import org.jboss.ejb.CacheKey;
 * <p>This particular container interceptor implements pessimistic locking
 *    on the transaction that is associated with the retrieved instance.  If
 *    there is a transaction associated with the target component and it is
-*    different from the transaction associated with the MethodInvocation
+*    different from the transaction associated with the Invocation
 *    coming in then the policy is to wait for transactional commit. 
 *   
 * <p>We also implement serialization of calls in here (this is a spec
@@ -40,7 +40,7 @@ import org.jboss.ejb.CacheKey;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.46 $
+* @version $Revision: 1.47 $
 *
 * <p><b>Revisions:</b><br>
 * <p><b>2001/06/28: marcf</b>
@@ -115,7 +115,7 @@ public class EntityInstanceInterceptor
 	
    // Interceptor implementation --------------------------------------
 	
-   public Object invokeHome(MethodInvocation mi)
+   public Object invokeHome(Invocation mi)
       throws Exception
    {
       // Get context
@@ -154,7 +154,7 @@ public class EntityInstanceInterceptor
       return rtn;
    }
 	
-   public Object invoke(MethodInvocation mi)
+   public Object invoke(Invocation mi)
       throws Exception
    {
 		
@@ -215,7 +215,7 @@ public class EntityInstanceInterceptor
             }
             else if (ctx.getId() == null)
             {
-               // The key from the MethodInvocation still identifies the right cachekey
+               // The key from the Invocation still identifies the right cachekey
                container.getInstanceCache().remove(key);
 					
                if( trace )	log.trace("Ending invoke, cache removal, ctx="+ctx);

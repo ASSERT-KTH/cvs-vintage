@@ -14,7 +14,7 @@ import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstancePool;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 import org.jboss.ejb.CacheKey;
 
 /**
@@ -23,7 +23,7 @@ import org.jboss.ejb.CacheKey;
  *
  *    
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/08: billb</b>
@@ -58,7 +58,7 @@ public class EntityMultiInstanceInterceptor
 	
    // Interceptor implementation --------------------------------------
 	
-   public Object invokeHome(MethodInvocation mi)
+   public Object invokeHome(Invocation mi)
       throws Exception
    {
       // Get context
@@ -74,7 +74,7 @@ public class EntityMultiInstanceInterceptor
       return getNext().invokeHome(mi);
    }
 	
-   public Object invoke(MethodInvocation mi)
+   public Object invoke(Invocation mi)
       throws Exception
    {
 		
