@@ -39,37 +39,37 @@ import org.jboss.logging.Logger;
 import org.jboss.util.Sync;
 
 /**
-*   This container acquires the given instance. 
+*   This container acquires the given instance.
 *
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.25 $
+*   @version $Revision: 1.26 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
 {
     // Constants -----------------------------------------------------
-    
+
     // Attributes ----------------------------------------------------
     protected EntityContainer container;
-    
+
     // Static --------------------------------------------------------
-    
+
     // Constructors --------------------------------------------------
-    
+
     // Public --------------------------------------------------------
-    public void setContainer(Container container) 
-    { 
-        this.container = (EntityContainer)container; 
+    public void setContainer(Container container)
+    {
+        this.container = (EntityContainer)container;
     }
-    
+
     public  Container getContainer()
     {
         return container;
     }
-    
+
     // Interceptor implementation --------------------------------------
     public Object invokeHome(MethodInvocation mi)
     throws Exception
@@ -77,10 +77,10 @@ extends AbstractInterceptor
         // Get context
         EnterpriseContext ctx = ((EntityContainer)getContainer()).getInstancePool().get();
         mi.setEnterpriseContext(ctx);
-        
+
         // It is a new context for sure so we can lock it
         ctx.lock();
-        
+
         try
         {
             // Invoke through interceptors
@@ -89,58 +89,57 @@ extends AbstractInterceptor
         {
             // Always unlock, no matter what
             ctx.unlock();
-            
+
             // Still free? Not free if create() was called successfully
             if (ctx.getId() == null)
             {
                 container.getInstancePool().free(ctx);
-                // the pool will notify all everyone
-            } 
+            }
         }
     }
-    
+
     public Object invoke(MethodInvocation mi)
     throws Exception
     {
-        // The id store is a CacheKey in the case of Entity 
+        // The id store is a CacheKey in the case of Entity
         CacheKey key = (CacheKey)mi.getId();
-        
+
         // Get cache
         AbstractInstanceCache cache = (AbstractInstanceCache)container.getInstanceCache();
         Sync mutex = (Sync)cache.getLock(key);
-        
+
         EnterpriseContext ctx = null;
-        
+
         try
         {
             do
             {
-                if (mi.getTransaction() != null && mi.getTransaction().getStatus() == Status.STATUS_MARKED_ROLLBACK) 
+                if (mi.getTransaction() != null && mi.getTransaction().getStatus() == Status.STATUS_MARKED_ROLLBACK)
                     throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
-  
-				try 
+
+				try
 				{
-				
+
 					mutex.acquire();
-				
+
                     // Get context
                     ctx = cache.get(key);
-                    
+
                     // Do we have a running transaction with the context
                     Transaction tx = ctx.getTransaction();
                     if (tx != null &&
                         // And are we trying to enter with another transaction
-                        !tx.equals(mi.getTransaction())) 
+                        !tx.equals(mi.getTransaction()))
                     {
                         // Let's put the thread to sleep a lock release will wake the thread
                         // Possible deadlock
                         Logger.debug("LOCKING-WAITING (TRANSACTION) for id "+ctx.getId()+" ctx.hash "+ctx.hashCode()+" tx:"+((tx == null) ? "null" : tx.toString()));
-  
+
                         // Try your luck again
                         ctx = null;
                         continue;
                     }
-                    else 
+                    else
                     {
                         // If we get here it's the right tx, or no tx
                         if (!ctx.isLocked())
@@ -149,15 +148,15 @@ extends AbstractInterceptor
                             ctx.lock();
                         }
                         else
-                        { 
+                        {
                             if (!isCallAllowed(mi)) {
-                                
+
                                 // Go to sleep and wait for the lock to be released
                                 // This is not one of the "home calls" so we need to wait for the lock
-                                
+
                                 // Possible deadlock
                                 Logger.debug("LOCKING-WAITING (CTX) for id "+ctx.getId()+" ctx.hash "+ctx.hashCode());
-                                
+
                                 // Try your luck again
                                 ctx = null;
                                 continue;
@@ -173,77 +172,75 @@ extends AbstractInterceptor
                     }
                 }
 				catch (InterruptedException ignored) {}
-				finally 
+				finally
 				{
 					mutex.release();
 				}
-            
+
             } while (ctx == null);
-                
+
             // Set context on the method invocation
             mi.setEnterpriseContext(ctx);
-            
+
             // Go on, you won
             return getNext().invoke(mi);
-        
-        } 
+
+        }
         catch (RemoteException e)
         {
             // Discard instance
             // EJB 1.1 spec 12.3.1
             cache.remove(key);
-            
+
             throw e;
         } catch (RuntimeException e)
         {
             // Discard instance
             // EJB 1.1 spec 12.3.1
             cache.remove(key);
-            
+
             throw e;
         } catch (Error e)
         {
             // Discard instance
             // EJB 1.1 spec 12.3.1
             cache.remove(key);
-            
+
             throw e;
         } finally
         {
             //         Logger.debug("Release instance for "+id);
-			try 
+			try
 			{
 				mutex.acquire();
-				
+
 				// unlock the context
 				ctx.unlock();
-                
-				if (ctx.getId() == null)                             
+
+				if (ctx.getId() == null)
 				{
-					    
+
 				    // Work only if no transaction was encapsulating this remove()
-					if (ctx.getTransaction() == null) 
+					if (ctx.getTransaction() == null)
 					{
-						// Here we arrive if the bean has been removed and no 
-						// transaction was associated with the remove, or if 
+						// Here we arrive if the bean has been removed and no
+						// transaction was associated with the remove, or if
 						// the bean has been passivated
 
 						// Remove from cache
 						cache.remove(key);
-					        
+
 						// It has been removed -> send to the pool
 						container.getInstancePool().free(ctx);
-					        
-						// The pool will notify everyone waiting on this
 				    }
 				}
-				else 
+				else
 				{
 					// Yeah, do nothing
 				}
             }
 			catch (InterruptedException ignored) {}
-			finally 
+			finally
 			{
 				mutex.release();
 			}
@@ -257,9 +254,9 @@ extends AbstractInterceptor
 	private static Method getPrimaryKey;
 	private static Method isIdentical;
 	private static Method remove;
-	static 
+	static
 	{
-	    try 
+	    try
 	    {
 	        Class[] noArg = new Class[0];
 	        getEJBHome = EJBObject.class.getMethod("getEJBHome", noArg);
@@ -271,10 +268,10 @@ extends AbstractInterceptor
 	    catch (Exception x) {x.printStackTrace();}
 	}
 
-	private boolean isCallAllowed(MethodInvocation mi) 
+	private boolean isCallAllowed(MethodInvocation mi)
 	{
 	    boolean reentrant = ((EntityMetaData)container.getBeanMetaData()).isReentrant();
-	    
+
 	    if (reentrant)
 	    {
 	        return true;
@@ -291,7 +288,7 @@ extends AbstractInterceptor
 	            return true;
 	        }
 	    }
-	    
+
 	    return false;
 	}
 }
