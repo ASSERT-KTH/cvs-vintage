@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.19 2003/05/05 23:11:47 spestov Exp $
+ * @version $Id: EditServer.java,v 1.20 2004/03/12 19:27:00 spestov Exp $
  */
 public class EditServer extends Thread
 {
@@ -261,7 +261,13 @@ public class EditServer extends Thread
 		return ok;
 	} //}}}
 
-	// stopServer() method
+	//{{{ getPort method
+	public int getPort()
+	{
+		return socket.getLocalPort();
+	} //}}}
+
+	//{{{ stopServer() method
 	void stopServer()
 	{
 		abort = true;

@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.217 2004/02/23 00:15:21 spestov Exp $
+ * @version $Id: jEdit.java,v 1.218 2004/03/12 19:27:00 spestov Exp $
  */
 public class jEdit
 {
@@ -2519,6 +2519,17 @@ public class jEdit
 			// Byebye...
 			System.exit(0);
 		}
+	} //}}}
+
+	//{{{ getEditServer() method
+	/**
+	 * Returns the edit server instance. You can use this to find out the
+	 * port number jEdit is listening on.
+	 * @since jEdit 4.2pre10
+	 */
+	public static EditServer getEditServer()
+	{
+		return server;
 	} //}}}
 
 	//}}}

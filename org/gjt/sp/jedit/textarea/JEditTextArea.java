@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.306 2004/02/27 23:59:09 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.307 2004/03/12 19:27:00 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6567,6 +6567,12 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				ChunkCache.LineInfo info = chunkCache.getLineInfo(screenLine);
 				if(info.lastSubregion)
 				{
+					if(!isEditable())
+					{
+						getToolkit().beep();
+						return;
+					}
+
 					// control-click in virtual space inserts
 					// whitespace and moves caret
 					String whitespace = MiscUtilities
