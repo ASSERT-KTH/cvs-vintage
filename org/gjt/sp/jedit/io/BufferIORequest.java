@@ -34,7 +34,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.27 2002/06/18 06:55:59 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.28 2002/08/13 16:38:47 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -229,6 +229,15 @@ public class BufferIORequest extends WorkRequest
 				Log.log(Log.ERROR,this,ch);
 				Object[] pp = { buffer.getProperty(Buffer.ENCODING),
 					ch.toString() };
+				VFSManager.error(view,path,"ioerror.encoding-error",pp);
+
+				buffer.setBooleanProperty(ERROR_OCCURRED,true);
+			}
+			catch(UnsupportedEncodingException uu)
+			{
+				Log.log(Log.ERROR,this,uu);
+				Object[] pp = { buffer.getProperty(Buffer.ENCODING),
+					uu.toString() };
 				VFSManager.error(view,path,"ioerror.encoding-error",pp);
 
 				buffer.setBooleanProperty(ERROR_OCCURRED,true);
