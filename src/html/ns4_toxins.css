@@ -1,0 +1,11 @@
+body, body div, body p, body th, body td, body li, body dd	{
+	font-size:	11px;
+	voice-family: "\"}\"";
+	voice-family: inherit;
+	font-size: 11px;
+	}
+
+html>body, html>body div, html>body p, html>body th, html>body td, html>body li, html>body dd	{
+	font-size:	11px;
+	}
+
