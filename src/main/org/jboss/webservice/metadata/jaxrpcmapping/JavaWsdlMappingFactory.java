@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMappingFactory.java,v 1.1 2004/05/14 18:34:23 tdiesler Exp $
+// $Id: JavaWsdlMappingFactory.java,v 1.2 2004/06/08 07:44:29 telrod Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.xml.binding.ContentNavigator;
@@ -15,7 +15,7 @@ import org.xml.sax.Attributes;
 
 /**
  * A JBossXB factory for {@link org.jboss.webservice.metadata.jaxrpcmapping.JavaWsdlMapping}
- * 
+ *
  * @author Thomas.Diesler@jboss.org
  * @since 14-May-2004
  */
@@ -141,7 +141,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
    public void setValue(JavaXmlTypeMapping typeMapping, ContentNavigator navigator, String namespaceURI, String localName, String value)
    {
       log.trace("setValue: [obj=" + typeMapping + ",value=" + value + "]");
-      if ("class-type".equals(localName))
+      if ("class-type".equals(localName) || "java-type".equals(localName))
          typeMapping.setClassType(value);
       else if ("root-type-qname".equals(localName))
          typeMapping.setRootTypeQName(navigator.resolveQName(value));
