@@ -38,13 +38,19 @@ import org.jboss.invocation.InvocationType;
  *
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- *   @version $Revision: 1.17 $
+ *   @version $Revision: 1.18 $
  */
 public class MethodMetaData extends MetaData
 {
    // Constants -----------------------------------------------------
    // These method interface contstants are compatible with the Invocation.XXX values
    public static final int ANY_METHOD = -1;
+   public static String HOME_TYPE = "Home";
+   public static String LOCAL_HOME_TYPE = "LocalHome";
+   public static String REMOTE_TYPE = "Remote";
+   public static String LOCAL_TYPE = "Local";
+   public static String SERVICE_ENDPOINT_TYPE = "ServiceEndpoint";
+
    private static final ArrayList EMPTY_PARAM_LIST = new ArrayList();
 
    // Attributes ----------------------------------------------------
@@ -68,6 +74,7 @@ public class MethodMetaData extends MetaData
     * <method-intf>Remote</method-intf>
     * <method-intf>LocalHome</method-intf>
     * <method-intf>Local</method-intf>
+    * <method-intf>ServiceEndpoint</method-intf>
     */
    private boolean intf = false;
    /** One of: InvocationType
@@ -101,7 +108,7 @@ public class MethodMetaData extends MetaData
     * <trans-attribute>Never</trans-attribute>
     */
    private byte transactionType;
-   
+
    private Set permissions;
    
    // Static --------------------------------------------------------
@@ -114,68 +121,132 @@ public class MethodMetaData extends MetaData
    // Public --------------------------------------------------------
    
    public String getMethodName()
-   { return methodName; }
-   
+   {
+      return methodName;
+   }
+
    public String getEjbName()
-   { return ejbName; }
-   
+   {
+      return ejbName;
+   }
+
    public boolean isHomeMethod()
-   { return methodType == InvocationType.HOME ; }
+   {
+      return methodType == InvocationType.HOME;
+   }
+
    public boolean isRemoteMethod()
-   { return methodType == InvocationType.REMOTE ; }
+   {
+      return methodType == InvocationType.REMOTE;
+   }
+
    public boolean isLocalHomeMethod()
-   { return methodType == InvocationType.LOCALHOME ; }
+   {
+      return methodType == InvocationType.LOCALHOME;
+   }
+
    public boolean isLocalMethod()
-   { return methodType == InvocationType.LOCAL ; }
+   {
+      return methodType == InvocationType.LOCAL;
+   }
+
    public boolean isServiceEndpointMethod()
-   { return methodType == InvocationType.SERVICE_ENDPOINT ; }
+   {
+      return methodType == InvocationType.SERVICE_ENDPOINT;
+   }
+
+   /** Return the interface type name.
+    * 
+    * @return one of "Home", "LocalHome", "Remote", "Local", "ServiceEndpoint",
+    *    or null if no interface was specified.
+    */ 
+   public String getInterfaceType()
+   {
+      String type = null;
+      if( isHomeMethod() )
+         type = HOME_TYPE;
+      if( isLocalHomeMethod() )
+         type = LOCAL_HOME_TYPE;
+      if( isRemoteMethod() )
+         type = REMOTE_TYPE;
+      if( isLocalMethod() )
+         type = LOCAL_TYPE;
+      if( isServiceEndpointMethod() )
+         type = SERVICE_ENDPOINT_TYPE;
+      return type;
+   }
+
    public boolean isUnchecked()
-   { return unchecked; }
+   {
+      return unchecked;
+   }
+
    public boolean isExcluded()
-   { return excluded; }
+   {
+      return excluded;
+   }
+
    public boolean isIntfGiven()
-   { return intf; }
-   
+   {
+      return intf;
+   }
+
    public boolean isParamGiven()
-   { return param; }
-   
+   {
+      return param;
+   }
+
    public Iterator getParams()
-   { return paramList.iterator(); }
-   
+   {
+      return paramList.iterator();
+   }
+
    public byte getTransactionType()
-   { return transactionType; }
-   
+   {
+      return transactionType;
+   }
+
    public void setTransactionType(byte type)
    {
       transactionType = type;
    }
-   
+
    public Set getRoles()
-   { return permissions; }
-   
+   {
+      return permissions;
+   }
+
    public void setRoles(Set perm)
-   { permissions = perm; }
+   {
+      permissions = perm;
+   }
+
    public void setUnchecked()
-   { unchecked = true; }
+   {
+      unchecked = true;
+   }
+
    public void setExcluded()
-   { excluded = true; }
-   
+   {
+      excluded = true;
+   }
+
    public boolean patternMatches(String name, Class[] arg, InvocationType iface)
    {
       return patternMatches(name, getClassNames(arg), iface);
    }
-   
+
    public boolean patternMatches(String name, String[] arg, InvocationType iface)
    {
       // the wildcard matches everything
       if (getMethodName().equals("*"))
       {
-         if( methodType != null && methodType != iface )
+         if (methodType != null && methodType != iface)
             return false;
          return true;
       }
 
-      if ( getMethodName().equals(name) == false )
+      if (getMethodName().equals(name) == false)
       {
          // different names -> no
          return false;
@@ -183,10 +254,10 @@ public class MethodMetaData extends MetaData
       else
       {
          // we have the same name, next check the interface type
-         if ( methodType != null && methodType != iface )
+         if (methodType != null && methodType != iface)
             return false;
 
-         if ( isParamGiven() == false)
+         if (isParamGiven() == false)
          {
             // no param given in descriptor -> ok
             return true;
@@ -206,7 +277,7 @@ public class MethodMetaData extends MetaData
    {
       methodName = getElementContent(getUniqueChild(element, "method-name"));
       ejbName = getElementContent(getUniqueChild(element, "ejb-name"));
-      
+
       Element intfElement = getOptionalChild(element, "method-intf");
       if (intfElement != null)
       {
@@ -228,10 +299,10 @@ public class MethodMetaData extends MetaData
          {
             methodType = InvocationType.LOCAL;
          }
-		else if (methodIntf.equals("ServiceEndpoint"))
-		{
-		   methodType = InvocationType.SERVICE_ENDPOINT;
-		}
+         else if (methodIntf.equals("ServiceEndpoint"))
+         {
+            methodType = InvocationType.SERVICE_ENDPOINT;
+         }
          else
          {
             throw new DeploymentException("method-intf tag should be one of: 'Home', 'Remote', 'LocalHome', 'Local', 'ServiceEndpoint'");
@@ -246,7 +317,7 @@ public class MethodMetaData extends MetaData
          Iterator paramsIterator = getChildrenByTagName(paramsElement, "method-param");
          while (paramsIterator.hasNext())
          {
-            paramList.add(getElementContent((Element)paramsIterator.next()));
+            paramList.add(getElementContent((Element) paramsIterator.next()));
          }
       }
    }
@@ -259,24 +330,24 @@ public class MethodMetaData extends MetaData
    private static String[] getClassNames(Class[] source)
    {
       String out[] = new String[source.length];
-      for(int i=0; i<out.length; i++)
+      for (int i = 0; i < out.length; i++)
       {
          String brackets = "";
          Class cls = source[i];
-         while(cls.isArray())
+         while (cls.isArray())
          {
             brackets += "[]";
             cls = cls.getComponentType();
          }
-         out[i] = cls.getName()+brackets;
+         out[i] = cls.getName() + brackets;
       }
       return out;
    }
-   
+
    private boolean sameParams(String[] arg)
    {
-      if(arg.length != paramList.size()) return false;
-      for(int i=0; i<arg.length; i++)
+      if (arg.length != paramList.size()) return false;
+      for (int i = 0; i < arg.length; i++)
          if (!arg[i].equals(paramList.get(i)))
             return false;
       return true;
