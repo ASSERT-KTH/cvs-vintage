@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.14 $
+ *	@version $Revision: 1.15 $
  */
 public abstract class EnterpriseContext
 {
@@ -108,27 +108,29 @@ public abstract class EnterpriseContext
     public synchronized void lock() 
     {
         locked ++;
-		
-		//new Exception().printStackTrace();
-		
+       
+       //new Exception().printStackTrace();
+       
 //DEBUG		Logger.debug("EnterpriseContext.lock() "+hashCode()+" "+locked);
+        Logger.debug("EnterpriseContext.lock() "+hashCode()+" "+locked);    
     }
     
     public void unlock() {
         
         // release a lock
         locked --;
-		
-		//new Exception().printStackTrace();
-		if (locked <0) new Exception().printStackTrace();
-		
+       
+       //new Exception().printStackTrace();
+       if (locked <0) new Exception().printStackTrace();
+       
 //DEBUG		Logger.debug("EnterpriseContext.unlock() "+hashCode()+" "+locked);
+        Logger.debug("EnterpriseContext.unlock() "+hashCode()+" "+locked);
     }
     
     public boolean isLocked() {
             
 //DEBUG       Logger.debug("EnterpriseContext.isLocked() "+hashCode()+" at "+locked);
-       
+            Logger.debug("EnterpriseContext.isLocked() "+hashCode()+" at "+locked);
        return locked != 0;
    }
    
@@ -140,13 +142,13 @@ public abstract class EnterpriseContext
    public void clear() {
    
     this.id = null;
-	this.locked = 0;
-	this.principal = null;
-	this.synch = null;
-	this.transaction = null;
+    this.locked = 0;
+    this.principal = null;
+    this.synch = null;
+    this.transaction = null;
    
    }
-	   
+       
     
    // Package protected ---------------------------------------------
     
