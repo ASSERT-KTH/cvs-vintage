@@ -11,7 +11,6 @@ import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.security.ScarabSecurity;
 import org.tigris.scarab.security.SecurityFactory;
-import org.tigris.scarab.security.OMSaveSecurity;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
