@@ -64,13 +64,14 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
+import org.jboss.ejb.plugins.cmp.bridge.CMPFieldBridge;
 
 /**
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  *
  * TODO: collecting join paths needs rewrite
  */
@@ -515,8 +516,12 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          for(int i = 0; i < orderByNode.jjtGetNumChildren(); i++)
          {
             Node orderByPath = orderByNode.jjtGetChild(i);
-            select.append(SQLUtil.COMMA);
-            orderByPath.jjtGetChild(0).jjtAccept(this, select);
+            ASTPath path = (ASTPath)orderByPath.jjtGetChild(0);
+            if(!isSelected(path))
+            {
+               select.append(SQLUtil.COMMA);
+               path.jjtAccept(this, select);
+            }
          }
       }
 
@@ -1576,6 +1581,50 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          }
       }
       return null;
+   }
+
+   /**
+    * Checks whether the path passed in is already in the SELECT clause.
+    * @param path  the path to check.
+    * @return true  if the path is already in the SELECT clause.
+    */
+   private boolean isSelected(ASTPath path)
+   {
+      boolean selected = false;
+
+      CMPFieldBridge cmpField = path.getCMPField();
+      if(selectObject instanceof JDBCCMPFieldBridge && cmpField == selectObject)
+      {
+         selected = true;
+      }
+      else if(selectObject instanceof JDBCEntityBridge)
+      {
+         JDBCEntityBridge entity = (JDBCEntityBridge)selectObject;
+         JDBCCMPFieldBridge[] pkFields = entity.getPrimaryKeyFields();
+         for(int pkInd = 0; pkInd < pkFields.length; ++pkInd)
+         {
+            if(pkFields[pkInd] == cmpField)
+            {
+               selected = true;
+               break;
+            }
+         }
+      }
+      else if(selectObject instanceof SelectFunction)
+      {
+         Node funcNode = (Node)selectObject;
+         ASTPath fieldPath = getPathFromChildren(funcNode);
+         if(fieldPath.getCMPField() == cmpField)
+         {
+            selected = true;
+         }
+      }
+      else
+      {
+         throw new IllegalStateException("Unexpected select object: " + selectObject);
+      }
+
+      return selected;
    }
 
    private void addJoinPath(ASTPath path)
