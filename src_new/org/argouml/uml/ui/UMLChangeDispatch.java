@@ -25,7 +25,7 @@
 // File: UMLChangeDispatch.java
 // Classes: UMLChangeDispatch
 // Original Author:
-// $Id: UMLChangeDispatch.java,v 1.5 2002/06/10 05:26:37 mkl Exp $
+// $Id: UMLChangeDispatch.java,v 1.6 2002/07/05 08:43:30 mkl Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added named constants
 // for the various event types.
@@ -216,7 +216,9 @@ public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
         //      add a listener to our new target
         //
         if(_eventType == -1 && _container instanceof PropPanel &&
-           !(_container instanceof PropPanelObject)) {
+           !((_container instanceof PropPanelObject) ||
+            (_container instanceof PropPanelNodeInstance) ||
+            (_container instanceof PropPanelComponentInstance))) {
             PropPanel propPanel = (PropPanel) _container;
             Object target = propPanel.getTarget();
             if(target instanceof MBase) {
