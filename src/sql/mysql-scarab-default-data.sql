@@ -333,6 +333,16 @@ insert into SCARAB_DEPEND_TYPE(DEPEND_TYPE_ID, DEPEND_TYPE_NAME)
         values(3, 'non-blocking');
 
 /*
+ * Types of saved queries.
+ */
+insert into SCARAB_QUERY_TYPE(QUERY_TYPE_ID, QUERY_TYPE_NAME)
+        values(1, 'global');
+insert into SCARAB_QUERY_TYPE(QUERY_TYPE_ID, QUERY_TYPE_NAME)
+        values(2, 'project');
+insert into SCARAB_QUERY_TYPE(QUERY_TYPE_ID, QUERY_TYPE_NAME)
+        values(3, 'personal');
+
+/*
  *
  */
 insert into SCARAB_ATTACHMENT_TYPE(ATTACHMENT_TYPE_ID, ATTACHMENT_TYPE_NAME)
