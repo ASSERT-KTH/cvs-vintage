@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.139 2003/03/02 10:39:41 cooperfbi Exp $ -->
+<!-- $Id: build.xml,v 1.140 2003/03/05 16:50:42 loubyansky Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -363,6 +363,7 @@
 
         <!-- Exclude key factory stuff -->
         <exclude name="org/jboss/ejb/plugins/keygenerator/uuid/**"/>
+        <exclude name="org/jboss/ejb/plugins/keygenerator/hilo/**"/>
       </fileset>
 
       <!-- HACK -->
@@ -593,14 +594,12 @@ THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFI
       </fileset>
     </jar>
 
-    <!-- uuid-key-generator.sar -->
-    <jar jarfile="${build.lib}/uuid-key-generator.sar"
+    <!-- keygenerators.jar -->
+    <jar jarfile="${build.lib}/keygenerators.jar"
          manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/ejb/plugins/keygenerator/uuid/**"/>
-      </fileset>
-      <fileset dir="${build.resources}/uuid-key-generator">
-        <include name="**/*"/>
+        <include name="org/jboss/ejb/plugins/keygenerator/hilo/**"/>
       </fileset>
     </jar>
 
