@@ -1,4 +1,4 @@
-// $Id: XmiWriter.java,v 1.3 2005/01/09 14:58:07 linus Exp $
+// $Id: XmiWriter.java,v 1.4 2005/01/14 02:09:48 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,7 +82,10 @@ public class XmiWriter {
         if (xmiWriter != null) {
             Iterator it = xmiWriter.getNotContainedElements().iterator();
             while (it.hasNext()) {
-                LOG.error("Not contained in XMI: " + it.next());
+                Object missingElement = it.next();
+                LOG.error("Not contained in XMI: "
+                    + missingElement.getClass().getName()
+                    + "[" + missingElement + "]");
             }
         }
     }
