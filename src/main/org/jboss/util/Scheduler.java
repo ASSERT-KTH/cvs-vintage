@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource J2EE webOS
+ * JBoss, the OpenSource EJB server
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -20,6 +20,8 @@ import java.util.Vector;
 import javax.management.MalformedObjectNameException;
 import javax.management.MBeanServer;
 import javax.management.Notification;
+import javax.management.timer.TimerNotification;
+import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 import javax.naming.Context;
@@ -35,11 +37,22 @@ import org.jboss.naming.NonSerializableFactory;
 import org.jboss.util.ServiceMBeanSupport;
 
 /**
- * Scheduler Instance to allow clients to run this as a
- * scheduling service for any Schedulable instances.
- *
- * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- **/
+* Scheduler Instance to allow clients to run this as a
+* scheduling service for any Schedulable instances.
+*
+* @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+* @author Cameron (camtabor)
+*
+* <p><b>Revisions:</b></p>
+* <p><b>20010814 Cameron:</b>
+* <ul>
+* <li>Checks if the TimerMBean is already loaded</li>
+* <li>Created a SchedulerNotificationFilter so that each Scheduler only
+*     get its notifications</li>
+* <li>Stop was broken because removeNotification( Integer ) was broken</li>
+* </ul>
+* </p>
+**/
 public class Scheduler
    extends ServiceMBeanSupport
    implements SchedulerMBean
@@ -47,23 +60,23 @@ public class Scheduler
 
    // -------------------------------------------------------------------------
    // Constants
-   // -------------------------------------------------------------------------  
+   // -------------------------------------------------------------------------
 
    public static String JNDI_NAME = "scheduler:domain";
    public static String JMX_NAME = "scheduler";
 
    // -------------------------------------------------------------------------
    // Members
-   // -------------------------------------------------------------------------  
+   // -------------------------------------------------------------------------
 
    private String mName;
-   
+
    private long mActualSchedulePeriod;
    private long mRemainingRepetitions = 0;
    private int mActualSchedule = -1;
    private ObjectName mTimer;
    private Schedulable mSchedulable;
-   
+
    private boolean mScheduleIsStarted = false;
    private boolean mWaitForNextCallToStop = false;
    private boolean mStartOnStart = false;
@@ -81,7 +94,7 @@ public class Scheduler
 
    // -------------------------------------------------------------------------
    // Constructors
-   // -------------------------------------------------------------------------  
+   // -------------------------------------------------------------------------
 
    /**
     * Default (no-args) Constructor
@@ -127,8 +140,8 @@ public class Scheduler
 
    // -------------------------------------------------------------------------
    // SchedulerMBean Methods
-   // -------------------------------------------------------------------------  
-   
+   // -------------------------------------------------------------------------
+
    public void startSchedule() {
       // Check if not already started
       if( !isStarted() ) {
@@ -195,15 +208,7 @@ public class Scheduler
             catch( Exception e ) {
                throw new InvalidParameterException( "Could not find the constructor or create the Schedulable Instance" );
             }
-            // Register the notificaiton listener at the MBeanServer
-            getServer().addNotificationListener(
-               mTimer, 
-               new Listener( mSchedulable ),
-               // No filter
-               null,
-               // No object handback necessary
-               null
-            );
+
             mRemainingRepetitions = mInitialRepetitions;
             mActualSchedulePeriod = mSchedulePeriod;
             // Register the Schedule at the Timer
@@ -273,6 +278,14 @@ public class Scheduler
                   }
                ) ).intValue();
             }
+            // Register the notificaiton listener at the MBeanServer
+            getServer().addNotificationListener(
+               mTimer,
+               new Listener( mSchedulable ),
+               new SchedulerNotificationFilter(new Integer(mActualSchedule)),
+               // No object handback necessary
+               null
+            );
             mScheduleIsStarted = true;
             mIsRestartPending = false;
          }
@@ -281,7 +294,7 @@ public class Scheduler
          }
       }
    }
-   
+
    public void stopSchedule(
       boolean pDoItNow
    ) {
@@ -296,7 +309,7 @@ public class Scheduler
                   new Integer( mActualSchedule )
                },
                new String[] {
-                  Integer.TYPE.getName(),
+                  "java.lang.Integer" ,
                }
             );
             mActualSchedule = -1;
@@ -310,19 +323,19 @@ public class Scheduler
          e.printStackTrace();
       }
    }
-   
+
    public void restartSchedule() {
       stopSchedule( true );
       startSchedule();
    }
-   
+
    public String getSchedulableClass() {
       if( mSchedulableClass == null ) {
          return null;
       }
       return mSchedulableClass.getName();
    }
-   
+
    public void setSchedulableClass( String pSchedulableClass )
       throws InvalidParameterException
    {
@@ -354,11 +367,11 @@ public class Scheduler
       }
       mIsRestartPending = true;
    }
-   
+
    public String getSchedulableArguments() {
       return mSchedulableArguments;
    }
-   
+
    public void setSchedulableArguments( String pArgumentList ) {
       if( pArgumentList == null || pArgumentList.equals( "" ) ) {
          mSchedulableArgumentList = new String[ 0 ];
@@ -380,11 +393,11 @@ public class Scheduler
       mSchedulableArguments = pArgumentList;
       mIsRestartPending = true;
    }
-   
+
    public String getSchedulableArgumentTypes() {
       return mSchedulableArgumentTypes;
    }
-   
+
    public void setSchedulableArgumentTypes( String pTypeList )
       throws InvalidParameterException
    {
@@ -440,11 +453,11 @@ public class Scheduler
       mSchedulableArgumentTypes = pTypeList;
       mIsRestartPending = true;
    }
-   
+
    public long getSchedulePeriod() {
       return mSchedulePeriod;
    }
-   
+
    public void setSchedulePeriod( long pPeriod ) {
       if( pPeriod <= 0 ) {
          throw new InvalidParameterException( "Schedulable Period may be not less or equals than 0" );
@@ -452,11 +465,11 @@ public class Scheduler
       mSchedulePeriod = pPeriod;
       mIsRestartPending = true;
    }
-   
+
    public long getInitialRepetitions() {
       return mInitialRepetitions;
    }
-   
+
    public void setInitialRepetitions( long pNumberOfCalls ) {
       if( pNumberOfCalls <= 0 ) {
          pNumberOfCalls = -1;
@@ -468,7 +481,7 @@ public class Scheduler
    public long getRemainingRepetitions() {
       return mRemainingRepetitions;
    }
-   
+
    public boolean isStarted() {
       return mScheduleIsStarted;
    }
@@ -479,7 +492,7 @@ public class Scheduler
 
    // -------------------------------------------------------------------------
    // Methods
-   // -------------------------------------------------------------------------  
+   // -------------------------------------------------------------------------
 
    public ObjectName getObjectName(
       MBeanServer pServer,
@@ -489,7 +502,7 @@ public class Scheduler
    {
       return pName;
    }
-   
+
    public String getJNDIName() {
       if( mName != null ) {
          return JMX_NAME + ":" + mName;
@@ -498,35 +511,38 @@ public class Scheduler
          return JMX_NAME;
       }
    }
-   
+
    public String getName() {
       return "JBoss Scheduler MBean";
    }
-   
+
    // -------------------------------------------------------------------------
    // ServiceMBean - Methods
-   // -------------------------------------------------------------------------  
+   // -------------------------------------------------------------------------
 
    protected void initService()
         throws Exception
    {
    }
-   
+
    protected void startService()
         throws Exception
    {
       bind( this );
       try {
-         // Create Timer MBean
-         mTimer = new ObjectName( "DefaultDomain", "service", "Timer" );
-         getServer().createMBean( "javax.management.timer.Timer", mTimer );
-         // Now start the Timer
-         getServer().invoke(
-            mTimer,
-            "start",
-            new Object[] {},
-            new String[] {}
-         );
+         // Create Timer MBean if need be
+
+           mTimer = new ObjectName( "DefaultDomain", "service", "Timer");
+           if ( !getServer().isRegistered(mTimer)){
+             getServer().createMBean( "javax.management.timer.Timer", mTimer );
+             // Now start the Timer
+             getServer().invoke(
+                mTimer,
+                "start",
+                new Object[] {},
+                new String[] {}
+             );
+         }
       }
       catch( Exception e ) {
          e.printStackTrace();
@@ -535,7 +551,7 @@ public class Scheduler
          startSchedule();
       }
    }
-   
+
    protected void stopService() {
       try {
          unbind();
@@ -601,16 +617,16 @@ public class Scheduler
    public class Listener
       implements NotificationListener
    {
-      
+
       private Schedulable mDelegate;
-      
+
       public Listener( Schedulable pDelegate ) {
          mDelegate = pDelegate;
       }
-      
+
       public void handleNotification(
          Notification pNotification,
-         Object pHandback 
+         Object pHandback
       ) {
          System.out.println( "Listener.handleNotification(), notification: " + pNotification );
          try {
@@ -639,7 +655,7 @@ public class Scheduler
                               new Integer( mActualSchedule )
                            },
                            new String[] {
-                              Integer.TYPE.getName(),
+                              "java.lang.Integer",
                            }
                         );
                         // Add regular schedule
@@ -674,7 +690,7 @@ public class Scheduler
                      new Integer( mActualSchedule )
                   },
                   new String[] {
-                     Integer.TYPE.getName(),
+                     "java.lang.Integer",
                   }
                );
                mActualSchedule = -1;
@@ -685,17 +701,17 @@ public class Scheduler
          }
       }
    }
-   
+
    /**
     * A test class for a Schedulable Class
     **/
    public static class SchedulableExample
       implements Schedulable
    {
-      
+
       private String mName;
       private int mValue;
-      
+
       public SchedulableExample(
          String pName,
          int pValue
@@ -703,7 +719,7 @@ public class Scheduler
          mName = pName;
          mValue = pValue;
       }
-      
+
       /**
        * Just log the call
        **/
@@ -716,4 +732,34 @@ public class Scheduler
             ", test, name: " + mName + ", value: " + mValue );
       }
    }
+}
+
+/**
+ * Filter to ensure that each Scheduler only gets notified when it is supposed to.
+ */
+class SchedulerNotificationFilter implements javax.management.NotificationFilter{
+
+   private Integer mId;
+
+   /**
+    * Create a Filter.
+    * @param id the Scheduler id
+    */
+   public SchedulerNotificationFilter(Integer id){
+     mId = id;
+   }
+
+   /**
+    * Determine if the notification should be sent to this Scheduler
+    */
+   public boolean isNotificationEnabled(Notification notification){
+     if (notification instanceof javax.management.timer.TimerNotification){
+       TimerNotification timerNotification = (TimerNotification) notification;
+       if (timerNotification.getNotificationID().equals(mId)){
+         return true;
+       }
+     }
+     return false;
+   }
+
 }
