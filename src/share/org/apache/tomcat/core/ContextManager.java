@@ -249,13 +249,7 @@ public class ContextManager {
 
 	    // XXX Hardcoded - it will be changed in the next step.( costin )
 
-	    // will set the Context
-	    contextInterceptor.handleRequest( rrequest );
-	    // will set Session 
-	    sessionInterceptor.handleRequest( rrequest );
-	    
-	    // will set all other fields and ServletWrapper
-	    mapperInterceptor.handleRequest( rrequest );
+	    processRequest( rrequest );
 
 	    // do it
 	    rrequest.getWrapper().handleRequest(rrequest.getFacade(),
@@ -281,7 +275,11 @@ public class ContextManager {
      *  the Context. This is used by Dispatcher and getResource - where the Context
      *  is already known.
      */
-    int internalRequestParsing( Request req ) {
+    int processRequest( Request req ) {
+	// will set the Context
+	contextInterceptor.handleRequest( req );
+	// will set Session 
+	sessionInterceptor.handleRequest( req );
 	return mapperInterceptor.handleRequest( req );
     }
 
@@ -290,5 +288,76 @@ public class ContextManager {
 	// 
 	return contextInterceptor.getContextByPath( path );      
     }
+
+
+    // -------------------- Sub-Request mechanism --------------------
+
+    // comment from Apache http_request.c
+    /*****************************************************************
+     *
+     * The sub_request mechanism.
+     *
+     * Fns to look up a relative URI from, e.g., a map file or SSI document.
+     * These do all access checks, etc., but don't actually run the transaction
+     * ... use run_sub_req below for that.  Also, be sure to use destroy_sub_req
+     * as appropriate if you're likely to be creating more than a few of these.
+     * (An early Apache version didn't destroy the sub_reqs used in directory
+     * indexing.  The result, when indexing a directory with 800-odd files in
+     * it, was massively excessive storage allocation).
+     *
+     * Note more manipulation of protocol-specific vars in the request
+     * structure...
+     */
+    Request createRequest( String method, String uri, Request orig ) {
+	//  See: ap_sub_req_method_uri()
+
+	// "clone" the usefull info out of req
+
+	// clean up uri ( remove .., etc )
+
+	// location() - find the context
+
+	//  interceptors
+
+	return null;
+    }
+
+    /** Create a new sub-request in a given context, set the context "hint"
+     *  This is a particular case of sub-request that can't get out of
+     *  a context ( and we know the context before - so no need to compute it again)
+     *
+     *  Note that session and all stuff will still be computed.
+     */
+    Request createRequest( Context ctx, String urlPath ) {
+	// assert urlPath!=null
+
+	// deal with paths with parameters in it
+	String queryString;
+	int i = urlPath.indexOf("?");
+	int len=urlPath.length();
+	if (i>-1) {
+	    if(i<len)
+		queryString =urlPath.substring(i + 1, urlPath.length());
+	    urlPath = urlPath.substring(0, i);
+	}
+	
+	Request lr = new Request();
+	RequestAdapterImpl reqA=new RequestAdapterImpl();
+	lr.setRequestAdapter( reqA);
+	lr.setLookupPath( urlPath );
+	lr.setContext( ctx );
+
+	// XXX set query string too 
+	return lr;
+    }
+
+    void runSubRequest( Request req ) {
+	// invoke_handler
+
+	// finalize_sub_req_protocol
+	
+    }
+
+    
     
 }

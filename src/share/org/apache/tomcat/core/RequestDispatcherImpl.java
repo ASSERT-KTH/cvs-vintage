@@ -74,13 +74,12 @@ import javax.servlet.http.*;
  * @author James Todd [gonzo@eng.sun.com]
  * @author Alex Cruikshank [alex@epitonic.com]
  */
-
 public class RequestDispatcherImpl implements RequestDispatcher {
-
-    private StringManager sm =
-        StringManager.getManager(Constants.Package);
+    private StringManager sm = StringManager.getManager("org.apache.tomcat.core");
+    
     private Context context;
-    private Request lookupResult = null;
+    
+    private Request subRequest = null;
     private String name = null;
     private String urlPath;
     private String queryString;
@@ -89,39 +88,33 @@ public class RequestDispatcherImpl implements RequestDispatcher {
         this.context = context;
     }
 
+    RequestDispatcherImpl(Request  subReq) {
+        this.subRequest = subReq;
+    }
+
     public void forward(ServletRequest request, ServletResponse response)
 	throws ServletException, IOException
     {
-	HttpServletRequestFacade reqFacade =
-	    (HttpServletRequestFacade)request;
-	HttpServletResponseFacade resFacade =
-	    (HttpServletResponseFacade)response;
-        Request realRequest = reqFacade.getRealRequest();
-        Response realResponse = resFacade.getRealResponse();
+        Request realRequest = ((HttpServletRequestFacade)request).getRealRequest();
+        Response realResponse = ((HttpServletResponseFacade)response).getRealResponse();
 
+	// according to specs
 	if (realResponse.isStarted()) {
             String msg = sm.getString("rdi.forward.ise");
 	    throw new IllegalStateException(msg);
         }
 
 	// Pre-pend the context name to give appearance of real request
-	urlPath = context.getPath() + urlPath;
+	urlPath = subRequest.getContext().getPath() + urlPath;
 
-	// XXX Need to clean up - what's the diff between the lookupResult
-	// ( internal-generated sub-request ) and ForwardedRequest  ?
-	// I think ForwardedRequest can be removed, it's a particular case of
-	// sub-request ( costin )
-	ForwardedRequest fRequest =
-	    new ForwardedRequest(realRequest, urlPath);
+	realRequest.setRequestURI( urlPath );
 
-        // add new query string parameters to request
-        // if names are duplicates, new values will be prepended to arrays
-        addQueryString(reqFacade.getRealRequest(), queryString);
+        addQueryString(realRequest, queryString);
+        realRequest.setServletPath(this.subRequest.getServletPath());
+	realRequest.setPathInfo(this.subRequest.getPathInfo());
 
-        fRequest.setServletPath(this.lookupResult.getServletPath());
-	fRequest.setPathInfo(this.lookupResult.getPathInfo());
-
-	this.lookupResult.getWrapper().handleRequest(fRequest, resFacade);
+	this.subRequest.getWrapper().handleRequest((HttpServletRequestFacade)request,
+						   (HttpServletResponseFacade)response);
     }
 
     public void include(ServletRequest request, ServletResponse response)
@@ -173,14 +166,14 @@ public class RequestDispatcherImpl implements RequestDispatcher {
                 urlPath);
         }
 
-	if (lookupResult.getServletPath() != null) {
+	if (subRequest.getServletPath() != null) {
 	    req.setAttribute(Constants.Attribute.ServletPath,
-                lookupResult.getServletPath());
+                subRequest.getServletPath());
 	}
 
-	if (lookupResult.getPathInfo() != null) {
+	if (subRequest.getPathInfo() != null) {
 	    req.setAttribute(Constants.Attribute.PathInfo,
-                lookupResult.getPathInfo());
+                subRequest.getPathInfo());
 	}
 
         // add new query string parameters to request
@@ -194,11 +187,15 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 
 	IncludedResponse iResponse = new IncludedResponse(realResponse);
 
-	lookupResult.getWrapper().handleRequest(reqFacade, iResponse);
+	subRequest.getWrapper().handleRequest(reqFacade, iResponse);
 
         // revert the parameters and query string to its original value
         reqFacade.getRealRequest().setParameters(originalParameters);
-        reqFacade.getRealRequest().replaceQueryString(originalQueryString);
+        reqFacade.getRealRequest().setQueryString(originalQueryString);
+	// XXX revert to the old parameters too - it was broken in the previous
+	// model  - it is still bad
+	reqFacade.getRealRequest().processQueryString();
+	
 
 	if (request_uri != null) {
 	    req.setAttribute(Constants.Attribute.RequestURI, request_uri);
@@ -229,33 +226,29 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 
     void setName(String name) {
         this.name = name;
-	this.lookupResult =
+	this.subRequest =
 	    context.lookupServletByName(this.name);
     }
 
     void setPath(String urlPath) {
+	// assert urlPath!=null
+	int len=urlPath.length();
 	int i = urlPath.indexOf("?");
 
-	if (i > -1) {
-	    try {
-		this.queryString =
-                    urlPath.substring(i + 1, urlPath.length());
-	    } catch (Exception e) {
-	    }
-
+	if (i>-1) {
+	    if(i<len)
+		this.queryString =urlPath.substring(i + 1, urlPath.length());
 	    urlPath = urlPath.substring(0, i);
 	}
 
 	this.urlPath = urlPath;
 
-	this.lookupResult = new Request();
-	lookupResult.setLookupPath( this.urlPath );
-	lookupResult.setContext( context );
-	context.getContextManager().internalRequestParsing(lookupResult);
+	this.subRequest = context.getContextManager().createRequest(context, urlPath);
+	context.getContextManager().processRequest(subRequest);
     }
 
     boolean isValid() {
-        return (this.lookupResult != null);
+        return (this.subRequest != null);
     }
 
     /**
@@ -267,7 +260,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
      *
      * @param inQueryString URLEncoded parameters to add
      */
-    public void addQueryString(Request req, String inQueryString) {
+    void addQueryString(Request req, String inQueryString) {
         // if query string is null, do nothing
         if ((inQueryString == null) || (inQueryString.trim().length() <= 0))
             return;
@@ -280,6 +273,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
             queryString = inQueryString + "&" + queryString;
 
 	req.setQueryString( queryString );
+	req.processQueryString();
     }
 
 

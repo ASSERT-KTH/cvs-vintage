@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.16 2000/01/11 20:43:02 costin Exp $
- * $Revision: 1.16 $
- * $Date: 2000/01/11 20:43:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.17 2000/01/12 00:57:31 costin Exp $
+ * $Revision: 1.17 $
+ * $Date: 2000/01/12 00:57:31 $
  *
  * ====================================================================
  *
@@ -271,8 +271,7 @@ public class Request  {
 
 	charEncoding=reqA.getCharacterEncoding();
 	if(charEncoding!=null) return charEncoding;
-
-        charEncoding = getCharsetFromContentType(getContentType());
+        charEncoding = RequestUtil.getCharsetFromContentType( getContentType());
 	return charEncoding;
     }
 
@@ -657,8 +656,11 @@ public class Request  {
      */
     public void setQueryString(String queryString) {
 	this.queryString = queryString;
-        // catch any parse exceptions
+    }
 
+    /** parse the query string into parameters
+     */
+    public void processQueryString() {
         try {
             this.parameters = HttpUtils.parseQueryString(queryString);
         } catch (Throwable e) {
@@ -670,17 +672,6 @@ public class Request  {
 //         this.scheme = scheme;
 //     }
 
-
-    /**
-     * Replaces the query string without processing the parameters.
-     * Used by the RequestDispatcherImpl to restore the original
-     * query string.
-     *
-     * @param inQueryString queryString to replace
-     */
-    public void replaceQueryString(String inQueryString) {
-        this.queryString = inQueryString;
-    }
 
     public void setSession(HttpSession serverSession) {
 	this.serverSession = serverSession;
@@ -774,28 +765,7 @@ public class Request  {
         processFormData(s);
     }
 
-
-    // XXX is it used???
-    public String unUrlDecode(String data) {
-	try {
-	    return RequestUtil.URLDecode( data );
-	} catch (NumberFormatException e) {
-	    String msg=sm.getString("serverRequest.urlDecode.nfe", data);
-	    throw new IllegalArgumentException(msg);
-	} catch (StringIndexOutOfBoundsException e) {
-	    String msg=sm.getString("serverRequest.urlDecode.nfe", data);
-	    throw new IllegalArgumentException(msg);
-	}
-
-    }
-
-    // XXX This method is duplicated in core/Response.java
-    public String getCharsetFromContentType(String type) {
-        return RequestUtil.getCharsetFromContentType( type );
-    }
-
     // -------------------- End utils
-
     public void recycle() {
 	response = null;
 	context = null;

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/ContextInterceptor.java,v 1.3 2000/01/10 22:01:19 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/01/10 22:01:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/ContextInterceptor.java,v 1.4 2000/01/12 00:57:32 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/01/12 00:57:32 $
  *
  * ====================================================================
  *
@@ -80,6 +80,10 @@ public class ContextInterceptor implements RequestInterceptor {
     }
 
     public int handleRequest( Request rrequest ) {
+	// someone else set it up, no need to worry
+	if( rrequest.getContext() != null )
+	    return OK;
+	
 	// resolve the server that we are for
 	String path = rrequest.getRequestURI();
 	

@@ -95,7 +95,7 @@ public class Context {
 
     // internal state / related objects
     private boolean initialized = false;
-    private ContextManager server;
+    private ContextManager contextM;
     private ServletContextFacade contextFacade;
     private SessionManager sessionManager;
     private ServletWrapper defaultServlet = null;
@@ -158,11 +158,11 @@ public class Context {
     // -------------------- Settable context properties --------------------
     // -------------------- Required properties
     public ContextManager getContextManager() {
-	return server;
+	return contextM;
     }
 
     public void setContextManager(ContextManager cm) {
-	server=cm;
+	contextM=cm;
     }
     
     public String getPath() {
@@ -234,12 +234,10 @@ public class Context {
 
         if (path == null) {
             String msg = sm.getString("scfacade.getresource.npe");
-
             throw new NullPointerException(msg);
         } else if (! path.equals("") &&
 	    ! path.startsWith("/")) {
 	    String msg = sm.getString("scfacade.getresource.iae", path);
-
 	    throw new IllegalArgumentException(msg);
 	}
 
@@ -247,10 +245,9 @@ public class Context {
 	// this could use a once over - after war perhaps
         URL docBase = getDocumentBase();
 
-	Request lr = new Request();
-	lr.setLookupPath( path );
-	lr.setContext( this );
-	getContextManager().internalRequestParsing(lr);
+	Request lr=contextM.createRequest( this, path );
+
+	getContextManager().processRequest(lr);
 
 	String mappedPath = path;
 
@@ -301,7 +298,7 @@ public class Context {
             String msg = sm.getString("sfcacade.context.iae", path);
 	    throw new IllegalArgumentException(msg);
 	}
-        return server.getContextByPath(path);
+        return contextM.getContextByPath(path);
     }
 
     public void log(String msg, Throwable t) {
@@ -382,7 +379,9 @@ public class Context {
 
 	    }
         } catch (Exception e) {
+	    e.printStackTrace();
         }
+	//Log	System.out.println("Get real path " + path + " = " +realPath);
 
 	return realPath;
     }
@@ -653,7 +652,7 @@ public class Context {
 
     ServletContextFacade getFacade() {
         if(contextFacade==null )
-	    contextFacade = new ServletContextFacade(server, this);
+	    contextFacade = new ServletContextFacade(contextM, this);
 	return contextFacade;
     }
 
