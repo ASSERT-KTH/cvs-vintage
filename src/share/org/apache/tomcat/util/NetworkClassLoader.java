@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/NetworkClassLoader.java,v 1.1 1999/11/26 09:03:46 harishp Exp $
- * $Revision: 1.1 $
- * $Date: 1999/11/26 09:03:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/NetworkClassLoader.java,v 1.2 1999/11/26 16:01:47 harishp Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/11/26 16:01:47 $
  *
  * ====================================================================
  *
@@ -113,7 +113,7 @@ public class NetworkClassLoader extends ClassLoader {
      * @param URL where to look for the classes.
      */
     public void addURL(URL url) {
-        System.out.println("Adding url: " + url);
+        // System.out.println("Adding url: " + url);
         if(!urlset.contains(url)) {
             urlset.addElement(url);
         }
