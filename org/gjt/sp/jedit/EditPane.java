@@ -53,7 +53,7 @@ import org.gjt.sp.jedit.textarea.*;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.34 2003/02/07 21:57:28 spestov Exp $
+ * @version $Id: EditPane.java,v 1.35 2003/03/11 02:02:03 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -391,6 +391,8 @@ public class EditPane extends JPanel implements EBComponent
 			jEdit.getColorProperty("view.caretColor"));
 		painter.setSelectionColor(
 			jEdit.getColorProperty("view.selectionColor"));
+		painter.setMultipleSelectionColor(
+			jEdit.getColorProperty("view.multipleSelectionColor"));
 		painter.setBackground(
 			jEdit.getColorProperty("view.bgColor"));
 		painter.setForeground(

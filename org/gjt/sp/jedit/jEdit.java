@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.114 2003/03/10 00:33:22 spestov Exp $
+ * @version $Id: jEdit.java,v 1.115 2003/03/11 02:02:03 spestov Exp $
  */
 public class jEdit
 {
@@ -2148,6 +2148,12 @@ public class jEdit
 	{
 		if(settingsDirectory != null)
 		{
+			Abbrevs.save();
+			FavoritesVFS.saveFavorites();
+			HistoryModel.saveHistory();
+			Registers.saveRegisters();
+			SearchAndReplace.save();
+
 			// Save the recent file list
 			File file1 = new File(MiscUtilities.constructPath(
 				settingsDirectory, "#recent.xml#save#"));
@@ -2166,11 +2172,6 @@ public class jEdit
 				file1.renameTo(file2);
 			}
 			recentModTime = file2.lastModified();
-
-			HistoryModel.saveHistory();
-			SearchAndReplace.save();
-			Abbrevs.save();
-			FavoritesVFS.saveFavorites();
 
 			file1 = new File(MiscUtilities.constructPath(
 				settingsDirectory,"#properties#save#"));
