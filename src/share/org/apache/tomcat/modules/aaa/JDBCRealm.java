@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/JDBCRealm.java,v 1.2 2001/02/04 22:08:24 nacho Exp $
- * $Revision: 1.2 $
- * $Date: 2001/02/04 22:08:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/JDBCRealm.java,v 1.3 2001/02/06 02:05:46 nacho Exp $
+ * $Revision: 1.3 $
+ * $Date: 2001/02/06 02:05:46 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -76,8 +76,13 @@ import java.sql.*;
 
 /**
  * Implmentation of <b>Realm</b> that works with any JDBC supported database.
- * See the JDBCRealm.howto for more details on how to set up the database and for configuration options. TODO:
- * - Work on authentication with non-plaintext passwords
+ * See the JDBCRealm.howto for more details on how to set up the database and
+ * for configuration options.
+ *
+ *
+ * TODO: - Work on authentication with non-plaintext passwords
+ *
+ *
  * @author Craig R. McClanahan
  * @author Carson McDonald
  * @author Ignacio J. Ortega
@@ -210,44 +215,48 @@ public final class JDBCRealm extends BaseInterceptor {
     /**
      * Set the column in the user role table that names a role
      * @param roleNameCol The column name
- */
+     */
     public void setRoleNameCol(String roleNameCol) {
         this.roleNameCol = roleNameCol;
     }
 
     /**
      * Gets the digest algorithm  used for credentials in the database
-     * could be the same that MessageDigest accepts vor algorithm and "No" that is the Default
-     * @return 
- */
+     * could be the same that MessageDigest accepts vor algorithm and "No" that
+     * is the Default
+     * @return
+     */
     public String getDigest() {
         return digest;
     }
 
     /**
      * Sets the digest algorithm  used for credentials in the database
-     * could be the same that MessageDigest accepts vor algorithm and "No" that is the Default
+     * could be the same that MessageDigest accepts vor algorithm and "No"
+     * that is the Default
      * @param algorithm the Encode type
- */
+     */
     public void setDigest(String algorithm) {
         digest = algorithm;
     }
-    
-/**
- * When connectOnInit is setted to "true" the JDBC connection is started at tomcat init
- * if false the connection is started in the first times is needed.
- * @param s "true" or "false"
- */    
-    public void setConnectOnInit(String s) {
-        connectOnInit = Boolean.valueOf(s).booleanValue();
+
+    /**
+     * When connectOnInit is true the JDBC connection is started at tomcat init
+     * if false the connection is started the first times it is needed.
+     * @param b
+     */
+    public void setConnectOnInit(boolean b) {
+        connectOnInit = b;
     }
 
     /**
      * If there are any errors with the JDBC connection, executing
-     * the query or anything we return false (don't authenticate). This event is also logged.
+     * the query or anything we return false (don't authenticate). This event
+     * is also logged.
      * If there is some SQL exception the connection is set to null.
      * This will allow a retry on the next auth attempt. This might not
-     * be the best thing to do but it will keep tomcat from needing a restart if the database goes down.
+     * be the best thing to do but it will keep tomcat from needing a restart
+     * if the database goes down.
      *
      * @param username Username of the Principal to look up
      * @param credentials Password or other credentials to use in authenticating this username
@@ -322,7 +331,8 @@ public final class JDBCRealm extends BaseInterceptor {
                     (connectionPassword == null || connectionPassword.equals(""))) {
                         dbConnection = DriverManager.getConnection(connectionURL);
                 } else {
-                    dbConnection = DriverManager.getConnection(connectionURL, connectionName, connectionPassword);
+                    dbConnection = DriverManager.getConnection(connectionURL,
+                        connectionName, connectionPassword);
                 }
                 JDBCstarted=true;
                 if (dbConnection == null || dbConnection.isClosed()) {
@@ -345,13 +355,14 @@ public final class JDBCRealm extends BaseInterceptor {
  *
  * @param username the user name
  * @return the roles array
- */    
+ */
     public synchronized String[] getUserRoles(String username) {
         try {
             if (!checkConnection())
                 return null;
             if (preparedRoles == null) {
-                String sql = "SELECT " + roleNameCol + " FROM " + userRoleTable + " WHERE " + userNameCol + " = ?";
+                String sql = "SELECT " + roleNameCol + " FROM " + userRoleTable
+                           + " WHERE " + userNameCol + " = ?";
                 if (debug >= 1)
                     log("JDBCRealm.roles: " + sql);
                 preparedRoles = dbConnection.prepareStatement(sql);
@@ -422,12 +433,8 @@ public final class JDBCRealm extends BaseInterceptor {
         }
     }
 
-/**
- * Hook implementation
- * @param req
- * @param response
- * @return
- */    
+    /** Authenticate hook implementation  */
+
     public int authenticate(Request req, Response response) {
         String user = (String)req.getNote(userNote);
         String password = (String)req.getNote(passwordNote);
@@ -439,7 +446,6 @@ public final class JDBCRealm extends BaseInterceptor {
                 req.setAuthType(ctx.getAuthMethod());
             if (user != null) {
                 req.setRemoteUser(user);
-                //		req.setNote(reqRealmSignNote,this);
                 String userRoles[] = getUserRoles(user);
                 req.setUserRoles(userRoles);
                 return OK;
@@ -449,7 +455,8 @@ public final class JDBCRealm extends BaseInterceptor {
     }
 
     /**
-     * Digest password using the algorithm especificied and convert the result to a corresponding hex string.
+     * Digest password using the algorithm especificied and
+     * convert the result to a corresponding hex string.
      * If exception, the plain credentials string is returned
      * @param credentials Password or other credentials to use in authenticating this username
      * @param algorithm Algorithm used to do th digest
@@ -472,10 +479,10 @@ public final class JDBCRealm extends BaseInterceptor {
         }
     }
 
-/**
- * JDBCRealm can be used as a standalone tool for offline password digest
- * @param args
- */    
+    /**
+     * JDBCRealm can be used as a standalone tool for offline password digest
+     * @param args
+     */
     public static void main(String args[]) {
         if (args.length >= 2) {
             if (args[0].equalsIgnoreCase("-a")) {
@@ -487,7 +494,7 @@ public final class JDBCRealm extends BaseInterceptor {
         }
     }
 
-    /** Called when the ContextManger is started */
+     /** Called when the ContextManager is started */
     public void engineInit(ContextManager cm) throws TomcatException {
         super.engineInit(cm);
         init(cm);
