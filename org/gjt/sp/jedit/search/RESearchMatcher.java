@@ -28,7 +28,7 @@ import org.gjt.sp.jedit.MiscUtilities;
 /**
  * A regular expression string matcher.
  * @author Slava Pestov
- * @version $Id: RESearchMatcher.java,v 1.3 2001/10/05 08:55:14 spestov Exp $
+ * @version $Id: RESearchMatcher.java,v 1.4 2001/10/17 12:14:12 spestov Exp $
  */
 public class RESearchMatcher implements SearchMatcher
 {
@@ -88,7 +88,7 @@ public class RESearchMatcher implements SearchMatcher
 		if(!end)
 			flags |= RE.REG_NOTEOL;
 
-		REMatch match = re.getMatch(new CharIndexedSegment(text,0),
+		REMatch match = re.getMatch(new CharIndexedSegment(text,0),0,
 			flags);
 		if(match == null)
 			return null;

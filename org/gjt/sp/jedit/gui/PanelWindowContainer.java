@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.12 2001/10/16 07:04:21 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.13 2001/10/17 12:14:12 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -554,15 +554,24 @@ public class PanelWindowContainer implements DockableWindowContainer
 			String text;
 			int width;
 			int height;
+			RenderingHints renderHints;
 
 			//{{{ RotatedTextIcon2D constructor
 			RotatedTextIcon2D(int rotate, String text)
 			{
 				this.rotate = rotate;
 				this.text = text;
+
+				// should use 2D text measurement here
 				FontMetrics fm = getFontMetrics(getFont());
 				width = fm.stringWidth(text);
 				height = fm.getHeight();
+
+				renderHints = new RenderingHints(
+					RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
+				renderHints.put(RenderingHints.KEY_RENDERING,
+					RenderingHints.VALUE_RENDER_QUALITY);
 			} //}}}
 
 			//{{{ getIconWidth() method
@@ -586,7 +595,9 @@ public class PanelWindowContainer implements DockableWindowContainer
 
 				Graphics2D g2d = (Graphics2D)g;
 				AffineTransform oldTransform = g2d.getTransform();
+				RenderingHints oldHints = g2d.getRenderingHints();
 
+				g2d.setRenderingHints(renderHints);
 				g2d.setColor(getForeground());
 
 				//{{{ No rotation
@@ -618,10 +629,11 @@ public class PanelWindowContainer implements DockableWindowContainer
 					g2d.setTransform(trans);
 					g2d.drawString(text,(height - width) / 2,
 						(width - height) / 2
-						+ fm.getAscent());
+						+ fm.getDescent());
 				} //}}}
 
 				g2d.setTransform(oldTransform);
+				g2d.setRenderingHints(oldHints);
 			} //}}}
 		} //}}}
 	} //}}}
