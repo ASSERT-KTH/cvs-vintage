@@ -78,7 +78,7 @@ import com.dreambean.ejx.ejb.MethodPermission;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.20 $
+ *   @version $Revision: 1.21 $
  */
 public abstract class Container
 {
@@ -261,7 +261,8 @@ public abstract class Container
       while (iter.hasNext())
       {
         JCheckBox checkBox = (JCheckBox) iter.next();
-        permissions.add( checkBox.getLabel() );
+        if (checkBox.isSelected())
+          permissions.add( checkBox.getLabel() );
       }
     }
 
