@@ -15,22 +15,20 @@
 //All Rights Reserved.
 package org.columba.mail.folderoptions;
 
-import org.columba.core.config.DefaultItem;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.table.TableController;
-import org.columba.mail.gui.table.TableView;
-
 import java.awt.Dimension;
-
 import java.util.Enumeration;
 
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 
+import org.columba.core.config.DefaultItem;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.headercache.CachedHeaderfields;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.frame.TableViewOwner;
+import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.TableView;
 
 /**
  * Stores all visible columns of the message list.
@@ -38,185 +36,188 @@ import javax.swing.table.TableColumn;
  * @author fdietz
  */
 public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
-    /**
-     * Constructor
-     *
-     * @param mediator      mail frame mediator
-     */
-    public ColumnOptionsPlugin(MailFrameMediator mediator) {
-        super("columns", mediator);
-    }
 
-    /**
-     * Find xml element with attribute name.
-     * 
-     * @param parent        parent element
-     * @param name          name of attribute
-     * @return              child element
-     */
-    private XmlElement findColumn(XmlElement parent, String name) {
-        for (int i = 0; i < parent.count(); i++) {
-            XmlElement child = parent.getElement(i);
+	public final static String[] COLUMNS=
+		{
+			"Status",
+			"Attachment",
+			"Flagged",
+			"Priority",
+			"Subject",
+			"From",
+			"Date",
+			"Size",
+			"Spam" };
 
-            if (child.getAttribute("name").equals(name)) {
-                return child;
-            }
-        }
+	/**
+	 * Constructor
+	 *
+	 * @param mediator      mail frame mediator
+	 */
+	public ColumnOptionsPlugin(MailFrameMediator mediator) {
+		super("columns", mediator);
+	}
 
-        return null;
-    }
+	/**
+	 * Get list of available columns.
+	 * 
+	 * @return		string array of columns
+	 */
+	public static String[] getColumns() {
+		String[] userDefined=
+			CachedHeaderfields.getUserDefinedHeaderfieldArray();
 
-    /**
-     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
-     */
-    public void saveOptionsToXml(Folder folder) {
-        XmlElement columns = getConfigNode(folder);
+		String[] stringList= new String[userDefined.length + COLUMNS.length];
+		int index= 0;
+		for (int i= 0; i < COLUMNS.length; i++) {
+			stringList[i]= COLUMNS[i];
+			index= i;
+		}
 
-        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
-        TableView view = tableController.getView();
+		index++;
+		
+		for (int i= 0; i < userDefined.length; i++) {
+			stringList[index + i]= userDefined[i];
+		}
 
-        // for each column
-        int c = view.getColumnCount();
+		return stringList;
 
-        Enumeration enum = view.getColumnModel().getColumns();
+	}
 
-        while (enum.hasMoreElements()) {
-            TableColumn tc = (TableColumn) enum.nextElement();
-            String name = (String) tc.getHeaderValue();
+	/**
+	 * Find xml element with attribute name.
+	 * 
+	 * @param parent        parent element
+	 * @param name          name of attribute
+	 * @return              child element
+	 */
+	private XmlElement findColumn(XmlElement parent, String name) {
+		for (int i= 0; i < parent.count(); i++) {
+			XmlElement child= parent.getElement(i);
 
-            XmlElement column = findColumn(columns, name);
-            column.addAttribute("enabled", "true");
+			if (child.getAttribute("name").equals(name)) {
+				return child;
+			}
+		}
 
-            // save width
-            int size = tc.getWidth();
-            column.addAttribute("width", Integer.toString(size));
-          
-            // save position
-            int position = view.getColumnModel().getColumnIndex(name);
-            column.addAttribute("position", Integer.toString(
-                    view.convertColumnIndexToView(tc.getModelIndex())));
-        }
-    }
+		return null;
+	}
 
-    /**
-     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
-     */
-    public void loadOptionsFromXml(Folder folder) {
-        XmlElement columns = getConfigNode(folder);
+	/**
+	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
+	 */
+	public void saveOptionsToXml(Folder folder) {
+		XmlElement columns= getConfigNode(folder);
 
-        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
-        TableView view = tableController.getView();
+		TableController tableController=
+			((TableViewOwner) getMediator()).getTableController();
+		TableView view= tableController.getView();
 
-        // remove all columns from table model
-        tableController.getHeaderTableModel().clearColumns();
+		// for each column
+		int c= view.getColumnCount();
 
-        // remove all columns for column model
-        view.setColumnModel(new DefaultTableColumnModel());
+		Enumeration enum= view.getColumnModel().getColumns();
 
-        int index = 0;
-        // add columns
-        for (int i = 0; i < columns.count(); i++) {
-            XmlElement column = columns.getElement(i);
-            DefaultItem columnItem = new DefaultItem(column);
+		// remove all child nodes
+		columns.removeAllElements();
 
-            if (columnItem.getBoolean("enabled")) {
-                String name = columnItem.get("name");
-                int size = columnItem.getInteger("width");
-                int position = columnItem.getInteger("position");
-                
-                // add column to table model
-                tableController.getHeaderTableModel().addColumn(name);
+		while (enum.hasMoreElements()) {
+			TableColumn tc= (TableColumn) enum.nextElement();
+			String name= (String) tc.getHeaderValue();
 
-                // add column to JTable column model
-                TableColumn tc = view.createTableColumn(name, size);
-                
-                //tc.setModelIndex(index);
-                tc.setModelIndex(position);
-                view.addColumn(tc);
-                
-                index++;
-            }
-        }
+			XmlElement column= new XmlElement("column");
+			column.addAttribute("name", name);
 
-        // resize/move columns
-        // -> this has to happen, after all columns are added
-        // -> in the JTable, otherwise it doesn't have any effect
-        index=0;
-        for (int i = 0; i < columns.count(); i++) {
-            XmlElement column = columns.getElement(i);
-            DefaultItem columnItem = new DefaultItem(column);
+			// save width
+			int size= tc.getWidth();
+			column.addAttribute("width", Integer.toString(size));
 
-            if (columnItem.getBoolean("enabled")) {
-                String name = columnItem.get("name");
-                int size = columnItem.getInteger("width");
-                int position = columnItem.getInteger("position");
+			columns.addElement(column);
 
-                TableColumn tc = view.getColumn(name);
+		}
+	}
 
-                // resize column width
-                tc.setPreferredWidth(size);
+	/**
+	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
+	 */
+	public void loadOptionsFromXml(Folder folder) {
+		XmlElement columns= getConfigNode(folder);
 
-				int columnIndex = tc.getModelIndex();
-									
-                // move column to new position
-                view.moveColumn(view.convertColumnIndexToView(tc.getModelIndex()), position);
-                
-                index++;
-                
-            }
-        }
+		TableController tableController=
+			((TableViewOwner) getMediator()).getTableController();
+		TableView view= tableController.getView();
 
-        // for some weird reason the table loses its inter-cell spacing
-        // property, when changing the underlying column model
-        // -> setting this to (0,0) again
-        view.setIntercellSpacing(new Dimension(0, 0));
-    
-    }
+		// remove all columns from table model
+		tableController.getHeaderTableModel().clearColumns();
 
-    /**
-       * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
-       */
-    public XmlElement createDefaultElement(boolean global) {
-        XmlElement columns = super.createDefaultElement(global);
+		// remove all columns for column model
+		view.setColumnModel(new DefaultTableColumnModel());
 
-        // these are the items, enabled as default
-        columns.addElement(createColumn("Status", "23", "1"));
-        columns.addElement(createColumn("Attachment", "23", "2"));
-        columns.addElement(createColumn("Flagged", "23", "3"));
-        columns.addElement(createColumn("Priority", "23", "4"));
-        columns.addElement(createColumn("Subject", "200", "5"));
-        columns.addElement(createColumn("From", "100", "6"));
-        columns.addElement(createColumn("Date", "100", "7"));
-        columns.addElement(createColumn("Size", "50", "8"));
-        columns.addElement(createColumn("Spam", "23", "9"));
+		// add columns
+		for (int i= 0; i < columns.count(); i++) {
+			XmlElement column= columns.getElement(i);
+			DefaultItem columnItem= new DefaultItem(column);
 
-        // more available items, but disabled
-        XmlElement column = createColumn("To", "100", "10");
-        column.addAttribute("enabled", "false");
-        columns.addElement(column);
-        column = createColumn("Cc", "100", "11");
-        column.addAttribute("enabled", "false");
-        columns.addElement(column);
+			String name= columnItem.get("name");
+			int size= columnItem.getInteger("width");
+			//int position= columnItem.getInteger("position");
 
-        return columns;
-    }
+			// add column to table model
+			tableController.getHeaderTableModel().addColumn(name);
 
-    /**
-     * Create new XmlElement with custom attributes.
-     *
-     * @param name      name of column
-     * @param width     column width
-     * @param position  column position
-     * @return          parent xml element
-     */
-    private static XmlElement createColumn(String name, String width,
-        String position) {
-        XmlElement column = new XmlElement("column");
-        column.addAttribute("name", name);
-        column.addAttribute("width", width);
-        column.addAttribute("position", position);
-        column.addAttribute("enabled", "true");
+			// add column to JTable column model
+			TableColumn tc= view.createTableColumn(name, size);
 
-        return column;
-    }
+			//tc.setModelIndex(position);
+			tc.setModelIndex(i);
+
+			// resize column width
+			tc.setPreferredWidth(size);
+
+			view.addColumn(tc);
+
+		}
+
+		// for some weird reason the table loses its inter-cell spacing
+		// property, when changing the underlying column model
+		// -> setting this to (0,0) again
+		view.setIntercellSpacing(new Dimension(0, 0));
+
+	}
+
+	/**
+	   * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
+	   */
+	public XmlElement createDefaultElement(boolean global) {
+		XmlElement columns= super.createDefaultElement(global);
+
+		// these are the items, enabled as default
+		columns.addElement(createColumn("Status", "23"));
+		columns.addElement(createColumn("Attachment", "23"));
+		columns.addElement(createColumn("Flagged", "23"));
+		columns.addElement(createColumn("Priority", "23"));
+		columns.addElement(createColumn("Subject", "200"));
+		columns.addElement(createColumn("From", "100"));
+		columns.addElement(createColumn("Date", "100"));
+		columns.addElement(createColumn("Size", "50"));
+		columns.addElement(createColumn("Spam", "23"));
+
+		return columns;
+	}
+
+	/**
+	 * Create new XmlElement with custom attributes.
+	 *
+	 * @param name      name of column
+	 * @param width     column width
+	 * @param position  column position
+	 * @return          parent xml element
+	 */
+	private static XmlElement createColumn(String name, String width) {
+		XmlElement column= new XmlElement("column");
+		column.addAttribute("name", name);
+		column.addAttribute("width", width);
+
+		return column;
+	}
 }
