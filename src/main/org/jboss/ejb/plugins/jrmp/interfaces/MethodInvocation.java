@@ -23,7 +23,7 @@ import java.util.HashMap;
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:Richard.Monson-Haefel@jGuru.com">Richard Monson-Haefel</a>.
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public class MethodInvocation
    implements java.io.Serializable
@@ -61,10 +61,6 @@ public class MethodInvocation
 	  // Overriding is not seen and must include parameters
       this.hash = calculateHash(m);
       this.args = args;
-
-	  System.out.println("In Method INVOCATION CREATE "+m.getDeclaringClass()+m.getName()+m.getParameterTypes().length);
-	  System.out.println("In Method INVOCATION CREATE hash "+hash);
-
    }
    // Public --------------------------------------------------------
 
@@ -111,7 +107,6 @@ public class MethodInvocation
       {
          // Get method based on its hash value
          Method m = (Method)methodMap.get(new Integer(hash));
-		 System.out.println("In Method INVOCATION LOOKUP "+m.getDeclaringClass()+m.getName()+m.getParameterTypes().length);
 
          if (m == null)
             throw new NoSuchMethodException(clazz+":"+hash);
