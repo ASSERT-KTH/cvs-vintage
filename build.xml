@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.174 2004/10/05 00:22:39 andd Exp $ -->
+<!-- $Id: build.xml,v 1.175 2004/10/08 15:37:12 loubyansky Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -422,6 +422,7 @@
 
         <!-- Exclude key factory stuff -->
         <exclude name="org/jboss/ejb/plugins/keygenerator/uuid/**"/>
+        <exclude name="org/jboss/ejb/plugins/keygenerator/hilo/**"/>
       </fileset>
 
       <fileset dir="${build.resources}">
