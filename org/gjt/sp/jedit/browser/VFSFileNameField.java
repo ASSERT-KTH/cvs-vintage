@@ -30,6 +30,11 @@ import org.gjt.sp.jedit.gui.HistoryTextField;
 import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.MiscUtilities;
 
+/**
+ * @author Slava Pestov
+ * @version $Id: VFSFileNameField.java,v 1.7 2003/04/22 01:35:07 spestov Exp $
+ * @since jEdit 4.2pre1
+ */
 class VFSFileNameField extends HistoryTextField
 {
 	//{{{ VFSFileNameField constructor
