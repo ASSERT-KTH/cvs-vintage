@@ -30,7 +30,7 @@ import org.jboss.management.j2ee.EJB;
  * @see ContainerFactory
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class Application
    implements Service
@@ -196,7 +196,7 @@ public class Application
    }
 	
    // Service implementation ----------------------------------------
-   public void init() throws Exception {throw new Exception("don't call init");}
+   public void create() throws Exception {}
    public void destroy(){}
    /**
     * The mbean Service interface <code>start</code> method calls
@@ -211,7 +211,7 @@ public class Application
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
          Container con = (Container)i.next();
-         con.init();
+         con.create();
       }
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
