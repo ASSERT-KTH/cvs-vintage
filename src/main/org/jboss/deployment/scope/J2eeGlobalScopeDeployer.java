@@ -341,6 +341,10 @@ public class J2eeGlobalScopeDeployer extends org.jboss.deployment.J2eeDeployer i
                 source.onDeploy();
                 // redirect all modules to the responsible deployers
                 startModules(_d,source,oldCl);
+		// enabled the scoped classloader to run some
+                // initialization logic after the application modules
+		// have been setup
+		source.afterStartup();
             } catch(Exception e) {
                 stopApplication(_d,new java.util.ArrayList(),null,scope,lCollector);
                 throw new J2eeDeploymentException("could not deploy "+_d.getName());

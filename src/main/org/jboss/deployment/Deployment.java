@@ -18,16 +18,16 @@ import java.util.jar.Manifest;
 /** Represents a J2EE application or module (EJB.jar, Web.war or App.ear). <br>
 *
 *  @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*  @version $Revision: 1.9 $
+*  @version $Revision: 1.10 $
 */
 public class Deployment
    implements java.io.Serializable
 {
-	/** the apploications name */
+   /** the apploications name */
    protected String name;
 
-	/** the date this deployment was made */
-	protected Date date;
+   /** the date this deployment was made */
+   protected Date date;
    
    /** the local position of the apps root directory */
    protected URL localUrl;
@@ -55,7 +55,7 @@ public class Deployment
    /** Creates a new Deployment object. */
    protected Deployment ()
    {
-	   date = new Date();
+      date = new Date();
 
       ejbModules = new Vector ();
       webModules = new Vector ();
@@ -120,52 +120,51 @@ public class Deployment
    }
    
    /** returns all files (URLs) that are needed to run this deployment properly */
-	public Vector getAllFiles()
+   public Vector getAllFiles() {
+	// the common libs
+	Vector result = new Vector();
+	Iterator it = commonUrls.iterator();
+	while (it.hasNext())
 	{
-		// the common libs
-		Vector result = new Vector();
-		Iterator it = commonUrls.iterator();
-		while (it.hasNext())
-		{
-			String s = ((URL)it.next()).getFile();
-			result.add(s.substring(s.lastIndexOf("/")+1));
-		}
-		
-		// the ejb packages
-	    it = ejbModules.iterator();
-		while (it.hasNext())
-		{			
-			String s = ((URL)((Module)it.next()).localUrls.firstElement()).getFile();
-			result.add(s.substring(s.lastIndexOf("/")+1));
-		}
-			
-		// the web packages
-	    it = webModules.iterator();
-		while (it.hasNext())
-		{
-			String s = ((URL)((Module)it.next()).localUrls.firstElement()).getFile();
-			result.add(s.substring(s.lastIndexOf("/")+1));
-		}
-
-		// and the config file
-		result.add(J2eeDeployer.CONFIG);
-
-		/*
-		it = result.iterator();
-		while (it.hasNext())
-			System.out.println ("contained file: "+it.next());
-		*/
-
-		return result;
+		String s = ((URL)it.next()).getFile();
+		result.add(s.substring(s.lastIndexOf("/")+1));
 	}
+		
+	// the ejb packages
+	it = ejbModules.iterator();
+	while (it.hasNext())
+	{			
+		String s = ((URL)((Module)it.next()).localUrls.firstElement()).getFile();
+		result.add(s.substring(s.lastIndexOf("/")+1));
+	}
+			
+	// the web packages
+	it = webModules.iterator();
+	while (it.hasNext())
+	{
+		String s = ((URL)((Module)it.next()).localUrls.firstElement()).getFile();
+		result.add(s.substring(s.lastIndexOf("/")+1));
+	}
+
+	// and the config file
+	result.add(J2eeDeployer.CONFIG);
+
+	/*
+	it = result.iterator();
+	while (it.hasNext())
+		System.out.println ("contained file: "+it.next());
+	*/
+
+	return result;
+   }
 
 
    /** Represents a J2ee module. */
    public class Module
       implements java.io.Serializable
    {
-   	/** a short name for the module */
-   	String name;
+      /** a short name for the module */
+      protected String name;
 
       /** a collection of urls that make this module. <br>
       actually there is only one url for the modules jar file or 
@@ -173,12 +172,12 @@ public class Deployment
       to allow alternative descriptors, the base directories of this alternative
       descriptors can be put here before the real module url, so that these where 
       found first */
-   	Vector localUrls;
+      protected Vector localUrls;
    	
       /** the web root context in case of war file */
-   	String webContext;
+      protected String webContext;
       
-      Module ()
+      protected Module ()
       {
          localUrls = new Vector ();
       }
@@ -199,7 +198,7 @@ public class Deployment
         return name;
       }
      
-       /** 
+      /** 
        * returns the web context
        * @author cgjung
        */

@@ -111,6 +111,13 @@ public class ScopedURLClassLoader extends URLClassLoader {
         // nothing
     }
 
+    /** what happens after startup of application modules, could be overridden to run initial logic 
+     *  @throws J2eeDeploymentException if this stage of deployment fails for some reason
+     */
+    protected void afterStartup() throws J2eeDeploymentException {
+        // nothing
+    }
+
     /** what happens on undeploy, could be overridden to tear down meta-data and such 
      *  @throws J2eeDeploymentException if this last stage of undeployment fails for some reason
      */
