@@ -42,7 +42,10 @@ REM find the configuration and properties files.
 
 set CLASSPATH=%CLASSPATH%;..\conf
 
+REM Add all login modules for JAAS-based security here
+set CLASSPATH=%CLASSPATH%;..\lib\jboss-jaas.jar
 
-java -classpath "%CLASSPATH%" -Dtomcat.home=%TOMCAT_HOME% org.jboss.Main
+
+java -classpath "%CLASSPATH%" -Dtomcat.home=%TOMCAT_HOME% -Djava.security.auth.login.config==../conf/auth.conf org.jboss.Main
 
 pause

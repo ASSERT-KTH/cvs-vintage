@@ -30,7 +30,7 @@
     <property name="build.javadocs.dir" value="${build.dir}/docs/api"/>
     <property name="dist.dir" value="dist"/>
 
-    <property name="classpath" value="${lib.dir}/jmxri.jar;${build.classes.dir};${src.lib.dir}/awt.jar;${lib.dir}/xml.jar;${src.lib.dir}/ejb.jar;${src.lib.dir}/ejxeditor.jar;${src.lib.dir}/jndi.jar;${src.lib.dir}/ejxejb.jar;${src.lib.dir}/jta-spec1_0_1.jar;${src.lib.dir}/jnpserver.jar;${src.lib.dir}/dynaserver.jar;${src.lib.dir}/hsql.jar;${src.lib.dir}/webserver.jar;${src.lib.dir}/idb.jar;${src.lib.dir}/jdbc2_0-stdext.jar;${src.lib.dir}/jpl-util-0_5b.jar"/>
+    <property name="classpath" value="${lib.dir}/jmxri.jar;${build.classes.dir};${src.lib.dir}/awt.jar;${lib.dir}/xml.jar;${src.lib.dir}/ejb.jar;${src.lib.dir}/ejxeditor.jar;${src.lib.dir}/jndi.jar;${src.lib.dir}/ejxejb.jar;${src.lib.dir}/jta-spec1_0_1.jar;${src.lib.dir}/jnpserver.jar;${src.lib.dir}/dynaserver.jar;${src.lib.dir}/hsql.jar;${src.lib.dir}/webserver.jar;${src.lib.dir}/idb.jar;${src.lib.dir}/jdbc2_0-stdext.jar;${src.lib.dir}/jaas.jar;${src.lib.dir}/jpl-util-0_5b.jar"/>
     <property name="packages" value="org.jboss,org.jboss.configuration,org.jboss.dependencies,org.jboss.deployment,org.jboss.ejb,org.jboss.ejb.plugins,org.jboss.ejb.plugins.jaws,org.jboss.ejb.plugins.jaws.deployment,org.jboss.ejb.plugins.jaws.jdbc,org.jboss.ejb.plugins.jaws.metadata,org.jboss.ejb.plugins.jrmp.server,org.jboss.ejb.plugins.jrmp.interfaces,org.jboss.ejb.plugins.jrmp12.server,org.jboss.ejb.plugins.jrmp12.interfaces,org.jboss.ejb.plugins.jrmp13.server,org.jboss.ejb.plugins.jrmp13.interfaces,org.jboss.jdbc,org.jboss.jmx.client,org.jboss.jmx.interfaces,org.jboss.jmx.server,org.jboss.logging,org.jboss.metadata,org.jboss.minerva.datasource,org.jboss.minerva.factories,org.jboss.minerva.jdbc,org.jboss.minerva.pools,org.jboss.minerva.xa,org.jboss.naming,org.jboss.naming.java,org.jboss.proxy,org.jboss.security,org.jboss.spydermq,org.jboss.system,org.jboss.tm,org.jboss.tomcat,org.jboss.util,org.jboss.util.timeout,org.jboss.verifier,org.jboss.verifier.event,org.jboss.verifier.factory,org.jboss.web"/>
 
     <property name="build.compiler" value="classic"/>
@@ -131,14 +131,20 @@
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/jboss.mf"
          includes="org/jboss/**"
-         excludes="org/jboss/Main*,org/jboss/ejb/deployment/**,org/jboss/system/**,org/jboss/ejb/plugins/jaws/deployment/**,org/jboss/dependencies/**"
+         excludes="org/jboss/Main*,org/jboss/ejb/deployment/**,org/jboss/system/**,org/jboss/ejb/plugins/jaws/deployment/**,org/jboss/dependencies/**,org/jboss/security/*LoginModule.class"
+    />
+
+    <jar jarfile="${build.lib.dir}/jboss-jaas.jar"
+         basedir="${build.classes.dir}"
+         manifest="${etc.dir}/jboss.mf"
+         includes="org/jboss/security/SimpleServerLoginModule.class"
     />
 
     <mkdir dir="${build.dir}/client"/>
     <jar jarfile="${build.dir}/client/jboss-client.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/jboss-client.mf"
-         includes="org/jboss/ejb/DeploymentException.class,org/jboss/proxy/**,org/jboss/ejb/plugins/jrmp/server/*Stub.class,org/jboss/ejb/plugins/jrmp/interfaces/**,org/jboss/ejb/plugins/jrmp12/interfaces/**,org/jboss/ejb/plugins/jrmp13/interfaces/**,org/jboss/util/SerializableEnumeration.class,org/jboss/ejb/CacheKey.class, org/jboss/util/FastKey.class,org/jboss/system/SecurityAssociation.class,org/jboss/system/SimplePrincipal.class"
+         includes="org/jboss/ejb/DeploymentException.class,org/jboss/proxy/**,org/jboss/ejb/plugins/jrmp/server/*Stub.class,org/jboss/ejb/plugins/jrmp/interfaces/**,org/jboss/ejb/plugins/jrmp12/interfaces/**,org/jboss/ejb/plugins/jrmp13/interfaces/**,org/jboss/util/SerializableEnumeration.class,org/jboss/ejb/CacheKey.class, org/jboss/util/FastKey.class,org/jboss/system/SecurityAssociation.class,org/jboss/system/SimplePrincipal.class,org/jboss/security/ClientLoginModule.class"
     />
 
     <jar jarfile="${build.dir}/client/deploy.jar"
@@ -147,13 +153,13 @@
          includes="org/jboss/jmx/interfaces/JMXAdaptor.class,org/jboss/jmx/client/Deployer.class,org/jboss/jmx/server/JMXAdaptorImpl_Stub.class,org/jboss/ejb/CacheKey.class,org/jboss/util/FastKey.class"
     />
 
-    <jar jarfile="${build.dir}/client//stop.jar"
+    <jar jarfile="${build.dir}/client/stop.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/stop.mf"
          includes="org/jboss/jmx/interfaces/JMXAdaptor.class,org/jboss/jmx/client/Stop.class,org/jboss/jmx/server/JMXAdaptorImpl_Stub.class,org/jboss/ejb/CacheKey.class,org/jboss/util/FastKey.class"
     />
 
-    <jar jarfile="${build.dir}/client//connector.jar"
+    <jar jarfile="${build.dir}/client/connector.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/connector.mf"
          includes="org/jboss/jmx/interfaces/MBeanServer.class,org/jboss/jmx/interfaces/JMXConnector.class,org/jboss/jmx/interfaces/JMXConnectorMBean.class,org/jboss/jmx/interfaces/RMIConnector.class,org/jboss/jmx/interfaces/RMINotificationListener.class,org/jboss/jmx/client/RMIClientConnectorImpl*.class,org/jboss/jmx/server/RMIConnectorImpl_Stub.class,org/jboss/jmx/server/ObjectHandler.class,org/jboss/jmx/client/ConnectorFactory*.class,org/jboss/util/Service*.class,org/jboss/logging/Log*.class,test/jboss/jmx/TestClient*.class"
@@ -193,7 +199,6 @@
      <mkdir dir="${dist.dir}/tmp"/>
 
      <copyfile src="${lib.dir}/jmxri.jar" dest="${dist.dir}/lib/jmxri.jar"/>
-     <copyfile src="${lib.dir}/xml.jar" dest="${dist.dir}/lib/xml.jar"/>
      <copyfile src="${etc.dir}/jboss.conf" dest="${dist.dir}/conf/jboss.conf"/>
      <copyfile src="${etc.dir}/jboss.jcml" dest="${dist.dir}/conf/jboss.jcml"/>
      <copyfile src="${etc.dir}/log.properties" dest="${dist.dir}/log/log.properties"/>
@@ -202,9 +207,11 @@
 
      <copydir src="${etc.dir}/conf" dest="${dist.dir}/conf"/>
      <copydir src="${src.bin.dir}" dest="${dist.dir}/bin"/>
-     <copydir src="${src.lib.dir}" dest="${dist.dir}/lib/ext" excludes="xml.jar"/>
+     <copydir src="${src.lib.dir}" dest="${dist.dir}/lib" includes="xml.jar,jaas.jar"/>
+     <copydir src="${src.lib.dir}" dest="${dist.dir}/lib/ext" excludes="xml.jar,jaas.jar"/>
      <copydir src="${build.bin.dir}" dest="${dist.dir}/bin"/>
      <copydir src="${build.lib.dir}/ext" dest="${dist.dir}/lib/ext"/>
+     <copydir src="${build.lib.dir}" dest="${dist.dir}/lib"/>
      <copydir src="${build.dir}/client" dest="${dist.dir}/client"/>
      <copydir src="${src.client.dir}" dest="${dist.dir}/client"/>
   </target>
