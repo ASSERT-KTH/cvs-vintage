@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.27 2003/06/05 00:44:54 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.28 2003/08/08 02:22:18 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent,
 	DefaultFocusComponent
@@ -230,7 +230,7 @@ public class HyperSearchResults extends JPanel implements EBComponent,
 		{
 			public void run()
 			{
-				if(!multi.isSelected())
+				if(!multiStatus)
 				{
 					for(int i = 0; i < resultTreeRoot.getChildCount(); i++)
 					{
@@ -276,9 +276,9 @@ public class HyperSearchResults extends JPanel implements EBComponent,
 	private void updateMultiStatus()
 	{
 		if(multiStatus)
-			multi.setIcon(GUIUtilities.loadIcon("SingleResult.png"));
-		else
 			multi.setIcon(GUIUtilities.loadIcon("MultipleResults.png"));
+		else
+			multi.setIcon(GUIUtilities.loadIcon("SingleResult.png"));
 	} //}}}
 
 	//{{{ goToSelectedNode() method

@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.Debug;
  * across Java implementations.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.30 2003/07/28 21:08:04 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.31 2003/08/08 02:22:17 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -99,8 +99,6 @@ public class KeyEventWorkaround
 			case KeyEvent.VK_SUBTRACT:
 			case KeyEvent.VK_DECIMAL:
 			case KeyEvent.VK_DIVIDE:
-			System.err.println(evt);
-				System.err.println("foo");
 				last = LAST_NUMKEYPAD;
 				return evt;
 			default:
@@ -170,13 +168,11 @@ public class KeyEventWorkaround
 				// and NumLock is off, filter it out
 				if(last == LAST_NUMKEYPAD)
 				{
-					System.err.println("last was numpad");
 					last = LAST_NOTHING;
 					if((ch >= '0' && ch <= '9') || ch == '.'
 						|| ch == '/' || ch == '*'
 						|| ch == '-' || ch == '+')
 					{
-						System.err.println("kill");
 						return null;
 					}
 				}

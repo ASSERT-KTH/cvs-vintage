@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Right-click context menu editor.
  * @author Slava Pestov
- * @version $Id: ContextOptionPane.java,v 1.8 2002/12/15 00:23:53 spestov Exp $
+ * @version $Id: ContextOptionPane.java,v 1.9 2003/08/08 02:22:18 spestov Exp $
  */
 public class ContextOptionPane extends AbstractOptionPane
 {
@@ -196,6 +196,12 @@ public class ContextOptionPane extends AbstractOptionPane
 			{
 				int index = list.getSelectedIndex();
 				listModel.removeElementAt(index);
+				if(listModel.getSize() != 0)
+				{
+					list.setSelectedIndex(
+						Math.min(listModel.getSize()-1,
+						index));
+				}
 				updateButtons();
 			}
 			else if(source == moveUp)

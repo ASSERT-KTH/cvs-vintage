@@ -67,7 +67,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.58 2003/08/04 00:23:07 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.59 2003/08/08 02:22:17 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -1232,7 +1232,7 @@ loop:		for(;;)
 		// Finally the bug fix release
 		int bugfix = Integer.parseInt(build.substring(9,11));
 
-		return "" + major + "." + minor
+		return major + "." + minor
 			+ (beta != 99 ? "pre" + beta :
 			(bugfix != 0 ? "." + bugfix : "final"));
 	} //}}}

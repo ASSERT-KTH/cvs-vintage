@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.273 2003/07/28 21:08:04 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.274 2003/08/08 02:22:18 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4746,8 +4746,8 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	{
 		view.processKeyEvent(evt,true);
 
-		if(!evt.isConsumed())
-			super.processKeyEvent(evt);
+		/* if(!evt.isConsumed())
+			super.processKeyEvent(evt); */
 	} //}}}
 
 	//{{{ addTopComponent() method
@@ -5585,7 +5585,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 
 		view.getStatus().setMessageAndClear(jEdit.getProperty(
 			"view.status.bracket",new Object[] { 
-			new Integer(match.startLine), text }));
+			new Integer(match.startLine + 1), text }));
 	} //}}}
 
 	//{{{ recalculateLastPhysicalLine() method
