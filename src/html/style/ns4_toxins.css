@@ -177,8 +177,9 @@ ul.tasks li {
 	background: #ccc url(/@SCARAB_CONTEXT@/images/sw_min.gif) no-repeat bottom left;
 	}
 .functnbar, .functnbar2, {
- padding: 2px;
-	margin-top: .67em;
+ padding: 5px;
+	margin-left: 2px;
+	margin-right: 2px;
 	margin-bottom: .67em;
 	}
 .functnbar3 {
