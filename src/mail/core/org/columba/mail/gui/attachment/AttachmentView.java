@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,45 +9,65 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.attachment;
 
 import org.columba.mail.gui.attachment.util.AttachmentImageIconLoader;
-import org.columba.mail.gui.attachment.util.IconPanel;
 
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.MimeType;
 import org.columba.ristretto.message.StreamableMimePart;
+import org.frappucino.iconpanel.IconPanel;
 
 import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.UIManager;
 
 
 /**
  * @author freddy
  */
 public class AttachmentView extends IconPanel {
-    private AttachmentModel model;
+    private AttachmentModel attachmentModel;
 
+    /**
+     * Creates a view of attachments with the specified model.
+     * @param model the model to represent in this view.
+     */
     public AttachmentView(AttachmentModel model) {
-        super();
-        this.model = model;
+        attachmentModel = model;
+
+        setOpaque(true);
+        setBackground(UIManager.getColor("List.background"));
     }
 
+    /**
+     * Returns the model for this attachment view.
+     * @return the model.
+     */
     public AttachmentModel getModel() {
-        return model;
+        return attachmentModel;
     }
 
+    /**
+     * Returns the selected mime part from the model.
+     * @return the selected mime part.
+     */
     public StreamableMimePart getSelectedMimePart() {
-        return (StreamableMimePart) model.getDisplayedMimeParts().get(getSelected());
+        return (StreamableMimePart) attachmentModel.getDisplayedMimeParts().get(getSelectedIndex());
     }
 
+    /**
+     * Sets the mime part.
+     * Adds icons to the view.
+     * @param collection collection containing mime parts.
+     * @return true if there was any mime parts added to the view; false otherwise.
+     */
     public boolean setMimePartTree(MimeTree collection) {
         String contentType;
         String contentSubtype;
@@ -57,9 +76,9 @@ public class AttachmentView extends IconPanel {
 
         removeAll();
 
-        model.setCollection(collection);
+        attachmentModel.setCollection(collection);
 
-        List displayedMimeParts = model.getDisplayedMimeParts();
+        List displayedMimeParts = attachmentModel.getDisplayedMimeParts();
 
         // Display resulting MimeParts
         for (int i = 0; i < displayedMimeParts.size(); i++) {

@@ -22,7 +22,7 @@ import org.columba.core.gui.selection.SelectionHandler;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.gui.attachment.util.IconPanelSelectionListener;
+import org.frappucino.iconpanel.IconPanelSelectionListener;
 
 
 public class AttachmentSelectionHandler extends SelectionHandler
