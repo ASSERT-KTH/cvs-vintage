@@ -33,7 +33,7 @@ import org.jnp.interfaces.NamingContext;
  @see javax.naming.spi.InitialContextFactory
 
  @author Scott.Stark@jboss.org
- @version $Revision: 1.3 $
+ @version $Revision: 1.4 $
  */
 public class HttpNamingContextFactory
    implements InitialContextFactory, ObjectFactory
@@ -99,8 +99,14 @@ public class HttpNamingContextFactory
          if( Boolean.getBoolean("org.jboss.security.ignoreHttpsHost") == true )
          {
             com.sun.net.ssl.HttpsURLConnection sconn = (com.sun.net.ssl.HttpsURLConnection) conn;
-            AnyhostVerifier verifier = new AnyhostVerifier();
-            sconn.setHostnameVerifier(verifier);
+            try
+            {
+               AnyhostVerifier.setHostnameVerifier(sconn);
+            }
+            catch (Exception ex)
+            {
+               throw new IOException("failed to create Verifier for HttpsURLConnection");
+            }
          }
       }
       int length = conn.getContentLength();
