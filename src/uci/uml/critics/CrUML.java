@@ -26,7 +26,7 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.15 1999/03/17 03:19:29 jrobbins Exp $
+// $Id: CrUML.java,v 1.16 1999/03/25 16:06:54 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -141,7 +141,7 @@ public class CrUML extends Critic {
     return super.predicate(dm, dsgr);
   }
 
-  public String getMoreInfoURL(Set offenders, Designer dsgr) {
+  public String getMoreInfoURL(VectorSet offenders, Designer dsgr) {
     String clsName = getClass().getName();
     clsName = clsName.substring(clsName.lastIndexOf(".") + 1);
     return CRITICS_SITE + clsName + ".html";
@@ -157,7 +157,7 @@ public class CrUML extends Critic {
   // display related methods
 
 
-  public String expand(String res, Set offs) {
+  public String expand(String res, VectorSet offs) {
     //System.out.println("expanding: " + res);
     if (offs.size() == 0) return res;
     Object off1 = offs.firstElement();

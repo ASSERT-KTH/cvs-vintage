@@ -26,7 +26,7 @@
 // File: WizNavigable.java
 // Classes: WizNavigable
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizNavigable.java,v 1.2 1999/03/17 03:19:38 jrobbins Exp $
+// $Id: WizNavigable.java,v 1.3 1999/03/25 16:07:02 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -61,7 +61,7 @@ public class WizNavigable extends Wizard {
 
   public ModelElement getModelElement() {
     if (_item != null) {
-      Set offs = _item.getOffenders();
+      VectorSet offs = _item.getOffenders();
       if (offs.size() >= 1) {
 	ModelElement me = (ModelElement) offs.elementAt(0);
 	return me;

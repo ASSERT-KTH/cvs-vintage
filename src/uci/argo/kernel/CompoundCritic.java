@@ -26,7 +26,7 @@
 // File: CompoundCritic.java
 // Classes: CompoundCritic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CompoundCritic.java,v 1.3 1999/03/17 03:18:21 jrobbins Exp $
+// $Id: CompoundCritic.java,v 1.4 1999/03/25 16:06:34 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -155,13 +155,13 @@ public class CompoundCritic extends Critic {
     System.out.println("this method should never be called: "+
 		       "CompoundCritic addKnowledgeType");
   }
-  public Set getKnowledgeTypes() {
+  public VectorSet getKnowledgeTypes() {
     System.out.println("this method should never be called: "+
 		       "CompoundCritic addSupportedDecision");
-    return new Set();
+    return new VectorSet();
   }
   
-  public String expand(String desc, Set offs) {
+  public String expand(String desc, VectorSet offs) {
     System.out.println("this method should never be called: "+
 		       "CompoundCritic expand");
     return desc;

@@ -26,7 +26,7 @@
 // File: WizCueCards.java
 // Classes: WizCueCards
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizCueCards.java,v 1.2 1999/03/17 03:19:34 jrobbins Exp $
+// $Id: WizCueCards.java,v 1.3 1999/03/25 16:07:00 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -56,7 +56,7 @@ public class WizCueCards extends Wizard {
 
   public ModelElement getModelElement() {
     if (_item != null) {
-      Set offs = _item.getOffenders();
+      VectorSet offs = _item.getOffenders();
       if (offs.size() >= 1) {
 	ModelElement me = (ModelElement) offs.elementAt(0);
 	return me;

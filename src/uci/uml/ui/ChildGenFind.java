@@ -27,7 +27,7 @@
 // File: ChildGenFind.java
 // Classes: ChildGenFind
 // Original Author: jrobbins
-// $Id: ChildGenFind.java,v 1.2 1999/02/19 22:24:25 jrobbins Exp $
+// $Id: ChildGenFind.java,v 1.3 1999/03/25 16:07:12 jrobbins Exp $
 
 package uci.uml.ui;
 
@@ -60,8 +60,8 @@ public class ChildGenFind implements ChildGenerator {
 				      p.getDiagrams().elements());
     }
 
-//     if (o instanceof Package) {
-//       Vector ownedElements = ((Package)o).getOwnedElement();
+//     if (o instanceof MMPackage) {
+//       Vector ownedElements = ((MMPackage)o).getOwnedElement();
 //       if (ownedElements != null) return ownedElements.elements();
 //     }
 

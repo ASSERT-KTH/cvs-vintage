@@ -11,7 +11,7 @@
 <!-- files.  "tee" = Template with Embedded Expressions. -->
 
 <!-- Original Author: jrobbins@ics.uci.edu -->
-<!-- $Id: XMI.tee,v 1.1 1999/03/11 01:50:10 jrobbins Exp $ -->
+<!-- $Id: XMI.tee,v 1.2 1999/03/25 16:07:32 jrobbins Exp $ -->
 
 
 <!-- TO DO LIST: -->
@@ -1822,7 +1822,7 @@ GeneralizableElementCompositions
 </macro>
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<template class="uci.uml.Model_Management.Package">
+<template class="uci.uml.Model_Management.MMPackage">
 <![CDATA[
 <Package XMI.id = "<ocl>self.id</ocl>">
   PackageProperties

@@ -26,7 +26,7 @@
 // File: Poster.java
 // Classes: Poster
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Poster.java,v 1.11 1999/03/17 03:18:25 jrobbins Exp $
+// $Id: Poster.java,v 1.12 1999/03/25 16:06:38 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -66,10 +66,10 @@ public interface Poster {
   boolean supports(Goal g);
   Vector getSupportedGoals();
   boolean containsKnowledgeType(String knowledgeType);
-  Set getKnowledgeTypes();
+  VectorSet getKnowledgeTypes();
 
   /** Customize the description string just before it is displayed. */
-  String expand(String desc, Set offs);
+  String expand(String desc, VectorSet offs);
 
   public Icon getClarifier();
 

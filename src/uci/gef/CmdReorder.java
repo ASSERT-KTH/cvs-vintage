@@ -27,7 +27,7 @@
 // File: CmdReorder.java
 // Classes: CmdReorder
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdReorder.java,v 1.7 1999/02/19 22:18:02 jrobbins Exp $
+// $Id: CmdReorder.java,v 1.8 1999/03/25 16:06:41 jrobbins Exp $
 
 package uci.gef;
 
@@ -45,6 +45,11 @@ public class CmdReorder extends Cmd {
   public static final int BRING_TO_FRONT = 2;
   public static final int SEND_BACKWARD = 3;
   public static final int BRING_FORWARD = 4;
+
+  public static CmdReorder SendToBack = new CmdReorder(SEND_TO_BACK);
+  public static CmdReorder BringToFront = new CmdReorder(BRING_TO_FRONT);
+  public static CmdReorder SendBackward = new CmdReorder(SEND_BACKWARD);
+  public static CmdReorder BringForward = new CmdReorder(BRING_FORWARD);
 
   ////////////////////////////////////////////////////////////////
   // instance variables

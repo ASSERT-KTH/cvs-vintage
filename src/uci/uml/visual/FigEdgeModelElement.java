@@ -26,7 +26,7 @@
 // File: FigEdgeModelElement.java
 // Classes: FigEdgeModelElement
 // Original Author: abonner
-// $Id: FigEdgeModelElement.java,v 1.15 1999/03/17 03:22:13 jrobbins Exp $
+// $Id: FigEdgeModelElement.java,v 1.16 1999/03/25 16:07:29 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -121,7 +121,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
   }
   public Vector getPopUpActions() {
     Vector popUpActions = super.getPopUpActions();
-    popUpActions.addElement(new CmdUMLProperties());
+    popUpActions.addElement(Actions.Properties);
     return popUpActions;
   }
 

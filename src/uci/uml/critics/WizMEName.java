@@ -26,7 +26,7 @@
 // File: WzMEName.java
 // Classes: WzMEName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizMEName.java,v 1.4 1999/03/17 03:19:35 jrobbins Exp $
+// $Id: WizMEName.java,v 1.5 1999/03/25 16:07:01 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -62,7 +62,7 @@ public class WizMEName extends Wizard {
 
   public ModelElement getModelElement() {
     if (_item != null) {
-      Set offs = _item.getOffenders();
+      VectorSet offs = _item.getOffenders();
       if (offs.size() >= 1) {
 	ModelElement me = (ModelElement) offs.elementAt(0);
 	return me;

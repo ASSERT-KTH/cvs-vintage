@@ -27,7 +27,7 @@
 // File: Dbg.java
 // Class: Dbg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Dbg.java,v 1.6 1999/03/11 01:13:17 jrobbins Exp $
+// $Id: Dbg.java,v 1.7 1999/03/25 16:05:25 jrobbins Exp $
 
 package uci.util;
 
@@ -41,7 +41,7 @@ public class Dbg {
   public final static boolean on = true;
 
   // needs-more-work: upgrade to sun collections
-  public final static Set guards = new Set();
+  public final static VectorSet guards = new VectorSet();
 
   public static final void assert(boolean cond, String msg) {
     if (on && !cond) throw new AssertionException(msg);

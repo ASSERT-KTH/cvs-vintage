@@ -26,7 +26,7 @@
 // File: CrUnconventionalAttrName.java
 // Classes: CrUnconventionalAttrName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalAttrName.java,v 1.14 1999/03/08 22:43:00 jrobbins Exp $
+// $Id: CrUnconventionalAttrName.java,v 1.15 1999/03/25 16:06:55 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -76,22 +76,22 @@ public class CrUnconventionalAttrName extends CrUML {
 
   public ToDoItem toDoItem(Object dm, Designer dsgr) {
     Feature f = (Feature) dm;
-    Set offs = computeOffenders(f);
+    VectorSet offs = computeOffenders(f);
     return new ToDoItem(this, offs, dsgr);
   }
 
-  protected Set computeOffenders(Feature dm) {
-    Set offs = new Set(dm);
+  protected VectorSet computeOffenders(Feature dm) {
+    VectorSet offs = new VectorSet(dm);
     offs.addElement(dm.getOwner());
     return offs;
   }
 
   public boolean stillValid(ToDoItem i, Designer dsgr) {
     if (!isActive()) return false;
-    Set offs = i.getOffenders();
+    VectorSet offs = i.getOffenders();
     Feature f = (Feature) offs.firstElement();
     if (!predicate(f, dsgr)) return false;
-    Set newOffs = computeOffenders(f);
+    VectorSet newOffs = computeOffenders(f);
     boolean res = offs.equals(newOffs);
 //      System.out.println("offs="+ offs.toString() +
 //  		       " newOffs="+ newOffs.toString() +

@@ -26,7 +26,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.14 1999/03/25 00:59:43 jrobbins Exp $
+// $Id: FigNodeModelElement.java,v 1.15 1999/03/25 16:07:30 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -37,6 +37,7 @@ import java.beans.*;
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
+import uci.ui.*;
 import uci.gef.*;
 import uci.graph.*;
 import uci.argo.kernel.*;
@@ -128,7 +129,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
 
   public Vector getPopUpActions() {
     Vector popUpActions = super.getPopUpActions();
-    popUpActions.addElement(CmdUMLProperties.Properties);
+    popUpActions.addElement(Actions.Properties);
     return popUpActions;
   }
 

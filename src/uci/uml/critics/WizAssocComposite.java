@@ -26,7 +26,7 @@
 // File: WizAssocComposite.java
 // Classes: WizAssocComposite
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizAssocComposite.java,v 1.2 1999/03/17 03:19:33 jrobbins Exp $
+// $Id: WizAssocComposite.java,v 1.3 1999/03/25 16:06:58 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -64,7 +64,7 @@ public class WizAssocComposite extends Wizard {
 
   public ModelElement getModelElement() {
     if (_item != null) {
-      Set offs = _item.getOffenders();
+      VectorSet offs = _item.getOffenders();
       if (offs.size() >= 1) {
 	ModelElement me = (ModelElement) offs.elementAt(0);
 	return me;

@@ -24,7 +24,7 @@
 // File: Fig.java
 // Classes: Fig
 // Original Author: ics125 spring 1996
-// $Id: Fig.java,v 1.25 1999/03/11 01:11:42 jrobbins Exp $
+// $Id: Fig.java,v 1.26 1999/03/25 16:06:43 jrobbins Exp $
 
 package uci.gef;
 
@@ -551,10 +551,10 @@ implements Cloneable, java.io.Serializable, PropertyChangeListener, PopupGenerat
 
   public Vector getPopUpActions() {
     Vector actions = new Vector();
-    actions.addElement(new CmdReorder(CmdReorder.BRING_FORWARD));
-    actions.addElement(new CmdReorder(CmdReorder.SEND_BACKWARD));
-    actions.addElement(new CmdReorder(CmdReorder.BRING_TO_FRONT));
-    actions.addElement(new CmdReorder(CmdReorder.SEND_TO_BACK));
+    actions.addElement(CmdReorder.BringForward);
+    actions.addElement(CmdReorder.SendBackward);
+    actions.addElement(CmdReorder.BringToFront);
+    actions.addElement(CmdReorder.SendToBack);
     return actions;
   }
 

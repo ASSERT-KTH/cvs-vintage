@@ -26,7 +26,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.19 1999/03/17 03:18:23 jrobbins Exp $
+// $Id: Designer.java,v 1.20 1999/03/25 16:06:37 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -330,9 +330,9 @@ public class Designer implements Poster, Runnable, java.io.Serializable {
   public boolean containsKnowledgeType(String type) {
     return type.equals("Designer's");
   }
-  public Set getKnowledgeTypes() { return new Set("Designer's"); }
+  public VectorSet getKnowledgeTypes() { return new VectorSet("Designer's"); }
 
-  public String expand(String desc, Set offs) { return desc; }
+  public String expand(String desc, VectorSet offs) { return desc; }
 
   public Icon getClarifier() { return null; }
 
