@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.310 2004/04/06 18:57:19 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.311 2004/04/08 20:07:37 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5292,6 +5292,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				Log.log(Log.DEBUG,this,"Horizontal ok");
 			painter.repaint();
 
+			horizontal.setValue(-horizontalOffset);
 			horizontal.setUnitIncrement(painter.getFontMetrics()
 				.charWidth('w'));
 			horizontal.setBlockIncrement(width / 2);
@@ -6576,7 +6577,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				if(screenLine > screenLastLine)
 					screenLine = screenLastLine;
 				ChunkCache.LineInfo info = chunkCache.getLineInfo(screenLine);
-				if(info.lastSubregion)
+				if(info.lastSubregion && extraEndVirt != 0)
 				{
 					if(!isEditable())
 					{
