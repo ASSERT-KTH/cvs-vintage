@@ -100,10 +100,7 @@ public class Constants {
     public static final String[] STANDARD_IMPORTS = { 
 	"javax.servlet.*",
 	"javax.servlet.http.*",
-	"javax.servlet.jsp.*",
-	// WRONG, the spec says only the above 3 should be included, but
-	// watchdog has a different opinion
-	"javax.servlet.jsp.tagext.*" 
+	"javax.servlet.jsp.*"
     };
     
     /**
