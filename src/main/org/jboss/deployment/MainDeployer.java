@@ -42,7 +42,7 @@ import org.jboss.system.ServiceMBeanSupport;
 * Takes a series of URL to watch, detects changes and calls the appropriate Deployers 
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.8 $
+* @version $Revision: 1.9 $
 *
 *
 */
@@ -310,7 +310,7 @@ implements MainDeployerMBean, Runnable
          // undeploy((DeploymentInfo) subs.next());
          log.info("DEPLOYMENT OF SUB "+sub.url);
          undeploy(sub);
-            
+      
       }
       
       // Them remove the deployment itself
@@ -554,7 +554,6 @@ implements MainDeployerMBean, Runnable
       // J2EE legacy goo in manifest
       parseManifestLibraries(di);
       
-      
       JarFile jarFile =null;
       
       // Then the packages inside the package being deployed
@@ -571,11 +570,6 @@ implements MainDeployerMBean, Runnable
          JarEntry entry = (JarEntry)e.nextElement();
          String name = entry.getName();
          
-         // Make sure the name is flat no directory structure in subs name
-         // example war's WEBINF/lib/myjar.jar appears as myjar.jar in the tmp directory
-         if (name.lastIndexOf("/") != -1)  
-            name = name.substring(name.lastIndexOf("/")+1);
-         
          // Everything that is not 
          // a- an XML file
          // b- a class in a normal directory structure
@@ -587,6 +581,11 @@ implements MainDeployerMBean, Runnable
             || name.endsWith(".war")
             || name.endsWith(".zip"))
          {
+            
+            // Make sure the name is flat no directory structure in subs name
+            // example war's WEBINF/lib/myjar.jar appears as myjar.jar in the tmp directory
+            if (name.lastIndexOf("/") != -1)  
+               name = name.substring(name.lastIndexOf("/")+1);
             
             try 
             {
@@ -610,6 +609,7 @@ implements MainDeployerMBean, Runnable
                
                // And deploy it, this call is recursive
                subDeployments.add(sub);
+            
             }
             catch (Exception e2) 
             { 
@@ -618,7 +618,7 @@ implements MainDeployerMBean, Runnable
                throw new DeploymentException("Could not deploy sub deployment "+name+" of deployment "+di.url);
             }
          }
-         
+      
          // WARNING: Do not close the jarFile let it hang until undeployment 
          // The reason is that if you close the jarFile you cannot open streams 
          // to files inside. The bug can be seen as follow 
@@ -639,23 +639,59 @@ implements MainDeployerMBean, Runnable
       { 
          
          try{ deploy((DeploymentInfo) lt.next());}
-         
+            
          catch (DeploymentException de) { di.subDeployments.remove(di);}
       }
    }
    
-   
-   protected void copy(InputStream in, OutputStream out)
-   throws IOException
+   public void parseManifestLibraries(DeploymentInfo sdi) throws DeploymentException
    {
+      String classPath = null;
       
-      byte[] buffer = new byte[1024];
-      int read;
-      while ((read = in.read(buffer)) > 0)
+      Manifest mf = sdi.getManifest();
+      
+      if( mf != null )
       {
-         out.write(buffer, 0, read);
+         Attributes mainAttributes = mf.getMainAttributes();
+         classPath = mainAttributes.getValue(Attributes.Name.CLASS_PATH);
       }
-   }
+      
+      URL[] libs = {};
+      if (classPath != null)
+      {
+         ArrayList tmp = new ArrayList();
+         StringTokenizer st = new StringTokenizer(classPath);
+         log.debug("resolveLibraries: "+classPath);
+         while (st.hasMoreTokens())
+         {
+            URL lib = null;
+            
+            String tk = st.nextToken();
+            
+            DeploymentInfo sub = null;
+            
+            log.debug("new manifest entry for sdi at "+sdi.shortName+" entry is "+tk);
+            
+            try {
+               
+               lib = new URL(sdi.url, tk);
+               
+               if (!deployments.containsKey(lib))
+               {
+                  
+                  // Try having it as a full subdeployment
+                  sub = new DeploymentInfo(lib, sdi);
+                  
+                  deploy(sub);
+               }
+            }
+            catch (Exception ignore) { 
+               log.error("The manifest entry in "+sdi.url+" references URL "+lib+ 
+                  " which could not be opened, entry ignored");
+            } 
+         }
+      }
+   }   
    
    
    
@@ -702,6 +738,20 @@ implements MainDeployerMBean, Runnable
       catch (Exception e) {log.error("Could not make local copy for "+sdi.url.toString(), e);}
    }
    
+   
+   
+   protected void copy(InputStream in, OutputStream out)
+   throws IOException
+   {
+      
+      byte[] buffer = new byte[1024];
+      int read;
+      while ((read = in.read(buffer)) > 0)
+      {
+         out.write(buffer, 0, read);
+      }
+   }
+   
    protected void copy (URL _src, URL _dest) throws IOException
    {
       if (!_dest.getProtocol ().equals ("file"))
@@ -735,55 +785,6 @@ implements MainDeployerMBean, Runnable
       out.close ();
       in.close ();
    }
-   
-   public void parseManifestLibraries(DeploymentInfo sdi) throws DeploymentException
-   {
-      String classPath = null;
-      
-      Manifest mf = sdi.getManifest();
-      
-      if( mf != null )
-      {
-         Attributes mainAttributes = mf.getMainAttributes();
-         classPath = mainAttributes.getValue(Attributes.Name.CLASS_PATH);
-      }
-      
-      URL[] libs = {};
-      if (classPath != null)
-      {
-         ArrayList tmp = new ArrayList();
-         StringTokenizer st = new StringTokenizer(classPath);
-         log.debug("resolveLibraries: "+classPath);
-         while (st.hasMoreTokens())
-         {
-            URL lib = null;
-            
-            String tk = st.nextToken();
-               
-            DeploymentInfo sub = null;
-            
-            log.debug("new manifest entry for sdi at "+sdi.shortName+" entry is "+tk);
-               
-            try {
-               
-               lib = new URL(sdi.url, tk);
-               
-               if (!deployments.containsKey(lib))
-               {
-                  
-                  // Try having it as a full subdeployment
-                  sub = new DeploymentInfo(lib, sdi);
-
-                  deploy(sub);
-               }
-            }
-            catch (Exception ignore) { 
-               log.error("The manifest entry in "+sdi.url+" references URL "+lib+ 
-               " which could not be opened, entry ignored");
-            } 
-         }
-      }
-   }   
    
    public ArrayList sortURLs(Set urls)
    {
