@@ -192,45 +192,45 @@ public class CookieTools {
  	// add version 1 specific information
 	if (version == 1) {
 	    // Version=1 ... required
-	    buf.append (";Version=1");
+	    buf.append ("; Version=1");
 
 	    // Comment=comment
 	    if (cookie.getComment() != null) {
-		buf.append (";Comment=");
+		buf.append ("; Comment=");
 		maybeQuote (version, buf, cookie.getComment().toString());
 	    }
 	}
 
 	// add domain information, if present
 
-	if (cookie.getDomain().isNull()) {
-	    buf.append(";Domain=");
+	if (!cookie.getDomain().isNull()) {
+	    buf.append("; Domain=");
 	    maybeQuote (version, buf, cookie.getDomain().toString());
 	}
 
 	// Max-Age=secs/Discard ... or use old "Expires" format
 	if (cookie.getMaxAge() >= 0) {
 	    if (version == 0) {
-		buf.append (";Expires=");
+		buf.append ("; Expires=");
 		DateTool.oldCookieFormat.format(new Date( System.currentTimeMillis() + cookie.getMaxAge() *1000L) ,buf,
 						new FieldPosition(0));
 
 	    } else {
-		buf.append (";Max-Age=");
+		buf.append ("; Max-Age=");
 		buf.append (cookie.getMaxAge());
 	    }
 	} else if (version == 1)
-	  buf.append (";Discard");
+	  buf.append ("; Discard");
 
 	// Path=path
-	if (cookie.getPath().isNull()) {
-	    buf.append (";Path=");
+	if (! cookie.getPath().isNull()) {
+	    buf.append ("; Path=");
 	    maybeQuote (version, buf, cookie.getPath().toString());
 	}
 
 	// Secure
 	if (cookie.getSecure()) {
-	  buf.append (";Secure");
+	  buf.append ("; Secure");
 	}
     }
 
