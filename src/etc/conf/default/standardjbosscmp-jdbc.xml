@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.38 2002/06/27 20:00:23 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.39 2002/07/08 21:14:34 sparre Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -81,7 +81,7 @@
          </mapping>
          <mapping>
             <java-type>java.lang.Character</java-type>
-            <jdbc-type>CHAR</jdbc-type>
+            <jdbc-type>VARCHAR</jdbc-type>
             <sql-type>CHAR</sql-type>
          </mapping>
          <mapping>
