@@ -1,0 +1,163 @@
+# -------------------------------------------------------------------
+# 
+# T O R Q U E  C O N F I G U R A T I O N  F I L E
+# 
+# static properties (fixed for this project)
+# exception: The database type will be set once
+# -------------------------------------------------------------------
+
+
+
+#######################################
+#
+#  B A S I C   P R O P E R T I E S
+#
+#######################################
+
+torque.home = .
+
+# This is the name of your Turbine project. Your generated sources
+# will be named using the project name selected below. If your
+# project=killerapp then you will have a generated:
+#
+# killerapp-schema.sql
+#
+# IMPORTANT!
+# This means that your project schema MUST be named
+# killerapp-schema.xml and it MUST be placed in the
+# schema directory for Torque to work property.
+#
+# The object model sources generated are independent of
+# the project name selected.
+torque.project = scarab
+
+# This is the target database, only considered when generating
+# the SQL for your Turbine project. Your possible choices are
+#
+# db2
+# db2400
+# hypersonic
+# mysql
+# oracle
+# postgresql
+# mssql
+#
+# Default: none
+# -------------------------------------------------------------------
+torque.database=@DATABASE_TYPE@
+
+torque.idTableXMLFile = 
+
+# These settings will allow you to customize the way your schema
+# documentation is created.
+# Valid formats are: html, anakia (for use with jakarta-site2)
+torque.doc.format = html
+
+torque.initialID = 101
+
+# -------------------------------------------------------------------
+#
+#  O B J E C T  M O D E L  I N F O R M A T I O N
+#
+# -------------------------------------------------------------------
+# These settings will allow you to customize the way your
+# Peer-based object model is created.
+# -------------------------------------------------------------------
+# addSaveMethod=true adds tracking code to determine how to save objects
+#
+# addGetByNameMethod=true adds methods to get fields by name/position
+#
+# complexObjectModel=true generates an om with collection support
+#
+# addTimeStamp=true puts time stamps in generated files
+#
+# addIntakeRetrievable=implement Intake's Retrievable interface
+# -------------------------------------------------------------------
+
+torque.targetPackage=org.tigris.scarab.om
+torque.retrievableInterface = org.apache.fulcrum.intake.Retrievable
+torque.basePrefix=Base
+torque.addSaveMethod=true
+torque.addGetByNameMethod=true
+torque.complexObjectModel=true
+torque.addTimeStamp=false
+torque.addIntakeRetrievable=true
+torque.overloadKeySetters=true
+
+# -------------------------------------------------------------------
+# Generate Manager classes that use JCS for caching.  This is still
+# considered experimental.
+# -------------------------------------------------------------------
+torque.useManagers=true
+
+
+# Tells JDBC task that javaName attribute for the tables and columns
+# should be made same as SQL name.
+torque.sameJavaName=false
+
+
+#######################################
+#
+#  D I R E C T O R I E S
+#
+#######################################
+
+torque.output.dir = ${torque.home}/../../../../../../src
+torque.schema.dir = ${torque.home}/schema
+
+torque.doc.dir = ${torque.output.dir}/doc
+torque.java.dir = ${torque.output.dir}/java
+torque.javadoc.dir = ${torque.output.dir}/javadoc
+torque.ojb.dir = ${torque.output.dir}/ojb
+torque.sql.dir = ${torque.output.dir}/sql
+torque.basezip.dir = ${torque.output.dir}
+
+#######################################
+#
+#  P A T H S
+#
+#######################################
+
+torque.templatePath = templates
+torque.useClasspath = true
+
+
+# -------------------------------------------------------------------
+# 
+#  C O N T R O L  T E M P L A T E S
+#
+# -------------------------------------------------------------------
+
+SQLControlTemplate = sql/base/Control.vm
+OMControlTemplate = om/Control.vm
+idTableControlTemplate = sql/id-table/Control.vm
+DataDTDControlTemplate = data/Control.vm
+DataDumpControlTemplate = data/dump/Control.vm
+DataSQLControlTemplate = sql/load/Control.vm
+DocControlTemplate = doc/Control.vm
+
+torque.template.sql = ${SQLControlTemplate}
+torque.template.om = ${OMControlTemplate}
+torque.template.idTable = ${idTableControlTemplate}
+torque.template.dataDtd = ${DataDTDControlTemplate}
+torque.template.dataDump = ${DataDumpControlTemplate}
+torque.template.dataSql = ${DataSQLControlTemplate}
+torque.template.doc = ${DocControlTemplate}
+torque.template.sqlDbInit = sql/db-init/Control.vm
+torque.template.ojb = ojb/repository/Control.vm
+torque.template.ojbModel = ojb/model/Control.vm
+
+
+#######################################
+#
+#  C O M P I L E   S E T T I N G S
+#
+#######################################
+
+torque.compile.src.dir = ${torque.java.dir}
+torque.compile.build.dir = bin/classes
+torque.compile.debug = on
+torque.compile.deprecation = off
+torque.compile.optimize = off
+
+

@@ -1,0 +1,26 @@
+# -------------------------------------------------------------------
+# 
+# T O R Q U E  C O N F I G U R A T I O N  F I L E
+#
+# Dynamic property settings. These settings need to be
+# customized for each database instance.
+# 
+# -------------------------------------------------------------------
+
+# -------------------------------------------------------------------
+#
+#  D A T A B A S E  S E T T I N G S
+#
+# -------------------------------------------------------------------
+# JDBC connection settings. This is used by the JDBCToXML task that
+# will create an XML database schema from JDBC metadata. These
+# settings are also used by the SQL Ant task to initialize your
+# Turbine system with the generated SQL.
+# NOTE: Scarab is not using the properties here, maybe in the future
+# -------------------------------------------------------------------
+
+torque.databaseUrl       = @DATABASE_URL@
+torque.databaseDriver    = @DATABASE_DRIVER@
+torque.databaseUser      = @DATABASE_USER@
+torque.databasePassword  = @DATABASE_PASSWORD@
+torque.createDatabaseUrl = @DATABASE_ADMIN_URL@
