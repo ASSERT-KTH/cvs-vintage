@@ -105,7 +105,7 @@
 
 <h3>Approve role requests</h3>
 
-<div class="functnbar2">
+<div class="functnbar">
  <input type="submit" name="eventSubmit_doApproveroles" 
      value="Submit" />
 </div>
