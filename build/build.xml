@@ -329,8 +329,8 @@
 
         <!-- the source code directory -->
         <filter token="OM" value="org.tigris.scarab.om"/>
-        <!-- touch this file because we replace the version tokens in it with a timestamp -->
-        <touch file="${build.src.scarab}/org/tigris/scarab/tools/ScarabRequestTool.java" />
+        <!-- delete this file because we replace the version tokens in it with a timestamp -->
+        <delete file="${build.src.scarab}/org/tigris/scarab/tools/ScarabRequestTool.java" />
         <copy todir="${build.src.scarab}/org" filtering="yes">
             <fileset dir="${src.java.dir.scarab}/org" defaultexcludes="no">
                 <include name="**/*.java"/>
