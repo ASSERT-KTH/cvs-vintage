@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.74 2004/07/17 13:10:41 kataka Exp $
+// $Id: PropPanelModelElement.java,v 1.75 2004/07/18 12:09:38 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,6 +74,7 @@ public abstract class PropPanelModelElement extends PropPanel {
     ////////////////////////////////////////////////////////////////
     // constants
 
+    protected static ImageIcon _partitionIcon = lookupIcon("Partition");
     protected static ImageIcon _objectIcon = lookupIcon("Object");
     protected static ImageIcon _componentInstanceIcon =
 	lookupIcon("ComponentInstance");
