@@ -38,6 +38,10 @@
 
         <SimpleMapper1 debug="0" />
 
+        <SessionExpirer checkInterval="60" />
+        <!-- For development you can use randomClass="java.util.Random" -->
+        <SessionIdGenerator randomClass="java.security.SecureRandom" />
+
 
         <!-- ========== context processing modules ========== -->
         <!-- This will be the "default" profile 
@@ -78,8 +82,7 @@
         
         <ReloadInterceptor fullReload="true" />
 
-        <SimpleSessionStore checkInterval="60" 
-			    maxActiveSessions="-1" />
+        <SimpleSessionStore maxActiveSessions="-1" />
 
         <AccessInterceptor />
 

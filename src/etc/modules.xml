@@ -280,13 +280,23 @@ in ServerXmlReader to use a simpler syntax.
 <module name="SimpleSessionStore" javaClass="org.apache.tomcat.modules.session.SimpleSessionStore">
 <category name="session"/>
 <doc>Not yet</doc>
-<attribute name="checkInterval">
-<doc>Not yet</doc>
-</attribute>
 <attribute name="maxActiveSessions">
 <doc>Not yet</doc>
 </attribute>
+</module>
+
+<module name="SessionIdGenerator" javaClass="org.apache.tomcat.modules.session.SessionIdGenerator">
+<category name="session"/>
+<doc>Not yet</doc>
 <attribute name="randomClass">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+<module name="SessionExpirer" javaClass="org.apache.tomcat.modules.session.SessionExpirer">
+<category name="session"/>
+<doc>Not yet</doc>
+<attribute name="checkInterval">
 <doc>Not yet</doc>
 </attribute>
 </module>
