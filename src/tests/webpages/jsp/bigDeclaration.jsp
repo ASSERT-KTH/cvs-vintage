@@ -387,12 +387,12 @@ class CellUpdater extends Thread {
 	    
 	    while (true) {
 		switch (tokenStream.nextToken()) {
-		case tokenStream.TT_EOF:
+		case StreamTokenizer.TT_EOF:
 		    dataStream.close();
 		    return;
 		default:
 		    break;
-		case tokenStream.TT_NUMBER:
+		case StreamTokenizer.TT_NUMBER:
 		    target.setTransientValue((float)tokenStream.nval);
 		    if (! target.app.isStopped && ! target.paused) {
 			target.app.repaint();
