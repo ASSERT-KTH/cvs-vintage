@@ -374,7 +374,7 @@ public class ColumbaCmdLineParser
    */
   public static void printVersionInfo ()
   {
-    System.out.println("columba " + MainInterface.version);
+    System.out.println("Columba " + VersionInfo.getVersion());
   }
 
   /**

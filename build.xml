@@ -1,17 +1,15 @@
 <?xml version="1.0"?>
 
 <project name="columba" default="build">
-<description>
+	<description>
 This is the whole build file for Columba. This build file is separated into any buildfiles which
 are dependent on this buildfile. Build Columba and try it.
 Have fun ... your Columba Team!
 </description>
-  <property name="basedir" value="${user.dir}"/>
+	<property name="basedir" value="${user.dir}"/>
 	<property name="src" value="${basedir}"/>
 	<property name="build" value="build"/>
 	<property name="user.name" value="The Columba Team"/>
-	<!-- here we should use the cvs-version info to automatically replace the version -->
-	<property name="version" value="1.0-M2"/>
 	<property name="dest" value="${basedir}/classes"/>
 	<property name="test-dest" value="${basedir}/test-classes"/>
 	<property name="ownclasspath" value="${dest}:${src}/lib/lucene-1.3-final.jar:${src}/lib/junit.jar:${src}/lib/jargs.jar:${src}/lib/jwizz-0.1.2.jar:${src}/lib/plastic-1.2.0.jar:${src}/lib/jhall.jar:${src}/lib/forms-1.0.4.jar:${src}/lib/ristretto-1.0_RC2.jar:${src}/lib/jscf-0.2.jar:${src}/lib/macchiato-1.0pre1.jar:${src}/lib/frappucino-1.0pre1.jar:${src}/lib/jniwrap-2.4.jar:${src}/lib/winpack.jar:${src}/lib/jdom.jar:${src}/lib/jpim.jar:${src}/lib/je.jar"/>
@@ -24,6 +22,14 @@ Have fun ... your Columba Team!
 			<pathelement location="${src}/lib/checkstyle-all-2.1.jar"/>
 		</classpath>
 	</taskdef>
+
+	<taskdef 
+	   name="jreleaseinfo" 
+	   classname="ch.oscg.jreleaseinfo.anttask.JReleaseInfoAntTask" >
+	   <classpath>
+	      <pathelement location="${src}/lib/jreleaseinfo-1.2.0.jar"/>
+	   </classpath>
+	</taskdef>	
 	
 	<!-- the task that really checks the style -->
 	<target name="verify" description="checks the style of the java-code">
@@ -35,10 +41,23 @@ Have fun ... your Columba Team!
 								ignoreWhitespace="true"
 								ignoreCastWhitespace="true"
 								failOnViolation="false">
-		<fileset dir="${src}" includes="**/*.java"/>
+			<fileset dir="${src}" includes="**/*.java"/>
 		</checkstyle>
 	</target>
 
+	<target name="version" description="creates the version info">
+		<jreleaseinfo
+		   className="ColumbaVersionInfo" 
+		   packageName="org.columba.core.main"
+		   targetDir="${src}/src/columba/core/"
+		   version="${version}" >
+		</jreleaseinfo>
+		
+		<javac srcdir="${src}/src/columba/core/org/columba/core/main/" includes="ColumbaVersionInfo.java" destdir="${dest}" />
+		
+		<delete file="${src}/src/columba/core/org/columba/core/main/ColumbaVersionInfo.java"/>
+	</target>
+	
 	<target name="update" description="updates columba via cvs">
 		<cvs command="update"/>
 	</target>
@@ -46,6 +65,8 @@ Have fun ... your Columba Team!
 	<target name="init" description="creates all required output-folders">
 		<echo message="you are running java version ${ant.java.version}"/>
 		<mkdir dir="${dest}"/>
+		<tstamp/>
+		<property name="version" value="${DSTAMP}" />
 	</target>
 
 	<target name="document" depends="init" description="creates the javadocs for the columba sources">
@@ -109,13 +130,13 @@ Have fun ... your Columba Team!
 	<target name="copy-resources" description="copy all resources to the destination folder">
 		<copy todir="${dest}">
 			<fileset dir="${src}/res/">
-			 <include name="**"/>
+				<include name="**"/>
 			</fileset>
 		</copy>
 	</target>
 
 	<!-- compile the classes -->
-	<target name="compile" depends="init, copy-resources"
+	<target name="compile" depends="init, copy-resources, version"
 	description="compiles columba. Here are the other buildfiles in the subdirectories needed">
 		<echo message="the classes are going to ${dest} "/>
 		<ant dir="${src}/src/addressbook" target="compile-classes" inheritall="false">
@@ -134,7 +155,7 @@ Have fun ... your Columba Team!
 			<property name="src" value="${java-src-dir}"/>
 		</ant>
 	</target>
-	
+
 	<!-- compile the test classes -->
 	<target name="compile-tests" depends="compile"
 	description="compiles test for columba. Here are the other buildfiles in the subdirectories needed">
@@ -150,8 +171,8 @@ Have fun ... your Columba Team!
 			<property name="ownclasspath" value="${ownclasspath}"/>
 			<property name="src" value="${java-test-src-dir}"/>
 		</ant>
-	</target>	
-	
+	</target>
+
 	<!-- pack the files into one jar file with automatic manifest file -->
 	<target name="jar" depends="compile" description="creates the columba.jar file">
 		<delete file="columba.jar"/>
@@ -185,7 +206,7 @@ Have fun ... your Columba Team!
 			</manifest>
 		</jar>
 	</target>
-	
+
 	<target name="run-script" depends="init" description="creates the run-script for columba">
 		<!-- echo file="${dest}/run.sh" >#!/bin/sh
 echo "starting columba ..."
@@ -198,20 +219,20 @@ else echo "cannot find columba.jar in `pwd`"; fi
 
 	<!-- convert line-endings -->
 	<target name="linefeeds-win32" description="converts the line-endings in the sources to crlf">
-	<fixcrlf srcdir="${dest}"
+		<fixcrlf srcdir="${dest}"
        eol="crlf"
        includes="README, AUTHORS, LICENSE, CHANGES, RUN, run.bat, run_source.bat"
   	/>
-  	</target>
+	</target>
 
-  	<!-- convert line-endings -->
+	<!-- convert line-endings -->
 	<target name="linefeeds-unix" description="converts the line-endings in the sources to lf">
-	<fixcrlf srcdir="${dest}"
+		<fixcrlf srcdir="${dest}"
        eol="lf"
        includes="README, AUTHORS, LICENSE, CHANGES, RUN, run.sh, run_source.sh"
   	/>
-  	</target>
-	
+	</target>
+
 	<!-- run test for all defined testcases -->
 	<target name="test" depends="compile-tests" 
 	description="runs all tests for columba. Failures only reported on console.">
@@ -377,43 +398,50 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	description=" this target creates two zip-files, one for binary release and one for the source stuff"/>
 
 	<!-- signing jar-files for Java WebStart -->
-        <!-- all libs and columba.jar need to be signed -->
-        <!-- you need to specify the alias and the passwords on the commandline -->
+	<!-- all libs and columba.jar need to be signed -->
+	<!-- you need to specify the alias and the passwords on the commandline -->
 	<property name="alias" value="TheColumbaProject" description="signing jar-files for Java WebStart"/>
-        <property name="storepass" value="columba"/>
-        <property name="keypass" value="columba"/>
+	<property name="storepass" value="columba"/>
+	<property name="keypass" value="columba"/>
 
-        <target name="webstart">
-         <signjar alias="${alias}" storepass="${storepass}" keypass="${keypass}">
-          <fileset dir="${src}">
-           <include name="columba.jar"/>
-           <include name="lib/lucene-1.3-final.jar"/>
-           <include name="lib/junit.jar"/>
-           <include name="lib/jargs.jar"/>
-           <include name="lib/plastic-1.2.0.jar"/>
-           <include name="lib/forms-1.0.4.jar"/>
-	   	   <include name="lib/jwizz-0.1.2.jar"/>
-           <include name="lib/jscf-0.2.jar"/>
-           <include name="lib/jdom.jar"/>
-           <include name="lib/ristretto-1.0_RC2.jar" />
-           <include name="lib/usermanual.jar"/>
-           <include name="lib/frappucino-1.0pre1.jar"/>
-           <include name="lib/macchiato-1.0pre1.jar"/>
-          	
-	       <!-- never sign JavaHelp, its already signed by SUN -->
-	       <!--<include name="lib/jhall.jar"/>-->
-	   	   
-           <!-- never sign jniwrapper, its already signed by jniwrapper.com -->
-           <!-- <include name="lib/jniwrap-2.4.jar"/> -->
-           <!-- <include name="lib/winpack.jar"/> -->
-          	
-           <!-- jar encapsulates the win32 dll's -->
-           <include name="lib/jniwraplib.jar"/>
-          	
-          </fileset>
-         </signjar>
-        </target>
+	<target name="webstart">
+		<signjar alias="${alias}" storepass="${storepass}" keypass="${keypass}">
+			<fileset dir="${src}">
+				<include name="columba.jar"/>
+				<include name="lib/lucene-1.3-final.jar"/>
+				<include name="lib/junit.jar"/>
+				<include name="lib/jargs.jar"/>
+				<include name="lib/plastic-1.2.0.jar"/>
+				<include name="lib/forms-1.0.4.jar"/>
+				<include name="lib/jwizz-0.1.2.jar"/>
+				<include name="lib/jscf-0.2.jar"/>
+				<include name="lib/jdom.jar"/>
+				<include name="lib/ristretto-1.0_RC2.jar" />
+				<include name="lib/usermanual.jar"/>
+				<include name="lib/frappucino-1.0pre1.jar"/>
+				<include name="lib/macchiato-1.0pre1.jar"/>
 
+				<!-- never sign JavaHelp, its already signed by SUN -->
+				<!--<include name="lib/jhall.jar"/>-->
+
+				<!-- never sign jniwrapper, its already signed by jniwrapper.com -->
+				<!-- <include name="lib/jniwrap-2.4.jar"/> -->
+				<!-- <include name="lib/winpack.jar"/> -->
+
+				<!-- jar encapsulates the win32 dll's -->
+				<include name="lib/jniwraplib.jar"/>
+
+			</fileset>
+		</signjar>
+	</target>
+
+	<target name="nightly_snapshot" depends="jar">
+		<tstamp/>
+		<property name="version" value="${DSTAMP}" />
+		
+		
+	</target>
+	
 	<!-- only for build the class-files -->
 	<target name="build" depends="compile" description="only for build the class-files"/>
 
@@ -434,8 +462,8 @@ else echo "cannot find columba.jar in `pwd`"; fi
 
 	<!-- create default package for translators -->
 	<target name="i18n" description="create default package for translators">
- 	<zip zipfile="default_i18n.zip" basedir="res" update="true">
-		<include name="**/*.properties"/>
-	</zip>
+		<zip zipfile="default_i18n.zip" basedir="res" update="true">
+			<include name="**/*.properties"/>
+		</zip>
 	</target>
 </project>

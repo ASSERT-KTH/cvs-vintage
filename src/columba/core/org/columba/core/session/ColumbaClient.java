@@ -16,11 +16,14 @@
 
 package org.columba.core.session;
 
-import org.columba.core.main.MainInterface;
-
-import java.io.*;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.net.Socket;
+
+import org.columba.core.main.VersionInfo;
 
 /**
  * Client connecting to the {@link ColumbaServer} to check if
@@ -46,7 +49,7 @@ public class ColumbaClient {
         socket = new Socket("127.0.0.1",
                 SessionController.deserializePortNumber());
         writer = new PrintWriter(socket.getOutputStream());
-        writer.write("Columba " + MainInterface.version);
+        writer.write("Columba " + VersionInfo.getVersion());
         writer.write(NEWLINE);
         writer.flush();
 

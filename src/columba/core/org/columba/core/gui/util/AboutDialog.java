@@ -16,19 +16,40 @@
 
 package org.columba.core.gui.util;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
 import java.io.IOException;
-import java.net.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.NumberFormat;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import org.columba.core.io.DiskIO;
 import org.columba.core.main.MainInterface;
+import org.columba.core.main.VersionInfo;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.gui.util.AddressLabel;
 import org.columba.mail.gui.util.URLLabel;
@@ -49,7 +70,7 @@ public class AboutDialog extends JDialog implements ActionListener {
      */
     protected AboutDialog() {
         super((JFrame) null, GlobalResourceLoader.getString(
-            RESOURCE_BUNDLE_PATH, "about", "title") + MainInterface.version);
+            RESOURCE_BUNDLE_PATH, "about", "title"));
         
         tabbedPane = new JTabbedPane();
         
@@ -57,6 +78,9 @@ public class AboutDialog extends JDialog implements ActionListener {
         authorPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
         
         GridBagConstraints c = new GridBagConstraints();
+
+        //Font font = MainInterface.columbaTheme.getControlTextFont();
+        Font font = UIManager.getFont("Label.font");
         
         JLabel imageLabel = new JLabel(ImageLoader.getImageIcon("startup.png"));
         c.gridx = 0;
@@ -64,25 +88,85 @@ public class AboutDialog extends JDialog implements ActionListener {
         c.anchor = GridBagConstraints.WEST;
         c.gridwidth = GridBagConstraints.REMAINDER;
         authorPanel.add(imageLabel, c);
+
+        JLabel versionLabel = new JLabel(GlobalResourceLoader.getString(
+                RESOURCE_BUNDLE_PATH, "about", "version"));
+        
+        if (font != null) {
+            font = font.deriveFont(Font.BOLD);
+            versionLabel.setFont(font);
+        }
+        
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridwidth = 1;
+        
+        Component box = Box.createRigidArea(new Dimension(10, 10));
+        authorPanel.add(box, c);
+
+        box = Box.createRigidArea(new Dimension(10, 10));
+        authorPanel.add(box, c);
+        
+        c.gridy = 1;
+        authorPanel.add(versionLabel, c);
+        
+        c.gridx = 1;
+        box = Box.createRigidArea(new Dimension(5, 15));
+        authorPanel.add(box, c);
+        
+        JLabel version = new JLabel(VersionInfo.getVersion());
+        c.gridx = 2;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        authorPanel.add(version, c);
+        
+        JLabel buildDateLabel = new JLabel(GlobalResourceLoader.getString(
+                RESOURCE_BUNDLE_PATH, "about", "build_date"));
+        
+        if (font != null) {
+            font = font.deriveFont(Font.BOLD);
+            buildDateLabel.setFont(font);
+        }
+        
+        c.gridx = 0;
+        c.gridy = 2;
+        c.gridwidth = 1;
+        
+        box = Box.createRigidArea(new Dimension(10, 10));
+        authorPanel.add(box, c);
+
+        box = Box.createRigidArea(new Dimension(10, 10));
+        authorPanel.add(box, c);
+        
+        authorPanel.add(buildDateLabel, c);
+        
+        c.gridx = 1;
+        box = Box.createRigidArea(new Dimension(5, 15));
+        authorPanel.add(box, c);
+        
+        JLabel buildDate = new JLabel(VersionInfo.getBuildDate().toString());
+        c.gridx = 2;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        authorPanel.add(buildDate, c);
+        
+        
         
         JLabel authorLabel = new JLabel(GlobalResourceLoader.getString(
             RESOURCE_BUNDLE_PATH, "about", "authors"));
-        
-        //Font font = MainInterface.columbaTheme.getControlTextFont();
-        Font font = UIManager.getFont("Label.font");
+
         
         if (font != null) {
             font = font.deriveFont(Font.BOLD);
             authorLabel.setFont(font);
         }
         
-        c.gridy = 1;
+        
+        c.gridx = 0;
+        c.gridy = 3;
         c.gridwidth = 1;
         
-        Component box = Box.createRigidArea(new Dimension(10, 10));
+        box = Box.createRigidArea(new Dimension(10, 10));
         authorPanel.add(box, c);
         
-        c.gridy = 2;
         authorPanel.add(authorLabel, c);
         
         c.gridx = 1;
@@ -97,7 +181,7 @@ public class AboutDialog extends JDialog implements ActionListener {
         
         AddressLabel a2 = new AddressLabel(
             "Timo Stich <tstich@users.sourceforge.net>");
-        c.gridy = 3;
+        c.gridy = 5;
         authorPanel.add(a2, c);
         
         JLabel websiteLabel = new JLabel(GlobalResourceLoader.getString(
@@ -108,7 +192,7 @@ public class AboutDialog extends JDialog implements ActionListener {
         }
         
         c.gridx = 0;
-        c.gridy = 4;
+        c.gridy = 6;
         c.gridwidth = 1;
         authorPanel.add(websiteLabel, c);
         

@@ -32,9 +32,6 @@ import org.columba.core.plugin.PluginManager;
  * @author fdietz
  */
 public class MainInterface {
-    /** Current version */
-    public static final String version = "1.0 RC1";
-
     /** If true, enables debugging output from org.columba.core.logging */
     public static boolean DEBUG = false;
 
