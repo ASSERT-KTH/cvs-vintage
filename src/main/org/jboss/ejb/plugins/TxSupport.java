@@ -22,9 +22,13 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.TransactionRolledbackException;
-import org.jboss.logging.Logger;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationResponse;
+import org.jboss.invocation.InvocationType;
+import org.jboss.logging.Logger;
+import org.jboss.tm.JBossRollbackException;
+import org.jboss.tm.JBossTransactionRolledbackException;
+import org.jboss.tm.JBossTransactionRolledbackLocalException;
 
 
 
@@ -64,11 +68,11 @@ public abstract class TxSupport
     *
     */
    private final TxSupport[] values = {NEVER,
-				       NOT_SUPPORTED,
-				       SUPPORTS,
-				       REQUIRED,
-				       REQUIRES_NEW,
-				       MANDATORY};
+                                       NOT_SUPPORTED,
+                                       SUPPORTS,
+                                       REQUIRED,
+                                       REQUIRES_NEW,
+                                       MANDATORY};
    private static int nextOrdinal = 0;
    private final int ordinal = nextOrdinal++;
    private final transient String name;
@@ -81,29 +85,29 @@ public abstract class TxSupport
    {
       if (NEVER.name.equals(name))
       {
-	 return NEVER;
+         return NEVER;
       } // end of if ()
       if (NOT_SUPPORTED.name.equals(name))
       {
-	 return NOT_SUPPORTED;
+         return NOT_SUPPORTED;
       } // end of if ()
       if (SUPPORTS.name.equals(name))
       {
-	 return SUPPORTS;
+         return SUPPORTS;
       } // end of if ()
       if (REQUIRED.name.equals(name))
       {
-	 return REQUIRED;
+         return REQUIRED;
       } // end of if ()
       if (REQUIRES_NEW.name.equals(name))
       {
-	 return REQUIRES_NEW;
+         return REQUIRES_NEW;
       } // end of if ()
       if (MANDATORY.name.equals(name))
       {
-	 return MANDATORY;
+         return MANDATORY;
       } // end of if ()
-      throw new IllegalArgumentException("Unknown TxType: " + name);      
+      throw new IllegalArgumentException("Unknown TxType: " + name);
    }
 
    public String toString()
@@ -111,7 +115,7 @@ public abstract class TxSupport
       return name;
    }
 
-   Object readResolve() throws ObjectStreamException {
+   protected Object internalReadResolve() throws ObjectStreamException {
       return values[ordinal];
    }
 
@@ -120,15 +124,15 @@ public abstract class TxSupport
    public abstract InvocationResponse serverInvoke(Invocation invocation, TransactionManager tm, org.jboss.ejb.Interceptor next) throws Exception;
 
 
-   protected void endTransaction(TransactionManager tm, Transaction tx) 
+   protected void endTransaction(Invocation invocation, TransactionManager tm, Transaction tx)
       throws TransactionRolledbackException, SystemException
    {
       if (tx != tm.getTransaction())
       {
-	 throw new IllegalStateException("Wrong tx on thread: expected " + tx + ", actual " + tm.getTransaction());
+         throw new IllegalStateException("Wrong tx on thread: expected " + tx + ", actual " + tm.getTransaction());
       } // end of if ()
-      
-      try 
+
+      try
       {
          if(tx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
          {
@@ -143,53 +147,65 @@ public abstract class TxSupport
             tx.commit();
          }
       }
-      catch (RollbackException e)
+      catch (Exception re)
       {
-         throw new TransactionRolledbackException(e.getMessage());
-      } 
-      catch (HeuristicMixedException e)
-      {
-         throw new TransactionRolledbackException(e.getMessage());
+         // Unwrap a JBossRollbackExcepion if possible.  There is no
+         // point in the extra wrapping, and the EJB spec should have
+         // just used javax.transaction.RollbackException
+         if (re instanceof JBossRollbackException)
+         {
+            JBossRollbackException rollback = (JBossRollbackException)re;
+            if(rollback.getCause() instanceof Exception)
+            {
+               re = (Exception) rollback.getCause();
+            }
+         }
+         if (invocation.getType() == InvocationType.LOCAL
+             || invocation.getType() == InvocationType.LOCALHOME)
+         {
+            throw new JBossTransactionRolledbackLocalException(re);
+         } // end of if ()
+         else
+         {
+            throw new JBossTransactionRolledbackException(re);
+         } // end of else
       }
-      catch (HeuristicRollbackException e)
-      {
-         throw new TransactionRolledbackException(e.getMessage());
-      }
-      catch (SystemException e)
-      {
-         throw new TransactionRolledbackException(e.getMessage());
-      } // end of try-catch
    }
 
    public final static class Never extends TxSupport
    {
       private Never(String name)
       {
-	 super(name);
+         super(name);
+      }
+
+      private Object readResolve() throws ObjectStreamException
+      {
+         return internalReadResolve();
       }
 
       public InvocationResponse clientInvoke(Invocation invocation,
-				 TransactionManager tm,
-				 org.jboss.proxy.Interceptor next)
-	 throws Throwable
+                                 TransactionManager tm,
+                                 org.jboss.proxy.Interceptor next)
+         throws Throwable
       {
-	 if (tm.getTransaction() != null)
-	 {
-	    throw new EJBException("Transaction not allowed");
-	 } // end of if ()
-	 return next.invoke(invocation);
+         if (tm.getTransaction() != null)
+         {
+            throw new EJBException("Transaction not allowed");
+         } // end of if ()
+         return next.invoke(invocation);
       }
 
       public InvocationResponse serverInvoke(Invocation invocation,
-				 TransactionManager tm,
-				 org.jboss.ejb.Interceptor next)
-	 throws Exception
+                                 TransactionManager tm,
+                                 org.jboss.ejb.Interceptor next)
+         throws Exception
       {
-	 if (tm.getTransaction() != null)
-	 {
-	    throw new IllegalStateException("Transaction present on server in Never call");   
-	 } // end of if ()
-	 return next.invoke(invocation);
+         if (tm.getTransaction() != null)
+         {
+            throw new IllegalStateException("Transaction present on server in Never call");
+         } // end of if ()
+         return next.invoke(invocation);
       }
 
 
@@ -199,45 +215,50 @@ public abstract class TxSupport
    {
       private NotSupported(String name)
       {
-	 super(name);
+         super(name);
       }
 
 
-      public InvocationResponse clientInvoke(Invocation invocation,
-				 TransactionManager tm,
-				 org.jboss.proxy.Interceptor next)
-	 throws Throwable
+      private Object readResolve() throws ObjectStreamException
       {
-	 Transaction tx = tm.getTransaction();
-	 if (tx != null)
-	 {
-	    tm.suspend();
-	    try
-	    {
-	       return next.invoke(invocation);
-	    }
-	    finally 
-	    {
-	       tm.resume(tx);
-	    } // end of try-finally
-	    
-	 } // end of if ()
-	 else
-	 {
-	    return next.invoke(invocation);
-	 } // end of else
+         return internalReadResolve();
+      }
+
+      public InvocationResponse clientInvoke(Invocation invocation,
+                                 TransactionManager tm,
+                                 org.jboss.proxy.Interceptor next)
+         throws Throwable
+      {
+         Transaction tx = tm.getTransaction();
+         if (tx != null)
+         {
+            tm.suspend();
+            try
+            {
+               return next.invoke(invocation);
+            }
+            finally
+            {
+               tm.resume(tx);
+            } // end of try-finally
+
+         } // end of if ()
+         else
+         {
+            return next.invoke(invocation);
+         } // end of else
       }
 
       public InvocationResponse serverInvoke(Invocation invocation,
-				 TransactionManager tm,
-				 org.jboss.ejb.Interceptor next)
-	 throws Exception
+                                 TransactionManager tm,
+                                 org.jboss.ejb.Interceptor next)
+         throws Exception
       {
-	 if (tm.getTransaction() != null)
-	 {
-	    throw new IllegalStateException("Transaction present on server in NotSupported call");   
-	 } // end of if ()
-	 return next.invoke(invocation);
+         if (tm.getTransaction() != null)
+         {
+            throw new IllegalStateException("Transaction present on server in NotSupported call");
+         } // end of if ()
+         return next.invoke(invocation);
       }
 
    }
@@ -246,30 +267,35 @@ public abstract class TxSupport
    {
       private Supports(String name)
       {
-	 super(name);
+         super(name);
       }
 
 
-      public InvocationResponse clientInvoke(Invocation invocation,
-				 TransactionManager tm,
-				 org.jboss.proxy.Interceptor next)
-	 throws Throwable
+      private Object readResolve() throws ObjectStreamException
       {
-	 Transaction tx = tm.getTransaction();
-	 if (tx != null)
-	 {
-	    invocation.setTransaction(tx);   
-	 } // end of if ()
-	 
-	 return next.invoke(invocation);
+         return internalReadResolve();
+      }
+
+      public InvocationResponse clientInvoke(Invocation invocation,
+                                 TransactionManager tm,
+                                 org.jboss.proxy.Interceptor next)
+         throws Throwable
+      {
+         Transaction tx = tm.getTransaction();
+         if (tx != null)
+         {
+            invocation.setTransaction(tx);
+         } // end of if ()
+
+         return next.invoke(invocation);
       }
 
       public InvocationResponse serverInvoke(Invocation invocation,
-				 TransactionManager tm,
-				 org.jboss.ejb.Interceptor next)
-	 throws Exception
+                                 TransactionManager tm,
+                                 org.jboss.ejb.Interceptor next)
+         throws Exception
       {
-	 return next.invoke(invocation);
+         return next.invoke(invocation);
       }
 
    }
@@ -278,48 +304,53 @@ public abstract class TxSupport
    {
       private Required(String name)
       {
-	 super(name);
+         super(name);
+      }
+
+      private Object readResolve() throws ObjectStreamException
+      {
+         return internalReadResolve();
       }
 
       public InvocationResponse clientInvoke(Invocation invocation,
-				 TransactionManager tm,
-				 org.jboss.proxy.Interceptor next)
-	 throws Throwable
+                                 TransactionManager tm,
+                                 org.jboss.proxy.Interceptor next)
+         throws Throwable
       {
-	 Transaction tx = tm.getTransaction();
-	 if (tx != null)
-	 {
-	    invocation.setTransaction(tx);   
-	 } // end of if ()
-	 
-	 return next.invoke(invocation);
+         Transaction tx = tm.getTransaction();
+         if (tx != null)
+         {
+            invocation.setTransaction(tx);
+         } // end of if ()
+
+         return next.invoke(invocation);
       }
 
       public InvocationResponse serverInvoke(Invocation invocation,
-				 TransactionManager tm,
-				 org.jboss.ejb.Interceptor next)
-	 throws Exception
+                                 TransactionManager tm,
+                                 org.jboss.ejb.Interceptor next)
+         throws Exception
       {
-	 Transaction tx = tm.getTransaction();
-	 if (tx == null)
-	 {
-	    tm.begin(); 
-	    tx = tm.getTransaction();
-	    try
-	    {
-	       return next.invoke(invocation);
-	    } 
-	    finally
-	    {
-	       endTransaction(tm, tx);
-	    } // end of try-finally
-	    
-	 } // end of if ()
-	 
-	 else
-	 {
-	    return next.invoke(invocation);
-	 } // end of else
+         Transaction tx = tm.getTransaction();
+         if (tx == null)
+         {
+            tm.begin();
+            tx = tm.getTransaction();
+            try
+            {
+               return next.invoke(invocation);
+            }
+            finally
+            {
+               endTransaction(invocation, tm, tx);
+            } // end of try-finally
+
+         } // end of if ()
+
+         else
+         {
+            return next.invoke(invocation);
+         } // end of else
       }
 
    }
@@ -328,48 +359,53 @@ public abstract class TxSupport
    {
       private RequiresNew(String name)
       {
-	 super(name);
+         super(name);
+      }
+
+      private Object readResolve() throws ObjectStreamException
+      {
+         return internalReadResolve();
       }
 
       public InvocationResponse clientInvoke(Invocation invocation,
-				 TransactionManager tm,
-				 org.jboss.proxy.Interceptor next)
-	 throws Throwable
+                                 TransactionManager tm,
+                                 org.jboss.proxy.Interceptor next)
+         throws Throwable
       {
-	 Transaction tx = tm.getTransaction();
-	 if (tx != null)
-	 {
-	    tm.suspend();
-	    try
-	    {
-	       return next.invoke(invocation);
-	    }
-	    finally 
-	    {
-	       tm.resume(tx);
-	    } // end of try-finally
-	 } // end of if ()
-	 else
-	 {
-	    return next.invoke(invocation);
-	 } // end of else
+         Transaction tx = tm.getTransaction();
+         if (tx != null)
+         {
+            tm.suspend();
+            try
+            {
+               return next.invoke(invocation);
+            }
+            finally
+            {
+               tm.resume(tx);
+            } // end of try-finally
+         } // end of if ()
+         else
+         {
+            return next.invoke(invocation);
+         } // end of else
       }
 
       public InvocationResponse serverInvoke(Invocation invocation,
-				 TransactionManager tm,
-				 org.jboss.ejb.Interceptor next)
-	 throws Exception
+                                 TransactionManager tm,
+                                 org.jboss.ejb.Interceptor next)
+         throws Exception
       {
-	 tm.begin(); 
-	 Transaction tx = tm.getTransaction();
-	 try 
-	 {
-	    return next.invoke(invocation);
-	 }  
-	 finally 
-	 {
-	    endTransaction(tm, tx);
-	 } // end of try-finally
+         tm.begin();
+         Transaction tx = tm.getTransaction();
+         try
+         {
+            return next.invoke(invocation);
+         }
+         finally
+         {
+            endTransaction(invocation, tm, tx);
+         } // end of try-finally
       }
 
    }
@@ -378,37 +414,42 @@ public abstract class TxSupport
    {
       private Mandatory(String name)
       {
-	 super(name);
+         super(name);
+      }
+
+      private Object readResolve() throws ObjectStreamException
+      {
+         return internalReadResolve();
       }
 
       public InvocationResponse clientInvoke(Invocation invocation,
-				 TransactionManager tm,
-				 org.jboss.proxy.Interceptor next)
-	 throws Throwable
+                                 TransactionManager tm,
+                                 org.jboss.proxy.Interceptor next)
+         throws Throwable
       {
-	 Transaction tx = tm.getTransaction();
-	 if (tx == null)
-	 {
-	    throw new EJBException("Transaction required");
-	 } // end of if ()
-	 invocation.setTransaction(tx);
-	 return next.invoke(invocation);
+         Transaction tx = tm.getTransaction();
+         if (tx == null)
+         {
+            throw new EJBException("Transaction required");
+         } // end of if ()
+         invocation.setTransaction(tx);
+         return next.invoke(invocation);
       }
 
       public InvocationResponse serverInvoke(Invocation invocation,
-				 TransactionManager tm,
-				 org.jboss.ejb.Interceptor next)
-	 throws Exception
+                                 TransactionManager tm,
+                                 org.jboss.ejb.Interceptor next)
+         throws Exception
       {
-	 Transaction tx = tm.getTransaction();
-	 if (tx == null)
-	 {
-	    throw new EJBException("Transaction required");
-	 } // end of if ()
-	 invocation.setTransaction(tx);
-	 return next.invoke(invocation);
+         Transaction tx = tm.getTransaction();
+         if (tx == null)
+         {
+            throw new EJBException("Transaction required");
+         } // end of if ()
+         invocation.setTransaction(tx);
+         return next.invoke(invocation);
       }
 
    }
-   
+
 }// TxSupport

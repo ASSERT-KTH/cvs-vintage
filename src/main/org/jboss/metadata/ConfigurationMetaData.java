@@ -20,12 +20,12 @@ import org.w3c.dom.NodeList;
 /** The configuration information for an EJB container.
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.34 $
+ *   @version $Revision: 1.35 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/08/02: marcf</b>
  *  <ol>
- *   <li>Added locking policy as optional tag in jboss.xml 
+ *   <li>Added locking policy as optional tag in jboss.xml
  *  </ol>
  *  <p><b>2001/10/16: billb</b>
  *  <ol>
@@ -45,7 +45,7 @@ import org.w3c.dom.NodeList;
  *  </ol>
  *
  */
-public class ConfigurationMetaData extends MetaData 
+public class ConfigurationMetaData extends MetaData
 {
 
    // Constants -----------------------------------------------------
@@ -55,7 +55,7 @@ public class ConfigurationMetaData extends MetaData
    public static final String STATELESS_13 = "Standard Stateless SessionBean";
    public static final String STATEFUL_13 = "Standard Stateful SessionBean";
    public static final String MESSAGE_DRIVEN_13 = "Standard Message Driven Bean";
-   
+
    public static final String CLUSTERED_CMP_2x_13 = "Clustered CMP 2.x EntityBean";
    public static final String CLUSTERED_CMP_1x_13 = "Clustered CMP EntityBean";
    public static final String CLUSTERED_BMP_13 = "Clustered BMP EntityBean";
@@ -77,7 +77,7 @@ public class ConfigurationMetaData extends MetaData
    private String transactionManager;
    private String webClassLoader = "org.jboss.web.WebClassLoader";
    // This is to provide backward compatibility with 2.4 series jboss.xml
-   // but it should come from standardjboss alone 
+   // but it should come from standardjboss alone
    // marcf:FIXME deprecate the "hardcoded string"
    private Element lockConfig = null;
    private byte commitOption;
@@ -116,11 +116,11 @@ public class ConfigurationMetaData extends MetaData
 
    public String getRoleMappingManager() { return roleMappingManager; }
 
-   public String getTransactionManager() { return transactionManager; }
+   //public String getTransactionManager() { return transactionManager; }
 
    public String getWebClassLoader() { return webClassLoader; }
 
-   public Element getLockConfig() {return lockConfig;} 
+   public Element getLockConfig() {return lockConfig;}
 
    public Element getContainerPoolConf() { return containerPoolConf; }
    public Element getContainerCacheConf() { return containerCacheConf; }
@@ -134,7 +134,7 @@ public class ConfigurationMetaData extends MetaData
 
    public long getOptionDRefreshRate() { return optionDRefreshRate; }
 
-   public Collection getDepends() 
+   public Collection getDepends()
    {
       return depends;
    }
@@ -164,7 +164,7 @@ public class ConfigurationMetaData extends MetaData
 
       // set the web classloader
       webClassLoader = getElementContent(getOptionalChild(element, "web-class-loader"), webClassLoader);
- 
+
       // set the lock class
       lockConfig = getOptionalChild(element, "locking-policy");
 
@@ -186,7 +186,7 @@ public class ConfigurationMetaData extends MetaData
          roleMappingManager = null;
       }
       // Don't allow only a authentication-module or role-mapping-manager
-      else if( (authenticationModule == null && roleMappingManager != null) 
+      else if( (authenticationModule == null && roleMappingManager != null)
                || (authenticationModule != null && roleMappingManager == null) )
       {
          String msg = "Either a security-domain or both authentication-module "
@@ -223,7 +223,7 @@ public class ConfigurationMetaData extends MetaData
          String dependsName = getElementContent(dependsElement);
          depends.add(ObjectNameFactory.create(dependsName));
       } // end of for ()
-   }      
+   }
 
    // Package protected ---------------------------------------------
 
@@ -267,7 +267,7 @@ public class ConfigurationMetaData extends MetaData
       } catch ( Exception e)
       {
          throw new DeploymentException("Invalid optiond-refresh-rate '"
-            + refreshRate + "'. Should be a number"); 
+            + refreshRate + "'. Should be a number");
       }
 
    }

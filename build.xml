@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.134 2003/02/16 05:21:59 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.135 2003/02/16 19:36:00 d_jencks Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -409,6 +409,8 @@ THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFI
         <include name="org/jboss/ejb/plugins/lock/ApplicationDeadlockException.class"/>
         <include name="org/jboss/monitor/client/*.class"/>
         <include name="org/jboss/tm/TransactionPropagationContextFactory.class"/>
+        <include name="org/jboss/tm/JBossRollbackException.class"/>
+        <include name="org/jboss/tm/JBossTransactionRolledBackException.class"/>
         <include name="org/jboss/tm/GlobalId.class"/>
         <include name="org/jboss/tm/usertx/client/*.class"/>
         <include name="org/jboss/tm/usertx/interfaces/*.class"/>

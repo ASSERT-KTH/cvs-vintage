@@ -76,48 +76,48 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.89 $
+ * @version $Revision: 1.90 $
  */
 public class EntityContainer
-   extends Container implements EJBProxyFactoryContainer, 
+   extends Container implements EJBProxyFactoryContainer,
    InstancePoolContainer, StatisticsProvider
 {
    private Interceptor rootEntityInterceptor;
-   
+
    private TxEntityMap txEntityMap = new TxEntityMap();
-   
+
    private Class primaryKeyClass;
-   
-  
+
+
    // These members contains statistics variable
    private long createCount = 0;
    private long removeCount = 0;
-   
+
    /**
     * Determines if state can be written to resource manager.
     */
    private boolean readOnly = false;
-   
+
    /**
     * This provides a way to find the entities that are part of a given
     * transaction EntitySynchronizationInterceptor and InstanceSynchronization
     * manage this instance.
     */
-   private static GlobalTxEntityMap globalTxEntityMap = 
+   private static GlobalTxEntityMap globalTxEntityMap =
          new GlobalTxEntityMap();
-   
+
    public static GlobalTxEntityMap getGlobalTxEntityMap()
    {
       return globalTxEntityMap;
    }
-   
+
    /**
     * Stores all of the entities associated with the specified transaction.
     * As per the spec 9.6.4, entities must be synchronized with the datastore
     * when an ejbFind<METHOD> is called.
     * Also, all entities within entire transaction should be synchronized before
     * a remove, otherwise there may be problems with 'cascade delete'.
-    * 
+    *
     * @param tx the transaction that associated entites will be stored
     * @throws Exception if an problem occures while storing the entities
     */
@@ -126,10 +126,10 @@ public class EntityContainer
       // If there is no transaction, there is nothing to synchronize.
       if(tx != null)
       {
-         getGlobalTxEntityMap().syncEntities(tx);
+         getGlobalTxEntityMap().synchronizeEntities(tx);
       }
    }
-   
+
    /**
     * Gets the primary key class of the Entity.
     */
@@ -147,7 +147,7 @@ public class EntityContainer
    {
       return txEntityMap;
    }
-   
+
    public Interceptor getRootEntityInterceptor()
    {
       return rootEntityInterceptor;
@@ -203,7 +203,7 @@ public class EntityContainer
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
             String invokerBinding = (String)it.next();
-            EJBProxyFactory ci = 
+            EJBProxyFactory ci =
                   (EJBProxyFactory) proxyFactories.get(invokerBinding);
             ci.create();
          }
@@ -217,7 +217,7 @@ public class EntityContainer
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-   
+
    protected void startService() throws Exception
    {
       // Associate thread with classloader
@@ -233,7 +233,7 @@ public class EntityContainer
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
             String invokerBinding = (String)it.next();
-            EJBProxyFactory ci = 
+            EJBProxyFactory ci =
                   (EJBProxyFactory)proxyFactories.get(invokerBinding);
             ci.start();
          }
@@ -264,13 +264,13 @@ public class EntityContainer
          //This assures that CachedConnectionInterceptor will get removed
          //from in between this and the pm before the pm is stopped.
          // Stop all interceptors in the chain
-	 //??Might be a problem, the superclass is now also stopping the interceptors.
+         //??Might be a problem, the superclass is now also stopping the interceptors.
          Interceptor in = interceptor;
          while (in != null)
          {
             in.stop();
             in = in.getNext();
-         }      
+         }
 
          // Stop the instance pool
          getInstancePool().stop();
@@ -282,7 +282,7 @@ public class EntityContainer
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
             String invokerBinding = (String)it.next();
-            EJBProxyFactory ci = 
+            EJBProxyFactory ci =
                   (EJBProxyFactory)proxyFactories.get(invokerBinding);
             ci.stop();
          }
@@ -296,7 +296,7 @@ public class EntityContainer
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-   
+
    protected void destroyService() throws Exception
    {
       // Associate thread with classloader
@@ -309,7 +309,7 @@ public class EntityContainer
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
             String invokerBinding = (String)it.next();
-            EJBProxyFactory ci = 
+            EJBProxyFactory ci =
                   (EJBProxyFactory)proxyFactories.get(invokerBinding);
             ci.destroy();
          }
@@ -351,11 +351,11 @@ public class EntityContainer
     *
     * @return   The new instance.
     */
-   public Object createBeanClassInstance() throws Exception 
+   public Object createBeanClassInstance() throws Exception
    {
       Invocation invocation = new Invocation();
       invocation.setValue(
-            EntityInvocationKey.TYPE, 
+            EntityInvocationKey.TYPE,
             EntityInvocationType.CREATE_INSTANCE,
             PayloadKey.TRANSIENT);
       invocation.setValue(Entrancy.ENTRANCY_KEY,
@@ -365,7 +365,7 @@ public class EntityContainer
       return response.getResponse();
       //return invokeHome(invocation);
    }
- 
+
    public void storeEntity(EntityEnterpriseContext ctx) throws Exception
    {
       if(ctx.getId() == null)
@@ -373,14 +373,14 @@ public class EntityContainer
          return;
       }
 
-      if(!isModified(ctx)) 
+      if(!isModified(ctx))
       {
          return;
       }
 
       Invocation invocation = new Invocation();
       invocation.setValue(
-            EntityInvocationKey.TYPE, 
+            EntityInvocationKey.TYPE,
             EntityInvocationType.STORE,
             PayloadKey.TRANSIENT);
       invocation.setValue(Entrancy.ENTRANCY_KEY,
@@ -398,7 +398,7 @@ public class EntityContainer
    {
       Invocation invocation = new Invocation();
       invocation.setValue(
-            EntityInvocationKey.TYPE, 
+            EntityInvocationKey.TYPE,
             EntityInvocationType.IS_MODIFIED,
             PayloadKey.TRANSIENT);
       invocation.setValue(Entrancy.ENTRANCY_KEY,
@@ -410,7 +410,7 @@ public class EntityContainer
       invocation.setPrincipal(SecurityAssociation.getPrincipal());
       invocation.setCredential(SecurityAssociation.getCredential());
       InvocationResponse response = invokeEntityInterceptor(invocation);
-      
+
       return ((Boolean)response.getResponse()).booleanValue();
    }
 
@@ -418,7 +418,7 @@ public class EntityContainer
    {
       Invocation invocation = new Invocation();
       invocation.setValue(
-            EntityInvocationKey.TYPE, 
+            EntityInvocationKey.TYPE,
             EntityInvocationType.ACTIVATE,
             PayloadKey.TRANSIENT);
       invocation.setValue(Entrancy.ENTRANCY_KEY,
@@ -436,7 +436,7 @@ public class EntityContainer
    {
       Invocation invocation = new Invocation();
       invocation.setValue(
-            EntityInvocationKey.TYPE, 
+            EntityInvocationKey.TYPE,
             EntityInvocationType.PASSIVATE,
             PayloadKey.TRANSIENT);
       invocation.setValue(Entrancy.ENTRANCY_KEY,
@@ -449,41 +449,41 @@ public class EntityContainer
       //invocation.setCredential(SecurityAssociation.getCredential());
       invokeEntityInterceptor(invocation);
    }
-   
+
    public void handleEjbTimeout( Timer pTimer ) {
       EntityCache cache = (EntityCache) getInstanceCache();
 //AS      EntityContext lContext = (EntityContext) ( (ContainerTimer) pTimer ).getContext();
       Object cacheKey = cache.createCacheKey( ( (ContainerTimer) pTimer ).getKey() );
-      
+
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader( getClassLoader() );
-      
+
       try
       {
          Invocation invocation = new Invocation(
             cacheKey,
-            EJB_TIMEOUT, 
+            EJB_TIMEOUT,
             new Class[] { Timer.class },
             ( getTransactionManager() == null ?
                  null:
                  getTransactionManager().getTransaction()
             ),
-            SecurityAssociation.getPrincipal(), 
+            SecurityAssociation.getPrincipal(),
             SecurityAssociation.getCredential()
          );
          invocation.setArguments( new Object[] { pTimer } );
          invocation.setType( InvocationType.LOCAL );
          invocation.setValue(
-            InvocationKey.CALLBACK_METHOD, 
+            InvocationKey.CALLBACK_METHOD,
             beanClass.getMethod( "ejbTimeout", new Class[] { Timer.class } ),
             PayloadKey.TRANSIENT
          );
          invocation.setValue(
-            InvocationKey.CALLBACK_ARGUMENTS, 
+            InvocationKey.CALLBACK_ARGUMENTS,
             invocation.getArguments(),
             PayloadKey.TRANSIENT
          );
-         
+
          invoke( invocation );
       }
       catch( Exception e ) {
@@ -505,7 +505,7 @@ public class EntityContainer
       }
       catch (TransactionRolledbackException trbe)
       {
-         throw new TransactionRolledbackLocalException( 
+         throw new TransactionRolledbackLocalException(
                trbe.getMessage(), trbe );
       }
 */
@@ -514,8 +514,8 @@ public class EntityContainer
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-   
-   private InvocationResponse invokeEntityInterceptor(Invocation invocation) 
+
+   private InvocationResponse invokeEntityInterceptor(Invocation invocation)
          throws Exception
    {
       // Associate thread with classloader
@@ -540,7 +540,7 @@ public class EntityContainer
       }
       log.info( "retrieveStatistics(), ended with container: " + container );
    }
-   
+
    protected void setupMarshalledInvocationMapping() throws Exception
    {
       if(homeInterface != null)
@@ -565,7 +565,7 @@ public class EntityContainer
          }
       }
    }
-   
+
    /**
     * Build the container MBean information on attributes, contstructors,
     * operations, and notifications. Currently there are no attributes, no
@@ -593,22 +593,22 @@ public class EntityContainer
       int superOpInfoCount = superInfo.getOperations().length;
       MBeanOperationInfo[] opInfo = new MBeanOperationInfo[superOpInfoCount +2];
       System.arraycopy(superInfo.getOperations(), 0, opInfo, 0, superOpInfoCount);
-      opInfo[superOpInfoCount] = 
+      opInfo[superOpInfoCount] =
          new MBeanOperationInfo("getCacheSize", "Get the Container cache size.",
                                 noParams,
                                 "java.lang.Integer", MBeanOperationInfo.INFO);
-      opInfo[superOpInfoCount + 1] = 
+      opInfo[superOpInfoCount + 1] =
          new MBeanOperationInfo("flushCache", "Flush the Container cache.",
             noParams,
             "void", MBeanOperationInfo.ACTION);
-      return new MBeanInfo(getClass().getName(), 
+      return new MBeanInfo(getClass().getName(),
                            "EJB Entity Container MBean",
                            superInfo.getAttributes(),
                            superInfo.getConstructors(),
                            opInfo,
                            superInfo.getNotifications());
    }
-   
+
    /**
     * Handle a operation invocation.
     */
@@ -617,36 +617,36 @@ public class EntityContainer
    {
       if( params != null && params.length == 1 && (params[0] instanceof Invocation) == false )
          throw new MBeanException(new IllegalArgumentException("Expected zero or single Invocation argument"));
-      
+
       Object value = null;
       Invocation invocation = null;
       if( params != null && params.length == 1 )
          invocation = (Invocation) params[0];
-    
+
       // marcf: FIXME: these should be exposed on the cache
-      
+
       // Check against home, remote, localHome, local, getHome, getRemote, getLocalHome, getLocal
       if (actionName.equals("getCacheSize")) {
          return new Integer(((EntityCache)getInstanceCache()).getCacheSize());
       }
-      else if (actionName.equals("flushCache")) 
+      else if (actionName.equals("flushCache"))
       {
          log.info("flushing cache");
          ((EntityCache)getInstanceCache()).flush();
          return null;
-      
+
       }
-      else 
+      else
       {
          return super.invoke(actionName, params, signature);
       }
    }
-   
+
    Interceptor createContainerInterceptor()
    {
       return null;
    }
-   
+
    /**
     * Describe <code>typeSpecificInitialize</code> method here.
     * entity specific initialization.
@@ -656,7 +656,7 @@ public class EntityContainer
       ClassLoader cl = getDeploymentInfo().ucl;
       ClassLoader localCl = getDeploymentInfo().localCl;
       int transType = CMT;
-      
+
       genericInitialize(transType, cl, localCl );
       if (getBeanMetaData().getHome() != null)
       {
@@ -667,6 +667,6 @@ public class EntityContainer
       setInstancePool( createInstancePool( conf, cl ) );
       //Set the bean Lock Manager
       setLockManager(createBeanLockManager(((EntityMetaData)getBeanMetaData()).isReentrant(),conf.getLockConfig(), cl));
-      
+
    }
 }
