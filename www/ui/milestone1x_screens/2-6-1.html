@@ -118,12 +118,33 @@ if (document.layers) { document.writeln('<link rel="stylesheet" type="text/css" 
 
 <h2>Issue ID: TBNS1</h2>
 
+
 <div class="functnbar">
      <input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="#" />&nbsp;<input type="submit" value="Copy" name="#" />&nbsp;
      <input type="hidden" name="otherTemplate" value="MoveIssue.vm" />
 </div>
 
+
+
+<h3>Static issue info</h3>
+
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="0">
+      <tr>
+      <th>Date committed</th>
+      <td> XX/XX/XXXX</td>
+	  </tr>
+      <th>Last date modified</th>
+      <td> XX/XX/XXXX</td>
+	  </tr>	  </table>
+
+
+</div>
+
+
+
 <h3>Attribute group one</h3>
+
 
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
@@ -285,24 +306,28 @@ if (document.layers) { document.writeln('<link rel="stylesheet" type="text/css" 
 		<tr>
 		<th>Name</th>
 		<th>Email</th>
+		<th>Date start</th>
 		<th>Association</th>
 		</tr>
 		
 		<tr class="a">
 		<td>&nbsp;</td>
 		<td><a href="#">bjones@test.net</a></td>
+		<td>XX/XX/XXXX</td>
 		<td><strong>Committed by:</strong></td>
   		</tr>
 
 		<tr class="b">
 		<td><strong>Alan Smith</strong></td>
 		<td><a href="#">asmith@test.net</a></td>
+		<td>XX/XX/XXXX</td>
 		<td>Assign to:</td>
   		</tr>
 		
 		<tr class="a">
 		<td><strong>Barbara Skoppke</strong></td>
 		<td><a href="#">bs@test.net</a></td>
+		<td>XX/XX/XXXX</td>
 		<td>CC:</td>
 		</tr>
    </table>  
