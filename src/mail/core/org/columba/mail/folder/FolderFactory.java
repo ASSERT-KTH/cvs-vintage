@@ -97,7 +97,7 @@ public class FolderFactory {
                 Matcher matcher = groupPattern.matcher(possibleParents);
 
                 while (matcher.find()) {
-                    if (matcher.group(1).equals(parentGroup)) {
+                    if (matcher.group(1).equals(parentGroup) || matcher.group(1).equals("all")) {
                         list.add(next.getAttribute("name"));
                     }
                 }
@@ -149,7 +149,7 @@ public class FolderFactory {
         return child;
     }
 
-    private String getGroup(String parentType) {
+    public String getGroup(String parentType) {
         Iterator it = folderlistElement.getElements().iterator();
         while (it.hasNext()) {
             XmlElement next = (XmlElement) it.next();

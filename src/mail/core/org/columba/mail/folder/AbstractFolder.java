@@ -242,6 +242,12 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 		}
 	}
 
+	public String getType() {
+		IFolderItem item = getConfiguration();
+		
+		return item.get("type");
+	}
+	
 	/**
 	 * Returns the folder's name.
 	 */
@@ -251,7 +257,9 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 		IFolderItem item = getConfiguration();
 		name = item.getString("property", "name");
 
-		if ( name == null ) name = "FIXME";
+		//(tstich) it is necessary to return null because imap account
+		//creation needs it!
+		//if ( name == null ) name = "FIXME";
 		
 		return name;
 	}
@@ -423,11 +431,11 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 * Returns true if this folder can have sub folders of the specified type;
 	 * false otherwise.
 	 * 
-	 * @param newFolder
+	 * @param newFolderType
 	 *            the folder that is going to be inserted as a child.
 	 * @return true if this folder can have sub folders; false otherwise.
 	 */
-	public boolean supportsAddFolder(IMailFolder newFolder) {
+	public boolean supportsAddFolder(String newFolderType) {
 		return false;
 	}
 

@@ -34,7 +34,6 @@ import org.columba.mail.filter.MailFilterCriteria;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.IHeaderListStorage;
-import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.imap.IMAPFolder;
@@ -752,12 +751,12 @@ public class VirtualFolder extends AbstractMessageFolder {
 	/**
 	 * Virtual folders can only accept other Virtual folders as childs.
 	 * 
-	 * @param newFolder
+	 * @param newFolderType
 	 *            a folder to check if it is a Virtual folder.
 	 * @return true if the folder is a VirtualFolder; false otherwise.
 	 */
-	public boolean supportsAddFolder(IMailFolder newFolder) {
-		return (newFolder instanceof VirtualFolder);
+	public boolean supportsAddFolder(String newFolderType) {
+		return (newFolderType.equals(getType()));
 	}
 
 	/**

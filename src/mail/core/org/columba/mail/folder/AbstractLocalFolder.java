@@ -29,7 +29,6 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.search.DefaultSearchEngine;
-import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.IColumbaHeader;
@@ -330,8 +329,8 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 	}
 
 	/** {@inheritDoc} */
-	public boolean supportsAddFolder(IMailFolder newFolder) {
-		return ((newFolder instanceof AbstractLocalFolder) || (newFolder instanceof VirtualFolder));
+	public boolean supportsAddFolder(String newFolderType) {
+		return (FolderFactory.getInstance().getGroup(newFolderType).equals("local") || newFolderType.equals("VirtualFolder"));
 	}
 
 	/**

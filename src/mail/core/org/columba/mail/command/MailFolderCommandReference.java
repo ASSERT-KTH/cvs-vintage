@@ -42,7 +42,8 @@ public class MailFolderCommandReference extends DefaultFolderCommandReference
 	private int markVariant;
 
 	private String folderName;
-
+	private String folderType;
+	
 	private int colorValue;
 
 	private File destFile;
@@ -203,4 +204,16 @@ public class MailFolderCommandReference extends DefaultFolderCommandReference
 		this.colorValue = colorValue;
 	}
 
+	/**
+	 * @return Returns the folderType.
+	 */
+	public String getFolderType() {
+		return folderType;
+	}
+	/**
+	 * @param folderType The folderType to set.
+	 */
+	public void setFolderType(String folderType) {
+		this.folderType = folderType;
+	}
 }

@@ -25,8 +25,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -39,6 +42,8 @@ import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -48,6 +53,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.util.MailResourceLoader;
@@ -82,6 +88,10 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 
 		initComponents();
 		layoutComponents();
+		// try to set selection
+		if (selected != null) {
+			tree.setSelectionPath(selected);
+		}
 
 		pack();
 		setLocationRelativeTo(null);
@@ -147,7 +157,7 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 		textField.setSelectionStart(0);
 		textField.setSelectionEnd(name.length());
 
-		typeBox = new JComboBox(new String[]{"Standard Mailbox"});
+		typeBox = new JComboBox();
 
 		//  get global sorting state
 		TreeModel t = ((TreeViewOwner) mediator).getTreeController().getModel();
@@ -174,11 +184,13 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 		tree.expandRow(0);
 		tree.expandRow(1);
 
-		// try to set selection
-		if (selected != null) {
-			tree.setSelectionPath(selected);
+		tree.addTreeSelectionListener( new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent arg0) {
+				selectionChanged();
+			}
 		}
-
+		);
+		
 		// button panel
 		okButton = new ButtonWithMnemonic(MailResourceLoader.getString(
 				"global", "ok"));
@@ -192,8 +204,41 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 				"global", "help"));
 		helpButton.setActionCommand("HELP");
 		helpButton.addActionListener(this);
+		
 	}
 
+	protected void selectionChanged()  {
+		AbstractFolder selected = getSelected();
+		if( selected != null) {
+			List childs = FolderFactory.getInstance().getPossibleChilds(selected);
+			Iterator it = childs.iterator();
+			while( it.hasNext() ) {
+				String type = (String)it.next();
+				if( ! selected.supportsAddFolder(type)) {
+					it.remove();
+				}
+				
+				// We have a special Command for VFolders
+				if( type.equals("VirtualFolder") ) {
+					it.remove();
+				}
+			}
+			
+			if( childs.size() > 0) {
+				typeBox.setModel(new DefaultComboBoxModel(childs.toArray()));
+
+				okButton.setEnabled(true);
+				typeBox.setEnabled(true);			
+			} else {			
+				okButton.setEnabled(false);
+				typeBox.setEnabled(false);
+			}
+		} else {
+			okButton.setEnabled(false);
+			typeBox.setEnabled(false);
+		}
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -230,5 +275,12 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 
 			dispose();
 		}
+	}
+
+	/**
+	 * @return
+	 */
+	public String getType() {
+		return (String)typeBox.getSelectedItem();
 	}
 }

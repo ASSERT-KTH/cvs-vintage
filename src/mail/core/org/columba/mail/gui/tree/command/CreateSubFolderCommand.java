@@ -60,10 +60,16 @@ public class CreateSubFolderCommand extends Command {
 		parentFolder = (IMailFolder) ((MailFolderCommandReference) getReference()).getSourceFolder();
 
 		String name = ((MailFolderCommandReference) getReference()).getFolderName();
+		String type = ((MailFolderCommandReference) getReference()).getFolderType();
 
 		try {
-			IMailFolder subFolder = FolderFactory.getInstance()
-					.createDefaultChild(parentFolder, name);
+			if( type == null ) {
+				IMailFolder subFolder = FolderFactory.getInstance()
+				.createDefaultChild(parentFolder, name);				
+			} else {
+				IMailFolder subFolder = FolderFactory.getInstance()
+				.createChild(parentFolder, name, type);
+			}
 		} catch (FolderCreationException ex) {
 			// show error message 
 			JOptionPane.showMessageDialog(null, 

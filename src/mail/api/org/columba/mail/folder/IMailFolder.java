@@ -95,11 +95,11 @@ public interface IMailFolder extends MutableTreeNode, IFolder{
 	 * Returns true if this folder can have sub folders of the specified type;
 	 * false otherwise.
 	 * 
-	 * @param newFolder
+	 * @param newFolderType
 	 *            the folder that is going to be inserted as a child.
 	 * @return true if this folder can have sub folders; false otherwise.
 	 */
-	boolean supportsAddFolder(IMailFolder newFolder);
+	boolean supportsAddFolder(String newFolderType);
 
 	/**
 	 * Returns true if this folder type can be moved around in the folder tree.

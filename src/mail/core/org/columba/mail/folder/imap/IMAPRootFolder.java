@@ -28,7 +28,6 @@ import org.columba.mail.config.IFolderItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.imap.IMAPServer;
@@ -404,7 +403,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 	/**
 	 * @see org.columba.mail.folder.AbstractFolder#supportsAddFolder()
 	 */
-	public boolean supportsAddFolder(IMailFolder folder) {
+	public boolean supportsAddFolder(String folder) {
 		return true;
 	}
 }

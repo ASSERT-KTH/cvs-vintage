@@ -242,7 +242,7 @@ public class TreeViewTransferHandler extends TransferHandler {
 
 		if ((dragTarget != null) && (!dragTarget.isNodeDescendant(dropTarget))
 				&& (dragTarget != dropTarget)) {
-			canImport = dropTarget.supportsAddFolder(dragTarget);
+			canImport = dropTarget.supportsAddFolder(dragTarget.getType());
 		}
 
 		return canImport;

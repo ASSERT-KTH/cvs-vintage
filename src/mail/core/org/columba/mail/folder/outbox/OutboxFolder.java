@@ -25,7 +25,6 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.AbstractHeaderListStorage;
 import org.columba.mail.folder.AbstractLocalFolder;
 import org.columba.mail.folder.IHeaderListStorage;
-import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.headercache.AbstractHeaderCache;
 import org.columba.mail.folder.headercache.LocalHeaderCache;
 import org.columba.mail.folder.mh.CachedMHFolder;
@@ -83,11 +82,11 @@ public class OutboxFolder extends CachedMHFolder {
 	/**
 	 * The outbox folder doesnt allow adding folders to it.
 	 * 
-	 * @param newFolder
+	 * @param newFolderType
 	 *            folder to check..
 	 * @return false always.
 	 */
-	public boolean supportsAddFolder(IMailFolder newFolder) {
+	public boolean supportsAddFolder(String newFolderType) {
 		return false;
 	}
 
