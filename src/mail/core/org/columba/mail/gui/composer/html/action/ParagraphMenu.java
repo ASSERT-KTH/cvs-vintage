@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.html.action;
 
 import org.columba.core.action.IMenu;
@@ -39,7 +40,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.text.html.HTML;
 
-
 /**
  * Submenu for formatting text.
  * <p>
@@ -64,25 +64,13 @@ public class ParagraphMenu extends IMenu implements Observer, ActionListener,
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.composer.html.action");
 
-    /** Supported paragraph styles */
-    public static final String[] STYLES = {
-        "Normal", "Preformatted", "Heading 1", "Heading 2", "Heading 3",
-        "Address"
-    };
-
     /** Html tags corresponding to supported paragraph styles */
     public static final HTML.Tag[] STYLE_TAGS = {
         HTML.Tag.P, HTML.Tag.PRE, HTML.Tag.H1, HTML.Tag.H2, HTML.Tag.H3,
         HTML.Tag.ADDRESS
     };
 
-    /** String representation of html tags */
-    public static final String[] STYLE_STRINGS = {
-        HTML.Tag.P.toString(), HTML.Tag.PRE.toString(), HTML.Tag.H1.toString(),
-        HTML.Tag.H2.toString(), HTML.Tag.H3.toString(),
-        HTML.Tag.ADDRESS.toString()
-    };
-    ButtonGroup group;
+    protected ButtonGroup group;
 
     /**
      * @param controller
@@ -125,9 +113,8 @@ public class ParagraphMenu extends IMenu implements Observer, ActionListener,
     protected void initMenu() {
         group = new ButtonGroup();
 
-        for (int i = 0; i < STYLES.length; i++) {
-            JRadioButtonMenuItem m = new JRadioButtonMenuItem(STYLES[i]);
-            m.setActionCommand(STYLE_STRINGS[i]);
+        for (int i = 0; i < STYLE_TAGS.length; i++) {
+            JRadioButtonMenuItem m = new ParagraphFormatMenuItem(STYLE_TAGS[i]);
             m.addActionListener(this);
             add(m);
 
@@ -182,11 +169,10 @@ public class ParagraphMenu extends IMenu implements Observer, ActionListener,
      */
     private void selectMenuItem(HTML.Tag tag) {
         Enumeration e = group.getElements();
-
         while (e.hasMoreElements()) {
-            JRadioButtonMenuItem item = (JRadioButtonMenuItem) e.nextElement();
+            ParagraphFormatMenuItem item = (ParagraphFormatMenuItem) e.nextElement();
 
-            if (item.getActionCommand().equals(tag.toString())) {
+            if (item.getAssociatedTag().equals(tag)) {
                 item.setSelected(true);
 
                 return; // done
@@ -194,38 +180,13 @@ public class ParagraphMenu extends IMenu implements Observer, ActionListener,
         }
     }
 
-    /**
-     * Private utility to return the html tag corresponding to
-     * a given string, e.g. p -> HTML.Tag.P
-     * <br>
-     * Strings / Tags are searched within STYLE_STRINGS
-     * and STYLE_TAGS respectively. The search is case insensitive.
-     *
-     * @param        tagStr        String representation of tag, e.g. p or h1
-     * @return        The corresponding Tag object or null if not found
-     */
-    public HTML.Tag getTagFromString(String tagStr) {
-        for (int i = 0; i < STYLE_STRINGS.length; i++) {
-            if (STYLE_STRINGS[i].equalsIgnoreCase(tagStr)) {
-                // found
-                return STYLE_TAGS[i];
-            }
-        }
-
-        // not found
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent arg0) {
-        HtmlEditorController ctrl = (HtmlEditorController) ((ComposerController) controller).getEditorController();
+    public void actionPerformed(ActionEvent e) {
+        HtmlEditorController ctrl = (HtmlEditorController) 
+            ((ComposerController) controller).getEditorController();
 
         // set paragraph formatting according to the given action
-        String action = arg0.getActionCommand();
-        HTML.Tag tag = getTagFromString(action);
-        ctrl.setParagraphFormat(tag);
+        ParagraphFormatMenuItem source = (ParagraphFormatMenuItem)e.getSource();
+        ctrl.setParagraphFormat(source.getAssociatedTag());
     }
 
     /**
@@ -238,12 +199,26 @@ public class ParagraphMenu extends IMenu implements Observer, ActionListener,
     public void componentAdded(ContainerEvent e) {
         LOG.info("Re-registering as observer on editor controller");
         ((ComposerController) getController()).getEditorController()
-         .addObserver(this);
+            .addObserver(this);
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ContainerListener#componentRemoved(java.awt.event.ContainerEvent)
+    public void componentRemoved(ContainerEvent e) {}
+    
+    /**
+     * A specialized radio button menu item class used to render paragraph
+     * format actions.
      */
-    public void componentRemoved(ContainerEvent e) {
+    protected static class ParagraphFormatMenuItem extends JRadioButtonMenuItem {
+        protected HTML.Tag tag;
+        
+        public ParagraphFormatMenuItem(HTML.Tag tag) {
+            super(MailResourceLoader.getString("menu", "composer",
+                "menu_format_paragraph_") + tag.toString());
+            this.tag = tag;
+        }
+        
+        public HTML.Tag getAssociatedTag() {
+            return tag;
+        }
     }
 }

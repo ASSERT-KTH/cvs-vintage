@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.html;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -34,6 +35,7 @@ import org.columba.mail.gui.composer.html.util.FormatInfo;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
@@ -43,20 +45,23 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Logger;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.text.html.HTML;
-
 
 /**
  * JPanel with useful HTML related actions.
  *
  * @author fdietz
  */
-public class HtmlToolbar extends JPanel implements ActionListener, Observer, ContainerListener {
+public class HtmlToolbar extends JPanel
+implements ActionListener, Observer, ContainerListener {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.composer.html");
+    private static final Logger LOG =
+        Logger.getLogger("org.columba.mail.gui.composer.html");
 
     private ComposerController controller;
     private JComboBox paragraphComboBox;
@@ -116,15 +121,16 @@ public class HtmlToolbar extends JPanel implements ActionListener, Observer, Con
         }
 
         // init components
-        LabelWithMnemonic paraLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "composer", "style"));
-        paragraphComboBox = new JComboBox(ParagraphMenu.STYLES);
+        LabelWithMnemonic paraLabel = new LabelWithMnemonic(
+            MailResourceLoader.getString("dialog", "composer", "style"));
+        paragraphComboBox = new JComboBox(ParagraphMenu.STYLE_TAGS);
+        paragraphComboBox.setRenderer(new ParagraphTagRenderer());
         paragraphComboBox.setActionCommand("PARA");
         paragraphComboBox.addActionListener(this);
         paragraphComboBox.setFocusable(false);
 
-        LabelWithMnemonic sizeLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "composer", "size"));
+        LabelWithMnemonic sizeLabel = new LabelWithMnemonic(
+            MailResourceLoader.getString("dialog", "composer", "size"));
         sizeComboBox = new JComboBox(FontSizeMenu.SIZES);
         sizeComboBox.setActionCommand("SIZE");
         sizeComboBox.addActionListener(this);
@@ -142,21 +148,27 @@ public class HtmlToolbar extends JPanel implements ActionListener, Observer, Con
         // TODO: sizeComboBox can be enabled as paragraphComboBox when implemented
         sizeComboBox.setEnabled(false);
 
-        ToggleToolbarButton boldFormatButton = new ToggleToolbarButton((AbstractSelectableAction) handler.getAction(
-                    "BoldFormatAction", getFrameController()));
-        ToggleToolbarButton italicFormatButton = new ToggleToolbarButton((AbstractSelectableAction) handler.getAction(
-                    "ItalicFormatAction", getFrameController()));
-        ToggleToolbarButton underlineFormatButton = new ToggleToolbarButton((AbstractSelectableAction) handler.getAction(
-                    "UnderlineFormatAction", getFrameController()));
-        ToggleToolbarButton strikeoutFormatButton = new ToggleToolbarButton((AbstractSelectableAction) handler.getAction(
-                    "StrikeoutFormatAction", getFrameController()));
-
-        ToggleToolbarButton leftJustifyButton = new ToggleToolbarButton((AbstractSelectableAction) handler.getAction(
-                    "LeftJustifyAction", getFrameController()));
-        ToggleToolbarButton centerJustifyButton = new ToggleToolbarButton((AbstractSelectableAction) handler.getAction(
-                    "CenterJustifyAction", getFrameController()));
-        ToggleToolbarButton rightJustifyButton = new ToggleToolbarButton((AbstractSelectableAction) handler.getAction(
-                    "RightJustifyAction", getFrameController()));
+        ToggleToolbarButton boldFormatButton = new ToggleToolbarButton(
+            (AbstractSelectableAction) handler.getAction("BoldFormatAction",
+            getFrameController()));
+        ToggleToolbarButton italicFormatButton = new ToggleToolbarButton(
+            (AbstractSelectableAction) handler.getAction("ItalicFormatAction",
+            getFrameController()));
+        ToggleToolbarButton underlineFormatButton = new ToggleToolbarButton(
+            (AbstractSelectableAction) handler.getAction("UnderlineFormatAction",
+            getFrameController()));
+        ToggleToolbarButton strikeoutFormatButton = new ToggleToolbarButton(
+            (AbstractSelectableAction) handler.getAction("StrikeoutFormatAction",
+            getFrameController()));
+        ToggleToolbarButton leftJustifyButton = new ToggleToolbarButton(
+            (AbstractSelectableAction) handler.getAction("LeftJustifyAction",
+            getFrameController()));
+        ToggleToolbarButton centerJustifyButton = new ToggleToolbarButton(
+            (AbstractSelectableAction) handler.getAction("CenterJustifyAction",
+            getFrameController()));
+        ToggleToolbarButton rightJustifyButton = new ToggleToolbarButton(
+            (AbstractSelectableAction) handler.getAction("RightJustifyAction",
+            getFrameController()));
 
         //builder.add(paraLabel, cc.xy(1, 7));
 
@@ -243,23 +255,14 @@ public class HtmlToolbar extends JPanel implements ActionListener, Observer, Con
      * If such a sub menu does not exist - nothing happens
      */
     private void selectInParagraphComboBox(HTML.Tag tag) {
-        for (int i = 0; i < ParagraphMenu.STYLE_TAGS.length; i++) {
-            if (tag.equals(ParagraphMenu.STYLE_TAGS[i])) {
-                // found
-                if (paragraphComboBox.getSelectedIndex() != i) {
-                    // need to change selection
-                    // Set ignore flag
-                    ignoreFormatAction = true;
+        // need to change selection
+        // Set ignore flag
+        ignoreFormatAction = true;
 
-                    paragraphComboBox.setSelectedIndex(i);
+        paragraphComboBox.setSelectedItem(tag);
 
-                    // clear ignore flag
-                    ignoreFormatAction = false;
-                }
-
-                return;
-            }
-        }
+        // clear ignore flag
+        ignoreFormatAction = false;
     }
 
     /* (non-Javadoc)
@@ -302,9 +305,17 @@ public class HtmlToolbar extends JPanel implements ActionListener, Observer, Con
         controller.getEditorController().addObserver(this);
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ContainerListener#componentRemoved(java.awt.event.ContainerEvent)
+    public void componentRemoved(ContainerEvent e) {}
+    
+    /**
+     * Cell renderer responsible for displaying localized strings in the combo box.
      */
-    public void componentRemoved(ContainerEvent e) {
+    protected static class ParagraphTagRenderer extends DefaultListCellRenderer {
+        public Component getListCellRendererComponent(JList list, Object value,
+            int index, boolean selected, boolean hasFocus) {
+            return super.getListCellRendererComponent(list,
+                MailResourceLoader.getString("menu", "composer",
+                "menu_format_paragraph_" + value.toString()), index, selected, hasFocus);
+        }
     }
 }
