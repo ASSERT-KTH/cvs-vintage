@@ -42,6 +42,7 @@ import org.objectweb.carol.rmi.jrmp.interceptor.JInitInfo;
 import org.objectweb.carol.rmi.jrmp.interceptor.JInitializer;
 import org.objectweb.carol.rmi.jrmp.interceptor.JRMPInitInfoImpl;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
+import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorStore;
 import org.objectweb.carol.rmi.jrmp.server.JUnicastRemoteObject;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
@@ -49,11 +50,6 @@ import org.objectweb.carol.util.configuration.TraceCarol;
  * Class <code>JrmpPRODelegate</code>  for the mapping between Rmi jrmp UnicastRemoteObject and PortableRemoteObject
  */
 public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
-
-    /**
-     * Initilazer class prefix
-     */
-    public static String INTIALIZER_PREFIX = "org.objectweb.PortableInterceptor.JRMPInitializerClass";
 
     /**
      * private Interceptor for Context propagation
@@ -69,23 +65,9 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
      * Constructor 
      */ 
     public JrmpPRODelegate() {
-
-
-	// Load the Interceptors
-	try {
-	    JInitInfo jrmpInfo = new JRMPInitInfoImpl();	    
-	    for (Enumeration e = getJRMPIntializers() ; e.hasMoreElements() ;) {
-		JInitializer jinit = (JInitializer) Class.forName((String)e.nextElement()).newInstance();
-		jinit.pre_init(jrmpInfo);
-		jinit.post_init(jrmpInfo);
-	    }	    
-	    sis = jrmpInfo.getServerRequestInterceptors();
-	    cis = jrmpInfo.getClientRequestInterceptors();
-	} catch ( Exception e) {
-	    //we did not found the interceptor do nothing but a trace ?
-	    TraceCarol.error("JrmpPRODelegate(), No interceptors found", e);
-	}	
-
+	JInterceptorStore.initLocalInterceptors();
+	sis=JInterceptorStore.getLocalServerInterceptors();
+	cis=JInterceptorStore.getLocalClientInterceptors();
     }
 
     /**
@@ -141,22 +123,5 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
      */
     public Remote toStub(Remote obj) throws NoSuchObjectException {
 	return (Remote)JUnicastRemoteObject.toStub(obj);
-    }
-
-    /**
-     * Get Intializers method
-     * @return JRMP Initializers enuumeration
-     */
-    private Enumeration getJRMPIntializers() {
-	Vector initializers =  new Vector();
-	Properties sys = System.getProperties();
-	for (Enumeration e = System.getProperties().propertyNames(); e.hasMoreElements() ;) {
-	    String pkey = (String)e.nextElement();
-	    if (pkey.startsWith(INTIALIZER_PREFIX)) {
-		initializers.add(pkey.substring(INTIALIZER_PREFIX.length() + 1));
-	    }
-	}
-	return initializers.elements();
-    }
-    
+    }    
 }

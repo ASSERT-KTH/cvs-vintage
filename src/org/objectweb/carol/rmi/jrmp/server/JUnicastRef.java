@@ -44,14 +44,14 @@ import java.rmi.UnmarshalException;
 import java.rmi.server.Operation;
 import java.rmi.server.RemoteCall;
 import java.rmi.server.RemoteObject;
-import java.rmi.server.UID;
-import java.net.InetAddress;
 
 
 // carol import
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientInterceptorHelper;
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorHelper;
+import org.objectweb.carol.rmi.jrmp.interceptor.RemoteKey;
+import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorStore;
 
 /**
  * Class <code>JUnicastRef</code> is the CAROL JRMP UnicastRef with context propagation
@@ -262,12 +262,9 @@ public class JUnicastRef extends UnicastRef {
      */
     public void readExternal(ObjectInput in, boolean newFormat)
             throws IOException, ClassNotFoundException {
-        InetAddress addr = (InetAddress)in.readObject();
-        UID uid = (UID)in.readObject();
-	if (addr.equals(InetAddress.getLocalHost())) {
-             localRef=JInterceptorHelper.getSpaceID().equals(uid);
-	}	
-	cis = (JClientRequestInterceptor []) in.readObject();
+        RemoteKey rk = (RemoteKey)in.readObject();
+	localRef=JInterceptorHelper.getRemoteKey().equals(rk);
+	cis = JInterceptorStore.setRemoteInterceptors(rk, (String [])in.readObject());
         ref = LiveRef.read(in, newFormat);
     }
 
@@ -278,9 +275,8 @@ public class JUnicastRef extends UnicastRef {
      * @param newFormat the boolean new format
      */
     public void writeExternal(ObjectOutput out, boolean newFormat) throws IOException {
-        out.writeObject(InetAddress.getLocalHost());
-        out.writeObject(JInterceptorHelper.getSpaceID());
-	out.writeObject(cis);
+        out.writeObject(JInterceptorHelper.getRemoteKey());
+	out.writeObject(JInterceptorStore.getJRMPInitializers());
         ref.write(out, newFormat);
     }
 }

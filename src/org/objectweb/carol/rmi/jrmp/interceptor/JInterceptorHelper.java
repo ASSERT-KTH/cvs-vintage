@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.rmi.server.UID;
+import java.net.InetAddress;
 
 import org.objectweb.carol.util.configuration.TraceCarol;
 
@@ -49,18 +50,31 @@ public abstract class JInterceptorHelper {
     protected static final int REMOTE_CTX = 1;
     protected static final int LOCAL_CTX  = 2;
     
-    /**
-     * hold a unique identifier of this class. This is used to determine if
-     * contexts can be passed by reference using the JObjectStore
-     * this is for performance optimization
-     */
-    public static UID getSpaceID() {
-        return spaceID;
-    }
 
     /**
      * The spaceID
      */
-    protected final static UID spaceID = new UID();
+    protected static RemoteKey rk = null;   
+    
+    /**
+     * The spaceID
+     */
+    protected static UID spaceID = null;
+
+    /**
+     * hold a unique identifier of this class and jvm
+     */
+    public static RemoteKey getRemoteKey() {
+        return rk;
+    }
+
+    static {
+	try {
+	    spaceID = new UID();
+	    rk = new RemoteKey(spaceID, InetAddress.getLocalHost());
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+    }
 
 }
