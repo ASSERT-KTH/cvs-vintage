@@ -83,7 +83,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.26 2002/07/23 21:49:33 jmcnally Exp $
+    @version $Id: ConfigureIssueList.java,v 1.27 2002/07/23 21:50:23 jmcnally Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -102,37 +102,37 @@ public class ConfigureIssueList extends RequireLoginFirstAction
         }
         else
         {
-        String[] orders = params.getStrings("attorder");
-        final Map orderMap = new HashMap();
-        List attributes = new ArrayList(ids.length);
-        for (int i =0; i<ids.length; i++)
-        {
-            Attribute attribute = AttributeManager
-                .getInstance(new NumberKey(ids[i]));
-            attributes.add(attribute);
-            Integer order = new Integer(orders[i]);
-            orderMap.put(attribute, order);
-        }
-        Comparator c = new Comparator()
+            String[] orders = params.getStrings("attorder");
+            final Map orderMap = new HashMap();
+            List attributes = new ArrayList(ids.length);
+            for (int i =0; i<ids.length; i++)
             {
-                public int compare(Object o1, Object o2)
+                Attribute attribute = AttributeManager
+                    .getInstance(new NumberKey(ids[i]));
+                attributes.add(attribute);
+                Integer order = new Integer(orders[i]);
+                orderMap.put(attribute, order);
+            }
+            Comparator c = new Comparator()
                 {
-                    int order1 = ((Integer)orderMap.get(o1)).intValue();
-                    int order2 = ((Integer)orderMap.get(o2)).intValue();
-                    int result = order2 - order1;
-                    if (result == 0) 
+                    public int compare(Object o1, Object o2)
                     {
-                        Attribute a1 = (Attribute)o1;
-                        Attribute a2 = (Attribute)o2;
+                        int order1 = ((Integer)orderMap.get(o1)).intValue();
+                        int order2 = ((Integer)orderMap.get(o2)).intValue();
+                        int result = order2 - order1;
+                        if (result == 0) 
+                        {
+                            Attribute a1 = (Attribute)o1;
+                            Attribute a2 = (Attribute)o2;
                         result = a1.getName().compareTo(a2.getName());
+                        }
+                        return result;
                     }
-                    return result;
-                }
-            };
-        Collections.sort(attributes, c);
-        ((ScarabUser)data.getUser()).updateIssueListAttributes(attributes);
-      
-        data.setMessage(DEFAULT_MSG);
+                };
+            Collections.sort(attributes, c);
+            ((ScarabUser)data.getUser()).updateIssueListAttributes(attributes);
+            
+            data.setMessage(DEFAULT_MSG);
         }
     }
 
