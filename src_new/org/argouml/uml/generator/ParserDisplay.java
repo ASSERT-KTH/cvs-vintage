@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.53 2003/01/24 19:12:27 kataka Exp $
+// $Id: ParserDisplay.java,v 1.54 2003/02/02 00:59:49 d00mst Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.53 2003/01/24 19:12:27 kataka Exp $
+// $Id: ParserDisplay.java,v 1.54 2003/02/02 00:59:49 d00mst Exp $
 
 
 
@@ -1380,10 +1380,11 @@ protected String parseOutMultiplicity(MAttribute f, String s) {
     // Should we be getting this from the GUI? BT 11 aug 2002
     type = p.findType(name);
     if (type == null) { // no type defined yet
-	type = UmlFactory.getFactory().getCore().buildClass(name);
+	type = UmlFactory.getFactory().getCore().buildClass(name, defaultSpace);
     }
     if (type.getModel() != p.getModel() && !ModelManagementHelper.getHelper().getAllNamespaces(p.getModel()).contains(type.getNamespace())) {
-    	type.setNamespace(p.getModel());
+	ModelManagementHelper.getHelper().importElement(type, type, defaultSpace.getModel());
+    	// type.setNamespace(p.getModel());
     }
     return type;
   }
