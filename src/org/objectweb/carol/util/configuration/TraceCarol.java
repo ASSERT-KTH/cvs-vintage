@@ -54,7 +54,8 @@ public class TraceCarol {
      */
     protected static Logger carolLogger = null;  
     protected static Logger jndiCarolLogger = null;
-    protected static Logger rmiCarolLogger = null;
+	protected static Logger rmiCarolLogger = null;
+	protected static Logger exportCarolLogger = null;
     protected static Logger cmiDesLogger = null;
     protected static Logger cmiJndiLogger = null;
     protected static Logger cmiRegistryLogger = null;
@@ -99,7 +100,8 @@ public class TraceCarol {
     public static void configure(LoggerFactory lf) {
         carolLogger = lf.getLogger(prefix);
         jndiCarolLogger = lf.getLogger(prefix + ".jndi");
-        rmiCarolLogger = lf.getLogger(prefix + ".rmi");
+		rmiCarolLogger = lf.getLogger(prefix + ".rmi");
+		exportCarolLogger = lf.getLogger(prefix + ".rmi.export");
         cmiDesLogger = lf.getLogger(prefix + ".cmi.des");
         cmiJndiLogger = lf.getLogger(prefix + ".cmi.jndi");
         cmiRegistryLogger = lf.getLogger(prefix + ".cmi.registry");
@@ -205,9 +207,9 @@ public class TraceCarol {
      * @param <code>msg</code> Jndi debug message
      */
     public static void debugJndiCarol(String msg) {
-        if (jndiCarolLogger != null) {
-            jndiCarolLogger.log(BasicLevel.DEBUG, msg);
-        }
+		if (jndiCarolLogger != null) {
+			jndiCarolLogger.log(BasicLevel.DEBUG, msg);
+		}
     }
 
     /**
@@ -230,7 +232,25 @@ public class TraceCarol {
             rmiCarolLogger.log(BasicLevel.DEBUG, msg);
         }
     }
+	/**
+	 * @return boolean true is is debug export
+	 */
+	public static boolean isDebugExportCarol()
+	{
+		return (exportCarolLogger != null) && exportCarolLogger.isLoggable(BasicLevel.DEBUG);
+	}
 
+
+	/**
+	 * @param string
+	 */
+	public static void debugExportCarol(String msg)
+	{
+		if (exportCarolLogger != null) {
+			exportCarolLogger.log(BasicLevel.DEBUG, msg);
+		}
+	}
+	
     /**
      * Test if Cmi DES debug messages are logged.
      *
@@ -293,6 +313,9 @@ public class TraceCarol {
             cmiRegistryLogger.log(BasicLevel.DEBUG, msg);
         }
     }
+
+
+
 
     /**
      * Test if Cmi info messages are logged.

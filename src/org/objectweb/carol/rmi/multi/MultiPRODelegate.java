@@ -50,13 +50,17 @@ import org.objectweb.carol.util.multi.ProtocolCurrent;
  * @version 1.0, 15/07/2002  
  */
 public class MultiPRODelegate implements PortableRemoteObjectDelegate {
-    
-
+    	 	
     /**
      * Static boolean for initialization
      */
     private static boolean init = false;
-
+	
+	/**
+	 * exported HashTable	
+	*/
+   private static Hashtable exported = new Hashtable();
+   
     /**
      * Standard Hashtable PortableRemoteObjectDelegates
      */
@@ -89,17 +93,21 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
      * @exception RemoteException exporting remote object problem 
      */
     public void exportObject(Remote obj) throws RemoteException {
-	if (TraceCarol.isDebugRmiCarol()) {
-	    TraceCarol.debugRmiCarol("MultiPRODelegate.exportObject(" +simpleClass(obj.getClass().getName())
-				     +" obj)");
-	}
+		if (TraceCarol.isDebugRmiCarol()) {
+			TraceCarol.debugRmiCarol("MultiPRODelegate.exportObject(" +simpleClass(obj.getClass().getName())
+						 +" obj)");
+		}
 	try {
 	    if (!init) {		
 		initProtocols();
 	    }
 	    for (Enumeration e = activesProtocols.elements(); e.hasMoreElements() ;) {
 		((PortableRemoteObjectDelegate)e.nextElement()).exportObject(obj);
-	    }	    
+	    }	
+	    if (TraceCarol.isDebugExportCarol()) {
+		TraceCarol.debugExportCarol("Export object "+obj.getClass().getName());
+		addObject(obj.getClass().getName());
+	     }
 	} catch (Exception ex) {
 	    String msg = "MultiPRODelegate.exportObject(Remote obj) fail";
 	    TraceCarol.error(msg,ex);
@@ -124,12 +132,17 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 	    }
 	    for (Enumeration e = activesProtocols.elements(); e.hasMoreElements() ;) {
 		((PortableRemoteObjectDelegate)e.nextElement()).unexportObject(obj);
-	    }	    
+	    }	
+	    if (TraceCarol.isDebugExportCarol()) {
+		TraceCarol.debugExportCarol("Unexport object "+obj.getClass().getName());
+		TraceCarol.debugExportCarol("UnExported objects list:\n"+getUnexportedObjects());
+		removeObject(obj.getClass().getName());
+	    }
 	} catch (Exception ex) {
 	    String msg = "MultiPRODelegate.unexportObject(Remote obj) fail";
 	    TraceCarol.error(msg,ex);
 	    throw new NoSuchObjectException(msg);	    
-	}	
+	}
     }
 
     /**
@@ -230,4 +243,46 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
     private String simpleClass(String c) {
 	return c.substring(c.lastIndexOf('.') +1);
     }
+    
+    
+	/**
+	 * @return
+	 */
+	private String getUnexportedObjects()
+	{
+		String result="Exported Objects:\n";
+		int resultInt=0;
+		for (Enumeration e = exported.keys() ; e.hasMoreElements() ;) {
+			 String ck = (String)e.nextElement();
+			 int on=((Integer)exported.get(ck)).intValue();
+			 result+=""+on+" instances of  "+ ck +"\n";
+			 resultInt+=on;
+		}
+		result+="Total number of exported objects="+resultInt;
+		return result;
+	}
+
+	/**
+	 * @param string
+	 */
+	private void removeObject(String className) {
+		if (exported.containsKey(className)) {
+			if (((Integer)exported.get(className)).intValue()!=1) {
+			   exported.put(className, new Integer(((Integer)exported.get(className)).intValue()-1));
+			} else {
+				exported.remove(className);
+			 }
+		}
+	}
+	
+	/**
+	* @param string
+	*/
+   private void addObject(String className) {
+	if (exported.containsKey(className)) {
+		 exported.put(className, new Integer(((Integer)exported.get(className)).intValue()+1));
+	} else {
+		 exported.put(className, new Integer(1));
+	}
+   }
 }
