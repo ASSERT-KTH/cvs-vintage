@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeModel.java,v 1.9 2003/11/10 20:36:25 alexb Exp $
+// $Id: ExplorerTreeModel.java,v 1.10 2003/11/13 21:04:23 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -235,7 +235,14 @@ ItemListener{
      */
     private Collection findNodes(Object modelElement){
         
-        return (Set)modelElementMap.get(modelElement);
+        Collection nodes = (Collection)modelElementMap.get(modelElement);
+        
+        if(nodes == null){
+            return Collections.EMPTY_LIST;
+        }
+        else{
+            return nodes;
+        }
     }
     
     /**
