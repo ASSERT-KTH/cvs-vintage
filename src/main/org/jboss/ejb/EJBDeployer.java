@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.25 $</tt>
+ * @version <tt>$Revision: 1.26 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -69,15 +69,13 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  */
 public class EJBDeployer
    extends SubDeployerSupport
    implements EJBDeployerMBean
 {
    private ServiceControllerMBean serviceController;
-
-   /** A map of current deployments. */
-   private HashMap deployments = new HashMap();
 
    /** Verify EJB-jar contents on deployments */
    private boolean verifyDeployments;
@@ -94,16 +92,6 @@ public class EJBDeployer
 
    /** A flag indicating if deployment descriptors should be validated */
    private boolean validateDTDs;
-
-   /**
-    * Returns the deployed applications.
-    *
-    * @jmx:managed-operation
-    */
-   public Iterator getDeployedApplications()
-   {
-      return deployments.values().iterator();
-   }
 
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws MalformedObjectNameException
@@ -124,31 +112,6 @@ public class EJBDeployer
       super.startService();
    }
 
-   /**
-    * Implements the template method in superclass. This method stops all the
-    * applications in this server.
-    */
-   protected void stopService() throws Exception
-   {
-      for( Iterator modules = deployments.values().iterator();
-         modules.hasNext(); )
-      {
-         DeploymentInfo di = (DeploymentInfo) modules.next();
-         stop(di);
-      }
-
-      // avoid concurrent modification exception
-      for( Iterator modules = new ArrayList(deployments.values()).iterator();
-         modules.hasNext(); )
-      {
-         DeploymentInfo di = (DeploymentInfo) modules.next();
-         destroy(di);
-      }
-      deployments.clear();
-
-      // deregister with MainDeployer
-      super.stopService();
-   }
 
    /**
     * Enables/disables the application bean verification upon deployment.
@@ -434,8 +397,7 @@ public class EJBDeployer
 
       try
       {
-         // remove reserved object name letters.  Let's hope no one takes
-         // advantage of the ambiguity.
+         // remove reserved object name letters.
          ObjectName ejbModule = ObjectNameConverter.convert(
             EjbModule.BASE_EJB_MODULE_NAME + ",url=" + di.url);
 
@@ -469,10 +431,6 @@ public class EJBDeployer
          serviceController.start(di.deployedObject);
 
          log.debug( "Deployed: " + di.url );
-
-         // Register deployment. Use the application name in the hashtable
-         // FIXME: this is obsolete!! (really?!)
-         deployments.put(di.url, di);
       }
       catch (Exception e)
       {
@@ -500,9 +458,6 @@ public class EJBDeployer
    public void destroy(DeploymentInfo di) 
       throws DeploymentException
    {
-      // FIXME: If the put() is obsolete above, this is obsolete, too
-      deployments.remove(di.url);
-
       try
       {
          serviceController.destroy( di.deployedObject );
@@ -514,34 +469,6 @@ public class EJBDeployer
             di.url, e );
       }
    }
-
-   // FIXME: The methods below may be obsolete, see FIXME entries above.
-   // FIXME FIXME FIXME: this is never called?!?!?!?
-
-   /**
-    * Check whether an Application with the given URL is deployed
-    *
-    * @param url URL to check (as String)
-    *
-    * @throws MalformedURLException
-    */
-   public boolean isDeployed( String url )
-      throws MalformedURLException
-   {
-      return isDeployed( new URL(url) );
-   }
-
-   /**
-    * Check if the application with this url is deployed.
-    *
-    * @param url    URL to check
-    * @return       true if deployed
-    */
-   public boolean isDeployed( URL url )
-   {
-      return deployments.get(url) != null;
-   }
-
 }
 /*
 vim:ts=3:sw=3:et
