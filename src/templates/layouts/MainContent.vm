@@ -1,5 +1,5 @@
 #set ($page.Title = $l10n.Title)
-#if (!$data.Parameters.getBoolean("nonav") && !$data.Parameters.getBoolean("nosearchnav"))
+#if (!$data.Parameters.getString("nonav") && !$data.Parameters.getString("nosearchnav"))
     $renderer.render("navigations", "SearchNav.vm")
 #end
 #actionErrorMsg()
