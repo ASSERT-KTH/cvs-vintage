@@ -49,6 +49,7 @@ package org.tigris.scarab.actions;
 import java.util.Iterator;
 import java.util.List;
 import java.math.BigDecimal;
+import javax.servlet.http.HttpServletRequest;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateAction;
@@ -80,7 +81,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.13 2001/07/27 01:32:42 elicia Exp $
+    @version $Id: Search.java,v 1.14 2001/07/27 19:39:50 elicia Exp $
 */
 public class Search extends TemplateAction
 {
@@ -93,6 +94,9 @@ public class Search extends TemplateAction
             .get(ScarabConstants.INTAKE_TOOL);
 
         ScarabUser user = (ScarabUser)data.getUser();
+
+        HttpServletRequest request = data.getRequest();    
+        context.put("queryString", request.getQueryString());
 
         if ( intake.isAllValid() ) 
         {
