@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.20 2003/04/29 19:25:08 kataka Exp $
+// $Id: ActionOpenProject.java,v 1.21 2003/05/02 16:34:30 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -88,7 +88,7 @@ public class ActionOpenProject extends UMLAction {
                 MessageFormat.format(
                     Argo.localize(
                         "Actions",
-                        "template.open_project.save_changes_to"),
+                        "optionpane.open-project-save-changes-to"),
                     new Object[] { p.getName()});
 
             int response =
@@ -133,7 +133,7 @@ public class ActionOpenProject extends UMLAction {
                 chooser = OsUtil.getFileChooser();
 
             chooser.setDialogTitle(
-                Argo.localize("Actions", "text.open_project.chooser_title"));
+                Argo.localize("Actions", "filechooser.open-project"));
             SuffixFilter filter = FileFilters.CompressedFileFilter;
             chooser.addChoosableFileFilter(filter);
             chooser.addChoosableFileFilter(FileFilters.UncompressedFileFilter);
@@ -191,7 +191,7 @@ public class ActionOpenProject extends UMLAction {
                 MessageFormat.format(
                     Argo.localize(
                         "Actions",
-                        "template.open_project.status_read"),
+                        "label.open-project-status-read"),
                     new Object[] { url.toString()}));
         } catch (ParserConfigurationException ex) {
             showErrorPane(
