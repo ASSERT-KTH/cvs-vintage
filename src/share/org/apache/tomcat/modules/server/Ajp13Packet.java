@@ -305,7 +305,7 @@ public class Ajp13Packet {
 	return (getByte() == (byte) 1);
     }
     
-    public static final String DEFAULT_CHAR_ENCODING = "8859_1";
+    public static final String DEFAULT_CHAR_ENCODING = "ISO-8859-1";
     
     public void getMessageBytes( MessageBytes mb ) {
 	int length = getInt();
