@@ -1729,18 +1729,20 @@ public class IssueSearch
                               IssuePeer.ISSUE_ID);
                 crit2.setDistinct();
                 sortColumn = AttributeValuePeer.VALUE; 
-                }
-                if (getSortPolarity().equals("desc"))
-                {
-                    crit2.addDescendingOrderByColumn(sortColumn);
-                }
-                else
-                {
-                    crit2.addAscendingOrderByColumn(sortColumn);
-                }
-                sortedIssues.addAll(IssuePeer.doSelect(crit2));
-           }
-           sortedIssues.addAll(attNotSet);
-           return sortedIssues;
+            }
+            if (getSortPolarity().equals("desc"))
+            {
+                crit2.addDescendingOrderByColumn(sortColumn);
+            }
+            else
+            {
+                crit2.addAscendingOrderByColumn(sortColumn);
+            }
+            IssuePeer.addSelectColumns(crit2);
+            crit2.addSelectColumn(sortColumn);
+            sortedIssues.addAll(IssuePeer.doSelect(crit2));
+        }
+        sortedIssues.addAll(attNotSet);
+        return sortedIssues;
     }
 }
