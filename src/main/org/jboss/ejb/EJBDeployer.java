@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import javax.management.ObjectName;
 import javax.security.jacc.PolicyContext;
 import javax.transaction.TransactionManager;
@@ -20,6 +21,7 @@ import javax.transaction.TransactionManager;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.deployment.J2eeApplicationMetaData;
+import org.jboss.deployment.SubDeployer;
 import org.jboss.deployment.SubDeployerSupport;
 import org.jboss.ejb.plugins.EnterpriseBeanPolicyContextHandler;
 import org.jboss.logging.Logger;
@@ -46,17 +48,18 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.60 $</tt>
+ * @version <tt>$Revision: 1.61 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @author <a href="mailto:thomas.diesler@arcor.de">Thomas Diesler</a>.
+ * @author <a href="mailto:thomas.diesler@arcor.de">Thomas Diesler</a>
+ * @author <a href="mailto:dimitris@jboss.org">Dimitris Andreadis</a>
  */
 public class EJBDeployer
    extends SubDeployerSupport
@@ -90,6 +93,9 @@ public class EJBDeployer
    private TransactionManager tm;
 
    private boolean callByValue;
+   
+   /** Hold a proxy reference to myself, used when registering to MainDeployer */
+   private SubDeployer thisProxy;
    
    /**
     * @jmx:managed-attribute
@@ -144,8 +150,13 @@ public class EJBDeployer
       PolicyContext.registerHandler(SOAPMsgPolicyContextHandler.SEI_ARGS_KEY,
          msgHandler, false);
 
-      // register with MainDeployer
-      super.startService();
+      // make a proxy to myself, so that calls from the MainDeployer
+      // can go through the MBeanServer, so interceptors can be added
+      thisProxy = (SubDeployer)
+         MBeanProxyExt.create(SubDeployer.class, super.getServiceName(), super.getServer());
+      
+      // Register with the main deployer
+      mainDeployer.addDeployer(thisProxy);
    }
 
    /**
@@ -172,7 +183,7 @@ public class EJBDeployer
       deployments.clear();
 
       // deregister with MainDeployer
-      super.stopService();
+      mainDeployer.removeDeployer(thisProxy);
 
       serviceController = null;
       tm = null;
