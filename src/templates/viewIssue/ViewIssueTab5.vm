@@ -22,33 +22,7 @@
      </td>
      <td>$act.Description</td>
 
-     <td>
-     #set ($activitySetAttachmentData = $activitySet.Attachment.Data)
-     #if ($activitySet && $activitySet.Attachment)
-       #if ($act.Depend && $activitySetAttachmentData)
-         #if ($activitySetAttachmentData.toString().length() > 0)
-           $activitySetAttachmentData
-         #else
-           $l10n.NotProvided
-         #end
-       #elseif ($activitySetAttachmentData && !$activitySet.Attachment.AttachmentType.Name.equals("COMMENT"))
-         $activitySetAttachmentData
-       #elseif ($activitySet.ActivitySetType.Name.equals("Edit Issue"))
-         $act.NewValue
-       #else
-         $l10n.NotProvided
-       #end
-     #elseif ($act.Attachment)
-       #if ($act.Attachment.Data && !$act.Attachment.AttachmentType.Name.equals("COMMENT") && !$act.Attachment.AttachmentType.Name.equals("URL"))
-         $act.Attachment.Data
-       #else
-         $l10n.NotProvided
-       #end     
-     #elseif ($activitySet && $activitySet.ActivitySetType.Name.equals("Create Issue"))
-       $l10n.InitialEntry
-     #else
-       $l10n.NotProvided
-     #end
+     <td>$scarabR.getActivityReason($activitySet, $act)
      </td>
      <td>
      #set ($user = $scarabR.getUser($activitySet.CreatedBy))
