@@ -1,4 +1,4 @@
-// $Id: StartCritics.java,v 1.3 2003/06/30 18:00:15 linus Exp $
+// $Id: StartCritics.java,v 1.4 2003/08/30 13:56:54 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,8 +34,6 @@ import org.argouml.uml.cognitive.critics.CrUML;
 
 import java.util.Locale;
 
-import ru.novosoft.uml.model_management.MModel;
-
 /** StartCritics is a thread which helps to start the critiquing thread
  */
 public class StartCritics implements Runnable {
@@ -52,7 +50,7 @@ public class StartCritics implements Runnable {
             // UmlModelEventPump.getPump()
 	    // .removeModelEventListener(dsgr, (MModel)o);
             UmlModelEventPump.getPump().addModelEventListener(dsgr,
-							      (MModel) o); 
+							      o); 
         }
         Argo.log.info("spawned critiquing thread");
 

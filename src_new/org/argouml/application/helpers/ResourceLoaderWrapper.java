@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.8 2003/06/30 18:00:16 linus Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.9 2003/08/30 13:56:54 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,10 +32,8 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.UmlHelper;
 import org.tigris.gef.util.ResourceLoader;
-
-import ru.novosoft.uml.behavior.state_machines.MPseudostate;
-import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
 
 /**
  * Wrapper around org.tigris.gef.util.ResourceLoader. 
@@ -256,21 +254,26 @@ public final class ResourceLoaderWrapper {
         
 	    icon = (Icon) _iconCache.get(value.getClass());
 
-
-	    if (ModelFacade.isAPseudostate(value) ) {
-		MPseudostate ps = (MPseudostate) value;
-		MPseudostateKind kind = ps.getKind();
-		if (MPseudostateKind.INITIAL.equals(kind))
+            if (ModelFacade.isAPseudostate(value) ) {
+                
+		Object kind = ModelFacade.getKind(value);
+                if (UmlHelper.getHelper().getDataTypes()
+                    .equalsINITIALKind(kind))
 		    icon = _InitialStateIcon;
-		if (MPseudostateKind.DEEP_HISTORY.equals(kind))
+		if (UmlHelper.getHelper().getDataTypes()
+                    .equalsDEEP_HISTORYKind(kind))
 		    icon = _DeepIcon;
-		if (MPseudostateKind.SHALLOW_HISTORY.equals(kind))
+		if (UmlHelper.getHelper().getDataTypes()
+                    .equalsSHALLOW_HISTORYKind(kind))
 		    icon = _ShallowIcon;
-		if (MPseudostateKind.FORK.equals(kind))
+		if (UmlHelper.getHelper().getDataTypes()
+                    .equalsFORKKind(kind))
 		    icon = _ForkIcon;
-		if (MPseudostateKind.JOIN.equals(kind))
+		if (UmlHelper.getHelper().getDataTypes()
+                    .equalsJOINKind(kind))
 		    icon = _JoinIcon;
-		if (MPseudostateKind.BRANCH.equals(kind))
+		if (UmlHelper.getHelper().getDataTypes()
+                    .equalsBRANCHKind(kind))
 		    icon = _BranchIcon;
 		// if (MPseudostateKind.FINAL.equals(kind)) 
 		// icon = _FinalStateIcon;
