@@ -340,7 +340,9 @@ public class Request {
 	// info is present
 	pathTranslated=null;
 	if(path==null || "".equals( path ) ) return null;
-	pathTranslated=context.getRealPath( path );
+
+	pathTranslated=FileUtil.safePath( context.getAbsolutePath(),
+					  path);
 	return pathTranslated;
     }
 

@@ -65,10 +65,6 @@ public class WebXmlReader extends BaseInterceptor {
 	// mime-mapping - are build into MimeMap.
 	// Note that default mappings are based on existing registered types.
 
-	// index pages - still use the hack, but it'll go away soon
-	for( int i=0; i< defaultWelcomeList.length; i++ )
-	    ctx.addWelcomeFile( defaultWelcomeList[i]);
-	ctx.expectUserWelcomeFiles();
     }
 
 
@@ -89,7 +85,6 @@ public class WebXmlReader extends BaseInterceptor {
 	    return;
 	
 	processWebXmlFile(ctx , default_xml.getPath());
-	ctx.expectUserWelcomeFiles();
     }
     
     public void contextInit(Context ctx) throws TomcatException {
@@ -113,6 +108,15 @@ public class WebXmlReader extends BaseInterceptor {
 	    if( inf_xml.exists() )
 		processWebXmlFile(ctx, inf_xml.getPath() );
 
+	    // If the user haven't set any welcome file, use the
+	    // defaults.
+	    // If the user specifies welcome files, it's assumed he
+	    // doesn't want extra
+	    String newWF[]=ctx.getWelcomeFiles();
+	    if( newWF==null || newWF.length==0 ) {
+		for( int i=0; i< defaultWelcomeList.length; i++ )
+		    ctx.addWelcomeFile( defaultWelcomeList[i]);
+	    }
 	} catch (Exception e) {
 	    String msg = sm.getString("context.getConfig.e",ctx.getPath() + " " + ctx.getDocBase());
 	    log(msg, e);

@@ -162,7 +162,17 @@ public class ReloadInterceptor extends  BaseInterceptor
 		// user servlets, but still need work XXX.
 
 		// we also need to save context attributes.
-		ctx.reload();
+
+		Enumeration sE=ctx.getServletNames();
+		while( sE.hasMoreElements() ) {
+		    try {
+			String sN=(String)sE.nextElement();
+			Handler sw=ctx.getServletByName( sN );
+			sw.reload();
+		    } catch( Exception ex ) {
+			log( "Reload exception: " + ex);
+		    }
+		}
 
 		// send notification to all interceptors
 		// They may try to save up the state or take

@@ -95,7 +95,7 @@ final class ServletContextFacade implements ServletContext {
 
     // -------------------- Public facade methods --------------------
     public ServletContext getContext(String path) {
-        Context target=context.getContext(path);
+        Context target=contextM.getContext(context, path);
 	return (ServletContext)target.getFacade();
     }
 
@@ -129,8 +129,10 @@ final class ServletContextFacade implements ServletContext {
         return context.getMimeMap().getContentTypeFor(filename);
     }
 
+    // Specific to servlet version and interpretation.
     public String getRealPath(String path) {
-	return context.getRealPath( path );
+ 	return FileUtil.safePath( context.getAbsolutePath(),
+				  path);
     }
 
     public InputStream getResourceAsStream(String path) {
@@ -146,8 +148,22 @@ final class ServletContextFacade implements ServletContext {
 	return is;
     }
 
-    public URL getResource(String path)	throws MalformedURLException {
-	return context.getResource( path );
+    public URL getResource(String rpath) throws MalformedURLException {
+	if (rpath == null) return null;
+
+	String absPath=context.getAbsolutePath();
+	String realPath=FileUtil.safePath( absPath, rpath);
+	if( realPath==null ) {
+	    log( "Unsafe path " + absPath + " " + rpath );
+	    return null;
+	}
+
+	try {
+            return new URL("file", null, 0,realPath );
+	} catch( IOException ex ) {
+	    log("getting resource " + rpath, ex);
+	    return null;
+	}
     }
 
     public RequestDispatcher getRequestDispatcher(String path) {

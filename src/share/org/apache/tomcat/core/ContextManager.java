@@ -1274,6 +1274,29 @@ public final class ContextManager implements LogAware{
 	return (Context)contexts.get(name);
     }
 
+    
+    /**
+     *   Find a context by doing a sub-request and mapping the request
+     *   against the active rules ( that means you could use a /~costin
+     *   if a UserHomeInterceptor is present )
+     *
+     *   XXX I think this should be in ContextManager
+     */
+    public final  Context getContext(Context base, String path) {
+	// XXX Servlet checks should be done in facade
+	if (! path.startsWith("/")) {
+	    return null; // according to spec, null is returned
+	    // if we can't  return a servlet, so it's more probable
+	    // servlets will check for null than IllegalArgument
+	}
+	// absolute path
+	Request lr=this.createRequest( path );
+	if( base.getHost() != null ) lr.setServerName( base.getHost() );
+	this.processRequest(lr);
+        return lr.getContext();
+    }
+
+
     /**
      * Shut down and removes a context from service.
      *

@@ -362,7 +362,9 @@ final class HttpServletRequestFacade implements HttpServletRequest {
      * @deprecated
      */
     public String getRealPath(String name) {
-        return request.getContext().getRealPath(name);
+	Context ctx=request.getContext();
+        return FileUtil.safePath( ctx.getAbsolutePath(),
+				  name);
     }
     
     // -------------------- Security --------------------

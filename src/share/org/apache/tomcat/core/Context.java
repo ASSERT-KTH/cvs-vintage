@@ -71,22 +71,23 @@ import java.net.*;
 import java.util.*;
 
 
-/* Right now we have all the properties defined in web.xml.
-   The interceptors will  go into Container ( every request will
-   be associated with the final container, which will point back to the
-   context). That will allow us to use a simpler and more "targeted"
-   object model.
-
-   The only "hard" part is moving getResource() and getRealPath() in
-   a different class, using a filesystem independent abstraction. 
-   
-*/
-   
-
 /**
  * Context represent a Web Application as specified by Servlet Specs.
  * The implementation is a repository for all the properties
  * defined in web.xml and tomcat specific properties.
+ * 
+ * This object has many properties, but doesn't do anything special
+ * except simple cashing.
+ *
+ * You need to set at least "path" and "base" before adding a
+ * context to a server. You can also set any other properties.
+ *
+ * At addContext() stage log and paths will be "fixed" based on
+ * context manager settings.
+ *
+ * At initContext() stage, web.xml will be read and all other
+ * properties will be set. WebXmlReader must be the first
+ * module in initContext() chain. 
  *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
@@ -95,9 +96,11 @@ import java.util.*;
  * @author costin@dnt.ro
  * @author Gal Shachor shachor@il.ibm.com
  */
-public class Context implements LogAware {
+public final class Context implements LogAware {
+    // -------------------- Constants --------------------
+    
     // Proprietary attribute names for contexts - defined
-    // here so we can document them
+    // here so we can document them ( will show in javadoc )
 
     /** Private tomcat attribute names
      */
@@ -114,6 +117,9 @@ public class Context implements LogAware {
     /** Workdir - a place where the servlets are allowed to write
      */
     public static final String ATTRIB_WORKDIR="org.apache.tomcat.workdir";
+    public static final String ATTRIB_WORKDIR1 = "javax.servlet.context.tempdir";
+    public static final String ATTRIB_WORKDIR2 = "sun.servlet.workdir";
+    
 
     /** This attribute will return the real context (
      *  org.apache.tomcat.core.Context).
@@ -135,8 +141,11 @@ public class Context implements LogAware {
     // internal state / related objects
     private ContextManager contextM;
     private Object contextFacade;
+    // print debugging information
+    private int debug=0;
 
-    boolean reloadable=true; 
+    // enable reloading
+    private boolean reloadable=true; 
 
     // XXX Use a better repository
     private Hashtable attributes = new Hashtable();
@@ -147,56 +156,86 @@ public class Context implements LogAware {
     // Servlets loaded by this context( String->ServletWrapper )
     private Hashtable servlets = new Hashtable();
 
-    // -------------------- from web.xml
+    // Initial properties for the context
     private Hashtable initializationParameters = new Hashtable();
 
-    // all welcome files that are added are treated as "system default"
-    private boolean expectUserWelcomeFiles=false;
-    private Vector welcomeFiles = new Vector();
-    
+    // WelcomeFiles
+    private Vector welcomeFilesV=new Vector();
+    // cached for faster access
+    private String welcomeFiles[] = null;
+
+    // Defined error pages. 
     private Hashtable errorPages = new Hashtable();
-    private String description = null;
-    private boolean isDistributable = false;
+
+    // mime mappings
     private MimeMap mimeTypes = new MimeMap();
+
+    // Default session time out
     private int sessionTimeOut = -1;
 
-    // taglibs
-    Hashtable tagLibs=new Hashtable();
-    // Env entries
-    Hashtable envEntryTypes=new Hashtable();
-    Hashtable envEntryValues=new Hashtable();
+    private boolean isDistributable = false;
 
     // Maps specified in web.xml ( String url -> Handler  )
     private Hashtable mappings = new Hashtable();
-    Hashtable constraints=new Hashtable();
 
-    Hashtable containers=new Hashtable();
+    // Security constraints ( String url -> Container )
+    private Hashtable constraints=new Hashtable();
 
-    Container defaultContainer = null; // generalization, will replace most of the
-    // functionality. By using a default container we avoid a lot of checkings
-    // and speed up searching, and we can get rid of special properties.
-    //    private Handler defaultServlet = null;
+    // All url patterns ( url_pattern -> properties )
+    private Hashtable containers=new Hashtable();
+
+    // Container used if no match is found
+    // Also contains the special properties for
+    // this context. 
+    private Container defaultContainer = null;
 
     // Authentication properties
-    String authMethod;
-    String realmName;
-    String formLoginPage;
-    String formErrorPage;
-
-    // verbosity level 
-    int debug=0;
+    private String authMethod;
+    private String realmName;
+    private String formLoginPage;
+    private String formErrorPage;
 
     // Servlet-Engine header ( default set by Servlet facade)
     private String engineHeader = null;
 
-    // are servlets allowed to access internal objects? 
-    boolean trusted=false;
-
     // Virtual host name ( null if default )
-    String vhost=null;
+    private String vhost=null;
     // vhost aliases 
-    Vector vhostAliases=new Vector();
+    private Vector vhostAliases=new Vector();
 
+    // are servlets allowed to access internal objects? 
+    private boolean trusted=false;
+
+    // log channels for context and servlets 
+    private Log loghelper = new Log("tc_log", this);
+    private Log loghelperServlet;
+
+    // servlet API implemented by this Context
+    private String apiLevel="2.2";
+
+    // class loader for this context
+    private ClassLoader classLoader;
+    // Vector<URL>, using URLClassLoader conventions
+    private Vector classPath=new Vector();
+
+    // true if a change was detected and this context
+    // needs reload
+    private boolean reload;
+    // Tool used to control reloading
+    private DependManager dependM;
+
+    // -------------------- from web.xml --------------------
+    // Those properties are not directly used in context
+    // operation, we just store them.
+    private String description = null;
+    private String icon=null;
+    // taglibs
+    private Hashtable tagLibs=new Hashtable();
+    // Env entries
+    private Hashtable envEntryTypes=new Hashtable();
+    private Hashtable envEntryValues=new Hashtable();
+
+    // -------------------- Constructor --------------------
     
     public Context() {
 	defaultContainer=new Container();
@@ -204,375 +243,17 @@ public class Context implements LogAware {
 	defaultContainer.setPath( null ); // default container
     }
 
-    /** Every context is associated with a facade. We don't know the exact
-	type of the facade, as a Context can be associated with a 2.2 ...
-	ServletContext.
 
-	I'm not sure if this method is good - it adds deps to upper layers.
-     */
-    public Object getFacade() {
-	return contextFacade;
-    }
+    // -------------------- Active methods --------------------
 
-    public void setFacade(Object obj) {
-        if(contextFacade!=null )
-	    log( "Changing facade " + contextFacade + " " +obj);
-	contextFacade=obj;
-    }
+    // The main role of Context is to store the many properties
+    // that a web application have.
 
+    // There are only few methods here that actually do something
+    // ( and we try to keep the object "passive" - it is already
+    // full of properties, no need to make it to complicated.
 
-    // -------------------- Settable context properties --------------------
-
-    /** Returned the main server ( servlet container )
-     */
-    public ContextManager getContextManager() {
-	return contextM;
-    }
-
-    public void setContextManager(ContextManager cm) {
-	contextM=cm;
-	// let the contextmanager know about our local logger
-	// ( and open it, adjust the path, etc )
-	if( loghelper!=null && loghelper.getLogger() != null )
-	    contextM.addLogger( loghelper.getLogger() );
-	if( loghelperServlet != null &&
-	    loghelperServlet.getLogger() != null)
-	    contextM.addLogger( loghelperServlet.getLogger() );
-    }
-
-    /** The servlet API variant that will be used for requests in this
-     *  context
-     */ 
-    public void setServletAPI( String s ) {
-	if( s!=null &&
-	    ( s.endsWith("23") || s.endsWith("2.3")) ) {
-	} else {
-	}
-    }
-
-
-    /** Base URL for this context
-     */
-    public String getPath() {
-	return path;
-    }
-
-    /** Base URL for this context
-     */
-    public void setPath(String path) {
-	// config believes that the root path is called "/",
-	//
-	if( "/".equals(path) )
-	    path="";
-	this.path = path;
-    }
-
-    /** DocBase points to the web application files.
-     *
-     *  There is no restriction on the syntax and content of DocBase,
-     *  it's up to the various modules to interpret this and use it.
-     *  For example, to serve from a war file you can use war: protocol,
-     *  and set up War interceptors.
-     *
-     *  "Basic" tomcat treats it as a file ( either absolute or relative to
-     *  the CM home ).
-     *
-     *  If docBase is relative assume it is relative  to the context manager home.
-     */
-    public void setDocBase( String docB ) {
-	this.docBase=docB;
-    }
-
-
-    public String getDocBase() {
-	return docBase;
-    }
-
-    /** Return the absolute path for the docBase, if we are file-system
-     *  based, null otherwise.
-    */
-    public String getAbsolutePath() {
-	if( absPath!=null) return absPath;
-
-	if (FileUtil.isAbsolute( docBase ) )
-	    absPath=docBase;
-	else
-	    absPath = contextM.getHome() + File.separator + docBase;
-	try {
-	    absPath = new File(absPath).getCanonicalPath();
-	} catch (IOException npe) {
-	}
-	return absPath;
-    }
-
-    // -------------------- Tomcat specific properties
-    // workaround for XmlMapper unable to set anything but strings
-    public void setReloadable( String s ) {
-	reloadable=new Boolean( s ).booleanValue();
-    }
-
-    public void setReloadable( boolean b ) {
-	reloadable=b;
-    }
-
-    /** Should we reload servlets ?
-     */
-    public boolean getReloadable() {
-	return reloadable;
-    }
-
-    // -------------------- Web.xml properties --------------------
-
-    public Enumeration getWelcomeFiles() {
-	return welcomeFiles.elements();
-    }
-
-    /** @deprecated It is used as a hack to allow web.xml override default
-	 welcome files.
-	 Tomcat will first load the "default" web.xml and then this file.
-    */
-    public void removeWelcomeFiles() {
-	if( ! this.welcomeFiles.isEmpty() )
-	    this.welcomeFiles.removeAllElements();
-    }
-
-    /** If any new welcome file is added, remove the old list of
-     *  welcome files and start a new one. This is used as a hack to
-     *  allow a default web.xml file to specifiy welcome files.
-     *  We should use a better mechanism! 
-     */
-    public void expectUserWelcomeFiles() {
-	expectUserWelcomeFiles = true;
-    }
     
-
-    public void addWelcomeFile( String s) {
-	// user specified at least one user welcome file, remove the system
-	// files
-	if (s == null ) return;
-	s=s.trim();
-	if(s.length() == 0)
-	    return;
-	if(  expectUserWelcomeFiles  ) {
-	    removeWelcomeFiles();
-	    expectUserWelcomeFiles=false;
-	} 
-	welcomeFiles.addElement( s );
-    }
-
-    /** Add a taglib declaration for this context
-     */
-    public void addTaglib( String uri, String location ) {
-	//	log("Add taglib " + uri + "  " + location );
-	tagLibs.put( uri, location );
-    }
-
-    public String getTaglibLocation( String uri ) {
-	return (String)tagLibs.get(uri );
-    }
-
-    public Enumeration getTaglibs() {
-	return tagLibs.keys();
-    }
-
-    /** Add Env-entry to this context
-     */
-    public void addEnvEntry( String name,String type, String value, String description ) {
-	log("Add env-entry " + name + "  " + type + " " + value + " " +description );
-	if( name==null || type==null) throw new IllegalArgumentException();
-	envEntryTypes.put( name, type );
-	if( value!=null)
-	    envEntryValues.put( name, value );
-    }
-
-    public String getEnvEntryType(String name) {
-	return (String)envEntryTypes.get(name);
-    }
-
-    public String getEnvEntryValue(String name) {
-	return (String)envEntryValues.get(name);
-    }
-
-    public Enumeration getEnvEntries() {
-	return envEntryTypes.keys();
-    }
-
-    public String getInitParameter(String name) {
-        return (String)initializationParameters.get(name);
-    }
-
-    /** @deprecated use addInitParameter
-     */
-    public void setInitParameter( String name, String value ) {
-	initializationParameters.put(name, value );
-    }
-
-    public void addInitParameter( String name, String value ) {
-	initializationParameters.put(name, value );
-    }
-
-    public Enumeration getInitParameterNames() {
-        return initializationParameters.keys();
-    }
-
-        
-    /** Workdir attribute - XXX is it specified anyway ? 
-     */
-    public static final String ATTRIB_WORKDIR1 = "javax.servlet.context.tempdir";
-    // XXX deprecated, is anyone in the world using it ?
-    public static final String ATTRIB_WORKDIR2 = "sun.servlet.workdir";
-    
-    public Object getAttribute(String name) {
-	// deprecated 
-	if( name.equals( ATTRIB_WORKDIR1 ) ) 
-	    return getWorkDir();
-	if( name.equals( ATTRIB_WORKDIR2 ) ) 
-	    return getWorkDir();
-
-	
-	if (name.startsWith( ATTRIB_PREFIX )) {
-	    // XXX XXX XXX XXX Security - servlets may get too much access !!!
-	    // right now we don't check because we need JspServlet to
-	    // be able to access classloader and classpath
-	    if( name.equals( ATTRIB_WORKDIR ) ) 
-		return getWorkDir();
-	    
-	    if (name.equals("org.apache.tomcat.jsp_classpath")) {
-		String separator = System.getProperty("path.separator", ":");
-		StringBuffer cpath=new StringBuffer();
-		URL classPaths[]=getClassPath();
-		for(int i=0; i< classPaths.length ; i++ ) {
-		    URL cp = classPaths[i];
-		    if (cpath.length()>0) cpath.append( separator );
-		    cpath.append(cp.getFile());
-		}
-		if( debug>9 ) log("Getting classpath " + cpath);
-		return cpath.toString();
-	    }
-	    if(name.equals("org.apache.tomcat.classloader")) {
-		return this.getClassLoader();
-	    }
-	    if(name.equals(ATTRIB_REAL_CONTEXT)) {
-		if( ! allowAttribute(name) ) return null;
-		return this;
-	    }
-	    // 	    if( name.equals(FacadeManager.FACADE_ATTRIBUTE)) {
-	    // 		if( ! allowAttribute(name) ) return null;
-	    // 		return this.getFacadeManager();
-	    // 	    }
-	    return null; // org.apache.tomcat namespace is reserved in tomcat
-	} else {
-            Object o = attributes.get(name);
-            return attributes.get(name);
-        }
-    }
-
-    public Enumeration getAttributeNames() {
-        return attributes.keys();
-    }
-
-    public void setAttribute(String name, Object object) {
-        attributes.put(name, object);
-    }
-
-    public void removeAttribute(String name) {
-        attributes.remove(name);
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setIcon( String icon ) {
-
-    }
-
-    public boolean isDistributable() {
-        return this.isDistributable;
-    }
-
-    public void setDistributable(boolean isDistributable) {
-        this.isDistributable = isDistributable;
-    }
-
-    public void setDistributable(String s) {
-	// XXX
-    }
-
-    public int getSessionTimeOut() {
-        return this.sessionTimeOut;
-    }
-
-    public void setSessionTimeOut(int sessionTimeOut) {
-        this.sessionTimeOut = sessionTimeOut;
-    }
-
-    public FileNameMap getMimeMap() {
-        return mimeTypes;
-    }
-
-    public void addContentType( String ext, String type) {
-	mimeTypes.addContentType( ext, type );
-    }
-
-    public String getErrorPage(int errorCode) {
-        return getErrorPage(String.valueOf(errorCode));
-    }
-
-    public void addErrorPage( String errorType, String value ) {
-	this.errorPages.put( errorType, value );
-    }
-
-    public String getErrorPage(String errorCode) {
-        return (String)errorPages.get(errorCode);
-    }
-
-
-    /** Authentication method, if any specified
-     */
-    public String getAuthMethod() {
-	return authMethod;
-    }
-
-    /** Realm to be used
-     */
-    public String getRealmName() {
-	return realmName;
-    }
-
-    public String getFormLoginPage() {
-	return formLoginPage;
-    }
-
-    public String getFormErrorPage() {
-	return formErrorPage;
-    }
-
-    public void setFormLoginPage( String page ) {
-	formLoginPage=page;
-    }
-    
-    public void setFormErrorPage( String page ) {
-	formErrorPage=page;
-    }
-
-    public void setLoginConfig( String authMethod, String realmName,
-				String formLoginPage, String formErrorPage)
-    {
-	// 	log("Login config: " + authMethod + " " + realmName + " " +
-	// 			   formLoginPage + " " + formErrorPage);
-	this.authMethod=authMethod;
-	this.realmName=realmName;
-	this.formLoginPage=formLoginPage;
-	this.formErrorPage=formErrorPage;
-    }
-
-    // -------------------- Mappings --------------------
-
     /**
      * Maps a named servlet to a particular path or extension.
      *
@@ -582,18 +263,8 @@ public class Context implements LogAware {
      *
      * If the mapping already exists it will be replaced by the new
      * mapping.
-     *
-     * Note that the servlet 2.2 standard mapings are:
-     *
-     *    exact mapped servlet (eg /catalog)
-     *    prefix mapped servlets (eg /foo/bar/*)
-     *    extension mapped servlets (eg *jsp)
-     *    default servlet
-     *
-     * XXX XXX XXX
-     *
      */
-    public void addServletMapping(String path, String servletName)
+    public final  void addServletMapping(String path, String servletName)
 	throws TomcatException
     {
 	if( mappings.get( path )!= null) {
@@ -620,16 +291,11 @@ public class Context implements LogAware {
 	
 	
 	if (sw == null) {
-	    // web.xml validation - a mapping with no servlet
-	    // rollback
+	    // web.xml validation - a mapping with no servlet rollback
 	    contextM.removeContainer( map );
- 	    throw new TomcatException( "Mapping with invalid servlet name " +
+ 	    throw new TomcatException( "Mapping with invalid servlet  " +
 				       path + " " + servletName );
 	}
-
-	// override defaultServlet XXX do we need defaultServlet?
-// 	if( "/".equals(path) )
-// 	    defaultServlet = sw;
 
 	containers.put( path, map );
 	mappings.put( path, sw );
@@ -646,7 +312,7 @@ public class Context implements LogAware {
 	the request will have to pass the security constraints.
 	
     */
-    public void addSecurityConstraint( String path[], String methods[],
+    public final  void addSecurityConstraint( String path[], String methods[],
 				       String roles[], String transport)
 	throws TomcatException
     {
@@ -665,7 +331,408 @@ public class Context implements LogAware {
 	}
     }
 
-    public Enumeration getContainers() {
+    /** getAttribute( "org.apache.tomcat.*" ) may return something
+	special
+    */
+    private Object getSpecialAttribute( String name ) {
+	// deprecated - invalid and wrong prefix
+	if( name.equals( ATTRIB_WORKDIR1 ) ) 
+	    return getWorkDir();
+	if( name.equals( ATTRIB_WORKDIR2 ) ) 
+	    return getWorkDir();
+
+	// this saves 5 compare for non-special attributes
+	if (name.startsWith( ATTRIB_PREFIX )) {
+	    // XXX XXX XXX XXX Security - servlets may get too much access !!!
+	    // right now we don't check because we need JspServlet to
+	    // be able to access classloader and classpath
+	    if( name.equals( ATTRIB_WORKDIR ) ) 
+		return getWorkDir();
+	    
+	    if (name.equals("org.apache.tomcat.jsp_classpath")) {
+		String separator = System.getProperty("path.separator", ":");
+		StringBuffer cpath=new StringBuffer();
+		URL classPaths[]=getClassPath();
+		for(int i=0; i< classPaths.length ; i++ ) {
+		    URL cp = classPaths[i];
+		    if (cpath.length()>0) cpath.append( separator );
+		    cpath.append(cp.getFile());
+		}
+		if( debug>9 ) log("Getting classpath " + cpath);
+		return cpath.toString();
+	    }
+	    if(name.equals("org.apache.tomcat.classloader")) {
+		return this.getClassLoader();
+	    }
+	    if(name.equals(ATTRIB_REAL_CONTEXT)) {
+		if( ! allowAttribute(name) ) {
+			return null;
+		}
+		return this;
+	    }
+	}
+	return null; 
+    }
+    
+    /** Check if "special" attributes can be used by
+     *   user application. Only trusted apps can get 
+     *   access to the implementation object.
+     */
+    public final  boolean allowAttribute( String name ) {
+	// check if we can access this attribute.
+	if( isTrusted() ) return true;
+	log( "Attempt to access internal attribute in untrusted app",
+	     null, Logger.ERROR);
+	return false;
+    }
+
+    // -------------------- Passive properties --------------------
+    // Everything bellow is just get/set
+    // for web application properties 
+    // --------------------
+    
+    // -------------------- Facade --------------------
+    
+    /** Every context is associated with a facade. We don't know the exact
+	type of the facade, as a Context can be associated with a 2.2 ...
+	ServletContext.
+     */
+    public final  Object getFacade() {
+	return contextFacade;
+    }
+
+    public final  void setFacade(Object obj) {
+        if(contextFacade!=null )
+	    log( "Changing facade " + contextFacade + " " +obj);
+	contextFacade=obj;
+    }
+
+
+    // -------------------- Settable context properties --------------------
+
+    /** Returned the main server ( servlet container )
+     */
+    public final  ContextManager getContextManager() {
+	return contextM;
+    }
+
+    /** This method is called when the Context is added
+	to a server. Some of the Context properties
+	depend on the ContextManager, and will be adjusted
+	by interceptors ( DefaultCMSetter )
+    */
+    public final  void setContextManager(ContextManager cm) {
+	contextM=cm;
+    }
+
+    /** Default container for this context.
+     */
+    public final  Container getContainer() {
+	return defaultContainer;
+    }
+
+    // -------------------- Basic properties --------------------
+
+    /** Base URL for this context
+     */
+    public final  String getPath() {
+	return path;
+    }
+
+    /** Base URL for this context
+     */
+    public final  void setPath(String path) {
+	// config believes that the root path is called "/",
+	//
+	if( "/".equals(path) )
+	    path="";
+	this.path = path;
+    }
+
+    /**
+     *  Make this context visible as part of a virtual host.
+     *  The host is the "default" name, it may also have aliases.
+     */
+    public final  void setHost( String h ) {
+	vhost=h;
+    }
+
+    /**
+     * Return the virtual host name, or null if we are in the
+     * default context
+     */
+    public final  String getHost() {
+	return vhost;
+    }
+    
+    /** DocBase points to the web application files.
+     *
+     *  There is no restriction on the syntax and content of DocBase,
+     *  it's up to the various modules to interpret this and use it.
+     *  For example, to serve from a war file you can use war: protocol,
+     *  and set up War interceptors.
+     *
+     *  "Basic" tomcat treats it as a file ( either absolute or relative to
+     *  the CM home ).
+     */
+    public final  void setDocBase( String docB ) {
+	this.docBase=docB;
+    }
+
+    public final  String getDocBase() {
+	return docBase;
+    }
+
+    /** Return the absolute path for the docBase, if we are file-system
+     *  based, null otherwise.
+    */
+    public final  String getAbsolutePath() {
+	return absPath;
+    }
+
+    /** Set the absolute path to this context.
+     * 	If not set explicitely, it'll be docBase ( if absolute )
+     *  or relative to "home" ( cm.getHome() ).
+     *  DefaultCMSetter will "fix" the path.
+     */
+    public final  void setAbsolutePath(String s) {
+	absPath=s;
+    }
+    
+    // -------------------- Tomcat specific properties --------------------
+    
+    public final  void setReloadable( boolean b ) {
+	reloadable=b;
+    }
+
+    /** Should we reload servlets ?
+     */
+    public final  boolean getReloadable() {
+	return reloadable;
+    }
+
+    // -------------------- API level --------------------
+    
+    /** The servlet API variant that will be used for requests in this
+     *  context
+     */ 
+    public final  void setServletAPI( String s ) {
+	if( s==null ) return;
+	if( s.endsWith("23") || s.endsWith("2.3")) {
+	    apiLevel="2.3";
+	} else if( ( s.endsWith("22") || s.endsWith("2.2")) ) {
+	    apiLevel="2.2";
+	} else {
+	    log( "Unknown API " + s );
+	}
+    }
+
+    public final  String getServletAPI() {
+	return apiLevel;
+    }
+    
+    // -------------------- Welcome files --------------------
+
+    /** Return welcome files defined in web.xml or the
+     *  defaults, if user doesn't define any
+     */
+    public final  String[] getWelcomeFiles() {
+	if( welcomeFiles==null ) {
+	    welcomeFiles=new String[ welcomeFilesV.size() ];
+	    for( int i=0; i< welcomeFiles.length; i++ ) {
+		welcomeFiles[i]=(String)welcomeFilesV.elementAt( i );
+	    }
+	}
+	return welcomeFiles;
+    }
+
+    /** Add an welcome file. 
+     */
+    public final  void addWelcomeFile( String s) {
+	if (s == null ) return;
+	s=s.trim();
+	if(s.length() == 0)
+	    return;
+	welcomeFiles=null; // invalidate the cache
+	welcomeFilesV.addElement( s );
+    }
+
+    // -------------------- Init parameters --------------------
+    
+    public final  String getInitParameter(String name) {
+        return (String)initializationParameters.get(name);
+    }
+
+    public final  void addInitParameter( String name, String value ) {
+	initializationParameters.put(name, value );
+    }
+
+    public final  Enumeration getInitParameterNames() {
+        return initializationParameters.keys();
+    }
+
+
+    // --------------------  Attributes --------------------
+
+    /** Return an attribute value.
+     *  "Special" attributes ( defined org.apache.tomcat )
+     *  are computed
+     * 
+     *  XXX Use callbacks !!
+     */
+    public final  Object getAttribute(String name) {
+	Object o=getSpecialAttribute( name );
+	if ( o!=null ) return o;
+	return attributes.get(name);    
+    }
+
+    public final  Enumeration getAttributeNames() {
+        return attributes.keys();
+    }
+
+    public final  void setAttribute(String name, Object object) {
+        attributes.put(name, object);
+    }
+
+    public final  void removeAttribute(String name) {
+        attributes.remove(name);
+    }
+
+
+    // -------------------- Web.xml properties --------------------
+
+    /** Add a taglib declaration for this context
+     */
+    public final  void addTaglib( String uri, String location ) {
+	tagLibs.put( uri, location );
+    }
+
+    public final  String getTaglibLocation( String uri ) {
+	return (String)tagLibs.get(uri );
+    }
+
+    public final  Enumeration getTaglibs() {
+	return tagLibs.keys();
+    }
+
+    /** Add Env-entry to this context
+     */
+    public final  void addEnvEntry( String name,String type, String value, String description ) {
+	log("Add env-entry " + name + "  " + type + " " + value + " " +description );
+	if( name==null || type==null) throw new IllegalArgumentException();
+	envEntryTypes.put( name, type );
+	if( value!=null)
+	    envEntryValues.put( name, value );
+    }
+
+    public final  String getEnvEntryType(String name) {
+	return (String)envEntryTypes.get(name);
+    }
+
+    public final  String getEnvEntryValue(String name) {
+	return (String)envEntryValues.get(name);
+    }
+
+    public final  Enumeration getEnvEntries() {
+	return envEntryTypes.keys();
+    }
+
+    
+    public final  String getDescription() {
+        return this.description;
+    }
+
+    public final  void setDescription(String description) {
+        this.description = description;
+    }
+
+    public final  void setIcon( String icon ) {
+	this.icon=icon;
+    }
+
+    public final  boolean isDistributable() {
+        return this.isDistributable;
+    }
+
+    public final  void setDistributable(boolean isDistributable) {
+        this.isDistributable = isDistributable;
+    }
+
+    public final  int getSessionTimeOut() {
+        return this.sessionTimeOut;
+    }
+
+    public final  void setSessionTimeOut(int sessionTimeOut) {
+        this.sessionTimeOut = sessionTimeOut;
+    }
+
+    // -------------------- Mime types --------------------
+
+    public final  FileNameMap getMimeMap() {
+        return mimeTypes;
+    }
+
+    public final  void addContentType( String ext, String type) {
+	mimeTypes.addContentType( ext, type );
+    }
+    
+    // -------------------- Error pages --------------------
+
+    public final  String getErrorPage(int errorCode) {
+        return getErrorPage(String.valueOf(errorCode));
+    }
+
+    public final  void addErrorPage( String errorType, String value ) {
+	this.errorPages.put( errorType, value );
+    }
+
+    public final  String getErrorPage(String errorCode) {
+        return (String)errorPages.get(errorCode);
+    }
+
+
+    // -------------------- Auth --------------------
+    
+    /** Authentication method, if any specified
+     */
+    public final  String getAuthMethod() {
+	return authMethod;
+    }
+
+    /** Realm to be used
+     */
+    public final  String getRealmName() {
+	return realmName;
+    }
+
+    public final  String getFormLoginPage() {
+	return formLoginPage;
+    }
+
+    public final  String getFormErrorPage() {
+	return formErrorPage;
+    }
+
+    public final  void setFormLoginPage( String page ) {
+	formLoginPage=page;
+    }
+    
+    public final  void setFormErrorPage( String page ) {
+	formErrorPage=page;
+    }
+
+    public final  void setLoginConfig( String authMethod, String realmName,
+				String formLoginPage, String formErrorPage)
+    {
+	this.authMethod=authMethod;
+	this.realmName=realmName;
+	this.formLoginPage=formLoginPage;
+	this.formErrorPage=formErrorPage;
+    }
+
+    // -------------------- Mappings --------------------
+
+    public final  Enumeration getContainers() {
 	return containers.elements();
     }
 
@@ -673,34 +740,46 @@ public class Context implements LogAware {
      *  all URLs ( relative to this context ) having
      *	associated properties ( handlers, security, etc)
      */
-    public Enumeration getContainerLocations() {
+    public final  Enumeration getContainerLocations() {
 	return containers.keys();
     }
 
     /** Return the container ( properties ) associated
      *  with a path ( relative to this context )
      */
-    public Container getContainer( String path ) {
+    public final  Container getContainer( String path ) {
 	return (Container)containers.get(path);
-    }
-
-    /** Default container for this context.
-     */
-    public Container getContainer() {
-	return defaultContainer;
     }
 
     /** Remove a container
      */
-    public void removeContainer( Container ct ) {
+    public final  void removeContainer( Container ct ) {
 	containers.remove(ct.getPath());
     }
 
     // -------------------- Servlets management --------------------
+    /**
+     * Add a servlet. Servlets are mapped by name.
+     * This method is used to maintain the list of declared
+     * servlets, that can be used for mappings.
+     */
+    public final  void addServlet(Handler wrapper)
+    	throws TomcatException
+    {
+	wrapper.setContext( this );
+	String name=wrapper.getName();
+
+        // check for duplicates
+        if (getServletByName(name) != null) {
+	    log("Removing duplicate servlet " + name  + " " + wrapper);
+            removeServletByName(name);
+        }
+	servlets.put(name, wrapper);
+    }
 
     /** Remove the servlet with a specific name
      */
-    public void removeServletByName(String servletName)
+    public final  void removeServletByName(String servletName)
 	throws TomcatException
     {
 	servlets.remove( servletName );
@@ -709,62 +788,25 @@ public class Context implements LogAware {
     /**
      *  
      */
-    public Handler getServletByName(String servletName) {
+    public final  Handler getServletByName(String servletName) {
 	return (Handler)servlets.get(servletName);
     }
 
-
-    /**
-     * Add a servlet with the given name to the container. The
-     * servlet will be loaded by the container's class loader
-     * and instantiated using the given class name.
-     *
-     * Called to add a new servlet from web.xml or by interceptors
-     * to dynamically add servlets and mappings ( for example
-     * JspInterceptor is registering a new servlet after it compiles
-     * the jsp page, and an exact map to avoid further overhead )
-     *
-     * Handlers are keyed by name.
-     * XXX should be addHandler
-     */
-    public void addServlet(Handler wrapper)
-    	throws TomcatException
-    {
-	wrapper.setContext( this );
-	String name=wrapper.getName();
-	//	log("Adding servlet " + name  + " " + wrapper);
-
-        // check for duplicates
-        if (getServletByName(name) != null) {
-	    log("Removing duplicate servlet " + name  + " " + wrapper);
-            removeServletByName(name);
-	    //	    getServletByName(name).destroy();
-        }
-	servlets.put(name, wrapper);
-    }
 
     
     /** Return all servlets registered with this Context
      *  The elements will be of type Handler ( or sub-types ) 
      */
-    public Enumeration getServletNames() {
+    public final  Enumeration getServletNames() {
 	return servlets.keys();
     }
 
     // -------------------- Loading and sessions --------------------
 
-    ClassLoader classLoader;
-    boolean reload;
-    // Vector<URL>, using URLClassLoader conventions
-    Vector classPath=new Vector();
-    DependManager dependM;
-    
     /** The current class loader. This value may change if reload
      *  is used, you shouldn't cache the result
      */
     public final ClassLoader getClassLoader() {
-	// 	if( servletL!=null) // backward compat
-	// 	    return servletL.getClassLoader();
 	return classLoader;
     }
 
@@ -773,42 +815,27 @@ public class Context implements LogAware {
     }
 
     // temp. properties until reloading is separated.
-    public boolean shouldReload() {
-	// 	if( servletL!=null) // backward compat
-	// 	    return servletL.shouldReload();
+    public final  boolean shouldReload() {
 	if( dependM != null )
 	    return dependM.shouldReload();
 	return reload;
     }
 
-    public void setReload( boolean b ) {
+    public final  void setReload( boolean b ) {
 	reload=b;
     }
 
-    public void reload() {
-	// 	if( servletL!=null) // backward compat
-	// 	    servletL.reload();
-	Enumeration sE=servlets.elements();
-	while( sE.hasMoreElements() ) {
-	    try {
-		Handler sw=(Handler)sE.nextElement();
-		// 		if( sw.getServletClassName() != null ) {
-		// 		    // this is dynamicaly added, probably a JSP.
-		// 		    // in any case, we can't save it
-		sw.reload();
-		//		}
-	    } catch( Exception ex ) {
-		log( "Reload exception: " + ex);
-	    }
-	}
-	// XXX todo
-    }
-
-    public void addClassPath( URL url ) {
+    // -------------------- ClassPath --------------------
+    
+    public final  void addClassPath( URL url ) {
 	classPath.addElement( url);
     }
 
-    public URL[] getClassPath() {
+    /** Returns the full classpath - concatenation
+	of ContextManager classpath and locally specified
+	class path
+    */
+    public final  URL[] getClassPath() {
 	if( classPath==null ) return new URL[0];
 	URL serverCP[]=contextM.getServerClassPath();
 	URL urls[]=new URL[classPath.size() + serverCP.length];
@@ -822,43 +849,37 @@ public class Context implements LogAware {
 	return urls;
     }
 
-    public void setDependManager(DependManager dm ) {
+    // -------------------- Depend manager ( used for reloading ) -----------
+    
+    public final  void setDependManager(DependManager dm ) {
 	dependM=dm;
     }
 
-    public DependManager getDependManager( ) {
+    public final  DependManager getDependManager( ) {
 	return dependM;
     }
     
     /* -------------------- Utils  -------------------- */
-    public void setDebug( int level ) {
+    public final  void setDebug( int level ) {
 	if (level!=debug)
 	    log( "Setting debug to " + level );
 	debug=level;
     }
 
-    public void setDebug( String level ) {
-	try {
-	    setDebug( Integer.parseInt(level) );
-	} catch (Exception e) {
-	    log("Trying to set debug to '" + level + "':", e, Logger.ERROR);
-	}
-    }
-
-    public int getDebug( ) {
+    public final  int getDebug( ) {
 	return debug;
     }
-
     
-    public String toString() {
+    public final  String toString() {
 	return "Ctx(" + (vhost==null ? "" : vhost + ":" )  +  path +  ")";
     }
 
     // ------------------- Logging ---------------
 
-    Log loghelper = new Log("tc_log", this);
-    Log loghelperServlet;
-
+    public final  String getId() {
+	return ((vhost==null) ? "" : vhost + ":" )  +  path;
+    }
+    
     /** Internal log method
      */
     public final void log(String msg) {
@@ -867,13 +888,13 @@ public class Context implements LogAware {
 
     /** Internal log method
      */
-    public void log(String msg, Throwable t) {
+    public final  void log(String msg, Throwable t) {
 	loghelper.log(msg, t);
     }
 
     /** Internal log method
      */
-    public void log(String msg, Throwable t, int level) {
+    public final  void log(String msg, Throwable t, int level) {
 	loghelper.log(msg, t, level);
     }
 
@@ -882,186 +903,91 @@ public class Context implements LogAware {
      *  tomcat core ( internals ) and one is used by 
      *  servlets
      */
-    public void logServlet( String msg , Throwable t ) {
+    public final  void logServlet( String msg , Throwable t ) {
 	if (loghelperServlet == null) {
-	    String pr= ((vhost==null) ? "" : vhost + ":" )  +  path;
+	    String pr= getId();
 	    loghelperServlet = new Log("servlet_log", pr );
 	}
 	if (t == null)
 	    loghelperServlet.log(msg);	// uses level INFORMATION
 	else
 	    loghelperServlet.log(msg, t); // uses level ERROR
-	// note: log(msg,t) is deprecated in ServletContext; that
-	// means most servlet messages will arrive with level
-	// INFORMATION.  So the "servlet_log" Logger should be
-	// specified with verbosityLevel="INFORMATION" in server.xml
-	// in order to see servlet log() messages.
     }
 
-    public void setLogger(Logger logger) {
+    public final  void setLogger(Logger logger) {
 	if (loghelper == null) {
-	    String pr=((vhost==null ? "" : vhost + ":" )  +  path);
+	    String pr=getId();
 	    loghelper = new Log("tc_log", pr );
 	}
 	loghelper.setLogger(logger);
     }
 
-    public void setServletLogger(Logger logger) {
+    public final  void setServletLogger(Logger logger) {
 	if (loghelperServlet == null) {
-	    String pr=((vhost==null ? "" : vhost + ":" )  +  path);
+	    String pr=getId();
 	    loghelperServlet = new Log("servlet_log",pr);
 	}
 	loghelperServlet.setLogger(logger);
     }
 
-    public Log getLog() {
+    public final  Log getLog() {
 	return loghelper;
     }
 
+    public final  Log getServletLog() {
+	return loghelperServlet;
+    }
+
     // -------------------- Path methods  --------------------
-
-    /**
-     *   Find a context by doing a sub-request and mapping the request
-     *   against the active rules ( that means you could use a /~costin
-     *   if a UserHomeInterceptor is present )
-     *
-     *   XXX I think this should be in ContextManager
-     */
-    public Context getContext(String path) {
-	// XXX Servlet checks should be done in facade
-	if (! path.startsWith("/")) {
-	    return null; // according to spec, null is returned
-	    // if we can't  return a servlet, so it's more probable
-	    // servlets will check for null than IllegalArgument
-	}
-	// absolute path
-	Request lr=contextM.createRequest( path );
-	if( vhost != null ) lr.setServerName( vhost );
-	getContextManager().processRequest(lr);
-        return lr.getContext();
-    }
-
-    /** Implements getResource()
-     *  See getRealPath(), it have to be local to the current Context -
-     *  and can't go to a sub-context. That means we don't need any overhead.
-     *
-     *  XXX XXX Don't use - must be moved at a higher layer ( facade ).
-     *  or re-designed to support non-filesystem-based contexts. In
-     *  any case, this method shouldn't be in core
-     */
-    public URL getResource(String rpath) throws MalformedURLException {
-        if (rpath == null) return null;
-
-        URL url = null;
-	String absPath=getAbsolutePath();
-
-	if ("".equals(rpath))
-	    return new URL( "file", null, 0, absPath );
-
-	if ( ! rpath.startsWith("/")) 
-	    rpath="/" + rpath;
-
-	String realPath=FileUtil.safePath( absPath, rpath);
-	if( realPath==null ) {
-	    log( "Unsafe path " + absPath + " " + rpath );
-	    return null;
-	}
-	
-	try {
-            url=new URL("file", null, 0,realPath );
-	    if( debug>9) log( "getResourceURL=" + url + " request=" + rpath );
-	    return url;
-	} catch( IOException ex ) {
-	    log("getting resource " + rpath, ex);
-	    return null;
-	}
-    }
-
-
-    /**
-     *  Return the absolute path, using the context base dir.
-     *  The parameter is interpreted as relative to the context
-     *  with a number of safety checks ( no .., etc)
-     *
-     *  If you want to find the path where an arbitrary request
-     *  lead you need a sub request.
-     *
-     *  XXX XXX Don't use this method - it's better to just call
-     *  safePath() when you need ( i.e. there are ways to factor
-     *  out the security checks, that method is not good )
-     */
-    public String getRealPath( String path) {
-	String base=getAbsolutePath();
-	if( path==null ) return base;
-
-	String realPath=FileUtil.safePath( base, path );
-	
-	if( debug>5) {
-	    log("Get real path " + path + " " + realPath + " " + base );
-	}
-	return realPath;
-    }
 
     /**  What is reported in the "Servlet-Engine" header
      *   for this context. It is set automatically by
      *   a facade interceptor.
      *   XXX Do we want to allow user to customize it ?
      */
-    public void setEngineHeader(String s) {
+    public final  void setEngineHeader(String s) {
         engineHeader=s;
     }
 
     /**  
      */
-    public String getEngineHeader() {
+    public final  String getEngineHeader() {
 	return engineHeader;
     }
+
+    // -------------------- Work dir --------------------
     
     /**
      *  Work dir is a place where servlets are allowed
      *  to write
      */
-    public void setWorkDir(String workDir) {
+    public final  void setWorkDir(String workDir) {
 	this.workDir = new File(workDir);
     }
 
     /**  
      */
-    public File getWorkDir() {
+    public final  File getWorkDir() {
 	return workDir;
     }
 
     /**  
      */
-    public void setWorkDir(File workDir) {
+    public final  void setWorkDir(File workDir) {
 	this.workDir = workDir;
     }
 
     // -------------------- Virtual host support --------------------
     
-    /** Make this context visible as part of a virtual host.
-     *  The host is the "default" name, it may also have aliases.
-     */
-    public void setHost( String h ) {
-	vhost=h;
-    }
-
-    /** Return the virtual host name, or null if we are in the
-	default context
-    */
-    public String getHost() {
-	return vhost;
-    }
-    
     /** Virtual host support - this context will be part of 
      *  a virtual host with the specified name. You should
      *  set all the aliases. XXX Not implemented
      */
-    public void addHostAlias( String alias ) {
+    public final  void addHostAlias( String alias ) {
 	vhostAliases.addElement( alias );
     }
 
-    public Enumeration getHostAliases() {
+    public final  Enumeration getHostAliases() {
 	return vhostAliases.elements();
     }
     // -------------------- Security - trusted code -------------------- 
@@ -1069,23 +995,12 @@ public class Context implements LogAware {
     /** Mark the webapplication as trusted, i.e. it can
      *  access internal objects and manipulate tomcat core
      */
-    public void setTrusted( boolean t ) {
+    public final  void setTrusted( boolean t ) {
 	trusted=t;
     }
 
-    public boolean isTrusted() {
+    public final  boolean isTrusted() {
 	return trusted;
-    }
-
-    /** Check if "special" attributes can be used by
-     *   user application. Only trusted apps can get 
-     *   access to the implementation object.
-     */
-    public boolean allowAttribute( String name ) {
-	// check if we can access this attribute.
-	if( isTrusted() ) return true;
-	log( "Illegal access to internal attribute ", null, Logger.ERROR);
-	return false;
     }
 
     // -------------------- Per-context interceptors ----------
@@ -1095,14 +1010,14 @@ public class Context implements LogAware {
      *  contextMap hook is not called ( since the context is not
      *	known at that time
      */
-    public void addInterceptor( BaseInterceptor ri ) {
+    public final  void addInterceptor( BaseInterceptor ri ) {
         defaultContainer.addRequestInterceptor(ri);
     }
 
 
     // -------------------- Deprecated --------------------
     
-    public void addRequestInterceptor( BaseInterceptor ri ) {
+    public final  void addRequestInterceptor( BaseInterceptor ri ) {
         addInterceptor( ri );
     }
 }

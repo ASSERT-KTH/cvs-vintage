@@ -126,7 +126,10 @@ public class StaticInterceptor extends BaseInterceptor {
 	// and a number of checks
 	String pathInfo=req.getServletPath();
 	if( pathInfo==null ) pathInfo="";
-	String absPath=ctx.getRealPath( pathInfo );
+
+	String absPath=FileUtil.safePath( ctx.getAbsolutePath(),
+					  pathInfo);
+
 	if( absPath == null ) return 0;
 	String requestURI=req.getRequestURI();
 
@@ -191,13 +194,12 @@ public class StaticInterceptor extends BaseInterceptor {
     }
 
     private String getWelcomeFile(Context context, File dir) {
-        Enumeration enum = context.getWelcomeFiles();
+        String wf[]= context.getWelcomeFiles();
 
-	while (enum.hasMoreElements()) {
-	    String fileName = (String)enum.nextElement();
-	    File f = new File(dir, fileName);
+	for( int i=0; i<wf.length; i++ ) {
+	    File f = new File(dir, wf[i]);
 	    if (f.exists()) {
-		return fileName;
+		return wf[i];
 	    }
 	}
 	return null;
@@ -237,7 +239,8 @@ class FileHandler extends Handler  {
 	String pathInfo=subReq.getServletPath();
 	String absPath = (String)subReq.getNote( realFileNote );
 	if( absPath==null )
-	    absPath=ctx.getRealPath( pathInfo );
+	    absPath=FileUtil.safePath( context.getAbsolutePath(),
+				       pathInfo);
 
 	if( debug>0) log( "Requested file = " + absPath);
 	String base = ctx.getAbsolutePath();
@@ -352,7 +355,8 @@ class DirHandler extends Handler  {
 	Context ctx=req.getContext();
 	String pathInfo=subReq.getServletPath();
 	if( pathInfo == null ) pathInfo="";
-	String absPath=ctx.getRealPath( pathInfo );
+	String absPath=FileUtil.safePath( context.getAbsolutePath(),
+					  pathInfo);
 	File file = new File( absPath );
 	String requestURI=subReq.getRequestURI();
 	String base = ctx.getAbsolutePath();

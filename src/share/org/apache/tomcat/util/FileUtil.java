@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.13 2000/09/29 07:01:51 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2000/09/29 07:01:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.14 2000/09/30 04:03:47 costin Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/09/30 04:03:47 $
  *
  * ====================================================================
  *
@@ -135,7 +135,8 @@ public class FileUtil {
     public static String safePath( String base, String path ) {
 	// Hack for Jsp ( and other servlets ) that use rel. paths 
 	// if( ! path.startsWith("/") ) path="/"+ path;
-
+	if( path==null || path.equals("") ) return base;
+	
 	String normP=path;
 	if( path.indexOf('\\') >=0 )
 	    normP= path.replace('\\', '/');

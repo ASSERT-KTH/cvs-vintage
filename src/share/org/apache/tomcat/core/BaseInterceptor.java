@@ -268,6 +268,9 @@ public class BaseInterceptor
      *  The first interceptor in the chain for contextInit must read web.xml
      *  and set the context. When this method is called you can expect the
      *  context to be filled in with all the informations from web.xml.
+     * 
+     *  WebXmlReader needs to be the first interceptor in
+     *  the contextInit chain.
      */
     public void contextInit(Context ctx)
 	throws TomcatException
@@ -344,17 +347,20 @@ public class BaseInterceptor
     }
 
 
-    /** Called when a context is added to a CM. The context is probably not
-     *  initialized yet, only path and docRoot are probably set.
-     *
-     *  If you need informations that are available in web.xml use
-     *  contextInit()( a WebXmlReader needs to be the first interceptor in
-     *  the contextInit chain ).
+    /**
+     *  Called when a context is added to a CM. The context is probably not
+     *  initialized yet, only path, docRoot, host, and properties set before adding
+     *  the context ( in server.xml for example ) are available.
      * 
-     *  We do that to support ( eventualy ) a "lazy" init, where you have
-     *  many contexts, most of them not in active use, and you'll init them
-     *  at first request. ( for example an ISP with many users )
+     *  At this stage mappers can start creating structures for the
+     *  context ( the actual loading of the context may be delayed in
+     *  future versions of tomcat until the first access ).
      *
+     *  DefaultCMSetter will also adjust the logger and paths
+     *  based on context manager properties.
+     *
+     *  Any activity that depends on web.xml must be done at
+     *  init time.
      */
     public void addContext( ContextManager cm, Context ctx )
 	throws TomcatException

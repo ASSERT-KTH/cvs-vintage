@@ -65,6 +65,7 @@ import java.io.*;
 import java.net.*;
 
 import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.*;
 
 import org.apache.jasper.*;
 import org.apache.jasper.Constants;
@@ -412,7 +413,8 @@ class JspInfo {
 	uri=req.getServletPath();
 	Context ctx=req.getContext();
 	outputDir = ctx.getWorkDir().getAbsolutePath();
-	String jspFilePath=ctx.getRealPath( uri );
+	String jspFilePath=FileUtil.safePath( ctx.getAbsolutePath(),
+					      uri); 
 	jspSource = new File(jspFilePath);
 	
 	// extension
@@ -838,9 +840,10 @@ class JspEngineContext1 implements JspCompilationContext {
      */
     public String getRealPath(String path)
     {
-	log("GetRP " + path + " " +
-			   req.getContext().getRealPath(path));
-	return req.getContext().getRealPath(path);
+	log("GetRP " + path);
+	Context ctx=req.getContext();
+	return FileUtil.safePath( ctx.getAbsolutePath(),
+				  path);
     };
 
     void log(String s, Exception e) {

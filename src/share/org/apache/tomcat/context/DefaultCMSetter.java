@@ -80,6 +80,37 @@ public class DefaultCMSetter extends BaseInterceptor {
     public DefaultCMSetter() {
     }
 
+    public void addContext( ContextManager cm, Context ctx)
+	throws TomcatException
+    {
+	// adjust context paths and loggers
+
+	String docBase=ctx.getDocBase();
+	String absPath=ctx.getAbsolutePath();
+	if( absPath==null ) {
+	    if (FileUtil.isAbsolute( docBase ) )
+		absPath=docBase;
+	    else
+		absPath = cm.getHome() + File.separator + docBase;
+	    try {
+		absPath = new File(absPath).getCanonicalPath();
+	    } catch (IOException npe) {
+	    }
+	    ctx.setAbsolutePath( absPath );
+	}
+
+	
+	// this would belong to a logger interceptor ?
+	Log loghelper=ctx.getLog();
+	Log loghelperServlet=ctx.getServletLog();
+	
+	if( loghelper!=null && loghelper.getLogger() != null )
+	    cm.addLogger( loghelper.getLogger() );
+	if( loghelperServlet != null &&
+	    loghelperServlet.getLogger() != null)
+	    cm.addLogger( loghelperServlet.getLogger() );
+    }
+
     public void contextInit( Context ctx)
 	throws TomcatException
     {

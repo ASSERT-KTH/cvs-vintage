@@ -153,7 +153,7 @@ public final class Servlet22Interceptor
     public int postRequest(Request rreq, Response rres ) {
 	//if( rreq.getContext() != ctx ) return; // throw
 
-	log( "Recycling " + rreq );
+	//	log( "Recycling " + rreq );
 	HttpServletRequest req=(HttpServletRequest)rreq.getFacade();
 	if( ! (req instanceof HttpServletRequestFacade))
 	    return 0;
