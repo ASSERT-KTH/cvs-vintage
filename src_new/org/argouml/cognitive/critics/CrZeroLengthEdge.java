@@ -1,4 +1,4 @@
-// $Id: CrZeroLengthEdge.java,v 1.6 2003/06/29 23:53:43 linus Exp $
+// $Id: CrZeroLengthEdge.java,v 1.7 2004/09/05 06:10:21 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrZeroLengthEdge.java
 // Classes: CrZeroLengthEdge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrZeroLengthEdge.java,v 1.6 2003/06/29 23:53:43 linus Exp $
+// $Id: CrZeroLengthEdge.java,v 1.7 2004/09/05 06:10:21 mvw Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -39,10 +39,12 @@ import org.tigris.gef.presentation.FigEdge;
 public class CrZeroLengthEdge extends CrUML {
     ////////////////////////////////////////////////////////////////
     // constants
-    public static int THRESHOLD = 20;
-  
-    ////////////////////////////////////////////////////////////////
-    // constructor
+    private static final int THRESHOLD = 20;
+
+    /**
+     * The constructor.
+     * 
+     */
     public CrZeroLengthEdge() {
 	// TODO: {name} is not expanded for diagram objects
 	setHeadline("Make Edge More Visible");
@@ -54,6 +56,11 @@ public class CrZeroLengthEdge extends CrUML {
 
     ////////////////////////////////////////////////////////////////
     // critiquing API
+    
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(dm instanceof FigEdge)) return NO_PROBLEM;
 	FigEdge fe = (FigEdge) dm;

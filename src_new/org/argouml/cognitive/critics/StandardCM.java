@@ -1,4 +1,4 @@
-// $Id: StandardCM.java,v 1.3 2003/08/30 20:09:52 alexb Exp $
+// $Id: StandardCM.java,v 1.4 2004/09/05 06:10:21 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,16 @@ import java.util.Vector;
 import org.argouml.cognitive.Designer;
 
 
+/**
+ * The standard Control Mech.
+ *
+ */
 public class StandardCM extends AndCM {
+    
+    /**
+     * The constructor.
+     * 
+     */
     public StandardCM() {
 	addMech(new EnabledCM());
 	addMech(new NotSnoozedCM());
@@ -68,9 +77,20 @@ class CurDecisionCM extends ControlMech {
 
 
 class CompositeCM extends ControlMech {
-    protected Vector _mechs = new Vector();
+    private Vector mechs = new Vector();
+    
+    /**
+     * @return Returns the _mechs.
+     */
+    protected Vector getMechs() {
+        return mechs;
+    }
+    
+    /**
+     * @param cm the ControlMech
+     */
     public void addMech(ControlMech cm) {
-	_mechs.addElement(cm);
+	mechs.addElement(cm);
     }
 } // end class CompositeCM
 
@@ -78,7 +98,7 @@ class CompositeCM extends ControlMech {
 
 class AndCM extends CompositeCM {
     public boolean isRelevant(Critic c, Designer d) {
-	Enumeration cur = _mechs.elements();
+	Enumeration cur = getMechs().elements();
 	while (cur.hasMoreElements()) {
 	    ControlMech cm = (ControlMech) cur.nextElement();
 	    if (!cm.isRelevant(c, d)) return false;
@@ -91,7 +111,7 @@ class AndCM extends CompositeCM {
 
 class OrCM extends CompositeCM {
     public boolean isRelevant(Critic c, Designer d) {
-	Enumeration cur = _mechs.elements();
+	Enumeration cur = getMechs().elements();
 	while (cur.hasMoreElements()) {
 	    ControlMech cm = (ControlMech) cur.nextElement();
 	    if (cm.isRelevant(c, d)) return true;
