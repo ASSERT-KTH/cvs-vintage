@@ -24,7 +24,6 @@ import javax.management.loading.*;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.jboss.dependencies.DependencyManager;
 import org.jboss.security.SecurityAssociation;
 
 /**
@@ -32,7 +31,7 @@ import org.jboss.security.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.31 $
+ *   @version $Revision: 1.32 $
  */
 public class Main
 {
