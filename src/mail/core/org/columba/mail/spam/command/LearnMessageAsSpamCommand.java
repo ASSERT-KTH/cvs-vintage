@@ -34,7 +34,7 @@ import org.columba.ristretto.message.Header;
 import org.macchiato.Message;
 
 /**
- * 
+ * Learn selected messages as spam.
  *
  * @author fdietz
  */
@@ -81,11 +81,13 @@ public class LearnMessageAsSpamCommand extends FolderCommand {
 					((StatusObservableImpl) srcFolder.getObservable()).setWorker(
 						worker);
 
+					// get inputstream of message body
 					InputStream istream=
 						CommandHelper.getBodyPart(srcFolder, uids[j]);
-
+					// get headers
 					Header h=
 						srcFolder.getHeaderFields(uids[j], Message.HEADERFIELDS);
+					// put headers in list
 					Enumeration enum= h.getKeys();
 					List list= new ArrayList();
 					while (enum.hasMoreElements()) {
@@ -93,6 +95,7 @@ public class LearnMessageAsSpamCommand extends FolderCommand {
 						list.add(h.get(key));
 					}
 
+					//train message as spam
 					SpamController.getInstance().trainMessageAsSpam(istream, list);
 
 					worker.setProgressBarValue(j);

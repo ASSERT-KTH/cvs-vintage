@@ -41,7 +41,8 @@ import org.columba.ristretto.message.Header;
 import org.macchiato.Message;
 
 /**
- * 
+ * Score selected messages as spam, meaning calculate the likelyhood 
+ * that the message is spam.
  *
  * @author fdietz
  */
@@ -133,15 +134,19 @@ public class ScoreMessageCommand extends FolderCommand {
 			for (int j= 0; j < uids.length; j++) {
 
 				try {
+					// get inputstream of message body
 					InputStream istream=
 						CommandHelper.getBodyPart(srcFolder, uids[j]);
 
+					// we are probably using this inpustream multiple times
 					CloneStreamMaster master= new CloneStreamMaster(istream);
 
+					// calculate message score
 					boolean result=
 						SpamController.getInstance().scoreMessage(
 							master.getClone());
 
+					// if message is spam
 					if (result) {
 						// mark message as spam
 						srcFolder.markMessage(
@@ -151,10 +156,12 @@ public class ScoreMessageCommand extends FolderCommand {
 						// if training mode is enabled
 						if (SpamController.getInstance().isTrainingModeEnabled()) {
 
+							// get headers
 							Header h=
 								srcFolder.getHeaderFields(
 									uids[j],
 									Message.HEADERFIELDS);
+							// put headers in list
 							Enumeration enum= h.getKeys();
 							List list= new ArrayList();
 							while (enum.hasMoreElements()) {

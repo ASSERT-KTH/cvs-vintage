@@ -34,7 +34,7 @@ import org.columba.ristretto.message.Header;
 import org.macchiato.Message;
 
 /**
- * 
+ * Learn selected messages as ham.
  *
  * @author fdietz
  */
@@ -82,17 +82,19 @@ public class LearnMessageAsHamCommand extends FolderCommand {
 					((StatusObservableImpl) srcFolder.getObservable()).setWorker(
 						worker);
 
+					// get inputstream of message body
 					InputStream istream=
 						CommandHelper.getBodyPart(srcFolder, uids[j]);
-
+					// get headers
 					Header h = srcFolder.getHeaderFields(uids[j], Message.HEADERFIELDS);
+					// put headers in list
 					Enumeration enum  = h.getKeys();
 					List list = new ArrayList();
 					while (enum.hasMoreElements()) {
 						String key = (String) enum.nextElement();
 						list.add(h.get(key));
 					}
-					
+					//train message as ham
 					SpamController.getInstance().trainMessageAsHam(istream, list);
 					
 					worker.setProgressBarValue(j);
