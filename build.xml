@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.168 2004/07/28 05:41:20 loubyansky Exp $ -->
+<!-- $Id: build.xml,v 1.169 2004/07/28 07:17:18 starksm Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -84,6 +84,7 @@
       <path refid="apache.commons.classpath"/>
       <path refid="gjt.jpl-util.classpath"/>
       <path refid="gnu.getopt.classpath"/>
+      <path refid="ibm.wsdl4j.classpath"/>
       <path refid="oswego.concurrent.classpath"/>
       <path refid="junit.junit.classpath"/>
     </path>
