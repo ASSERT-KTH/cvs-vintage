@@ -172,7 +172,7 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
     public void removeContext( ContextManager cm, Context ctx ) throws TomcatException {
     }
 
-    public void reload( Context ctx)
+    public void reload( Request req, Context ctx)
 	throws TomcatException
     {
     }

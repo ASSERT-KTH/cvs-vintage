@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.9 2000/06/10 21:55:31 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2000/06/10 21:55:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.10 2000/06/15 19:34:59 jon Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/06/15 19:34:59 $
  *
  * ====================================================================
  *
@@ -71,6 +71,7 @@ import java.util.Vector;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.core.Request;
 
 /**
  * Standard implementation of the <b>Manager</b> interface that provides
@@ -101,7 +102,7 @@ import org.apache.tomcat.util.*;
  * @author Craig R. McClanahan
  * @author costin@eng.sun.com
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Revision: 1.9 $ $Date: 2000/06/10 21:55:31 $
+ * @version $Revision: 1.10 $ $Date: 2000/06/15 19:34:59 $
  */
 public final class StandardManager implements Runnable  {
     // ----------------------------------------------------- Instance Variables
@@ -321,6 +322,14 @@ public final class StandardManager implements Runnable  {
 	public Hashtable getSessions() {
 		return this.sessions;
 	}
+
+        /**
+                This method will replace the sessions Hashtable with
+                that given.
+        */
+        public void setSessions(Hashtable sessions) {
+                this.sessions = sessions;
+        }
 	
     /**
      * Construct and return a new session object, based on the default
@@ -361,8 +370,8 @@ public final class StandardManager implements Runnable  {
 	return (session);
     }
 
-    public void handleReload(ClassLoader newLoader) {
-	SessionSerializer.doSerialization(newLoader, this);
+    public void handleReload(Request req, ClassLoader newLoader) {
+	SessionSerializer.doSerialization(req, newLoader, this);
     }
 
     /**

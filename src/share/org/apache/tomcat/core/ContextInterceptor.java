@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.10 2000/06/10 21:55:28 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/06/10 21:55:28 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.11 2000/06/15 19:34:27 jon Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/06/15 19:34:27 $
  *
  * ====================================================================
  *
@@ -111,7 +111,7 @@ public interface ContextInterceptor {
 	This can be used to serialize sessions, log the event,
 	remove any resource that was class-loader dependent.
      */
-    public void reload( Context ctx) throws TomcatException;
+    public void reload( Request req, Context ctx) throws TomcatException;
 
 
     /** Called when a context is stoped, before removeContext. You must free all resources.

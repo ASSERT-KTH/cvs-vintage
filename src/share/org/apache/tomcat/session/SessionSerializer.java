@@ -62,6 +62,7 @@ package org.apache.tomcat.session;
 import java.io.*;
 import java.util.*;
 import javax.servlet.http.*;
+import org.apache.tomcat.core.Request;
 
 /**
 	This class manages the serialization of HttpSession object across
@@ -82,7 +83,7 @@ public final class SessionSerializer
 	/**
 		This is the method that does the serialization.
 	*/
-	public static final void doSerialization(ClassLoader cl, StandardManager sessionM) {
+	public static final void doSerialization(Request req, ClassLoader cl, StandardManager sessionM) {
 		// get the hashtable of sessions
 		Hashtable sessions = sessionM.getSessions();
 		
@@ -102,6 +103,15 @@ public final class SessionSerializer
 			
 			// unserialize the sessions
 			sessions = (Hashtable) oOut.readObject();
+
+                        // put the new sessions into the manager
+                        sessionM.setSessions(sessions);
+
+                        // and replace the current session in the current
+                        // request
+                        HttpSession newSession = 
+                            (HttpSession)sessions.get(req.getRequestedSessionId());
+                        req.setSession(newSession);
 			
 		} catch (Exception e) {
 		    // log the error. there shouldn't be one here though.

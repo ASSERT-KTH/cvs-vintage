@@ -143,10 +143,10 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 	return 0;
     }
     
-    public void reload( Context ctx ) {
+    public void reload( Request req, Context ctx ) {
 	ClassLoader newLoader = ctx.getServletLoader().getClassLoader();
 	StandardManager sM = getManager( ctx );    
-	sM.handleReload(newLoader);
+	sM.handleReload(req, newLoader);
     }
     
     public int newSessionRequest( Request request, Response response) {

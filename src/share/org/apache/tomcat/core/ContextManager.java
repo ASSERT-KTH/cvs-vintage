@@ -503,14 +503,14 @@ public class ContextManager {
 	contextsV.removeElement(context);
     }
 
-    void doReload( Context context ) throws TomcatException {
+    void doReload( Request req, Context context ) throws TomcatException {
 	if( context==null ) return;
 	
 	if( debug>0 ) log( "Reloading context " + context.toString());
 
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
-	    cI[i].reload(  context );
+	    cI[i].reload(  req, context );
 	}
     }
 
