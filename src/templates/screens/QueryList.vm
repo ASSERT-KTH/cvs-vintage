@@ -32,9 +32,9 @@ $page.setTitle("Saved query list")
   <th>Subscribe frequency</th>
   <th>Query name</th>
   <th>Query description</th>
+  <th>Default</th>
   <th>Location</th>
   <th>Initiated by</th>
-  <th>Default</th>
  </tr>
  
  #foreach ($query in $module.getAllUserQueries($user, $issueType))
@@ -50,6 +50,8 @@ $page.setTitle("Saved query list")
   </td>
   <td><a href="$query.getEditLink($link.setPage("EditQuery.vm").toString())">$query.Name</a></td>
   <td>#if($query.Description)  $query.Description #else &#160; #end</td>
+  <td><input type="radio" name="default" value="$query.QueryId" 
+          #if ($rqu.Isdefault) checked="checked" #end /></td>
   <td><a href="$query.getExecuteLink($link.setPage("IssueList.vm").toString())">$query.Scope.Name</a>
   #if (!$query.Approved)
    (until approved)
@@ -57,8 +59,6 @@ $page.setTitle("Saved query list")
   </td>
   #set ($createdUser = $scarabR.getUser($query.UserId.toString()))
   <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
-  <td><input type="radio" name="default" value="$query.QueryId" 
-          #if ($rqu.Isdefault) checked="checked" #end /></td>
   </tr>
  #end
 </table>
