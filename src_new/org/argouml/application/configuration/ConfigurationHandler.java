@@ -1,4 +1,4 @@
-// $Id: ConfigurationHandler.java,v 1.11 2003/09/16 23:43:42 thierrylach Exp $
+// $Id: ConfigurationHandler.java,v 1.12 2003/10/11 11:34:25 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import org.argouml.application.api.*;
 import java.beans.*;
 import java.io.*;
 import java.net.*;
+import org.apache.log4j.*;
 
 /**
  *   This class provides a user configuration based upon properties.
@@ -77,6 +78,9 @@ public abstract class ConfigurationHandler {
      */
     private static PropertyChangeSupport _pcl = null; 
 
+    private static Logger _cat = 
+        Logger.getLogger(ConfigurationHandler.class);
+    
     /** Anonymous constructor allows configuration changes.
      */
     public ConfigurationHandler() {
@@ -393,7 +397,7 @@ public abstract class ConfigurationHandler {
 	if (_pcl == null) {
 	    _pcl = new PropertyChangeSupport(this);
 	}
-	Configuration.cat.debug("addPropertyChangeListener(" + pcl + ")");
+	_cat.debug("addPropertyChangeListener(" + pcl + ")");
 	_pcl.addPropertyChangeListener(pcl);
     }
 
@@ -403,7 +407,7 @@ public abstract class ConfigurationHandler {
      */
     public final void removeListener(PropertyChangeListener pcl) {
 	if (_pcl != null) {
-	    Configuration.cat.debug("removePropertyChangeListener()");
+	    _cat.debug("removePropertyChangeListener()");
 	    _pcl.removePropertyChangeListener(pcl);
 	}
     }
@@ -419,7 +423,7 @@ public abstract class ConfigurationHandler {
 	if (_pcl == null) {
 	    _pcl = new PropertyChangeSupport(this);
 	}
-	Configuration.cat.debug("addPropertyChangeListener(" 
+	_cat.debug("addPropertyChangeListener(" 
 				+ key.getKey() + ")");
 	_pcl.addPropertyChangeListener(key.getKey(), pcl);
     }
@@ -433,7 +437,7 @@ public abstract class ConfigurationHandler {
 				     PropertyChangeListener pcl) 
     {
 	if (_pcl != null) {
-	    Configuration.cat.debug("removePropertyChangeListener(" 
+	    _cat.debug("removePropertyChangeListener(" 
 				    + key.getKey() + ")");
 	    _pcl.removePropertyChangeListener(key.getKey(), pcl);
 	}
