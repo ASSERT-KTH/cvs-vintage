@@ -57,7 +57,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 public abstract class JDBCCommand
 {
@@ -405,7 +405,7 @@ public abstract class JDBCCommand
         if(result == null)
             return null;
 
-        if(destination.isAssignableFrom(result.getClass()))
+        if(destination.isAssignableFrom(result.getClass()) && !result.getClass().equals(MarshalledObject.class) )
             return result;
         else if(debug)
             log.debug("Got a "+result.getClass().getName()+": '"+result+"' while looking for a "+destination.getName());
@@ -455,28 +455,32 @@ public abstract class JDBCCommand
 				// ejb-reference: get the object back from the handle
 				if (result instanceof Handle) result = ((Handle)result).getEJBObject();
 
-                if(!destination.isAssignableFrom(result.getClass())) {
-                    boolean found = false;
-                    if(destination.isPrimitive()) {
-                        if((destination.equals(Byte.TYPE) && result instanceof Byte) ||
-                           (destination.equals(Short.TYPE) && result instanceof Short) ||
-                           (destination.equals(Character.TYPE) && result instanceof Character) ||
-                           (destination.equals(Boolean.TYPE) && result instanceof Boolean) ||
-                           (destination.equals(Integer.TYPE) && result instanceof Integer) ||
-                           (destination.equals(Long.TYPE) && result instanceof Long) ||
-                           (destination.equals(Float.TYPE) && result instanceof Float) ||
-                           (destination.equals(Double.TYPE) && result instanceof Double)
-                          ) {
-                            found = true;
-                        }
-                    }
-                    if(!found) {
-                        log.debug("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"' (got a "+result.getClass().getName()+")");
-                        result = null;
-                    }
-                }
+            // is this a marshalled object that we stuck in earlier?
+            if (result instanceof MarshalledObject && !destination.equals(MarshalledObject.class)) 
+                result = ((MarshalledObject)result).get();
+            
+             if(!destination.isAssignableFrom(result.getClass())) {
+                 boolean found = false;
+                 if(destination.isPrimitive()) {
+                     if((destination.equals(Byte.TYPE) && result instanceof Byte) ||
+                        (destination.equals(Short.TYPE) && result instanceof Short) ||
+                        (destination.equals(Character.TYPE) && result instanceof Character) ||
+                        (destination.equals(Boolean.TYPE) && result instanceof Boolean) ||
+                        (destination.equals(Integer.TYPE) && result instanceof Integer) ||
+                        (destination.equals(Long.TYPE) && result instanceof Long) ||
+                        (destination.equals(Float.TYPE) && result instanceof Float) ||
+                        (destination.equals(Double.TYPE) && result instanceof Double)
+                       ) {
+                         found = true;
+                     }
+                 }
+                 if(!found) {
+                     log.debug("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"' (got a "+result.getClass().getName()+")");
+                     result = null;
+                 }
+             }
 
-                ois.close();
+             ois.close();
 			} catch (RemoteException e) {
 				throw new SQLException("Unable to load EJBObject back from Handle: " +e);
             } catch (IOException e) {
