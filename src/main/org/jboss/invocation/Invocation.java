@@ -25,7 +25,7 @@ import javax.transaction.Transaction;
  *    a repository of objects. 
  *
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * 
  * Revisions:
  *
@@ -43,13 +43,34 @@ public class Invocation
    
    /**
     * The payload is a repository of everything associated with the invocation
-    * with the exception of the generic transaction and security information above.
+    * It is information that will need to travel 
     */
-   public Map payload;
 
+   // Contextual information to the invocation that is not part of the payload
+   public Map transient_payload = new HashMap();
+
+   // as_is classes that will not be marshalled by the invocation (java.* and javax.* or anything in system classpath is OK)
+   public Map as_is_payload = new HashMap();
+
+   // Payload will be marshalled for type hiding at the RMI layers
+   public Map payload = new HashMap();
+   
+   
+   // The variables used to indicate what type of data and where to put it
+   public final static int 
+      // Put me in the transient map, not part of payload
+      TRANSIENT = 1,
+      // Do not serialize me, part of payload as is
+      AS_IS = 0,
+      // Put me in the payload map
+      PAYLOAD = 2;
+
+   
    //
    // NOTE: The following comment style does not make for good javadocs!
+   // marcf: so fix it ...
    //
+   
    
    /**
     * We are using the generic payload to store some of our data, we define some integer entries.
@@ -63,7 +84,7 @@ public class Invocation
       CREDENTIAL = new Integer(new String("CREDENTIAL").hashCode()),
    
       // We can keep a reference to an abstract "container" this invocation is associated with
-      CONTAINER = new Integer(new String("CONTAINER").hashCode()),
+      OBJECT_NAME = new Integer(new String("CONTAINER").hashCode()),
       
       // The type can be any qualifier for the invocation, anything (used in EJB)
       TYPE = new Integer(new String("TYPE").hashCode()),
@@ -76,6 +97,9 @@ public class Invocation
       
       // The arguments of the method to call
       ARGUMENTS = new Integer(new String("ARGUMENTS").hashCode()),
+      
+      // Invocation context
+      INVOCATION_CONTEXT = new Integer(new String("INVOCATION_CONTEXT").hashCode()),
       
       // Enterprise context
       ENTERPRISE_CONTEXT = new Integer(new String("ENTERPRISE_CONTEXT").hashCode());
@@ -93,7 +117,9 @@ public class Invocation
    /**
     * Exposed for externalization only.
     */
-   public Invocation() {}
+   public Invocation() 
+   { 
+   }
    
    /**
     * Invocation creation
@@ -113,6 +139,9 @@ public class Invocation
       Object credential)
    {
       this.payload = new HashMap();
+      this.as_is_payload = new HashMap();
+      this.transient_payload = new HashMap();
+      
       setId(id);
       setMethod(m);
       setArguments(args);    
@@ -127,19 +156,60 @@ public class Invocation
    //
    
    //The generic store of variables
-   public void setValue(Object key, Object value) { payload.put(key, value); }
-   public Object getValue(Object key) { return payload.get(key); }
+   public void setValue(Object key, Object value) { setValue(key, value, PAYLOAD); }
+   
+   // Advanced store
+   // Here you can pass a TYPE that indicates where to put the value.
+   // TRANSIENT: the value is put in a map that WON'T be passed 
+   // AS_IS: no need to marshall the value when passed (use for all JDK java types)
+   // PAYLOAD: we need to marshall the value as its type is application specific
+   public void setValue(Object key, Object value, int TYPE) 
+   {
+      switch (TYPE)
+      {
+
+         case TRANSIENT:
+            transient_payload.put(key,value);
+            break;
+
+         case AS_IS:
+            as_is_payload.put(key,value);
+            break;
+            
+         case PAYLOAD:
+            payload.put(key,value);
+            break;
+      }
+   }
+ 
+   // Get a value from the stores 
+   public Object getValue(Object key) 
+   { 
+      // find where it is
+      if (payload.containsKey(key)) return payload.get(key);
+      
+      else if (as_is_payload.containsKey(key)) return as_is_payload.get(key);
+      
+      else if (transient_payload.containsKey(key)) return transient_payload.get(key);
+      
+      return null;
+   }
    
    //
-   // Convenience typed getters, use pre-declared keys in the store, but it all comes back to the payload  
+   // Convenience typed getters, use pre-declared keys in the store, 
+   // but it all comes back to the payload, here you see the usage of the 
+   // different payloads.  Anything that has a well defined type can go in as_is
+   // Anything that is arbitrary and depends on the application needs to go in 
+   // in the serialized payload.  The "Transaction" is known, the type of the 
+   // method arguments are not for example and are part of the EJB jar.
    //
    
    // set and get on transaction
-   public void setTransaction(Transaction tx) { payload.put(TRANSACTION, tx); }
+   public void setTransaction(Transaction tx) { as_is_payload.put(TRANSACTION, tx); }
    public Transaction getTransaction() { return (Transaction) getValue(TRANSACTION); }
    
    //  Change the security identity of this invocation.
-   public void setPrincipal(Principal principal) { payload.put(PRINCIPAL, principal);}
+   public void setPrincipal(Principal principal) { as_is_payload.put(PRINCIPAL, principal);}
    public Principal getPrincipal() { return (Principal) getValue(PRINCIPAL);}
    
    //  Change the security credentials of this invocation.
@@ -147,11 +217,11 @@ public class Invocation
    public Object getCredential() { return getValue(CREDENTIAL); }
    
    // A container for server side association
-   public void setContainer(Object container) { payload.put(CONTAINER, container);}
-   public Object getContainer() { return getValue(CONTAINER);}
+   public void setObjectName(Object objectName) { payload.put(OBJECT_NAME, objectName);}
+   public Object getObjectName() { return getValue(OBJECT_NAME);}
    
    // An arbitrary type
-   public void setType(int type) {payload.put(TYPE, new Integer(type));}
+   public void setType(int type) {as_is_payload.put(TYPE, new Integer(type));}
    public int getType() {return ((Integer) getValue(TYPE)).intValue();} 
    
    // Return the invocation target ID.  Can be used to identify a cached object
@@ -169,7 +239,12 @@ public class Invocation
    /**
     * marcf: SCOTT WARNING! I removed the "setPrincipal" that was called here
     */
-   public void setEnterpriseContext(Object ctx) { payload.put(ENTERPRISE_CONTEXT, ctx);}
+    
+   public void setInvocationContext(InvocationContext ctx) { transient_payload.put(INVOCATION_CONTEXT, ctx);}
+   
+   public void setEnterpriseContext(Object ctx) { transient_payload.put(ENTERPRISE_CONTEXT, ctx);}
       
-   public Object getEnterpriseContext() { return (Object) payload.get(ENTERPRISE_CONTEXT);}
+   public Object getEnterpriseContext() { return (Object) transient_payload.get(ENTERPRISE_CONTEXT);}
+
+   public InvocationContext getInvocationContext() { return (InvocationContext) transient_payload.get(INVOCATION_CONTEXT);}
 }
