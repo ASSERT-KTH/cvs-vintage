@@ -26,13 +26,13 @@ import javax.swing.table.AbstractTableModel;
 public class AbstractTreeTableModel extends AbstractTableModel {
 
 	protected Tree tree;
+
 	protected String[] columns;
 
 	/**
 	 * 
 	 */
-	public AbstractTreeTableModel(Tree tree, String[] columns) {
-		this.tree = tree;
+	public AbstractTreeTableModel(String[] columns) {
 		this.columns = columns;
 
 	}
@@ -77,6 +77,22 @@ public class AbstractTreeTableModel extends AbstractTableModel {
 			return true;
 
 		return false;
+	}
+
+	/**
+	 * @param tree
+	 */
+	public void setTree(Tree tree) {
+		this.tree = tree;
+		
+		
+	}
+
+	/**
+	 * @return
+	 */
+	public Tree getTree() {
+		return tree;
 	}
 
 }
