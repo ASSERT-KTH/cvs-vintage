@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.34 2000/03/29 23:31:04 costin Exp $
- * $Revision: 1.34 $
- * $Date: 2000/03/29 23:31:04 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.35 2000/03/30 21:46:07 costin Exp $
+ * $Revision: 1.35 $
+ * $Date: 2000/03/30 21:46:07 $
  *
  * ====================================================================
  *
@@ -353,7 +353,20 @@ public class ServletWrapper {
     
     public void handleRequest(Request req, Response res)
     {
+	ClassLoader originalCL=null;
 	try {
+	    // Before we do init() or service(), we need to do some tricks
+	    // with the class loader - see bug #116.
+	    // some JDK1.2 code will not work without this fix
+
+	    // we save the originalCL because we might be in include
+	    // and we need to revert to it when we finish
+
+	    // that will set a new (JDK)context class loader, and return the old one
+	    // if we are in JDK1.2
+	    originalCL = fixJDKContextClassLoader(context.getServletLoader().getClassLoader());
+
+
 	    if( path != null ) {
 		// XXX call JspServlet directly, did anyone tested it ??
 		String requestURI = path + req.getPathInfo();
@@ -363,6 +376,8 @@ public class ServletWrapper {
 		    rd.forward(req.getFacade(), res.getFacade());
 		else
 		    rd.include(req.getFacade(), res.getFacade());
+
+		fixJDKContextClassLoader( originalCL );
 		return;
 	    }
 	    
@@ -376,6 +391,7 @@ public class ServletWrapper {
 		    context.log( "Class Not Found", ex );
 		    res.setStatus( 404 );
 		    contextM.handleError( req, res, null,  404 );
+		    fixJDKContextClassLoader( originalCL );
 		    return;
 		}
 	    }
@@ -425,9 +441,57 @@ public class ServletWrapper {
 	    } else {
 		contextM.handleError( req, res, t, 0 );
 	    }
+	} finally {
+	    fixJDKContextClassLoader(originalCL );
 	}
     }
 
+    static boolean haveContextClassLoader=true;
+    static Class noParams[]=new Class[0];
+    static Class clParam[]=new Class[1];
+    static Object noObjs[]=new Object[0];
+    static { clParam[0]=ClassLoader.class; }
+
+    /** Reflection trick to set the context class loader for JDK1.2, without
+	braking JDK1.1.
+
+	This code can be commented out for 3.1 if it creates any problems -
+	it should work.
+
+	XXX We need to find a better way to do that - maybe make it part of
+	the ServletLoader interface.
+     */
+    ClassLoader fixJDKContextClassLoader( ClassLoader cl ) {
+	if( cl==null ) return null;
+	if( ! haveContextClassLoader ) return null;
+	
+	Thread t=Thread.currentThread();
+	try {
+	    java.lang.reflect.Method getCCL=t.getClass().getMethod("getContextClassLoader", noParams);
+	    java.lang.reflect.Method setCCL=t.getClass().getMethod("setContextClassLoader", clParam) ;
+	    if( (getCCL==null) || (setCCL==null) ) {
+		haveContextClassLoader=false;
+		return null;
+	    }
+	    ClassLoader old=( ClassLoader)getCCL.invoke( t, noObjs );
+	    Object params[]=new Object[1];
+	    params[0]=cl;
+	    setCCL.invoke( t, params );
+	    if( context.getDebug() > 5 ) context.log("Setting system loader " + old + " " + cl );
+	    context.log("Setting system loader " + old + " " + cl );
+	    
+	    return old;
+	} catch (NoSuchMethodException ex ) {
+	    // we don't have the methods, don't try again
+	    haveContextClassLoader=false;
+	} catch( Exception ex ) {
+	    haveContextClassLoader = false;
+	    context.log( "Error setting jdk context class loader", ex );
+	}
+	return null;
+    }
+
+    
     /** @deprecated
      */
     public void handleRequest(final HttpServletRequestFacade request,
