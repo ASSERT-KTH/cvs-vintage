@@ -27,13 +27,13 @@
   <!-- Security -->
 
   <!-- Uncomment to enable the sample SRPVerifierStore service
-  <mbean code="org.jboss.security.plugins.SRPVerifierStoreService" name="Security:name=SRPVerifierStoreService">
+  <mbean code="org.jboss.security.srp.SRPVerifierStoreService" name="Security:name=SRPVerifierStoreService">
     <attribute name="JndiName">SRPDefaultVerifierSource</attribute>
     <attribute name="StoreFile">SRPVerifierStore.ser</attribute>
   </mbean>
 -->
   <!-- Uncomment to enable the SRP login service
-  <mbean code="org.jboss.security.plugins.SRPService" name="service:name=SRPService">
+  <mbean code="org.jboss.security.srp.SRPService" name="service:name=SRPService">
     <attribute name="JndiName">SRPServerInterface</attribute>
     <attribute name="VerifierSourceJndiName">SRPDefaultVerifierSource</attribute>
     <attribute name="AuthenticationCacheJndiName">SRPAuthenticationCache</attribute>
