@@ -1,4 +1,4 @@
-// $Id: GoStateToEntry.java,v 1.6 2004/08/31 18:50:07 mvw Exp $
+// $Id: GoStateToEntry.java,v 1.7 2004/08/31 20:11:14 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
 
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
@@ -68,7 +69,7 @@ public class GoStateToEntry extends AbstractPerspectiveRule {
      * @see org.argouml.ui.AbstractGoRule#getRuleName()
      */
     public String getRuleName() {
-        return "State->Entry"; 
+        return Translator.localize ("Tree", "misc.state.entry");
     }
 
 }

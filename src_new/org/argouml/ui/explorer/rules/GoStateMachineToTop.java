@@ -1,4 +1,4 @@
-// $Id: GoStateMachineToTop.java,v 1.7 2004/08/31 18:50:07 mvw Exp $
+// $Id: GoStateMachineToTop.java,v 1.8 2004/08/31 20:11:14 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
@@ -40,7 +41,9 @@ public class GoStateMachineToTop extends AbstractPerspectiveRule {
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
-    public String getRuleName() { return "Statemachine->Top State"; }
+    public String getRuleName() {
+        return Translator.localize ("Tree", "misc.state-machine.top-state");
+    }
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)

@@ -1,4 +1,4 @@
-// $Id: GoMessageAction.java,v 1.5 2004/08/29 21:05:12 mvw Exp $
+// $Id: GoMessageAction.java,v 1.6 2004/08/31 20:11:14 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
@@ -41,7 +42,7 @@ public class GoMessageAction extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
     public String getRuleName() {
-	return "Message->Action";
+	return Translator.localize ("Tree", "misc.message.action");
     }
 
     /**

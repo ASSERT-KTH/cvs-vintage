@@ -1,4 +1,4 @@
-// $Id: GoOperationToCollaborationDiagram.java,v 1.8 2004/08/31 18:50:06 mvw Exp $
+// $Id: GoOperationToCollaborationDiagram.java,v 1.9 2004/08/31 20:11:14 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.argouml.model.ModelFacade;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ArgoDiagram;
@@ -80,7 +81,8 @@ public class GoOperationToCollaborationDiagram extends AbstractPerspectiveRule {
      * @see org.argouml.ui.AbstractGoRule#getRuleName()
      */
     public String getRuleName() {
-        return "Operation->Collaboration Diagram";
+        return Translator.localize ("Tree", 
+                "misc.operation.collaboration-diagram");
     }
 
 }
