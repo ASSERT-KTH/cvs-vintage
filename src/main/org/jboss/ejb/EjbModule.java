@@ -67,7 +67,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.51 $
+ * @version $Revision: 1.52 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -366,8 +366,9 @@ public class EjbModule
             (WebServiceMBean) MBeanProxyExt.create(WebServiceMBean.class,
                                                    webServiceName);
       }
+
       ListIterator iter = containerOrdering.listIterator(containerOrdering.size());
-      while( iter.hasPrevious() )
+      while ( iter.hasPrevious() )
       {
          Container con = (Container) iter.previous();
          ObjectName jmxName = con.getJmxName();
@@ -375,32 +376,34 @@ public class EjbModule
          boolean destroyContainer = conState == CREATED || conState == STOPPED
             || conState == FAILED; 
          log.debug("Looking to destroy container: " + jmxName
-            + ", state: "+con.getStateString()+", destroy: "+destroyContainer);
+            + ", state: " + con.getStateString() + ", destroy: " + destroyContainer);
+
+         // always unregister from Registry
+         int jmxHash = jmxName.hashCode();
+         Registry.unbind(new Integer(jmxHash));
+         
+         // Unregister the web classloader
+         //Removing the wcl should probably be done in stop of the container,
+         // but I don't want to look for errors today.
+         if (webServer != null)
+         {
+            ClassLoader wcl = con.getWebClassLoader();
+            if (wcl != null)
+            {
+               try
+               {
+                  webServer.removeClassLoader(wcl);
+               }
+               catch (Throwable e)
+               {
+                  log.warn("Failed to unregister webClassLoader", e);
+               }
+            }
+         }
+
          // Only destroy containers that have been created or started
          if( destroyContainer )
          {
-            int jmxHash = jmxName.hashCode();
-            Registry.unbind(new Integer(jmxHash));
-            // Unregister the web classloader
-            //Removing the wcl should probably be done in stop of the container,
-            // but I don't want to look for errors today.
-            //Certainly the attempt needs to be before con.destroy
-            //where the reference is discarded.
-            if (webServer != null)
-            {
-               ClassLoader wcl = con.getWebClassLoader();
-               if (wcl != null)
-               {
-                  try
-                  {
-                     webServer.removeClassLoader(wcl);
-                  }
-                  catch (Throwable e)
-                  {
-                     log.warn("Failed to unregister webClassLoader", e);
-                  }
-               }
-            } // end of if ()
             try
             {
                serviceController.destroy(jmxName);
@@ -410,6 +413,7 @@ public class EjbModule
                log.error("unexpected exception destroying Container: " + jmxName, e);
             } // end of try-catch
         }
+
         // If the container was registered with the mbeanserver, remove it
         if (destroyContainer || conState == REGISTERED)
         {
@@ -422,6 +426,10 @@ public class EjbModule
                log.error("unexpected exception removing Container: " + jmxName, e);
             } // end of try-catch
          }
+
+         // cleanup container
+         con.setBeanMetaData(null);
+         con.setWebClassLoader(null);
       }
 
       this.containers.clear();

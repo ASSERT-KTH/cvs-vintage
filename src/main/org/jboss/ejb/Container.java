@@ -67,7 +67,7 @@ import org.jboss.mx.util.ObjectNameConverter;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.129 $
+ * @version $Revision: 1.130 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -612,14 +612,14 @@ public abstract class Container
       localProxyFactory.destroy();
       ejbModule.removeLocalHome( this );
       this.classLoader = null;
-      this.webClassLoader = null;
+      // this.webClassLoader = null; disposed by EjbModule
       this.localClassLoader = null;
       this.ejbModule = null;
 
       // this.lockManager = null; Setting this to null causes AbstractCache
       // to fail on undeployment
       di = null;
-      metaData = null;
+      // metaData = null; disposed by EjbModule
       beanClass = null;
       homeInterface = null;
       remoteInterface = null;
