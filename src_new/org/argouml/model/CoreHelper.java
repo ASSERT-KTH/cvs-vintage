@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.6 2005/02/10 20:33:18 mvw Exp $
+// $Id: CoreHelper.java,v 1.7 2005/02/10 21:53:02 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1179,5 +1179,5 @@ public interface CoreHelper {
      * @param handle Component
      * @param node Node
      */
-    public void removeDeploymentLocation(Object handle, Object node);
+    void removeDeploymentLocation(Object handle, Object node);
 }
