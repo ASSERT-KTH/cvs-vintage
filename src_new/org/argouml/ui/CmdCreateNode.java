@@ -1,4 +1,4 @@
-// $Id: CmdCreateNode.java,v 1.15 2004/08/20 19:28:26 mvw Exp $
+// $Id: CmdCreateNode.java,v 1.16 2004/10/03 08:11:11 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,11 +71,9 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
     /**
      * Constructor for CmdCreateNode.
      * 
-     * @param args
-     *            a hastable of arguments
-     * @param resource
-     * @param name
-     *            the tooltip name
+     * @param args a hastable of arguments
+     * @param resource for localizing the name
+     * @param name the to be localized tooltip name
      */
     public CmdCreateNode(Hashtable args, String resource, String name) {
         super(args, resource, name);
@@ -85,8 +83,8 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
     /**
      * Constructor for CmdCreateNode.
      * 
-     * @param args
-     * @param name
+     * @param args a hastable of arguments
+     * @param name the to be localized name of the command = tooltip name
      */
     public CmdCreateNode(Hashtable args, String name) {
         super(args, name);
@@ -96,12 +94,10 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
     /**
      * Constructor for CmdCreateNode.
      * 
-     * @param nodeClass
-     *            the class for which to create a node, and which to create
-     *            itself
-     * @param resource
-     * @param name
-     *            the tooltip name
+     * @param nodeClass the class for which to create a node, and which 
+     *                  to create itself
+     * @param resource for localizing the name
+     * @param name the tooltip name
      */
     public CmdCreateNode(Class nodeClass, String resource, String name) {
         super(nodeClass, resource, name);
@@ -111,11 +107,9 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
     /**
      * Constructor for CmdCreateNode.
      * 
-     * @param nodeClass
-     *            the class for which to create a node, and which to create
-     *            itself
-     * @param name
-     *            the tooltip name
+     * @param nodeClass the class for which to create a node, and which 
+     *                  to create itself
+     * @param name the tooltip name
      */
     public CmdCreateNode(Object nodeClass, String name) {
         super((Class) nodeClass, name);
@@ -125,13 +119,12 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
     /**
      * Constructor for CmdCreateNode.
      * 
-     * @param nodeClass
-     *            the class for which to create a node, and which to create
-     *            itself
-     * @param sticky
-     * @param resource
-     * @param name
-     *            the tooltip name
+     * @param nodeClass the class for which to create a node, and which 
+     *                  to create itself
+     * @param sticky the global sticky mode boolean allows the user 
+     *               to place several nodes rapidly (in succession)
+     * @param resource for localizing the name
+     * @param name the tooltip name
      */
     public CmdCreateNode(Class nodeClass, boolean sticky, String resource,
             String name) {
@@ -142,12 +135,11 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
     /**
      * Constructor for CmdCreateNode.
      * 
-     * @param nodeClass
-     *            the class for which to create a node, and which to create
-     *            itself
-     * @param sticky
-     * @param name
-     *            the tooltip name
+     * @param nodeClass the class for which to create a node, and which
+     *                  to create itself
+     * @param sticky the global sticky mode boolean allows the user 
+     *               to place several nodes rapidly (in succession)
+     * @param name the tooltip name
      */
     public CmdCreateNode(Object nodeClass, boolean sticky, String name) {
         super((Class) nodeClass, sticky, name);

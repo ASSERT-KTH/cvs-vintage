@@ -1,4 +1,4 @@
-// $Id: CmdSetMode.java,v 1.6 2004/09/29 18:46:29 mvw Exp $
+// $Id: CmdSetMode.java,v 1.7 2004/10/03 08:11:11 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,44 +55,101 @@ public class CmdSetMode extends org.tigris.gef.base.CmdSetMode {
     /**
      * The constructor.
      * 
-     * @param modeClass the mode
+     * @param modeClass the next global editor mode
      */
     public CmdSetMode(Class modeClass) {
         super(modeClass);
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param modeClass the next global editor mode
+     * @param name the name of the command = tooltip text
+     */
     public CmdSetMode(Class modeClass, String name) {
         super(modeClass, name);
         putToolTip(name);
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param modeClass the next global editor mode
+     * @param name the to be localized name of the command
+     * @param tooltip the tooltip text
+     */
     public CmdSetMode(Class modeClass, String name, String tooltip) {
         super(modeClass, name);
         putToolTip(tooltip);
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param modeClass the next global editor mode
+     * @param sticky the global sticky mode boolean allows the user 
+     *               to place several nodes rapidly (in succession)
+     */
     public CmdSetMode(Class modeClass, boolean sticky) {
         super(modeClass, sticky);
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param modeClass the next global editor mode
+     * @param modeArgs arguments for the new mode
+     */
     public CmdSetMode(Class modeClass, Hashtable modeArgs) {
         super(modeClass, modeArgs);
     }
     
+    /**
+     * The constructor.
+     * 
+     * @param modeClass the next global editor mode
+     * @param modeArgs arguments for the new mode
+     * @param name the name of the command = tooltip text
+     */
     public CmdSetMode(Class modeClass, Hashtable modeArgs, String name) {
     	super(modeClass, name);
     	_modeArgs = modeArgs;
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param modeClass the next global editor mode
+     * @param arg the name of a new argument for the new mode
+     * @param value the value of a new argument for the new mode
+     */
     public CmdSetMode(Class modeClass, String arg, Object value) {
         super(modeClass, arg, value);
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param modeClass the next global editor mode
+     * @param arg the name of a new argument for the new mode
+     * @param value the value of a new argument for the new mode
+     * @param name the name of the command = tooltip text
+     */
     public CmdSetMode(Class modeClass, String arg, Object value, String name) {
         super(modeClass, arg, value, name);
         putToolTip(name);
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param modeClass the next global editor mode
+     * @param arg the name of a new argument for the new mode
+     * @param value the value of a new argument for the new mode
+     * @param name the name of the command = tooltip text
+     * @param icon the SMALL_ICON for the action
+     */
     public CmdSetMode(
         Class modeClass,
         String arg,
