@@ -52,6 +52,7 @@
     <option value="AdvancedQuery.vm">$l10n.SelectQuery</option>
     <option value="AdvancedQuery.vm">&#160;$l10n.Advanced</option>
     <option value="Search.vm">&#160;$l10n.Custom</option>
+    <option value="IssueList.vm">&#160;$l10n.MyIssuesNC</option>
     #if ($currentIssueType && $user.hasMostRecentQuery())
         <option value="IssueList.vm">&#160;$l10n.MostRecent</option>
     #end
