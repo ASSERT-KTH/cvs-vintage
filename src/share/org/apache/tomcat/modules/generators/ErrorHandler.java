@@ -86,16 +86,9 @@ public final class ErrorHandler extends BaseInterceptor {
 	showDebugInfo=b;
     }
 
-    public void engineInit( ContextManager cm )
-    	throws TomcatException
-    {
+    public void engineInit(ContextManager cm ) {
     }
     
-    public void addContext( ContextManager cm, Context ctx)
-	throws TomcatException
-    {
-    }
-
     /** Add default error handlers
      */
     public void contextInit( Context ctx)
@@ -131,6 +124,8 @@ public final class ErrorHandler extends BaseInterceptor {
 	ctx.addErrorPage( "301", "tomcat.redirectHandler");
 	ctx.addServlet( new NotFoundHandler(this, showDebugInfo));
 	ctx.addErrorPage( "404", "tomcat.notFoundHandler");
+
+	if( debug > 0 ) log( "Init " + ctx + " " + showDebugInfo);
     }
 
     public int handleError( Request req, Response res, Throwable t ) {
@@ -143,6 +138,7 @@ public final class ErrorHandler extends BaseInterceptor {
 	    ctx=rootContext;
 	}
 
+	if( debug > 0 ) log( "In error handler "  +t );
 	if( t==null ) {
 	    handleStatusImpl( cm, ctx, req, res, res.getStatus() );
 	} else {
@@ -207,8 +203,13 @@ public final class ErrorHandler extends BaseInterceptor {
 
 	// reset error exception
 	res.setErrorException( null );
-	errorServlet.service( req, res );
-	Exception ex=res.getErrorException();
+	Exception ex=null;
+	try {
+	    errorServlet.service( req, res );
+	    ex=res.getErrorException();
+	} catch (Exception ex1 ) {
+	    ex=ex1;
+	}
 	if( ex!=null && ! (ex instanceof IOException) ) {
 	    // we can ignore IOException - probably the user
 	    // has clicked "STOP"
@@ -229,6 +230,9 @@ public final class ErrorHandler extends BaseInterceptor {
     void handleErrorImpl( ContextManager cm, Context ctx,
 			  Request req, Response res , Throwable t  )
     {
+	if( debug>0 )
+	    log( "Handle error in " + req + " " + t.getMessage() );
+	
 	/** The exception must be available to the user.
 	    Note that it is _WRONG_ to send the trace back to
 	    the client. AFAIK the trace is the _best_ debugger.
@@ -283,11 +287,13 @@ public final class ErrorHandler extends BaseInterceptor {
 
 	boolean isDefaultHandler = false;
 	if ( errorLoop( ctx, req ) ){
-                return;
+	    log( "Error loop for " + req + " error " + t);
+	    return;
         }
         if ( errorServlet==null) {
 	    errorServlet = ctx.getServletByName("tomcat.exceptionHandler");
 	    isDefaultHandler = true;
+	    if( debug>0 ) ctx.log( "Using default handler " + errorServlet );
 	}
 
 	if (errorServlet == null) {
@@ -315,8 +321,13 @@ public final class ErrorHandler extends BaseInterceptor {
 
 	// reset error exception
 	res.setErrorException( null );
-	errorServlet.service( req, res );
-	Exception ex=res.getErrorException();
+	Exception ex=null;
+	try {
+	    errorServlet.service( req, res );
+	    ex=res.getErrorException();
+	} catch(Exception ex1 ) {
+	    ex=ex1;
+	}
 	if( ex!=null && ! (ex instanceof IOException) ) {
 	    // we can ignore IOException - probably the user
 	    // has clicked "STOP"
