@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.52 2002/02/12 06:33:14 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.53 2002/02/13 05:16:25 jmcnally Exp $
  */
 public interface ScarabUser extends User
 {
@@ -238,4 +238,9 @@ public interface ScarabUser extends User
      */
     public boolean hasAnyRoleIn(ModuleEntity module)
         throws Exception;
+
+    /**
+     * The user's full name.
+     */
+    public String getName();
 }
