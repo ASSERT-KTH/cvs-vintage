@@ -16,11 +16,14 @@
 
 package org.columba.core.main;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.commons.cli.CommandLine;
@@ -41,6 +44,9 @@ import org.columba.core.profiles.ProfileManager;
 import org.columba.core.session.SessionController;
 import org.columba.core.trayicon.ColumbaTrayIcon;
 import org.columba.core.util.GlobalResourceLoader;
+import org.columba.core.util.OSInfo;
+
+import sun.misc.URLClassPath;
 
 /**
  * Columba's main class used to start the application.
@@ -73,15 +79,29 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws Exception {
-		addCustomClasspath();
+		addNativeJarsToClasspath();
 		setLibraryPath();
 		
 		Main.getInstance().run(args);
 	}
 
-	
+	/**
+	 * This hacks the classloader to adjust the library path
+	 * for convinient native support.
+	 * 
+	 * @author tstich
+	 * 
+	 * @throws Exception
+	 */
 	private static void setLibraryPath() throws Exception {		
-		System.setProperty("java.library.path", System.getProperty("java.library.path") + ":native/" + System.getProperty("os.name").toLowerCase() + "/lib");
+		if( OSInfo.isLinux() ) {
+			System.setProperty("java.library.path", System.getProperty("java.library.path") + ":native/linux/lib");		
+		} else if (OSInfo.isWin32Platform()) {
+			System.setProperty("java.library.path", System.getProperty("java.library.path") + ";native\\win32\\lib");		
+		}
+		// Platform maintainers: add your platform here
+		
+		
 		Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
 		fieldSysPath.setAccessible(true);
 		if (fieldSysPath != null) {
@@ -89,24 +109,58 @@ public class Main {
 		}		
 	}
 	
-	private static void addCustomClasspath() throws Exception {
-		String columbaPath = System.getProperty("columba.class.path");
-		if( columbaPath == null || columbaPath.length() == 0) return;
+	/**
+	 * This hacks the classloader to adjust the classpath
+	 * for convinient native support.
+	 * 
+	 * @author tstich
+	 * 
+	 * @throws Exception
+	 */
+	private static void addNativeJarsToClasspath() throws Exception {
+		File nativeDir;
 		
-		String[] paths = columbaPath.split(":|;");
+		// Setup the path
+		// Platform maintainers: add your platform here
+		if( OSInfo.isLinux() ) {
+			nativeDir = new File("native/linux/lib");
+		} else if (OSInfo.isWin32Platform()) {
+			nativeDir = new File("native/win32/lib");
+		} else {
+			throw new Exception("Platform not supported!");
+		}
 		
+		
+		// Find all native jars
+		File[] nativeJars = nativeDir.listFiles(new FilenameFilter() {
+			public boolean accept(File dir, String name) {
+				return name.endsWith("jar");
+			}
+		});
+		
+		// Get the current classpath from the sysloader
+		// through reflection
 		URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
 		Class sysclass = URLClassLoader.class;
 		
-		for( int i=0; i<paths.length; i++) {
-		try {
-			Method method = sysclass.getDeclaredMethod("addURL",new Class[]{URL.class});
-			method.setAccessible(true);
-			method.invoke(sysloader,new Object[]{ new URL("file:" + paths[i]) });
-		} catch (Throwable t) {
-			throw new Exception(t);
+		Field ucp = URLClassLoader.class.getDeclaredField("ucp");
+		ucp.setAccessible(true);
+		URLClassPath currentCP = (URLClassPath) ucp.get(sysloader);
+		URL[] currentURLs = currentCP.getURLs();
+		
+		// add all native jars
+		List urlList = new ArrayList();
+		for( int i=0; i<nativeJars.length; i++) {
+			urlList.add(nativeJars[i].toURL());
 		}
-		}
+
+		// add the old classpath
+		for( int i=0; i<currentURLs.length; i++) {
+			urlList.add(currentURLs[i]);
+		}		
+		
+		// replace with the modified classpath
+		ucp.set(sysloader, new URLClassPath((URL[])urlList.toArray(new URL[0])));		
 	}
 	
 	public void run(String args[]) {
