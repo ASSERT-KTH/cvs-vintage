@@ -3,7 +3,7 @@ rem -------------------------------------------------------------------------
 rem JBoss Bootstrap Script for Win32
 rem -------------------------------------------------------------------------
 
-rem $Id: run.bat,v 1.31 2002/02/09 16:12:58 slaboure Exp $
+rem $Id: run.bat,v 1.32 2002/02/10 03:02:47 starksm Exp $
 
 if exist "run.jar" goto FOUND_RUN_JAR
 echo Could not locate run.jar. Please check that you are in the
@@ -38,7 +38,7 @@ rem Setup JBoss sepecific properties
 set JAVA_OPTS=%JAVA_OPTS% -Djboss.boot.loader.name=run.bat
 
 rem JPDA options. Uncomment and modify as appropriate to enable remote debugging.
-rem set JAVA_OPTS=%JAVA_OPTS% -classic -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y
+rem set JAVA_OPTS=-classic -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y %JAVA_OPTS%
 
 echo JBOSS_CLASSPATH=%JBOSS_CLASSPATH%
 java %JAVA_OPTS% %JAXP% -classpath "%JBOSS_CLASSPATH%" org.jboss.Main %1 %2 %3 %4 %5 %6 %7 %8 %9
