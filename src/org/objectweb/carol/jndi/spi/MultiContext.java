@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MultiContext.java,v 1.7 2005/03/10 10:05:01 benoitf Exp $
+ * $Id: MultiContext.java,v 1.8 2005/03/11 14:38:56 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -70,12 +70,19 @@ public class MultiContext implements Context {
      */
     private String rmiName = null;
 
+
+    /**
+     * Initial environment
+     */
+    private Hashtable environment = null;
+
     /**
      * Constructor, load communication framework and instaciate initial contexts
      * @param env the environment of the InitialContext
      * @throws NamingException if cccf.getNewContextHashtable(env) fails
      */
     public MultiContext(Hashtable env) throws NamingException {
+        this.environment = env;
         if (TraceCarol.isDebugJndiCarol()) {
             TraceCarol.debugJndiCarol("MultiContext.MultiContext(env), env = " + env);
         }
@@ -409,7 +416,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public Object addToEnvironment(String propName, Object propVal) throws NamingException {
-        return currentConfig.getCurrentInitialContext().addToEnvironment(propName, propVal);
+        return environment.put(propName, propVal);
     }
 
     /**
@@ -422,7 +429,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public Object removeFromEnvironment(String propName) throws NamingException {
-        return currentConfig.getCurrentInitialContext().removeFromEnvironment(propName);
+        return environment.remove(propName);
     }
 
     /**
@@ -432,7 +439,7 @@ public class MultiContext implements Context {
      * @throws NamingException if a naming exception is encountered
      */
     public Hashtable getEnvironment() throws NamingException {
-        return currentConfig.getCurrentInitialContext().getEnvironment();
+        return this.environment;
     }
 
     /**
