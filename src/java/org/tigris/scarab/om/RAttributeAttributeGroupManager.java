@@ -2,8 +2,12 @@
 
 package org.tigris.scarab.om;
 
+import java.util.List;
+import java.util.HashMap;
+import java.io.Serializable;
 
 import org.apache.torque.TorqueException;
+import org.apache.torque.om.Persistent;
 
 /**
  * This class manages RAttributeAttributeGroup objects.  
@@ -23,8 +27,24 @@ public class RAttributeAttributeGroupManager
         throws TorqueException
     {
         super();
+        validFields = new HashMap();
+        validFields.put(RAttributeAttributeGroupPeer.GROUP_ID, null);
     }
 
+    protected Persistent putInstanceImpl(Persistent om)
+        throws TorqueException
+    {
+        Persistent oldOm = super.putInstanceImpl(om);
+        List listeners = (List)listenersMap
+            .get(RAttributeAttributeGroupPeer.GROUP_ID);
+        notifyListeners(listeners, oldOm, om);
+        return oldOm;
+    }
+
+    protected RAttributeAttributeGroup getInstanceImpl()
+    {
+        return new RAttributeAttributeGroup();
+    }
 }
 
 

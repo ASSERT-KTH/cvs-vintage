@@ -3,13 +3,16 @@
 package org.tigris.scarab.om;
 
 import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
+import java.io.Serializable;
 
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
+import org.apache.torque.manager.CacheListener;
 
 /** 
  * This class manages AttributeGroup objects.  
@@ -19,6 +22,7 @@ import org.apache.torque.om.Persistent;
  */
 public class AttributeGroupManager
     extends BaseAttributeGroupManager
+    implements CacheListener
 {
     /**
      * Creates a new <code>AttributeGroupManager</code> instance.
@@ -29,6 +33,7 @@ public class AttributeGroupManager
         throws TorqueException
     {
         super();
+        setRegion(getClassName().replace('.', '_'));
         validFields = new HashMap();
         validFields.put(AttributeGroupPeer.MODULE_ID, null);
     }
@@ -41,8 +46,51 @@ public class AttributeGroupManager
         notifyListeners(listeners, oldOm, om);
         return oldOm;
     }
-}
 
+    protected AttributeGroup getInstanceImpl()
+    {
+        return new AttributeGroup();
+    }
+
+    /**
+     * Notify other managers with relevant CacheEvents.
+     */
+    protected void registerAsListener()
+    {
+        RAttributeAttributeGroupManager.addCacheListener(this);
+    }
+
+    // -------------------------------------------------------------------
+    // CacheListener implementation
+
+    public void addedObject(Persistent om)
+    {
+        if (om instanceof RAttributeAttributeGroup)
+        {
+            RAttributeAttributeGroup castom = (RAttributeAttributeGroup)om;
+            ObjectKey key = castom.getGroupId();
+            Serializable obj = (Serializable)cacheGet(key);
+            if (obj != null) 
+            {
+                getMethodResult().remove(obj, 
+                    AttributeGroup.GET_ATTRIBUTES);
+            }
+        }
+    }
+
+    public void refreshedObject(Persistent om)
+    {
+        addedObject(om);
+    }
+
+    /** fields which interest us with respect to cache events */
+    public List getInterestedFields()
+    {
+        List interestedCacheFields = new LinkedList();
+        interestedCacheFields.add(RAttributeAttributeGroupPeer.GROUP_ID);
+        return interestedCacheFields;
+    }
+}
 
 
 

@@ -76,7 +76,7 @@ public  class AttributeGroup
     implements Persistent
 {
     // the following Strings are method names that are used in caching results
-    private static final String GET_ATTRIBUTES = 
+    public static final String GET_ATTRIBUTES = 
         "getAttributes";
     private static final String GET_R_ATTRIBUTE_ATTRGROUP = 
         "getRAttributeAttributeGroup";
@@ -143,6 +143,11 @@ public  class AttributeGroup
         return module;
     }
 
+    private static org.apache.torque.manager.MethodResultCache
+        getMethodResult()
+    {
+        return AttributeGroupManager.getMethodResult();
+    }
 
     /**
      * List of Attributes in this group.
@@ -151,7 +156,7 @@ public  class AttributeGroup
         throws Exception
     {
         List result = null;
-        Object obj = ScarabCache.get(this, GET_ATTRIBUTES); 
+        Object obj = getMethodResult().get(this, GET_ATTRIBUTES); 
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria()
@@ -173,7 +178,7 @@ public  class AttributeGroup
                     .getAttributeId();
                 result.add(AttributeManager.getInstance(id));
             }
-            ScarabCache.put(result, this, GET_ATTRIBUTES);
+            getMethodResult().put(result, this, GET_ATTRIBUTES);
         }
         else 
         {

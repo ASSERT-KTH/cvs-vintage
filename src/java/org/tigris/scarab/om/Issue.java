@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.257 2003/01/27 01:45:06 jon Exp $
+ * @version $Id: Issue.java,v 1.258 2003/01/27 17:45:16 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1291,7 +1291,7 @@ public class Issue
         ActivitySet activitySet = null;
         if ( !isNew() ) 
         {
-            Object obj = ScarabCache.get(this, GET_INITIAL_ACTIVITYSET);
+            Object obj = getMethodResult().get(this, GET_INITIAL_ACTIVITYSET);
             if (obj == null)
             {
                 NumberKey[] types = {ActivitySetTypePeer.CREATE_ISSUE__PK,
@@ -1305,7 +1305,7 @@ public class Issue
                 if (activitySets != null && activitySets.size() > 0)
                 {
                     activitySet = (ActivitySet)activitySets.get(0);
-                    ScarabCache.put(activitySet, this, GET_INITIAL_ACTIVITYSET);
+                    getMethodResult().put(activitySet, this, GET_INITIAL_ACTIVITYSET);
                 }
             }
             else
