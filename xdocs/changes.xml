@@ -7,6 +7,12 @@
 
   <body>
     <release version="b20" date="in dev">
+      <action dev="jorgeuriarte" type="add">
+        Added basic workflow functionalities, allowing restriction of transitions
+        between different values of dropdown-list fields depending on the user's
+        role. Also included the ability to conditionally require a field depending
+        on the value of another in the issue. 
+      </action>
       <action dev="epugh" type="add">
         Simplify logic for using a standard i10n key in a .vm that is custom
         per screen.  Removed an entire level of indirection and abstraction that
