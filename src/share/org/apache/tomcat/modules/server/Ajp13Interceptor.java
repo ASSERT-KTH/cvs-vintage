@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.18 2002/02/07 05:07:36 costin Exp $
- * $Revision: 1.18 $
- * $Date: 2002/02/07 05:07:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.19 2002/02/08 12:48:04 larryi Exp $
+ * $Revision: 1.19 $
+ * $Date: 2002/02/08 12:48:04 $
  *
  * ====================================================================
  *
@@ -86,8 +86,9 @@ public class Ajp13Interceptor extends PoolTcpConnector
     private boolean decoded=true;
 
     private int decodedNote;
-    private String secret;
-    private File ajpidFile;
+    private String secret=null;
+    private File ajpidFile=null;
+    private boolean authenticateRequests=false;
     
     public Ajp13Interceptor()
     {
@@ -122,6 +123,7 @@ public class Ajp13Interceptor extends PoolTcpConnector
      */
     public void setUseSecret(boolean b ) {
 	secret=Double.toString(Math.random());
+        shutDownEnable=true;
     }
 
     /** Set the 'secret'. If this is set, all sensitive operations
@@ -140,8 +142,13 @@ public class Ajp13Interceptor extends PoolTcpConnector
     public void setAjpidFile( String path ) {
         ajpidFile=( path==null?null:new File(path));
     }
-    
-    
+
+    /** Specify if Ajp13 requests must be authenticated
+     */
+    public void setAuthenticateRequests( boolean b ) {
+        authenticateRequests=b;
+    }
+
     public void setDecodedUri( boolean b ) {
 	decoded=b;
     }
@@ -163,7 +170,7 @@ public class Ajp13Interceptor extends PoolTcpConnector
     {
 
         if( state==ContextManager.STATE_START ) {
-            // the engine is now started, create the ajp12.id
+            // the engine is now started, create the ajp13.id
             // file that will allow us to stop the server and
             // know that the server is started ok.
             Ajp13Interceptor tcpCon=this;
@@ -193,6 +200,8 @@ public class Ajp13Interceptor extends PoolTcpConnector
                 } else {
                     // stopF.println();
                 }
+                if( shutDownEnable )
+                    props.put( "shutdown", "enabled" );
                 //            stopF.close();
                 props.save( stopF, "Automatically generated, don't edit" );
             } catch( IOException ex ) {
@@ -266,9 +275,10 @@ public class Ajp13Interceptor extends PoolTcpConnector
 
             boolean moreRequests = true;
             boolean authenticated = false;
-            // If we are not configured with a secret, assume
+            // If we are not configured with a secret or we are
+            // not authenticating requests, assume
             // we trust the remote party ( as we did before )
-            if( secret == null )
+            if( secret == null || !authenticateRequests )
                 authenticated=true;
             
             while(moreRequests) {
@@ -291,6 +301,11 @@ public class Ajp13Interceptor extends PoolTcpConnector
                 }
                 
 		if( status==-2) {
+                    // check secret if set
+                    if( secret != null && ! secret.equals(con.getSecret())) {
+                        log("Shutdown command ignored. Secret didn't match.");
+                        continue;
+                    }
 		    // special case - shutdown
 		    // XXX need better communication, refactor it
 		    if( !doShutdown(con,
