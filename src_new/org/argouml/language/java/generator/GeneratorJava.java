@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.92 2004/06/27 01:39:04 d00mst Exp $
+// $Id: GeneratorJava.java,v 1.93 2004/06/29 01:28:01 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -281,6 +281,39 @@ public class GeneratorJava
                 }
             }
         }
+
+	c = ModelFacade.getGeneralizations(cls);
+	if (c != null) {
+	    // now check packages of all generalized types
+	    for (j = c.iterator(); j.hasNext();) {
+		Object gen = /*(MGeneralization)*/ j.next();
+		Object parent = ModelFacade.getParent(gen);
+		if (parent == cls) {
+		    continue;
+		}
+
+		ftype = generateImportType(parent,
+					   packagePath);
+		if (ftype != null) {
+		    importSet.add(ftype);
+		}
+	    }
+	}
+
+	c = ModelFacade.getSpecifications(cls);
+	if (c != null) {
+	    // now check packages of the interfaces
+	    for (j = c.iterator(); j.hasNext();) {
+		Object iface = /*(MInterface)*/ j.next();
+
+		ftype = generateImportType(iface,
+					   packagePath);
+		if (ftype != null) {
+		    importSet.add(ftype);
+		}
+	    }
+	}
+
         c = ModelFacade.getAssociationEnds(cls);
         if (!c.isEmpty()) {
             // check association end types
@@ -329,8 +362,13 @@ public class GeneratorJava
         String ret = null;
         if (type != null && ModelFacade.getNamespace(type) != null) {
             String p = getPackageName(ModelFacade.getNamespace(type));
-            if (p.length() > 0 && !p.equals(exclude))
-                ret = p + '.' + ModelFacade.getName(type);
+            if (!p.equals(exclude)) {
+		if (p.length() > 0) {
+		    ret = p + '.' + ModelFacade.getName(type);
+		} else {
+		    ret = ModelFacade.getName(type);
+		}
+	    }
         }
         return ret;
     }
