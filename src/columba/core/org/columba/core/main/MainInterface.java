@@ -30,7 +30,7 @@ import org.columba.mail.pop3.POP3ServerCollection;
 
 public class MainInterface {
 
-	public static final String version = "0.10.1";
+	public static final String version = "0.11.0-cvs";
 
 	public static boolean DEBUG = false;
 
