@@ -27,7 +27,7 @@
 // File: FigEdge.java
 // Classes: FigEdge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigEdge.java,v 1.25 1999/02/19 22:18:22 jrobbins Exp $
+// $Id: FigEdge.java,v 1.26 1999/03/11 01:11:43 jrobbins Exp $
 
 package uci.gef;
 
@@ -248,7 +248,7 @@ implements PropertyChangeListener, Highlightable {
   }
 
   /** Update my bounding box */
-  protected void calcBounds() {
+  public void calcBounds() {
     _fig.calcBounds();
     Rectangle res = _fig.getBounds();
 

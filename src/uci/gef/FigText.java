@@ -26,7 +26,7 @@
 // File: FigText.java
 // Classes: FigText
 // Original Author: ics125 spring 1996
-// $Id: FigText.java,v 1.19 1999/02/19 22:18:37 jrobbins Exp $
+// $Id: FigText.java,v 1.20 1999/03/11 01:11:45 jrobbins Exp $
 
 package uci.gef;
 
@@ -519,7 +519,7 @@ public class FigText extends Fig implements KeyListener, MouseListener {
    *  on the font, font size, and current text. Needs-More-Work: Right
    *  now text objects can get larger when you type more, but they
    *  do not get smaller when you backspace.  */
-  protected void calcBounds() {
+  public void calcBounds() {
     if (_font == null) return;
     if (_fm == null) _fm = Toolkit.getDefaultToolkit().getFontMetrics(_font);
     int overallW = 0;

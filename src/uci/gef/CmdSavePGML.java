@@ -28,7 +28,7 @@
 // File: CmdSave.java
 // Classes: CmdSave
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSavePGML.java,v 1.1 1999/02/22 21:26:07 jrobbins Exp $
+// $Id: CmdSavePGML.java,v 1.2 1999/03/11 01:11:41 jrobbins Exp $
 
 package uci.gef;
 
@@ -37,6 +37,8 @@ import java.awt.*;
 import java.io.*;
 
 import uci.uml.ocl.*;
+
+import uci.xml.pgml.*;
 
 
 

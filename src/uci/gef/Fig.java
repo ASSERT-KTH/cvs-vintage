@@ -24,7 +24,7 @@
 // File: Fig.java
 // Classes: Fig
 // Original Author: ics125 spring 1996
-// $Id: Fig.java,v 1.24 1999/02/19 22:18:20 jrobbins Exp $
+// $Id: Fig.java,v 1.25 1999/03/11 01:11:42 jrobbins Exp $
 
 package uci.gef;
 
@@ -793,7 +793,7 @@ implements Cloneable, java.io.Serializable, PropertyChangeListener, PopupGenerat
    *  the bounds have already been updated, so this does nothing.
    *
    * @see FigText#calcBounds */
-  protected void calcBounds() { }
+  public void calcBounds() { }
 
 
   ////////////////////////////////////////////////////////////////

@@ -26,7 +26,7 @@
 // File: FigPoly.java
 // Classes: FigPoly
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigPoly.java,v 1.16 1999/02/19 22:18:33 jrobbins Exp $
+// $Id: FigPoly.java,v 1.17 1999/03/11 01:11:44 jrobbins Exp $
 
 package uci.gef;
 
@@ -539,7 +539,7 @@ public class FigPoly extends Fig {
   }
 
   /** Update the bounding box. */
-  protected void calcBounds() {
+  public void calcBounds() {
     //needs-more-work: could be faster, dont alloc polygon
     Rectangle polyBounds = getPolygon().getBounds();
     _x = polyBounds.x;
