@@ -81,7 +81,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * go here.
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AbstractScarabUser.java,v 1.11 2002/01/18 22:26:07 jon Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.12 2002/02/11 23:22:24 elicia Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -161,7 +161,7 @@ public abstract class AbstractScarabUser
            .add(RModuleUserAttributePeer.USER_ID, getUserId())
            .add(RModuleUserAttributePeer.ATTRIBUTE_ID, 
                 attribute.getAttributeId())
-           .add(RModuleUserAttributePeer.ATTRIBUTE_ID, 
+           .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
                 issueType.getIssueTypeId());
         List muas = RModuleUserAttributePeer.doSelect(crit);
         if ( muas.size() == 1 ) 
