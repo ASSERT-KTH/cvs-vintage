@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=Columba
-AppVerName=Columba 0.14.0
+AppVerName=Columba 1.0 Milestone M1
 AppPublisherURL=http://columba.sourceforge.net/
 AppSupportURL=http://columba.sourceforge.net/
 AppUpdatesURL=http://columba.sourceforge.net/
@@ -36,10 +36,10 @@ Source: columba.jar; DestDir: {app}
 Source: LICENSE; DestDir: {app}
 Source: README; DestDir: {app}
 Source: run.bat; DestDir: {app}
-Source: E:\Program Files\eclipse\workspace\columba\lib\ristretto-1.0pre1.jar; DestDir: {app}\lib\
-Source: E:\Program Files\eclipse\workspace\columba\lib\jhall.jar; DestDir: {app}\lib\
-Source: E:\Program Files\eclipse\workspace\columba\lib\usermanual.jar; DestDir: {app}\lib\
-Source: E:\Program Files\eclipse\workspace\columba\lib\forms.jar; DestDir: {app}\lib\
+Source: lib\ristretto-1.0pre1.jar; DestDir: {app}\lib\
+Source: lib\jhall.jar; DestDir: {app}\lib\
+Source: lib\usermanual.jar; DestDir: {app}\lib\
+Source: lib\forms.jar; DestDir: {app}\lib\
 
 [Icons]
 Name: {group}\Columba; Filename: {app}\columba.exe; IconIndex: 0; WorkingDir: {app}
