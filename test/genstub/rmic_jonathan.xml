@@ -5,9 +5,9 @@
  -
  - <a href="Guillaume.Riviere@inrialpes.fr">Guillaume RIVIERE</a>
  -
- - Compilation directive for david rmic and jeremie rmic 
+ - Compilation directive for jeremie rmic 
  - this task did not use the rmic ant task because this 
- - task is not supporded with the david or jeremie rmic 
+ - task is not supporded with the jeremie rmic 
  - and so we use a java task ...
  -
  -->
@@ -30,12 +30,10 @@
   </path>
 
   <property name="compiler.jeremie" value="org.objectweb.jeremie.tools.jrmic.JRMICompiler" />
-  <property name="compiler.david"   value="org.objectweb.david.tools.jrmic.JRMICompiler" />
   <property name="jonathan.jvmarg"  value="-Xbootclasspath/p:${test.externals}/jonathan.jar:${test.externals}/kilim.jar:${test.externals}/kilim-tools.jar:${test.externals}/nanoxml-lite-2.2.1.jar:${test.build}/classes:${test.ext}/jonathan.xml"/>
 
   <target name="compile.all"> 
     <antcall target="compile.jeremie"/>
-    <!--antcall target="compile.david"/-->
   </target>
 
 
@@ -54,28 +52,4 @@
     </java>
     <jar destfile="${test.dist.lib}/jeremie_stub.jar" basedir="${test.build.stub}/jeremie" />
   </target>   
-
-  <!-- Compile Remote Interface Stub/Skel target for David-->
-  <target name="compile.david">
-    <mkdir   dir="${test.build.stub}/david"/>
-    <java classname="${compiler.david}" fork="true" failonerror="true">
-      <jvmarg line="${jonathan.jvmarg}"/>
-      <arg value="-opt"/>
-      <arg value="-iiop"/>
-      <arg value="-d"/>
-      <arg path="${test.build.stub}/david"/>
-      <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicObject"/>
-      <classpath refid="jonathan.classpath"/>
-    </java>
-    <java classname="${compiler.david}" fork="true" failonerror="true">
-      <jvmarg line="${jonathan.jvmarg}"/>
-      <arg value="-opt"/>
-      <arg value="-iiop"/>
-      <arg value="-d"/>
-      <arg path="${test.build.stub}/david"/>
-      <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicMultiObject"/>
-      <classpath refid="jonathan.classpath"/>
-    </java>
-    <jar destfile="${test.dist.lib}/david.jar" basedir="${test.build.stub}/david" />
-  </target>
 </project>
