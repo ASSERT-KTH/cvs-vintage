@@ -68,12 +68,18 @@ public class TableSelectionHandler extends SelectionHandler implements TreeSelec
 	public void setSelection(DefaultCommandReference[] selection) {
 		FolderCommandReference ref = (FolderCommandReference) selection[0];
 
+		// TODO implement setSelection
+		if ( ref != null )
+		{
+		
 		Object[] uids = ref.getUids();
 
 		view.clearSelection();
 		view.requestFocus();
 
 		TreePath path[] = new TreePath[uids.length];
+		}
+		
 		
 		/*
 		for (int i = 0; i < uids.length; i++) {

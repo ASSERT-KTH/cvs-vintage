@@ -4,6 +4,7 @@
 <menu name="table_menu">
 	<menuitem action="NewMessage"/>
  	<menuitem action="OpenMessageWithComposer"/>
+ 	<menuitem action="OpenMessageWithMessageFrame" />
  	<menuitem action="Print"/>
  	<separator/>
  	<menuitem action="Reply" />

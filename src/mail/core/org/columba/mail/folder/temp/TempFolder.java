@@ -55,8 +55,8 @@ public class TempFolder extends Folder {
 	 * Constructor for TempFolder.
 	 * @param name
 	 */
-	public TempFolder(String name) {
-		super(name);
+	public TempFolder() {
+		super("temp");
 
 		headerList = new HeaderList();
 		messageList = new Hashtable();

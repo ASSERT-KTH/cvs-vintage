@@ -66,27 +66,35 @@ public class MailFrameController extends AbstractFrameController {
 	private FrameActionListener actionListener;
 	private ToolBar toolBar;
 	public GlobalActionCollection globalActionCollection;
-	
+
 	protected static Vector list = new Vector();
 
-	public MailFrameController( ViewItem viewItem) {
-		super("Mail", viewItem);
-		
-		list.add(this);
-		
-	}
-	
-	public static void tableChanged(TableChangedEvent ev) throws Exception {
-			for (Enumeration e = list.elements(); e.hasMoreElements();) {
-				
 
-				MailFrameController frame =
-					(MailFrameController) e.nextElement();
-					
-				frame.tableController.tableChanged(ev);
-			}
+	public MailFrameController(ViewItem viewItem) {
+			super("Mail", viewItem);
+
+			list.add(this);
 
 		}
+		
+	public MailFrameController(String id, ViewItem viewItem) {
+		super(id, viewItem);
+
+		list.add(this);
+
+	}
+
+	
+
+	public static void tableChanged(TableChangedEvent ev) throws Exception {
+		for (Enumeration e = list.elements(); e.hasMoreElements();) {
+
+			MailFrameController frame = (MailFrameController) e.nextElement();
+
+			frame.tableController.tableChanged(ev);
+		}
+
+	}
 
 	public FolderCommandReference[] getTableSelection() {
 		FolderCommandReference[] r =
@@ -96,12 +104,20 @@ public class MailFrameController extends AbstractFrameController {
 		return r;
 	}
 
+	public void setTableSelection(FolderCommandReference[] r) {
+		getSelectionManager().setSelection("mail.table", r);
+	}
+
 	public FolderCommandReference[] getTreeSelection() {
 		FolderCommandReference[] r =
 			(FolderCommandReference[]) getSelectionManager().getSelection(
 				"mail.tree");
 
 		return r;
+	}
+
+	public void setTreeSelection(FolderCommandReference[] r) {
+		getSelectionManager().setSelection("mail.tree", r);
 	}
 
 	public void registerTableSelectionListener(SelectionListener l) {
@@ -193,10 +209,8 @@ public class MailFrameController extends AbstractFrameController {
 	 */
 	protected void init() {
 		treeController = new TreeController(this, MainInterface.treeModel);
-		
-		
+
 		tableController = new TableController(this);
-		
 
 		attachmentController = new AttachmentController(this);
 
@@ -212,7 +226,7 @@ public class MailFrameController extends AbstractFrameController {
 	 * @see org.columba.core.gui.frame.AbstractFrameController#createDefaultConfiguration(java.lang.String)
 	 */
 	protected XmlElement createDefaultConfiguration(String id) {
-		
+
 		XmlElement child = super.createDefaultConfiguration(id);
 
 		XmlElement toolbars = new XmlElement("toolbars");

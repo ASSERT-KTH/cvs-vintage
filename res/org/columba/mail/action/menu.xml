@@ -52,6 +52,7 @@
 	<menu name="menu_message">
 		<menuitem action="NewMessage" />
 		<menuitem action="OpenMessageWithComposer" />
+		<menuitem action="OpenMessageWithMessageFrame" />
 		<menuitem action="SaveMessage" />
 		<separator />
 		<menuitem action="Reply" />

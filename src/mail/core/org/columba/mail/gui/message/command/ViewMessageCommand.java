@@ -109,15 +109,11 @@ public class ViewMessageCommand extends FolderCommand {
 	 */
 	public void updateGUI() throws Exception {
 
-		((AttachmentSelectionHandler)frameController.getSelectionManager().getHandler("mail.attachment")).setMessage(folder, uid);
+		AttachmentSelectionHandler h = ((AttachmentSelectionHandler)frameController.getSelectionManager().getHandler("mail.attachment"));
+		if ( h!= null)
+			h.setMessage(folder, uid);
 
-		/*
-		boolean hasAttachments = false;
 		
-		if ((mimePartTree.count() > 1)
-			|| (!mimePartTree.get(0).getHeader().contentType.equals("text"))) {
-			hasAttachments = true;
-		*/
 			((MailFrameController) frameController)
 						.messageController
 						.showMessage(
@@ -125,24 +121,7 @@ public class ViewMessageCommand extends FolderCommand {
 				bodyPart,
 				mimePartTree);
 
-			/*
-			if ((mimePartTree.count() > 1)
-				|| (!mimePartTree.get(0).getHeader().contentType.equals("text"))) {
-				(
-					(
-						MailFrameController) frameController)
-							.attachmentController
-							.setMimePartTree(
-					mimePartTree);
 			
-			} else
-				(
-					(
-						MailFrameController) frameController)
-							.attachmentController
-							.setMimePartTree(
-					null);
-			*/
 			if (header.getFlags().getSeen() == false) {
 				((MailFrameController) frameController)
 					.tableController

@@ -60,7 +60,7 @@ public abstract class FolderTreeNode
 
 	public FolderTreeNode(FolderItem node) {
 		super();
-		setNode(node);
+		if ( node != null ) setNode(node);
 		myLock = new Lock();
 	}
 

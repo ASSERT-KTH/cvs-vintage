@@ -29,6 +29,7 @@ import org.columba.mail.config.FolderXmlConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.Root;
+import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.plugin.FolderPluginHandler;
@@ -44,6 +45,8 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class TreeModel extends DefaultTreeModel {
 	protected FolderXmlConfig folderXmlConfig;
+	
+	protected TempFolder tempFolder = new TempFolder();
 
 	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
 
@@ -363,6 +366,11 @@ public class TreeModel extends DefaultTreeModel {
 
 	public SelectFolderDialog getSelectFolderDialog() {
 		return new SelectFolderDialog();
+	}
+	
+	public TempFolder getTempFolder()
+	{
+		return tempFolder;
 	}
 
 }

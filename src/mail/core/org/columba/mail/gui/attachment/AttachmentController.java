@@ -24,7 +24,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 
 import org.columba.core.util.SwingWorker;
-import org.columba.mail.gui.attachment.action.AttachmentActionListener;
 import org.columba.mail.gui.attachment.action.OpenAction;
 import org.columba.mail.gui.attachment.util.IconPanel;
 import org.columba.mail.gui.frame.MailFrameController;
@@ -55,7 +54,7 @@ public class AttachmentController {
 	private boolean inline;
 
 	private AttachmentMenu menu;
-	private AttachmentActionListener actionListener;
+	//private AttachmentActionListener actionListener;
 
 	private AttachmentView view;
 	private AttachmentModel model;
@@ -75,7 +74,7 @@ public class AttachmentController {
 		//attachmentSelectionManager = new AttachmentSelectionManager();
 		mailFrameController.getSelectionManager().addSelectionHandler( new AttachmentSelectionHandler(view));
 
-		actionListener = new AttachmentActionListener(this);
+		//actionListener = new AttachmentActionListener(this);
 
 		menu = new AttachmentMenu(superController);
 
@@ -112,9 +111,7 @@ public class AttachmentController {
 		return model;
 	}
 
-	public AttachmentActionListener getActionListener() {
-		return actionListener;
-	}
+	
 
 	public boolean setMimePartTree(MimePartTree collection) {
 		return getView().setMimePartTree(collection);

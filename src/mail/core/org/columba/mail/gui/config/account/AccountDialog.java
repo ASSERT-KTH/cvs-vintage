@@ -16,6 +16,7 @@
 package org.columba.mail.gui.config.account;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +37,7 @@ import org.columba.core.gui.util.CTabbedPane;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.wizard.WizardTopBorder;
 import org.columba.core.main.MainInterface;
+import org.columba.core.util.Compatibility;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.ImapItem;
@@ -81,7 +83,9 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		//panelChooser.addListSelectionListener(this);
 
 		dialog.pack();
-		dialog.setLocationRelativeTo(null);
+//		for jdk1.3 compatibility, this is called dynamically
+			 Compatibility.simpleSetterInvoke(dialog, "setLocationRelativeTo", Component.class, null );
+		//dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
 	}
 

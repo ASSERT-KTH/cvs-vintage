@@ -15,9 +15,12 @@
 //All Rights Reserved.
 package org.columba.core.gui.util;
 
+import java.awt.Component;
+
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+import org.columba.core.util.Compatibility;
 import org.columba.mail.gui.frame.MailFrameView;
 
 public class DialogStore
@@ -34,14 +37,18 @@ public class DialogStore
     public static JDialog getDialog()
     {
         JDialog dialog = new JDialog(mainFrame, true );
-        dialog.setLocationRelativeTo(null);
+        // for jdk1.3 compatibility, this is called dynamically
+		Compatibility.simpleSetterInvoke(dialog, "setLocationRelativeTo", Component.class, null );
+        //dialog.setLocationRelativeTo(null);
         return dialog;
     }
 
     public static JDialog getDialog( String title)
     {
         JDialog dialog = new JDialog(mainFrame, title, true );
-        dialog.setLocationRelativeTo(null);
+//		for jdk1.3 compatibility, this is called dynamically
+			 Compatibility.simpleSetterInvoke(dialog, "setLocationRelativeTo", Component.class, null );
+        //dialog.setLocationRelativeTo(null);
         return dialog;
     }
 

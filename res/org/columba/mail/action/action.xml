@@ -15,6 +15,7 @@
  
  <!-- message menu -->
  <action name="OpenMessageWithComposer" class="org.columba.mail.gui.table.action.OpenMessageWithComposerAction"/>
+ <action name="OpenMessageWithMessageFrame" class="org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction"/>
  <action name="SaveMessage" class="org.columba.mail.gui.table.action.SaveMessageAction"/>
  <action name="Reply" class="org.columba.mail.gui.table.action.ReplyAction"/>
  <action name="ReplyToList" class="org.columba.mail.gui.table.action.ReplyToListAction"/>

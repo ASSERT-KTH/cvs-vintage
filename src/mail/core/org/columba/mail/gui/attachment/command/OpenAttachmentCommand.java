@@ -22,13 +22,19 @@ import java.io.FileOutputStream;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.TempFileStore;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Decoder;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.temp.TempFolder;
+import org.columba.mail.gui.message.command.ViewMessageCommand;
+import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
+import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
 
@@ -44,6 +50,10 @@ public class OpenAttachmentCommand extends FolderCommand {
 
 	MimePart part;
 	File tempFile;
+	// true, if showing a message as attachment
+	boolean inline = false;
+	TempFolder tempFolder;
+	Object tempMessageUid;
 
 	/**
 	 * Constructor for OpenAttachmentCommand.
@@ -64,6 +74,23 @@ public class OpenAttachmentCommand extends FolderCommand {
 		MimeHeader header = part.getHeader();
 
 		if (header.getContentType().toLowerCase().indexOf("message") != -1) {
+			
+			MessageFrameController c = (MessageFrameController) FrameModel.openView("MessageFrame");
+			
+			FolderCommandReference[] r = new FolderCommandReference[1];
+			Object[] uidList = new Object[1];
+			uidList[0] = tempMessageUid;
+			
+			c.setTableSelection(r);
+			
+			r[0] = new FolderCommandReference(tempFolder, uidList);
+			MainInterface.processor.addOp(
+						new ViewMessageCommand(c,
+						r));
+						
+			
+			
+			
 			//inline = true;
 			//openInlineMessage(part, tempFile);
 		} else {
@@ -94,7 +121,15 @@ public class OpenAttachmentCommand extends FolderCommand {
 		// If part is Message/Rfc822 we do not need to download anything because
 		// we have already parsed the subMessage and can directly access the mime-parts
 
-		if (!part.getHeader().getContentType().equals("message")) {
+		if (part.getHeader().getContentType().equals("message")) {
+			tempFolder = MainInterface.treeModel.getTempFolder();
+			tempMessageUid = tempFolder.addMessage( (AbstractMessage) part.getContent(), worker );
+			
+			inline = true;
+		}
+		else
+		{
+		
 
 			try {
 				String filename = part.getHeader().getFileName();

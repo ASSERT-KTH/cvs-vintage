@@ -12,6 +12,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.message.command.ViewMessageCommand;
 
 /**
  * @author frd
@@ -25,7 +26,7 @@ public class MessageFrameController extends MailFrameController {
 	 * @param viewItem
 	 */
 	public MessageFrameController(ViewItem viewItem) {
-		super(viewItem);
+		super("MessageFrame", viewItem);
 
 	}
 
@@ -44,12 +45,16 @@ public class MessageFrameController extends MailFrameController {
 				r[0] = new FolderCommandReference(inboxFolder, newUids);
 
 				getSelectionManager().getHandler("mail.table").setSelection(r);
+
+				MainInterface.processor.addOp(new ViewMessageCommand(this, r));
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
 	}
+
+	
 
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.frame.AbstractFrameController#createView()
