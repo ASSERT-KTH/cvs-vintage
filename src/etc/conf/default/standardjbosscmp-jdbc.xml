@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.29 2002/06/06 03:31:17 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.30 2002/06/06 05:28:42 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -669,7 +669,7 @@
          </function-mapping>    
          <function-mapping>
             <function-name>locate</function-name>
-            <function-sql>(coalesce(nullif(position(?1 in substring(?2 from ?3)), 0) + ?3 -1, 0))  </function-sql>
+            <function-sql>(CASE position(?1 in substring(?2 from ?3)) WHEN 0 THEN 0 ELSE position(?1 in substring(?2 from ?3)) + ?3 - 1 END)</function-sql>
          </function-mapping>    
          <function-mapping>
             <function-name>abs</function-name>
@@ -788,7 +788,7 @@
          </function-mapping>    
          <function-mapping>
             <function-name>locate</function-name>
-            <function-sql>(coalesce(nullif(position(?1 in substring(?2 from ?3)), 0) + ?3 -1, 0))  </function-sql>
+            <function-sql>(CASE position(?1 in substring(?2 from ?3)) WHEN 0 THEN 0 ELSE position(?1 in substring(?2 from ?3)) + ?3 - 1 END)</function-sql>
          </function-mapping>    
          <function-mapping>
             <function-name>abs</function-name>
