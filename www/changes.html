@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $ -->
+<!-- $Id: changes.html,v 1.361 2003/05/19 20:41:08 dlr Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -13,7 +13,7 @@
 </p>
 
 <p>
-Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
+Last updated: $Id: changes.html,v 1.361 2003/05/19 20:41:08 dlr Exp $
 </p>
 
 <table border="0" cellpadding="2" width="98%" bgcolor="white">
@@ -38,7 +38,7 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
                     .jar file into WEB-INF/lib and also separates out the definition
                     of the various databases into their own .properties files which
                     can and should be overridden in your own build.properties.
-                    See #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB242">SCB242</a>. (JSS)</li>
+                    See #<a href="http://scarab.collab.net/scarab/issues/id/SCB242">SCB242</a>. (JSS)</li>
                 <li>The update search index screen now uses a background
                     thread and a page refresh to do its work so that 
                     browser/server timeouts don't affect the process. (JSS)</li>
@@ -82,7 +82,7 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
                     indexes on different tables, which Oracle does not allow
                     (Oracle requires indexes to be uniquely named within a
                     schema, MySQL requires indexes to be uniquely named on a table).
-                    For more information see #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB231">SCB231</a>. (TL)</li>
+                    For more information see #<a href="http://scarab.collab.net/scarab/issues/id/SCB231">SCB231</a>. (TL)</li>
                 <li>A minimal distribution of Tomcat 4.1.18 is now the default 
                     servlet engine bundled and used with Scarab. We should see a bit of a 
                     performance increase over 4.0.6. Note: this version has been
@@ -102,30 +102,30 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
                     manifested itself as users reporting that the emails
                     were missing the domain name. (JSS)</li>
                 <li>Remove "Add new" button from URL section on ViewIssue.
-                For more information see #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB277">SCB277</a>. (EWD)</li>
+                For more information see #<a href="http://scarab.collab.net/scarab/issues/id/SCB277">SCB277</a>. (EWD)</li>
                 <li>Added an All option to the Results Per Page chooser. For more information, see Enhancement request
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB168">SCB168</a> (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB168">SCB168</a> (JDM)</li>
                 <li>Changed sort links on IssueList.vm to maintain results per page and current page info. (JDM)</li>
                 <li>Add Issue | Move permission. See #PCN12339. (EWD)</li>
                 <li>Give error message when missing required fields on Report
-                    Issue. See #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB278">SCB278</a>. (EWD)</li>
+                    Issue. See #<a href="http://scarab.collab.net/scarab/issues/id/SCB278">SCB278</a>. (EWD)</li>
                 <li>AssignIssue: associated users now saved in the session. Only one
                     attachment is now saved per transaction. Bug report #PCN 12634. (EWD)</li>
                 <li>For single-module and single-issueType queries, use module-
                     specific name for attribute.
-                    See #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB349">SCB349</a>. (EWD)</li>
+                    See #<a href="http://scarab.collab.net/scarab/issues/id/SCB349">SCB349</a>. (EWD)</li>
                 <li>Can now unset a set attribute. 
-                    See #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB256">SCB256</a>. (EWD)</li>
+                    See #<a href="http://scarab.collab.net/scarab/issues/id/SCB256">SCB256</a>. (EWD)</li>
                 <li>Cached search results for duration of a request so that the
                     results are not recalculated several times.  And pass a
                     short list of ids in the urls that go from IssueList.vm to                     ViewIssue.vm, so that some navigation by prev/next links
                     is possible without repeating the search. (JDM)</li>
                 <li>Users with only View permission can now see all tabs on
                     ViewIssue.
-                    See #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB307">SCB307</a>. (EWD)</li>
+                    See #<a href="http://scarab.collab.net/scarab/issues/id/SCB307">SCB307</a>. (EWD)</li>
                 <li>Fixed "Show complete history" links so they stay in history tab. (EWD)</li>
                 <li>No longer creating a history record for null string attributes when entering an issue.
-                    See #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB156">SCB156</a>. (EWD)</li>
+                    See #<a href="http://scarab.collab.net/scarab/issues/id/SCB156">SCB156</a>. (EWD)</li>
                 <li>Update UI for Move Issue. Make it possible to add a reason for move and to move /copy to a new issue type.  See Bug Report PCN#13098. (EWD)</li>
                 <li>Added openoffice file extensions to the auto-detect 
                     mime.types file.  See Bug Report PCN#11769. (JDM)</li>
@@ -153,23 +153,23 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
                     (probably on the order of 400-500 changes since b13). We aplogize for
                     not documenting them here and will try to do better in the future.</li>
                 <li>Added Oracle upgrade scripts for b13 to b14.
-                    See #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB548">SCB548</a>. (JSS)</li>
+                    See #<a href="http://scarab.collab.net/scarab/issues/id/SCB548">SCB548</a>. (JSS)</li>
                 <li>Fixed i18n problems
-                    See #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB528">SCB528</a>. (JSS)
-                    See #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB529">SCB529</a>. (JSS)
-                    See #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB530">SCB530</a>. (JSS)
+                    See #<a href="http://scarab.collab.net/scarab/issues/id/SCB528">SCB528</a>. (JSS)
+                    See #<a href="http://scarab.collab.net/scarab/issues/id/SCB529">SCB529</a>. (JSS)
+                    See #<a href="http://scarab.collab.net/scarab/issues/id/SCB530">SCB530</a>. (JSS)
                     </li>
                 <li>Added Postgresql upgrade scripts for b13 to b14.
-                    See #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB563">SCB563</a>. (JSS)
-                    See #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB571">SCB571</a>. (JSS)</li>
+                    See #<a href="http://scarab.collab.net/scarab/issues/id/SCB563">SCB563</a>. (JSS)
+                    See #<a href="http://scarab.collab.net/scarab/issues/id/SCB571">SCB571</a>. (JSS)</li>
                 <li>SQL script directory couldn't be found if context was different.
-                    See #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB560">SCB560</a>. (JSS)</li>
+                    See #<a href="http://scarab.collab.net/scarab/issues/id/SCB560">SCB560</a>. (JSS)</li>
                 <li>Wrong username variable used in build.xml:datadump
-                    See #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB549">SCB549</a>. (JSS)</li>
+                    See #<a href="http://scarab.collab.net/scarab/issues/id/SCB549">SCB549</a>. (JSS)</li>
                 <li>Copy the right .jar files over depending on the database (was broken for Postgres and Oracle).
-                    See #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB526">SCB526</a>. (JSS)</li>
+                    See #<a href="http://scarab.collab.net/scarab/issues/id/SCB526">SCB526</a>. (JSS)</li>
                 <li>Added a scarab.bat file to compliment the scarab.sh file.
-                    See #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB333">SCB333</a>. (JSS)</li>
+                    See #<a href="http://scarab.collab.net/scarab/issues/id/SCB333">SCB333</a>. (JSS)</li>
                 <li>The AssignIssue emails now use the email/ModifyIssue.vm template
                     and code to provide a more consistent interface for issue modification
                     notices. (JSS)</li>
@@ -180,19 +180,19 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
                 <li>create-db.sh: Removed duplicate use of -h (JSS)</li>
                 <li>Missing resource bundle
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB301">SCB301</a>. (JSS)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB301">SCB301</a>. (JSS)</li>
                 <li>Missing resource bundle.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB292">SCB292</a>. (JSS)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB292">SCB292</a>. (JSS)</li>
                 <li>Fixed caching bug in adding attributes to global attribute
                     groups. Took out ability to add a global issue type from the  
                     ManageIssueTypes (project) page to avoid confusion.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB302">SCB302</a>. (EWD)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB302">SCB302</a>. (EWD)</li>
                 <li>Fixed error deleting new issue types from a module by
                     removing unnecessary RMIT records for template types.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB251">SCB251</a>. (EWD)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB251">SCB251</a>. (EWD)</li>
                 <li>Sequence numbers for attribute groups were off. Fixed. (EWD)</li>
                 <li>Fixed inability for users to request roles in modules by 
                     not requiring a permission in order to request roles.  
@@ -200,22 +200,22 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
                     executing an action, if the module is not needed for a
                     permission check.   
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB299">SCB299</a>. (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB299">SCB299</a>. (JDM)</li>
                 <li>Null attribute values or attachments are now ignored when
                     reindexing text.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB311">SCB311</a>. (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB311">SCB311</a>. (JDM)</li>
                 <li>Create directory to store file attachments when 
                     copying/moving an issue to a module which has not 
                     previously had any file attachments.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB314">SCB314</a>. (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB314">SCB314</a>. (JDM)</li>
                 <li>Don't cache the homepage in case permission changes affect
                     which tab should be shown. (JDM)</li>
                 <li>Check for permissions to save as module query when
                     editing stored query. 
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB295">SCB295</a>. (EWD)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB295">SCB295</a>. (EWD)</li>
                 <li>Fix some problems in adding attribute options to a global
                     issue type.(EWD)</li>
                 <li>Done button was not working properly on the EditQuery screen.
@@ -225,78 +225,78 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
                 <li>& is now allowed as the final character in text supplied
                     by a user, such as an attribute value or comment.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB296">SCB295</a>. (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB296">SCB295</a>. (JDM)</li>
                 <li>Mappings between modules and user attributes were not always
                     being removed when removing a module-issuetype mapping, 
                     resulting in an error when adding issue type back. 
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB348">SCB348</a>. (EWD)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB348">SCB348</a>. (EWD)</li>
                 <li>Don't show a stack trace and give a constructive message, if
                     the user enters an invalid query.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB304">SCB304</a>. (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB304">SCB304</a>. (JDM)</li>
                 <li>Fixed problem of getting stuck on History tab when viewing
                     an issue.  (Note this was in cvs for ~12 hours on Nov.13.) 
                     For more information, see Defect
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB358">SCB358</a> (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB358">SCB358</a> (JDM)</li>
                 <li>Now copying module-issue type display description when copying a 
                     module-issue type.
                     For more information, see Defect
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB365">SCB365</a> (EWD)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB365">SCB365</a> (EWD)</li>
                 <li>When adding a global attribute to a global issue type, do not
                     add deleted options. Bug report PCN #13033. (EWD) </li>
                 <li>Issue shown multiple times in query list if it has had 
                     attributes modified over its lifetime.
                     For more information, see Defect
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB370">SCB370</a> (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB370">SCB370</a> (JDM)</li>
                 <li>If an attribute option belongs to more than one category,
                     do not add it to the issue type or module more than once. (EWD)</li>
                 <li>IssueList.vm attribute columns now shown in order specified
                     on ConfigureIssueList.vm
                     For more information, see Defect
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB392">SCB392</a> (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB392">SCB392</a> (JDM)</li>
                 <li>Save results per page and sorting preferences when save a query.
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB391">SCB391</a> (EWD)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB391">SCB391</a> (EWD)</li>
                 <li>Issues were viewable by directly entering an issue id or 
                     following a dependency link.  This is no longer allowed.
                     For more information, see Defect
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB371">SCB371</a> (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB371">SCB371</a> (JDM)</li>
                <li>Fix exception when selecting a new attribute option that has just been globally added.
                     For more information, see Defect
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB399">SCB399</a> (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB399">SCB399</a> (JDM)</li>
                <li>Fix caching bug when adding a new attribute option to a module.
                     For more information, see Defect
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB404">SCB404</a> (EWD)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB404">SCB404</a> (EWD)</li>
                <li>Fix problem where create module was failing when inheriting
                    an empty dropdown list from parent module.
                     For more information, see Defect
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB405">SCB405</a> (EWD)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB405">SCB405</a> (EWD)</li>
                <li>Previous and next links now maintain after doing a modification to an issue.
                     For more information, see Defect
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB285">SCB285</a> (EWD)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB285">SCB285</a> (EWD)</li>
                <li>Can get created date from a Move Issue Transaction as well as a Create Issue Transaction, so that if an issue is moved without any matching attributes there will still be a created date. (EWD) </li>
                <li>When moving an issue, account for multiple valed attributes (i.e., user attributes). 
                     For more information, see Defect
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB419">SCB419</a> (EWD)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB419">SCB419</a> (EWD)</li>
                <li>When switching issue types in the middle of entering an issue, clear out
                    reporting issue.
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB430">SCB430</a> (EWD)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB430">SCB430</a> (EWD)</li>
                <li>Fix permissions for move/copy issue. Now, if copying between issue types, do not delete original issue.
-                   For more information see #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB468">SCB468</a> (EWD)</li>
+                   For more information see #<a href="http://scarab.collab.net/scarab/issues/id/SCB468">SCB468</a> (EWD)</li>
                <li>Use issue's module and issue type when getting list of users to assign to an issue or issue list. Only assign users to groups of issues that are from a single module and issue type. For more information see PCN # 13711. (EWD)</li>
                <li>Fixed problem where selecting an enter issue template caused the
                    input field on the enter issue form to shrink. For more information see PCN #13824. (EWD) </li>
                 <li>Removed restriction that was limiting the client language
                     to that given by the first request. (JDM)</li>
                 <li>Users can now delete the enter issue templates that they have created. For more information see #PCN 14289 (EWD)</li>
-                <li>Fix broken next/previous links to step between issues in an issue list. For more information see #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB478">SCB478</a> (EWD)</li>
+                <li>Fix broken next/previous links to step between issues in an issue list. For more information see #<a href="http://scarab.collab.net/scarab/issues/id/SCB478">SCB478</a> (EWD)</li>
                 <li>Account for ~ in text entries when dupe checking. 
-                    For more information see #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB539">SCB539</a> (JDM)</li>
+                    For more information see #<a href="http://scarab.collab.net/scarab/issues/id/SCB539">SCB539</a> (JDM)</li>
                 <li>Issue queries involving multiple users are now more 
                     performant and as a side effect sql syntax in searches (e.g.
                     Adv. Query) is now compatible with Postgresql and Oracle 9i.
-                    For more information see #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB421">SCB421</a>
-                    For more information see #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB412">SCB412</a>
-                    For more information see #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB400">SCB400</a> (JDM)</li>
+                    For more information see #<a href="http://scarab.collab.net/scarab/issues/id/SCB421">SCB421</a>
+                    For more information see #<a href="http://scarab.collab.net/scarab/issues/id/SCB412">SCB412</a>
+                    For more information see #<a href="http://scarab.collab.net/scarab/issues/id/SCB400">SCB400</a> (JDM)</li>
                 <li>After editing global attribute, return back to correct page number of global attributes. (EWD) PCN #14714</li>
                 <li>Added save method for GlobalUserAttributes to save their permission properties. PCN #14765 (EWD) </li>
             </ul>
@@ -316,22 +316,22 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
                     scarab.register.email.checkRFC2505 (JSS)</li>
                 <li>Added default text to change notification emails.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB125">SCB125</a>. (TL)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB125">SCB125</a>. (TL)</li>
                 <li>Added site name to top of screen for easier site recognition.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB240">SCB240</a>. (TL)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB240">SCB240</a>. (TL)</li>
                 <li>Modified the email process in (un)assigning users so that
                     it results in one email that includes the user in the 
                     subject. 
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB112">SCB112</a>. (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB112">SCB112</a>. (JDM)</li>
                 <li>if the user has their homepage tab set to EnterNew... tab
                     and they change current issue type, redirect to the 
                     entry/Wizard*.vm template.  This improves the process of 
                     entering many issues of different types.  This is related
                     though not exactly what is requested in 
                     Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB255">SCB255</a>. (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB255">SCB255</a>. (JDM)</li>
                 <li>Almost all text (~95%) is now i18n.  With Exception 
                     messages being the only class of messages still known
                     to be english only. (JDM, Carol, et.al.)</li>
@@ -341,19 +341,19 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
                 <li>When copying query, set creating user to the copyer, not
                     the creator of the original query. 
                     Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB298">SCB298</a>. (EWD)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB298">SCB298</a>. (EWD)</li>
                 <li>Do not show parent issue type, as it is not modifyable. (EWD)</li>
                 <li>Can no longer select parent module as current module, as it is not modifyable. (EWD)</li>
                <li>Multivalued attributes (such as user attributes) were causing
                    issues to show up multiple times in a query result list.
-                   For more information see #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB480">SCB480</a> (JDM)</li>
+                   For more information see #<a href="http://scarab.collab.net/scarab/issues/id/SCB480">SCB480</a> (JDM)</li>
                <li>Hitting Refresh button on the query results (IssueList.vm)
                    resulted in a loss of query criteria, if issues had been
                    sorted or page navigation had been used.
-                   For more information see #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB476">SCB476</a> (JDM)</li>
+                   For more information see #<a href="http://scarab.collab.net/scarab/issues/id/SCB476">SCB476</a> (JDM)</li>
                <li>Check for previously added items, when adding new 
                    module/issuetypes to the list used for a query. 
-                   For more information see #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB354">SCB354</a> (JDM)</li>
+                   For more information see #<a href="http://scarab.collab.net/scarab/issues/id/SCB354">SCB354</a> (JDM)</li>
             </ul>
         </td>
     </tr>
@@ -369,50 +369,50 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
                 <li>Now, both A and MX records are checked during registration if
                     the checkRFC2505 property is defined to true.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB241">SCB241</a>. (JSS)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB241">SCB241</a>. (JSS)</li>
                 <li>The password for the system adminstrator is now not hard-coded.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB247">SCB247</a>. (JSS)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB247">SCB247</a>. (JSS)</li>
                 <li>Allow one to override properties in run-tests.xml.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB229">SCB229</a>. (JSS)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB229">SCB229</a>. (JSS)</li>
                  <li>Use input value (not name) to store issue id. Prevents an 
                      npe when mass assigning users.
                      For more information, see Bug Report
-                     #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB153">SCB153</a>. (JDM)</li>
+                     #<a href="http://scarab.collab.net/scarab/issues/id/SCB153">SCB153</a>. (JDM)</li>
                 <li>Fixed Issue list sorting problem due to sql error 
                     (for some db's, e.g. oracle) that require
                     sorted columns to also be selected in the query.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB163">SCB163</a>. (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB163">SCB163</a>. (JDM)</li>
                 <li>Use of absolute pathname to lucene index was resulting in
                     a stacktrace on windows (non unix) platforms.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB206">SCB206</a>. (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB206">SCB206</a>. (JDM)</li>
                 <li>Column for storing attachment data was changed from binary
                     to text.  One reason for this was to better support i18n,
                     but it also helps several issues related to Oracle.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB154">SCB154</a>. (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB154">SCB154</a>. (JDM)</li>
                 <li>Link to the Approval template now shows up in the email
                     to notify project owners about items awaiting approval.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB182">SCB182</a>. (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB182">SCB182</a>. (JDM)</li>
                 <li>Fixed ClassCastException when searching on attribute option
                     that involves an option hierarchy.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB272">SCB272</a>. (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB272">SCB272</a>. (JDM)</li>
                 <li>Give alert message if deleting global issue types without
                     any issue types selected
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB42">SCB42</a>. (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB42">SCB42</a>. (JDM)</li>
                 <li>Fixed NPE when deleting a global issue type
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB269">SCB269</a>. (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB269">SCB269</a>. (JDM)</li>
                 <li>Attachments, including files, are copied to the new issue 
                     during a copy/move.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB271">SCB271</a>. (JDM)</li>
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB271">SCB271</a>. (JDM)</li>
                 <li>All actions have some minimal permission that is required, 
                     before they are executed.  Previously, the security was 
                     largely enforced by the user not seeing the ui which would
@@ -436,10 +436,10 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
                  <li>Database build tasks run database-specific configuration scripts
                      before inserting data to allow for separate configuration of each database type.
                      For more information, see Bug Report
-                     #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB129">SCB129</a>. (TL)</li>
+                     #<a href="http://scarab.collab.net/scarab/issues/id/SCB129">SCB129</a>. (TL)</li>
                  <li>Issue id and summary text is displayed as part of the "breadcrumb".
                      For more information, see Bug Report
-                     #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB122">SCB122</a>. (TL)</li>
+                     #<a href="http://scarab.collab.net/scarab/issues/id/SCB122">SCB122</a>. (TL)</li>
                  <li>Upgraded to latest Tomcat 4.0.5. Fixes security hole in 4.0.4. (JSS)</li>
                  <li>Added Russian properties file for i18n. (JSS)</li>
                  <li>Updated French properties file for i18n. (JSS)</li>
@@ -452,29 +452,29 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
             <ul>
                 <li>Fixed default HTML redirect to go to the configured context.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB220">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB220">
                     SCB220</a>. (JSS)</li>
                 <li>Building Tomcat is now optional.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB219">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB219">
                     SCB219</a>. (JSS)</li>
                 <li>Problem with Torque and Postgresql and boolean values
                     has now been resolved.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB189">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB189">
                     SCB189</a>. (JSS)</li>
                 <li>If module doesn't have any users assigned to it, then
                     add myself when creating a new template.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB179">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB179">
                     SCB179</a>. (JSS)</li>
                 <li>Some stored cross issuetype queries were not 
                     runnable/editable due an NPE determining the module.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB186">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB186">
                     SCB186</a>. (JDM)</li>
                 <li>Sorting the issue list on an attribute should work now. 
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB136">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB136">
                     SCB136</a>.(EWD)</li>
             </ul>
         </td>
@@ -499,58 +499,58 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
                     to a booleanint. (JSS)</li>
                 <li>Enhanced the registration email checking.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB161">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB161">
                     SCB161</a>. (JSS)</li>
                 <li>Fixed bug where the name column on Attachment was not being set.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB160">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB160">
                     SCB160</a>. (JSS)</li>
                 <li>No longer show duplicated Assigned To column in IssueList.vm
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB134">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB134">
                     SCB134</a>. (JSS)</li>
                 <li>The fix for b10 for saving attributes never made it for some reason.
                     Now it is finally fixed.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB151">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB151">
                     SCB151</a>. (JSS)</li>
                 <li>Set created date for new comments.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB152">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB152">
                     SCB152</a>. (JSS)</li>
                 <li>Make the validation query customizable. Should fix
                     an Oracle usage issue. (JSS)</li>
                 <li>Don't copy CVS directories into target
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB113">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB113">
                     SCB113</a>. (JSS)</li>
                 <li>Fixed potential crash when editing module attributes.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB135">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB135">
                     SCB135</a>. (JSS)</li>
                 <li>Better formatting of comments which attempts to display
                     linebreaks as they were originally entered.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB128">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB128">
                     SCB128</a>. (JDM)</li>
                 <li>Fixed error in db upgrade script that required a 
                     SCARAB_MIT_LIST entry to have a non-null NAME.  Also 
                     provided another upgrade script for the next release to fix
                     the problem, if the previously buggy script was run.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB131">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB131">
                     SCB131</a>. (JDM)</li>
                 <li>Added quiet="true" attribute to delete's in clean-all 
                     build target, in case the dirs/files have not been created.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB171">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB171">
                     SCB171</a>. (JDM)</li>
                 <li>Unmatched quote in AttributeGroupEdit.vm. (JDM)</li>
                 <li>Fixed error in entry,Wizard2.vm that would generate 
                     stacktrace when an issue with unset attributes was found to
                     be a possible dupe.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB174">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB174">
                     SCB174</a>. (JDM)</li>
                 <li>When an attribute is added to an issue type, it should now 
                     inherit the preferred order of the options for the global attribute.
@@ -584,11 +584,11 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
                 <li>Copy the upgrade SQL .sh scripts to the target directory. (JSS)</li>
                 <li>Empty database + cross module search = stack trace
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB4">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB4">
                     SCB4</a>. (JDM)</li>
                 <li>Fix crash when requesting a role.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB96">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB96">
                     SCB96</a>. (JDM)</li>
             </ul>
         </td>
@@ -613,7 +613,7 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
                 <li>Upgraded to Tomcat 4.0.4. (JSS)</li>
                 <li>Can now add multiple user attributes to your project at 
                     one time.  For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB51">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB51">
                     SCB51</a>. (EWD)</li>
                 <li>emails now come from the user who performed that action 
                     that generated the email.  The email addresses specified 
@@ -628,39 +628,39 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
             <ul>
                 <li>"*" key does not appear when editing an existing issue
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB99">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB99">
                     SCB99</a>. (JSS)</li>
                 <li>Added * by the reason for change.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB98">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB98">
                     SCB98</a>. (JSS)</li>
                 <li>Attributes were not being saved.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB97">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB97">
                     SCB97</a>. (JSS)</li>
                 <li>Applied patch for enhanced build configurability.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB89">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB89">
                     SCB89</a>. (JSS)</li>
                 <li>Fix problem where an if was used instead of a while loop.
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB40">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB40">
                     SCB40</a>. (JSS)</li>
                 <li>Fixed missing security info for ReportList.vm
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB78">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB78">
                     SCB78</a>. (JSS)</li>
                 <li>updated fulcrum jar to match the torque jar. 
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB64">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB64">
                     SCB64</a>. (JDM)</li>
                 <li>fixed misplaced table tag on ModuleQuery.vm. 
                     For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB26">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB26">
                     SCB26</a>. (JDM)</li>
                 <li>Applied patch to allow easy configuration of email sending
                     settings. For more information, see Bug Report
-                    #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB25">
+                    #<a href="http://scarab.collab.net/scarab/issues/id/SCB25">
                     SCB25</a>. (JSS)</li>
                 <li>In the list of users awaiting final confirmation in order 
                     to be assigned, only show the attributes for which the 
@@ -737,7 +737,7 @@ Last updated: $Id: changes.html,v 1.360 2003/05/17 01:25:48 dlr Exp $
                 <li>On ManageIssueTypes, pass all the issue type values even if it is paginated, to avoid NPE. PCN#10676 (EWD)</li>
                 <li>Fixed bug in rejecting templates. (EWD)</li>
                 <li>Fixed bug where templates were getting used even when not
-                    selected. #<a href="http://scarab.collab.net:8080/scarab/issues/id/SCB16">SCB16</a> (EWD)</li>
+                    selected. #<a href="http://scarab.collab.net/scarab/issues/id/SCB16">SCB16</a> (EWD)</li>
                 <li>Fixed bug in re-creating issue dependency that has been deleted.# PCN#11049 (EWD)</li>
                 <li>Fixed bug in submitting project-wide enter issue templates. #PCN 11079. (EWD)</li>
                 <li>User attributes seemed to not be deleting from a module. Fixed. (EWD) </li>
