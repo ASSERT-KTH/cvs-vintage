@@ -458,9 +458,9 @@ final class DirHandler extends Handler  {
 	// 	    req.setNote( sbNote, buf );
 	// 	}
 
-	Encoder utfEncoder=(Encoder)req.getNote( sbNote );
+	UEncoder utfEncoder=(UEncoder)req.getNote( sbNote );
 	if( utfEncoder==null ) {
-	    utfEncoder=new Encoder();
+	    utfEncoder=new UEncoder();
 	    utfEncoder.addSafeCharacter( '/' );
 	}
 
