@@ -370,6 +370,7 @@ public abstract class DefaultUtil {
 			System.getProperty("line.separator").getBytes());
 		// send return after passphrase
 		StreamUtils.streamCopy(cryptMessage, p.getOutputStream());
+		cryptMessage.close();
 		p.getOutputStream().close();
 
 		exitVal = p.waitFor();

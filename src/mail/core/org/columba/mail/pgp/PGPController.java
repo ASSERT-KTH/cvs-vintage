@@ -186,18 +186,24 @@ public class PGPController {
 			e.printStackTrace();
 
 			throw new PGPException(error);
+		} finally {
+			// clear tempfile
+			if(!tempFile.delete()) {
+				tempFile.deleteOnExit();
+			}
+			tempFile = null;			
 		}
 
 		pgpMessage = new String(error);
 
 		if (exitVal == 2) {
 			// wrong passprase 
+			passwordMap.remove(item.get("id"));
+			
 
 			return decrypt(cryptMessage, item);
 		}
 
-		// clear tempfile
-		tempFile = null;
 
 		return utils[GPG].getStreamResult();
 	}
