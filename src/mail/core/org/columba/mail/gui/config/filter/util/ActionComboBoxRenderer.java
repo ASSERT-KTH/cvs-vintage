@@ -1,19 +1,26 @@
-/*
- * Created on 23.03.2003
- *
- * To change this generated comment go to 
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
+//The contents of this file are subject to the Mozilla Public License Version 1.1
+//(the "License"); you may not use this file except in compliance with the
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+//for the specific language governing rights and
+//limitations under the License.
+//
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
+//
+//All Rights Reserved.
+
 package org.columba.mail.gui.config.filter.util;
 
 import java.awt.Component;
 
-import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.ListCellRenderer;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
@@ -26,13 +33,10 @@ import org.columba.mail.plugin.FilterActionPluginHandler;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ActionComboBoxRenderer
-	extends JLabel
-	implements ListCellRenderer {
+public class ActionComboBoxRenderer extends DefaultListCellRenderer {
 
-	FilterActionPluginHandler pluginHandler;
+	protected FilterActionPluginHandler pluginHandler;
 
-	protected static Border noFocusBorder;
 	/**
 	 * 
 	 */
@@ -50,12 +54,6 @@ public class ActionComboBoxRenderer
 			NotifyDialog d = new NotifyDialog();
 			d.showDialog(ex);
 		}
-		if (noFocusBorder == null) {
-			noFocusBorder = new EmptyBorder(1, 1, 1, 1);
-		}
-		setOpaque(true);
-		setBorder(noFocusBorder);
-
 	}
 
 	/* (non-Javadoc)
@@ -88,5 +86,5 @@ public class ActionComboBoxRenderer
 
 		return this;
 	}
-
 }
+
