@@ -177,10 +177,10 @@
           <Context path="" docBase="ROOT" debug="0"/>
         -->
 
-        <Context path="/scarab" docBase="scarab" reloadable="true" 
+        <Context path="/@SCARAB_CONTEXT@" docBase="scarab" reloadable="true" 
                  debug="0">
            <Logger className="org.apache.catalina.logger.FileLogger"
-                     prefix="scarab_log." suffix=".txt"
+                     prefix="@SCARAB_CONTEXT@_log." suffix=".txt"
                   timestamp="true"/>
            <Loader checkInterval="1"
                 className="org.apache.catalina.loader.WebappLoader"/>

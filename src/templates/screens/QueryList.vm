@@ -53,8 +53,8 @@ $page.setTitle("Stored query list")
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
   <th nowrap="nowrap">
-  <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
-  <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
+  <img src="$data.Request.ContextPath/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
+  <img src="$data.Request.ContextPath/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
   </th>
   <th>Subscription</th>
   <th>Subscription frequency</th>

@@ -3,16 +3,16 @@
 <html>
  <head>
   <title>Scarab</title>
-  <link rel="stylesheet" type="text/css" href="/scarab/style/main.css" />
-  <link rel="stylesheet" type="text/css" href="/scarab/style/print.css" media="print" />
-  <link rel="alternate stylesheet" title="compact" type="text/css" href="/scarab/style/compact.css" />
+  <link rel="stylesheet" type="text/css" href="$data.Request.ContextPath/style/main.css" />
+  <link rel="stylesheet" type="text/css" href="$data.Request.ContextPath/style/print.css" media="print" />
+  <link rel="alternate stylesheet" title="compact" type="text/css" href="$data.Request.ContextPath/style/compact.css" />
  </head>
 <body marginwidth="0" marginheight="0">
  <div id="banner">
   <table border="0" cellspacing="0" cellpadding="8" width="100%">
   <tr>
   <td>
-  <a href="$link.setPage("Index.vm")"><img src="/scarab/images/logo.gif" alt="Scarab" width="118" height="23" border="0" /></a>
+  <a href="$link.setPage("Index.vm")"><img src="$data.Request.ContextPath/images/logo.gif" alt="Scarab" width="118" height="23" border="0" /></a>
   </td>
   <td>
   <div align="right" id="login">
@@ -94,10 +94,10 @@
    <option>query two</option>
    </select>
    <input type="submit" name="query" value="Go" />
-   &nbsp;<img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
+   &nbsp;<img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
             <input type="text" name="id" size="15" maxlength="255" />
             <input type="submit" name="Submit" value="Query" />
-   &nbsp;<img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
+   &nbsp;<img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
    <small><a href="#">Advanced</a>&nbsp;|&nbsp;<a href="#">Custom</a></small>
    </form>
    </td>

@@ -1,2 +1,2 @@
-$page.setStyleSheet("/scarab/style.css")
+$page.setStyleSheet("$data.Request.ContextPath/style.css")
 $page.setBgColor("#ffffff")

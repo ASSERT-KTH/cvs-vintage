@@ -39,11 +39,11 @@ table, th, td	{
 	margin-left: 2px;
 	}
 .app h3 {
-	background: #369 url(/scarab/images/nw_min.gif) no-repeat;
+	background: #369 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat;
 	border-bottom: 1px solid #333;
 	border-right: 1px solid #333;
  }
-.app h4 {	background: #999 url(/scarab/images/nw_min.gif) no-repeat;
+.app h4 {	background: #999 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat;
 	padding: 5px;
 	color: #fff;
 	margin-right: 2px;
@@ -56,7 +56,7 @@ table, th, td	{
  text-decoration: underline;
  }
 .app th {
-	background: #ccc url(/scarab/images/nw_min.gif) no-repeat;
+	background: #ccc url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat;
 	}
 #apphead h2 {
  margin-top: 0;
@@ -132,11 +132,11 @@ ul.tasks li {
  border-bottom: 1em #999 solid
  }
 .tabs th {
-	background: url(/scarab/images/nw_min.gif) no-repeat top left;
+	background: url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat top left;
 	border-right: 1px solid #666;
 	}
 .tabs td {
-	background: url(/scarab/images/nw_min.gif) no-repeat top left;
+	background: url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat top left;
 	border-bottom: 1px solid #ccc;
 	border-right: 1px solid #666;
 	}
@@ -144,10 +144,10 @@ ul.tasks li {
 
 /* Scarab/App - styles start here */
 .functnbar {
-	background: #666 url(/scarab/images/nw_min.gif) no-repeat top left;
+	background: #666 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat top left;
 	}
 .functnbar2 {
-	background: #666 url(/scarab/images/sw_min.gif) no-repeat bottom left;
+	background: #666 url(/@SCARAB_CONTEXT@/images/sw_min.gif) no-repeat bottom left;
 	}
 .functnbar, .functnbar2 {
  padding: 2px;

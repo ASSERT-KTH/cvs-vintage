@@ -48,6 +48,20 @@
     </path>
 
     <!-- ================================================================== -->
+    <!-- Check to see what optional dependencies are available              -->
+    <!-- ================================================================== -->
+    <target name="check_for_optional_packages">
+        <available property="lucene.present"
+                   classname="com.lucene.document.Document">
+            <classpath refid="classpath"/>
+        </available>
+        <available property="junit.present"
+           classname="junit.framework.TestCase">
+            <classpath refid="classpath"/>
+        </available>
+    </target>
+
+    <!-- ================================================================== -->
     <!-- Prepares the Build directory                                       -->
     <!-- ================================================================== -->
     <target name="prepare-build-dir">
@@ -63,8 +77,27 @@
     <target name="prepare-tomcat" depends="prepare-build-dir">
 
         <!-- copy over tomcat -->
+        <mkdir dir="${build.dir}"/>
+        <copy todir="${build.dir}/bin" filtering="no">
+            <fileset dir="${tomcat.dist.dir}/bin"/>
+        </copy>
+        <copy todir="${build.dir}/common" filtering="no">
+            <fileset dir="${tomcat.dist.dir}/common"/>
+        </copy>
+        <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
+        <copy todir="${build.dir}/conf" filtering="yes">
+            <fileset dir="${tomcat.dist.dir}/conf"/>
+        </copy>
+        <copy todir="${build.dir}/lib" filtering="no">
+            <fileset dir="${tomcat.dist.dir}/lib"/>
+        </copy>
+        <copy todir="${build.dir}/server" filtering="no">
+            <fileset dir="${tomcat.dist.dir}/server"/>
+        </copy>
         <copy todir="${build.dir}" filtering="no">
-            <fileset dir="${tomcat.dist.dir}/"/>
+            <fileset dir="${tomcat.dist.dir}">
+                <include name="scarab.sh"/>
+            </fileset>
         </copy>
         <!-- no need to have two copies of this checked into CVS -->
         <copy todir="${build.dir}/common/lib" filtering="no">
@@ -87,26 +120,13 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Check to see what optional dependencies are available              -->
-    <!-- ================================================================== -->
-    <target name="check_for_optional_packages">
-        <available property="lucene.present"
-                   classname="com.lucene.document.Document">
-            <classpath refid="classpath"/>
-        </available>
-        <available property="junit.present"
-           classname="junit.framework.TestCase">
-            <classpath refid="classpath"/>
-        </available>
-    </target>
-
-    <!-- ================================================================== -->
     <!-- Prepares the build directory                                       -->
     <!-- ================================================================== -->
     <target name="prepare" depends="prepare-tomcat">
 
         <!-- things to go into the project directory -->
-        <copy todir="${build.project}" filtering="no">
+        <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
+        <copy todir="${build.project}" filtering="yes">
             <fileset dir="${src.html.dir}" defaultexcludes="no">
                 <include name="**/*.html"/>
                 <include name="**/*.css"/>
@@ -124,7 +144,7 @@
         <copy todir="${build.project}/resources" filtering="no">
             <fileset dir="${src.resources.dir}" defaultexcludes="no"/>
         </copy>
-        <copy todir="${build.project.webinf}" filtering="no">
+        <copy todir="${build.project.webinf}" filtering="yes">
             <fileset dir="${src.conf.dir}/">
                 <include name="web.xml"/>
             </fileset>
