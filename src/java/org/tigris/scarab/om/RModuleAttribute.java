@@ -89,23 +89,30 @@ public class RModuleAttribute
     {
         if (isModified())
         {
-            RIssueTypeAttribute ria = null;
-            try
-            {
-                ria = getIssueType().getRIssueTypeAttribute(getAttribute());
-                if ( (isNew() == false ) && (ria != null && ria.getLocked()))
-                {
-                    throw new TorqueException(getAttribute().getName() + " is locked");
-                }
-                else
-                {
-                    super.save(con);
-                }
+	    if (isNew())
+	    {
+		super.save(con);
             }
-            catch (Exception e)
-            {
-                throw new TorqueException("An error has occurred.", e);
-            }
+	    else
+            { 
+		RIssueTypeAttribute ria = null;
+		try
+		{
+		    ria = getIssueType().getRIssueTypeAttribute(getAttribute());
+		    if ( (ria != null && ria.getLocked()))
+		    {
+			throw new TorqueException(getAttribute().getName() + " is locked");
+		    }
+		    else
+		    {
+			super.save(con);
+		    }
+		}
+		catch (Exception e)
+		{
+		    throw new TorqueException("An error has occurred.", e);
+		}
+	    }
         }
     }
 

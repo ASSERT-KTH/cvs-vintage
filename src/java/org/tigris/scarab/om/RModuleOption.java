@@ -303,24 +303,31 @@ public class RModuleOption
     {
         if (isModified())
         {
-            Attribute attr = getAttributeOption().getAttribute();
-            RIssueTypeAttribute ria = null;
-            try
-            {
-                ria = getIssueType().getRIssueTypeAttribute(attr);
-                if (ria != null && ria.getLocked())
-                {
-                    throw new TorqueException(attr.getName() + "is locked");
-                }
-                else
-                {
-                    super.save(con);
-                }
+	    if (isNew())
+	    {
+		super.save(con);
             }
-            catch (Exception e)
+	    else
             {
-                throw new TorqueException("An error has occurred.");
-            }
+		Attribute attr = getAttributeOption().getAttribute();
+		RIssueTypeAttribute ria = null;
+		try
+		{
+		    ria = getIssueType().getRIssueTypeAttribute(attr);
+		    if (ria != null && ria.getLocked())
+		    {
+			throw new TorqueException(attr.getName() + "is locked");
+		    }
+		    else
+		    {
+			super.save(con);
+		    }
+		}
+		catch (Exception e)
+		{
+		    throw new TorqueException("An error has occurred.");
+		}
+	    }
         }
     }
 }
