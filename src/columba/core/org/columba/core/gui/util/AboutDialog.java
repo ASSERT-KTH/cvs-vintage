@@ -132,13 +132,14 @@ public class AboutDialog extends JDialog implements ActionListener {
         authorPanel.add(websiteUrl, c);
 
         //TODO: i18n
-        tabbedPane.addTab("Authors", authorPanel);
+        tabbedPane.addTab(GlobalResourceLoader.getString(
+                RESOURCE_BUNDLE_PATH, "about", "authorsPane"), authorPanel);
         
         JPanel contributorPanel = new JPanel(new BorderLayout(0, 5));
         contributorPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
-        contributorPanel.add(
-                new JLabel("These people have contributed to the development:"),
-                BorderLayout.NORTH);
+        JLabel contributorLabel = new JLabel(GlobalResourceLoader.getString(
+                RESOURCE_BUNDLE_PATH, "about", "contributorLabel"));
+        contributorPanel.add(contributorLabel, BorderLayout.NORTH);
         JList contributorList = new JList(new String[]{
                 "Thomas Wabner",
                 "Karl Peder Olesen",
@@ -160,21 +161,22 @@ public class AboutDialog extends JDialog implements ActionListener {
                 "Paul Nicholls",
                 "Paul E. Baclace"
         });
+        contributorLabel.setLabelFor(contributorList);
         contributorPanel.add(new JScrollPane(contributorList));
         
-        tabbedPane.addTab("Contributors", contributorPanel);
+        tabbedPane.addTab(GlobalResourceLoader.getString(
+                RESOURCE_BUNDLE_PATH, "about", "contributorPane"), contributorPanel);
         if (MainInterface.DEBUG) {
                 tabbedPane.addTab("Memory", new MemoryPanel());
         }
-        
 		
-		JPanel center = new JPanel();
-		center.setLayout( new BorderLayout());
-		center.setBorder( BorderFactory.createEmptyBorder(12,12,12,12));
-		
-		center.add(tabbedPane, BorderLayout.CENTER);
-		
-		getContentPane().add(center,BorderLayout.CENTER);
+        JPanel center = new JPanel();
+        center.setLayout( new BorderLayout());
+        center.setBorder( BorderFactory.createEmptyBorder(12,12,12,12));
+
+        center.add(tabbedPane, BorderLayout.CENTER);
+
+        getContentPane().add(center,BorderLayout.CENTER);
 		
         JPanel buttonPanel = new JPanel(new BorderLayout(0, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 12, 11, 11));
