@@ -200,7 +200,7 @@
     <small>$l10n.CommentFieldDesc</small>
 #else
     #fieldErrorMsg($intakeAttachment.Data "")
-    <small><strong>$l10n.MissedRequired1</strong> $l10n.MissedRequire2</small>
+    <small><strong>$l10n.MissedRequired1</strong> $l10n.MissedRequired2</small>
 #end
 <p>
 #textAreaMedium("$intakeAttachment.Data.Key" $intakeAttachment.Data)
