@@ -89,7 +89,7 @@ import org.apache.turbine.Log;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.41 2002/01/11 21:56:51 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.42 2002/01/11 22:33:02 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -362,6 +362,27 @@ public class ScarabUserImpl
         crit.addJoin(TurbineRolePeer.ROLE_ID, 
                      TurbineUserGroupRolePeer.ROLE_ID);
         List roles = TurbineRolePeer.doSelect(crit);
+
+        // check the global module
+        if ( !ModuleEntity.ROOT_ID.equals(module.getModuleId()) ) 
+        {
+            crit = new Criteria();
+            crit.setDistinct();
+            crit.add(TurbineUserGroupRolePeer.USER_ID, getUserId());
+            crit.add(TurbineUserGroupRolePeer.GROUP_ID, ModuleEntity.ROOT_ID);
+            crit.addJoin(TurbineRolePeer.ROLE_ID, 
+                         TurbineUserGroupRolePeer.ROLE_ID);
+            List globalRoles = TurbineRolePeer.doSelect(crit);
+
+            for ( int i=0; i<globalRoles.size(); i++ ) 
+            {
+                if ( !roles.contains(globalRoles.get(i)) ) 
+                {
+                    roles.add(globalRoles.get(i));
+                }
+            }
+        }
+        
         return roles;
     }
     
