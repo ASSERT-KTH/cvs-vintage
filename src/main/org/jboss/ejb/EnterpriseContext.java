@@ -47,7 +47,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -439,9 +439,9 @@ public abstract class EnterpriseContext
          } finally {
            // According to the spec, after commit and rollback was called on
            // UserTransaction, the thread is associated with no transaction.
-           // Since the BMT Tx interceptor will associate the thread from the context
-           // with the thread that comes in on an invocation, we must set the
-           // context transaction to null
+           // Since the BMT Tx interceptor will associate and resume the tx 
+           // from the context with the thread that comes in
+           // on a subsequent invocation, we must set the context transaction to null
            setTransaction(null);
          }  
       }
@@ -454,9 +454,9 @@ public abstract class EnterpriseContext
          } finally {
            // According to the spec, after commit and rollback was called on
            // UserTransaction, the thread is associated with no transaction.
-           // Since the BMT Tx interceptor will associate the thread from the context
-           // with the thread that comes in on an invocation, we must set the
-           // context transaction to null
+           // Since the BMT Tx interceptor will associate and resume the tx 
+           // from the context with the thread that comes in
+           // on a subsequent invocation, we must set the context transaction to null
            setTransaction(null);
          }  
       }
