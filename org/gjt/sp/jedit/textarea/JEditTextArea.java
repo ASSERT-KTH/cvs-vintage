@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.206 2003/03/23 01:31:14 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.207 2003/03/23 18:02:21 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4836,6 +4836,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	Segment lineSegment;
 	MouseHandler mouseHandler;
 	ChunkCache chunkCache;
+	DisplayManager displayManager;
 	boolean bufferChanging;
 
 	int maxHorizontalScrollWidth;
@@ -4992,7 +4993,6 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	private JScrollBar horizontal;
 
 	private Buffer buffer;
-	private DisplayManager displayManager;
 	private BufferChangeHandler bufferHandler;
 	private boolean bufferHandlerInstalled;
 
@@ -5875,7 +5875,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		{
 			// Inserting multiple lines can change the last physical
 			// line due to folds being pushed down and so on
-			if(numLines != 0 || (softWrap && getDisplayManager()
+			if(numLines != 0 || (softWrap && displayManager
 				.getLastVisibleLine() - numLines <= getLastPhysicalLine()))
 			{
 				delayedRecalculateLastPhysicalLine = true;
@@ -5912,7 +5912,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				return;
 			if(startLine < getFirstPhysicalLine())
 			{
-				if(startLine < getDisplayManager().getFirstVisibleLine())
+				if(startLine < displayManager.getFirstVisibleLine())
 				{
 					// need to update these two!
 					physFirstLine = virtualToPhysical(firstLine);

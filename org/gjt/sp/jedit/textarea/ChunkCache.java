@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.syntax.*;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.63 2003/03/23 17:56:07 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.64 2003/03/23 18:02:19 spestov Exp $
  */
 class ChunkCache
 {
@@ -491,7 +491,7 @@ class ChunkCache
 		}
 		else
 		{
-			int nextLine = textArea.getDisplayManager()
+			int nextLine = textArea.displayManager
 				.getNextVisibleLine(physicalLine);
 
 			if(nextLine == -1)
@@ -525,7 +525,7 @@ class ChunkCache
 		}
 		else
 		{
-			int prevLine = textArea.getDisplayManager()
+			int prevLine = textArea.displayManager
 				.getPrevVisibleLine(physicalLine);
 
 			if(prevLine == -1)
@@ -650,7 +650,7 @@ class ChunkCache
 			else
 			{
 				physicalLine = textArea
-					.getDisplayManager()
+					.displayManager
 					.getNextVisibleLine(prevPhysLine);
 			}
 		}
@@ -675,7 +675,7 @@ class ChunkCache
 			{
 				if(physicalLine != -1 && i != firstScreenLine)
 				{
-					physicalLine = textArea.getDisplayManager()
+					physicalLine = textArea.displayManager
 						.getNextVisibleLine(physicalLine);
 				}
 
