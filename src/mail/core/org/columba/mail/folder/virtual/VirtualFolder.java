@@ -108,10 +108,10 @@ public class VirtualFolder extends AbstractMessageFolder {
 		super(name, type, path);
 
 		IFolderItem item = getConfiguration();
-		item.set("property", "accessrights", "user");
-		item.set("property", "subfolder", "true");
-		item.set("property", "include_subfolders", "true");
-		item.set("property", "source_uid", "101");
+		item.setString("property", "accessrights", "user");
+		item.setString("property", "subfolder", "true");
+		item.setString("property", "include_subfolders", "true");
+		item.setString("property", "source_uid", "101");
 
 		headerList = new HeaderList();
 
@@ -208,8 +208,8 @@ public class VirtualFolder extends AbstractMessageFolder {
 				"include_subfolders");
 
 		IFolderItem newFolderItem = newFolder.getConfiguration();
-		newFolderItem.set("property", "source_uid", uid);
-		newFolderItem.set("property", "include_subfolders", includes);
+		newFolderItem.setInteger("property", "source_uid", uid);
+		newFolderItem.setBoolean("property", "include_subfolders", includes);
 
 		newFolderItem.getElement("filter").removeFromParent();
 		newFolderItem.getRoot().addElement(
@@ -346,7 +346,7 @@ public class VirtualFolder extends AbstractMessageFolder {
 		}
 
 		boolean isInclude = Boolean.valueOf(
-				getConfiguration().get("property", "include_subfolders"))
+				getConfiguration().getString("property", "include_subfolders"))
 				.booleanValue();
 
 		if (isInclude) {
@@ -844,7 +844,7 @@ public class VirtualFolder extends AbstractMessageFolder {
 		AbstractMessageFolder srcFolder = getSourceFolder();
 		
 		boolean isInclude = Boolean.valueOf(
-				getConfiguration().get("property", "include_subfolders"))
+				getConfiguration().getString("property", "include_subfolders"))
 				.booleanValue();
 
 		

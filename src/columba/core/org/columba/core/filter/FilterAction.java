@@ -53,7 +53,7 @@ public class FilterAction extends DefaultItem {
 		if (contains("uid") == false) {
 			// folder uid doesn't exist
 			//  -> create default value
-			set("uid", 101);
+			setInteger("uid", 101);
 
 			return getInteger("uid");
 		} else {
@@ -67,7 +67,7 @@ public class FilterAction extends DefaultItem {
 	 * @param i
 	 */
 	public void setUid(int i) {
-		set("uid", i);
+		setInteger("uid", i);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class FilterAction extends DefaultItem {
 	 * @param s
 	 */
 	public void setAction(String s) {
-		set("type", s);
+		setString("type", s);
 	}
 
 }

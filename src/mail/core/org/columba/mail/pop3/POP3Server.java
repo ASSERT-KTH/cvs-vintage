@@ -209,8 +209,8 @@ public class POP3Server {
 			CommandCancelledException {
 		PopItem item = getAccountItem().getPopItem();
 
-		if (item.getBoolean("leave_messages_on_server", false)
-				&& item.getBoolean("remove_old_from_server", false)) {
+		if (item.getBooleanWithDefault("leave_messages_on_server", false)
+				&& item.getBooleanWithDefault("remove_old_from_server", false)) {
 			int days = item.getInteger("older_than");
 			long date = new Date().getTime();
 			date -= days * DAY_IN_MS;

@@ -116,7 +116,7 @@ public class HeadersMenu extends IMenu implements ActionListener, Observer {
 	 */
 	public void update(Observable arg0, Object arg1) {
 		IDefaultItem item = new DefaultItem(element);
-		int style = item.getInteger("style", 0);
+		int style = item.getIntegerWithDefault("style", 0);
 		switch (style) {
 		case 0:
 			defaultMenuItem.setSelected(true);

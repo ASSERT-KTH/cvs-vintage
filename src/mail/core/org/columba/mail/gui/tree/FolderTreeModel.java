@@ -151,12 +151,12 @@ public class FolderTreeModel extends DefaultTreeModel {
             } else if (uid == 107) {
                 name = MailResourceLoader.getString("tree", "templates");
             } else {
-                name = item.get("property", "name");
+                name = item.getString("property", "name");
             }
 
-            item.set("property", "name", name);
+            item.setString("property", "name", name);
         } catch (MissingResourceException ex) {
-            name = item.get("property", "name");
+            name = item.getString("property", "name");
         }
 
         // now instanciate the folder classes

@@ -93,13 +93,13 @@ public String getDestinationFolder()
         if (b) {
             leaveOnServerCheckBox.setSelected(item.getBoolean(
                     "leave_messages_on_server"));
-        	removeOldMessagesCheckBox.setSelected(item.getBoolean("remove_old_from_server", false));
+        	removeOldMessagesCheckBox.setSelected(item.getBooleanWithDefault("remove_old_from_server", false));
         	
         	updateRemoveOldMessagesEnabled();
 
-        	olderThanSpinner.getModel().setValue(new Integer( item.getInteger("older_than", 30)));
+        	olderThanSpinner.getModel().setValue(new Integer( item.getIntegerWithDefault("older_than", 30)));
         	
-            excludeCheckBox.setSelected(item.getBoolean(
+            excludeCheckBox.setSelected(item.getBooleanWithDefault(
                     "exclude_from_checkall", false));
 
             limitMessageDownloadCheckBox.setSelected(item.getBoolean(
@@ -112,18 +112,18 @@ enablePreProcessingFilterCheckBox.setSelected(item.getBoolean(
 "enable_pop3preprocessingfilter", false));
 */
         } else {
-        	item.set("remove_old_from_server", removeOldMessagesCheckBox.isSelected());
+        	item.setBoolean("remove_old_from_server", removeOldMessagesCheckBox.isSelected());
 
-        	item.set("older_than", ((SpinnerNumberModel)olderThanSpinner.getModel()).getNumber().intValue() );
+        	item.setInteger("older_than", ((SpinnerNumberModel)olderThanSpinner.getModel()).getNumber().intValue() );
         	
-        	item.set("leave_messages_on_server",
+        	item.setBoolean("leave_messages_on_server",
                 leaveOnServerCheckBox.isSelected()); //$NON-NLS-1$
 
-            item.set("exclude_from_checkall", excludeCheckBox.isSelected()); //$NON-NLS-1$
+            item.setBoolean("exclude_from_checkall", excludeCheckBox.isSelected()); //$NON-NLS-1$
 
-            item.set("download_limit", limitMessageDownloadTextField.getText());
+            item.setString("download_limit", limitMessageDownloadTextField.getText());
 
-            item.set("enable_download_limit",
+            item.setBoolean("enable_download_limit",
                 limitMessageDownloadCheckBox.isSelected());
 
             /*

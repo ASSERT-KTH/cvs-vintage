@@ -88,7 +88,7 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
 		}
 
 		DefaultItem item = new DefaultItem(messageviewer);
-		return item.getBoolean("inline_attachments", false);
+		return item.getBooleanWithDefault("inline_attachments", false);
 	}
 
 	/**

@@ -146,10 +146,10 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 	private String createLabelText(MailboxInfo info, IFolderItem item) {
 
 		// name of folder
-		String name = item.get("property", "name");
+		String name = item.getString("property", "name");
 		//	IMAP folder specific
 		// - Is this folder selectable (does it contain messages?)
-		boolean selectable = item.getBoolean("selectable", true) == false;
+		boolean selectable = item.getBooleanWithDefault("selectable", true) == false;
 
 		StringBuffer buf;
 		// set label text

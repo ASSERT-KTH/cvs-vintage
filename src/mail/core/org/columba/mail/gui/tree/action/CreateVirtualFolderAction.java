@@ -96,7 +96,7 @@ public class CreateVirtualFolderAction extends AbstractColumbaAction implements
 				FolderTreeModel.getInstance().nodeStructureChanged(r.getSourceFolder());
 
 				// set parent folder uid
-				vfolder.getConfiguration().set("property", "source_uid",
+				vfolder.getConfiguration().setInteger("property", "source_uid",
 						r.getSourceFolder().getUid());
 
 				// open search dialog

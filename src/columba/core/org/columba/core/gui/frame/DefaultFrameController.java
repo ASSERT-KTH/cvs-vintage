@@ -70,7 +70,7 @@ public class DefaultFrameController implements FrameMediator {
 	}
 	
 	public DefaultFrameController(String id) {
-		this(new ViewItem(DefaultContainer.createDefaultConfiguration(id)));
+		this(ViewItem.createDefault(id));
 
 	}
 

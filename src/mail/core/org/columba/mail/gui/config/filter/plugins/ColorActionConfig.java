@@ -48,7 +48,7 @@ public class ColorActionConfig extends DefaultActionRow {
         colorsComboBox = new ColorComboBox();
 
         // Add the custom color item.
-        int rgb = getFilterAction().getInteger("rgb", Color.black.getRGB());
+        int rgb = getFilterAction().getIntegerWithDefault("rgb", Color.black.getRGB());
         colorsComboBox.setCustomColor(ColorFactory.getColor(rgb));
 
         addComponent(colorsComboBox);
@@ -65,8 +65,8 @@ public class ColorActionConfig extends DefaultActionRow {
             ColorItem object = (ColorItem) colorsComboBox.getSelectedColorItem();
 
             if (object != null) {
-                getFilterAction().set("color", object.getName());
-                getFilterAction().set("rgb", object.getColor().getRGB());
+                getFilterAction().setString("color", object.getName());
+                getFilterAction().setInteger("rgb", object.getColor().getRGB());
             }
         }
     }

@@ -71,7 +71,7 @@ public class AccountCriteriaRow extends DefaultCriteriaRow {
         if (b) {
             matchComboBox.setSelectedItem(criteria.getCriteriaString());
 
-            int criteriaAccountUid = criteria.getInteger("account.uid", -1);
+            int criteriaAccountUid = criteria.getIntegerWithDefault("account.uid", -1);
 
             if (criteriaAccountUid != -1) {
                 ComboBoxModel model = accountComboBox.getModel();
@@ -90,7 +90,7 @@ public class AccountCriteriaRow extends DefaultCriteriaRow {
             criteria.setCriteriaString((String) matchComboBox.getSelectedItem());
 
             AccountComboBoxItem item = (AccountComboBoxItem) accountComboBox.getSelectedItem();
-            criteria.set("account.uid", item.getAccountID());
+            criteria.setInteger("account.uid", item.getAccountID());
         }
     }
 

@@ -142,8 +142,8 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		super(name, type, path);
 
 		IFolderItem item = getConfiguration();
-		item.set("property", "accessrights", "user");
-		item.set("property", "subfolder", "true");
+		item.setString("property", "accessrights", "user");
+		item.setString("property", "subfolder", "true");
 	}
 
 	/**
@@ -348,7 +348,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 				AccountItem accountItem = rootFolder.getAccountItem();
 				ImapItem item = accountItem.getImapItem();
 
-				boolean applyFilter = item.getBoolean(
+				boolean applyFilter = item.getBooleanWithDefault(
 						"automatically_apply_filter", false);
 
 				// if "automatically apply filter" is selected & there are new

@@ -35,7 +35,6 @@ import javax.swing.text.View;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.config.ViewItem;
-import org.columba.core.config.WindowItem;
 import org.columba.core.gui.menu.ColumbaMenu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ColumbaToolBar;
@@ -178,40 +177,6 @@ public class DefaultContainer extends JFrame implements Container,
 
 	/**
 	 * 
-	 * Create default view configuration
-	 * 
-	 * This is used by implementations of controllers who want to store some
-	 * more information, which is specific to their domain.
-	 * 
-	 * @see AbstractMailFrameController for implementation example
-	 * 
-	 * 
-	 * @param id
-	 *            ID of controller
-	 * @return xml treenode containing the new configuration
-	 */
-	public static XmlElement createDefaultConfiguration(String id) {
-		// initialize default view options
-		XmlElement defaultView = new XmlElement("view");
-		XmlElement window = new XmlElement("window");
-		window.addAttribute("x", "0");
-		window.addAttribute("y", "0");
-		window.addAttribute("width", "640");
-		window.addAttribute("height", "480");
-		window.addAttribute("maximized", "true");
-		defaultView.addElement(window);
-
-		XmlElement toolbars = new XmlElement("toolbars");
-		toolbars.addAttribute("main", "true");
-		defaultView.addElement(toolbars);
-
-		defaultView.addAttribute("id", id);
-
-		return defaultView;
-	}
-
-	/**
-	 * 
 	 * @return statusbar
 	 */
 	public StatusBar getStatusBar() {
@@ -308,7 +273,7 @@ public class DefaultContainer extends JFrame implements Container,
 	 *            true/false
 	 */
 	public void enableToolBar(String id, boolean enable) {
-		getViewItem().set("toolbars", id, enable);
+		getViewItem().setBoolean("toolbars", id, enable);
 
 		toolbarPane.removeAll();
 
@@ -337,7 +302,7 @@ public class DefaultContainer extends JFrame implements Container,
 	 * @return true, if toolbar is enabled, false otherwise
 	 */
 	public boolean isToolBarEnabled(String id) {
-		return getViewItem().getBoolean("toolbars", id, true);
+		return getViewItem().getBooleanWithDefault("toolbars", id, true);
 	}
 
 	/**
@@ -347,11 +312,11 @@ public class DefaultContainer extends JFrame implements Container,
 	public void loadPositions(ViewItem viewItem) {
 
 		// *20030831, karlpeder* Also location is restored
-		int x = viewItem.getInteger("window", "x", 0);
-		int y = viewItem.getInteger("window", "y", 0);
-		int w = viewItem.getInteger("window", "width", 900);
-		int h = viewItem.getInteger("window", "height", 700);
-		boolean maximized = viewItem.getBoolean("window", "maximized", true);
+		int x = viewItem.getIntegerWithDefault(ViewItem.WINDOW, ViewItem.POSITION_X_INT, 0);
+		int y = viewItem.getIntegerWithDefault(ViewItem.WINDOW, ViewItem.POSITION_Y_INT, 0);
+		int w = viewItem.getIntegerWithDefault(ViewItem.WINDOW, ViewItem.WIDTH_INT, 900);
+		int h = viewItem.getIntegerWithDefault(ViewItem.WINDOW, ViewItem.HEIGHT_INT, 700);
+		boolean maximized = viewItem.getBooleanWithDefault(ViewItem.WINDOW, ViewItem.MAXIMIZED_BOOL, true);
 
 		//if (WindowMaximizer.isWindowMaximized(this) == false) {
 		// if window is maximized -> ignore the window size
@@ -388,17 +353,17 @@ public class DefaultContainer extends JFrame implements Container,
 		java.awt.Dimension d = getSize();
 		java.awt.Point loc = getLocation();
 
-		WindowItem item = getViewItem().getWindowItem();
+		ViewItem item = getViewItem();
 
 		// *20030831, karlpeder* Now also location is stored
-		item.set("x", loc.x);
-		item.set("y", loc.y);
-		item.set("width", d.width);
-		item.set("height", d.height);
+		item.setInteger(ViewItem.WINDOW, ViewItem.POSITION_X_INT, loc.x);
+		item.setInteger(ViewItem.WINDOW, ViewItem.POSITION_Y_INT, loc.y);
+		item.setInteger(ViewItem.WINDOW, ViewItem.WIDTH_INT, d.width);
+		item.setInteger(ViewItem.WINDOW, ViewItem.HEIGHT_INT, d.height);
 
 		boolean isMaximized = WindowMaximizer.isWindowMaximized(this);
 
-		item.set("maximized", isMaximized);
+		item.setBoolean(ViewItem.WINDOW, ViewItem.MAXIMIZED_BOOL, isMaximized);
 
 		getFrameMediator().savePositions(viewItem);
 	}
@@ -601,7 +566,7 @@ public class DefaultContainer extends JFrame implements Container,
 	 * @see org.columba.core.gui.frame.Container#enableInfoPanel(boolean)
 	 */
 	public void enableInfoPanel(boolean enable) {
-		getViewItem().set("toolbars", "infopanel", enable);
+		getViewItem().setBoolean("toolbars", "infopanel", enable);
 
 		toolbarPane.removeAll();
 
@@ -627,7 +592,7 @@ public class DefaultContainer extends JFrame implements Container,
 	 * @see org.columba.core.gui.frame.Container#isInfoPanelEnabled()
 	 */
 	public boolean isInfoPanelEnabled() {
-		return getViewItem().getBoolean("toolbars", "infopanel", true);
+		return getViewItem().getBooleanWithDefault("toolbars", "infopanel", true);
 	}
 
 	/**

@@ -147,7 +147,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	}
 
 	public void enableMessagePreview(boolean enable) {
-		getViewItem().set("header_enabled", enable);
+		getViewItem().setBoolean("header_enabled", enable);
 
 		if (enable) {
 			rightSplitPane = new UIFSplitPane();
@@ -162,11 +162,11 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 			mainSplitPane.add(tablePanel, JSplitPane.RIGHT);
 		}
 
-		mainSplitPane.setDividerLocation(viewItem.getInteger("splitpanes",
+		mainSplitPane.setDividerLocation(viewItem.getIntegerWithDefault("splitpanes",
 				"main", 100));
 
 		if (enable)
-			rightSplitPane.setDividerLocation(viewItem.getInteger("splitpanes",
+			rightSplitPane.setDividerLocation(viewItem.getIntegerWithDefault("splitpanes",
 					"header", 100));
 
 		getContainer().getFrame().validate();
@@ -235,7 +235,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		tableScrollPane.getViewport().setBackground(Color.white);
 		tablePanel.add(tableScrollPane, BorderLayout.CENTER);
 
-		if (viewItem.getBoolean("splitpanes", "header_enabled", true)) {
+		if (viewItem.getBooleanWithDefault("splitpanes", "header_enabled", true)) {
 
 			rightSplitPane = new UIFSplitPane();
 			rightSplitPane.setBorder(null);
@@ -256,11 +256,11 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 			//pack();
 			rightSplitPane.setDividerLocation(150);
 		} else {
-			mainSplitPane.setDividerLocation(viewItem.getInteger("splitpanes",
+			mainSplitPane.setDividerLocation(viewItem.getIntegerWithDefault("splitpanes",
 					"main", 100));
 
-			if (viewItem.getBoolean("splitpanes", "header_enabled", true))
-				rightSplitPane.setDividerLocation(viewItem.getInteger(
+			if (viewItem.getBooleanWithDefault("splitpanes", "header_enabled", true))
+				rightSplitPane.setDividerLocation(viewItem.getIntegerWithDefault(
 						"splitpanes", "header", 100));
 		}
 
@@ -305,12 +305,12 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		super.savePositions(viewItem);
 
 		// splitpanes
-		viewItem.set("splitpanes", "main", mainSplitPane.getDividerLocation());
+		viewItem.setInteger("splitpanes", "main", mainSplitPane.getDividerLocation());
 
 		if (rightSplitPane != null)
-			viewItem.set("splitpanes", "header", rightSplitPane
+			viewItem.setInteger("splitpanes", "header", rightSplitPane
 					.getDividerLocation());
-		viewItem.set("splitpanes", "header_enabled", rightSplitPane != null);
+		viewItem.setBoolean("splitpanes", "header_enabled", rightSplitPane != null);
 
 		IMailFolderCommandReference r = getTreeSelection();
 

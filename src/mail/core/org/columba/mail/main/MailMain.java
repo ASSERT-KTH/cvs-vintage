@@ -205,7 +205,7 @@ public class MailMain implements IComponentPlugin {
 		IDefaultItem item = new DefaultItem(MailConfig.getInstance().get(
 				"options"));
 
-		boolean checkDefault = item.getBoolean("options/defaultclient",
+		boolean checkDefault = item.getBooleanWithDefault("options/defaultclient",
 				"check", true);
 
 		if (checkDefault
@@ -232,7 +232,7 @@ public class MailMain implements IComponentPlugin {
 					defaultClientHandler.setDefaultMailClient();
 				}
 
-				item.set("options/defaultclient", "check", !askAgain
+				item.setBoolean("options/defaultclient", "check", !askAgain
 						.isSelected());
 			}
 		}

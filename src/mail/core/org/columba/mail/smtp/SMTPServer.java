@@ -190,7 +190,7 @@ public class SMTPServer {
 					}
 
 					// turn off SSL for the future
-					smtpItem.set("enable_ssl", false);
+					smtpItem.setBoolean("enable_ssl", false);
 
 					protocol.openPort();
 
@@ -216,7 +216,7 @@ public class SMTPServer {
 				}
 
 				// turn off SSL for the future
-				smtpItem.set("enable_ssl", false);
+				smtpItem.setBoolean("enable_ssl", false);
 			}
 		}
 
@@ -292,7 +292,7 @@ public class SMTPServer {
 
 						if (result == JOptionPane.OK_OPTION) {
 							authMethod = AuthenticationManager.SASL_PLAIN;
-							smtpItem.set("login_method", Integer
+							smtpItem.setString("login_method", Integer
 									.toString(authMethod));
 						} else {
 							throw new CommandCancelledException();
@@ -316,10 +316,10 @@ public class SMTPServer {
 
 			// authentication was successful
 			// -> save name/password
-			smtpItem.set("user", username);
-			smtpItem.set("save_password", savePassword);
+			smtpItem.setString("user", username);
+			smtpItem.setBoolean("save_password", savePassword);
 			if (savePassword) {
-				smtpItem.set("password", new String(password));
+				smtpItem.setString("password", new String(password));
 			}
 		}
 	}

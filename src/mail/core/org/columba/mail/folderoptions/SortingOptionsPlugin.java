@@ -54,7 +54,7 @@ public class SortingOptionsPlugin extends AbstractFolderOptionsPlugin {
             column = "Date";
         }
 
-        boolean order = item.getBoolean("order", true);
+        boolean order = item.getBooleanWithDefault("order", true);
 
         TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
 

@@ -17,7 +17,6 @@
 package org.columba.core.config;
 
 import java.io.File;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.columba.core.xml.XmlElement;
@@ -26,10 +25,7 @@ public class OptionsXmlConfig extends DefaultXmlConfig {
 
     private static final Logger LOG = Logger.getLogger("org.columba.core.config");
 
-    //private File file;
-    protected ThemeItem themeItem;
-    GuiItem guiItem;
-    boolean initialVersionWasApplied = false;
+    private GuiItem guiItem;
 
     public OptionsXmlConfig(File file) {
         super(file);
@@ -37,17 +33,6 @@ public class OptionsXmlConfig extends DefaultXmlConfig {
 
     public boolean load() {
         boolean result = super.load();
-
-        //		apply initial version information
-        XmlElement root = getRoot().getElement(0);
-        String version = root.getAttribute("version");
-
-        if (version == null) {
-            initialVersionWasApplied = true;
-            root.addAttribute("version", "1.0");
-        }
-
-        convert();
         
         XmlElement proxy = getRoot().getElement("/options/proxy");
         if (proxy != null && System.getProperty("http.proxyHost") != null) {
@@ -58,53 +43,11 @@ public class OptionsXmlConfig extends DefaultXmlConfig {
         return result;
     }
 
-    protected void convert() {
-        // rename "Mail" to "ThreePaneMail
-        XmlElement root = getRoot();
-        String version = root.getAttribute("version");
-
-        if (initialVersionWasApplied) {
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("converting configuration to new version...");
-            }
-
-            XmlElement viewlist = root.getElement("/options/gui/viewlist");
-
-            for (int i = 0; i < viewlist.count(); i++) {
-                XmlElement view = viewlist.getElement(i);
-
-                if (view.getAttribute("id").equals("Mail")) {
-                    view.addAttribute("id", "ThreePaneMail");
-                }
-            }
-        }
-    }
-
     public GuiItem getGuiItem() {
         if (guiItem == null) {
             guiItem = new GuiItem(getRoot().getElement("/options/gui"));
         }
 
         return guiItem;
-    }
-
-    public ThemeItem getThemeItem() {
-        if (themeItem == null) {
-            themeItem = new ThemeItem(getRoot().getElement("/options/gui/theme"));
-        }
-
-        return themeItem;
-    }
-
-    public XmlElement getMimeTypeNode() {
-        XmlElement mimeTypes = getRoot().getElement("/options/mimetypes");
-
-        if (mimeTypes == null) {
-            getRoot().getElement("options").addElement(new XmlElement(
-                    "mimetypes"));
-            mimeTypes = getRoot().getElement("/options/mimetypes");
-        }
-
-        return mimeTypes;
     }
 }

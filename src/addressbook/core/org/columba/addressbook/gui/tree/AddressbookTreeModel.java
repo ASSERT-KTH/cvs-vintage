@@ -93,7 +93,7 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 		}
 
 		// i18n stuff
-		String name = item.get("property", "name");
+		String name = item.getString("property", "name");
 
 		//XmlElement.printNode(item.getRoot(), "");
 		int uid = item.getInteger("uid");

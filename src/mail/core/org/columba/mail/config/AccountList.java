@@ -173,7 +173,7 @@ public class AccountList extends DefaultItem {
         if (emptyAccount != null) {
             AccountItem newAccount = new AccountItem((XmlElement) emptyAccount
                     .clone());
-            newAccount.set("uid", getNextUid());
+            newAccount.setInteger("uid", getNextUid());
             add(newAccount);
 
             return newAccount;
@@ -208,7 +208,7 @@ public class AccountList extends DefaultItem {
 
     /** ************************** default account ******************* */
     public void setDefaultAccount(int uid) {
-        set("default", uid);
+        setInteger("default", uid);
         defaultAccount = null;
     }
 

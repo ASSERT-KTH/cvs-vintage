@@ -64,6 +64,6 @@ public class AccountFilter extends AbstractFilter {
  */
     public void setUp(FilterCriteria f) {
         criteriaCondition = f.getCriteria();
-        criteriaAccountUid = f.getInteger("account.uid", -1);
+        criteriaAccountUid = f.getIntegerWithDefault("account.uid", -1);
     }
 }

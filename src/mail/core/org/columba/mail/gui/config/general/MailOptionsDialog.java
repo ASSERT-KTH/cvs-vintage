@@ -101,7 +101,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
                 messageviewer = gui.addSubElement("messageviewer");
             }
             
-    		showAttachmentsInlineCheckBox.setSelected(new DefaultItem(messageviewer).getBoolean("inline_attachments", false));
+    		showAttachmentsInlineCheckBox.setSelected(new DefaultItem(messageviewer).getBooleanWithDefault("inline_attachments", false));
     		
             XmlElement markasread = options.getElement("markasread");
 

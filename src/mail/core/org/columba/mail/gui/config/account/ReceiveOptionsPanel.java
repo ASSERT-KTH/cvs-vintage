@@ -396,7 +396,7 @@ public class ReceiveOptionsPanel extends DefaultPanel implements ActionListener 
 			autodownloadCheckBox.setSelected(receiveItem
 					.getBoolean("automatically_download_new_messages"));
 
-			intervalCheckingSpinner.setValue(new Integer(receiveItem.getInteger("mailcheck_interval", 10)));
+			intervalCheckingSpinner.setValue(new Integer(receiveItem.getIntegerWithDefault("mailcheck_interval", 10)));
 
 			String soundfile = receiveItem.get("sound_file");
 
@@ -426,21 +426,21 @@ public class ReceiveOptionsPanel extends DefaultPanel implements ActionListener 
 				layoutComponents();
 			}
 		} else {
-			receiveItem.set("enable_mailcheck", intervalCheckingCheckBox
+			receiveItem.setBoolean("enable_mailcheck", intervalCheckingCheckBox
 					.isSelected());
 
-			receiveItem.set("enable_sound", playsoundCheckBox.isSelected());
+			receiveItem.setBoolean("enable_sound", playsoundCheckBox.isSelected());
 
-			receiveItem.set("automatically_download_new_messages",
+			receiveItem.setBoolean("automatically_download_new_messages",
 					autodownloadCheckBox.isSelected());
 
-			receiveItem.set("mailcheck_interval",
+			receiveItem.setString("mailcheck_interval",
 					((Integer) intervalCheckingSpinner.getValue()).toString());
 
 			if (defaultRadioButton.isSelected()) {
-				receiveItem.set("sound_file", "default");
+				receiveItem.setString("sound_file", "default");
 			} else {
-				receiveItem.set("sound_file", chooseButton.getText());
+				receiveItem.setString("sound_file", chooseButton.getText());
 			}
 		}
 

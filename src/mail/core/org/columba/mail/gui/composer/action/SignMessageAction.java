@@ -61,7 +61,7 @@ public class SignMessageAction extends AbstractSelectableAction implements
 
         PGPItem item = this.composerController.getModel().getAccountItem()
                 .getPGPItem();
-        setState(item.getBoolean("always_sign", false));
+        setState(item.getBooleanWithDefault("always_sign", false));
         System.out.println("always_sign=" + item.get("always_sign"));
 
         composerController.getModel().setSignMessage(getState());
@@ -86,7 +86,7 @@ public class SignMessageAction extends AbstractSelectableAction implements
         if (e.getStateChange() == ItemEvent.SELECTED) {
             AccountItem item = (AccountItem) ((AccountView)e.getSource()).getSelectedItem();
             PGPItem pgp = item.getPGPItem();
-            setState(pgp.getBoolean("always_sign", false));
+            setState(pgp.getBooleanWithDefault("always_sign", false));
         }
     }
 

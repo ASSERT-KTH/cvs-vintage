@@ -288,11 +288,11 @@ public class ComposerController extends DefaultFrameController implements
 			centerPanel.add(attachmentSplitPane, BorderLayout.CENTER);
 
 			// set splitpane position based on configuration settings
-			XmlElement viewElement = MailConfig.getInstance().get(
-					"composer_options").getElement("/options/gui/view");
-			ViewItem viewItem = new ViewItem(viewElement);
+			
+			ViewItem viewItem = getViewItem();
+			
 			// default value is 200 pixel
-			int pos = viewItem.getInteger("splitpanes", "attachment", 200);
+			int pos = viewItem.getIntegerWithDefault("splitpanes", "attachment", 200);
 			attachmentSplitPane.setDividerLocation(pos);
 		} else {
 			// no attachments
@@ -402,10 +402,8 @@ public class ComposerController extends DefaultFrameController implements
 
 		centerPanel.add(attachmentSplitPane, BorderLayout.CENTER);
 
-		XmlElement viewElement = MailConfig.getInstance().get(
-				"composer_options").getElement("/options/gui/view");
-		ViewItem viewItem = new ViewItem(viewElement);
-		int pos = viewItem.getInteger("splitpanes", "attachment", 200);
+		ViewItem viewItem = getViewItem();
+		int pos = viewItem.getIntegerWithDefault("splitpanes", "attachment", 200);
 		attachmentSplitPane.setDividerLocation(pos);
 
 	}
@@ -735,13 +733,12 @@ public class ComposerController extends DefaultFrameController implements
 	public void savePositions(ViewItem viewItem) {
 		super.savePositions(viewItem);
 
-		XmlElement viewElement = MailConfig.getInstance().get(
-				"composer_options").getElement("/options/gui/view");
-		viewItem = new ViewItem(viewElement);
+		
+		viewItem = getViewItem();
 
 		// splitpanes
 		if (attachmentSplitPane != null)
-			viewItem.set("splitpanes", "attachment", attachmentSplitPane
+			viewItem.setInteger("splitpanes", "attachment", attachmentSplitPane
 					.getDividerLocation());
 
 	}

@@ -307,7 +307,7 @@ public class POP3Store {
                                 "authentication_process_error"), JOptionPane.OK_CANCEL_OPTION);
                         if (result == JOptionPane.OK_OPTION) {
                             loginMethod = AuthenticationManager.USER;
-                            popItem.set("login_method", Integer.toString(loginMethod));
+                            popItem.setString("login_method", Integer.toString(loginMethod));
                         } else {
                             throw new CommandCancelledException();
                         }
@@ -317,18 +317,18 @@ public class POP3Store {
                 JOptionPane.showMessageDialog(null, e.getMessage(),
                     "Authorization failed!", JOptionPane.ERROR_MESSAGE);
                 
-                popItem.set("password", "");
+                popItem.setString("password", "");
             }
             
             LOG.info("login=" + login);
         }
         
-        popItem.set("save_password", save);
+        popItem.setBoolean("save_password", save);
         
         if (save) {
             // save plain text password in config file
             // this is a security risk !!!
-            popItem.set("password", new String(password));
+            popItem.setString("password", new String(password));
         }
     }
     
@@ -426,7 +426,7 @@ public class POP3Store {
      */
     private void openConnection() throws IOException, POP3Exception,
     CommandCancelledException {
-        int sslType = popItem.getInteger("ssl_type", IncomingServerPanel.TLS);
+        int sslType = popItem.getIntegerWithDefault("ssl_type", IncomingServerPanel.TLS);
         boolean sslEnabled = popItem.getBoolean("enable_ssl");
         
         // open a port to the server
@@ -446,8 +446,8 @@ public class POP3Store {
                 }
                 
                 // turn off SSL for the future
-                popItem.set("enable_ssl", false);
-                popItem.set("port", POP3Protocol.DEFAULT_PORT);
+                popItem.setBoolean("enable_ssl", false);
+                popItem.setInteger("port", POP3Protocol.DEFAULT_PORT);
                 
                 // reopen the port
                 protocol.openPort();
@@ -477,7 +477,7 @@ public class POP3Store {
                     }
                     
                     // turn off SSL for the future
-                    popItem.set("enable_ssl", false);
+                    popItem.setBoolean("enable_ssl", false);
                     
                     // reopen the port
                     protocol.openPort();
@@ -492,7 +492,7 @@ public class POP3Store {
                     }
                     
                     // turn off SSL for the future
-                    popItem.set("enable_ssl", false);
+                    popItem.setBoolean("enable_ssl", false);
                 }
             } else {
                 // CAPAs say that SSL is not supported
@@ -506,7 +506,7 @@ public class POP3Store {
                 }
                 
                 // turn off SSL for the future
-                popItem.set("enable_ssl", false);
+                popItem.setBoolean("enable_ssl", false);
             }
         }
     }

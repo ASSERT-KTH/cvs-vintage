@@ -297,7 +297,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 			}
 
 			boolean isInclude = Boolean.valueOf(
-					destFolder.getConfiguration().get("property",
+					destFolder.getConfiguration().getString("property",
 							"include_subfolders")).booleanValue();
 
 			includeSubfolderButton.setSelected(isInclude);
@@ -312,7 +312,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 			if (f == null) {
 				uid = 101;
 				destFolder.getConfiguration()
-						.set("property", "source_uid", uid);
+						.setInteger("property", "source_uid", uid);
 				f = (AbstractMessageFolder) FolderTreeModel.getInstance().getFolder(uid);
 			}
 
@@ -331,10 +331,10 @@ public class SearchFrame extends JDialog implements ActionListener {
 			}
 
 			if (includeSubfolderButton.isSelected()) {
-				destFolder.getConfiguration().set("property",
+				destFolder.getConfiguration().setString("property",
 						"include_subfolders", "true");
 			} else {
-				destFolder.getConfiguration().set("property",
+				destFolder.getConfiguration().setString("property",
 						"include_subfolders", "false");
 			}
 
@@ -343,7 +343,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 			AbstractMessageFolder folder = (AbstractMessageFolder) FolderTreeModel.getInstance()
 					.getFolder(list);
 			int uid = folder.getUid();
-			destFolder.getConfiguration().set("property", "source_uid", uid);
+			destFolder.getConfiguration().setInteger("property", "source_uid", uid);
 
 			criteriaList.updateComponents(b);
 		}

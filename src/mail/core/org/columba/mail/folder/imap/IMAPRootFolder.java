@@ -110,7 +110,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 
 		this.accountItem = accountItem;
 
-		getConfiguration().set("account_uid", accountItem.getInteger("uid"));
+		getConfiguration().setInteger("account_uid", accountItem.getInteger("uid"));
 
 		updateConfiguration();
 	}
@@ -122,8 +122,8 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 		super(name, type);
 
 		IFolderItem item = getConfiguration();
-		item.set("property", "accessrights", "system");
-		item.set("property", "subfolder", "true");
+		item.setString("property", "accessrights", "system");
+		item.setString("property", "subfolder", "true");
 	}
 
 	public String getDefaultChild() {
@@ -161,14 +161,14 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 						parent.getIndex(subFolder));
 
 				((IMAPFolder) subFolder).existsOnServer = true;
-				subFolder.getConfiguration().set("selectable", "false");
+				subFolder.getConfiguration().setString("selectable", "false");
 
 				// this is the final folder
 				//subFolder = addIMAPChildFolder(parent, info, subchild);
 			} else {
 				if (!((IMAPFolder) subFolder).existsOnServer) {
 					((IMAPFolder) subFolder).existsOnServer = true;
-					subFolder.getConfiguration().set("selectable", "false");
+					subFolder.getConfiguration().setString("selectable", "false");
 				}
 			}
 
@@ -194,17 +194,17 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 
 			// Check the Noselect flag
 			if (info.getParameter(ListInfo.NOSELECT)) {
-				subFolder.getConfiguration().set("selectable", "false");
+				subFolder.getConfiguration().setString("selectable", "false");
 			} else {
-				subFolder.getConfiguration().set("selectable", "true");
+				subFolder.getConfiguration().setString("selectable", "true");
 			}
 
 			// Check the Noinferior flag
 			if (info.getParameter(ListInfo.NOINFERIORS)
 					&& info.getDelimiter() != null) {
-				subFolder.getConfiguration().set("noinferiors", "true");
+				subFolder.getConfiguration().setString("noinferiors", "true");
 			} else {
-				subFolder.getConfiguration().set("noinferiors", "false");
+				subFolder.getConfiguration().setString("noinferiors", "false");
 			}
 		}
 	}
@@ -270,7 +270,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 				if (specialFolder != null) {
 					// we found a suitable folder -> set it
 					folders
-							.set(SPECIAL_FOLDER_NAMES[i], specialFolder
+							.setInteger(SPECIAL_FOLDER_NAMES[i], specialFolder
 									.getUid());
 				}
 			}
@@ -303,7 +303,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 
 		// This fixes the strange behaviour of the courier imapserver
 		// which sets the \Noselect flag on INBOX
-		inbox.getConfiguration().set("selectable", "true");
+		inbox.getConfiguration().setString("selectable", "true");
 
 		findSpecialFolders();
 	}

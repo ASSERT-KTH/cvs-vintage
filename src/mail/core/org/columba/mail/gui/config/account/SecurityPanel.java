@@ -74,13 +74,13 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 
             enablePGP(enableCheckBox.isSelected());
         } else {
-            item.set("id", idTextField.getText());
-            item.set("path", pathButton.getText());
+            item.setString("id", idTextField.getText());
+            item.setString("path", pathButton.getText());
 
-            item.set("enabled", enableCheckBox.isSelected());
+            item.setBoolean("enabled", enableCheckBox.isSelected());
 
-            item.set("always_sign", alwaysSignCheckBox.isSelected());
-            item.set("always_encrypt", alwaysEncryptCheckBox.isSelected());
+            item.setBoolean("always_sign", alwaysSignCheckBox.isSelected());
+            item.setBoolean("always_encrypt", alwaysEncryptCheckBox.isSelected());
         }
     }
 

@@ -83,7 +83,7 @@ public class ShowMessagePreviewAction extends AbstractSelectableAction
 	public void update(Observable arg0, Object arg1) {
 
 		IDefaultItem item = new DefaultItem(element);
-		boolean enabled = item.getBoolean("header_enabled", true);
+		boolean enabled = item.getBooleanWithDefault("header_enabled", true);
 		
 		setState(enabled);
 	}

@@ -55,7 +55,7 @@ public class EncryptMessageAction extends AbstractSelectableAction {
         AccountItem account = model.getAccountItem();
         PGPItem pgp = account.getPGPItem();
    
-        setState(pgp.getBoolean("always_encrypt", false));
+        setState(pgp.getBooleanWithDefault("always_encrypt", false));
         
         //setEnabled(false);
     }

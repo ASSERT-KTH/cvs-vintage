@@ -210,26 +210,6 @@ public class FrameModel {
 		return new JFrame();
 	}
 
-	protected XmlElement createDefaultConfiguration(String id) {
-		// initialize default view options
-		XmlElement defaultView = new XmlElement("view");
-		XmlElement window = new XmlElement("window");
-		window.addAttribute("x", "0");
-		window.addAttribute("y", "0");
-		window.addAttribute("width", "640");
-		window.addAttribute("height", "480");
-		window.addAttribute("maximized", "true");
-		defaultView.addElement(window);
-
-		XmlElement toolbars = new XmlElement("toolbars");
-		toolbars.addAttribute("main", "true");
-		defaultView.addElement(toolbars);
-
-		defaultView.addAttribute("id", id);
-
-		return defaultView;
-	}
-
 	/**
 	 * @param viewItem
 	 * @param id
@@ -287,7 +267,7 @@ public class FrameModel {
 		ViewItem view = loadDefaultView(id);
 
 		if (view == null)
-			view = new ViewItem(createDefaultConfiguration(id));
+			view = ViewItem.createDefault(id);
 
 		// Create a frame controller for this view
 		// view = null => defaults specified by frame controller is used
@@ -302,7 +282,7 @@ public class FrameModel {
 		ViewItem view = loadDefaultView(id);
 
 		if (view == null)
-			view = new ViewItem(createDefaultConfiguration(id));
+			view = ViewItem.createDefault(id);
 
 		// Create a frame controller for this view
 
@@ -425,12 +405,8 @@ public class FrameModel {
 			if ( name.equals(id) ) return new ViewItem(child); 
 		}
 		
-		XmlElement child = createDefaultConfiguration(id);
-		custom.addElement(child);
-		
-		XmlElement.printNode(parent, " ");
-		
-		ViewItem viewItem = new ViewItem(child);
+		ViewItem viewItem = ViewItem.createDefault(id);
+		custom.addElement(viewItem.getRoot());
 
 		return viewItem;
 	}

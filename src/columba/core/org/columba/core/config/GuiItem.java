@@ -15,35 +15,32 @@
 //All Rights Reserved.
 package org.columba.core.config;
 
-import java.awt.Font;
-
 import org.columba.core.xml.XmlElement;
 
 
 /**
- * @author freddy
+ * User Interface specific options, including the Look&Feel, font settings,
+ * toolbar settings.
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz
  */
 public class GuiItem extends DefaultItem {
+	
+	public final static String THEME = "theme";	
+	public final static String NAME = "name";
+	
+	public final static String FONT = "fonts";
+	public final static String FONT_MAIN = "fonts/main";
+	public final static String FONT_TEXT = "fonts/text";
+	public final static String OVERWRITE_BOOL = "overwrite"; 
+	public final static String SIZE_INT = "size";
+	
+	public final static String TOOLBAR = "toolbar";
+	public final static String TEXT_POSITION_BOOL = "text_position";
+	public final static String ENABLE_ICON_BOOL = "enable_icon";
+	public final static String ENABLE_TEXT_BOOL = "enable_text";
+	
     public GuiItem(XmlElement root) {
         super(root);
-    }
-
-    public Font getMainFont() {
-        String name = get("mainfont", "name");
-        int size = getInteger("mainfont", "size");
-
-        return new Font(name, Font.PLAIN, size);
-    }
-
-    public Font getTextFont() {
-        String name = get("textfont", "name");
-        int size = getInteger("textfont", "size");
-
-        return new Font(name, Font.PLAIN, size);
     }
 }

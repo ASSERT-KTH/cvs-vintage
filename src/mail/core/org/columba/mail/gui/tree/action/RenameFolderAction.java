@@ -74,7 +74,7 @@ public class RenameFolderAction extends AbstractColumbaAction
             if ((folder != null) && folder instanceof AbstractMessageFolder) {
             	IFolderItem item = folder.getConfiguration();
 
-                if (item.get("property", "accessrights").equals("user")) {
+                if (item.getString("property", "accessrights").equals("user")) {
                     setEnabled(true);
                 } else {
                     setEnabled(false);

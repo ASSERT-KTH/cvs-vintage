@@ -503,7 +503,7 @@ public class MessageComposer {
 			// the account-config
 			if ((idStr == null) || (idStr.length() == 0)) {
 				//  Set id on from address
-				item.set("id", model.getAccountItem().getIdentity()
+				item.setString("id", model.getAccountItem().getIdentity()
 						.getAddress().getMailAddress());
 			}
 
@@ -525,7 +525,7 @@ public class MessageComposer {
 				recipientBuf.append((String) it.next());
 			}
 
-			item.set("recipients", recipientBuf.toString());
+			item.setString("recipients", recipientBuf.toString());
 
 			PGPMimePart signPart = new PGPMimePart(new MimeHeader("multipart",
 					"encrypted"), item);

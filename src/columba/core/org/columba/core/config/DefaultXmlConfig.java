@@ -21,7 +21,18 @@ import java.net.MalformedURLException;
 import org.columba.core.xml.XmlIO;
 
 
+/**
+ * XML config file.
+ * 
+ * @author fdietz
+ */
 public class DefaultXmlConfig extends XmlIO {
+	
+	/**
+	 * Default constructor.
+	 * 
+	 * @param file
+	 */
     public DefaultXmlConfig(File file) {
         try {
             setURL(file.toURL());
@@ -29,6 +40,11 @@ public class DefaultXmlConfig extends XmlIO {
         }
     }
 
+    /**
+     * Overwrite method to set default settings.
+     * 
+     * @see org.columba.core.xml.XmlIO#load()
+     */
     public boolean load() {
         boolean result = super.load();
 

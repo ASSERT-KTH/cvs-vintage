@@ -45,7 +45,7 @@ public class OptionsItem implements CheckableItem {
     public boolean isSelected() {
         IDefaultItem item = new DefaultItem(element);
 
-        return item.getBoolean("overwrite", false);
+        return item.getBooleanWithDefault("overwrite", false);
     }
 
     /**

@@ -19,14 +19,14 @@ public class DefaultItemTest extends TestCase {
  */
     public void testHashCode() {
         IDefaultItem item = new DefaultItem(new XmlElement());
-        item.set("boolean", false);
-        item.set("badboolean", true);
-        item.set("key", "value");
+        item.setBoolean("boolean", false);
+        item.setBoolean("badboolean", true);
+        item.setString("key", "value");
 
         IDefaultItem item2 = new DefaultItem(new XmlElement());
-        item2.set("boolean", false);
-        item2.set("badboolean", true);
-        item2.set("key", "value");
+        item2.setBoolean("boolean", false);
+        item2.setBoolean("badboolean", true);
+        item2.setString("key", "value");
         assertTrue("The hashcodes are not the same",
             item.hashCode() == item2.hashCode());
         assertTrue("The hashcodes are the same for different items.",
@@ -38,14 +38,14 @@ public class DefaultItemTest extends TestCase {
  */
     public void testEqualsObject() {
         IDefaultItem item = new DefaultItem(new XmlElement());
-        item.set("boolean", false);
-        item.set("badboolean", true);
-        item.set("key", "value");
+        item.setBoolean("boolean", false);
+        item.setBoolean("badboolean", true);
+        item.setString("key", "value");
 
         IDefaultItem item2 = new DefaultItem(new XmlElement());
-        item2.set("boolean", false);
-        item2.set("badboolean", true);
-        item2.set("key", "value");
+        item2.setBoolean("boolean", false);
+        item2.setBoolean("badboolean", true);
+        item2.setString("key", "value");
         assertTrue("The items are not equal", item.equals(item2));
         assertTrue("The items are not equal", item2.equals(item));
         assertTrue("The items are not equal", item.equals(item));
@@ -106,9 +106,9 @@ public class DefaultItemTest extends TestCase {
     public void testSet() {
     	XmlElement root = new XmlElement("root");
     	IDefaultItem item = new DefaultItem(root);
-    	item.set("sub/path", "test", "value");
+    	item.setString("sub/path", "test", "value");
     	
     	assertTrue( root.getElement("sub/path")!= null ); 
-    	assertEquals( item.get("sub/path","test"), "value");
+    	assertEquals( item.getString("sub/path","test"), "value");
     }
 }

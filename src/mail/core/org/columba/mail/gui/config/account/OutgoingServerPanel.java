@@ -123,7 +123,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
             portSpinner.setValue(new Integer(port));
             loginTextField.setText(item.get("user"));
             storePasswordCheckBox.setSelected(item.getBoolean("save_password"));
-            secureCheckBox.setSelected(item.getBoolean("enable_ssl", false));
+            secureCheckBox.setSelected(item.getBooleanWithDefault("enable_ssl", false));
             
             if (!(item.get("login_method").equals(
                     Integer.toString(AuthenticationManager.NONE)) || item.get(
@@ -160,21 +160,21 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
                 layoutComponents();
             }
         } else {
-            item.set("user", loginTextField.getText());
-            item.set("save_password", storePasswordCheckBox.isSelected());
-            item.set("port", ((Integer) portSpinner.getValue()).toString());
-            item.set("host", hostTextField.getText());
+            item.setString("user", loginTextField.getText());
+            item.setBoolean("save_password", storePasswordCheckBox.isSelected());
+            item.setString("port", ((Integer) portSpinner.getValue()).toString());
+            item.setString("host", hostTextField.getText());
             
-            item.set("enable_ssl", secureCheckBox.isSelected());
+            item.setBoolean("enable_ssl", secureCheckBox.isSelected());
             
             if (needAuthCheckBox.isSelected()) {
-                item.set("login_method", authenticationComboBox
+                item.setString("login_method", authenticationComboBox
                         .getSelectedItem().toString());
             } else {
-                item.set("login_method", Integer.toString(AuthenticationManager.NONE));
+                item.setString("login_method", Integer.toString(AuthenticationManager.NONE));
             }
             
-            item.set("use_default_account", defaultAccountCheckBox.isSelected());
+            item.setBoolean("use_default_account", defaultAccountCheckBox.isSelected());
         }
     }
     
@@ -378,7 +378,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
                     AuthenticationManager.POP_BEFORE_SMTP));
         }
         
-        String authMethods = accountItem.get("smtpserver",
+        String authMethods = accountItem.getString("smtpserver",
                 "authentication_methods");
         
         // Add previously fetch authentication modes
@@ -446,11 +446,11 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
     private AccountItem getCurrentDialogSettings() {
         AccountItem account = (AccountItem) accountItem.clone();
         SmtpItem item = account.getSmtpItem();
-        item.set("user", loginTextField.getText());
-        item.set("save_password", storePasswordCheckBox.isSelected());
-        item.set("port", ((Integer) portSpinner.getValue()).toString());
-        item.set("host", hostTextField.getText());
-        item.set("enable_ssl", secureCheckBox.isSelected());
+        item.setString("user", loginTextField.getText());
+        item.setBoolean("save_password", storePasswordCheckBox.isSelected());
+        item.setString("port", ((Integer) portSpinner.getValue()).toString());
+        item.setString("host", hostTextField.getText());
+        item.setBoolean("enable_ssl", secureCheckBox.isSelected());
         
         return account;
     }
@@ -479,10 +479,10 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
                 authMethods.append(it.next());
             }
             
-            accountItem.set("smtpserver", "authentication_methods", 
+            accountItem.setString("smtpserver", "authentication_methods", 
                     authMethods.toString());
         } else {
-            accountItem.set("smtpserver", "authentication_methods", "");
+            accountItem.setString("smtpserver", "authentication_methods", "");
         }
         
         updateAuthenticationComboBox();

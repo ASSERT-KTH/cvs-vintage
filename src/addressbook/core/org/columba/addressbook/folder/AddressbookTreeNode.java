@@ -186,7 +186,7 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode impleme
 				null);
 		FolderItem childNode = getDefaultItem(childClass.getName(), props);
 
-		childNode.set("property", "name", name);
+		childNode.setString("property", "name", name);
 
 		// Put properties that should be copied from parent here
 		AbstractFolder subFolder = (AbstractFolder) childClass.getConstructor(
@@ -219,7 +219,7 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode impleme
 		String name = null;
 
 		FolderItem item = getFolderItem();
-		name = item.get("property", "name");
+		name = item.getString("property", "name");
 
 		return name;
 	}
@@ -229,6 +229,6 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode impleme
 	 */
 	public void setName(String newName) {
 		FolderItem item = getFolderItem();
-		item.set("property", "name", newName);
+		item.setString("property", "name", newName);
 	}
 }

@@ -503,7 +503,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 				item = folder.getConfiguration();
 
 				boolean bool = enableTextIndexingCheckBox.isSelected();
-				item.set("property", "enable_lucene", bool); //$NON-NLS-1$ //$NON-NLS-2$
+				item.setBoolean("property", "enable_lucene", bool); //$NON-NLS-1$ //$NON-NLS-2$
 
 				// cast to Local AbstractMessageFolder is safe here
 				AbstractLocalFolder localFolder = (AbstractLocalFolder) folder;

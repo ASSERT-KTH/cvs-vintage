@@ -237,7 +237,7 @@ public class IMAPServer implements IMAPListener {
 		printStatusMessage(MailResourceLoader.getString("statusbar", "message",
 				"connecting"));
 
-		int sslType = item.getInteger("ssl_type", IncomingServerPanel.TLS);
+		int sslType = item.getIntegerWithDefault("ssl_type", IncomingServerPanel.TLS);
 		boolean sslEnabled = item.getBoolean("enable_ssl");
 
 		// open a port to the server
@@ -259,8 +259,8 @@ public class IMAPServer implements IMAPListener {
 				}
 
 				// turn off SSL for the future
-				item.set("enable_ssl", false);
-				item.set("port", IMAPProtocol.DEFAULT_PORT);
+				item.setBoolean("enable_ssl", false);
+				item.setInteger("port", IMAPProtocol.DEFAULT_PORT);
 
 				// reopen the port
 				protocol.openPort();
@@ -292,7 +292,7 @@ public class IMAPServer implements IMAPListener {
 					}
 
 					// turn off SSL for the future
-					item.set("enable_ssl", false);
+					item.setBoolean("enable_ssl", false);
 
 					// reopen the port
 					protocol.openPort();
@@ -308,7 +308,7 @@ public class IMAPServer implements IMAPListener {
 					}
 
 					// turn off SSL for the future
-					item.set("enable_ssl", false);
+					item.setBoolean("enable_ssl", false);
 				}
 			} else {
 				// CAPAs say that SSL is not supported
@@ -323,7 +323,7 @@ public class IMAPServer implements IMAPListener {
 				}
 
 				// turn off SSL for the future
-				item.set("enable_ssl", false);
+				item.setBoolean("enable_ssl", false);
 			}
 		}
 
@@ -491,11 +491,11 @@ public class IMAPServer implements IMAPListener {
 					password = dialog.getPassword();
 
 					// Save or Clear the password in the configuration
-					item.set("save_password", dialog.getSave());
+					item.setBoolean("save_password", dialog.getSave());
 					if (dialog.getSave()) {
-						item.set("password", new String(password));
+						item.setString("password", new String(password));
 					} else {
-						item.set("password", "");
+						item.setString("password", "");
 					}
 				} else {
 					//User cancelled authentication
@@ -552,7 +552,7 @@ public class IMAPServer implements IMAPListener {
 
 						if (result == JOptionPane.OK_OPTION) {
 							loginMethod = AuthenticationManager.LOGIN;
-							item.set("login_method", Integer
+							item.setString("login_method", Integer
 									.toString(loginMethod));
 						} else {
 							throw new CommandCancelledException();

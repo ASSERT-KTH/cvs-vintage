@@ -131,18 +131,18 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
             }
         } else {
             if (!isPopAccount()) {
-                item.set("trash", getUid(trashButton.getText()));
+                item.setString("trash", getUid(trashButton.getText()));
             }
 
-            item.set("drafts", getUid(draftsButton.getText()));
-            item.set("templates", getUid(templatesButton.getText()));
-            item.set("sent", getUid(sentButton.getText()));
+            item.setString("drafts", getUid(draftsButton.getText()));
+            item.setString("templates", getUid(templatesButton.getText()));
+            item.setString("sent", getUid(sentButton.getText()));
 
             if (isPopAccount()) {
-                item.set("inbox", getUid(inboxButton.getText()));
+                item.setString("inbox", getUid(inboxButton.getText()));
             }
 
-            item.set("use_default_account", defaultAccountCheckBox.isSelected());
+            item.setBoolean("use_default_account", defaultAccountCheckBox.isSelected());
         }
     }
 

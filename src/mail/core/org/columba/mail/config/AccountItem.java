@@ -217,7 +217,7 @@ public class AccountItem extends DefaultItem {
     }
 
     public void setName(String str) {
-        set("name", str);
+        setString("name", str);
     }
 
     public String getName() {
@@ -225,7 +225,7 @@ public class AccountItem extends DefaultItem {
     }
 
     public void setUid(int i) {
-        set("uid", i);
+        setInteger("uid", i);
     }
 
     public int getUid() {

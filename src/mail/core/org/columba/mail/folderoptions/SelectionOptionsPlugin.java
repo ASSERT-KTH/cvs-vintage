@@ -86,7 +86,7 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
 		TableView view = tableController.getView();
 
 		// should we re-use the last remembered selection?
-		boolean remember = item.getBoolean("remember_last_selection", true);
+		boolean remember = item.getBooleanWithDefault("remember_last_selection", true);
 
 		// sorting order
 		boolean ascending = tableController.getTableModelSorter()

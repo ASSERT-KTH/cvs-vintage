@@ -20,18 +20,13 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.Properties;
 
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import org.columba.core.command.TaskManager;
 import org.columba.core.command.TaskManagerEvent;
 import org.columba.core.command.TaskManagerListener;
-import org.columba.core.config.Config;
-import org.columba.core.config.ThemeItem;
 import org.columba.core.gui.toolbar.ToolbarButton;
 import org.columba.core.gui.util.ImageLoader;
 
@@ -71,8 +66,9 @@ public class ImageSequenceTimer extends ToolbarButton implements ActionListener,
         setContentAreaFilled(false);
 
         setRequestFocusEnabled(false);
-        init();
-
+   
+        initDefault();
+        
         // register interested on changes in the running worker list
         this.taskManager = taskManager;
         taskManager.addTaskManagerListener(this);
@@ -120,76 +116,6 @@ public class ImageSequenceTimer extends ToolbarButton implements ActionListener,
         restImage = ImageLoader.getImageIcon("rest.png");
 
         setIcon(restImage);
-    }
-
-    protected void init() {
-        ThemeItem item = Config.getInstance().getOptionsConfig().getThemeItem();
-
-        //String pulsator = item.getPulsator();
-        String pulsator = "default";
-
-        // we always use the default initialization
-        // -> Note: all the code in the else case is not used
-        // ->       I just left it in to be able to easily re-enable
-        // ->       themeing support of the throbber
-        if (pulsator.toLowerCase().equals("default")) {
-            initDefault();
-        } else {
-            try {
-                File zipFile = new File(Config.getInstance().getConfigDirectory() +
-                        "/pulsators/" + pulsator + ".jar");
-
-                String zipFileEntry = new String(pulsator +
-                        "/pulsator.properties");
-
-                //System.out.println("zipfileentry:"+zipFileEntry );
-                Properties properties = ImageLoader.loadProperties(zipFile,
-                        zipFileEntry);
-
-                String frameCountStr = (String) properties.getProperty("count");
-                frameCount = Integer.parseInt(frameCountStr);
-
-                String widthStr = (String) properties.getProperty("width");
-                imageWidth = Integer.parseInt(widthStr);
-
-                String heightStr = (String) properties.getProperty("height");
-                imageHeight = Integer.parseInt(heightStr);
-
-                /*
-                setPreferredSize(new Dimension(width, height));
-                setMinimumSize(new Dimension(width, height));
-                setMaximumSize(new Dimension(width, height));
-                */
-                images = new ImageIcon[frameCount];
-
-                for (int i = 0; i < frameCount; i++) {
-                    String istr = (new Integer(i)).toString();
-                    String image = (String) properties.getProperty(istr);
-
-                    zipFile = new File(Config.getInstance().getConfigDirectory() +
-                            "/pulsators/" + pulsator + ".jar");
-
-                    zipFileEntry = new String(pulsator + "/" + image);
-
-                    //System.out.println("zuifileentry:"+zipFileEntry);
-                    images[i] = new ImageIcon(ImageLoader.loadImage(zipFile,
-                                zipFileEntry));
-                }
-
-                String image = (String) properties.getProperty("rest");
-                zipFileEntry = new String(pulsator + "/" + image);
-
-                restImage = new ImageIcon(ImageLoader.loadImage(zipFile,
-                            zipFileEntry));
-            } catch (Exception ex) {
-                StringBuffer buf = new StringBuffer();
-                buf.append("Error while loading pulsator icons!");
-                JOptionPane.showMessageDialog(null, buf.toString());
-
-                //Config.getOptionsConfig().getThemeItem().setPulsator("default");
-                initDefault();
-            }
-        }
     }
 
     public void start() {

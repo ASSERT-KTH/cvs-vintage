@@ -20,9 +20,7 @@ import java.util.logging.Logger;
 
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.config.GuiItem;
-import org.columba.core.config.TableItem;
 import org.columba.core.config.ViewItem;
-import org.columba.core.config.WindowItem;
 import org.columba.core.xml.XmlElement;
 
 
@@ -31,10 +29,9 @@ public class MainFrameOptionsXmlConfig extends DefaultXmlConfig {
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.config");
 
-    // private File file;
-    WindowItem windowItem;
+    
     GuiItem guiItem;
-    TableItem headerTableItem;
+   
     ViewItem viewItem;
     boolean initialVersionWasApplied = false;
 
@@ -93,14 +90,6 @@ public class MainFrameOptionsXmlConfig extends DefaultXmlConfig {
         }
     }
 
-    public TableItem getTableItem() {
-        if (headerTableItem == null) {
-            headerTableItem = new TableItem(getRoot().getElement("/options/gui/table"));
-        }
-
-        return headerTableItem;
-    }
-
     public ViewItem getViewItem() {
         if (viewItem == null) {
             viewItem = new ViewItem(getRoot().getElement("/options/gui/viewlist/view"));
@@ -117,11 +106,4 @@ public class MainFrameOptionsXmlConfig extends DefaultXmlConfig {
         return guiItem;
     }
 
-    public WindowItem getWindowItem() {
-        if (windowItem == null) {
-            windowItem = new WindowItem(getRoot().getElement("/options/gui/viewlist/view/window"));
-        }
-
-        return windowItem;
-    }
 }

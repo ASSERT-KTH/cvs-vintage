@@ -176,8 +176,8 @@ public class CreateVFolderOnMessageCommand extends Command {
             parentUid = parent.getUid();
         }
 
-        vfolder.getConfiguration().set("property", "source_uid", parentUid);
-        vfolder.getConfiguration().set("property", "include_subfolders", false);
+        vfolder.getConfiguration().setInteger("property", "source_uid", parentUid);
+        vfolder.getConfiguration().setBoolean("property", "include_subfolders", false);
 
         // define filter rule
         FilterRule rule = vfolder.getFilter().getFilterRule();

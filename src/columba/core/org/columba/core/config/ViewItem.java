@@ -17,21 +17,61 @@ package org.columba.core.config;
 
 import org.columba.core.xml.XmlElement;
 
-
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * View configuration item includes window properties, like position and
+ * dimensions, toolbar properties, splitpane position.
+ * 
+ * @author fdietz
  */
 public class ViewItem extends DefaultItem {
-    public ViewItem(XmlElement root) {
-        super(root);
-    }
 
-    public WindowItem getWindowItem() {
-        return new WindowItem(getRoot().getElement("window"));
-    }
+	public static final String ID = "id";
+	public static final String VIEW = "view";
+	
+	public final static String WINDOW = "window";
+
+	public final static String MAXIMIZED_BOOL = "maximized";
+
+	public final static String HEIGHT_INT = "height";
+
+	public final static String WIDTH_INT = "width";
+
+	public final static String POSITION_X_INT = "x";
+
+	public final static String POSITION_Y_INT = "y";
+
+	public final static String TOOLBARS = "toolbars";
+
+	public final static String MAIN_BOOL = "main";
+
+	public final static String INFOPANEL_BOOL = "infopanel";
+
+	public final static String SPLITPANES = "splitpanes";
+
+	public final static String HEADER_INT = "header";
+
+	public ViewItem(XmlElement root) {
+		super(root);
+	}
+
+	public static ViewItem createDefault(String id) {
+
+		// initialize default view options
+		XmlElement defaultView = new XmlElement(ViewItem.VIEW);
+		XmlElement window = new XmlElement(WINDOW);
+		window.addAttribute(POSITION_X_INT, "0");
+		window.addAttribute(POSITION_Y_INT, "0");
+		window.addAttribute(WIDTH_INT, "640");
+		window.addAttribute(HEIGHT_INT, "480");
+		window.addAttribute(MAXIMIZED_BOOL, "true");
+		defaultView.addElement(window);
+
+		XmlElement toolbars = new XmlElement(TOOLBARS);
+		toolbars.addAttribute(MAIN_BOOL, "true");
+		defaultView.addElement(toolbars);
+
+		defaultView.addAttribute(ViewItem.ID, id);
+		
+		return new ViewItem(defaultView);
+	}
 }

@@ -23,7 +23,7 @@ public class ColorMessageFilterAction extends AbstractFilterAction {
     /** {@inheritDoc} */
     public Command getCommand(FilterAction filterAction, IFolder srcFolder,
         Object[] uids) throws Exception {
-        int rgb = filterAction.getInteger("rgb", Color.black.getRGB());
+        int rgb = filterAction.getIntegerWithDefault("rgb", Color.black.getRGB());
 
         // create reference
         MailFolderCommandReference r = new MailFolderCommandReference(srcFolder, uids);

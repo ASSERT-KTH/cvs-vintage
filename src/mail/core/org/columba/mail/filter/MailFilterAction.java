@@ -54,7 +54,7 @@ public class MailFilterAction extends FilterAction {
 	 * @param s
 	 */
 	public void setMarkVariant(String s) {
-		set("markvariant", s);
+		setString("markvariant", s);
 	}
 
 	public String getMarkVariant() {

@@ -122,7 +122,7 @@ public class HeaderViewer extends JPanel implements ICustomViewer {
 		XmlElement headerviewerElement = MailConfig.getInstance()
 				.get("options").getElement("/options/headerviewer");
 		IDefaultItem item = new DefaultItem(headerviewerElement);
-		int style = item.getInteger("style", 0);
+		int style = item.getIntegerWithDefault("style", 0);
 
 		map = new LinkedHashMap();
 		Header header = null;

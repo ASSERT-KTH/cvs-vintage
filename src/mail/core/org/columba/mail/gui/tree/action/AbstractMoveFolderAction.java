@@ -104,7 +104,7 @@ public abstract class AbstractMoveFolderAction extends AbstractColumbaAction
         } else {
             IFolderItem item = lastSelectedFolder.getConfiguration();
 
-            if (item.get("property", "accessrights").equals("user")) {
+            if (item.getString("property", "accessrights").equals("user")) {
                 int index = lastSelectedFolder.getParent().getIndex(lastSelectedFolder);
 
                 setEnabled(isActionEnabledByIndex(index));

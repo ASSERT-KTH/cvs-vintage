@@ -14,6 +14,9 @@
 //
 // All Rights Reserved.
 //$Log: Filter.java,v $
+//Revision 1.2  2005/01/16 22:52:43  fdietz
+//[intern]configurationn cleanup, removed obsolete classes, replaced usage of XmlElement with Item wrapper classes, added constants instead of direct string usage
+//
 //Revision 1.1  2004/12/23 10:41:49  fdietz
 //[feature]added new filter toolbar, using vFolder search capability instead of table-model, moved Ifolder, foldercommand, foldercommandreference, and all filter/filteractions code in core package
 //
@@ -89,7 +92,7 @@ public class Filter extends DefaultItem {
 	 * @return boolean true if enabled
 	 */
 	public boolean getEnabled() {
-		return getBoolean(Filter.ENABLED, true);
+		return getBooleanWithDefault(Filter.ENABLED, true);
 	}
 
 	/**
@@ -100,7 +103,7 @@ public class Filter extends DefaultItem {
 	 *            if true enable filter otherwise disable filter
 	 */
 	public void setEnabled(boolean bool) {
-		set(Filter.ENABLED, bool);
+		setBoolean(Filter.ENABLED, bool);
 	}
 
 	/**
@@ -110,7 +113,7 @@ public class Filter extends DefaultItem {
 	 *            new filter name
 	 */
 	public void setName(String s) {
-		set(Filter.DESCRIPTION, s);
+		setString(Filter.DESCRIPTION, s);
 	}
 
 	/**

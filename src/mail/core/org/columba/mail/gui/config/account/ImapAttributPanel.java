@@ -67,7 +67,7 @@ if ( storePasswordCheckBox.isSelected() == true )
 else
     item.setSavePassword("false");
     */
-            item.set("automatically_apply_filter",
+            item.setBoolean("automatically_apply_filter",
                 automaticallyApplyFilterCheckBox.isSelected());
         }
     }

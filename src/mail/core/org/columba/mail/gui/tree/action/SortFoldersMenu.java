@@ -97,7 +97,7 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
         FolderComparator comparator = null;
         if (element != null) {
             IDefaultItem item = new DefaultItem(element);
-            boolean ascending = item.getBoolean("ascending", true);
+            boolean ascending = item.getBooleanWithDefault("ascending", true);
             activeComparator = 
                 item.getRoot().getAttribute("comparator", "").toUpperCase();
 
@@ -146,9 +146,9 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
         }
 
         IDefaultItem item = new DefaultItem(element);
-        item.set("ascending", ascendingMenuItem.isSelected());
-        item.set("comparator", activeComparator.toLowerCase());
-        item.set("sorted", !activeComparator.equals(UNSORTED_ACTION));
+        item.setBoolean("ascending", ascendingMenuItem.isSelected());
+        item.setString("comparator", activeComparator.toLowerCase());
+        item.setBoolean("sorted", !activeComparator.equals(UNSORTED_ACTION));
         element.notifyObservers();
     }
 

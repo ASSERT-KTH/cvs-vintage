@@ -24,7 +24,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.core.config.WindowItem;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.gui.table.SortingStateObservable;
@@ -51,9 +50,7 @@ public class TableModelSorter implements ModelVisitor {
 	protected String sort = new String("Date");
 
 	protected Collator collator;
-
-	protected WindowItem config;
-
+	
 	protected SortingStateObservable sortingStateObservable;
 
 	public TableModelSorter() {

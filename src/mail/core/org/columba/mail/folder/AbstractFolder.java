@@ -238,7 +238,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 				nextUid = node.getInteger("uid") + 1;
 			}
 		} catch (NumberFormatException ex) {
-			node.set("uid", nextUid++);
+			node.setInteger("uid", nextUid++);
 		}
 	}
 
@@ -249,8 +249,10 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 		String name = null;
 
 		IFolderItem item = getConfiguration();
-		name = item.get("property", "name");
+		name = item.getString("property", "name");
 
+		if ( name == null ) name = "FIXME";
+		
 		return name;
 	}
 
@@ -263,7 +265,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 */
 	public void setName(String newName) throws Exception {
 		IFolderItem item = getConfiguration();
-		item.set("property", "name", newName);
+		item.setString("property", "name", newName);
 		fireFolderPropertyChanged();
 	}
 	

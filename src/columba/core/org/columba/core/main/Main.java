@@ -254,14 +254,16 @@ public class Main {
 			FrameModel.getInstance().openStoredViews();
 		}
 
-		// call the postStartups of the modules
-		// e.g. check for default mailclient
-		handler.postStartup();
-		
 		// hide splash screen
 		if (frame != null) {
 			frame.setVisible(false);
 		}
+		
+		// call the postStartups of the modules
+		// e.g. check for default mailclient
+		handler.postStartup();
+		
+		
 	}
 
 	/**

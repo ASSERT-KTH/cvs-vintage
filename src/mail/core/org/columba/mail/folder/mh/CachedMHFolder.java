@@ -40,7 +40,7 @@ public class CachedMHFolder extends AbstractLocalFolder {
         super(item, path);
 
         DefaultSearchEngine engine = new DefaultSearchEngine(this);
-        boolean enableLucene = getConfiguration().getBoolean("property",
+        boolean enableLucene = getConfiguration().getBooleanWithDefault("property",
                 "enable_lucene", false);
         if (enableLucene) {
             engine.setNonDefaultEngine(new LuceneQueryEngine(this));
@@ -55,8 +55,8 @@ public class CachedMHFolder extends AbstractLocalFolder {
         super(name, type, path);
 
         IFolderItem item = getConfiguration();
-        item.set("property", "accessrights", "user");
-        item.set("property", "subfolder", "true");
+        item.setString("property", "accessrights", "user");
+        item.setString("property", "subfolder", "true");
     }
 
     public IDataStorage getDataStorageInstance() {

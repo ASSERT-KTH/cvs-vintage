@@ -70,14 +70,14 @@ public class ColorCriteriaRow extends DefaultCriteriaRow {
             matchComboBox.setSelectedItem(criteria.getCriteriaString());
 
             colorComboBox.setSelectedColor(criteria.getPatternString());
-            colorComboBox.setCustomColor(criteria.getInteger("rgb",
+            colorComboBox.setCustomColor(criteria.getIntegerWithDefault("rgb",
                     Color.black.getRGB()));
         } else {
             criteria.setCriteriaString((String) matchComboBox.getSelectedItem());
 
             ColorItem item = colorComboBox.getSelectedColorItem();
             criteria.setPatternString(item.getName());
-            criteria.set("rgb", item.getColor().getRGB());
+            criteria.setInteger("rgb", item.getColor().getRGB());
         }
     }
 }

@@ -279,13 +279,13 @@ public class FilterToolbar extends JPanel implements ActionListener,
 		searchFolder.getFilter().getFilterRule().add(c);
 
 		// don't search in subfolders recursively
-		searchFolder.getConfiguration().set("property", "include_subfolders",
+		searchFolder.getConfiguration().setString("property", "include_subfolders",
 				"false");
 
 		int uid = folder.getUid();
 
 		// set source folder UID
-		searchFolder.getConfiguration().set("property", "source_uid", uid);
+		searchFolder.getConfiguration().setInteger("property", "source_uid", uid);
 
 		return searchFolder;
 	}

@@ -21,12 +21,14 @@ import org.columba.core.xml.XmlElement;
 
 /**
  * @author fdietz
- *
+ *  
  */
 public interface IDefaultItem {
+
 	XmlElement getRoot();
 
-	/************************ composition pattern **********************/
+	/** ********************** composition pattern ********************* */
+
 	XmlElement getElement(String pathToElement);
 
 	XmlElement getChildElement(int index);
@@ -39,49 +41,41 @@ public interface IDefaultItem {
 
 	String get(String key);
 
-	String get(String pathToElement, String key);
+	String getString(String pathToElement, String key);
+	
+	String getStringWithDefault(String pathToElement, String key, String defaultValue);
 
-	/*
-	 public String get(String pathToElement, String key, String defaultValue) {
-	 XmlElement parent = getElement(pathToElement);
+	void setString(String key, String newValue);
 
-	 return parent.getAttribute(key, defaultValue);
-	 }
-	 */void set(String key, String newValue);
+	void setString(String pathToElement, String key, String newValue);
 
-	void set(String pathToElement, String key, String newValue);
+	/** ************************** helper classes ************************** */
 
-	/**************************** helper classes ***************************/
 	int getInteger(String key);
 
-	int getInteger(String key, int defaultValue);
+	int getIntegerWithDefault(String key, int defaultValue);
 
 	int getInteger(String pathToElement, String key);
 
-	int getInteger(String pathToElement, String key, int defaultValue);
+	int getIntegerWithDefault(String pathToElement, String key, int defaultValue);
 
-	void set(String key, int value);
+	void setInteger(String key, int value);
 
-	void set(String pathToElement, String key, int value);
+	void setInteger(String pathToElement, String key, int value);
 
-	boolean getBoolean(String key, boolean defaultValue);
+	boolean getBooleanWithDefault(String key, boolean defaultValue);
 
 	boolean getBoolean(String key);
 
 	boolean getBoolean(String pathToElement, String key);
 
-	boolean getBoolean(String pathToElement, String key, boolean defaultValue);
+	boolean getBooleanWithDefault(String pathToElement, String key, boolean defaultValue);
 
-	void set(String key, boolean value);
+	void setBoolean(String key, boolean value);
 
-	void set(String pathToElement, String key, boolean value);
+	void setBoolean(String pathToElement, String key, boolean value);
 
-	/*
-	 public DefaultItem(Document doc)
-	 {
-	 this.document = doc;
-	 }
-	 */boolean equals(Object obj);
+	boolean equals(Object obj);
 
 	/** {@inheritDoc} */
 	int hashCode();
@@ -94,5 +88,5 @@ public interface IDefaultItem {
 	 * @param string2
 	 * @return
 	 */
-	String getString(String key, String defaultValue);
+	String getStringWithDefault(String key, String defaultValue);
 }

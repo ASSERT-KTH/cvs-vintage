@@ -41,7 +41,7 @@ public class SpamItem extends DefaultItem {
      * @return 	true, if enabled. False, otherwise.
      */
     public boolean isEnabled() {
-        return getBoolean("enabled", false);
+        return getBooleanWithDefault("enabled", false);
     }
     
     /**
@@ -50,63 +50,63 @@ public class SpamItem extends DefaultItem {
      * @param enabled 	true or false
      */
     public void setEnabled(boolean enabled) {
-        set("enabled", enabled);
+        setBoolean("enabled", enabled);
         
     }
     
     public boolean isMoveIncomingJunkMessagesEnabled() {
-        return getBoolean("move_incoming_junk_messages", false);
+        return getBooleanWithDefault("move_incoming_junk_messages", false);
     }
     
     public void enableMoveIncomingJunkMessage(boolean enabled) {
-        set("move_incoming_junk_messages", enabled);
+        setBoolean("move_incoming_junk_messages", enabled);
     }
     
     public boolean isIncomingTrashSelected() {
-        return getBoolean("incoming_trash", true);
+        return getBooleanWithDefault("incoming_trash", true);
     }
     
     public void selectedIncomingTrash(boolean select) {
-        set("incoming_trash", select);
+        setBoolean("incoming_trash", select);
     }
     
     public int getIncomingCustomFolder() {
-        return getInteger("incoming_folder", 101);
+        return getIntegerWithDefault("incoming_folder", 101);
     }
     
     public void setIncomingCustomFolder(int folder) {
-        set("incoming_folder", folder);
+        setInteger("incoming_folder", folder);
     }
     
     public boolean isMoveMessageWhenMarkingEnabled() {
-        return getBoolean("move_message_when_marking", false);
+        return getBooleanWithDefault("move_message_when_marking", false);
     }
     
     public void enableMoveMessageWhenMarking(boolean enabled) {
-        set("move_message_when_marking", enabled);
+        setBoolean("move_message_when_marking", enabled);
     }
     
     public boolean isMoveTrashSelected() {
-        return getBoolean("move_trash", true);
+        return getBooleanWithDefault("move_trash", true);
     }
     
     public void selectMoveTrash(boolean select) {
-        set("move_trash", select);
+        setBoolean("move_trash", select);
     }
     
     public int getMoveCustomFolder() {
-        return getInteger("move_folder", 101);
+        return getIntegerWithDefault("move_folder", 101);
     }
     
     public void setMoveCustomFolder(int folder) {
-        set("move_folder", folder);
+        setInteger("move_folder", folder);
     }
     
     public boolean checkAddressbook() {
-        return getBoolean("check_addressbook", false);
+        return getBooleanWithDefault("check_addressbook", false);
     }
     
     public void enableCheckAddressbook(boolean enable) {
-        set("check_addressbook", enable);
+        setBoolean("check_addressbook", enable);
     }
 }

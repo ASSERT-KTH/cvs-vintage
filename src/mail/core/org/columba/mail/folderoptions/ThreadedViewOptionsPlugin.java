@@ -48,7 +48,7 @@ public class ThreadedViewOptionsPlugin extends AbstractFolderOptionsPlugin {
 
         TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
 
-        item.set("enabled",
+        item.setBoolean("enabled",
             tableController.getTableModelThreadedView().isEnabled());
     }
 
@@ -59,7 +59,7 @@ public class ThreadedViewOptionsPlugin extends AbstractFolderOptionsPlugin {
         XmlElement parent = getConfigNode(folder);
         IDefaultItem item = new DefaultItem(parent);
 
-        boolean enableThreadedView = item.getBoolean("enabled", false);
+        boolean enableThreadedView = item.getBooleanWithDefault("enabled", false);
 
         TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
 

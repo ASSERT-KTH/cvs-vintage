@@ -172,10 +172,10 @@ public class IncomingServerPanel extends DefaultPanel implements
             secureCheckBox.removeActionListener(this);
             sslComboBox.removeActionListener(this);
             
-            secureCheckBox.setSelected(serverItem.getBoolean("enable_ssl",
+            secureCheckBox.setSelected(serverItem.getBooleanWithDefault("enable_ssl",
                     false));
             
-            sslComboBox.setSelectedIndex(serverItem.getInteger("ssl_type", 1));
+            sslComboBox.setSelectedIndex(serverItem.getIntegerWithDefault("ssl_type", 1));
             sslComboBox.setEnabled(secureCheckBox.isSelected());
             // reactivate
             secureCheckBox.addActionListener(this);
@@ -191,21 +191,21 @@ public class IncomingServerPanel extends DefaultPanel implements
                 layoutComponents();
             }
         } else {
-            serverItem.set("user", loginTextField.getText());
-            serverItem.set("host", hostTextField.getText());
-            serverItem.set("password", passwordTextField.getText());
-            serverItem.set("port", ((Integer) portSpinner.getValue()).toString());
+            serverItem.setString("user", loginTextField.getText());
+            serverItem.setString("host", hostTextField.getText());
+            serverItem.setString("password", passwordTextField.getText());
+            serverItem.setString("port", ((Integer) portSpinner.getValue()).toString());
             
-            serverItem.set("save_password", storePasswordCheckBox.isSelected());
+            serverItem.setBoolean("save_password", storePasswordCheckBox.isSelected());
             
-            serverItem.set("enable_ssl", secureCheckBox.isSelected());
-            serverItem.set("ssl_type", sslComboBox.getSelectedIndex());
+            serverItem.setBoolean("enable_ssl", secureCheckBox.isSelected());
+            serverItem.setInteger("ssl_type", sslComboBox.getSelectedIndex());
             
             // if securest write DEFAULT
-            serverItem.set("login_method",
+            serverItem.setString("login_method",
                     authenticationComboBox.getSelectedItem().toString());
             
-            serverItem.set("use_default_account", defaultAccountCheckBox
+            serverItem.setBoolean("use_default_account", defaultAccountCheckBox
                     .isSelected());
         }
     }
@@ -432,10 +432,10 @@ public class IncomingServerPanel extends DefaultPanel implements
         
         String authMethods;
         if (isPopAccount()) {
-            authMethods = accountItem.get("popserver",
+            authMethods = accountItem.getString("popserver",
                     "authentication_methods");
         } else {
-            authMethods = accountItem.get("imapserver",
+            authMethods = accountItem.getString("imapserver",
                     "authentication_methods");
         }
         // Add previously fetch authentication modes
@@ -565,13 +565,13 @@ public class IncomingServerPanel extends DefaultPanel implements
             server = (IDefaultItem)accountItem.getImapItem().clone();
         }
         
-        server.set("user", loginTextField.getText());
-        server.set("host", hostTextField.getText());
-        server.set("password", passwordTextField.getText());
-        server.set("port", ((Integer) portSpinner.getValue()).toString());
+        server.setString("user", loginTextField.getText());
+        server.setString("host", hostTextField.getText());
+        server.setString("password", passwordTextField.getText());
+        server.setString("port", ((Integer) portSpinner.getValue()).toString());
         
-        server.set("enable_ssl", secureCheckBox.isSelected());
-        server.set("ssl_type", sslComboBox.getSelectedIndex());
+        server.setBoolean("enable_ssl", secureCheckBox.isSelected());
+        server.setInteger("ssl_type", sslComboBox.getSelectedIndex());
         
         return server;
     }
@@ -616,10 +616,10 @@ public class IncomingServerPanel extends DefaultPanel implements
             }
 
             if (isPopAccount()) {
-                accountItem.set("popserver", "authentication_methods", 
+                accountItem.setString("popserver", "authentication_methods", 
                         authMethods.toString());
             } else {
-                accountItem.set("imapserver", "authentication_methods", 
+                accountItem.setString("imapserver", "authentication_methods", 
                         authMethods.toString());
             }
 

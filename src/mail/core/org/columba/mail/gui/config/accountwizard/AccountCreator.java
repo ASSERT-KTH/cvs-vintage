@@ -54,13 +54,13 @@ class AccountCreator implements WizardModelListener {
 
         if (type.equals("POP3")) {
             PopItem pop = account.getPopItem();
-            pop.set("host", (String) data.getData("IncomingServer.host"));
-            pop.set("user", (String) data.getData("IncomingServer.login"));
+            pop.setString("host", (String) data.getData("IncomingServer.host"));
+            pop.setString("user", (String) data.getData("IncomingServer.login"));
             POP3ServerCollection.getInstance().add(account);
         } else {
             ImapItem imap = account.getImapItem();
-            imap.set("host", (String) data.getData("IncomingServer.host"));
-            imap.set("user", (String) data.getData("IncomingServer.login"));
+            imap.setString("host", (String) data.getData("IncomingServer.host"));
+            imap.setString("user", (String) data.getData("IncomingServer.login"));
 
             // TODO (@author fdietz): All this code for creating a new IMAPRootFolder should
             //       be moved to a FolderFactory
@@ -94,11 +94,11 @@ class AccountCreator implements WizardModelListener {
         // notify all observers
         MailCheckingManager.getInstance().update();
 
-        account.getSmtpItem().set("host",
+        account.getSmtpItem().setString("host",
             (String) data.getData("OutgoingServer.host"));
 
         // generally we can just use the same login for both servers
-        account.getSmtpItem().set("user",
+        account.getSmtpItem().setString("user",
             (String) data.getData("IncomingServer.login"));
     }
 
