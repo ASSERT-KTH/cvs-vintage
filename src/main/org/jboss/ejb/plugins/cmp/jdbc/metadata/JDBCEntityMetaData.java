@@ -11,9 +11,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.EntityMetaData;
@@ -27,7 +29,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -134,13 +136,19 @@ public final class JDBCEntityMetaData {
    /**
     * Map of the cmp fields of this entity by field name.
     */
-   private final Map cmpFields = new HashMap();
+   private final Map cmpFieldsByName = new HashMap();
+   private final List cmpFields = new ArrayList();
+
+   /**
+    * A map of all the load groups by name.
+    */
+   private final Map loadGroups = new HashMap();
 
    /**
     * The fields which should always be loaded when an entity of this type
     * is loaded.
     */
-   private final List eagerLoadFields = new ArrayList();
+   private final String eagerLoadGroup;
 
    /**
     * A list of groups (also lists) of the fields that should be lazy
@@ -164,6 +172,12 @@ public final class JDBCEntityMetaData {
    private final JDBCReadAheadMetaData readAhead;
 
    /**
+    * The maximum number of read ahead lists that can be tracked for this
+    * entity.
+    */
+   private final int listCacheMax;
+
+   /**
     * Constructs jdbc entity meta data defined in the jdbcApplication and 
     * with the data from the entity meta data which is loaded from the
     * ejb-jar.xml file.
@@ -182,6 +196,7 @@ public final class JDBCEntityMetaData {
       this.jdbcApplication = jdbcApplication;
       entityName = entity.getEjbName();
       abstractSchemaName = entity.getAbstractSchemaName();
+      listCacheMax = 1000;
 
       try {
          entityClass = getClassLoader().loadClass(entity.getEjbClass());
@@ -249,16 +264,20 @@ public final class JDBCEntityMetaData {
       
       // build the metadata for the cmp fields now in case there is
       // no jbosscmp-jdbc.xml
+      List nonPkFieldNames = new ArrayList();
       for(Iterator i = entity.getCMPFields(); i.hasNext(); ) {
          String cmpFieldName = (String)i.next();
-          JDBCCMPFieldMetaData cmpField = 
+         JDBCCMPFieldMetaData cmpField = 
                new JDBCCMPFieldMetaData(this, cmpFieldName);         
-         cmpFields.put(cmpFieldName, cmpField);
+         cmpFields.add(cmpField);
+         cmpFieldsByName.put(cmpFieldName, cmpField);
+         if(!cmpField.isPrimaryKeyMember()) {
+            nonPkFieldNames.add(cmpFieldName);
+         }
       }
 
-      // set eager load fields to all cmp fields in case there is
-      // no jbosscmp-jdbc.xml
-      eagerLoadFields.addAll(cmpFields.values());
+      // set eager load fields to all group.
+      eagerLoadGroup = "*";
 
       // Create no lazy load groups. By default every thing is eager loaded.
       // build the metadata for the queries now in case there is no 
@@ -269,11 +288,10 @@ public final class JDBCEntityMetaData {
             queriesIterator.hasNext();) {
 
          QueryMetaData queryData = (QueryMetaData)queriesIterator.next();
-         Method[] methods = queryFactory.getQueryMethods(queryData);
-         for(int i=0; i<methods.length; i++) {
-            queries.put(methods[i],
-                  queryFactory.createJDBCQueryMetaData(queryData, methods[i]));
-         }
+         Map newQueries = queryFactory.createJDBCQueryMetaData(queryData);
+
+         // overrides defaults added above
+         queries.putAll(newQueries);
       }
 
       // Create no relationship roles for this entity, will be added 
@@ -411,8 +429,27 @@ public final class JDBCEntityMetaData {
          primaryKeyConstraint = defaultValues.hasPrimaryKeyConstraint();
       }
 
+      // list-cache-max
+      String listCacheMaxStr = 
+            MetaData.getOptionalChildContent(element, "list-cache-max");
+      if(listCacheMaxStr != null) {
+         try {
+            listCacheMax = Integer.parseInt(listCacheMaxStr);
+         } catch (NumberFormatException e) {
+            throw new DeploymentException("Wrong number format of read " +
+                  "ahead list-cache-max '" + listCacheMaxStr + "': " + e);
+         }
+         if(listCacheMax < 0) {
+            throw new DeploymentException("Negative value for read ahead " +
+                  "list-cache-max '" + listCacheMaxStr + "'.");
+         }
+      } else {
+         listCacheMax = defaultValues.getListCacheMax();
+      }
+
       // cmp fields
-      cmpFields.putAll(defaultValues.cmpFields);
+      cmpFields.addAll(defaultValues.cmpFields);
+      cmpFieldsByName.putAll(defaultValues.cmpFieldsByName);
       for(Iterator i = MetaData.getChildrenByTagName(element, "cmp-field"); 
             i.hasNext(); ) {
 
@@ -420,22 +457,42 @@ public final class JDBCEntityMetaData {
          String fieldName =
                MetaData.getUniqueChildContent(cmpFieldElement, "field-name");
 
-         JDBCCMPFieldMetaData cmpFieldMetaData =
-               (JDBCCMPFieldMetaData)cmpFields.get(fieldName);
-         if(cmpFieldMetaData == null) {
+         JDBCCMPFieldMetaData oldCMPField =
+               (JDBCCMPFieldMetaData)cmpFieldsByName.get(fieldName);
+         if(oldCMPField == null) {
             throw new DeploymentException("CMP field not found : fieldName=" +
                   fieldName);
          }
-         cmpFieldMetaData = new JDBCCMPFieldMetaData(
+         JDBCCMPFieldMetaData cmpFieldMetaData = new JDBCCMPFieldMetaData(
                this, 
                cmpFieldElement, 
-               cmpFieldMetaData);
-         cmpFields.put(fieldName, cmpFieldMetaData);
+               oldCMPField);
+
+         // replace the old cmp meta data with the new
+         cmpFieldsByName.put(fieldName, cmpFieldMetaData);
+         int index = cmpFields.indexOf(oldCMPField);
+         cmpFields.remove(oldCMPField);
+         cmpFields.add(index, cmpFieldMetaData);
       }
 
+      // load-loads
+      loadGroups.putAll(defaultValues.loadGroups);
+      loadLoadGroupsXml(element);
+
       // eager-load
-      eagerLoadFields.addAll(defaultValues.eagerLoadFields);
-      loadEagerLoadXml(element);
+      Element eagerLoadGroupElement = MetaData.getOptionalChild(
+            element, "eager-load-group");
+      if(eagerLoadGroupElement != null) {
+         eagerLoadGroup = MetaData.getElementContent(eagerLoadGroupElement);
+         if(eagerLoadGroup != null 
+               && !eagerLoadGroup.equals("*")
+               && !loadGroups.containsKey(eagerLoadGroup)) {
+            throw new DeploymentException("Eager load group not found: " +
+                  "eager-load-group=" + eagerLoadGroup);
+         }
+      } else {
+         eagerLoadGroup = defaultValues.getEagerLoadGroup();
+      }
 
       // lazy-loads
       lazyLoadGroups.addAll(defaultValues.lazyLoadGroups);
@@ -444,138 +501,128 @@ public final class JDBCEntityMetaData {
       // read-ahead
       Element readAheadElement =
             MetaData.getOptionalChild(element, "read-ahead");
-      if (readAheadElement != null) {
-         readAhead = new JDBCReadAheadMetaData(readAheadElement);
+      if(readAheadElement != null) {
+         readAhead = new JDBCReadAheadMetaData(
+               readAheadElement, defaultValues.getReadAhead());
       } else {
          readAhead = defaultValues.readAhead;
       }
 
-      // build the metadata for the queries now in case there is
-      // no jbosscmp-jdbc.xml
+      // query
       queries.putAll(defaultValues.queries);
-      
       for(Iterator queriesIterator = 
             MetaData.getChildrenByTagName(element, "query"); 
             queriesIterator.hasNext(); ) {
 
          Element queryElement = (Element)queriesIterator.next();
-         Method[] methods = queryFactory.getQueryMethods(queryElement);
-         for(int i=0; i<methods.length; i++) {
-            JDBCQueryMetaData jdbcQueryData = 
-                  (JDBCQueryMetaData)queries.get(methods[i]);
+         Map newQueries = queryFactory.createJDBCQueryMetaData(
+               queryElement,
+               defaultValues.queries,
+               readAhead);
 
-            jdbcQueryData = queryFactory.createJDBCQueryMetaData(
-                  jdbcQueryData, 
-                  queryElement, 
-                  methods[i], 
-                  readAhead);
-
-            queries.put(methods[i], jdbcQueryData);
-         }
+         // overrides defaults added above
+         queries.putAll(newQueries);
       }
    }
 
    /**
-    * Loads the list of eager loaded fields from the xml element.
+    * Loads the load groups of cmp fields from the xml element
     */
-   private void loadEagerLoadXml(Element element) throws DeploymentException {
-      Element eagerLoadElement = 
-            MetaData.getOptionalChild(element, "eager-load");
-
-      // If no info, we're done. Default work was already done in constructor.
-      if(eagerLoadElement == null) {
-         return;
-      }
-
-      // only allowed for cmp 2.x
-      if(isCMP1x) {
-         throw new DeploymentException("eager-load is only allowed " +
-               "for CMP 2.x");
-      }
-
-      // get the fields
-      Iterator fieldNames =
-            MetaData.getChildrenByTagName(eagerLoadElement, "field-name");
-
-      // If no eager fields, clear current list and return
-      if(!fieldNames.hasNext()) {
-         eagerLoadFields.clear();
-         return;
-      }
-         
-      // check for * option
-      String fieldName = MetaData.getElementContent((Element)fieldNames.next());
-      if("*".equals(fieldName)) {
-         // all case, which is the default
-         // default work already done in constructor, so do nothing
-         
-         // check that there are no other fields listed
-         if(fieldNames.hasNext()) {
-            throw new DeploymentException("When * is specified in " +
-                  "eager-load, it is the only field-name element allowed.");
-         }
-         return;
-      } 
-
-      // We have a field list, clear current set and add the fields
-      eagerLoadFields.clear();
-      
-      // add the field we just loaded
-      eagerLoadFields.add(getExistingFieldByName(fieldName));
-      
-      // add the rest
-      while(fieldNames.hasNext()) {
-         fieldName = MetaData.getElementContent((Element)fieldNames.next());
-         eagerLoadFields.add(getExistingFieldByName(fieldName));
-      }
-
-      // remove any primary key fields from the set
-      // primary key fields do not need to be loaded
-      for(Iterator i = eagerLoadFields.iterator(); i.hasNext(); ) {
-         JDBCCMPFieldMetaData field = (JDBCCMPFieldMetaData)i.next();
-         if(field.isPrimaryKeyMember()) {
-            i.remove();
-         }
-      }
-   }
-
-   /**
-    * Loads the lazy load groups of cmp fields from the xml element
-    */
-   private void loadLazyLoadGroupsXml(Element element)
+   private void loadLoadGroupsXml(Element element)
          throws DeploymentException {
 
-      Element lazyLoadGroupsElement = 
-            MetaData.getOptionalChild(element, "lazy-load-groups");
-      if(lazyLoadGroupsElement == null) {
+      Element loadGroupsElement = 
+            MetaData.getOptionalChild(element, "load-groups");
+      if(loadGroupsElement == null) {
          // no info, default work already done in constructor
          return;
       }
       
       // only allowed for cmp 2.x
       if(isCMP1x) {
-         throw new DeploymentException("lazy-load-groups are only allowed " +
+         throw new DeploymentException("load-groups are only allowed " +
                "for CMP 2.x");
       }
       
+      // load each group
       Iterator groups = MetaData.getChildrenByTagName(
-            lazyLoadGroupsElement, "lazy-load-group");
-
+            loadGroupsElement, "load-group");
       while(groups.hasNext()) {
-         Element groupsElement = (Element)groups.next();
+         Element groupElement = (Element)groups.next();
+
+         // get the load-group-name
+         String loadGroupName = MetaData.getUniqueChildContent(
+               groupElement, "load-group-name");
+         if(loadGroups.containsKey(loadGroupName)) {
+            throw new DeploymentException("Load group already defined: " +
+                  " load-group-name=" + loadGroupName);
+         }
+         if(loadGroupName.equals("*")) {
+            throw new DeploymentException("The * load group is automatically " +
+                  "defined and can't be overriden");
+         }
          ArrayList group = new ArrayList();
 
          // add each field
          Iterator fields =
-               MetaData.getChildrenByTagName(groupsElement, "field-name");
+               MetaData.getChildrenByTagName(groupElement, "field-name");
          while(fields.hasNext()) {
             String fieldName = 
                   MetaData.getElementContent((Element)fields.next());
-            group.add(getExistingFieldByName(fieldName));
+
+            // check if the field is a cmp field that it is not a pk memeber
+            JDBCCMPFieldMetaData field = getCMPFieldByName(fieldName);
+            if(field != null && field.isPrimaryKeyMember()) {
+               throw new DeploymentException("Primary key fields can not be" +
+                     " a member of a load group: " +
+                     " load-group-name=" + loadGroupName +
+                     " field-name=" + fieldName);
+            }
+
+            group.add(fieldName);
          }
          
-         lazyLoadGroups.add(group);
+         loadGroups.put(
+               loadGroupName,
+               Collections.unmodifiableList(group));
       }
+   }
+
+   /**
+    * Loads the list of lazy load groups from the xml element.
+    */
+   private void loadLazyLoadGroupsXml(Element element)
+         throws DeploymentException {
+
+      Element lazyLoadGroupsElement = 
+            MetaData.getOptionalChild(element, "lazy-load-groups");
+
+      // If no info, we're done. Default work was already done in constructor.
+      if(lazyLoadGroupsElement == null) {
+         return;
+      }
+
+      // only allowed for cmp 2.x
+      if(isCMP1x) {
+         throw new DeploymentException("lazy-load-groups is only allowed " +
+               "for CMP 2.x");
+      }
+
+      // get the fields
+      Iterator loadGroupNames = MetaData.getChildrenByTagName(
+            lazyLoadGroupsElement, "load-group-name");
+      while(loadGroupNames.hasNext()) {
+         String loadGroupName = MetaData.getElementContent(
+               (Element)loadGroupNames.next());
+         if(!eagerLoadGroup.equals("*")
+               && !loadGroups.containsKey(loadGroupName)) {
+            throw new DeploymentException("Lazy load group not found: " +
+                  "load-group-name=" + loadGroupName);
+         }
+
+         lazyLoadGroups.add(loadGroupName);
+      }
+
    }
 
    /**
@@ -689,28 +736,49 @@ public final class JDBCEntityMetaData {
     * Gets the cmp fields of this entity
     * @return an unmodifiable collection of JDBCCMPFieldMetaData objects
     */
-   public Collection getCMPFields() {
-      return Collections.unmodifiableCollection(cmpFields.values());
+   public List getCMPFields() {
+      return Collections.unmodifiableList(cmpFields);
    }
    
    /**
-    * Gets the cmp fields of this entity which are eager loaded 
-    * @return an unmodifiable collection of the JDBCCMPFieldMetaData objects
-    *    that are eager loaded
+    * Gets the name of the eager load group. This name can be used to 
+    * look up the load group.
+    * @return the name of the eager load group
     */
-   public Collection getEagerLoadFields() {
-      return Collections.unmodifiableCollection(eagerLoadFields);
+   public String getEagerLoadGroup() {
+      return eagerLoadGroup;
    }
    
    /**
-    * Gets the collections cmp fields of this entity which are lazy
-    * loaded together 
-    * @return an unmodifiable collection of unmodifiable collections of the
-    *       JDBCCMPFieldMetaData objects that are lazy loaded together
+    * Gets the collection of lazy load group names.
+    * @return an unmodifiable collection of load group names
     */
-   public Collection getLazyLoadGroups() {
-      return Collections.unmodifiableCollection(lazyLoadGroups);
+   public List getLazyLoadGroups() {
+      return Collections.unmodifiableList(lazyLoadGroups);
    }
+
+   /**
+    * Gets the map from load grou name to a List of field names, which
+    * forms a logical load group.
+    * @return an unmodifiable map of load groups (Lists) by group name.
+    */
+   public Map getLoadGroups() {
+      return Collections.unmodifiableMap(loadGroups);
+   }
+
+   /**
+    * Gets the load group with the specified name.
+    * @return the load group with the specified name
+    * @throws EJBException if group with the specified name is not found
+    */
+   public List getLoadGroup(String name) throws DeploymentException {
+      List group = (List)loadGroups.get(name);
+      if(group == null) {
+         throw new DeploymentException("Unknown load group: name=" + name);
+      }
+      return group;
+   }
+
 
    /**
     * Gets the cmp field with the specified name
@@ -718,7 +786,7 @@ public final class JDBCEntityMetaData {
     * @return the cmp field with the specified name or null if not found
     */
    public JDBCCMPFieldMetaData getCMPFieldByName(String name) {
-      return (JDBCCMPFieldMetaData)cmpFields.get(name);
+      return (JDBCCMPFieldMetaData)cmpFieldsByName.get(name);
    }
 
    /**
@@ -782,6 +850,10 @@ public final class JDBCEntityMetaData {
     */
    public boolean hasRowLocking() {
       return rowLocking;
+   }
+
+   public int getListCacheMax() {
+      return listCacheMax;
    }
 
    /**
