@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.150 2002/10/02 20:51:18 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.151 2002/10/16 19:31:34 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3210,19 +3210,6 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 			}
 			else if(selection.size() != 0)
 				shiftIndentRight();
-			else if(buffer.getBooleanProperty("indentOnTab"))
-			{
-				// if caret is inside leading whitespace, indent.
-				String text = buffer.getLineText(caretLine);
-				int start = buffer.getLineStartOffset(caretLine);
-				int whiteSpace = MiscUtilities.getLeadingWhiteSpace(text);
-
-				if(caret - start <= whiteSpace
-					&& buffer.indentLine(caretLine,true,false))
-					return;
-				else
-					insertTab();
-			}
 			else
 				insertTab();
 			return;
@@ -4372,6 +4359,26 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		{
 			setSelectedText("\n");
 			buffer.indentLine(caretLine,true,false);
+		}
+	} //}}}
+
+	//{{{ insertTabAndIndent() method
+	public void insertTabAndIndent()
+	{
+		if(!isEditable())
+			getToolkit().beep();
+		else if(selection.size() == 0)
+		{
+			// if caret is inside leading whitespace, indent.
+			String text = buffer.getLineText(caretLine);
+			int start = buffer.getLineStartOffset(caretLine);
+			int whiteSpace = MiscUtilities.getLeadingWhiteSpace(text);
+
+			if(caret - start <= whiteSpace
+				&& buffer.indentLine(caretLine,true,false))
+				return;
+			else
+				insertTab();
 		}
 	} //}}}
 
