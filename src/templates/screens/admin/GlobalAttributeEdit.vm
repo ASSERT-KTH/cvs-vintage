@@ -4,9 +4,13 @@
 <div class="app" id="div3-0-2-0">
 
 #if ($deleting)
-<form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="post">
-<input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
-<input type="hidden" name="attId" value="$attribute.AttributeId" />
+   <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="post">
+   <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
+   <input type="hidden" name="attId" value="$attribute.AttributeId" />
+
+   #set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalAttributeShow.vm"))
+   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
+
    <div class="warningmessage">
    $l10n.ConfirmDeleteAttribute
    #if ($attribute.hasModuleMappings())

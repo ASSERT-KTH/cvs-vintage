@@ -3,6 +3,25 @@
 #set ($attribute = $scarabR.Attribute)
 #set ($lastTemplate = $data.Parameters.getString($scarabG.Constant.LAST_TEMPLATE))
 
+#if ($deleting)
+   <form action="$link.setPage("admin,UserAttributeEdit.vm")" method="post">
+   <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
+   <input type="hidden" name="attId" value="$attribute.AttributeId" />
+   #set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalUserAttributes.vm"))
+   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
+
+
+   <div class="warningmessage">
+   $l10n.ConfirmDeleteAttribute
+   #if ($attribute.hasModuleMappings())
+       $l10n.AttrMappedToModules
+   #elseif ($attribute.hasIssueTypeMappings())
+       $l10n.AttrMappedToIssueTypes
+   #end
+   <p><input type="submit" value="$l10n.ConfirmDelete"  name="eventSubmit_doDeleteattribute" /></p>
+
+#else
+
 #if ($attribute.AttributeId)
    #set ($attgroup = $intake.Attribute.mapTo($attribute))
    #set ($createNew = false)
@@ -108,6 +127,7 @@
 </div>
 
 $intake.declareGroups()
+#end
 </form>
 
 </div>

@@ -75,7 +75,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.51 2003/05/27 22:11:24 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.52 2003/06/04 12:10:08 venkatesh Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -186,7 +186,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
             attr.setDeleted(true);
             attr.save();
             scarabR.setConfirmMessage(getLocalizationTool(context).get(DEFAULT_MSG));  
-            setTarget(data, "admin,GlobalAttributeShow.vm");
+            setTarget(data, getCancelTemplate(data));
         }
     }
 
