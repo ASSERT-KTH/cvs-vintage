@@ -223,6 +223,7 @@
     <javadoc packagenames="${packages}"
              sourcepath="${src.dir}"
              destdir="${build.javadocs.dir}"
+             classpath="${classpath}"
              author="true"
              version="true"
              windowtitle="${Name} API"
