@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.5 2001/04/06 23:34:02 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.6 2001/04/10 01:13:24 fedor Exp $ -->
 
 <app-data>
 <database>
@@ -645,10 +645,45 @@
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
 </table>
+<!-- This table will hold dictionary index -->
+<table name="SCARAB_WORD" idMethod="idbroker" javaName="Word">
+    <!-- Uinique identifier -->
+    <column name="WORD_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!-- the word itself should be lowercased (?) -->
+    <column name="WORD" required="true" type="VARCHAR" size="50"/>
+    <!-- word's rating. The less frequent word has the higher rating. For now rating = 100000 / (total number of occurences) -->
+    <column name="RATING" required="true" type="INTEGER"/>
+    <!-- set to one to ignore the word when indexing. this should be 1 for words like "is", "it", "on" etc...-->
+    <column name="INGNORE" default="0" type="INTEGER"/>
+    <unique name="UK_WORD">
+        <unique-column name="WORD"/>
+    </unique>
+</table>
 
+<!-- This table holds info on words' ocurrences in issues -->
+<table name="SCARAB_R_ISSUE_WORD" idMethod="none" javaName="RIssueWord">
+    <!-- Isuue -->
+    <column name="ISSUE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!-- Word -->
+    <column name="WORD_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!-- Number of ocuurences of the word in this issue. increases relevance.-->
+    <column name="OCCURENCES" required="true" type="INTEGER"/>
+    <!-- position of the first word's ocuurence in the issue. The smaller it is the higher is relevance. -->
+    <column name="POSITION" required="true" type="INTEGER"/>
+    <foreign-key foreignTable="SCARAB_ISSUE">
+        <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_WORD">
+        <reference local="WORD_ID" foreign="WORD_ID"/>
+    </foreign-key>
+    <index name="IX_WORD_OCCURENCES">
+        <index-column name="WORD_ID"/>
+        <index-column name="OCCURENCES"/>
+    </index>
+</table>
 <!--
-    Dummy table for where the USER_ID lives. In most cases, this will be a 
-    foreign table outside of the scope of Scarab itself. For example, if you are 
+    Dummy table for where the USER_ID lives. In most cases, this will be a
+    foreign table outside of the scope of Scarab itself. For example, if you are
     using Scarab with Turbine, then this will be defined as TURBINE_USER. For 
     use in other systems, you will want to define this to be the name of your 
     own USER table and update the FK references in this file to point at the new 
