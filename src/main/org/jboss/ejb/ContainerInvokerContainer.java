@@ -6,37 +6,60 @@
  */
 package org.jboss.ejb;
 
-import java.rmi.RemoteException;
-import java.util.Collection;
-
-import javax.ejb.EJBMetaData;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBObject;
-import javax.naming.Name;
-
 /**
- *	This is an interface for Containers that uses ContainerInvokers.
+ * This is an interface for Containers that uses ContainerInvokers.
  *
- *	ContainerInvokers may communicate with the Container through this interface
+ * <p>ContainerInvokers may communicate with the Container through
+ *    this interface.
  *
- *	@see ContainerInvoker
- *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- *	@version $Revision: 1.5 $
+ * @see ContainerInvoker
+ * 
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
+ * @version $Revision: 1.6 $
  */
 public interface ContainerInvokerContainer
 {
-   // Public --------------------------------------------------------
-   public Class getHomeClass();
+   /**
+    * ???
+    *
+    * @return ???
+    */
+   Class getHomeClass();
    
-   public Class getRemoteClass();
+   /**
+    * ???
+    *
+    * @return ???
+    */
+   Class getRemoteClass();
    
-   public Class getLocalHomeClass();
+   /**
+    * ???
+    *
+    * @return ???
+    */
+   Class getLocalHomeClass();
    
-   public Class getLocalClass();
+   /**
+    * ???
+    *
+    * @return ???
+    */
+   Class getLocalClass();
 	
-   public ContainerInvoker getContainerInvoker();
+   /**
+    * ???
+    *
+    * @return ???
+    */
+   ContainerInvoker getContainerInvoker();
    
-   public LocalContainerInvoker getLocalContainerInvoker();
+   /**
+    * ???
+    *
+    * @return ???
+    */
+   LocalContainerInvoker getLocalContainerInvoker();
 }
 
