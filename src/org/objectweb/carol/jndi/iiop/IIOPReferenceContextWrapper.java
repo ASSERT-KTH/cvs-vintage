@@ -328,10 +328,7 @@ public class IIOPReferenceContextWrapper implements Context {
     }
 
     public void close() throws NamingException {
-    	if (iiopContext!=null) {
-			iiopContext.close();	
-    	}
-    	single=null;
+	// do nothing for the moment
     }
 
     public String getNameInNamespace() throws NamingException {
