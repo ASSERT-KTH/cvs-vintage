@@ -50,7 +50,7 @@ insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DE
         values(1, 'Description', 12, 'Description');
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
        ATTRIBUTE_TYPE_ID, PERMISSION, DESCRIPTION) /* Assigned to */
-       values(2, 'Assigned To', 8, 'edit_issues', 'Assigned To');
+       values(2, 'Assigned To', 8, 'Issue | Edit', 'Assigned To');
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Status */
         values(3, 'Status', 5, 'Status');
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
@@ -459,7 +459,7 @@ insert into SCARAB_MODULE(MODULE_ID, MODULE_NAME, MODULE_DESCRIPTION, MODULE_URL
  * module_id, attr_id, display_value, active, required, preferred order, dedupe, quick search
  */
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,1,'Description',1,1,100,0,0);
-INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,2,'Assigned To',0,0,200,0,0);
+INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,2,'Assigned To',1,0,200,0,0);
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,3,'Status',1,0,300,0,0);
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,4,'Resolution',1,0,400,0,0);
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,5,'Platform',1,1,2,1,0);
