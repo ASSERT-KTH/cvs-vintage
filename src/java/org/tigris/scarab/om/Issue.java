@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.234 2002/12/17 21:37:02 elicia Exp $
+ * @version $Id: Issue.java,v 1.235 2002/12/19 00:15:19 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -506,33 +506,6 @@ public class Issue
             ScarabConstants.DEFAULT_BUNDLE_NAME,
             Locale.getDefault(),
             "AddComment");
-        return addMessage(activitySet, desc, attachment, user);
-    }
-
-    /**
-     * Used for adding a Note on Wizard2. This creates the ActivitySet
-     * since one is not passed in from Wizard2.
-     */
-    public ActivitySet addNote(ActivitySet activitySet, 
-                            Attachment attachment, ScarabUser user)
-        throws Exception
-    {
-        String desc = Localization.getString(
-            ScarabConstants.DEFAULT_BUNDLE_NAME,
-            Locale.getDefault(),
-            "AddNote");
-        return addMessage(activitySet, desc, attachment, user);
-    }
-
-    /**
-     * Used by the addComment/addNote methods. Essentially, they
-     * are the same method with different messages and slightly 
-     * different usage patterns.
-     */
-    private ActivitySet addMessage(ActivitySet activitySet, String description, 
-                           Attachment attachment, ScarabUser user)
-        throws Exception
-    {
         attachment.setIssue(this);
         attachment.setTypeId(Attachment.COMMENT__PK);
         attachment.setName("comment");
@@ -542,8 +515,8 @@ public class Issue
 
         if (activitySet == null)
         {
-            activitySet = getActivitySet(user, attachment, 
-                                        ActivitySetTypePeer.EDIT_ISSUE__PK);
+            activitySet = getActivitySet(user, 
+                            ActivitySetTypePeer.EDIT_ISSUE__PK);
         }
         else
         {
@@ -552,16 +525,20 @@ public class Issue
         activitySet.save();
 
         String summary = attachment.getData();
-        if (summary != null && summary.length() > 60)
+        if (summary != null)
         {
-            summary = summary.substring(0,60) + "...";
+            if (summary.length() > 254)
+            {
+                summary = summary.substring(0,254) + "...";
+            }
+            summary = desc + ' ' + summary;
         }                
         
         ActivityManager
             .createTextActivity(this, activitySet,
-                                description, summary);
+                                summary, attachment);
         return activitySet;
-    }    
+    }
 
     /**
      * Adds an attachment file to this issue
@@ -588,8 +565,7 @@ public class Issue
         // Generate description of modification
         String name = attachment.getFileName();
         String path = attachment.getRelativePath();
-        Object[] args = {
-            name, path };
+        Object[] args = {name, path};
         String desc = Localization.format(
             ScarabConstants.DEFAULT_BUNDLE_NAME,
             Locale.getDefault(),
