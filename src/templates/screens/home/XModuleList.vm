@@ -249,8 +249,6 @@ $l10n.NoMoreIssueTypes
 
 
 #if (!$mitList || $mitList.isEmpty())
- <hr />
- <p>$l10n.ChoosePredefinedList</p>
  <h3>$l10n.PredefinedLists</h3>
 
  #set($manager = $scarabG.MITListManager)
@@ -260,6 +258,7 @@ $l10n.NoMoreIssueTypes
  #set($list = $manager.AllModulesAllIssueTypesList)
  #set($checked = !$checked2 || $list.QueryKey == $data.Parameters.getString($key, ""))
  <div class="colbar">
+   <p>$l10n.ChoosePredefinedList</p>
    <p><input type="radio" name="$key" value="$list.QueryKey"
      #if($checked) checked="checked"#end />$list.Name</p>
    <p><input type="radio" name="$key" value="$list2.QueryKey"
