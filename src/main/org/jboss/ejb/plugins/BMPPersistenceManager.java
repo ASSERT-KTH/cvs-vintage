@@ -27,7 +27,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class BMPPersistenceManager
    implements EntityPersistenceManager
@@ -267,7 +267,7 @@ public class BMPPersistenceManager
 
    private Method getFinderMethod(Class beanClass, Method finderMethod, Object[] args) throws NoSuchMethodException {
      String methodName = "ejbF" + finderMethod.getName().substring(1);
-     return beanClass.getDeclaredMethod(methodName, finderMethod.getParameterTypes());
+     return beanClass.getMethod(methodName, finderMethod.getParameterTypes());
    }
 
    private String parametersToString(Object []a) {
