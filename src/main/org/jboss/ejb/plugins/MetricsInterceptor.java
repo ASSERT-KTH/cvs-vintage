@@ -15,6 +15,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import javax.jms.DeliveryMode;
 import javax.jms.Topic;
 import javax.jms.TopicPublisher;
 import javax.jms.TopicSession;
@@ -31,7 +32,7 @@ import javax.transaction.Status;
 // jboss imports
 import org.jboss.ejb.Container;
 import org.jboss.ejb.MethodInvocation;
-
+import org.jboss.monitor.MetricsConstants;
 
 /**
  * MetricsInterceptor is used for gathering data from the container for admin
@@ -41,7 +42,8 @@ import org.jboss.ejb.MethodInvocation;
  *
  * @author  <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
  */
-public class MetricsInterceptor extends AbstractInterceptor {
+public class MetricsInterceptor extends AbstractInterceptor 
+                                implements MetricsConstants {
 
     // Constants -----------------------------------------------------
     
@@ -98,7 +100,7 @@ public class MetricsInterceptor extends AbstractInterceptor {
    public void init() {
 
        try {
-           final boolean TRANSACTED       = false;
+           final boolean IS_TRANSACTED    = false;
            final int     ACKNOWLEDGE_MODE = Session.DUPS_OK_ACKNOWLEDGE;
            
            namingContext = new InitialContext();
@@ -109,7 +111,7 @@ public class MetricsInterceptor extends AbstractInterceptor {
            TopicConnection connection = factory.createTopicConnection();
 
            metricsTopic     = (Topic)namingContext.lookup("topic/metrics");
-           metricsSession   = connection.createTopicSession(TRANSACTED, ACKNOWLEDGE_MODE);
+           metricsSession   = connection.createTopicSession(IS_TRANSACTED, ACKNOWLEDGE_MODE);
            metricsPub       = metricsSession.createPublisher(metricsTopic);     
            
            connection.start();
@@ -129,8 +131,8 @@ public class MetricsInterceptor extends AbstractInterceptor {
     private void sendMessage(long time, Message msg) {        
 
         try {
-            msg.setStringProperty("TIME",  String.valueOf(time));
-            metricsPub.publish(metricsTopic, msg);
+            msg.setLongProperty(TIME,  time);
+            metricsPub.publish(msg, DeliveryMode.NON_PERSISTENT, 1, 1);
         }
         catch (Exception e) {
             // catch JMSExceptions, NPE's etc and prevent them from propagating
@@ -145,10 +147,12 @@ public class MetricsInterceptor extends AbstractInterceptor {
             Transaction tx  =  mi.getTransaction();
             Principal principal = mi.getPrincipal();
             
-            msg.setStringProperty("CHECKPOINT",  checkpoint);
-            //msg.setStringProperty("APPLICATION", applicationName);
-            msg.setStringProperty("BEAN",   beanName);
-            msg.setObjectProperty("METHOD", mi.getMethod().getName());    
+            msg.setJMSType(INVOCATION_METRICS);
+           // msg.setJMSExpiration(1);
+            
+            msg.setStringProperty(CHECKPOINT, checkpoint);
+            msg.setStringProperty(BEAN,   beanName);
+            msg.setObjectProperty(METHOD, mi.getMethod().getName());    
             
             if (tx != null) 
                 msg.setStringProperty("ID",  String.valueOf(tx.hashCode()));
