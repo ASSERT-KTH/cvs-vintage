@@ -10,7 +10,7 @@
             default
         </servlet-name>
         <servlet-class>
-            org.apache.tomcat.core.DefaultServlet
+            org.apache.tomcat.servlets.DefaultServlet
         </servlet-class>
 	<load-on-startup>
             -2147483646
@@ -21,9 +21,9 @@
             invoker
         </servlet-name>
         <servlet-class>
-            org.apache.tomcat.core.InvokerServlet
+            org.apache.tomcat.servlets.InvokerServlet
 <!--
-            org.apache.tomcat.core.NoInvokerServlet
+            org.apache.tomcat.servlets.NoInvokerServlet
 -->
         </servlet-class>
     </servlet>

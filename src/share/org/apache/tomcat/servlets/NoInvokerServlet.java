@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/NoInvokerServlet.java,v 1.1 1999/10/09 00:30:15 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:15 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -62,9 +58,10 @@
  */ 
 
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.servlets;
 
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.core.*;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -77,11 +74,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Jason Hunter [jch@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
  */
-
 public class NoInvokerServlet extends HttpServlet {
-    
-    private StringManager sm =
-	StringManager.getManager(Constants.Package);
     
     public void service(HttpServletRequest request,
         HttpServletResponse response)
@@ -89,6 +82,6 @@ public class NoInvokerServlet extends HttpServlet {
 	response.sendError(response.SC_FORBIDDEN,
 	    "The invoker servlet used to handle /servlet " +
 	    "requests is disabled. Enable by registering an " +
-            "invoker servlet in " + Constants.Context.ConfigFile + ".");
+            "invoker servlet in WEB-INF/web.xml");
     }
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.9 2000/01/11 02:06:54 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2000/01/11 02:06:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.10 2000/01/11 03:02:14 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/01/11 03:02:14 $
  *
  * ====================================================================
  *
@@ -287,7 +287,7 @@ public class ServletWrapper {
 	return context;
     } 
 
-    void handleRequest(final HttpServletRequestFacade request,
+    public void handleRequest(final HttpServletRequestFacade request,
         final HttpServletResponseFacade response)
     throws IOException {
         synchronized (this) {

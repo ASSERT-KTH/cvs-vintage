@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/InvokerServlet.java,v 1.5 2000/01/11 02:06:53 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/01/11 02:06:53 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -60,11 +56,11 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-
-
-package org.apache.tomcat.core;
+package org.apache.tomcat.servlets;
 
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.core.*;
+import org.apache.tomcat.core.Constants;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -83,9 +79,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 public class InvokerServlet extends HttpServlet {
-    
-    private StringManager sm =
-	StringManager.getManager(Constants.Package);
     private Context context;
     
     public void init() throws ServletException {
@@ -184,7 +177,7 @@ public class InvokerServlet extends HttpServlet {
         if (wrapper == null) {
             // try the more forceful approach
 
-            wrapper = context.getServletAndLoadByName(servletName);
+            wrapper = context.loadServlet(servletName);
         }
 
         if (wrapper == null) {
@@ -200,7 +193,7 @@ public class InvokerServlet extends HttpServlet {
         HttpServletResponseFacade responsefacade =
 	    (HttpServletResponseFacade)response;
 	Request realRequest = requestfacade.getRealRequest();
-	Response realResponse = responsefacade.getRealResponse();
+	Response realResponse = realRequest.getResponse();
 
 	// The saved servlet path, path info are for cases in which a
 	// request dispatcher forwards through the invoker. This is

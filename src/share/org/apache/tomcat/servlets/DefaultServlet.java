@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/DefaultServlet.java,v 1.7 2000/01/08 15:34:28 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/01/08 15:34:28 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -60,11 +56,10 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
+package org.apache.tomcat.servlets;
 
-
-package org.apache.tomcat.core;
-
-import org.apache.tomcat.server.*;
+import org.apache.tomcat.core.*;
+import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
@@ -79,10 +74,7 @@ import javax.servlet.http.*;
  * @author Jason Hunter [jch@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
  */
-
 public class DefaultServlet extends HttpServlet {
-    private StringManager sm =
-        StringManager.getManager(Constants.Package);
     private ServletContextFacade facade;
     private String servletInfo = "DefaultServlet";
     private Context context;

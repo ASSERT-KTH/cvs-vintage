@@ -87,6 +87,10 @@ public class WarInterceptor {
 				       Constants.Context.WARExpandDir);
 		ctx.setWARDir( warDir );
 		
+		// the directory where the war was expanded will act
+		// as the new document base
+		// XXX todo		ctx.setDocumentBase( warDir.toString() );
+		
 		if (! warDir.exists()) {
 		    warDir.mkdirs();
 

@@ -231,7 +231,7 @@ public class Context {
 
 
 
-    File getWARDir() {
+    public File getWARDir() {
         return this.warDir;
     }
 
@@ -720,19 +720,8 @@ public class Context {
 	return (ServletWrapper)servlets.get(servletName);
     }
 
-    ServletWrapper getServletAndLoadByName(String servletName) {
-	// XXX
-	// make sure that we aren't tramping over ourselves!
-	ServletWrapper wrapper = new ServletWrapper(this);
-
-	wrapper.setServletClass(servletName);
-
-	servlets.put(servletName, wrapper);
-
-	return wrapper;
-    }
-
-    ServletWrapper loadServlet(String servletClassName) {
+    // className==name for servlets loaded by invoker
+    public ServletWrapper loadServlet(String servletClassName) {
         // XXX
         // check for duplicates!
 
@@ -814,14 +803,6 @@ public class Context {
 	servlets.remove(sw.getServletName());
     }
     
-    private void removeServlets(ServletWrapper[] sw) {
-	if (sw != null) {
-	    for (int i = 0; i < sw.length; i++) {
-		removeServlet( sw[i] );
-	    }
-	}
-    }
-
     /** Return servlets with a specified class name
      */
     private ServletWrapper[] getServletsByClassName(String name) {
