@@ -128,6 +128,14 @@ public class SecurityCheck extends  BaseInterceptor {
     public int authenticate( Request req, Response response )
     {
 	Context ctx=req.getContext();
+	// Set  default RequestSecurityProvider if not set
+	if (ctx.getRequestSecurityProvider() == null) {
+	    Hashtable roles = memoryRealm.getRoles();
+	    RequestSecurityProvider rsp = 
+	    	new SimpleRequestSecurityProviderImpl(roles);
+	    ctx.setRequestSecurityProvider(rsp);
+	}
+	
 	if( req.getRemoteUser() != null) return 0; // already authenticated
 
 	String authMethod=ctx.getAuthMethod();
@@ -200,6 +208,13 @@ public class SecurityCheck extends  BaseInterceptor {
     public int authorize( Request req, Response response )
     {
 	Context ctx=req.getContext();
+	// Set  default RequestSecurityProvider if not set
+	if (ctx.getRequestSecurityProvider() == null) {
+	    Hashtable roles = memoryRealm.getRoles();
+	    RequestSecurityProvider rsp = 
+	    	new SimpleRequestSecurityProviderImpl(roles);
+	    ctx.setRequestSecurityProvider(rsp);
+	}
 
 	String roles[]=req.getContainer().getRoles();
 	if( roles==null ) {
@@ -293,6 +308,10 @@ class MemoryRealm {
 	this.ctx=ctx;
     }
 
+    public Hashtable getRoles() {
+    	return roles;
+    }
+    
     public void addUser(String name, String pass, String groups ) {
 	if( debug > 0 )  ctx.log( "Add user " + name + " " + pass + " " + groups );
 	passwords.put( name, pass );
