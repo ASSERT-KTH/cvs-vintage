@@ -75,6 +75,7 @@ import org.tigris.scarab.om.Scope;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListItem;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.services.security.ScarabSecurity;
 
 import org.apache.commons.betwixt.io.BeanReader;
@@ -251,8 +252,8 @@ public  class ReportBridge
             if (torqueReport.getIssueTypeId() != null) 
             {
                 ModuleIssueType mit = new ModuleIssueType();
-                mit.setModuleId(new Integer(v.getModuleId().toString()));
-                mit.setIssueTypeId(new Integer(torqueReport.getIssueTypeId().toString()));
+                mit.setModuleId(v.getModuleId());
+                mit.setIssueTypeId(torqueReport.getIssueTypeId());
                 reportDefn.addModuleIssueType(mit);
             }
         }
@@ -269,7 +270,7 @@ public  class ReportBridge
         if (v == null) 
         {
             // issue type id cannot be null
-            torqueReport.setIssueTypeId(new Integer(0));            
+            torqueReport.setIssueTypeId(ScarabConstants.INTEGER_0);
         }
         else 
         {
@@ -277,8 +278,8 @@ public  class ReportBridge
             if (torqueReport.getModuleId() != null) 
             {
                 ModuleIssueType mit = new ModuleIssueType();
-                mit.setModuleId(new Integer(torqueReport.getModuleId().toString()));
-                mit.setIssueTypeId(new Integer(v.getIssueTypeId().toString()));
+                mit.setModuleId(torqueReport.getModuleId());
+                mit.setIssueTypeId(v.getIssueTypeId());
                 reportDefn.addModuleIssueType(mit);
             }
         }
@@ -482,8 +483,8 @@ public  class ReportBridge
             {
                 MITListItem item = (MITListItem)i.next();
                 ModuleIssueType mit = new ModuleIssueType();
-                mit.setModuleId(new Integer(item.getModuleId().toString()));
-                mit.setIssueTypeId(new Integer(item.getIssueTypeId().toString()));
+                mit.setModuleId(item.getModuleId());
+                mit.setIssueTypeId(item.getIssueTypeId());
                 reportDefn.addModuleIssueType(mit);
             }
             if (mitList.isSingleModule()) 
