@@ -22,6 +22,7 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.command.SaveFolderConfigurationCommand;
 
 /**
  * @author freddy
@@ -59,6 +60,8 @@ public class SaveAllFoldersPlugin implements TaskInterface {
 
 			ColumbaLogger.log.debug("saving folder: " + child.getName());
 
+			MainInterface.processor.addOp(new SaveFolderConfigurationCommand(r));
+			
 			saveFolder(child);
 		}
 	}
