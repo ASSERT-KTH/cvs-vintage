@@ -22,7 +22,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class WebProvider
    extends ServiceMBeanSupport
@@ -39,7 +39,6 @@ public class WebProvider
    public WebProvider()
    {
       this.server = new DynaServer();
-      this.server.setPort(8080);
    }
    
    // Public --------------------------------------------------------

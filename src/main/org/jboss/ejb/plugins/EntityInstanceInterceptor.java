@@ -33,13 +33,11 @@ import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 
 /**
- *   This container acquires the given instance. This must be used after
- *   the EnvironmentInterceptor, since acquiring instances requires a proper
- *   JNDI environment to be set
+ *   This container acquires the given instance. 
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -88,21 +86,48 @@ public class EntityInstanceInterceptor
       {
          // Invoke through interceptors
          return getNext().invoke(id, method, args, ctx);
-      } finally
+      } catch (RemoteException e)
+		{
+			// Discard instance
+			// EJB 1.1 spec 12.3.1
+			((EntityContainer)getContainer()).getInstanceCache().remove(id);
+			ctx = null;
+			
+			throw e;
+		} catch (RuntimeException e)
+		{
+			// Discard instance
+			// EJB 1.1 spec 12.3.1
+			((EntityContainer)getContainer()).getInstanceCache().remove(id);
+			ctx = null;
+			
+			throw e;
+		} catch (Error e)
+		{
+			// Discard instance
+			// EJB 1.1 spec 12.3.1
+			((EntityContainer)getContainer()).getInstanceCache().remove(id);
+			ctx = null;
+			
+			throw e;
+		} finally
       {
 //         System.out.println("Release instance for "+id);
-         if (ctx.getId() == null)
-         {
-            // Remove from cache
-            ((EntityContainer)getContainer()).getInstanceCache().remove(id);
-            
-            // It has been removed -> send to free pool
-            getContainer().getInstancePool().free(ctx);
-         }
-         {
-            // Return context
-            ((EntityContainer)getContainer()).getInstanceCache().release(ctx);
-         }
+			if (ctx != null)
+			{
+				if (ctx.getId() == null)
+				{
+				   // Remove from cache
+				   ((EntityContainer)getContainer()).getInstanceCache().remove(id);
+				   
+				   // It has been removed -> send to free pool
+				   getContainer().getInstancePool().free(ctx);
+				}
+				{
+				   // Return context
+				   ((EntityContainer)getContainer()).getInstanceCache().release(ctx);
+				}
+			}
       }
    }
 }

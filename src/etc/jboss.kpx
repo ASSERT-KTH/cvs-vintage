@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<kawaproject timestamp="Wed Apr 26 06:25:22 2000">
+<kawaproject timestamp="Tue May 02 14:52:12 2000">
 <versioninfo>
 <documentversion>
 <major>"0"</major>
@@ -321,6 +321,14 @@
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"114291764"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"jboss-client.mf"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 <file>
@@ -1089,26 +1097,10 @@
 <name>"interfaces"</name>
 <file>
 <dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\ContainerRemote.java"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"112"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\EntityHandleImpl.java"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"1816403032"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\EntityProxy.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
-<userinteger>"1816403032"</userinteger>
+<userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 <file>
@@ -1121,90 +1113,7 @@
 </file>
 <file>
 <dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\IteratorImpl.java"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\MethodInvocation.java"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"1816403032"</userinteger>
-</scmstatus>
-</file>
-<virtualfolder>
-<name>"proxy"</name>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\proxy\InvocationHandler.java"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"102305688"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\proxy\Proxies.java"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\proxy\Proxy.java"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"102219784"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\proxy\ProxyAssembler.java"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"49"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\proxy\ProxyCompiler.java"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\proxy\ProxyProxy.java"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"102247424"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\proxy\Replaceable.java"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"102473552"</userinteger>
-</scmstatus>
-</file>
-</virtualfolder>
-<file>
-<dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\StatefulSessionProxy.java"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\StatelessHandleImpl.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -1229,12 +1138,53 @@
 <userinteger>"0"</userinteger>
 </scmstatus>
 </file>
+</virtualfolder>
+</virtualfolder>
+<virtualfolder>
+<name>"jrmp13"</name>
+<virtualfolder>
+<name>"interfaces"</name>
 <file>
 <dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\server\SecureSocketFactory.java"</relativepath>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\interfaces\EntityProxy.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
-<userinteger>"1816403032"</userinteger>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\interfaces\HomeProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\interfaces\StatefulSessionProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\interfaces\StatelessSessionProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"server"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\server\JRMPContainerInvoker.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 </virtualfolder>
@@ -1355,6 +1305,14 @@
 </virtualfolder>
 <virtualfolder>
 <name>"jdbc"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\jdbc\Connection.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\jdbc\DataSourceImpl.java"</relativepath>
@@ -1538,6 +1496,65 @@
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"1816403032"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<virtualfolder>
+<name>"proxy"</name>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\proxy\InvocationHandler.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\proxy\Proxies.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\proxy\Proxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\proxy\ProxyAssembler.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\proxy\ProxyCompiler.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\proxy\ProxyProxy.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\proxy\Replaceable.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 </virtualfolder>

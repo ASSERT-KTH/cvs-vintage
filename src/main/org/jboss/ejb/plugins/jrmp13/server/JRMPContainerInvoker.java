@@ -4,8 +4,10 @@
  * Distributable under GPL license.
  * See terms of license at gnu.org.
  */
-package org.jboss.ejb.plugins.jrmp12.server;
+package org.jboss.ejb.plugins.jrmp13.server;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -14,19 +16,17 @@ import javax.ejb.EJBMetaData;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 
-import org.jboss.ejb.plugins.jrmp12.interfaces.HomeProxy;
-import org.jboss.ejb.plugins.jrmp12.interfaces.StatelessSessionProxy;
-import org.jboss.ejb.plugins.jrmp12.interfaces.StatefulSessionProxy;
-import org.jboss.ejb.plugins.jrmp12.interfaces.EntityProxy;
-
-import org.jboss.proxy.Proxy;
+import org.jboss.ejb.plugins.jrmp13.interfaces.HomeProxy;
+import org.jboss.ejb.plugins.jrmp13.interfaces.StatelessSessionProxy;
+import org.jboss.ejb.plugins.jrmp13.interfaces.StatefulSessionProxy;
+import org.jboss.ejb.plugins.jrmp13.interfaces.EntityProxy;
 
 /**
  *	<description> 
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.1 $
  */
 public final class JRMPContainerInvoker
    extends org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker

@@ -27,7 +27,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public abstract class ContainerConfiguration
    extends BeanContextServicesSupport
@@ -108,9 +108,8 @@ public abstract class ContainerConfiguration
       {
          Class clazz = Thread.currentThread().getContextClassLoader().loadClass(getConfigurationClassName(ip));
          Object obj = clazz.newInstance();
-         if (obj instanceof XmlExternalizable &&
-             (obj instanceof BeanContextChildComponentProxy ||
-              obj instanceof BeanContextContainerProxy))
+         if (obj instanceof BeanContextChildComponentProxy ||
+             obj instanceof BeanContextContainerProxy)
          {
             instancePoolConfiguration = obj;
             add(instancePoolConfiguration);
@@ -137,9 +136,8 @@ public abstract class ContainerConfiguration
       {
          Class clazz = Thread.currentThread().getContextClassLoader().loadClass(getConfigurationClassName(ic));
          Object obj = clazz.newInstance();
-         if (obj instanceof XmlExternalizable &&
-             (obj instanceof BeanContextChildComponentProxy ||
-              obj instanceof BeanContextContainerProxy))
+         if (obj instanceof BeanContextChildComponentProxy ||
+             obj instanceof BeanContextContainerProxy)
          {
             instanceCacheConfiguration = obj;
             add(instanceCacheConfiguration);

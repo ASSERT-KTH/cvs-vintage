@@ -30,7 +30,7 @@ import com.dreambean.ejx.FileManagerFactory;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class jBossFileManager
    extends BeanContextServicesSupport
@@ -93,7 +93,7 @@ public class jBossFileManager
          // Load jBoss XML
          try
          {
-            in = new InputStreamReader(new URL(file, "jboss.xml").openStream());
+            in = new BufferedReader(new InputStreamReader(new URL(file, "jboss.xml").openStream()));
             
             doc = xm.load(in);
             in.close();
@@ -202,6 +202,27 @@ public class jBossFileManager
    public void createNew()
    {
       ejbJar = new EjbJar();
+		
+      // Load default jBoss XML
+      InputStream jbossXml = getClass().getResourceAsStream("defaultjboss.xml");
+      if (jbossXml == null)
+      {
+         // No default found
+         return;
+      }
+		
+		try
+		{
+			Reader in = new BufferedReader(new InputStreamReader(jbossXml));
+			Document doc = xm.load(in);
+			in.close();
+			
+			ejbJar.importXml(doc.getDocumentElement());
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
       add(ejbJar);
    }
    

@@ -11,8 +11,8 @@ import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
+//import java.lang.reflect.InvocationHandler;
+//import java.lang.reflect.Proxy;
 import java.lang.reflect.Method;
 import java.util.Stack;
 import java.util.Hashtable;
@@ -31,12 +31,16 @@ import javax.sql.DataSource;
 import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
+import org.jboss.proxy.Proxy;
+import org.jboss.proxy.Proxies;
+import org.jboss.proxy.InvocationHandler;
+
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class DataSourceImpl
    extends ServiceMBeanSupport
@@ -93,7 +97,7 @@ public class DataSourceImpl
       // Bind in JNDI
       new InitialContext().bind(jndiName, this);
       
-      log.log("Connection pool for "+url+" bound to "+jndiName);
+//DEBUG      log.log("Connection pool for "+url+" bound to "+jndiName);
       
       // Test database
       getConnection().close();
@@ -105,7 +109,7 @@ public class DataSourceImpl
       try
       {
          new InitialContext().unbind(jndiName);
-         log.log("Connection pool for "+url+" removed from JNDI");
+//DEBUG         log.log("Connection pool for "+url+" removed from JNDI");
       } catch (NamingException e)
       {
          log.error("Could not unbind connection pool "+jndiName);
@@ -127,15 +131,19 @@ public class DataSourceImpl
       if (pool.empty())
       {
          Connection con = DriverManager.getConnection(url,user,password);
-//DEBUG         log.debug("Connection to "+url+" created");
          // Create proxy around it
-         return (Connection) Proxy.newProxyInstance(null,
-                                          new Class[] { Connection.class },
-                                          new ConnectionProxy(con));
+         Connection conProxy = (Connection) Proxy.newProxyInstance(getClass().getClassLoader(),
+                                          new Class[] { org.jboss.jdbc.Connection.class },
+                                          new ConnectionProxy(con, this));
+//DEBUG			log.debug("Connection to "+url+" created:"+conProxy);
+			return conProxy;
       } else
       {
-//DEBUG         log.debug("Connection to "+url+" taken from pool");
-         return (Connection)pool.pop();
+//DEBUG         log.debug("Connection to "+url+" pool size:"+pool.size());
+         Connection con = (Connection)pool.pop();
+//DEBUG         log.debug("Connection to "+url+" pool size:"+pool.size());
+//DEBUG         log.debug("Connection to "+url+" taken from pool:"+con);
+			return con;
       }
    }
    
@@ -185,55 +193,64 @@ public class DataSourceImpl
       if (pool.size() < maxSize)
       {
          pool.push(con);
-//DEBUG         log.debug("Connection to "+url+" put into pool(size="+pool.size()+")");
+//DEBUG         log.debug("Connection to "+url+" put into pool(size="+pool.size()+","+con+")");
       } else
       {
          // Pool is full
 //DEBUG         log.debug("Connection to "+url+" closed");
-         ((ConnectionProxy)Proxy.getInvocationHandler(con)).close();
+         ((ConnectionProxy)Proxies.getInvocationHandler(con, (Class[])null)).close();
       }
    }
    
-   class ConnectionProxy
-      implements InvocationHandler
+}
+
+class ConnectionProxy
+   implements InvocationHandler
+{
+   Connection con;
+	DataSourceImpl ds;
+	
+   ConnectionProxy(Connection con, DataSourceImpl ds)
    {
-      Connection con;
-      ConnectionProxy(Connection con)
+      this.con = con;
+		this.ds = ds;
+   }
+   public Object invoke(Object proxy,
+                        Method method,
+                        Object[] args)
+      throws Throwable
+   {
+      if (method.getName().equals("close"))
       {
-         this.con = con;
-      }
-      public Object invoke(Object proxy,
-                           Method method,
-                           Object[] args)
-         throws Throwable
+         if (con == null)
+            throw new SQLException("Connection is already closed");
+            
+// TODO: Should work, but doesn't!(?)
+//         ds.release((Connection)Proxies.getTarget(this));
+			ds.release((Connection)Proxy.newProxyInstance(getClass().getClassLoader(),
+                                          new Class[] { org.jboss.jdbc.Connection.class },
+                                          new ConnectionProxy(con, ds)));
+         return null;
+      } else
       {
-         if (method.getName().equals("close"))
+         if (con == null)
+            throw new SQLException("Connection is closed");
+         else
          {
-            if (con == null)
-               throw new SQLException("Connection is already closed");
-               
-            release((Connection)proxy);
-            return null;
-         } else
-         {
-            if (con == null)
-               throw new SQLException("Connection is closed");
-            else
-            {
-               // Invoke underlying connection
-               if (args == null) args = new Object[0];
-               return method.invoke(con, args);
-            }
+            // Invoke underlying connection
+            if (args == null) args = new Object[0];
+            return method.invoke(con, args);
          }
       }
-      
-      void close()
+   }
+   
+   void close()
+   {
+      try
       {
-         try
-         {
-            con.close();
-         } catch (Throwable e) { e.printStackTrace(); }
-         con = null;
-      }
+         con.close();
+      } catch (Throwable e) { e.printStackTrace(); }
+      con = null;
    }
 }
+

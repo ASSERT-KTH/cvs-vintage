@@ -27,7 +27,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class EjbJar
    extends com.dreambean.ejx.ejb.EjbJar
@@ -64,9 +64,9 @@ public class EjbJar
    {
       Element ejbjar = doc.createElement("jboss");
 
-      ejbjar.appendChild(eb.exportXml(doc));
-      ejbjar.appendChild(rm.exportXml(doc));
       ejbjar.appendChild(cc.exportXml(doc));
+      ejbjar.appendChild(rm.exportXml(doc));
+      ejbjar.appendChild(eb.exportXml(doc));
       
       return ejbjar;
    }
@@ -96,7 +96,7 @@ public class EjbJar
       } else
       {
          super.importXml(elt);
-         remove(ad);
+			remove(ad);
       }
    }
    

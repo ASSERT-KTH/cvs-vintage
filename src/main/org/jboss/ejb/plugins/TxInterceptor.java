@@ -27,7 +27,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class TxInterceptor
    extends AbstractInterceptor
@@ -113,23 +113,40 @@ public class TxInterceptor
             try
             {
                return getNext().invoke(id, method, args, ctx);
-            } catch (Exception e)
+            } catch (RemoteException e)
             {
-               e.printStackTrace(System.err);
-               getContainer().getTransactionManager().rollback();
+					if (!tx.equals(current))
+					{
+						getContainer().getTransactionManager().rollback();
+					}
                throw e;
+            } catch (RuntimeException e)
+            {
+            	if (!tx.equals(current))
+            	{
+            		getContainer().getTransactionManager().rollback();
+            	}
+               throw new ServerException("Exception occurred", e);
+            } catch (Error e)
+            {
+            	if (!tx.equals(current))
+            	{
+            		getContainer().getTransactionManager().rollback();
+            	}
+               throw new ServerException("Exception occurred", e);
             } finally
             {
                if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
                {
                   tx.rollback();
-                  // Throw some exception
-                  throw new EJBException("Transaction rolled back");
                }
                else if (current.getStatus() == Status.STATUS_NO_TRANSACTION && 
                         tx.getStatus() == Status.STATUS_ACTIVE)
                {
-                  Logger.debug("Commit tx:"+tx);
+						// Commit tx
+						// This will happen if
+						// a) everything goes well
+						// b) app. exception was thrown
                   tx.commit();
                }
             }

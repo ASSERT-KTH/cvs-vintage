@@ -47,7 +47,7 @@ import org.jnp.server.NamingServer;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public abstract class Container
 {
@@ -105,6 +105,7 @@ public abstract class Container
       this.containerInvoker = ci; 
       ci.setContainer(this);
    }
+	
    public void setInstancePool(InstancePool ip) 
    { 
       if (ip == null)

@@ -31,7 +31,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class EntityContainer
    extends Container
@@ -131,13 +131,7 @@ public class EntityContainer
    public Object invokeHome(Method method, Object[] args)
       throws Exception
    {
-      try
-      {
-         return getInterceptor().invokeHome(method, args, null);
-      } finally
-      {
-//         System.out.println("Invoke home on bean finished");
-      }
+	   return getInterceptor().invokeHome(method, args, null);
    }
 
    /**

@@ -8,19 +8,21 @@ package org.jboss.util;
 
 import java.io.*;
 import java.net.*;
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 
 import javax.management.*;
 import javax.management.loading.MLet;
 
 import org.jboss.logging.Log;
+import org.jboss.proxy.Proxy;
+import org.jboss.proxy.InvocationHandler;
 
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class MBeanProxy
    implements InvocationHandler
