@@ -39,7 +39,7 @@ Please enter the confirmation code that was sent to you in an email.
 
 <form method="post" action="$link.setPage("Confirm.vm")">
  <input type="hidden" name="action" value="Confirm" />
- <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm" />
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm" />
 
 <h3>Confirmation Information</h3>
@@ -49,14 +49,14 @@ Please enter the confirmation code that was sent to you in an email.
  <tr>
   <th>Email Address</th>
   <td>
-   <input type="text" size="25" name="$regGroup.Email.Key" value="$!emailValue" />
+   <input type="text" size="25" name="$regGroup.Email.Key" value="$!emailValue" tabindex="1" />
    #fieldErrorMsg($regGroup.Email "")
   </td>
  </tr>
  <tr>
   <th>Confirmation Code</th>
   <td>
-   <input type="text" size="25" name="$regGroup.Confirm.Key" value="$!confirmValue" />
+   <input type="text" size="25" name="$regGroup.Confirm.Key" value="$!confirmValue" tabindex="2" />
    #fieldErrorMsg($regGroup.Confirm "")
   </td>
  </tr>
@@ -67,8 +67,8 @@ Please enter the confirmation code that was sent to you in an email.
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
-<input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
-<input type="submit" name="eventSubmit_doConfirm" value="Confirm" />
+<input type="submit" name="eventSubmit_doConfirm" value="Confirm" tabindex="3" />&#160;
+<input type="submit" name="eventSubmit_doCancel" value="Cancel" tabindex="4" />
   </td>
  </tr>
 </table>
