@@ -22,7 +22,6 @@ public class PluginTreeTableModel extends AbstractTreeTableModel {
 
 	PluginNode root;
 
-
 	/**
 	 * @param tree
 	 * @param columns
@@ -39,49 +38,53 @@ public class PluginTreeTableModel extends AbstractTreeTableModel {
 		if (c == 0)
 			return tree.getClass();
 
-		if ( c==1)
+		if (c == 1)
 			return String.class;
-		
-		else	
-		// third column is a JCheckBox column
-		return Boolean.class;
+
+		else
+			// third column is a JCheckBox column
+			return Boolean.class;
 	}
 
 	public Object getValueAt(int row, int col) {
 		PluginNode node =
 			(PluginNode) tree.getPathForRow(row).getLastPathComponent();
 
-		if ( col==2 ) return new Boolean(node.isEnabled());
-		
 		return node;
 	}
 
 	public void set(PluginNode root) {
 		tree.setRootNode(root);
-		
-		((DefaultTreeModel)tree.getModel()).nodeStructureChanged(root);
-		
-	 	fireTableDataChanged();
+
+		((DefaultTreeModel) tree.getModel()).nodeStructureChanged(root);
+
+		fireTableDataChanged();
 	}
 
 	/* (non-Javadoc)
 	 * @see javax.swing.table.TableModel#setValueAt(java.lang.Object, int, int)
 	 */
+
 	public void setValueAt(Object value, int row, int col) {
-		if ( col == 2)
-		{
+
+		if (col == 2) {
+
 			// checkbox pressed
 			TreePath path = tree.getPathForRow(row);
 			PluginNode node = (PluginNode) path.getLastPathComponent();
-			if ( node.isCategory() ) return;
-			
+			if (node.isCategory())
+				return;
+
 			// enable/disable tree node
-			node.setEnabled( ((Boolean)value).booleanValue());
-			
+			node.setEnabled(((Boolean) value).booleanValue());
+
 			// enable/disable plugin
 			String id = node.getId();
-			
-			MainInterface.pluginManager.setEnabled(id, ((Boolean)value).booleanValue());
+
+			MainInterface.pluginManager.setEnabled(
+				id,
+				((Boolean) value).booleanValue());
+
 		}
 	}
 
@@ -90,11 +93,13 @@ public class PluginTreeTableModel extends AbstractTreeTableModel {
 	 */
 	public boolean isCellEditable(int row, int col) {
 		// enabled/disabled checkbox must be editable
-		if ( col == 2 ) return true;
-		
+		if (col == 2)
+			return true;
+
 		// tree must be editable, otherwise you can't collapse/expand tree nodes
-		if ( col == 0 ) return true;
-		
+		if (col == 0)
+			return true;
+
 		return false;
 	}
 

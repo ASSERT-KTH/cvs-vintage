@@ -35,6 +35,7 @@ public class PluginNode extends DefaultMutableTreeNode {
 
 	public PluginNode()
 	{
+		category = false;
 	}
 	
 	/**
@@ -116,6 +117,16 @@ public class PluginNode extends DefaultMutableTreeNode {
 	 */
 	public void setCategory(boolean b) {
 		category = b;
+	}
+	
+	public void debug()
+	{
+	 	System.out.println("id="+id);
+		System.out.println("version="+version);
+		System.out.println("enabled="+enabled);
+		System.out.println("isCategory="+category);
+		System.out.println("description="+tooltip);
+		
 	}
 
 }

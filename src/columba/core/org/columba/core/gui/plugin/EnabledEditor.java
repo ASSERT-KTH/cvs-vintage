@@ -26,12 +26,19 @@ public class EnabledEditor
 
 	JCheckBox component = new JCheckBox();
 
+	PluginNode currentNode;
+
 	/**
 	 * 
 	 */
 	public EnabledEditor() {
+
 		component.setHorizontalAlignment(SwingConstants.CENTER);
-		component.setOpaque(true);
+		
+	}
+	
+	public int getClickCountToStart() {
+		return 1;
 	}
 
 	//	This method is called when a cell value is edited by the user.
@@ -42,10 +49,20 @@ public class EnabledEditor
 		int rowIndex,
 		int vColIndex) {
 
-		PluginNode node = (PluginNode) value;
+		currentNode = (PluginNode) value;
 
 		// Configure the component with the specified value
-		 ((JCheckBox) component).setSelected(node.isEnabled());
+		 ((JCheckBox) component).setSelected(currentNode.isEnabled());
+
+		if (isSelected) {
+
+			((JCheckBox) component).setBackground(
+				table.getSelectionBackground());
+		} else {
+
+			((JCheckBox) component).setBackground(table.getBackground());
+
+		}
 
 		// Return the configured component
 		return component;
@@ -54,8 +71,28 @@ public class EnabledEditor
 	// This method is called when editing is completed.
 	// It must return the new value to be stored in the cell.
 	public Object getCellEditorValue() {
+		
 		Boolean b = new Boolean(((JCheckBox) component).isSelected());
+		
+		// enable/disable tree node
+		currentNode.setEnabled(b.booleanValue());
+		
+		/*
+		// enable/disable plugin
+		String id = currentNode.getId();
 
+		MainInterface.pluginManager.setEnabled(id, b.booleanValue());
+		*/
+		
+		System.out.println("cell-editor="+b);
+		
 		return b;
 	}
+	
+	public Component getComponent()
+	{
+		return component;
+	}
+	
+	
 }

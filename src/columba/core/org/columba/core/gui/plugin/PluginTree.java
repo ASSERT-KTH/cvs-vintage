@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultTreeModel;
@@ -22,10 +21,15 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 /**
- * @author frd
+ * TreeTable component responsible for displaying plugins in a categorized
+ * way.
+ * 
+ * Additionally shows plugin version information, the plugin description as
+ * tooltip. 
+ * 
+ * The third column is a checkbox to enable/disable the plugin.
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author fdietz
  */
 public class PluginTree extends TreeTable {
 
@@ -76,12 +80,9 @@ public class PluginTree extends TreeTable {
 		
 		// make "enabled" column fixed size
 		tc = getColumn(columns[2]);
-		//tc.setCellRenderer(new EnabledRenderer());
-		//tc.setCellRenderer( new DefaultCellRenderer(n))
-		//tc.setCellEditor( new DefaultCellEditor(new JCheckBox()));
-		//setDefaultEditor(Boolean.class, new JComboBox());
+		tc.setCellRenderer(new EnabledRenderer());
+		tc.setCellEditor(new EnabledEditor());		
 		
-		//tc.setCellEditor(new EnabledEditor());
 		tc.setMaxWidth(80);
 		tc.setMinWidth(80);
 		
@@ -99,14 +100,17 @@ public class PluginTree extends TreeTable {
 		}
 
 		PluginNode childNode = new PluginNode();
+		childNode.setCategory(false);
 		childNode.setId(pluginElement.getAttribute("id"));
 		childNode.setTooltip(pluginElement.getAttribute("description"));
 		childNode.setVersion(pluginElement.getAttribute("version"));
 		String enabled = pluginElement.getAttribute("enabled");
 		if (enabled == null)
 			enabled = "true";
-		childNode.setEnabled(Boolean.getBoolean(enabled));
+		childNode.setEnabled(new Boolean(enabled).booleanValue());
 
+		System.out.println("adding plugin to table: "+enabled);
+		
 		PluginNode node = (PluginNode) map.get(category);
 		if (node == null) {
 			// unknown category found 

@@ -269,7 +269,16 @@ public class PluginManager {
 	 * @return	parent xml treenode of "plugin.xml"
 	 */
 	public XmlElement getPluginElement(String id) {
-		return (XmlElement) elements.get(id);
+		String searchId;
+
+		int index = id.indexOf("$");
+
+		if (index != -1)
+			searchId = id.substring(0, id.indexOf("$"));
+		else
+			searchId = id;
+
+		return (XmlElement) elements.get(searchId);
 	}
 
 	public String getPluginType(String id) {

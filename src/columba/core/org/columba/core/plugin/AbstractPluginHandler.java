@@ -26,11 +26,12 @@ import java.util.Vector;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.loader.DefaultClassLoader;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 /*
  * 
- * @author fdietz
+ * 
  *
  * Every entrypoint is represented by this abstract handler class
  * 
@@ -62,6 +63,8 @@ import org.columba.core.xml.XmlElement;
  * 
  * Please read the documentation of the corresponding methods for more
  * details.
+ * 
+ * @author fdietz
  * 
  */
 public abstract class AbstractPluginHandler implements PluginHandlerInterface {
@@ -250,8 +253,9 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 
 			String s = action.getAttribute("name");
 			// return if attribute was not found
-			if ( s == null ) return null;
-			
+			if (s == null)
+				return null;
+
 			if (s.indexOf('$') != -1) {
 				// this is an external plugin
 				// -> extract the correct id
@@ -272,22 +276,51 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 	}
 
 	/**
-	 * @return
+	 * Return array of enabled plugins.
+	 * 
+	 * @return	array of enabled plugins
 	 */
 	public String[] getPluginIdList() {
 		int count = parentNode.count();
 
-		String[] list = new String[count];
+		//String[] list = new String[count];
+
+		List list = new Vector();
 
 		for (int i = 0; i < count; i++) {
 			XmlElement action = parentNode.getElement(i);
 			String s = action.getAttribute("name");
+			System.out.println("s=" + s);
 
-			list[i] = s;
+			XmlElement element =
+				MainInterface.pluginManager.getPluginElement(s);
+			if (element == null) {
+				// this is no external plugin
+				// -> just add it to the list
+				System.out.println("internal plugin: "+s);
+				
+				list.add(s);
+				continue;
+			}
+			
+			String enabled = element.getAttribute("enabled");
+			if (enabled == null)
+				enabled = "true";
+			boolean e = new Boolean(enabled).booleanValue();
+			System.out.println("enabled=" + e);
 
+			if (e == true)
+				list.add(s);
+			//list[i] = s;
 		}
 
-		return list;
+		String[] strs = new String[list.size()];
+		for (int i = 0; i < list.size(); i++) {
+			strs[i] = (String) list.get(i);
+		}
+		//return list;
+
+		return strs;
 	}
 
 	public boolean exists(String id) {
@@ -299,11 +332,11 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 			String plugin = list[i];
 			int index = plugin.indexOf("$");
 			String searchId;
-			if ( index != -1 )
+			if (index != -1)
 				searchId = plugin.substring(0, plugin.indexOf("$"));
 			else
 				searchId = plugin;
-				
+
 			ColumbaLogger.log.debug(" - plugin id=" + plugin);
 			ColumbaLogger.log.debug(" - search id=" + searchId);
 			if (searchId.equals(id))
