@@ -48,7 +48,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.20 $
+*   @version $Revision: 1.21 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -87,6 +87,11 @@ extends AbstractInterceptor
 	*/
 	protected EntityContainer container;
 	
+	/**
+	*  Optional isModified method
+	*/
+	protected Method isModified;
+   
 	// Static --------------------------------------------------------
 	
 	// Constructors --------------------------------------------------
@@ -96,6 +101,21 @@ extends AbstractInterceptor
 	{ 
 		this.container = (EntityContainer)container; 
 	}
+   
+   public void init()
+      throws Exception
+   {
+      // Check for isModified method
+      try
+      {
+         isModified = container.getBeanClass().getMethod("isModified", new Class[0]);
+         if (!isModified.getReturnType().equals(Boolean.TYPE))
+            isModified = null; // Has to have "boolean" as return type!
+      } catch (Exception e)
+      {
+         // Ignore
+      }
+   }
 	
 	public Container getContainer()
 	{
@@ -261,8 +281,19 @@ extends AbstractInterceptor
 				// And skip reads too ("get" methods)
 				// OSH FIXME: Isn't this startsWith("get") optimization a violation of
 				// the EJB specification? Think of SequenceBean.getNext().
-				if (ctx.getId() != null && !mi.getMethod().getName().startsWith("get"))
-					((EntityContainer)getContainer()).getPersistenceManager().storeEntity(ctx);
+				if (ctx.getId() != null)
+				{
+               boolean dirty = true;
+				   // Check isModified bean flag
+				   if (isModified != null)
+				   {
+				      dirty = ((Boolean)isModified.invoke(ctx.getInstance(), new Object[0])).booleanValue();
+				   }
+            
+               // Store entity
+               if (dirty)
+					   ((EntityContainer)getContainer()).getPersistenceManager().storeEntity(ctx);
+				}
 				
 				return result;
 			} catch (Exception e) {
@@ -320,7 +351,22 @@ extends AbstractInterceptor
 							
 //DEBUG							Logger.debug("EntitySynchronization sync calling store on ctx "+ctx.hashCode());
 							
-							container.getPersistenceManager().storeEntity(ctx);
+							// Check isModified bean flag
+							boolean dirty = true;
+							if (isModified != null)
+							{
+                        try
+                        {
+                           dirty = ((Boolean)isModified.invoke(ctx.getInstance(), new Object[0])).booleanValue();
+                        } catch (Exception e)
+                        {
+                           // Ignore
+                           e.printStackTrace();
+                        }
+							}
+							
+                     if (dirty)
+							   container.getPersistenceManager().storeEntity(ctx);
 						}
 					} catch (NoSuchEntityException e) {
 						// Object has been removed -- ignore
