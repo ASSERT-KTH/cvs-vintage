@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.17 2004/06/19 14:04:30 starksm Exp $
+// $Id: ServiceRefMetaData.java,v 1.18 2004/06/27 20:45:01 tdiesler Exp $
 
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
  * application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class ServiceRefMetaData implements Serializable
 {
@@ -99,7 +99,7 @@ public class ServiceRefMetaData implements Serializable
 
    public JavaWsdlMapping getJavaWsdlMapping()
    {
-      if (javaWsdlMapping == null)
+      if (javaWsdlMapping == null && jaxrpcMappingFile != null)
       {
          try
          {
@@ -169,18 +169,18 @@ public class ServiceRefMetaData implements Serializable
 
    public Definition getWsdlDefinition()
    {
-      if (wsdlDefinition != null)
-         return wsdlDefinition;
-
-      try
+      if (wsdlDefinition == null && (wsdlOverride != null || wsdlFile != null))
       {
-         URL wsdlURL = (wsdlOverride != null ? wsdlOverride : resourceCL.findResource(wsdlFile));
-         WSDLDefinitionFactory factory = WSDLDefinitionFactory.newInstance();
-         wsdlDefinition = factory.parse(wsdlURL);
-      }
-      catch (WSDLException e)
-      {
-         throw new IllegalStateException("Cannot unmarshall wsdl, cause: " + e.toString());
+         try
+         {
+            URL wsdlURL = (wsdlOverride != null ? wsdlOverride : resourceCL.findResource(wsdlFile));
+            WSDLDefinitionFactory factory = WSDLDefinitionFactory.newInstance();
+            wsdlDefinition = factory.parse(wsdlURL);
+         }
+         catch (WSDLException e)
+         {
+            throw new IllegalStateException("Cannot unmarshall wsdl, cause: " + e.toString());
+         }
       }
 
       return wsdlDefinition;
