@@ -1,4 +1,4 @@
-// $Id: TabTarget.java,v 1.7 2004/09/01 16:48:22 mvw Exp $
+// $Id: TabTarget.java,v 1.8 2004/12/20 23:04:34 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import org.argouml.ui.targetmanager.TargetListener;
  * based on the selections made in the gui/views.
  * 
  * @since 0.13.4
- * @author $Author: mvw $
  */
 public interface TabTarget extends TargetListener {
 
