@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.118 2002/05/13 10:21:01 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.119 2002/05/14 07:34:55 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5537,7 +5537,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		if(offset != 0)
 		{
 			int bracketOffset = TextUtilities.findMatchingBracket(
-				buffer,caretLine,offset - 1,0,buffer.getLineCount() - 1);
+				buffer,caretLine,offset - 1);
 			if(bracketOffset != -1)
 			{
 				bracketLine = getLineOfOffset(bracketOffset);

@@ -24,7 +24,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Message sent when a file or directory changes.
  * @author Slava Pestov
- * @version $Id: VFSUpdate.java,v 1.2 2001/09/08 04:50:46 spestov Exp $
+ * @version $Id: VFSUpdate.java,v 1.3 2002/05/14 07:34:55 spestov Exp $
  *
  * @since jEdit 2.6pre4
  */
@@ -54,7 +54,7 @@ public class VFSUpdate extends EBMessage
 
 	public String paramString()
 	{
-		return super.paramString() + ",path=" + path;
+		return "path=" + path + "," + super.paramString();
 	}
 
 	// private members

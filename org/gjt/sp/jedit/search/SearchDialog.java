@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.22 2002/05/13 07:34:49 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.23 2002/05/14 07:34:55 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -268,7 +268,7 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 			if(hyperSearch.isSelected() || searchSelection.isSelected())
 			{
 				if(SearchAndReplace.hyperSearch(view,
-					searchSelection.isSelected()));
+					searchSelection.isSelected()))
 					closeOrKeepDialog();
 			}
 			else

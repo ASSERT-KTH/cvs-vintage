@@ -25,7 +25,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Message sent when an edit pane-related change occurs.
  * @author Slava Pestov
- * @version $Id: EditPaneUpdate.java,v 1.1 2001/09/02 05:37:34 spestov Exp $
+ * @version $Id: EditPaneUpdate.java,v 1.2 2002/05/14 07:34:55 spestov Exp $
  *
  * @since jEdit 2.5pre1
  */
@@ -79,7 +79,7 @@ public class EditPaneUpdate extends EBMessage.NonVetoable
 
 	public String paramString()
 	{
-		return super.paramString() + ",what=" + what;
+		return "what=" + what + "," + super.paramString();
 	}
 
 	// private members

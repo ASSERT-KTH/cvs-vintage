@@ -27,7 +27,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Message sent when a buffer-related change occurs.
  * @author Slava Pestov
- * @version $Id: BufferUpdate.java,v 1.3 2001/12/25 08:07:14 spestov Exp $
+ * @version $Id: BufferUpdate.java,v 1.4 2002/05/14 07:34:55 spestov Exp $
  *
  * @since jEdit 2.2pre6
  */
@@ -142,8 +142,8 @@ public class BufferUpdate extends EBMessage.NonVetoable
 	//{{{ paramString() method
 	public String paramString()
 	{
-		return super.paramString() + ",what=" + what
-			+ ",view=" + view;
+		return "what=" + what + ",view=" + view + ","
+			+ super.paramString();
 	} //}}}
 
 	//{{{ Private members
