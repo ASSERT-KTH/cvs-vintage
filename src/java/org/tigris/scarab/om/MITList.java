@@ -70,7 +70,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.26 2003/06/06 00:20:31 jmcnally Exp $
+ * @version $Id: MITList.java,v 1.27 2003/06/13 00:15:19 elicia Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -387,8 +387,7 @@ public  class MITList
         return user;
     }
 
-
-    public List getCommonAttributes()
+    public List getCommonAttributes(boolean activeOnly)
         throws Exception
     {
         List matchingAttributes = new ArrayList();
@@ -400,7 +399,7 @@ public  class MITList
         {
             RModuleAttribute rma = (RModuleAttribute)i.next();
             Attribute att = rma.getAttribute();
-            if (rma.getActive() && (size() == 1 || isCommon(att)))
+            if ((!activeOnly || rma.getActive()) && (size() == 1 || isCommon(att, activeOnly)))
             {
                 matchingAttributes.add(att);
             }
@@ -409,13 +408,20 @@ public  class MITList
         return matchingAttributes;
     }
 
+    public List getCommonAttributes()
+        throws Exception
+    {
+        return getCommonAttributes(true);
+    }
+
+
     /**
      * Checks all items to see if they contain the attribute.
      *
      * @param attribute an <code>Attribute</code> value
      * @return a <code>boolean</code> value
      */
-    public boolean isCommon(Attribute attribute)
+    public boolean isCommon(Attribute attribute, boolean activeOnly)
         throws Exception
     {
         boolean common = true;
@@ -426,9 +432,16 @@ public  class MITList
             RModuleAttribute modAttr = getModule(compareItem)
                         .getRModuleAttribute(attribute, 
                                              getIssueType(compareItem));
-            common = modAttr != null && modAttr.getActive();
+            common = modAttr != null && (!activeOnly || modAttr.getActive());
+            //common = modAttr != null ;
         }
         return common;
+    }
+
+    public boolean isCommon(Attribute attribute)
+        throws Exception
+    {
+       return isCommon(attribute, true);
     }
 
 
@@ -493,26 +506,28 @@ public  class MITList
      * gets a list of all of the User Attributes common to all modules in 
      * the list.
      */
-    public List getCommonUserAttributes()
+    public List getCommonUserAttributes(boolean activeOnly)
         throws Exception
     {
         List attributes = null;
         if (isSingleModuleIssueType()) 
         {
-            attributes = getModule().getUserAttributes(getIssueType());
+            attributes = getModule().getUserAttributes(getIssueType(), activeOnly);
         }
         else 
         {
             List matchingAttributes = new ArrayList();
             MITListItem item = getFirstItem();
             List rmas = getModule(item)
-                .getRModuleAttributes(getIssueType(item), true, Module.USER);
+                .getRModuleAttributes(getIssueType(item), activeOnly, 
+                                      Module.USER);
             Iterator i = rmas.iterator();
             while (i.hasNext()) 
             {
                 RModuleAttribute rma = (RModuleAttribute)i.next();
                 Attribute att = rma.getAttribute();
-                if (rma.getActive() && isCommon(att)) 
+                if ((!activeOnly || rma.getActive()) && 
+                    isCommon(att, activeOnly)) 
                 {
                     matchingAttributes.add(att);   
                 }            
@@ -522,6 +537,11 @@ public  class MITList
         return attributes;
     }
 
+    public List getCommonUserAttributes()
+        throws Exception
+    {
+        return getCommonUserAttributes(false);
+    }
 
     /**
      * potential assignee must have at least one of the permissions
@@ -612,7 +632,7 @@ public  class MITList
         {
             RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
             Attribute att = rmua.getAttribute();
-            if (isCommon(att)) 
+            if (isCommon(att, false)) 
             {
                 matchingRMUAs.add(rmua);   
             }            
@@ -621,7 +641,7 @@ public  class MITList
         int moreAttributes = sizeGoal - matchingRMUAs.size();
         if (moreAttributes > 0) 
         {
-            Iterator attributes = getCommonAttributes().iterator();
+            Iterator attributes = getCommonAttributes(false).iterator();
             int k=1;
             while (attributes.hasNext() && moreAttributes > 0) 
             {
@@ -805,7 +825,6 @@ public  class MITList
         
         return matchingRMOs;
     }
-
 
     /**
      * Checks all items after the first to see if they contain the attribute.
