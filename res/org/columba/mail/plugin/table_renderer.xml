@@ -9,5 +9,7 @@
  <renderer name="Priority" size="fixed" icon="priority-high.png" class="org.columba.mail.gui.table.plugins.PriorityRenderer" />
  <renderer name="From" class="org.columba.mail.gui.table.plugins.FromRenderer" />
  <renderer name="Spam" size="fixed" icon="spam-16.png" class="org.columba.mail.gui.table.plugins.SpamRenderer" />
+ <renderer name="To" class="org.columba.mail.gui.table.plugins.ToRenderer" />
+ <renderer name="Cc" class="org.columba.mail.gui.table.plugins.CcRenderer" />
 </rendererlist>
 
