@@ -8,6 +8,10 @@
 package org.jboss.invocation;
 
 import java.io.Serializable;
+import java.io.ObjectOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.Principal;
@@ -29,7 +33,7 @@ import javax.transaction.Transaction;
  *
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author  <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class Invocation
 {
@@ -42,21 +46,21 @@ public class Invocation
    /** 
     * Contextual information to the invocation that is not part of the payload. 
     */
-   public Map transient_payload;// = null;
+   public Map transient_payload;
 
    /**
     * as_is classes that will not be marshalled by the invocation
     * (java.* and javax.* or anything in system classpath is OK)
     */
-   public Map as_is_payload;// = null;
+   public Map as_is_payload;
 
    /** Payload will be marshalled for type hiding at the RMI layers. */
-   public Map payload;// = null;
+   public Map payload;
 
-   public InvocationContext invocationContext;// = null;
-   public Object[] args;// = null;
-   public Object objectName;// = null;
-   public Method method;// = null;
+   public InvocationContext invocationContext;
+   public Object[] args;
+   public Object objectName;
+   public Method method;
    public InvocationType invocationType;
 
    // The variables used to indicate what type of data and where to put it.
@@ -333,9 +337,10 @@ public class Invocation
    /**
     * This method will be called by the container(ContainerInterceptor) to issue the
     * ultimate method call represented by this invocation. It is overwritten, e.g., by the
-    * WS4EE invocation in order to realize JAXRPC pre- and postprocessing. 
+    * WS4EE invocation in order to realize JAXRPC pre- and postprocessing.
     */
-   public Object performCall(Object instance, Method m, Object[] arguments) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, Exception
+   public Object performCall(Object instance, Method m, Object[] arguments)
+           throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, Exception
    {
       return m.invoke(instance,arguments);
    }
@@ -348,11 +353,6 @@ public class Invocation
    public boolean isLocal()
    {
       InvocationType type = getType();
-      if (type == InvocationType.LOCAL || type == InvocationType.LOCALHOME)
-         return true;
-      return false;
+      return (type == InvocationType.LOCAL || type == InvocationType.LOCALHOME);
    }
 }
-/*
-vim:ts=3:sw=3:et
-*/
