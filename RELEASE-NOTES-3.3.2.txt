@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.2.txt,v 1.20 2003/09/26 04:27:48 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.2.txt,v 1.21 2003/10/26 01:43:59 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -74,6 +74,9 @@ Bug No.  Description
 
 	 Fix problem where the AccessLog was printing the content-length of the
 	 Request instead of the Response.
+
+24123    Fix problem where the AccessLog wasn't logging request that produce
+         no output.  Also log the Request's content length for PUT requests.
 
 Jasper:
 
