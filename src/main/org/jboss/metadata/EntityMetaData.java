@@ -17,7 +17,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class EntityMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------
@@ -74,7 +74,7 @@ public class EntityMetaData extends BeanMetaData {
 		
 		// set the cmp fields
 		if (isCMP()) {
-			Iterator iterator = getChildrenByTagName(element, "cmp-fields");			
+			Iterator iterator = getChildrenByTagName(element, "cmp-field");			
 			while (iterator.hasNext()) {
 				Element field = (Element)iterator.next();
 				cmpFields.add(getElementContent(getUniqueChild(field, "field-name")));
@@ -84,6 +84,10 @@ public class EntityMetaData extends BeanMetaData {
 		// set the primary key field
 		if (isCMP()) {
 			primKeyField = getElementContent(getOptionalChild(element, "primkey-field"));
+			
+			if (primKeyField != null && !cmpFields.contains(primKeyField)) {
+				throw new DeploymentException("primkey-field " + primKeyField + " is not a cmp-field");
+			}
 		}
 	}
 

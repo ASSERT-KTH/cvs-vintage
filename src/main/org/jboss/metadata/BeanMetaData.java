@@ -21,7 +21,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -205,6 +205,9 @@ public abstract class BeanMetaData extends MetaData {
 		
 		// set the configuration (optional)
 		configurationName = getElementContent(getOptionalChild(element, "configuration-name"));
+		if (configurationName != null && getApplicationMetaData().getConfigurationMetaDataByName(configurationName) == null) {
+			throw new DeploymentException("configuration '" + configurationName + "' not found in standardjboss.xml or jboss.xml");
+		}
 		
 		// update the resource references (optional)
 		Iterator iterator = getChildrenByTagName(element, "resource-ref");

@@ -16,7 +16,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class SessionMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------
@@ -57,7 +57,7 @@ public class SessionMetaData extends BeanMetaData {
 		} else if (sessionType.equals("Stateless")) {
 			stateful = false;
 		} else {
-			throw new DeploymentException("bean " + getEjbName() + ", session type should be 'Stateful' or 'Stateless'");
+			throw new DeploymentException("session type should be 'Stateful' or 'Stateless'");
 		}
 			
 		// set the transaction type
@@ -67,7 +67,7 @@ public class SessionMetaData extends BeanMetaData {
 		} else if (transactionType.equals("Container")) {
 			containerManagedTx = true;
 		} else {
-			throw new DeploymentException("bean " + getEjbName() + ", transaction type should be 'Bean' or 'Container'");
+			throw new DeploymentException("transaction type should be 'Bean' or 'Container'");
 		}
 	}
 			
