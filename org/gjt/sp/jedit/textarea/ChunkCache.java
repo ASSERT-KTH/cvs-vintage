@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.syntax.*;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.55 2003/03/10 02:42:52 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.56 2003/03/14 02:51:25 spestov Exp $
  */
 class ChunkCache
 {
@@ -330,8 +330,6 @@ class ChunkCache
 			painter.getFontRenderContext(),
 			painter,out,
 			(textArea.softWrap ? textArea.wrapMargin : 0.0f));
-		tokenHandler.setMonospacedCharWidth(textArea.monospacedHack
-			? textArea.charWidth : 0);
 		buffer.markTokens(physicalLine,tokenHandler);
 	} //}}}
 
@@ -348,8 +346,6 @@ class ChunkCache
 		tokenHandler.init(textArea.lineSegment,painter.getStyles(),
 			painter.getFontRenderContext(),
 			painter,out,0.0f);
-		tokenHandler.setMonospacedCharWidth(textArea.monospacedHack
-			? textArea.charWidth : 0);
 		buffer.markTokens(physicalLine,tokenHandler);
 
 		if(out.size() == 0)

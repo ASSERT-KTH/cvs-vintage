@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 1999, 2001, 2002 Slava Pestov
+ * Copyright (C) 1999, 2003 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,10 +28,11 @@ import java.awt.Color;
  * A simple text style class. It can specify the color, italic flag,
  * and bold flag of a run of text.
  * @author Slava Pestov
- * @version $Id: SyntaxStyle.java,v 1.4 2002/06/04 08:48:13 spestov Exp $
+ * @version $Id: SyntaxStyle.java,v 1.5 2003/03/14 02:51:25 spestov Exp $
  */
 public class SyntaxStyle
 {
+	//{{{ SyntaxStyle constructor
 	/**
 	 * Creates a new SyntaxStyle.
 	 * @param fgColor The text color
@@ -43,34 +44,60 @@ public class SyntaxStyle
 		this.fgColor = fgColor;
 		this.bgColor = bgColor;
 		this.font = font;
-	}
+	} //}}}
 
+	//{{{ getForegroundColor() method
 	/**
 	 * Returns the text color.
 	 */
 	public Color getForegroundColor()
 	{
 		return fgColor;
-	}
+	} //}}}
 
+	//{{{ getBackgroundColor() method
 	/**
 	 * Returns the background color.
 	 */
 	public Color getBackgroundColor()
 	{
 		return bgColor;
-	}
+	} //}}}
 
+	//{{{ getFont() method
 	/**
 	 * Returns the style font.
 	 */
 	public Font getFont()
 	{
 		return font;
-	}
+	} //}}}
 
-	// private members
+	//{{{ getCharWidth() method
+	/**
+	 * Returns the character width of the monospaced font.
+	 * @since jEdit 4.2pre1
+	 */
+	public int getCharWidth()
+	{
+		return charWidth;
+	} //}}}
+
+	//{{{ setCharWidth() method
+	/**
+	 * Sets the character width of the monospaced font.
+	 * @param charWidth The character width
+	 * @since jEdit 4.2pre1
+	 */
+	public void setCharWidth(int charWidth)
+	{
+		this.charWidth = charWidth;
+	} //}}}
+
+	//{{{ Private members
 	private Color fgColor;
 	private Color bgColor;
 	private Font font;
+	private int charWidth;
+	//}}}
 }

@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.196 2003/03/12 17:33:53 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.197 2003/03/14 02:51:25 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4733,8 +4733,6 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				.getWidth();
 		}
 
-		monospacedHack = jEdit.getBooleanProperty("view.monospacedHack");
-
 		maxHorizontalScrollWidth = 0;
 		updateScrollBars();
 
@@ -4997,7 +4995,6 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	int wrapMargin;
 	boolean wrapToWidth;
 	int charWidth;
-	boolean monospacedHack;
 
 	boolean scrollBarsInitialized;
 
