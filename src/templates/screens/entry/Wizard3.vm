@@ -112,7 +112,7 @@
 #if ($attachments.size() > 0)
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
-     <th>&#160;</th>
+     <th>$l10n.Select</th>
      <th>$l10n.Name</th>
      <th>$l10n.Description</th>
      <th>$l10n.Type</th>
