@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.85 2002/01/11 21:51:29 richard Exp $
+ * @version $Id: ReportIssue.java,v 1.86 2002/01/11 23:18:22 richard Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -441,6 +441,9 @@ public class ReportIssue extends RequireLoginFirstAction
         
         Field nameField = group.get("Name"); 
         nameField.setRequired(true);
+        // set any required flags
+        setRequiredFlags(issue, intake);
+
         if (!nameField.isValid())
         {
             nameField.setMessage("This field requires a value.");
@@ -638,4 +641,5 @@ public class ReportIssue extends RequireLoginFirstAction
      }
      */
 }
+
 
