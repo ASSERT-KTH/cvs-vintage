@@ -82,7 +82,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.1 2001/12/31 23:43:02 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.2 2002/01/15 21:19:46 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -107,6 +107,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         Field order1 = null;
         Field order2 = null;
 
+        // Manage attribute groups
         if (attributeGroups.size() > 0)
         {
             int dupeOrder = Integer.parseInt(data.getParameters()
@@ -172,9 +173,39 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 attGroup.save();
             }
         }
-        data.getParameters().add("issueTypeId", 
-                                 issueType.getIssueTypeId().toString());
 
+        //data.getParameters().add("issueTypeId", 
+        //                         issueType.getIssueTypeId().toString());
+
+    }
+
+    /**
+     * Adds or modifies user attributes' properties
+     */
+    public void doSaveuserattributes ( RunData data, TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ModuleEntity module = scarabR.getCurrentModule();
+        IssueType issueType = scarabR.getIssueType();
+
+        if (intake.isAllValid())
+        {
+            List userAttributes = module.getUserAttributes(issueType, false);
+            for (int i=0; i < userAttributes.size(); i++)
+            {
+                // Set properties for module-attribute mapping
+                Attribute attribute = (Attribute)userAttributes.get(i);
+                RModuleAttribute rma = (RModuleAttribute)module
+                                       .getRModuleAttribute(attribute, 
+                                        issueType, "user");
+                Group rmaGroup = intake.get("RModuleAttribute", 
+                                 rma.getQueryKey(), false);
+                rmaGroup.setProperties(rma);
+                rma.save();
+            }
+        }
     }
 
     /**
@@ -234,4 +265,106 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         }
     }
 
+    /**
+     * Unmaps attributes to modules.
+     */
+    public void doDeleteuserattribute( RunData data, TemplateContext context ) 
+        throws Exception
+    {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabUser user = (ScarabUser)data.getUser();
+        ModuleEntity module = scarabR.getCurrentModule();
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        String key;
+        String attributeId;
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("att_delete_"))
+            {
+               attributeId = key.substring(11);
+               Attribute attribute = (Attribute)AttributePeer
+                                     .retrieveByPK(new NumberKey(attributeId));
+
+               // Remove attribute - module mapping
+               IssueType issueType = scarabR.getIssueType();
+               RModuleAttribute rma = module
+                   .getRModuleAttribute(attribute, issueType);
+               try
+               {
+                   rma.delete(user);
+               }
+               catch (Exception e)
+               {
+                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+               }
+
+               // Remove attribute - module mapping from template type
+               RModuleAttribute rma2 = module
+                   .getRModuleAttribute(attribute, 
+                   scarabR.getIssueType(issueType.getTemplateId().toString()));
+               try
+               {
+                   rma2.delete(user);
+               }
+               catch (Exception e)
+               {
+                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+               }
+           }
+        }        
+    }
+
+
+    public void doCreatenewuserattribute( RunData data, 
+                                            TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Group attGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
+        intake.remove(attGroup);
+        scarabR.setAttribute(null);
+        setTarget(data, getOtherTemplate(data));
+    }
+
+    /**
+     * Selects attribute to add to issue type.
+     */
+    public void doSelectuserattribute( RunData data, TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ModuleEntity module = scarabR.getCurrentModule();
+        IssueType issueType = scarabR.getIssueType();
+        IssueType templateType = 
+            scarabR.getIssueType(issueType.getTemplateId().toString());
+        Attribute attribute = scarabR.getAttribute();
+ 
+        if (attribute.getAttributeId() == null)
+        { 
+            data.setMessage("Please select an attrubute.");
+        }
+        else
+        {        
+            // add module-attribute groupings
+            RModuleAttribute rma = module.addRModuleAttribute(issueType, 
+                                                              "user");
+            Group rmaGroup = intake.get("RModuleAttribute", 
+                                         IntakeTool.DEFAULT_KEY);
+            rmaGroup.setProperties(rma);
+            rma.setAttributeId(attribute.getAttributeId());
+            rma.save();
+
+            // add module-attribute mappings to template type
+            RModuleAttribute rma2 = module.addRModuleAttribute(templateType);
+            rma2.setAttributeId(attribute.getAttributeId());
+            rma2.save();
+            doCancel(data, context);
+       }      
+
+    }
 }
