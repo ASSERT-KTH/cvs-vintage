@@ -564,7 +564,7 @@ static void jk_child_init(ap_pool_t *pconf,
     jk_server_conf_t *conf =
         (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
 
-    fprintf(stdout, "jk_post_config %s\n", p ? p : "NULL"); fflush(stdout);
+    fprintf(stdout, "jk_child_init %s\n", p ? p : "NULL"); fflush(stdout);
         
     if(conf->log_file && conf->log_level >= 0) {
         if(!jk_open_file_logger(&(conf->log), conf->log_file, conf->log_level)) {
@@ -575,6 +575,7 @@ static void jk_child_init(ap_pool_t *pconf,
     }
     
     if(!uri_worker_map_alloc(&(conf->uw_map), conf->uri_to_context, conf->log)) {
+	printf( "Memory error - uri worker alloc \n");
         jk_error_exit(APLOG_MARK, APLOG_EMERG, s, "Memory error");
     }
 

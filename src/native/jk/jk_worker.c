@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Workers controller                                         *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #include "jk_ajp12_worker.h"
@@ -177,10 +177,15 @@ int wc_create_worker(const char *name,
         }
         
         jk_log(l, JK_LOG_DEBUG, "wc_create_worker, about to validate and init %s\n", name);         
-        if(!w->validate(w, init_data, l) ||
-           !w->init(w, init_data, l)) {
+        if(!w->validate(w, init_data, l)) {
             w->destroy(&w, l);
-            jk_log(l, JK_LOG_ERROR, "wc_create_worker validate/init failed for %s\n", 
+            jk_log(l, JK_LOG_ERROR, "wc_create_worker validate failed for %s\n", 
+                   name); 
+            return JK_FALSE;
+	}
+	if(!w->init(w, init_data, l)) {
+            w->destroy(&w, l);
+            jk_log(l, JK_LOG_ERROR, "wc_create_worker init failed for %s\n", 
                    name); 
             return JK_FALSE;
         }

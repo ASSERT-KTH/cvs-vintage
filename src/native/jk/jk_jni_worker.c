@@ -57,7 +57,7 @@
  * Description: In process JNI worker                                      *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 #ifndef WIN32
@@ -235,6 +235,7 @@ static int JK_METHOD validate(jk_worker_t *pThis,
         char *str_config = NULL;
         JNIEnv *env;
 
+	jk_log(l, JK_LOG_DEBUG, "Into jni_validate\n"); 
         if(p->was_verified) {
             return JK_TRUE;
         }
@@ -252,6 +253,7 @@ static int JK_METHOD validate(jk_worker_t *pThis,
         }
 
         if(!p->tomcat_classpath) {
+	    jk_log(l, JK_LOG_EMERG, "Fail-> no classpath\n"); 
             return JK_FALSE;
         }
 
@@ -261,6 +263,7 @@ static int JK_METHOD validate(jk_worker_t *pThis,
 
         if(!p->jvm_dll_path || 
             !jk_file_exists(p->jvm_dll_path)) {
+	    jk_log(l, JK_LOG_EMERG, "Fail-> no jvm_dll_path\n"); 
             return JK_FALSE;
         }
 
@@ -285,23 +288,34 @@ static int JK_METHOD validate(jk_worker_t *pThis,
         }
 
 
-        if(load_jvm_dll(p, l)) {
-            if(open_jvm(p, &env, l)) {
-                if(get_bridge_object(p, env, l)) {
-                    if(get_method_ids(p, env, l)) {
-                        p->was_verified = JK_TRUE;
-                        return JK_TRUE;
-                    }
-                }
-            }            
-        }
+        if( ! load_jvm_dll(p, l)) {
+	    jk_log(l, JK_LOG_EMERG, "Fail-> can't load jvm dll\n"); 
+	    detach_from_jvm(p);
+	    return JK_FALSE;
+	}
 
-        if(p->jvm) {
-            detach_from_jvm(p);
-        }
+	if( ! open_jvm(p, &env, l)) {
+	    jk_log(l, JK_LOG_EMERG, "Fail-> can't open jvm\n"); 
+	    detach_from_jvm(p);
+	    return JK_FALSE;
+	}
+
+	if( ! get_bridge_object(p, env, l)) {
+	    jk_log(l, JK_LOG_EMERG, "Fail-> can't get bridge object\n"); 
+	    detach_from_jvm(p);
+	    return JK_FALSE;
+	}
+	
+	if( ! get_method_ids(p, env, l)) {
+	    jk_log(l, JK_LOG_EMERG, "Fail-> can't get method ids\n"); 
+	    detach_from_jvm(p);
+	    return JK_FALSE;
+	}
+
+	p->was_verified = JK_TRUE;
+	return JK_TRUE;
     }
-
-    return JK_FALSE;
+    
 }
 
 static int JK_METHOD init(jk_worker_t *pThis,
@@ -321,6 +335,7 @@ static int JK_METHOD init(jk_worker_t *pThis,
            !p->jk_service_method     ||
            !p->jk_startup_method     ||
            !p->jk_shutdown_method) {
+	    jk_log(l, JK_LOG_EMERG, "Fail-> worker not set completely\n"); 
             return JK_FALSE;
         }
        
@@ -353,6 +368,7 @@ static int JK_METHOD init(jk_worker_t *pThis,
                 p->was_initialized = JK_TRUE; 
                 return JK_TRUE;
             }
+	    jk_log(l, JK_LOG_EMERG, "Fail-> result from call is 0\n"); 
             return JK_FALSE;
         }
     }
@@ -515,9 +531,11 @@ static int open_jvm(jni_worker_t *p,
 {
     JDK1_1InitArgs vm_args;  
     JNIEnv *penv;
+    int err;
     *env = NULL;
 
     if(0 != jni_get_default_java_vm_init_args(&vm_args)) {
+	jk_log(l, JK_LOG_EMERG, "Fail-> can't get default vm init args\n"); 
         return JK_FALSE;
     }
 
@@ -535,6 +553,7 @@ static int open_jvm(jni_worker_t *p,
                     vm_args.classpath);
             p->tomcat_classpath = tmp;
         } else {
+	    jk_log(l, JK_LOG_EMERG, "Fail-> allocation error for classpath\n"); 
             return JK_FALSE;
         }
     }
@@ -552,9 +571,10 @@ static int open_jvm(jni_worker_t *p,
         vm_args.properties = p->sysprops;
     }
 
-    if(jni_create_java_vm(&(p->jvm), 
+    if(err=jni_create_java_vm(&(p->jvm), 
                           &penv, 
                           &vm_args) != 0) {
+	jk_log(l, JK_LOG_EMERG, "Fail-> create java vm %d \n", err); 
         return JK_FALSE;
     }
 
@@ -640,5 +660,6 @@ static JNIEnv *attach_to_jvm(jni_worker_t *p)
 
 static void detach_from_jvm(jni_worker_t *p)
 {
+    if(p->jvm == NULL ) return;
     (*(p->jvm))->DetachCurrentThread(p->jvm);
 }
