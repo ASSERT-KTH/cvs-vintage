@@ -229,15 +229,10 @@ public class Handler {
 	if ( ! initialized ) return;// already destroyed or not init.
 	initialized=false;
 
-	if( ! internal )
-	    contextM.doPreServletDestroy( context, this);
-	
 	// XXX post will not be called if any error happens in destroy.
 	// That's how tomcat worked before - I think it's a bug !
 	doDestroy();
 
-	if( ! internal )
-	    contextM.doPostServletDestroy( context, this);
     }
 
     /** Initialize the handler. Handler can override this
