@@ -1,4 +1,4 @@
-// $Id: ActionStateDiagram.java,v 1.35 2005/01/02 16:43:46 linus Exp $
+// $Id: ActionStateDiagram.java,v 1.36 2005/01/03 13:00:11 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,16 +51,7 @@ public class ActionStateDiagram extends ActionAddDiagram {
     // constructors
 
     private ActionStateDiagram() {
-        super("action.state-diagram", true, HAS_ICON);
-    }
-
-    /**
-     * The constructor.
-     * 
-     * @param name the name of the action
-     */
-    protected ActionStateDiagram(String name) {
-        super(name, true, HAS_ICON);
+        super("action.state-diagram");
     }
 
     /**

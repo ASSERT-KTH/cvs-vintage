@@ -1,4 +1,4 @@
-// $Id: ActionActivityDiagram.java,v 1.37 2005/01/02 16:43:46 linus Exp $
+// $Id: ActionActivityDiagram.java,v 1.38 2005/01/03 13:00:11 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ public class ActionActivityDiagram extends ActionAddDiagram {
      * Constructor.
      */
     private ActionActivityDiagram() {
-        super("action.activity-diagram", true, HAS_ICON);
+        super("action.activity-diagram");
     }
 
     /**
