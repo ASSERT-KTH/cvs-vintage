@@ -1,39 +1,23 @@
 @echo off
-rem $Id: jspc.bat,v 1.2 2000/02/07 16:07:39 shemnon Exp $
+rem $Id: jspc.bat,v 1.3 2000/02/26 20:44:15 rubys Exp $
 rem A batch file to run the JspC Compiler
 
 rem This batch file written and tested under Windows NT
 rem Improvements to this file are welcome
 
-set jsdkJars=.\lib\webserver.jar;.\lib\servlet.jar
-set jspJars=.\lib\jasper.jar
-set beanJars=.\webpages\WEB-INF\classes\jsp\beans
-set miscJars=.\lib\xml.jar
-set appJars=%jsdkJars%;%jspJars%;%beanJars%;%miscJars%
-set sysJars=%JAVA_HOME%\lib\tools.jar
+if not "%TOMCAT_HOME%" == "" goto start
 
-set appClassPath=.\classes;%appJars%
-set cp=%CLASSPATH%
+SET TOMCAT_HOME=.
+if exist %TOMCAT_HOME%\bin\tomcat.bat goto start
 
-set CLASSPATH=%appClassPath%;%sysJars%
+SET TOMCAT_HOME=..
+if exist %TOMCAT_HOME%\bin\tomcat.bat goto start
 
-if "%cp%" == "" goto next
+SET TOMCAT_HOME=
+echo Unable to determine the value of TOMCAT_HOME.
+goto eof
 
-rem else
-set CLASSPATH=%CLASSPATH%;%cp%
+:start
+call %TOMCAT_HOME%\bin\tomcat jspc %*
 
-echo Using classpath: %CLASSPATH%
-rem start java org.apache.tomcat.shell.Startup %2 %3 %4 %5 %6 %7 %8 %9
-java org.apache.jasper.JspC %1 %2 %3 %4 %5 %6 %7 %8 %9
-
-set CLASSPATH=%cp%
-set port=
-set host=
-set test=
-set jsdkJars=
-set jspJars=
-set beanJars=
-set miscJars=
-set appJars=
-set appClassPath=
-set cp=
+:eof

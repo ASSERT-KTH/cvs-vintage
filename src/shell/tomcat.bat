@@ -1,5 +1,5 @@
 @echo off
-rem $Id: tomcat.bat,v 1.13 2000/02/26 19:41:47 rubys Exp $
+rem $Id: tomcat.bat,v 1.14 2000/02/26 20:44:15 rubys Exp $
 rem A batch file to start/stop tomcat server.
 
 rem This batch file written and tested under Windows NT
@@ -67,7 +67,7 @@ goto cleanup
 :runJspc
 rem Run ant
 echo Using classpath: %CLASSPATH%
-java -Dtomcat.home=%TOMCAT_HOME% org.apache.jasper.JspC $@
+java -Dtomcat.home=%TOMCAT_HOME% org.apache.jasper.JspC %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :setupEnv
