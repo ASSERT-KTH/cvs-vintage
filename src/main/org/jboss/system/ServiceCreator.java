@@ -24,7 +24,7 @@ import org.w3c.dom.NodeList;
  * @see Service
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * 
  * <p><b>Revisions:</b>
  * <p><b>2001/08/03 marcf </b>
@@ -35,7 +35,8 @@ import org.w3c.dom.NodeList;
 public class ServiceCreator 
 {
    // Attributes ----------------------------------------------------
-   
+
+   /** Instance logger. */
    private final Logger log = Logger.getLogger(getClass());
 	
    private MBeanServer server;
@@ -72,31 +73,30 @@ public class ServiceCreator
       String code = mbeanElement.getAttribute("code");
       if (code == null)
       {
-         throw new ConfigurationException
-            ("missing 'code' attribute");
+         throw new ConfigurationException("missing 'code' attribute");
       }
 		
       // get the constructor params/sig to use
       ConstructorInfo constructor =
          ConstructorInfo.create(mbeanElement);
-      log.info("About to create the bean"+name);
+      log.info("About to create bean: "+name);
 		
       // Create the MBean instance
       try 
       {
-         ObjectInstance instance =  server.createMBean(code,
-                                                       name,
-                                                       loader,
-                                                       constructor.params,
-                                                       constructor.signature);
-         log.info("Created the bean"+name);
+         ObjectInstance instance = server.createMBean(code,
+                                                      name,
+                                                      loader,
+                                                      constructor.params,
+                                                      constructor.signature);
+         log.info("Created bean: "+name);
 		
          return instance;
 	
       } 
       catch (Exception e) 
       {
-         //didn't work, unregister in case the jmx agent is screwed.
+         // didn't work, unregister in case the jmx agent is screwed.
          try 
          {
             server.unregisterMBean(name);
