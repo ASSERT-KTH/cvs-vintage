@@ -13,11 +13,11 @@ import org.jboss.ejb.Interceptor;
 import org.jboss.ejb.MethodInvocation;
 
 /**
- *   <description> 
+ * An abstract base class for container interceptors.
  *      
- *   @see <related>
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.5 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.6 $
  */
 public abstract class AbstractInterceptor
    implements Interceptor
@@ -25,6 +25,8 @@ public abstract class AbstractInterceptor
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
+
+   /** The next interceptor in the chain. */
    protected Interceptor nextInterceptor;
 
    // Static --------------------------------------------------------
@@ -34,39 +36,45 @@ public abstract class AbstractInterceptor
    // Public --------------------------------------------------------
 
    // Interceptor implementation ------------------------------------
+   
    public abstract void setContainer(Container container);
+   
    public abstract Container getContainer();
-   public void setNext(Interceptor interceptor) { nextInterceptor = interceptor; }
-   public Interceptor getNext() { return nextInterceptor; }
    
-   public void init()
-      throws Exception
-   {
+   public void setNext(final Interceptor interceptor) {
+      // assert interceptor != null
+      nextInterceptor = interceptor;
    }
    
-   public void start()
-      throws Exception
-   {
-   }
-   
-   public void stop()
-   {
+   public Interceptor getNext() {
+      return nextInterceptor;
    }
 
-   public void destroy()
-   {
+   public void init() throws Exception {
+      // empty
+   }
+   
+   public void start() throws Exception {
+      // empty
+   }
+   
+   public void stop() {
+      // empty
    }
 
-   public Object invokeHome(MethodInvocation mi)
-      throws Exception
-   {
+   public void destroy() {
+      // empty
+   }
+
+   public Object invokeHome(final MethodInvocation mi) throws Exception {
+      // assert mi != null;
       return getNext().invokeHome(mi);
    }
 
-   public Object invoke(MethodInvocation mi)
-      throws Exception
-   {
+   public Object invoke(final MethodInvocation mi) throws Exception {
+      // assert mi != null;
       return getNext().invoke(mi);
    }
+   
    // Protected -----------------------------------------------------
 }
