@@ -27,21 +27,21 @@ $page.setTitle("Scarab Registration")
 <tr>
  <th>* First name</th>
  <td>
-  <input name="$regGroup.FirstName.Key" value="$regGroup.FirstName" type="text" size="25" />
+  <input name="$regGroup.FirstName.Key" value="$regGroup.FirstName" type="text" size="25" tabindex="1"/>
   #fieldErrorMsg($regGroup.FirstName "")
  </td>
 </tr>
 <tr>
  <th> *Last name</th>
  <td>
-  <input name="$regGroup.LastName.Key" value="$regGroup.LastName" type="text" size="25" />
+  <input name="$regGroup.LastName.Key" value="$regGroup.LastName" type="text" size="25"  tabindex="2"/>
   #fieldErrorMsg($regGroup.LastName "")
  </td>
 </tr>
 <tr>
  <th> *Email address</th>
  <td>
-  <input name="$regGroup.Email.Key" value="$regGroup.Email" type="text" size="25" />
+  <input name="$regGroup.Email.Key" value="$regGroup.Email" type="text" size="25"  tabindex="3"/>
   #fieldErrorMsg($regGroup.Email "")
 <p>
  Note: Enter your valid email address - including your "@serviceprovider" domain.
@@ -52,7 +52,7 @@ $page.setTitle("Scarab Registration")
 <tr>
  <th> *Password</th>
  <td>
-  <input name="$regGroup.Password.Key" type="password" value="$password" size="25" />
+  <input name="$regGroup.Password.Key" type="password" value="$password" size="25"  tabindex="4"/>
   #if ($password.Message) ## hack
   #fieldErrorMsg($password "")
   #end
@@ -61,7 +61,7 @@ $page.setTitle("Scarab Registration")
 <tr>
  <th> *Password confirm</th>
  <td>
-  <input name="$regGroup.PasswordConfirm.Key" type="password" value="$regGroup.PasswordConfirm" size="25" />
+  <input name="$regGroup.PasswordConfirm.Key" type="password" value="$regGroup.PasswordConfirm" size="25"  tabindex="5"/>
   #fieldErrorMsg($regGroup.PasswordConfirm "")
  </td>
 </tr>
@@ -74,8 +74,8 @@ $page.setTitle("Scarab Registration")
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
- <input type="submit" name="eventSubmit_doRegister" value="Register" />
+ <input type="submit" name="eventSubmit_doRegister" value="Register" tabindex="6"/>
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" tabindex="7"/>&#160;
   </td>
  </tr>
 </table>
