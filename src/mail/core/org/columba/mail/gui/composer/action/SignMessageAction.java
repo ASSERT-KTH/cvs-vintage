@@ -56,7 +56,7 @@ public class SignMessageAction extends CheckBoxAction {
 				"composer",
 				"menu_message_sign"),
 			null);
-
+		setEnabled(false);
 	}
 
 	/* (non-Javadoc)

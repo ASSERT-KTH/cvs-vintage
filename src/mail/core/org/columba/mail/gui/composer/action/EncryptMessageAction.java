@@ -57,7 +57,7 @@ public class EncryptMessageAction extends CheckBoxAction {
 				"composer",
 				"menu_message_encrypt"),
 			null);
-
+		setEnabled(false);
 	}
 
 	/* (non-Javadoc)
