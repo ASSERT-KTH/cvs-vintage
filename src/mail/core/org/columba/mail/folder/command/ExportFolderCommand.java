@@ -1,13 +1,26 @@
-/*
- * Created on 07.09.2003
- *
- * To change the template for this generated file go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
+//The contents of this file are subject to the Mozilla Public License Version 1.1
+//(the "License"); you may not use this file except in compliance with the 
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//for the specific language governing rights and
+//limitations under the License.
+//
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//
+//All Rights Reserved.
+
 package org.columba.mail.folder.command;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
+
+import java.text.MessageFormat;
+
+import javax.swing.JOptionPane;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
@@ -16,6 +29,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Export all selected folders to a single MBOX mailbox file.
@@ -26,9 +40,7 @@ import org.columba.mail.folder.Folder;
  * @author fdietz
  */
 public class ExportFolderCommand extends FolderCommand {
-
 	protected FolderCommandAdapter adapter;
-
 	protected Object[] destUids;
 
 	/**
@@ -36,7 +48,6 @@ public class ExportFolderCommand extends FolderCommand {
 	 */
 	public ExportFolderCommand(DefaultCommandReference[] references) {
 		super(references);
-
 	}
 
 	/**
@@ -47,7 +58,6 @@ public class ExportFolderCommand extends FolderCommand {
 		AbstractFrameController frame,
 		DefaultCommandReference[] references) {
 		super(frame, references);
-
 	}
 
 	/* (non-Javadoc)
@@ -64,64 +74,101 @@ public class ExportFolderCommand extends FolderCommand {
 		// get source references
 		FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
-		// get destination file
-		File destFile = r[0].getDestFile();
-		
-		// create output stream
-		FileOutputStream os = new FileOutputStream(destFile);
+                OutputStream os = null;
+                
+                try {
+                        // create output stream
+                        os = new BufferedOutputStream(new FileOutputStream(r[0].getDestFile()));
 
-		int counter = 0;
-		
-		// for each source folder
-		for (int i = 0; i < r.length; i++) {
-			
-			// get source folder
-			Folder srcFolder = (Folder) r[i].getFolder();
-			
-			// update status message
-			worker.setDisplayText("Exporting "+srcFolder.getName()+" "+(i+1)+"/"+r.length+"...");
-		 	
-			// get array of message UIDs
-			Object[] uids = srcFolder.getUids();
-			
-			// initialize progressbar with total number of messages
-			worker.setProgressBarMaximum(uids.length);
-			
-			worker.setProgressBarValue(0);
-			
-			// for each message in folder i
-			for (int j = 0; j < uids.length; j++) {
-				// get message source from folder
-				String source = srcFolder.getMessageSource(uids[j]);
-				
-				// prepend From line
-				// 
-				os.write(new String("From \r\n").getBytes());
-				
-				// write message source to file
-				os.write(source.getBytes());
-				
-				// append newline
-				os.write(new String("\r\n").getBytes());
-				
-				os.flush();
-				
-				worker.setProgressBarValue(j);
-				counter++;
-				
-				// if user cancels operation
-				if ( worker.cancelled() ) break;
-			}
-			
-			//if user cancels operation
-			if ( worker.cancelled() ) break;
-		}
+                        int counter = 0;
+                        Folder srcFolder;
+                        Object[] uids;
+                        InputStream in;
+                        int read;
+                        byte[] buffer = new byte[1024];
 
-		// close output stream
-		os.close();
-		
-		// update status message
-		worker.setDisplayText("Exported "+counter+" messages successfully");
-	}
+                        // for each source folder
+                        for (int i = 0; i < r.length && !worker.cancelled(); i++) {
 
+                                // get source folder
+                                srcFolder = (Folder) r[i].getFolder();
+
+                                // update status message
+                                worker.setDisplayText(MessageFormat.format(
+                                        MailResourceLoader.getString(
+                                                "statusbar",
+                                                "message",
+                                                "export_messages"),
+                                        new Object[]{
+                                                srcFolder.getName(),
+                                                Integer.toString(i+1),
+                                                Integer.toString(r.length)
+                                        }));
+
+                                // get array of message UIDs
+                                uids = srcFolder.getUids();
+
+                                // initialize progressbar with total number of messages
+                                worker.setProgressBarMaximum(uids.length);
+                                worker.setProgressBarValue(0);
+
+                                // for each message in folder i
+                                for (int j = 0; j < uids.length && !worker.cancelled(); j++) {
+                                        // get message source from folder
+                                        in = new BufferedInputStream(
+                                                srcFolder.getMessageSourceStream(uids[j]));
+
+                                        // prepend From line
+                                        os.write(new String("From \r\n").getBytes());
+
+                                        // write message source to file
+                                        while ((read = in.read(buffer, 0, buffer.length)) > 0) {
+                                                os.write(buffer, 0, read);
+                                        }
+                                        
+                                        try {
+                                                in.close();
+                                        } catch(IOException ioe_) {}
+
+                                        // append newline
+                                        os.write(new String("\r\n").getBytes());
+
+                                        os.flush();
+
+                                        worker.setProgressBarValue(j);
+                                        counter++;
+                                }
+                        }
+
+                        // update status message
+                        if (worker.cancelled()) {
+                                worker.setDisplayText(MailResourceLoader.getString(
+                                        "statusbar",
+                                        "message",
+                                        "export_messages_cancelled"));
+                        } else {
+                                worker.setDisplayText(MessageFormat.format(
+                                        MailResourceLoader.getString(
+                                                "statusbar",
+                                                "message",
+                                                "export_messages_success"),
+                                        new Object[]{Integer.toString(counter)}));
+                        }
+                } catch (IOException ioe) {
+                        JOptionPane.showMessageDialog(null, MailResourceLoader.getString(
+                                "statusbar",
+                                "message",
+                                "err_export_messages_msg"), MailResourceLoader.getString(
+                                "statusbar",
+                                "messages",
+                                "err_export_messages_title"), JOptionPane.ERROR_MESSAGE);
+                } finally {
+                        try {
+                                //close output stream
+                                if (os != null) {
+                                        os.close();
+                                }
+                        } catch (IOException ioe) {}
+                }
+        }
 }
