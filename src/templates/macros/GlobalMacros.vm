@@ -130,7 +130,7 @@
 
 #macro (actionErrorMsg)
 #if ($data.Message)
-<p class="alert"><small><strong>Alert!</strong>&#160;$data.Message</small></p>
+#alert($data.Message)
 #end
 #end
 

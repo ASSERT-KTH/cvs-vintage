@@ -24,11 +24,11 @@
   </td>
   <td>
   <div align="right" id="login">
-      #if ($data.User.FirstName)
+   #if ($data.User.FirstName)
    <div>
     Logged in: <strong class="username">$data.User.FirstName $data.User.LastName</strong>
    </div>
-            #end
+   #end
    <div>
     #if ($data.User.hasLoggedIn())
     <a href="$link.setPage("Login.vm").setAction("Logout")">Logout</a>
