@@ -44,6 +44,7 @@ import org.jboss.logging.ConsoleLogging;
 import org.jboss.logging.ConsoleLoggingMBean;
 
 import org.jboss.util.MBeanProxy;
+import org.jboss.web.WebClassLoader;
 import org.jboss.web.WebServiceMBean;
 
 import org.jboss.ejb.plugins.*;
@@ -82,7 +83,7 @@ import org.jboss.mgt.Module;
 *   @author Peter Antman (peter.antman@tim.se)
 *   @author Scott Stark(Scott_Stark@displayscape.com)
 *
-*   @version $Revision: 1.72 $
+*   @version $Revision: 1.73 $
 */
 public class ContainerFactory
   extends org.jboss.util.ServiceMBeanSupport
@@ -329,8 +330,10 @@ public class ContainerFactory
       app.setURL( appUrl );
       log.log( "Deploying:" + appUrl );
 
-      // create the _real_ classloader for this app
-      ClassLoader cl = new URLClassLoader( jarUrls, Thread.currentThread().getContextClassLoader() );
+      /* Create a subclass of URLClassLoader that allows for dynamic class
+        loading via the WebServiceMBean
+      */
+      WebClassLoader cl = new WebClassLoader( jarUrls, Thread.currentThread().getContextClassLoader() );
       app.setClassLoader( cl );
 
       for( int i = 0; i < jarUrls.length; i++ )
@@ -343,8 +346,9 @@ public class ContainerFactory
 
       // Add to webserver so client can access classes through dynamic class downloading
       WebServiceMBean webServer = (WebServiceMBean) MBeanProxy.create( WebServiceMBean.class, WebServiceMBean.OBJECT_NAME );
+      URL[] codebase = { webServer.addClassLoader(cl) };
+      cl.setWebURLs(codebase);
 
-      webServer.addClassLoader( cl );
       // Done
       log.log( "Deployed application: " + app.getName() );
       // Register deployment. Use the application name in the hashtable

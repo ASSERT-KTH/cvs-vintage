@@ -19,12 +19,12 @@ import javax.management.*;
 import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
-/**
- *   <description> 
- *      
- *   @see <related>
+/** The WebService implementation. It configures a WebServer instance to
+ perform dynamic class and resource loading.
+
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @author Scott_Stark@displayscape.com
+ *   @version $Revision: 1.4 $
  */
 public class WebService
    extends ServiceMBeanSupport
@@ -74,19 +74,29 @@ public class WebService
    {
       return "Webserver";
    }
-   
+
+   /** Start the web server for dynamic downloading of classes and resources.
+    This sets the system java.rmi.server.hostname property to the local hostname
+    if it has not been set. The system java.rmi.server.codebase is also set to
+    "http://"+java.rmi.server.hostname+":"+getPort()+"/" if the 
+    java.rmi.server.codebase has not been set.
+    */
    public void startService()
       throws Exception
    {
       server.start();
-      // Set codebase
+      // Set the rmi host and codebase if they are not already set
       String host = System.getProperty("java.rmi.server.hostname");
-      if (host ==null) host = InetAddress.getLocalHost().getHostName(); 
+      if( host == null )
+          host = InetAddress.getLocalHost().getHostName();
       
-      String codebase = "http://"+host+":"+getPort()+"/";
-      System.setProperty("java.rmi.server.codebase", codebase);
+      String codebase = System.getProperty("java.rmi.server.codebase");
+      if( codebase == null )
+      {
+        codebase = "http://"+host+":"+getPort()+"/";
+        System.setProperty("java.rmi.server.codebase", codebase);
+      }
       log.log("Codebase set to "+codebase);
-		
       log.log("Started webserver on port "+server.getPort());
    }
    
@@ -95,9 +105,9 @@ public class WebService
       server.stop();
    }
 
-   public void addClassLoader(ClassLoader cl)
+   public URL addClassLoader(ClassLoader cl)
    {
-      server.addClassLoader(cl);
+      return server.addClassLoader(cl);
    }
    
    public void removeClassLoader(ClassLoader cl)
