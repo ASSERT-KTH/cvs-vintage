@@ -55,6 +55,7 @@ import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.tm.TransactionPropagationContextFactory;
 import org.jboss.tm.TransactionPropagationContextImporter;
 import org.jboss.mx.util.JMXExceptionDecoder;
+import org.jboss.net.sockets.DefaultSocketFactory;
 
 /**
  * The JRMPInvoker is an RMI implementation that can generate Invocations
@@ -64,7 +65,7 @@ import org.jboss.mx.util.JMXExceptionDecoder;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public class JRMPInvoker
    extends RemoteServer
