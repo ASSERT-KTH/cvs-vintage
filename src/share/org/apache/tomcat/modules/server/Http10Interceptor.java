@@ -386,7 +386,11 @@ class HttpRequest extends Request {
 
     protected void parseHostHeader() {
 	MessageBytes hH=getMimeHeaders().getValue("host");
-        serverPort = socket.getLocalPort();
+        if (sslSupport != null){
+            serverPort = 443;
+        } else {
+            serverPort = 80;
+        }           
 	if (hH != null) {
 	    // XXX use MessageBytes
 	    String hostHeader = hH.toString();
@@ -399,8 +403,9 @@ class HttpRequest extends Request {
                 }catch(NumberFormatException  nfe){
                 }
 	    }else serverNameMB.setString( hostHeader);
-        return;
+            return;
 	}
+        serverPort = socket.getLocalPort();
 	if( localHost != null ) {
 	    serverNameMB.setString( localHost );
 	}
