@@ -168,7 +168,22 @@
     <field name="File" key="d" type="FileItem">
         <rule name="maxLength" value="16777215">Files larger than 16MB are not allowed</rule>
     </field>
-
 </group>
+
+<group name="Depend" key="dep" mapToObject="om.Depend">
+    <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
+        <rule name="mask" value="[0-9]+">badIdMessage</rule>
+    </field>
+    <field name="ObservedId" key="odi" type="NumberKey" >
+        <rule name="mask" value="[0-9]+">badIdMessage</rule>
+    </field>
+    <field name="ObserverId" key="ori" type="NumberKey" >
+        <rule name="mask" value="[0-9]+">badIdMessage</rule>
+    </field>
+    <field name="TypeId" key="dti" type="NumberKey" >
+        <rule name="mask" value="[0-9]+">badIdMessage</rule>
+    </field>
+</group>
+
 
 </input-data>
