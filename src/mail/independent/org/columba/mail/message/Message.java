@@ -50,6 +50,9 @@ public class Message extends AbstractMessage {
 		if (getSource() != null)
 			message.setSource(new String(getSource()));
 
+		if ( getMimePartTree() != null)
+			message.setMimePartTree( getMimePartTree());
+
 		return message;
 	}
 

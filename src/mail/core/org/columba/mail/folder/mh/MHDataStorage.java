@@ -43,6 +43,9 @@ public class MHDataStorage implements DataStorageInterface {
 			new File(
 				folder.getDirectoryFile() + File.separator + (Integer) uid);
 
+		if( source == null ) {
+			System.out.println( source + uid );
+		}
 		DiskIO.saveStringInFile(file, source);
 	}
 

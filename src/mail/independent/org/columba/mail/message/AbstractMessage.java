@@ -102,4 +102,6 @@ public abstract class AbstractMessage {
 	{
 		source=null;
 	}
+	
+	public abstract Object clone();
 }

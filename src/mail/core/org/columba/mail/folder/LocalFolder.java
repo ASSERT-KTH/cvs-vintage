@@ -165,10 +165,9 @@ public abstract class LocalFolder extends Folder {
 
 		// get message source
 		String source = message.getSource();
-
-		// free memory 
-		// -> we don't need the message object anymore
-		message.freeMemory();
+		if( source == null) {
+			System.out.println( "source is null " + newUid );
+		}
 
 		// save message to disk
 		getDataStorageInstance().saveMessage(source, newUid);
@@ -181,6 +180,10 @@ public abstract class LocalFolder extends Folder {
 
 		// this folder has changed
 		changed = true;
+
+		//		free memory 
+		// -> we don't need the message object anymore
+		message.freeMemory();
 
 		return newUid;
 	}
@@ -252,7 +255,7 @@ public abstract class LocalFolder extends Folder {
 				// this message is already cached
 				//ColumbaLogger.log.info("using already cached message..");
 
-				return aktMessage;
+				return (AbstractMessage) aktMessage.clone();
 			}
 		}
 
@@ -267,7 +270,7 @@ public abstract class LocalFolder extends Folder {
 
 		aktMessage = message;
 
-		return message;
+		return (AbstractMessage) message.clone();
 	}
 
 	/**
@@ -379,7 +382,7 @@ public abstract class LocalFolder extends Folder {
 	 * @see org.columba.mail.folder.Folder#size()
 	 */
 	public int size() {
-		
+
 		// return number of messages
 		return getDataStorageInstance().getMessageCount();
 	}

@@ -197,7 +197,7 @@ public abstract class CachedFolder extends LocalFolder {
 			if (aktMessage.getUID().equals(uid)) {
 				// this message is already cached
 				// -> no need to parse it again
-				return aktMessage;
+				return (AbstractMessage) aktMessage.clone();
 			}
 		}
 
@@ -217,12 +217,15 @@ public abstract class CachedFolder extends LocalFolder {
 
 		// set message source
 		message.setSource(source);
+		if( source == null) {
+			source = new String();
+		}
 
 		// this is the new cached message
 		// which should be re-used if possible
 		aktMessage = message;
 
-		return message;
+		return (AbstractMessage) message.clone();
 	}
 
 	/**

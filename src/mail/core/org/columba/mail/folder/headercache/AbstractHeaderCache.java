@@ -341,7 +341,10 @@ public abstract class AbstractHeaderCache {
 		for (int i = 0; i < uids.length; i++) {
 			try {
 				String source = ds.loadMessage(uids[i]);
-				
+				if( source.length() == 0) {
+					ds.removeMessage(uids[i]);
+					continue;
+				}
 
 				header = parser.parseHeader(source);
 
@@ -373,6 +376,7 @@ public abstract class AbstractHeaderCache {
 				}
 
 			} catch (Exception ex) {
+				ex.printStackTrace();
 				ColumbaLogger.log.error(
 					"Error syncing HeaderCache :" + ex.getLocalizedMessage());
 			}

@@ -137,7 +137,7 @@ public class Rfc822Parser extends AbstractParser {
 
 	public ColumbaHeader parseHeader(String message) {
 		if (message == null) {
-
+			System.out.print("Message is null");
 		}
 		String[] divided = divideMessage(message);
 		return parseHeaderString(divided[0]);
