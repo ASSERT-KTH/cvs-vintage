@@ -58,6 +58,7 @@ import org.apache.turbine.util.StringStackBuffer;
 
 // Scarab classes
 import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.Attachment;
 
 import com.lucene.document.Document;
 import com.lucene.document.Field;
@@ -72,7 +73,7 @@ import com.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdaptor.java,v 1.5 2001/08/02 17:52:19 jmcnally Exp $
+ * @version $Id: LuceneAdaptor.java,v 1.6 2001/08/02 20:38:06 jmcnally Exp $
  */
 public class LuceneAdaptor 
     implements SearchIndex

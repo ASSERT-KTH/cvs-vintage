@@ -56,8 +56,8 @@ import java.text.DateFormat;
 // import java.util.SimpleDateFormat;
 
 // Turbine classes
-import org.apache.turbine.services.db.om.NumberKey;
-import org.apache.turbine.services.db.util.Criteria;
+import org.apache.torque.om.NumberKey;
+import org.apache.torque.util.Criteria;
 import org.apache.turbine.util.SequencedHashtable;
 import org.apache.turbine.util.StringUtils;
 
