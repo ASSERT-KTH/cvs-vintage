@@ -8,6 +8,7 @@
 <form method="post" name="Report2Form" action="$link.setPage("entry,Wizard2.vm")">
 <input type="hidden" name="action" value="ReportIssue" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="entry,Wizard1.vm" />
 <input type="hidden" name="templateId" value="$!templateId" />
 
 <h3>New $scarabR.CurrentIssueType.Name</h3>
