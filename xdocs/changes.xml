@@ -11,7 +11,11 @@
         Added Maven generated docs to scarab-gen.
       </action>             
     </release>
-
+    <release version="b18-1" date="27-Jan-2004">
+      <action dev="pledbrook" type="fix">
+        Refactoring of Email.java submitted by Vladimir Prus.
+      </action>             
+    </release>
   </body>
 </document>
 
