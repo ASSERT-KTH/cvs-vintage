@@ -182,7 +182,9 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 		// property, when changing the underlying column model
 		// -> setting this to (0,0) again
 		view.setIntercellSpacing(new Dimension(0, 0));
-
+	
+		// if new columns were added, we have to initialize the tooltips
+		tableController.initTooltips();	
 	}
 
 	/**
