@@ -353,8 +353,7 @@ public class IMAPFolder extends RemoteFolder {
 		}
 		return newUids;
 		/*
-		 * List result = new Vector();
-		 *  // delete old headers
+		 * List result = new Vector(); // delete old headers
 		 * 
 		 * for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
 		 * String str = (String) e.nextElement();
@@ -576,6 +575,16 @@ public class IMAPFolder extends RemoteFolder {
 				case MarkMessageCommand.MARK_AS_ANSWERED :
 					{
 						h.set("columba.flags.answered", Boolean.TRUE);
+						break;
+					}
+				case MarkMessageCommand.MARK_AS_SPAM :
+					{
+						h.set("columba.spam", Boolean.TRUE);
+						break;
+					}
+				case MarkMessageCommand.MARK_AS_NOTSPAM :
+					{
+						h.set("columba.spam", Boolean.FALSE);
 						break;
 					}
 			}

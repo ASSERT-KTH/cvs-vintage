@@ -373,6 +373,16 @@ public abstract class CachedFolder extends LocalFolder {
 					h.set("columba.flags.answered", Boolean.TRUE);
 					break;
 				}
+			case MarkMessageCommand.MARK_AS_SPAM :
+				{
+					h.set("columba.spam", Boolean.TRUE);
+					break;
+				}
+			case MarkMessageCommand.MARK_AS_NOTSPAM :
+				{
+					h.set("columba.spam", Boolean.FALSE);
+					break;
+				}
 		}
 
 		changed = true;
@@ -460,7 +470,7 @@ public abstract class CachedFolder extends LocalFolder {
 		getHeaderList();
 
 		int size = in.available();
-		
+
 		// call addMessage of superclass LocalFolder
 		// to do the dirty work
 		Object newUid = super.addMessage(in);
@@ -471,15 +481,15 @@ public abstract class CachedFolder extends LocalFolder {
 
 		Header header = HeaderParser.parse(source);
 		ColumbaHeader h = new ColumbaHeader(header);
-        h.getAttributes().put("columba.size", new Integer(size / 1024));
-        
+		h.getAttributes().put("columba.size", new Integer(size / 1024));
+
 		// decode all headerfields:
 
 		// remove all unnecessary headerfields which doesn't
 		// need to be cached
 		// -> saves much memory
 		ColumbaHeader strippedHeader = CachedHeaderfields.stripHeaders(h);
-		
+
 		// free memory
 		h = null;
 
@@ -548,29 +558,27 @@ public abstract class CachedFolder extends LocalFolder {
 	 * This method first tries to find the requested header in the header
 	 * cache. If the headerfield is not cached, the message source is parsed
 	 * (@see LocalFolder).
-	 * 
+	 *  
 	 */
 	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
 		// get header with UID
 		Header header = (Header) getHeaderList().get(uid);
-		
+
 		Header result = new Header();
-		
+
 		// if only one headerfield wasn't found in cache
 		// -> call LocalFolder.getHeaderFields() to parse the
 		// -> complete message source
 		boolean parsingNeeded = false;
-		for ( int i=0; i<keys.length; i++)
-		{
-			if ( header.get(keys[i]) != null )
-			{
+		for (int i = 0; i < keys.length; i++) {
+			if (header.get(keys[i]) != null) {
 				// headerfield found
 				result.set(keys[i], header.get(keys[i]));
-			}else
+			} else
 				parsingNeeded = true;
 		}
-		
-		if ( parsingNeeded ) 
+
+		if (parsingNeeded)
 			return super.getHeaderFields(uid, keys);
 		else
 			return result;
