@@ -56,7 +56,7 @@ import org.jboss.system.Registry;
  * from RMI/JRMP into the JMX base.
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2002/01/13: Sacha Labourey</b>
@@ -346,7 +346,6 @@ public class JRMPInvoker
       throws Exception
    {     
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      
       try
       {
          // Deserialize the transaction if it is there  
@@ -368,7 +367,8 @@ public class JRMPInvoker
          
          return new MarshalledObject(obj);
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
          if (e instanceof MBeanException)
             e = ((MBeanException)e).getTargetException();
 

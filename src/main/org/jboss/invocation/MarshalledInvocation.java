@@ -6,49 +6,25 @@
 */
 package org.jboss.invocation;
 
+import java.io.DataOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.security.DigestOutputStream;
+import java.security.MessageDigest;
+import java.security.Principal;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.HashMap;
 import java.util.WeakHashMap;
-import java.lang.reflect.Method;
-import java.io.DataOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.rmi.MarshalledObject;
-
-
-import java.security.Principal;
-import java.security.MessageDigest;
-import java.security.DigestOutputStream;
-
 import javax.transaction.Transaction;
 
 import org.jboss.invocation.Invocation;
 
-/*
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.HashMap;
-
-import java.security.Principal;
-import java.security.MessageDigest;
-import java.security.DigestOutputStream;
-
-import javax.transaction.Transaction;
-*/
-
 /**
-*
-* The MarshalledInvocation is an invocation that travels.  As such it serializes its payload because of lack of ClassLoader visibility.
+* The MarshalledInvocation is an invocation that travels.  As such it serializes
+* its payload because of lack of ClassLoader visibility.
 * As such it contains Marshalled data representing the byte[] of the Invocation object it extends
 * Besides handling the specifics of "marshalling" the payload, which could be done at the Invocation level
 * the Marshalled Invocation can hold optimization and needed code for distribution for example the 
@@ -58,7 +34,7 @@ import javax.transaction.Transaction;
 *
 *   @see <related>
 *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
-*   @version $Revision: 1.3 $
+*   @version $Revision: 1.4 $
 *   Revisions:
 *
 *   <p><b>Revisions:</b>
@@ -77,25 +53,23 @@ import javax.transaction.Transaction;
 *   </ul>
 */
 public class MarshalledInvocation
-extends Invocation
-implements java.io.Externalizable
+   extends Invocation
+   implements java.io.Externalizable
 {
    // Constants -----------------------------------------------------
    
    /** Serial Version Identifier. */
-   // FIXME TODO 
-   
+   static final long serialVersionUID = -718723094688127810L;
+
    // The Transaction Propagation Context for distribution
    Object tpc;
    
    // The Map of methods used by this Invocation
    transient Map methodMap;
    
-   
    // Static --------------------------------------------------------
    static Map hashMap = new WeakHashMap();
-   
-   
+
    /**
    * Calculate method hashes. This algo is taken from RMI.
    *
@@ -134,7 +108,8 @@ implements java.io.Externalizable
             else 
                map.put(new Long(hash), method);
                
-         } catch (Exception e)
+         }
+         catch (Exception e)
          {
             e.printStackTrace();
          }
@@ -142,7 +117,7 @@ implements java.io.Externalizable
       
       return map;
    }
-   
+
    static String getTypeString(Class cl)
    {
       if (cl == Byte.TYPE)
@@ -180,7 +155,7 @@ implements java.io.Externalizable
          return "L"+cl.getName().replace('.','/')+";";
       }
    }
-   
+
    /*
    * The use of hashCode is not enough to differenciate methods
    * we override the hashCode
@@ -234,10 +209,10 @@ implements java.io.Externalizable
    {
       Object value = getValue(METHOD);
       
-      if (value instanceof Method) return (Method) value;
-         
-      else {
-         
+      if (value instanceof Method)
+         return (Method) value;  
+      else
+      {   
          // Try the hash, the methodMap should be set
          Method m = (Method)methodMap.get(value);
          
@@ -248,48 +223,62 @@ implements java.io.Externalizable
             
             return m;
          }
-         
          // This is a bug barf
          else 
          {
             throw new NullPointerException("METHOD IS NOT FOUND: "+value);
          }
-      
       }
    }
    
    
-   public void setMethodMap(Map methods) { methodMap = methods; }
-   
-   
+   public void setMethodMap(Map methods)
+   {
+      methodMap = methods;
+   }
+
    // The transaction propagation context for the Invocation that travels (distributed tx only)
-   public void setTransactionPropagationContext(Object tpc) { this.tpc = tpc; }
-   public Object getTransactionPropagationContext() { return tpc; }
-   
+   public void setTransactionPropagationContext(Object tpc)
+   {
+      this.tpc = tpc;
+   }
+   public Object getTransactionPropagationContext()
+   {
+      return tpc;
+   }
+
    // Invocation overwrite -----------------------------------------
-   
-   // A Marshalled invocation has serialized data in the form of java.rmi.Marshalled 
-   // We overwrite the "getValue" to deserialize the data, this assume that the thread context
-   // class loader has visibility on the classes.
+
+   /** A Marshalled invocation has serialized data in the form of
+    MarshalledValue objects. We overwrite the "getValue" to deserialize the
+    data, this assume that the thread context class loader has visibility
+    on the classes.
+    */
    public Object getValue(Object key) 
    { 
       Object value = payload.get(key);
       
       // The map may contain serialized values of the fields
-      if (value instanceof java.rmi.MarshalledObject) { 
-         
-         try { return ((MarshalledObject) value).get(); }
-            
+      if (value instanceof MarshalledValue)
+      {
+         try
+         {
+            MarshalledValue mv = (MarshalledValue) value;
+            value = mv.get();
+         }   
          // Barf and return null
-         catch (Exception e) { e.printStackTrace();return null; }
+         catch (Exception e)
+         {
+            e.printStackTrace();
+            value = null;
+         }
       }
-      
-      else return value;
+      return value;
    }
-   
+
    // Externalizable implementation ---------------------------------
    public void writeExternal(java.io.ObjectOutput out)
-   throws IOException
+      throws IOException
    {
       
       // Write the TPC, not the local transaction
@@ -297,10 +286,10 @@ implements java.io.Externalizable
       
       HashMap sentData = new HashMap ();
       
-      // Everything else is possibly tied to classloaders that exist inside the server but not in 
-      // the generic JMX land. 
-      // they will travel in the  payload as Marshalled Object, see the Invocation getter logic
-      
+      /* Everything else is possibly tied to classloaders that exist inside the
+      server but not in the generic JMX land. they will travel in the  payload
+      as MarshalledValue objects, see the Invocation getter logic
+      */
       // FIXME MARCF: we can put some optimizations in what we serialize and not, for example
       // classes that come from the JDK will be present at deserialization on the server side. 
       // So there is no need to marshal a "Principal" for example. 
@@ -308,9 +297,10 @@ implements java.io.Externalizable
       // think about time, test these string manipulation to see if it is good (test method arguments
       // with native object and with extensions... compare)
       Iterator keys = payload.keySet().iterator();
-      while (keys.hasNext()) {
+      while (keys.hasNext())
+      {
          Object currentKey = keys.next();
-         
+   
          // This code could be if (object.getClass().getName().startsWith("java")) then don't serialize. 
          // Bench the above for speed.
          
@@ -321,16 +311,16 @@ implements java.io.Externalizable
                // We write the hash instead of the method
                sentData.put(METHOD, new Long(calculateHash((Method) payload.get(METHOD))));
             else
-               sentData.put (currentKey, new MarshalledObject(payload.get(currentKey)));
+               sentData.put (currentKey, new MarshalledValue(payload.get(currentKey)));
          }
       }
       
       // The map contains only serialized representations of every other object
       out.writeObject(sentData);
    }
-   
+
    public void readExternal(java.io.ObjectInput in)
-   throws IOException, ClassNotFoundException
+      throws IOException, ClassNotFoundException
    {
       // Read TPC
       tpc = in.readObject();

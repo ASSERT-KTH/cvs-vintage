@@ -31,7 +31,7 @@ import org.jboss.tm.TransactionPropagationContextFactory;
 * JRMPInvokerProxy, local to the proxy and is capable of delegating to local and JRMP implementations
 * 
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.4 $
+* @version $Revision: 1.5 $
 *
 * <p><b>2001/11/19: marcf</b>
 * <ol>
@@ -39,7 +39,7 @@ import org.jboss.tm.TransactionPropagationContextFactory;
 * </ol>
 */
 public class JRMPInvokerProxy
-implements Invoker, Externalizable
+   implements Invoker, Externalizable
 {
    // Constants -----------------------------------------------------
    
