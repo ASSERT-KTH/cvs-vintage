@@ -17,19 +17,15 @@
 
 #if (!$data.Message || $data.Message.length() == 0)
 <p>
-Thanks for registering!
+$l10n.ThankYouForRegistering
 </p>
 
 <p>
-We have now sent you a confirmation message via email to verify that
-the email address you supplied is working properly. To complete your
-registration click on the link in the email or type in the confirmation
-code below. If you do not choose to confirm your account now, you will
-be asked to confirm it the next time you try to login.
+$l10n.ConfirmationSent
 </p>
 #else
 <p>
-Please enter the confirmation code that was sent to you in an email.
+$l10n.EnterConfirmation
 </p>
 #end
 

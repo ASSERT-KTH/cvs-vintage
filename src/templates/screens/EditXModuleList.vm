@@ -7,13 +7,13 @@
         
 #if ($user.CurrentMITList)
 
-<h3>Save cross module/issue type list</h3>
+<h3>$l10n.SaveXModuleList</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-    <th>Module</th>
-    <th>Issue type</th>
-    <th>Description</th>
+    <th>$l10n.Module</th>
+    <th>$l10n.IssueType</th>
+    <th>$l10n.Description</th>
   </tr>
  #foreach ($item in $user.CurrentMITList.MITListItems)
   #indexedRows($velocityCount)
@@ -23,7 +23,7 @@
   </tr>        
  #end
 </table>
-<h4>Save new list</h4>
+<h4>l10n.SaveNewList</h4>
 #set ($intakeList = $intake.MITList.mapTo($user.CurrentMITList))
 <p>
 Name: 
