@@ -3,144 +3,136 @@
     #set ( $attr = $attrValue.Attribute )
     #set ( $module = $attrValue.Issue.Module )
 
-        <select name="$attrInput.get($optionFieldName).Key" 
-                #if($size.length())size="$size"#end class="select">
-            #if ($size.length() == 0)
-            <option value="">Choose...</option>
-            #end
-            #foreach ($option in $module.getLeafRModuleOptions($attr))
-              #set ( $selected = "" )
-              #if ( $attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value )
-                #set ( $selected = " selected" )
-              #end
-              <option$selected value="$option.OptionId">
-                  $option.DisplayValue</option>
-            #end
-        </select>
+<select name="$attrInput.get($optionFieldName).Key" 
+								#if($size.length())size="$size"#end>
+				#if ($size.length() == 0)
+				<option value="">Choose...</option>
+				#end
+				#foreach ($option in $module.getLeafRModuleOptions($attr))
+						#set ( $selected = "" )
+						#if ( $attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value )
+								#set ( $selected = ' selected="selected"' )
+						#end
+						<option$selected value="$option.OptionId">
+										$option.DisplayValue</option>
+				#end
+</select>
 #end
 
 #macro ( dependTypeLeafSelect $childIssue $type)
-        <select name="$type_depend_type_id_$childIssue.IssueId" class="select">
-            <option>Choose dependency type</option>
-            #foreach ($dependType in $currentIssue.getAllDependencyTypes())
-              #set ( $selected = "" )
-              #if ( $currentIssue.getDependency($childIssue).TypeId.toString().equals($dependType.DependTypeId.toString()) )
-                #set ( $selected = " selected" )
-              #end
-              <option$selected value="$dependType.DependTypeId">
-                  $dependType.Name</option>
-            #end
-            <option value="none">remove dependency </option>
-        </select>
+<select name="$type_depend_type_id_$childIssue.IssueId">
+				<option>Choose dependency type</option>
+				#foreach ($dependType in $currentIssue.getAllDependencyTypes())
+						#set ( $selected = "" )
+						#if ( $currentIssue.getDependency($childIssue).TypeId.toString().equals($dependType.DependTypeId.toString()) )
+								#set ( $selected = ' selected="selected"' )
+						#end
+						<option$selected value="$dependType.DependTypeId">
+										$dependType.Name</option>
+				#end
+				<option value="none">remove dependency </option>
+</select>
 #end
 
 #macro ( attrValueText $attrValue $size )
-    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) )
-    <input type="text" name="$attrInput.Value.Key" value="$!attrInput.Value"#if($size.length()) size="$size"#end />
+#set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) )
+<input type="text" name="$attrInput.Value.Key" value="$!attrInput.Value"#if($size.length()) size="$size"#end />
 #end
 
 #macro ( attrValueHierarchySelect $attrValue $optionFieldName $size )
-    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
-    #set ( $attr = $attrValue.Attribute )
-    #set ( $module = $attrValue.Issue.Module )
+#set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+#set ( $attr = $attrValue.Attribute )
+#set ( $module = $attrValue.Issue.Module )
 
-        <select name="$attrInput.get($optionFieldName).Key" 
-                #if($size.length() != 1)size="$size"#end class="select">
-            #if ($size.length() == 0)
-            <option value="">Choose...</option>
-            #end
-            #foreach ($option in $module.getOptionTree($attr))
-              #set ( $selected = "" )
-              #if ($attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value)
-                #set ( $selected = " selected" )
-              #end
+<select name="$attrInput.get($optionFieldName).Key" 
+								#if($size.length() != 1)size="$size"#end>
+				#if ($size.length() == 0)
+				<option value="">Choose...</option>
+				#end
+				#foreach ($option in $module.getOptionTree($attr))
+						#set ( $selected = "" )
+						#if ($attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value)
+								#set ( $selected = " selected" )
+						#end
 
-              <option$selected value="$option.OptionId">
+						<option$selected value="$option.OptionId">
 #foreach ($i in [0..$option.Level])#if($i != 0)&nbsp;&nbsp;&nbsp;&nbsp;#end#end
-                  $option.DisplayValue</option>
-            #end
-        </select>
+										$option.DisplayValue</option>
+				#end
+</select>
 #end
 
 #macro ( attrValueErrorMsg $attrValue $fieldName )
-    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
-    #if ( !$attrInput.get($fieldName).isValid() )
-        <p><font color="red">$attrInput.get($fieldName).Message</font></p>
-    #end
+#set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+#if ( !$attrInput.get($fieldName).isValid() )
+<p><strong class="alert">$attrInput.get($fieldName).Message</strong></p>
+#end
 #end
 
 #macro ( fieldErrorMsg $field $br)
-    #if ( !$field.isValid() )
-       <p><font color="red">$field.Message</font></p>$br
-    #end
+#if ( !$field.isValid() )
+<p><strong class="alert">$field.Message</strong></p>$br
+#end
 #end
 
 #macro ( actionErrorMsg )
-    #if ($data.Message)
-        <p><font color="red">$data.Message</font></p>
-    #end
+#if ($data.Message)
+<p><strong class="alert">$data.Message</strong></p>
+#end
 #end
 
 #macro ( stdIntakeMsg )
-    #if ( !$intake.isAllValid() )
-        <font color="red">
-            Please check your form fields for errors and resubmit.
-        </font>
-    #end
+#if ( !$intake.isAllValid() )
+<p><strong class="alert">Please check your form fields for errors and resubmit.</strong></p>
+#end
 #end
 
 #macro ( numericSelect $name $first $last $selected $size )
 
-    <select name="$name" size="$size" class="select">
-    #foreach ( $i in [$first..$last] )
-        <option value="$i" #if ($i==$selected)selected #end>$i</option>
-    #end          
-    </select>
+<select name="$name" size="$size">
+#foreach ( $i in [$first..$last] )
+<option value="$i" #if ($i==$selected)selected="selected" #end>$i</option>
+#end          
+</select>
 
 #end      
 
 
 #macro ( booleanCheckbox $booleanField )
-   <input type="checkbox" name="$booleanField.Key" value="true"
-        #if ($booleanField.Value) checked #end />
-   <input type="hidden" name="$booleanField.ValueIfAbsent"
-        value="false" />
+<input type="checkbox" name="$booleanField.Key" value="true"
+#if ($booleanField.Value) checked="checked" #end />
+<input type="hidden" name="$booleanField.ValueIfAbsent"
+value="false" />
 #end
 
 #macro ( textField $field $size )
-    #if ( $field.Validator.MaxLength && $field.Validator.MaxLength > 0 )
-        #set ( $maxLength = $field.Validator.MaxLength )
-    #end
-    <input type="text" name="$field.Key" value="$!field.Value"#if($maxLength) maxlength="$maxLength"#end#if($size.length()) size="$size"#end />
+#if ( $field.Validator.MaxLength && $field.Validator.MaxLength > 0 )
+#set ( $maxLength = $field.Validator.MaxLength )
+#end
+<input type="text" name="$field.Key" value="$!field.Value"#if($maxLength) maxlength="$maxLength"#end#if($size.length()) size="$size"#end />
 #end
 
 #macro (userSelectBox $attrValue $size)
-    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
-    #set ( $attr = $attrValue.Attribute )
-    #set ( $module = $attrValue.Issue.Module )
+#set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+#set ( $attr = $attrValue.Attribute )
+#set ( $module = $attrValue.Issue.Module )
 
-        <select name="$attrInput.UserId.Key" 
-                #if($size.length())size="$size"#end class="select">
-            #if ($size.length() == 0)
-            <option value="">Choose...</option>
-            #end
-            #foreach ($user in $security.getUsers($attr.Permission, $module))
-              #set ( $selected = "" )
-              #if ($attrInput.UserId.Value && $user.PrimaryKey == $attrInput.UserId.Value)
-                #set ( $selected = " selected" )
-              #end
-              <option$selected value="$user.PrimaryKey">
-                  $user.UserName</option>
-            #end
-        </select>
+<select name="$attrInput.UserId.Key" 
+					#if($size.length())size="$size"#end>
+	#if ($size.length() == 0)
+	<option value="">Choose...</option>
+	#end
+	#foreach ($user in $security.getUsers($attr.Permission, $module))
+			#set ( $selected = "" )
+			#if ($attrInput.UserId.Value && $user.PrimaryKey == $attrInput.UserId.Value)
+					#set ( $selected = ' selected="selected"' )
+			#end
+			<option$selected value="$user.PrimaryKey">
+							$user.UserName</option>
+	#end
+</select>
 #end
 
 #macro ( datatitle $title )
-<div class="datatitle">
-<table width="100%" cellpadding="3" cellspacing="2" border="1">
-<tr>
-<td>$title</td>
-</tr>
-</table>
-</div>
+<h3>$title</h3>
 #end
