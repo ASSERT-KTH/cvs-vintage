@@ -131,7 +131,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.13 2002/03/28 20:21:29 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.14 2002/03/29 01:08:25 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -903,7 +903,6 @@ public abstract class AbstractScarabModule
         return getIssueTypes(true); 
     }
 
-
     /**
      * gets a list of the Issue Types for this module. only shows
      * active issue types
@@ -926,7 +925,7 @@ public abstract class AbstractScarabModule
             }
             crit.add(IssueTypePeer.PARENT_ID, 0);
             crit.add(IssueTypePeer.DELETED, 0);
-            crit.addAscendingOrderByColumn(RModuleIssueTypePeer.PREFERRED_ORDER);
+            crit.addAscendingOrderByColumn(RModuleIssueTypePeer.PREFERRED_ORDER);             
             types = IssueTypePeer.doSelect(crit);
             ScarabCache.put(types, this, "getIssueTypes", 
                             new Boolean(activeOnly));
@@ -1563,7 +1562,13 @@ try{
     }
 
 
-    public Vector getRModuleIssueTypes()
+    public Vector getRModuleIssueTypes() throws TorqueException
+    {
+        return  getRModuleIssueTypes("sequence", "asc", 25, 1);
+    }
+
+    public Vector getRModuleIssueTypes( String sortColumn, String sortPolarity,
+                                        int resultsPerPage, int pageNum)
         throws TorqueException
     {
         Vector types = null;
@@ -1575,9 +1580,32 @@ try{
                 .addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
                          IssueTypePeer.ISSUE_TYPE_ID)
                 .add(IssueTypePeer.PARENT_ID, 0)
-                .add(IssueTypePeer.DELETED, 0)
-                .addAscendingOrderByColumn(
-                    RModuleIssueTypePeer.PREFERRED_ORDER);
+                .add(IssueTypePeer.DELETED, 0);
+            if (sortColumn.equals("name"))
+            {
+                if (sortPolarity.equals("desc"))
+                {
+                    crit.addDescendingOrderByColumn(IssueTypePeer.NAME);
+                }
+                else
+                {
+                    crit.addAscendingOrderByColumn(IssueTypePeer.NAME);
+                }
+            }
+            else
+            {
+                // sortColumn defaults to sequence #
+                if (sortPolarity.equals("desc"))
+                {
+                    crit.addDescendingOrderByColumn(RModuleIssueTypePeer
+                                                    .PREFERRED_ORDER);
+                }
+                else
+                {
+                    crit.addAscendingOrderByColumn(RModuleIssueTypePeer
+                                                   .PREFERRED_ORDER);
+                }
+            }
             types = RModuleIssueTypePeer.doSelect(crit);
             ScarabCache.put(types, this, GET_R_MODULE_ISSUE_TYPES);
         }
