@@ -224,11 +224,8 @@ try{
     }
 
     /**
-     * A User object for use within the Scarab API. This
-     * is the result of whatever was set with setUser().
-     * It can return null if setUser() has not been previously
-     * called. If you would like to get the currently logged
-     * in User, retrieve that from the data.getUser() method.
+     * A <code>User</code> object for use within the Scarab API,
+     * generally <i>not</i> the user who is logged in.
      */
     public void setUser (ScarabUser user)
     {
@@ -236,11 +233,13 @@ try{
     }
 
     /**
-     * A User object for use within the Scarab API. This
-     * is the result of whatever was set with setUser().
-     * It can return null if setUser() has not been previously
-     * called. If you would like to get the currently logged
-     * in User, retrieve that from the data.getUser() method.
+     * A <code>User</code> object for use within the Scarab API. This
+     * is the result of whatever was set with {@link #setUser()}
+     * (generally <i>not</i> the user who is logged in).  It can
+     * return <code>null</code> if {@link #setUser()} has not been
+     * previously called.  If you would like to get the currently
+     * logged in <code>User</code>, retrieve that from the
+     * data.getUser() method.
      */
     public ScarabUser getUser()
     {
