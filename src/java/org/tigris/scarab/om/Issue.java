@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.245 2002/12/20 04:50:33 jon Exp $
+ * @version $Id: Issue.java,v 1.246 2002/12/20 21:37:46 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -874,6 +874,10 @@ public class Issue
                 {
                     result = (AttributeValue)avals.get(0);
                 }
+                else if (avals.size() > 1)
+                {
+                    throw new Exception("Error in retrieving users.");
+                }
             }
             ScarabCache.put(result, this, GET_ATTRVALUE, attribute);
         }
@@ -886,9 +890,6 @@ public class Issue
 
     /**
      * Returns AttributeValues for the Attribute (which have not been deleted.)
-     * Warning: does not work for a new issue.
-     * FIXME! this method should be similar to getAttributeValue and
-     * getAttributeValue should call this method.
      */
     public List getAttributeValues(Attribute attribute)
        throws Exception
@@ -897,14 +898,34 @@ public class Issue
         Object obj = ScarabCache.get(this, GET_ATTRVALUES, attribute); 
         if ( obj == null ) 
         {        
-            // FIXME!  needs a isNew() check for alternative logic.
-            Criteria crit = new Criteria(2)
-                .add(AttributeValuePeer.DELETED, false)        
-                .add(AttributeValuePeer.ATTRIBUTE_ID, 
-                     attribute.getAttributeId());
-            
-            result = getAttributeValues(crit);
-            ScarabCache.put(result, this, GET_ATTRVALUES, attribute);
+            if ( isNew() ) 
+            {
+                List avals = getAttributeValues();
+                if ( avals != null ) 
+                {
+                    Iterator i = avals.iterator();
+                    while (i.hasNext()) 
+                    {
+                        AttributeValue tempAval = (AttributeValue)i.next();
+                        if ( tempAval.getAttribute().equals(attribute)) 
+                        {
+                            result = new ArrayList();
+                            result.add(tempAval);
+                            break;
+                        }
+                    }
+                }
+            }
+            else 
+            {            
+                Criteria crit = new Criteria(2)
+                    .add(AttributeValuePeer.DELETED, false)        
+                    .add(AttributeValuePeer.ATTRIBUTE_ID, 
+                         attribute.getAttributeId());
+                
+                result = getAttributeValues(crit);
+                ScarabCache.put(result, this, GET_ATTRVALUES, attribute);
+            }
         }
         else 
         {
@@ -2086,11 +2107,15 @@ public class Issue
             attachmentBuf.append("\n");
             for (int i=0;i<commentAttrs.size();i++)
             {
-                AttributeValue attVal = getAttributeValue((Attribute)commentAttrs.get(i));
-                String field = null;
-                delAttrsBuf.append(attVal.getAttribute().getName());
-                field = attVal.getValue();
-                delAttrsBuf.append("=").append(field).append(". ").append("\n");
+                List attVals = getAttributeValues((Attribute)commentAttrs.get(i));
+                for (int j=0; j<attVals.size(); j++)
+                {
+                    AttributeValue attVal = (AttributeValue)attVals.get(j);
+                    String field = null;
+                    delAttrsBuf.append(attVal.getAttribute().getName());
+                    field = attVal.getValue();
+                    delAttrsBuf.append("=").append(field).append(". ").append("\n");
+               }
            }
            String delAttrs = delAttrsBuf.toString();
            attachmentBuf.append(delAttrs);
