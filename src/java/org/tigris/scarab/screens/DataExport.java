@@ -83,9 +83,10 @@ import org.tigris.scarab.util.export.ExportFormat;
 class DataExport extends Default
 {
     /**
-     * What to show if a cell is empty.
+     * What to show if a cell is empty.  The empty string is dealt
+     * with best by spreadsheet applications.
      */
-    protected static final String NO_CONTENT = "-------";
+    protected static final String NO_CONTENT = "";
 
     /**
      * Sets the <code>Content-Type</code> header for the response.

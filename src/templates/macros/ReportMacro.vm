@@ -160,8 +160,10 @@
      <td>
      #if ($model.isDate($cell))
         $format.getDate('yyyy-MM-dd HH:mm', $cell)
+     #elseif ($cell && $cell.toString() != '')
+         $cell
      #else
-        $cell
+         &nbsp;
      #end
      </td>
    #end

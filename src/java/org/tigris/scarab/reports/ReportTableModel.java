@@ -70,7 +70,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class represents a ReportTableModel.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ReportTableModel.java,v 1.5 2003/04/04 18:09:17 jon Exp $
+ * @version $Id: ReportTableModel.java,v 1.6 2003/05/20 01:21:31 dlr Exp $
  */
 public class ReportTableModel 
     extends TableModel
@@ -320,9 +320,18 @@ public class ReportTableModel
         if (columnHeadings != null && columnHeadings.size() == 1 && 
             ((ReportHeading)columnHeadings.get(0)).get(0) instanceof ReportDate) 
         {
-            contents = new Integer(getIssueCount(getRowDataArray(row), 
-                ((ReportDate)((ReportHeading)columnHeadings.get(0))
-                 .get(column)).dateValue())); 
+            Date date = ((ReportDate) ((ReportHeading) columnHeadings.get(0))
+                         .get(column)).dateValue();
+            if (date.getTime() <= System.currentTimeMillis())
+            {
+                contents = new Integer(getIssueCount(getRowDataArray(row),
+                                                     date));
+            }
+            else
+            {
+                // Dates in the future are not applicable to reporting.
+                contents = "";
+            }
         }
         else if (rowHeadings != null && rowHeadings.size() == 1 && 
                  ((ReportHeading)rowHeadings.get(0)).get(0) instanceof ReportDate)
