@@ -24,15 +24,19 @@ public class HtmlParserTest extends TestCase {
 
         String result = HtmlParser.substituteURL(input);
         assertTrue(result.equals(
-                "This page <A HREF=http://columba.sourceforge.net>http://columba.sourceforge.net</A> is net!"));
+                "This page <A HREF=\"http://columba.sourceforge.net\">http://columba.sourceforge.net</A> is net!"));
     }
 
+    /**
+     * TODO: fix the HtmlParser, which seems to include ")" character
+     *
+     */
     public void testSubstituteURL3() {
         String input = "This page \t(http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239) is net!";
 
         String result = HtmlParser.substituteURL(input);
         assertTrue(result.equals(
-                "This page \t(<A HREF=http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239>http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239</A>) is net!"));
+                "This page \t(<A HREF=\"http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239\">http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239</A>) is net!"));
     }
 
     public void testSubstituteURL4() {
@@ -40,6 +44,6 @@ public class HtmlParserTest extends TestCase {
 
         String result = HtmlParser.substituteURL(input);
         assertTrue(result.equals(
-                "This page <A HREF=http://columba.sourceforge.net>http://columba.sourceforge.net</A>. is net!"));
+                "This page <A HREF=\"http://columba.sourceforge.net\">http://columba.sourceforge.net</A>. is net!"));
     }
 }
