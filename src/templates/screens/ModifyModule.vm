@@ -73,9 +73,9 @@ module you have <a href="$link.setPage("SelectModule.vm")">currently selected</a
          #set ($canEdit = $security.hasPermission("Module | Edit", $userModule))
          #if ($canEdit)
            #if ($ancestor.RealName.equals($currentModule.Parent.RealName))
-            <option selected="selected" value="$ancestor.ModuleId" />$ancestor.RealName
+            <option selected="selected" value="$ancestor.ModuleId">$ancestor.RealName</option>
            #else
-            <option value="$ancestor.ModuleId" />$ancestor.RealName
+            <option value="$ancestor.ModuleId">$ancestor.RealName</option>
            #end
          #end
         #end

@@ -111,9 +111,9 @@ $intake.declareGroups()
      <td>
      <select name="$pcaoGroup.ParentId.Key">
      #if ($pcao.ParentId.toString().equals("0"))
-        <option selected="selected" value="0" />Root
+        <option selected="selected" value="0">Root</option>
      #else
-        <option value="0" />Root
+        <option value="0">Root</option>
      #end
      #foreach ($parentAttrOption in $attribute.ParentChildAttributeOptions)
        #if (! $parentAttrOption.Name.equals($pcao.Name) )

@@ -10,9 +10,9 @@
   #foreach ($option in $module.getLeafRModuleOptions($attr))
     #set ($selected = "")
     #if ( $attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value)
-    <option selected="selected" value="$option.OptionId" />$option.DisplayValue
+    <option selected="selected" value="$option.OptionId">$option.DisplayValue</option>
     #else
-    <option value="$option.OptionId" />$option.DisplayValue
+    <option value="$option.OptionId">$option.DisplayValue</option>
     #end
   #end
 </select>
@@ -37,9 +37,9 @@
   #foreach ($option in $module.getLeafRModuleOptions($attr))
     #set ($selected = "")
     #if ( $currentValue && $option.OptionId == $currentValue)
-      <option selected="selected" value="$option.OptionId" />$option.DisplayValue
+      <option selected="selected" value="$option.OptionId">$option.DisplayValue</option>
     #else
-      <option value="$option.OptionId" />$option.DisplayValue
+      <option value="$option.OptionId">$option.DisplayValue</option>
     #end
   #end
 #end
@@ -50,12 +50,12 @@
   #foreach ($dependType in $currentIssue.getAllDependencyTypes())
     #set ($selected = "")
     #if ( $currentIssue.getDependency($childIssue).TypeId.toString().equals($dependType.DependTypeId.toString()))
-    <option selected="selected" value="$dependType.DependTypeId" />$dependType.Name
+    <option selected="selected" value="$dependType.DependTypeId">$dependType.Name</option>
     #else
-    <option value="$dependType.DependTypeId" />$dependType.Name
+    <option value="$dependType.DependTypeId">$dependType.Name</option>
     #end
   #end
-  <option value="none">Remove dependency </option>
+  <option value="none">Remove dependency</option>
 </select>
 #end
 
@@ -155,9 +155,9 @@
  #foreach ($user in $security.getUsers($attr.Permission, $module))
    #set ($selected = "")
    #if ($attrInput.UserId.Value && $user.PrimaryKey == $attrInput.UserId.Value)
-   <option selected="selected" value="$user.PrimaryKey" />$user.UserName
+   <option selected="selected" value="$user.PrimaryKey">$user.UserName</option>
    #else
-   <option value="$user.PrimaryKey" />$user.UserName
+   <option value="$user.PrimaryKey">$user.UserName</option>
    #end
  #end
 </select>
@@ -167,7 +167,7 @@
   #set ($queryGroup = $intake.Query.mapTo($query))
   <select name="$queryGroup.TypeId.Key">
   #foreach ($type in $query.getAllQueryTypes())
-    <option value = "$type.QueryTypeId" #if( $type.QueryTypeId.equals("$query.TypeId")) selected="selected" #end >
+    <option value = "$type.QueryTypeId" #if( $type.QueryTypeId.equals("$query.TypeId")) selected="selected" #end>
     $type.Name
     </option>
   #end
@@ -178,7 +178,7 @@
   #set ($group = $intake.Issue.mapTo($issue))
   <select name="$group.TypeId.Key">
   #foreach ($type in $issue.getTemplateTypes())
-    <option value = "$type.IssueTypeId" #if( $type.IssueTypeId.equals("$issue.TypeId")) selected="selected" #end >
+    <option value = "$type.IssueTypeId" #if( $type.IssueTypeId.equals("$issue.TypeId")) selected="selected" #end>
     $type.Name
     </option>
   #end
@@ -187,7 +187,7 @@
 
 #macro (frequencySelectBox $query $id)
   #foreach ($frequency in $query.Frequencies)
-    <option value = "$frequency.FrequencyId" #if( $frequency.FrequencyId.equals($id)) selected="selected" #end >
+    <option value = "$frequency.FrequencyId" #if( $frequency.FrequencyId.equals($id)) selected="selected" #end>
     $frequency.Name
     </option>
   #end

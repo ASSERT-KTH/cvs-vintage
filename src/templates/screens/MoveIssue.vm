@@ -61,9 +61,9 @@ $issue.ScarabModule.Name
  <option>Select Module...</option>
  #foreach ($module in $security.getModules($user, "Issue | Enter"))
   #if ($module.ModuleId.equals($moduleId))
-    <option selected="selected" value="$module.ModuleId" />$module.Name
+    <option selected="selected" value="$module.ModuleId">$module.Name</option>
   #else
-    <option value="$module.ModuleId" />$module.Name
+    <option value="$module.ModuleId">$module.Name</option>
   #end
  #end
 </select>

@@ -45,10 +45,10 @@ $page.setTitle("Enter issue")
  <td>
  <select>
 #foreach ($template in $privateTemplateList)
-<option value="" />$template.TemplateInfo.Name
+<option value="">$template.TemplateInfo.Name</option>
 #end
 #foreach ($template in $globalTemplateList)
-<option value="" />$template.TemplateInfo.Name
+<option value="">$template.TemplateInfo.Name</option>
 #end
 </select>
    <input type="submit" value="Select" /> &#160;

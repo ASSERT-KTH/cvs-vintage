@@ -32,16 +32,20 @@ $page.setTitle("Enter issue")
          <table width="100%" cellpadding="3" cellspacing="2" border="1">
       <tr>
       <th width="120">Templates</th>
-      <td><select name="templateId">
+      <td>
+      <select name="templateId">
  #foreach ($template in $privateTemplateList)
- <option value="$template.IssueId" />$template.TemplateInfo.Name
+ <option value="$template.IssueId">$template.TemplateInfo.Name</option>
  #end
  #foreach ($template in $globalTemplateList)
- <option value="$template.IssueId" />$template.TemplateInfo.Name
+ <option value="$template.IssueId">$template.TemplateInfo.Name</option>
  #end
-         </select> &#160;<input type="submit" value="Select" name="eventSubmit_doGotowizard3" /> &#160;<a href="#">template list</a></td>
-         </tr>
-         </table>
+      </select> 
+      &#160;<input type="submit" value="Select" name="eventSubmit_doGotowizard3" /> 
+      &#160;<a href="#">template list</a>
+      </td>
+      </tr>
+      </table>
  </div>
 #end
 </form>
