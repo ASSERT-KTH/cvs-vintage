@@ -26,7 +26,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.35 1999/04/28 23:31:11 jrobbins Exp $
+// $Id: FigClass.java,v 1.36 1999/04/28 23:45:08 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -55,7 +55,6 @@ public class FigClass extends FigNodeWithCompartments {
 
   protected FigCompartment _attr;
   protected FigCompartment _oper;
-  protected FigRect _bigPort;
 
   ////////////////////////////////////////////////////////////////
   // constructors
