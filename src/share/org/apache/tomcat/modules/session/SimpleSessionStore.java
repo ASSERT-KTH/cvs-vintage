@@ -198,6 +198,8 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 
 	if( sm == null ) {
 	    sm=new SimpleSessionManager();
+	    sm.setDebug( debug );
+	    sm.setModule( this );
 	    ctx.getContainer().setNote( manager_note, sm );
 	}
     }
@@ -209,7 +211,8 @@ public final class SimpleSessionStore  extends BaseInterceptor {
     public void contextShutdown( Context ctx )
 	throws TomcatException
     {
-	if( debug > 0 ) ctx.log("Removing sessions from " + ctx );
+	if( debug > 0 )
+	    log("Removing sessions from " + ctx );
 
 	SimpleSessionManager sm=getManager(ctx);
 	Enumeration ids = sm.getSessionIds();
@@ -218,6 +221,9 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	    ServerSession session = sm.findSession(id);
 	    if (!session.getTimeStamp().isValid())
 		continue;
+	    if( debug > 0 )
+		log( "Shuting down " + id );
+	    session.setState( ServerSession.STATE_SUSPEND );
 	    session.setState( ServerSession.STATE_EXPIRED );
 	}
     }
@@ -274,6 +280,8 @@ public final class SimpleSessionStore  extends BaseInterceptor {
      */
     public static class SimpleSessionManager  
     {
+	private int debug=0;
+	private BaseInterceptor mod;
 	/** The set of previously recycled Sessions for this Manager.
 	 */
 	protected SimplePool recycled = new SimplePool();
@@ -285,6 +293,14 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	protected Hashtable sessions = new Hashtable();
 
 	public SimpleSessionManager() {
+	}
+
+	public void setDebug( int l ) {
+	    debug=l;
+	}
+
+	public void setModule( BaseInterceptor bi ) {
+	    mod=bi;
 	}
 
 	// --------------------------------------------- Public Methods
@@ -316,6 +332,7 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	 * @param session Session to be removed
 	 */
 	public void removeSession(ServerSession session) {
+	    if( debug>0 ) mod.log( "removeSession " + session );
 	    sessions.remove(session.getId().toString());
 	    recycled.put(session);
 	    session.setValid(false);
