@@ -277,8 +277,8 @@ class HttpRequest extends Request {
                     serverPort=Integer.parseInt(hostHeader);
                 }catch(NumberFormatException  nfe){
                 }
-	    }
-            return;
+	    }else serverNameMB.setString( hostHeader);
+        return;
 	}
 	if( localHost != null ) {
 	    serverNameMB.setString( localHost );
