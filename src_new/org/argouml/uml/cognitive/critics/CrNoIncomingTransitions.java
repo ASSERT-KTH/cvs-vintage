@@ -24,7 +24,7 @@
 // File: CrNoIncomingTransitions.java
 // Classes: CrNoIncomingTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoIncomingTransitions.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrNoIncomingTransitions.java,v 1.3 2003/06/23 12:31:21 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -53,16 +53,16 @@ public class CrNoIncomingTransitions extends CrUML {
       MStateMachine sm = ((MState)sv).getStateMachine();
       if (sm != null && sm.getTop() == sv) return NO_PROBLEM;
     }
-    //Vector outgoing = sv.getOutgoing();
+
     Collection incoming = sv.getIncomings();
-    //boolean needsOutgoing = outgoing == null || outgoing.size() == 0;
+
     boolean needsIncoming = incoming == null || incoming.size() == 0;
     if (sv instanceof MPseudostate) {
       MPseudostateKind k = ((MPseudostate)sv).getKind();
       if (k.equals(MPseudostateKind.INITIAL)) needsIncoming = false;
-      //if (k.equals(MPseudostateKind.FINAL)) needsOutgoing = false;
+
     }
-    // if (needsIncoming && !needsOutgoing) return PROBLEM_FOUND;
+
     if (needsIncoming) return PROBLEM_FOUND;
     return NO_PROBLEM;
   }
