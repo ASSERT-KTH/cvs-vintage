@@ -77,10 +77,10 @@ public class AttributePeer
 
     private static final String ATTRIBUTE_PEER = 
         "AttributePeer";
-    private static final String GET_ATTRIBUTES = 
-        "getAttributes";
-    private static final String GET_ALL_ATTRIBUTES = 
-        "getAllAttributes";
+    private static final String GET_DATA_ATTRIBUTES = 
+        "getDataAttributes";
+    private static final String GET_USER_ATTRIBUTES = 
+        "getUserAttributes";
 
     /**
      *  Gets a List of all of the Attribute objects in the database.
@@ -90,7 +90,16 @@ public class AttributePeer
         throws Exception
     {
         List result = null;
-        Object obj = ScarabCache.get(ATTRIBUTE_PEER, GET_ALL_ATTRIBUTES); 
+        String cacheKey = null;
+        if (attributeType.equals("data"))
+        {  
+            cacheKey = GET_DATA_ATTRIBUTES;
+        }
+        else
+        {
+            cacheKey = GET_USER_ATTRIBUTES;
+        }
+        Object obj = ScarabCache.get(ATTRIBUTE_PEER, cacheKey);
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria();
@@ -141,7 +150,7 @@ public class AttributePeer
             result = sortAttributesByCreatingUser(result, sortPolarity);
         }
                 
-        ScarabCache.put(result, ATTRIBUTE_PEER, GET_ALL_ATTRIBUTES);
+        ScarabCache.put(result, ATTRIBUTE_PEER, cacheKey);
         return result;
     }
 
