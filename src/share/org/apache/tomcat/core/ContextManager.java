@@ -248,6 +248,11 @@ public final class ContextManager implements LogAware{
      */
     private String installDir;
     
+    /** The flag which controls the display of
+     *  debugging information in default responses
+     */
+    boolean showDebugInfo = true;
+
     // Server properties ( interceptors, etc ) - it's one level above "/"
     private Container defaultContainer;
 
@@ -336,7 +341,21 @@ public final class ContextManager implements LogAware{
     public final int getState() {
 	return state;
     }
+
+    /** The showDebugInfo property state.  To be used for controlling the
+     *  display of debugging information in default responses.
+     **/
+    public final boolean isShowDebugInfo() {
+	return showDebugInfo;
+    }
     
+    /** Sets the showDebugInfo property used for controlling the display of
+     *  debugging information in default responses.
+     */
+    public void setShowDebugInfo(boolean showDebugInfo) {
+	this.showDebugInfo = showDebugInfo;
+    }
+ 
     /**
      *  Parent loader is the "base" class loader of the
      *	application that starts tomcat, and includes no
@@ -875,7 +894,7 @@ public final class ContextManager implements LogAware{
 
 
     // -------------------- Error handling --------------------
-    
+
     /** Called for error-codes. Will call the error hook.
      */
     public final void handleStatus( Request req, Response res, int code ) {
@@ -895,7 +914,7 @@ public final class ContextManager implements LogAware{
     /**
      *  Call error hook
      */
-    void handleError( Request req, Response res , Throwable t  ) {
+    public final void handleError( Request req, Response res , Throwable t  ) {
 	BaseInterceptor ri[];
 	int status;
 	ri=req.getContainer().getInterceptors( Container.H_handleError );
