@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.19 2000/04/17 21:02:30 costin Exp $
- * $Revision: 1.19 $
- * $Date: 2000/04/17 21:02:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.20 2000/04/18 19:36:05 costin Exp $
+ * $Revision: 1.20 $
+ * $Date: 2000/04/18 19:36:05 $
  *
  * ====================================================================
  *
@@ -170,10 +170,9 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 		    (BufferedServletInputStream)reqA.getInputStream();
 		sis.setLimit(contentLength);
 	    }
-    
-	    //	    System.out.print("3");
+
 	    contextM.service( reqA, resA );
-	    //	    System.out.print("4");
+
 	    try {
                InputStream is = socket.getInputStream();
                int available = is.available ();

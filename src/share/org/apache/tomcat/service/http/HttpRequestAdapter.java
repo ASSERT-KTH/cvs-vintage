@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.8 2000/03/28 03:40:00 craigmcc Exp $
- * $Revision: 1.8 $
- * $Date: 2000/03/28 03:40:00 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.9 2000/04/18 19:36:05 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/04/18 19:36:05 $
  *
  * ====================================================================
  *
@@ -76,18 +76,24 @@ public class HttpRequestAdapter extends RequestImpl {
     private Socket socket;
     private boolean moreRequests = false;
     InputStream sin;
+    byte[] buf;
     
     public HttpRequestAdapter() {
         super();
+	buf=new byte[Constants.RequestBufferSize];
     }
 
     public void setSocket(Socket socket) throws IOException {
-	sin = socket.getInputStream();
+	sin = new BufferedInputStream ( socket.getInputStream());
 	in = new BufferedServletInputStream(this);
         this.socket = socket;
     	moreRequests = true;
     }
 
+    public void recycle() {
+	super.recycle();
+    }
+    
     public Socket getSocket() {
         return this.socket;
     }
@@ -105,14 +111,12 @@ public class HttpRequestAdapter extends RequestImpl {
     }
 
     public void readNextRequest(Response response) throws IOException {
-	String line="";
-	// cut&paste from BufferedInputStream.
-	// XXX reuse buff, avoid creating strings 
-	byte[] buf = new byte[Constants.RequestBufferSize];
 	int count = in.readLine(buf, 0, buf.length);
-	if (count >= 0) {
-            line=new String(buf, 0, count, Constants.CharacterEncoding.Default);
+	if (count < 0 ) {
+	    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	}
+
+	String line=new String(buf, 0, count, Constants.CharacterEncoding.Default);
 
 	processRequestLine(response,line);
 
@@ -131,16 +135,10 @@ public class HttpRequestAdapter extends RequestImpl {
 	if ((protocol!=null) &&
             !protocol.toLowerCase().startsWith("http/0."))
 	    headers.read(in);
-	//	processCookies(); // called later
-
-	// 	contentLength = headers.getIntHeader("content-length");
-	// 	contentType = headers.getHeader("content-type");
-	//         charEncoding = getCharsetFromContentType(contentType);
 
 	// XXX
 	// detect for real whether or not we have more requests
 	// coming
-
 	moreRequests = false;	
     }    
     
@@ -243,4 +241,6 @@ public class HttpRequestAdapter extends RequestImpl {
 	    requestURI= requestString;
 	}
     }
+
+    
 }
