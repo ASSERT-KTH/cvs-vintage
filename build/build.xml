@@ -291,9 +291,9 @@
     <!-- Generate SQL from Torque                                           -->
     <!-- ================================================================== -->
     <target name="schema-check">
-        <echo message="checking: ${src.sql.dir}/mysql-${project}.sql"/>
+        <echo message="checking: ${build.sql.scarab}/mysql-${project}.sql"/>
         <uptodate property="schema.uptodate"
-            targetfile="${src.sql.dir}/mysql-${project}.sql">
+            targetfile="${build.sql.scarab}/mysql-${project}.sql">
             <srcfiles dir="${src.sql.dir}" includes="scarab-schema.xml"/>
             <srcfiles dir="${user.home}" includes="build.properties"/>
             <srcfiles dir="${basedir}" includes="build.properties"/>
@@ -310,7 +310,7 @@
         </ant>
 
         <move file="${src.sql.dir}/${project}-schema.sql"
-            tofile="${src.sql.dir}/mysql-${project}.sql"/>
+            tofile="${build.sql.scarab}/mysql-${project}.sql"/>
     </target>
 
 
@@ -352,16 +352,16 @@
             userid="${scarab.database.admin.username}"
             password="${scarab.database.admin.password}">
             <classpath refid="classpath"/>
-            <transaction src="${src.sql.dir}/mysql-scarab.sql"/>
-            <transaction src="${src.sql.dir}/mysql-turbine.sql"/>
-            <transaction src="${src.sql.dir}/mysql-turbine-scheduler.sql"/>
-            <transaction src="${src.sql.dir}/mysql-id-table-schema.sql"/>
-            <transaction src="${src.sql.dir}/mysql-turbine-id-table-init.sql"/>
-            <transaction src="${src.sql.dir}/mysql-scarab-id-table-init.sql"/>
-            <transaction src="${src.sql.dir}/mysql-scarab-required-data.sql"/>
-            <transaction src="${src.sql.dir}/mysql-scarab-default-data.sql"/>
-            <transaction src="${src.sql.dir}/mysql-scarab-security.sql"/>
-            <transaction src="${src.sql.dir}/mysql-scarab-sample-data.sql"/>
+            <transaction src="${build.sql.scarab}/mysql-scarab.sql"/>
+            <transaction src="${build.sql.scarab}/mysql-turbine.sql"/>
+            <transaction src="${build.sql.scarab}/mysql-turbine-scheduler.sql"/>
+            <transaction src="${build.sql.scarab}/mysql-id-table-schema.sql"/>
+            <transaction src="${build.sql.scarab}/mysql-turbine-id-table-init.sql"/>
+            <transaction src="${build.sql.scarab}/mysql-scarab-id-table-init.sql"/>
+            <transaction src="${build.sql.scarab}/mysql-scarab-required-data.sql"/>
+            <transaction src="${build.sql.scarab}/mysql-scarab-default-data.sql"/>
+            <transaction src="${build.sql.scarab}/mysql-scarab-security.sql"/>
+            <transaction src="${build.sql.scarab}/mysql-scarab-sample-data.sql"/>
         </sql>
     </target>
 
