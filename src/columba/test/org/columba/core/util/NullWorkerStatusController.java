@@ -13,10 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.command;
 
+package org.columba.core.util;
+
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
-
 
 /**
  * @author timo
@@ -121,17 +122,16 @@ public class NullWorkerStatusController implements WorkerStatusController {
     public boolean cancelled() {
         return false;
     }
-	/* (non-Javadoc)
-	 * @see org.columba.core.command.WorkerStatusController#addWorkerStatusChangeListener(org.columba.core.gui.statusbar.event.WorkerStatusChangeListener)
-	 */
-	public void addWorkerStatusChangeListener(WorkerStatusChangeListener l) {
-		
-	}
-	/* (non-Javadoc)
-	 * @see org.columba.core.command.WorkerStatusController#getTimeStamp()
-	 */
-	public int getTimeStamp() {
-		
-		return 0;
-	}
+    
+    /* (non-Javadoc)
+     * @see org.columba.core.command.WorkerStatusController#addWorkerStatusChangeListener(org.columba.core.gui.statusbar.event.WorkerStatusChangeListener)
+     */
+    public void addWorkerStatusChangeListener(WorkerStatusChangeListener l) {
+    }
+    /* (non-Javadoc)
+     * @see org.columba.core.command.WorkerStatusController#getTimeStamp()
+     */
+    public int getTimeStamp() {
+            return 0;
+    }
 }

@@ -15,18 +15,20 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.mh;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.columba.core.command.NullWorkerStatusController;
+import org.columba.core.util.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTestHelper;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.ristretto.message.MessageFolderInfo;
+
 /**
  * @author fdietz
- *  
  */
 public class CopyMessageFolderTest extends AbstractFolderTest {
 	/**
@@ -35,6 +37,7 @@ public class CopyMessageFolderTest extends AbstractFolderTest {
 	public CopyMessageFolderTest(String arg0) {
 		super(arg0);
 	}
+        
 	public void testCopyMessage() throws Exception {
 		//		 add message "0.eml" as inputstream to folder
 		String input = FolderTestHelper.getString(0);
