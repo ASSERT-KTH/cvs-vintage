@@ -37,7 +37,7 @@ $page.setTitle("Custom Search")
     #else
       #set ($selected = true)
     #end
-    <select name="$searchGroup.TextScope.Key" size="5" multiple>
+    <select name="$searchGroup.TextScope.Key" size="5" multiple="multiple">
     #if ($searchTextAttributes.size() > 4)
       <option value="$search.ALL_TEXT"#selected($selected)>Search all</option>
       #set ($selected = false)

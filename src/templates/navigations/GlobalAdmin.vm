@@ -1,2 +1,2 @@
- <div>$link.setPage("admin,GlobalArtifactTypeShow.vm").setLabel("Global Issue Types")</div>
- <div>$link.setPage("admin,GlobalAttributeShow.vm").setLabel("Global Attributes")</div>
+ <div><small>$link.setPage("admin,GlobalArtifactTypeShow.vm").setLabel("Global Issue Types")</small></div>
+ <div><small>$link.setPage("admin,GlobalAttributeShow.vm").setLabel("Global Attributes")</small></div>
