@@ -365,12 +365,12 @@
  <p class="paginate">
  #if($scarabR.PrevPage != 0)
   #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()))
-  &laquo; <a href="$prevLink">previous</a> |
+  <a href="$prevLink">&laquo; previous</a> |
  #end
  $pageNum of $scarabR.NbrPages
  #if ($scarabR.NextPage != 0)
   #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.NextPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()))
-  | &raquo; <a href="$nextLink">next</a>
+  | <a href="$nextLink">&raquo; next</a>
  #end
  </p>
 #end
