@@ -3,7 +3,12 @@ How to Build
 
 First, you must have the jakarta-tools workspace checked out parallel
 to this workspace (jakarta-tomcat). Without jakarta-tools, you wont'
-be able to build.
+be able to build.  When you have completed your downloads and checkouts,
+you should have the following directory structure:
+
+	$JAKARTA_HOME/
+		jakarta-tomcat/	<-- Contains jakarta-tomcat files
+		jakarta-tools/	<-- Contains jakarta-tools files
 
 There are a 2 compilation scripts provided, a ksh based script for
 Unix and a .bat based DOS build script. Essentially these scripts are
@@ -11,7 +16,7 @@ wrappers that put the ant.jar file on the classpath and calls:
 
 	java com.sun.ant.Main
 
-To build, execute the following command in this directory:
+To build, execute the following command in the jakarta-tomcat directory:
 
 	build
 
@@ -35,10 +40,15 @@ To clean out the build (removes the build dir):
 Running the Build
 -----------------
 
+If you are running under JDK 1.2, you will need to ensure that the
+"tools.jar" file from your JDK distribution is present on your classpath.
+The Java compiler is required by the JSP engine, which uses it when
+converting JSP source files into Java class files.
+
 Two scripts are provided for starting and stopping the server. To
 start the server:
 
-	cd build
+	cd ../build
 	cd tomcat
 	startup
 
