@@ -512,6 +512,7 @@
                type="String" multiValued="true"/>
         <field name="Axis2Keys" key="a2k" 
                type="String" multiValued="true"/>
+        <field name="Deleted" key="del" type="boolean" />
 </group>
 
 <group name="OptionGroup" key="repog" mapToObject="om.Report$OptionGroup">
