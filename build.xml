@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.163 2004/04/21 13:29:51 tdiesler Exp $ -->
+<!-- $Id: build.xml,v 1.164 2004/05/16 15:07:30 remm Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -76,6 +76,7 @@
     <path id="library.classpath">
       <path refid="sun.jaas.classpath"/>
       <path refid="sun.jsse.classpath"/>
+      <path refid="sun.servlet.classpath"/>
       <path refid="apache.axis.classpath"/>
       <path refid="apache.crimson.classpath"/>
       <path refid="apache.log4j.classpath"/>
