@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.19 2002/04/26 23:34:52 jmcnally Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.20 2002/04/30 19:50:49 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -251,6 +251,16 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
 
                     // now remove the group to set the page stuff to null
                     intake.remove(newPCAOGroup);
+
+                    String lastTemplate = getCancelTemplate(data);
+                    if (lastTemplate != null 
+                        && lastTemplate.equals("admin,ModuleAttributeEdit.vm"))
+                    {
+                        scarabR.getCurrentModule()
+                          .addAttributeOption(scarabR.getIssueType(), 
+                                              newPCAO.getOptionId());
+                        scarabR.setConfirmMessage("The attribute option been added.");
+                    }
                 }
             }
         }
@@ -279,10 +289,9 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         // If they came from the manage module page,
         // Add the attribute and return there.
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        String lastTemplate = getLastTemplate(data);
+        String lastTemplate = getCancelTemplate(data);
         Attribute attribute = scarabR.getAttribute();
-        if (lastTemplate != null && !lastTemplate.equals("global")
-            && attribute.getAttributeId() != null)
+        if (lastTemplate != null && attribute.getAttributeId() != null)
         { 
             // Add attribute to group
             if (lastTemplate.equals("admin,AttributeGroupEdit.vm"))
@@ -292,17 +301,18 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 if (groupId != null)
                 {
                     scarabR.getAttributeGroup(groupId).addAttribute(attribute);
+                    scarabR.setConfirmMessage("The attribute has been added.");
                 }
             }
-            else
+            else if (lastTemplate.equals("admin,ArtifactTypeEdit.vm"))
             {
                 // Add user attribute to module
                 scarabR.getCurrentModule()
                        .addRModuleAttribute(scarabR.getIssueType(), attribute);
+                scarabR.setConfirmMessage("The attribute has been added.");
             }
-            scarabR.setConfirmMessage("The attribute has been added.");
             ScarabCache.clear();
-            cancelBackTo( data, context, lastTemplate);
+            setTarget( data, lastTemplate);
         }
         else
         {
