@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -313,7 +313,7 @@ public class EARDeployer
       {
          DeploymentException.rethrowAsDeploymentException("Error during stop of EARDeployment: " + di.url, e);
       }
-      super.destroy(di);
+      super.stop(di);
    }
 
    /**
@@ -348,7 +348,7 @@ public class EARDeployer
    {
       if (loader == null)
       {
-         if (isolated)
+         if (isolated && di.parent == null)
          {
             J2eeApplicationMetaData metaData = (J2eeApplicationMetaData) di.metaData;
             String name = EARDeployment.getJMXName(metaData, di) + ",extension=LoaderRepository";
