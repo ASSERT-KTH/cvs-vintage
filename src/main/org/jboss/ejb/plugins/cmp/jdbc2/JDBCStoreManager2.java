@@ -44,7 +44,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public class JDBCStoreManager2
    implements JDBCEntityPersistenceStore
@@ -178,6 +178,14 @@ public class JDBCStoreManager2
                if(manager.stop.execute())
                {
                   i.remove();
+                  try
+                  {
+                     entityBridge.stop();
+                  }
+                  catch(Exception e)
+                  {
+                     log.error("Failed to stop entity bridge.", e);
+                  }
                   ++stoppedInIteration;
                }
             }

@@ -6,6 +6,8 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc2.schema;
 
+import org.jboss.system.ServiceMBeanSupport;
+
 import javax.transaction.Transaction;
 import java.util.Map;
 import java.util.HashMap;
@@ -15,10 +17,14 @@ import java.util.HashMap;
  * Simple LRU cache. Items are evicted when maxCapacity is exceeded.
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
+ * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
-public class TableCache implements Cache
+public class TableCache
+   extends ServiceMBeanSupport
+   implements Cache, TableCacheMBean
 {
+   private Cache.Listener listener = Cache.Listener.NOOP;
    private final Map rowsById;
    private CachedRow head;
    private CachedRow tail;
@@ -32,10 +38,36 @@ public class TableCache implements Cache
       rowsById = new HashMap(initialCapacity);
    }
 
+   /**
+    * @jmx.managed-operation
+    */
+   public void registerListener(Cache.Listener listener)
+   {
+      log.debug("Registered listener for " + getServiceName());
+      this.listener = listener;
+   }
+
+   /**
+    * @jmx.managed-operation
+    */
+   public int size()
+   {
+      lock();
+      try
+      {
+         return rowsById.size();
+      }
+      finally
+      {
+         unlock();
+      }
+   }
+
    public synchronized void lock()
    {
       if(locked)
       {
+         long start = System.currentTimeMillis();
          while(locked)
          {
             try
@@ -46,6 +78,8 @@ public class TableCache implements Cache
             {
             }
          }
+
+         listener.contention(System.currentTimeMillis() - start);
       }
       locked = true;
    }
@@ -149,6 +183,7 @@ public class TableCache implements Cache
          {
             dereference(victim);
             rowsById.remove(victim.pk);
+            listener.eviction(row.pk, rowsById.size());
          }
          victim = nextVictim;
       }

@@ -36,7 +36,7 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public class JDBCEntityBridge2
    implements JDBCAbstractEntityBridge
@@ -104,7 +104,7 @@ public class JDBCEntityBridge2
          versionField.initVersion();
       }
 
-      table.generateSql();
+      table.start();
 
       if(cmrFields != null)
       {
@@ -115,6 +115,11 @@ public class JDBCEntityBridge2
       }
    }
 
+   public void stop() throws Exception
+   {
+      table.stop();
+   }
+   
    public JDBCEntityMetaData getMetaData()
    {
       return metadata;

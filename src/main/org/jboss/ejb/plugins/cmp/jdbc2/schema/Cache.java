@@ -10,7 +10,7 @@ import javax.transaction.Transaction;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public interface Cache
 {
@@ -31,6 +31,10 @@ public interface Cache
    void lockForUpdate(Transaction tx, Object pk) throws Exception;
 
    void releaseLock(Transaction tx, Object pk) throws Exception;
+
+   void start() throws Exception;
+
+   void stop() throws Exception;
 
    Cache NONE = new Cache()
    {
@@ -77,6 +81,14 @@ public interface Cache
       public void releaseLock(Transaction tx, Object pk) throws Exception
       {
       }
+
+      public void start()
+      {
+      }
+
+      public void stop()
+      {
+      }
    };
 
    interface CacheLoader
@@ -84,5 +96,23 @@ public interface Cache
       Object loadFromCache(Object value);
 
       Object getCachedValue();
+   }
+
+   interface Listener
+   {
+      void contention(long time);
+
+      void eviction(Object pk, int size);
+
+      public Listener NOOP = new Listener()
+      {
+         public void contention(long time)
+         {
+         }
+
+         public void eviction(Object pk, int size)
+         {
+         }
+      };
    }
 }

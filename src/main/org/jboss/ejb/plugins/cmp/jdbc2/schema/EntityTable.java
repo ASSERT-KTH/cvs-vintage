@@ -18,6 +18,9 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc2.bridge.JDBCEntityBridge2;
 import org.jboss.ejb.plugins.cmp.jdbc2.bridge.JDBCCMPFieldBridge2;
 import org.jboss.logging.Logger;
+import org.jboss.system.ServiceControllerMBean;
+import org.jboss.mx.util.MBeanServerLocator;
+import org.jboss.mx.util.MBeanProxyExt;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -26,6 +29,8 @@ import javax.ejb.DuplicateKeyException;
 import javax.ejb.ObjectNotFoundException;
 import javax.ejb.EJBException;
 import javax.transaction.Transaction;
+import javax.management.ObjectName;
+import javax.management.MBeanServer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -38,7 +43,7 @@ import java.util.HashMap;
  * todo refactor optimistic locking
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public class EntityTable
    implements Table
@@ -70,7 +75,9 @@ public class EntityTable
 
    private Logger log;
 
-   private Cache cache = new TableCache(500, 1000);
+   private Cache cache;
+   private ServiceControllerMBean serviceController;
+   private ObjectName cacheName;
 
    public EntityTable(JDBCEntityMetaData metadata, JDBCEntityBridge2 entity, Schema schema, int tableId)
       throws DeploymentException
@@ -98,9 +105,28 @@ public class EntityTable
       insertStrategy = NON_BATCH_UPDATE;
       deleteStrategy = NON_BATCH_UPDATE;
       updateStrategy = NON_BATCH_UPDATE;
+
+      // create cache
+      cache = new TableCache(500, 1000);
+
+      final MBeanServer server = MBeanServerLocator.locateJBoss();
+      serviceController = (ServiceControllerMBean)
+               MBeanProxyExt.create(ServiceControllerMBean.class,
+                  ServiceControllerMBean.OBJECT_NAME,
+                  server);
+      try
+      {
+         cacheName = new ObjectName("jboss.cmp:service=tablecache,ejbname=" + metadata.getName() + ",table=" + tableName);
+         server.registerMBean(cache, cacheName);
+         serviceController.create(cacheName);
+      }
+      catch(Exception e)
+      {
+         throw new DeploymentException("Failed to register table cache for " + tableName, e);
+      }
    }
 
-   public void generateSql() throws DeploymentException
+   public void start() throws DeploymentException
    {
       final JDBCAbstractCMRFieldBridge[] cmrFields = entity.getCMRFields();
       relationsTotal = (cmrFields != null ? cmrFields.length : 0);
@@ -214,8 +240,32 @@ public class EntityTable
          }
          log.debug("duplicate pk sql: " + duplicatePkSql);
       }
+
+      try
+      {
+         cache.start();
+      }
+      catch(Exception e)
+      {
+         throw new DeploymentException("Failed to start cache", e);
+      }
+
+      try
+      {
+         serviceController.start(cacheName);
+      }
+      catch(Exception e)
+      {
+         throw new DeploymentException("Failed to start table cache.", e);
+      }
    }
 
+   public void stop() throws Exception
+   {
+      serviceController.stop(cacheName);
+      serviceController = null;
+   }
+   
    public StringBuffer appendColumnNames(JDBCCMPFieldBridge2[] fields, String alias, StringBuffer buf)
    {
       for(int i = 0; i < fields.length; ++i)
