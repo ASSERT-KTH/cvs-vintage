@@ -42,7 +42,7 @@
 </div>
 
 <div class="functnbar2">
-<input type="submit" name="eventSubmit_doLogin" value="$l10n.Login" onclick="eventSubmit_doLogin.disabled=true;document.login.submit()" />
+<input type="submit" name="eventSubmit_doLogin" value="$l10n.Login" onclick="document.login.eventSubmit_doLogin.disabled=true;document.login.submit()" />
 </div>
 
 $intake.declareGroups()
