@@ -78,12 +78,17 @@ import java.net.*;
  *  Part of GTest - send a Http request. 
  */
 public class HttpClient {
+    static Report defaultReport=new Report();
+
     HttpRequest firstRequest=null;
     Vector actions=new Vector();
     String id;
     int debug=0;
     Body comment=null;
     boolean success=true;
+
+    PrintWriter out=null;
+    String outType=null;
     
     public HttpClient() {
     }
@@ -100,6 +105,10 @@ public class HttpClient {
      */
     public void setDebug( int d ) {
 	debug=d;
+    }
+
+    public int getDebug() {
+        return debug;
     }
     
     /** Add a request that will be executed.
@@ -122,6 +131,14 @@ public class HttpClient {
 
     public void setDescription( String s ) {
 	comment=new Body( s );
+    }
+
+    public void setWriter( PrintWriter pw ) {
+        out=pw;
+    }
+
+    public void setOutput( String t ) {
+        outType=t;
     }
     
     // -------------------- Various matchers --------------------
@@ -178,9 +195,9 @@ public class HttpClient {
     // -------------------- Execute the request --------------------
 
     public void execute() {
+        HttpRequest lastRequest=null;
 	try {
 	    Enumeration aE=actions.elements();
-	    HttpRequest lastRequest=null;
 	    while( aE.hasMoreElements() ) {
 		Object action=aE.nextElement();
 		if( action instanceof HttpRequest ) {
@@ -212,6 +229,13 @@ public class HttpClient {
 	else
 	    testSuccess.addElement( this );
 
+        if( lastRequest != null) {
+            defaultReport.setHttpClient(this);
+            defaultReport.setHttpRequest(lastRequest);
+            defaultReport.setWriter(out);
+            defaultReport.setOutput(outType);
+            defaultReport.writeReport();
+        }
     }
 
     /** Invoke a request, set headers, responseLine, body

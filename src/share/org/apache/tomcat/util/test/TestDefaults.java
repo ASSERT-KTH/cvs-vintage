@@ -89,7 +89,7 @@ public class TestDefaults {
     }
 
     public void setOutputType(String t  ) {
-	GTest.setDefaultOutput(t);
+	Report.setDefaultOutput(t);
     }
 
     public void execute() {

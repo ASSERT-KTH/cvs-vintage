@@ -75,8 +75,6 @@ import org.apache.tomcat.util.test.matchers.*;
 */
 public class GTest  {
     // Defaults
-    static PrintWriter defaultOutput=new PrintWriter(System.out);
-    static String defaultOutType="text";
     static int defaultDebug=0;
     static boolean failureOnly=false;
 
@@ -116,7 +114,7 @@ public class GTest  {
     }
 
     public static void setDefaultWriter( PrintWriter pw ) {
-	defaultOutput=pw;
+	Report.setDefaultWriter(pw);
     }
 
     /** @deprecated. Output will be text or none, with external
@@ -124,7 +122,7 @@ public class GTest  {
 	still a simple test runner )
     */
     public static void setDefaultOutput( String s ) {
-	defaultOutType=s;
+	Report.setDefaultOutput(s);
     }
 
     /** Vector of GTest elements, containing all test instances
@@ -312,21 +310,13 @@ public class GTest  {
     public void execute() {
 	try {
 	    //	 System.out.println("XXX " + outType + " " + defaultOutType);
-	    if( out==null) out=defaultOutput;
-	    if( outType==null) outType=defaultOutType;
 	    if( debug==-1) debug=defaultDebug;
 
 	    initMatchers();
+            httpClient.setWriter(out);
+            httpClient.setOutput(outType);
+            httpClient.setDebug(debug);
 	    httpClient.execute();
-	    HttpResponse resp=httpRequest.getHttpResponse();
-
-	    result=httpClient.getResult();
-	    failMessage=httpClient.getFailureMessage();
-
-	    if( "text".equals(outType) )
-		textReport();
-	    if( "html".equals(outType) )
-		htmlReport();
 	} catch(Exception ex ) {
 	    // no exception should be thrown in normal operation
 	    ex.printStackTrace();
@@ -372,78 +362,5 @@ public class GTest  {
 	    httpClient.addMatcher(sm );
 	}
     }
-    
-    private void textReport() {
-	String msg=null;
-	if(  "".equals( getDescription() )) 
-	    msg=" (" + httpRequest.getRequestLine() + ")";
-	else
-	    msg=getDescription() + " (" + httpRequest.getRequestLine() + ")";
-
-	if( result ) 
-	    out.println("OK " +  msg );
-	else {
-	    out.println("FAIL " + msg );
-	    out.println("Message: " + failMessage);
-	}
-	out.flush();
-    }
-
-    private void htmlReport() {
-	String uri=httpRequest.getURI();
-	if( uri!=null )
-	    out.println("<a href='" + uri + "'>");
-	if( result )
-	    out.println( "OK " );
-	else
-	    out.println("<font color='red'>FAIL ");
-	if( uri!=null )
-	    out.println("</a>");
-
-	String msg=null;
-	if(  "".equals( getDescription() )) 
-	    msg=" (" + httpRequest.getRequestLine() + ")";
-	else
-	    msg=getDescription() + " (" + httpRequest.getRequestLine() + ")";
-
-	out.println( msg );
-	
-	if( ! result )
-	    out.println("</font>");
-	
-	out.println("<br>");
-
-	if( ! result ) {
-	    out.println("<b>Message:</b><pre>");
-	    out.println( failMessage);
-	    out.println("</pre>");
-	}
-
-	if( ! result && debug > 0 ) {
-	    out.println("<b>Request: </b><pre>" + httpRequest.getFullRequest());
-	    out.println("</pre><b>Response:</b> " +
-			httpRequest.getHttpResponse().getResponseLine());
-	    out.println("<br><b>Response headers:</b><br>");
-	    Hashtable headerH=httpRequest.getHttpResponse().getHeaders();
-	    Enumeration hE=headerH.elements();
-	    while( hE.hasMoreElements() ) {
-		Header h=(Header) hE.nextElement();
-		out.println("<b>" + h.getName() + ":</b>" +
-			    h.getValue() + "<br>");
-	    }
-	    out.println("<b>Response body:</b><pre> ");
-	    out.println(httpRequest.getHttpResponse().getResponseBody());
-	    out.println("</pre>");
-	}
-
-	Throwable ex=httpRequest.getHttpResponse().getThrowable();
-	if( ex!=null) {
-	    out.println("<b>Exception</b><pre>");
-	    ex.printStackTrace(out);
-	    out.println("</pre><br>");
-	}
-	out.flush();
-    }
-
     
 }
