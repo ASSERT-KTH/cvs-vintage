@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.6 2001/08/16 00:19:20 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2001/08/16 00:19:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.7 2002/01/22 06:09:51 billbarker Exp $
+ * $Revision: 1.7 $
+ * $Date: 2002/01/22 06:09:51 $
  *
  * ====================================================================
  *
@@ -83,7 +83,7 @@ import org.apache.tomcat.util.log.*;
  */
 
 public class FileUtil {
-
+    static final String osName = System.getProperty("os.name");
     public static File[] listFiles(File dir) {
 
 	String[] ss = dir.list();
@@ -273,7 +273,7 @@ public class FileUtil {
         }
 
 	// fix path on NetWare - all '/' become '\\' and remove duplicate '\\'
-	if (System.getProperty("os.name").startsWith("NetWare") &&
+	if (osName.startsWith("NetWare") && 
 	    path.length() >=3 &&
 	    path.indexOf(':') > 0) {
 	    char[] ca = patchPath.replace('/', '\\').toCharArray();
@@ -304,7 +304,7 @@ public class FileUtil {
 	    return true;
 
 	// NetWare volume:
-	if (System.getProperty("os.name").startsWith("NetWare") &&
+	if (osName.startsWith("NetWare") &&
 	    path.length() >=3 &&
 	    path.indexOf(':') > 0)
 	    return true;
