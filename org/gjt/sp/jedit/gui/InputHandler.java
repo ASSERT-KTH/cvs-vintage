@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * to the implementations of this class to do so.
  *
  * @author Slava Pestov
- * @version $Id: InputHandler.java,v 1.8 2002/02/05 06:28:10 spestov Exp $
+ * @version $Id: InputHandler.java,v 1.9 2002/02/11 09:25:51 spestov Exp $
  * @see org.gjt.sp.jedit.gui.DefaultInputHandler
  */
 public abstract class InputHandler extends KeyAdapter
@@ -253,7 +253,7 @@ public abstract class InputHandler extends KeyAdapter
 			// stop people doing dumb stuff like C+ENTER 100 C+n
 			if(_repeatCount > REPEAT_COUNT_THRESHOLD)
 			{
-				String label = jEdit.getProperty(action.getLabel());
+				String label = action.getLabel();
 				if(label == null)
 					label = action.getName();
 				else

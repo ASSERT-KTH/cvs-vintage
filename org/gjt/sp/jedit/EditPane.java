@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * A panel containing a text area. Each edit pane can edit one buffer at
  * a time.
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.19 2002/02/05 06:28:09 spestov Exp $
+ * @version $Id: EditPane.java,v 1.20 2002/02/11 09:25:51 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -430,7 +430,8 @@ public class EditPane extends JPanel implements EBComponent
 		textArea.setRightClickPopup(GUIUtilities
 			.loadPopupMenu("view.context"));
 
-		textArea.setMiddleMousePasteEnabled(jEdit.getBooleanProperty(
+		// use old property name for backwards compatibility
+		textArea.setQuickCopyEnabled(jEdit.getBooleanProperty(
 			"view.middleMousePaste"));
 
 		textArea.propertiesChanged();

@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.67 2002/02/11 03:15:29 spestov Exp $
+ * @version $Id: Buffer.java,v 1.68 2002/02/11 09:25:51 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -3227,6 +3227,7 @@ public class Buffer implements EBComponent
 			int pos = marker.getPosition();
 			if(pos > getLength())
 				marker.setPosition(getLength());
+			marker.removePosition();
 			marker.createPosition();
 		}
 	} //}}}
