@@ -37,7 +37,7 @@ import org.jboss.metadata.SessionMetaData;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf</b>
@@ -137,7 +137,7 @@ public class StatefulSessionInstanceInterceptor
       }
    }
 	
-   private void register(EnterpriseContext ctx, Transaction tx, BeanLock lock)
+   protected void register(EnterpriseContext ctx, Transaction tx, BeanLock lock)
    {
       // Create a new synchronization
       InstanceSynchronization synch = new InstanceSynchronization(tx, ctx, lock);
@@ -294,7 +294,7 @@ public class StatefulSessionInstanceInterceptor
       }
    }
 	
-   private boolean isCallAllowed(MethodInvocation mi) 
+   protected boolean isCallAllowed(MethodInvocation mi) 
    {
       Method m = mi.getMethod();
       if (m.equals(getEJBHome) ||
