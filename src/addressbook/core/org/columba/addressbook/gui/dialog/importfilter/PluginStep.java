@@ -29,7 +29,6 @@ import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -57,23 +56,11 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
             AddressbookResourceLoader.getString("dialog", "addressbookimport",
                 "plugin_description"));
         this.data = data;
-
-        try {
-            pluginHandler = (ImportPluginHandler) MainInterface.pluginManager.getHandler(
-                    "org.columba.addressbook.import");
-        } catch (PluginHandlerNotFoundException ex) {
-            NotifyDialog d = new NotifyDialog();
-
-            //show neat error message here
-            d.showDialog(ex);
-
-            return;
-        }
+        pluginHandler = (ImportPluginHandler)data.getData("Plugin.handler");
     }
 
     protected JComponent createComponent() {
-        JList list = new JList(((ImportPluginHandler) data.getData(
-                    "Plugin.handler")).getPluginIdList());
+        JList list = new JList(pluginHandler.getPluginIdList());
         list.setCellRenderer(new PluginListCellRenderer());
 
         descriptionLabel = new MultiLineLabel("description");
@@ -138,16 +125,14 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
     public void valueChanged(ListSelectionEvent event) {
         try {
             //adjust description field
-            DefaultAddressbookImporter importer = (DefaultAddressbookImporter) pluginHandler.getPlugin((String) data.getData(
-                        "Plugin.ID"), null);
+            DefaultAddressbookImporter importer = (DefaultAddressbookImporter)
+                pluginHandler.getPlugin((String) data.getData("Plugin.ID"), null);
 
             String description = importer.getDescription();
             descriptionLabel.setText(description);
         } catch (Exception e) {
-            NotifyDialog d = new NotifyDialog();
-
-            //show neat error message here
-            d.showDialog(e);
+            e.printStackTrace();
+            ((JList)event.getSource()).clearSelection();
         }
     }
 
