@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.28 2002/05/28 03:01:22 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.29 2002/06/18 02:44:52 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -732,15 +732,7 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 
 		boolean ok = true;
 
-		if(fileset.getFileCount(view) == 0)
-		{
-			// oops
-			if(!cancel)
-				GUIUtilities.error(this,"empty-fileset",null);
-			ok = false;
-		}
-		else
-			SearchAndReplace.setSearchFileSet(fileset);
+		SearchAndReplace.setSearchFileSet(fileset);
 
 		if(find.getText().length() != 0)
 		{

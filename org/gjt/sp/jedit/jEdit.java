@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.74 2002/06/17 10:51:30 spestov Exp $
+ * @version $Id: jEdit.java,v 1.75 2002/06/18 02:44:52 spestov Exp $
  */
 public class jEdit
 {
@@ -1890,14 +1890,17 @@ public class jEdit
 	 */
 	public static Buffer[] getBuffers()
 	{
-		Buffer[] buffers = new Buffer[bufferCount];
-		Buffer buffer = buffersFirst;
-		for(int i = 0; i < bufferCount; i++)
+		synchronized(bufferListLock)
 		{
-			buffers[i] = buffer;
-			buffer = buffer.next;
+			Buffer[] buffers = new Buffer[bufferCount];
+			Buffer buffer = buffersFirst;
+			for(int i = 0; i < bufferCount; i++)
+			{
+				buffers[i] = buffer;
+				buffer = buffer.next;
+			}
+			return buffers;
 		}
-		return buffers;
 	} //}}}
 
 	//{{{ getBufferCount() method

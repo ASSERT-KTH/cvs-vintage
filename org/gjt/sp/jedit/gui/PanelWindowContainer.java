@@ -39,7 +39,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.35 2002/06/17 09:30:37 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.36 2002/06/18 02:44:52 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -544,9 +544,6 @@ public class PanelWindowContainer implements DockableWindowContainer
 			//{{{ Counterclockwise rotation
 			else if(rotate == RotatedTextIcon.CCW)
 			{
-				System.err.println("painting " + text);
-				System.err.println("ascent = " + ascent + ", height = "
-					+ height + ", width = " + width);
 				AffineTransform trans = new AffineTransform();
 				trans.concatenate(oldTransform);
 				trans.translate(x,y - 2);
