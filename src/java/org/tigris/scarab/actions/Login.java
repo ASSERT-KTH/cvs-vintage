@@ -74,7 +74,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.32 2002/05/06 17:53:06 jon Exp $
+ * @version $Id: Login.java,v 1.33 2002/05/06 17:56:50 jon Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -92,7 +92,7 @@ public class Login extends ScarabTemplateAction
         {
             ScarabUser user = (ScarabUser)data.getUser();
             List userModules = user.getModules();
-            if (userModules.size() == 1)
+            if (userModules != null && userModules.size() == 1)
             {
                 ScarabRequestTool scarabR = getScarabRequestTool(context);
                 scarabR.setCurrentModule((Module)(userModules).get(0));
