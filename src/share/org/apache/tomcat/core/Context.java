@@ -149,6 +149,8 @@ public class Context {
     private MimeMap mimeTypes = new MimeMap();
     private int sessionTimeOut = -1;
 
+    Hashtable tagLibs=new Hashtable();
+    
     // Maps specified in web.xml ( String->ServletWrapper )
     private Hashtable prefixMappedServlets = new Hashtable();
     private Hashtable extensionMappedServlets = new Hashtable();
@@ -555,6 +557,19 @@ public class Context {
 
     public void addWelcomeFile( String s) {
 	welcomeFiles.addElement( s );
+    }
+
+    public void addTaglib( String uri, String location ) {
+	//	System.out.println("Add taglib " + uri + "  " + location );
+	tagLibs.put( uri, location );
+    }
+
+    public String getTaglibLocation( String uri ) {
+	return (String)tagLibs.get(uri );
+    }
+
+    public Enumeration getTaglibs() {
+	return tagLibs.keys();
     }
     
     public String getInitParameter(String name) {

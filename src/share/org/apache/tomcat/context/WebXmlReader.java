@@ -60,6 +60,10 @@ public class WebXmlReader extends BaseContextInterceptor  implements ContextInte
 	    xh.addRule("web-app/servlet-mapping/servlet-name", xh.methodParam(0) ); 
 	    xh.addRule("web-app/servlet-mapping/url-pattern", xh.methodParam(1) );
 	    
+	    xh.addRule("web-app/taglib", xh.methodSetter("addTaglib", 2) ); 
+	    xh.addRule("web-app/taglib/taglib-uri", xh.methodParam(0) ); 
+	    xh.addRule("web-app/taglib/taglib-location", xh.methodParam(1) );
+	    
 	    xh.addRule("web-app/mime-mapping", xh.methodSetter("addContentType", 2) ); 
 	    xh.addRule("web-app/mime-mapping/extension", xh.methodParam(0) ); 
 	    xh.addRule("web-app/mime-mapping/mime-type", xh.methodParam(1) );
