@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.40 2004/07/31 22:30:22 kataka Exp $
+// $Id: DetailsPane.java,v 1.41 2004/08/03 00:58:13 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,14 +81,6 @@ public class DetailsPane
 
     /** logger */
     private static final Logger LOG = Logger.getLogger(DetailsPane.class);
-
-    ////////////////////////////////////////////////////////////////
-    // constants
-
-    public static final int WIDTH = 690;
-    public static final int HEIGHT = 520;
-    public static final int INITIAL_WIDTH = 400;
-    public static final int INITIAL_HEIGHT = 200;
 
     ////////////////////////////////////////////////////////////////
     // instance variables
