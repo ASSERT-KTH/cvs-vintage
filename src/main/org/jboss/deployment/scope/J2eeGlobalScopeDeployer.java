@@ -28,11 +28,11 @@ import javax.management.JMException;
 /**
  * This is a deployer that introduces a J2ee application scoping facility and
  * proper (re-)deployment procedures. It implements a default global scope.
- * @author  cgjung
+ * @author  <a href="mailto:Christoph.Jung@infor.de">cgjung</a>
  * @version 0.9
  */
 
-public class J2eeGlobalScopeDeployer extends org.jboss.deployment.J2eeDeployer {
+public class J2eeGlobalScopeDeployer extends org.jboss.deployment.J2eeDeployer implements J2eeGlobalScopeDeployerMBean {
     
     /** the scopes that are in effect */
     final protected Map scopes=new java.util.HashMap();
@@ -41,56 +41,63 @@ public class J2eeGlobalScopeDeployer extends org.jboss.deployment.J2eeDeployer {
     public J2eeGlobalScopeDeployer() {
     }
     
-    /** registers a new scope in this deployer
+    /** 
+     * registers a new scope in this deployer
      * @param name unique name of the new scope
-     *
      * @param scope the scope to register
      * @return the scope that has been isolated by that action
-     *
      */
-    public Scope registerScope(String name, Scope scope) {
-        synchronized(scopes) {
-            return (Scope) scopes.put(name,scope);
-        }
+    protected Scope registerScope(String name, Scope scope) {
+	synchronized(scopes) {
+    		return (Scope) scopes.put(name,scope);
+	}
     }
     
-    /** looks up a scope
+    /** 
+     * looks up a scope and creates it of not yet registered
      * @param name the unique name of the scope
-     *
      * @return the registered scope
-     *
      */
     public Scope getScope(String name) {
-        synchronized(scopes) {
-            return (Scope) scopes.get(name);
-        }
+	synchronized(scopes) {
+		return (Scope) scopes.get(name);
+	}
     }
     
-    /** deregisters a scope
+    /** 
+     * returns a list of the registered scope names
+     * @return scope name list
+     */
+    public String[] listScopes() {
+	synchronized(scopes) {
+		return (String[]) scopes.keySet().toArray(new String[scopes.size()]);
+	}
+    }
+
+    /** 
+     * deregisters a scope
      * @param name unique name of the scope to deRegister
      * @return the deRegistered scope
      *
      */
-    public Scope deRegisterScope(String name) {
-        synchronized(scopes) {
-            return (Scope) scopes.remove(name);
-        }
+    protected Scope deRegisterScope(String name) {
+    	synchronized(scopes) {
+		return (Scope) scopes.remove(name);
+	}
     }
     
-    /** static name of the global scope */
-    final public static String GLOBAL_SCOPE="GLOBAL_SCOPE";
-    
-    /** starts the service by first creating
-     * a new scope
-     * @throws Exception to indicate
-     * that either superclass or scope creation
-     * went wrong.
+    /** 
+     * deregisters all scopes
      */
-    public void startService() throws Exception {
-        registerScope(GLOBAL_SCOPE,createScope());
-        super.startService();
+    protected void deRegisterScopes() {
+	synchronized(scopes) {
+	    Iterator allScopes=scopes.keySet().iterator();
+	    while(allScopes.hasNext()) {
+		allScopes.remove();
+	    }
+	}
     }
-    
+
     /** factory method to create a new scope, May throw a general exception
      * if this very basic enterprise fails.
      * @throws Exception May throw any exception to indicate
@@ -103,13 +110,40 @@ public class J2eeGlobalScopeDeployer extends org.jboss.deployment.J2eeDeployer {
     protected Scope createScope() throws Exception {
         return new Scope(log);
     }
+
+    /** creates and registers fresh scope */
+    public Scope createScope(String name) throws Exception {
+	synchronized(scopes) {
+		Scope result=getScope(name);
+		if(result==null) {
+			result=createScope();
+			registerScope(name,result);
+		}
+		return result;
+	}
+    }
+
+    /** static name of the global scope */
+    final public static String GLOBAL_SCOPE="GLOBAL_SCOPE";
+    
+    /** starts the service by first creating
+     * a new scope
+     * @throws Exception to indicate
+     * that either superclass or scope creation
+     * went wrong.
+     */
+    public void startService() throws Exception {
+        super.startService();
+	createScope(GLOBAL_SCOPE);
+    }
+    
     
     /** stops the service by freeing
-     * scope afterwards
+     *  scopes
      */
     public void stopService() {
         super.stopService();
-        deRegisterScope(GLOBAL_SCOPE);
+    	deRegisterScopes();
     }
     
     
@@ -196,9 +230,22 @@ public class J2eeGlobalScopeDeployer extends org.jboss.deployment.J2eeDeployer {
      * @throws IOException if trouble while file download occurs
      */
     public void deploy(String _url) throws MalformedURLException, IOException, J2eeDeploymentException {
-        deploy(_url,getScope(GLOBAL_SCOPE));
+        deploy(_url,GLOBAL_SCOPE);
     }
-    
+
+
+    /** scoped (re-)deploy method. Using a particular scope name
+     *
+     * @param scope the scope in which the file should be deployed
+     * @param _url the url (file or http) to the archiv to deploy
+     * @throws MalformedURLException in case of a malformed url
+     * @throws J2eeDeploymentException if something went wrong...
+     * @throws IOException if trouble while file download occurs
+     */
+    public void deploy(String _url, String scopeName) throws MalformedURLException, IOException, J2eeDeploymentException {
+	deploy(_url,getScope(scopeName));
+    }
+
     /** scoped (re-)deploy method.
      *
      * @param scope the scope in which the file should be deployed

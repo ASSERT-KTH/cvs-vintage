@@ -18,7 +18,7 @@ import java.util.jar.Manifest;
 /** Represents a J2EE application or module (EJB.jar, Web.war or App.ear). <br>
 *
 *  @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*  @version $Revision: 1.8 $
+*  @version $Revision: 1.9 $
 */
 public class Deployment
    implements java.io.Serializable
@@ -53,7 +53,7 @@ public class Deployment
    protected transient Manifest manifest;
    
    /** Creates a new Deployment object. */
-   Deployment ()
+   protected Deployment ()
    {
 	   date = new Date();
 
