@@ -81,7 +81,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.101 2003/01/16 01:30:14 elicia Exp $
+ * @version $Id: Search.java,v 1.102 2003/01/24 19:53:00 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -120,7 +120,7 @@ public class Search extends RequireLoginFirstAction
         setTarget(data, "SaveQuery.vm");
     }
 
-    public void doRedirecttocrossmodulequery(RunData data, TemplateContext context)
+    public void doRedirecttocrossmodulelist(RunData data, TemplateContext context)
          throws Exception
     {
         data.getParameters().setString("queryString", getQueryString(data));

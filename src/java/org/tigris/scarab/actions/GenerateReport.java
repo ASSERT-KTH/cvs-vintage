@@ -61,15 +61,16 @@ import org.apache.fulcrum.intake.model.Group;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.om.Report;
+import org.tigris.scarab.reports.ReportBridge;
 import org.tigris.scarab.om.ReportPeer;
 import org.tigris.scarab.om.ReportManager;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
+import org.tigris.scarab.util.ScarabConstants;
 
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.25 2002/10/24 22:59:25 jon Exp $
+    @version $Id: GenerateReport.java,v 1.26 2003/01/24 19:52:59 jmcnally Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction
@@ -77,320 +78,25 @@ public class GenerateReport
     private static final String NO_PERMISSION_MESSAGE = 
         "NoPermissionToEditReport";
 
-    public void doStep1( RunData data, TemplateContext context )
+    public void doCreatenew( RunData data, TemplateContext context )
         throws Exception
     {
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Report report = populateReport(data, context);
-        Intake intake = getIntakeTool(context);
-        if (!report.isEditable((ScarabUser)data.getUser())) 
+        String key = data.getParameters()
+            .getString(ScarabConstants.CURRENT_REPORT);
+        data.getParameters().remove(ScarabConstants.CURRENT_REPORT);
+        if (key != null && key.length() > 0) 
         {
-            setNoPermissionMessage(context);
-            setTarget(data, "reports,ReportList.vm");                        
+            ((ScarabUser)data.getUser()).setCurrentReport(key, null);
         }
-        else if ( !intake.isAllValid() ) 
-        {
-            getScarabRequestTool(context).setAlertMessage(
-                l10n.get("InvalidData"));
-            setTarget(data, "reports,Step1.vm");            
-        }
-        else if (report.getType() == 1)
-        {
-            setTarget(data, "reports,Step3_2a.vm");
-        }
-        else if (report.getType() == 0)
-        {
-            setTarget(data, "reports,Step2.vm");
-        }
-        else 
-        {
-            getScarabRequestTool(context).setAlertMessage(
-                l10n.get("InvalidData"));
-            setTarget(data, "reports,Step1.vm");            
-        }
+        setTarget(data, "reports,Info.vm");            
     }
-
-    public void doStep2agoto2b( RunData data, TemplateContext context )
-        throws Exception
-    {
-        Report report = populateReport(data, context);
-        Intake intake = getIntakeTool(context);
-        if (!report.isEditable((ScarabUser)data.getUser())) 
-        {
-            setNoPermissionMessage(context);
-            setTarget(data, "reports,ReportList.vm");                        
-        }
-        else if ( intake.isAllValid() ) 
-        {
-            //Group g = intake.get("Report", report.getQueryKey(), false);
-            //g.setProperties(report);
-            setTarget(data, "reports,Step2b.vm");
-        }
-        else 
-        {
-            setTarget(data, "reports,Step2.vm");            
-        }
-    }
-
-    public void doStep2agoto3( RunData data, TemplateContext context )
-        throws Exception
-    {
-        Report report = populateReport(data, context);
-        Intake intake = getIntakeTool(context);
-        if (!report.isEditable((ScarabUser)data.getUser())) 
-        {
-            setNoPermissionMessage(context);
-            setTarget(data, "reports,ReportList.vm");                        
-        }
-        else if ( intake.isAllValid() ) 
-        {
-            //Group g = intake.get("Report", report.getQueryKey(), false);
-            //g.setProperties(report);
-            setTarget(data, "reports,Step3_1a.vm");
-        }
-        else 
-        {
-            setTarget(data, "reports,Step2.vm");            
-        }
-    }
-
-    public void doStep2baddgroup( RunData data, TemplateContext context )
-        throws Exception
-    {
-        Report report = populateReport(data, context);
-        Intake intake = getIntakeTool(context);
-        if (!report.isEditable((ScarabUser)data.getUser())) 
-        {
-            setNoPermissionMessage(context);
-            setTarget(data, "reports,ReportList.vm");                        
-        }
-        else if ( intake.isAllValid() ) 
-        {
-            // add new option group
-            List groups = report.getOptionGroups();
-            if (groups == null) 
-            {
-                groups = new ArrayList();
-                report.setOptionGroups(groups);
-            }
-            
-            Report.OptionGroup group = report.getNewOptionGroup();
-            Group intakeGroup = intake.get("OptionGroup", 
-                                           group.getQueryKey(), false);
-            if ( intakeGroup != null ) 
-            {
-                intakeGroup.setProperties(group);
-                if ( group.getDisplayValue() != null 
-                     && group.getDisplayValue().length() > 0 ) 
-                {
-                    group.setQueryKey(String.valueOf(groups.size()));
-                    groups.add(group);
-                }
-            }
-        }
-        setTarget(data, "reports,Step2b.vm");
-    }
-
-    public void doStep2bdeletegroup( RunData data, TemplateContext context )
-        throws Exception
-    {
-        Report report = populateReport(data, context);
-        Intake intake = getIntakeTool(context);
-        if (!report.isEditable((ScarabUser)data.getUser())) 
-        {
-            setNoPermissionMessage(context);
-            setTarget(data, "reports,ReportList.vm");                        
-        }
-        else if ( intake.isAllValid() ) 
-        {
-            // remove any selected option groups
-            List groups = report.getOptionGroups();
-            for ( int i=groups.size()-1; i>=0; i-- ) 
-            {
-                if (((Report.OptionGroup)groups.get(i)).isSelected())
-                {
-                    groups.remove(i);
-                }
-            }
-        }
-        setTarget(data, "reports,Step2b.vm");
-    }
-
-    public void doStep2b( RunData data, TemplateContext context )
-        throws Exception
-    {
-        Report report = populateReport(data, context);
-        Intake intake = getIntakeTool(context);
-        if (!report.isEditable((ScarabUser)data.getUser())) 
-        {
-            setNoPermissionMessage(context);
-            setTarget(data, "reports,ReportList.vm");                        
-        }
-        else if ( intake.isAllValid() ) 
-        {
-            
-            setTarget(data, "reports,Step3_1a.vm");
-            intake.removeAll();
-        }
-        else 
-        {
-            setTarget(data, "reports,Step2b.vm");
-        }
-    }
-
-    public void doStep3_1a( RunData data, TemplateContext context )
-        throws Exception
-    {
-        Report report = populateReport(data, context);
-        Intake intake = getIntakeTool(context);
-        Group repGroup = intake.get("Report", report.getQueryKey(), false);
-        repGroup.get("Axis1Category").setRequired(true);
-        repGroup.get("Axis2Category").setRequired(true);
-        if (!report.isEditable((ScarabUser)data.getUser())) 
-        {
-            setNoPermissionMessage(context);
-            setTarget(data, "reports,ReportList.vm");                        
-        }
-        else if ( intake.isAllValid() ) 
-        {
-            setTarget(data, "reports,Step3_1b.vm");
-            intake.removeAll();
-        }
-        else 
-        {
-            setTarget(data, "reports,Step3_1a.vm"); 
-        }
-    }
-
-    public void doStep3_1b( RunData data, TemplateContext context )
-        throws Exception
-    {
-        Report report = populateReport(data, context);
-        Intake intake = getIntakeTool(context);
-        Group repGroup = intake.get("Report", report.getQueryKey(), false);
-        repGroup.get("Axis1Keys").setRequired(true);
-        repGroup.get("Axis2Keys").setRequired(true);
-        if (!report.isEditable((ScarabUser)data.getUser())) 
-        {
-            setNoPermissionMessage(context);
-            setTarget(data, "reports,ReportList.vm");                        
-        }
-        else if ( intake.isAllValid() ) 
-        {
-            setTarget(data, "reports,Report_1.vm");
-            intake.removeAll();
-        }
-        else 
-        {
-            setTarget(data, "reports,Step3_1b.vm"); 
-        }
-    }
-
-    public void doStep3_2a( RunData data, TemplateContext context )
-        throws Exception
-    {
-        Report report = populateReport(data, context);
-        Intake intake = getIntakeTool(context);
-        Group repGroup = intake.get("Report", report.getQueryKey(), false);
-        repGroup.get("Axis1Category").setRequired(true);
-        if (!report.isEditable((ScarabUser)data.getUser())) 
-        {
-            setNoPermissionMessage(context);
-            setTarget(data, "reports,ReportList.vm");                        
-        }
-        else if ( intake.isAllValid() ) 
-        {
-            setTarget(data, "reports,Step3_2b.vm");
-            intake.removeAll();
-        }
-        else 
-        {
-            setTarget(data, "reports,Step3_2a.vm"); 
-        }
-    }
-
-
-    public void doStep3_2badddate( RunData data, TemplateContext context )
-        throws Exception
-    {
-        Report report = populateReport(data, context);
-        if (!report.isEditable((ScarabUser)data.getUser())) 
-        {
-            setNoPermissionMessage(context);
-            setTarget(data, "reports,ReportList.vm");                        
-        }
-        else 
-        {
-            setTarget(data, "reports,Step3_2b.vm");
-        }
-    }
-
-    public void doStep3_2bdeletedate( RunData data, TemplateContext context )
-        throws Exception
-    {
-        Report report = populateReport(data, context);
-        Intake intake = getIntakeTool(context);
-        if (!report.isEditable((ScarabUser)data.getUser())) 
-        {
-            setNoPermissionMessage(context);
-            setTarget(data, "reports,ReportList.vm");                        
-        }
-        else if ( intake.isAllValid() ) 
-        {
-            // remove any selected option groups
-            List dates = report.getReportDates();
-            if (dates != null && dates.size() > 0) 
-            {
-                for ( int i=dates.size()-1; i>=0; i-- ) 
-                {
-                    if (((Report.ReportDate)dates.get(i)).isSelected())
-                    {
-                        dates.remove(i);
-                    }
-                }   
-            }            
-        }
-        setTarget(data, "reports,Step3_2b.vm");
-    }
-
-
-    public void doStep3_2b( RunData data, TemplateContext context )
-        throws Exception
-    {
-        Report report = populateReport(data, context);
-        Intake intake = getIntakeTool(context);
-        Group repGroup = intake.get("Report", report.getQueryKey(), false);
-        repGroup.get("Axis1Keys").setRequired(true);
-        if (!report.isEditable((ScarabUser)data.getUser())) 
-        {
-            setNoPermissionMessage(context);
-            setTarget(data, "reports,ReportList.vm");                        
-        }
-        else if ( intake.isAllValid() ) 
-        {
-            if (report.getDates() == null || report.getDates().length == 0) 
-            {
-                Group intakeDate = intake.get("ReportDate", "0", false);
-                intakeDate.get("Date")
-                    .setMessage("intake_YouMustSupplyAtLeastOneDate");
-            }
-            else 
-            {
-                setTarget(data, "reports,Report_1.vm");
-                intake.removeAll();
-            }            
-        }
-        else 
-        {
-            setTarget(data, "reports,Step3_2b.vm"); 
-        }
-    }
+    
 
     public void doSavereport( RunData data, TemplateContext context )
         throws Exception
     {
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Report report = populateReport(data, context);
+        ReportBridge report = populateReport(data, context);
         Intake intake = getIntakeTool(context);
         if (!report.isEditable((ScarabUser)data.getUser())) 
         {
@@ -402,6 +108,21 @@ public class GenerateReport
             // make sure report has a name
             if ( report.getName() == null || report.getName().length() == 0 ) 
             {
+                Group intakeReport = 
+                    intake.get("Report", report.getQueryKey(), false);
+                if (intakeReport == null) 
+                {   
+                    intakeReport = intake.get("Report", "", false);
+                }  
+            
+                if (intakeReport != null) 
+                {   
+                    intakeReport.setValidProperties(report);
+                }
+            }
+
+            if ( report.getName() == null || report.getName().length() == 0 ) 
+            {
                 getScarabRequestTool(context)
                     .setAlertMessage(l10n.get("SavedReportsMustHaveName"));
                 setTarget(data, "reports,SaveReport.vm");
@@ -409,10 +130,10 @@ public class GenerateReport
             else 
             {
                 // make sure name is unique
-                Report savedReport = ReportPeer
+                org.tigris.scarab.om.Report savedReport = ReportPeer
                     .retrieveByName(report.getName());
                 if (savedReport == null 
-                    || savedReport.getReportId().equals(report.getReportId()))
+                    || savedReport.getQueryKey().equals(report.getQueryKey()))
                 {
                     report.save();
                     getScarabRequestTool(context)
@@ -460,7 +181,7 @@ public class GenerateReport
     public void doDeletereport( RunData data, TemplateContext context )
         throws Exception
     {
-        Report report = populateReport(data, context);
+        ReportBridge report = populateReport(data, context);
         report.setDeleted(true);
         report.save();
         ScarabRequestTool scarabR = getScarabRequestTool(context); 
@@ -483,7 +204,7 @@ public class GenerateReport
                String reportId = reportIds[i];
                if (reportId != null && reportId.length() > 0)
                {
-                   Report report = ReportManager
+                   org.tigris.scarab.om.Report report = ReportManager
                        .getInstance(new NumberKey(reportId), false);
                     report.setDeleted(true);
                     report.save();
@@ -502,13 +223,10 @@ public class GenerateReport
             .setInfoMessage(l10n.get("UseBrowserPrintReport"));
     }
 
-    private Report populateReport(RunData data, TemplateContext context)
+    private ReportBridge populateReport(RunData data, TemplateContext context)
        throws Exception
     {
-        ScarabRequestTool scarabR = getScarabRequestTool(context); 
-        Report report = scarabR.getReport();
-        report.populate(data.getParameters());
-        return report;
+        return getScarabRequestTool(context).getReport();
     }
 
     private void setNoPermissionMessage(TemplateContext context)

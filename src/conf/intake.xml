@@ -513,7 +513,7 @@
     </field>
 </group>
 
-<group name="Report" key="rep" mapToObject="om.Report">
+<group name="Report" key="rep" mapToObject="reports.ReportBridge">
         <field name="Type" key="type" type="int">
             <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
         </field>
@@ -524,9 +524,12 @@
             <rule name="maxLength" value="255">intake_DescriptionMustBeLessThan256Characters</rule>
         </field>
         <field name="ScopeId" key="scp" type="NumberKey"/>
-        <field name="AttributesAndOptionsForGrouping" key="fao" 
-               type="String" multiValued="true"/>
         <field name="NewDate" key="date" type="DateString">
+           <rule name="format1" value="MM/dd/yy HH:mm"/>
+           <rule name="format2" value="MM/dd/yy"/>
+           <rule name="flexible" value="true"/>
+        </field>
+        <field name="DefaultDate" key="dd" type="DateString">
            <rule name="format1" value="MM/dd/yy HH:mm"/>
            <rule name="format2" value="MM/dd/yy"/>
            <rule name="flexible" value="true"/>
@@ -536,38 +539,7 @@
            <rule name="format2" value="MM/dd/yy"/>
            <rule name="flexible" value="true"/>
         </field>
-        <field name="Axis1Category" key="a1c" type="int">
-           <required-message>intake_SelectCategory</required-message>
-        </field>
-        <field name="Axis2Category" key="a2c" type="int">
-           <required-message>intake_SelectCategory</required-message>
-        </field>
-        <field name="Axis1Keys" key="a1k" 
-               type="String" multiValued="true">
-           <required-message>intake_SelectAtLeastOneOption</required-message>
-        </field>
-        <field name="Axis2Keys" key="a2k" 
-               type="String" multiValued="true">
-           <required-message>intake_SelectAtLeastOneOption</required-message>
-        </field>
         <field name="Deleted" key="del" type="boolean" />
-</group>
-
-<group name="OptionGroup" key="repog" mapToObject="om.Report$OptionGroup">
-    <field name="DisplayValue" key="dv" type="String">
-        <rule name="maxLength" 
-              value="40">intake_NameMustBeLessThan40Characters</rule>
-    </field>
-    <field name="Selected" key="sel" type="boolean"/>
-</group>
-
-<group name="ReportDate" key="repdt" mapToObject="om.Report$ReportDate">
-    <field name="Date" key="d" type="DateString">
-        <rule name="format1" value="MM/dd/yy HH:mm"/>
-        <rule name="format2" value="MM/dd/yy"/>
-        <rule name="flexible" value="true"/>
-    </field>
-    <field name="Selected" key="sel" type="boolean"/>
 </group>
 
 <group name="MoveIssue" key="mv">

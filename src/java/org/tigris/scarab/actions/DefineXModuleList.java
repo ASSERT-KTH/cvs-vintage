@@ -63,7 +63,10 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListManager;
 import org.tigris.scarab.om.RModuleIssueTypeManager;
+import org.tigris.scarab.om.Scope;
+import org.tigris.scarab.reports.ReportBridge;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 
@@ -71,7 +74,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class is responsible for building a list of Module/IssueTypes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefineXModuleList.java,v 1.11 2002/10/24 22:59:25 jon Exp $
+ * @version $Id: DefineXModuleList.java,v 1.12 2003/01/24 19:52:59 jmcnally Exp $
  */
 public class DefineXModuleList extends RequireLoginFirstAction
 {
@@ -91,25 +94,44 @@ public class DefineXModuleList extends RequireLoginFirstAction
             MITList list = setAndGetCurrentList(listId, data, context);   
             if (list != null)
             {
-                setTarget(data, "AdvancedQuery.vm");            
+                setTarget(data, data.getParameters()
+                          .getString(ScarabConstants.NEXT_TEMPLATE));
             }            
         }
     }        
 
-    public void doGotoquery(RunData data, TemplateContext context)
+    public void doFinished(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
         MITList currentList = user.getCurrentMITList();
         if (currentList != null && !currentList.isEmpty()) 
         {
-            setTarget(data, "AdvancedQuery.vm");                
+            setTarget(data, data.getParameters()
+                      .getString(ScarabConstants.NEXT_TEMPLATE));
         }
         else
         {
             ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
             scarabR.setAlertMessage(l10n.get("ListWithAtLeastOneMITRequired"));
+        }
+    }
+
+    public void doFinishedreportlist(RunData data, TemplateContext context)
+        throws Exception
+    {
+        doFinished(data, context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        ReportBridge report = scarabR.getReport();
+        MITList mitList = ((ScarabUser)data.getUser()).getCurrentMITList();
+        report.setMITList(mitList);
+        if (!mitList.isSingleModule() && 
+            Scope.MODULE__PK.equals(report.getScopeId())) 
+        {
+            report.setScopeId(Scope.PERSONAL__PK);
+            scarabR.setInfoMessage(l10n.get("ScopeChangedToPersonal"));
         }
     }
 
@@ -129,7 +151,8 @@ public class DefineXModuleList extends RequireLoginFirstAction
             MITList list = setAndGetCurrentList(listId, data, context);   
             if (list != null && !list.getModifiable())
             {
-                setTarget(data, "AdvancedQuery.vm");
+                setTarget(data, data.getParameters()
+                    .getString(ScarabConstants.NEXT_TEMPLATE));
             }
         }        
     }
@@ -257,7 +280,6 @@ public class DefineXModuleList extends RequireLoginFirstAction
             }
             
             scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
-            setTarget(data, "home,XModuleList.vm");
         }
     }
 
@@ -285,7 +307,8 @@ public class DefineXModuleList extends RequireLoginFirstAction
             {
                 mitList.setScarabUser(user);
             }
-
+            Log.get().debug(user + " Added rmits to list " + mitList + 
+                            ". size=" + mitList.size());
         }
     }
 }
