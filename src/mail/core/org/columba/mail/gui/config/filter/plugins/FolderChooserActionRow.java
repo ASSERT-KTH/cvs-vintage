@@ -15,12 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-import org.columba.core.main.MainInterface;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.config.filter.ActionList;
@@ -69,6 +69,7 @@ public class FolderChooserActionRow
 		super.initComponents();
 
 		treePathButton = new JButton();
+		//treePathButton.setMargin(new Insets(0,0,0,0));
 		treePathButton.addActionListener(this);
 		treePathButton.setActionCommand("TREEPATH");
 

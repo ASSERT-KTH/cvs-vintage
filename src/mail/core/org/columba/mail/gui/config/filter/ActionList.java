@@ -233,7 +233,7 @@ public class ActionList extends JPanel implements ActionListener {
 				buttonPanel.add(removeButton);
 				buttonPanel.add(addButton);
 
-				//c.insets = new Insets(1, 2, 1, 2);
+				c.insets = new Insets(2, 2, 2, 2);
 				c.gridx = GridBagConstraints.REMAINDER;
 				c.anchor = GridBagConstraints.NORTHEAST;
 				gridbag.setConstraints(buttonPanel, c);

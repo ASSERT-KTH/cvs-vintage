@@ -124,9 +124,9 @@ public class DefaultCriteriaRow implements PluginInterface {
 		*/
 
 		//c.fill = GridBagConstraints.HORIZONTAL;
-		c.fill = GridBagConstraints.BOTH;
+		c.fill = GridBagConstraints.VERTICAL;
 		c.weightx = 1.0;
-		c.insets = new Insets(1, 2, 1, 2);
+		c.insets = new Insets(2, 2, 2, 2);
 		c.gridx = 0;
 		c.anchor = GridBagConstraints.WEST;
 		c.gridwidth = 1;

@@ -111,9 +111,9 @@ public class DefaultActionRow implements PluginInterface {
 		actionComboBox = new JComboBox(names);
 		actionComboBox.setRenderer(new ActionComboBoxRenderer());
 
-		c.fill = GridBagConstraints.NONE;
+		c.fill = GridBagConstraints.VERTICAL;
 		c.weightx = 1.0;
-		c.insets = new Insets(2, 5, 2, 5);
+		c.insets = new Insets(2, 2, 2, 2);
 		c.gridx = 0;
 		c.anchor = GridBagConstraints.WEST;
 		c.gridwidth = 1;

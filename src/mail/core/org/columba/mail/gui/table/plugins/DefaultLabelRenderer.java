@@ -33,13 +33,14 @@ import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.HeaderInterface;
 
 /**
- * @author frd
+ * 
  *
  * The is basic class every renderer should inherite
  * 
  * It is responsible for paint the background/foreground and borders
  * and gives us a central place for optimization
  * 
+ * @author dietz
  */
 public class DefaultLabelRenderer extends JLabel implements TableCellRenderer, PluginInterface {
 
