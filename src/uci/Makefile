@@ -19,7 +19,7 @@
 # File: uci/Makefile
 # makefile for the uci shared code directory
 # original author: jrobbins@ics.uci.edu
-# $Id: Makefile,v 1.4 1998/04/23 23:50:17 jrobbins Exp $
+# $Id: Makefile,v 1.5 1998/04/24 01:10:12 jrobbins Exp $
 
 include Makefile.config
 
@@ -55,6 +55,7 @@ umlClasses:
 	cd Behavioral_Elements/Collaborations; make classes; cd ../.. ; \
 	cd test/omg; make classes; cd ../.. ; \
 	cd generate; make classes; cd .. ; \
+	make classes; \
 	cd .. ; \
 	fi
 
@@ -105,6 +106,7 @@ umlFresh:
 	cd Behavioral_Elements/Collaborations; $(JAVAC) $(JFLAGS) *.java; cd ../.. ; \
 	cd test/omg; $(JAVAC) $(JFLAGS) *.java; cd ../.. ; \
 	cd generate; $(JAVAC) $(JFLAGS) *.java; cd .. ; \
+	$(JAVAC) $(JFLAGS) *.java; \
 	cd .. ; \
 	fi
 
@@ -155,6 +157,7 @@ umlClean:
 	cd Behavioral_Elements/Collaborations; make clean; cd ../.. ; \
 	cd test/omg; make clean; cd ../.. ; \
 	cd generate; make clean; cd .. ; \
+	make clean ; \
 	cd .. ; \
 	fi
 
