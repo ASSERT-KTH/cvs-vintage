@@ -57,7 +57,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon Scott Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: BaseDate.java,v 1.8 2003/07/30 22:36:22 dlr Exp $
+ * @version $Id: BaseDate.java,v 1.9 2003/08/12 06:29:37 parun Exp $
  */
 public class BaseDate implements java.io.Serializable
 {
@@ -110,6 +110,7 @@ public class BaseDate implements java.io.Serializable
             {
                 SimpleDateFormat sdf =
                     new SimpleDateFormat(haveFormat ? format : DEFAULT_FORMAT);
+                sdf.setLenient(false);
                 date = sdf.parse(getTimestamp());
             }
             catch (ParseException e)
