@@ -73,7 +73,7 @@ $renderer.render("navigations", $data, $template, "Default.vm")
   <tr>
    <td nowrap="nowrap">
     <form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
-        <input type="hidden" name="$scarabR.Constant.NEXT_TEMPLATE" value="IssueList.vm" />
+        <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="IssueList.vm" />
      #set ($privateQueries = $scarabR.CurrentModule.getPrivateQueries($data.User))
      #set ($globalQueries = $module.GlobalQueries)
      #if ($privateQueries.size() > 0 || $globalQueries.size() > 0)
