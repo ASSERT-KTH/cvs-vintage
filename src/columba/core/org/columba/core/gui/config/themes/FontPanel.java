@@ -40,11 +40,9 @@ import org.columba.core.util.GlobalResourceLoader;
 public class FontPanel extends JPanel implements ActionListener {
 	private static final String RESOURCE_PATH = "org.columba.mail.i18n.dialog";
 
-	private JLabel mainFontLabel;
 	private JTextField mainFontTextField;
 	private JButton mainFontButton;
 
-	private JLabel textFontLabel;
 	private JTextField textFontTextField;
 	private JButton textFontButton;
 
@@ -67,26 +65,23 @@ public class FontPanel extends JPanel implements ActionListener {
 
 	public void updateComponents(boolean b) {
 		GuiItem item = Config.getOptionsConfig().getGuiItem();
-
 		mainFont = item.getMainFont();
 		textFont = item.getTextFont();
 
 		if (b) {
 			mainFontTextField.setFont(mainFont);
 			mainFontTextField.setText(mainFont.getFontName());
-
 			textFontTextField.setFont(textFont);
 			textFontTextField.setText(textFont.getFontName());
 
 			overwriteCheckBox.setSelected(
 				item.getBoolean("mainfont", "overwrite"));
-
+                        actionPerformed(new ActionEvent(overwriteCheckBox, ActionEvent.ACTION_PERFORMED, null));
 		} else {
 			item.set("textfont", "name", getTextFont().getName());
 			item.set("textfont", "size", getTextFont().getSize());
 			item.set("mainfont", "name", getMainFont().getName());
 			item.set("mainfont", "size", getMainFont().getSize());
-
 			item.set("mainfont", "overwrite", overwriteCheckBox.isSelected());
 		}
 	}
@@ -122,7 +117,7 @@ public class FontPanel extends JPanel implements ActionListener {
 					RESOURCE_PATH,
 					"general",
 					"overwrite_main_font"));
-
+                overwriteCheckBox.addActionListener(this);
 		fontPanel.add(overwriteCheckBox);
 
 		c.gridx = 0;
@@ -134,7 +129,7 @@ public class FontPanel extends JPanel implements ActionListener {
 		c.gridwidth = 1;
 		c.weightx = 0.0;
 
-		mainFontLabel =
+		JLabel mainFontLabel =
 			new JLabel(
 				GlobalResourceLoader.getString(
 					RESOURCE_PATH,
@@ -164,7 +159,6 @@ public class FontPanel extends JPanel implements ActionListener {
 					RESOURCE_PATH,
 					"general",
 					"choose"));
-		mainFontButton.setActionCommand("MAINFONT");
 		mainFontButton.addActionListener(this);
 		c.gridx = 2;
 		c.gridy = 1;
@@ -186,7 +180,7 @@ public class FontPanel extends JPanel implements ActionListener {
 		//textFontPanel.setAlignmentX(0);
 		 * */
 
-		textFontLabel =
+		JLabel textFontLabel =
 			new JLabel(
 				GlobalResourceLoader.getString(
 					RESOURCE_PATH,
@@ -223,7 +217,6 @@ public class FontPanel extends JPanel implements ActionListener {
 					RESOURCE_PATH,
 					"general",
 					"choose"));
-		textFontButton.setActionCommand("TEXTFONT");
 		textFontButton.addActionListener(this);
 		c.gridx = 2;
 		c.gridy = 2;
@@ -248,9 +241,8 @@ public class FontPanel extends JPanel implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent ev) {
-		String command = ev.getActionCommand();
-
-		if (command.equals("MAINFONT")) {
+		Object source = ev.getSource();
+		if (source == mainFontButton) {
 			FontSelectionDialog fontDialog = new FontSelectionDialog(null);
 			fontDialog.showDialog();
 
@@ -260,7 +252,7 @@ public class FontPanel extends JPanel implements ActionListener {
 				mainFontTextField.setText(mainFont.getFontName());
 			}
 
-		} else if (command.equals("TEXTFONT")) {
+		} else if (source == textFontButton) {
 			FontSelectionDialog fontDialog = new FontSelectionDialog(null);
 			fontDialog.showDialog();
 
@@ -269,6 +261,12 @@ public class FontPanel extends JPanel implements ActionListener {
 				textFontTextField.setFont(textFont);
 				textFontTextField.setText(textFont.getFontName());
 			}
-		}
+		} else if (source == overwriteCheckBox) {
+                        boolean enabled = overwriteCheckBox.isSelected();
+                        mainFontTextField.setEnabled(enabled);
+                        mainFontButton.setEnabled(enabled);
+                        textFontTextField.setEnabled(enabled);
+                        textFontButton.setEnabled(enabled);
+                }
 	}
 }
