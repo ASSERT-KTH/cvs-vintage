@@ -586,7 +586,7 @@
         </uptodate>
     </target>
 
-    <target name="om-peer" depends="generated-check,torque-init,sql" 
+    <target name="om-peer-generate" depends="generated-check,torque-init,sql" 
             unless="gen.uptodate">
 
         <!-- we don't want to generate the OM objects for Turbine 
@@ -601,6 +601,28 @@
             <property name="build.properties" value="${torque.dir.scarab}/build.properties"/>
         </ant>
 
+    </target>
+
+    <!-- Working with Scarab inside of an IDE is difficult if the source files are
+         moved.  Setting "copy.peer.classes" inside of build.properties changes
+         this behavior to a copy.  The default (with the property missing)
+         is the traditional move. -->
+
+    <target name="om-peer-copy" if="copy.peer.classes">
+        <copy todir="${build.src.scarab}/org/tigris/scarab/om" filtering="yes">
+            <fileset dir="${src.java.dir.scarab}/org/tigris/scarab/om">
+                <include name="**/Base*.java"/>
+                <exclude name="**/BaseScarabObject.java"/>
+                <include name="**/map/*MapBuilder.java"/>
+                <include name="report.scarab.om.generation"/>
+            </fileset>
+        </copy>
+
+        <copy file="${src.java.dir.scarab}/report.scarab.om.generation" 
+              overwrite="true" todir="${torque.dir.scarab}"/>
+    </target>
+
+    <target name="om-peer-move" unless="copy.peer.classes">
         <move todir="${build.src.scarab}/org/tigris/scarab/om" filtering="yes">
             <fileset dir="${src.java.dir.scarab}/org/tigris/scarab/om">
                 <include name="**/Base*.java"/>
@@ -615,6 +637,13 @@
 
         <delete dir="${src.java.dir.scarab}/org/tigris/scarab/om/map"/>
     </target>
+
+    <target name="om-peer" depends="om-peer-generate" 
+            unless="gen.uptodate">
+        <antcall target="om-peer-copy" />
+        <antcall target="om-peer-move" />
+    </target>
+
 
     <!-- ================================================================== -->
     <!-- Check for databases that could require alternate or more complex   -->
