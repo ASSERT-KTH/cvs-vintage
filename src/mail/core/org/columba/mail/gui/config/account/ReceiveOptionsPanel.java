@@ -299,11 +299,6 @@ public class ReceiveOptionsPanel extends DefaultPanel implements ActionListener 
         intervalCheckingLabel = new LabelWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "check_for_new_messages_every"));
 
-        /*
-         * intervalCheckingLabel.setDisplayedMnemonic(
-         * MailResourceLoader.getMnemonic( "dialog", "account",
-         * "check_for_new_messages_every"));
-         */
         intervalCheckingTextField = new JTextField();
         intervalCheckingLabel.setLabelFor(intervalCheckingTextField);
 
@@ -313,28 +308,15 @@ public class ReceiveOptionsPanel extends DefaultPanel implements ActionListener 
         intervalCheckingCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "enable_interval_message_checking"));
 
-        /*
-         * intervalCheckingCheckBox.setMnemonic(
-         * MailResourceLoader.getMnemonic( "dialog", "account",
-         * "enable_interval_message_checking"));
-         */
         intervalCheckingCheckBox.setActionCommand("ENABLE");
         intervalCheckingCheckBox.addActionListener(this);
 
         autodownloadCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "automatically_download_new_messages"));
 
-        /*
-         * autodownloadCheckBox.setMnemonic( MailResourceLoader.getMnemonic(
-         * "dialog", "account", "automatically_download_new_messages"));
-         */
         playsoundCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "play_sound_when_new_messages_arrive"));
 
-        /*
-         * playsoundCheckBox.setMnemonic( MailResourceLoader.getMnemonic(
-         * "dialog", "account", "play_sound_when_new_messages_arrive"));
-         */
         playsoundCheckBox.setActionCommand("PLAYSOUND");
         playsoundCheckBox.addActionListener(this);
 

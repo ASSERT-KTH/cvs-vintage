@@ -295,10 +295,6 @@ public class IncomingServerPanel
                     "account",
                     "use_default_account_settings"));
 
-        /*
-         * defaultAccountCheckBox.setMnemonic( MailResourceLoader.getMnemonic(
-         * "dialog", "account", "use_default_account_settings"));
-         */
         defaultAccountCheckBox.setActionCommand("DEFAULT_ACCOUNT");
         defaultAccountCheckBox.addActionListener(this);
 
@@ -310,10 +306,6 @@ public class IncomingServerPanel
                     "account",
                     "server_type"));
 
-        /*
-         * typeLabel.setDisplayedMnemonic(
-         * MailResourceLoader.getMnemonic("dialog", "account", "server_type"));
-         */
         typeComboBox = new JComboBox();
         typeComboBox.addItem("POP3");
         typeComboBox.addItem("IMAP4");
@@ -335,29 +327,18 @@ public class IncomingServerPanel
             new LabelWithMnemonic(
                 MailResourceLoader.getString("dialog", "account", "login"));
 
-        /*
-         * loginLabel.setDisplayedMnemonic(
-         * MailResourceLoader.getMnemonic("dialog", "account", "login"));
-         */
-        //$NON-NLS-1$
         loginTextField = new JTextField();
         loginLabel.setLabelFor(loginTextField);
         passwordLabel =
             new LabelWithMnemonic(
                 MailResourceLoader.getString("dialog", "account", "password"));
 
-        //$NON-NLS-1$
         passwordTextField = new JTextField();
 
         hostLabel =
             new LabelWithMnemonic(
                 MailResourceLoader.getString("dialog", "account", "host"));
 
-        /*
-         * hostLabel.setDisplayedMnemonic(
-         * MailResourceLoader.getMnemonic("dialog", "account", "host"));
-         */
-        //$NON-NLS-1$
         hostTextField = new JTextField();
         hostLabel.setLabelFor(hostTextField);
 
@@ -365,11 +346,6 @@ public class IncomingServerPanel
             new LabelWithMnemonic(
                 MailResourceLoader.getString("dialog", "account", "port"));
 
-        /*
-         * portLabel.setDisplayedMnemonic(
-         * MailResourceLoader.getMnemonic("dialog", "account", "port"));
-         */
-        //$NON-NLS-1$
         portTextField = new JTextField();
         portLabel.setLabelFor(portTextField);
 
@@ -380,10 +356,6 @@ public class IncomingServerPanel
                     "account",
                     "store_password_in_configuration_file"));
 
-        /*
-         * storePasswordCheckBox.setMnemonic( MailResourceLoader.getMnemonic(
-         * "dialog", "account", "store_password_in_configuration_file"));
-         */
         secureCheckBox =
             new CheckBoxWithMnemonic(
                 MailResourceLoader.getString(
@@ -391,10 +363,6 @@ public class IncomingServerPanel
                     "account",
                     "use_SSL_for_secure_connection"));
 
-        /*
-         * secureCheckBox.setMnemonic( MailResourceLoader.getMnemonic(
-         * "dialog", "account", "use_SSL_for_secure_connection"));
-         */
         authenticationLabel =
             new LabelWithMnemonic(
                 MailResourceLoader.getString(
@@ -506,9 +474,6 @@ public class IncomingServerPanel
             updateAuthenticationComboBox();
         }
     }
-
-    
-    
 
     private LinkedList getAuthPOP3() throws IOException, POP3Exception {
         LinkedList list;

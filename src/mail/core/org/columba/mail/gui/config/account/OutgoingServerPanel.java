@@ -294,36 +294,21 @@ public class OutgoingServerPanel
                     "account",
                     "use_default_account_settings"));
 
-        /*
-         * defaultAccountCheckBox.setMnemonic( MailResourceLoader.getMnemonic(
-         * "dialog", "account", "use_default_account_settings"));
-         */
-
         //defaultAccountCheckBox.setEnabled(false);
         defaultAccountCheckBox.setActionCommand("DEFAULT_ACCOUNT");
         defaultAccountCheckBox.addActionListener(this);
 
         hostLabel = new LabelWithMnemonic(MailResourceLoader.getString("dialog", "account", "host")); //$NON-NLS-1$
 
-        /*
-         * hostLabel.setDisplayedMnemonic(
-         */
         hostTextField = new JTextField();
         hostLabel.setLabelFor(hostTextField);
         portLabel = new LabelWithMnemonic(MailResourceLoader.getString("dialog", "account", "port")); //$NON-NLS-1$
 
-        /*
-         * portLabel.setDisplayedMnemonic(
-         */
         portTextField = new JTextField();
         portLabel.setLabelFor(portTextField);
 
         needAuthCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString("dialog", "account", "server_needs_authentification")); //$NON-NLS-1$
 
-        /*
-         * needAuthCheckBox.setMnemonic( MailResourceLoader.getMnemonic(
-         * "dialog", "account", "server_needs_authentification"));
-         */
         needAuthCheckBox.setActionCommand("AUTH"); //$NON-NLS-1$
         needAuthCheckBox.addActionListener(this);
 
@@ -334,10 +319,6 @@ public class OutgoingServerPanel
                     "account",
                     "store_password_in_configuration_file"));
 
-        /*
-         * storePasswordCheckBox.setMnemonic( MailResourceLoader.getMnemonic(
-         * "dialog", "account",
-         */
         secureCheckBox =
             new CheckBoxWithMnemonic(
                 MailResourceLoader.getString(
@@ -345,10 +326,6 @@ public class OutgoingServerPanel
                     "account",
                     "use_SSL_for_secure_connection"));
 
-        /*
-         * secureCheckBox.setMnemonic(MailResourceLoader.getMnemonic("dialog",
-         * "account", "use_SSL_for_secure_connection")); //$NON-NLS-1$
-         */
         authenticationLabel =
             new LabelWithMnemonic(
                 MailResourceLoader.getString(
@@ -377,9 +354,6 @@ public class OutgoingServerPanel
             new LabelWithMnemonic(
                 MailResourceLoader.getString("dialog", "account", "login"));
 
-        /*
-         * loginLabel.setDisplayedMnemonic(
-         */
         loginTextField = new JTextField();
         loginLabel.setLabelFor(loginTextField);
     }
@@ -399,7 +373,6 @@ public class OutgoingServerPanel
 		if (accountItem.isPopAccount()) {
 			authenticationComboBox.addItem("POP before SMTP");
 		}
-
 
         String authMethods =
             accountItem.get("smtpserver", "authentication_methods");
@@ -459,7 +432,6 @@ public class OutgoingServerPanel
         }
     }
     
-    
     private void getAuthMechanisms() {
         {
             List list = new LinkedList();
@@ -498,42 +470,44 @@ public class OutgoingServerPanel
             updateAuthenticationComboBox();
         }
     }
-	/**
-	  * @return
-	  */
-	 private List getAuthSMTP() throws IOException, SMTPException {
-		 List result = new LinkedList();
-		 SMTPProtocol protocol =
-			 new SMTPProtocol(
-				 accountItem.get("smtpserver", "host"),
-				 accountItem.getInteger("smtpserver", "port"));
+    
+    /**
+      * @return
+      */
+     private List getAuthSMTP() throws IOException, SMTPException {
+             List result = new LinkedList();
+             SMTPProtocol protocol =
+                     new SMTPProtocol(
+                             accountItem.get("smtpserver", "host"),
+                             accountItem.getInteger("smtpserver", "port"));
 
-		 protocol.openPort();
-		 String[] capas = protocol.ehlo("localhost");
-		 for (int i = 0; i < capas.length; i++) {
-			 if (capas[i].startsWith("AUTH")) {
-				 result = parseAuthCapas(capas[i]);
-			 }
-		 }
+             protocol.openPort();
+             String[] capas = protocol.ehlo("localhost");
+             for (int i = 0; i < capas.length; i++) {
+                     if (capas[i].startsWith("AUTH")) {
+                             result = parseAuthCapas(capas[i]);
+                     }
+             }
 
-		 return result;
-	 }
-	 /**
-	  * @param string
-	  * @return
-	  */
-	 private List parseAuthCapas(String string) {
-		 Matcher tokenizer = Pattern.compile("\\b[^\\s]+\\b").matcher(string);
-		 tokenizer.find();
+             return result;
+     }
 
-		 List mechanisms = new LinkedList();
+     /**
+      * @param string
+      * @return
+      */
+     private List parseAuthCapas(String string) {
+             Matcher tokenizer = Pattern.compile("\\b[^\\s]+\\b").matcher(string);
+             tokenizer.find();
 
-		 while (tokenizer.find()) {
-			 mechanisms.add(tokenizer.group());
-		 }
+             List mechanisms = new LinkedList();
 
-		 return mechanisms;
-	 }
+             while (tokenizer.find()) {
+                     mechanisms.add(tokenizer.group());
+             }
+
+             return mechanisms;
+     }
 
     public boolean isFinished() {
         boolean result = false;

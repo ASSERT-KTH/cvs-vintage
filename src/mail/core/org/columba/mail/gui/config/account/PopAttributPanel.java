@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.account;
 
 import com.jgoodies.forms.layout.FormLayout;
@@ -34,7 +35,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 
 /**
  *
@@ -161,19 +161,9 @@ public class PopAttributPanel implements ActionListener {
         leaveOnServerCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "leave_messages_on_server"));
 
-        /*leaveOnServerCheckBox.setMnemonic(
-                MailResourceLoader.getMnemonic(
-                        "dialog",
-                        "account",
-                        "leave_messages_on_server"));*/
         limitMessageDownloadCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "limit_message_download_to"));
 
-        /*limitMessageDownloadCheckBox.setMnemonic(
-                MailResourceLoader.getMnemonic(
-                        "dialog",
-                        "account",
-                        "limit_message_download_to"));*/
         limitMessageDownloadCheckBox.setActionCommand("LIMIT_MESSAGE_DOWNLOAD");
         limitMessageDownloadCheckBox.addActionListener(this);
 
@@ -185,12 +175,6 @@ public class PopAttributPanel implements ActionListener {
         excludeCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "exclude_from_fetch_all"));
 
-        /*excludeCheckBox.setMnemonic(
-                MailResourceLoader.getMnemonic(
-                        "dialog",
-                        "account",
-                        "exclude_from_fetch_all"));
-        */
         enablePreProcessingFilterCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "enable_pop3_preprocessing"));
 
