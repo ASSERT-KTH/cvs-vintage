@@ -1,4 +1,4 @@
-// $Id: SelectionInterface.java,v 1.20 2004/08/07 15:39:55 mvw Exp $
+// $Id: SelectionInterface.java,v 1.21 2004/08/28 15:15:19 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -162,6 +162,9 @@ public class SelectionInterface extends SelectionWButtons {
     }
 
     /**
+     * TODO: This is never used by anybody. What is it for? 
+     * Document it, or remove!
+     *
      * @param mgm
      * @param interf4ce
      * @param cl4ss
