@@ -234,6 +234,9 @@ try{
         return (ScarabUser)data.getUser();
     }
 
+    /**
+     * A User object for use within the Scarab API.
+     */
     public ScarabUser getUser(String id)
      throws Exception
     {
@@ -245,9 +248,18 @@ try{
         }
         catch (Exception e)
         {
-            Log.error ("SRT.getUser(id) error: " + e);
+            Log.error ("SRT.getUser(id) error: ", e);
         }
         return su;
+    }
+
+    /**
+     * A User object for use within the Scarab API.
+     */
+    public ScarabUser getUser(Integer id)
+        throws Exception
+    {
+        return getUser(id.toString());
     }
 
     /**

@@ -69,7 +69,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabRequestScope.java,v 1.10 2001/08/02 07:11:42 jon Exp $
+ * @version $Id: ScarabRequestScope.java,v 1.11 2001/08/13 06:08:13 jon Exp $
  */
 public interface ScarabRequestScope extends ApplicationTool
 {
@@ -87,10 +87,21 @@ public interface ScarabRequestScope extends ApplicationTool
      * A User object for use within the Scarab API.
      */
     public void setUser (ScarabUser user);
+
     /**
      * A User object for use within the Scarab API.
      */
     public ScarabUser getUser();
+
+    /**
+     * A User object for use within the Scarab API.
+     */
+    public ScarabUser getUser(String id) throws Exception;
+
+    /**
+     * A User object for use within the Scarab API.
+     */
+    public ScarabUser getUser(Integer id) throws Exception;
 
     /**
      * A Issue object for use within the Scarab API.
