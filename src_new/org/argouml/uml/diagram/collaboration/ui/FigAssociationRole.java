@@ -1,4 +1,4 @@
-// $Id: FigAssociationRole.java,v 1.24 2005/01/09 14:58:38 linus Exp $
+// $Id: FigAssociationRole.java,v 1.25 2005/01/10 16:24:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -132,7 +132,7 @@ class FigMessageGroup extends FigGroup {
     }
 
     protected void updateFigPositions() {
-    	Collection figs = getFigs(null); // the figs that make up this group
+    	Collection figs = getFigs(); // the figs that make up this group
         Iterator it = figs.iterator();
     	if (!figs.isEmpty()) {
             FigMessage previousFig = null;
@@ -159,7 +159,7 @@ class FigMessageGroup extends FigGroup {
      */
     public void calcBounds() {
 	super.calcBounds();
-	Collection figs = getFigs(null);
+	Collection figs = getFigs();
 	if (!figs.isEmpty()) {
 	    Fig last = null;
 	    Fig first = null;
@@ -205,7 +205,7 @@ class FigMessageGroup extends FigGroup {
      * @see org.tigris.gef.presentation.Fig#removeFromDiagram()
      */
     public void removeFromDiagram() {
-        Collection figs = getFigs(null);
+        Collection figs = getFigs();
         if (figs != null) {
             Iterator it = figs.iterator();
             while (it.hasNext()) {
@@ -222,7 +222,7 @@ class FigMessageGroup extends FigGroup {
      * @see org.tigris.gef.presentation.Fig#deleteFromModel()
      */
     public void deleteFromModel() {
-    	Collection figs = getFigs(null);
+    	Collection figs = getFigs();
         if (figs != null) {
 	    Iterator it = figs.iterator();
 	    while (it.hasNext()) {

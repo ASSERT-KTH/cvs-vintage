@@ -1,4 +1,4 @@
-// $Id: FigSubactivityState.java,v 1.6 2005/01/09 14:58:37 linus Exp $
+// $Id: FigSubactivityState.java,v 1.7 2005/01/10 16:24:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -153,7 +153,7 @@ public class FigSubactivityState extends FigStateVertex {
      */
     public Object clone() {
         FigSubactivityState figClone = (FigSubactivityState) super.clone();
-        Iterator it = figClone.getFigs(null).iterator();
+        Iterator it = figClone.getFigs().iterator();
         figClone.setBigPort((FigRRect) it.next());
         figClone.cover = (FigRRect) it.next();
         figClone.setNameFig((FigText) it.next());

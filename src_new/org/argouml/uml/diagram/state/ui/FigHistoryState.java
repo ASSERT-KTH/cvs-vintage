@@ -1,4 +1,4 @@
-// $Id: FigHistoryState.java,v 1.16 2005/01/09 14:58:39 linus Exp $
+// $Id: FigHistoryState.java,v 1.17 2005/01/10 16:24:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -112,7 +112,7 @@ public abstract class FigHistoryState extends FigStateVertex {
      */
     public Object clone() {
         FigHistoryState figClone = (FigHistoryState) super.clone();
-        Iterator it = figClone.getFigs(null).iterator();
+        Iterator it = figClone.getFigs().iterator();
         figClone.setBigPort((FigCircle) it.next());
         figClone.head = (FigCircle) it.next();
         figClone.h = (FigText) it.next();

@@ -1,4 +1,4 @@
-// $Id: FigCompositeState.java,v 1.23 2005/01/09 14:58:39 linus Exp $
+// $Id: FigCompositeState.java,v 1.24 2005/01/10 16:24:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -119,7 +119,7 @@ public class FigCompositeState extends FigState {
      */
     public Object clone() {
         FigCompositeState figClone = (FigCompositeState) super.clone();
-        Iterator it = figClone.getFigs(null).iterator();
+        Iterator it = figClone.getFigs().iterator();
         figClone.setBigPort((FigRRect) it.next());
         figClone.cover = (FigRect) it.next();
         figClone.setNameFig((FigText) it.next());

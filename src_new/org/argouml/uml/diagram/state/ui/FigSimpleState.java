@@ -1,4 +1,4 @@
-// $Id: FigSimpleState.java,v 1.17 2005/01/09 14:58:39 linus Exp $
+// $Id: FigSimpleState.java,v 1.18 2005/01/10 16:24:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -119,7 +119,7 @@ public class FigSimpleState extends FigState {
      */
     public Object clone() {
 	FigSimpleState figClone = (FigSimpleState) super.clone();
-	Iterator it = figClone.getFigs(null).iterator();
+	Iterator it = figClone.getFigs().iterator();
 	figClone.setBigPort((FigRRect) it.next());
 	figClone.cover = (FigRect) it.next();
 	figClone.setNameFig((FigText) it.next());

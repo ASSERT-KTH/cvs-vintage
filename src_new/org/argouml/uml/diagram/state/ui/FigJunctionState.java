@@ -1,4 +1,4 @@
-// $Id: FigJunctionState.java,v 1.9 2005/01/09 14:58:39 linus Exp $
+// $Id: FigJunctionState.java,v 1.10 2005/01/10 16:24:17 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,7 +104,7 @@ public class FigJunctionState extends FigStateVertex {
      */
     public Object clone() {
 	FigJunctionState figClone = (FigJunctionState) super.clone();
-	Iterator it = figClone.getFigs(null).iterator();
+	Iterator it = figClone.getFigs().iterator();
 	figClone.setBigPort((FigPoly) it.next());
 	figClone.head = (FigPoly) it.next();
 	return figClone;

@@ -1,4 +1,4 @@
-// $Id: FigInitialState.java,v 1.19 2005/01/09 14:58:39 linus Exp $
+// $Id: FigInitialState.java,v 1.20 2005/01/10 16:24:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,7 +96,7 @@ public class FigInitialState extends FigStateVertex {
      */
     public Object clone() {
         FigInitialState figClone = (FigInitialState) super.clone();
-        Iterator it = figClone.getFigs(null).iterator();
+        Iterator it = figClone.getFigs().iterator();
         setBigPort((FigCircle) it.next());
         figClone.head = (FigCircle) it.next();
         return figClone;

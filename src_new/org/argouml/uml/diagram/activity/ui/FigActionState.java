@@ -1,4 +1,4 @@
-// $Id: FigActionState.java,v 1.23 2005/01/09 14:58:37 linus Exp $
+// $Id: FigActionState.java,v 1.24 2005/01/10 16:24:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -110,7 +110,7 @@ public class FigActionState extends FigStateVertex {
      */
     public Object clone() {
         FigActionState figClone = (FigActionState) super.clone();
-        Iterator it = figClone.getFigs(null).iterator();
+        Iterator it = figClone.getFigs().iterator();
         figClone.setBigPort((FigRRect) it.next());
         figClone.cover = (FigRRect) it.next();
         figClone.setNameFig((FigText) it.next());

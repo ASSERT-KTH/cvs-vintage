@@ -1,4 +1,4 @@
-// $Id: FigInstance.java,v 1.10 2005/01/09 14:58:44 linus Exp $
+// $Id: FigInstance.java,v 1.11 2005/01/10 16:24:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,7 +102,7 @@ public class FigInstance extends FigNodeModelElement {
      */
     public Object clone() {
 	FigInstance figClone = (FigInstance) super.clone();
-	Iterator iter = figClone.getFigs(null).iterator();
+	Iterator iter = figClone.getFigs().iterator();
 	figClone.setBigPort((FigRect) iter.next());
 	figClone.setNameFig((FigText) iter.next());
 	figClone.attr = (FigText) iter.next();

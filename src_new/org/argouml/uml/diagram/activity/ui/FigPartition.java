@@ -1,4 +1,4 @@
-// $Id: FigPartition.java,v 1.4 2005/01/09 14:58:37 linus Exp $
+// $Id: FigPartition.java,v 1.5 2005/01/10 16:24:15 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,7 +90,7 @@ public class FigPartition extends FigNodeModelElement {
      */
     public Object clone() {
         FigPartition figClone = (FigPartition) super.clone();
-        Iterator it = figClone.getFigs(null).iterator();
+        Iterator it = figClone.getFigs().iterator();
         figClone.setBigPort((FigRect) it.next());
         figClone.rightLine = (FigLine) it.next();
         figClone.leftLine = (FigLine) it.next();

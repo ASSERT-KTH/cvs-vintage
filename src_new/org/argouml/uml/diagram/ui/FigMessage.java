@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.26 2005/01/09 14:58:56 linus Exp $
+// $Id: FigMessage.java,v 1.27 2005/01/10 16:24:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -127,7 +127,7 @@ public class FigMessage extends FigNodeModelElement {
      */
     public Object clone() {
 	FigMessage figClone = (FigMessage) super.clone();
-	Iterator it = figClone.getFigs(null).iterator();
+	Iterator it = figClone.getFigs().iterator();
 	figClone.setNameFig((FigText) it.next());
 	figClone.figPoly = (FigPoly) it.next();
 	//figClone._polygon = (Polygon) _polygon.clone();

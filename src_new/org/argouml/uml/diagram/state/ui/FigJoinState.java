@@ -1,4 +1,4 @@
-// $Id: FigJoinState.java,v 1.14 2005/01/09 14:58:39 linus Exp $
+// $Id: FigJoinState.java,v 1.15 2005/01/10 16:24:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigJoinState.java,v 1.14 2005/01/09 14:58:39 linus Exp $
+// $Id: FigJoinState.java,v 1.15 2005/01/10 16:24:16 mvw Exp $
 package org.argouml.uml.diagram.state.ui;
 
 import java.awt.Color;
@@ -86,7 +86,7 @@ public class FigJoinState extends FigStateVertex {
      */
     public Object clone() {
         FigJoinState figClone = (FigJoinState) super.clone();
-        Iterator it = figClone.getFigs(null).iterator();
+        Iterator it = figClone.getFigs().iterator();
         figClone.setBigPort((FigRect) it.next());
         figClone.head = (FigRect) it.next();
         return figClone;
