@@ -25,14 +25,14 @@ package org.gjt.sp.jedit.browser;
 //{{{ Imports
 import java.io.*;
 import org.gjt.sp.jedit.io.*;
-import org.gjt.sp.jedit.jEdit;
+import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.*;
 //}}}
 
 /**
  * A browser I/O request.
  * @author Slava Pestov
- * @version $Id: BrowserIORequest.java,v 1.17 2003/05/28 22:37:18 spestov Exp $
+ * @version $Id: BrowserIORequest.java,v 1.18 2003/06/04 01:44:17 spestov Exp $
  */
 class BrowserIORequest extends WorkRequest
 {
@@ -256,14 +256,26 @@ class BrowserIORequest extends WorkRequest
 				VFS.DirectoryEntry file = vfs._getDirectoryEntry(
 					session,path2,browser);
 				if(file != null)
-					VFSManager.error(browser,path1,"ioerror.rename-exists",
-						new String[] { path2 });
-				else
 				{
-					if(!vfs._rename(session,path1,path2,browser))
-						VFSManager.error(browser,path1,"ioerror.rename-error",
+					if((OperatingSystem.isDOSDerived()
+						|| OperatingSystem.isMacOS())
+						&& path1.equalsIgnoreCase(path2))
+					{
+						// allow user to change name
+						// case
+					}
+					else
+					{
+						VFSManager.error(browser,path1,
+							"ioerror.rename-exists",
 							new String[] { path2 });
+						return;
+					}
 				}
+
+				if(!vfs._rename(session,path1,path2,browser))
+					VFSManager.error(browser,path1,"ioerror.rename-error",
+						new String[] { path2 });
 			}
 			catch(IOException io)
 			{

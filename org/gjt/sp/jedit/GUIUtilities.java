@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.71 2003/05/13 23:50:21 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.72 2003/06/04 01:44:16 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -1066,7 +1066,13 @@ public class GUIUtilities
 		{
 			public void windowActivated(WindowEvent evt)
 			{
-				comp.requestFocus();
+				SwingUtilities.invokeLater(new Runnable()
+				{
+					public void run()
+					{
+						comp.requestFocus();
+					}
+				});
 				win.removeWindowListener(this);
 			}
 		});

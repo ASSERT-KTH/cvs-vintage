@@ -67,7 +67,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.52 2003/05/30 00:49:52 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.53 2003/06/04 01:44:16 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -94,6 +94,11 @@ public class MiscUtilities
 		{
 			// get rid of mixed paths on Windows
 			path = path.replace('/','\\');
+		}
+		else if(OperatingSystem.isMacOS())
+		{
+			// do the same on OS X
+			path = path.replace(':','/');
 		}
 
 		if(path.startsWith("~" + File.separator))

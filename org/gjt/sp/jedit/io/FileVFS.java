@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.37 2003/05/29 02:46:49 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.38 2003/06/04 01:44:17 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -228,6 +228,21 @@ public class FileVFS extends VFS
 		Component comp)
 	{
 		File _to = new File(to);
+
+		// this is needed because on OS X renaming to a non-existent
+		// directory causes problems
+		File parent = new File(_to.getParent());
+		if(parent.exists())
+		{
+			if(!parent.isDirectory())
+				return false;
+		}
+		else
+		{
+			parent.mkdirs();
+			if(!parent.exists())
+				return false;
+		}
 
 		// Case-insensitive fs workaround
 		if(!from.equalsIgnoreCase(to))

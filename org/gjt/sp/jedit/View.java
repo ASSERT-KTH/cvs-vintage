@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.92 2003/05/29 21:57:24 spestov Exp $
+ * @version $Id: View.java,v 1.93 2003/06/04 01:44:16 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1214,6 +1214,8 @@ public class View extends JFrame implements EBComponent
 		addWindowListener(new WindowHandler());
 
 		EditBus.addToBus(this);
+
+		SearchDialog.preloadSearchDialog(this);
 	} //}}}
 
 	//{{{ close() method

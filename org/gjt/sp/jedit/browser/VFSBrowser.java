@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.93 2003/05/29 19:02:56 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.94 2003/06/04 01:44:17 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -699,7 +699,7 @@ public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusCompo
 
 		SearchAndReplace.setSearchFileSet(new DirectoryListSet(
 			path,filter,true));
-		new SearchDialog(view,null,SearchDialog.DIRECTORY);
+		SearchDialog.showSearchDialog(view,null,SearchDialog.DIRECTORY);
 	} //}}}
 
 	//{{{ getBrowserView() method

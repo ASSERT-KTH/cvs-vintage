@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.171 2003/06/03 21:48:20 spestov Exp $
+ * @version $Id: jEdit.java,v 1.172 2003/06/04 01:44:17 spestov Exp $
  */
 public class jEdit
 {
@@ -389,6 +389,8 @@ public class jEdit
 		VFSManager.init();
 
 		initResources();
+
+		SearchAndReplace.load();
 
 		GUIUtilities.advanceSplashProgress();
 
