@@ -35,7 +35,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCGetGeneratedKeysCreateCommand
    extends JDBCCreateEntityCommand
@@ -184,7 +184,7 @@ public class JDBCGetGeneratedKeysCreateCommand
             iter.hasNext(); )
          {
             JDBCCMPFieldBridge cmpField = (JDBCCMPFieldBridge) iter.next();
-            cmpField.setInstanceValue( ctx, pk );
+            cmpField.loadInstanceResults( rs, 1, ctx );
             break;
          }
       }
