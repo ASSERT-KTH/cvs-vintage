@@ -88,7 +88,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.57 2001/10/26 00:38:50 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.58 2001/10/26 00:43:18 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -299,12 +299,13 @@ public class ScarabModule
      * List of private queries associated with this module.
      * Created by this user.
      */
-    public List getPrivateQueries(ScarabUser user)
+    public List getPrivateQueries(ScarabUser user, IssueType issueType)
         throws Exception
     {
         List queries = null;
         Criteria crit = new Criteria()
             .add(QueryPeer.MODULE_ID, getModuleId())
+            .add(QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
             .add(QueryPeer.DELETED, 0)
             .add(QueryPeer.USER_ID, user.getUserId())
             .add(QueryPeer.SCOPE_ID, Scope.PERSONAL__PK);
@@ -315,12 +316,13 @@ public class ScarabModule
     /**
      * List of global Query objects associated with this module.
      */
-    public List getGlobalQueries()
+    public List getGlobalQueries(IssueType issueType)
         throws Exception
     {
         List queries = null;
         Criteria crit = new Criteria()
             .add(QueryPeer.MODULE_ID, getModuleId())
+            .add(QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
             .add(QueryPeer.DELETED, 0)
             .add(QueryPeer.SCOPE_ID, Scope.GLOBAL__PK);
         queries = QueryPeer.doSelect(crit);
@@ -330,12 +332,12 @@ public class ScarabModule
     /**
      * List of all queries for this user.
      */
-    public List getAllUserQueries(ScarabUser user)
+    public List getAllUserQueries(ScarabUser user, IssueType issueType)
         throws Exception
     {
         List allQueries = new ArrayList();
-        allQueries.addAll(getPrivateQueries(user));
-        allQueries.addAll(getGlobalQueries());
+        allQueries.addAll(getPrivateQueries(user, issueType));
+        allQueries.addAll(getGlobalQueries(issueType));
         return allQueries;
     }
 
