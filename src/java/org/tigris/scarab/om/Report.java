@@ -1346,7 +1346,11 @@ public  class Report
     {
         if ( queryKey == null ) 
         {
-            return "";
+            queryKey = super.getQueryKey();
+            if ( queryKey == null ) 
+            {
+                queryKey = "";
+            }
         }
         return queryKey;
     }

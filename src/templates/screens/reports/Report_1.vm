@@ -3,6 +3,8 @@
 
 <div class="app" id="div2-4-1-a-output">
 
+<form method="get" action="$action">
+
 #set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))
 #if ($reports.size() > 0)
 <h3>Saved reports</h3>
@@ -17,7 +19,6 @@
 
 
 <h2>$!report.Name</h2>
-<form method="get" action="$action">
 
 <div>
  <strong>Project:</strong> $report.Module.Name
