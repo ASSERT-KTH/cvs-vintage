@@ -148,7 +148,7 @@ public class ActivityRule extends BaseRule
         if (attribute.isOptionAttribute())
         {
             AttributeOption attributeOption = AttributeOption
-                .getInstance(attribute, activityInfo.getName());
+                .getInstance(attribute, activityInfo.getValue());
             
             if (attributeOption == null)
             {
