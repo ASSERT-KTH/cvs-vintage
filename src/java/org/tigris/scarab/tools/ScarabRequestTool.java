@@ -58,14 +58,15 @@ import java.util.Hashtable;
 import java.util.TimeZone;
 
 // Turbine
+import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
-import org.apache.commons.lang.Strings;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.services.pull.TurbinePull;
+import org.apache.turbine.tool.IntakeTool;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.ComboKey;
 import org.apache.torque.util.Criteria;
-import org.apache.turbine.RunData;
-import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.localization.Localization;
 import org.apache.fulcrum.intake.Intake;
 import org.apache.fulcrum.intake.model.Group;
@@ -74,6 +75,7 @@ import org.apache.fulcrum.pool.RecyclableSupport;
 import org.apache.fulcrum.util.parser.StringValueParser;
 import org.apache.fulcrum.util.parser.ValueParser;
 import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.lang.Strings;
 
 // Scarab
 import org.tigris.scarab.om.ScarabUser;
@@ -111,16 +113,17 @@ import org.tigris.scarab.om.ParentChildAttributeOption;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.MITList;
-import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.word.IssueSearch;
-import org.tigris.scarab.util.word.SearchIndex;
 import org.tigris.scarab.om.Report;
 import org.tigris.scarab.om.ReportManager;
 import org.tigris.scarab.om.TransactionPeer;
 import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.om.ActivityPeer;
-import org.tigris.scarab.util.ScarabException;  
+import org.tigris.scarab.tools.SecurityAdminTool;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabException;  
+import org.tigris.scarab.util.word.IssueSearch;
+import org.tigris.scarab.util.word.SearchIndex;
 
 /**
  * This class is used by the Scarab API
@@ -335,8 +338,7 @@ public class ScarabRequestTool
     }
 
     /**
-     * Get the intake tool. FIXME: why is it getting it
-     * from the Module and not from the IntakeService?
+     * Get the intake tool.
      */
     private IntakeTool getIntakeTool()
     {
@@ -2088,6 +2090,26 @@ try{
             params.put(name, value);
         }
         data.getUser().setTemp("userListParams", params);
+    }
+
+    public boolean hasItemsToApprove()
+    {
+        try
+        {
+            SecurityAdminTool sat = (SecurityAdminTool)org.apache.turbine.modules.Module.getTemplateContext(data)
+                .get(ScarabConstants.SECURITY_ADMIN_TOOL);
+            if (getCurrentModule().getUnapprovedQueries().isEmpty() &&
+                getCurrentModule().getUnapprovedTemplates().isEmpty() &&
+                sat.getPendingGroupUserRoles(getCurrentModule()).isEmpty())
+            {
+                return false;
+            }
+        }
+        catch (Exception e)
+        {
+            Log.get().debug("Error: ", e);
+        }
+        return true;
     }
 
     // --------------------
