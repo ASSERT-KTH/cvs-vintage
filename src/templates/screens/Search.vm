@@ -58,9 +58,7 @@ $page.setTitle("Custom Search")
 
   <tr>
    <th width="120">enter search string</th>
-   <td>
-      <#textAreaSmall() name="$searchGroup.SearchWords.Key"
-          >$!searchGroup.SearchWords</textarea>
+   <td>#textAreaSmall("$searchGroup.SearchWords.Key" $searchGroup.SearchWords)
    </td>
   </tr>
  </table>

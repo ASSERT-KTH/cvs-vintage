@@ -45,7 +45,7 @@ $page.setTitle("Save/edit template")
 <tr>
   <th>Template descr</th>
   <td>
-  <#textAreaMedium() name="$templateGroup.Description.Key">$!templateGroup.Description</textarea>
+  #textAreaMedium("$templateGroup.Description.Key" $templateGroup.Description)
   </td>
 </tr>
 <tr>
@@ -95,8 +95,7 @@ $page.setTitle("Save/edit template")
  #else
      #attrValueErrorMsg($attVal "Value")
      #if ($attVal.Attribute.AttributeType.Name == "long-string")
-        <#textAreaMedium() name="$attrInput.Value.Key"
-            >$!attrInput.Value</textarea>
+        #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
      #else
         <input name= "$attrInput.Value.Key"
             value="$!attrInput.Value" size="45" type="text" />

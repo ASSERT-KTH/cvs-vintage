@@ -22,6 +22,7 @@ $page.setTitle("Template list")
 
 <form method="post" action="$link.setPage("TemplateList.vm").setAction("TemplateList")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="SaveTemplate.vm" />
 
 #TemplateListBar("")
 
@@ -118,7 +119,7 @@ $page.setTitle("Template list")
 #end
 
 <div class="functnbar3">
-  <input type="submit" value="Create new" name="eventSubmit_doCreatenew" />&#160;
+  <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
   #if ($someTemplates.equals("true"))
     <input type="submit" value="Delete selected" name="eventSubmit_doDeletetemplates" />
   #end

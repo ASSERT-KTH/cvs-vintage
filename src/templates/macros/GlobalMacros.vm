@@ -62,8 +62,7 @@
 #macro ( attrValueText $attrValue $size)
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
         #if ($attVal.Attribute.AttributeType.Name == "long-string")
-           <#textAreaMedium() name="$attrInput.Value.Key" 
-               >$!attrInput.Value</textarea>
+           #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
         #else
            <input type="text" name="$attrInput.Value.Key" value="$!attrInput.Value"#if($size.length()) size="$size"#end />
         #end
@@ -78,8 +77,7 @@
      #set ($currentValue = $templAttrInput.Value)
 #end
 #if ($attVal.Attribute.AttributeType.Name == "long-string")
-   <#textAreaMedium() name="$attrInput.Value.Key"
-       >$!currentValue</textarea>
+   #textAreaMedium("$attrInput.Value.Key" $currentValue)
 #else
    <input type="text" name="$attrInput.Value.Key" value="$!currentValue"#if($size.length()) size="$size"#end />
 #end
@@ -308,6 +306,16 @@
  </p>
 #end
 
-#macro (textAreaSmall)textarea cols="30" rows="2" wrap="virtual"#end
-#macro (textAreaMedium)textarea cols="55" rows="5" wrap="virtual"#end
-#macro (textAreaLarge)textarea cols="90" rows="10" wrap="virtual"#end
+#macro (textAreaSmall $key $value)
+ <textarea cols="30" rows="2" wrap="virtual" name="$key">#if ($value)$value#end
+</textarea>
+#end
+
+#macro (textAreaMedium $key $value)
+  <textarea cols="55" rows="5" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
+#end
+#macro (textAreaLarge $key $value)
+ <textarea cols="90" rows="10" wrap="virtual" name="$key">#if ($value)$value#end
+</textarea>
+#end
+
