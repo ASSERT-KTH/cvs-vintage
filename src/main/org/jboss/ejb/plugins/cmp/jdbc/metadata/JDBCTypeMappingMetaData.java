@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.12 $
+ *   @version $Revision: 1.13 $
  */
 public final class JDBCTypeMappingMetaData {
    
@@ -40,6 +40,9 @@ public final class JDBCTypeMappingMetaData {
    private final int aliasMaxLength;
 
    private final boolean subquerySupported;
+
+   private final String trueMapping;
+   private final String falseMapping;
 
    private JDBCFunctionMappingMetaData rowLocking = null;
    private JDBCFunctionMappingMetaData fkConstraint = null;
@@ -123,6 +126,9 @@ public final class JDBCTypeMappingMetaData {
       String subquerySupportedStr = 
             MetaData.getUniqueChildContent(element, "subquery-supported");
       subquerySupported = Boolean.valueOf(subquerySupportedStr).booleanValue();
+
+      trueMapping = MetaData.getUniqueChildContent(element, "true-mapping");
+      falseMapping = MetaData.getUniqueChildContent(element, "false-mapping");
    }
        
    /**
@@ -173,6 +179,20 @@ public final class JDBCTypeMappingMetaData {
     */
    public boolean isSubquerySupported() {
       return subquerySupported;
+   }
+
+   /**
+    * Gets the value to which the boolean true value in EJB-QL will be mapped.
+    */
+   public String getTrueMapping() {
+      return trueMapping;
+   }
+
+   /**
+    * Gets the value to which the boolean false value in EJB-QL will be mapped.
+    */
+   public String getFalseMapping() {
+      return falseMapping;
    }
 
    /**

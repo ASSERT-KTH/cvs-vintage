@@ -87,7 +87,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCEJBQLCompiler extends BasicVisitor {
 
@@ -831,7 +831,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       // IS NOT EMPTY is handled automatically by the from clause
       if(node.not) {
          joinPaths.add(path);
-         buf.append("TRUE");
+         buf.append(typeMapping.getTrueMapping());
       } else {
          notExistsClause(path, buf);
       }
@@ -1253,5 +1253,16 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       inputParameters.add(param);
       buf.append("?");
       return buf;
+   }
+
+   /** typeMapping.get<True/False>Mapping() */
+   public Object visit(ASTBooleanLiteral node, Object data) {
+      BlockStringBuffer buf = (BlockStringBuffer)data;
+      if(node.value) {
+         buf.append(typeMapping.getTrueMapping());
+      } else {
+         buf.append(typeMapping.getFalseMapping());
+      }
+      return data;
    }
 }
