@@ -14,7 +14,8 @@
 
 <form method="post" action="$link.setPage("home,XModuleList.vm")">
 <input type="hidden" name="action" value="DefineXModuleList" />
-        
+<input type="hidden" name="queryString" value="$!queryString" />
+
 #if ($user.CurrentMITList && !$user.CurrentMITList.isEmpty())
 <div class="functnbar">
  <input type="submit" name="eventSubmit_doGotoquery" value="Go" />
@@ -101,6 +102,14 @@
 <div class="directory">
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr>
+#set ($searchableRMITs = $user.getSearchableRMITs())
+#if ($searchableRMITs.isEmpty())
+    <td colspan="5">
+    <strong class="alert">
+    There are no more issue types to select.
+    </strong>
+    </td>
+#else
 	  <th nowrap="nowrap">Select</th>
 	  <th>
           <a href="#"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" 
@@ -111,7 +120,7 @@
 	  <th><a href="#">Description</a></th>
     </tr>
 
-#foreach ($rmit in $user.getSearchableRMITs())
+#foreach ($rmit in $searchableRMITs)
   #indexedRows($velocityCount)
     <td>
     <input type="checkbox" name="rmitid" value="$rmit.QueryKey" />
@@ -119,6 +128,7 @@
     <td>$rmit.Module.Name</td>
     <td><a href="#">$rmit.IssueType.Name</a></td>
     <td>$rmit.IssueType.Description</td>
+#end
   </tr>        
 #end      
 </table>  
@@ -128,11 +138,12 @@
 <div class="colbar">p. 1 <a href="#">2</a> <a href="#">3</a></div>
 -->
 
+#if (!$searchableRMITs.isEmpty())
 <div class="functnbar3">
  <input type="submit"  name="eventSubmit_doAddselectedrmits" 
      value="Add selected to cross module query list" />
 </div>
-
+#end
 <!-- commented out until paging is implemented
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
