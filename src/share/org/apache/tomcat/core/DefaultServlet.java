@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/DefaultServlet.java,v 1.2 1999/10/15 00:34:30 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/15 00:34:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/DefaultServlet.java,v 1.3 1999/10/19 06:45:03 jhunter Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/19 06:45:03 $
  *
  * ====================================================================
  *
@@ -338,10 +338,6 @@ public class DefaultServlet extends HttpServlet {
     private void serveFile(File file, HttpServletRequest request,
         HttpServletResponse response)
     throws IOException {
-	// Make sure that x.jsp and x.jsp. is different
-	// Make sure that x.Jsp and x.jsp trigger a 404
-	// Make sure that x.jsp%20 triggers a 404.	
-	// Make sure that we don't let ../'s through
 
 	String absPath = file.getAbsolutePath();
 	String canPath = file.getCanonicalPath();
@@ -351,6 +347,11 @@ public class DefaultServlet extends HttpServlet {
 
         absPath = FilePathUtil.patch(absPath);
 
+        // This absPath/canPath comparison plugs security holes...
+	// On Windows, makes "x.jsp.", "x.Jsp", and "x.jsp%20" 
+        // return 404 instead of the JSP source
+	// On all platforms, makes sure we don't let ../'s through
+        // Unfortunately, on Unix, it prevents symlinks from working
 	if (! absPath.equals(canPath)) {
 	    response.sendError(response.SC_NOT_FOUND);
 
