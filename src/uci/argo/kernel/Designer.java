@@ -26,7 +26,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.21 1999/04/22 20:23:49 jrobbins Exp $
+// $Id: Designer.java,v 1.22 1999/05/03 23:24:21 cvswrite Exp $
 
 package uci.argo.kernel;
 
@@ -288,8 +288,8 @@ implements Poster, Runnable, PropertyChangeListener, java.io.Serializable {
 
    public static void setCritiquingRoot(Object d) {
      _CritiquingRoot = d;
-     theDesigner()._toDoList.removeAllElements();
      synchronized (theDesigner()) {
+       theDesigner()._toDoList.removeAllElements(); //v71
        theDesigner()._hotQueue.removeAllElements();
        theDesigner()._hotReasonQueue.removeAllElements();
        theDesigner()._addQueue.removeAllElements();
