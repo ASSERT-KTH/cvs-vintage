@@ -24,7 +24,7 @@
 // File: MMUtil.java
 // Classes: MMUtil
 // Original Author: not known
-// $Id: MMUtil.java,v 1.11 2002/07/22 13:54:25 kataka Exp $
+// $Id: MMUtil.java,v 1.12 2002/07/23 05:57:45 kataka Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the Extend and Include relationships.
@@ -583,6 +583,7 @@ public class MMUtil {
 	MOperation oper = buildOperation();
 
 	cls.addFeature(oper);
+	oper.setOwner(cls);
 	return oper;
     }
 
