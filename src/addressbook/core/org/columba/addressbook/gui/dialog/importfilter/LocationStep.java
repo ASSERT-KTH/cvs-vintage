@@ -23,6 +23,7 @@ import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.WizardTextField;
 import org.columba.core.main.MainInterface;
@@ -32,14 +33,7 @@ import java.awt.event.ActionListener;
 
 import java.io.File;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
+import javax.swing.*;
 
 class LocationStep extends AbstractStep implements ActionListener {
     protected File sourceFile;
@@ -75,10 +69,9 @@ class LocationStep extends AbstractStep implements ActionListener {
         component.add(Box.createVerticalStrut(40));
 
         WizardTextField middlePanel = new WizardTextField();
-        JLabel sourceLabel = new JLabel(AddressbookResourceLoader.getString(
+        LabelWithMnemonic sourceLabel = 
+                new LabelWithMnemonic(AddressbookResourceLoader.getString(
                     "dialog", "addressbookimport", "source"));
-        sourceLabel.setDisplayedMnemonic(AddressbookResourceLoader.getMnemonic(
-                "dialog", "addressbookimport", "source"));
         middlePanel.addLabel(sourceLabel);
         sourceButton = new JButton("...");
         sourceButton.addActionListener(this);
@@ -86,10 +79,9 @@ class LocationStep extends AbstractStep implements ActionListener {
         middlePanel.addTextField(sourceButton);
         middlePanel.addExample(new JLabel());
 
-        JLabel destinationLabel = new JLabel(AddressbookResourceLoader.getString(
+        LabelWithMnemonic destinationLabel = 
+                new LabelWithMnemonic(AddressbookResourceLoader.getString(
                     "dialog", "addressbookimport", "destination"));
-        destinationLabel.setDisplayedMnemonic(AddressbookResourceLoader.getMnemonic(
-                "dialog", "addressbookimport", "destination"));
         middlePanel.addLabel(destinationLabel);
         destinationButton = new JButton("...");
         destinationButton.addActionListener(this);
