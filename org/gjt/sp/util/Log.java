@@ -41,7 +41,7 @@ import javax.swing.event.*;
  * This class can also optionally redirect standard output and error to the log.
  *
  * @author Slava Pestov
- * @version $Id: Log.java,v 1.11 2003/05/22 23:43:16 spestov Exp $
+ * @version $Id: Log.java,v 1.12 2003/06/05 20:37:02 spestov Exp $
  */
 public class Log
 {
@@ -463,7 +463,7 @@ public class Log
 
 		void update(final int lineCount, final boolean oldWrap)
 		{
-			if(lineCount == 0)
+			if(lineCount == 0 || listeners.size() == 0)
 				return;
 
 			SwingUtilities.invokeLater(new Runnable()

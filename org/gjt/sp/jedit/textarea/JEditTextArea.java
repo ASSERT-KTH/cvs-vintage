@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.265 2003/06/05 04:44:40 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.266 2003/06/05 20:37:02 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -697,15 +697,14 @@ public class JEditTextArea extends JComponent
 			int nextLine = displayManager.getNextVisibleLine(getLastPhysicalLine());
 			if(line == prevLine)
 			{
-				setFirstLine(getFirstLine() - _electricScroll
-					- displayManager.getScreenLineCount(
-					prevLine));
+				setFirstPhysicalLine(prevLine,subregion
+					- _electricScroll);
 			}
 			else if(line == nextLine)
 			{
-				setFirstLine(getFirstLine() + _electricScroll
-					+ displayManager.getScreenLineCount(
-					nextLine));
+				setFirstPhysicalLine(nextLine,
+					subregion + electricScroll
+					- visibleLines - 1);
 			}
 			else
 			{
