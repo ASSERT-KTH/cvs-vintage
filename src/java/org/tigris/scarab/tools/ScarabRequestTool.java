@@ -931,6 +931,32 @@ try{
     }
 
     /**
+     * Takes unique id, and returns issue.
+     */
+    public Issue getIssueByUniqueId()
+     throws Exception
+    {
+        Issue issue = null;
+        try
+        {
+            String uniqueId = data.getParameters()
+                .getString("unique_id"); 
+            issue = Issue.getIssueById(uniqueId);
+            if (issue == null)
+            {
+               String code = getCurrentModule().getCode();
+               uniqueId = code + uniqueId;
+               issue = Issue.getIssueById(uniqueId);
+            }
+        }        
+        catch (Exception e)
+        {
+            data.setMessage("That id is not valid.");
+        }
+        return issue;
+    }
+
+    /**
      * Get a list of Issue objects.
      *
      * @return a <code>Issue</code> value
