@@ -1,6 +1,9 @@
-<div class="app" id="links">
 $page.setTitle("Scarab Links")
+
+<div class="app" id="links">
+
 <h2>$l10n.SCARAB_LINKS</h2>
+
 <h3>Site Pages</h3>
 <ul>
 <li><a href="$link.setPage("Index.vm")">Index.vm</a></li>
@@ -20,6 +23,7 @@ $page.setTitle("Scarab Links")
 <li><a href="$link.setPage("Approval.vm")">Approval.vm</a></li>
 <li><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", 1)">ViewIssue.vm?id=1</a></li>
 </ul>
+
 <h3>Admin Pages</h3>
 <ul>
 <li>
@@ -28,46 +32,18 @@ $page.setTitle("Scarab Links")
 <li>
  <a href="$link.setPage("admin,GlobalAttributeShow.vm")">admin,GlobalAttributeShow.vm</a>
 </li>
-<!--
 <li>
- <a href="$link.setPage("admin,AttributeShow.vm")">admin,AttributeShow.vm</a>
-(not working currently)</li>
-<li>
- <a href="$link.setPage("admin,ModuleAttributeEditor.vm")">admin,ModuleAttributeEditor.vm</a>
-(not working currently)</li>
--->
+ <a href="$link.setPage("ModifyModule.vm")">ModifyModule.vm</a>
+</li>
 <li>
  <a href="$link.setPage("FluxIndex.vm")">Flux</a>
 </li>
 </ul>
+
 <h3>Documentation</h3>
 <ul>
 <li>
  <a href="http://scarab.whichever.com/api/">Javadoc API Documentation</a>
 </li>
 </ul>
-<!--
-<p>
-Not working:
-</p>
-<ul>
-<li><a href="$link.setPage("admin,AddUser.vm")">admin,AddUser.vm</a>
-<li><a href="$link.setPage("admin,AdminHome.vm")">admin,AdminHome.vm</a>
-<li><a href="$link.setPage("admin,ConfirmUser.vm")">admin,ConfirmUser.vm</a>
-<li><a href="$link.setPage("admin,CurrentPermissions.vm")">admin,CurrentPermissions.vm</a>
-<li><a href="$link.setPage("admin,CurrentUsers.vm")">admin,CurrentUsers.vm</a>
-<li><a href="$link.setPage("admin,CurrentUsers2.vm")">admin,CurrentUsers2.vm</a>
-<li><a href="$link.setPage("admin,DeleteItem.vm")">admin,DeleteItem.vm</a>
-<li><a href="$link.setPage("admin,DeleteItemConfirm.vm")">admin,DeleteItemConfirm.vm</a>
-<li><a href="$link.setPage("admin,ModifyComponent.vm")">admin,ModifyComponent.vm</a>
-<li><a href="$link.setPage("admin,ModifyComponentAttrib.vm")">admin,ModifyComponentAttrib.vm</a>
-<li><a href="$link.setPage("admin,ModifyPermission.vm")">admin,ModifyPermission.vm</a>
-<li><a href="$link.setPage("admin,ModifyProject.vm")">admin,ModifyProject.vm</a>
-<li><a href="$link.setPage("admin,ModifyProjectsHome.vm")">admin,ModifyProjectsHome.vm</a>
-<li><a href="$link.setPage("admin,ModifyProjectsResults.vm")">admin,ModifyProjectsResults.vm</a>
-<li><a href="$link.setPage("admin,ModifyProjectsSearch.vm")">admin,ModifyProjectsSearch.vm</a>
-<li><a href="$link.setPage("admin,ModifyRoles.vm")">admin,ModifyRoles.vm</a>
-<li><a href="$link.setPage("admin,ModifyUser.vm")">admin,ModifyUser.vm</a>
-</ul>
--->
 </div>
