@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
@@ -18,7 +20,6 @@ package org.columba.mail.folder.headercache;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 
@@ -36,15 +37,14 @@ import org.columba.ristretto.parser.HeaderParser;
 
 /**
  * @author freddy
- *
+ * 
  * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Window>Preferences>Java>Templates. To enable and disable the creation of
+ * type comments go to Window>Preferences>Java>Code Generation.
  */
 public class LocalHeaderCache extends AbstractFolderHeaderCache {
-	
-	private final int WEEK = 1000 * 60 * 60 * 24 * 7; 
+
+	private final int WEEK = 1000 * 60 * 60 * 24 * 7;
 
 	public LocalHeaderCache(CachedFolder folder) {
 		super(folder);
@@ -54,7 +54,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 	public HeaderList getHeaderList() throws Exception {
 		boolean needToRelease = false;
 		// if there exists a ".header" cache-file
-		//  try to load the cache	
+		//  try to load the cache
 		if (!isHeaderCacheLoaded()) {
 
 			if (headerFile.exists()) {
@@ -72,7 +72,9 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		return headerList;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.folder.headercache.AbstractHeaderCache#needToSync(int)
 	 */
 	public boolean needToSync(int capacity) {
@@ -85,9 +87,9 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 	}
 
 	/**
-		 * @param worker
-		 * @throws Exception
-		 */
+	 * @param worker
+	 * @throws Exception
+	 */
 	public void load() throws Exception {
 
 		ColumbaLogger.log.info("loading header-cache=" + headerFile);
@@ -132,9 +134,8 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 			HeaderInterface h = createHeaderInstance();
 
 			/*
-			// read current number of message
-			ois.readInt();
-			*/
+			 * // read current number of message ois.readInt();
+			 */
 
 			loadHeader(ois, h);
 
@@ -176,7 +177,8 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 			return;
 
 		ColumbaLogger.log.info("saving header-cache=" + headerFile);
-		// this has to called only if the uid becomes higher than Integer allows
+		// this has to called only if the uid becomes higher than Integer
+		// allows
 		//cleanUpIndex();
 
 		//System.out.println("saving headerfile: "+ headerFile.toString() );
@@ -203,9 +205,9 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 	}
 
 	/**
-		 * @param worker
-		 * @throws Exception
-		 */
+	 * @param worker
+	 * @throws Exception
+	 */
 	public void sync() throws Exception {
 		if (getObservable() != null) {
 			getObservable().setMessage(
@@ -217,7 +219,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		Object[] uids = ds.getMessageUids();
 
 		headerList = new HeaderList(uids.length);
-		
+
 		Date today = Calendar.getInstance().getTime();
 
 		// parse all message files to recreate the header cache
@@ -241,15 +243,28 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 					continue;
 				}
 
-				header = new ColumbaHeader( HeaderParser.parse(new CharSequenceSource(source)) );
+				header =
+					new ColumbaHeader(
+						HeaderParser.parse(new CharSequenceSource(source)));
 				ColumbaHeader h = CachedHeaderfieldOwner.stripHeaders(header);
 
-				if( isOlderThanOneWeek(today, ((Date)header.getAttributes().get("columba.date"))) ) {
+				if (isOlderThanOneWeek(today,
+					((Date) header.getAttributes().get("columba.date")))) {
 					header.getFlags().set(Flags.SEEN);
 				}
 
 				int size = source.length() >> 10; // Size in KB
 				h.set("columba.size", new Integer(size));
+
+				//	set the attachment flag
+				String contentType = (String) header.get("Content-Type");
+
+				if (contentType != null) {
+					if (contentType.indexOf("multipart") != -1)
+						header.set("columba.attachment", Boolean.TRUE);
+					else
+						header.set("columba.attachment", Boolean.FALSE);
+				}
 
 				h.set("columba.uid", uids[i]);
 
@@ -274,13 +289,17 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 				ColumbaLogger.log.error(
 					"Error syncing HeaderCache :" + ex.getLocalizedMessage());
 			}
-			((LocalFolder) folder).setNextMessageUid(((Integer)uids[uids.length-1]).intValue() +1);
+			((LocalFolder) folder).setNextMessageUid(
+				((Integer) uids[uids.length - 1]).intValue() + 1);
 
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.headercache.AbstractHeaderCache#loadHeader(java.io.ObjectInputStream, org.columba.mail.message.HeaderInterface)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.headercache.AbstractHeaderCache#loadHeader(java.io.ObjectInputStream,
+	 *      org.columba.mail.message.HeaderInterface)
 	 */
 	protected void loadHeader(ObjectInputStream p, HeaderInterface h)
 		throws Exception {
@@ -290,8 +309,11 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		super.loadHeader(p, h);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.headercache.AbstractHeaderCache#saveHeader(java.io.ObjectOutputStream, org.columba.mail.message.HeaderInterface)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.headercache.AbstractHeaderCache#saveHeader(java.io.ObjectOutputStream,
+	 *      org.columba.mail.message.HeaderInterface)
 	 */
 	protected void saveHeader(ObjectOutputStream p, HeaderInterface h)
 		throws Exception {
@@ -304,6 +326,5 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 	public boolean isOlderThanOneWeek(Date arg0, Date arg1) {
 		return arg0.getTime() - WEEK > arg1.getTime();
 	}
-
 
 }

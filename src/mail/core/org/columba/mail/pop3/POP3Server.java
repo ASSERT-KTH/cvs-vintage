@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.pop3;
@@ -184,6 +186,16 @@ public class POP3Server {
 		header.set("columba.pop3uid", uid);
 		header.set("columba.flags.recent", Boolean.TRUE);
 
+		// set the attachment flag
+		String contentType = (String) header.get("Content-Type");
+
+		if (contentType != null) {
+			if (contentType.indexOf("multipart") != -1)
+				header.set("columba.attachment", Boolean.TRUE);
+			else
+				header.set("columba.attachment", Boolean.FALSE);
+		}
+
 		headerCache.getHeaderList().add(header, uid);
 
 		return message;
@@ -195,14 +207,14 @@ public class POP3Server {
 
 	/**
 	 * Returns the store.
+	 * 
 	 * @return POP3Store
 	 */
 	public POP3Store getStore() {
 		return store;
 	}
-	
-	public StatusObservable getObservable()
-	{
+
+	public StatusObservable getObservable() {
 		return store.getObservable();
 	}
 
