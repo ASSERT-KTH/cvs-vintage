@@ -82,7 +82,7 @@ import org.jboss.mgt.Module;
 *   @author Peter Antman (peter.antman@tim.se)
 *   @author Scott Stark(Scott_Stark@displayscape.com)
 *
-*   @version $Revision: 1.68 $
+*   @version $Revision: 1.69 $
 */
 public class ContainerFactory
   extends org.jboss.util.ServiceMBeanSupport
@@ -351,22 +351,29 @@ public class ContainerFactory
       log.log( "Deployed application: " + app.getName() );
       // Register deployment. Use the application name in the hashtable
       deployments.put( appUrl, app );
-      // Save EJBs management data: application
-      log.log( "Add module: " + module + ", to app: " + appId );
-      getServer().invoke(
-          new ObjectName( "Management", "service", "Collector" ),
-         "saveModule",
-         new Object[] {
-            appId,
-            new Integer( org.jboss.mgt.Application.EJBS ),
-            module
-         },
-         new String[] {
-            String.class.getName(),
-            Integer.TYPE.getName(),
-            module.getClass().getName()
+      try
+         {
+         // Save EJBs management data: application
+         log.log( "Add module: " + module + ", to app: " + appId );
+         getServer().invoke(
+             new ObjectName( "Management", "service", "Collector" ),
+            "saveModule",
+            new Object[] {
+               appId,
+               new Integer( org.jboss.mgt.Application.EJBS ),
+               module
+            },
+            new String[] {
+               String.class.getName(),
+               Integer.TYPE.getName(),
+               module.getClass().getName()
+            }
+         );
          }
-      );
+      catch( Exception e )
+         {
+         log.exception( e );
+         }
       }
     catch( Exception e )
       {
@@ -460,6 +467,7 @@ public class ContainerFactory
         module.addItem( ejb );
         ejb.setName( bean.getEjbName() );
         app.addContainer( createContainer( bean, cl, localCl, ejb ) );
+        ejb.setDeployed( true );
         }
     }
 
@@ -488,7 +496,7 @@ public class ContainerFactory
     app.stop();
     app.destroy();
     try
-    {
+       {
        // Remove EJBs management data
        getServer().invoke(
           new ObjectName( "Management", "service", "Collector" ),
@@ -502,10 +510,11 @@ public class ContainerFactory
              Integer.TYPE.getName()
           }
        );
-    }
-    catch( Exception e ) {
+       }
+    catch( Exception e )
+       {
        log.exception( e );
-    }
+       }
     try {
         if ( app.getClassLoader() != null ) {
             // Remove from webserver 

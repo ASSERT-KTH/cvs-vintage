@@ -71,7 +71,7 @@ import org.w3c.dom.Element;
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 *   @author Toby Allsopp (toby.allsopp@peace.com)
 *   @author Scott_Stark@displayscape.com
-*   @version $Revision: 1.26 $
+*   @version $Revision: 1.27 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -217,7 +217,7 @@ implements J2eeDeployerMBean
 	  {
         try {
             // Now the application is deployed add it to the server data collector
-            Application lApplication = convert2Application( d.getName(), d );
+            Application lApplication = new Application( d.getName(), "DD:Fix later" );
             server.invoke(
                lCollector,
                "saveApplication",
@@ -232,7 +232,7 @@ implements J2eeDeployerMBean
             );
         }
         catch( Exception e ) {
-           log.log ("Report of deployment of J2EE application: " + _url + " could not be reported.");
+           log.log ("Report of deployment of J2EE application: " + d.getName() + " could not be reported.");
         }
 		  startApplication (d);
 		  log.log ("J2EE application: " + _url + " is deployed.");
@@ -699,53 +699,5 @@ implements J2eeDeployerMBean
 
       // set it as the context class loader for the deployment thread
       Thread.currentThread().setContextClassLoader(appCl);
-   }
-   
-   /**
-    * Converts a given Deployment to a Management Application
-    *
-    * @param pId Application Id
-    * @param pDeployment Deployment to be converted
-    *
-    * @return Converted Applicaiton
-    **/
-   public Application convert2Application(
-      String pId,
-      Deployment pDeployment
-   ) {
-      // Create Applications
-      Application lApplication = new Application(
-         pId,
-         "DD:FixeLater"
-      );
-      // Go through web applications
-      Iterator i = pDeployment.webModules.iterator();
-      Collection lItems = new ArrayList();
-      while( i.hasNext() ) {
-         Deployment.Module lModule = (Deployment.Module) i.next();
-         // Add a Web Module
-         lApplication.saveModule(
-            Application.SERVLETS,
-            new Module(
-               lModule.webContext,
-               "DD:FixeLater"
-            )
-         );
-      }
-      // Go through ejb applications
-      i = pDeployment.ejbModules.iterator();
-      lItems = new ArrayList();
-      while( i.hasNext() ) {
-         Deployment.Module lModule = (Deployment.Module) i.next();
-         // Add an EJB Module
-         lApplication.saveModule(
-            Application.EJBS,
-            new Module(
-               ( (URL) lModule.localUrls.firstElement() ).getFile(),
-               "DD:FixeLater"
-            )
-         );
-      }
-      return lApplication;
    }
 }
