@@ -480,6 +480,7 @@ public class ContextManager {
 	code duplication
     */
     public void service( Request rrequest, Response rresponse ) {
+	//	log( "New  request " + rrequest );
 	try {
 	    rrequest.setContextManager( this );
 	    rrequest.setResponse(rresponse);
@@ -502,13 +503,18 @@ public class ContextManager {
 		// something went wrong
 		handleError( rrequest, rresponse, null, status );
 	    }
-	    
-	    rresponse.finish();
-	    rrequest.recycle();
-	    rresponse.recycle();
 	} catch (Throwable t) {
 	    handleError( rrequest, rresponse, t, 0 );
 	}
+
+	try {
+	    rresponse.finish();
+	    rrequest.recycle();
+	    rresponse.recycle();
+	} catch( Throwable ex ) {
+	    log( "Error closing request " + ex);
+	}
+	//	log( "Done with request " + rrequest );
 	return;
     }
 
@@ -559,14 +565,10 @@ public class ContextManager {
     void handleError( Request req, Response res , Throwable t, int code ) {
 	Context ctx = req.getContext();
 	if(ctx==null) {
-	    ///*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	    /// *DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	    ctx=getContext("");
 	}
-
-	if( code!=0) 
-	    ctx.log("Status: " + code + " in " + req );
-	if( t!=null) 
-	    ctx.log("Exception: " + t.getMessage() + " in " + req );
+	if(ctx.getDebug() > 0 ) ctx.log("In error handler " + code + " " + t +  " / " + req );
 	
 	String path=null;
 	ServletWrapper errorServlet=null;

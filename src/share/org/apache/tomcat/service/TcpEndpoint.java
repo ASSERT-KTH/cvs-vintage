@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpoint.java,v 1.8 2000/02/17 10:37:42 shachor Exp $
- * $Revision: 1.8 $
- * $Date: 2000/02/17 10:37:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpoint.java,v 1.9 2000/02/17 23:37:49 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/02/17 23:37:49 $
  *
  * ====================================================================
  *
@@ -373,7 +373,9 @@ class TcpWorkerThread implements Runnable {
 
     public void run() {
 	    while(endpoint.running) {
+		//		System.out.println("XXX accept socket");
 	        Socket s = endpoint.acceptSocket();
+		//		System.out.println("XXX accepted " + s );
 	        if(null != s) {
 	            // Continue accepting on another thread...
 	            endpoint.tp.runIt(this);
@@ -397,10 +399,11 @@ class TcpWorkerThread implements Runnable {
                     con.recycle();
                     connectionCache.addElement(con);
                 }
-
+		    //		System.out.println("XXX done " + s  );
                 break;
 	        }
 	    }
+	    //	    System.out.println("End thread "   );
     }
 }
 
