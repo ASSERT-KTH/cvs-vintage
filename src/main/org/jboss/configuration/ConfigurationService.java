@@ -45,7 +45,7 @@ import org.jboss.util.XmlHelper;
  * @author  Rickard Öberg (rickard.oberg@telkel.com)
  * @author  Scott_Stark@displayscape.com
  * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public class ConfigurationService
     extends ServiceMBeanSupport
@@ -462,8 +462,42 @@ public class ConfigurationService
                     //
                     // NOTE: should coerce value to the correct type??
                     //
-                    info.signature[j] = arg.getAttribute("type");
-                    info.params[j] = arg.getAttribute("value");
+                    // Add support for primitive Data Types
+                    String signature = arg.getAttribute("type");
+                    String value = arg.getAttribute("value");
+                    Object realValue = value;
+                    if( signature != null ) {
+                       if( signature.equals( "int" ) ) {
+                          signature = Integer.TYPE.getName();
+                          realValue = new Integer( value );
+                       } else
+                       if( signature.equals( "long" ) ) {
+                          signature = Long.TYPE.getName();
+                          realValue = new Long( value );
+                       } else
+                       if( signature.equals( "byte" ) ) {
+                          signature = Byte.TYPE.getName();
+                          realValue = new Byte( value );
+                       } else
+                       if( signature.equals( "char" ) ) {
+                          signature = Character.TYPE.getName();
+                          realValue = new Character( value.charAt( 0 ) );
+                       } else
+                       if( signature.equals( "float" ) ) {
+                          signature = Float.TYPE.getName();
+                          realValue = new Float( value );
+                       } else
+                       if( signature.equals( "double" ) ) {
+                          signature = Double.TYPE.getName();
+                          realValue = new Double( value );
+                       } else
+                       if( signature.equals( "boolean" ) ) {
+                          signature = Boolean.TYPE.getName();
+                          realValue = new Boolean( value );
+                       }
+                    }
+                    info.signature[j] = signature;
+                    info.params[j] = realValue;
                 }
             }
 
