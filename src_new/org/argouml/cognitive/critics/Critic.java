@@ -1,4 +1,4 @@
-// $Id: Critic.java,v 1.45 2005/03/09 15:56:26 mkl Exp $
+// $Id: Critic.java,v 1.46 2005/03/10 09:34:55 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,13 +36,13 @@ import org.argouml.application.api.Configuration;
 import org.argouml.application.api.ConfigurationKey;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.cognitive.Decision;
-import org.argouml.cognitive.DesignMaterial;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.Goal;
+import org.argouml.cognitive.ListSet;
+import org.argouml.cognitive.Offender;
 import org.argouml.cognitive.Poster;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.Translator;
-import org.argouml.cognitive.ListSet;
 import org.argouml.cognitive.ui.Wizard;
 
 /**
@@ -397,12 +397,12 @@ public class Critic implements Poster, Serializable {
 
     /**
      * @param item the todo item
-     * @param dm the designmaterial
+     * @param dm the designmaterial/offender to be informed
      * @param dsgr the designer
      */
     public void postItem(ToDoItem item, Object dm, Designer dsgr) {
-	if (dm instanceof DesignMaterial) {
-	    ((DesignMaterial) dm).inform(item);
+	if (dm instanceof Offender) {
+	    ((Offender) dm).inform(item);
 	}
 	dsgr.inform(item);
     }
