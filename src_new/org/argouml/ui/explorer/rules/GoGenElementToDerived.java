@@ -1,4 +1,4 @@
-// $Id: GoGenElementToDerived.java,v 1.5 2004/04/22 21:43:21 d00mst Exp $
+// $Id: GoGenElementToDerived.java,v 1.6 2004/08/29 21:05:12 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,12 +31,22 @@ import java.util.Set;
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
+/**
+ * Rule for Class->Subclass.
+ *
+ */
 public class GoGenElementToDerived extends AbstractPerspectiveRule {
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
+     */
     public String getRuleName() {
 	return Translator.localize ("Tree", "misc.class.subclass");
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public Collection getChildren(Object parent) { 
 	if (ModelFacade.isAGeneralizableElement(parent)) {
 	    return ModelFacade.getChildren(parent);
@@ -44,6 +54,9 @@ public class GoGenElementToDerived extends AbstractPerspectiveRule {
 	return null;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAGeneralizableElement(parent)) {
 	    Set set = new HashSet();

@@ -1,4 +1,4 @@
-// $Id: GoClassToAssociatedClass.java,v 1.4 2004/04/22 21:43:21 d00mst Exp $
+// $Id: GoClassToAssociatedClass.java,v 1.5 2004/08/29 21:05:12 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,12 +30,22 @@ import java.util.Set;
 
 import org.argouml.model.ModelFacade;
 
+/**
+ * Rule for Class->Associated Class.
+ *
+ */
 public class GoClassToAssociatedClass extends AbstractPerspectiveRule {
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
+     */
     public String getRuleName() {
 	return "Class->Associated Class";
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public Collection getChildren(Object parent) {
 	if (ModelFacade.isAClass(parent)) {
 	    return ModelFacade.getAssociatedClasses(parent);
@@ -43,6 +53,9 @@ public class GoClassToAssociatedClass extends AbstractPerspectiveRule {
 	return null;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAClass(parent)) {
 	    Set set = new HashSet();

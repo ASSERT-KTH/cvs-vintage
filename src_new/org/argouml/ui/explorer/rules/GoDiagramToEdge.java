@@ -1,4 +1,4 @@
-// $Id: GoDiagramToEdge.java,v 1.7 2004/05/02 13:20:24 mvw Exp $
+// $Id: GoDiagramToEdge.java,v 1.8 2004/08/29 21:05:12 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,12 +30,22 @@ import java.util.Set;
 import org.argouml.i18n.Translator;
 import org.tigris.gef.base.Diagram;
 
+/**
+ * Rule for Diagram->Edge.
+ *
+ */
 public class GoDiagramToEdge extends AbstractPerspectiveRule {
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
+     */
     public String getRuleName() {
 	return Translator.localize ("Tree", "misc.diagram.edge");
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public Collection getChildren(Object parent) { 
 	if (parent instanceof Diagram) {
 	    return ((Diagram) parent).getEdges(null);
@@ -43,6 +53,9 @@ public class GoDiagramToEdge extends AbstractPerspectiveRule {
 	return null;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     */
     public Set getDependencies(Object parent) {
         // TODO: What?
 	return null;

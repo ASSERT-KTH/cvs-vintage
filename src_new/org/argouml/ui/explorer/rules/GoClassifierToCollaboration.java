@@ -1,4 +1,4 @@
-// $Id: GoClassifierToCollaboration.java,v 1.4 2004/04/22 21:43:21 d00mst Exp $
+// $Id: GoClassifierToCollaboration.java,v 1.5 2004/08/29 21:05:12 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,9 @@ import org.argouml.model.ModelFacade;
  */
 public class GoClassifierToCollaboration extends AbstractPerspectiveRule {
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
+     */
     public String getRuleName() {
 	return "Classifier->Collaboration";
     }
@@ -53,6 +56,9 @@ public class GoClassifierToCollaboration extends AbstractPerspectiveRule {
         return null;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAClassifier(parent)) {
 	    Set set = new HashSet();

@@ -1,4 +1,4 @@
-// $Id: GoCollaborationDiagram.java,v 1.6 2004/07/17 16:23:42 mvw Exp $
+// $Id: GoCollaborationDiagram.java,v 1.7 2004/08/29 21:05:12 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,12 +33,22 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 
+/**
+ * Rule for Collaboration->Diagram.
+ *
+ */
 public class GoCollaborationDiagram extends AbstractPerspectiveRule {
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
+     */
     public String getRuleName() {
         return "Collaboration->Diagram";
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public Collection getChildren(Object parent) {
         if (!ModelFacade.isACollaboration(parent))
             return null;
@@ -55,12 +65,15 @@ public class GoCollaborationDiagram extends AbstractPerspectiveRule {
         while (elems.hasMoreElements()) {
             Object d = elems.nextElement();
             if (d instanceof UMLCollaborationDiagram
-                && ((UMLCollaborationDiagram)d).getNamespace() == parent)
+                && ((UMLCollaborationDiagram) d).getNamespace() == parent)
                 res.addElement(d);
         }
         return res;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     */
     public Set getDependencies(Object parent) {
         // TODO: What?
 	return null;

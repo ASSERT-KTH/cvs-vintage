@@ -1,4 +1,4 @@
-// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.6 2004/05/02 13:20:24 mvw Exp $
+// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.7 2004/08/29 21:05:12 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import org.argouml.ui.ArgoDiagram;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 
 /**
+ * The rule for Behavioral Feature->Statechart diagram.
  * 
  * @author jaap.branderhorst@xs4all.nl	
  * @since Dec 30, 2002
@@ -48,7 +49,7 @@ public class GoBehavioralFeatureToStateDiagram extends AbstractPerspectiveRule {
     public Collection getChildren(Object parent) {
         
         if (ModelFacade.isABehavioralFeature(parent)) {
-            Object operation = parent;//MBehavioralFeature
+            Object operation = parent; //MBehavioralFeature
             Collection col = ModelFacade.getBehaviors(operation);
             Vector ret = new Vector();
             Project p = ProjectManager.getManager().getCurrentProject();
@@ -56,8 +57,9 @@ public class GoBehavioralFeatureToStateDiagram extends AbstractPerspectiveRule {
             Iterator it = diagrams.iterator();
             while (it.hasNext()) {
                 ArgoDiagram diagram = (ArgoDiagram) it.next();
-                if (diagram instanceof UMLStateDiagram &&
-                    col.contains(((UMLStateDiagram) diagram).getStateMachine())) {
+                if (diagram instanceof UMLStateDiagram 
+                    && col.contains(((UMLStateDiagram) diagram)
+                            .getStateMachine())) {
                     ret.add(diagram);
                 }
                 
@@ -67,6 +69,9 @@ public class GoBehavioralFeatureToStateDiagram extends AbstractPerspectiveRule {
         return null;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     */
     public Set getDependencies(Object parent) {
         // TODO: what?
 	return null;

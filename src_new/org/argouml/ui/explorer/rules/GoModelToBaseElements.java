@@ -1,4 +1,4 @@
-// $Id: GoModelToBaseElements.java,v 1.5 2004/04/22 21:43:21 d00mst Exp $
+// $Id: GoModelToBaseElements.java,v 1.6 2004/08/29 21:05:12 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,19 +28,26 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 
+/**
+ * Rule for Package->Base Class.
+ *
+ */
 public class GoModelToBaseElements extends AbstractPerspectiveRule {
-    protected static Logger cat =
-	Logger.getLogger(GoModelToBaseElements.class);
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
+     */
     public String getRuleName() {
 	return Translator.localize ("Tree", "misc.package.base-class");
     }
   
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public Collection getChildren(Object parent) { 
 	if (ModelFacade.isAPackage(parent)) {
 	    return CoreHelper.getHelper().getBaseClasses(parent);
@@ -48,6 +55,9 @@ public class GoModelToBaseElements extends AbstractPerspectiveRule {
 	return null;
     }
 
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getDependencies(java.lang.Object)
+     */
     public Set getDependencies(Object parent) {
         if (ModelFacade.isAPackage(parent)) {
 	    Set set = new HashSet();
