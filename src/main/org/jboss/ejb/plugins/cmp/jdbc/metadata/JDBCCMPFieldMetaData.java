@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public final class JDBCCMPFieldMetaData {
    /**
@@ -532,6 +532,32 @@ public final class JDBCCMPFieldMetaData {
 
       // is the field auto-increment?
       autoIncrement = defaultValues.isAutoIncrement();
+   }
+
+   /**
+    * Constructs a field that is used as an optimistic lock
+    */
+   public JDBCCMPFieldMetaData(JDBCEntityMetaData entity,
+                               String fieldName,
+                               Class fieldType,
+                               String columnName,
+                               int jdbcType,
+                               String sqlType)
+      throws DeploymentException {
+      this.entity = entity;
+      this.fieldName = fieldName;
+      this.fieldType = fieldType;
+      this.columnName = columnName;
+      this.jdbcType = jdbcType;
+      this.sqlType = sqlType;
+
+      readOnly = false;
+      readTimeOut = -1;
+      primaryKeyMember = false;
+      notNull = true;
+      primaryKeyField = null;
+      unknownPkField = false;
+      autoIncrement = false;
    }
 
    /**
