@@ -98,7 +98,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.87 2002/02/05 02:48:44 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.88 2002/02/07 18:20:05 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -249,7 +249,8 @@ public class ScarabModule
         return super.getRModuleIssueTypes(crit);
     }
 
-    public boolean allowsIssues() {
+    public boolean allowsIssues()
+    {
         return (true);
     }
     

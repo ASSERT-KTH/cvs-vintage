@@ -114,7 +114,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.26 2002/02/04 23:06:16 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.27 2002/02/07 18:20:08 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -208,7 +208,7 @@ public abstract class AbstractScarabModule
                 sb.append(me.getRealName());
                 firstTime = false;
             }
-            if (parents.size() == 1)
+            if (parents.size() >= 1)
             {
                 sb.append(ModuleEntity.NAME_DELIMINATOR);
             }
