@@ -66,6 +66,7 @@
 <th>Base permission</th>
 <th>#sort("user" "Author")</th>
 <th>#sort("date" "Creation date")</th>
+<th>Deleted?</th>
 </tr>
        
 #foreach ($attr in $userAttrs)
@@ -97,6 +98,7 @@
   </td>
   <td>#attributeCreatedBy($attr)</td>
   <td>$format.getDate($scarabR.DateFormat, $attr.CreatedDate)</td>
+  <td>$attgroup.Deleted</td>
   </tr>
 #end        
 </table>
@@ -109,7 +111,6 @@
 <input type="submit" value="Create new"  name="eventSubmit_doCreatenew" />&#160;
 #if (!$userAttrs.isEmpty())
 <input type="submit" value="Copy selected"  name="eventSubmit_doCopy" />&#160;
-<input type="submit" value="Delete selected"  name="eventSubmit_doDelete" />
 #end
 </div>
 
