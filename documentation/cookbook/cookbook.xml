@@ -5583,7 +5583,7 @@ classes in this file (if more than one),
 original author (if you want).
 Like this:
 <programlisting>
-// $Id: cookbook.xml,v 1.57 2002/09/02 19:59:22 linus Exp $
+// $Id: cookbook.xml,v 1.58 2002/09/08 10:13:08 linus Exp $
 // Copyright ...
 
 // Classes: blabla, blabla
@@ -5859,7 +5859,6 @@ Information lost.
 Functions not working.
 Strange behavior.
 Exceptions logged.
-Excessive logging.
 </para>
 	    </listitem>
 	    <listitem>
@@ -5875,6 +5874,7 @@ UI not updated.
 	      <para>
 Spelling errors.
 Ugly icons.
+Excessive logging.
 </para>
 	    </listitem>
 	  </itemizedlist>
