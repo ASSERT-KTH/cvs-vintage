@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.16 2001/11/28 23:59:40 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.17 2001/11/30 23:07:29 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -133,7 +133,7 @@ public class MoveIssue extends RequireLoginFirstAction
         }
 
         Group moveIssue = intake.get("MoveIssue",
-                                IntakeTool.DEFAULT_KEY, false);
+                          IntakeTool.DEFAULT_KEY, false);
         NumberKey newModuleId = ((NumberKey) moveIssue.get("ModuleId").
             getValue());
         String selectAction = moveIssue.get("Action").toString();
@@ -278,19 +278,18 @@ public class MoveIssue extends RequireLoginFirstAction
         transaction.save();
 
         // Save activity record
-        String desc = descBuf.toString();
         Activity activity = new Activity();
         Attribute zeroAttribute = (Attribute) AttributePeer
                                   .retrieveByPK(new NumberKey("0"));
-        activity.create(newIssue, zeroAttribute, desc, transaction, 
-                        oldModule.getName(), newModule.getName());
+        activity.create(newIssue, zeroAttribute, descBuf.toString(),
+                        transaction, oldModule.getName(), newModule.getName());
 
         // placed in the context for the email to be able to access them
         context.put("action", selectAction);
         context.put("oldModule", oldModule.getName());
         context.put("newModule", newModule.getName());
         transaction.sendEmail(new ContextAdapter(context), newIssue, 
-                              "issue " +  newIssue.getIssueId() + desc,
+                              "issue " +  newIssue.getUniqueId() + descBuf.toString(),
                               "email/MoveIssue.vm");
 
         setTarget(data, nextTemplate);
