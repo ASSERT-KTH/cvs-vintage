@@ -55,9 +55,13 @@ import java.util.Vector;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.entity.Group;
-import org.apache.fulcrum.security.util.GroupSet;
 import org.apache.fulcrum.security.TurbineSecurity;
+import org.apache.fulcrum.security.impl.db.entity.TurbinePermissionPeer;
+import org.apache.fulcrum.security.impl.db.entity.TurbineRolePermissionPeer;
+import org.apache.fulcrum.security.impl.db.entity.TurbineRolePeer;
 import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRolePeer;
+import org.apache.fulcrum.security.util.AccessControlList;
+import org.apache.fulcrum.security.util.GroupSet;
 import org.apache.torque.pool.DBConnection;
 import org.apache.torque.Torque;
 import org.apache.torque.util.Criteria;
@@ -67,22 +71,14 @@ import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.commons.util.GenerateUniqueId;
 
-import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.util.ScarabException;
 
 import org.apache.turbine.Turbine;
 import org.apache.turbine.Log;
-import org.apache.fulcrum.security.util.AccessControlList;
-import org.apache.fulcrum.security.impl.db.entity
-    .TurbinePermissionPeer;
-import org.apache.fulcrum.security.impl.db.entity
-    .TurbineUserGroupRolePeer;
-import org.apache.fulcrum.security.impl.db.entity
-    .TurbineRolePermissionPeer;
-import org.apache.fulcrum.security.impl.db.entity
-    .TurbineRolePeer;
 
 
 /**
@@ -92,77 +88,77 @@ import org.apache.fulcrum.security.impl.db.entity
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.38 2001/11/19 03:21:47 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.39 2001/12/07 23:26:00 dr Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
     implements ScarabUser
 {
     private static final String REPORTING_ISSUE = "REPORTING_ISSUE";
-
+    
     public static final String PASSWORD_EXPIRE = "PASSWORD_EXPIRE";
-
+    
     private int issueCount = 0;
     private AbstractScarabUser internalUser;
-
+    
     /**
      * The maximum length for the unique identifier used at user
      * creation time.
      */
     private static final int UNIQUE_ID_MAX_LEN = 10;
-
+    
     /**
      * Call the superclass constructor to initialize this object.
      */
     public ScarabUserImpl()
     {
         super();
-
+        
         internalUser = new AbstractScarabUser()
+        {
+            public NumberKey getUserId()
             {
-                public NumberKey getUserId()
+                return getPrivateUserId();
+            }
+            
+            public String getEmail()
+            {
+                return getPrivateEmail();
+            }
+            
+            protected Vector getRModuleUserAttributes(Criteria crit)
+                throws Exception
+            {
+                return getPrivateRModuleUserAttributes(crit);
+            }
+            
+            public boolean hasPermission(String perm, ModuleEntity module)
+            {
+                return hasPrivatePermission(perm, module);
+            }
+            
+            public List getModules() 
+                throws Exception
+            {
+                Criteria crit = new Criteria();
+                crit.addJoin(TurbineUserGroupRolePeer.USER_ID, 
+                             ScarabUserImplPeer.USER_ID);
+                crit.addJoin(TurbineUserGroupRolePeer.GROUP_ID, 
+                             ScarabModulePeer.MODULE_ID);
+                crit.add(TurbineUserGroupRolePeer.USER_ID, getUserId());
+                GroupSet groups = TurbineSecurity.getGroups(crit);
+                Iterator itr = groups.elements();
+                List modules = new ArrayList(groups.size());
+                while (itr.hasNext())
                 {
-                    return getPrivateUserId();
+                    Group group = (Group) itr.next();
+                    modules.add((ModuleEntity)group);
                 }
-
-                public String getEmail()
-                {
-                    return getPrivateEmail();
-                }
-
-                protected Vector getRModuleUserAttributes(Criteria crit)
-                    throws Exception
-                {
-                    return getPrivateRModuleUserAttributes(crit);
-                }
-
-                public boolean hasPermission(String perm, ModuleEntity module)
-                {
-                    return hasPrivatePermission(perm, module);
-                }
-
-                public List getModules() 
-                    throws Exception
-                {
-                    Criteria crit = new Criteria();
-                    crit.addJoin(TurbineUserGroupRolePeer.USER_ID, 
-                                 ScarabUserImplPeer.USER_ID);
-                    crit.addJoin(TurbineUserGroupRolePeer.GROUP_ID, 
-                                 ScarabModulePeer.MODULE_ID);
-                    crit.add(TurbineUserGroupRolePeer.USER_ID, getUserId());
-                    GroupSet groups = TurbineSecurity.getGroups(crit);
-                    Iterator itr = groups.elements();
-                    List modules = new ArrayList(groups.size());
-                    while (itr.hasNext())
-                    {
-                        Group group = (Group) itr.next();
-                        modules.add((ModuleEntity)group);
-                    }
-                    return modules;
-                }
-            };
+                return modules;
+            }
+        };
     }
-
+    
     // the following four methods are to avoid naming conflicts when
     // supplying implementations of the methods needed by AbstractScarabUser
     // when instantiated in the constructor
@@ -198,7 +194,7 @@ public class ScarabUserImpl
         {
             return false;
         }
-    
+        
         try
         {
             Criteria criteria = new Criteria();
@@ -233,11 +229,11 @@ public class ScarabUserImpl
     }
     
     
-
+    
     /**
-        This method will mark username as confirmed.
-        returns true on success and false on any error
-    */
+     This method will mark username as confirmed.
+     returns true on success and false on any error
+     */
     public static boolean confirmUser (String username)
     {
         try
@@ -252,7 +248,7 @@ public class ScarabUserImpl
             return false;
         }
     }
-
+    
     /**
      * @see org.tigris.scarab.om.ScarabUser#hasPermission(String, ModuleEntity)
      */
@@ -264,7 +260,15 @@ public class ScarabUserImpl
             AccessControlList acl = TurbineSecurity.getACL(this);
             if ( acl != null ) 
             {
+                // first check for the permission in the specified module
                 hasPermission = acl.hasPermission(perm, (Group)module);
+                
+                // if necessary, check for the permission within the 'Global' module
+                if (!hasPermission)
+                {
+                    ModuleEntity globalModule = ModuleManager.getInstance(new NumberKey(ModuleEntity.ROOT_ID));
+                    hasPermission = acl.hasPermission(perm, (Group)globalModule);
+                }
             }
         }
         catch (Exception e)
@@ -274,8 +278,8 @@ public class ScarabUserImpl
         }
         return hasPermission;
     }
-
-
+    
+    
     /**
      * @see org.tigris.scarab.om.ScarabUser#getModules(String)
      */
@@ -284,8 +288,8 @@ public class ScarabUserImpl
         String[] perms = {permission};
         return getModules(perms);
     }
-
-
+    
+    
     /**
      * @see org.tigris.scarab.om.ScarabUser#getModules(String[])
      */
@@ -301,7 +305,7 @@ public class ScarabUserImpl
         crit.add(TurbineUserGroupRolePeer.USER_ID, getUserId());
         crit.addJoin(ScarabModulePeer.MODULE_ID, 
                      TurbineUserGroupRolePeer.GROUP_ID);
-
+        
         ModuleEntity[] modules = null;
         try
         {
@@ -318,16 +322,16 @@ public class ScarabUserImpl
         }
         return modules;
     }
-
+    
     /**
      * @see org.tigris.scarab.om.ScarabUser#hasAnyRoleIn(ModuleEntity)
      */ 
-   public boolean hasAnyRoleIn(ModuleEntity module)
+    public boolean hasAnyRoleIn(ModuleEntity module)
         throws Exception
     {
         return getRoles(module).size() != 0;
     }
-
+    
     /* *
      * @see org.tigris.scarab.om.ScarabUser#getRoles(ModuleEntity)
      * !FIXME! need to define a Role interface (maybe the one in fulcrum is 
@@ -337,7 +341,7 @@ public class ScarabUserImpl
      * public method for that.
      */
     private List getRoles(ModuleEntity module)
-         throws Exception
+        throws Exception
     {
         Criteria crit = new Criteria();
         crit.setDistinct();
@@ -349,38 +353,38 @@ public class ScarabUserImpl
         return roles;
     }
     
-
+    
     /* *
      * @see org.tigris.scarab.om.ScarabUser#getModules(Role)
      * This method is not needed yet.
      * /
-    public List getModules(Role role) 
-        throws Exception
-    {
-    /*
-        Criteria crit = new Criteria(3)
-            .add(RModuleUserRolePeer.DELETED, false)
-            .add(RModuleUserRolePeer.ROLE_ID, 
-                 ((BaseObject)role).getPrimaryKey());        
-        List moduleRoles = getRModuleUserRolesJoinScarabModule(crit);
-
-        // rearrange so list contains Modules
-        List modules = new ArrayList(moduleRoles.size());
-        Iterator i = moduleRoles.iterator();
-        while (i.hasNext()) 
-        {
-            ModuleEntity module = 
-                (ModuleEntity) ((RModuleUserRole)i.next()).getScarabModule();
-            modules.add(module);
-        }
-
-        return modules;
-    * /
-        if (true)
-            throw new Exception ("FIXME: This method doesn't belong here!");
-        return null;
-    }
-    */
+     public List getModules(Role role) 
+     throws Exception
+     {
+     /*
+     Criteria crit = new Criteria(3)
+     .add(RModuleUserRolePeer.DELETED, false)
+     .add(RModuleUserRolePeer.ROLE_ID, 
+     ((BaseObject)role).getPrimaryKey());        
+     List moduleRoles = getRModuleUserRolesJoinScarabModule(crit);
+     
+     // rearrange so list contains Modules
+     List modules = new ArrayList(moduleRoles.size());
+     Iterator i = moduleRoles.iterator();
+     while (i.hasNext()) 
+     {
+     ModuleEntity module = 
+     (ModuleEntity) ((RModuleUserRole)i.next()).getScarabModule();
+     modules.add(module);
+     }
+     
+     return modules;
+     * /
+     if (true)
+     throw new Exception ("FIXME: This method doesn't belong here!");
+     return null;
+     }
+     */
     
     /**
      * @see org.tigris.scarab.om.ScarabUser#createNewUser()
@@ -399,7 +403,7 @@ public class ScarabUserImpl
         TurbineSecurity.addUser (this, getPassword());
         setPasswordExpire();
     }
-
+    
     /**
      * @see org.tigris.scarab.om.ScarabUser#getModules()
      */
@@ -407,7 +411,7 @@ public class ScarabUserImpl
     {
         return internalUser.getModules();
     }
-
+    
     /**
      * @see org.tigris.scarab.om.ScarabUser#getEditableModules()
      */
@@ -415,7 +419,7 @@ public class ScarabUserImpl
     {
         return internalUser.getEditableModules();
     }
-
+    
     /**
      * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttributes(ModuleEntity, IssueType)
      */
@@ -425,21 +429,21 @@ public class ScarabUserImpl
     {
         return internalUser.getRModuleUserAttributes(module, issueType);
     }
-
-            
+    
+    
     /**
      * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttribute(ModuleEntity, Attribute, IssueType)
      */
     public RModuleUserAttribute getRModuleUserAttribute(ModuleEntity module, 
-                                                       Attribute attribute,
-                                                       IssueType issueType)
+                                                        Attribute attribute,
+                                                        IssueType issueType)
         throws Exception
     {
         return internalUser
             .getRModuleUserAttribute(module, attribute, issueType);
     }
-
-
+    
+    
     /**
      * @see org.tigris.scarab.om.ScarabUser#getReportingIssue(String)
      */
@@ -448,7 +452,7 @@ public class ScarabUserImpl
     {
         return internalUser.getReportingIssue(key);
     }
-
+    
     /**
      * @see org.tigris.scarab.om.ScarabUser#setReportingIssue(Issue)
      */
@@ -457,7 +461,7 @@ public class ScarabUserImpl
     {
         return internalUser.setReportingIssue(issue);
     }
-
+    
     /**
      * @see org.tigris.scarab.om.ScarabUser#setReportingIssue(String, Issue)
      */
@@ -465,7 +469,7 @@ public class ScarabUserImpl
     {
         internalUser.setReportingIssue(key, issue);
     }
-
+    
     /**
      * Gets default query-user map for this module/issuetype.
      */
@@ -475,7 +479,7 @@ public class ScarabUserImpl
     {
         return internalUser.getDefaultQueryUser(module, issueType);
     }
-
+    
     /**
      * gets default query for this module/issuetype.
      */
@@ -484,7 +488,7 @@ public class ScarabUserImpl
     {
         return internalUser.getDefaultQuery(module, issueType);
     }
-
+    
     /**
      * Clears default query for this module/issuetype.
      */
@@ -493,7 +497,7 @@ public class ScarabUserImpl
     {
         internalUser.resetDefaultQuery(module, issueType);
     }
-
+    
     /**
      * If user has no default query set, gets a default default query.
      */
@@ -501,7 +505,7 @@ public class ScarabUserImpl
     {
         return internalUser.getDefaultDefaultQuery();
     }
-
+    
     /**
      * Sets the password to expire with information from the scarab.properties
      * scarab.login.password.expire value.
@@ -521,11 +525,11 @@ public class ScarabUserImpl
         {
             Calendar expireDate = Calendar.getInstance();
             expireDate.add(Calendar.DATE, 
-                new Integer(expireDays).intValue());
+                           new Integer(expireDays).intValue());
             setPasswordExpire(expireDate);
         }
     }
-
+    
     /**
      * Sets the password to expire on the specified date.
      *
@@ -562,7 +566,7 @@ public class ScarabUserImpl
         }
         up.save();
     }
-
+    
     /**
      * Checks if the users password has expired.
      *
@@ -580,7 +584,7 @@ public class ScarabUserImpl
         crit.add(UserPreferencePeer.USER_ID, userid);
         Calendar cal = Calendar.getInstance();
         crit.add(UserPreferencePeer.PASSWORD_EXPIRE, 
-            cal.getTime() , Criteria.LESS_THAN);
+                 cal.getTime() , Criteria.LESS_THAN);
         List result = UserPreferencePeer.doSelect(crit);
         return result.size() == 1 ? true : false;
     }
