@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.85 2005/02/01 20:42:35 mvw Exp $
+// $Id: FigAssociation.java,v 1.86 2005/03/03 20:47:02 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -508,6 +508,26 @@ public class FigAssociation extends FigEdgeModelElement {
 	return popUpActions;
     }
 
+    /**
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#renderingChanged()
+     */
+    public void renderingChanged() {
+        Object associationEnd = getOwner(); //MAssociation
+        if (associationEnd == null) {
+            return;
+        }
+        
+        //MAssociationEnd
+        Object ae0 =
+            ((Model.getFacade().getConnections(associationEnd)).toArray())[0];
+        //MAssociationEnd
+        Object ae1 =
+            ((Model.getFacade().getConnections(associationEnd)).toArray())[1];
+        updateEnd(srcMult, srcRole, srcOrdering, ae0);
+        updateEnd(destMult, destRole, destOrdering, ae1);
+        super.renderingChanged();
+    }
+    
     /**
      * Returns the name of the OrderingKind.
      *
