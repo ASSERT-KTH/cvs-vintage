@@ -70,6 +70,15 @@ h3, h4	{
 .mtb {
  border-top: solid 1px #ccc;
  }
+.colbar {
+	background: #ccc;
+	}
+.colbar {
+	padding: 5px;
+	margin-top: 2px;
+	margin-right: 2px;
+	margin-left: 2px;
+	}
 .courtesylinks {
  margin: 1.5em 0
  }
@@ -133,18 +142,22 @@ ul.tasks li {
 	border-right: 1px solid #666;
 	}
 .tabs td {
-	background: url(/@SCARAB_CONTEXT@/images/images/nw_min.gif) no-repeat top left;
+	background: url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat top left;
 	border-bottom: 1px solid #ccc;
 	border-right: 1px solid #666;
 	}
 #navcolumn div div {
+	background-image: url(/@SCARAB_CONTEXT@/images/strich.gif);
 	background-repeat: no-repeat;
+	background-position:  .5em .5em;
  }
 #navcolumn div div div, #navcolumn div.selected {
 	background-image: none;
 	background-color: white;
 	padding-bottom: .1em;
  }
+
+
 
 /* Scarab/App - styles start here */
 .modbar {
