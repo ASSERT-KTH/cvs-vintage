@@ -55,9 +55,8 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 public class PorterStemAnalyzer extends Analyzer
 {
     /** 
-     * Constructs a {@link StandardTokenizer} filtered by a {@link
-     * StandardFilter}, a {@link LowerCaseFilter} and a {@link StopFilter}. 
-     * And finally a PorterStemFilter
+     * Constructs a {@link StandardAnalyzer} filtered by a {@link
+     * PorterStemFilter}.
      */
     public final TokenStream tokenStream(String fieldName, Reader reader) 
     {
