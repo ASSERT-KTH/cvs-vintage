@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.11 2001/12/07 05:36:39 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.12 2001/12/08 04:57:28 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -99,6 +99,8 @@ Bug No.  Description
          Eliminated some hard coded '\n' line separators used by Jasper in the
          translated Java file.
 
+	 Fixed the position of the ;jsessionid when Tomcat generates a 401 
+	 response.  Now it is before the query string instead of after.
 
 Configuration:
 
