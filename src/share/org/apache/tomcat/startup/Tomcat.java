@@ -10,7 +10,9 @@ import java.net.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.logging.*;
 import org.xml.sax.*;
+import org.apache.tomcat.core.Constants;
 
 /**
  * Starter for Tomcat using XML.
@@ -18,12 +20,13 @@ import org.xml.sax.*;
  *
  * @author costin@dnt.ro
  */
-public class Tomcat {
+public class Tomcat extends Logger.Helper {
 
     private static StringManager sm =
 	StringManager.getManager("org.apache.tomcat.resources");
 
     Tomcat() {
+	super("tc_log");
     }
 
     // Set the mappings
@@ -125,6 +128,7 @@ public class Tomcat {
     /** Setup loggers when reading the configuration file - this will be
      *  called only when starting tomcat as deamon, all other modes will
      * output to stderr
+     * *** [I don't think that's true any more -Alex]
      */
     void setLogHelper( XmlMapper xh ) {
 	xh.addRule("Server/Logger",
@@ -166,7 +170,7 @@ public class Tomcat {
 
     public void execute(String args[] ) throws Exception {
 	if( ! processArgs( args ) ) {
-	    System.out.println(sm.getString("tomcat.wrongargs"));
+	    // System.out.println(sm.getString("tomcat.wrongargs"));	    
 	    printUsage();
 	    return;
 	}
@@ -185,23 +189,35 @@ public class Tomcat {
 	setLogHelper( xh );
 
 	File f = getConfigFile(cm);
+	log(sm.getString("tomcat.loading") + " " + f);
 	try {
 	    xh.readXml(f,cm);
 	} catch( Exception ex ) {
-	    System.out.println(sm.getString("tomcat.fatalconfigerror") );
-	    ex.printStackTrace();
-	    System.exit(1);
+	    log( sm.getString("tomcat.fatalconfigerror"), ex );
+	    throw ex;
 	}
+	log(sm.getString("tomcat.loaded") + " " + f);
 
-	System.out.println(sm.getString("tomcat.start"));
+	// by now, we should know where the log file is
+	String path = cm.getLogger().getPath();
+	if (path == null)
+	    path = "console";
+	System.out.println(sm.getString("tomcat.start", new Object[] { path }));
+	
 	cm.init(); // set up contexts
+	log(Constants.TOMCAT_NAME + " " + Constants.TOMCAT_VERSION);	
 
 	// XXX Make this optional, and make sure it doesn't require
 	// a full start. It is called after init to make sure
 	// auto-configured contexts are initialized.
 	generateServerConfig( cm );
-
-	cm.start(); // start serving
+	try {
+	    cm.start(); // start serving
+	}
+	catch (java.net.BindException be) {
+	    log("Starting Tomcat: " + be.getMessage(), Logger.ERROR);
+	    System.out.println(sm.getString("tomcat.start.bindexception"));
+	}
     }
 
     /** This method will generate Server config files that
@@ -236,8 +252,9 @@ public class Tomcat {
 	    Tomcat tomcat=new Tomcat();
 	    tomcat.execute( args );
 	} catch(Exception ex ) {
-	    System.out.println(sm.getString("tomcat.fatal") + ex );
-	    ex.printStackTrace();
+	    System.out.println(sm.getString("tomcat.fatal"));
+	    System.err.println(Logger.throwableToString(ex));
+	    System.exit(1);
 	}
 
     }
@@ -259,9 +276,7 @@ public class Tomcat {
 	try {
 	    xh.readXml(f,cm);
 	} catch( Exception ex ) {
-	    System.out.println(sm.getString("tomcat.fatalconfigerror") );
-	    ex.printStackTrace();
-	    System.exit(1);
+	    throw new TomcatException("Fatal exception reading " + f, ex);
 	}
 	
 	org.apache.tomcat.task.StopTomcat stopTc=
