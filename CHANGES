@@ -1,3 +1,43 @@
+Version CVS
+
+ - mail-component
+    * protocol:
+       - imap flags are now synchronized, correctly
+       - imap mark as read/flagged/expunged works again
+       - bodystructure parser fixes (respects stuff
+         like alternative)
+       - smtp sending From and recipient addresses are
+         normalized correctly
+    * support for specifying a default account 
+      (other accounts can inherit customization from
+       default account)
+    * overall dialog-polishing, new account-,
+      login- and filter-dialog
+    * composer:
+       - many fixes to the address-completion
+       - address-table-widget bugfixes
+       - address-table-widget is now editable on
+         double-click (former single-click)
+       - remove entries with DEL-shortcut
+       - external editor support (Tony)
+    
+ 
+ - addressbook-component:
+ 
+ 
+ - core-component
+    * dialogs are now all centered
+    * Mainframe window is maximized correctly 
+ 	* translations can be added dynamically
+ 	  (packaged as jar-files) (Hrk)
+ 	* improved windows-launcher
+ 	* added log4j logging (Thomas)
+ 	  
+ - translation
+    * mnemonics are externalized
+    * new finnish fi_FI translation (Jari)
+    
+ 
 Version 0.9.10
 
  - mail-component:
