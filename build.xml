@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.29 2001/09/15 03:06:48 schaefera Exp $ -->
+<!-- $Id: build.xml,v 1.30 2001/09/16 05:27:44 d_jencks Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -717,6 +717,7 @@ os.version:      ${os.version}
         <include name="org/jboss/jmx/connector/JMXConnector.class"/>
         <include name="org/jboss/jmx/connector/JMXConnectorMBean.class"/>
         <include name="org/jboss/jmx/connector/notification/RMI**"/>
+        <include name="org/jboss/jmx/connector/notification/JMSNotificationListener.class"/>
         <include name="org/jboss/jmx/connector/rmi/RMIConnector.class"/>
         <include name="org/jboss/jmx/connector/rmi/RMINotificationListener.class"/>
         <include name="org/jboss/jmx/connector/rmi/RMIClientConnectorImpl*.class"/>
