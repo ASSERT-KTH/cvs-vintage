@@ -230,7 +230,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	 * @return				a message object referring to this UID
 	 * @throws Exception	<class>Exception</class>
 	 */
-	public ColumbaMessage getMessage(Object uid) throws Exception {
+	protected ColumbaMessage getMessage(Object uid) throws Exception {
 		if (aktMessage != null) {
 			if (aktMessage.getUID().equals(uid)) {
 				// this message is already cached

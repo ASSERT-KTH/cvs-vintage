@@ -208,7 +208,7 @@ public abstract class CachedFolder extends LocalFolder {
 	 * @see org.columba.mail.folder.LocalFolder#getMessage(java.lang.Object,
 	 *      org.columba.core.command.WorkerStatusController)
 	 */
-	public ColumbaMessage getMessage(Object uid) throws Exception {
+	protected ColumbaMessage getMessage(Object uid) throws Exception {
 
 		// check if message was already parsed before
 		if (aktMessage != null) {
