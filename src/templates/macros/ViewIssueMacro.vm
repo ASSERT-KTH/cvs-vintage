@@ -146,6 +146,9 @@
    <tr>
      <th>&#160;</th>
      <th>Link</th>
+     #if ($canEdit)
+     <th>Edit Link</th>
+     #end
      <th>Link description</th>
    </tr>
    #foreach ($url in $currentIssue.Urls)
@@ -157,13 +160,20 @@
        &#160;
      #end
      </td>
-     <td><input type="text" size="25" value="$url.Name" /> </td>
-     <td><input type="text" size="25" value="$url.DataAsString" /></td>
+     <td><a href="$url.Name">$url.Name</a> </td>
+      #set ($urlGroup = $intake.Attachment.mapTo($url))
+     #if ($canEdit)
+         <td><input type="text" size="25" name="$urlGroup.Name.Key" value="$url.Name" /> </td>
+         <td><input type="text" size="25" name="$urlGroup.DataAsString.Key" value="$url.DataAsString" /></td>
+     #else
+         <td>$!url.DataAsString</td>
+     #end
     </tr>
    #end
    #if ($canEdit)
-   <tr>
-     <td><strong>Add url:</strong></td>
+   <tr class="b">
+     <td>&#160;</td>
+     <td>&#160;</td>
      #set ($urlGroup = $intake.Attachment.setKey("urlKey"))
      <td>
      <input type="text" size="25" name="$urlGroup.Name.Key" value="$!urlGroup.Name" />
@@ -176,12 +186,13 @@
    </tr>
    #end
  </table>
-  #if ($canEdit)
 <div class="functnbar3">
+  #if ($canEdit)
+  <input type="submit" value="Save" name="eventSubmit_doSaveurl"  />&#160;
   <input type="submit" value="Add link" name="eventSubmit_doSubmiturl"  />&#160;
   <input type="submit" value="Delete link"  name="eventSubmit_doDeleteurl" />
-</div>
   #end
+</div>
 #end
 
 ## DEPENDENCIES
@@ -274,7 +285,6 @@
 </td>
 </tr>
 </table>
-
 <div class="functnbar3">
   #if ($canEdit)
    <input type="submit" value="Save"  name="eventSubmit_doUpdatedependencies" />
