@@ -25,12 +25,8 @@
 
 package org.columba.core.util;
 
-//GlobalResourceBundle
-import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Locale;
 import java.util.MissingResourceException;
-import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -56,12 +52,8 @@ import org.columba.core.main.MainInterface;
 */
 public class GlobalResourceLoader {
 
-	//Hashtables of resource bundles: we'll use one for general bundles and one for global bundles.
 	protected static Hashtable htBundles = new Hashtable(80);
-	//key: sBundlePath, value: rBundle
 	protected static ResourceBundle globalBundle;
-	//Key: bundle "path" (i.e.: "org/columba/core/i18n/global/global", "org/columba/modules/mail/i18n/action/filter")
-	//Value: a ResourceBundle object.
 	protected static final String FIX_ME = "FIX ME!";
         
         static {
@@ -73,7 +65,7 @@ public class GlobalResourceLoader {
         }
 
 	protected static String generateBundlePath(String sPath, String sName) {
-		return new String(sPath + "." + sName);
+		return sPath + "." + sName;
 	}
         
 	/*
