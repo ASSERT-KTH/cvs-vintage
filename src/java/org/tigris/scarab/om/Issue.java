@@ -120,8 +120,12 @@ public class Issue
         "getCreatedDate";
     protected static final String GET_CREATED_BY = 
         "getCreatedBy";
+    protected static final String GET_LAST_TRANSACTION = 
+        "getLastTransaction";
     protected static final String GET_MODIFIED_BY = 
         "getModifiedBy";
+    protected static final String GET_MODIFIED_DATE = 
+        "getModifiedDate";
     protected static final String GET_COMMENTS = 
         "getComments";
     protected static final String GET_URLS = 
@@ -1001,19 +1005,18 @@ public class Issue
         return result;
     }
 
-
     /**
-     * The last user to modify the issue.
+     * The last modification made to the issue.
      *
      * @return a <code>ScarabUser</code> value
      */
-    public ScarabUser getModifiedBy()
+    public Transaction getLastTransaction()
         throws Exception
     {
-        ScarabUser result = null;
+        Transaction t = null;
         if ( !isNew() ) 
         {
-            Object obj = ScarabCache.get(this, GET_MODIFIED_BY); 
+            Object obj = ScarabCache.get(this, GET_LAST_TRANSACTION); 
             if ( obj == null ) 
             {        
                 Criteria crit = new Criteria();
@@ -1029,12 +1032,74 @@ public class Issue
                 List transactions = TransactionPeer.doSelect(crit);
                 if ( transactions.size() > 0 ) 
                 {
-                    Transaction t = (Transaction)transactions.get(0);
-                    result = ScarabUserManager.getInstance(t.getCreatedBy());
+                    t = (Transaction)transactions.get(0);
+                }
+                ScarabCache.put(t, this, GET_LAST_TRANSACTION);
+            }
+            else 
+            {
+                t = (Transaction)obj;
+            }
+        }
+        return t;
+    }
+
+
+    /**
+     * The date issue was last modified.
+     *
+     * @return a <code>ScarabUser</code> value
+     */
+    public Date getModifiedDate()
+        throws Exception
+    {
+        Date result = null;
+        if ( !isNew() ) 
+        {
+            Object obj = ScarabCache.get(this, GET_MODIFIED_DATE); 
+            if ( obj == null ) 
+            {        
+                Transaction t = getLastTransaction();
+                if ( t == null)
+                {
+                    result = getCreatedDate();
                 }
                 else 
                 {
+                    result = t.getCreatedDate();
+                }
+                ScarabCache.put(result, this, GET_MODIFIED_DATE);
+            }
+            else 
+            {
+                result = (Date)obj;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * The last user to modify the issue.
+     *
+     * @return a <code>ScarabUser</code> value
+     */
+    public ScarabUser getModifiedBy()
+        throws Exception
+    {
+        ScarabUser result = null;
+        if ( !isNew() ) 
+        {
+            Object obj = ScarabCache.get(this, GET_MODIFIED_BY); 
+            if ( obj == null ) 
+            {        
+                Transaction t = getLastTransaction();
+                if ( t == null)
+                {
                     result = getCreatedBy();
+                }
+                else 
+                {
+                    result = ScarabUserManager.getInstance(t.getCreatedBy());
                 }
                 ScarabCache.put(result, this, GET_MODIFIED_BY);
             }
