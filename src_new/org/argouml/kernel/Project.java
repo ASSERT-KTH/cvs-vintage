@@ -24,7 +24,7 @@
 // File: Project.java
 // Classes: Project
 // Original Author: not known
-// $Id: Project.java,v 1.25 2002/07/30 23:19:41 linus Exp $
+// $Id: Project.java,v 1.26 2002/08/02 08:06:08 kataka Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to remove
 // include and extend relationships when deleting a use case.
@@ -877,7 +877,9 @@ public class Project implements java.io.Serializable {
     }
     
     /**
-     * Finds all figs on the diagrams for some project member.
+     * Finds all figs on the diagrams for some project member, including the 
+     * figs containing the member (so for some operation, the containing figclass
+     * is returned).
      * @param member The member we are looking for. This can be a NSUML object but also another object.
      * @return Collection The collection with the figs.
      */
@@ -886,7 +888,7 @@ public class Project implements java.io.Serializable {
     	Iterator it = getDiagrams().iterator();
     	while(it.hasNext()) {
     		ArgoDiagram diagram = (ArgoDiagram)it.next();
-    		Fig fig = diagram.presentationFor(member);
+    		Fig fig = diagram.getContainingFig(member);
     		if (fig != null) {
     			figs.add(fig);
     		}
