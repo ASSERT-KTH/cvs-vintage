@@ -7,7 +7,7 @@
 #if (!$issueId || $issueId.length() == 0 || !$issue)
 
 <h3>Error</h3>
-<p><strong class="alert">Sorry, the requested issue could not be found.</strong></p>
+<p class="alert">Sorry, the requested issue could not be found.</p>
 
 #else
 
@@ -35,14 +35,8 @@
 <input type="hidden" name="$moveIssueGroup.Action.key" value="$selectAction" />
 
 <div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-  <input type="submit" value="Back" name="eventSubmit_doBacktoone" />&#160; 
-  <input type="submit" value="$actionText Issue" name="eventSubmit_doSaveissue" />
-  </td>
- </tr>
-</table>
+  <input type="submit" value="$actionText issue" name="eventSubmit_doSaveissue" />
+  <input type="submit" value="Cancel" name="eventSubmit_doBacktoone" />&#160; 
 </div>
 
 #set ($attrValues = $issue.AllAttributeValuesMap)
@@ -55,7 +49,7 @@
    #set ($attVal = $issue.DefaultTextAttributeValue)
 #end
 #if ($attVal)
-  <th>$attVal.RModuleAttribute.DisplayValue:</th>
+  <th>$attVal.RModuleAttribute.DisplayValue</th>
 #end
   <th>Date committed</th>
   <th>Committed by</th>
@@ -74,7 +68,8 @@
  </tr>
 </table>
 
-<div class="axial"> <table border="1" cellspacing="2" cellpadding="3">
+<div class="axial">
+<table border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th width="120">Destination module</th>
 <td>$newModule.Name</td>
@@ -158,14 +153,8 @@
 #end
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-  <input type="submit" value="Back" name="eventSubmit_doBacktoone" />&#160; 
-  <input type="submit" value="$actionText Issue" name="eventSubmit_doSaveissue" />
-  </td>
- </tr>
-</table>
+  <input type="submit" value="$actionText issue" name="eventSubmit_doSaveissue" />
+  <input type="submit" value="Cancel" name="eventSubmit_doBacktoone" />&#160; 
 </div>
 
 $intake.declareGroups()
