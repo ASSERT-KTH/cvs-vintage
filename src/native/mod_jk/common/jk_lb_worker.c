@@ -58,7 +58,7 @@
  *              several workers.                                           *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -133,7 +133,7 @@ static char *get_path_param(jk_ws_service_t *s,
                  * string if appended...
                  */
                 if(id_end = strchr(id_start, '?')) { 
-                    id_end = NULL;
+                    *id_end = '\0';
                 }
                 return id_start;
             }
