@@ -13,12 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.pop3.command;
 
 import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.text.MessageFormat;
 
 import javax.swing.JOptionPane;
 
@@ -39,6 +41,7 @@ import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.Message;
 import org.columba.mail.pop3.POP3Server;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author freddy
@@ -77,7 +80,10 @@ public class FetchNewMessagesCommand extends Command {
 
 		server = r[0].getServer();
 
-		log("Authenticating...", worker);
+		log(MailResourceLoader.getString(
+                                "statusbar",
+                                "message",
+                                "authenticating"), worker);
 
 		try {
 			// login and get # of messages on server
@@ -126,7 +132,6 @@ public class FetchNewMessagesCommand extends Command {
 			// always enable the menuitem again 
 			r[0].getPOP3ServerController().enableActions(true);
 		}
-
 	}
 
 	protected void log(String message, WorkerStatusController worker) {
@@ -155,7 +160,6 @@ public class FetchNewMessagesCommand extends Command {
 			"columba.size",
 			new Integer(Math.round(size / 1024)));
 		message.getHeader().set("columba.flags.seen", Boolean.FALSE);
-		//System.out.println("message:\n" + message.getSource());
 
 		// get inbox-folder from pop3-server preferences
 		Folder inboxFolder = server.getFolder();
@@ -188,7 +192,6 @@ public class FetchNewMessagesCommand extends Command {
 
 				MainInterface.processor.addOp(command);
 			}
-
 		}
 	}
 
@@ -241,8 +244,10 @@ public class FetchNewMessagesCommand extends Command {
 				ColumbaLogger.log.info("fetch message with UID=" + serverUID);
 			}
 
-			log(
-				"Fetching " + (i + 1) + "/" + newMessageCount + " messages...",
+			log(MessageFormat.format(MailResourceLoader.getString(
+                                        "statusbar",
+                                        "message",
+                                        "fetch_messages"), new Object[]{new Integer(i + 1), new Integer(newMessageCount)}),
 				worker);
 
 			// lookup index of message 
@@ -279,11 +284,10 @@ public class FetchNewMessagesCommand extends Command {
 				serverUID,
 				worker);
 
-			if (server
+			if (!server
 				.getAccountItem()
 				.getPopItem()
-				.getBoolean("leave_messages_on_server")
-				== false) {
+				.getBoolean("leave_messages_on_server")) {
 				// delete message from server
 
 				/*
@@ -304,7 +308,6 @@ public class FetchNewMessagesCommand extends Command {
 				}
 			}
 		}
-
 	}
 
 	public List synchronize(List newUIDList) throws Exception {
@@ -321,15 +324,17 @@ public class FetchNewMessagesCommand extends Command {
 	public List fetchMessageSizes(WorkerStatusController worker)
 		throws Exception {
 
-		log("Fetching message size list...", worker);
-		// fetch message-size list 		
+		log(MailResourceLoader.getString(
+                                "statusbar",
+                                "message",
+                                "fetch_size_list"), worker);
+		// fetch message-size list
 		List messageSizeList = server.getMessageSizeList(worker);
 		if (MainInterface.DEBUG) {
 			ColumbaLogger.log.info(
 				"fetched message-size-list capacity=" + messageSizeList.size());
 		}
 		return messageSizeList;
-
 	}
 
 	public List fetchUIDList(
@@ -338,7 +343,10 @@ public class FetchNewMessagesCommand extends Command {
 		throws Exception {
 		// fetch UID list 
 
-		log("Fetch UID list...", worker);
+		log(MailResourceLoader.getString(
+                                "statusbar",
+                                "message",
+                                "fetch_uid_list"), worker);
 
 		List newUIDList = server.getUIDList(totalMessageCount, worker);
 		if (MainInterface.DEBUG) {
@@ -356,9 +364,16 @@ public class FetchNewMessagesCommand extends Command {
 			ColumbaLogger.log.info("logout");
 		}
 
-		log("Logout...", worker);
+		log(MailResourceLoader.getString(
+                                "statusbar",
+                                "message",
+                                "logout"), worker);
 
-		if (newMessageCount == 0)
-			log("No new messages on server", worker);
+		if (newMessageCount == 0) {
+			log(MailResourceLoader.getString(
+                                        "statusbar",
+                                        "message",
+                                        "no_new_messages"), worker);
+                }
 	}
 }
