@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.47 2004/12/23 18:27:53 bobtarling Exp $
+// $Id: ActionOpenProject.java,v 1.48 2004/12/26 11:14:45 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,7 +64,8 @@ public class ActionOpenProject extends ActionFileOperations
      * Constructor for this action.
      */
     public ActionOpenProject() {
-        super("action.open-project");
+        // this is not a "global" action, since it is never downlighted...
+        super("action.open-project", false, true);
     }
 
     ////////////////////////////////////////////////////////////////

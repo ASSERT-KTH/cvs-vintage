@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationRoleBase.java,v 1.12 2004/11/01 19:55:10 mvw Exp $
+// $Id: ActionSetAssociationRoleBase.java,v 1.13 2004/12/26 11:14:47 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,7 @@ public class ActionSetAssociationRoleBase extends UMLChangeAction {
      * Constructor for ActionSetAssociationRoleBase.
      */
     protected ActionSetAssociationRoleBase() {
-        super(Translator.localize("Set"), true, NO_ICON);
+        super(Translator.localize("Set"), false, NO_ICON);
     }   
 
     /**

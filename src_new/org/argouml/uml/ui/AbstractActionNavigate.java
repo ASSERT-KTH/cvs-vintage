@@ -1,4 +1,4 @@
-// $Id: AbstractActionNavigate.java,v 1.5 2004/10/13 05:52:28 linus Exp $
+// $Id: AbstractActionNavigate.java,v 1.6 2004/12/26 11:14:45 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ public abstract class AbstractActionNavigate extends UMLAction {
      * @param hasIcon true if there is an icon for this action
      */
     public AbstractActionNavigate(String name, boolean hasIcon) {
-        super(name, true, hasIcon);
+        super(name, hasIcon);
         putValue(Action.SMALL_ICON,
                  ResourceLoaderWrapper.lookupIconResource("NavigateUp"));
     }

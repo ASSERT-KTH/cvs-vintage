@@ -1,4 +1,4 @@
-// $Id: ActionSetSubmachineStateSubmachine.java,v 1.6 2004/11/01 19:55:04 mvw Exp $
+// $Id: ActionSetSubmachineStateSubmachine.java,v 1.7 2004/12/26 11:14:46 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ public class ActionSetSubmachineStateSubmachine extends UMLChangeAction {
      * Constructor for ActionSetModelElementStereotype.
      */
     protected ActionSetSubmachineStateSubmachine() {
-        super(Translator.localize("action.set"), true, NO_ICON);
+        super(Translator.localize("action.set"), false, NO_ICON);
     }
 
     /**

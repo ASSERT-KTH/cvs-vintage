@@ -1,4 +1,4 @@
-// $Id: ActionSystemInfo.java,v 1.2 2004/11/04 17:23:16 bobtarling Exp $
+// $Id: ActionSystemInfo.java,v 1.3 2004/12/26 11:14:44 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,10 +36,11 @@ import org.argouml.uml.ui.UMLAction;
 /**
  * System information dialog. 
  */
-
 class ActionSystemInfo extends UMLAction {
 
-    public ActionSystemInfo() { super("action.system-information", HAS_ICON); }
+    public ActionSystemInfo() { 
+        super("action.system-information", HAS_ICON); 
+    }
 
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -59,11 +60,6 @@ class ActionSystemInfo extends UMLAction {
 	sysInfoDialog.setLocationRelativeTo(jFrame);
 	sysInfoDialog.show();
     }
-
-    /**
-     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
-     */
-    public boolean shouldBeEnabled() { return true; }
 
 } /* end class ActionSystemInfo */
 

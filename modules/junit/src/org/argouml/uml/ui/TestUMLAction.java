@@ -1,4 +1,4 @@
-// $Id: TestUMLAction.java,v 1.9 2004/09/19 21:06:26 mvw Exp $
+// $Id: TestUMLAction.java,v 1.10 2004/12/26 11:14:48 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ public class TestUMLAction extends TestCase {
      * 
      */
     public void testCreate1() {
-	UMLAction to = new UMLAction(new String("hejsan"));
+	UMLAction to = new UMLAction(new String("hejsan"), true);
 	assertTrue("Disabled", to.shouldBeEnabled());
     }
 
@@ -71,8 +71,7 @@ public class TestUMLAction extends TestCase {
      * 
      */
     public void testCreate3() {
-	UMLAction to = new UMLAction(new String("hejsan"), true, 
-            UMLAction.NO_ICON);
+	UMLAction to = new UMLAction(new String("hejsan"), UMLAction.NO_ICON);
 	assertTrue("Disabled", to.shouldBeEnabled());
     }
 	
@@ -87,13 +86,13 @@ public class TestUMLAction extends TestCase {
     }
 
     private void compileTestConstructors() {
-	new UMLAction(new String());
 	new UMLAction(new String(), true);
-	new UMLAction(new String(), true, true);
+	new UMLAction(new String(), true);
+	new UMLAction(new String(), true);
     }
 
     private void compileTestMethods() {
-	UMLAction to = new UMLAction(new String());
+	UMLAction to = new UMLAction(new String(), true);
 
 	// to.actionPerformed(new ActionEvent());
 	to.markNeedsSave();

@@ -1,4 +1,4 @@
-// $Id: ActionGoToEdit.java,v 1.6 2004/08/20 21:06:59 mvw Exp $
+// $Id: ActionGoToEdit.java,v 1.7 2004/12/26 11:14:44 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ public class ActionGoToEdit extends UMLAction {
      * @param name The name of the tab.
      */
     public ActionGoToEdit(String name) {
-	super(name, NO_ICON);
+	super(name, true, NO_ICON);
 	tabName = name;
     }
 

@@ -1,4 +1,4 @@
-// $Id: ActionMultiplicity.java,v 1.3 2004/10/20 11:46:50 mkl Exp $
+// $Id: ActionMultiplicity.java,v 1.4 2004/12/26 11:14:46 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,7 +81,7 @@ public class ActionMultiplicity extends UMLAction {
      */
     protected ActionMultiplicity(Object/*MMultiplicity*/ m, String s) {
 	//super(m.getLower() + ".." + m.getUpper(), NO_ICON);
-	super(m.toString(), NO_ICON);
+	super(m.toString(), true, NO_ICON);
 	str = s;
 	mult = m;
     }

@@ -1,4 +1,4 @@
-// $Id: ActionSetCompositeStateConcurrent.java,v 1.8 2004/10/12 17:44:26 bobtarling Exp $
+// $Id: ActionSetCompositeStateConcurrent.java,v 1.9 2004/12/26 11:14:46 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ public class ActionSetCompositeStateConcurrent extends UMLChangeAction {
      * Constructor for ActionSetCompositeStateConcurrent.
      */
     protected ActionSetCompositeStateConcurrent() {
-        super(Translator.localize("action.set"), true, NO_ICON);
+        super(Translator.localize("action.set"), false, NO_ICON);
     }
     
     /**

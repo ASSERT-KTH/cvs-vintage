@@ -1,4 +1,4 @@
-// $Id: ActionOpenBrowser.java,v 1.3 2004/11/21 10:22:18 mvw Exp $
+// $Id: ActionOpenBrowser.java,v 1.4 2004/12/26 11:14:44 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,9 @@ public class ActionOpenBrowser extends UMLAction {
     /**
      * The constructor.
      */
-    public ActionOpenBrowser() { super("action.open-browser", NO_ICON); }
+    public ActionOpenBrowser() { 
+        super("action.open-browser", NO_ICON); 
+    }
     
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)

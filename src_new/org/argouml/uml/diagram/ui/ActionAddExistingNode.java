@@ -1,4 +1,4 @@
-// $Id: ActionAddExistingNode.java,v 1.15 2004/10/13 05:52:21 linus Exp $
+// $Id: ActionAddExistingNode.java,v 1.16 2004/12/26 11:14:46 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,22 +55,15 @@ public class ActionAddExistingNode extends UMLAction
 
     ////////////////////////////////////////////////////////////////
     // constructor
-    /**
-     * The Constructor.
-     * @param myTabName the tab
-     */
-    public ActionAddExistingNode(String myTabName) {
-        super(myTabName, NO_ICON);
-    }
 
     /**
      * The Constructor.
      *  
-     * @param myTabName the name of the tab
+     * @param name the name of the action
      * @param o the node object to be added
      */
-    public ActionAddExistingNode(String myTabName, Object o) {
-        super(myTabName, NO_ICON);
+    public ActionAddExistingNode(String name, Object o) {
+        super(name, true, NO_ICON);
         object = o;
     }
 

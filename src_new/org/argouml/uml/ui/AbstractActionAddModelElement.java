@@ -1,4 +1,4 @@
-// $Id: AbstractActionAddModelElement.java,v 1.11 2004/08/16 19:30:57 mvw Exp $
+// $Id: AbstractActionAddModelElement.java,v 1.12 2004/12/26 11:14:45 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractActionAddModelElement.java,v 1.11 2004/08/16 19:30:57 mvw Exp $
+// $Id: AbstractActionAddModelElement.java,v 1.12 2004/12/26 11:14:45 mvw Exp $
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
@@ -49,7 +49,8 @@ public abstract class AbstractActionAddModelElement extends UMLChangeAction {
      * The constructor.
      */
     protected AbstractActionAddModelElement() {
-        super(Translator.localize("Add"), true, NO_ICON);
+        super(Translator.localize("menu.popup.add-modelelement"), false, 
+                NO_ICON);
     }
         
 

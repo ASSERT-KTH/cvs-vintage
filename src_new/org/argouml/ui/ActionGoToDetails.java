@@ -1,4 +1,4 @@
-// $Id: ActionGoToDetails.java,v 1.12 2004/07/17 16:52:03 linus Exp $
+// $Id: ActionGoToDetails.java,v 1.13 2004/12/26 11:14:44 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,12 +48,12 @@ public class ActionGoToDetails extends UMLAction {
      * @param name The name of the tab.
      */
     public ActionGoToDetails(String name) {
-	super(name, NO_ICON);
+	super(name, true, NO_ICON);
 	tabName = name;
     }
 
     /**
-     * Should return true as the pane where the user can navigate to supports
+     * Should return true if the pane where the user can navigate to supports
      * the current target.
      * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
      */

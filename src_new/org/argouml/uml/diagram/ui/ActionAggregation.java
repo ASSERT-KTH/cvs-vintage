@@ -1,4 +1,4 @@
-// $Id: ActionAggregation.java,v 1.4 2004/10/20 11:46:50 mkl Exp $
+// $Id: ActionAggregation.java,v 1.5 2004/12/26 11:14:46 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +73,7 @@ public class ActionAggregation extends UMLAction {
      * @param s "src" or "dest". Anything else is interpreted as "dest".
      */
     protected ActionAggregation(Object/*MAggregationKind*/ a, String s) {
-	super(ModelFacade.getName(a), NO_ICON);
+	super(ModelFacade.getName(a), true, NO_ICON);
 	str = s;
 	agg = a;
     }

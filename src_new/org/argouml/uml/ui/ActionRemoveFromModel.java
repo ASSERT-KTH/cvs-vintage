@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.47 2004/11/13 20:21:49 mvw Exp $
+// $Id: ActionRemoveFromModel.java,v 1.48 2004/12/26 11:14:45 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,17 +61,9 @@ public class ActionRemoveFromModel extends UMLChangeAction {
      * Constructor.
      */
     public ActionRemoveFromModel() {
-        super(Translator.localize("action.delete-from-model"));
+        super(Translator.localize("action.delete-from-model"), true, HAS_ICON);
     }
 
-    /**
-     * Constructor.
-     *
-     * @param global <tt>true</tt> if we have an icon.
-     */
-    protected ActionRemoveFromModel(boolean global) {
-        super(Translator.localize("action.delete-from-model"), global);
-    }
 
     /**
      * Only disabled when nothing is selected. Necessary to use since this 

@@ -1,4 +1,4 @@
-// $Id: ActionAutoResize.java,v 1.11 2004/08/20 19:28:26 mvw Exp $
+// $Id: ActionAutoResize.java,v 1.12 2004/12/26 11:14:44 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,11 +27,12 @@ package org.argouml.ui;
 import java.awt.event.ActionEvent;
 import org.argouml.uml.ui.UMLAction;
 
-/** A class to keep track of the users desire to have his diagram nodes
- *  automatically resized.
+/** 
+ * A class to keep track of the users desire to have his diagram nodes
+ * automatically resized.
  *  
- *  @see org.argouml.ui.cmd.CmdSetPreferredSize
- *  @author Markus Klink
+ * @see org.argouml.ui.cmd.CmdSetPreferredSize
+ * @author Markus Klink
  */
 public class ActionAutoResize extends UMLAction {
 
@@ -41,7 +42,7 @@ public class ActionAutoResize extends UMLAction {
      * The constructor.
      */
     public ActionAutoResize() {
-        super("action.toggle-auto-resizing",  NO_ICON);
+        super("action.toggle-auto-resizing", NO_ICON);
     }
 
     /**

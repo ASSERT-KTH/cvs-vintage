@@ -1,4 +1,4 @@
-// $Id: AbstractActionNewModelElement.java,v 1.12 2004/11/22 20:54:36 mvw Exp $
+// $Id: AbstractActionNewModelElement.java,v 1.13 2004/12/26 11:14:45 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractActionNewModelElement.java,v 1.12 2004/11/22 20:54:36 mvw Exp $
+// $Id: AbstractActionNewModelElement.java,v 1.13 2004/12/26 11:14:45 mvw Exp $
 package org.argouml.uml.ui;
 
 import org.argouml.i18n.Translator;
@@ -36,8 +36,8 @@ public abstract class AbstractActionNewModelElement extends UMLChangeAction {
     private Object/*MModelElement*/ target;
     
     /**
-     *  The constructor.
-     * Defaults to name "action.new" and NO_ICON
+     * The constructor.
+     * Defaults to name "action.new", global and NO_ICON
      */
     protected AbstractActionNewModelElement() {
         super(Translator.localize("action.new"), true, NO_ICON);
@@ -49,7 +49,7 @@ public abstract class AbstractActionNewModelElement extends UMLChangeAction {
      * @param name the to be localized name of the action
      */
     protected AbstractActionNewModelElement(String name) {
-        super(name);
+        super(name, true, HAS_ICON);
     }
     
      /**

@@ -1,4 +1,4 @@
-// $Id: Actions.java,v 1.79 2004/10/02 20:49:38 mvw Exp $
+// $Id: Actions.java,v 1.80 2004/12/26 11:14:44 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,9 +40,11 @@ import org.argouml.uml.ui.UMLAction;
  * "enabled" status of all these actions.<p>
  * 
  * Which means: <br>
- * Any ArgoUML class may tell Actions by calling addAction() about UMLActions 
- * of which the availability depends on the currently selected Target 
- * or the state of ArgoUML.
+ * Any instance of UMLAction may (at construction time) 
+ * tell Actions by calling addAction() 
+ * about UMLActions of which the availability depends on the currently 
+ * selected Target or the state of ArgoUML. <p>
+ * 
  * From here on, Actions will check the availability 
  * of all enlisted UMLActions after every Target change and
  * after every ArgoUML state change (i.e. every user action), 
@@ -101,6 +103,9 @@ public class Actions implements TargetListener {
     }
 
     /**
+     * Add actions to the global actions list. 
+     * Only done at construction time for UMLActions.
+     * 
      * @param newAction the new action to be added
      */
     public static void addAction(UMLAction newAction) {

@@ -1,4 +1,4 @@
-// $Id: ActionGotoDiagram.java,v 1.5 2004/10/25 19:24:51 mvw Exp $
+// $Id: ActionGotoDiagram.java,v 1.6 2004/12/26 11:14:44 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,9 @@ public class ActionGotoDiagram
     /**
      * The constructor.
      */
-    public ActionGotoDiagram() { super("action.goto-diagram", NO_ICON); }
+    public ActionGotoDiagram() { 
+        super("action.goto-diagram", NO_ICON); 
+    }
 
     
     /**

@@ -1,4 +1,4 @@
-// $Id: ActionAboutArgoUML.java,v 1.1 2004/09/28 19:45:05 mvw Exp $
+// $Id: ActionAboutArgoUML.java,v 1.2 2004/12/26 11:14:44 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,9 @@ import org.argouml.uml.ui.UMLAction;
  */
 class ActionAboutArgoUML extends UMLAction {
 
-    public ActionAboutArgoUML() { super("action.about-argouml", HAS_ICON); }
+    public ActionAboutArgoUML() { 
+        super("action.about-argouml", HAS_ICON); 
+    }
 
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -52,9 +54,5 @@ class ActionAboutArgoUML extends UMLAction {
 	box.show();
     }
 
-    /**
-     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
-     */
-    public boolean shouldBeEnabled() { return true; }
 
 } /* end class ActionAboutArgoUML */

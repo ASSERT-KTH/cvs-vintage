@@ -1,4 +1,4 @@
-// $Id: ActionAddMessage.java,v 1.3 2004/12/19 11:05:38 mvw Exp $
+// $Id: ActionAddMessage.java,v 1.4 2004/12/26 11:14:46 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,7 @@ public class ActionAddMessage extends UMLChangeAction {
      * The constructor.
      */
     private ActionAddMessage() { 
-        super("action.add-message"); 
+        super("action.add-message", true, HAS_ICON); 
     }
 
 

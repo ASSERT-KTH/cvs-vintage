@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.35 2004/11/21 10:36:52 mvw Exp $
+// $Id: TargetManager.java,v 1.36 2004/12/26 11:14:47 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -292,12 +292,8 @@ public final class TargetManager {
                 // times in history
             }
             if (oldCurrentTarget != currentTarget) {
-            	/* TODO: updateAllEnabled() has been deprecated, and
-            	 * the replacement is to use
-            	 * updateAllEnabled(TargetEvent e), but what
-            	 * TargetEvent would be passed?
-            	 */
-                Actions.updateAllEnabled();
+                Actions.updateAllEnabled(); /*TODO: (MVW) Why? Actions is 
+                * listening to target changes already... */
             }
         }
 

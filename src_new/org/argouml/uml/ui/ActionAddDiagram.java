@@ -1,4 +1,4 @@
-// $Id: ActionAddDiagram.java,v 1.27 2004/10/06 19:26:24 mvw Exp $
+// $Id: ActionAddDiagram.java,v 1.28 2004/12/26 11:14:44 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddDiagram.java,v 1.27 2004/10/06 19:26:24 mvw Exp $
+// $Id: ActionAddDiagram.java,v 1.28 2004/12/26 11:14:44 mvw Exp $
 
 package org.argouml.uml.ui;
 
@@ -53,9 +53,21 @@ public abstract class ActionAddDiagram extends UMLChangeAction {
      * @param s the name for this action
      */
     public ActionAddDiagram(String s) {
-        super(s);
+        super(s, true, HAS_ICON);
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param s the name
+     * @param global is global
+     * @param hasIcon has an icon
+     */
+    public ActionAddDiagram(String s, boolean global, boolean hasIcon) {
+        super(s, global, hasIcon);
+    }
+
+    
     /**
      * @see java.awt.event.ActionListener#actionPerformed(ActionEvent)
      */

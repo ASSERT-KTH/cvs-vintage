@@ -1,4 +1,4 @@
-// $Id: ActionNotation.java,v 1.8 2004/10/28 05:46:05 linus Exp $
+// $Id: ActionNotation.java,v 1.9 2004/12/26 11:14:47 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import javax.swing.event.MenuListener;
 
 import org.argouml.application.api.Notation;
 import org.argouml.application.api.NotationName;
+import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.UMLAction;
 
 
@@ -71,8 +72,8 @@ public class ActionNotation extends UMLAction
      * Constructor - adds the Notation menu.
      */
     public ActionNotation() {
-        super("Notation", NO_ICON);
-        menu = new JMenu("Notation");
+        super(Translator.localize("menu.notation"), NO_ICON);
+        menu = new JMenu(Translator.localize("menu.notation"));
         menu.add(this);
         menu.addMenuListener(this);
     }

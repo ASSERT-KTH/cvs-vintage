@@ -1,4 +1,4 @@
-// $Id: ActionAddAttribute.java,v 1.9 2004/10/29 19:37:03 mvw Exp $
+// $Id: ActionAddAttribute.java,v 1.10 2004/12/26 11:14:46 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,9 @@ public class ActionAddAttribute extends UMLChangeAction {
     /**
      * The constructor for this class.
      */
-    public ActionAddAttribute() { super("button.new-attribute"); }    
+    public ActionAddAttribute() { 
+        super("button.new-attribute", true, HAS_ICON); 
+    }    
 
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)

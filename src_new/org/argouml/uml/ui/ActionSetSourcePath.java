@@ -1,4 +1,4 @@
-// $Id: ActionSetSourcePath.java,v 1.18 2004/09/16 20:50:04 mvw Exp $
+// $Id: ActionSetSourcePath.java,v 1.19 2004/12/26 11:14:45 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,7 @@ public class ActionSetSourcePath extends UMLAction {
      * The constructor.
      */
     protected ActionSetSourcePath() {
-	super("action.set-source-path", NO_ICON);
+	super("action.set-source-path", true, NO_ICON);
     }
 
 

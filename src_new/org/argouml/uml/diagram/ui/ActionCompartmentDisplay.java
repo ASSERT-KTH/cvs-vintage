@@ -1,4 +1,4 @@
-// $Id: ActionCompartmentDisplay.java,v 1.6 2004/10/20 11:46:50 mkl Exp $
+// $Id: ActionCompartmentDisplay.java,v 1.7 2004/12/26 11:14:46 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ActionCompartmentDisplay.java
 // Classes: ActionCompartmentDisplay
 // Original Author: your email address here
-// $Id: ActionCompartmentDisplay.java,v 1.6 2004/10/20 11:46:50 mkl Exp $
+// $Id: ActionCompartmentDisplay.java,v 1.7 2004/12/26 11:14:46 mvw Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // compartments for extension points on use cases.
@@ -156,7 +156,7 @@ public class ActionCompartmentDisplay extends UMLAction {
     protected ActionCompartmentDisplay(boolean d, String c) {
 
         // Invoke the parent constructor
-	super(c, NO_ICON);
+	super(c, true, NO_ICON);
 
         // Save copies of the parameters
 	display = d;

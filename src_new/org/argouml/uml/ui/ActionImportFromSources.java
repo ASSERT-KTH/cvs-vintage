@@ -1,4 +1,4 @@
-// $Id: ActionImportFromSources.java,v 1.20 2004/09/18 15:56:49 mvw Exp $
+// $Id: ActionImportFromSources.java,v 1.21 2004/12/26 11:14:45 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: ActionImportFromSources.java,v 1.20 2004/09/18 15:56:49 mvw Exp $
 
 package org.argouml.uml.ui;
 
@@ -57,7 +56,8 @@ public class ActionImportFromSources extends UMLAction {
      *  The constructor.
      */
     protected ActionImportFromSources() {
-        super("action.import-sources");
+        // this is not a "global" action, since it is never downlighted...
+        super("action.import-sources", HAS_ICON);
     }
 
 

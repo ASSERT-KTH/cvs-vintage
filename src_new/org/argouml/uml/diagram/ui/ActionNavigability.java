@@ -1,4 +1,4 @@
-// $Id: ActionNavigability.java,v 1.5 2004/10/20 11:46:50 mkl Exp $
+// $Id: ActionNavigability.java,v 1.6 2004/12/26 11:14:46 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -120,7 +120,7 @@ public class ActionNavigability extends UMLAction {
 				 Object theAssociationStart,
 				 Object theAssociationEnd,
 				 int theNavigability) {
-        super(label, NO_ICON);
+        super(label, true, NO_ICON);
 
         this.nav = theNavigability;
         this.assocStart = theAssociationStart;

@@ -1,4 +1,4 @@
-// $Id: ActionSetObjectFlowStateClassifier.java,v 1.1 2004/08/11 20:59:24 mvw Exp $
+// $Id: ActionSetObjectFlowStateClassifier.java,v 1.2 2004/12/26 11:14:47 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,7 @@ public class ActionSetObjectFlowStateClassifier extends UMLChangeAction {
      * Constructor for ActionSetObjectFlowStateClassifier.
      */
     protected ActionSetObjectFlowStateClassifier() {
-        super(Translator.localize("Set"), true, NO_ICON);
+        super(Translator.localize("Set"), false, NO_ICON);
     }
  
     /**

@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.75 2004/12/09 19:20:16 mvw Exp $
+// $Id: NavigatorPane.java,v 1.76 2004/12/26 11:14:44 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -183,7 +183,8 @@ public class NavigatorPane
     class ActionPerspectiveConfig extends UMLAction {
         
         public ActionPerspectiveConfig() {
-	    super("action.configure-perspectives");
+            // this is not a "global" action, since it is never downlighted...
+	    super("action.configure-perspectives", HAS_ICON);
 	}
         
         public void actionPerformed(ActionEvent ae) {

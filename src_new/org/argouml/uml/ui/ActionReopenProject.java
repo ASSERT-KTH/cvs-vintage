@@ -1,4 +1,4 @@
-// $Id: ActionReopenProject.java,v 1.10 2004/12/11 12:15:50 mvw Exp $
+// $Id: ActionReopenProject.java,v 1.11 2004/12/26 11:14:45 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
 
 /**
  * Reopens a project with respect of the calling event handler - should be 
- * used with menu item
+ * used with menu item.
  *
  * @author  Frank Jelinek
  * @since 10. November 2003 (0.15.2)

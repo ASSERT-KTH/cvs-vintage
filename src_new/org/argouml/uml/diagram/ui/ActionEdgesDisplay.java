@@ -1,4 +1,4 @@
-// $Id: ActionEdgesDisplay.java,v 1.7 2004/12/22 21:38:36 mvw Exp $
+// $Id: ActionEdgesDisplay.java,v 1.8 2004/12/26 11:14:46 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,7 +70,7 @@ public class ActionEdgesDisplay extends UMLAction {
      * @param desc the name
      */
     protected ActionEdgesDisplay(boolean showEdge, String desc) {
-        super(desc, NO_ICON);
+        super(desc, true, NO_ICON);
         show = showEdge;
     }
 

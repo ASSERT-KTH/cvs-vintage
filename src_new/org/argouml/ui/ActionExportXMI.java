@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.11 2004/10/13 05:52:24 linus Exp $
+// $Id: ActionExportXMI.java,v 1.12 2004/12/26 11:14:44 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,7 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
      * Constructor.
      */
     private ActionExportXMI() {
-        super("action.export-project-as-xmi", false);
+        super("action.export-project-as-xmi", NO_ICON);
     }
 
     /**
@@ -239,13 +239,6 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
             }
 
         }
-    }
-
-    /**
-     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
-     */
-    public boolean shouldBeEnabled() {
-        return true;
     }
 
 }

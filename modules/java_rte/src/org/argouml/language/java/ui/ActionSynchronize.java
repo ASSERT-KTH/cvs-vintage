@@ -1,4 +1,4 @@
-// $Id: ActionSynchronize.java,v 1.6 2004/08/27 15:23:07 mvw Exp $
+// $Id: ActionSynchronize.java,v 1.7 2004/12/26 11:14:47 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,8 @@ import org.argouml.application.api.PluggableMenu;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.ui.UMLAction;
 
-/** Plugin for synchronizing Java sources (RTE).
+/** 
+ * Plugin for synchronizing Java sources (RTE).
  *
  *  @author Thomas Neustupny
  *  @since  0.11.3

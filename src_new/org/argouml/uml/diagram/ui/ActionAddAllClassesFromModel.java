@@ -1,4 +1,4 @@
-// $Id: ActionAddAllClassesFromModel.java,v 1.3 2004/08/14 15:26:11 mvw Exp $
+// $Id: ActionAddAllClassesFromModel.java,v 1.4 2004/12/26 11:14:46 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,22 +50,12 @@ public class ActionAddAllClassesFromModel extends UMLAction {
     /**
      * Constructor
      *
-     * @param myTabName the name of the tab
-     */
-    public ActionAddAllClassesFromModel(String myTabName) {
-        super(myTabName, NO_ICON);
-        tabName = myTabName;
-    }
-
-    /**
-     * Constructor
-     *
-     * @param myTabName the name of the tab
+     * @param name the name of the action
      * @param o the Diagram
      */
-    public ActionAddAllClassesFromModel(String myTabName, Object o) {
-        super(myTabName, NO_ICON);
-        tabName = myTabName;
+    public ActionAddAllClassesFromModel(String name, Object o) {
+        super(name, true, NO_ICON);
+        tabName = name;
         object = o;
     }
 

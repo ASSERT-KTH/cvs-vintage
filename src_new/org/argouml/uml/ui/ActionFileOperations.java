@@ -1,4 +1,4 @@
-// $Id: ActionFileOperations.java,v 1.5 2004/12/24 17:20:45 bobtarling Exp $
+// $Id: ActionFileOperations.java,v 1.6 2004/12/26 11:14:44 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ import org.argouml.ui.ProjectBrowser;
  * This class provides common functions for all FileOperations 
  * like new, save, load, and reopen.
  * 
- * @author MVW
+ * @author mvw@tigris.org
  *
  */
 public abstract class ActionFileOperations extends UMLAction {
@@ -58,7 +58,7 @@ public abstract class ActionFileOperations extends UMLAction {
      * @param name the name of the action
      */
     public ActionFileOperations(String name) {
-        super(name);
+        super(name, HAS_ICON);
     }
 
     /**
@@ -80,7 +80,7 @@ public abstract class ActionFileOperations extends UMLAction {
      * @param hasIcon true if an icon should be shown
      */
     public ActionFileOperations(String name, boolean global, boolean hasIcon) {
-        super(name, global, hasIcon);
+        super(name, hasIcon);
     }
 
     /**

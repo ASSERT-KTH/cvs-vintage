@@ -1,4 +1,4 @@
-// $Id: ActionModifier.java,v 1.6 2004/10/20 11:46:50 mkl Exp $
+// $Id: ActionModifier.java,v 1.7 2004/12/26 11:14:46 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,7 +64,7 @@ public class ActionModifier extends UMLAction {
 			  String getMethod,
 			  String setMethod,
 			  Object mclass) {
-	super(name, NO_ICON);
+	super(name, true, NO_ICON);
 	this.object = mclass;
 	property =
 	    new UMLReflectionBooleanProperty(propertyName, mclassClass,
@@ -98,7 +98,7 @@ public class ActionModifier extends UMLAction {
 			  Object theTrueValue,
 			  Object theFalseValue)
     {
-	super(name, NO_ICON);
+	super(name, true, NO_ICON);
 	this.object = mclass;
 	property =
 	    new UMLEnumerationBooleanProperty(propertyName, mclassClass,

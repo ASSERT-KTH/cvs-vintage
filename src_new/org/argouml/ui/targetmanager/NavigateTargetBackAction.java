@@ -1,4 +1,4 @@
-// $Id: NavigateTargetBackAction.java,v 1.3 2004/08/29 19:40:55 mvw Exp $
+// $Id: NavigateTargetBackAction.java,v 1.4 2004/12/26 11:14:47 mvw Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ public class NavigateTargetBackAction extends UMLAction {
     }
 
     private NavigateTargetBackAction() {
-        super("action.navigate-back");
+        super("action.navigate-back", true, HAS_ICON);
     }
 
     /**
@@ -58,12 +58,12 @@ public class NavigateTargetBackAction extends UMLAction {
     }
 
     /**
-     * Action is possible as navigateForwardPossible on targetManager
-     * returns true
+     * Action is possible only if navigateForwardPossible on targetManager
+     * returns true.
      * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
      */
     public boolean shouldBeEnabled() {
-        super.shouldBeEnabled();
-        return TargetManager.getInstance().navigateBackPossible();
+        return super.shouldBeEnabled()  
+            && TargetManager.getInstance().navigateBackPossible();
     }
 }

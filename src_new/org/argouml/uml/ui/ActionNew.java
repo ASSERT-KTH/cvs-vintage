@@ -1,4 +1,4 @@
-// $Id: ActionNew.java,v 1.26 2004/12/11 12:15:50 mvw Exp $
+// $Id: ActionNew.java,v 1.27 2004/12/26 11:14:45 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,10 @@ public class ActionNew extends ActionFileOperations {
     /**
      * The constructor.
      */
-    protected ActionNew() { super("action.new"); }
+    protected ActionNew() { 
+        // this is not a "global" action, since it is never downlighted...
+        super("action.new", false, true); 
+    }
 
     ////////////////////////////////////////////////////////////////
     // main methods

@@ -1,4 +1,4 @@
-// $Id: ActionDeleteFromDiagram.java,v 1.10 2004/12/21 22:29:20 mvw Exp $
+// $Id: ActionDeleteFromDiagram.java,v 1.11 2004/12/26 11:14:46 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ public class ActionDeleteFromDiagram extends UMLChangeAction {
     // constructors
 
     private ActionDeleteFromDiagram() {
-        super("action.remove-from-diagram");
+        super("action.remove-from-diagram", true, HAS_ICON);
         String localMnemonic =
 	    Translator.localize("action.remove-from-diagram.mnemonic");
         if (localMnemonic != null && localMnemonic.length() == 1) {

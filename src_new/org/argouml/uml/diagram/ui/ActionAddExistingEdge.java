@@ -1,4 +1,4 @@
-// $Id: ActionAddExistingEdge.java,v 1.10 2004/08/14 15:26:11 mvw Exp $
+// $Id: ActionAddExistingEdge.java,v 1.11 2004/12/26 11:14:46 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,11 +43,11 @@ public class ActionAddExistingEdge extends UMLAction {
     /**
      * Constructor for ActionAddExistingEdge.
      *
-     * @param tabName       the name of the tab
+     * @param name       the name of the action
      * @param edgeObject    the edge
      */
-    public ActionAddExistingEdge(String tabName, Object edgeObject) {
-        super(tabName, NO_ICON);
+    public ActionAddExistingEdge(String name, Object edgeObject) {
+        super(name, true, NO_ICON);
         edge = edgeObject;
         
     }

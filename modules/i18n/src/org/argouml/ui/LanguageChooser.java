@@ -1,4 +1,4 @@
-// $Id: LanguageChooser.java,v 1.5 2004/08/27 15:26:36 mvw Exp $
+// $Id: LanguageChooser.java,v 1.6 2004/12/26 11:14:47 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ public class LanguageChooser extends UMLAction implements PluggableMenu {
      * singleton pattern).
      */
     protected LanguageChooser() {
-        super("menu.item.languages", false);
+        super("menu.item.languages", NO_ICON);
     }
 
     /** 

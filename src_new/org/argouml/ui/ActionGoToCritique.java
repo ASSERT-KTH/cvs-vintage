@@ -1,4 +1,4 @@
-// $Id: ActionGoToCritique.java,v 1.6 2004/08/20 19:28:26 mvw Exp $
+// $Id: ActionGoToCritique.java,v 1.7 2004/12/26 11:14:44 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,11 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-
-// File: ActionGoToCritique.java
-// Classes: ActionGoToCritique
 // Original Author: agauthie
-// $Id: ActionGoToCritique.java,v 1.6 2004/08/20 19:28:26 mvw Exp $
 
 package org.argouml.ui;
 
@@ -58,10 +54,5 @@ public class ActionGoToCritique extends UMLAction {
     public void actionPerformed(ActionEvent ae) {
 	ProjectBrowser.getInstance().getTodoPane().selectItem(item);
     }
-
-    /**
-     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
-     */
-    public boolean shouldBeEnabled() { return true; }
 
 } /* end class ActionGoToCritique */

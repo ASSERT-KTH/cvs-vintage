@@ -1,4 +1,4 @@
-// $Id: UMLChangeAction.java,v 1.9 2004/09/19 14:24:33 mvw Exp $
+// $Id: UMLChangeAction.java,v 1.10 2004/12/26 11:14:45 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,9 @@ public class UMLChangeAction extends UMLAction {
      * 
      * @param s the to be localized description string
      */
-    public UMLChangeAction(String s) { super(s, HAS_ICON); }
+    public UMLChangeAction(String s) { 
+        super(s, HAS_ICON); 
+    }
     
     /**
      * The constructor.
@@ -49,7 +51,9 @@ public class UMLChangeAction extends UMLAction {
      * @param s the to be localized description string
      * @param hasIcon true if an icon is to be shown
      */
-    public UMLChangeAction(String s, boolean hasIcon) { super(s, hasIcon); }
+    public UMLChangeAction(String s, boolean hasIcon) { 
+        super(s, hasIcon); 
+    }
     
     /**
      * The constructor.

@@ -1,4 +1,4 @@
-// $Id: ActionGenerationSettings.java,v 1.8 2004/09/18 15:56:49 mvw Exp $
+// $Id: ActionGenerationSettings.java,v 1.9 2004/12/26 11:14:45 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ public class ActionGenerationSettings extends UMLAction {
      *  The constructor.
      */
     protected ActionGenerationSettings() {
-	super("action.settings-for-project-code-generation", NO_ICON);
+	super("action.settings-for-project-code-generation", true, NO_ICON);
     }
 
     ////////////////////////////////////////////////////////////////

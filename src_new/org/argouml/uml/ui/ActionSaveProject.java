@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.38 2004/12/23 18:27:54 bobtarling Exp $
+// $Id: ActionSaveProject.java,v 1.39 2004/12/26 11:14:45 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,11 @@ import org.argouml.ui.cmd.GenericArgoMenuBar;
 
 /**
  * Action that saves the project.
- *
+ * 
+ * TODO: Currently, this action is a "global" action, i.e. its enabled status
+ * gets updated when the target changes. But that is not correct; 
+ * it should be updated inmediately after the project became dirty (needsSave).
+ * 
  * @see ActionOpenProject
  * @stereotype singleton
  */
@@ -69,16 +73,17 @@ public class ActionSaveProject extends ActionFileOperations {
      * The constructor.
      */
     protected ActionSaveProject() {
-        super("action.save-project");
+        super("action.save-project", true, HAS_ICON);
     }
 
     /**
      * The constructor.
      * @param title the title for this action
      * @param icon the icon for this action
+     * @param global if the action is global
      */
-    protected ActionSaveProject(String title, boolean icon) {
-        super(title, icon);
+    protected ActionSaveProject(String title, boolean global, boolean icon) {
+        super(title, global, icon);
     }
 
 

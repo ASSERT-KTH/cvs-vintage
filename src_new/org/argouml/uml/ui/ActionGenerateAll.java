@@ -1,4 +1,4 @@
-// $Id: ActionGenerateAll.java,v 1.19 2004/12/21 18:05:51 bobtarling Exp $
+// $Id: ActionGenerateAll.java,v 1.20 2004/12/26 11:14:45 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ public class ActionGenerateAll extends UMLAction {
      * Constructor.
      */
     public ActionGenerateAll() {
-	super("action.generate-all-classes", NO_ICON);
+	super("action.generate-all-classes", true, NO_ICON);
     }
 
 

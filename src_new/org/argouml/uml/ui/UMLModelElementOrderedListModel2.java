@@ -1,4 +1,4 @@
-// $Id: UMLModelElementOrderedListModel2.java,v 1.2 2004/12/17 22:56:20 mvw Exp $
+// $Id: UMLModelElementOrderedListModel2.java,v 1.3 2004/12/26 11:14:45 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -112,7 +112,7 @@ class MoveUpAction extends UMLAction {
      */
     public MoveUpAction(UMLModelElementOrderedListModel2 theModel, 
             int theIndex) {
-        super("menu.popup.moveup", false, false);
+        super("menu.popup.moveup", NO_ICON);
         model = theModel;
         index = theIndex;
     }
@@ -148,7 +148,7 @@ class MoveDownAction extends UMLAction {
      */
     public MoveDownAction(UMLModelElementOrderedListModel2 theModel, 
             int theIndex) {
-        super("menu.popup.movedown", false, false);
+        super("menu.popup.movedown", NO_ICON);
         model = theModel;
         index = theIndex;
     }

@@ -1,4 +1,4 @@
-// $Id: TestActions.java,v 1.4 2004/09/25 08:04:51 mvw Exp $
+// $Id: TestActions.java,v 1.5 2004/12/26 11:14:46 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ import org.argouml.uml.ui.UMLAction;
 public class TestActions extends TestCase {
 
     private class MockGlobalAction extends UMLAction {
-        public MockGlobalAction() { super("test"); }
+        public MockGlobalAction() { super("test", true, NO_ICON); }
 
         /**
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
