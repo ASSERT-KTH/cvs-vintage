@@ -367,7 +367,7 @@
          </th>
 
          <td>
-         #if ($security.hasPermission("admin_users"))
+         #if ($security.hasPermission("Module | Edit"))
            <textarea rows="2" cols="35" class="text" name="edit_comment_$comment.AttachmentId">$comment.DataAsString</textarea></td>
          #else
            $comment.DataAsString
@@ -389,7 +389,7 @@
          <tr>
          <td colspan="2">
            <input type="submit" value="add comment" name="eventSubmit_doSubmitcomment"/>&#160; 
-         #if ($security.hasPermission("admin_users"))
+         #if ($security.hasPermission("Module | Edit"))
            <input type="submit" value="edit comment(s)" name="eventSubmit_doEditcomment"/>
          #end
          </td>
