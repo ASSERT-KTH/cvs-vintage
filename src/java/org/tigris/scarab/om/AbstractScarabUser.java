@@ -73,7 +73,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.55 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.56 2002/10/26 17:12:35 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -131,11 +131,6 @@ public abstract class AbstractScarabUser
      * After entering an issue
      */
     private int enterIssueRedirect = 0;
-
-    /**
-     * The template/tab to show for the home page.
-     */
-    private String homePage;
 
     /**
      * The list of MITListItems that will be searched in a 
@@ -794,39 +789,43 @@ public abstract class AbstractScarabUser
     public String getHomePage(Module module)
         throws Exception
     {
-        if (homePage == null)
+        String homePage = null;
+        UserPreference up = UserPreference.getInstance(getUserId());
+        if (up != null)
         {
-            UserPreference up = UserPreference.getInstance(getUserId());
-            if (up != null)
+            homePage = up.getHomePage();
+        }
+        int i=0;
+        while (homePage == null || !isHomePageValid(homePage, module)) 
+        {
+            try
             {
-                homePage = up.getHomePage();
-                if (homePage != null) 
-                {
-                    checkHomePage(module);
-                }
+                homePage = homePageArray[i++];
             }
-            for (int i=0; homePage == null; i++) 
+            catch (Exception e)
             {
-                homePage = homePageArray[i];
-                checkHomePage(module);
+                homePage = "Index.vm";
+                Log.get().warn("Error determining user homepage.", e);
             }
-        } 
+        }
+        
         return homePage;
     }
-
 
     /**
      * This method is used in getHomePage() and expects the homePage to 
      * be non-null.
      */
-    private void checkHomePage(Module module)
+    private boolean isHomePageValid(String homePage, Module module)
     {
+        boolean result = true;
         String perm = ScarabSecurity
             .getScreenPermission(homePage.replace(',','.'));
         if (perm != null && !hasPermission(perm, module)) 
         {
-            homePage = null;
+            result = false;;
         }
+        return result;
     }
 
     
@@ -839,7 +838,6 @@ public abstract class AbstractScarabUser
         UserPreference up = getUserPreference();
         up.setHomePage(homePage);
         up.save();
-        this.homePage = homePage;
     }
 
     private UserPreference getUserPreference()
