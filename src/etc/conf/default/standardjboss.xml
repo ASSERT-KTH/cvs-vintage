@@ -13,7 +13,8 @@
                 <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
                 <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
-                <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
+                <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
+					 <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
             </container-interceptors>
@@ -54,7 +55,8 @@
                 <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
                 <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
-                <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
+                <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
+					 <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
             </container-interceptors>
 			<instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
@@ -94,7 +96,8 @@
                 <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
                 <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
-                <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
+                <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
+					 <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
             </container-interceptors>
             <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
@@ -274,7 +277,8 @@
                 <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
                 <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
-                <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
+                <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
+					 <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
             </container-interceptors>
 		 	<instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
@@ -314,7 +318,8 @@
                 <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
                 <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
-                <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
+                <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
+					 <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
             </container-interceptors>
 		 	<instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
