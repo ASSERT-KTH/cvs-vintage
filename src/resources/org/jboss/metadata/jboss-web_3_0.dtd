@@ -11,8 +11,8 @@ DOCTYPE jboss-web
 
 <!-- The jboss-web element is the root element.
 -->
-<!ELEMENT jboss-web (context-root?, security-domain?, resource-env-ref*,
-resource-ref* , ejb-ref*)>
+<!ELEMENT jboss-web (security-domain?, context-root?, virtual-host?,
+resource-env-ref*, resource-ref* , ejb-ref*)>
 
 <!-- The context-root element specifies the context root of a web
 application. This is normally specified at the ear level using the standard
@@ -27,6 +27,13 @@ manager that implements the org.jboss.security.AuthenticationManager and
 org.jboss.security.RealmMapping interfaces for the domain.
 -->
 <!ELEMENT security-domain (#PCDATA)>
+
+<!-- The virtual-host element allows one to specify which virtual host the war
+should be deployed to. Example, to specify that a war should be deployed to the
+www.jboss-store.org virtual host add the following virtual-host element:
+   <virtual-host>www.jboss-store.org</virtual-host>
+-->
+<!ELEMENT virtual-host (#PCDATA)>
 
 <!--The resource-env-ref element maps from the servlet ENC relative name
 of the resource-env-ref to the deployment environment JNDI name of
