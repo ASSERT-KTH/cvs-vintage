@@ -135,58 +135,58 @@ public class Activity
                        String oldValue, String newValue, DBConnection dbCon)
          throws TorqueException
     {
-            setIssue(issue);
-            if (attribute == null)
-            {
-                attribute = Attribute.getInstance(0);
-            }
-            setAttribute(attribute);
-            setDescription(desc);
-            setTransaction(transaction);
-            setOldNumericValue(oldNumericValue);
-            setNewNumericValue(newNumericValue);
-            setOldUserId(oldUserId);
-            setNewUserId(newUserId);
-            setOldOptionId(oldOptionId);
-            setNewOptionId(newOptionId);
-            setOldValue(oldValue);
-            setNewValue(newValue);
-            if (dbCon == null) 
-            {
-                try
-                {
-                    save();
-                }
-                catch (Exception e)
-                {
-                    if (e instanceof TorqueException) 
-                    {
-                        throw (TorqueException)e;
-                    }
-                    else 
-                    {
-                        throw new TorqueException(e);
-                    }
-                }
-            }
-            else 
-            {
-                save(dbCon);
-            }
-            // Make sure new activity is added to activity cache
-            List activityList = null;
+        setIssue(issue);
+        if (attribute == null)
+        {
+            attribute = Attribute.getInstance(0);
+        }
+        setAttribute(attribute);
+        setDescription(desc);
+        setTransaction(transaction);
+        setOldNumericValue(oldNumericValue);
+        setNewNumericValue(newNumericValue);
+        setOldUserId(oldUserId);
+        setNewUserId(newUserId);
+        setOldOptionId(oldOptionId);
+        setNewOptionId(newOptionId);
+        setOldValue(oldValue);
+        setNewValue(newValue);
+        if (dbCon == null) 
+        {
             try
             {
-                activityList = issue.getActivity(true);
+                save();
             }
             catch (Exception e)
             {
-                throw new TorqueException(e);
+                if (e instanceof TorqueException) 
+                {
+                    throw (TorqueException)e;
+                }
+                else 
+                {
+                    throw new TorqueException(e);
+                }
             }
-            if (!activityList.contains(this))
-            {
-                activityList.add(this);
-            }
+        }
+        else 
+        {
+            save(dbCon);
+        }
+        // Make sure new activity is added to activity cache
+        List activityList = null;
+        try
+        {
+            activityList = issue.getActivity(true);
+        }
+        catch (Exception e)
+        {
+            throw new TorqueException(e);
+        }
+        if (!activityList.contains(this))
+        {
+            activityList.add(this);
+        }
     }
 
     /**
