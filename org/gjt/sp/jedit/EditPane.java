@@ -54,7 +54,7 @@ import org.gjt.sp.jedit.textarea.*;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.46 2003/06/22 01:09:47 spestov Exp $
+ * @version $Id: EditPane.java,v 1.47 2003/08/10 03:21:57 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -506,6 +506,9 @@ public class EditPane extends JPanel implements EBComponent
 		// use old property name for backwards compatibility
 		textArea.setQuickCopyEnabled(jEdit.getBooleanProperty(
 			"view.middleMousePaste"));
+
+		textArea.setDragEnabled(jEdit.getBooleanProperty(
+			"view.dragAndDrop"));
 
 		textArea.propertiesChanged();
 	} //}}}
