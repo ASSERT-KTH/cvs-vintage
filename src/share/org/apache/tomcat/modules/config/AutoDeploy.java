@@ -129,14 +129,20 @@ public class AutoDeploy extends BaseInterceptor {
     //-------------------- Implementation --------------------
     
     /**
-     *  Find all wars, expand them, register dependency.
+     *  Find all wars and expand them. 
+     *  Do this as early as possible - we don't need anything from the engine.
      */
-    public void engineInit(ContextManager cm) throws TomcatException {
-
+    public void addInterceptor(ContextManager cm, Context ctx,
+			       BaseInterceptor module)
+	throws TomcatException
+    {
+	//	checkHooks(cm, ctx, module);
+	if( this != module ) return;
 	// For all contexts in <server.xml > or loaded by differen means,
 	// check if the docBase ends with .war - and expand it if so,
 	// after that replace the docBase with the dir. See bug 427.
 	/* XXX not ready yet.
+	   // XXX Should be done on addContext hook too
 	Enumeration loadedCtx=cm.getContexts();
 	while( loadedCtx.hasMoreElements() ) {
 	    Context ctx=(Context)loadedCtx.nextElement();
