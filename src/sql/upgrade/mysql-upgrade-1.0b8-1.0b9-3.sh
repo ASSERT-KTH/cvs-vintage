@@ -1,9 +1,9 @@
 #!/bin/sh
 
 ### DEFINE THESE PARAMETERS IF YOU NEED TO
-username=tigris
-password=euphrates
-HOSTNAME=localhost
+username=
+password=
+HOSTNAME=
 port=
 database=scarab
 
@@ -13,10 +13,14 @@ if [ "${HELP}" = "" ] ; then
 echo
 echo "This MySQL specific script does the following:"
 echo 
-echo "   1) Gets a list of deleted attributes"
-echo "   2) Deletes the deleted attributes from the SCARAB_R_MODULE_ATTRIBUTE table"
-echo "   3) Gets a list of options who's attributes have been deleted"
-echo "   4) Deletes the options from the SCARAB_R_MODULE_OPTION table"
+echo "   1) Gets a list of deleted issue types"
+echo "   2) Deletes the entries from SCARAB_R_MODULE_ISSUE_TYPES,
+            SCARAB_R_MODULE_ATTRIBUTES, and SCARAB_R_MODULE_OPTIONS
+            with ths issue type"
+echo "   3) Gets a list of deleted attributes"
+echo "   4) Deletes the deleted attributes from the SCARAB_R_MODULE_ATTRIBUTE table"
+echo "   5) Gets a list of options who's attributes have been deleted"
+echo "   6) Deletes the options from the SCARAB_R_MODULE_OPTION table"
 echo
 echo "In order to use this script, you must first edit it and define"
 echo "the username, password and database variables at the top of the"
