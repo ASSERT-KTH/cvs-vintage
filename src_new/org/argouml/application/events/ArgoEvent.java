@@ -1,4 +1,4 @@
-// $Id: ArgoEvent.java,v 1.8 2004/03/09 20:33:23 mvw Exp $
+// $Id: ArgoEvent.java,v 1.9 2004/08/08 11:29:44 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,13 +34,21 @@ import java.util.*;
 public abstract class ArgoEvent extends EventObject
     implements ArgoEventTypes {
 
-    protected int eventType = 0;
+    private int eventType = 0;
 
+    /**
+     * The constructor.
+     * @param eT the event type
+     * @param src the sourc, that triggered the event
+     */
     public ArgoEvent(int eT, Object src) {
         super(src);
 	eventType = eT;
     }
 
+    /**
+     * @return the event type
+     */
     public int getEventType() { return eventType; }
 
     /** Indicates the start of the range for any events.
@@ -61,9 +69,9 @@ public abstract class ArgoEvent extends EventObject
      * @return the formatted information.
      */
     public String toString() {
-        return "{" + getClass().getName() + ":" + eventType +
-	       "(" + getEventStartRange() + "-" + getEventEndRange() + ")" +
-	       "/" + super.toString() + "}";
+        return "{" + getClass().getName() + ":" + eventType 
+            + "(" + getEventStartRange() + "-" + getEventEndRange() + ")" 
+            + "/" + super.toString() + "}";
     }
 
 }

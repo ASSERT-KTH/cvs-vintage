@@ -1,4 +1,4 @@
-// $Id: ConfigurationProperties.java,v 1.13 2004/06/23 07:02:35 linus Exp $
+// $Id: ConfigurationProperties.java,v 1.14 2004/08/08 11:29:44 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,7 @@ import org.apache.log4j.Logger;
  */
 public class ConfigurationProperties extends ConfigurationHandler {
     /** logger */
-    private static Logger LOG = 
+    private static final Logger LOG = 
 	Logger.getLogger(ConfigurationProperties.class);
 
     /** The location of Argo's default properties resource.
