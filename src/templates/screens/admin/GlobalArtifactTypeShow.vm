@@ -16,15 +16,50 @@ This page is for selecting an Issue type to edit which is defined in a global sc
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>       
 
+
+## SORTING
+#set ($sortColumn = $data.Parameters.getString("sortColumn",""))
+#set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
+#if (!$sortColumn || $sortColumn.length() == 0)
+   #set ($sortColumn = "name")
+#end
+#if (!$sortPolarity || $sortPolarity.length() == 0)
+   #set ($sortPolarity = "asc")
+#end
+#set ($allIssueTypes = $scarabG.getAllIssueTypes($sortColumn, $sortPolarity))
+
+
+## PAGINATION
+## if results exceed limit, get subset list
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",0))
+#set ($pageNum = $data.Parameters.getInt("pageNum",0))
+#if ($resultsPerPage == 0)
+  #set ($resultsPerPage = 25)
+#end
+#if ($pageNum == 0)
+  #set ($pageNum = 1)
+#end
+#if ($allIssueTypes.size() > $resultsPerPage)
+ #set ($paginated = "true")
+ #set ($pagList = $scarabR.getPaginatedList($allIssueTypes, $pageNum.toString(),       $resultsPerPage.toString()))
+ #if ($pagList)
+   #set ($allIssueTypes = $pagList)
+ #end
+#end
+
+#if ($paginated)
+  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
+#end
+
 <h3>Issue Types</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>Deleted</th>
-<th>Issue Type Name</th>
-<th>Description</th>
+<th></th>
+<th>#sort ("name" "Issue type name")</th>
+<th>#sort ("desc" "Description")</th>
 </tr>
-#foreach ($issueType in $scarabG.AllIssueTypes)
+#foreach ($issueType in $allIssueTypes)
 #indexedRows($velocityCount)
 <td>#booleanCheckbox ($group.Deleted)</td>
 <td><a href="$link.setPage("admin,GlobalArtifactTypeEdit.vm").setPathInfo("issuetypeid", "$issueType.IssueTypeId")">$issueType.Name</a>
@@ -39,6 +74,10 @@ This page is for selecting an Issue type to edit which is defined in a global sc
 <input type="submit" value="Copy" />&#160;
 <input type="submit" value="Delete selected" name="eventSubmit_doSave" />
 </div>
+
+#if ($paginated)
+  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
+#end
 
 <div class="functnbar2">
 <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;

@@ -18,29 +18,13 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 #end
 #set ($allAttributes = $scarabG.getAllAttributes($sortColumn, $sortPolarity))
 
-#*
-#macro (sort $shortName $longName)
-     #if ($sortColumn.equals($shortName))
-        #if ($sortPolarity.equals("desc"))
-           #set ($arrowLink = $link.setPage("admin,GlobalAttributeShow.vm").setPathInfo("sortPolarity", "asc").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum",$pageNum.toString()))
-           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
-        #else
-           #set ($arrowLink = $link.setPage("admin,GlobalAttributeShow.vm").setPathInfo("sortPolarity", "desc").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum", $pageNum.toString()))
-           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&#160;
-        #end $longName
-     #else
-        #set ($sortLink = $link.setPage("admin,GlobalAttributeShow.vm").setPathInfo("sortColumn", "$shortName").setPathInfo("sortPolarity", "$sortPolarity").setPathInfo("pageNum", $pageNum.toString()))
-        <a href="$sortLink">$longName</a>
-     #end
-#end
-*#
 
 ## PAGINATION
 ## if results exceed limit, get subset list
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",0))
 #set ($pageNum = $data.Parameters.getInt("pageNum",0))
 #if ($resultsPerPage == 0)
-  #set ($resultsPerPage = 9)
+  #set ($resultsPerPage = 25)
 #end
 #if ($pageNum == 0)
   #set ($pageNum = 1)
