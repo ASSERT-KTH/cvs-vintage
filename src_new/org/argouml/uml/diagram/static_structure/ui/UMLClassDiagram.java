@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.52 2004/09/19 09:46:09 mvw Exp $
+// $Id: UMLClassDiagram.java,v 1.53 2004/09/21 20:20:08 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -172,12 +172,13 @@ public class UMLClassDiagram extends UMLDiagram {
             actionPackage,
             actionClass,
             getAssociationActions(),
-            actionDepend,
-            actionPermission,
-            actionUsage,
-            actionGeneralize, null,
+            actionGeneralize, 
+            null,
             actionInterface,
-            actionRealize, null,
+            actionRealize, 
+            null,
+            getDependencyActions(), 
+            null,
             ActionAddAttribute.getSingleton(),
             ActionAddOperation.getSingleton()
         };
@@ -201,7 +202,20 @@ public class UMLClassDiagram extends UMLDiagram {
        
         return actions;
     }
+    /**
+     * Return an array of dependency actions in the
+     * pattern of which to build a popup toolbutton
+     */
+    private Object[] getDependencyActions() {
+        Object actions[][] = {
+            {actionDepend},
+            {actionPermission},
+            {actionUsage}
+        };
 
+        return actions;
+    }
+    
     /**
      * Return an array of association actions in the
      * pattern of which to build a popup toolbutton
