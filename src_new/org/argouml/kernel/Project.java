@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.84 2003/09/29 18:51:52 alexb Exp $
+// $Id: Project.java,v 1.85 2003/10/08 14:09:29 jjones Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -341,7 +341,13 @@ public class Project implements java.io.Serializable, TargetListener {
                         (ArgoDiagram) PGMLParser.SINGLETON.readDiagram(
 								      sub,
 								      false);
-                    addMember(d);
+                    if (d != null) {                  
+                        addMember(d);
+                    }
+                    else {
+                        Argo.log.error("An error occurred while loading " 
+                            + currentEntry.getName());
+                    }
                     // sub.closeEntry();
                     Argo.log.info("Finished loading " + currentEntry.getName());
                 }
