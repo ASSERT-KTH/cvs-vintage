@@ -24,7 +24,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.5 2002/07/25 12:49:59 kataka Exp $
+// $Id: UMLClassDiagram.java,v 1.6 2002/08/19 16:11:53 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -37,7 +37,10 @@ import ru.novosoft.uml.model_management.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.behavior.common_behavior.*;
 
-import org.tigris.gef.base.*;
+import org.tigris.gef.base.CmdSetMode;
+import org.tigris.gef.base.LayerPerspective;
+import org.tigris.gef.base.LayerPerspectiveMutable;
+import org.tigris.gef.base.ModeCreatePolyEdge;
 import org.tigris.gef.ui.*;
 
 import org.argouml.ui.*;

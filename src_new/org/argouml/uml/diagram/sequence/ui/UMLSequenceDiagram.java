@@ -26,7 +26,7 @@
 // File: UMLSequenceDiagram.java
 // Classes: UMLSequenceDiagram
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: UMLSequenceDiagram.java,v 1.6 2002/07/25 12:53:26 kataka Exp $
+// $Id: UMLSequenceDiagram.java,v 1.7 2002/08/19 16:11:53 kataka Exp $
 
 
 package org.argouml.uml.diagram.sequence.ui;
@@ -41,8 +41,8 @@ import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.behavior.collaborations.*;
 import ru.novosoft.uml.behavior.common_behavior.*;
 
-
-import org.tigris.gef.base.*;
+import org.tigris.gef.base.Layer;
+import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.presentation.*;
 import org.tigris.gef.ui.*;
 

@@ -24,7 +24,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.10 2002/08/12 11:25:32 mkl Exp $
+// $Id: UMLStateDiagram.java,v 1.11 2002/08/19 16:11:53 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -37,7 +37,10 @@ import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.behavior.state_machines.*;
 
-import org.tigris.gef.base.*;
+import org.tigris.gef.base.CmdSetMode;
+import org.tigris.gef.base.LayerPerspective;
+import org.tigris.gef.base.LayerPerspectiveMutable;
+import org.tigris.gef.base.ModeCreatePolyEdge;
 import org.tigris.gef.ui.*;
 
 import org.argouml.ui.*;
