@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN"
+        "http://www.w3.org/MarkUp/Wilbur/HTML32.dtd">
+<html>
+<head>
+	<title>Process Flow: Viewing and Entering a Issue</title>
+</head>
+<body>
+<h2>Viewing and Entering a Issue</h2>
+
+<pre>
+
+Viewing and Entering a Issue:
+
+1. User wants to view bugs
+   --> If Logged in: <a href="StartPage.gif">StartPage</a>
+   --> If not logged in: <a href="TLogin.gif">TLogin</a>
+
+2. User reviews their StartPage selects Project "manhattanproject"
+   --> Logged in: ProjectView
+   --> Not logged in: <a href="TLogin.gif">TLogin</a>
+
+3. User wants to enter a bug, clicks "Enter New Issue"
+   --> Logged in: NewIssueStep1
+   --> Not Logged in: <a href="TLogin.gif">TLogin</a>
+
+3a. User enters data into NewIsuseStep1 and clicks "Next Step"
+   + Scarab searches for possible matches
+   --> If matches: IssueMatches
+   --> If no matches: <a href="NewIssueStep2.gif">NewIssueStep2</a>
+   
+3b. User enters data into NewIssueStep2 and clicks "Next Step"
+   --> <a href="NewIssueStep2.gif">NewIssueStep2</a>
+
+3c. Scarab displays IssueDetail
+   --> <a href="IssueDetail.gif">IssueDetail</a>
+
+</pre>
+
+</body>
+</html>
