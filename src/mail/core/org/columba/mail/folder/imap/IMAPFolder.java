@@ -290,7 +290,7 @@ public class IMAPFolder extends RemoteFolder {
 			
 			Integer uid = (Integer) flags.getUid();
 				
-			ColumbaHeader header = (ColumbaHeader) headerList.get(uid.toString());
+			ColumbaHeader header = (ColumbaHeader) headerList.get(uid);
 			
 			// if the parser didn't return a complete flags object
 			// the UID in the flags object is totally wrong
