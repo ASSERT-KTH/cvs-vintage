@@ -26,7 +26,7 @@ import org.jboss.logging.Logger;
  * An instance pool feeder which periodically adds instances to the pool.
  * 
  * @author ???
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class TimedInstancePoolFeeder
    extends TimerTask
@@ -44,7 +44,6 @@ public class TimedInstancePoolFeeder
    private int increment;
 
    private Timer timer;
-   private boolean isStarted = false;
 
    public TimedInstancePoolFeeder() {}
 
@@ -73,15 +72,24 @@ public class TimedInstancePoolFeeder
 
    public void start()
    {
+      if (isStarted()) {
+         log.error("Already started");
+         return;
+      }
+      
       log.debug("Starting");
       
       timer = new Timer();
       timer.schedule(this, 0, rate);
-      isStarted = true;
    }
 
    public void stop()
    {
+      if (!isStarted()) {
+         log.error("Not started");
+         return;
+      }
+      
       log.debug("Stopping");
       
       if (timer != null)
@@ -98,7 +106,7 @@ public class TimedInstancePoolFeeder
 
    public boolean isStarted()
    {
-      return isStarted;
+      return timer != null;
    }
 
    // XmlLoadable Impl ----------------------------------------------
@@ -117,7 +125,7 @@ public class TimedInstancePoolFeeder
       }
       catch (Exception e)
       {
-         throw new DeploymentException("Can't read feeder-policy-conf", e);
+         throw new DeploymentException("Failed to process feeder-policy-conf", e);
       }
    }
 }
