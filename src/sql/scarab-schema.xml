@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.33 2001/08/02 17:52:19 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.34 2001/08/02 22:25:46 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -25,7 +25,7 @@
     <!--
         Comment added to modification.
     -->
-    <column name="ATTACHMENT_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="ATTACHMENT_ID"  required="false" type="INTEGER"></column>
     <!--
         Value of attribute before modification.
     -->
@@ -34,6 +34,10 @@
         Value of attribute after modification.
     -->
     <column name="NEW_VALUE" required="false" type="VARCHAR" size="255"></column>
+    <!--
+        System-generated description of modification.
+    -->
+    <column name="DESCRIPTION" required="false" type="VARCHAR" size="255"></column>
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
     </foreign-key>
