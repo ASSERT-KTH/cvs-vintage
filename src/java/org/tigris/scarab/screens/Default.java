@@ -74,7 +74,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.48 2002/05/18 15:29:28 jmcnally Exp $
+ * @version $Id: Default.java,v 1.49 2002/05/18 15:33:38 jmcnally Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -98,7 +98,7 @@ public class Default extends TemplateSecureScreen
         }
         if (module == null || module.isInitializing()) 
         {
-            data.setTarget("ProjectNotReady.vm");
+            data.setTarget("ModuleNotReady.vm");
         }        
     }
 
