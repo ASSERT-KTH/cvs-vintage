@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.23 2002/10/23 21:44:07 jon Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.24 2002/12/05 06:46:20 elicia Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -252,6 +252,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                 }
             }
             doCancel(data, context);
+ScarabCache.clear();
             scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
         }
     }
