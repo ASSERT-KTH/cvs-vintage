@@ -1,4 +1,4 @@
-// $Id: Trash.java,v 1.18 2004/08/24 16:43:21 mvw Exp $
+// $Id: Trash.java,v 1.19 2004/11/11 14:56:12 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
+import org.argouml.ui.ArgoDiagram;
 
 /** In the future this will be a trash can icon in the project
  * browser.  Deleting an object moves it to the trash.  You can move
@@ -72,6 +73,10 @@ public class Trash {
 	    // me.setNamespace(null);
 	    // me.setNamespace(Trash_Model);
 	    LOG.debug("added " + obj + " to trash");
+	}
+	if (ModelFacade.isADiagram(obj)) {
+	    TrashItem ti = new TrashItem(obj, places);
+	    contents.addElement(ti);
 	}
 	//TODO: trash diagrams
     }
