@@ -28,7 +28,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JaasAuthenticationInterceptor extends AbstractInterceptor
 {
@@ -161,6 +161,11 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
          SecurityRolesAssociation.setSecurityRoles(securityRoles);
          if (securityManager.isValid(principal, credential) == false)
          {
+            // Check for the security association exception
+            Exception ex = SecurityActions.getContextException();
+            if( ex != null )
+               throw ex;
+            // Else throw a generic SecurityException
             String msg = "Authentication exception, principal=" + principal;
             SecurityException e = new SecurityException(msg);
             throw e;

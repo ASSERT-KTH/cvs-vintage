@@ -30,7 +30,7 @@ import java.util.Set;
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -160,6 +160,11 @@ public class SecurityInterceptor extends AbstractInterceptor
          SecurityRolesAssociation.setSecurityRoles(securityRoles);
          if (securityManager.isValid(principal, credential) == false)
          {
+            // Check for the security association exception
+            Exception ex = SecurityActions.getContextException();
+            if( ex != null )
+               throw ex;
+            // Else throw a generic SecurityException
             String msg = "Authentication exception, principal=" + principal;
             SecurityException e = new SecurityException(msg);
             throw e;
