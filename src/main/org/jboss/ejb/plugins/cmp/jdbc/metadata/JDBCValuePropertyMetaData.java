@@ -16,7 +16,7 @@ import org.w3c.dom.Element;
  * value object property.
  *     
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public final class JDBCValuePropertyMetaData {
    private final String propertyName;
@@ -64,7 +64,7 @@ public final class JDBCValuePropertyMetaData {
                toSetterName(propertyName), 
                new Class[] { propertyType }  );
       } catch(Exception e) {
-         throw new DeploymentException("Unable to find getter for property " +
+         throw new DeploymentException("Unable to find setter for property " +
                propertyName + " on dependent value class " + classType.getName());
       }
 
