@@ -9,6 +9,7 @@
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="MoveIssue.vm" />
 </div>
 
+
 #set ($canEdit = $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module))
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 #set ($currentIssueId = $currentIssue.UniqueId)
@@ -181,135 +182,106 @@
   #end
 #end
 
-## ADD DEPENDENCY
+## DEPENDENCIES
+<h3>Dependencies</h3>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+ <th> &nbsp; </th>
+ <th>Issue ID #</th>
+ <th>Relationship</th>
+ <th>Dependency type</th>
+</tr>
+
+#foreach ($depend in $currentIssue.Parents)
+  #set ($parent = $scarabR.getIssueByPk($depend.ObservedId.toString()))
+  #set ($dependGroup = $intake.Depend.mapTo($depend))
+  #indexedRows($velocityCount)
+<td>#booleanCheckbox($dependGroup.Deleted)</td>
+<td> $link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId).setLabel("$parent.UniqueId")</td>
+<td> parent </td>
+<td>
 #if ($canEdit)
- #set ($dependGroup = $intake.Depend.setKey("dependKey"))
- <input type="hidden" name="$dependGroup.ObserverId.Key" value="$currentIssue.IssueId" />
- <h3>Dependencies</h3>
- #if (!$dependGroup.ObservedId.Message.equals(""))
-  <p><strong class="alert">$dependGroup.ObservedId.Message</strong></p>
- #end
- #if (!$dependGroup.TypeId.Message.equals(""))
-  <p><strong class="alert">$dependGroup.TypeId.Message</strong></p>
- #end
-
-<div class="axial">
- <table cellspacing="2" cellpadding="3" border="0">
- <tr>
-  <th>Add dependency on issue</th>
-  <td>
-    <input type="text" size="10" name="$dependGroup.ObservedId.Key" value = "$!dependGroup.ObservedId" />
-    <select name="$dependGroup.TypeId.Key" class="select">
-    <option value="0">Choose dependency type</option>
-    #foreach ($dependType in $currentIssue.getAllDependencyTypes())
-      <option value="$dependType.DependTypeId">
-          $dependType.Name</option>
-    #end
-    </select>
-  </td>
- </tr>
- </table>
-</div>
-
-<div class="functnbar3">
-  <input type="submit" value="Add dependency"  name="eventSubmit_doAdddependency" />
-</div>
-
-#end
-
-## PARENT ISSUES
-#if (!$currentIssue.Parents.isEmpty())
-<h3>Parent issues</h3>
-  <table width="100%" border="1" cellspacing="2" cellpadding="3">
-    <tr>
-     <th>Issue Id</th>
-     <th>Issue summary</th>
-     <th>Dependency type</th>
-    </tr>
-    #foreach ($parent in $currentIssue.Parents)
-      #indexedRows($velocityCount)
-      <td>
-      $link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId).setLabel("$parent.UniqueId")
-      </td>
-      #set ($parentAttrValues = $parent.AllAttributeValuesMap)
-      #set ($attVal = $parentAttrValues.get("SUMMARY"))
-      <td>
-      $link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId).setLabel("$attVal.Value")
-      </td>
-      <td>
-      #if ($canEdit)
-        <select name="parent_depend_type_id_$parent.IssueId" class="select">
-        #foreach ($dependType in $currentIssue.getAllDependencyTypes())
-          #set ($selected = false)
-          #if ($parent.getDependency($currentIssue).TypeId.equals($dependType.DependTypeId))
-            #set ($selected = true)
-          #end
-          <option#selected($selected) value="$dependType.DependTypeId">
-                $dependType.Name</option>
-          #end
-          <option value="none">Remove dependency</option>
-        </select>
-      #else
-        $parent.getDependency($currentIssue).DependType.Name
-      #end
-      </td>
-      </tr>
-    #end
-  </table>
-
-  #if ($canEdit)
-<div class="functnbar3">
-   <input type="submit"  name="eventSubmit_doUpdateparent" value="Update parent issue" />
-</div>
+<select name="$dependGroup.TypeId.Key" class="select">
+#foreach ($dependType in $currentIssue.getAllDependencyTypes())
+  #set ($selected = false)
+  #if ($depend.TypeId.toString().equals($dependType.DependTypeId.toString()))
+    #set ($selected = true)
   #end
+  <option#selected($selected) value="$dependType.DependTypeId">
+        $dependType.Name</option>
+  #end
+</select>
+#else
+ $depend.DependType.Name
+#end
+</td>
+</tr>
 #end
 
-## CHILD ISSUES
-#if (!$currentIssue.Children.isEmpty())
-<h3>Child issues</h3>
-  <table width="100%" border="1" cellspacing="2" cellpadding="3">
-   <tr>
-    <th>Issue Id</th>
-    <th>Issue summary</th>
-    <th>Dependency type</th>
-   </tr>
-   #foreach ($child in $currentIssue.Children)
-    #indexedRows($velocityCount)
-    <td>
-    $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$child.UniqueId")
-    </td>
-    #set ($childAttrValues = $child.AllAttributeValuesMap)
-    #set ($attVal = $childAttrValues.get("SUMMARY"))
-    <td>
-    $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$attVal.Value")
-    </td>
-    <td>
-    #if ($canEdit)
-      <select name="child_depend_type_id_$child.IssueId" class="select">
-      <option>Choose dependency type</option>
-      #foreach ($dependType in $currentIssue.getAllDependencyTypes())
-        #set ($selected = false)
-        #if ($currentIssue.getDependency($child).TypeId.equals($dependType.DependTypeId))
-          #set ($selected = true)
-        #end
-          <option#selected($selected) value="$dependType.DependTypeId">
-             $dependType.Name</option>
-      #end
-      <option value="none">Remove dependency </option>
-      </select>
-   #else
-      $currentIssue.getDependency($child).DependType.Name
+#foreach ($depend in $currentIssue.Children)
+  #set ($child = $scarabR.getIssueByPk($depend.ObserverId.toString()))
+  #set ($dependGroup = $intake.Depend.mapTo($depend))
+  #indexedRows($velocityCount)
+<td>#booleanCheckbox($dependGroup.Deleted)</td>
+<td> $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$child.UniqueId")</td>
+<td> child </td>
+<td> 
+#if ($canEdit)
+<select name="$dependGroup.TypeId.Key" class="select">
+#foreach ($dependType in $currentIssue.getAllDependencyTypes())
+  #set ($selected = false)
+  #if ($depend.TypeId.toString().equals($dependType.DependTypeId.toString()))
+    #set ($selected = true)
+  #end
+  <option#selected($selected) value="$dependType.DependTypeId">
+        $dependType.Name</option>
+#end
+</select>
+#else
+ $depend.DependType.Name
+#end
+</td>
+</tr>
+#end
+
+#set ($newDependGroup = $intake.Depend.Default)
+<tr class="a">
+<td>&nbsp;</td>
+<td> 
+ <input type="hidden" name="$newDependGroup.ObservedId.Key" value="$currentIssue.IssueId" />
+ #if (!$newDependGroup.ObserverUniqueId.Message.equals(""))
+  <p><strong class="alert">$newDependGroup.ObserverUniqueId.Message</strong></p>
+ #end
+    <input type="text" size="5" name="$newDependGroup.ObserverUniqueId.Key" value = "$!newDependGroup.ObserverUniqueId" />
+</td>
+<td> &nbsp; </td>
+<td> 
+ #if (!$newDependGroup.TypeId.Message.equals(""))
+  <p><strong class="alert">$newDependGroup.TypeId.Message</strong></p>
+ #end
+ <select name="$newDependGroup.TypeId.Key" class="select">
+   <option value="">Choose dependency type</option>
+ #foreach ($dependType in $currentIssue.getAllDependencyTypes())
+   #set ($selected = false)
+   #if ($dependType.DependTypeId.toString().equals($newDependGroup.TypeId.toString()))
+      #set ($selected = true)
    #end
-    </td>
-    </tr>
-  #end
-  </table>
-  #if ($canEdit)
+   <option#selected($selected) value="$dependType.DependTypeId" >$dependType.Name</option>
+ #end
+ </select>
+</td>
+</tr>
+</table>
+
 <div class="functnbar3">
-     <input type="submit" value="Update child issue"  name="eventSubmit_doUpdatechild" />
-</div>
+  #if ($canEdit)
+   <input type="submit" value="Save"  name="eventSubmit_doUpdatedependencies" />
+&nbsp;
+   <input type="submit" value="Add new child" name="eventSubmit_doAdddependency" />&nbsp;
+   <input type="submit" value="Delete selected"  name="eventSubmit_doUpdatedependencies" />
   #end
-#end
+</div>
+
 
 ## COMMENTS
 #if ($fullComments.equals("true"))
