@@ -1,43 +1,32 @@
 ##set ($action = $link.setPage("ViewIssueLong.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "ViewIssueLong.vm"))
-
 #set ($user = $data.User)
 #set( $issueList = $scarabR.IssueList )
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage"))
 #set ($pageNum = $data.Parameters.getInt("pageNum"))
-
 #if ($issueList.size() > $resultsPerPage)
    #set ($paginated = "true")
    #set ($issueList = $scarabR.getPaginatedList($issueList, $pageNum, $resultsPerPage))
 #end
-
-
 #if( $issueList )
-   
 ## PAGINATION
 #if( $paginated)
-	<div class="misc">
+ <div class="misc">
   #if( $scarabR.PrevPage != 0 )
     #set ( $prevLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.PrevPage.toString()).setPage("ViewIssueLong.vm"))
     <a href="$prevLink">&laquo;</a> previous |
   #end
-     $pageNum of $scarabR.NbrPages 
+     $pageNum of $scarabR.NbrPages
   #if( $scarabR.NextPage != 0)
     #set ( $nextLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.NextPage.toString()).setPage("ViewIssueLong.vm"))
     | <a href="$nextLink">&raquo;</a> next
   #end
 #end
-
   <form name="IssueForm" method="post" action="$link.setAction("ModifyIssue")" >
-
   #foreach ($currentIssue in $issueList)
-
     #viewIssue ($currentIssue)
-
   #end
   $intake.declareGroups()
-
   </form>
-
 #else
    <div class="alert">You have not selected any issues to view.</div>
 #end

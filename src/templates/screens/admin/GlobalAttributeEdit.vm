@@ -1,31 +1,22 @@
 $page.setTitle("Attribute / Options Editor")
-
 #set ($module = $scarabR.CurrentModule)
-
 #set ($attribute = $scarabR.Attribute)
 #set ($attType = $attribute.AttributeType)
 #set ($attgroup = $intake.Attribute.Default )
 #set ($atttgroup = $intake.AttributeType.Default )
-
 <div class="app" id="div3-0-2-0">
-
 <h2>$page.Title</h2>
-
 <p>
-On this screen, one can modify system wide Attribute information. 
+On this screen, one can modify system wide Attribute information.
 </p>
-
 <p>
 Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute Show</a>
 </p>
-
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="get">
     <input type="hidden" name="action" value="admin.GlobalAttributes"/>
     <input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm"/>
     <input type="hidden" name="$attgroup.Id.Key" value="$!attgroup.Id"/>
-
 #datatitle ( "Attribute Info" )
-
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
  <tr>
@@ -37,7 +28,6 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
     #end
     </select>
   </td>
-
  <tr>
   <th width="120">attribute name</th>
   <td>
@@ -45,7 +35,6 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
     #fieldErrorMsg($attgroup.Name "")
   </td>
  </tr>
-
  <tr>
   <th width="120">attribute description</th>
   <td>
@@ -53,7 +42,6 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
     #fieldErrorMsg($attgroup.Description "")
   </td>
  </tr>
-
   #if ($attribute.CreatedDate)
  <tr>
   <th width="120">created by</th>
@@ -63,7 +51,6 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
   </td>
  </tr>
   #end
-
   #if ($attribute.CreatedDate)
  <tr>
   <th width="120">creation date</th>
@@ -72,30 +59,23 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
   </td>
  </tr>
   #end
-
 </tr>
 </table>
 </div>
-
 <p class="functnbar">
-  <input type="submit" name="eventSubmit_doModifyattributedata" 
+  <input type="submit" name="eventSubmit_doModifyattributedata"
         value="Save"/> General Info
 </p>
 $intake.declareGroups()
 </form>
-
 #if ($attType.AttributeClass.Name.equals("select-one"))
-
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="get">
     <input type="hidden" name="action" value="admin.GlobalAttributes"/>
     <input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm"/>
     <input type="hidden" name="$attgroup.Id.Key" value="$!attgroup.Id"/>
-
 #datatitle ("Attribute Options")
-
 #set ($pcaos = $attribute.ParentChildAttributeOptions)
 #set ($maxNum = $pcaos.size())
-
 <div class="grouper">
 <div>
 <table width="70%" border="0" cellspacing="2" cellpadding="2">
@@ -110,11 +90,9 @@ $intake.declareGroups()
  <th>Preferred Order</th>
  <th>Weight</th>
 </tr>
-
 #foreach ($pcao in $pcaos)
     #set ($pcaoGroup = $intake.ParentChildAttributeOption.mapTo($pcao))
     #if ( $velocityCount % 2 > 0 )<tr class="a">#else<tr class="b">#end
-
      <td>#booleanCheckbox ($pcaoGroup.Deleted)</td>
      <td>
      <select name="$pcaoGroup.ParentId.Key">
@@ -137,7 +115,7 @@ $intake.declareGroups()
      #end
      </select>
      </td>
-     <td><input type="text" size="25" class="text" name="$pcaoGroup.Name.Key" value="$pcaoGroup.Name"/></td>
+     <td><input type="text" size="25" name="$pcaoGroup.Name.Key" value="$pcaoGroup.Name"/></td>
      <td>
         #numericSelect( $pcaoGroup.PreferredOrder.Key 1 $maxNum $pcaoGroup.PreferredOrder.Value 1 )
      </td>
@@ -146,7 +124,6 @@ $intake.declareGroups()
      </td>
     </tr>
 #end
-
 #set ($newPCAO = $scarabR.ParentChildAttributeOption)
 #set ($newPCAOGroup = $intake.ParentChildAttributeOption.mapTo($newPCAO))
 #if ( ($maxNum + 1) % 2 > 0 )<tr class="a">#else<tr class="b">#end
@@ -160,7 +137,7 @@ $intake.declareGroups()
      #end
      </select>
      </td>
-     <td><input type="text" size="25" class="text" name="$newPCAOGroup.NewName.Key" value="$newPCAOGroup.NewName"/></td>
+     <td><input type="text" size="25" name="$newPCAOGroup.NewName.Key" value="$newPCAOGroup.NewName"/></td>
      <td>
 #set ( $maxNum = $maxNum + 1 )
 #if ($newPCAOGroup.PreferredOrder.Value != 0)
@@ -179,26 +156,19 @@ $intake.declareGroups()
 #numericSelect( $newPCAOGroup.Weight.Key 1 $maxNum $selected 1 )
      </td>
 </tr>
-
 </table>
-
 <strong>Please note: Once created, Attribute Options cannot be deleted
 from the database. They can only be marked as deleted and will always
 show up in the list above (but will not show up in the application
 itself). Therefore, please use caution when creating new Attribute
 Options because you can quickly end up with a mess.</strong>
-
 <p class="functnbar">
-  <input type="submit" name="eventSubmit_doAddormodifyattributeoptions" 
+  <input type="submit" name="eventSubmit_doAddormodifyattributeoptions"
         value="Save"/> Attribute Options
 </p>
-
 #end #* if select-one *#
-
-
 </div>
 </div>
 $intake.declareGroups()
 </form>
-
 </div>

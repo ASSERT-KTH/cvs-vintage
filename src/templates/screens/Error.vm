@@ -1,8 +1,6 @@
 <div class="app" id="error">
 $page.setTitle("Scarab Error")
-
 <h2>$page.Title</h2>
-
 #if( $data.getMessage() )
  Message: $data.getMessage()
 #else
@@ -13,12 +11,12 @@ $page.setTitle("Scarab Error")
   </pre>
  #else
   <p>
-Sorry, there was no error message. :-( If there was one, it would have been 
-shown here. Please believe me! 
+Sorry, there was no error message. :-( If there was one, it would have been
+shown here. Please believe me!
  </p>
  <p>
-  Although, one common source of the error could be a result of not being able 
-  to find the requested template. Please try going back to the 
+  Although, one common source of the error could be a result of not being able
+  to find the requested template. Please try going back to the
   <a href="$link.setPage("Start.vm")">Start</a> screen and starting over.
  </p>
  #end

@@ -1,15 +1,11 @@
 <div class="app" id="editquery">
 $page.setTitle("Edit Query")
-
-
 #set ( $queryId = $data.Parameters.getString("queryId"))
 #set ( $currentQuery = $scarabR.getQuery() )
-#set ( $queryGroup = $intake.Query.mapTo($currentQuery)) 
+#set ( $queryGroup = $intake.Query.mapTo($currentQuery))
 #set ($module = $scarabR.CurrentModule)
 #set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("nextTemplate", "EditQuery.vm"))
-
 <h2>Edit Query $currentQuery.Name</h2>
-
 <form action="$action" method="post">
 <input type="hidden" name="queryId" value="$queryId" />
 <input type="hidden" name="$queryGroup.Value.Key" value="$currentQuery.Value" />
@@ -34,35 +30,26 @@ $page.setTitle("Edit Query")
   </tr>
  </table>
 </div>
-
-<div class="functnbar">
-<table cellpadding="0" cellspacing="0" border="0">
+<div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td><input type="submit" name="eventSubmit_doSavequery" value="Save" />&#160;</td>
+  <td class="firstchild"><input type="submit" name="eventSubmit_doSavequery" value="Save" />&#160;</td>
   <td><input type="submit" name="eventSubmit_doCancel" value="cancel" /></td>
  </tr>
 </table>
 </div>
-
 </form>
-
 #set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("nextTemplate", "IssueList.vm"))
-
 <form action="$action" method="get">
 <input type="hidden" name="queryId" value="$queryId" />
 <input type="hidden" name="searchType" value="advanced" />
-
 #set ( $search = $scarabR.Search )
 #set ( $query = $intake.SearchIssue.mapTo($search) )
 #set ($attrValues = $search.ModuleAttributeValuesMap)
 ##set ( $searchTextAttributes = $search.QuickSearchTextAttributeValues )
 ##set ( $searchValues = $search.QuickSearchOptionAttributeValues )
-
 #advancedQuery()
-
 #if ($currentQuery.QueryType.Name.equals("All users"))
  <h3>Subscription info</h3>
-
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
   <tr>
@@ -74,11 +61,8 @@ $page.setTitle("Edit Query")
   </tr>
  </table>
 </div>
-
-
 #if (!$currentQuery.RQueryUsers.isEmpty())
-<h3>Current subscriber list</h3>  
-
+<h3>Current subscriber list</h3>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
    <th>&nbsp;</th>
@@ -93,21 +77,17 @@ $page.setTitle("Edit Query")
    <td>$su.Frequency.Name</td>
   </tr>
 #end
-
   </table>
   <input type="submit" value="revoke subscription" name="eventSubmit_doUnsubscribeusers" />
    #end
 #end
-
-<div class="functnbar2">
-<table cellpadding="0" cellspacing="0" border="0">
+<div class="functnbar2"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td><input type="submit" name="eventSubmit_doSavequery" value="Save" />&#160;</td>
+  <td class="firstchild"><input type="submit" name="eventSubmit_doSavequery" value="Save" />&#160;</td>
   <td><input type="submit" name="eventSubmit_doCancel" value="cancel" /></td>
  </tr>
 </table>
 </div>
-
 $intake.declareGroups()
 </form>
 </div>

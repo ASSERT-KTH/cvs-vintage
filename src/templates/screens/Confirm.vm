@@ -1,8 +1,6 @@
 <div class="app" id="confirm">
 $page.setTitle("Confirm Your Email Address")
-
 <h2>$page.Title</h2>
-
 ## attempt to get the user out of the temp hashtable
 #set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
 #if ($user)
@@ -13,11 +11,9 @@ $page.setTitle("Confirm Your Email Address")
  #set ($emailValue = $data.Parameters.Email)
 #end
 #set ($confirmValue = $data.Parameters.Confirm)
-
 <p>
 Thanks for registering!
 </p>
-
 <p>
 We have now sent you a confirmation message via email to verify that
 the email address you supplied is working properly. To complete your
@@ -25,12 +21,10 @@ registration click on the link in the email or type in the confirmation
 code below. If you do not choose to confirm your account now, you will
 be asked to confirm it the next time you try to login.
 </p>
-
 <form method="post" action="$link.setPage("Confirm.vm")">
  <input type="hidden" name="action" value="Confirm" />
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm" />
  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm" />
-
 <h3>Confirmation Information</h3>
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">

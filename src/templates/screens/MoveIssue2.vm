@@ -1,18 +1,14 @@
 <div class="app" id="moveissue2">
 $page.setTitle("Copy / Move Issue")
-
 <h2>$page.Title</h2>
-
 #set ($action = $link.setPage("MoveIssue2.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "Links.vm"))
 #set ($issueId = $data.Parameters.getString("issue_id"))
 #set ($issue = $scarabR.getIssue($issueId))
 #set ($moduleId = $data.Parameters.getString("module_id"))
 #set ($module = $scarabR.CurrentModule)
-
 <form method="post" action="$action">
 <input type="hidden" name="id" value="$issueId" />
 <input type="hidden" name="module_id" value="$moduleId" />
-
 <div class="functnbar">
 #if ($select_action.equals("move") )
  #set ($tmp = "Move")
@@ -21,14 +17,12 @@ $page.setTitle("Copy / Move Issue")
 #end
 <table cellpadding="0" cellspacing="0" border="0">
  <tr>
-  <td><input type="submit" value="Back" name="eventSubmit_doBacktoone" /></td> 
+  <td><input type="submit" value="Back" name="eventSubmit_doBacktoone" /></td>
   <td><input type="submit" value="$tmp Issue" name="eventSubmit_doSaveissue" /></td>
  </tr>
 </table>
 </div>
-
 <h3>Issue to be Copied / Moved</h3>
-
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
   <th>Summary</th>
@@ -41,7 +35,7 @@ $page.setTitle("Copy / Move Issue")
    #set( $attVal =  $attrValues.get("SUMMARY"))
    #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
    $attVal.Value
-  </td>  
+  </td>
   <td>$format.getDate($scarabG.DateFormat, $issue.CreatedDate)</td>
   <td>
    #set ($createdUser = $issue.CreatedBy)
@@ -49,27 +43,23 @@ $page.setTitle("Copy / Move Issue")
   </td>
  </tr>
 </table>
-
 <h3>Destination Project</h3>
 <p>
  #set($newModule = $scarabR.getModule($moduleId))
  $newModule.Name
 </p>
-
 <h3>Action</h3>
-<p><input type="radio" name="select_action" value="copy" 
+<p><input type="radio" name="select_action" value="copy"
 #if ($select_action.equals("copy") )
  checked
 #end /> Copy
 </p>
-<p><input type="radio" name="select_action" value="move" 
+<p><input type="radio" name="select_action" value="move"
 #if ($select_action.equals("move") )
  checked
 #end /> Move
-</p>  
-
+</p>
 <h3>Attribute Mapping Results</h3>
-
 <div class="sidebyside">
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
  <tr>
@@ -86,11 +76,11 @@ $page.setTitle("Copy / Move Issue")
     </tr>
     #foreach( $attr in $matchingAttributes )
      #indexedRows($velocityCount)
-     <td>$attr.Attribute.Name 
+     <td>$attr.Attribute.Name
       #set( $displayValue = $module.getRModuleAttribute($attr.Attribute).getDisplayValue() )
       #if (!$attr.Attribute.Name.equals($displayValue))
        ($displayValue)
-      #end 
+      #end
      </td>
      <td>$attr.Value</td>
     </tr>
@@ -102,7 +92,7 @@ $page.setTitle("Copy / Move Issue")
  <div class="datatablechild">
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
-    <th>Attribute Name (alias)</th> 
+    <th>Attribute Name (alias)</th>
     <th>Value (list option/content)</th>
    </tr>
    #foreach( $attr in $matchingAttributes )
@@ -117,20 +107,18 @@ $page.setTitle("Copy / Move Issue")
    #end
    </tr>
   </table>
- </div> 
+ </div>
  </td>
  </tr>
 </table>
 </div>
-
-#if (!$orphanAttributes.isEmpty()) 
+#if (!$orphanAttributes.isEmpty())
  <h3>Attributes that do not exist in destination Module (saved as comment)</h3>
-
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
    <th>Include</th>
    <th>Attribute Name</th>
-   <th>Pption Name</th>  
+   <th>Pption Name</th>
   </tr>
   #foreach( $attr in $orphanAttributes )
    #indexedRows($velocityCount)
@@ -141,15 +129,12 @@ $page.setTitle("Copy / Move Issue")
   #end
  </table>
 #end
-
-
 <div class="functnbar">
 #if ($select_action.equals("move") )
 #set ($tmp = "Move")
 #else
 #set ($tmp = "Copy")
 #end
-
 <div class="functnbar">
 #if ($select_action.equals("move") )
  #set ($tmp = "Move")
@@ -158,11 +143,10 @@ $page.setTitle("Copy / Move Issue")
 #end
 <table cellpadding="0" cellspacing="0" border="0">
  <tr>
-  <td><input type="submit" value="Back" name="eventSubmit_doBacktoone" /></td> 
+  <td><input type="submit" value="Back" name="eventSubmit_doBacktoone" /></td>
   <td><input type="submit" value="$tmp Issue" name="eventSubmit_doSaveissue" /></td>
  </tr>
 </table>
 </div>
-
 </form>
 </div>

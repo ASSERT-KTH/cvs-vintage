@@ -1,8 +1,6 @@
 <div class="app" id="links">
 $page.setTitle("Scarab Links")
-
 <h2>$l10n.SCARAB_LINKS</h2>
-
 <h3>Site Pages</h3>
 <ul>
 <li><a href="$link.setPage("Index.vm")">Index.vm</a></li>
@@ -22,7 +20,6 @@ $page.setTitle("Scarab Links")
 <li><a href="$link.setPage("Approval.vm")">Approval.vm</a></li>
 <li><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", 1)">ViewIssue.vm?id=1</a></li>
 </ul>
-
 <h3>Admin Pages</h3>
 <ul>
 <li>
@@ -33,29 +30,26 @@ $page.setTitle("Scarab Links")
 </li>
 <!--
 <li>
- <a href="$link.setPage("admin,AttributeShow.vm")">admin,AttributeShow.vm</a> 
+ <a href="$link.setPage("admin,AttributeShow.vm")">admin,AttributeShow.vm</a>
 (not working currently)</li>
 <li>
- <a href="$link.setPage("admin,ModuleAttributeEditor.vm")">admin,ModuleAttributeEditor.vm</a> 
+ <a href="$link.setPage("admin,ModuleAttributeEditor.vm")">admin,ModuleAttributeEditor.vm</a>
 (not working currently)</li>
 -->
 <li>
  <a href="$link.setPage("FluxIndex.vm")">Flux</a>
 </li>
 </ul>
-
 <h3>Documentation</h3>
 <ul>
 <li>
  <a href="http://scarab.whichever.com/api/">Javadoc API Documentation</a>
 </li>
 </ul>
-
 <!--
 <p>
 Not working:
 </p>
-
 <ul>
 <li><a href="$link.setPage("admin,AddUser.vm")">admin,AddUser.vm</a>
 <li><a href="$link.setPage("admin,AdminHome.vm")">admin,AdminHome.vm</a>

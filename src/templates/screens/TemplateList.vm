@@ -2,22 +2,16 @@ $page.setTitle("Template List")
 #set ($action = $link.setPage("TemplateList.vm").setAction("TemplateList").addPathInfo("nextTemplate", "TemplateList.vm").toString())
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
-
-#if ( ($module.getPrivateTemplates($user).isEmpty()) && ($module.GlobalTemplates.isEmpty())) 
+#if ( ($module.getPrivateTemplates($user).isEmpty()) && ($module.GlobalTemplates.isEmpty()))
    #set ($noTemplates = "true")
 #end
-
 <div class="app" id="templateList">
-
 <form method="post" action="$action" >
-
 <p class="functnbar">
    <input type="submit" value="create new" name="eventSubmit_doCreatenew" />&#160;
    <input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>
       &#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
-
 <h3>$page.Title</h3>
-
 #if ($noTemplates.equals("true"))
     <div class="alert">
     There are no stored templates, click <a
@@ -25,9 +19,7 @@ $page.setTitle("Template List")
     one.
     </div>
 #else
-
 ##  FIXME: add prev/next nav       <p>&#171; previous | 1 of 1 | next &#187;</p>
-        
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
         <th nowrap="nowrap">
@@ -39,9 +31,7 @@ $page.setTitle("Template List")
         <th>Location</th>
         <th>Initiated By</th>
         </tr>
-        
 #foreach ( $template in $module.getPrivateTemplates($user) )
-
          #indexedRows($velocityCount)
         <td><input type="checkbox" name="delete_$template.IssueId"/></td>
         #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
@@ -61,9 +51,7 @@ $page.setTitle("Template List")
          </td>
         </tr>
 #end
-
 #foreach ( $template in $module.GlobalTemplates )
-
          #indexedRows($velocityCount)
       #if ($security.hasPermission("Item | Delete", $module))
         <td><input type="checkbox" name="delete_$template.IssueId"/></td>
@@ -75,7 +63,7 @@ $page.setTitle("Template List")
             #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
             <a href="$editLink">$template.TemplateInfo.Name</a>
           #else
-            $template.TemplateInfo.Name 
+            $template.TemplateInfo.Name
           #end
         </td>
         <td>#if($template.TemplateInfo.Description)  $template.TemplateInfo.Description #else &nbsp; #end</td>
@@ -94,9 +82,7 @@ $page.setTitle("Template List")
         </tr>
 #end
         </table>
-        
 ##  FIXME: add prev/next nav       <p>&#171; previous | 1 of 1 | next &#187;</p>
-
    <p class="functnbar">
    #if ($user.UserId)
         <input type="submit" value="create new" name="eventSubmit_doCreatenew" />&#160;
@@ -104,5 +90,4 @@ $page.setTitle("Template List")
    #end
       &#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
 #end
-
 </div>

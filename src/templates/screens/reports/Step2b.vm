@@ -1,132 +1,108 @@
 #set ( $report = $scarabR.Report )
 #set ($action = $link.setPage("reports,Step2b.vm").setAction("GenerateReport"))
-
 <div class="app" id="div2-4-1-step3">
-
 <h2>Define report (2.4.1)</h2>
-		
-		<div class="tabs">
-			<table cellpadding="3" cellspacing="0" border="0">
-			<tr>
-			<td>1: <a href="#" title="summary info">Summary info</a></td>
-			<th>2: Primary filter attribute (PFA)</th>
-			<td>3: Select row/column heading(s)</td>
-			</tr>
-			</table>
-		</div>
-
+  <div class="tabs">
+   <table cellpadding="3" cellspacing="0" border="0">
+   <tr>
+   <td>1: <a href="#" title="summary info">Summary info</a></td>
+   <th>2: Primary filter attribute (PFA)</th>
+   <td>3: Select row/column heading(s)</td>
+   </tr>
+   </table>
+  </div>
 <p class="functnbar">
     <a href="#" title="select pfa(s)">2a: Select PFA(s)</a> | <strong>
     2b: PFA display options</strong>
 </p>
-		
 <h3>Define PFA Groups</h3>
-		
 <div><strong>Grouping PFA options</strong></div>
-<p>In cases where primary filter attribute options represent similar traits 
-(e.g. for X attribute "state" the options "open unassigned", "open assigned", 
-and "reopened unassigned" are all "open") it may be useful to calculate and 
-display these options as an average. Thus, all options listed below and being 
-the same "group" are averaged together, which is reflected in the report's 
+<p>In cases where primary filter attribute options represent similar traits
+(e.g. for X attribute "state" the options "open unassigned", "open assigned",
+and "reopened unassigned" are all "open") it may be useful to calculate and
+display these options as an average. Thus, all options listed below and being
+the same "group" are averaged together, which is reflected in the report's
 output.</p>
-
-<p>If there are no groups, each PFA/option will appear as a separate 
+<p>If there are no groups, each PFA/option will appear as a separate
 column.</p>
-
 <form method="get" action="$action">
-
 <p class="functnbar">
     <input type="submit" name="eventSubmit_doStep2baddgroup" value="add group" />
     &nbsp;
-    <input type="submit" name="eventSubmit_doStep2bdeletegroup" 
+    <input type="submit" name="eventSubmit_doStep2bdeletegroup"
         value="delete group" />
 </p>
-		
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
-	<tr>
-		<th nowrap="nowrap">&nbsp;</th>
-		<th>group number</th>
-		<th>group name</th>
-	</tr>
-    
+ <tr>
+  <th nowrap="nowrap">&nbsp;</th>
+  <th>group number</th>
+  <th>group name</th>
+ </tr>
 #set ($finalCount = 1)
 #foreach ( $optionGroup in $report.OptionGroups )
     #set ($intakeOptionGroup = $intake.OptionGroup.mapTo($optionGroup))
-		
-	#rows()
-		<td><input type="checkbox" 
+ #rows()
+  <td><input type="checkbox"
                 name="$intakeOptionGroup.Selected.Key" /></td>
-		<td>Group $velocityCount</td>
-		<td><input type="text" value="$intakeOptionGroup.DisplayValue" 
+  <td>Group $velocityCount</td>
+  <td><input type="text" value="$intakeOptionGroup.DisplayValue"
                 name="$intakeOptionGroup.DisplayValue.Key" /></td>
-	</tr>
+ </tr>
     #set ($finalCount = $velocityCount + 1)
 #end
-
 #set ( $optionGroup = $report.NewOptionGroup )
     #set ($intakeOptionGroup = $intake.OptionGroup.mapTo($optionGroup))
-	##indexedRows($finalCount)
+ ##indexedRows($finalCount)
 <tr>
-		<td>&nbsp;</td>
-		<td>Group $finalCount (new)</td>
+  <td>&nbsp;</td>
+  <td>Group $finalCount (new)</td>
     #if ($intakeOptionGroup.DisplayValue.isValid())
         ## don't show the last entered value
         #set ($value = "")
     #else
         #set ($value = $intakeOptionGroup.DisplayValue)
     #end
-		<td><input type="text" value="$value" 
+  <td><input type="text" value="$value"
                 name="$intakeOptionGroup.DisplayValue.Key" /></td>
-	</tr>
-
+ </tr>
 </table>
-
 <p class="functnbar">
     <input type="submit" name="eventSubmit_doStep2baddgroup" value="add group" />
     &nbsp;
-    <input type="submit" name="eventSubmit_doStep2bdeletegroup" 
+    <input type="submit" name="eventSubmit_doStep2bdeletegroup"
         value="delete group" />
 </p>
-
-		
 #if ($report.OptionGroups && $report.OptionGroups.size() > 0)
 <h3>Grouping PFA/Options</h3>
-
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
-	<tr>	
-		<th>group name</th>
-		<th>attribute</th>
-		<th>option</th>
-	</tr>
-
-    #foreach ( $attOption in $report.SelectedOptionsForGrouping )		
+ <tr>
+  <th>group name</th>
+  <th>attribute</th>
+  <th>option</th>
+ </tr>
+    #foreach ( $attOption in $report.SelectedOptionsForGrouping )
         #set ($intakeOptionForGrouping = $intake.OptionForGrouping.mapTo($attOption))
-	  #rows()
-		
-		<td>
+   #rows()
+  <td>
             <select name="ofg$attOption.QueryKey">
         #foreach ( $optionGroup in $report.OptionGroups )
             #set ( $optionValue = $velocityCount - 1 )
-		        <option value="$optionValue">$optionGroup.DisplayValue</option>
+          <option value="$optionValue">$optionGroup.DisplayValue</option>
         #end
-		    </select>
+      </select>
         </td>
-		<td>$attOption.RModuleAttribute.DisplayValue</td>
-		<td>$attOption.DisplayValue</td>
-
-	</tr>
+  <td>$attOption.RModuleAttribute.DisplayValue</td>
+  <td>$attOption.DisplayValue</td>
+ </tr>
     #end
 </table>
 #end
-
 <p class="functnbar">
     <input type="submit" value="continue"  name="eventSubmit_doStep2b" />
     &nbsp;
     <input type="submit" value="cancel"  name="eventSubmit_doCancel" />
 </p>
-
 #addReportHiddenInputs($report "reports,Step2b.vm")
 $intake.declareGroups()
 </form>
-	
 </div>

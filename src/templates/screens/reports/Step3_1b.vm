@@ -1,83 +1,65 @@
 #set ( $report = $scarabR.Report )
 #set ( $intakeReport = $intake.Report.mapTo($report) )
 #set ( $action = $link.setPage("reports,Step3_1b.vm").setAction("GenerateReport").addPathInfo("nextTemplate", "reports,Report_1.vm") )
-
 <div class="app" id="div2-4-1-step3_1b">
-
 <h2>Define report (2.4.1)</h2>
-		
-		<div class="tabs">
-			<table cellpadding="3" cellspacing="0" border="0">
-			<tr>
-			<td>1: <a href="#" title="summary info">Summary info</a></td>
-			<td>2: <a href="#" title="primary filter attribute">Primary filter attribute (PFA)</a></td>
-			<th>3: Select row/column heading(s)</th>
-			</tr>
-			</table>
-		</div>
-		
+  <div class="tabs">
+   <table cellpadding="3" cellspacing="0" border="0">
+   <tr>
+   <td>1: <a href="#" title="summary info">Summary info</a></td>
+   <td>2: <a href="#" title="primary filter attribute">Primary filter attribute (PFA)</a></td>
+   <th>3: Select row/column heading(s)</th>
+   </tr>
+   </table>
+  </div>
 <p class="functnbar">
     <a href="#" title="define row/column criteria">
-        3a: Define row/column criteria</a> | 
+        3a: Define row/column criteria</a> |
     <strong>3b: Select row/column content</strong>
 </p>
-		
-<h3>Select row/column content</h3>	  
-
+<h3>Select row/column content</h3>
 <form method="get" action="$action">
-		
 <div class="axial">
-	<table border="0" cellspacing="2" cellpadding="3">
-
-		<tr>
-			<th>Row content</th>
-			<td>
+ <table border="0" cellspacing="2" cellpadding="3">
+  <tr>
+   <th>Row content</th>
+   <td>
 #set ($options = $report.Axis1OptionList)
 #if ($report.Axis1Category == 0 || $report.Axis1Category == 1 || $report.Axis1Category == 2)
-			<select name="$intakeReport.Axis1Keys.Key" 
+   <select name="$intakeReport.Axis1Keys.Key"
                 multiple="multiple" size="15">
-
                 #attributeOptionOptionList( $options $report.Axis1Keys)
-			</select>
-
+   </select>
 #else
-    No category was chosen, did you hack the url, 
+    No category was chosen, did you hack the url,
     or is this an application error?
 #end
-			</td>
-		</tr>
-
-		<tr>
-			<th>Column content</th>
-			<td>
+   </td>
+  </tr>
+  <tr>
+   <th>Column content</th>
+   <td>
 #set ($options = $report.Axis2OptionList)
 #if ($report.Axis2Category == 0 || $report.Axis2Category == 1 || $report.Axis2Category == 2)
-
-			<select name="$intakeReport.Axis2Keys.Key" 
+   <select name="$intakeReport.Axis2Keys.Key"
                 multiple="multiple" size="15">
-
                 #attributeOptionOptionList( $options $report.Axis2Keys)
-			</select>
-
+   </select>
 #else
-    No category was chosen, did you hack the url, 
+    No category was chosen, did you hack the url,
     or is this an application error?
 #end
-			</td>
-		</tr>
-	</table>
+   </td>
+  </tr>
+ </table>
 </div>
-
 <p class="functnbar">
-    <input type="submit" value="Generate report" 
+    <input type="submit" value="Generate report"
             name="eventSubmit_doStep3_1b" />
     &nbsp;
     <input type="submit" value="cancel" name="eventSubmit_doCancel" />
 </p>
-
 #addReportHiddenInputs($report "reports,Step3_1b.vm")
 $intake.declareGroups()
 </form>
-	
 </div>
-

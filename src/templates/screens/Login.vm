@@ -1,24 +1,18 @@
 <div class="app" id="loginDONOTCHANGETHISID">
-$page.setTitle("Login to Scarab") 
-
+$page.setTitle("Login to Scarab")
 <h2>$page.Title</h2>
-
 <p>New users, <a href="$link.setPage("Register.vm")"><strong>register here</strong></a>.</p>
-
 #set ($paramNext = $data.Parameters.getString($scarabG.Constant.NEXT_TEMPLATE))
-
 <form action="$link.setPage("Login.vm")" method="post" name="login">
-  <input type="hidden" name="action" value="Login" /> 
+  <input type="hidden" name="action" value="Login" />
 #if ($nextTemplate && $nextTemplate.length() > 0)
- <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" /> 
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" />
 #elseif ($paramNext && $paramNext.length() > 0)
- <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$paramNext" /> 
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$paramNext" />
 #else
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm" />
-#end 
-
+#end
 #set ( $loginGroup = $intake.Login.Default )
-
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
@@ -40,7 +34,6 @@ $page.setTitle("Login to Scarab")
 </tr>
 </table>
 </div>
-
 $intake.declareGroups()
 </form>
 </div>

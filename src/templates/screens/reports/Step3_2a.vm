@@ -1,62 +1,49 @@
 #set ( $report = $scarabR.Report )
 #set ( $intakeReport = $intake.Report.mapTo($report) )
 #set ( $action = $link.setPage("reports,Step3_2a.vm").setAction("GenerateReport").addPathInfo("nextTemplate", "reports,Step3_2b.vm") )
-
 <div class="app" id="div2-4-1-step4b">
-
 <h2>Define report (2.4.1)</h2>
-		
-		<div class="tabs">
-			<table cellpadding="3" cellspacing="0" border="0">
-			<tr>
-			<td>1: <a href="#" title="summary info">Summary info</a></td>
-			<td>2: <a href="#" title="primary filter attribute">Primary filter attribute (PFA)</a></td>
-			<th>3: Select row/column heading(s)</th>
-			</tr>
-			</table>
-		</div>
-		
+  <div class="tabs">
+   <table cellpadding="3" cellspacing="0" border="0">
+   <tr>
+   <td>1: <a href="#" title="summary info">Summary info</a></td>
+   <td>2: <a href="#" title="primary filter attribute">Primary filter attribute (PFA)</a></td>
+   <th>3: Select row/column heading(s)</th>
+   </tr>
+   </table>
+  </div>
 <p class="functnbar">
-    <strong>3a: Define row/column criteria</strong> | 
+    <strong>3a: Define row/column criteria</strong> |
     3b: Select row/column content
 </p>
-		
-<h3>Report content: Rate of change analysis</h3>	  
-
+<h3>Report content: Rate of change analysis</h3>
 <form method="get" action="$action">
-		
 <div class="axial">
-	<table cellpadding="3" cellspacing="2" border="0">
-	    <tr>
-			<th width="120">rows: criteria</th>
-
-			<td>
-			    <select name="$intakeReport.Axis1Category.Key">
-			        <option value="">select criteria</option>
+ <table cellpadding="3" cellspacing="2" border="0">
+     <tr>
+   <th width="120">rows: criteria</th>
+   <td>
+       <select name="$intakeReport.Axis1Category.Key">
+           <option value="">select criteria</option>
 #set ($options = $scarabR.Report.AxisCategories)
 #foreach ( $option in $options )
-		  	        <option value="$option.Value">$option.Name</option>
-#end		  
-			    </select>
-			</td>
-		</tr>
-			
-		<tr>
-			<th width="120">columns: date(s)</th>
-			<td>Added during next step</td>
-		</tr>
-	</table>
+             <option value="$option.Value">$option.Name</option>
+#end
+       </select>
+   </td>
+  </tr>
+  <tr>
+   <th width="120">columns: date(s)</th>
+   <td>Added during next step</td>
+  </tr>
+ </table>
 </div>
-
 <p class="functnbar">
     <input type="submit" value="continue" name="eventSubmit_doStep3_2a" />
     &nbsp;
     <!-- <input type="submit" value="back" /> -->
 </p>
-
 #addReportHiddenInputs($report $link.CurrentView)
 $intake.declareGroups()
 </form>
-
 </div>
-

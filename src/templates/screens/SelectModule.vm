@@ -1,8 +1,6 @@
 #set ($userModules = $data.User.Modules)
 #set ($currentModule = $scarabR.CurrentModule)
-
 <div id="selectmodule" class="app">
-
 #if ($currentModule)
 <h3>Current module</h3>
 <table cellpadding="3" cellspacing="2" border="1" width="100%">
@@ -16,23 +14,19 @@
 </tr>
 </table>
 #end
-
 <h3>New module selection</h3>
-
 #if ($userModules.size() > 0)
 <form action="$link.setPage("SelectModule.vm").setAction("SelectModule")" method="get">
 #if ($nextTemplate && $nextTemplate.length() > 0)
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" /> 
-#else 
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm" /> 
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" />
+#else
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm" />
 #end
-
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
     <th>Module name</th>
     <th>Module desc</th>
 </tr>
-
 #foreach ($module in $userModules)
 #indexedRows($velocityCount)
 <td>
@@ -47,13 +41,10 @@ $module.Description
 </td>
 </tr>
 #end
-
 </table>
-
 <p>
 <input type="submit" name="eventSubmit_doSelect" value="Select Module" />
 </p>
-
 </form>
 #else
 <p><strong class="alert">
@@ -62,8 +53,5 @@ Sorry, you do not have access to select any other modules. Please
 has permissions to select a Module.
 </strong></p>
 #end
-
 </div>
-
-
 </div>

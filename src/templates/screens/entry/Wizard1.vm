@@ -1,12 +1,10 @@
 <div id="wizard1" class="app">
 $page.setTitle("Enter Issue")
-
 #set ($issue = $scarabR.ReportingIssue)
 #set ($action = $link.setPage("entry,Wizard1.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm"))
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
-
 <h2>$page.Title</h2>
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
@@ -17,24 +15,19 @@ $page.setTitle("Enter Issue")
 </tr>
 </table>
 </div>
-
 <form name="ReportForm" method="get" action="$action">
-
 <p class="functnbar">
 <input type="submit" name="eventSubmit_doCheckforduplicates" value="Check for duplicates"/>&#160;
 <input type="reset" value="reset"/>
 </p>
-
 #set ($privateTemplateList = $module.getPrivateTemplates($user))
 #set ($globalTemplateList = $module.GlobalTemplates)
 #if ($privateTemplateList.size() > 0 || $globalTemplateList.size() > 0)
 <h3>Apply issue entry template</h3>
-
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
  <tr>
  <th width="120">Templates</th>
- 
  <td>
  <select>
 #foreach ($template in $privateTemplateList)
@@ -46,17 +39,13 @@ $page.setTitle("Enter Issue")
 </select>
    <input type="submit" value="select"/> &#160;<a href="$link.setPage("TemplateList.vm")">Template List</a>
  </td>
-
  </tr>
  </table>
  </div>
 #end
-
 <h3>Input your issue</h3>
-
 <div class="axial">
     <table cellpadding="3" cellspacing="2" border="0">
-
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attVal = $attrValues.get($attKey) )
   #if ($attVal.isDedupeAttribute())
@@ -86,12 +75,10 @@ $page.setTitle("Enter Issue")
 #end
     </table>
 </div>
-
 <p class="functnbar">
 <input type="submit" name="eventSubmit_doCheckforduplicates" value="Check For Duplicates"/>&#160;
 <input type="reset" value="reset"/>
 </p>
-
 $intake.declareGroups()
 </form>
 </div>

@@ -1,29 +1,22 @@
 <div class="app" id="querylist">
 $page.setTitle("Stored Query List")
-
 <h2>$page.Title</h2>
-
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
 #set ($noQueries = "false")
-
-#if (($module.getPrivateQueries($user).isEmpty()) && ($module.GlobalQueries.isEmpty())) 
+#if (($module.getPrivateQueries($user).isEmpty()) && ($module.GlobalQueries.isEmpty()))
  #set ($noQueries = "true")
 #end
-
 #if ($noQueries.equals("true"))
- <div class="alert">There are no stored queries. 
- Please go to <a href="$link.setPage("AdvancedQuery.vm")">Advanced Query</a> 
+ <div class="alert">There are no stored queries.
+ Please go to <a href="$link.setPage("AdvancedQuery.vm")">Advanced Query</a>
  to create a new stored query.</div>
 #else
-
 #set ($action = $link.setPage("QueryList.vm").setAction("QueryList").addPathInfo("nextTemplate", "QueryList.vm"))
 <form method="post" action="$action">
-
-<div class="functnbar">
-<table cellpadding="0" cellspacing="0" border="0">
+<div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td>General functions</td>
+  <td class="firstchild">General functions</td>
   <td rowspan="2"><img src="/scarab/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
   <td>Select list item(s) to</td>
   <td rowspan="2"><img src="/scarab/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
@@ -41,11 +34,8 @@ $page.setTitle("Stored Query List")
  </tr>
 </table>
 </div>
-
 ##   <p>&#171; previous | 1 of 1 | next &#187; </p>
-
 <p><b>Click on location to execute. Click query name to edit.</b></p>
-
 <h3>Saved Queries</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
@@ -76,7 +66,6 @@ $page.setTitle("Stored Query List")
   <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
   </tr>
  #end
-
  #foreach ( $query in $module.GlobalQueries )
   #indexedRows($velocityCount)
   <td>
@@ -123,20 +112,17 @@ $page.setTitle("Stored Query List")
   </tr>
  #end
 </table>
-
 ##    <p>&#171; previous | 1 of 1 | next &#187; </p>
- 
 #if ($user.UserId)
- <div class="functnbar">
- <table cellpadding="0" cellspacing="0" border="0">
-  <tr>
-   <td>General functions</td>
+ <div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">General functions</td>
    <td rowspan="2"><img src="/scarab/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
    <td>Select list item(s) to</td>
    <td rowspan="2"><img src="/scarab/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
   </tr>
   <tr>
-   <td><input type="submit" value="save" name="eventSubmit_doSavefrequencies" />&nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel" />&nbsp;<input type="submit" value="new" name="eventSubmit_doNewquery" /></td>        
+   <td><input type="submit" value="save" name="eventSubmit_doSavefrequencies" />&nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel" />&nbsp;<input type="submit" value="new" name="eventSubmit_doNewquery" /></td>
    <td><input type="submit" value="copy" name="eventSubmit_doCopyquery" />&nbsp;
    #if ($security.hasPermission("Item | Delete") || !$module.getPrivateQueries($user).isEmpty())
     <input type="submit" value="delete" name="eventSubmit_doDeletequeries" />
@@ -146,8 +132,6 @@ $page.setTitle("Stored Query List")
  </table>
  </div>
 #end
-
 </form>
 #end
 </div>
-

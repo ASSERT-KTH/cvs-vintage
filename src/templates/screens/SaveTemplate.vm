@@ -1,24 +1,18 @@
 $page.setTitle("Issue Template")
-        
 #set ($action = $link.setPage("SaveTemplate.vm").setAction("TemplateList").addPathInfo("nextTemplate", "TemplateList.vm").toString())
 #set ($module = $scarabR.CurrentModule)
 #set ($issueId = $data.Parameters.getString("issue_id"))
-
 #if ($issueId)
    #set ($issue = $scarabR.Issue)
 #else
    #set ($issue = $module.NewIssue)
 #end
-
 #set ($templateInfo = $scarabR.IssueTemplateInfo)
-#set ($templateGroup = $intake.IssueTemplateInfo.mapTo($templateInfo)) 
-#set ($issueGroup = $intake.Issue.mapTo($issue)) 
-
+#set ($templateGroup = $intake.IssueTemplateInfo.mapTo($templateInfo))
+#set ($issueGroup = $intake.Issue.mapTo($issue))
 <div class="app" id="saveTemplate">
-
 <form method="post" action="$action" >
 #if ($issueId) <input type="hidden" name="issue_id" value="$issueId" /> #end
-
 <h3>$page.Title</h3>
 <div class="axial">
     <table border="0" cellspacing="2" cellpadding="3">
@@ -44,7 +38,6 @@ $page.setTitle("Issue Template")
          <td>$module.Name</td>
          <input type="hidden" name="$issueGroup.ModuleId.Key" value="$module.ModuleId" />
        </tr>
-
 #if ($issueId)
        <tr>
           <th>Template Author</th>
@@ -60,18 +53,13 @@ $page.setTitle("Issue Template")
 #end
    </table>
 </div>
-
 <h3>Template Attributes</h3>
-
 <div class="axial">
         <table cellspacing="2" cellpadding="3" border="0">
-                                                
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
-#set ( $group = $intake.AttributeValue.mapTo($attrValue) ) 
-
+#set ( $group = $intake.AttributeValue.mapTo($attrValue) )
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attVal = $attrValues.get($attKey) )
-
     <tr>
         <th>
      #if ( $attVal.Attribute.AttributeType.ValidationKey )
@@ -89,33 +77,28 @@ $page.setTitle("Issue Template")
     <td>
     #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
           #userSelectBox ($attVal "")
-    #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" ) 
+    #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
          #attrValueLeafSelect ($attVal $field "")
     #else
         #attrValueErrorMsg( $attVal "Value" )
-
         #if ($attVal.Attribute.AttributeType.Name == "long-string" )
-            <textarea name= "$attrInput.Value.Key" class="text" cols="40"
+            <textarea name= "$attrInput.Value.Key" cols="40"
                rows="4">$!attrInput.Value</textarea>
         #else
            <input name= "$attrInput.Value.Key"
-                value="$!attrInput.Value" size="45" type="text" class="text" />
+                value="$!attrInput.Value" size="45" type="text" />
         #end
     #end
     </td>
    </tr>
 #end
 </table>
-
 </div>
-
 <p class="functnbar">
 <input type="submit" value="save details" name="eventSubmit_doSubmit" />&#160;
 <input type="submit" value="cancel" name="eventSubmit_doCancel"  />&#160;
 <input type="submit" value="clear form" />
 </p>
-
 $intake.declareGroups()
 </form>
-
 </div>

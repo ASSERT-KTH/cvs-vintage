@@ -1,72 +1,54 @@
 #set ( $report = $scarabR.Report )
 #set ( $intakeReport = $intake.Report.mapTo($report) )
 #set ( $action = $link.setPage("reports,Step2.vm").setAction("GenerateReport"))
-
 <div class="app" id="div2-4-1-step2">
-
 <h2>Define report (2.4.1)</h2>
-		
-		<div class="tabs">
-			<table cellpadding="3" cellspacing="0" border="0">
-			<tr>
-			<td>1: <a href="#" title="summary info">Summary info</a></td>
-			<th>2: Primary filter attribute (PFA)</th>
-			<td>3:Select row/column heading(s)</td>
-			</tr>
-			</table>
-		</div>
-
-
+  <div class="tabs">
+   <table cellpadding="3" cellspacing="0" border="0">
+   <tr>
+   <td>1: <a href="#" title="summary info">Summary info</a></td>
+   <th>2: Primary filter attribute (PFA)</th>
+   <td>3:Select row/column heading(s)</td>
+   </tr>
+   </table>
+  </div>
 <p class="functnbar">
-    <strong>2a: Select PFA(s)</strong> | 
+    <strong>2a: Select PFA(s)</strong> |
     2b: PFA display options
 </p>
-		
 <h3>Select primary filter attribute(s)</h3>
-		
 <div><strong>Primary filter attribute</strong></div>
-<p>This selection defines the subset of issues that this report will be drawn 
-from. It is often useful (but not required) to set the primary filter 
-attribute "state" or "status", limiting the report to options such as "open", 
-"open unassigned", "open assigned", "closed", or a combination of several of 
+<p>This selection defines the subset of issues that this report will be drawn
+from. It is often useful (but not required) to set the primary filter
+attribute "state" or "status", limiting the report to options such as "open",
+"open unassigned", "open assigned", "closed", or a combination of several of
 these options.</p>
-
-<p><strong>note:</strong> Selecting the attribute's name will select all 
-options within that attribute. If you choose to "continue", without defining 
-PFA groups, each selected Attribute and/or Attribute Option will appear as a 
+<p><strong>note:</strong> Selecting the attribute's name will select all
+options within that attribute. If you choose to "continue", without defining
+PFA groups, each selected Attribute and/or Attribute Option will appear as a
 seperate column (i.e. side-by-side comparison).</p>
-
 <form method="get" action="$action">
-		
 <div class="axial">
-	<table border="0" cellspacing="2" cellpadding="3">
-
-		<tr>
-			<th width="120">attributes</th>
-			<td>
-
-			<select name="$intakeReport.AttributesAndOptionsForGrouping.Key" 
+ <table border="0" cellspacing="2" cellpadding="3">
+  <tr>
+   <th width="120">attributes</th>
+   <td>
+   <select name="$intakeReport.AttributesAndOptionsForGrouping.Key"
                 multiple="multiple" size="20">
-
                 #attributeOptionOptionList( $report.AllOptionsForGrouping $report.AttributesAndOptionsForGrouping)
-			</select>
-		
-			</td>
-		</tr>
-	</table>
-
+   </select>
+   </td>
+  </tr>
+ </table>
 </div>
-
 <p class="functnbar">
     <input type="submit" value="continue"  name="eventSubmit_doStep2agoto3" />
     &nbsp;
-    <input type="submit" value="Define PFA/Option(s) group(s)" 
+    <input type="submit" value="Define PFA/Option(s) group(s)"
         name="eventSubmit_doStep2agoto2b" />&nbsp;
     <input type="submit" value="cancel"  name="eventSubmit_doCancel" />
 </p>
-
 #addReportHiddenInputs($report "reports,Step2.vm")
 $intake.declareGroups()
 </form>
-
 </div>

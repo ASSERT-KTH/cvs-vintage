@@ -1,27 +1,19 @@
 <div id="globalattributeshow" class="app">
 $page.setTitle("Global Attribute Editor")
-
 <h2>$page.Title</h2>
-
 <p>
 This page is for editing the Global Attributes.
 </p>
-
 <form action="$link.setPage("admin,GlobalAttributeShow.vm")" method="get">
     <input type="hidden" name="action" value="admin.GlobalAttributes">
     <input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm">
-
 <p class="functnbar">
 <input type="submit" value="Create New Attribute" name="eventSubmit_doCreatenew" class="buttonfunc"/>
 <input type="submit" value="Delete Selected Attributes" name="eventSubmit_doDeleteaelectedattributes" class="buttonfunc"/>
 </p>
-
 <div class="grouper">
-
 #datatitle("Attributes")
-
 <div>
-
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th>Deleted</th>
@@ -31,9 +23,7 @@ This page is for editing the Global Attributes.
 <th>Author</th>
 <th>Creation Date</th>
 </tr>
-
 #set ($allAttributes = $scarabG.AllAttributes)
-
 #foreach( $attribute in $allAttributes )
 #set ($attgroup = $intake.Attribute.mapTo($attribute))
 #if ( $velocityCount % 2 > 0 )
@@ -59,13 +49,10 @@ This page is for editing the Global Attributes.
 #end
 </table>
 </div>
-
 $intake.declareGroups()
-
 <p class="functnbar">
 <input type="submit" value="Create New Attribute" name="eventSubmit_doCreatenew" class="buttonfunc"/>
 <input type="submit" value="Delete Selected Attributes" name="eventSubmit_doDeleteaelectedattributes" class="buttonfunc"/>
 </p>
 </form>
-
 </div>

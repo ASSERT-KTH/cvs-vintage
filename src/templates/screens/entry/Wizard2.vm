@@ -2,17 +2,11 @@
 $page.setTitle("Identified as duplicate")
 #set ($currentIssue = $scarabR.ReportingIssue)
 #set ( $action = $link.setPage("entry,Wizard2.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm") )
-
-
 <h2>$page.Title</h2>
-
 <form method="get" name="Report2Form" action="$action">
-
-<h3>New issue</h3>      
-
+<h3>New issue</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-
 #set( $attrValues = $currentIssue.ModuleAttributeValuesMap )
 #set( $keys = $attrValues.sequence() )
 #foreach ( $attKey in $keys )
@@ -21,23 +15,17 @@ $page.setTitle("Identified as duplicate")
 <td>
 <strong>$attVal.Attribute.Name: </strong>
 #if ($attVal.Attribute.AttributeType.Name == "email" && $attVal.Value && $attVal.Value.toString().length() != 0 )
-
-			<a href="mailto:$attVal.Value">$attVal.Value</a>
-
+   <a href="mailto:$attVal.Value">$attVal.Value</a>
 #else
-			$!attVal.Value
+   $!attVal.Value
 #end
 </td>
-
 #end
 #end
-
-
 </tr>
 </table>
 </div>
 </div>
-
 <div class="grouper">
 <div class="datatitle">
 <table width="100%" cellpadding="3" cellspacing="2" border="1">
@@ -46,40 +34,26 @@ $page.setTitle("Identified as duplicate")
 </tr>
 </table>
 </div>
-
 <div>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
-
 <tr>
-<th><a href="#"><img src="/scarab/images/icon_uparrow.gif" 
-			width="13" height="8" alt="sort" border="0" /></a><a href="#"><img 
-			src="/scarab/images/icon_downarrow.gif" width="13" height="8" 
-			alt="sort" border="0" /></a></th>
-
+<th><a href="#"><img src="/scarab/images/icon_uparrow.gif"
+   width="13" height="8" alt="sort" border="0" /></a><a href="#"><img
+   src="/scarab/images/icon_downarrow.gif" width="13" height="8"
+   alt="sort" border="0" /></a></th>
 <th><a href="#">issue ID #</a></th>
-
-
 #set( $attrValues = $currentIssue.ModuleAttributeValuesMap )
 #foreach ( $attKey in $keys )
 #set ( $attVal = $attrValues.get($attKey) )
 #if ($attVal.isDedupeAttribute())
-
 <th>$attVal.Attribute.Name</th>
-
 #end
 #end
-
-
 <th>creation date</th>
-
 <th>date closed</th>
-
 </tr>
-
 #foreach ($issue in $scarabR.IssueList)
-
 #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString() )
-
 <tr class="a">
 #set ($issueGroup = $intake.Issue.Default)
 #if ($velocityCount == 1)
@@ -87,63 +61,46 @@ $page.setTitle("Identified as duplicate")
 #else
 #set ($checked = '')
 #end
-<td><input type="radio" name="$issueGroup.Id.Key" 
-					value="$issue.IssueId"$checked /></td>
-
+<td><input type="radio" name="$issueGroup.Id.Key"
+     value="$issue.IssueId"$checked /></td>
 <td><strong>$issue.UniqueId</strong></td>
-
 #set( $attrValues = $issue.ModuleAttributeValuesMap )
 #foreach ( $attKey in $keys )
 #set ( $attVal = $attrValues.get($attKey) )
 #if ($attVal.isDedupeAttribute())
 <td>
 #if ($attVal.Attribute.AttributeType.Name == "email" && $attVal.Value && $attVal.Value.toString().length() != 0 )
-
-			<a href="mailto:$attVal.Value">$attVal.Value</a>
-
+   <a href="mailto:$attVal.Value">$attVal.Value</a>
 #else
-			$!attVal.Value
+   $!attVal.Value
 #end
 </td>
-
 #end
 #end
-
 <td>$issue.CreatedDate</td>
-
 <td>#if ($issue.ClosedDate)$issue.ClosedDate#else&nbsp;#end</td>
-
 </tr>
-
 #end
-
 </table>
 </div>
 </div>
-
-<p><input type="submit"  name="eventSubmit_doAddvote" 
+<p><input type="submit"  name="eventSubmit_doAddvote"
 value="add vote to selected" /></p>
-
-
 #set ( $atch = $scarabR.Attachment )
 #set( $intakeAttachment = $intake.Attachment.mapTo($atch) )
-
 <div class="listtable">
 <table width="100%" cellpadding="3" cellspacing="2" border="1">
 <tr>
 <td width="120" class="a"><strong>append with note:</strong></td>
-
 <td class="b">
-<textarea name="$intakeAttachment.DataAsString.Key" rows="4" 
-	cols="40" class="text">$!intakeAttachment.DataAsString</textarea>
-
-<p><input type="submit" name="eventSubmit_doAddnote" 
-				value="submit note" /></p>
+<textarea name="$intakeAttachment.DataAsString.Key" rows="4"
+ cols="40">$!intakeAttachment.DataAsString</textarea>
+<p><input type="submit" name="eventSubmit_doAddnote"
+    value="submit note" /></p>
 </td>
 </tr>
 </table>
 </div>
-
 <div class="grouper">
 <p>
 The issues above do not match my issue:<br />
@@ -151,167 +108,94 @@ The issues above do not match my issue:<br />
 value="continue issue entry" />
 &#160;
 <input type="submit" name="eventSubmit_doCancel"
-	value="cancel" />
+ value="cancel" />
 </p>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #*
-
-
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
 <td width="50%" valign="top">
-
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
 <td  bgcolor="#999999" colspan="2">POSSIBLE ISSUE MATCHES</td>
 </tr>
-
 <tr>
 <td>Issue ID#</td>
 <td>Issue Summary</td>
 </tr>
-
 #set ( $currentIssueId = $data.Parameters.getString("currentIssueId", $issueList.get(0).UniqueId))
-
-
 #if ( $currentIssueId == $issue.UniqueId )
-#set ( $currentIssue = $issue )        
+#set ( $currentIssue = $issue )
 #if ( $velocityCount != $issueList.size() )
 #set ($nextIssueIndex = $velocityCount )
 #else
 #set ($nextIssueIndex = 0 )
 #end
-
 #set ( $nextIssueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issueList.get($nextIssueIndex).UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString() )
-
-
-
 #else
-
 <a href="$issueLink">$issue.UniqueId</a>
-
-$issue.ModuleAttributeValuesMap.get("SUMMARY").Value 
-
+$issue.ModuleAttributeValuesMap.get("SUMMARY").Value
 #end
-
 #end
-
-
-
 ## The issue details
-
-
-
 Issue ID#: $currentIssue.UniqueId
-
-
 #foreach ( $attVal in $currentIssue.OrderedModuleAttributeValues )
-
 <b>$attVal.Attribute.Name:</b>
 #if ($attVal.Attribute.AttributeType.Name == "email" && $attVal.Value && $attVal.Value.toString().length() != 0 )
-
 <a href="mailto:$attVal.Value">$attVal.Value</a>
-
 #else
 $!attVal.Value
 #end
 </td></tr>
-
 #end
-
-
 Reported by:<br />
 #set ( $email = $currentIssue.CreatedBy.Email )
 <a href="mailto:$email">$email</a>
-
-
 Date Entered:<br />
 $currentIssue.CreatedDate
-
-
 Last Modified:<br />
 $currentIssue.ModifiedDate
-
-
-
-
-
-
 #set ( $comma = "" )
 #foreach ($issue in $currentIssue.BlockerIssues)
 #set ( $issueLink = $link.setPage("IssueDetails.vm").addPathInfo("currentIssueId", $currentIssueId).addPathInfo($data.Parameters).addPathInfo("prevTemplate", $link.CurrentTemplate) )
-
 $comma<a href="$issueLink">$issue.UniqueId</a>
 #set ( $comma = ", " )
 #end
 </td>
 </tr>
-
 <tr>
 <td>Dependents:<br />
-
 #set ( $comma = "" )
 #foreach ($issue in $currentIssue.BlockerIssues)
 #set ( $issueLink = $link.setPage("IssueDetails.vm").addPathInfo("currentIssueId", $currentIssueId).addPathInfo($data.Parameters).addPathInfo("prevTemplate", $link.CurrentTemplate) )
-
 $comma<a href="$issueLink">$issue.UniqueId</a>
 #set ( $comma = ", " )
 #end
-
 </td>
 </tr>
-
-
-
 #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString() )
-
-
 <tr><td>
-
 Does this issue match yours?<a href="$link.setPage("links.vm")">Yes</a>(Vote)
 <a href="$nextIssueLink">No</a>(Next issue)
-
 <p>
 <a href="$link.addPathInfo($data.Parameters).setPathInfo("nexttempate", "entry,wizard3.vm").setpage("entry,wizard3.vm")">None of these Issues Match Mine</a> (Report issue now)
 </p>
 #*
 <input type="submit" name="eventSubmit_doAddvote" value="Yes">(Vote)
 <input type="submit" name="eventSubmit_doNo" value="No">(Next issue)
-
 <p>
 <input type="submit" name="eventSubmit_doNoneOfThese" value="None of These Issues Match Mine">(New Search)
 <input type="submit" name="eventSubmit_doJustReport" value="Just Report My Issue">(Report issue now)
 *#
 </p>
-
 </td></tr>
-
 *#
 #*  Comments are not ready, not really sure they belong here.
 <a href="#Comments">Add Comment</a>
-
-
 <p>
 <a name="Comments">
 Comments</a>
 </p>
-
 <td class="TableDataHeader">From: <span class="TableData"><a href="mailto:bob@collab.net">bob@collab.net</a></span></td>
 <td class="TableDataHeader">Date: <span class="TableData">2000-08-12</span></td>
 </tr>
@@ -337,24 +221,16 @@ Comments</a>
 <tr>
 <td colspan="2" class="TableData">Java is meant to be a cross-platform programming lnaguage, not a cross-platform user interface language. If using the Gecko browser this project can take advantage of the XUL language from Mozilla.</td>
 </tr>
-
-
 Add a comment
-
 <p>
 <textarea name="" value="$description" cols="40" rows="3"></textarea><br>
 <input type="submit" name="eventSubmit_doAddComment" value="Add Comment">
 </p>
-
 *#
-
 </table>
-
 </td>
 </tr>
 </table>
 $intake.declareGroups()
 </form>
-
-
 </div>

@@ -1,9 +1,8 @@
 #macro ( attributeOptionOptionList $optionList $selectOptions )
-
 #set ($showSeparator = false)
 #foreach ( $option in $optionList )
     #if ($showSeparator && $option.isAttribute())
-			    <option value="">----------------------------------</option>
+       <option value="">----------------------------------</option>
     #end
     #set ($showSeparator = true)
     #if ($option.isAttribute())
@@ -18,18 +17,13 @@
             #set ($selected = ' selected="selected"')
         #end
     #end
-    	    <option value="$option.Value"$selected>$spaces$option.Name</option>
+         <option value="$option.Value"$selected>$spaces$option.Name</option>
 #end
-
 #end
-
-
 #*
 #macro ( reportTable $model )
-
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
-
-	<tr>
+ <tr>
 #foreach ($heading in $model.Headings)
     #if (!$heading.Label || $heading.Label.toString().length() == 0)
         #set ($label = "&nbsp;")
@@ -45,12 +39,11 @@
     #else
         #set ($colspan = "")
     #end
-		<th$colspan>$label</th>
+  <th$colspan>$label</th>
 #end
-	</tr>
-
+ </tr>
 #if ($hasSubHeadings)
-	<tr>
+ <tr>
     #foreach ($superheading in $model.Headings)
     #foreach ($heading in $superheading.SubHeadings)
         #if (!$heading.Label || $heading.Label.toString().length() == 0)
@@ -61,15 +54,12 @@
             #set ($label = "$heading.Label")
         #end
         #set ($quote = '"')
-		<th>$label</th>
+  <th>$label</th>
     #end
     #end
-	</tr>
+ </tr>
 #end
-
-
     #foreach ( $row in $model.Rows )
-
     #rows()
         #foreach ($cell in $row)
             #if ( $model.isHeading($cell) )
@@ -78,7 +68,7 @@
                 #else
                     #set ($rowspan = "")
                 #end
-		        <td$rowspan><strong>$cell.Label</strong></td>
+          <td$rowspan><strong>$cell.Label</strong></td>
             #elseif ($model.isDate($cell))
                 <td>$format.getDate('MM/dd/yyyy HH:mm', $heading.Label)</td>
             #else
@@ -87,13 +77,9 @@
         #end
     </tr>
     #end
-
 </table>
-
 #end
 *#
-
-
 ## the rowspan and colspan stuff below will not work as written.  We must
 ## track which cells to skip.  For now assume rowspan and colspan are always 1.
 #macro ( reportTable $model )
@@ -101,13 +87,11 @@
     #set ($maxRow = $model.RowCount)
     #set ($maxColumn = $model.ColumnCount)
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
-
 #foreach ($rowIndex in [0..$maxRow])
-	<tr>
+ <tr>
         #foreach ($columnIndex in [0..$maxColumn])
             #set ($cell = $model.getValueAt($rowIndex, $columnIndex))
             #if ($model.isHeading($cell))
-
                 #if (!$cell.Label)
                     #set ($label = "&nbsp;")
                 #else
@@ -123,7 +107,6 @@
                     #elseif ($cellLabel.isUser($cellLabel.subLabel1))
                         #set ($label = "Author:$cellLabel.SubLabel1.UserName")
                     #end
-    
                     #if ($cellLabel.SubLabels.size() == 2)
                         #if ($cellLabel.isOptionGroup($cellLabel.SubLabel2))
                             #set ($label = "$label $cellLabel.SubLabel2.DisplayValue")
@@ -138,14 +121,14 @@
                     #else
                         #set ($colspan = "")
                     #end
-		            <th$colspan>$label</th>
+              <th$colspan>$label</th>
                 #else
                     #if ($cell.Rowspan > 1)
                         #set ($rowspan = " rowspan=$quote$cell.Rowspan$quote")
                     #else
                         #set ($rowspan = "")
                     #end
-		        <td$rowspan><strong>$label</strong></td>
+          <td$rowspan><strong>$label</strong></td>
                 #end
             #else
                 <td>
@@ -159,17 +142,11 @@
                 </td>
             #end
         #end
-	</tr>
+ </tr>
 #end
-
 </table>
-
 #end
-
-
-
 #macro ( addReportHiddenInputs $report $template)
-
 #set ( $ir = $intake.Report.mapTo($report) )
 #if ($template != "reports,Step1.vm")
 #if ($report.Name)
@@ -182,77 +159,69 @@
     <input type="hidden" name="$ir.Type.Key" value="$ir.Type" />
 #end
 #end
-
 #if ($template != "reports,Step2.vm")
 #if ($report.AttributesAndOptionsForGrouping)
     #foreach ($ao in $report.AttributesAndOptionsForGrouping)
-    <input type="hidden" name="$ir.AttributesAndOptionsForGrouping.Key" 
+    <input type="hidden" name="$ir.AttributesAndOptionsForGrouping.Key"
         value="$ao" />
     #end
 #end
 #end
-
 #if ($template != "reports,Step2b.vm")
 #if ($report.OptionGroups)
     #foreach ($group in $report.OptionGroups)
         #set ($intakeOptionGroup = $intake.OptionGroup.mapTo($group))
-        <input type="hidden" name="$intakeOptionGroup.DisplayValue.Key" 
+        <input type="hidden" name="$intakeOptionGroup.DisplayValue.Key"
             value="$intakeOptionGroup.DisplayValue" />
         #if ($group.Options)
             #foreach ($option in $group.Options)
-                <input type="hidden" name="ofg$option.QueryKey" 
-                    value="$group.QueryKey" />        
+                <input type="hidden" name="ofg$option.QueryKey"
+                    value="$group.QueryKey" />
             #end
         #end
     #end
 #end
 #end
-
 #if ($template != "reports,Step3_1a.vm"  && $template != "reports,Step3_2a")
 #if ($report.Axis1Category != 0)
-    <input type="hidden" name="$ir.Axis1Category.Key" 
+    <input type="hidden" name="$ir.Axis1Category.Key"
         value="$ir.Axis1Category" />
 #end
 #if ($report.Axis2Category != 0)
-    <input type="hidden" name="$ir.Axis2Category.Key" 
+    <input type="hidden" name="$ir.Axis2Category.Key"
         value="$ir.Axis2Category" />
 #end
 #end
-
 #if ($template != "reports,Step3_1b.vm"  && $template != "reports,Step3_2b")
 #if ($report.Axis1AttributesAndOptions)
     #foreach ($ao in $report.Axis1AttributesAndOptions)
-    <input type="hidden" name="$ir.Axis1AttributesAndOptions.Key" 
+    <input type="hidden" name="$ir.Axis1AttributesAndOptions.Key"
         value="$ao" />
     #end
 #end
 #if ($report.Axis2AttributesAndOptions)
     #foreach ($ao in $report.Axis2AttributesAndOptions)
-    <input type="hidden" name="$ir.Axis2AttributesAndOptions.Key" 
+    <input type="hidden" name="$ir.Axis2AttributesAndOptions.Key"
         value="$ao" />
     #end
 #end
 #end
-
 #*
 #if ($report.Dates)
     #foreach ($date in $report.Dates)
 $date
-        <input type="hidden" name="$ir.Dates.Key" 
+        <input type="hidden" name="$ir.Dates.Key"
             value="$format.getDate("MM/dd/yy HH:mm", $date)" />
     #end
 #end
 *#
-
-
 #if ($template != "reports,Step3_1a.vm"  && $template != "reports,Step3_2b")
 #if ($report.ReportDates)
     #foreach ($date in $report.ReportDates)
         #set ($intakeDate = $intake.ReportDate.mapTo($date))
-        <input type="hidden" name="$intakeDate.Date.Key" 
+        <input type="hidden" name="$intakeDate.Date.Key"
             value="$format.getDate("MM/dd/yy HH:mm", $date.Date)" />
     #end
 #end
 #end
-
 #end

@@ -1,19 +1,14 @@
 $page.setTitle("Enter Issue")
-
 #set ($issue = $scarabR.ReportingIssue)
 #set ($action = $link.setPage("entry,Wizard3.vm").setAction("ReportIssue").toString())
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
-
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
-
 #set ($templateId = $data.Parameters.getString("templateId"))
 #set ($template = $scarabR.getIssue($templateId))
 #set ($templAttrValues = $template.ModuleAttributeValuesMap)
-
    <div class="app" id="div2-1-0">
                 <h2>Enter issue (2.1.0)</h2>
-                
                 <div class="tabs">
                         <table cellpadding="3" cellspacing="0" border="0">
                         <tr>
@@ -23,20 +18,16 @@ $page.setTitle("Enter Issue")
                         </tr>
                         </table>
                 </div>
-                                
                 <p class="functnbar"><input type="submit" value="check for dupes" />&#160;<input type="reset" value="reset form" /></p>
-                
 <form method="get" action="$action">
 #set ($privateTemplateList = $module.getPrivateTemplates($user))
 #set ($globalTemplateList = $module.GlobalTemplates)
 #if ($privateTemplateList.size() > 0 || $globalTemplateList.size() > 0)
                 <h3>Apply issue entry template</h3>
-                
                 <div class="axial">
                         <table width="100%" cellpadding="3" cellspacing="2" border="1">
                      <tr>
                      <th width="120">templates</th>
-                        
                      <td><select name="templateId">
                 #foreach ($template in $privateTemplateList)
                 <option value="$template.IssueId">$template.TemplateInfo.Name
@@ -47,33 +38,27 @@ $page.setTitle("Enter Issue")
                         </select> &#160;<input type="submit" value="select" name="eventSubmit_doGotowizard3" /> &#160;<a href="#">template list</a></td>
                         </tr>
                         </table>
-                </div>          
+                </div>
 #end
-</form>                
-
+</form>
 <form method="get" action="$link.setPage("entry,Wizard3.vm")">
 <input type="hidden" name="action" value="ReportIssue");
-
 <div class="axial">
 <h3>Input your issue</h3>
-	
     <table cellpadding="3" cellspacing="2" border="0">
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attVal = $attrValues.get($attKey) )
-  #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
+  #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
   #set ( $templAttVal = $templAttrValues.get($attKey) )
-  #set ( $templAttrInput = $intake.AttributeValue.mapTo($templAttVal) ) 
-
+  #set ( $templAttrInput = $intake.AttributeValue.mapTo($templAttVal) )
   #if ( $attVal.Attribute.AttributeType.ValidationKey )
         #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
   #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
         #set ( $field = "OptionId" )
   #else
-        #set ( $field = "Value" )  
+        #set ( $field = "Value" )
   #end
-
   #if ( !$attVal.isSet() )
-
         <tr>
             <th>
     #if ( $attVal.isRequired() )*#end
@@ -81,7 +66,6 @@ $page.setTitle("Enter Issue")
     #attrValueErrorMsg ( $attVal $field )<br />
             </th>
             <td>
-
     #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
           #userSelectBox ($attVal "")
     #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
@@ -91,70 +75,57 @@ $page.setTitle("Enter Issue")
           #attrValueLeafSelect ($attVal $field "")
         #end
     #else
-
 #set ($currentValue = "")
         #if ($attrInput.Value.toString().length() > 0)
              #set ($currentValue = $attrInput.Value)
         #elseif ($templAttrInput.Value.toString().length() > 0)
              #set ($currentValue = $templAttrInput.Value)
         #end
-
         #if ($attVal.Attribute.AttributeType.Name == "long-string" )
-            <textarea name= "$attrInput.Value.Key" class="text" cols="40"
+            <textarea name= "$attrInput.Value.Key" cols="40"
                rows="4">$!currentValue</textarea>
         #else
            <input name= "$attrInput.Value.Key"
-                value="$!currentValue" size="45" type="text" class="text" />
+                value="$!currentValue" size="45" type="text" />
         #end
     #end
             </td>
         </tr>
   #end
 #end
-
         </table>
 </div>
-
 <h3>Add Attachment</h3>
-
 <div class="axial">
     <table cellpadding="3" cellspacing="2" border="0">
      <tr>
       <th>Attachment Description</th>
-
 #set ( $atch = $scarabR.Attachment )
 #set( $intakeAttachment = $intake.Attachment.mapTo($atch) )
-
       <td>
-       <textarea name="$intakeAttachment.Name.Key" cols="45" rows="2" 
-            class="text">$!intakeAttachment.Name</textarea>
+       <textarea name="$intakeAttachment.Name.Key" cols="45" rows="2"
+           >$!intakeAttachment.Name</textarea>
         <p>
-          Please provide a short (less than 250 characters) description 
+          Please provide a short (less than 250 characters) description
           of the attachment
         </p>
       </td>
      </tr>
-
      <tr>
       <th>File path</th>
-
       <td>
-       <input type="file" name="$intakeAttachment.File.Key" size="45" 
-            class="text" value="$!intakeAttachment.File.Value.FileName"/>
-
+       <input type="file" name="$intakeAttachment.File.Key" size="45"
+            value="$!intakeAttachment.File.Value.FileName"/>
        <p>Click Browse and select a file. If you do not see a Browse
        button, your browser does not support file uploads. Windows
        users, set Files of Type: to be All Files (*.*) to get a
        complete file listing. The File field cannot be used to
        rename files.</p>
-
       </td>
      </tr>
     </table>
 </div>
-
 <br/>
-
 <div class="axial">
     <table cellpadding="3" cellspacing="2" border="0">
      <tr>
@@ -162,23 +133,21 @@ $page.setTitle("Enter Issue")
       workflow options</th>
      <td>
     return to&#160;
-   <input type="radio" name="nextTemplate" 
-      value="$data.Parameters.getString($scarabG.Constant.HISTORY_SCREEN, "entry,Wizard3.vm")"/> 
-      Enter New Issue 
-  <input type="radio" name="nextTemplate" value="Index.vm" /> 
-      Start Page 
-  <input type="radio" name="nextTemplate" value="AssignIssue.vm"/> 
+   <input type="radio" name="nextTemplate"
+      value="$data.Parameters.getString($scarabG.Constant.HISTORY_SCREEN, "entry,Wizard3.vm")"/>
+      Enter New Issue
+  <input type="radio" name="nextTemplate" value="Index.vm" />
+      Start Page
+  <input type="radio" name="nextTemplate" value="AssignIssue.vm"/>
       Assign Issue
       </td>
       </tr>
     </table>
 </div>
-
 <p class="functnbar">
 <input type="submit" name="eventSubmit_doEnterissue" value="Save Issue"/>&#160;
 <input type="reset" value="Reset"/>
 </p>
-
 $intake.declareGroups()
 </form>
 </div>

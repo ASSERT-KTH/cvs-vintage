@@ -1,111 +1,93 @@
   <div class="app" id="div2-1-4-0">
         <h2>Add/Edit attribute group  (2.1.4.1)</h2>
-   
 #set ($groupId = $data.Parameters.getString("groupId"))
-
 <form method="get" action="$link.setPage("admin,attributegroup.vm")">
       <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
       <input type="hidden" name="nextTemplate" value="admin,AttributeGroup.vm"/>
       <input type="hidden" name="groupId" value="$groupId">
-
-        <div class="functnbar">
-            <table cellpadding="0" cellspacing="0" border="0">
-            <tr>
-            <td><strong>Screen options:</strong></td>
-            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-            <td><strong>attribute options:</strong></td>
-            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-            </tr>
-
-            <tr>
-            <td><input type="submit" value="submit changes" name="eventSubmit_doModifygroup" />&#160;<input type="submit" value="cancel" /></td>
-            <td><input type="submit" value="add new"  name="eventSubmit_doGotoselectpage" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete"  name="eventSubmit_doDeleteattributes" />&#160;<input type="submit" value="resort" /></td> 
-            </tr>
-            </table>
-        </div>     
-
-        
-        <h3>Attribute group details</h3>
-        
+<div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild"><div>
+Screen options
+</div>
+<input type="submit" value="submit changes" name="eventSubmit_doModifygroup" />&#160;<input type="submit" value="cancel" />
+</td>
+<td><div>
+Attribute options
+</div>
+<input type="submit" value="Add new"  name="eventSubmit_doGotoselectpage" />&#160;<input type="submit" value="Copy" />&#160;<input type="submit" value="Delete"  name="eventSubmit_doDeleteattributes" />&#160;<input type="submit" value="Resort" />
+</td>
+</table>
+</div>
+<h3>Attribute group details</h3>
 #set ($group = $scarabR.getAttributeGroup(groupId))
 #set ($agGroup = $intake.AttributeGroup.mapTo($group) )
-<input type="hidden" name="groupid" value="$groupId"> 
-
-        <div class="axial">
-            <table border="0" cellspacing="2" cellpadding="3">
-            <tr>
-            <th>Group name</th>
-            <td><input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" class="text" ></td>
-            </tr>
-            
-            <tr>
-            <th>Group descr</th>
-            <td><textarea rows="4" cols="40" name="$agGroup.Description.Key">$!agGroup.Description.Value</textarea></td>
-            </tr>
-            
-            <tr>
-            <th>author</th>
-            <td><div>Joe Smo</div>
-            <a href="#">joes@users.com</a></td>
-            </tr>
-            </table>
-        </div>
-        
-
-#if (!$group.Attributes.isEmpty())                        
-        <h3>Attributes in this group</h3>
-        
-        <table width="100%" border="1" cellspacing="2" cellpadding="3">
-        <tr>
-        <th nowrap="nowrap">select</th>
-        <th>attribute name</th>
-        <th>per project name</th>
-        <th>(in)active</th>
-        <th>required</th>
-        <th>quick search</th>
-        <th>sequence #</th>
-        </tr>
-
+<input type="hidden" name="groupid" value="$groupId" />
+<div class="axial">
+ <table border="0" cellspacing="2" cellpadding="3">
+ <tr>
+ <th>Group name</th>
+ <td><input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" ></td>
+ </tr>
+ <tr>
+ <th>Group descr</th>
+ <td><textarea rows="4" cols="40" name="$agGroup.Description.Key">$!agGroup.Description.Value</textarea></td>
+ </tr>
+ <tr>
+ <th>author</th>
+ <td><div>Joe Smo</div>
+ <a href="#">joes@users.com</a></td>
+ </tr>
+ </table>
+</div>
+#if (!$group.Attributes.isEmpty())
+<h3>Attributes in this group</h3>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th>Select</th>
+<th>Attribute name</th>
+<th>Per project name</th>
+<th>(In)active</th>
+<th>Required</th>
+<th>Quick search</th>
+<th>Sequence #</th>
+</tr>
 #foreach ($attribute in $group.Attributes)
    #set ($rma = $scarabR.CurrentModule.getRModuleAttribute($attribute))
    #set ( $rmaGroup = $intake.RModuleAttribute.mapTo($rma) )
    #set ($raag = $group.getRAttributeAttributeGroup($attribute))
    #set ( $raagGroup = $intake.RAttributeAttributeGroup.mapTo($raag) )
    #set ( $maxNum = $group.Attributes.size() )
-
-        #rows()
-        <td>-&nbsp;<input type="checkbox" name="att_delete_$attribute.AttributeId"/></td>
-        <td><a href="#">$attribute.Name</a></td>
-        <td><input type="text" size="15" class="text" value="$rmaGroup.DisplayValue" /></td>
-        <td>#booleanCheckbox ($rmaGroup.Active)</td>
-        <td>#booleanCheckbox ($rmaGroup.Required)</td>
-        <td>#booleanCheckbox ($rmaGroup.QuickSearch)</td>
-        <td>#numericSelect( "$raagGroup.Order.Key" 1 $maxNum $raagGroup.Order.Value 1 )</td>
-        </tr>
-
-        </td>
-        </tr>
-        
+ #rows()
+ <td>-&nbsp;<input type="checkbox" name="att_delete_$attribute.AttributeId"/></td>
+ <td><a href="#">$attribute.Name</a></td>
+ <td><input type="text" size="15" value="$rmaGroup.DisplayValue" /></td>
+ <td>#booleanCheckbox ($rmaGroup.Active)</td>
+ <td>#booleanCheckbox ($rmaGroup.Required)</td>
+ <td>#booleanCheckbox ($rmaGroup.QuickSearch)</td>
+ <td>#numericSelect( "$raagGroup.Order.Key" 1 $maxNum $raagGroup.Order.Value 1 )</td>
+ </tr>
+ </td>
+ </tr>
 #end
         </table>
 #else
-        <p class="text">There are no attributes in this group.</p>
+        <p>There are no attributes in this group.</p>
 #end
-
-        <div class="functnbar2">
-            <table cellpadding="0" cellspacing="0" border="0">
-            <tr>
-            <td><strong>Screen options:</strong></td>
-            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-            <td><strong>attribute options:</strong></td>
-            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-            </tr>
-
-            <tr>
-            <td><input type="submit" value="submit changes" name="eventSubmit_doModifygroup" />&#160;<input type="submit" value="cancel" /></td>
-            <td><input type="submit" value="add new"  name="eventSubmit_doGotoselectpage" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete"  name="eventSubmit_doDeleteattributes" />&#160;<input type="submit" value="resort" /></td> 
-            </tr>
-            </table>
-        </div>     
+<div class="functnbar2"><table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+  <div>
+Screen options
+</div> <input type="submit" value="Submit changes" name="eventSubmit_doModifygroup" />&#160;<input type="submit" value="cancel" /></td>
+  <td>
+  <div>
+Attribute options
+</div>
+<input type="submit" value="Add new"  name="eventSubmit_doGotoselectpage" />&#160;<input type="submit" value="Copy" />&#160;<input type="submit" value="Delete"  name="eventSubmit_doDeleteattributes" />&#160;<input type="submit" value="Resort" />
+  </td>
+  </tr>
+  </table>
+</div>
 $intake.declareGroups()
 </form>
