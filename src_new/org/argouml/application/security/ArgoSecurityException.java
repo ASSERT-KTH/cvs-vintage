@@ -1,4 +1,4 @@
-// $Id: ArgoSecurityException.java,v 1.5 2004/03/09 20:33:32 mvw Exp $
+// $Id: ArgoSecurityException.java,v 1.6 2004/09/11 09:25:57 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,15 +33,27 @@ public class ArgoSecurityException extends SecurityException
 {
     private boolean hidden = false;
 
+    /**
+     * The constructor.
+     * 
+     */
     public ArgoSecurityException() {
         this(false);
     } 
 
+    /**
+     * The constructor.
+     * 
+     * @param h true if the exception is hidden
+     */
     public ArgoSecurityException(boolean h) {
         super();
 	hidden = h;
     }
 
+    /**
+     * @return true if this exception is hidden
+     */
     public boolean isHidden() {
         return hidden;
     }

@@ -1,4 +1,4 @@
-// $Id: ArgoClassLoader.java,v 1.4 2003/06/30 18:00:16 linus Exp $
+// $Id: ArgoClassLoader.java,v 1.5 2004/09/11 09:25:57 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,24 +32,28 @@ import java.io.DataInputStream;
 /** Argo custom classloader.
  *
  *  Much of the code that this is based upon is taken from the
- *  O'reilly book <cite>TODO</cite>.
+ *  O'reilly book <cite>TODO:</cite>.
  *
  *  @author Thierry Lach
  *  @since 0.9.4
  */
 public final class ArgoClassLoader extends ClassLoader {
 
-    /**
-     */
+
     private JarFile jf = null;
 
     /**
+     * The constructor.
+     * 
+     * @param jarfile the jar to be loaded
      */
     public ArgoClassLoader (JarFile jarfile) {
         jf = jarfile;
     }
 
     /** The worker for this classloader.
+     *
+     * @see java.lang.ClassLoader#loadClass(java.lang.String)
      */
     public Class loadClass(String classname) throws ClassNotFoundException {
 

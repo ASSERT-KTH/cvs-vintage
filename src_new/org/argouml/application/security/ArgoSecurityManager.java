@@ -1,4 +1,4 @@
-// $Id: ArgoSecurityManager.java,v 1.17 2004/03/09 20:33:32 mvw Exp $
+// $Id: ArgoSecurityManager.java,v 1.18 2004/09/11 09:25:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,6 +79,8 @@ public final class ArgoSecurityManager extends SecurityManager
 
     /**
      * Accessor for the instance.
+     *
+     * @return the signleton
      */
     public static final ArgoSecurityManager getInstance() {
         return SINGLETON;
@@ -88,6 +90,9 @@ public final class ArgoSecurityManager extends SecurityManager
     private ArgoSecurityManager() {
     }
 
+    /**
+     * @see java.lang.SecurityManager#checkPermission(java.security.Permission)
+     */
     public void checkPermission(Permission perm) {
         // TODO:  
 	// Don't allow write access to <code>sun.awt.exception.handler</code>
@@ -117,10 +122,16 @@ public final class ArgoSecurityManager extends SecurityManager
 	}
     }
 
+    /**
+     * @return true if we may exit
+     */
     public boolean getAllowExit() {
         return allowExit;
     }
 
+    /**
+     * @param myAllowExit true if we may exit
+     */
     public void setAllowExit(boolean myAllowExit) {
         allowExit = myAllowExit;
     }

@@ -1,4 +1,4 @@
-// $Id: NotationProviderFactory.java,v 1.10 2004/04/26 19:46:56 thn Exp $
+// $Id: NotationProviderFactory.java,v 1.11 2004/09/11 09:25:57 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,9 +48,13 @@ public class NotationProviderFactory
     private static final Logger LOG =
 		Logger.getLogger(NotationProviderFactory.class);
 
-    static NotationProviderFactory SINGLETON = new NotationProviderFactory();
+    private static NotationProviderFactory singleton = 
+        new NotationProviderFactory();
 
-    public static NotationProviderFactory getInstance() { return SINGLETON; }
+    /**
+     * @return the singleton
+     */
+    public static NotationProviderFactory getInstance() { return singleton; }
 
     private ArrayList providers = new ArrayList();
     private NotationProvider2 defaultProvider = null;
@@ -80,6 +84,10 @@ public class NotationProviderFactory
     }
 
 
+    /**
+     * @param nn the name of the notation
+     * @return the notation provider class
+     */
     public NotationProvider2 getProvider(NotationName nn) {
         NotationName n = (nn == null) ? Notation.getDefaultNotation() : nn;
 
@@ -96,18 +104,27 @@ public class NotationProviderFactory
         return getDefaultProvider();
     }
 
+    /**
+     * @return the list of all providers
+     */
     public ArrayList getProviders() { return providers; }
 
+    /**
+     * @return the list of all notations
+     */
     public ArrayList getNotations() {
-        ArrayList _notations = new ArrayList();
+        ArrayList nots = new ArrayList();
         ListIterator iterator = providers.listIterator();
         while (iterator.hasNext()) {
             NotationProvider2 np = (NotationProvider2) iterator.next();
-	    _notations.add(np.getNotation());
+	    nots.add(np.getNotation());
 	}
-        return _notations;
+        return nots;
     }
 
+    /**
+     * @return the default notation provider
+     */
     public NotationProvider2 getDefaultProvider() {
 	if (defaultProvider == null) {
 	    defaultProvider =
@@ -119,6 +136,9 @@ public class NotationProviderFactory
 	return defaultProvider;
     }
 
+    /**
+     * @see org.argouml.application.events.ArgoModuleEventListener#moduleLoaded(org.argouml.application.events.ArgoModuleEvent)
+     */
     public void moduleLoaded(ArgoModuleEvent event) {
 	LOG.debug (event);
 	if (event.getSource() instanceof NotationProvider2) {
@@ -129,12 +149,21 @@ public class NotationProviderFactory
 	}
     }
 
+    /**
+     * @see org.argouml.application.events.ArgoModuleEventListener#moduleUnloaded(org.argouml.application.events.ArgoModuleEvent)
+     */
     public void moduleUnloaded(ArgoModuleEvent event) {
     }
 
+    /**
+     * @see org.argouml.application.events.ArgoModuleEventListener#moduleEnabled(org.argouml.application.events.ArgoModuleEvent)
+     */
     public void moduleEnabled(ArgoModuleEvent event) {
     }
 
+    /**
+     * @see org.argouml.application.events.ArgoModuleEventListener#moduleDisabled(org.argouml.application.events.ArgoModuleEvent)
+     */
     public void moduleDisabled(ArgoModuleEvent event) {
     }
 

@@ -1,4 +1,4 @@
-// $Id: SettingsTabHelper.java,v 1.7 2003/11/25 10:58:17 jhraigniac Exp $
+// $Id: SettingsTabHelper.java,v 1.8 2004/09/11 09:25:58 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,29 +45,39 @@ public abstract class SettingsTabHelper extends JPanel
 
     /** String naming the resource bundle to use for localization.
      */
-    protected String _bundle = "";
+    private String bundle = "";
 
     /** Constructor gets passed the localizer bundle name and
      *  a property change listener.
      */
     public SettingsTabHelper() {
-        _bundle = getTabResourceBundleKey();
+        bundle = getTabResourceBundleKey();
     }
 
-    /** Helper for localization, localizes using the bundle passed in
-     *  the constructor.
+    /** 
+     * Helper for localization, localizes using the bundle passed in
+     * the constructor.
+     *
+     * @param key the key for the string to localize
+     * @return the localized string
      */
     public String localize(String key) {
-        return Translator.localize(_bundle, key);
+        return Translator.localize(bundle, key);
     }
 
     /** Create a localized JLabel.
+     *
+     * @param key the key of the text for the label
+     * @return a new label with a localized text for the given key
      */
     protected JLabel createLabel(String key) {
     	return new JLabel(localize(key));
     }
 
     /** Create a localized JCheckBox.
+     *
+     * @param key the key for the string to be localized
+     * @return a new checkbox with localized text
      */
     protected JCheckBox createCheckBox(String key) {
     	JCheckBox j = new JCheckBox(localize(key));
@@ -75,6 +85,11 @@ public abstract class SettingsTabHelper extends JPanel
     }
 
     /** Create a localized JRadioButton.
+     *
+     * @param bg the buttongroup
+     * @param key the key for the string to be localized
+     * @param selected true if selected
+     * @return a new radiobutton with localized string
      */
     protected JRadioButton createRadioButton(ButtonGroup bg, String key, 
 					     boolean selected) {
@@ -83,22 +98,60 @@ public abstract class SettingsTabHelper extends JPanel
 	return j;
     }
 
-    /** Create a JTextField.
+    /** 
+     * Create a JTextField.
+     *
+     * @return a new textfield
      */
     protected JTextField createTextField() {
     	JTextField j = new JTextField();
 	return j;
     }
 
+    /**
+     * @see org.argouml.application.api.ArgoModule#setModuleEnabled(boolean)
+     */
     public void setModuleEnabled(boolean v) { }
+    
+    /**
+     * @see org.argouml.application.api.ArgoModule#initializeModule()
+     */
     public boolean initializeModule() { return true; }
+    
+    /**
+     * @see org.argouml.application.api.Pluggable#inContext(java.lang.Object[])
+     */
     public boolean inContext(Object[] o) { return true; }
+    
+    /**
+     * @see org.argouml.application.api.ArgoModule#isModuleEnabled()
+     */
     public boolean isModuleEnabled() { return true; }
+    
+    /**
+     * @see org.argouml.application.api.ArgoModule#getModulePopUpActions(
+     * java.util.Vector, java.lang.Object)
+     */
     public Vector getModulePopUpActions(Vector v, Object o) { return null; }
+    
+    /**
+     * @see org.argouml.application.api.ArgoModule#shutdownModule()
+     */
     public boolean shutdownModule() { return true; }
+    
+    /**
+     * @see org.argouml.application.api.PluggableSettingsTab#getSettingsTabPanel()
+     */
     public SettingsTabPanel getSettingsTabPanel() { return this; }
+    
+    /**
+     * @see org.argouml.application.api.SettingsTabPanel#getTabPanel()
+     */
     public JPanel getTabPanel() { return this; }
 
+    /**
+     * @see org.argouml.application.api.SettingsTabPanel#getTabResourceBundleKey()
+     */
     public String getTabResourceBundleKey() {
         return SETTINGS_BUNDLE;
     }

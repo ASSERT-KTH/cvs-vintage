@@ -1,4 +1,4 @@
-// $Id: DiagramHelper.java,v 1.6 2003/11/25 10:58:17 jhraigniac Exp $
+// $Id: DiagramHelper.java,v 1.7 2004/09/11 09:25:58 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,22 +47,57 @@ public abstract class DiagramHelper extends ArgoDiagram
 
     /** String naming the resource bundle to use for localization.
      */
-    protected String _bundle = "";
+    private String bundle = "";
 
+    /**
+     * The constructor.
+     * 
+     */
     public DiagramHelper() {
-        _bundle = getDiagramResourceBundleKey();
+        bundle = getDiagramResourceBundleKey();
     }
 
+    /**
+     * @see org.argouml.application.api.ArgoModule#setModuleEnabled(boolean)
+     */
     public void setModuleEnabled(boolean v) { }
+    
+    /**
+     * @see org.argouml.application.api.ArgoModule#initializeModule()
+     */
     public boolean initializeModule() { return true; }
+    
+    /**
+     * @see org.argouml.application.api.Pluggable#inContext(java.lang.Object[])
+     */
     public boolean inContext(Object[] o) { return true; }
+    
+    /**
+     * @see org.argouml.application.api.ArgoModule#isModuleEnabled()
+     */
     public boolean isModuleEnabled() { return true; }
+    
+    /**
+     * @see org.argouml.application.api.ArgoModule#getModulePopUpActions(
+     * java.util.Vector, java.lang.Object)
+     */
     public Vector getModulePopUpActions(Vector v, Object o) { return null; }
+    
+    /**
+     * @see org.argouml.application.api.ArgoModule#shutdownModule()
+     */
     public boolean shutdownModule() { return true; }
+    
+    /**
+     * @see org.argouml.application.api.PluggableDiagram#getDiagramMenuItem()
+     */
     public JMenuItem getDiagramMenuItem() {
 	return new JMenuItem(Translator.localize("menu.item.diagram-type"));
     } // add icon if desired
 
+    /**
+     * @return the default localization key for diagrams
+     */
     public String getDiagramResourceBundleKey() {
         return DIAGRAM_BUNDLE;
     }

@@ -1,4 +1,4 @@
-// $Id: SimpleCodePiece.java,v 1.3 2003/06/29 23:47:19 linus Exp $
+// $Id: SimpleCodePiece.java,v 1.4 2004/09/11 09:25:57 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,22 +48,29 @@ public class SimpleCodePiece extends CodePiece
     private int endPosition;
 
     /**
-       Create a simple piece of code.
-    */
-    public SimpleCodePiece(StringBuffer text,
-                           int line,
-                           int startPosition,
-                           int endPosition)
+     *  Create a simple piece of code.
+     *
+     * @param t the text
+     * @param lne the line
+     * @param sp the start position
+     * @param ep the end position
+     */
+    public SimpleCodePiece(StringBuffer t,
+                           int lne,
+                           int sp,
+                           int ep)
     {
-	this.text = text;
-	this.line = line;
-	this.startPosition = startPosition;
-	this.endPosition = endPosition;
+	this.text = t;
+	this.line = lne;
+	this.startPosition = sp;
+	this.endPosition = ep;
     }
 
     /**
-       Create a simple piece of code from a token.
-    */
+     * Create a simple piece of code from a token.
+     *
+     * @param token the given token
+     */
     public SimpleCodePiece(antlr.Token token)
     {
 	this(new StringBuffer(token.getText()),
@@ -73,40 +80,50 @@ public class SimpleCodePiece extends CodePiece
     }
 
     /**
-       Return the string representation for this piece of code.
-    */
+     * Return the string representation for this piece of code.
+     *
+     * @see org.argouml.language.java.generator.CodePiece#getText()
+     */
     public StringBuffer getText()
     {
 	return text;
     }
 
     /**
-       Return the start position.
-    */
+     * Return the start position.
+     *
+     * @see org.argouml.language.java.generator.CodePiece#getStartPosition()
+     */
     public int getStartPosition()
     {
 	return startPosition;
     }
 
     /**
-       Return the end position.
-    */
+     * Return the end position.
+     *
+     * @see org.argouml.language.java.generator.CodePiece#getEndPosition()
+     */
     public int getEndPosition()
     {
 	return endPosition;
     }
 
     /**
-	Return the start line
-    */
+     * Return the start line
+     *
+     * @see org.argouml.language.java.generator.CodePiece#getStartLine()
+     */
     public int getStartLine()
     {
 	return line;
     }
 
     /**
-	Return the end line
-    */
+     * Return the end line
+     *
+     * @see org.argouml.language.java.generator.CodePiece#getEndLine()
+     */
     public int getEndLine()
     {
 	return line;

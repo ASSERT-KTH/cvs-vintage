@@ -1,4 +1,4 @@
-// $Id: CodePiece.java,v 1.4 2003/06/30 18:00:18 linus Exp $
+// $Id: CodePiece.java,v 1.5 2004/09/11 09:25:57 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,27 +38,27 @@ package org.argouml.language.java.generator;
 public abstract class CodePiece
 {
     /**
-       Return the string representation for this piece of code.
-    */
+     * @return the string representation for this piece of code
+     */
     public abstract StringBuffer getText();
 
     /**
-       Return the start position.
-    */
+     *  @return the start position
+     */
     public abstract int getStartPosition();
 
     /**
-       Return the end position.
-    */
+     * @return the end position
+     */
     public abstract int getEndPosition();
 
     /**
-	Return the start line
-    */
+     * @return the start line
+     */
     public abstract int getStartLine();
 
     /**
-	Return the end line
-    */
+     * @return the end line
+     */
     public abstract int getEndLine();
 }

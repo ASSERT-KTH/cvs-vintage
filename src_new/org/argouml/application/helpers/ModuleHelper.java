@@ -1,4 +1,4 @@
-// $Id: ModuleHelper.java,v 1.3 2003/06/29 23:53:42 linus Exp $
+// $Id: ModuleHelper.java,v 1.4 2004/09/11 09:25:58 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,20 +32,34 @@ public abstract class ModuleHelper
     implements ArgoModule
 {
 
-    protected boolean _enabled = false;
+    private boolean enabled = false;
 
+    /**
+     * The constructor.
+     * 
+     */
     public ModuleHelper() {
-        _enabled = false; 
+        enabled = false; 
     }
 
+    /**
+     * @see org.argouml.application.api.ArgoModule#isModuleEnabled()
+     */
     public boolean isModuleEnabled() {
-        return _enabled;
+        return enabled;
     }
 
-    public void setModuleEnabled(boolean enabled) {
-        _enabled = enabled;
+    /**
+     * @see org.argouml.application.api.ArgoModule#setModuleEnabled(boolean)
+     */
+    public void setModuleEnabled(boolean e) {
+        enabled = e;
     }
 
+    /**
+     * @see org.argouml.application.api.ArgoModule#getModulePopUpActions(
+     * java.util.Vector, java.lang.Object)
+     */
     public Vector getModulePopUpActions(Vector v, Object o) {
         return null;
     }

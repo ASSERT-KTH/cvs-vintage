@@ -1,4 +1,4 @@
-// $Id: ArgoAwtExceptionHandler.java,v 1.4 2003/11/13 20:02:37 jjones Exp $
+// $Id: ArgoAwtExceptionHandler.java,v 1.5 2004/09/11 09:25:57 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,10 @@ package org.argouml.application.security;
  */
 public final class ArgoAwtExceptionHandler {
 
+    /**
+     * The constructor.
+     * 
+     */
     public ArgoAwtExceptionHandler() {
     }
 

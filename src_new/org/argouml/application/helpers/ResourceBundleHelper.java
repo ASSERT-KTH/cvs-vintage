@@ -1,4 +1,4 @@
-// $Id: ResourceBundleHelper.java,v 1.3 2003/06/30 19:23:17 linus Exp $
+// $Id: ResourceBundleHelper.java,v 1.4 2004/09/11 09:25:58 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,14 +35,38 @@ import org.tigris.gef.util.*;
 public abstract class ResourceBundleHelper extends ListResourceBundle
     implements PluggableResourceBundle 
 {
+    /**
+     * @see org.argouml.application.api.ArgoModule#setModuleEnabled(boolean)
+     */
     public void setModuleEnabled(boolean v) { }
+    
+    /**
+     * @see org.argouml.application.api.ArgoModule#initializeModule()
+     */
     public boolean initializeModule() {
        	Localizer.addResource(getModuleName(), getClass().getName()); 
 	return true;
     }
+    
+    /**
+     * @see org.argouml.application.api.Pluggable#inContext(java.lang.Object[])
+     */
     public boolean inContext(Object[] o) { return true; }
+    
+    /**
+     * @see org.argouml.application.api.ArgoModule#isModuleEnabled()
+     */
     public boolean isModuleEnabled() { return true; }
+    
+    /**
+     * @see org.argouml.application.api.ArgoModule#getModulePopUpActions(
+     * java.util.Vector, java.lang.Object)
+     */
     public Vector getModulePopUpActions(Vector v, Object o) { return null; }
+    
+    /**
+     * @see org.argouml.application.api.ArgoModule#shutdownModule()
+     */
     public boolean shutdownModule() { return true; }
 }
 

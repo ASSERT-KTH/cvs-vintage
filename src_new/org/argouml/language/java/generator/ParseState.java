@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.8 2004/02/03 07:04:38 linus Exp $
+// $Id: ParseState.java,v 1.9 2004/09/11 09:25:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,8 @@ public class ParseState
             this.mClassifier = handle;
             namespace = handle;
             newFeatures = new Vector(ModelFacade.getFeatures(mClassifier));
-            newInnerClasses = new Vector(ModelFacade.getOwnedElements(mClassifier));
+            newInnerClasses = 
+                new Vector(ModelFacade.getOwnedElements(mClassifier));
         } else {
             this.mClassifier = null;
             namespace = handle;
@@ -77,11 +78,11 @@ public class ParseState
      */
     public Object newClassifier(String name)
     {
-	Object mClassifier = ModelFacade.lookupIn(namespace, name);
-	if (mClassifier != null) {
-	    newInnerClasses.remove(mClassifier);
+	Object mc = ModelFacade.lookupIn(namespace, name);
+	if (mc != null) {
+	    newInnerClasses.remove(mc);
 	}
-	return mClassifier;
+	return mc;
     }
 
     /**
@@ -95,14 +96,18 @@ public class ParseState
     }
 
     /**
-       Get the current classifier.
+     * Get the current classifier.
+     *
+     * @return the current classifier
      */
     public Object getClassifier() {
 	return mClassifier;
     }
 
     /**
-       Get all features not in the source.
+     * Get all features not in the source.
+     *
+     * @return all features not in the source
      */
     public Vector getNewFeatures()
     {
@@ -110,7 +115,9 @@ public class ParseState
     }
 
     /**
-       Get all inner classes not in the source.
+     * Get all inner classes not in the source.
+     *
+     * @return all inner classes not in the source
      */
     public Vector getNewInnerClasses()
     {
@@ -118,14 +125,18 @@ public class ParseState
     }
 
     /**
-       Get the current namespace.
+     * Get the current namespace.
+     *
+     * @return the current namespace
      */
     public Object getNamespace() {
 	return namespace;
     }
 
     /**
-       Get the association ends.
+     * Get the association ends.
+     *
+     * @return the association ends
      */
     public Vector getAssociationEnds()
     {
