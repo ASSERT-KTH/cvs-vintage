@@ -8,7 +8,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-# $Id: build.sh,v 1.10 2002/02/28 04:08:05 user57 Exp $
+# $Id: build.sh,v 1.11 2002/05/31 00:01:04 user57 Exp $
 
 PROGNAME=`basename $0`
 DIRNAME=`dirname $0`
@@ -31,6 +31,9 @@ ANT_BUILD_FILE="build.xml"
 # the default arguments
 ANT_OPTIONS="-find $ANT_BUILD_FILE"
 
+# Use the maximum available, or set MAX_FD != -1 to use that
+MAX_FD="maximum"
+
 # the jaxp parser to use
 if [ "x$JAXP" = "x" ]; then
     # Default to crimson
@@ -43,6 +46,13 @@ fi
 die() {
     echo "${PROGNAME}: $*"
     exit 1
+}
+
+#
+# Helper to complain.
+#
+warn() {
+    echo "${PROGNAME}: $*"
 }
 
 #
@@ -75,6 +85,22 @@ search() {
 main() {
     # if there is a build config file. then source it
     maybe_source "$DIRNAME/build.conf" "$HOME/.build.conf"
+
+    # Increase the maximum file descriptors if we can
+    MAX_FD_LIMIT=`ulimit -H -n`
+    if [ $? -eq 0 ]; then
+	if [ "$MAX_FD" = "maximum" -o "$MAX_FD" = "max" ]; then
+	    # use the system max
+	    MAX_FD="$MAX_FD_LIMIT"
+	fi
+
+	ulimit -n $MAX_FD
+	if [ $? -ne 0 ]; then
+	    warn "Could not set maximum file descriptor limit: $MAX_FD"
+	fi
+    else
+	warn "Could not query system maximum file descriptor limit: $MAX_FD_LIMIT"
+    fi
 
     # try the search path
     ANT_HOME=`search $ANT_SEARCH_PATH`
