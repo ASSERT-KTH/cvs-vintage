@@ -151,6 +151,9 @@
 
         <DecodeInterceptor /> 
 
+        <!-- If you are running SSL and wish to verify Tomcat sessions 
+             against SSL sessions, use checkSSLSessionId="true"
+             Default is checkSSLSessionId="false" -->
         <SessionId cookiesFirst="true" noCookies="false" /> 
 
         <!-- Automatic config generation
