@@ -11,11 +11,13 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.ejb.EJBException;
+import javax.transaction.Transaction;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityContainer;
@@ -35,19 +37,18 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean instance, including beans in pool.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */                            
 public class EntityBridgeInvocationHandler implements InvocationHandler {
-   private EntityContainer container;
-   private EntityBridge entityBridge;
-   private Class beanClass;
+   private final EntityContainer container;
+   private final EntityBridge entityBridge;
+   private final Class beanClass;
+   private final Map fieldMap;
+   private final Map selectorMap;
    private EntityEnterpriseContext ctx;
-   private Map fieldMap;
-   private Map selectorMap;
    
    /**
     * Creates an invocation handler for the specified entity.
-    * @param container the container for this class handles invocations
     * @param entityBridge the bridge that will be called in response to 
     *    in invocation
     * @param beanClass the implementation class for the ejb
@@ -62,8 +63,8 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
       this.entityBridge = entityBridge;
       this.beanClass = beanClass;
 
-      setupFieldMap();
-      setupSelectorMap();
+      fieldMap = createFieldMap();
+      selectorMap = createSelectorMap();
    }
    
    public void setContext(EntityEnterpriseContext ctx) {
@@ -78,35 +79,49 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
 
       String methodName = method.getName();
 
-      // is this a field accessor
-      FieldBridge field = (FieldBridge) fieldMap.get(method);
-      if(field != null) {
-         if(methodName.startsWith("get")) {
-            return field.getInstanceValue(ctx);
-         } else if(methodName.startsWith("set")) {
-            if(field.isReadOnly()) {
-               throw new EJBException("Field is read-only: " +
-                     field.getFieldName());
-            }
-            field.setInstanceValue(ctx, args[0]);
-            return null;
-         }
-         Exception e = new EJBException("Unknown field method: " +
-               methodName);
-
-         e.printStackTrace();
-         throw e;
-      }
-
       SelectorBridge selector = (SelectorBridge) selectorMap.get(method);
       if(selector != null) {
-         container.synchronizeEntitiesWithinTransaction(ctx.getTransaction());
+         Transaction tx;
+         if(ctx != null) {
+            // it is probably safer to get the tx from the context if we have
+            // one (ejbHome methods don't have a context)
+            tx = ctx.getTransaction();
+         } else {
+            tx = container.getTransactionManager().getTransaction();
+         }
+         EntityContainer.synchronizeEntitiesWithinTransaction(tx);
          return selector.execute(args);
       }
-      
-      Exception e = new EJBException("Unknown method type: " + methodName);
-      e.printStackTrace();
-      throw e;
+
+      // get the field object
+      FieldBridge field = (FieldBridge) fieldMap.get(method);
+
+      if(field == null) { 
+         throw new EJBException("Method is not a known CMP field accessor, " +
+               "CMR field accessor, or ejbSelect method: " +
+               "methodName=" + methodName);
+      }
+
+      // In the case of ejbHome methods there is no context, but ejb home
+      // methods are only allowed to call selectors.
+      if(ctx == null) {
+         throw new EJBException("EJB home methods are not allowed to access " +
+               "CMP or CMR fields: methodName=" + methodName);
+      }
+
+      if(methodName.startsWith("get")) {
+         return field.getInstanceValue(ctx);
+      } else if(methodName.startsWith("set")) {
+         if(field.isReadOnly()) {
+            throw new EJBException("Field is read-only: " +
+                  "fieldName=" + field.getFieldName());
+         }
+         field.setInstanceValue(ctx, args[0]);
+         return null;
+      }
+      // Should never get here, but it's better to be safe then sorry.
+      throw new EJBException("Unknown field accessor method: " +
+            "methodName=" + methodName);
    }
    
    private Map getAbstractAccessors() {
@@ -124,12 +139,12 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
       return abstractAccessors;
    }
    
-   private void setupFieldMap() throws DeploymentException {
+   private Map createFieldMap() throws DeploymentException {
 
       Map abstractAccessors = getAbstractAccessors();
 
       Collection fields = entityBridge.getFields();
-      fieldMap = new HashMap(fields.size() * 2);
+      Map map = new HashMap(fields.size() * 2);
       for(Iterator iter = fields.iterator(); iter.hasNext();) {
          FieldBridge field = (FieldBridge)iter.next();
 
@@ -153,22 +168,24 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
                   "was found for field: " + fieldName);
          } else if(getterMethod != null && setterMethod != null) {
             // add methods
-            fieldMap.put(getterMethod, field);
-            fieldMap.put(setterMethod, field);
+            map.put(getterMethod, field);
+            map.put(setterMethod, field);
 
             // remove the accessors (they have been used)
             abstractAccessors.remove(getterName);
             abstractAccessors.remove(setterName);
          }
       }
+      return Collections.unmodifiableMap(map);
    }
 
-   private void setupSelectorMap() {
+   private Map createSelectorMap() {
       Collection selectors = entityBridge.getSelectors();
-      selectorMap = new HashMap(selectors.size());
+      Map map = new HashMap(selectors.size());
       for(Iterator iter = selectors.iterator(); iter.hasNext();) {
          SelectorBridge selector = (SelectorBridge)iter.next();
-         selectorMap.put(selector.getMethod(), selector);
+         map.put(selector.getMethod(), selector);
       }
+      return Collections.unmodifiableMap(map);
    }
 }
