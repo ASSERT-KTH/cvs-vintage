@@ -309,9 +309,29 @@ public class Request {
     public MessageBytes method() {
 	return methodMB;
     }
-    
+
+    /** @deprecated After Tomcat 3.2, use {@link #method()} instead */
+    public String getMethod() {
+	return methodMB.toString();
+    }
+
+    /** @deprecated After Tomcat 3.2, use {@link #method()} instead */
+    public void setMethod(String method) {
+	methodMB.setString(method);
+    }
+
     public MessageBytes requestURI() {
 	return uriMB;
+    }
+
+    /** @deprecated After Tomcat 3.2, use {@link #requestURI()} instead */
+    public String getRequestURI() {
+	return uriMB.toString();
+    }
+
+    /** @deprecated After Tomcat 3.2, use {@link #requestURI()} instead */
+    public void setRequestURI(String r) {
+	uriMB.setString(r);
     }
 
     public MessageBytes unparsedURI() {
