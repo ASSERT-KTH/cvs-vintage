@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Experimental bi-directionl protocol handler.               *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.3 $                                           *
+ * Version:     $Revision: 1.4 $                                           *
  ***************************************************************************/
 
 
@@ -510,8 +510,16 @@ int ajp13_unmarshal_response(jk_msg_buf_t *msg,
 
     d->msg = jk_b_get_string(msg);
 
+    jk_log(l, JK_LOG_DEBUG, 
+           "ajp13_unmarshal_response: status = %d\n",
+           d->status);
+
     d->num_headers = jk_b_get_int(msg);
     d->header_names = d->header_values = NULL;
+
+    jk_log(l, JK_LOG_DEBUG, 
+           "ajp13_unmarshal_response: Number of headers is = %d\n",
+           d->num_headers);
 
     if(d->num_headers) {
         d->header_names = jk_pool_alloc(p, sizeof(char *) * d->num_headers);
@@ -550,8 +558,34 @@ int ajp13_unmarshal_response(jk_msg_buf_t *msg,
 
                     return JK_FALSE;
                 }
+
+                jk_log(l, JK_LOG_DEBUG, 
+                    "ajp13_unmarshal_response: Header[%d] [%s] = [%s]\n",
+                    i,
+                    d->header_names[i],
+                    d->header_values[i]);
             }
         }
+    }
+
+    return JK_TRUE;
+}
+
+int ajp13_marshal_shutdown_into_msgb(jk_msg_buf_t *msg,
+                                     jk_pool_t *p,
+                                     jk_logger_t *l)
+{
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into ajp13_marshal_shutdown_into_msgb\n");
+    
+    /* To be on the safe side */
+    jk_b_reset(msg);
+
+    /*
+     * Just a single byte with s/d command.
+     */
+    if(0 != jk_b_append_byte(msg, JK_AJP13_SHUTDOWN)) {
+        return JK_FALSE;
     }
 
     return JK_TRUE;

@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Experimental bi-directionl protocol handler.               *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                           *
+ * Version:     $Revision: 1.3 $                                           *
  ***************************************************************************/
 #ifndef JK_AJP13_H
 #define JK_AJP13_H
@@ -107,6 +107,11 @@ extern "C" {
  */
 #define JK_AJP13_GET_BODY_CHUNK     (unsigned char)6
 
+/*
+ * Asks the container to shutdown
+ */
+#define JK_AJP13_SHUTDOWN           (unsigned char)7
+
 struct jk_res_data {
     int         status;
     const char *msg;
@@ -124,6 +129,12 @@ int ajp13_unmarshal_response(jk_msg_buf_t *msg,
                              jk_res_data_t *d,
                              jk_pool_t *p,
                              jk_logger_t *l);
+
+
+int ajp13_marshal_shutdown_into_msgb(jk_msg_buf_t *msg,
+                                     jk_pool_t *p,
+                                     jk_logger_t *l);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

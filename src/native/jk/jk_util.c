@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Utility functions (mainly configuration)                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.4 $                                               *
+ * Version:     $Revision: 1.5 $                                               *
  ***************************************************************************/
 
 
@@ -193,6 +193,7 @@ int jk_log(jk_logger_t *l,
         char buf[HUGE_BUFFER_SIZE];
         char *f = (char *)(file + strlen(file) - 1);
         va_list args;
+        int used = 0;
 
         while(f != file && '\\' != *f && '/' != *f) {
             f--;
@@ -200,11 +201,22 @@ int jk_log(jk_logger_t *l,
         if(f != file) {
             f++;
         }
-        sprintf(buf, "[%s (%d)]: ", f, line);
+                       
+#ifdef WIN32
+        used = _snprintf(buf, HUGE_BUFFER_SIZE, "[%s (%d)]: ", f, line);        
+#else 
+        used = snprintf(buf, HUGE_BUFFER_SIZE, "[%s (%d)]: ", f, line);        
+#endif
+        if(used < 0) {
+            return 0; /* [V] not sure what to return... */
+        }
     
         va_start(args, fmt);
-
-        rc = vsprintf(buf + strlen(buf), fmt, args);
+#ifdef WIN32
+        rc = _vsnprintf(buf + used, HUGE_BUFFER_SIZE - used, fmt, args);
+#else 
+        rc = vsnprintf(buf + used, HUGE_BUFFER_SIZE - used, fmt, args);
+#endif
         va_end(args);
         l->log(l, level, buf);
     }

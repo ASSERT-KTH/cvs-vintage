@@ -57,7 +57,7 @@
  * Description: Experimental bi-directionl protocol.                       *
  * Author:      Costin <costin@costin.dnt.ro>                              *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                           *
+ * Version:     $Revision: 1.3 $                                           *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -200,10 +200,14 @@ static int connection_tcp_get_message(ajp13_endpoint_t *ep,
     rc = jk_tcp_socket_recvfull(ep->sd, head, 4);
 
     if(rc < 0) {
+        jk_log(l, JK_LOG_ERROR, 
+               "connection_tcp_get_message: Error - jk_tcp_socket_recvfull failed\n");
         return JK_FALSE;
     }
     
     if((head[0] != 'A') || (head[1] != 'B' )) {
+        jk_log(l, JK_LOG_ERROR, 
+               "connection_tcp_get_message: Error - Wrong message format\n");
 	    return JK_FALSE;
     }
 
@@ -211,6 +215,8 @@ static int connection_tcp_get_message(ajp13_endpoint_t *ep,
     msglen += (head[3] & 0xFF);
 
     if(msglen > jk_b_get_size(msg)) {
+        jk_log(l, JK_LOG_ERROR, 
+               "connection_tcp_get_message: Error - Wrong message size\n");
 	    return JK_FALSE;
     }
     
@@ -219,6 +225,8 @@ static int connection_tcp_get_message(ajp13_endpoint_t *ep,
 
     rc = jk_tcp_socket_recvfull(ep->sd, jk_b_get_buff(msg), msglen);
     if(rc < 0) {
+        jk_log(l, JK_LOG_ERROR, 
+               "connection_tcp_get_message: Error - jk_tcp_socket_recvfull failed\n");
         return JK_FALSE;
     }
         
@@ -260,12 +268,16 @@ static int read_into_msg_buff(ajp13_endpoint_t *ep,
     read_buf += 2; /* leave some space for the read length */
 
     if(read_fully_from_server(r, read_buf, len) <= 0) {
+        jk_log(l, JK_LOG_ERROR, 
+               "read_into_msg_buff: Error - read_fully_from_server failed\n");
         return JK_FALSE;                        
     } 
     
     ep->left_bytes_to_send -= len;
 
     if(0 != jk_b_append_int(msg, (unsigned short)len)) {
+        jk_log(l, JK_LOG_ERROR, 
+               "read_into_msg_buff: Error - jk_b_append_int failed\n");
         return JK_FALSE;
     }
 
@@ -289,6 +301,8 @@ static int ajp13_process_callback(jk_msg_buf_t *msg,
                                              &res,
                                              &ep->pool,
                                              l)) {
+                    jk_log(l, JK_LOG_ERROR, 
+                           "Error ajp13_process_callback - ajp13_unmarshal_response failed\n");
                     return JK_AJP13_ERROR;
                 }
                 if(!r->start_response(r, 
@@ -297,6 +311,8 @@ static int ajp13_process_callback(jk_msg_buf_t *msg,
                                       (const char * const *)res.header_names,
                                       (const char * const *)res.header_values,
                                       res.num_headers)) {
+                    jk_log(l, JK_LOG_ERROR, 
+                           "Error ajp13_process_callback - start_response failed\n");
                     return JK_INTERNAL_ERROR;
                 }
             }
@@ -306,6 +322,8 @@ static int ajp13_process_callback(jk_msg_buf_t *msg,
             {
 	            unsigned len = (unsigned)jk_b_get_int(msg);
                 if(!r->write(r, jk_b_get_buff(msg) + jk_b_get_pos(msg), len)) {
+                    jk_log(l, JK_LOG_ERROR, 
+                           "Error ajp13_process_callback - write failed\n");
                     return JK_INTERNAL_ERROR;
                 }
             }
@@ -326,6 +344,8 @@ static int ajp13_process_callback(jk_msg_buf_t *msg,
                         return JK_AJP13_HAS_RESPONSE;
                     }                  
 
+                    jk_log(l, JK_LOG_ERROR, 
+                           "Error ajp13_process_callback - read_into_msg_buff failed\n");
                     return JK_INTERNAL_ERROR;
                 }
             }
@@ -346,10 +366,9 @@ static int ajp13_process_callback(jk_msg_buf_t *msg,
 	    break;
 
         default:
-	        jk_b_dump(msg , "Invalid code");
 	        jk_log(l, 
                    JK_LOG_ERROR,
-		           "Invalid code: %d\n", code);
+		           "Error ajp13_process_callback - Invalid code: %d\n", code);
 	        return JK_AJP13_ERROR;
     }
     
