@@ -153,13 +153,11 @@
         <field name="Dedupe" key="dedupe" type="boolean"/>
         <field name="QuickSearch" key="qs" type="boolean"/>
         <field name="IsDefaultText" key="dt" type="boolean"/>
-<!--
         <field name="Order" key="order" type="int" 
-                mapToProperty="PreferredOrder">
+                mapToProperty="Order">
            <rule name="maxValue" value="99">Please enter a value less than 99</rule>
            <rule name="minValue" value="1">Please enter a value greater than 0</rule>
         </field>
--->
 </group>
 
 <group name="RQueryUser" key="rqu" mapToObject="om.RQueryUser">
