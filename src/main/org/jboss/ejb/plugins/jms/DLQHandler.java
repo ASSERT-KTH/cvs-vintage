@@ -52,7 +52,7 @@ import org.jboss.metadata.MetaData;
  * Created: Thu Aug 23 21:17:26 2001
  *
  * @author
- * @version $Revision: 1.5 $ $Date: 2001/12/19 05:54:09 $
+ * @version $Revision: 1.6 $ $Date: 2002/01/05 12:08:52 $
  */
 public class DLQHandler
 {
@@ -122,7 +122,8 @@ public class DLQHandler
       
       connection = factory.createQueueConnection();
       dlq = (Queue)ctx.lookup(destinationJNDI);
-      log.debug("Created Dead Letter Queue connection " + dlq);
+      if (log.isDebugEnabled())
+         log.debug("Created Dead Letter Queue connection " + dlq);
    }
    
    /**
@@ -203,9 +204,11 @@ public class DLQHandler
    protected int incrementResentCount(String id)
    {
       BufferEntry entry = null;
+      boolean debug = log.isDebugEnabled();
       if(!resentBuffer.containsKey(id))
       {
-         log.debug("Making new entry for id " + id);
+         if (debug)
+            log.debug("Making new entry for id " + id);
          entry = new BufferEntry();
          entry.id = id;
          entry.count = 1;
@@ -215,7 +218,8 @@ public class DLQHandler
       {
          entry = (BufferEntry)resentBuffer.get(id);
          entry.count++;
-         log.debug("Incremented old entry for id " + id + " count " + entry.count);
+         if (debug)
+            log.debug("Incremented old entry for id " + id + " count " + entry.count);
       }
       return entry.count;
    }
@@ -246,7 +250,8 @@ public class DLQHandler
          
          ses = connection.createQueueSession(false,Session.AUTO_ACKNOWLEDGE);
          sender = ses.createSender(dlq);
-         log.debug("Resending DLQ message to destination" + dlq);
+         if (log.isDebugEnabled())
+            log.debug("Resending DLQ message to destination" + dlq);
          sender.send(msg,deliveryMode,priority,timeToLive);
       }
       finally

@@ -49,7 +49,7 @@ import org.jboss.logging.Logger;
  * just implementing the Proxy generation calls. Separation of concern. 
  *
  *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/12/30: billb</b>
@@ -152,8 +152,8 @@ public class ProxyFactory
          }
       }
       
-      
-      log.debug("Proxy Factory for "+jndiName+" initialized");
+      if (log.isDebugEnabled())
+         log.debug("Proxy Factory for "+jndiName+" initialized");
    }
    
    public void start() throws Exception
@@ -211,8 +211,9 @@ public class ProxyFactory
             getEJBHome());
          
          
-         log.debug("Bound "+container.getBeanMetaData().getEjbName() + " to " + container.getBeanMetaData().getJndiName());
-      
+         if (log.isDebugEnabled())
+            log.debug("Bound "+container.getBeanMetaData().getEjbName() + " to " + container.getBeanMetaData().getJndiName());
+
       } catch (Exception e)
       {
          throw new ServerException("Could not bind home", e);

@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class JDBCStartCommand {
 
@@ -70,6 +70,8 @@ public class JDBCStartCommand {
 
    public void execute() throws Exception {
 
+      boolean debug = log.isDebugEnabled();
+
       // Create table if necessary
       if(!entity.getTableExists()) {
          if(entityMetaData.getCreateTable()) {
@@ -77,17 +79,19 @@ public class JDBCStartCommand {
                   entity.getDataSource(),
                   entity.getTableName(),
                   getEntityCreateTableSQL());
-         } else {
+         }
+         else if (debug)
+         {
             log.debug("Table not create as requested: " +
                   entity.getTableName());
          }
          entity.setTableExists(true);
       }
-     
+
       // create relation tables
       JDBCCMRFieldBridge[] cmrFields = entity.getJDBCCMRFields();
       for(int i=0; i<cmrFields.length; i++) {
-         JDBCRelationMetaData relationMetaData = 
+         JDBCRelationMetaData relationMetaData =
                cmrFields[i].getRelationMetaData();
 
          // if the table for the related entity has been created
@@ -96,13 +100,15 @@ public class JDBCStartCommand {
             // create the relation table
             if(relationMetaData.isTableMappingStyle() &&
                !relationMetaData.getTableExists()) {
-               
+
                if(relationMetaData.getCreateTable()) {
                   createTable(
                         relationMetaData.getDataSource(),
                         relationMetaData.getTableName(),
                         getRelationCreateTableSQL(cmrFields[i]));
-               } else {
+               }
+               else if (debug)
+               {
                   log.debug("Relation table not create as requested: " +
                         relationMetaData.getTableName());
                }
@@ -131,24 +137,27 @@ public class JDBCStartCommand {
 
       Connection con = null;
       Statement statement = null;
+      boolean debug = log.isDebugEnabled();
       try {
          // since we use the pools, we have to do this within a transaction
          manager.getContainer().getTransactionManager().begin ();
 
          // get the connection
          con = dataSource.getConnection();
-         
+
          // create the statement
          statement = con.createStatement();
-         
+
          // execute sql
-         log.debug("Executing SQL: " + sql);
+         if (debug)
+            log.debug("Executing SQL: " + sql);
          statement.executeUpdate(sql);
 
          // commit the transaction
          manager.getContainer().getTransactionManager().commit ();
       } catch (Exception e) {
-         log.debug("Could not create table " + tableName, e);
+         if (debug)
+            log.debug("Could not create table " + tableName, e);
          try {
             manager.getContainer().getTransactionManager().rollback ();
          } catch (Exception _e) {
@@ -287,8 +296,10 @@ public class JDBCStartCommand {
                   cmrField.getRelatedEntity().getTableName(),
                   cmrField.getRelatedEntity().getJDBCPrimaryKeyFields());
          }
-      } else {
-         log.debug("Foreign key constaint not added as requested: " + 
+      }
+      else if (log.isDebugEnabled())
+      {
+         log.debug("Foreign key constaint not added as requested: " +
                "relationshipRolename=" +
                cmrField.getMetaData().getRelationshipRoleName());
       }
@@ -325,18 +336,20 @@ public class JDBCStartCommand {
 
       Connection con = null;
       Statement statement = null;
+      boolean debug = log.isDebugEnabled();
       try {
          // since we use the pools, we have to do this within a transaction
          manager.getContainer().getTransactionManager().begin();
 
          // get the connection
          con = dataSource.getConnection();
-         
+
          // create the statement
          statement = con.createStatement();
-         
+
          // execute sql
-         log.debug("Executing SQL: " + sql);
+         if (debug)
+            log.debug("Executing SQL: " + sql);
          statement.executeUpdate(sql);
 
          // commit the transaction
@@ -345,7 +358,8 @@ public class JDBCStartCommand {
          // success
          log.info("Added foreign key constriant to table '" + tableName);
       } catch (Exception e) {
-         log.debug("Could not add foreign key constriant to table " + 
+         if (debug)
+            log.debug("Could not add foreign key constriant to table " +
                tableName, e);
          try {
             manager.getContainer().getTransactionManager().rollback ();

@@ -40,7 +40,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JMSProviderLoader 
    extends ServiceMBeanSupport
@@ -173,8 +173,9 @@ public class JMSProviderLoader
    private void bind(Context ctx, String name, Object val)
       throws NamingException
    {
-      log.debug("attempting to bind " + val + " to " + name);
-      
+      if (log.isDebugEnabled())
+         log.debug("attempting to bind " + val + " to " + name);
+
       // Bind val to name in ctx, and make sure that all
       // intermediate contexts exist
       Name n = ctx.getNameParser("").parse(name);

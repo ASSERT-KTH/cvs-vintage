@@ -59,7 +59,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore {
 
@@ -235,7 +235,8 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    // Store Manager Life Cycle Commands
    //
    public void create() throws Exception {
-      log.debug("Initializing CMP plugin for " +
+      if (log.isDebugEnabled())
+         log.debug("Initializing CMP plugin for " +
                 container.getBeanMetaData().getEjbName());
 
       initApplicationDataMap();
@@ -383,7 +384,8 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    public void loadEntity(EntityEnterpriseContext ctx) {
       // is any on the data already in the entity valid
       if(!ctx.isValid()) {
-         log.debug("RESET PERSISTENCE CONTEXT: id="+ctx.getId());
+         if (log.isDebugEnabled())
+            log.debug("RESET PERSISTENCE CONTEXT: id="+ctx.getId());
          entityBridge.resetPersistenceContext(ctx);
       }
 
@@ -654,7 +656,8 @@ public class JDBCStoreManager implements EntityPersistenceStore {
       preloadKey = new PreloadKey(
             trans, entityKey, field.getMetaData().getFieldName());
       fieldValue = preloadedData.remove(preloadKey);
-      log.debug("Getting Preload " + preloadKey + " " + 
+      if (log.isDebugEnabled())
+         log.debug("Getting Preload " + preloadKey + " " +
             field.getMetaData().getFieldName() + " " + fieldValue);
       found = (fieldValue != null);
 

@@ -113,7 +113,7 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.10 $
+@version $Revision: 1.11 $
 */
 public abstract class AbstractWebContainer extends ServiceMBeanSupport implements AbstractWebContainerMBean
 {
@@ -345,10 +345,12 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
     protected void addEnvEntries(Iterator envEntries, Context envCtx)
         throws ClassNotFoundException, NamingException
     {
+        boolean debug = log.isDebugEnabled();
         while( envEntries.hasNext() )
         {
             EnvEntryMetaData entry = (EnvEntryMetaData) envEntries.next();
-            log.debug("Binding env-entry: "+entry.getName()+" of type: "+entry.getType()+" to value:"+entry.getValue());
+            if (debug)
+               log.debug("Binding env-entry: "+entry.getName()+" of type: "+entry.getType()+" to value:"+entry.getValue());
             EnvEntryMetaData.bindEnvEntry(envCtx, entry);
         }
     }
@@ -356,6 +358,8 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
    protected void linkResourceEnvRefs(Iterator resourceEnvRefs, Context envCtx)
       throws NamingException
    {
+        boolean debug = log.isDebugEnabled();
+
         while( resourceEnvRefs.hasNext() )
         {
             ResourceEnvRefMetaData ref = (ResourceEnvRefMetaData) resourceEnvRefs.next();
@@ -365,7 +369,8 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
             {
                 try
                 {
-                    log.debug("Binding '"+refName+"' to URL: "+resourceName);
+                    if (debug)
+                       log.debug("Binding '"+refName+"' to URL: "+resourceName);
                     URL url = new URL(resourceName);
                     Util.bind(envCtx, refName, url);
                 }
@@ -376,7 +381,8 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
             }
             else
             {
-                log.debug("Linking '"+refName+"' to JNDI name: "+resourceName);
+                if (debug)
+                   log.debug("Linking '"+refName+"' to JNDI name: "+resourceName);
                 Util.bind(envCtx, refName, new LinkRef(resourceName));
             }
         }
@@ -385,6 +391,8 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
    protected void linkResourceRefs(Iterator resourceRefs, Context envCtx)
         throws NamingException
     {
+        boolean debug = log.isDebugEnabled();
+
         while( resourceRefs.hasNext() )
         {
             ResourceRefMetaData ref = (ResourceRefMetaData) resourceRefs.next();
@@ -394,7 +402,8 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
             {
                 try
                 {
-                    log.debug("Binding '"+refName+"' to URL: "+jndiName);
+                    if (debug)
+                       log.debug("Binding '"+refName+"' to URL: "+jndiName);
                     URL url = new URL(jndiName);
                     Util.bind(envCtx, refName, url);
                 }
@@ -405,7 +414,8 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
             }
             else
             {
-                log.debug("Linking '"+refName+"' to JNDI name: "+jndiName);
+                if (debug)
+                   log.debug("Linking '"+refName+"' to JNDI name: "+jndiName);
                 Util.bind(envCtx, refName, new LinkRef(jndiName));
             }
         }
@@ -414,6 +424,8 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
     protected void linkEjbRefs(Iterator ejbRefs, Context envCtx)
         throws NamingException
     {
+        boolean debug = log.isDebugEnabled();
+
         while( ejbRefs.hasNext() )
         {
             EjbRefMetaData ejb = (EjbRefMetaData) ejbRefs.next();
@@ -422,7 +434,8 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
             String linkName = ejb.getLink();
             if( jndiName == null )
                 jndiName = linkName;
-            log.debug("Linking ejb-ref: "+name+" to JNDI name: "+jndiName);
+            if (debug)
+               log.debug("Linking ejb-ref: "+name+" to JNDI name: "+jndiName);
             if( jndiName == null )
                  throw new NamingException("ejb-ref: "+name+", expected jndi-name in jboss-web.xml");
             Util.bind(envCtx, name, new LinkRef(jndiName));
@@ -441,9 +454,12 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
     protected void linkSecurityDomain(String securityDomain, Context envCtx)
         throws NamingException
     {
+        boolean debug = log.isDebugEnabled();
+
         if( securityDomain == null )
         {
-            log.debug("Binding security/securityMgr to NullSecurityManager");
+            if (debug)
+               log.debug("Binding security/securityMgr to NullSecurityManager");
             Object securityMgr = new NullSecurityManager("java:/jaas/null");
             Util.bind(envCtx, "security/securityMgr", securityMgr);
             Util.bind(envCtx, "security/realmMapping", securityMgr);
@@ -452,7 +468,8 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
         }
         else
         {
-            log.debug("Linking security/securityMgr to JNDI name: "+securityDomain);
+            if (debug)
+               log.debug("Linking security/securityMgr to JNDI name: "+securityDomain);
             Util.bind(envCtx, "security/securityMgr", new LinkRef(securityDomain));
             Util.bind(envCtx, "security/realmMapping", new LinkRef(securityDomain));
             Util.bind(envCtx, "security/security-domain", new LinkRef(securityDomain));

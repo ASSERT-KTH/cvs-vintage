@@ -25,7 +25,7 @@ import org.jboss.logging.Logger;
  * entity's table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JDBCFindByForeignKeyCommand {
 
@@ -78,7 +78,8 @@ public class JDBCFindByForeignKeyCommand {
          con = entity.getDataSource().getConnection();
          
          // create the statement
-         log.debug("Executing SQL: " + sql);
+         if (log.isDebugEnabled())
+            log.debug("Executing SQL: " + sql);
          ps = con.prepareStatement(sql.toString());
          
          // set the parameters

@@ -44,7 +44,7 @@ that can only be used from within this VM.
 @see org.jboss.naming.NonSerializableFactory
 
 @author Scott.Stark@jboss.org
-@version $Revision: 1.11 $
+@version $Revision: 1.12 $
 */
 public class ExternalContext extends ServiceMBeanSupport implements ExternalContextMBean
 {
@@ -185,21 +185,26 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
 
     private void rebind() throws Exception
     {
+        boolean debug = log.isDebugEnabled();
         Context ctx = contextInfo.newContext();
         Context rootCtx = (Context) new InitialContext();
-        log.debug("ctx="+ctx+", env="+ctx.getEnvironment());
+        if (debug)
+           log.debug("ctx="+ctx+", env="+ctx.getEnvironment());
         // Get the parent context into which we are to bind
         String jndiName = contextInfo.getJndiName();
         Name fullName = rootCtx.getNameParser("").parse(jndiName);
-        log.debug("fullName="+fullName);
+        if (debug)
+           log.debug("fullName="+fullName);
         Name parentName = fullName;
         if( fullName.size() > 1 )
             parentName = fullName.getPrefix(fullName.size()-1);
         else
             parentName = new CompositeName();
-        log.debug("parentName="+parentName);
+        if (debug)
+           log.debug("parentName="+parentName);
         Context parentCtx = createContext(rootCtx, parentName);
-        log.debug("parentCtx="+parentCtx);
+        if (debug)
+           log.debug("parentCtx="+parentCtx);
         Name atomName = fullName.getSuffix(fullName.size()-1);
         String atom = atomName.get(0);
         boolean cacheContext = contextInfo.getCacheContext();

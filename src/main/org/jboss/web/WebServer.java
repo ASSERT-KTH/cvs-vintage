@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.16 $
+ *   @version $Revision: 1.17 $
  *
  *   Revisions:
  *   
@@ -158,7 +158,8 @@ public class WebServer
         try
         {
             server = new ServerSocket(port, backlog, bindAddress);
-            log.debug("Started server: "+server);
+            if (log.isDebugEnabled())
+               log.debug("Started server: "+server);
             listen();
         }
         catch (IOException e)
@@ -355,11 +356,12 @@ public class WebServer
                 }
             }
         }
-        catch (IOException ex) 
+        catch (IOException ex)
         {
             // eat exception (could log error to log file, but
             // write out to stdout for now).
-            log.debug("error writing response: " + ex.getMessage());
+            if (log.isDebugEnabled())
+               log.debug("error writing response: " + ex.getMessage());
             ex.printStackTrace();
         }
         finally 
@@ -413,7 +415,8 @@ public class WebServer
     protected byte[] getBytes(URL url) throws IOException
     {
         InputStream in = new BufferedInputStream(url.openStream());
-        log.debug("Retrieving "+url.toString());
+        if (log.isDebugEnabled())
+           log.debug("Retrieving "+url.toString());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         byte[] tmp = new byte[1024];
         int bytes;

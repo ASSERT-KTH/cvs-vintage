@@ -16,24 +16,27 @@ import org.jboss.ejb.plugins.cmp.jdbc.ejbql.EJBQLParser;
 import org.jboss.ejb.plugins.cmp.jdbc.ejbql.SQLTarget;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
+import org.jboss.logging.Logger;
 
 /**
  * This class generates a query from EJB-QL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCEJBQLQuery extends JDBCAbstractQueryCommand {
 
    public JDBCEJBQLQuery(
-         JDBCStoreManager manager, 
+         JDBCStoreManager manager,
          JDBCQueryMetaData q) throws DeploymentException {
 
       super(manager, q);
 
       JDBCQlQueryMetaData metadata = (JDBCQlQueryMetaData)q;
-      getLog().debug("EQL-QL: "+metadata.getEjbQl());
-      
+      Logger log = getLog();
+      if (log.isDebugEnabled())
+         log.debug("EQL-QL: "+metadata.getEjbQl());
+
       // get a parser
       Parser ejbql = new EJBQLParser().ejbqlQuery();
       

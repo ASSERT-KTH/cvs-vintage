@@ -31,7 +31,7 @@ import org.jboss.tm.TransactionPropagationContextFactory;
 * JRMPInvokerProxy, local to the proxy and is capable of delegating to local and JRMP implementations
 * 
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 *
 * <p><b>2001/11/19: marcf</b>
 * <ol>
@@ -195,7 +195,7 @@ implements Invoker, Externalizable
       out.writeLong(containerStartup);
       out.writeObject(remoteInvoker);
    }
-   
+
    /**
    *  Un-externalize this instance.
    *
@@ -207,8 +207,8 @@ implements Invoker, Externalizable
       containerStartup = in.readLong();
       remoteInvoker = (Invoker) in.readObject();
    }
-   
+
    // Private -------------------------------------------------------
-   
+
    // Inner classes -------------------------------------------------
 }

@@ -24,7 +24,7 @@ import org.jboss.logging.Logger;
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCLoadRelationCommand {
    private JDBCStoreManager manager;
@@ -79,7 +79,8 @@ public class JDBCLoadRelationCommand {
          con = cmrField.getRelationMetaData().getDataSource().getConnection();
          
          // create the statement
-         log.debug("Executing SQL: " + sql);
+         if (log.isDebugEnabled())
+            log.debug("Executing SQL: " + sql);
          ps = con.prepareStatement(sql.toString());
          
          // set the parameters

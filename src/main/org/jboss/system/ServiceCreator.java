@@ -25,7 +25,7 @@ import org.w3c.dom.NodeList;
  * @see Service
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * 
  * <p><b>Revisions:</b>
  * <p><b>2001/08/03 marcf </b>
@@ -58,30 +58,33 @@ public class ServiceCreator
     */
    public ObjectInstance install(Element mbeanElement) throws Exception
    {
+      boolean debug = log.isDebugEnabled();
+
       ObjectName name = parseObjectName(mbeanElement);
-      
+
       // marcf fixme add and remove the classlaoder from the controller
-      
-      ObjectName loader = new ObjectName("jboss.system.classloader:id=" + 
+
+      ObjectName loader = new ObjectName("jboss.system.classloader:id=" +
                                          name.hashCode());
-      
+
       MBeanClassLoader cl = new MBeanClassLoader(name);
-      
+
       if (!server.isRegistered(loader))
          server.registerMBean(cl, loader);
-      
+
       // If class is given, instantiate it
       String code = mbeanElement.getAttribute("code");
       if (code == null)
       {
          throw new ConfigurationException("missing 'code' attribute");
       }
-      
+
       // get the constructor params/sig to use
       ConstructorInfo constructor =
 
       ConstructorInfo.create(mbeanElement);
-      log.debug("About to create bean: "+name);
+      if (debug)
+         log.debug("About to create bean: "+name);
 		
       // Create the MBean instance
       try 
@@ -91,7 +94,8 @@ public class ServiceCreator
                                                       loader,
                                                       constructor.params,
                                                       constructor.signature);
-         log.debug("Created bean: "+name);
+         if (debug)
+            log.debug("Created bean: "+name);
 		
          return instance;
       } 
@@ -116,16 +120,17 @@ public class ServiceCreator
       if (domain == null || "".equals(domain)) {
          name = new ObjectName(server.getDefaultDomain() + name);
       }
-      
+
       // Remove the MBean from the MBeanServer
       server.unregisterMBean(name);
-      
+
       // Remove the MBeanClassLoader used by the MBean
       ObjectName loader = new ObjectName("jboss.system.classloader:id=" + hcode);
-      if (server.isRegistered(loader)) 
+      if (server.isRegistered(loader))
       {
          server.unregisterMBean(loader);
-         log.debug("unregistered caossloader for: " + name);
+         if (log.isDebugEnabled())
+            log.debug("unregistered caossloader for: " + name);
       }
    }	
    

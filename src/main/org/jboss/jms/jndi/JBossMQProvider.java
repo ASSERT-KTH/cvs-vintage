@@ -31,7 +31,7 @@ import org.apache.log4j.Category;
  * Created: Fri Dec 22 09:34:04 2000
  * 6/22/01 - hchirino - The queue/topic jndi references are now configed via JMX
  *
- * @version <pre>$Revision: 1.7 $</pre>
+ * @version <pre>$Revision: 1.8 $</pre>
  * @author  <a href="mailto:peter.antman@dn.se">Peter Antman</a>
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -82,9 +82,11 @@ public class JBossMQProvider
     */
    public Context getInitialContext() throws NamingException {
       Context ctx = null;
+      boolean debug = log.isDebugEnabled();
       if (providerURL == null) {
          // Use default
-         log.debug("no provider url; connecting to local JNDI");
+         if (debug)
+            log.debug("no provider url; connecting to local JNDI");
          ctx = new InitialContext(); // Only for JBoss embedded now
       } else {
          // Try another location
@@ -95,11 +97,12 @@ public class JBossMQProvider
          props.put(SECURITY_MANAGER, hasJndiSecurityManager);
          props.put(Context.URL_PKG_PREFIXES, URL_PKG_PREFIXES);
 
-         log.debug("connecting to remote JNDI with props: " + props);
+         if (debug)
+            log.debug("connecting to remote JNDI with props: " + props);
          ctx = new InitialContext(props);
       }
 
-      if (log.isDebugEnabled()) {
+      if (debug) {
          log.debug("created context: " + ctx);
       }
       return ctx;

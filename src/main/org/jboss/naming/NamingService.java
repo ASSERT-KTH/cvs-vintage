@@ -31,7 +31,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -167,7 +167,8 @@ public class NamingService
       */
       InitialContext iniCtx = new InitialContext();
       Hashtable env = iniCtx.getEnvironment();
-      log.debug("InitialContext Environment:");
+      if (debug)
+         log.debug("InitialContext Environment:");
       String providerURL = null;
       for (Enumeration keys = env.keys(); keys.hasMoreElements(); )
       {

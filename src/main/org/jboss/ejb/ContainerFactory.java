@@ -71,7 +71,7 @@ import org.jboss.management.j2ee.EjbModule;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.107 $ 
+* @version $Revision: 1.108 $ 
 */
 public class ContainerFactory
 extends ServiceMBeanSupport
@@ -977,9 +977,11 @@ implements ContainerFactoryMBean
       logger
       */
       final Logger logger = ContainerFactory.this.getLog();
+      final boolean debug = logger.isDebugEnabled();
       public void beanChecked( VerificationEvent event )
       {
-         logger.debug( event.getMessage() );
+         if (debug)
+            logger.debug( event.getMessage() );
       }
       public void specViolation( VerificationEvent event )
       {
@@ -989,10 +991,10 @@ implements ContainerFactoryMBean
             logger.info( event.getMessage() );
       }
    }
-   
+
    protected ObjectName getServiceControllerName() throws DeploymentException
    {
-      try 
+      try
       {
          return new ObjectName(SERVICE_CONTROLLER_NAME);
       }

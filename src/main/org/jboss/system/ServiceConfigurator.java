@@ -40,7 +40,7 @@ import org.w3c.dom.Text;
 *
 * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:hiram@jboss.org">Hiram Chirino</a>
-* @version $Revision: 1.15 $
+* @version $Revision: 1.16 $
 *
 * <p><b>20010830 marc fleury:</b>
 * <ul>
@@ -92,14 +92,16 @@ public class ServiceConfigurator
    public String getConfiguration(ObjectName[] objectNames)
    throws Exception
    {
+      boolean debug = log.isDebugEnabled();
+
       Writer out = new StringWriter();
-      
+
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
       Document doc = builder.newDocument();
-      
+
       Element serverElement = doc.createElement("server");
-      
+
       // Store attributes as XML
       for (int j = 0 ; j<objectNames.length ; j++)
       {
@@ -107,7 +109,7 @@ public class ServiceConfigurator
          ObjectName name = (ObjectName)instance.getObjectName();
          Element mbeanElement = doc.createElement("mbean");
          mbeanElement.setAttribute("name", name.toString());
-         
+
          MBeanInfo info = server.getMBeanInfo(name);
          mbeanElement.setAttribute("code", info.getClassName());
          MBeanAttributeInfo[] attributes = info.getAttributes();
@@ -118,13 +120,14 @@ public class ServiceConfigurator
             {
                if (!attributes[i].isWritable())
                {
-                  log.debug("Detected JMX Bug: Server reports attribute '"+attributes[i].getName() + "' is not writeable for MBean '" + name.getCanonicalName() + "'");
+                  if (debug)
+                     log.debug("Detected JMX Bug: Server reports attribute '"+attributes[i].getName() + "' is not writeable for MBean '" + name.getCanonicalName() + "'");
                }
                Element attributeElement = doc.createElement("attribute");
                Object value = server.getAttribute(name, attributes[i].getName());
-               
+
                attributeElement.setAttribute("name", attributes[i].getName());
-               
+
                if (value != null)
                {
                   attributeElement.appendChild(doc.createTextNode(value.toString()));
@@ -147,14 +150,14 @@ public class ServiceConfigurator
       (new DOMWriter(out, false)).print(doc, true);
       
       out.close();
-      
+
       // Return configuration
       return out.toString();
    }
-   
-   
+
+
    // Public -----------------------------------------------------
-   
+
    /**
    * The <code>configure</code> method configures an mbean based on the xml element configuration
    * passed in.  Three formats are supported:
@@ -171,12 +174,14 @@ public class ServiceConfigurator
    public ArrayList configure(Element mbeanElement)
    throws Exception
    {
-      
+
       // Set configuration to MBeans from XML
-      
+
+      boolean debug = log.isDebugEnabled();
+
       // get the name of the mbean
       ObjectName objectName = parseObjectName(mbeanElement);
-      
+
       MBeanInfo info;
       try
       {
@@ -186,7 +191,7 @@ public class ServiceConfigurator
          // The MBean is no longer available
          throw new DeploymentException("trying to configure nonexistent mbean: " + objectName);
       }
-      
+
       // Set attributes
       MBeanAttributeInfo[] attributes = info.getAttributes();
       NodeList attrs = mbeanElement.getElementsByTagName("attribute");
@@ -204,7 +209,7 @@ public class ServiceConfigurator
             {
                attributeText = ((Text)n).getData().trim();
             }
-            
+
             for (int k = 0; k < attributes.length; k++)
             {
                if (attributeName.equals(attributes[k].getName()))
@@ -219,9 +224,9 @@ public class ServiceConfigurator
                   {
                      typeClass = Class.forName(typeName);
                   }
-                  
+
                   Object value = null;
-                  
+
                   // HRC: Is the attribute type a org.w3c.dom.Element??
                   if (typeClass.equals(Element.class))
                   {
@@ -246,7 +251,8 @@ public class ServiceConfigurator
                      value = editor.getValue();
                   }
                   
-                  log.debug(attributeName + " set to " + value + " in " + objectName);
+                  if (debug)
+                     log.debug(attributeName + " set to " + value + " in " + objectName);
                   
                   server.setAttribute(objectName, new Attribute(attributeName, value));
                   
@@ -261,7 +267,8 @@ public class ServiceConfigurator
       ArrayList mbeans = new ArrayList();
       
       NodeList dependsElements = mbeanElement.getElementsByTagName("depends");
-      log.debug("found " + dependsElements.getLength() + " depends elements");
+      if (debug)
+         log.debug("found " + dependsElements.getLength() + " depends elements");
       for (int j = 0; j < dependsElements.getLength(); j++) {
          Element dependsElement = (Element)dependsElements.item(j);
       dependAttrFound:
@@ -285,7 +292,8 @@ public class ServiceConfigurator
          {
             mbeans.add(dependsObjectName);
          } // end of if ()
-         log.debug("considering " + ((mbeanRefName == null)? "<anonymous>": mbeanRefName.toString()) + " with object name " + dependsObjectName);
+         if (debug)
+            log.debug("considering " + ((mbeanRefName == null)? "<anonymous>": mbeanRefName.toString()) + " with object name " + dependsObjectName);
          if (mbeanRefName != null) 
          {
             //if if doesn't exist or has wrong type, we'll get an exception

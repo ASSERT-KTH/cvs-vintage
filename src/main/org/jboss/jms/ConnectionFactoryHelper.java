@@ -21,7 +21,7 @@ import org.apache.log4j.Category;
  * A helper for creating connections from jms connection factories.
  *      
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class ConnectionFactoryHelper
 {
@@ -51,7 +51,9 @@ public class ConnectionFactoryHelper
       if (factory == null)
          throw new IllegalArgumentException("factory is null");
 
-      if (log.isDebugEnabled()) {
+      boolean debug = log.isDebugEnabled();
+      if (debug)
+      {
          log.debug("using connection factory: " + factory);
          log.debug("using username/password: " +
                    String.valueOf(username) + "/" +
@@ -59,7 +61,7 @@ public class ConnectionFactoryHelper
       }
 
       QueueConnection connection;
-      
+
       if (factory instanceof XAQueueConnectionFactory) {
          XAQueueConnectionFactory qFactory = (XAQueueConnectionFactory)factory;
          if (username != null) {
@@ -68,7 +70,8 @@ public class ConnectionFactoryHelper
          else {
             connection = qFactory.createXAQueueConnection();
          }
-         log.debug("created XAQueueConnection: " + connection);
+         if (debug)
+            log.debug("created XAQueueConnection: " + connection);
       }
       else if (factory instanceof QueueConnectionFactory) {
          QueueConnectionFactory qFactory = (QueueConnectionFactory)factory;
@@ -78,12 +81,13 @@ public class ConnectionFactoryHelper
          else {
             connection = qFactory.createQueueConnection();
          }
-         log.debug("created QueueConnection: " + connection);
+         if (debug)
+            log.debug("created QueueConnection: " + connection);
       }
       else {
          throw new IllegalArgumentException("factory is invalid");
       }
-      
+
       return connection;
    }
 
@@ -94,7 +98,7 @@ public class ConnectionFactoryHelper
     * @param factory     An object that implements QueueConnectionFactory,
     *                    XAQueueConnectionFactory
     * @return            A queue connection.
-    *                    
+    *
     * @throws JMSException                Failed to create connection.
     * @throws IllegalArgumentException    Factory is null or invalid.
     */
@@ -103,7 +107,7 @@ public class ConnectionFactoryHelper
    {
       return createQueueConnection(factory, null, null);
    }
-   
+
    /**
     * Create a topic connection from the given factory.  An XA connection will
     * be created if possible.
@@ -126,7 +130,9 @@ public class ConnectionFactoryHelper
       if (factory == null)
          throw new IllegalArgumentException("factory is null");
 
-      if (log.isDebugEnabled()) {
+      boolean debug = log.isDebugEnabled();
+      if (debug)
+      {
          log.debug("using connection factory: " + factory);
          log.debug("using username/password: " +
                    String.valueOf(username) + "/" +
@@ -134,7 +140,7 @@ public class ConnectionFactoryHelper
       }
 
       TopicConnection connection;
-      
+
       if (factory instanceof XATopicConnectionFactory) {
          XATopicConnectionFactory tFactory = (XATopicConnectionFactory)factory;
          if (username != null) {
@@ -143,7 +149,8 @@ public class ConnectionFactoryHelper
          else {
             connection = tFactory.createXATopicConnection();
          }
-         log.debug("created XATopicConnection: " + connection);
+         if (debug)
+            log.debug("created XATopicConnection: " + connection);
       }
       else if (factory instanceof TopicConnectionFactory) {
          TopicConnectionFactory tFactory = (TopicConnectionFactory)factory;
@@ -153,7 +160,8 @@ public class ConnectionFactoryHelper
          else {
             connection = tFactory.createTopicConnection();
          }
-         log.debug("created TopicConnection: " + connection);
+         if (debug)
+            log.debug("created TopicConnection: " + connection);
       }
       else {
          throw new IllegalArgumentException("factory is invalid");

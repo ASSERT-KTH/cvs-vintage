@@ -49,7 +49,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 class TxCapsule
    implements TimeoutTarget
@@ -69,7 +69,7 @@ class TxCapsule
 
    /** True if debug messages should be logged. */
    private boolean debug = log.isDebugEnabled();
-   
+
    // Static --------------------------------------------------------
 
    /**
@@ -987,7 +987,8 @@ class TxCapsule
          try {
             timeout.cancel();
          } catch (Exception e) {
-            log.debug("failed to cancel timeout", e);
+            if (debug)
+               log.debug("failed to cancel timeout", e);
          } finally {
             lock();
          }

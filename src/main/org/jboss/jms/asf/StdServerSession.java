@@ -31,7 +31,7 @@ import org.jboss.tm.XidImpl;
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.11 $
+ * @version   $Revision: 1.12 $
  */
 public class StdServerSession
    implements Runnable, ServerSession, MessageListener
@@ -101,9 +101,10 @@ public class StdServerSession
       if( xaSession == null )
          useLocalTX = false;
       this.useLocalTX = useLocalTX;
-      
-      log.debug("initializing (pool, session, xaSession, useLocalTX): " +
-      pool + ", " + session + ", " + xaSession + ", " + useLocalTX);
+
+      if (log.isDebugEnabled())
+         log.debug("initializing (pool, session, xaSession, useLocalTX): " +
+            pool + ", " + session + ", " + xaSession + ", " + useLocalTX);
       
       // Set out self as message listener
       if (xaSession != null)
@@ -340,8 +341,7 @@ public class StdServerSession
     */
    public void start() throws JMSException
    {
-      if( log.isTraceEnabled() )
-         log.trace("starting invokes on server session");
+      log.trace("starting invokes on server session");
       
       if (session != null)
       {
@@ -358,7 +358,7 @@ public class StdServerSession
          throw new JMSException("No listener has been specified");
       }
    }
-   
+
    /**
     * Called by the ServerSessionPool when the sessions should be closed.
     */
@@ -373,10 +373,10 @@ public class StdServerSession
          catch (Exception ignore)
          {
          }
-         
+
          session = null;
       }
-      
+
       if (xaSession != null)
       {
          try
@@ -388,7 +388,7 @@ public class StdServerSession
          }
          xaSession = null;
       }
-      
+
       log.debug("closed");
    }
    

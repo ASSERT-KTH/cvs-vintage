@@ -45,7 +45,7 @@ import org.jboss.logging.Logger;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*  @version $Revision: 1.28 $
+*  @version $Revision: 1.29 $
 */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -78,37 +78,40 @@ public class StatefulSessionFilePersistenceManager
     public void create()
     throws Exception
     {
-        
+        boolean debug = log.isDebugEnabled();
+
         // Find methods
         ejbActivate = SessionBean.class.getMethod("ejbActivate", new Class[0]);
-        
+
         ejbPassivate = SessionBean.class.getMethod("ejbPassivate", new Class[0]);
-        
+
         ejbRemove = SessionBean.class.getMethod("ejbRemove", new Class[0]);
-        
+
         // Initialize the dataStore
         String ejbName = con.getBeanMetaData().getEjbName();
-        
+
         // Base dir
         log.warn("using jboss.system.home property");
         File homeDir = new File(System.getProperty("jboss.system.home"));
         File databaseDir = new File(homeDir, "db"+File.separator);
         File database = new File(databaseDir, "sessions");
-        
+
         dir = new File(database, ejbName);
-        
+
         dir.mkdirs();
-        
-        log.debug("Storing sessions for "+ejbName+" in:"+dir);
-        
+
+        if (debug)
+           log.debug("Storing sessions for "+ejbName+" in:"+dir);
+
         // Clear dir of old files
         File[] sessions = dir.listFiles();
         for (int i = 0; i < sessions.length; i++)
         {
             sessions[i].delete();
         }
-        log.debug(sessions.length + " old sessions removed");
-        
+        if (debug)
+           log.debug(sessions.length + " old sessions removed");
+
         // Get fields of class
         Class beanClass = con.getBeanClass();
         fields = new ArrayList();

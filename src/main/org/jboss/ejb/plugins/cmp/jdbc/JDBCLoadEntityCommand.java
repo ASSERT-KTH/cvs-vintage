@@ -34,7 +34,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class JDBCLoadEntityCommand {
    private JDBCStoreManager manager;
@@ -97,7 +97,8 @@ public class JDBCLoadEntityCommand {
          con = entity.getDataSource().getConnection();
          
          // create the statement
-         log.debug("Executing SQL: " + sql);
+         if (log.isDebugEnabled())
+            log.debug("Executing SQL: " + sql);
          ps = con.prepareStatement(sql.toString());
          
          // set the parameters

@@ -33,7 +33,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:david_jencks@earthlink.net">David Jencks</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
  * 
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  * 
  *   <p><b>Revisions:</b>
  *
@@ -109,27 +109,28 @@ public class JDBCInitCommand
       if (jawsEntity.getCreateTable())
       {
          // first check if the table already exists...
-         // (a j2ee spec compatible jdbc driver has to fully 
+         // (a j2ee spec compatible jdbc driver has to fully
          // implement the DatabaseMetaData)
          boolean created = false;
          Connection con = null;
          ResultSet rs = null;
-         try 
+         boolean debug = log.isDebugEnabled();
+         try
          {
              con = getConnection();
              DatabaseMetaData dmd = con.getMetaData();
              rs = dmd.getTables(con.getCatalog(), null, jawsEntity.getTableName(), null);
              if (rs.next ())
                 created = true;
-         
+
              rs.close ();
              con.close ();
-         } 
-         catch(Exception e) 
+         }
+         catch(Exception e)
          {
             throw e;
-         } 
-         finally 
+         }
+         finally
          {
              if(rs != null) try {rs.close(); rs = null;}catch(SQLException e) {}
              if(con != null) try {con.close();con = null;}catch(SQLException e) {}
@@ -140,7 +141,7 @@ public class JDBCInitCommand
              log.info("Table '"+jawsEntity.getTableName()+"' already exists");
          } else {
              try
-             {          
+             {
                 // since we use the pools, we have to do this within a transaction
                 factory.getContainer().getTransactionManager().begin ();
                 jdbcExecute(null);
@@ -149,8 +150,9 @@ public class JDBCInitCommand
                 // Create successful, log this
                 log.info("Created table '"+jawsEntity.getTableName()+"' successfully.");
 	             if (jawsEntity.getPrimKeyField() != null)
-	             	log.debug("Primary key of table '"+jawsEntity.getTableName()+"' is '"
-	             		+jawsEntity.getPrimKeyField()+"'.");
+	               if (debug)
+                    log.debug("Primary key of table '"+jawsEntity.getTableName()+"' is '"
+	                     +jawsEntity.getPrimKeyField()+"'.");
 	             else {
 	             	String flds = "[";
 	                for (Iterator i = jawsEntity.getPkFields();i.hasNext();) {
@@ -158,11 +160,13 @@ public class JDBCInitCommand
 					   flds += i.hasNext()?",":"";
 					}
 				    flds += "]";
-	             	log.debug("Primary key of table '"+jawsEntity.getTableName()+"' is " + flds);
-	             }	
+            if (debug)
+               log.debug("Primary key of table '"+jawsEntity.getTableName()+"' is " + flds);
+	             }
 	         } catch (Exception e)
              {
-                log.debug("Could not create table " +
+                if (debug)
+                   log.debug("Could not create table " +
                           jawsEntity.getTableName(), e);
                 try
                 {
@@ -182,7 +186,8 @@ public class JDBCInitCommand
    protected Object handleResult(int rowsAffected, Object argOrArgs)
       throws Exception
    {
-      log.debug("Table " + jawsEntity.getTableName() + " created");
+      if (log.isDebugEnabled())
+         log.debug("Table " + jawsEntity.getTableName() + " created");
       return null;
    }
 }

@@ -26,7 +26,7 @@ import org.jboss.logging.Logger;
  *     share classes) to this scope class 
  *  c) is optimized by caching the locations.
  * @author  cgjung
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 
 public class Scope {
@@ -139,10 +139,11 @@ public class Scope {
                 deps=new HashSet();
                 dependencies.put(target,deps);
             }
-            
-            log.debug("Adding dependency from deployment "+source+":"+source.deployment.getLocalUrl()+" to deployment "+
-                target+":"+target.deployment.getLocalUrl());
-            
+
+            if (log.isDebugEnabled())
+               log.debug("Adding dependency from deployment "+source+":"+source.deployment.getLocalUrl()+" to deployment "+
+                  target+":"+target.deployment.getLocalUrl());
+
             return deps.add(source);
         } else
             return false;

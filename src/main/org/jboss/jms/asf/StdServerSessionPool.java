@@ -37,7 +37,7 @@ import org.jboss.logging.Logger;
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.17 $
+ * @version   $Revision: 1.18 $
  */
 public class StdServerSessionPool
        implements ServerSessionPool
@@ -325,13 +325,16 @@ public class StdServerSessionPool
 
    private void create() throws JMSException
    {
+      boolean debug = log.isDebugEnabled();
+
       for (int index = 0; index < poolSize; index++)
       {
          // Here is the meat, that MUST follow the spec
          Session ses = null;
          XASession xaSes = null;
 
-         log.debug("initializing with connection: " + con);
+         if (debug)
+            log.debug("initializing with connection: " + con);
 
          if (con instanceof XATopicConnection)
          {
@@ -368,7 +371,8 @@ public class StdServerSessionPool
 
          sessionPool.add(serverSession);
          numServerSessions++;
-         log.debug("added server session to the pool: " + serverSession);
+         if (debug)
+            log.debug("added server session to the pool: " + serverSession);
       }
    }
 }

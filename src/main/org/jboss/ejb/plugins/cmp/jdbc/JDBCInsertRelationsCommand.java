@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
  * Inserts relations into a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCInsertRelationsCommand {
    protected JDBCStoreManager manager;
@@ -39,39 +39,43 @@ public class JDBCInsertRelationsCommand {
             "." + 
             manager.getMetaData().getName());
    }
-   
+
    public void execute(RelationData relationData) {
       if(relationData.addedRelations.size() == 0) {
          return;
       }
-      
+
       Connection con = null;
       PreparedStatement ps = null;
-      
-      JDBCRelationMetaData relationMetaData = 
+
+      boolean debug = log.isDebugEnabled();
+
+      JDBCRelationMetaData relationMetaData =
             relationData.getLeftCMRField().getRelationMetaData();
       try {
          // get the connection
          DataSource dataSource = relationMetaData.getDataSource();
          con = dataSource.getConnection();
-         
+
          // get the sql
          String sql = getSQL(relationData);
-         
+
          // get a prepared statement
-         log.debug("Executing SQL: " + sql);
+         if (debug)
+            log.debug("Executing SQL: " + sql);
          ps = con.prepareStatement(sql);
-         
+
          Iterator pairs = relationData.addedRelations.iterator();
          while(pairs.hasNext()) {
             RelationPair pair = (RelationPair)pairs.next();
-            
+
             // set the parameters
             setParameters(ps, relationData, pair);
-         
+
             int rowsAffected = ps.executeUpdate();
-         
-            log.debug("Rows affected = " + rowsAffected);
+
+            if (debug)
+               log.debug("Rows affected = " + rowsAffected);
          }
       } catch(Exception e) {
          throw new EJBException("Could insert relations into " +
@@ -81,14 +85,14 @@ public class JDBCInsertRelationsCommand {
          JDBCUtil.safeClose(con);
       }
    }
-   
+
    protected String getSQL(RelationData relationData) throws Exception {
       JDBCCMRFieldBridge left = relationData.getLeftCMRField();
       JDBCCMRFieldBridge right = relationData.getRightCMRField();
-      
+
       StringBuffer sql = new StringBuffer();
       sql.append("INSERT INTO ").append(
-           left.getRelationMetaData().getTableName());      
+           left.getRelationMetaData().getTableName());
 
       sql.append(" (");
             sql.append(SQLUtil.getColumnNamesClause(left.getTableKeyFields()));
@@ -100,10 +104,10 @@ public class JDBCInsertRelationsCommand {
             sql.append(SQLUtil.getValuesClause(left.getTableKeyFields()));
             sql.append(", ");
             sql.append(SQLUtil.getValuesClause(right.getTableKeyFields()));
-      sql.append(")");      
+      sql.append(")");
       return sql.toString();
    }
-      
+
    protected void setParameters(
          PreparedStatement ps,
          RelationData relationData,

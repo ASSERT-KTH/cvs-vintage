@@ -42,7 +42,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    private JDBCStoreManager manager;
@@ -74,6 +74,8 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
          Object[] args,
          EntityEnterpriseContext ctx) throws FinderException {
 
+      boolean debug = log.isDebugEnabled();
+
       Collection results = new ArrayList();
 
       Connection con = null;
@@ -81,11 +83,12 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
       try {
          // get the connection
          con = manager.getEntityBridge().getDataSource().getConnection();
-         
+
          // create the statement
-         log.debug("Executing SQL: " + sql);
+         if (debug)
+            log.debug("Executing SQL: " + sql);
          ps = con.prepareStatement(sql);
-         
+
          // set the parameters
          for(int i=0; i<parameters.size(); i++) {
             QueryParameter parameter = (QueryParameter)parameters.get(i);
@@ -112,9 +115,10 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
                selectField.loadArgumentResults(rs, 1, valueRef);
                results.add(valueRef[0]);
             }
-         }   
+         }
       } catch(Exception e) {
-         log.debug(e);
+         if (debug)
+            log.debug(e);
          throw new FinderException("Find failed: " + e);
       } finally {
          JDBCUtil.safeClose(ps);
@@ -158,14 +162,15 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
             return invoker.getEntityCollection(finderResults);
       }
    }
-   
+
    protected Logger getLog() {
       return log;
    }
 
    protected void setSQL(String sql) {
       this.sql = sql;
-      log.debug("SQL: " + sql);
+      if (log.isDebugEnabled())
+         log.debug("SQL: " + sql);
    }
 
    protected void setParameterList(List p) {

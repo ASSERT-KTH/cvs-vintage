@@ -30,7 +30,7 @@ import org.jboss.metadata.BeanMetaData;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.21 $
+ *  @version $Revision: 1.22 $
  */
 public class TxInterceptorCMT
     extends AbstractTxInterceptor
@@ -90,7 +90,8 @@ public class TxInterceptorCMT
             default:
                 name = "TX_UNKNOWN";
         }
-        log.debug(name+" for "+m.getName());
+        if (log.isDebugEnabled())
+           log.debug(name+" for "+m.getName());
     }
 
     /*

@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
  * @author <a href="mailto:david_jencks@earthlink.net">David Jencks</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  *
  * Revison:
  * 20010621 danch: merged patch from David Jenks - null constraint on columns.
@@ -243,6 +243,7 @@ public class CMPFieldMetaData extends MetaData implements XmlLoadable
       Field tmpField = null;
       Class tmpClass = ejbClass;
       StringTokenizer st = new StringTokenizer(name, ".");
+      boolean debug = log.isDebugEnabled();
 
       if (st.countTokens() > 1)
       {
@@ -257,7 +258,8 @@ public class CMPFieldMetaData extends MetaData implements XmlLoadable
             //debugClass(tmpClass);
             tmpField = tmpClass.getField(fieldName);
             tmpClass = tmpField.getType();
-                log.debug("(Dependant Object) "+tmpField.getName());
+            if (debug)
+               log.debug("(Dependant Object) "+tmpField.getName());
          }
          catch (NoSuchFieldException e)
          {

@@ -30,7 +30,7 @@ import org.jboss.util.FinderResults;
  *
  * @see org.jboss.ejb.plugins.jaws.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class CustomFindByEntitiesCommand
    implements JPMFindEntitiesCommand
@@ -58,7 +58,8 @@ public class CustomFindByEntitiesCommand
       finderImplMethod = finderMethod;
       // set name for debugging purposes
       name = "Custom finder "+finderMethod.getName();
-      log.debug("Finder:"+name);
+      if (log.isDebugEnabled())
+         log.debug("Finder:"+name);
    }
 
    // JPMFindEntitiesCommand implementation -------------------------

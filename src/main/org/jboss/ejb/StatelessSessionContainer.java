@@ -32,7 +32,7 @@ import org.jboss.invocation.MarshalledInvocation;
 * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
-* @version $Revision: 1.31 $
+* @version $Revision: 1.32 $
 * <p><b>2001219 marc fleury</b>
 * <ul>
 * <li> move to the new invocation layer and Invocation object
@@ -418,15 +418,18 @@ implements ContainerInvokerContainer, InstancePoolContainer
    protected void setupHomeMapping()
    throws NoSuchMethodException
    {
+      boolean debug = log.isDebugEnabled();
+
       Map map = new HashMap();
-      
+
       if (homeInterface != null)
       {
          Method[] m = homeInterface.getMethods();
          for (int i = 0; i < m.length; i++)
          {
             // Implemented by container
-            log.debug("Mapping "+m[i].getName());
+            if (debug)
+               log.debug("Mapping "+m[i].getName());
             map.put(m[i], getClass().getMethod(m[i].getName()+"Home", m[i].getParameterTypes()));
          }
       }
@@ -436,31 +439,36 @@ implements ContainerInvokerContainer, InstancePoolContainer
          for (int i = 0; i < m.length; i++)
          {
             // Implemented by container
-            log.debug("Mapping "+m[i].getName());
+            if (debug)
+               log.debug("Mapping "+m[i].getName());
             map.put(m[i], getClass().getMethod(m[i].getName()+"LocalHome", m[i].getParameterTypes()));
          }
       }
-      
+
       homeMapping = map;
    }
-   
+
    private void setUpBeanMappingImpl( Map map, Method[] m, String declaringClass )
    throws NoSuchMethodException
    {
+      boolean debug = log.isDebugEnabled();
+
       for (int i = 0; i < m.length; i++)
       {
          if (!m[i].getDeclaringClass().getName().equals(declaringClass))
          {
             // Implemented by bean
             map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
-            log.debug("Mapped "+m[i].getName()+" "+m[i].hashCode()+"to "+map.get(m[i]));
+            if (debug)
+               log.debug("Mapped "+m[i].getName()+" "+m[i].hashCode()+"to "+map.get(m[i]));
          }
          else
          {
             try
             {
                // Implemented by container
-               log.debug("Mapped Container method "+m[i].getName() +" HASH "+m[i].hashCode());
+               if (debug)
+                  log.debug("Mapped Container method "+m[i].getName() +" HASH "+m[i].hashCode());
                map.put(m[i], getClass().getMethod(m[i].getName(), new Class[] { Invocation.class }));
             } catch (NoSuchMethodException e)
             {
@@ -469,7 +477,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
          }
       }
    }
-   
+
    protected void setupBeanMapping()
    throws NoSuchMethodException
    {

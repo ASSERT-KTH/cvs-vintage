@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JDBCRemoveEntityCommand {
    
@@ -55,12 +55,13 @@ public class JDBCRemoveEntityCommand {
                entity.getJDBCPrimaryKeyFields()));
       
       removeEntitySQL = sql.toString();
-      log.debug("Remove SQL: " + removeEntitySQL);
+      if (log.isDebugEnabled())
+         log.debug("Remove SQL: " + removeEntitySQL);
    }
-   
+
    public void execute(EntityEnterpriseContext context)
          throws RemoveException {
-      
+
       // remove entity from all relations
       HashMap oldRelations = removeFromRelations(context);
 
@@ -69,17 +70,19 @@ public class JDBCRemoveEntityCommand {
          manager.getContainer().synchronizeEntitiesWithinTransaction(
                context.getTransaction());
       }
-      
+
       Connection con = null;
       PreparedStatement ps = null;
       int rowsAffected = 0;
+      boolean debug = log.isDebugEnabled();
       try {
          // get the connection
          DataSource dataSource = entity.getDataSource();
          con = dataSource.getConnection();
-         
+
          // create the statement
-         log.debug("Executing SQL: " + removeEntitySQL);
+         if (debug)
+            log.debug("Executing SQL: " + removeEntitySQL);
          ps = con.prepareStatement(removeEntitySQL);
          
          // set the parameters
@@ -99,7 +102,8 @@ public class JDBCRemoveEntityCommand {
       if(rowsAffected == 0) {
          throw new RemoveException("Could not remove entity");
       }
-      log.debug("Remove: Rows affected = " + rowsAffected);
+      if (debug)
+         log.debug("Remove: Rows affected = " + rowsAffected);
 
       // cascate-delete to old relations, if relation uses cascade.
       cascadeDelete(oldRelations);

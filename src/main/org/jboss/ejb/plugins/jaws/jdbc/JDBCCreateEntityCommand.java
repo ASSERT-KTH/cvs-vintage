@@ -37,7 +37,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -143,7 +143,8 @@ public class JDBCCreateEntityCommand
             jdbcExecute(ctx);
          } catch (Exception e)
          {
-            if (log.isDebugEnabled()) log.debug("Exception", e);
+            if (log.isDebugEnabled())
+               log.debug("Exception", e);
             throw new CreateException("Could not create entity:"+e);
          }
          
@@ -151,7 +152,8 @@ public class JDBCCreateEntityCommand
          
       } catch (IllegalAccessException e)
       {
-         if (log.isDebugEnabled()) log.debug("IllegalAccessException", e);
+         if (log.isDebugEnabled())
+            log.debug("IllegalAccessException", e);
          throw new CreateException("Could not create entity:"+e);
       }
    }

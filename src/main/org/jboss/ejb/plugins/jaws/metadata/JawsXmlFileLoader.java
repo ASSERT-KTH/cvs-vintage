@@ -21,7 +21,7 @@ import org.jboss.metadata.XmlFileLoader;
  *
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.10 $
+ *	@version $Revision: 1.11 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -60,19 +60,23 @@ public class JawsXmlFileLoader
       // Load standardjaws.xml from the default classLoader
       // we always load defaults first
       URL stdJawsUrl = classLoader.getResource("standardjaws.xml");
-      
+
       if (stdJawsUrl == null) throw new DeploymentException("No standardjaws.xml found");
-      
-      log.debug("Loading standardjaws.xml : " + stdJawsUrl.toString());
+
+      boolean debug = log.isDebugEnabled();
+
+      if (debug)
+         log.debug("Loading standardjaws.xml : " + stdJawsUrl.toString());
       Document stdJawsDocument = XmlFileLoader.getDocument(stdJawsUrl);
       jamd.importXml(stdJawsDocument.getDocumentElement());
-      
+
       // Load jaws.xml if provided
       URL jawsUrl = localClassLoader.getResource("META-INF/jaws.xml");
-      
+
       if (jawsUrl != null)
       {
-         log.debug(jawsUrl.toString() + " found. Overriding defaults");
+         if (debug)
+            log.debug(jawsUrl.toString() + " found. Overriding defaults");
          Document jawsDocument = XmlFileLoader.getDocument(jawsUrl);
          jamd.importXml(jawsDocument.getDocumentElement());
       }

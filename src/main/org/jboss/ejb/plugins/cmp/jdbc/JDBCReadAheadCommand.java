@@ -26,7 +26,7 @@ import org.jboss.logging.Logger;
  * JDBCReadAheadCommand
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCReadAheadCommand {
 
@@ -76,7 +76,8 @@ public class JDBCReadAheadCommand {
          con = entity.getDataSource().getConnection();
          
          // create the statement
-         log.debug("Executing SQL: " + sql);
+         if (log.isDebugEnabled())
+            log.debug("Executing SQL: " + sql);
          ps = con.prepareStatement(sql);
          
          // set the parameters

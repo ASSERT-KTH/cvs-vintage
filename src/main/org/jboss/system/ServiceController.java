@@ -42,7 +42,7 @@ import org.jboss.logging.Logger;
  * @see org.jboss.system.Service
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.21 $ <p>
+ * @version $Revision: 1.22 $ <p>
  *
  * <b>Revisions:</b> <p>
  *
@@ -137,18 +137,20 @@ public class ServiceController
    public synchronized ObjectName install(Element mbeanElement)
        throws Exception
    {
+      boolean debug = log.isDebugEnabled();
+
       // Create a Service Context for the service, or get one if it exists
       ServiceContext ctx = getServiceContext(parseObjectName(mbeanElement));
-      
+
       // MARCF FIXME THINK ABOUT REMOVe IF ACTIVE HERE
       //at least make a new version!
       //remove(objectName);
-      
+
       // It is not there so really create the component now, this registers the component in the mbeanserver
       try
       {
          creator.install(mbeanElement);
-      }  
+      }
       catch (MBeanException mbe)
       {
          mbe.getTargetException().printStackTrace();
@@ -176,28 +178,29 @@ public class ServiceController
             throw (Exception)e;
          if (e instanceof Error)
             throw (Error)e;
-         
+
          throw new Error("unexpected throwable: " + e);
       }
-      
+
       // We got this far
       ctx.state = ServiceContext.INSTALLED;
-      
-      try {   
+
+      try {
          // Configure the MBean
          synchronized (this)
          {
             // The return is a list of MBeans this MBean "depends" on
             List mbeans = configurator.configure(mbeanElement);
-            
+
             // Link the dependency me.idependOn(them) and them.dependsOnMe(me)
             Iterator iterator = mbeans.iterator();
             while (iterator.hasNext()) {
-               
+
                // We work from the service context, if it doesn't exist yet, we have a wrapper (OK)
                ServiceContext service = getServiceContext((ObjectName) iterator.next());
-               
-               log.debug("recording that " + ctx.objectName + " depends on " + service.objectName);
+
+               if (debug)
+                  log.debug("recording that " + ctx.objectName + " depends on " + service.objectName);
                // ctx depends on service
                ctx.iDependOn.add(service);
                
@@ -346,30 +349,35 @@ public class ServiceController
     * @exception Exception Description of Exception
     */
    public void stop(ObjectName serviceName) throws Exception
-   {  
+   {
+      boolean debug = log.isDebugEnabled();
+
       ServiceContext ctx = (ServiceContext) nameToServiceMap.get(serviceName);
-      log.debug("stopping service: " + serviceName);
-      if (ctx != null) 
+      if (debug)
+         log.debug("stopping service: " + serviceName);
+      if (ctx != null)
       {
          // If we are already stopped (can happen in dependencies) just return
          if (ctx.state == ServiceContext.STOPPED) return;
-            
+
          // JSR 77 and to avoid circular dependencies
          ctx.state = ServiceContext.STOPPED;
-         
-         log.debug("service context has " + ctx.dependsOnMe.size() + " depending services");
+
+         if (debug)
+            log.debug("service context has " + ctx.dependsOnMe.size() + " depending services");
          Iterator iterator = ctx.dependsOnMe.iterator();
          while (iterator.hasNext())
          {
             // stop all the mbeans that depend on me
             ObjectName other = ((ServiceContext) iterator.next()).objectName;
-            log.debug("stopping dependent service " + other);
+            if (debug)
+               log.debug("stopping dependent service " + other);
             stop(other);
          }
-         
-         // Call create on the service Proxy  
+
+         // Call create on the service Proxy
          try { ctx.proxy.stop(); }
-            
+
          catch (Exception e){ ctx.state = ServiceContext.FAILED; throw e;}
       }
    }   
@@ -381,9 +389,12 @@ public class ServiceController
     * @exception Exception Description of Exception
     */
    public void destroy(ObjectName serviceName) throws Exception
-   {  
+   {
+      boolean debug = log.isDebugEnabled();
+        
       ServiceContext ctx = (ServiceContext) nameToServiceMap.get(serviceName);
-      log.debug("destroying service: " + serviceName);
+      if (debug)
+         log.debug("destroying service: " + serviceName);
       
       if (ctx != null) 
       {
@@ -398,7 +409,8 @@ public class ServiceController
          {        
             // destroy all the mbeans that depend on me
             ObjectName other = ((ServiceContext) iterator.next()).objectName;
-            log.debug("destroying dependent service " + other);
+            if (debug)
+               log.debug("destroying dependent service " + other);
             destroy(other);
          }
          
@@ -432,12 +444,15 @@ public class ServiceController
     */
    public void remove(ObjectName objectName) throws Exception
    {   
-      ServiceContext ctx = getServiceContext(objectName);    
-      log.debug("removing service: " + objectName);
-      
+      boolean debug = log.isDebugEnabled();
+
+      ServiceContext ctx = getServiceContext(objectName);
+      if (debug)
+         log.debug("removing service: " + objectName);
+
       // Notify those that think I depend on them
       Iterator iterator = ctx.iDependOn.iterator();
-      while (iterator.hasNext()) 
+      while (iterator.hasNext())
       {
          ((ServiceContext) iterator.next()).dependsOnMe.remove(ctx);
       }
@@ -445,9 +460,8 @@ public class ServiceController
       // Do we have a deployed MBean?
       if (server.isRegistered(objectName))
       {
-         if (log.isDebugEnabled()) {
+         if (debug)
             log.debug("removing " + objectName + " from server");
-         }
          
          nameToServiceMap.remove(objectName);
          
@@ -458,9 +472,8 @@ public class ServiceController
       }
       else 
       {
-         if (log.isDebugEnabled()) {
+         if (debug)
             log.debug("no need to remove " + objectName + " from server");
-         }  
       }
    }
    

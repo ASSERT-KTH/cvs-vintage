@@ -27,7 +27,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCStoreEntityCommand {
    private JDBCStoreManager manager;
@@ -48,15 +48,17 @@ public class JDBCStoreEntityCommand {
    public void execute(EntityEnterpriseContext ctx) {
       JDBCCMPFieldBridge[] dirtyFields = 
             (JDBCCMPFieldBridge[])entity.getDirtyFields(ctx);
-         
+
+      boolean debug = log.isDebugEnabled();
       if(dirtyFields.length == 0) {
-         log.debug("Store command NOT executed. Entity is not dirty: pk=" + 
+         if (debug)
+            log.debug("Store command NOT executed. Entity is not dirty: pk=" +
                ctx.getId());
          return;
       }
 
       // generate sql
-      StringBuffer sql = new StringBuffer(); 
+      StringBuffer sql = new StringBuffer();
       sql.append("UPDATE ").append(entity.getTableName());
       sql.append(" SET ").append(SQLUtil.getSetClause(dirtyFields));
       sql.append(" WHERE ").append(
@@ -68,11 +70,12 @@ public class JDBCStoreEntityCommand {
       try {
          // get the connection
          con = entity.getDataSource().getConnection();
-         
+
          // create the statement
-         log.debug("Executing SQL: " + sql);
+         if (debug)
+            log.debug("Executing SQL: " + sql);
          ps = con.prepareStatement(sql.toString());
-         
+
          // set the parameters
          int index = 1;
          index = entity.setInstanceParameters(ps, index, ctx, dirtyFields);
@@ -93,7 +96,8 @@ public class JDBCStoreEntityCommand {
                "affected row: rowsAffected=" + rowsAffected +
                "id=" + ctx.getId());
       }
-      log.debug("Create: Rows affected = " + rowsAffected);
+      if (debug)
+         log.debug("Create: Rows affected = " + rowsAffected);
 
       // Mark the inserted fields as clean.
       for(int i=0; i<dirtyFields.length; i++) {

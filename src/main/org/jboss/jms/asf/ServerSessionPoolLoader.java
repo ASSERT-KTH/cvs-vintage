@@ -38,7 +38,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class ServerSessionPoolLoader 
    extends ServiceMBeanSupport
@@ -135,7 +135,8 @@ public class ServerSessionPoolLoader
       poolFactory = (ServerSessionPoolFactory)cls.newInstance();
       poolFactory.setName(name);
 
-      log.debug("initialized with pool factory: " + poolFactory);
+      if (log.isDebugEnabled())
+         log.debug("initialized with pool factory: " + poolFactory);
       InitialContext ctx = new InitialContext();
       String name = poolFactory.getName();
       String jndiname = "java:/" + name;

@@ -27,7 +27,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCStopCommand {
 
@@ -50,7 +50,8 @@ public class JDBCStopCommand {
    
    public void execute() {
       if(entityMetaData.getRemoveTable()) {
-         log.debug("Droping table for entity " + entity.getEntityName());
+         if (log.isDebugEnabled())
+            log.debug("Droping table for entity " + entity.getEntityName());
          dropTable(entity.getDataSource(), entityMetaData.getTableName());
       }
 
@@ -76,6 +77,7 @@ public class JDBCStopCommand {
    private void dropTable(DataSource dataSource, String tableName) {
       Connection con = null;
       ResultSet rs = null;
+      boolean debug = log.isDebugEnabled();
 
       // was the table already delete?
       try {
@@ -86,7 +88,8 @@ public class JDBCStopCommand {
             return;
          }
       } catch(SQLException e) {
-         log.debug("Error getting database metadata for DROP TABLE command. " +
+         if (debug)
+            log.debug("Error getting database metadata for DROP TABLE command. " +
                " DROP TABLE will not be executed. ", e);
          return;
       } finally {
@@ -114,7 +117,8 @@ public class JDBCStopCommand {
          // success
          log.info("Dropped table '" + tableName + "' successfully.");
       } catch (Exception e) {
-         log.debug("Could not drop table " + tableName + ": " + e.getMessage());
+         if (debug)
+            log.debug("Could not drop table " + tableName + ": " + e.getMessage());
          try {
             manager.getContainer().getTransactionManager().rollback ();
          } catch (Exception _e) {

@@ -20,7 +20,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -64,7 +64,8 @@ public class JDBCDestroyCommand
             factory.getContainer().getTransactionManager().commit ();
          } catch (Exception e)
          {
-            if (log.isDebugEnabled()) log.debug("Could not drop table " +
+            if (log.isDebugEnabled())
+               log.debug("Could not drop table " +
                       jawsEntity.getTableName(), e);
 
             try
@@ -84,7 +85,8 @@ public class JDBCDestroyCommand
    protected Object handleResult(int rowsAffected, Object argOrArgs) 
       throws Exception
    {
-      log.debug("Table "+jawsEntity.getTableName()+" removed");
+      if (log.isDebugEnabled())
+         log.debug("Table "+jawsEntity.getTableName()+" removed");
       
       return null;
    }

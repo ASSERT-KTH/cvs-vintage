@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  * fields.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JDBCLoadFieldCommand {
    private JDBCStoreManager manager;
@@ -108,7 +108,8 @@ public class JDBCLoadFieldCommand {
          con = entity.getDataSource().getConnection();
          
          // create the statement
-         log.debug("Executing SQL: " + sql);
+         if (log.isDebugEnabled())
+            log.debug("Executing SQL: " + sql);
          ps = con.prepareStatement(sql.toString());
          
          // set the parameters

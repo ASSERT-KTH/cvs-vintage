@@ -55,7 +55,7 @@ import org.w3c.dom.Node;
 *      </a>
 * @author    <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
-* @version   $Revision: 1.38 $
+* @version   $Revision: 1.39 $
 */
 
 public class JMSContainerInvoker
@@ -191,7 +191,8 @@ implements ContainerInvoker, XmlLoadable
    */
    public void setOptimized(final boolean optimize)
    {
-      log.debug("Container Invoker optimize set to " + optimize);
+      if (log.isDebugEnabled())
+         log.debug("Container Invoker optimize set to " + optimize);
       this.optimize = optimize;
    }
    
@@ -274,7 +275,8 @@ implements ContainerInvoker, XmlLoadable
    */
    public boolean isOptimized()
    {
-      log.debug("Optimize in action: " + optimize);
+      if (log.isDebugEnabled())
+         log.debug("Optimize in action: " + optimize);
       return optimize;
    }
    
@@ -283,14 +285,15 @@ implements ContainerInvoker, XmlLoadable
    */
    public void destroy()
    {
-      log.debug("Destroying JMSContainerInvoker for bean " + beanName);
-      
+      if (log.isDebugEnabled())
+         log.debug("Destroying JMSContainerInvoker for bean " + beanName);
+
       // Take down DLQ
       if ( dlqHandler != null)
       {
          dlqHandler.destroy();
       }
-      
+
       // close the connection consumer
       try
       {
@@ -303,7 +306,7 @@ implements ContainerInvoker, XmlLoadable
       {
          log.error("Could not close consumer", e);
       }
-      
+
       // clear the server session pool (if it is clearable)
       try
       {
@@ -317,7 +320,7 @@ implements ContainerInvoker, XmlLoadable
       {
          log.error("Could not clear ServerSessionPool", e);
       }
-      
+
       // close the connection
       if (connection != null)
       {
@@ -331,7 +334,7 @@ implements ContainerInvoker, XmlLoadable
          }
       }
    }
-   
+
    /**
    * XmlLoadable implementation.
    *
@@ -409,7 +412,9 @@ implements ContainerInvoker, XmlLoadable
    public void create() throws Exception
 
    {
-      log.debug("initializing");
+      boolean debug = log.isDebugEnabled();
+      if (debug)
+         log.debug("initializing");
       
       // Set up Dead Letter Queue handler
       
@@ -433,7 +438,7 @@ implements ContainerInvoker, XmlLoadable
       
       // Queue or Topic - optional unfortunately
       String destinationType = config.getDestinationType();
-      
+
       // Bean Name
       beanName = config.getEjbName();
       
@@ -452,11 +457,13 @@ implements ContainerInvoker, XmlLoadable
       
       // Get the JMS provider
       JMSProviderAdapter adapter = getJMSProviderAdapter();
-      log.debug("provider adapter: " + adapter);
+      if (debug)
+         log.debug("provider adapter: " + adapter);
       
       // Connect to the JNDI server and get a reference to root context
       Context context = adapter.getInitialContext();
-      log.debug("context: " + context);
+      if (debug)
+         log.debug("context: " + context);
       
       // if we can't get the root context then exit with an exception
       if (context == null)
@@ -467,7 +474,8 @@ implements ContainerInvoker, XmlLoadable
       // Get the JNDI suffix of the destination
       String jndiSuffix = parseJndiSuffix(destinationJNDI,
          config.getEjbName());
-      log.debug("jndiSuffix: " + jndiSuffix);
+      if (debug)
+         log.debug("jndiSuffix: " + jndiSuffix);
       
       // Unfortunately the destination is optional, so if we do not have one
       // here we have to look it up if we have a destinationJNDI, else give it
@@ -480,7 +488,8 @@ implements ContainerInvoker, XmlLoadable
       
       if (destinationType.equals("javax.jms.Topic"))
       {
-         log.debug("Got destination type Topic for " + config.getEjbName());
+         if (debug)
+            log.debug("Got destination type Topic for " + config.getEjbName());
          
          // create a topic connection
          Object factory = context.lookup(adapter.getTopicFactoryRef());
@@ -528,12 +537,14 @@ implements ContainerInvoker, XmlLoadable
                pool,
                maxMessagesNr);
          }
-         
-         log.debug("Topic connectionConsumer set up");
+
+         if (debug)
+            log.debug("Topic connectionConsumer set up");
       }
       else if (destinationType.equals("javax.jms.Queue"))
       {
-         log.debug("Got destination type Queue for " + config.getEjbName());
+         if (debug)
+            log.debug("Got destination type Queue for " + config.getEjbName());
          
          // create a queue connection
          Object qFactory = context.lookup(adapter.getQueueFactoryRef());
@@ -556,20 +567,23 @@ implements ContainerInvoker, XmlLoadable
             // tx
             acknowledgeMode,
             new MessageListenerImpl(this));
-         log.debug("server session pool: " + pool);
-         
+         if (debug)
+            log.debug("server session pool: " + pool);
+
          // create the connection consumer
          connectionConsumer =
          qConnection.createConnectionConsumer(queue,
             messageSelector,
             pool,
             maxMessagesNr);
-         log.debug("connection consumer: " + connectionConsumer);
+         if (debug)
+            log.debug("connection consumer: " + connectionConsumer);
       }
-      
-      log.debug("initialized with config " + toString());
+
+      if (debug)
+         log.debug("initialized with config " + toString());
    }
-   
+
    /**
    * #Description of the Method
    *
@@ -615,18 +629,20 @@ implements ContainerInvoker, XmlLoadable
    */
    public void start() throws Exception
    {
-      log.debug("Starting JMSContainerInvoker for bean " + beanName);
+      if (log.isDebugEnabled())
+         log.debug("Starting JMSContainerInvoker for bean " + beanName);
       exListener = new ExceptionListenerImpl(this);
       connection.setExceptionListener(exListener);
       connection.start();
    }
-   
+
    /**
    * Stop the connection.
    */
    public void stop()
    {
-      log.debug("Stopping JMSContainerInvoker for bean " + beanName);
+      if (log.isDebugEnabled())
+         log.debug("Stopping JMSContainerInvoker for bean " + beanName);
       // Silence the exception listener
       if (exListener != null)
       {
@@ -648,7 +664,7 @@ implements ContainerInvoker, XmlLoadable
    protected String getDestinationType(Context ctx, String destinationJNDI)
    {
       String destType = null;
-      
+
       if (destinationJNDI != null)
       {
          try
@@ -665,9 +681,10 @@ implements ContainerInvoker, XmlLoadable
          }
          catch (NamingException ex)
          {
-            log.debug("Could not do heristic lookup of destination " + ex, ex);
+            if (log.isDebugEnabled())
+               log.debug("Could not do heristic lookup of destination " + ex, ex);
          }
-      
+
       }
       if (destType == null)
       {
@@ -689,7 +706,8 @@ implements ContainerInvoker, XmlLoadable
       Context context = new InitialContext();
       try
       {
-         log.debug("looking up provider adapter: " + providerAdapterJNDI);
+         if (log.isDebugEnabled())
+            log.debug("looking up provider adapter: " + providerAdapterJNDI);
          return (JMSProviderAdapter)context.lookup(providerAdapterJNDI);
       }
       finally
@@ -789,8 +807,9 @@ implements ContainerInvoker, XmlLoadable
       try
       {
          // first lookup the factory
-         log.debug("looking up session pool factory: " +
-            serverSessionPoolFactoryJNDI);
+         if (log.isDebugEnabled())
+            log.debug("looking up session pool factory: " +
+               serverSessionPoolFactoryJNDI);
          ServerSessionPoolFactory factory = (ServerSessionPoolFactory)
          context.lookup(serverSessionPoolFactoryJNDI);
          
@@ -917,7 +936,7 @@ implements ContainerInvoker, XmlLoadable
       {
          // assert message != null;
          
-         if (log.isTraceEnabled())
+         if (log.isDebugEnabled())
          {
             log.debug("processing message: " + message);
          }
@@ -1028,7 +1047,7 @@ implements ContainerInvoker, XmlLoadable
       void stop()
       {
          log.debug("stop requested");
-         
+
          notStoped = false;
          if (currentThread != null)
          {

@@ -53,7 +53,7 @@ import org.jboss.system.Registry;
 *
 *  @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
 *
-*  @version $Revision: 1.3 $
+*  @version $Revision: 1.4 $
 */
 
 public class JRMPInvoker
@@ -144,49 +144,53 @@ implements Invoker, JRMPInvokerMBean,  MBeanRegistration
    {
       log.info("creating");
       loadCustomSocketFactories();
-      
-      log.debug("Container Invoker RMI Port='"+(rmiPort == ANONYMOUS_PORT ? "Anonymous" : Integer.toString(rmiPort))+"'");
-      log.debug("Container Invoker Client SocketFactory='"+(clientSocketFactory == null ? "Default" : clientSocketFactory.toString())+"'");
-      log.debug("Container Invoker Server SocketFactory='"+(serverSocketFactory == null ? "Default" : serverSocketFactory.toString())+"'");
-      log.debug("Container Invoker Server SocketAddr='"+(serverAddress == null ? "Default" : serverAddress)+"'");
-       
+
+      if (log.isDebugEnabled())
+      {
+         log.debug("Container Invoker RMI Port='"+(rmiPort == ANONYMOUS_PORT ? "Anonymous" : Integer.toString(rmiPort))+"'");
+         log.debug("Container Invoker Client SocketFactory='"+(clientSocketFactory == null ? "Default" : clientSocketFactory.toString())+"'");
+         log.debug("Container Invoker Server SocketFactory='"+(serverSocketFactory == null ? "Default" : serverSocketFactory.toString())+"'");
+         log.debug("Container Invoker Server SocketAddr='"+(serverAddress == null ? "Default" : serverAddress)+"'");
+      }
+
+
       log.info("created");
    }
-   
+
    public void start()
    throws Exception
    {
       if (getState() != STOPPED && getState() != FAILED)
          return;
-       
+
       state = STARTING;
       log.info("Starting");
 
       Context ctx = new InitialContext();
-      
+
       // Get the transaction propagation context factory
       // and the transaction propagation context importer
       tpcFactory = (TransactionPropagationContextFactory)ctx.lookup("java:/TransactionPropagationContextExporter");
       tpcImporter = (TransactionPropagationContextImporter)ctx.lookup("java:/TransactionPropagationContextImporter");
-      
+
       // Set the transaction manager and transaction propagation
       // context factory of the GenericProxy class
       GenericProxy.setTransactionManager((TransactionManager)ctx.lookup("java:/TransactionManager"));
       JRMPInvokerProxy.setTPCFactory(tpcFactory);
-      
+
       Invoker delegateInvoker = createDelegateInvoker();
-      
+
       // Export references to the bean
-      Registry.bind(serviceName, delegateInvoker);   
-  
+      Registry.bind(serviceName, delegateInvoker);
+
       try
       {
-         
+
          // Export CI
          exportCI();
-         
+
          InitialContext context = new InitialContext();
-         
+
          // Bind the invoker in the JNDI invoker naming space
          rebind(
             // The context
@@ -195,9 +199,10 @@ implements Invoker, JRMPInvokerMBean,  MBeanRegistration
             "invokers/"+InetAddress.getLocalHost().getHostName()+"/jrmp", 
             // The bare invoker            
             delegateInvoker);
-         
-         log.debug("Bound JRMP invoker for JMX node");
-      
+
+         if (log.isDebugEnabled())
+            log.debug("Bound JRMP invoker for JMX node");
+
       }
       catch (Exception e)
       {

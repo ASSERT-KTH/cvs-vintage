@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JDBCCreateEntityCommand {
    private JDBCStoreManager manager;
@@ -41,16 +41,18 @@ public class JDBCCreateEntityCommand {
    private String entityExistsSQL;
    private String insertEntitySQL;
    private boolean createAllowed;
-   
+
    public JDBCCreateEntityCommand(JDBCStoreManager manager) {
       this.manager = manager;
       entity = manager.getEntityBridge();
 
       // Create the Log
       log = Logger.getLogger(
-            this.getClass().getName() + 
-            "." + 
+            this.getClass().getName() +
+            "." +
             manager.getMetaData().getName());
+
+      boolean debug = log.isDebugEnabled();
 
       // set create allowed
       createAllowed = true;
@@ -61,18 +63,23 @@ public class JDBCCreateEntityCommand {
             break;
          }
       }
-      
+
       if(createAllowed) {
          insertFields = getInsertFields();
          entityExistsSQL = createEntityExistsSQL();
          insertEntitySQL = createInsertEntitySQL();
-         log.debug("Entity Exists SQL: " + entityExistsSQL);
-         log.debug("Insert Entity SQL: " + entityExistsSQL);
-      } else {
+         if (debug)
+         {
+            log.debug("Entity Exists SQL: " + entityExistsSQL);
+            log.debug("Insert Entity SQL: " + entityExistsSQL);
+         }
+      }
+      else if (debug)
+      {
          log.debug("Create will not be allowed.");
       }
    }
-  
+
    private JDBCCMPFieldBridge[] getInsertFields() {
       JDBCCMPFieldBridge[] cmpFields = entity.getJDBCCMPFields();
       ArrayList fields = new ArrayList(cmpFields.length);
@@ -135,7 +142,8 @@ public class JDBCCreateEntityCommand {
 
       try {
          Object pk = entity.extractPrimaryKeyFromInstance(ctx);
-         log.debug("Create: pk="+pk);
+         if (log.isDebugEnabled())
+            log.debug("Create: pk="+pk);
          return pk;
       } catch(Exception e) {
          log.error(e);
@@ -154,9 +162,10 @@ public class JDBCCreateEntityCommand {
          con = dataSource.getConnection();
          
          // create the statement
-         log.debug("Executing SQL: " + entityExistsSQL);
+         if (log.isDebugEnabled())
+            log.debug("Executing SQL: " + entityExistsSQL);
          ps = con.prepareStatement(entityExistsSQL);
-         
+
          // set the parameters
          entity.setPrimaryKeyParameters(ps, 1, pk);
 
@@ -166,7 +175,7 @@ public class JDBCCreateEntityCommand {
             throw new CreateException("Error checking if entity exists: " +
                   "result set contains no rows");
          }
-      
+
          // did any rows mathch
          return rs.getInt(1) > 0;
       } catch(CreateException e) {
@@ -179,22 +188,24 @@ public class JDBCCreateEntityCommand {
          JDBCUtil.safeClose(con);
       }
    }
-   
+
    private void insertEntity(EntityEnterpriseContext ctx)
          throws CreateException{
 
       Connection con = null;
       PreparedStatement ps = null;
       int rowsAffected  = 0;
+      boolean debug = log.isDebugEnabled();
       try {
          // get the connection
          DataSource dataSource = entity.getDataSource();
          con = dataSource.getConnection();
-         
+
          // create the statement
-         log.debug("Executing SQL: " + insertEntitySQL);
+         if (debug)
+            log.debug("Executing SQL: " + insertEntitySQL);
          ps = con.prepareStatement(insertEntitySQL);
-         
+
          // set the parameters
          entity.setInstanceParameters(ps, 1, ctx, insertFields);
 
@@ -214,7 +225,8 @@ public class JDBCCreateEntityCommand {
                "affected row: rowsAffected=" + rowsAffected +
                "id=" + ctx.getId());
       }
-      log.debug("Create: Rows affected = " + rowsAffected);
+      if (debug)
+         log.debug("Create: Rows affected = " + rowsAffected);
 
       // Mark the inserted fields as clean.
       for(int i=0; i<insertFields.length; i++) {
