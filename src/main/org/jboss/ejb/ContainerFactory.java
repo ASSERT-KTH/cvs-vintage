@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.50 $
+*   @version $Revision: 1.51 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -545,14 +545,35 @@ public class ContainerFactory
                  // Set transaction manager
                  container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
 
-                 // Set security manager (should be chosen based on container config)
-                 container.setSecurityManager((EJBSecurityManager)new InitialContext().lookup("EJBSecurityManager"));
-
-                     // Set realm mapping (should be chosen based on container config)
-                     container.setRealmMapping( (RealmMapping)new InitialContext().lookup("SimpleRealmMapping"));
-
                  // Get container configuration
                  ConfigurationMetaData conf = bean.getContainerConfiguration();
+
+                 // Set security manager & role mapping manager
+                 String securityManagerJNDIName = conf.getAuthenticationModule();
+                 String roleMappingManagerJNDIName = conf.getRoleMappingManager();
+
+                 if ((securityManagerJNDIName != null) && (roleMappingManagerJNDIName != null))
+                 {
+                   try
+                   {
+                     EJBSecurityManager ejbS = (EJBSecurityManager)new InitialContext().lookup(securityManagerJNDIName);
+                     container.setSecurityManager( ejbS );
+                   }
+                   catch (NamingException ne)
+                   {
+                    throw new DeploymentException( "Could not find the Security Manager specified for this container", ne );
+                   }
+
+                   try
+                   {
+                     RealmMapping rM = (RealmMapping)new InitialContext().lookup(roleMappingManagerJNDIName);
+                     container.setRealmMapping( rM );
+                   }
+                   catch (NamingException ne)
+                   {
+                    throw new DeploymentException( "Could not find the Role Mapping Manager specified for this container", ne );
+                   }
+                 }
 
                  // Set container invoker
                  ContainerInvoker ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
@@ -610,14 +631,35 @@ public class ContainerFactory
               // Set transaction manager
               container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
 
-              // Set security manager (should be chosen based on container config)
-              container.setSecurityManager((EJBSecurityManager)new InitialContext().lookup("EJBSecurityManager"));
-
-              // Set realm mapping (should be chosen based on container config)
-              container.setRealmMapping( (RealmMapping)new InitialContext().lookup("SimpleRealmMapping"));
-
               // Get container configuration
               ConfigurationMetaData conf = bean.getContainerConfiguration();
+
+              // Set security manager & role mapping manager
+              String securityManagerJNDIName = conf.getAuthenticationModule();
+              String roleMappingManagerJNDIName = conf.getRoleMappingManager();
+
+              if ((securityManagerJNDIName != null) && (roleMappingManagerJNDIName != null))
+              {
+                try
+                {
+                  EJBSecurityManager ejbS = (EJBSecurityManager)new InitialContext().lookup(securityManagerJNDIName);
+                  container.setSecurityManager( ejbS );
+                }
+                catch (NamingException ne)
+                {
+                 throw new DeploymentException( "Could not find the Security Manager specified for this container", ne );
+                }
+
+                try
+                {
+                  RealmMapping rM = (RealmMapping)new InitialContext().lookup(roleMappingManagerJNDIName);
+                  container.setRealmMapping( rM );
+                }
+                catch (NamingException ne)
+                {
+                 throw new DeploymentException( "Could not find the Role Mapping Manager specified for this container", ne );
+                }
+              }
 
               // Set container invoker
               ContainerInvoker ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
@@ -749,7 +791,7 @@ public class ContainerFactory
     }
 
     /**
-    *	is the aplication with this url deployed
+    *   is the aplication with this url deployed
     *
     * @param   url
     * @exception   MalformedURLException
@@ -757,7 +799,7 @@ public class ContainerFactory
      public boolean isDeployed(String url)
         throws MalformedURLException
      {
-     	  return isDeployed (new URL (url));
+          return isDeployed (new URL (url));
      }
 
     /**
@@ -768,7 +810,7 @@ public class ContainerFactory
     */
     public boolean isDeployed (URL url)
     {
-    	 return (deployments.get(url) != null);
+         return (deployments.get(url) != null);
     }
 
 
