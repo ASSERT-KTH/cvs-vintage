@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Administration Guide</h2>
-<h4>$Id: admin-guide.html,v 1.1 2002/01/29 23:46:21 jon Exp $</h4>
+<h4>$Id: admin-guide.html,v 1.2 2002/02/05 19:43:57 jon Exp $</h4>
 
 <p>
 Out of the box, Scarab comes with some default behavior which most 
@@ -24,6 +24,14 @@ associate Issue Types, Attributes, Attribute Options, etc...all of these
 functions can be performed by logging in as a user that has the "Root"
 or "Project Owner" role and using the Administration screens to setup
 your own installation of Scarab.
+</p>
+
+<p>
+Use the turbine@collab.net id (or define a new id by changing the
+'scarab.user.username' property in your build.properties and
+re-building) to create modules. Then create issue types and global
+attributes, if the default ones don't meet your needs. Then assign issue
+types to your new modules.  Then assign attributes to your issue types.
 </p>
 
 <p>
