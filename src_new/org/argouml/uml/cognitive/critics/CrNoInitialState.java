@@ -1,4 +1,4 @@
-// $Id: CrNoInitialState.java,v 1.11 2003/09/13 18:16:33 alexb Exp $
+// $Id: CrNoInitialState.java,v 1.12 2004/08/29 15:43:00 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrNoInitialState.java
 // Classes: CrNoInitialState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoInitialState.java,v 1.11 2003/09/13 18:16:33 alexb Exp $
+// $Id: CrNoInitialState.java,v 1.12 2004/08/29 15:43:00 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -39,12 +39,20 @@ import org.argouml.model.ModelFacade;
  */
 public class CrNoInitialState extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrNoInitialState() {
 	setHeadline("Place an Initial MState");
 	addSupportedDecision(CrUML.decSTATE_MACHINES);
 	addTrigger("substate");
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isACompositeState(dm))) return NO_PROBLEM;
 	Object cs = /*(MCompositeState)*/ dm;

@@ -1,4 +1,4 @@
-// $Id: CrOppEndVsAttr.java,v 1.10 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrOppEndVsAttr.java,v 1.11 2004/08/29 15:43:00 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrOppEndVsAttr.java
 // Classes: CrOppEndVsAttr
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOppEndVsAttr.java,v 1.10 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrOppEndVsAttr.java,v 1.11 2004/08/29 15:43:00 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -42,6 +42,10 @@ import org.argouml.model.ModelFacade;
 //one for pproblems directly in this class.
 public class CrOppEndVsAttr extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrOppEndVsAttr() {
         setHeadline("Rename Role or MAttribute");
         addSupportedDecision(CrUML.decINHERITANCE);
@@ -52,6 +56,10 @@ public class CrOppEndVsAttr extends CrUML {
         addTrigger("structuralFeature");
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
         if (!(ModelFacade.isAClassifier(dm)))
             return NO_PROBLEM;

@@ -1,4 +1,4 @@
-// $Id: CrNoGuard.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrNoGuard.java,v 1.8 2004/08/29 15:43:00 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrNoGuard.java
 // Classes: CrNoGuard.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoGuard.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrNoGuard.java,v 1.8 2004/08/29 15:43:00 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -34,8 +34,16 @@ import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
 
 
+/**
+ * Critic that fires when there is no guard.
+ *
+ */
 public class CrNoGuard extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrNoGuard() {
 	setHeadline("Add MGuard to Transistion");
 	addSupportedDecision(CrUML.decSTATE_MACHINES);
@@ -43,6 +51,10 @@ public class CrNoGuard extends CrUML {
 	addTrigger("guard");
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isATransition(dm))) return NO_PROBLEM;
 	Object sv = ModelFacade.getSource(dm);
@@ -52,9 +64,11 @@ public class CrNoGuard extends CrUML {
 				  ModelFacade.BRANCH_PSEUDOSTATEKIND))
 	    return NO_PROBLEM;
 	Object g = /*(MGuard)*/ ModelFacade.getGuard(dm);
-	boolean noGuard = (g == null || ModelFacade.getExpression(g) == null ||
-			   ModelFacade.getBody(ModelFacade.getExpression(g)) == null ||
-			   ((String)ModelFacade.getBody(ModelFacade.getExpression(g))).length() == 0);
+	boolean noGuard = (g == null 
+            || ModelFacade.getExpression(g) == null 
+            || ModelFacade.getBody(ModelFacade.getExpression(g)) == null 
+            || ((String) ModelFacade.getBody(ModelFacade.getExpression(g)))
+                                                    .length() == 0);
 	if (noGuard) return PROBLEM_FOUND;
 	return NO_PROBLEM;
     }

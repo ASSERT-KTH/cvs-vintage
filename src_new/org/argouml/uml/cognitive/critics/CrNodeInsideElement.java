@@ -1,4 +1,4 @@
-// $Id: CrNodeInsideElement.java,v 1.8 2004/03/25 22:30:00 mvw Exp $
+// $Id: CrNodeInsideElement.java,v 1.9 2004/08/29 15:43:00 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrNodeInsideElement.java
 // Classes: CrNodeInsideElement
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrNodeInsideElement.java,v 1.8 2004/03/25 22:30:00 mvw Exp $
+// $Id: CrNodeInsideElement.java,v 1.9 2004/08/29 15:43:00 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -45,11 +45,19 @@ import org.tigris.gef.util.VectorSet;
 
 public class CrNodeInsideElement extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrNodeInsideElement() {
 	setHeadline("Nodes normally have no enclosers");
 	addSupportedDecision(CrUML.decPATTERNS);
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(dm instanceof UMLDeploymentDiagram)) return NO_PROBLEM;
 	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
@@ -58,12 +66,20 @@ public class CrNodeInsideElement extends CrUML {
 	return PROBLEM_FOUND; 
     }
 
+    /**
+     * @see org.argouml.cognitive.critics.Critic#toDoItem(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public ToDoItem toDoItem(Object dm, Designer dsgr) { 
 	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm; 
 	VectorSet offs = computeOffenders(dd); 
 	return new UMLToDoItem(this, offs, dsgr); 
     } 
  
+    /**
+     * @see org.argouml.cognitive.Poster#stillValid(
+     * org.argouml.cognitive.ToDoItem, org.argouml.cognitive.Designer)
+     */
     public boolean stillValid(ToDoItem i, Designer dsgr) { 
 	if (!isActive()) return false; 
 	VectorSet offs = i.getOffenders(); 
@@ -79,7 +95,10 @@ public class CrNodeInsideElement extends CrUML {
      * the returned vector-set is not null. Then in the vector-set
      * are the UMLDeploymentDiagram and all FigMNodes with an
      * enclosing Fig
-     **/
+     *
+     * @param dd the diagram to check
+     * @return the set of offenders
+     */
     public VectorSet computeOffenders(UMLDeploymentDiagram dd) { 
 	Collection figs = dd.getLayer().getContents(null);
 	VectorSet offs = null;

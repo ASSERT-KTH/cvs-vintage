@@ -1,4 +1,4 @@
-// $Id: CrMultiComposite.java,v 1.7 2004/03/25 22:30:00 mvw Exp $
+// $Id: CrMultiComposite.java,v 1.8 2004/08/29 15:43:00 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 // File: CrMultiComposite.java
 // Classes: CrMultiComposite
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultiComposite.java,v 1.7 2004/03/25 22:30:00 mvw Exp $
+// $Id: CrMultiComposite.java,v 1.8 2004/08/29 15:43:00 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 import org.argouml.cognitive.Designer;
@@ -37,6 +37,10 @@ import org.argouml.model.ModelFacade;
 
 public class CrMultiComposite extends CrUML {
     
+    /**
+     * The constructor.
+     * 
+     */
     public CrMultiComposite() {
         setHeadline("Composite Role with MMultiplicity > 1");
         addSupportedDecision(CrUML.decCONTAINMENT);
@@ -45,6 +49,10 @@ public class CrMultiComposite extends CrUML {
         addTrigger("multiplicity");
     }
     
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
         boolean problem = NO_PROBLEM;
         if (ModelFacade.isAAssociationEnd(dm)) {
@@ -57,6 +65,9 @@ public class CrMultiComposite extends CrUML {
         return problem;
     }
     
+    /**
+     * @see org.argouml.cognitive.critics.Critic#getWizardClass(org.argouml.cognitive.ToDoItem)
+     */
     public Class getWizardClass(ToDoItem item) {
         return WizAssocComposite.class;
     }
