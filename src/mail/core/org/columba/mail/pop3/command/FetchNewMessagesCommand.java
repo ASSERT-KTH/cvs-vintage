@@ -229,16 +229,6 @@ public class FetchNewMessagesCommand extends Command {
 			if (!server.getAccountItem().getPopItem().getBoolean(
 					"leave_messages_on_server")) {
 				// delete message from server
-
-				/*
-				 * // remove UID from server list boolean remove =
-				 * newUIDList.remove(serverUID);
-				 */
-
-				// server message numbers start with 1
-				// whereas List numbers start with 0
-				//  -> always increase delete number
-				// delete message with <index>==index from server
 				server.deleteMessage(serverUID);
 
 				LOG.fine("deleted message with uid=" + serverUID);
