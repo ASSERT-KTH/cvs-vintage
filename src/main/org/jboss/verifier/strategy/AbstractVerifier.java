@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.39 2003/03/31 23:40:46 ejort Exp $
+ * $Id: AbstractVerifier.java,v 1.40 2003/05/20 03:43:03 starksm Exp $
  */
 package org.jboss.verifier.strategy;
 
@@ -76,7 +76,7 @@ import org.jboss.verifier.factory.VerificationEventFactory;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  * @since   JDK 1.3
  */
 public abstract class AbstractVerifier
@@ -252,12 +252,21 @@ public abstract class AbstractVerifier
    }
 
    /**
-    * checks if the method throws no exceptions in its throws clause.
+    * checks if the method has no checked exceptions in its throws clause.
     */
    public boolean throwsNoException(Method method)
    {
-      Class[] exception = method.getExceptionTypes();
-      return (exception.length == 0) ? true : false;
+      boolean hasCheckedException = false;
+      Class[] exceptions = method.getExceptionTypes();
+      for(int e = 0; e < exceptions.length; e ++)
+      {
+         Class ex = exceptions[e];
+         boolean isError = Error.class.isAssignableFrom(ex);
+         boolean isRuntimeException = RuntimeException.class.isAssignableFrom(ex);
+         if( isError == false && isRuntimeException == false )
+            hasCheckedException = true;
+      }
+      return hasCheckedException == false;
    }
 
    /**
