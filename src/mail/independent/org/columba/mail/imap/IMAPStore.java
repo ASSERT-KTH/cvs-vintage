@@ -36,6 +36,7 @@ import org.columba.mail.folder.headercache.CachedHeaderfieldOwner;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.imap.parser.FlagsParser;
+import org.columba.mail.imap.parser.HeaderParser;
 import org.columba.mail.imap.parser.IMAPFlags;
 import org.columba.mail.imap.parser.ListInfo;
 import org.columba.mail.imap.parser.MessageFolderInfoParser;
@@ -959,7 +960,7 @@ public class IMAPStore {
 						// flags updated
 					} else {
 						Object uid = null;
-						ColumbaHeader header = parseMessage(buffer);
+						ColumbaHeader header = parseMessage(HeaderParser.parse(r));
 						if (header != null) {
 
 							header.set("columba.uid", list.get(i));

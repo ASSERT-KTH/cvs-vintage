@@ -18,6 +18,8 @@ package org.columba.mail.coder;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.columba.core.main.MainInterface;
+
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
  * 
@@ -25,6 +27,12 @@ import junit.framework.TestSuite;
 public class AllTests {
 
 	public static Test suite() {
+		//		enable debugging for testsuite
+		MainInterface.DEBUG = true;
+
+		// enable decoder/encoder for testsuite
+		new CoderRouter();
+
 		TestSuite suite = new TestSuite("Test for org.columba.mail.coder");
 		//$JUnit-BEGIN$
 		suite.addTest(new TestSuite(NullDecoderTest.class));

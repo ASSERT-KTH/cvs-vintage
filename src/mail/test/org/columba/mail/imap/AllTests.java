@@ -9,6 +9,8 @@ package org.columba.mail.imap;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.columba.core.main.MainInterface;
+
 /**
  * @author frd
  *
@@ -18,6 +20,10 @@ import junit.framework.TestSuite;
 public class AllTests {
 
 	public static Test suite() {
+
+		//		enable debugging for testsuite
+		MainInterface.DEBUG = true;
+
 		TestSuite suite = new TestSuite("Test for org.columba.mail.imap");
 		//$JUnit-BEGIN$
 		suite.addTest(new TestSuite(IMAPResponseTest.class));

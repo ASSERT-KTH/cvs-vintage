@@ -44,5 +44,4 @@ public class MimePartTreeParserTest extends TestCase {
 		MimePartTree result = MimePartTreeParser.parse(r);
 
 	}
-
 }

@@ -28,17 +28,41 @@ import org.columba.mail.imap.IMAPResponse;
 public class HeaderParser {
 
 	public static String parse(IMAPResponse[] responses) {
-		StringBuffer buf = new StringBuffer();
+		String source = responses[0].getSource();
 
-		for (int i = 0; i < responses.length-1; i++) {
-			if (responses[i] == null)
-				continue;
-				
-			buf.append( responses[i].getSource()+ "\n" );			
+		int newLine = source.indexOf("\n");
+
+		if (newLine == -1) {
+			// there's not newline
+			// -> one line message
+			// example:
+			// * 133 FETCH (UID 133 BODY[1] \"da!\")
+			// note: message is enclosed with " characters
+			int leftIndex = source.indexOf("\"");
+			int rightIndex = source.lastIndexOf("\"");
+
+			return source.substring(leftIndex + 1, rightIndex);
 		}
 
-		return buf.toString();
+		boolean uidAtBeginning = false;
+		int uidIndex = source.indexOf("(UID");
+		if (uidIndex != -1)
+			uidAtBeginning = true;
+
+		int leftIndex = source.indexOf('}');
+
+		int rightIndex = -1;
+		if (uidAtBeginning) {
+			// message is ending with "\n)"
+			rightIndex = source.length() - 1;
+		} else {
+			// message is ending with " UID 17)"
+			// note the whitespace before "UID" !
+			rightIndex = source.lastIndexOf("UID") - 1;
+		}
+
+		// skip "} \n"
+		return source.substring(leftIndex + 3, rightIndex);
 	}
 
-	
 }
