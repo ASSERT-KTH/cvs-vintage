@@ -44,7 +44,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.53 $</tt>
+ * @version <tt>$Revision: 1.54 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -384,15 +384,21 @@ public class EJBDeployer
          InputStream in = di.localCl.getResourceAsStream("META-INF/jboss.xml");
          if( in != null )
          {
-            Element jboss = xfl.getDocument(in, "META-INF/jboss.xml").getDocumentElement();
-            in.close();
-            // Check for a ejb level class loading config
-            Element loader = MetaData.getOptionalChild(jboss, "loader-repository");
-            if( loader != null )
+            try
             {
-               LoaderRepositoryFactory.LoaderRepositoryConfig config =
-                     LoaderRepositoryFactory.parseRepositoryConfig(loader);
-               di.setRepositoryInfo(config);
+               Element jboss = xfl.getDocument(in, "META-INF/jboss.xml").getDocumentElement();
+               // Check for a ejb level class loading config
+               Element loader = MetaData.getOptionalChild(jboss, "loader-repository");
+               if( loader != null )
+               {
+                  LoaderRepositoryFactory.LoaderRepositoryConfig config =
+                        LoaderRepositoryFactory.parseRepositoryConfig(loader);
+                  di.setRepositoryInfo(config);
+               }
+            }
+            finally
+            {
+               in.close();
             }
          }
       }
