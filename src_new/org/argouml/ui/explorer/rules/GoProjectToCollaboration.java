@@ -1,4 +1,4 @@
-// $Id: GoProjectToCollaboration.java,v 1.4 2003/12/26 17:56:35 alexb Exp $
+// $Id: GoProjectToCollaboration.java,v 1.5 2004/04/22 21:43:21 d00mst Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,9 @@ package org.argouml.ui.explorer.rules;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.argouml.kernel.Project;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
@@ -49,4 +51,12 @@ public class GoProjectToCollaboration extends AbstractPerspectiveRule{
 	return col;
     }
 
+    public Set getDependencies(Object parent) {
+        if (parent instanceof Project) {
+	    Set set = new HashSet();
+	    set.add(parent);
+	    return set;
+	}
+	return null;
+    }
 }

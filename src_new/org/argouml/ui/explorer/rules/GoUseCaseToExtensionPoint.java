@@ -1,5 +1,5 @@
-// $Id: GoUseCaseToExtensionPoint.java,v 1.4 2003/12/22 23:00:16 alexb Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: GoUseCaseToExtensionPoint.java,v 1.5 2004/04/22 21:43:21 d00mst Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -25,7 +25,7 @@
 // File: GoUseCaseToExtensionPoint.java
 // Classes: GoUseCaseToExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: GoUseCaseToExtensionPoint.java,v 1.4 2003/12/22 23:00:16 alexb Exp $
+// $Id: GoUseCaseToExtensionPoint.java,v 1.5 2004/04/22 21:43:21 d00mst Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // display of extension points in the navigator pane.
@@ -34,6 +34,8 @@
 package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
@@ -68,4 +70,13 @@ public class GoUseCaseToExtensionPoint extends AbstractPerspectiveRule{
         return null;
     }
 
+    public Set getDependencies(Object parent) {
+        if (ModelFacade.isAUseCase(parent)) {
+	    Set set = new HashSet();
+	    set.add(parent);
+	    return set;
+	}
+	return null;
+    }
 }  /* End of class GoUseCaseToExtensionPoint */
+

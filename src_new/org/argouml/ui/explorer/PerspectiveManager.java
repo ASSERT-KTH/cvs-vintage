@@ -1,4 +1,4 @@
-// $Id: PerspectiveManager.java,v 1.12 2004/04/02 23:35:54 d00mst Exp $
+// $Id: PerspectiveManager.java,v 1.13 2004/04/22 21:43:21 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -216,6 +216,7 @@ public class PerspectiveManager {
     public void oldLoadDefaultPerspectives(){
         ExplorerPerspective classPerspective = 
             new ExplorerPerspective("Class centric");
+        classPerspective.addRule(new GoProjectToModel());
         classPerspective.addRule(new GoNamespaceToClassifierAndPackage());
         classPerspective.addRule(new GoNamespaceToDiagram());
         classPerspective.addRule(new GoClassToSummary());
@@ -259,7 +260,7 @@ public class PerspectiveManager {
         
         ExplorerPerspective diagramPerspective = 
             new ExplorerPerspective("combobox.item.diagram-centric");
-        packagePerspective.addRule(new GoProjectToModel());
+        diagramPerspective.addRule(new GoProjectToModel());
         diagramPerspective.addRule(new GoModelToDiagrams());
         diagramPerspective.addRule(new GoDiagramToNode());
         diagramPerspective.addRule(new GoDiagramToEdge());

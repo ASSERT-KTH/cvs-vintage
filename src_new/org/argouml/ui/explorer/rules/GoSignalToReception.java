@@ -1,5 +1,5 @@
-// $Id: GoSignalToReception.java,v 1.6 2003/12/26 17:56:35 alexb Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: GoSignalToReception.java,v 1.7 2004/04/22 21:43:21 d00mst Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -25,6 +25,8 @@
 package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
@@ -51,4 +53,12 @@ public class GoSignalToReception extends AbstractPerspectiveRule{
 	return null;
     }
 
+    public Set getDependencies(Object parent) {
+        if (ModelFacade.isASignal(parent)) {
+	    Set set = new HashSet();
+	    set.add(parent);
+	    return set;
+	}
+	return null;
+    }
 }

@@ -1,6 +1,5 @@
-
-// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.4 2003/12/26 17:56:35 alexb Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.5 2004/04/22 21:43:21 d00mst Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -26,7 +25,9 @@
 package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
 
 import org.argouml.kernel.Project;
@@ -40,14 +41,14 @@ import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
  * @author jaap.branderhorst@xs4all.nl	
  * @since Dec 30, 2002
  */
-public class GoBehavioralFeatureToStateDiagram extends AbstractPerspectiveRule{
+public class GoBehavioralFeatureToStateDiagram extends AbstractPerspectiveRule {
 
     /**
      * @see org.argouml.ui.AbstractGoRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
         
-        if (org.argouml.model.ModelFacade.isABehavioralFeature(parent)) {
+        if (ModelFacade.isABehavioralFeature(parent)) {
             Object operation = parent;//MBehavioralFeature
             Collection col = ModelFacade.getBehaviors(operation);
             Vector ret = new Vector();
@@ -67,11 +68,15 @@ public class GoBehavioralFeatureToStateDiagram extends AbstractPerspectiveRule{
         return null;
     }
 
+    public Set getDependencies(Object parent) {
+        // TODO: what?
+	return null;
+    }
+
     /**
      * @see org.argouml.ui.AbstractGoRule#getRuleName()
      */
     public String getRuleName() {
         return "Behavioral Feature->Statechart diagram";
     }
-
 }

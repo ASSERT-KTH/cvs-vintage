@@ -1,5 +1,5 @@
-// $Id: GoSummaryToOutgoingDependency.java,v 1.7 2004/03/25 22:30:01 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: GoSummaryToOutgoingDependency.java,v 1.8 2004/04/22 21:43:21 d00mst Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,19 +24,21 @@
 
 package org.argouml.ui.explorer.rules;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.argouml.model.ModelFacade;
 
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.7 $
+ * $Revision: 1.8 $
  *
- * @author  alexb, $Author: mvw $
+ * @author  alexb, $Author: d00mst $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class GoSummaryToOutgoingDependency extends AbstractPerspectiveRule{
@@ -46,23 +48,28 @@ public class GoSummaryToOutgoingDependency extends AbstractPerspectiveRule{
     }
 
     public Collection getChildren(Object parent) {
-	if ( parent instanceof OutgoingDependencyNode) {
-          
+	if (parent instanceof OutgoingDependencyNode) {
 	    List list = new ArrayList();
-          
 	    Iterator it =
 		ModelFacade.getClientDependencies(((OutgoingDependencyNode) parent).getParent()).iterator();
-          
+
 	    while (it.hasNext()) {
-              
 		Object next = it.next();
 		if (!ModelFacade.isAAbstraction(next))
 		    list.add(next);
 	    }
-          
+
 	    return list;
 	}
 	return null;
     }
 
+    public Set getDependencies(Object parent) {
+        if (parent instanceof OutgoingDependencyNode) {
+	    Set set = new HashSet();
+	    set.add(((OutgoingDependencyNode) parent).getParent());
+	    return set;
+	}
+	return null;
+    }
 }

@@ -1,4 +1,4 @@
-// $Id: TypeThenNameOrder.java,v 1.5 2003/12/04 22:58:21 alexb Exp $
+// $Id: TypeThenNameOrder.java,v 1.6 2004/04/22 21:43:21 d00mst Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,8 @@
 
 package org.argouml.ui.explorer;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 /**
  * Sorts by user object type,
  * diagrams first,
@@ -42,42 +44,45 @@ public class TypeThenNameOrder extends NameOrder{
     public TypeThenNameOrder() {
     }
     
-    public int compare(Object obj, Object obj1) {
-        
-        ExplorerTreeNode node = (ExplorerTreeNode)obj;
-        ExplorerTreeNode node1 = (ExplorerTreeNode)obj1;
-        
-        Object userObject = node.getUserObject();
-        Object userObject1 = node1.getUserObject();
-        
-        String typeName = userObject.getClass().getName();
-        String typeName1 = userObject1.getClass().getName();
-        
+    public int compare(Object obj1, Object obj2) {
+	if (obj1 instanceof DefaultMutableTreeNode) {
+	    DefaultMutableTreeNode node = (DefaultMutableTreeNode) obj1;
+	    obj1 = node.getUserObject();
+	}
+
+	if (obj2 instanceof DefaultMutableTreeNode) {
+	    DefaultMutableTreeNode node = (DefaultMutableTreeNode) obj2;
+	    obj2 = node.getUserObject();
+	}
+
+        String typeName = obj1.getClass().getName();
+        String typeName1 = obj2.getClass().getName();
+
         // all diagram types treated equally
-        if(typeName.indexOf("Diagram") != -1 &&
-        typeName1.indexOf("Diagram") != -1)
-            return compareUserObjects(userObject,userObject1);
-        
+	if (typeName.indexOf("Diagram") != -1
+	    && typeName1.indexOf("Diagram") != -1)
+	    return compareUserObjects(obj1, obj2);
+
         int typeNameOrder = typeName.compareTo(typeName1);
-        if(typeNameOrder == 0)
-            return compareUserObjects(userObject,userObject1);
-        
-        if(typeName.indexOf("Diagram") == -1 &&
-        typeName1.indexOf("Diagram") != -1)
+        if (typeNameOrder == 0)
+            return compareUserObjects(obj1, obj2);
+
+        if (typeName.indexOf("Diagram") == -1
+	    && typeName1.indexOf("Diagram") != -1)
             return 1;
-        
-        if(typeName.indexOf("Diagram") != -1 &&
-        typeName1.indexOf("Diagram") == -1)
+
+        if (typeName.indexOf("Diagram") != -1
+	    && typeName1.indexOf("Diagram") == -1)
             return -1;
-        
-        if(typeName.indexOf("Package") == -1 &&
-        typeName1.indexOf("Package") != -1)
+
+        if (typeName.indexOf("Package") == -1
+	    && typeName1.indexOf("Package") != -1)
             return 1;
-        
-        if(typeName.indexOf("Package") != -1 &&
-        typeName1.indexOf("Package") == -1)
+
+        if (typeName.indexOf("Package") != -1
+	    && typeName1.indexOf("Package") == -1)
             return -1;
-        
+
         return typeNameOrder;
     }
     
