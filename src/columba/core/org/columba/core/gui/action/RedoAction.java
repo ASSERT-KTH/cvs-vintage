@@ -58,7 +58,6 @@ public class RedoAction extends FrameAction implements WorkerListChangeListener 
 	 * @see org.columba.core.gui.statusbar.event.WorkerListChangeListener#workerListChanged(org.columba.core.gui.statusbar.event.WorkerListChangedEvent)
 	 */
 	public void workerListChanged(WorkerListChangedEvent e) {
-		if( e.getNewValue() != 0) setEnabled(false);
+		setEnabled(e.getNewValue() != 0);
 	}
-
 }
