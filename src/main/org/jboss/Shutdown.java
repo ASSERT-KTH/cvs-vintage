@@ -15,7 +15,7 @@ import java.net.URL;
  * command.  The host to the JMX server can be passed in as well
  * as the port number.  If neither is supplied, the defaults of
  * <tt>localhost</tt> and <tt>8082</tt> are used.
- * 
+ *
  * <h3>Usage:</h3>
  * <pre>
  * java org.jboss.Shutdown [host] [port]
@@ -23,7 +23,7 @@ import java.net.URL;
  *
  * @author <a href="mailto:dewayne@dmsoft.com">Dewayne McNair</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class Shutdown
 {
@@ -42,11 +42,11 @@ public class Shutdown
       String host = "localhost";
       int port = 8082;
 
-      if (argv.length == 1) {
+      if (argv.length >= 1) {
          host = argv[0];
       }
 
-      if (argv.length == 2) {
+      if (argv.length >= 2) {
          port = Integer.parseInt(argv[1]);
       }
 
