@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 import javax.ejb.EJBException;
 import javax.sql.DataSource;
@@ -39,6 +41,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCOptimisticLockingMetaData;
 import org.jboss.proxy.compiler.Proxies;
 import org.jboss.proxy.compiler.InvocationHandler;
 
@@ -58,7 +61,7 @@ import org.jboss.ejb.plugins.keygenerator.KeyGeneratorFactory;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    private JDBCEntityMetaData metadata;
@@ -81,7 +84,9 @@ public class JDBCEntityBridge implements EntityBridge {
 
    private List cmrFields;
    private Map cmrFieldsByName;
-   
+
+   private JDBCCMPFieldBridge versionField;
+
    private Map selectorsByMethod;
    
    private Map loadGroups;
@@ -118,11 +123,24 @@ public class JDBCEntityBridge implements EntityBridge {
 
       // CMR fields
       loadCMRFields(metadata);
-      
+
+      // create locking field
+      JDBCOptimisticLockingMetaData lockMetaData = metadata.getOptimisticLocking();
+      if(lockMetaData != null && lockMetaData.getLockingField() != null) {
+         versionField = new JDBCCMP2xFieldBridge(
+            manager, lockMetaData.getLockingField()
+         );
+      }
+
       // all fields list
-      fields = new ArrayList(cmpFields.size() + cmrFields.size());
+      fields = new ArrayList(
+         cmpFields.size() + cmrFields.size()
+         + (versionField == null ? 0 : 1)
+      );
       fields.addAll(cmpFields);
       fields.addAll(cmrFields);
+      if(versionField != null)
+         fields.add(versionField);
       fields = Collections.unmodifiableList(fields);
       fieldsByName = new HashMap(fields.size());
       fieldsByName.putAll(cmpFieldsByName);
@@ -207,6 +225,12 @@ public class JDBCEntityBridge implements EntityBridge {
       cmrFieldsByName = Collections.unmodifiableMap(cmrFieldsByName);
    }
 
+   /**
+    * Loads the specified load groups.
+    * Note: if optimistic locking is specified then
+    * optimistic locking fields are added each group to
+    * ensure the locking fields are always loaded
+    */
    private void loadLoadGroups(JDBCEntityMetaData metadata)
          throws DeploymentException {
 
@@ -227,13 +251,13 @@ public class JDBCEntityBridge implements EntityBridge {
          }
       }
       loadGroups.put("*", loadFields);
-      
+
       // put each group in the load groups map by group name
       Iterator groupNames = metadata.getLoadGroups().keySet().iterator();
       while(groupNames.hasNext()) {
          // get the group name
          String groupName = (String)groupNames.next();
-         
+
          // create the fields list
          loadFields = new ArrayList();
 
@@ -247,8 +271,8 @@ public class JDBCEntityBridge implements EntityBridge {
                   loadFields.add(field);
                } else {
                   throw new DeploymentException("Only CMR fields that have " +
-                        "a foreign-key may be a member of a load group: " +
-                        "fieldName="+fieldName);
+                     "a foreign-key may be a member of a load group: " +
+                     "fieldName="+fieldName);
                }
             } else {
                loadFields.add(field);
@@ -261,7 +285,6 @@ public class JDBCEntityBridge implements EntityBridge {
 
    private void loadEagerLoadGroup(JDBCEntityMetaData metadata)
          throws DeploymentException {
-
       String eagerLoadGroupName = metadata.getEagerLoadGroup();
       if(eagerLoadGroupName == null) {
          eagerLoadFields = Collections.EMPTY_LIST;
@@ -274,7 +297,7 @@ public class JDBCEntityBridge implements EntityBridge {
          throws DeploymentException {
 
       lazyLoadGroups = new ArrayList();
-      
+
       Iterator lazyLoadGroupNames = metadata.getLazyLoadGroups().iterator();
       while(lazyLoadGroupNames.hasNext()) {
          String lazyLoadGroupName = (String)lazyLoadGroupNames.next();
@@ -293,11 +316,11 @@ public class JDBCEntityBridge implements EntityBridge {
          return new JDBCCMP2xFieldBridge(manager, cmpFieldMetaData);
       }
    }
-   
+
    private void loadSelectors(JDBCEntityMetaData metadata)
          throws DeploymentException {
-            
-      // Don't know if this is the best way to do this.  Another way would be 
+
+      // Don't know if this is the best way to do this.  Another way would be
       // to deligate seletors to the JDBCFindEntitiesCommand, but this is
       // easier now.
       selectorsByMethod = new HashMap(metadata.getQueries().size());
@@ -306,13 +329,13 @@ public class JDBCEntityBridge implements EntityBridge {
          JDBCQueryMetaData q = (JDBCQueryMetaData)definedFinders.next();
 
          if(q.getMethod().getName().startsWith("ejbSelect")) {
-            selectorsByMethod.put(q.getMethod(), 
+            selectorsByMethod.put(q.getMethod(),
                   new JDBCSelectorBridge(manager, q));
          }
       }
       selectorsByMethod = Collections.unmodifiableMap(selectorsByMethod);
    }
-   
+
    public String getEntityName() {
       return metadata.getName();
    }
@@ -453,7 +476,11 @@ public class JDBCEntityBridge implements EntityBridge {
    public JDBCCMRFieldBridge getCMRFieldByName(String name) {
       return (JDBCCMRFieldBridge)cmrFieldsByName.get(name);
    }
-   
+
+   public JDBCCMPFieldBridge getVersionField() {
+      return versionField;
+   }
+
    public Collection getSelectors() {
       return selectorsByMethod.values();
    }
@@ -516,7 +543,7 @@ public class JDBCEntityBridge implements EntityBridge {
          field.resetPersistenceContext(ctx);
       }
    }
-   
+
 
    public void destroyPersistenceContext(EntityEnterpriseContext ctx) {
       // If we have an EJB 2.0 dynaymic proxy,
@@ -536,11 +563,11 @@ public class JDBCEntityBridge implements EntityBridge {
    //
    // Commands to handle primary keys
    //
-   
+
    public int setPrimaryKeyParameters(
          PreparedStatement ps,
          int parameterIndex,
-         Object primaryKey) {      
+         Object primaryKey) {
 
       for(Iterator pkFields=primaryKeyFields.iterator(); pkFields.hasNext();) {
          JDBCCMPFieldBridge pkField = (JDBCCMPFieldBridge)pkFields.next();
@@ -553,8 +580,8 @@ public class JDBCEntityBridge implements EntityBridge {
    }
 
    public int loadPrimaryKeyResults(
-         ResultSet rs, 
-         int parameterIndex, 
+         ResultSet rs,
+         int parameterIndex,
          Object[] pkRef) {
 
       pkRef[0] = createPrimaryKeyInstance();
@@ -565,7 +592,7 @@ public class JDBCEntityBridge implements EntityBridge {
       }
       return parameterIndex;
    }
-         
+
    public Object extractPrimaryKeyFromInstance(EntityEnterpriseContext ctx) {
       try {
          Object pk = null;
@@ -574,7 +601,7 @@ public class JDBCEntityBridge implements EntityBridge {
 
             JDBCCMPFieldBridge pkField = (JDBCCMPFieldBridge)pkFields.next();
             Object fieldValue = pkField.getInstanceValue(ctx);
-            
+
             // updated pk object with return form set primary key value to
             // handle single valued non-composit pks and more complicated
             // behivors.
@@ -614,7 +641,7 @@ public class JDBCEntityBridge implements EntityBridge {
 
    public static class EntityState {
       private boolean isCreated = false;
-      
+
       public boolean isCreated() {
          return isCreated;
       }
