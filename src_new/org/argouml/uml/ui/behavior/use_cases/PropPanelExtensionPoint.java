@@ -1,4 +1,4 @@
-// $Id: PropPanelExtensionPoint.java,v 1.8 2002/12/28 20:52:53 kataka Exp $
+// $Id: PropPanelExtensionPoint.java,v 1.9 2002/12/28 21:09:59 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,7 +90,7 @@ public class PropPanelExtensionPoint extends PropPanelModelElement {
         // NSUML associated with the NSUML type. Allow the location label to
         // expand vertically so we all float to the top.
 
-        JTextField locationField = new UMLTextField2(this, new UMLExtensionPointLocationDocument());
+        JTextField locationField = new UMLTextField2(new UMLExtensionPointLocationDocument());
         addField(Argo.localize("UMLMenu", "label.location"), locationField);
         
         add(LabelledLayout.getSeperator());

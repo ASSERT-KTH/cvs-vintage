@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLPlainTextDocument.java,v 1.8 2002/12/28 20:52:53 kataka Exp $
+// $Id: UMLPlainTextDocument.java,v 1.9 2002/12/28 21:09:58 kataka Exp $
 package org.argouml.uml.ui;
 
 import javax.swing.text.AttributeSet;
@@ -40,13 +40,6 @@ import ru.novosoft.uml.MElementListener;
  * its goal and will perform better therefore. Furthermore, it only reacts to 
  * events that are meant for this model which improves maintainability and 
  * performance. 
- * TODO: make this model independant from proppanel by designing a mechanisme
- * that can replace thirthpartyeventlistener.
- * TODO: make this model independant from GUI components to pass on targetChanged
- * and targetreasserted events by designing a mechanisme that can extend 
- * UMLChangeDispatch so UMLUserInterfaceComponents don't have to be java.awt.components
- * anymore to get targetChanged events.
- * TODO: remove the dependance on the panel to get the target.
  * @since Oct 6, 2002
  * @author jaap.branderhorst@xs4all.nl
  */

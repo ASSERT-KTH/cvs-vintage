@@ -24,7 +24,7 @@
 // File: FigComment.java
 // Classes: FigComment
 // Original Author: a_rueckert@gmx.net
-// $Id: FigComment.java,v 1.6 2002/12/28 14:46:30 kataka Exp $
+// $Id: FigComment.java,v 1.7 2002/12/28 21:09:58 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -472,8 +472,11 @@ public class FigComment extends FigNodeModelElement implements VetoableChangeLis
     protected void updateNameText() {
         if (getOwner() != null) {            
         	String text = ((MComment)getOwner()).getName();    	
-        	if (text != null)
+        	if (text != null) {
         		_text.setText(text);
+                calcBounds();
+                setBounds(getBounds());
+        	}
         }
     }
 
