@@ -21,6 +21,18 @@
     <ant:filterset id="scarab.test.filter">
       <ant:filter token="SCARAB_MODULE_CODE_LENGTH"
                 value="${scarab.module.code.length}" />
+      <ant:filter token="SCARAB_DATABASE_TYPE"
+                value="${scarab.database.type}" />
+      <ant:filter token="SCARAB_DATABASE_USERNAME"
+                value="${scarab.database.username}" />
+      <ant:filter token="SCARAB_DATABASE_PASSWORD"
+                value="${scarab.database.password}" />
+      <ant:filter token="SCARAB_DATABASE_URL"
+                value="${scarab.database.url}" />
+      <ant:filter token="SCARAB_DATABASE_DRIVER"
+                value="${scarab.database.driver}" />
+      <ant:filter token="SCARAB_DATABASE_VALIDATION_QUERY"
+                value="${scarab.database.validation.query}" />
     </ant:filterset>
     <ant:copy todir="${maven.build.dir}/test-config">
       <ant:fileset dir="${maven.src.dir}/conf/conf"
