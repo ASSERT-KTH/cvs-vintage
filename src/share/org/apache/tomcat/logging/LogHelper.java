@@ -146,7 +146,6 @@ public class LogHelper {
 		out.print(TomcatLogger.throwableToString(t));
 	}
 	else {
-	    msg += "\n";
 	    logger.log(msg, t, level);
 	}
     }
