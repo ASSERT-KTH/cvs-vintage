@@ -1,0 +1,282 @@
+<html>
+<head>
+    <!-- $Id  $ -->
+    <!-- Copyright 1999, Apache Software Foundation -->
+
+    <meta http-equiv=Content-Type content="text/html">
+    <link rel="stylesheet" href=uguide/style.css>
+    <style type="text/css">
+    td {
+        background-color: #E0E0E0;
+        vertical-align: text-top;
+        border-top: thick black;
+        border-right: thick black;
+        border-bottom: thick black;
+        border-left: thick black;
+    }
+    th {
+        background-color: #d0d0d0;
+        border-top: thick black;
+        border-right: thick black;
+        border-bottom: thick black;
+        border-left: thick black;
+    }
+    table {
+        width: 75%;
+        border: thick;
+        background-color: #000000;
+    }
+    </style>
+
+<title>Working with mod_jk</title>
+</head>
+
+<body>
+
+<h1>Working with mod_jk</h1>
+<p>By Gal Shachor <tt>&lt;<a href="mailto:shachor@il.ibm.com">
+shachor@il.ibm.com</a>&gt;</tt></p>
+
+<h2>What is mod_jk</h2>
+
+<p>mod_jk is a replacement to the elderly mod_jeserv. It is a completely new
+Tomcat-Apache plugin that passed adaptation to Tomcat. With some luck working
+with it is going to be simpler for everyone.</p>
+
+<h2>Why mod_jk?</h2>
+
+<p>Several reasons: </p>
+
+<ul>
+ <li>mod_jserv was too complex
+     because it supported Jserv specific requirements that Tomcat does not
+     pose.</li>
+ <li>mod_jserv supported only
+     Apache; on the other hand Tomcat supports many web servers through a
+     compatibility layer named the jk library. Supporting two different modes
+     of work became problematic in terms of support, documentation and bug
+     fixes. mod_jk should fix that.</li>
+ <li>The layered approach provided
+     by the jk library makes it easier to support both Apache1.3.x and
+     Apache2.xx.</li>
+</ul>
+
+<h2>What does it means to me?</h2>
+
+<p>You will need to get to know a new simplified configuration mechanism. The
+advantage is that learning this mechanism will give you a head start if you
+want to deploy Tomcat on other web servers such as IIS and Netscape (oops,
+iPlanet).</p>
+
+<h2>Configuring Apache to use mod_jk</h2>
+
+<p>The configuration includes the following steps: </p>
+
+<ol>
+ <li>Remove your old mod_jserv
+     configuration. mod_jk and mod_jserv cannot coexist !!</li>
+ <li>Obtaining mod_jk</li>
+ <li>Defining workers for mod_jk
+     (or selecting the quick start option)</li>
+ <li>Configuring Apache to use
+     mod_jk and configure mod_jk internals (or selecting the quick start
+     option)</li>
+ <li>Assigning URLs to be
+     redirected to Tomcat (or selecting the quick start option)</li>
+</ol>
+
+<h2>Obtaining mod_jk</h2>
+
+<p>There are no prebuilt mod_jk distribution for now, so you will need to build
+it yourself.</p>
+
+<h3>On NT</h3>
+
+<p>The redirector was developed using Visual C++ Ver.6.0, so having this
+environment is a prereq if you want to perform a custom build.</p>
+
+<p>The steps that you need to take are: </p>
+
+<ol>
+ <li>Change directory to the
+     apache1.3/apache2.0 source directory. </li>
+ <li>Execute the following
+     command:<br>
+     <tt><span>MSDEV mod_jk.dsp /MAKE ALL</span></tt><br>
+     If msdev is not in your path, enter the full path to msdev.exe </li>
+ <li>Copy mod_jk.dll to Apache's modules directory.</li>
+</ol>
+
+<p>This will build both release and debug versions of the redirector plugin
+(mod_jk). </p>
+
+<p>An alternative will be to open <tt>mod_jk.dsp</tt> in msdev and build it using the build
+menu.</p>
+
+<h3>On UNIX</h3>
+
+<p>For apache1.3</p>
+
+<ol>
+ <li>Change directory to the
+     apache1.3/ apache2.0 source directory.</li>
+ <li>Use apxs in the following
+     manner: <br>
+     <tt><span>apxs -o mod_jk.so -c *.c ../jk/ *.c -I ../jk/</span></tt></li>
+ <li>Copy mod_jk.so to Apache's libexec directory</li>
+</ol>
+
+<h2>Quick start?</h2>
+
+<p>In most of simple cases Tomcat can generate the needed Apache configuration.
+When Tomcat starts up it will automatically generate
+a configuration file for Apache in<tt>TOMCAT_HOME/conf/mod_jk.conf-auto</tt>.
+Most of the time you don't need to do anything but
+include this file (appending <tt>&quot;Include TOMCAT_HOME/conf/mod_jk.conf-auto&quot;</tt>)
+in your httpd.conf. That’s it, you can
+now start Tomact and Apache and access Tomcat from the Apache server.</p>
+
+<p>If you have special needs, for example mounting
+URL prefixes that are not the default, you can use this file as a base for your
+customized configuration and save the results in another file. If you manage
+the Apache configuration yourself you'll need to update it whenever you add a
+new context. </p>
+
+<p style="background-color: #E0E0E0;"><b>Tomcat 3.2:</b> you must restart tomcat and apache after adding a new
+context; Apache doesn't support configuration changes without a restart. Also
+the file <tt>TOMCAT_HOME/conf/mod_jk.conf-auto</tt> is generated when
+tomcat starts, so you'll need to start Tomcat before Apache. Tomcat will
+overwrite <tt>TOMCAT_HOME/conf/mod_jk.conf-auto</tt> each startup so
+customized configuration should be kept elsewhere.</p>
+
+<h2>Definitions and terminology </h2>
+
+<p>During this document I am going to use a few terms, so lets define them:<o:p></o:p></p>
+
+<table>
+ <tr>
+  <th>
+  <p><pp>Term</p>
+  </th>
+  <th>
+  <p>Meaning</p>
+  </th>
+ </tr>
+ <tr>
+  <td>
+  <p>Worker process</p>
+  </td>
+  <td>
+  <p>A worker is a tomcat instance that is running to serve
+  servlet requests coming from the web server. In most cases there is only a
+  single worker (the one and only tomcat process) but sometimes you will run
+  multiple workers to achieve load balancing or site partitioning. Each worker
+  is identified to the web server by the host were it is located, the port
+  where it listens and the communication protocol used to exchange messages.</p>
+  </td>
+ </tr>
+ <tr>
+  <td>
+  <p>In process worker</p>
+  </td>
+  <td>
+  <p>This is a special worker. Instead of working with a Tomcat
+  process residing on another process, the web server opens a JVM and executes
+  Tomcat inside the web server process address space. Our discussion in this
+  document is not going to get into this special worker.</p>
+  </td>
+ </tr>
+ <tr>
+  <td>
+  <p>Web server plugin/tomcat redirector</p>
+  </td>
+  <td>
+  <p>For Tomcat to cooperate with any web server it needs an
+  &quot;agent&quot; to reside in the web server and send him servlet requests.
+  This is the web server plugin, and in our case the web server plugin is
+  mod_jk. The redirector usually comes in the shape of a DLL/shared object
+  module that you should plug into the web server.</p>
+  </td>
+ </tr>
+ <tr>
+  <td>
+  <p>Plugin configuration</p>
+  </td>
+  <td>
+  <p>We need to configure the web server plugin so that it will
+  know where are the different Tomcat workers and to which of them it should
+  forward requests. This information accompanied with some internal parameter
+  such as the log level comprises the plugin configuration. </p>
+  </td>
+ </tr>
+ <tr>
+  <td>
+  <p>Web server configuration</p>
+  </td>
+  <td>
+  <p>Each web server has some configuration that defines how
+  behave, e.g. on which port to listen, what files to serve, what web server
+  plugins to load, etc. You will need to modify your web server configuration
+  to instruct it to load the tomcat redirector.</p>
+  </td>
+ </tr>
+</table>
+
+<h2>Configuring workers</h2>
+
+<p>Workers are configured using the file workers.properties, look into the <a
+href="Tomcat-Workers-HowTo.html">workers.properties howto</a> document for
+further documentation.</p>
+
+<h2>Configure Apache to use mod_jk</h2>
+
+<p>Configuring Apache to use mod_jk is done using the Apache server
+configuration directives; to assist you in your first steps, please take a look
+into the auto-generated <tt>mod_jk.conf-auto</tt> available in Tomcat's conf directory.</p>
+
+<ul>
+ <li>You will need to instruct
+     Apache to load Tomcat. This can be done with Apache's LoadModule
+     configuration directive.</li>
+ <li>You must inform mod_jk the
+     location of your workers.properties file. Use mod_jk's JkWorkersFile
+     configuration directive.</li>
+ <li>You should specify a location
+     where mod_jk is going to place its log file and a log level to be used.
+     Use the JkLogFile and JkLogLevel configuration directives. Possible log
+     levels are debug, warn, error and emerg, but warn should be your default
+     selection.</li>
+</ul>
+
+<p>That's it. Now you should assign URLs to be redirected to Tomcat.</p>
+
+<h2>Assigning URLs to Tomcat</h2>
+
+<p>Use mod_jk's JkMount directive to assign specific URLs to Tomcat. In general
+the structure of a JkMount directive is:</p>
+
+<pre>
+JkMount &lt;URL prefix&gt; &lt;Worker name&gt;
+</pre>
+
+<p>For example the following directives will send all the .jsp suffixed
+requests to localworker, but jsp requests to files located in /otherworker will
+go to remoteworker. Additionally any requests prefixed by /servlet/ will go to
+localworker</p>
+
+<pre>
+JkMount /*.jsp localworker
+JkMount /otherworker/*.jsp remoteworker
+JkMount /servlet/* localworker
+</pre>
+
+<p>You should of course adjust the mounts points to reflect
+your own topology.</p>
+
+<h2>Running Apache with Tomcat </h2>
+
+<p>That's it; you are done. You should now be able to start Tomcat and apache
+and have tomcat and apache cooperate to serve servlets and JSP files.</p>
+
+</body>
+</html>
