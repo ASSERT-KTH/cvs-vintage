@@ -1,4 +1,4 @@
-// $Id: StylePanelFig.java,v 1.29 2005/01/09 14:58:13 linus Exp $
+// $Id: StylePanelFig.java,v 1.30 2005/02/01 09:35:10 mkl Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,7 @@ public class StylePanelFig extends StylePanel implements ItemListener,
         FocusListener, KeyListener {
 
     private static final Logger LOG = Logger
-            .getLogger(StylePanelFigNodeModelElement.class);
+            .getLogger(StylePanelFig.class);
 
     private static final String CUSTOM_ITEM = Translator
             .localize("label.stylepane.custom")
@@ -424,7 +424,8 @@ public class StylePanelFig extends StylePanel implements ItemListener,
         Object c = fillField.getSelectedItem();
         if (getPanelTarget() == null || c == null) return;
         Color oldColor = getPanelTarget().getFillColor();
-        if (c instanceof Color) getPanelTarget().setFillColor((Color) c);
+        if (c instanceof Color) 
+            getPanelTarget().setFillColor((Color) c);
         getPanelTarget().setFilled(c instanceof Color);
         getPanelTarget().endTrans();
         if (!c.equals(oldColor)) {

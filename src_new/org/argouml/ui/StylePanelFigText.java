@@ -1,4 +1,4 @@
-// $Id: StylePanelFigText.java,v 1.10 2005/01/09 14:58:13 linus Exp $
+// $Id: StylePanelFigText.java,v 1.11 2005/02/01 09:35:10 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,10 +83,6 @@ public class StylePanelFigText extends StylePanelFig {
 
     private JComboBox textColorField = new JComboBox();
 
-    private JLabel textFillLabel = new JLabel("Text Fill: ");
-
-    private JComboBox textFillField = new JComboBox();
-
     /**
      * Construct default style panel for text elements.
      *
@@ -104,21 +100,16 @@ public class StylePanelFigText extends StylePanelFig {
         styleField.addItemListener(this);
         justField.addItemListener(this);
         textColorField.addItemListener(this);
-        textFillField.addItemListener(this);
-
+      
         textColorField.setRenderer(new ColorRenderer());
-        textFillField.setRenderer(new ColorRenderer());
-
+      
         c.weightx = 0.0;
         c.gridx = 0;
         c.gridwidth = 1;
         c.gridy = 5;
         gb.setConstraints(textColorLabel, c);
         add(textColorLabel);
-        c.gridy = 6;
-        gb.setConstraints(textFillLabel, c);
-        add(textFillLabel);
-
+       
         c.gridx = 3;
         c.gridwidth = 1;
         c.gridy = 1;
@@ -141,8 +132,6 @@ public class StylePanelFigText extends StylePanelFig {
         gb.setConstraints(textColorField, c);
         add(textColorField);
         c.gridy = 6;
-        gb.setConstraints(textFillField, c);
-        add(textFillField);
         c.gridx = 4;
         c.gridy = 1;
         gb.setConstraints(fontField, c);
@@ -174,19 +163,6 @@ public class StylePanelFigText extends StylePanelFig {
         textColorField.addItem(Color.orange);
         textColorField.addItem(Color.pink);
         textColorField.addItem("Custom...");
-
-        textFillField.addItem("No Fill");
-        textFillField.addItem(Color.black);
-        textFillField.addItem(Color.white);
-        textFillField.addItem(Color.gray);
-        textFillField.addItem(Color.lightGray);
-        textFillField.addItem(Color.darkGray);
-        textFillField.addItem(Color.red);
-        textFillField.addItem(Color.blue);
-        textFillField.addItem(Color.green);
-        textFillField.addItem(Color.orange);
-        textFillField.addItem(Color.pink);
-        textFillField.addItem("Custom...");
 
     }
 
@@ -222,7 +198,7 @@ public class StylePanelFigText extends StylePanelFig {
             textColorField.setSelectedItem(c);
         }
 
-        c = ft.getTextFillColor();
+        c = ft.getFillColor();
         getFillField().setSelectedItem(c);
         if (c != null && !getFillField().getSelectedItem().equals(c)) {
             getFillField().insertItemAt(c, getFillField().getItemCount() - 1);
@@ -281,18 +257,7 @@ public class StylePanelFigText extends StylePanelFig {
         getPanelTarget().endTrans();
     }
 
-    /**
-     * change color of the text fill / background to the selected value.
-     *
-     */
-    protected void setTargetTextFill() {
-        if (getPanelTarget() == null) return;
-        Object c = textFillField.getSelectedItem();
-        if (c instanceof Color)
-                ((FigText) getPanelTarget()).setTextFillColor((Color) c);
-        ((FigText) getPanelTarget()).setTextFilled(c instanceof Color);
-        getPanelTarget().endTrans();
-    }
+
 
     /**
      * change the color of the text element according to the selected value.
@@ -321,8 +286,6 @@ public class StylePanelFigText extends StylePanelFig {
             setTargetJustification();
         else if (src == textColorField)
             setTargetTextColor();
-        else if (src == textFillField)
-            setTargetTextFill();
         else
             super.itemStateChanged(e);
     }
