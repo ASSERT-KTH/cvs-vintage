@@ -75,7 +75,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 /**
     This class is responsible for user-saved queries.
     @author <a href="mailto:elicai@collab.net">Elicia David</a>
-    @version $Id: SaveQuery.java,v 1.3 2001/08/09 07:59:52 jon Exp $
+    @version $Id: SaveQuery.java,v 1.4 2001/08/14 22:23:09 elicia Exp $
 */
 public class SaveQuery extends RequireLoginFirstAction
 {
@@ -95,12 +95,7 @@ public class SaveQuery extends RequireLoginFirstAction
             .get(ScarabConstants.SCARAB_REQUEST_TOOL);
         Group queryGroup = intake.get("Query", 
                                  scarab.getQuery().getQueryKey() );
-        String typeId = queryGroup.get("TypeId").toString();
-        if (typeId.equals("2"))
-        {
-            Field moduleId = queryGroup.get("ModuleId");
-            moduleId.setRequired(true);
-        }
+
         Field name = queryGroup.get("Name");
         name.setRequired(true);
         Field value = queryGroup.get("Value");
