@@ -13,9 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.main;
 
-import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.LookAndFeel;
 
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.core.command.DefaultProcessor;
@@ -31,7 +32,7 @@ import org.columba.mail.pop3.POP3ServerCollection;
 
 public class MainInterface {
 
-	public static String version = "05-06-2003 cvs";
+	public static final String version = "05-06-2003 cvs";
 
 	public static boolean DEBUG = false;
 
@@ -43,7 +44,7 @@ public class MainInterface {
 
 	public static AddressbookTreeModel addressbookTreeModel;
 
-	public static MetalLookAndFeel lookAndFeel;
+	public static LookAndFeel lookAndFeel;
 
 	public static DefaultProcessor processor;
 
