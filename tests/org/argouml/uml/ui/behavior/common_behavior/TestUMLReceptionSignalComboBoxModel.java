@@ -1,4 +1,4 @@
-// $Id: TestUMLReceptionSignalComboBoxModel.java,v 1.7 2003/05/04 07:35:12 kataka Exp $
+// $Id: TestUMLReceptionSignalComboBoxModel.java,v 1.8 2003/06/29 23:18:55 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +73,7 @@ public class TestUMLReceptionSignalComboBoxModel extends TestCase {
         MModel m = ModelManagementFactory.getFactory().createModel();
         p.setRoot(m);
         elem.setNamespace(m);
-        for (int i = 0 ; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
             signals[i] = CommonBehaviorFactory.getFactory().createSignal();
             m.addOwnedElement(signals[i]);
         }      
@@ -87,7 +87,7 @@ public class TestUMLReceptionSignalComboBoxModel extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         UmlFactory.getFactory().delete(elem);
-        for (int i = 0 ; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
             UmlFactory.getFactory().delete(signals[i]);
         }
         MFactoryImpl.setEventPolicy(oldEventPolicy);

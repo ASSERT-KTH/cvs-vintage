@@ -1,3 +1,4 @@
+// $Id: TestTabDiagram.java,v 1.5 2003/06/29 23:18:55 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
-// $Id: TestTabDiagram.java,v 1.4 2003/04/29 19:03:32 kataka Exp $
+// $Id: TestTabDiagram.java,v 1.5 2003/06/29 23:18:55 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 

@@ -1,3 +1,4 @@
+// $Id: TestMultiEditorPane.java,v 1.5 2003/06/29 23:18:54 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TestMultiEditorPane.java,v 1.4 2003/05/04 07:35:11 kataka Exp $
+// $Id: TestMultiEditorPane.java,v 1.5 2003/06/29 23:18:54 linus Exp $
 package org.argouml.ui;
 
 import org.argouml.application.security.ArgoSecurityManager;
@@ -45,28 +46,28 @@ public class TestMultiEditorPane extends TestCase {
     /**
      * @see junit.framework.TestCase#setUp()
      */
-     protected void setUp() throws Exception {
-         super.setUp();
-         ArgoSecurityManager.getInstance().setAllowExit(true);
-     }
+    protected void setUp() throws Exception {
+	super.setUp();
+	ArgoSecurityManager.getInstance().setAllowExit(true);
+    }
      
-     protected void tearDown() throws Exception {
-         super.tearDown();
-     }
+    protected void tearDown() throws Exception {
+	super.tearDown();
+    }
      
-     /**
-      * Tests the construction of the multieditorpane. Can we construct a
-      * multieditorpane and even have an editor in it?
-      */
-     public void testConstruction() {
-         try {
+    /**
+     * Tests the construction of the multieditorpane. Can we construct a
+     * multieditorpane and even have an editor in it?
+     */
+    public void testConstruction() {
+	try {
             MultiEditorPane pane = new MultiEditorPane();
-             assertNotNull(pane);             
-             assertEquals(pane.getComponents().length, 1);
-         } catch (Exception ex) {
-             // on a headless system (without display) this will crash
-         }
-     }
+	    assertNotNull(pane);             
+	    assertEquals(pane.getComponents().length, 1);
+	} catch (Exception ex) {
+	    // on a headless system (without display) this will crash
+	}
+    }
      
      
      

@@ -1,3 +1,4 @@
+// $Id: TestUMLMessageActivatorComboBoxModel.java,v 1.7 2003/06/29 23:18:55 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,7 +75,7 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
         inter.setContext(col);
         col.setNamespace(m);
         inter.addMessage(elem);
-        for (int i = 0 ; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
             activators[i] = CollaborationsFactory.getFactory().createMessage();
             inter.addMessage(activators[i]);
         }  
@@ -88,7 +89,7 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         UmlFactory.getFactory().delete(elem);
-        for (int i = 0 ; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
             UmlFactory.getFactory().delete(activators[i]);
         }
         MFactoryImpl.setEventPolicy(oldEventPolicy);

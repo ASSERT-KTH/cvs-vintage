@@ -1,3 +1,4 @@
+// $Id: TestUMLCollaborationRepresentedClassifierListModel.java,v 1.7 2003/06/29 23:18:55 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,7 +87,7 @@ public class TestUMLCollaborationRepresentedClassifierListModel
     }
     
     public void testRemoveRepresentedOperation() {
-       MClassifier oper = CoreFactory.getFactory().createClassifier();
+	MClassifier oper = CoreFactory.getFactory().createClassifier();
         elem.setRepresentedClassifier(oper);
         elem.setRepresentedClassifier(null);
         assertEquals(0, model.getSize());

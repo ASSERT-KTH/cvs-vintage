@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementNameDocument.java,v 1.7 2003/05/14 11:15:07 linus Exp $
+// $Id: TestUMLModelElementNameDocument.java,v 1.8 2003/06/29 23:18:56 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -137,7 +137,7 @@ public class TestUMLModelElementNameDocument extends TestCase {
 	throws BadLocationException
     {
         elem.setName("test");
-	model.remove(1, model.getLength()-2);
+	model.remove(1, model.getLength() - 2);
         assertEquals("tt", elem.getName());
     }
 }
