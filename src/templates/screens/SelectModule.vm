@@ -1,72 +1,75 @@
-<div class="app" id="selectmodule">
-$page.setTitle("Select Module")
-
-<h2>$page.Title</h2>
-
 #set ($userModules = $data.User.Modules)
 #set ($currentModule = $scarabR.CurrentModule)
 
+<div id="selectmodule" class="app">
+
 <div class="grouper">
+
 #if ($currentModule)
- <h3>Current Module</h3>
- <div class="datatable">
- <table cellpadding="3" cellspacing="2" border="1">
-  <tr>
-   <th>Current Module Name</th>
-   <td>$currentModule.Name</td>
-  </tr>
-  <tr>
-   <th>Current Module Desc</th>
-   <td>$currentModule.Description</td>
-  </tr>
- </table>
- </div>
+<h3>Current Module</h3>
+<div class="datatable">
+<table cellpadding="3" cellspacing="2" border="1">
+<tr>
+    <th>Current Module Name</th>
+    <td>$currentModule.Name</td>
+</tr>
+<tr>
+    <th>Current Module Desc</th>
+    <td>$currentModule.Description</td>
+</tr>
+</table>
+</div>
 #end
 
 <h3>New Module Selection</h3>
 
 #if ($userModules.size() > 0)
- <form action="$link.setPage("SelectModule.vm").setAction("SelectModule")" method="get">
- #if ($nextTemplate && $nextTemplate.length() > 0)
-  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate"/> 
- #else 
-  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm"/> 
+<form action="$link.setPage("SelectModule.vm").setAction("SelectModule")" method="get">
+#if ($nextTemplate && $nextTemplate.length() > 0)
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate"/> 
+#else 
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm"/> 
+#end
+
+<div class="datatable">
+<table border="1" cellspacing="2" cellpadding="3">
+<tr>
+    <th>Module Name</th>
+    <th>Module Desc</th>
+</tr>
+
+#foreach ($module in $userModules)
+#indexedRows($velocityCount)
+<td>
+ #if ($module.Name.equals($currentModule.Name))
+<input type="radio" name="newmodule" value="$module.ModuleId" checked="true"/>$module.Name
+ #else
+<input type="radio" name="newmodule" value="$module.ModuleId"/>$module.Name
  #end
+</td>
+<td>
+$module.Description
+</td>
+</tr>
+#end
 
- <div class="datatable">
- <table border="1" cellspacing="2" cellpadding="3">
-  <tr>
-   <th>Module Name</th>
-   <th>Module Desc</th>
-  </tr>
+</table>
+</div>
 
- #foreach ($module in $userModules)
-  #indexedRows($velocityCount)
-   <td>
-   #if ($module.Name.equals($currentModule.Name))
-    <input type="radio" name="newmodule" value="$module.ModuleId" checked="true"/>$module.Name
-   #else
-    <input type="radio" name="newmodule" value="$module.ModuleId"/>$module.Name
-   #end
-   </td>
-   <td>
-   $module.Description
-   </td>
-  </tr>
- #end
- </table>
- </div>
+<p>
+<input type="submit" name="eventSubmit_doSelect" value="Select Module">
+</p>
 
- <p><input type="submit" name="eventSubmit_doSelect" value="Select Module" /></p>
-
- </form>
+</form>
 #else
- <p><strong class="alert">
- Sorry, you do not have access to select any other modules. Please
- <a href="$link.setPage("Login.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm")">Login</a> 
- with an account that has permissions to select a Module.
- </strong></p>
+<p><strong class="alert">
+Sorry, you do not have access to select any other modules. Please
+<a href="$link.setPage("Login.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm")">Login</a> with an account that
+has permissions to select a Module.
+</strong></p>
 #end
 
 </div>
+
+
 </div>
