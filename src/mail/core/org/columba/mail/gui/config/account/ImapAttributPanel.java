@@ -58,9 +58,6 @@ public class ImapAttributPanel extends JPanel {
 	private JCheckBox cleanupCheckBox;
 	private JPanel cleanupPanel;
 
-	private JCheckBox emptyTrashCheckBox;
-	private JPanel emptyTrashPanel;
-
 	//private ConfigFrame frame;
 
 	public ImapAttributPanel(ImapItem item) {
@@ -202,28 +199,6 @@ public class ImapAttributPanel extends JPanel {
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		layout.setConstraints(cleanupPanel, c);
 		add(cleanupPanel);
-
-		JPanel emptyTrashPanel = new JPanel();
-		//emptyTrashPanel.add( Box.createRigidArea( new java.awt.Dimension(10,0) ) );
-		emptyTrashPanel.setLayout(
-			new BoxLayout(emptyTrashPanel, BoxLayout.X_AXIS));
-		emptyTrashCheckBox = new JCheckBox();
-		emptyTrashCheckBox.setEnabled(false);
-		emptyTrashCheckBox.setText(
-			MailResourceLoader.getString(
-				"dialog",
-				"account",
-				"Empty_Trash_on_Exit"));
-		//$NON-NLS-1$
-		emptyTrashCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-		emptyTrashPanel.add(emptyTrashCheckBox);
-		emptyTrashPanel.add(Box.createHorizontalGlue());
-		c.gridx = 0;
-		c.weightx = 1.0;
-		c.anchor = GridBagConstraints.WEST;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		layout.setConstraints(emptyTrashPanel, c);
-		add(emptyTrashPanel);
 
 		automaticallyApplyFilterCheckBox =
 			new JCheckBox(
