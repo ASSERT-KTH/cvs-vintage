@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.113 2002/08/01 18:20:02 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.114 2002/08/02 01:48:51 jon Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -255,23 +255,13 @@ public class ModifyIssue extends BaseModifyIssue
             scarabR.setAlertMessage(ERROR_MESSAGE);
         }
     }
-
     
     /**
-    *  Adds an attachment of type "url".
-    */
-   public void doSubmiturl (RunData data, TemplateContext context) 
+     *  Modifies attachments of type "url".
+     */
+    public void doSaveurl (RunData data, TemplateContext context) 
         throws Exception
-   {
-        submitAttachment (data, context, "url");
-   } 
-
-    /**
-    *  Modifies attachments of type "url".
-    */
-   public void doSaveurl (RunData data, TemplateContext context) 
-        throws Exception
-   {
+    {
         if (isCollision(data, context)) 
         {
             return;
@@ -313,171 +303,154 @@ public class ModifyIssue extends BaseModifyIssue
                 
                 if (intake.isAllValid())
                 {
-                    group.setProperties(attachment);
-                    attachment.save();
+                    // store the new and old data
+                    String oldDescription = attachment.getName();
+                    String oldURL = new String(attachment.getData());
+                    String newDescription = nameField.toString();
+                    String newURL = dataField.toString();
+
+                    if (!oldDescription.equals(newDescription) ||
+                        !oldURL.equals(newURL))
+                    {
+                        group.setProperties(attachment);
+                        attachment.save();
+                        attachment.registerSaveURLActivity(
+                            (ScarabUser)data.getUser(), issue, 
+                            oldDescription, newDescription, 
+                            oldURL, newURL);
+                    }
                 }
             }
         } 
-   }
+    }
 
     /**
-    *  Adds an attachment of type "comment".
-    */
-   public void doSubmitcomment (RunData data, TemplateContext context) 
+     *  Adds an attachment of type "url".
+     */
+    public void doSubmiturl (RunData data, TemplateContext context) 
         throws Exception
-   {
-        submitAttachment (data, context, "comment");
-   } 
-    
-    
+    {
+        IntakeTool intake = getIntakeTool(context);
+        Group group = intake.get("Attachment", "urlKey", false);
+        if (group != null) 
+        {
+            handleAttachment(data, context, Attachment.URL__PK, group);
+        }
+    }
+
+    /**
+     *  Adds an attachment of type "comment".
+     */
+    public void doSubmitcomment (RunData data, TemplateContext context) 
+         throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        Group group = intake.get("Attachment", "commentKey", false);
+        if (group != null) 
+        {
+            handleAttachment(data, context, Attachment.COMMENT__PK, group);
+        }
+    } 
+
     /**
      * Add an attachment of type "file"
      */
     public void doSubmitfile (RunData data, TemplateContext context)
         throws Exception
     {
-        submitAttachment (data, context, "file");
-    }
-    
-
-   /**
-    *  Adds an attachment.
-    */
-    private void submitAttachment (RunData data, TemplateContext context, 
-                                   String type)
-        throws Exception
-    {                          
         IntakeTool intake = getIntakeTool(context);
-        NumberKey typeId = null;
-        Group group = null;
-        
-        if (type.equals("url"))
-        {
-            group = intake.get("Attachment", "urlKey", false);
-            typeId = Attachment.URL__PK;
-        } 
-        else if (type.equals("comment")) 
-        {
-            group = intake.get("Attachment", "commentKey", false);
-            typeId = Attachment.COMMENT__PK;
-        }
-        else if (type.equals("file"))
-        {
-            group = intake.get("Attachment", "fileKey", false);
-            typeId = Attachment.FILE__PK;
-        }
-        
+        Group group = intake.get("Attachment", "fileKey", false);
         if (group != null) 
         {
-            Field nameField = group.get("Name"); 
-            Field dataField = group.get("DataAsString"); 
-            if (nameField.isValid())
-            {
-                nameField.setRequired(true);
-            }
-            if (dataField.isValid() && (typeId == Attachment.COMMENT__PK 
-                                        || typeId == Attachment.URL__PK))
-            {
-                dataField.setRequired(true);
-            }
-
-
-            if (intake.isAllValid())
-            {
-                Attachment attachment = new Attachment();
-                group.setProperties(attachment);
-                
-                ScarabUser user = (ScarabUser)data.getUser();
-                ScarabRequestTool scarabR = getScarabRequestTool(context);
-                String id = data.getParameters().getString("id");
-                if (id == null || id.length() == 0)
-                {
-                    scarabR.setAlertMessage("Could not locate issue.");
-                    return;
-                }
-                Issue issue = Issue.getIssueById(id);
-                if (issue == null)
-                {
-                    scarabR.setAlertMessage("Could not locate issue: " + id);
-                    return;
-                }
-
-                if (type.equals("url") || type.equals("comment"))
-                {
-                    attachment.setTextFields(user, issue, typeId);
-                    attachment.save();
-                    if (type.equals("url"))
-                    {
-                        // Generate description of modification
-                        String name = nameField.toString();
-                        String desc = new StringBuffer(name.length() + 12)
-                            .append("added URL '").append(name).append('\'')
-                            .toString();
-                        registerActivity(desc, "Your url was saved", 
-                            issue, user, attachment, context, data, "", name);
-                    }
-                    else 
-                    {
-                        // Generate description of modification
-                        String comment = dataField.toString();
-                        StringBuffer descBuf = new StringBuffer(35);
-                        descBuf.append("added comment '");
-                        if (comment.length() > 25)
-                        { 
-                            descBuf.append(comment.substring(0,25)).append("...");
-                        }
-                        else
-                        {
-                            descBuf.append(comment);
-                        }
-                        descBuf.append('\'').toString();
-                        registerActivity(descBuf.toString(),
-                            "Your comment was saved", 
-                            issue, user, attachment, context, data, "", comment); 
-                        scarabR.setConfirmMessage("Your comment was added.");
-                    }
-                    intake.remove(group);    
-                }
-                else if (type.equals("file"))
-                {
-                    addAttachment(issue, group, attachment, 
-                                  scarabR, data, intake);
-                    issue.save();
-
-                    // Generate description of modification
-                    String name = attachment.getFileName();
-                    String path = attachment.getRelativePath();
-                    String desc = 
-                        new StringBuffer(path.length() + name.length() + 17)
-                   .append("added file '").append(name)
-                   .append("' at ").append(path).toString();
-                    registerActivity(desc, "Your file was added", issue, user, 
-                                     attachment, context, data);
-                    data.setMessage(DEFAULT_MSG);  
-                }
-            } 
-            else
-            {
-                getScarabRequestTool(context).setAlertMessage(ERROR_MESSAGE);
-            }
-        }
-    } 
-
-    private void sendEmail(ActivitySet activitySet, Issue issue, String msg,
-                           TemplateContext context, RunData data)
-        throws Exception
-    {
-        if (!activitySet.sendEmail(new ContextAdapter(context), issue))
-        {
-            StringBuffer sb = 
-                new StringBuffer(msg.length() + EMAIL_ERROR.length());
-            sb.append(msg).append(EMAIL_ERROR);
-            getScarabRequestTool(context).setConfirmMessage(sb.toString());
+            handleAttachment(data, context, Attachment.FILE__PK, group);
         }
     }
 
+    private void handleAttachment (RunData data, TemplateContext context, 
+                                 NumberKey typeId, Group group)
+        throws Exception
+    {
+        // grab the data from the group
+        Field nameField = group.get("Name"); 
+        Field dataField = group.get("DataAsString");
+        // set some required fields
+        if (nameField.isValid())
+        {
+            nameField.setRequired(true);
+        }
+        if (dataField.isValid() && (typeId == Attachment.COMMENT__PK 
+                                    || typeId == Attachment.URL__PK))
+        {
+            dataField.setRequired(true);
+        }
 
-    static void addAttachment(Issue issue, Group group, Attachment attachment, 
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        IntakeTool intake = getIntakeTool(context);
+        // validate intake
+        if (intake.isAllValid())
+        {
+            // get the issue id
+            String id = data.getParameters().getString("id");
+            if (id == null || id.length() == 0)
+            {
+                scarabR.setAlertMessage("Could not locate issue.");
+                return;
+            }
+            // get the issue object
+            Issue issue = Issue.getIssueById(id);
+            if (issue == null)
+            {
+                scarabR.setAlertMessage("Could not locate issue: " + id);
+                return;
+            }
+            // create the new attachment
+            Attachment attachment = AttachmentManager.getInstance();
+            String message = null;
+            boolean addSuccess = false;
+            if (typeId == Attachment.FILE__PK)
+            {
+                // adding a file is a special process
+                addSuccess = addFileAttachment(issue, group, attachment, 
+                              scarabR, data, intake);
+                issue.save();
+                message = "Your file was saved.";
+            }
+            else if (typeId == Attachment.URL__PK || typeId == Attachment.COMMENT__PK)
+            {
+                // set the form data to the attachment object
+                group.setProperties(attachment);
+                if (typeId == Attachment.URL__PK)
+                {
+                    message = "Your url was saved.";
+                }
+                else
+                {
+                    message = "Your comment was saved.";
+                }
+                addSuccess = true;
+            }
+
+            ScarabUser user = (ScarabUser)data.getUser();
+            String nameFieldString = nameField.toString();
+            String dataFieldString = dataField.toString();
+            // register the add activity
+            ActivitySet activitySet = attachment.registerAddActivity(user, issue, typeId, 
+                                        nameFieldString, dataFieldString);
+            if (addSuccess)
+            {
+                // remove the group
+                intake.remove(group);
+                sendEmail(activitySet, issue, message, context, data);
+                scarabR.setConfirmMessage(message);
+            }
+        }
+        else
+        {
+            scarabR.setAlertMessage(ERROR_MESSAGE);
+        }
+    }
+
+    static boolean addFileAttachment(Issue issue, Group group, Attachment attachment, 
         ScarabRequestTool scarabR, RunData data, IntakeTool intake)
         throws Exception
     {
@@ -509,9 +482,9 @@ public class ModifyIssue extends BaseModifyIssue
                 ScarabUser user = (ScarabUser)data.getUser();
                 attachment.setCreatedBy(user.getUserId());
                 issue.addFile(attachment);
-                scarabR.setConfirmMessage("Attachment was added");
                 // remove the group so that the form data doesn't show up again
                 intake.remove(group);
+                return true;
             }
             else
             {
@@ -520,15 +493,32 @@ public class ModifyIssue extends BaseModifyIssue
         }
         else
         {
-            scarabR.setAlertMessage("Could not locate Attachment group");
+            scarabR.setAlertMessage("Could not locate attachment group");
+        }
+        return false;
+    }
+
+    /**
+     * Eventually, this should be moved somewhere else once we can figure
+     * out how to separate email out of the request context scope.
+     */
+    private void sendEmail(ActivitySet activitySet, Issue issue, String msg,
+                           TemplateContext context, RunData data)
+        throws Exception
+    {
+        if (!activitySet.sendEmail(new ContextAdapter(context), issue))
+        {
+            StringBuffer sb = 
+                new StringBuffer(msg.length() + EMAIL_ERROR.length());
+            sb.append(msg).append(EMAIL_ERROR);
+            getScarabRequestTool(context).setConfirmMessage(sb.toString());
         }
     }
 
-
     /**
-    *  Edits a comment.
-    */
-   public void doEditcomment (RunData data, TemplateContext context)
+     *  Edits a comment.
+     */
+    public void doEditcomment (RunData data, TemplateContext context)
         throws Exception
     {                          
         if (isCollision(data, context)) 
