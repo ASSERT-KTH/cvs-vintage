@@ -1,4 +1,4 @@
 #!/bin/sh
-#java  -cp .:./ext/jaxp.jar:./ext/parser.jar org/columba/main/Main
+PATH=/usr/bin
 
-java -cp .:./ext/jaxp.jar:./ext/parser.jar org/columba/main/Main --path ~/.stable
+/usr/java/jdk1.3.1/bin/java  -cp .:./ext/jaxp.jar:./ext/parser.jar org/columba/main/Main --path ~/.stable
