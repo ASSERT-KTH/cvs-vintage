@@ -133,6 +133,10 @@
 	  <menuitem action="CreateVFolderOnTo"/>
 	 </menu>
 	 <separator/>
+	 <menuitem action="TrainMessageAsSpam"/>
+	 <menuitem action="TrainMessageAsHam"/>
+	 <menuitem action="ScoreMessage"/>
+	 <separator/>
 	 <extensionpoint name="mail_bottom" />	
 	 <separator/>
 	 <menuitem action="ExportDialog"/>

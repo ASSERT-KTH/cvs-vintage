@@ -25,11 +25,9 @@ import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.shutdown.ShutdownManager;
-
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.mailchecking.MailCheckingManager;
@@ -45,7 +43,7 @@ import org.columba.mail.plugin.TableRendererPluginHandler;
 import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.shutdown.SaveAllFoldersPlugin;
 import org.columba.mail.shutdown.SavePOP3CachePlugin;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.mail.spam.SaveSpamDBPlugin;
 import org.columba.ristretto.composer.MimeTreeRenderer;
 
 /**
@@ -144,6 +142,10 @@ public class MailMain extends DefaultMain {
         MainInterface.backgroundTaskManager.register(plugin);
         
         plugin = new SavePOP3CachePlugin();
+        MainInterface.backgroundTaskManager.register(plugin);
+        ShutdownManager.getShutdownManager().register(plugin);
+        
+        plugin = new SaveSpamDBPlugin();
         MainInterface.backgroundTaskManager.register(plugin);
         ShutdownManager.getShutdownManager().register(plugin);
     }

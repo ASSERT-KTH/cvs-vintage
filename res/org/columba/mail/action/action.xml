@@ -57,6 +57,9 @@
  <action name="AddSenderToAddressbook" class="org.columba.mail.gui.table.action.AddSenderToAddressbookAction"/>
  <action name="AddAllSendersToAddressbook" class="org.columba.mail.gui.table.action.AddAllSendersToAddressbookAction"/>
  <action name="ColorMessageMenu" class="org.columba.mail.gui.table.action.ColorMessageMenu"/>
+ <action name="TrainMessageAsSpam" class="org.columba.mail.gui.table.action.TrainMessageAsSpamAction"/>
+ <action name="TrainMessageAsHam" class="org.columba.mail.gui.table.action.TrainMessageAsHamAction"/>
+ <action name="ScoreMessage" class="org.columba.mail.gui.table.action.ScoreMessageAction"/>
  
  <!-- tree menu -->
  <action name="ApplyFilter" class="org.columba.mail.gui.tree.action.ApplyFilterAction"/>
