@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.8 $
+ *	@version $Revision: 1.9 $
  */
 public class TxManager
    implements TransactionManager
@@ -235,7 +235,8 @@ public class TxManager
               throws SystemException
    {
       // Look up the txCapsule and delegate
-	  return ((TxCapsule) txCapsules.get(tx)).getStatus();
+      TxCapsule txCap = ((TxCapsule) txCapsules.get(tx));
+      return txCap == null ? Status.STATUS_NO_TRANSACTION : txCap.getStatus();
    }
 
    public void registerSynchronization(Transaction tx, Synchronization s)
