@@ -1697,8 +1697,14 @@ e.printStackTrace();
                 for (int i =0; i<userList.length; i++)
                 {
                     String userId = userList[i];
-                    String attrId = parser.getString("user_attr_" + userId);
-                    search.addUserCriteria(userId, attrId);
+                    String[] attrIds = parser.getStrings("user_attr_" + userId);
+                    if (attrIds != null) 
+                    {
+                        for (int j=0; j<attrIds.length; j++) 
+                        {
+                            search.addUserCriteria(userId, attrIds[j]);
+                        }
+                    }
                 }
             }
 

@@ -115,7 +115,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.94 2003/04/10 02:03:47 jon Exp $
+ * @version $Id: IssueSearch.java,v 1.95 2003/04/16 03:37:19 jmcnally Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -909,21 +909,32 @@ public class IssueSearch
             userSearchCriteriaList = new ArrayList(4);
         }
         boolean newCriteria = true;
-        for (int i=userIdList.size()-1; i>=0; i--) 
+        for (int i=userIdList.size()-1; i>=0 && newCriteria; i--) 
         {
-            if (userId.equals(userIdList.get(i)) &&
-                searchCriteria.equals(userSearchCriteriaList.get(i))) 
-            {
-                newCriteria = false;
-                break;
-            }
+            Object attrId = userSearchCriteriaList.get(i);
+            // not new if attrId already present or an ANY search has already
+            // been specified
+            newCriteria = !(userId.equals(userIdList.get(i)) && 
+               (searchCriteria.equals(attrId) || ANY_KEY.equals(attrId))); 
         }
         
         if (newCriteria) 
         {
             modified = true;
+            // if the new criteria is ANY, then remove old criteria 
+            if (ANY_KEY.equals(searchCriteria)) 
+            {
+                for (int i=userIdList.size()-1; i>=0; i--) 
+                {
+                    if (userId.equals(userIdList.get(i)))
+                    {
+                        userIdList.remove(i);
+                        userSearchCriteriaList.remove(i);
+                    }
+                }
+            }
             userIdList.add(userId);
-            userSearchCriteriaList.add(searchCriteria);            
+            userSearchCriteriaList.add(searchCriteria);
         }
     }
 

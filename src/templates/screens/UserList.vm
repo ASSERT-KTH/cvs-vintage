@@ -58,17 +58,19 @@
 		<th>$l10n.FullName</th>
 		<th>$l10n.Association</th>
 		</tr>
+#set ($rowIndex = 0)
 #foreach ($userId in $selectedUsers.keySet())
   #set ($user = $scarabR.getUser($userId))
-  #set ($attrId = $selectedUsers.get($userId))
-    #indexedRows($velocityCount)
+  #set ($attrIds = $selectedUsers.get($userId))
+  #foreach ($attrId in $attrIds)
+    #set ($rowIndex = $rowIndex + 1)
+    #indexedRows($rowIndex)
     <td>
-      <input type="checkbox" name="select_user" value="$userId" />
-      <input type="hidden" name="old_attr_$userId" value="$attr.AttributeId" />
+      <input type="checkbox" name="select_user" value="${userId}_$attrId" />
     </td>
     <td><a href="mailto:$user.Email">$user.UserName</a></td>
     <td>$!user.Name</td>
-    <td><select name="asso_user_{$userId}">
+    <td><select name="user_attr_${userId}_$attrId">
       <option value="any"
          #if ($attrId.equals("any")) selected="selected" #end
          >$l10n.Any</option>
@@ -85,7 +87,8 @@
       #end
      #end
        </select></td>
-    </tr>
+  </tr>
+  #end
 #end
 
    </table>  

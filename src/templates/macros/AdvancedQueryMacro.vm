@@ -95,27 +95,21 @@ from:&#160;<input type="text" size="20"
 </tr>
 
 #foreach ($userId in $userList)
+ #set ($user = $scarabR.getUser($userId))
  <input type="hidden" name="user_list" value="$userId"  />
-#if ($usingList.equals("true"))
-  #set ($attrId = $data.Parameters.getString("user_attr_$userId"))
-#else
-  #set ($attrId = $selectedUsers.get($userId))
-#end
-#set ($user = $scarabR.getUser($userId))
-#indexedRows($velocityCount) 
-#set ($loopVar = $velocityCount)
+ #if ($usingList.equals("true"))
+  #set ($attrIds = $data.Parameters.getStrings("user_attr_$userId"))
+ #else
+  #set ($attrIds = $selectedUsers.get($userId))
+ #end
+ 
+ #foreach($attrId in $attrIds)
+ #set ($loopVar = $loopVar + 1) 
+ #indexedRows($loopVar) 
 
-## Determine what the previous value of the selected user attribute
-## In case page has been reloaded
-  #set ($selectedAttr = "")
-#if ($user.UserName.equals($data.Parameters.getString("add_user")))
-  #set ($selectedAttr = $data.Parameters.getString("add_user_attr"))
-#else
-  #set ($selectedAttr = $data.Parameters.getString("user_attr_$userId"))
-#end
 #if ($userList && !$userList.isEmpty())
-  <td><input type="checkbox" name="select_user" value="$userId"/></td>
-  <td><a href="mailto:$user.Email"><strong>$!user.FirstName $!user.LastName</strong></a></td>
+  <td><input type="checkbox" name="select_user" value="${userId}_$attrId"/></td>
+  <td><a href="mailto:$user.Email"><strong>$!user.Name</strong></a></td>
 #end
   <td>$user.UserName</a></td>
   <td>
@@ -136,14 +130,11 @@ from:&#160;<input type="text" size="20"
    </select>
   </td>
 </tr>
+ #end
 #end
 
 ## Add user to search list
- #if ($loopVar % 2 > 0)
-    <tr class="b">
- #else
-    <tr class="a">
- #end
+ #indexedRows2($loopVar) 
 #if ($userList && !$userList.isEmpty())
   <td>&nbsp;</td>
   <td>&nbsp;</td>

@@ -89,7 +89,7 @@ import org.tigris.scarab.util.Log;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.124 2003/04/09 18:02:04 elicia Exp $
+ * @version $Id: Search.java,v 1.125 2003/04/16 03:37:19 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -636,8 +636,14 @@ public class Search extends RequireLoginFirstAction
             {
                 List item = new ArrayList(2);
                 String userId = userIds[i];
-                String attrId = params.get("user_attr_" + userId);
-                userMap.put(userId, attrId);
+                String[] attrIds = params.getStrings("user_attr_" + userId);
+                if (attrIds != null) 
+                {
+                    for (int j=0; j<attrIds.length; j++) 
+                    {
+                        addAttributeToMap(userMap, userId, attrIds[j], context);
+                    }
+                }
             } 
             user.setSelectedUsersMap(userMap);
             scarabR.setConfirmMessage(l10n.get("SelectedUsersWereAdded"));
@@ -647,6 +653,7 @@ public class Search extends RequireLoginFirstAction
             scarabR.setAlertMessage(l10n.get("NoUsersSelected"));
         }
     }
+
 
     /**
         Adds user to the search form.
@@ -717,7 +724,8 @@ public class Search extends RequireLoginFirstAction
 
        if (success)
        {
-           userMap.put(newUser.getUserId().toString(), attrId.toString());
+           String userId = newUser.getUserId().toString();
+           addAttributeToMap(userMap, userId, attrId, context);
            user.setSelectedUsersMap(userMap);
            scarabR.setConfirmMessage(l10n.get("SelectedUsersWereAdded"));
        }
@@ -725,6 +733,45 @@ public class Search extends RequireLoginFirstAction
        {
            scarabR.setAlertMessage(l10n.get("UserNotPossibleAssignee"));
        }
+    }
+
+    private void addAttributeToMap(Map userMap, String userId, String attrId, 
+                                   TemplateContext context)
+    {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        List attrIds = (List)userMap.get(userId);
+        if (attrIds == null) 
+        {
+            attrIds = new ArrayList(3);
+            userMap.put(userId, attrIds);
+        }
+
+        if (ANY.equals(attrId)) 
+        {
+            if (!attrIds.isEmpty()) 
+            {
+                scarabR.setInfoMessage(
+                    l10n.get("AnyHasReplacedPreviousChoices"));
+            }
+            attrIds.clear();
+        }
+
+        boolean isNew = true;
+        for (Iterator i = attrIds.iterator(); i.hasNext() && isNew;) 
+        {
+            Object oldAttrId = i.next();
+            isNew = !ANY.equals(oldAttrId) && !oldAttrId.equals(attrId); 
+        }
+        
+        if (isNew) 
+        {
+            attrIds.add(attrId);            
+        }
+        else 
+        {
+            scarabR.setInfoMessage(l10n.get("ChoiceAlreadyAccountedAny"));
+        }
     }
 
     /**
@@ -743,14 +790,23 @@ public class Search extends RequireLoginFirstAction
             loadUsersFromUserList(data, userMap);
         }
         ValueParser params = data.getParameters();
-        String[] userIds =  params.getStrings(SELECTED_USER);
-        if (userIds != null && userIds.length > 0) 
+        String[] userAttrIds =  params.getStrings(SELECTED_USER);
+        if (userAttrIds != null && userAttrIds.length > 0) 
         {
-            for (int i =0; i<userIds.length; i++)
+            for (int i =0; i<userAttrIds.length; i++)
             {
-                List item = new ArrayList(2);
-                String userId = userIds[i];
-                userMap.remove(userId);
+                String userAttrId = userAttrIds[i];
+                int delimPos = userAttrId.indexOf('_');
+                String userId = userAttrId.substring(0, delimPos);
+                List currentAttrIds = (List)userMap.get(userId);
+                if (currentAttrIds.size() == 1) 
+                {
+                    userMap.remove(userId);                    
+                }
+                else 
+                {
+                    currentAttrIds.remove(userAttrId.substring(delimPos+1));
+                }
             }
             user.setSelectedUsersMap(userMap);
             scarabR.setConfirmMessage(l10n.get("SelectedUsersWereRemoved"));
@@ -772,16 +828,37 @@ public class Search extends RequireLoginFirstAction
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         Map userMap = user.getSelectedUsersMap();
         ValueParser params = data.getParameters();
-        String[] userIds =  params.getStrings(SELECTED_USER);
-        if (userIds != null && userIds.length > 0) 
+        String[] userAttrIds =  params.getStrings(SELECTED_USER);
+        if (userAttrIds != null && userAttrIds.length > 0) 
         {
-            for (int i =0; i<userIds.length; i++)
+            for (int i =0; i<userAttrIds.length; i++)
             {
-                List item = new ArrayList(2);
-                List newItem = new ArrayList(2);
-                String userId = userIds[i];
-                String attrId = params.getString("asso_user_{" + userId + "}");
-                userMap.put(userId, attrId);
+                String userAttrId = userAttrIds[i];
+                int delimPos = userAttrId.indexOf('_');
+                String userId = userAttrId.substring(0, delimPos);
+                String oldAttrId = userAttrId.substring(delimPos+1);
+                String newAttrId = params
+                    .getString("user_attr_" + userAttrId);
+                if (!oldAttrId.equals(newAttrId)) 
+                {
+                    List currentAttrIds = (List)userMap.get(userId);
+                    if (ANY.equals(newAttrId)) 
+                    {
+                        currentAttrIds.clear();
+                        currentAttrIds.add(ANY);
+                    }
+                    else 
+                    {
+                        for (int j=currentAttrIds.size()-1; j>=0; j--) 
+                        {
+                            if (currentAttrIds.get(j).equals(oldAttrId)) 
+                            {
+                                currentAttrIds.set(j, newAttrId);
+                                break;
+                            }
+                        }
+                    }
+                }                
             }
             user.setSelectedUsersMap(userMap);
             scarabR.setConfirmMessage(l10n.get("SelectedUsersWereModified"));
@@ -806,8 +883,15 @@ public class Search extends RequireLoginFirstAction
             for (int i =0;i<userList.length;i++)
             {
                 String userId = (String)userList[i];
-                String attrId = params.get("user_attr_" + userId);
-                userMap.put(userId, attrId);
+                String[] attrIds = params.getStrings("user_attr_" + userId);
+                if (attrIds != null) 
+                {
+                    for (int j=0; j<attrIds.length; j++) 
+                    {
+                        addAttributeToMap(userMap, userId, attrIds[j],
+                                          getTemplateContext(data));
+                    }
+                }
             }
             ((ScarabUser)data.getUser()).setSelectedUsersMap(userMap);
         }
