@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IIOPContextWrapperFactory.java,v 1.2 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: IIOPContextWrapperFactory.java,v 1.3 2005/02/14 15:09:19 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -40,7 +40,6 @@ import javax.naming.spi.InitialContextFactory;
  * reference wrapping to/from a remote object
  * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @see javax.naming.spi.InitialContextFactory
- * @version 1.0, 15/07/2002
  */
 public class IIOPContextWrapperFactory implements InitialContextFactory {
 

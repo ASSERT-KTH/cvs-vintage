@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IIOPCosNaming.java,v 1.7 2005/02/01 18:56:08 el-vadimo Exp $
+ * $Id: IIOPCosNaming.java,v 1.8 2005/02/14 15:09:19 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -32,30 +32,46 @@ import java.util.Properties;
 
 import javax.naming.InitialContext;
 
+import org.omg.CORBA.ORB;
+
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * Class <code> IIOPCosNaming </code> Start in a separated process (see the sun
  * orbd documentation)
  * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/01/2003
+ * @author Florent Benoit (add POA model)
  */
 public class IIOPCosNaming implements NameService {
 
     /**
-     * port number ( 12350 for default)
+     * Default port number ( 12350 for default)
      */
-    public int port = 12350;
+    private static final int DEFAUL_PORT = 12350;
+
+    /**
+     * Sleep time to wait
+     */
+    private static final int SLEEP_TIME = 2000;
+
+    /**
+     * port number
+     */
+    private int port = DEFAUL_PORT;
 
     /**
      * process of the cosnaming
      */
-    public Process cosNamingProcess = null;
+    private Process cosNamingProcess = null;
+
+    /**
+     * Unique instance of the ORB running in the JVM
+     */
+    private static ORB orb = null;
 
     /**
      * start Method, Start a new NameService or do nothing if the name service
      * is all ready start
-     * @param int port is port number
      * @throws NameServiceException if a problem occurs
      */
     public void start() throws NameServiceException {
@@ -70,7 +86,7 @@ public class IIOPCosNaming implements NameService {
                             System.getProperty("java.home") + System.getProperty("file.separator") + "bin"
                                     + System.getProperty("file.separator") + "tnameserv -ORBInitialPort " + port);
                     // wait for starting
-                    Thread.sleep(2000);
+                    Thread.sleep(SLEEP_TIME);
 
                     // trace the start execution
                     InputStream cosError = cosNamingProcess.getErrorStream();
@@ -130,7 +146,9 @@ public class IIOPCosNaming implements NameService {
         }
         try {
             // stop orbd procees
-            if (cosNamingProcess != null) cosNamingProcess.destroy();
+            if (cosNamingProcess != null) {
+                cosNamingProcess.destroy();
+            }
             cosNamingProcess = null;
         } catch (Exception e) {
             throw new NameServiceException("can not stop cosnaming daemon: " + e);
@@ -142,10 +160,19 @@ public class IIOPCosNaming implements NameService {
      * @return boolean true if the name service is started
      */
     public boolean isStarted() {
-        if (cosNamingProcess != null) return true;
+        if (cosNamingProcess != null) {
+            return true;
+        }
         Properties prop = new Properties();
         prop.put("java.naming.factory.initial", "com.sun.jndi.cosnaming.CNCtxFactory");
         prop.put("java.naming.provider.url", "iiop://localhost:" + port);
+
+        if (orb == null) {
+            initORB();
+        }
+
+        prop.put("java.naming.corba.orb", orb);
+
         try {
             new InitialContext(prop);
         } catch (javax.naming.NamingException ex) {
@@ -156,7 +183,7 @@ public class IIOPCosNaming implements NameService {
 
     /**
      * set port method, set the port for the name service
-     * @param int port number
+     * @param p port number
      */
     public void setPort(int p) {
         if (TraceCarol.isDebugJndiCarol()) {
@@ -167,11 +194,28 @@ public class IIOPCosNaming implements NameService {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.objectweb.carol.jndi.ns.NameService#getPort()
+    /**
+     * @return the port number
      */
     public int getPort() {
         return port;
     }
+    /**
+     * @return the orb.
+     */
+    public static ORB getOrb() {
+        if (orb == null) {
+            initORB();
+        }
+        return orb;
+    }
+
+    /**
+     * Initialize the ORB
+     * @return
+     */
+    private static void initORB() {
+        orb = ORB.init(new String[0], null);
+    }
+
 }
