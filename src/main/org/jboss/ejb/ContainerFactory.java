@@ -59,7 +59,7 @@ import org.jboss.ejb.plugins.*;
  *   @see Container
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public class ContainerFactory
    implements ContainerFactoryMBean, MBeanRegistration
@@ -217,10 +217,10 @@ public class ContainerFactory
                   con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
                   
                   // Create interceptors
-                  con.addInterceptor(new LogInterceptor());
-                  con.addInterceptor(new TxInterceptor());
+//                  con.addInterceptor(new LogInterceptor());
+//                  con.addInterceptor(new SecurityInterceptor());
+//                  con.addInterceptor(new TxInterceptor());
                   con.addInterceptor(new StatelessSessionInstanceInterceptor());
-                  con.addInterceptor(new SecurityInterceptor());
                   
                   con.addInterceptor(con.createContainerInterceptor());
 						
@@ -280,10 +280,10 @@ public class ContainerFactory
 					     
 
 					// Create interceptors
-					con.addInterceptor(new LogInterceptor());
-					con.addInterceptor(new TxInterceptor());
+//					con.addInterceptor(new LogInterceptor());
+//					con.addInterceptor(new SecurityInterceptor());
+//					con.addInterceptor(new TxInterceptor());
 					con.addInterceptor(new EntityInstanceInterceptor());
-					con.addInterceptor(new SecurityInterceptor());
 					con.addInterceptor(new EntitySynchronizationInterceptor());
 
 					con.addInterceptor(con.createContainerInterceptor());

@@ -5,6 +5,6 @@
   
   <property 
     name="Optimized" class="boolean" 
-    displayname="Optimize local calls"/>
+    displayname="Optimize local calls" propertyeditor="com.dreambean.awt.editors.BooleanEditor"/>
 </bean>
    

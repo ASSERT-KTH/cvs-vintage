@@ -16,13 +16,15 @@ import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatelessSessionEnterpriseContext;
 
+import org.jboss.ejb.deployment.SingletonStatelessSessionInstancePoolConfiguration;
+
 /**
  *	Singleton pool for session beans. This lets you have
  * singletons in EJB!
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class SingletonStatelessSessionInstancePool
    implements InstancePool
@@ -34,6 +36,7 @@ public class SingletonStatelessSessionInstancePool
    
    EnterpriseContext ctx;
    boolean inUse = false;
+   boolean isSynchronized = true;
    
    // Static --------------------------------------------------------
    
@@ -55,6 +58,8 @@ public class SingletonStatelessSessionInstancePool
    public void init()
       throws Exception
    {
+	   SingletonStatelessSessionInstancePoolConfiguration conf = (SingletonStatelessSessionInstancePoolConfiguration)con.getMetaData().getContainerConfiguration().getInstancePoolConfiguration();
+	   isSynchronized = conf.getSynchronized();
    }
    
    public void start()
@@ -80,7 +85,7 @@ public class SingletonStatelessSessionInstancePool
       throws RemoteException
    {
       // Wait while someone else is using it
-      while(inUse)
+      while(inUse && isSynchronized)
       {
          try { this.wait(); } catch (InterruptedException e) {}
       }

@@ -15,6 +15,7 @@ import java.util.HashMap;
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
 import javax.ejb.EJBObject;
+import javax.ejb.EJBHome;
 import javax.ejb.EJBMetaData;
 import javax.ejb.CreateException;
 import javax.ejb.RemoveException;
@@ -24,7 +25,7 @@ import javax.ejb.RemoveException;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class StatelessSessionContainer
    extends Container
@@ -153,12 +154,37 @@ public class StatelessSessionContainer
    }
    
    // EJBObject implementation --------------------------------------
-   public void remove()
+   public void remove(Method m, Object[] args, StatelessSessionEnterpriseContext ctx)
       throws java.rmi.RemoteException, RemoveException
    {
+		// Do nothing
+   }
+   
+   public Handle getHandle(Method m, Object[] args, StatelessSessionEnterpriseContext ctx)
+      throws java.rmi.RemoteException
+   {
       // TODO
+   	throw new Error("Not yet implemented");
    }
 
+   public Object getPrimaryKey(Method m, Object[] args, StatelessSessionEnterpriseContext ctx)
+      throws java.rmi.RemoteException
+   {
+		throw new java.rmi.RemoteException("Sessions do not have primary keys");
+   }
+   
+   public EJBHome getEJBHome(Method m, Object[] args, StatelessSessionEnterpriseContext ctx)
+      throws java.rmi.RemoteException
+   {
+      return containerInvoker.getEJBHome();
+   }
+   
+   public boolean isIdentical(Method m, Object[] args, StatelessSessionEnterpriseContext ctx)
+      throws java.rmi.RemoteException
+   {
+   	throw new Error("Not yet implemented");
+   }
+	
    // EJBHome implementation ----------------------------------------
    public EJBObject create()
       throws java.rmi.RemoteException, CreateException
@@ -170,20 +196,19 @@ public class StatelessSessionContainer
    public void remove(Handle handle)
       throws java.rmi.RemoteException, RemoveException
    {
-      // TODO
+      throw new Error("Not yet implemented");
    }
    
    public void remove(java.lang.Object primaryKey)
       throws java.rmi.RemoteException, RemoveException
    {
-      // TODO
+      throw new Error("Not yet implemented");
    }
    
    public EJBMetaData getEJBMetaData()
       throws java.rmi.RemoteException
    {
-      // TODO
-      return null;
+      throw new Error("Not yet implemented");
    }
    
    public HomeHandle getHomeHandle()
@@ -195,46 +220,49 @@ public class StatelessSessionContainer
       
    // Protected  ----------------------------------------------------
    protected void setupHomeMapping()
-      throws NoSuchMethodException
+      throws DeploymentException
    {
       Map map = new HashMap();
       
       Method[] m = homeInterface.getMethods();
       for (int i = 0; i < m.length; i++)
       {
-         // Implemented by container
-//         System.out.println("Mapping "+m[i].getName());
-         map.put(m[i], getClass().getMethod(m[i].getName(), m[i].getParameterTypes()));
+			try
+			{
+	         // Implemented by container
+	         map.put(m[i], getClass().getMethod(m[i].getName(), m[i].getParameterTypes()));
+	      } catch (NoSuchMethodException e)
+	      {
+	      	throw new DeploymentException("Could not find matching method for "+m[i], e);
+	      }
       }
       
       homeMapping = map;
    }
 
    protected void setupBeanMapping()
-      throws NoSuchMethodException
+      throws DeploymentException
    {
       Map map = new HashMap();
       Method[] m = remoteInterface.getMethods();
       for (int i = 0; i < m.length; i++)
       {
-         if (!m[i].getDeclaringClass().equals(EJBObject.class))
-         {
-            // Implemented by bean
-            map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
-//            System.out.println("Mapped "+m[i].getName()+" "+m[i].hashCode());
-//            System.out.println("to "+map.get(m[i]));
-         }
-         else
-         {
-            try
-            {
+			try
+			{
+	         if (!m[i].getDeclaringClass().equals(EJBObject.class))
+	         {
+	            // Implemented by bean
+	            map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
+	         }
+	         else
+	         {
                // Implemented by container
-               map.put(m[i], getClass().getMethod(m[i].getName(), m[i].getParameterTypes()));
-            } catch (NoSuchMethodException e)
-            {
-//               System.out.println(m[i].getName() + " in bean has not been mapped");
-            }
-         }
+               map.put(m[i], getClass().getMethod(m[i].getName(), new Class[] { Method.class, Object[].class , StatelessSessionEnterpriseContext.class}));
+	         }
+	      } catch (NoSuchMethodException e)
+	      {
+	      	throw new DeploymentException("Could not find matching method for "+m[i], e);
+	      }
       }
       
       beanMapping = map;
@@ -271,29 +299,36 @@ public class StatelessSessionContainer
       {
          // Get method and instance to invoke upon
          Method m = (Method)beanMapping.get(method);
-         Object instance;
-         if (m.getDeclaringClass().equals(StatelessSessionContainer.this.getClass()))
+
+         // Select instance to invoke (container or bean)
+         if (m.getDeclaringClass().equals(StatelessSessionContainer.class))
          {
-            instance = StatelessSessionContainer.this;
+            // Invoke and handle exceptions
+            try
+            {
+               return m.invoke(StatelessSessionContainer.this, new Object[] { method, args, ctx });
+            } catch (InvocationTargetException e)
+            {
+               Throwable ex = e.getTargetException();
+               if (ex instanceof Exception)
+                  throw (Exception)ex;
+               else
+                  throw (Error)ex;
+            } 
          } else
          {
-            instance = ctx.getInstance();
-         }
-         
-         // Invoke and handle exceptions
-         try
-         {
-            Object res = m.invoke(instance, args);
-            
-            // Return result
-            return res;
-         } catch (InvocationTargetException e)
-         {
-            Throwable ex = e.getTargetException();
-            if (ex instanceof Exception)
-               throw (Exception)ex;
-            else
-               throw (Error)ex;
+            // Invoke and handle exceptions
+            try
+            {
+               return m.invoke(ctx.getInstance(), args);
+            } catch (InvocationTargetException e)
+            {
+               Throwable ex = e.getTargetException();
+               if (ex instanceof Exception)
+                  throw (Exception)ex;
+               else
+                  throw (Error)ex;
+            } 
          }
       }
    }

@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  *   @see Container
  *   @see EntityEnterpriseContext
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class EntityContainer
    extends Container
@@ -392,7 +392,7 @@ public class EntityContainer
          Method m = (Method)beanMapping.get(method);
          
          // Select instance to invoke (container or bean)
-         if (m.getDeclaringClass().equals(EntityContainer.this.getClass()))
+         if (m.getDeclaringClass().equals(EntityContainer.class))
          {
             // Invoke and handle exceptions
             try

@@ -79,7 +79,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.9 $
+ *	@version $Revision: 1.10 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceManager
@@ -720,6 +720,9 @@ public class JAWSPersistenceManager
    public void storeEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {
+	
+		log.debug("Store entity");
+	
 		// Check for read-only
 		if (readOnly)
 			return;
