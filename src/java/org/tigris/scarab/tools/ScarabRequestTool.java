@@ -54,6 +54,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.TimeZone;
 import java.util.Arrays;
 
@@ -2101,6 +2102,28 @@ try{
             Log.get().error("Permission check failed on:" + permission, e);
         }
         return hasPermission;
+    }
+
+    public HashMap getAssociatedUsers() throws Exception
+    {
+        return (HashMap)data.getUser().getTemp("assoUsers");
+    }
+    
+    public void setAssociatedUsers(HashMap users) 
+    {
+        data.getUser().setTemp("assoUsers", users);
+    }
+
+    public void resetAssociatedUsers() throws Exception
+    {
+        HashMap assoUsers = new HashMap();
+        List issueList = getIssues();
+        for (int i=0; i<issueList.size(); i++)
+        {
+            Issue issue = (Issue)issueList.get(i);
+            assoUsers.put(issue.getIssueId(), issue.getAssociatedUsers());
+        }
+        data.getUser().setTemp("assoUsers", assoUsers);
     }
 
     /**
