@@ -24,7 +24,7 @@
 // File: CrTooManyAttr.java
 // Classes: CrTooManyAttr
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyAttr.java,v 1.4 1999/03/17 03:19:25 jrobbins Exp $
+// $Id: CrTooManyAttr.java,v 1.5 1999/04/27 00:20:35 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -49,8 +49,8 @@ public class CrTooManyAttr extends CrUML {
   ////////////////////////////////////////////////////////////////
   // constructor
   public CrTooManyAttr() {
-    setHeadline("Reduce Attributes on {name}");
-    sd("There are too many Attributes on class {name}.  Whenever one class "+
+    setHeadline("Reduce Attributes on <ocl>self</ocl>");
+    sd("There are too many Attributes on class <ocl>self</ocl>.  Whenever one class "+
        "becomes too central to the design it may become a maintenance "+
        "bottleneck that must be updated frequently. \n\n"+
        "Defining the attributes of objects is an important "+

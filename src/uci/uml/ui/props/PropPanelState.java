@@ -26,7 +26,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelState.java,v 1.6 1999/04/20 01:52:52 jrobbins Exp $
+// $Id: PropPanelState.java,v 1.7 1999/04/27 00:21:18 jrobbins Exp $
 
 package uci.uml.ui.props;
 
@@ -167,8 +167,8 @@ implements DocumentListener, ItemListener {
   // accessors
 
   /** Set the values to be shown in all widgets based on model */
-  public void setTarget(Object t) {
-    super.setTarget(t);
+  protected void setTargetInternal(Object t) {
+    super.setTargetInternal(t);
     State st = (State) t;
 
     _entryField.setText(GeneratorDisplay.Generate(st.getEntry()));
@@ -188,6 +188,7 @@ implements DocumentListener, ItemListener {
 
 
   public void setTargetEntry() {
+    if (_inChange) return;
     State s = (State) _target;
     String newText = _entryField.getText();
     System.out.println("setTargetEntry: " + newText);
@@ -198,6 +199,7 @@ implements DocumentListener, ItemListener {
   }
 
   public void setTargetExit() {
+    if (_inChange) return;
     State s = (State) _target;
     String newText = _exitField.getText();
     System.out.println("setTargetExit: " + newText);

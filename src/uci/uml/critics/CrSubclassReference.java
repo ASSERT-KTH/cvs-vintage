@@ -24,7 +24,7 @@
 // File: CrSubclassReference.javoa
 // Classes: CrSubclassReference
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSubclassReference.java,v 1.4 1999/03/25 16:06:53 jrobbins Exp $
+// $Id: CrSubclassReference.java,v 1.5 1999/04/27 00:20:33 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -43,7 +43,7 @@ public class CrSubclassReference extends CrUML {
 
   public CrSubclassReference() {
     setHeadline("Remove Reference to Specific Subclass");
-    sd("Class {name} has a reference to one of it's subclasses. "+
+    sd("Class <ocl>self</ocl> has a reference to one of it's subclasses. "+
        "Normally all subclasses should be treated \"equally\" by "+
        "the superclass.  This allows for addition of new subclasses "+
        "without modification to the superclass. \n\n"+

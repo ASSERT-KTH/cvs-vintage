@@ -26,7 +26,7 @@
 // File: FigEdgeModelElement.java
 // Classes: FigEdgeModelElement
 // Original Author: abonner
-// $Id: FigEdgeModelElement.java,v 1.20 1999/04/22 22:35:14 jrobbins Exp $
+// $Id: FigEdgeModelElement.java,v 1.21 1999/04/27 00:21:25 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -115,9 +115,12 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
 
   public String getTipString(MouseEvent me) {
     ToDoItem item = hitClarifier(me.getX(), me.getY());
-    if (item != null) return item.getHeadline() + " ";
-    if (getOwner() != null) return getOwner().toString();
-    return toString();
+    String tip = "";
+    if (item != null) tip = item.getHeadline();
+    else if (getOwner() != null) tip = getOwner().toString();
+    else tip = toString();
+    if (tip != null && tip.length() > 0 && !tip.endsWith(" ")) tip += " ";
+    return tip;
   }
 
   public Vector getPopUpActions(MouseEvent me) {

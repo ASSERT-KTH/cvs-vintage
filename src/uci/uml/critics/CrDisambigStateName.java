@@ -26,7 +26,7 @@
 // File: CrDisambigStateName.java
 // Classes: CrDisambigStateName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDisambigStateName.java,v 1.6 1999/03/17 03:19:12 jrobbins Exp $
+// $Id: CrDisambigStateName.java,v 1.7 1999/04/27 00:20:16 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -43,10 +43,10 @@ import uci.uml.Behavioral_Elements.State_Machines.*;
 public class CrDisambigStateName extends CrUML {
 
   public CrDisambigStateName() {
-    setHeadline("Choose a Unique Name for {name}");
+    setHeadline("Choose a Unique Name for <ocl>self</ocl>");
     sd("Every state within a state machine must have a unique "+
        "name. There are at least two states in this machine named "+
-       "\"{name}\".\n\n"+
+       "\"<ocl>self</ocl>\".\n\n"+
        "Clear and unambiguous naming is key to code generation and "+
        "the understandability and maintainability of the design. \n\n"+
        "To fix this, use the \"Next>\" button, or manually select one of the "+

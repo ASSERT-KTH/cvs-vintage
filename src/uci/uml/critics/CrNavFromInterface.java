@@ -26,7 +26,7 @@
 // File: CrNavFromInterface.java
 // Classes: CrNavFromInterface.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNavFromInterface.java,v 1.5 1999/02/19 22:23:05 jrobbins Exp $
+// $Id: CrNavFromInterface.java,v 1.6 1999/04/27 00:20:20 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -40,7 +40,7 @@ import uci.uml.Behavioral_Elements.Collaborations.*;
 public class CrNavFromInterface extends CrUML {
 
   public CrNavFromInterface() {
-    setHeadline("Remove Navigation from Interface {name}");
+    setHeadline("Remove Navigation from Interface <ocl>self</ocl>");
     sd("Associations involving an Interface can be not be naviagable in "+
        "the direction from the Interface.  This is because interfaces do "+
        "contain only operation declarations and cannot hold pointers to "+

@@ -26,7 +26,7 @@
 // File: CrOppEndConflict.java
 // Classes: CrOppEndConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOppEndConflict.java,v 1.14 1999/02/19 22:23:17 jrobbins Exp $
+// $Id: CrOppEndConflict.java,v 1.15 1999/04/27 00:20:29 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -47,7 +47,7 @@ public class CrOppEndConflict extends CrUML {
 
   public CrOppEndConflict() {
     setHeadline("Rename Association Roles");
-    sd("Two roles of {name} have the same name. "+
+    sd("Two roles of <ocl>self</ocl> have the same name. "+
        "Roles must have distinct names.  This may because of an inherited "+
        "attribute. \n\n"+
        "Clear and unambiguous names are key to code generation and producing "+

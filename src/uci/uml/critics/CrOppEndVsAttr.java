@@ -26,7 +26,7 @@
 // File: CrOppEndVsAttr.java
 // Classes: CrOppEndVsAttr
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOppEndVsAttr.java,v 1.14 1999/02/19 22:23:18 jrobbins Exp $
+// $Id: CrOppEndVsAttr.java,v 1.15 1999/04/27 00:20:30 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -47,8 +47,8 @@ public class CrOppEndVsAttr extends CrUML {
 
   public CrOppEndVsAttr() {
     setHeadline("Rename Role or Attribute");
-    sd("One of the attributes of {name} has the same name as "+
-       "{name}'s role in an association.  Attributes and roles "+
+    sd("One of the attributes of <ocl>self</ocl> has the same name as "+
+       "<ocl>self</ocl>'s role in an association.  Attributes and roles "+
        "should have distinct names.  "+
        "This may because of an inherited attribute. \n\n"+
        "Clear and unambiguous names are key to code generation and producing "+

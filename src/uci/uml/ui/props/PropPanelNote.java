@@ -26,7 +26,7 @@
 // File: PropPanelNote.java
 // Classes: PropPanelNote
 // Original Author: your email address here
-// $Id: PropPanelNote.java,v 1.3 1999/03/17 03:21:33 jrobbins Exp $
+// $Id: PropPanelNote.java,v 1.4 1999/04/27 00:21:15 jrobbins Exp $
 
 package uci.uml.ui.props;
 
@@ -85,16 +85,6 @@ implements DocumentListener, ItemListener {
 
     // register interest in change events from all widgets
   }
-
-  ////////////////////////////////////////////////////////////////
-  // accessors
-
-  /** Set the values to be shown in all widgets based on model */
-  public void setTarget(Object t) {
-    super.setTarget(t);
-    // set the values to be shown in all widgets based on model
-  }
-
 
   ////////////////////////////////////////////////////////////////
   // event handlers

@@ -26,7 +26,7 @@
 // File: PropPanelTransition.java
 // Classes: PropPanelTransition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelTransition.java,v 1.4 1999/03/17 03:21:38 jrobbins Exp $
+// $Id: PropPanelTransition.java,v 1.5 1999/04/27 00:21:19 jrobbins Exp $
 
 package uci.uml.ui.props;
 
@@ -124,9 +124,8 @@ public class PropPanelTransition extends PropPanelTwoEnds {
   // accessors
 
   /** Set the values to be shown in all widgets based on model */
-  public void setTarget(Object t) {
-    //System.out.println("PropPanelTransition setting target to " + t);
-    super.setTarget(t);
+  protected void setTargetInternal(Object t) {
+    super.setTargetInternal(t);
     Transition tt = (Transition) t;
     _triggerField.setText(GeneratorDisplay.Generate(tt.getTrigger()));
     _guardField.setText(GeneratorDisplay.Generate(tt.getGuard()));
@@ -158,6 +157,7 @@ public class PropPanelTransition extends PropPanelTwoEnds {
   
 
   public void setTargetTrigger() {
+    if (_inChange) return;
     Transition t = (Transition) _target;
     String newText = _triggerField.getText();
     //System.out.println("setTargetTrigger: " + newText);
@@ -168,6 +168,7 @@ public class PropPanelTransition extends PropPanelTwoEnds {
   }
 
   public void setTargetGuard() {
+    if (_inChange) return;
     Transition t = (Transition) _target;
     String newText = _guardField.getText();
     //System.out.println("setTargetGuard: " + newText);
@@ -178,6 +179,7 @@ public class PropPanelTransition extends PropPanelTwoEnds {
   }
 
   public void setTargetEffect() {
+    if (_inChange) return;
     Transition t = (Transition) _target;
     String newText = _effectField.getText();
     //System.out.println("setTargetEffect: " + newText);

@@ -24,7 +24,7 @@
 // File: CrTooManyClasses.java
 // Classes: CrTooManyClasses
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyClasses.java,v 1.4 1999/03/17 03:19:26 jrobbins Exp $
+// $Id: CrTooManyClasses.java,v 1.5 1999/04/27 00:20:37 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -50,9 +50,9 @@ public class CrTooManyClasses extends CrUML {
   ////////////////////////////////////////////////////////////////
   // constructor
   public CrTooManyClasses() {
-    // needs-more-work: {name} is not expanded for diagram objects
-    setHeadline("Reduce Classes in diagram {name}");
-    sd("There are too many classes in {name}.  If one class diagram "+
+    // needs-more-work: <ocl>self.name</ocl> is not expanded for diagram objects
+    setHeadline("Reduce Classes in diagram <ocl>self</ocl>");
+    sd("There are too many classes in <ocl>self</ocl>.  If one class diagram "+
        "has too many classes it may become very difficult for humans "+
        "to understand. \n\n"+
        "Defining an understandable set of class diagrams is an important "+

@@ -26,7 +26,7 @@
 // File: CrUselessInterface.java
 // Classes: CrUselessInterface
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUselessInterface.java,v 1.3 1999/02/19 22:23:38 jrobbins Exp $
+// $Id: CrUselessInterface.java,v 1.4 1999/04/27 00:20:49 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -44,9 +44,9 @@ import uci.util.*;
 public class CrUselessInterface extends CrUML {
 
   public CrUselessInterface() {
-    setHeadline("Define Class to Implement {name}");
+    setHeadline("Define Class to Implement <ocl>self</ocl>");
     String s;
-    s = "{name} can never be used because "+
+    s = "<ocl>self</ocl> can never be used because "+
       "no classes implement it.\n\n"+
       "To fix this problem, press the \"Next>\" button or manually "+
       "use the toolbar \"Class\" button to define classes and the "+

@@ -26,7 +26,7 @@
 // File: CrSingletonViolated.java
 // Classes: CrSingletonViolated
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSingletonViolated.java,v 1.12 1999/02/19 22:23:45 jrobbins Exp $
+// $Id: CrSingletonViolated.java,v 1.13 1999/04/27 00:20:53 jrobbins Exp $
 
 package uci.uml.critics.patterns;
 
@@ -72,7 +72,7 @@ public class CrSingletonViolated extends CrUML {
   }
 
   protected void sd(String s) { setDescription(s); }
-  
+
   public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof MMClass)) return NO_PROBLEM;
     MMClass cls = (MMClass) dm;

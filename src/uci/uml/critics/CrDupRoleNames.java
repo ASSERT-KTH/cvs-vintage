@@ -26,7 +26,7 @@
 // File: CrDupRoleNames.java
 // Classes: CrDupRoleNames
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupRoleNames.java,v 1.11 1999/02/19 22:22:42 jrobbins Exp $
+// $Id: CrDupRoleNames.java,v 1.12 1999/04/27 00:20:17 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -43,11 +43,11 @@ import uci.uml.Behavioral_Elements.Collaborations.*;
 public class CrDupRoleNames extends CrUML {
 
   public CrDupRoleNames() {
-    setHeadline("Change {name} Role Names");
-    sd("Association {name} has two roles with conflicting names. \n\n"+
+    setHeadline("Change <ocl>self</ocl> Role Names");
+    sd("Association <ocl>self</ocl> has two roles with conflicting names. \n\n"+
        "Clear and unambiguous naming is key to code generation and "+
        "the understandability and maintainability of the design. \n\n"+
-       "To fix this, use the \"Next>\" button, or manually select {name} "+
+       "To fix this, use the \"Next>\" button, or manually select <ocl>self</ocl> "+
        "and use the Properties tab to change the role names.");
     addSupportedDecision(CrUML.decNAMING);
     addTrigger("connection");

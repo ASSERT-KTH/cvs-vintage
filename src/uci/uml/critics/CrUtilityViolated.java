@@ -28,7 +28,7 @@
 // File: CrUtilityViolated.java
 // Classes: CrUtilityViolated
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUtilityViolated.java,v 1.7 1999/02/19 22:23:39 jrobbins Exp $
+// $Id: CrUtilityViolated.java,v 1.8 1999/04/27 00:20:50 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -45,8 +45,8 @@ import uci.uml.Foundation.Extension_Mechanisms.*;
 public class CrUtilityViolated extends CrUML {
 
   public CrUtilityViolated() {
-    setHeadline("Remove Instance Variables");
-    sd("The <<utility> class {name} has instance variables. "+
+    setHeadline("Remove Instance Variables from Utility Class");
+    sd("The <<utility>> class <ocl>self</ocl> has instance variables. "+
        "Utility classes shold provide only static attributes and methods.\n\n"+
        "Applying and following the constraints imposed by stereotypes "+
        "allows you to add additional meaning to your design that helps "+
@@ -55,7 +55,7 @@ public class CrUtilityViolated extends CrUML {
        "variables by dobule clicking on them in the navigator pane and "+
        "using the Remove From Project command, or remove the <<utility>> "+
        "stereotype. ");
-       
+
     addSupportedDecision(CrUML.decSTORAGE);
     addSupportedDecision(CrUML.decSTEREOTYPES);
     addTrigger("stereotype");

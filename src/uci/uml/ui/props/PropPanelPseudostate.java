@@ -26,7 +26,7 @@
 // File: PropPanelPseudostate.java
 // Classes: PropPanelPseudostate
 // Original Author: your email address here
-// $Id: PropPanelPseudostate.java,v 1.4 1999/03/17 03:21:35 jrobbins Exp $
+// $Id: PropPanelPseudostate.java,v 1.5 1999/04/27 00:21:17 jrobbins Exp $
 
 package uci.uml.ui.props;
 
@@ -87,17 +87,6 @@ implements DocumentListener, ItemListener {
 
     // register interest in change events from all widgets
   }
-
-  ////////////////////////////////////////////////////////////////
-  // accessors
-
-  /** Set the values to be shown in all widgets based on model */
-  public void setTarget(Object t) {
-    super.setTarget(t);
-    Pseudostate st = (Pseudostate) t;
-    // set the values to be shown in all widgets based on model
-  }
-
 
   ////////////////////////////////////////////////////////////////
   // event handlers

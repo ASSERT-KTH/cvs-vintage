@@ -26,7 +26,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.7 1999/04/20 01:52:53 jrobbins Exp $
+// $Id: PropPanelUseCase.java,v 1.8 1999/04/27 00:21:21 jrobbins Exp $
 
 package uci.uml.ui.props;
 
@@ -142,8 +142,8 @@ public class PropPanelUseCase extends PropPanel {
   // accessors
 
   /** Set the values to be shown in all widgets based on model */
-  public void setTarget(Object t) {
-    super.setTarget(t);
+  protected void setTargetInternal(Object t) {
+    super.setTargetInternal(t);
     UseCase uc = (UseCase) t;
     // set the values to be shown in all widgets based on model
 

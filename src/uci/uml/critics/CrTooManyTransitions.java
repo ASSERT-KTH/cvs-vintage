@@ -24,7 +24,7 @@
 // File: CrTooManyTransitions.java
 // Classes: CrTooManyTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyTransitions.java,v 1.4 1999/03/17 03:19:28 jrobbins Exp $
+// $Id: CrTooManyTransitions.java,v 1.5 1999/04/27 00:20:41 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -49,8 +49,8 @@ public class CrTooManyTransitions extends CrUML {
   ////////////////////////////////////////////////////////////////
   // constructor
   public CrTooManyTransitions() {
-    setHeadline("Reduce Transitions on {name}");
-    sd("There are too many Transitions on state {name}.  Whenever one state "+
+    setHeadline("Reduce Transitions on <ocl>self</ocl>");
+    sd("There are too many Transitions on state <ocl>self</ocl>.  Whenever one state "+
        "becomes too central to the machine it may become a maintenance "+
        "bottleneck that must be updated frequently. \n\n"+
        "Defining the transitions between states is an important "+

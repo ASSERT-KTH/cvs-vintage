@@ -26,7 +26,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.3 1999/03/17 03:21:26 jrobbins Exp $
+// $Id: PropPanelInstance.java,v 1.4 1999/04/27 00:21:11 jrobbins Exp $
 
 package uci.uml.ui.props;
 
@@ -91,8 +91,8 @@ implements DocumentListener, ItemListener {
   // accessors
 
   /** Set the values to be shown in all widgets based on model */
-  public void setTarget(Object t) {
-    super.setTarget(t);
+  protected void setTargetInternal(Object t) {
+    super.setTargetInternal(t);
     Instance tt = (Instance) t;
     // set the values to be shown in all widgets based on model
   }

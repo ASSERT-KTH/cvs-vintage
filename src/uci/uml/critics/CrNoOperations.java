@@ -30,7 +30,7 @@
 // File: CrNoOperations.javoa
 // Classes: CrNoOperations
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoOperations.java,v 1.10 1999/03/17 03:19:19 jrobbins Exp $
+// $Id: CrNoOperations.java,v 1.11 1999/04/27 00:20:24 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -49,13 +49,13 @@ import uci.uml.Foundation.Extension_Mechanisms.*;
 public class CrNoOperations extends CrUML {
 
   public CrNoOperations() {
-    setHeadline("Add Operations to {name}");
-    sd("You have not yet specified operations for {name}. "+
+    setHeadline("Add Operations to <ocl>self</ocl>");
+    sd("You have not yet specified operations for <ocl>self</ocl>. "+
        "Normally classes provide operations that define their behavior. \n\n"+
        "Defining operations is needed to complete the behavioral "+
        "specification part of your design. \n\n"+
        "To fix this, press the \"Next>\" button, or add operations manually "+
-       "by clicking on {name} in the navigator pane and "+
+       "by clicking on <ocl>self</ocl> in the navigator pane and "+
        "using the Create menu to make a new operations. ");
 
     addSupportedDecision(CrUML.decBEHAVIOR);

@@ -26,7 +26,7 @@
 // File: CrOperNameConflict.java
 // Classes: CrOperNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOperNameConflict.java,v 1.4 1999/03/17 03:19:20 jrobbins Exp $
+// $Id: CrOperNameConflict.java,v 1.5 1999/04/27 00:20:28 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -41,7 +41,7 @@ import uci.uml.Foundation.Data_Types.*;
 public class CrOperNameConflict extends CrUML {
 
   public CrOperNameConflict() {
-    setHeadline("Change Names or Signatures in {name}");
+    setHeadline("Change Names or Signatures in <ocl>self</ocl>");
     sd("Two operations have the exact same signature.  "+
        "Operations must have distinct signatures.  A signature is the combination "+
        "of the operation's name, and parameter types. \n\n"+

@@ -26,7 +26,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.3 1999/03/17 03:21:23 jrobbins Exp $
+// $Id: PropPanelClassifierRole.java,v 1.4 1999/04/27 00:21:10 jrobbins Exp $
 
 package uci.uml.ui.props;
 
@@ -121,8 +121,8 @@ implements ItemListener, DocumentListener {
   // accessors
 
   /** Set the values to be shown in all widgets based on model */
-  public void setTarget(Object t) {
-    super.setTarget(t);
+  protected void setTargetInternal(Object t) {
+    super.setTargetInternal(t);
     ClassifierRole cr = (ClassifierRole) t;
     if (cr.getBaseString() != null)
       _baseField.setText(cr.getBaseString().trim());
@@ -160,6 +160,7 @@ implements ItemListener, DocumentListener {
 
   protected void setTargetBaseString(String s) {
     if (_target == null) return;
+    if (_inChange) return;
     try {
       ((ClassifierRole)_target).setBaseString(s);
     }

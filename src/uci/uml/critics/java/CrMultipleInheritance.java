@@ -26,7 +26,7 @@
 // File: CrMultipleInheritance.java.java
 // Classes: CrMultipleInheritance.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleInheritance.java,v 1.6 1999/03/16 19:01:42 jrobbins Exp $
+// $Id: CrMultipleInheritance.java,v 1.7 1999/04/27 00:20:52 jrobbins Exp $
 
 package uci.uml.critics.java;
 
@@ -44,14 +44,14 @@ public class CrMultipleInheritance extends CrUML {
 
   public CrMultipleInheritance() {
     setHeadline("Change Multiple Inheritance to Interfaces");
-    sd("{name} has multiple base classes, but Java does not support "+
+    sd("<ocl>self</ocl> has multiple base classes, but Java does not support "+
        "multiple inheritance.  You must use interfaces instead. \n\n"+
        "This change is required before you can generate Java code.\n\n"+
        "To fix this, use the \"Next>\" button, or manually (1) remove one of "+
        "the base classes and then (2) optionally define a new interface "+
        "with the same method declarations and (3) add it as an "+
-       "interface of {name}, and (4) move the method bodies from the "+
-       "old base class down into {name}.");
+       "interface of <ocl>self</ocl>, and (4) move the method bodies from the "+
+       "old base class down into <ocl>self</ocl>.");
 
     addSupportedDecision(CrUML.decINHERITANCE);
     addSupportedDecision(CrUML.decCODE_GEN);

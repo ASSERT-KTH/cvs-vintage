@@ -26,7 +26,7 @@
 // File: CrSignatureConflict.java
 // Classes: CrSignatureConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSignatureConflict.java,v 1.12 1999/02/19 22:23:21 jrobbins Exp $
+// $Id: CrSignatureConflict.java,v 1.13 1999/04/27 00:20:32 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -42,7 +42,7 @@ public class CrSignatureConflict extends CrUML {
 
   public CrSignatureConflict() {
     setHeadline("Resolve Signature Conflict");
-    sd("Two operations of {name} have same signature.  A signature "+
+    sd("Two operations of <ocl>self</ocl> have same signature.  A signature "+
        "consists of the operation's name and the number and types of "+
        "its parameters.\n\n"+
        "Operations must have distinct signatures for code generation to "+

@@ -24,7 +24,7 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnnavigableAssoc.java,v 1.5 1999/03/08 22:43:05 jrobbins Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.6 1999/04/27 00:20:47 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -43,12 +43,12 @@ import uci.uml.Model_Management.*;
 public class CrUnnavigableAssoc extends CrUML {
 
   public CrUnnavigableAssoc() {
-    setHeadline("Make {name} Navigable");
-    sd("The Association {name} is not navigable in any direction. "+
+    setHeadline("Make <ocl>self</ocl> Navigable");
+    sd("The Association <ocl>self</ocl> is not navigable in any direction. "+
        "All associations should be navigable at least one way.\n\n"+
        "Setting the navigablility of associations allows your code to access "+
        "data by following pointers. \n\n"+
-       "To fix this, select association \"{name}\" in the diagram or "+
+       "To fix this, select association \"<ocl>self</ocl>\" in the diagram or "+
        "navigator panel and click the properties tab.  Then use the "+
        "checkboxes at the bottom of the properties panel to turn on "+
        "navigablility. ");

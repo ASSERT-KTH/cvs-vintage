@@ -26,7 +26,7 @@
 // File: CrAlreadyRealizes.java
 // Classes: CrAlreadyRealizes.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAlreadyRealizes.java,v 1.3 1999/02/19 22:22:28 jrobbins Exp $
+// $Id: CrAlreadyRealizes.java,v 1.4 1999/04/27 00:20:11 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -39,7 +39,7 @@ import uci.uml.Foundation.Data_Types.*;
 public class CrAlreadyRealizes extends CrUML {
 
   public CrAlreadyRealizes() {
-    setHeadline("Remove Unneeded Realizes from {name}");
+    setHeadline("Remove Unneeded Realizes from <ocl>self</ocl>");
     sd("The selected class already indirectly realizes Interface " +
        "{item.extra}.  There is no need to directly realize it again.\n\n"+
        "Simplifying the design is always a good idea.  You might dismiss "+

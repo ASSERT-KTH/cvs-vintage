@@ -26,7 +26,7 @@
 // File: CrCircularInheritance.java
 // Classes: CrCircularInheritance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularInheritance.java,v 1.13 1999/03/25 16:06:50 jrobbins Exp $
+// $Id: CrCircularInheritance.java,v 1.14 1999/04/27 00:20:12 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -43,7 +43,7 @@ import uci.uml.util.*;
 public class CrCircularInheritance extends CrUML {
 
   public CrCircularInheritance() {
-    setHeadline("Remove {name}'s Circular Inheritance");
+    setHeadline("Remove <ocl>self</ocl>'s Circular Inheritance");
     sd("Inheritances relationships cannot have cycles. \n\n"+
        "A legal class inheritance hierarchy is needed for code generation "+
        "and the correctness of the design. \n\n"+

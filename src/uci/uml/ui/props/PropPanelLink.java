@@ -26,7 +26,7 @@
 // File: PropPanelLink.java
 // Classes: PropPanelLink
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelLink.java,v 1.4 1999/03/17 03:21:28 jrobbins Exp $
+// $Id: PropPanelLink.java,v 1.5 1999/04/27 00:21:13 jrobbins Exp $
 
 package uci.uml.ui.props;
 
@@ -90,8 +90,8 @@ public class PropPanelLink extends PropPanelTwoEnds {
   // accessors
 
   /** Set the values to be shown in all widgets based on model */
-  public void setTarget(Object t) {
-    super.setTarget(t);
+  protected void setTargetInternal(Object t) {
+    super.setTargetInternal(t);
     Link tt = (Link) t;
     // set the values to be shown in all widgets based on model
   }

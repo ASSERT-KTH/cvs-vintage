@@ -26,7 +26,7 @@
 // File: Editor.java
 // Classes: Editor
 // Original Author: ics125 spring 1996
-// $Id: Editor.java,v 1.27 1999/04/22 20:23:54 jrobbins Exp $
+// $Id: Editor.java,v 1.28 1999/04/27 00:19:54 jrobbins Exp $
 
 package uci.gef;
 
@@ -633,7 +633,8 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
     Globals.curEditor(this);
     setUnderMouse(me);
     if (_curFig != null && Globals.getShowFigTips()) {
-      String tip = _curFig.getTipString(me) + " ";
+      String tip = _curFig.getTipString(me);
+      if (tip != null && tip.length() > 0 && !tip.endsWith(" ")) tip += " ";
       if (tip != null && (_awt_component instanceof JComponent)) {
  	((JComponent)_awt_component).setToolTipText(tip);
       }
