@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.31 2004/10/03 07:51:42 mvw Exp $
+// $Id: ArgoDiagram.java,v 1.32 2004/10/31 08:50:14 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -208,7 +208,7 @@ public class ArgoDiagram extends Diagram {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return "Diagram: " + _name;
+        return "Diagram: " + getName();
     }
     
 
