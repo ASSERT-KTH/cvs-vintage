@@ -1,4 +1,4 @@
-// $Id: GUITestProject.java,v 1.9 2005/01/20 23:20:33 linus Exp $
+// $Id: GUITestProject.java,v 1.10 2005/01/30 11:11:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,7 @@ public class GUITestProject extends TestCase {
         int sizeMembers = p.getMembers().size();
         int sizeDiagrams = p.getDiagrams().size();
 
-        // test with a class and class diagram
+        // test with a package and class diagram
         Object package1 = Model.getModelManagementFactory().buildPackage(
                 "test1", null);
         Object package2 = Model.getModelManagementFactory().buildPackage(
@@ -141,7 +141,7 @@ public class GUITestProject extends TestCase {
     }
 
     /**
-     * Test deleting a package that contains a Class.
+     * Test deleting a class that contains a Class.
      * The class should be deleted, too.
      */
     public void testDeleteClassWithInnerClass() {
