@@ -68,12 +68,12 @@ import java.net.*;
  *  Part of GTest
  * 
  */
-public class Parameter {
+public class Cookie {
     private String name;
     private String value;
-    private String type;
+    private int version;
     
-    public Parameter() {}
+    public Cookie() {}
 
     public void setName( String n ) {
 	name=n;
@@ -91,21 +91,4 @@ public class Parameter {
 	return value;
     }
     
-    /** POST or GET - if not set the current method's type will be
-     *  used. You can set it to force GET parameters on POST requests
-     */
-    public void setType( String t ) {
-	type=t;
-    }
-
-    public String getType() {
-	return type;
-    }
-    
-    public String getType(String def) {
-	if( type==null ) return def;
-	return type;
-    }
-    
-
 }

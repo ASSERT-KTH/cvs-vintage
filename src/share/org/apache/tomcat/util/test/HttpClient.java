@@ -58,6 +58,7 @@
  */ 
 package org.apache.tomcat.util.test;
 
+import org.apache.tomcat.util.test.matchers.*;
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -65,53 +66,26 @@ import java.net.*;
 
 
 /**
- *  Part of GTest - send a Http request. This tool gives a lot 
- *  of control over the request, and is usable with ant ( testing
- *  is also a part of the build process :-) or other xml-tools
- *  using similar patterns.
- *
- *  
+ *  HttpClient can send requests and execute matchers against the request.
+ *  This is the main tool that is used to test tomcat's web applications.
+ *  Typical use:
+ *  <pre>
+ *      <httpClient>
+ *        <request/>
+ *        <matcher/>
+ *      </httpClient>
+ *  </pre>
+ *  Part of GTest - send a Http request. 
  */
 public class HttpClient {
-    // Defaults
-    static String defaultHost="localhost";
-    static int defaultPort=8080;
-    static int defaultDebug=0;
-    static String defaultProtocol="HTTP/1.0";
-
-    static Hashtable clients=new Hashtable();
-    
-    // Instance variables
-
+    HttpRequest firstRequest=null;
+    Vector actions=new Vector();
     String id;
-    // Instance variables
-    String host=null;
-    int port=-1;
-
-    int debug=defaultDebug;
-
-    String method="GET";
-    String protocol=null;
-    String path;
+    int debug=0;
+    Body comment=null;
+    boolean success=true;
     
-    String requestLine;
-    Hashtable requestHeaders=new Hashtable();
-    Vector headerVector=new Vector();// alternate
-    Body body;
-    
-    String fullRequest;
-    
-    // Response resulted from this request
-    Response response=new Response();
-    static String CRLF="\r\n";
-
     public HttpClient() {
-    }
-
-    /** Return one of the "named" clients that have been executed so far.
-     */
-    public static Hashtable getHttpClients() {
-	return clients;
     }
 
     /** Set an unique id to this request. This allows it to be
@@ -122,217 +96,133 @@ public class HttpClient {
 	this.id=id;
     }
 
-    /** Server that will receive the request
-     */
-    public void setHost(String h) {
-	this.host=h;
-    }
-
-    /** 
-     */
-    public void setMethod(String h) {
-	this.method=h;
-    }
-
-    /** The port used to send the request
-     */
-    public void setPort(String portS) {
-	this.port=Integer.valueOf( portS).intValue();
-    }
-
-    /** Set the port as int - different name to avoid confusing introspection
-     */
-    public void setPortInt(int i) {
-	this.port=i;
-    }
-
-    /** Do a POST with the specified content.
-     */
-    public void setContent(String s) {
-	body=new Body( s );
-    }
-
-    /** Add content to the request, for POST ( alternate method )
-     */
-    public void addBody( Body b ) {
-	body=b;
-    }
-
-    public void setProtocol( String s ) {
-	protocol=s;
-    }
-    
-    public void setPath( String s ) {
-	path=s;
-    }
-
-    public void addHeader( String n, String v ) {
-	requestHeaders.put(n, new Header( n, v) );
-    }
-
-    /** Add a header to the request
-     */
-    public void addHeader( Header rh ) {
-	headerVector.addElement( rh );
-    }
-
-    /** Add headers - string representation, will be parsed
-     *  The value is a "|" separated list of headers to expect.
-     *  It's preferable to use the other 2 methods.
-     */
-    public void setHeaders( String s ) {
-       requestHeaders=new Hashtable();
-       Header.parseHeadersAsString( s, requestHeaders );
-    }
-
-
-    /** Add a parameter to the request
-     *  XXX not implemented
-     */
-    public void addParameter( Parameter rp ) {
-    }
-
     /** Display debug info
      */
     public void setDebug( int d ) {
 	debug=d;
     }
-
-    /** Verbose request line - including method and protocol
+    
+    /** Add a request that will be executed.
      */
-    public void setRequestLine( String s ) {
-	this.requestLine=s;
+    public void addHttpRequest( HttpRequest b ) {
+	b.setHttpClient( this );
+	if( firstRequest == null ) firstRequest=b;
+	actions.addElement( b );
+    }
+
+    public Body createComment() {
+	comment=new Body();
+	return comment;
+    }
+
+    public String getComment() {
+	if(comment==null) return "";
+	return comment.getText();
+    }
+
+    public void setDescription( String s ) {
+	comment=new Body( s );
     }
     
-    public String getRequestLine( ) {
-	if( requestLine==null ) {
-	    prepareRequest(); 
-	    int idx=fullRequest.indexOf("\r");
-	    if( idx<0 )
-		requestLine=fullRequest;
-	    else
-		requestLine=fullRequest.substring(0, idx );
-	}
-	return requestLine;
+    // -------------------- Various matchers --------------------
+
+    /** Add a matcher.
+     */
+    public void addMatcher( Matcher m ) {
+	m.setHttpClient( this );
+	actions.addElement( m );
+    }
+
+    // XXX Ant is not able to handle generic addXXX, we need to add
+    // individual methods for each matcher
+
+    public void addGoldenMatch( GoldenMatch m ) {
+	addMatcher( m );
+    }
+    public void addHeaderMatch( HeaderMatch m ) {
+	addMatcher( m );
+    }
+    public void addHttpStatusMatch( HttpStatusMatch m ) {
+	addMatcher( m );
+    }
+    public void addResponseMatch( ResponseMatch m ) {
+	addMatcher( m );
+    }
+    public void addResponseMatchFile( ResponseMatchFile m ) {
+	addMatcher( m );
     }
     
-    /** Allow sending a verbose request
-     */
-    public void setFullRequest( String s ) {
-	fullRequest=s;
+    
+    // -------------------- Access to the actions --------------------
+
+    public HttpRequest getFirstRequest() {
+	return firstRequest;
     }
 
-    public String getFullRequest() {
-	return fullRequest;
+    // -------------------- Result --------------------
+    Matcher failingMatcher=null;
+
+    public Matcher getFailingMatch() {
+	return failingMatcher;
     }
 
-    /** Alternate method for sending a verbose request
-     */
-    public void addText(String s ) {
-	fullRequest=s;
+    public String getFailureMessage() {
+	if( failingMatcher==null ) return "";
+	return failingMatcher.getMessage();
     }
 
-    // -------------------- Access the response --------------------
-
-    public Response getResponse() {
-	return response;
+    public boolean getResult() {
+	return success;
     }
-
+    
     // -------------------- Execute the request --------------------
 
     public void execute() {
 	try {
-	    dispatch();
+	    Enumeration aE=actions.elements();
+	    HttpRequest lastRequest=null;
+	    while( aE.hasMoreElements() ) {
+		Object action=aE.nextElement();
+		if( action instanceof HttpRequest ) {
+		    lastRequest=(HttpRequest)action;
+		    dispatch(lastRequest);
+		} else if( action instanceof Matcher ) {
+		    Matcher matcher=(Matcher)action;
+		    matcher.setHttpRequest( lastRequest );
+		    matcher.setHttpResponse( lastRequest.getHttpResponse() );
+		    matcher.execute();
+		    boolean testResult=matcher.getResult();
+		    if( ! testResult ) {
+			success=false;
+			failingMatcher=matcher;
+			break;
+		    }
+		}
+	    }
 	} catch(Exception ex ) {
 	    ex.printStackTrace();
 	}
 	if( id!=null )
 	    clients.put( id, this );
-    }
 
-    /** 
-     */
-    private void prepareRequest() 
-    {
-	// explicitely set
-	if( fullRequest != null ) return;
+	// after execute() is done, add the test result to the list
+	testResults.addElement( this );
+	if( !success )
+	    testFailures.addElement( this.getFailingMatch() );
+	else
+	    testSuccess.addElement( this );
 
-	// use the existing info to compose what will be sent to the
-	// server
-	StringBuffer sb=new StringBuffer();
-	if( requestLine != null ) 
-	    sb.append(requestLine);
-	else {
-	    sb.append( method ).append(" ").append(path).append(" ");
-	    sb.append(protocol);
-	    requestLine=sb.toString();
-	}
-
-	sb.append(CRLF);
-
-	// We may test HTTP0.9 behavior. If it's post 1.0, it needs
-	// a LF
-	if( requestLine.indexOf( "HTTP/1." ) <0 ) {
-	    fullRequest=sb.toString();
-	    return; // nothing to add
-	}
-
-	String contentL=null;
-
-	Enumeration en=headerVector.elements();
-	while( en.hasMoreElements()) {
-	    Header rh=(Header)en.nextElement();
-	    requestHeaders.put( rh.getName(), rh );
-	}
-	 
-	// headers
-	Enumeration headersE=requestHeaders.elements();
-	while( headersE.hasMoreElements() ) {
-	    Header h=(Header)headersE.nextElement();
-	    sb.append(h.getName()).append(": ");
-	    sb.append(h.getValue()).append( CRLF );
-	    if( "Content-Length".equals( h.getName() )) {
-		contentL=h.getValue();
-	    }
-	}
-	if( requestHeaders.get("Host") == null ) {
-	    sb.append("Host: ").append(host ).append( CRLF );
-	}
-	
-	// If we have a body
-	if( body != null) {
-	    // If set explicitely ( maybe we're testing bad POSTs )
-	    if( contentL==null ) {
-		sb.append("Content-Length: ").append( body.getBody().length());
-		sb.append(CRLF).append( CRLF);
-	    }
-	    
-	    sb.append(body.getBody());
-	    // no /n at the end -see HTTP specs!
-	    // If we want to test bad POST - set Content-Length
-	    // explicitely.
-	} else {
-	    sb.append( CRLF );
-	}
-
-	// set the fullRequest
-	fullRequest=sb.toString();
     }
 
     /** Invoke a request, set headers, responseLine, body
      *  We use plain socket ( instead of the more convenient URLConnection)
      *  because we want to check bad http, special strings, etc.
      */
-    private void dispatch()
+    private void dispatch(HttpRequest req)
 	throws Exception
     {
 	// connect
-	if( host==null ) host=defaultHost;
-	if( port==-1) port=defaultPort;
-
-	if( protocol==null ) protocol=defaultProtocol;
-
-	Socket s = new Socket( host, port);
+	Socket s = new Socket( req.getHost(), req.getPort());
 	s.setSoLinger( true, 1000);
 
 	InputStream is=	s.getInputStream();
@@ -340,7 +230,11 @@ public class HttpClient {
 	OutputStreamWriter out=new OutputStreamWriter(os);
 	PrintWriter pw = new PrintWriter(out);
 
-	prepareRequest();
+	HttpResponse response=new HttpResponse();
+	req.setHttpResponse( response );
+
+	req.prepareRequest();
+	String fullRequest=req.getFullRequest();
 	if( debug > 5 ) {
 	    System.out.println("--------------------Sending " );
 	    System.out.println(fullRequest);
@@ -456,17 +350,47 @@ public class HttpClient {
 	return (sb.toString());
     }
 
-    /** Return a URI (guessed) from the requestLine/fullRequest
-     */
-    public String getURI() {
-	String toExtract=fullRequest;
-	if( fullRequest==null ) toExtract=requestLine;
-	if( toExtract==null ) return null;
+    // -------------------- Client registry --------------------
+    // all test results will be available
+    static Vector testResults=new Vector();
+    static Vector testFailures=new Vector();
+    static Vector testSuccess=new Vector();
 
-	if( ! toExtract.startsWith("GET")) return null;
-	StringTokenizer st=new StringTokenizer( toExtract," " );
-	st.nextToken(); // GET
-	return st.nextToken();
+
+    static Hashtable clients=new Hashtable();
+
+    /** Return one of the "named" clients that have been executed so far.
+     */
+    public static Hashtable getHttpClients() {
+	return clients;
     }
+
     
+    /** Vector of GTest elements, containing all test instances
+     *  that were run.
+     */
+    public static Vector getTestResults() {
+	return testResults;
+    }
+
+    /** Vector of GTest elements, containing all test instances
+     *  that were run and failed.
+     */
+    public static Vector getTestFailures() {
+	return testFailures;
+    }
+
+    /** Vector of GTest elements, containing all test instances
+     *  that were run and failed.
+     */
+    public static Vector getTestSuccess() {
+	return testSuccess;
+    }
+
+
+    // --------------------
+
+    public String getMatchDescription() {
+	return "";
+    }
 }

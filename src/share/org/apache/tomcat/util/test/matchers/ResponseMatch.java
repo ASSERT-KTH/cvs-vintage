@@ -56,74 +56,84 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-package org.apache.tomcat.util.test;
+package org.apache.tomcat.util.test.matchers;
 
+import org.apache.tomcat.util.test.*;
 import java.net.*;
 import java.io.*;
 import java.util.*;
 import java.net.*;
 
-
 /**
- *  Part of GTest.
- * 
- */
-public class Response {
+   Check if the response contains a substring
+*/
+public class ResponseMatch extends Matcher {
+    // Match the body against a string
+    String responseMatch;
 
-    String responseLine;
-    String responseBody;
-    Hashtable responseHeaders=new Hashtable();
-    
-    Throwable exception;
+    public ResponseMatch() {
+    }
 
-    public Response() {}
+    // -------------------- 
 
-    /** Exception thrown during request execution
+    /** Verify that response match the string
      */
-    public void setThrowable( Throwable t ) {
-	exception=t;
+    public void setMatch( String s ) {
+	this.responseMatch=s;
     }
 
-    public Throwable getThrowable() {
-	return exception;
-    }
-
-    
-    /**
-     * Response headers 
+    /** Verify that response match the string
      */
-    public Hashtable getHeaders() {
-	return responseHeaders;
+    public void setResponseMatch( String s ) {
+	this.responseMatch=s;
     }
 
-    public void setHeaders(Hashtable  v) {
-	this.responseHeaders = v;
-    }
-    
-    
-    /**
-     * Get the value of responseBody - the content
+    /** A test description of the test beeing made
      */
-    public String getResponseBody() {
-	return responseBody;
-    }
-    
-    public void setResponseBody(String  v) {
-	this.responseBody = v;
-    }
-    
-    
-    /**
-     * Get the value of responseLine - the first line of the response
-     */
-    public String getResponseLine() {
-	return responseLine;
-    }
-    
-    public void setResponseLine(String  v) {
-	this.responseLine = v;
-    }
-    
-    
+    public String getTestDescription() {
+	StringBuffer desc=new StringBuffer();
 
+	desc.append("( responseBody matches '"+ responseMatch + "') ");
+	return desc.toString();
+    }
+
+    // -------------------- Execute the request --------------------
+
+    public void execute() {
+	try {
+	    result=checkResponse( magnitude );
+	} catch(Exception ex ) {
+	    ex.printStackTrace();
+	    result=false;
+	}
+    }
+
+    private boolean checkResponse(boolean testCondition)
+	throws Exception
+    {
+	String responseLine=response.getResponseLine();
+	Hashtable headers=response.getHeaders();
+	
+        boolean responseStatus = true;
+	
+	String responseBody=response.getResponseBody();
+	    
+	if( responseMatch != null ) {
+	    // check if we got the string we wanted
+	    if( responseBody == null ) {
+		log("ERROR: got no response, expecting " + responseMatch);
+		return false;
+	    }
+	    boolean match=responseBody.indexOf( responseMatch ) >= 0; 
+	    if( match != testCondition ) {
+		responseStatus = false;
+		log("ERROR: expecting match on " + responseMatch);
+		log("GOT: " );
+		log(responseBody );
+	    }
+	}
+
+	
+	return responseStatus;
+    }
 }

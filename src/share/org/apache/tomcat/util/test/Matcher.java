@@ -63,49 +63,104 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
-
 /**
- *  Part of GTest
- * 
- */
-public class Parameter {
-    private String name;
-    private String value;
-    private String type;
+   Part of the GTest application
+*/
+public class Matcher {
+    protected HttpResponse response;
+    protected HttpRequest request;
+    protected HttpClient client;
+    protected boolean result=false;
+    protected boolean magnitude=true; // expectedResult
+    protected int debug=0;
     
-    public Parameter() {}
-
-    public void setName( String n ) {
-	name=n;
-    }
-
-    public String getName() {
-	return name;
-    }
-    
-    public void setValue( String v ) {
-	value=v;
+    // If the matching fails, a description of what failed
+    StringBuffer messageSB=new StringBuffer();
+        
+    public Matcher() {
     }
 
-    public String getValue() {
-	return value;
-    }
-    
-    /** POST or GET - if not set the current method's type will be
-     *  used. You can set it to force GET parameters on POST requests
+    // -------------------- General Properties --------------------
+
+    /** Test description ( text representation of the test )
      */
-    public void setType( String t ) {
-	type=t;
+    public String getTestDescription() {
+	return "";
     }
 
-    public String getType() {
-	return type;
+    public void setExpectedResult( boolean b ) {
+	magnitude=b;
     }
-    
-    public String getType(String def) {
-	if( type==null ) return def;
-	return type;
-    }
-    
 
+    public void setMagnitude( boolean b ) {
+	magnitude=b;
+    }
+
+    /** Display debug info
+     */
+    public void setDebug( int d ) {
+	debug=d;
+    }
+
+    /** Return a message describing the reason of the failure
+     *  or the test log
+     */
+    public String getMessage() {
+	return messageSB.toString();
+    }
+
+    /** Add a message to the test log
+     */
+    protected void log(String s ) {
+	messageSB.append( s ).append("\r\n");
+    }
+
+    /** Result of the test
+     */
+    public boolean getResult() {
+	return result;
+    }
+    
+    
+    // -------------------- Client, request, response --------------------
+    /** The test case
+     */
+    public void setHttpClient( HttpClient req ) {
+	client=req;
+    }
+
+    public HttpClient getHttpClient() {
+	return client;
+    }
+
+    /** The request that generated the response
+     */
+    public void setHttpRequest( HttpRequest req ) {
+	request=req;
+    }
+
+    
+    public HttpRequest getHttpRequest() {
+	return request;
+    }
+
+    /** The response we'll match against
+     */
+    public void setHttpResponse( HttpResponse resp ) {
+	response=resp;
+    }
+
+    public HttpResponse getHttpResponse() {
+	return response;
+    }
+
+    // --------------------
+
+    /** Execute the test
+     */
+    public void execute() {
+    }
+
+    
+    
 }

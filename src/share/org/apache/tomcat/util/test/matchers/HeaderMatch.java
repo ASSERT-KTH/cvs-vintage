@@ -56,56 +56,129 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-package org.apache.tomcat.util.test;
+package org.apache.tomcat.util.test.matchers;
 
+import org.apache.tomcat.util.test.*;
 import java.net.*;
 import java.io.*;
 import java.util.*;
 import java.net.*;
 
-
-/**
- *  Part of GTest
- * 
+/** Check if the response has ( or has not ) some headers
  */
-public class Parameter {
-    private String name;
-    private String value;
-    private String type;
+public class HeaderMatch extends Matcher {
+    String name;
+    String value;
     
-    public Parameter() {}
+    // the response should include the following headers
+    Vector headerVector=new Vector(); // workaround for introspection problems
+    Hashtable expectHeaders=new Hashtable();
+
+    public HeaderMatch() {
+    }
+
+    // -------------------- 
 
     public void setName( String n ) {
 	name=n;
     }
 
-    public String getName() {
-	return name;
-    }
-    
     public void setValue( String v ) {
 	value=v;
     }
 
-    public String getValue() {
-	return value;
+    // Multiple headers ?
+    public void addHeader( Header rh ) {
+	headerVector.addElement( rh );
     }
-    
-    /** POST or GET - if not set the current method's type will be
-     *  used. You can set it to force GET parameters on POST requests
+
+    /** Verify that response includes the expected headers.
+     *  The value is a "|" separated list of headers to expect.
+     *  ?? Do we need that ?
      */
-    public void setType( String t ) {
-	type=t;
+    public void setExpectHeaders( String s ) {
+       Header.parseHeadersAsString( s, headerVector );
     }
 
-    public String getType() {
-	return type;
+    public Hashtable getExpectHeaders() {
+	if( name!=null ) {
+	    headerVector.addElement( new Header( name, value ));
+	}
+	if( headerVector.size() > 0 ) {
+	    Enumeration en=headerVector.elements();
+	    while( en.hasMoreElements()) {
+		Header rh=(Header)en.nextElement();
+		expectHeaders.put( rh.getName(), rh );
+	    }
+	    headerVector=new Vector();
+	}
+	return expectHeaders;
     }
     
-    public String getType(String def) {
-	if( type==null ) return def;
-	return type;
-    }
-    
+    public String getTestDescription() {
+	StringBuffer desc=new StringBuffer();
+	boolean needAND=false;
+	
+	if( getExpectHeaders().size() > 0 ) {
+	    Enumeration e=expectHeaders.keys();
+	    while( e.hasMoreElements()) {
+		if( needAND ) desc.append( " && " );
+		needAND=true;
+		String key=(String)e.nextElement();
+		Header h=(Header)expectHeaders.get(key);
+		desc.append("( responseHeader '" + h.getName() +
+			    ": " + h.getValue() + "' ) ");
+	    }
+	}
 
+	desc.append( " == " ).append( magnitude );
+	return desc.toString();
+    }
+
+    // -------------------- Execute the request --------------------
+
+    public void execute() {
+	try {
+	    result=checkResponse( magnitude );
+	} catch(Exception ex ) {
+	    ex.printStackTrace();
+	    result=false;
+	}
+    }
+
+    private boolean checkResponse(boolean testCondition)
+	throws Exception
+    {
+	String responseLine=response.getResponseLine();
+	Hashtable headers=response.getHeaders();
+	
+        boolean responseStatus = true;
+	
+	getExpectHeaders();
+	if( expectHeaders.size() > 0 ) {
+	    // Check if we got the expected headers
+	    if(headers==null) {
+		log("ERROR no response header, expecting header");
+	    }
+	    Enumeration e=expectHeaders.keys();
+	    while( e.hasMoreElements()) {
+		String key=(String)e.nextElement();
+		Header expH=(Header)expectHeaders.get(key);
+		String value=expH.getValue();
+		Header resH=(Header)headers.get(key);
+		String respValue=(resH==null)? "": resH.getValue();
+		if( respValue==null || respValue.indexOf( value ) <0 ) {
+		    log("ERROR expecting header " + key + ":" +
+			value + " \nGOT: " + respValue+ " HEADERS(" +
+			Header.toString(headers) + ")");
+		    
+		    return false;
+		}
+	    }
+
+	}
+	
+	return responseStatus;
+    }
+    
 }

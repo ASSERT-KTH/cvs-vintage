@@ -73,15 +73,15 @@ public class TestDefaults {
 
     public void setHost( String s ) {
 	// I know, I'll add setters...
-	HttpClient.defaultHost=s;
+	HttpRequest.defaultHost=s;
     }
 
     public void setPort(int port ) {
-	HttpClient.defaultPort=port;
+	HttpRequest.defaultPort=port;
     }
 
     public void setProtocol( String proto ) {
-	HttpClient.defaultProtocol=proto;
+	HttpRequest.defaultProtocol=proto;
     }
 
     public void setDebug( int debug ) {

@@ -56,8 +56,9 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-package org.apache.tomcat.util.test;
+package org.apache.tomcat.util.test.matchers;
 
+import org.apache.tomcat.util.test.*;
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -65,47 +66,69 @@ import java.net.*;
 
 
 /**
- *  Part of GTest
- * 
+ *  Test if the HTTP response has a certain status code 
  */
-public class Parameter {
-    private String name;
-    private String value;
-    private String type;
-    
-    public Parameter() {}
+public class HttpStatusMatch extends Matcher {
 
-    public void setName( String n ) {
-	name=n;
+    // Match request line
+    String returnCode=null;
+
+    public HttpStatusMatch() {
     }
 
-    public String getName() {
-	return name;
-    }
+    // -------------------- 
     
-    public void setValue( String v ) {
-	value=v;
-    }
-
-    public String getValue() {
-	return value;
-    }
-    
-    /** POST or GET - if not set the current method's type will be
-     *  used. You can set it to force GET parameters on POST requests
+    /** Verify the response code
      */
-    public void setType( String t ) {
-	type=t;
+    public void setMatch( String s ) {
+	this.returnCode=s;
     }
 
-    public String getType() {
-	return type;
+    public void setReturnCode( String s ) {
+	this.returnCode=s;
     }
-    
-    public String getType(String def) {
-	if( type==null ) return def;
-	return type;
-    }
-    
 
+    /** A test description of the test beeing made
+     */
+    public String getTestDescription() {
+	StringBuffer desc=new StringBuffer();
+	if( returnCode != null ) {
+	    desc.append("( returnCode matches '" + returnCode + "') ");
+	}
+	desc.append( " == " ).append( magnitude );
+	return desc.toString();
+    }
+
+    // -------------------- Execute the request --------------------
+
+    public void execute() {
+	try {
+	    result=checkResponse( magnitude );
+	} catch(Exception ex ) {
+	    ex.printStackTrace();
+	    result=false;
+	}
+    }
+
+    private boolean checkResponse(boolean testCondition)
+	throws Exception
+    {
+	String responseLine=response.getResponseLine();
+	Hashtable headers=response.getHeaders();
+	
+        boolean responseStatus = true;
+	
+	// you can't check return code on http 0.9
+	if( returnCode != null ) {
+	    boolean match= ( responseLine!=null &&
+			     responseLine.indexOf(returnCode) > -1);
+	    if( match != testCondition ) {
+		responseStatus = false;
+		log("    Expecting: " + returnCode );
+		log("    Got      : " + responseLine);
+	    }
+	}
+
+	return responseStatus;
+    }
 }

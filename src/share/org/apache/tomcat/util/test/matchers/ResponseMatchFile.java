@@ -56,56 +56,116 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-package org.apache.tomcat.util.test;
+package org.apache.tomcat.util.test.matchers;
 
+import org.apache.tomcat.util.test.*;
 import java.net.*;
 import java.io.*;
 import java.util.*;
 import java.net.*;
 
-
 /**
- *  Part of GTest
- * 
- */
-public class Parameter {
-    private String name;
-    private String value;
-    private String type;
-    
-    public Parameter() {}
+   Check if the response matches a response file
+*/
+public class ResponseMatchFile extends Matcher {
+    // Match the body against a list of strings in a file
+    String responseMatchFile;
 
-    public void setName( String n ) {
-	name=n;
+    public ResponseMatchFile() {
     }
 
-    public String getName() {
-	return name;
-    }
-    
-    public void setValue( String v ) {
-	value=v;
-    }
+    // -------------------- 
 
-    public String getValue() {
-	return value;
-    }
-    
-    /** POST or GET - if not set the current method's type will be
-     *  used. You can set it to force GET parameters on POST requests
+    /** Verify that response matches a list of strings in a file
      */
-    public void setType( String t ) {
-	type=t;
+    public void setFile( String s ) {
+	this.responseMatchFile=s;
+    }
+    public void setResponseMatchFile( String s ) {
+	this.responseMatchFile=s;
     }
 
-    public String getType() {
-	return type;
-    }
-    
-    public String getType(String def) {
-	if( type==null ) return def;
-	return type;
-    }
-    
+    /** A test description of the test beeing made
+     */
+    public String getTestDescription() {
+	StringBuffer desc=new StringBuffer();
+	boolean needAND=false;
 
+	// if match file is specified
+	if( responseMatchFile != null ) {
+	    if( needAND ) desc.append( " && " );
+	    needAND=true;
+
+	    desc.append("( responseBody matches lines in '"+
+			responseMatchFile + "') ");
+        }
+
+	desc.append( " == " ).append( magnitude );
+	return desc.toString();
+    }
+
+    // -------------------- Execute the request --------------------
+
+    public void execute() {
+	try {
+	    result=checkResponse( magnitude );
+	} catch(Exception ex ) {
+	    ex.printStackTrace();
+	    result=false;
+	}
+    }
+
+    private boolean checkResponse(boolean testCondition)
+	throws Exception
+    {
+	String responseLine=response.getResponseLine();
+	Hashtable headers=response.getHeaders();
+	
+        boolean responseStatus = true;
+	
+	String responseBody=response.getResponseBody();
+	    
+	// if match file is specified
+	if( responseMatchFile != null ) {
+	    try {
+		boolean desiredResult = true;
+		FileReader fr=new FileReader( responseMatchFile);
+		BufferedReader br = new BufferedReader( fr );
+
+		String expected = br.readLine();
+		while (expected != null) {
+		    if ( "!=".equals(expected) )
+			desiredResult = false;
+		    else {
+			boolean result = responseBody.indexOf( expected ) >= 0;
+			if( result != desiredResult ) {
+			    responseStatus = false;
+			    if ( desiredResult )
+				log("ERROR: expecting match on " + expected);
+			    else
+				log("ERROR: expecting no match on " + expected);
+			    log("In match file: " + responseMatchFile);
+			    log("====================Got:");
+			    log(responseBody );
+			    log("====================");
+			}
+		    }
+		    expected = br.readLine();
+		}
+		br.close();
+	    } catch (FileNotFoundException ex) {
+        	log("\tMatch file not found: " + responseMatchFile);
+		log("====================Got:");
+		log(responseBody );
+		log("====================");
+		responseStatus = false;
+	    } catch ( IOException ex ) {
+        	log("\tError reading match file: " + responseMatchFile);
+        	log(ex.toString());
+		responseStatus = false;
+	    }
+	}
+	
+	return responseStatus;
+    }
 }

@@ -68,44 +68,53 @@ import java.net.*;
  *  Part of GTest
  * 
  */
-public class Parameter {
-    private String name;
-    private String value;
-    private String type;
+public class Properties {
+    Hashtable keys=new Hashtable();
     
-    public Parameter() {}
+    public Properties() {}
 
-    public void setName( String n ) {
-	name=n;
-    }
 
-    public String getName() {
-	return name;
-    }
     
-    public void setValue( String v ) {
-	value=v;
-    }
-
-    public String getValue() {
-	return value;
-    }
-    
-    /** POST or GET - if not set the current method's type will be
-     *  used. You can set it to force GET parameters on POST requests
+    /** Replace ${NAME} with the property value
+     *  Reproduced from ant, without dependencies on Project. Should be
+     *  part of a top-level tool set.
      */
-    public void setType( String t ) {
-	type=t;
+    public static String replaceProperties(String value, Hashtable keys )
+    {
+        StringBuffer sb=new StringBuffer();
+        int i=0;
+        int prev=0;
+        if( value==null ) return null;
+        int pos;
+        while( (pos=value.indexOf( "$", prev )) >= 0 ) {
+            if(pos>0) {
+                sb.append( value.substring( prev, pos ) );
+            }
+            if( pos == (value.length() - 1)) {
+                sb.append('$');
+                prev = pos + 1;
+            }
+            else if (value.charAt( pos + 1 ) != '{' ) {
+                sb.append( value.charAt( pos + 1 ) );
+                prev=pos+2; 
+            } else {
+                int endName=value.indexOf( '}', pos );
+                if( endName < 0 ) {
+		    // it's not a property..
+		    sb.append( value.substring( pos ));
+		    pos=value.length() -1;
+                }
+                String n=value.substring( pos+2, endName );
+                String v = (keys.containsKey(n)) ?
+		    (String) keys.get(n) :
+		    "${"+n+"}"; 
+                
+                sb.append( v );
+                prev=endName+1;
+            }
+        }
+        if( prev < value.length() ) sb.append( value.substring( prev ) );
+        return sb.toString();
     }
-
-    public String getType() {
-	return type;
-    }
-    
-    public String getType(String def) {
-	if( type==null ) return def;
-	return type;
-    }
-    
 
 }

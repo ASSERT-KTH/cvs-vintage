@@ -141,14 +141,14 @@ public class Header {
     }
 
 
-    public static void parseHeadersAsString( String s, Hashtable headers ) {
+    public static void parseHeadersAsString( String s, Vector headers ) {
 	StringTokenizer st=new StringTokenizer( s, "|");
 	while( st.hasMoreTokens() ) {
 	    String tok=st.nextToken();
 	    Header h=new Header();
 	    h.parseHeaderLine( tok );
 	    if( h.getName() !=null )
-		headers.put( h.getName(), h );
+		headers.addElement( h );
 	}
     }
 

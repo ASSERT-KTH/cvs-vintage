@@ -65,47 +65,65 @@ import java.net.*;
 
 
 /**
- *  Part of GTest
+ *  Part of GTest.
  * 
  */
-public class Parameter {
-    private String name;
-    private String value;
-    private String type;
-    
-    public Parameter() {}
+public class HttpResponse {
 
-    public void setName( String n ) {
-	name=n;
-    }
-
-    public String getName() {
-	return name;
-    }
+    String responseLine;
+    String responseBody;
+    Hashtable responseHeaders=new Hashtable();
     
-    public void setValue( String v ) {
-	value=v;
-    }
+    Throwable exception;
 
-    public String getValue() {
-	return value;
-    }
-    
-    /** POST or GET - if not set the current method's type will be
-     *  used. You can set it to force GET parameters on POST requests
+    public HttpResponse() {}
+
+    /** Exception thrown during request execution
      */
-    public void setType( String t ) {
-	type=t;
+    public void setThrowable( Throwable t ) {
+	exception=t;
     }
 
-    public String getType() {
-	return type;
+    public Throwable getThrowable() {
+	return exception;
+    }
+
+    
+    /**
+     * Response headers 
+     */
+    public Hashtable getHeaders() {
+	return responseHeaders;
+    }
+
+    public void setHeaders(Hashtable  v) {
+	this.responseHeaders = v;
     }
     
-    public String getType(String def) {
-	if( type==null ) return def;
-	return type;
+    
+    /**
+     * Get the value of responseBody - the content
+     */
+    public String getResponseBody() {
+	return responseBody;
     }
+    
+    public void setResponseBody(String  v) {
+	this.responseBody = v;
+    }
+    
+    
+    /**
+     * Get the value of responseLine - the first line of the response
+     */
+    public String getResponseLine() {
+	return responseLine;
+    }
+    
+    public void setResponseLine(String  v) {
+	this.responseLine = v;
+    }
+    
     
 
 }
