@@ -48,7 +48,8 @@
 ##ASSIGNEE LIST
 ## Determine if there are any users to show up in the added/assigned list
 #foreach ($issueId in $issueList)
- #set ($issue = $scarabR.getIssueByPk($issueId.toString()))
+ #set ($issue = $scarabR.getIssue($issueId.toString()))
+ #if ($issue)
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
 <input type="hidden" name="id" value="$issue.UniqueId" />
@@ -108,6 +109,9 @@
   #end
 $intake.declareGroups()
 </form>
+#else
+ <p class="alert"> The issue Id, $issueId, is not valid.</p>
+#end
 #end
 
 <form action="$actionLink" method="post">
