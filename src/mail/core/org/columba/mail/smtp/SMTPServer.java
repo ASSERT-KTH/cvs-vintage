@@ -236,8 +236,8 @@ public class SMTPServer {
         }
 
         if (!authenticated) {
-            username = accountItem.getSmtpItem().get("user");
-            password = accountItem.getSmtpItem().get("password", "").toCharArray();
+            username = smtpItem.get("user");
+            password = smtpItem.getRoot().getAttribute("password", "").toCharArray();
 
             if (username.length() == 0) {
                 // there seems to be no username set in the smtp-options
