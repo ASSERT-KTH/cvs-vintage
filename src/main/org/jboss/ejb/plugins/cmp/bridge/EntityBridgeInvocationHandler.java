@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.ejb.EJBException;
+import javax.ejb.FinderException;
 import javax.transaction.Transaction;
 
 import org.jboss.deployment.DeploymentException;
@@ -37,7 +38,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean instance, including beans in pool.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */                            
 public class EntityBridgeInvocationHandler implements InvocationHandler {
    private final EntityContainer container;
