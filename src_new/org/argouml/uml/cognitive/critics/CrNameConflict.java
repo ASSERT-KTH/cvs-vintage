@@ -26,20 +26,11 @@
 // File: CrNameConflict.java
 // Classes: CrNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConflict.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrNameConflict.java,v 1.3 2003/02/02 17:21:25 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.behavior.state_machines.*;
-import ru.novosoft.uml.model_management.*;
-
-import org.argouml.kernel.*;
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
+import java.util.ArrayList;import java.util.Collection;import java.util.Iterator;import org.argouml.cognitive.Designer;import org.argouml.cognitive.ToDoItem;import org.argouml.cognitive.critics.Critic;import org.argouml.kernel.Wizard;import org.argouml.model.ModelFacade;import ru.novosoft.uml.foundation.core.MModelElement;
 
 /** Well-formedness rule [1] for MNamespace. See page 33 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
@@ -54,28 +45,7 @@ public class CrNameConflict extends CrUML {
     addTrigger("feature_name");
   }
 
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof MNamespace)) return NO_PROBLEM;
-//     if (dm instanceof MClass) return NO_PROBLEM;
-//     if (dm instanceof MInterface) return NO_PROBLEM;
-//     if (dm instanceof MState) return NO_PROBLEM;
-    MNamespace ns = (MNamespace) dm;
-    Collection oes = ns.getOwnedElements();
-    if (oes == null) return NO_PROBLEM;
-    Vector namesSeen = new Vector();
-    Iterator enum = oes.iterator();
-    while (enum.hasNext()) {
-      MModelElement me = (MModelElement) enum.next();
-      if (me instanceof MAssociation) continue;
-      if (me instanceof MGeneralization) continue;
-      String meName = me.getName();
-      if (meName == null || meName.equals("")) continue;
-      if (meName.length() == 0) continue;
-      if (namesSeen.contains(meName)) return PROBLEM_FOUND;
-      namesSeen.addElement(meName);
-    }
-    return NO_PROBLEM;
-  }
+  public boolean predicate2(Object dm, Designer dsgr) {      boolean problem = NO_PROBLEM;            if (ModelFacade.isANamespace(dm)) {          Iterator it = ModelFacade.getOwnedElements(dm).iterator();          Collection names = new ArrayList();          while (it.hasNext()) {              String name = ModelFacade.getName(it.next());              if (names.contains(name)) {                  problem = PROBLEM_FOUND;                  break;                            }              names.add(name);          }      }      return problem;  }
 
   public void initWizard(Wizard w) {
     if (w instanceof WizMEName) {

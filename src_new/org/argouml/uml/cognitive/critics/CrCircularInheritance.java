@@ -26,20 +26,11 @@
 // File: CrCircularInheritance.java
 // Classes: CrCircularInheritance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularInheritance.java,v 1.5 2003/02/02 17:11:50 kataka Exp $
+// $Id: CrCircularInheritance.java,v 1.6 2003/02/02 17:21:25 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-
-import ru.novosoft.uml.foundation.core.*;
-
-import org.tigris.gef.util.*;
-
-import org.apache.log4j.Category;
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
-import org.argouml.model.ModelFacade;import org.argouml.model.uml.foundation.core.CoreHelper;import org.argouml.uml.*;
+import org.apache.log4j.Category;import org.argouml.cognitive.Designer;import org.argouml.cognitive.ToDoItem;import org.argouml.cognitive.critics.Critic;import org.argouml.model.ModelFacade;import org.argouml.model.uml.foundation.core.CoreHelper;import org.argouml.uml.SuperclassGen;import org.tigris.gef.util.VectorSet;import ru.novosoft.uml.foundation.core.MGeneralizableElement;
 
 /** Well-formedness rule [2] for MGeneralizableElement. See page 31 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
