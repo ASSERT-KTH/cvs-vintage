@@ -79,14 +79,23 @@
 
               <dependency>
                 <id>$activityDepend.DependId</id>
-                <parent>$activityDepend.ObservedId</parent>
-                <child>$activityDepend.ObserverId</child>
+                <parent>$scarabR.getIssueByPk($activityDepend.ObservedId).UniqueId</parent>
+                <child>$scarabR.getIssueByPk($activityDepend.ObserverId).UniqueId</child>
                 <type>$activityDepend.DependType.Name</type>
               </dependency>
               #end
               #set ($activityDepend = false)
 
               <description>$activity.Description</description>
+              #set ($activityEndDate = $activity.EndDate)
+              #if ($activityEndDate)
+
+              <end-date>
+                <format>$scarabG.Constant.DATE_FORMAT</format>
+                <timestamp>$format.getDate($scarabG.Constant.DATE_FORMAT, $activityEndDate)</timestamp>
+              </end-date>
+              #end
+              #set ($activityEndDate = false)
 
               #set ($activityAttachment = $activity.Attachment)
               #attachment ($activityAttachment)
