@@ -1,4 +1,4 @@
-// $Id: CoreFactoryImpl.java,v 1.5 2005/01/07 09:11:01 linus Exp $
+// $Id: CoreFactoryImpl.java,v 1.6 2005/01/07 18:46:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -479,8 +479,9 @@ public class CoreFactoryImpl
             (MAssociation)
             	nsmodel.getUmlFactory().getCore().createAssociation();
         assoc.setName("");
-        assoc.setNamespace(nsmodel.getCoreHelper().getFirstSharedNamespace(ns1,
-        								  ns2));
+        assoc.setNamespace(
+                (MNamespace) nsmodel.getCoreHelper()
+                	.getFirstSharedNamespace(ns1, ns2));
         buildAssociationEnd(
 			    assoc,
 			    null,
@@ -546,7 +547,7 @@ public class CoreFactoryImpl
             (MAssociation)
             	nsmodel.getUmlFactory().getCore().createAssociation();
         assoc.setName("");
-        assoc.setNamespace(
+        assoc.setNamespace((MNamespace)
         		   nsmodel.getCoreHelper().getFirstSharedNamespace(ns1,
         								  ns2));
 
