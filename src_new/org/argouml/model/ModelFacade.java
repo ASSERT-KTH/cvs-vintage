@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.216 2004/12/04 13:04:23 mvw Exp $
+// $Id: ModelFacade.java,v 1.217 2004/12/08 18:27:38 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -769,6 +769,26 @@ public class ModelFacade {
         return handle instanceof MClass;
     }
 
+    /**
+    * Recognizer for AssociationClass.
+    *
+    * @param handle candidate
+    * @return true if handle is an AssociationClass
+    */
+    public static boolean isAAssociationClass(Object handle) {
+        return handle instanceof MAssociationClass;
+    }
+    
+    /**
+     * Recognizer for a Element that is Classifier and RelationShip
+     *
+     * @param handle candidate
+     * @return true if handle is a Classifier and a Relationship
+     */
+    public static boolean isAClassifierAndARelationship(Object handle) {
+        return ((handle instanceof MClassifier) && (handle instanceof MRelationship));
+    }
+    
     /**
      * Recognizer for Classifier
      *

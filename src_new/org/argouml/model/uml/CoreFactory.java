@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.2 2004/11/13 21:27:09 mvw Exp $
+// $Id: CoreFactory.java,v 1.3 2004/12/08 18:27:37 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -655,7 +655,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * @param end2 the second given classifier
      * @return MAssociationClass
      */
-    private MAssociationClass buildAssociationClass(
+    public MAssociationClass buildAssociationClass(
 						   MClassifier end1,
 						   MClassifier end2) {
         if (end1 == null

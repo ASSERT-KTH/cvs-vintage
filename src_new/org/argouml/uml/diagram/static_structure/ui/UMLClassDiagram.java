@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.61 2004/11/01 10:57:21 mvw Exp $
+// $Id: UMLClassDiagram.java,v 1.62 2004/12/08 18:27:37 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,6 +48,7 @@ public class UMLClassDiagram extends UMLDiagram {
 
     ////////////////
     // actions for toolbar
+    private Action actionAssociationClass;
     private Action actionClass;
     private Action actionObject;
     private Action actionInterface;
@@ -138,7 +139,8 @@ public class UMLClassDiagram extends UMLDiagram {
             getDependencyActions(), 
             null,
             getActionAttribute(),
-            getActionOperation()
+            getActionOperation(),
+            getActionAssociationClass()
         };
 
         return actions;
@@ -244,6 +246,19 @@ public class UMLClassDiagram extends UMLDiagram {
 
         return actionClass;
     }
+    
+    /**
+    * @return Returns the actionAssociationClass.
+    */
+    protected Action getActionAssociationClass() {
+        if (actionAssociationClass == null) {
+            actionAssociationClass =
+                makeCreateEdgeAction(
+                    ModelFacade.ASSOCIATION_CLASS,
+                    "AssociationClass");
+        }
+        return actionAssociationClass;
+    }    
     /**
      * @return Returns the actionComposition.
      */

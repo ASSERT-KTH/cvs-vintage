@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.52 2004/12/04 07:30:27 linus Exp $
+// $Id: UmlFactory.java,v 1.53 2004/12/08 18:27:37 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -243,7 +243,8 @@ public class UmlFactory extends AbstractUmlModelFactory {
 	 ModelFacade.COMMENT},
 	{CommentEdge.class,            ModelFacade.COMMENT,
          ModelFacade.MODELELEMENT},
-        {ModelFacade.TRANSITION,       ModelFacade.STATEVERTEX}
+        {ModelFacade.TRANSITION,       ModelFacade.STATEVERTEX},
+        {ModelFacade.ASSOCIATION_CLASS, ModelFacade.CLASS}
     };
 
     /** Singleton instance.
@@ -524,11 +525,16 @@ public class UmlFactory extends AbstractUmlModelFactory {
         Object connection = null;
         
         if (connectionType == ModelFacade.ASSOCIATION) {
-            connection = getCore().buildAssociation((MClassifier) fromElement, 
+            connection = getCore().buildAssociation(
+                       (MClassifier) fromElement, 
                        (MAggregationKind) fromStyle, 
                        (MClassifier) toElement, 
                        (MAggregationKind) toStyle, 
                        (Boolean) unidirectional);
+        } else if (connectionType == ModelFacade.ASSOCIATION_CLASS) {
+            connection = getCore().buildAssociationClass(
+                       (MClassifier) fromElement,
+                       (MClassifier) toElement);
         } else if (connectionType == ModelFacade.ASSOCIATION_ROLE) {
             connection = getCollaborations()
                 .buildAssociationRole((MClassifierRole) fromElement, 

@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.71 2004/10/19 05:40:05 linus Exp $
+// $Id: FigAssociation.java,v 1.72 2004/12/08 18:27:38 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,8 +75,9 @@ public class FigAssociation extends FigEdgeModelElement {
     /**
      * Group for the FigTexts concerning the name and stereotype of the 
      * association itself.
+     * TODO provide getter instead and maybe setter if needed
      */
-    private FigTextGroup middleGroup = new FigTextGroup();
+    protected FigTextGroup middleGroup = new FigTextGroup();
     
     private FigText srcMult, srcRole;
     private FigText destMult, destRole;

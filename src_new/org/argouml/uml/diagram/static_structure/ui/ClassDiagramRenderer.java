@@ -1,4 +1,4 @@
-// $Id: ClassDiagramRenderer.java,v 1.25 2004/11/01 19:55:53 mvw Exp $
+// $Id: ClassDiagramRenderer.java,v 1.26 2004/12/08 18:27:37 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramRenderer.java
 // Classes: ClassDiagramRenderer
 // Original jrobbins@ics.uci.edu
-// $Id: ClassDiagramRenderer.java,v 1.25 2004/11/01 19:55:53 mvw Exp $
+// $Id: ClassDiagramRenderer.java,v 1.26 2004/12/08 18:27:37 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -37,6 +37,7 @@ import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.ExtensionMechanismsHelper;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.uml.diagram.ui.FigAssociation;
+import org.argouml.uml.diagram.ui.FigAssociationClass;
 import org.argouml.uml.diagram.ui.FigDependency;
 import org.argouml.uml.diagram.ui.FigGeneralization;
 import org.argouml.uml.diagram.ui.FigPermission;
@@ -115,7 +116,10 @@ public class ClassDiagramRenderer
             throw new IllegalArgumentException("A model edge must be supplied");
         }
         FigEdge newEdge = null;
-        if (ModelFacade.isAAssociation(edge)) {
+        if (ModelFacade.isAAssociationClass(edge)) {
+            FigAssociationClass ascCFig = new FigAssociationClass(edge, lay);
+            return ascCFig;
+        } else if (ModelFacade.isAAssociation(edge)) {
             FigAssociation ascFig = new FigAssociation(edge, lay);
             newEdge = ascFig;
         } else if (ModelFacade.isALink(edge)) {
