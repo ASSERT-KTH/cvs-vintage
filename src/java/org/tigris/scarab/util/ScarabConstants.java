@@ -51,7 +51,7 @@ package org.tigris.scarab.util;
     A place to put public final static strings.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.17 2001/08/30 19:34:44 jmcnally Exp $
+    @version $Id: ScarabConstants.java,v 1.18 2001/09/07 01:12:02 elicia Exp $
 */
 
 public interface ScarabConstants
@@ -125,4 +125,12 @@ public interface ScarabConstants
      *
      */
     public static final String ISSUE_ID_LIST = "scarab.issueIdList";
+
+    /**
+     *  The message the user sees if they try to perform an action
+     *  For which they have no permissions.
+     *
+     */
+    public static final String NO_PERMISSION_MESSAGE = "You do not have " +
+                               "permissions to perform this action.";
 }    
