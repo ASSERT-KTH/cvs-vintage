@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice;
 
-// $Id: WSDLDefinitionFactory.java,v 1.8 2004/06/13 11:08:24 tdiesler Exp $
+// $Id: WSDLDefinitionFactory.java,v 1.9 2004/06/14 12:17:33 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.xml.sax.InputSource;
@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.StringReader;
 import java.net.URL;
+import java.net.MalformedURLException;
 
 /**
  * A factory that creates a WSDL <code>Definition</code> from an URL.
@@ -138,27 +139,50 @@ public class WSDLDefinitionFactory
          return wsdlURL.toExternalForm();
       }
 
-      public InputSource getImportInputSource(String parent, String relative)
+      public InputSource getImportInputSource(String parent, String resource)
       {
-         log.trace("getImportInputSource [parent=" + parent + ",relative=" + relative + "]");
+         log.debug("getImportInputSource [parent=" + parent + ",resource=" + resource + "]");
 
-         String parentDir = parent.substring(0, parent.lastIndexOf("/"));
-
-         // remove references to current dir
-         while (relative.startsWith("./"))
-            relative = relative.substring(2);
-
-         // remove references to parentdir
-         while (relative.startsWith("../"))
+         URL parentURL = null;
+         try
          {
-            parentDir = parentDir.substring(0, parentDir.lastIndexOf("/"));
-            relative = relative.substring(3);
+            parentURL = new URL(parent);
+         }
+         catch (MalformedURLException e)
+         {
+            log.error("Not a valid URL: " + parent);
+            return null;
          }
 
-         String wsdlImport = parentDir + "/" + relative;
+         String wsdlImport = null;
+         String external = parentURL.toExternalForm();
+         
+         if (resource.startsWith("/"))
+         {
+            String beforePath = external.substring(0, external.indexOf(parentURL.getPath()));
+            wsdlImport = beforePath + resource;
+         }
+         else
+         {
+            String parentDir = external.substring(0, external.lastIndexOf("/"));
+
+            // remove references to current dir
+            while (resource.startsWith("./"))
+               resource = resource.substring(2);
+
+            // remove references to parentdir
+            while (resource.startsWith("../"))
+            {
+               parentDir = parentDir.substring(0, parentDir.lastIndexOf("/"));
+               resource = resource.substring(3);
+            }
+
+            wsdlImport = parentDir + "/" + resource;
+         }
 
          try
          {
+            log.debug("Resolved to: " + wsdlImport);
             InputStream is = new URL(wsdlImport).openStream();
             if (is == null)
                throw new IllegalArgumentException("Cannot import wsdl from: " + wsdlImport);
