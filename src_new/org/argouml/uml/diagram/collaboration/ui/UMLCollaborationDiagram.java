@@ -24,7 +24,7 @@
 // File: UMLCollaborationDiagram.java
 // Classes: UMLCollaborationDiagram
 // Original Author: agauthie@ics.uci.edu
-// $Id: UMLCollaborationDiagram.java,v 1.8 2002/07/22 06:19:32 kataka Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.9 2002/07/25 12:52:15 kataka Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -73,15 +73,8 @@ public class UMLCollaborationDiagram extends UMLDiagram {
 
 
   public UMLCollaborationDiagram() {
-  	String name = null;
-  	Object[] args = {name};
-  	do {
-        name = "collaboration diagram " + _CollaborationDiagramSerial;
-        _CollaborationDiagramSerial++;
-        args[0] = name;
-    }
-    while (vetoCheck("name", args));
-    try { setName(name); }
+  	
+    try { setName(getNewDiagramName()); }
     catch (PropertyVetoException pve) { }
   }
 
@@ -161,7 +154,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
   }
 
 
-  /**  After loading the diagram it´s necessary to connect
+  /**  After loading the diagram it?s necessary to connect
     *  every FigMessage to its FigAssociationRole. 
     *  This is done by adding the FigMessage 
     *  to the PathItems of its FigAssociationRole */  
@@ -192,6 +185,18 @@ public class UMLCollaborationDiagram extends UMLDiagram {
            }
        }
     }
+  }
+  
+  protected static String getNewDiagramName() {
+  	String name = null;
+  	Object[] args = {name};
+  	do {
+        name = "collaboration diagram " + _CollaborationDiagramSerial;
+        _CollaborationDiagramSerial++;
+        args[0] = name;
+    }
+    while (TheInstance.vetoCheck("name", args));
+    return name;
   }
 
 } /* end class UMLCollaborationDiagram */
