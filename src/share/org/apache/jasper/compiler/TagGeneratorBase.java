@@ -115,7 +115,36 @@ abstract class TagGeneratorBase extends GeneratorBase {
 	return (TagVariableData) tagHandlerStack.peek();
     }
 
+    private String substitute(String name, char from, String to) {
+        StringBuffer s = new StringBuffer();
+        int begin = 0;
+        int last = name.length();
+        int end;
+        while (true) {
+            end = name.indexOf(from, begin);
+            if (end < 0)
+                end = last;
+            s.append(name.substring(begin, end));
+            if (end == last)
+                break;
+            s.append(to);
+            begin = end + 1;
+        }
+        return (s.toString());
+    }
+
     protected String getTagVarName(String prefix, String shortTagName) {
+	if (prefix.indexOf('-') >= 0)
+	    prefix = substitute(prefix, '-', "$1");
+	if (prefix.indexOf('.') >= 0)
+	    prefix = substitute(prefix, '.', "$2");
+
+        if (shortTagName.indexOf('-') >= 0)
+            shortTagName = substitute(shortTagName, '-', "$1");
+        if (shortTagName.indexOf('.') >= 0)
+            shortTagName = substitute(shortTagName, '.', "$2");
+        if (shortTagName.indexOf(':') >= 0)
+            shortTagName = substitute(shortTagName, ':', "$3");
 	// Fix: Can probably remove the synchronization now when no vars or method is static
 	synchronized (tagVarNumbers) {
 	    String tag = prefix+":"+shortTagName;
