@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.49 2002/05/24 21:24:44 starksm Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.50 2002/05/28 03:29:53 user57 Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -16,7 +16,7 @@
      | if the installation is local and the configuration is from file
      | then there is no need to list the files and it should commented
    -->
-  <classpath codebase="lib" archives="*"/>
+  <classpath codebase="../../lib" archives="*"/>
 
   <!-- ==================================================================== -->
   <!-- Log4j Initialization                                                 -->
