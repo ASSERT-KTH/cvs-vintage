@@ -56,7 +56,7 @@ import org.jboss.monitor.MetricsConstants;
  * </ul>
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public abstract class AbstractInstanceCache
 	implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
@@ -357,9 +357,10 @@ public abstract class AbstractInstanceCache
 		{
 			getCache().stop();
 		}
-		m_passivator.stop();
 
-		if (isJMSMonitoringEnabled())
+		if (m_passivator != null) {m_passivator.stop();}
+
+		if (isJMSMonitoringEnabled() && m_jmsConnection != null)
 		{
 			try
 			{
@@ -372,7 +373,7 @@ public abstract class AbstractInstanceCache
 	public void destroy()
 	{
 		getCache().destroy();
-		if (isJMSMonitoringEnabled())
+		if (isJMSMonitoringEnabled() && m_jmsConnection != null)
 		{
 			try
 			{
