@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public final class JDBCLoadEntityCommand
 {
@@ -108,7 +108,7 @@ public final class JDBCLoadEntityCommand
       // load any preloaded fields into the context
       if(readAheadCache.load(ctx))
       {
-         if(requiredField != null && requiredField.isLoaded(ctx))
+         if(requiredField == null || (requiredField != null && requiredField.isLoaded(ctx)))
          {
               return true;
          }
