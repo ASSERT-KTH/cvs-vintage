@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.96 2002/05/26 03:58:40 reverbel Exp $ -->
+<!-- $Id: build.xml,v 1.97 2002/05/31 04:13:43 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -231,6 +231,13 @@
       <pathelement path="${jboss.management.lib}/jboss-management.jar"/>
     </path>
 
+    <!-- Transaction -->
+    <property name="jboss.transaction.root" value="${project.root}/transaction/output"/>
+    <property name="jboss.transaction.lib" value="${jboss.transaction.root}/lib"/>
+    <path id="jboss.transaction.classpath">
+      <pathelement path="${jboss.transaction.lib}/jboss-transaction.jar"/>
+    </path>
+
     <!-- The combined dependant module classpath -->
     <path id="dependentmodule.classpath">
       <path refid="jboss.j2ee.classpath"/>
@@ -239,6 +246,7 @@
       <path refid="jboss.jmx.classpath"/>
       <path refid="jboss.naming.classpath"/>
       <path refid="jboss.management.classpath"/>
+      <path refid="jboss.transaction.classpath"/>
     </path>
 
     <!-- ===== -->
