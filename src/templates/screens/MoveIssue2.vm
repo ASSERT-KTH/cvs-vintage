@@ -16,7 +16,8 @@
 #set ($newIssueTypeId = $context.get("newIssueTypeId"))
 #set ($newModule = $scarabR.getModule("$newModuleId"))
 #set ($newIssueType = $scarabR.getIssueType("$newIssueTypeId"))
-#set ($module = $scarabR.CurrentModule)
+#set ($module = $issue.Module)
+#set ($issueType = $issue.IssueType)
 
 #set ($matchingAttributes = $issue.getMatchingAttributeValuesList("$newModuleId", "$newIssueTypeId"))
 #set ($orphanAttributes = $issue.getOrphanAttributeValuesList("$newModuleId", "$newIssueTypeId"))
@@ -78,7 +79,7 @@
 #foreach ($attr in $matchingAttributes)
 #indexedRows($velocityCount)
     <td>$attr.Attribute.Name
-     #set ($displayValue = $module.getRModuleAttribute($attr.Attribute, $scarabR.CurrentIssueType).getDisplayValue())
+     #set ($displayValue = $module.getRModuleAttribute($attr.Attribute, $issueType).getDisplayValue())
      #if (!$attr.Attribute.Name.equals($displayValue))
       ($displayValue)
      #end
@@ -103,8 +104,8 @@
 #foreach($attr in $orphanAttributes)
 #indexedRows($velocityCount)
 <td><input type="checkbox" name="comment_attr_ids_$attr.AttributeId" checked /></td>
-    <td>$attr.Attribute.Name
-     #set ($displayValue = $module.getRModuleAttribute($attr.Attribute, $scarabR.CurrentIssueType).getDisplayValue())
+    <td>$attr.Attribute.Name 
+     #set ($displayValue = $module.getRModuleAttribute($attr.Attribute, $issueType).getDisplayValue())
      #if (!$attr.Attribute.Name.equals($displayValue))
       ($displayValue)
      #end
