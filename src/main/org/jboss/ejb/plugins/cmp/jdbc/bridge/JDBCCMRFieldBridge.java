@@ -47,7 +47,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */                            
 public class JDBCCMRFieldBridge implements CMRFieldBridge {
    // ------ Invocation messages ------
@@ -760,13 +760,11 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     */
    private void load(EntityEnterpriseContext myCtx) {
       FieldState fieldState = getFieldState(myCtx);
-      if(fieldState.getValue() != null) {
+      if(fieldState.isLoaded()) {
          return;
       }
       
       if(hasForeignKey()) {
-         fieldState =  new FieldState(myCtx, new HashSet());
-
          Object fk = null;   
          JDBCCMPFieldBridge[] foreignKeyFields = getForeignKeyFields();
          for(int i=0; i<foreignKeyFields.length; i++) {
@@ -784,18 +782,19 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
          }
       } else if(relatedCMRField.hasForeignKey()) {
          // related cmr field has fk, so use it to find my related
-         fieldState = new FieldState(
-               myCtx, 
+         fieldState.getValue().clear();
+         fieldState.getValue().addAll(
                relatedManager.findByForeignKey(
                      entity.extractPrimaryKeyFromInstance(myCtx), 
                      relatedCMRField.getForeignKeyFields())
                );
       } else {
          // no FKs, must use relation table
-         fieldState = new FieldState(
-               myCtx, manager.loadRelation(this, myCtx.getId()));
+         fieldState.getValue().clear();
+         fieldState.getValue().addAll(
+               manager.loadRelation(this, myCtx.getId()));
       }      
-      setFieldState(myCtx, fieldState);
+      fieldState.setLoaded(true);
    }
    
    /**
@@ -882,13 +881,12 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
       private EntityEnterpriseContext ctx;
       private Set[] setHandle = new Set[1];
       private Set relationSet;
-      private long lastRead = System.currentTimeMillis();
+      private boolean isLoaded = false;
+      private long lastRead = -1;
+
       public FieldState(EntityEnterpriseContext ctx) {
          this.ctx = ctx;
-      }
-      public FieldState(EntityEnterpriseContext ctx, Set value) {
-         this.ctx = ctx;
-         setHandle[0] = value;
+         setHandle[0] = new HashSet();
       }
       public Set getValue() {
          return setHandle[0];
@@ -900,21 +898,19 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
          }
          return relationSet;
       }
+      public boolean isLoaded() {
+         return isLoaded;
+      }
+      public void setLoaded(boolean isLoaded) {
+         this.isLoaded = isLoaded;
+      }
       public long getLastRead() {
          return lastRead;
-      }
-      public void invalidateRelationSet() {
-         // make a new set handle with the existing value
-         Set[] oldSetHandle = setHandle;
-         setHandle = new Set[1];
-         setHandle[0] = oldSetHandle[0];
-         
-         // change the old set handle to have a hold of nothing
-         oldSetHandle[0] = null;
       }
       public void invalidate() {
          setHandle[0] = null;
          setHandle = null;
+         relationSet = null;
       }
    }   
 }
