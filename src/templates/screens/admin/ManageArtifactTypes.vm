@@ -1,5 +1,9 @@
 #set ($module = $scarabR.CurrentModule)
-
+#set ($availableIssueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
+#set ($moreIssueTypesAvailable = false)
+#if ($availableIssueTypes && !$availableIssueTypes.isEmpty())
+    #set ($moreIssueTypesAvailable = true)
+#end
 <div class="app" id="div2-1-4-0">
 
 <form method="post" action="$link.setPage("admin,ManageArtifactTypes.vm")">
@@ -49,10 +53,11 @@
 <h3>$l10n.IssueTypes</h3>
 
 #if (!$rmits || $rmits.isEmpty())
-   <p class="alert">$l10n.NoIssueTypesInModule</p>
-<div class="functnbar3">
-<input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate"/>
-</div>
+  <p class="alert">$l10n.NoIssueTypesInModule</p>
+  #if ($moreIssueTypesAvailable)
+    <div class="functnbar3"><input type="submit" value="$l10n.AddNew"  
+        name="eventSubmit_doGotoothertemplate"/></div>
+  #end
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
@@ -84,13 +89,17 @@
 </table>
 
 <div class="functnbar3">
-#if (!$rmits || !$rmits.isEmpty())
-<input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
+#if ($rmits && !$rmits.isEmpty())
+  <input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
 #end
-<input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
-#if (!$rmits || !$rmits.isEmpty())
-<input type="submit" value="$l10n.RemoveSelected" name="eventSubmit_doDeletemoduleissuetype" />&#160;
-<input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
+#if ($moreIssueTypesAvailable)
+  <input type="submit" value="$l10n.AddNew" 
+      name="eventSubmit_doGotoothertemplate" />&#160;
+#end
+#if ($rmits && !$rmits.isEmpty())
+  <input type="submit" value="$l10n.RemoveSelected" 
+      name="eventSubmit_doDeletemoduleissuetype" />&#160;
+  <input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
 #end
 </div>
 
