@@ -76,7 +76,7 @@ public class StopTomcat {
     private static StringManager sm =
 	StringManager.getManager("org.apache.tomcat.resources");
 
-    String tomcatHome;
+    String tomcatHome=null;
 
     String host=null;
     int port=-1;
@@ -85,6 +85,7 @@ public class StopTomcat {
     boolean commandLineParams=false;
     String secretFile=null;
     String args[];
+    boolean help=false;
     
     public StopTomcat() 
     {
@@ -136,13 +137,21 @@ public class StopTomcat {
 	commandLineParams=true;
     }
 
+    public void setHelp( boolean b ) {
+        help = b;
+    }
+
     // Generic properties / attributes
 
     public void setAttribute(String s, Object o ) {
+	if( s.equals("args")  )
+	    setArgs((String [])o);
     }
 
     public void setProperty( String name, String v ) {
-
+	if( !name.equals("stop")  )
+            // unknown property
+            help = true;
     }
 
     public void setArgs( String args[] ) {
@@ -154,6 +163,10 @@ public class StopTomcat {
     public void execute() throws Exception {
 	if( args!=null )
 	    processArgs( args );
+        if( help ) {
+            printUsage();
+            return;
+        }
 	System.out.println(sm.getString("tomcat.stop"));
 	try {
 	    stopTomcat(); // stop serving
@@ -217,6 +230,8 @@ public class StopTomcat {
     }
     
     public String getTomcatHome() {
+        if (tomcatHome != null)
+            return tomcatHome;
 	// Try to establish install and home locations
 	String tchome=IntrospectionUtils.guessInstall("tomcat.install",
 				"tomcat.home","stop-tomcat.jar");
@@ -325,13 +340,16 @@ public class StopTomcat {
     }
 
     public static void printUsage() {
-	System.out.println("Usage: java org.apache.tomcat.startup.StopTomcat {options}");
-	System.out.println("  Options are:");
-        System.out.println("    -ajpid file                Use this file instead of conf/ajp12.id");
-	System.out.println("    -pass                      Password to use");
-        System.out.println("    -host                      Host to send the shutdown command");
-	System.out.println("    -port                      Port to send the shutdown command");
-	System.out.println("    -home dir                  Use this directory as tomcat.home,to find ajp12.id");
+        System.out.println("Usage: java org.apache.tomcat.startup.StopTomcat {options}");
+        System.out.println("  Options are:");
+        System.out.println("    -ajpid file (or -secretFile file) Use this file instead of conf/ajp12.id");
+        System.out.println("    -help                             Show this usage report");
+        System.out.println("    -host                             Host to send the shutdown command");
+        System.out.println("    -home dir (or -h dir)             Use this directory as tomcat.home,");
+        System.out.println("                                          to find ajp12.id");
+        System.out.println("    -pass                             Password to use");
+        System.out.println("    -port                             Port to send the shutdown command");
+        System.out.println("Note: the '-' on the options is optional.");
         System.out.println();
     }
     
