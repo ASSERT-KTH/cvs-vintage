@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.61 2002/03/01 00:17:07 elicia Exp $ -->
+<!-- $Id: changes.html,v 1.62 2002/03/01 14:28:41 maartenc Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -56,7 +56,9 @@
                 <li>Fixed link in email when assigning users. (EWD)</li>
                 <li>Fixed a NPE that could occur when checking the permission of
                     a hyperlink if no module had been selected yet by the current
-                    user. (MC)</li>
+                    user. See also Bug Report 
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=194">194</a>
+                    (MC)</li>
                 <li>changes to user attributes such as adding and deleting
                     now show up immediately.  Caching was causing the results
                     to not show up until the list was shown a second time.
@@ -68,10 +70,19 @@
                 <li>Fixed the template showing the results of a usersearch.
                     The template had some problems showing the correct
                     pagination links (and pagination info) if there were 
-                    more than 25 users. (MC)</li>
+                    more than 25 users. See also Bug Report
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=172">172</a>
+                    (MC)</li>
                 <li>Fixed error on entry,Wizard2.vm that can occur when
                     entering a duplicate issue to an issue that was 
                     previously closed. (JDM)</li>
+                <li>Fixed a problem pressing the Cancel button while choosing
+                    a new password. If the password of a user has been expired,
+                    he/she must choose a new one. If the user pressed
+                    Cancel during this process, an Excpetion was thrown.
+                    For more details, see also Bug Report 
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=199">199</a>
+                    (MC)</li>
             </ul>
         </td>
     </tr>    
