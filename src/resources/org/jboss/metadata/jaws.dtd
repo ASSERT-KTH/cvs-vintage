@@ -39,9 +39,10 @@ This is the XML DTD for the JAWS deployment descriptor.
  select-for-update: On loading the bean, use the 'select ... for update' syntax,
       locking the row.
  pk-constraint: If create-table is on, create it with a primary key.
- time-out: -->
+ time-out: For read-only only, re-load entity after time-out
+-->
 <!ELEMENT entity (ejb-name,cmp-field*,finder*,read-ahead?,read-only?,
-                  table-name?,tuned-updates?,create-table?,remove-table?,select-for-update?)>
+                  table-name?,tuned-updates?,create-table?,remove-table?,select-for-update?,time-out?,pk-constraint?)>
 
 <!-- ejb-name within an entity element must contain the ejb-name as specified
  in ejb-jar.xml. -->
