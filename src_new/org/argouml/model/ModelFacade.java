@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.4 2003/01/18 20:56:04 linus Exp $
+// $Id: ModelFacade.java,v 1.5 2003/01/18 21:15:52 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -124,6 +124,15 @@ public class ModelFacade {
 	return handle instanceof MClassifier;
     }
 
+    /** Recognizer for GeneralizableElement
+     *
+     * @param handle candidate
+     * @returns true if handle is a GeneralizableElement
+     */
+    public static boolean isAGeneralizableElement(Object handle) {
+	return handle instanceof MGeneralizableElement;
+    }
+
     /** Recognizer for Package
      *
      * @param handle candidate
@@ -133,9 +142,24 @@ public class ModelFacade {
 	return handle instanceof MPackage;
     }
 
+    /** Recognizer for leafs
+     *
+     * @param handle candidate GeneralizableElement
+     * @returns true if handle is a leaf
+     */
+    public static boolean isLeaf(Object handle) {
+	if (handle instanceof MGeneralizableElement) {
+	    return ((MGeneralizableElement)handle).isLeaf();
+	}
+	// ...
+	return false;
+    }
 
 
+
+    ////////////////////////////////////////////////////////////////
     // Recognizer methods for the diagrams (in alphabetic order)
+
     /** Recognizer for Diagram.
      *
      * @param handle candidate
@@ -200,7 +224,7 @@ public class ModelFacade {
     /** The list of owned elements of the the package.
      *
      * @param handle package to retrieve from.
-     * @return Iterator with operaitons
+     * @return Iterator with operations
      */
     public static Iterator getOwnedElements(Object handle) {
 	if (handle instanceof MNamespace) {
@@ -209,6 +233,21 @@ public class ModelFacade {
 	// ...
 	return emptyIterator();
     }
+
+    /** The list of Specializations from a GeneralizableElement.
+     *
+     * @param handle GeneralizableElement to retrieve from.
+     * @return Iterator with Specializations.
+     */
+    public static Iterator getSpecializations(Object handle) {
+	if (handle instanceof MGeneralizableElement) {
+	    MGeneralizableElement ge = (MGeneralizableElement)handle;
+	    return ge.getSpecializations().iterator();
+	}
+	// ...
+	return emptyIterator();
+    }
+
 
 
     ////////////////////////////////////////////////////////////////
