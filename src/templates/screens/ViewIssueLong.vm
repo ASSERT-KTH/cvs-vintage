@@ -1,7 +1,7 @@
 <div class="app" id="viewissue">
 
 #set ($action = $link.setPage("ViewIssueLong.vm").setAction("ModifyIssue").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "ViewIssueLong.vm").toString())
-#set ($issueList = $scarabR.IssueList)
+#set ($issueList = $data.Parameters.getStrings("issue_ids"))
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage"))
 #set ($pageNum = $data.Parameters.getInt("pageNum"))
 
@@ -25,7 +25,8 @@
   #end
 #end
   #set ($currentModule = $scarabR.CurrentModule)
-  #foreach ($currentIssue in $issueList)
+  #foreach ($issueId in $issueList)
+     #set ($currentIssue = $scarabR.getIssueByPk($issueId.toString()))
   <form method="post" action="$action">
     <input type="hidden" name="id" value="$currentIssue.UniqueId">
     <input type="hidden" name="resultsPerPage" value="$resultsPerPage">
