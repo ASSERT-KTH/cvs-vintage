@@ -19,16 +19,17 @@ package org.columba.mail.facade;
 import org.columba.core.main.MainInterface;
 
 /**
+ * Message Composer functionality.
+ * 
  * @author fdietz
- *
  */
 public class ComposerFacade {
-    /**
- *
- * open up composer window
- */
-    public static void openComposer() {
-        // Choice btw. text and html will be based on stored option
-        MainInterface.frameModel.openView("Composer");
-    }
+	/**
+	 * 
+	 * open up composer window
+	 */
+	public static void openComposer() {
+		// Choice btw. text and html will be based on stored option
+		MainInterface.frameModel.openView("Composer");
+	}
 }

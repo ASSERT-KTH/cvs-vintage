@@ -20,8 +20,9 @@ import javax.swing.JFrame;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 
 /**
- * @author fdietz
- *  
+ * Dialog Factory.
+ * 
+ * @author fdietz 
  */
 public class DialogFacade {
 	/**

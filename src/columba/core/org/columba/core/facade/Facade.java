@@ -23,57 +23,55 @@ import org.columba.core.xml.XmlIO;
 
 import java.io.File;
 
-
 /**
  * @author fdietz
- *
- *
+ * 
+ *  
  */
 public class Facade {
-    /**
-     * @param configName        id of config-file
-     *                                                 example: options
-     *
-     *
-     *
-     * @return XmlElement        represents an xml-treenode
-     */
-    public static XmlElement getConfigElement(String configName) {
-        XmlElement root = MainInterface.config.get(configName);
+	/**
+	 * @param configName
+	 *            id of config-file example: options
+	 * 
+	 * 
+	 * 
+	 * @return XmlElement represents an xml-treenode
+	 */
+	public static XmlElement getConfigElement(String configName) {
+		XmlElement root = MainInterface.config.get(configName);
 
-        return root;
-    }
+		return root;
+	}
 
-    /**
-     *
-     * create temporary File which exists also when Columba is
-     * not running.
-     *
-     * This is useful when opening attachments with your web-browser.
-     * When you close Columba and use java's internal temp-file
-     * stuff, closing Columba would also close the web-browser.
-     *
-     * @return File
-     */
-    public static File createTempFile() {
-        return TempFileStore.createTempFile();
-    }
+	/**
+	 * 
+	 * create temporary File which exists also when Columba is not running.
+	 * 
+	 * This is useful when opening attachments with your web-browser. When you
+	 * close Columba and use java's internal temp-file stuff, closing Columba
+	 * would also close the web-browser.
+	 * 
+	 * @return File
+	 */
+	public static File createTempFile() {
+		return TempFileStore.createTempFile();
+	}
 
-    /**
-     *
-     * Returns the top xml node of config.xml found in
-     * the plugin folder.
-     *
-     * @param pluginId        id of your plugin
-     *
-     * @return XmlIO
-     */
-    public static XmlIO getPluginConfiguration(String pluginId) {
-        return MainInterface.pluginManager.getConfiguration(pluginId);
-    }
+	/**
+	 * 
+	 * Returns the top xml node of config.xml found in the plugin folder.
+	 * 
+	 * @param pluginId
+	 *            id of your plugin
+	 * 
+	 * @return XmlIO
+	 */
+	public static XmlIO getPluginConfiguration(String pluginId) {
+		return MainInterface.pluginManager.getConfiguration(pluginId);
+	}
 
-    public static PluginResourceLoader createPluginResourceLoader(
-        String pluginId) {
-        return new PluginResourceLoader(pluginId);
-    }
+	public static PluginResourceLoader createPluginResourceLoader(
+			String pluginId) {
+		return new PluginResourceLoader(pluginId);
+	}
 }
