@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.16 2001/08/20 22:39:52 user57 Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.17 2001/08/30 20:42:24 pra Exp $ -->
 
 <jboss>
    <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -391,6 +391,11 @@
 	    <MaximumSize>15</MaximumSize>
 	    <MaxMessages>1</MaxMessages>
 	    <Optimized>True</Optimized>
+            <MDBConfig>
+               <DestinationQueue>queue/DLQ</DestinationQueue>
+               <MaxTimesRedelivered>10</MaxTimesRedelivered>
+               <TimeToLive>-1</TimeToLive>
+            </MDBConfig>
 	 </container-invoker-conf>
 	 <container-pool-conf>
 	    <MaximumSize>100</MaximumSize>
