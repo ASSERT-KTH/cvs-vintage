@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpointConnector.java,v 1.2 2000/05/31 20:58:37 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/05/31 20:58:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpointConnector.java,v 1.3 2000/06/22 23:41:02 alex Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/06/22 23:41:02 $
  *
  * ====================================================================
  *
@@ -67,6 +67,7 @@ package org.apache.tomcat.service;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.service.connector.*;
+import org.apache.tomcat.logging.*;
 
 /**
  * Connector for a JNI connections using the API in tomcat.service.
@@ -90,7 +91,7 @@ public class JNIEndpointConnector  implements ServerConnector {
 
     boolean running = true;
 
-    public static void setEndpoinet(JNIEndpoint ep)
+    public static void setEndpoint(JNIEndpoint ep)
     {
         JNIEndpointConnector.ep = ep;
     }
@@ -131,4 +132,14 @@ public class JNIEndpointConnector  implements ServerConnector {
     public Object getAttribute(String prop) {
         return null;
     }
+
+    private LogHelper loghelper = new LogHelper("tc_log", "JNIEndpointConnector");
+
+    /**
+     * Set a logger explicitly.
+     **/
+    public void setLogger( Logger logger ) {
+	loghelper.setLogger(logger);
+    }
+
 }
