@@ -89,9 +89,9 @@ $issue.Module.Name
 #set ($userAction = "$moveIssueGroup.Action")
 <p>
 <input type="radio" name="$moveIssueGroup.Action.Key" value="copy" 
-#checked($userAction.toString() 'copy') /> Copy
+#if ($userAction.toString().equals("copy")) checked="checked" #end /> Copy
 <input type="radio" name="$moveIssueGroup.Action.Key" value="move" 
-#checked($userAction.toString() 'move') /> Move
+#if ($userAction.toString().equals("move")) checked="checked" #end /> Move
 </p>
 
 <h3>Attribute mapping results</h3>

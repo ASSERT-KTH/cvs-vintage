@@ -74,9 +74,9 @@ $issue.Module.Name
 #end
 <p>
 <input type="radio" name="$moveIssueGroup.Action.Key" value="copy" 
-#checked($userAction 'copy') /> Copy
+#if ($userAction.toString().equals("copy")) checked="checked" #end /> Copy
 <input type="radio" name="$moveIssueGroup.Action.Key" value="move" 
-#checked($userAction 'move') /> Move
+#if ($userAction.toString().equals("move")) checked="checked" #end /> Move
 </p>
 
 <div class="functnbar2">
