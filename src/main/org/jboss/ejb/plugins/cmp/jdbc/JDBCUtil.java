@@ -46,7 +46,30 @@ import org.jboss.logging.Logger;
  * parameters and loading query results.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
+ *
+ * <p><b>20021023 Steve Coy:</b>
+ * <ul>
+ * <li>Use the jdbcType in {@link #setParameter} to make better use of the
+ *     methods avaailable in a <code>PreparedStatement</code>, paying
+ *     particular attention to the binary types, blobs and large character
+ *     columns. Also, this function previously took it upon itself to
+ *     serialise data with jdbc types of JAVA_OBJECT, OTHER and STRUCT, when
+ *     in fact the driver should be managing this through the 
+ *     <code>setObject</code> call.
+ * <li>Added a jdbcType parameter to {@link #getResult} so that it could get
+ *     similar treatment to the above. This was also necessary to satisfy a
+ *     quirk in the Oracle JDBC driver. {@link java.sql.ResultSet#getBytes}
+ *     purports to return "raw bytes" from the driver. In Oracle's case for
+ *     blobs, this looks like the LOB pointer or something. Therefore, the
+ *     function needed to know what type of data to retrieve. Also, we 
+ *     explicitly get the driver to return appropriate types for JAVA_OBJECT,
+ *     OTHER and STRUCT data.
+ * <li>Even though it's not referenced anywhere, I changed
+ *     {@link isBinaryJDBCType} so that JAVA_OBJECT, OTHER and STRUCT are no
+ *     longer considered to be "binary" types.
+ *            
+ * </ul>
  */
 public final class JDBCUtil
 {
@@ -188,64 +211,77 @@ public final class JDBCUtil
       // (for DATE, TIME, TIMESTAMP, CHAR)
       //
       value = coerceToSQLType(jdbcType, value);
-         
-      //
-      // handle CLOBs special
-      //
-      // This won't fix the Oracle problem with CLOBs > 2000 characters,
-      // but it is a step in the right direction.
-      if(jdbcType == Types.CLOB) 
+      
+      // Set the prepared statement parameter based upon the jdbc type
+      switch (jdbcType)
       {
-         String string = value.toString();
-         StringReader reader = null;
-         try {
-            reader = new StringReader(string);
-            ps.setCharacterStream(index, reader, string.length());
-         } finally
-         {
-            safeClose(reader);
-         }
-         return;
-      } 
-
-      //
-      // Binary types need to be converted to a byte array and set
-      //
-      if(isBinaryJDBCType(jdbcType))
-      {
-         byte[] bytes = convertObjectToByteArray(value);
-
-         if(jdbcType == Types.BLOB) 
-         {
-            // if the jdbc type is blob use a real blob
-            ps.setBlob(index, new ByteArrayBlob(bytes));
-         } else if (bytes.length < 2000)
-         {
-            // it's more efficient to use setBinaryStream for large
-            // streams, and causes problems if not done on some DBMS
-            // implementations
-            ps.setBytes(index, bytes);
-         } else
-         {
-            InputStream in = null;
-            try
+         //
+         // Large character types
+         //
+         case Types.CLOB:
+         case Types.LONGVARCHAR:
             {
-               in = new ByteArrayInputStream(bytes);
-               ps.setBinaryStream(index, in, bytes.length);
-            } finally
-            {
-               safeClose(in);
+               String string = value.toString();
+               ps.setCharacterStream(index, new StringReader(string), string.length());
+               // Can't close the reader because some drivers don't use it until
+               // the statement is executed. This would appear to be a safe thing
+               // to do with a StringReader as it only releases its reference.
             }
-         }
-         return;
-      }
+            break;
+         
+         //
+         // All binary types
+         //
+   /*    case Types.JAVA_OBJECT:    // scoy: I'm not convinced that these should be here
+         case Types.OTHER:          // ie. mixed in with the binary types.
+         case Types.STRUCT:		
+    */
+         //
+         // Small binary types
+         //
+         case Types.BINARY:
+         case Types.VARBINARY:
+            {
+               byte[] bytes = convertObjectToByteArray(value);
+               ps.setBytes(index, bytes);
+            }
+            break;
+       
+         //
+         // Large binary types
+         //
+         case Types.BLOB:
+         case Types.LONGVARBINARY:
+            {
+               byte[] bytes = convertObjectToByteArray(value);
+               ps.setBinaryStream(index, new ByteArrayInputStream(bytes), bytes.length);
+               // Can't close the stream because some drivers don't use it until
+               // the statement is executed. This would appear to be a safe thing
+               // to do with a ByteArrayInputStream as it only releases its reference.
+            }
+            break;
+       
+         
+         //
+         // Let the JDBC driver handle these if it can.
+         // If it can't, then don't use them!
+         // Map to a binary type instead and let JBoss marshall/unmarshall the data.
+         //
+         case Types.JAVA_OBJECT:
+         case Types.OTHER:
+         case Types.STRUCT:
+         
+         //
+         //  Standard SQL type
+         //
+         default:
+            ps.setObject(index, value, jdbcType);
+            break;
 
-      //
-      //  Standard SQL type
-      //
-      ps.setObject(index, value, jdbcType);
+      } 
    }
-   
+
+
    /**
     * Used for all retrieval of results from <code>ResultSet</code>s.
     * Implements tracing, and allows some tweaking of returned types.
@@ -253,73 +289,144 @@ public final class JDBCUtil
     * @param rs the <code>ResultSet</code> from which a result is 
     *    being retrieved.
     * @param index index of the result column.
+    * @param jdbcType a {@link java.sql.Types} constant used to determine the
+    *                 most appropriate way to extract the data from rs.
     * @param destination The class of the variable this is going into
     */
    public static Object getResult(
          Logger log, 
          ResultSet rs, 
-         int index, 
+         int index,
+         int jdbcType, 
          Class destination) throws SQLException
    {
-      boolean gotResult = false;
       Object value = null;
       
-      //
-      // Non-binary types
-      //
-      Method method = (Method)rsTypes.get(destination.getName());
-      if(method != null)
+      switch (jdbcType)
       {
-         try
-         {
-            value = method.invoke(rs, new Object[]{new Integer(index)});
-            if(rs.wasNull())
+         //
+         // Large character types
+         //
+         case Types.CLOB:
+         case Types.LONGVARCHAR:
             {
-               value = null;
+               value = getLongString(rs, index);
+               if (log.isTraceEnabled()) {
+                  log.trace("Get result: index=" + index + 
+                        ", javaType=" + destination.getName() + 
+                        ", Big Char, value=" + value);
+               }
             }
-
-            if(log.isTraceEnabled()) {
-               log.trace("Get result: index=" + index + 
-                     ", javaType=" + destination.getName() + 
-                     ", Simple, value=" + value);
+            break;
+            
+         //
+         // Small binary types
+         //
+         case Types.BINARY:
+         case Types.VARBINARY:
+            {
+               byte[] bytes = rs.getBytes(index);
+               if (!rs.wasNull())
+               {
+                  if (destination == byte[].class)
+                     value = bytes;
+                  else
+                     value = convertToObject(bytes);
+               }
+               if (log.isTraceEnabled()) {
+                  log.trace("Get result: index=" + index + 
+                        ", javaType=" + destination.getName() + 
+                        ", Binary, value=" + value);
+               }
             }
-            gotResult = true;
-         } catch(IllegalAccessException e)
-         {
-            // Whatever, I guess non-binary will not work for this field.
-         } catch(InvocationTargetException e)
-         {
-            // Whatever, I guess non-binary will not work for this field.
-         }
-      }
-   
-      //
-      // Binary types
-      //
-      if(!gotResult) {
-         // I guess this is binary data
-         byte[] bytes = rs.getBytes(index);
-         if( bytes == null )
-         {
-            return null;
-         }
-      
-         // if we are not looking for a byte array convert the bytes into 
-         // a real object; otherwise we are done
-         if (destination != byte[].class)
-         {
-            value = convertByteArrayToObject(bytes);
-         } else
-         {
-            value = bytes;
-         }
+            break;
+       
+         //
+         // Large binary types
+         //
+         case Types.BLOB:
+         case Types.LONGVARBINARY:
+            {
+               InputStream binaryData = rs.getBinaryStream(index);
+               if (binaryData != null)
+               {
+	               try
+	               {
+	                  if (destination == byte[].class)
+	                     value = getByteArray(binaryData);
+	                  else
+	                     value = convertToObject(binaryData);
+	               }
+	               finally
+	               {
+	                  safeClose(binaryData);
+	               }
+               }
+               if (log.isTraceEnabled()) {
+                  log.trace("Get result: index=" + index + 
+                        ", javaType=" + destination.getName() + 
+                        ", Big Binary, value=" + value);
+               }
+            }
+            break;
+         
+         //
+         // Specialist types that the
+         // driver should handle
+         //
+         case Types.JAVA_OBJECT:
+         case Types.STRUCT:
+         case Types.ARRAY:
+         case Types.OTHER:
+            {
+               value = rs.getObject(index);
+               if (log.isTraceEnabled()) {
+                  log.trace("Get result: index=" + index + 
+                        ", javaType=" + destination.getName() + 
+                        ", Object, value=" + value);
+               }
+            }
+            break;
 
-         if(log.isTraceEnabled()) {
-            log.trace("Get result: index=" + index + 
-                  ", javaType=" + destination.getName() + 
-                  ", Binary, value=" + value);
-         }
-         gotResult = true;
+         //
+         // Non-binary types
+         //
+         default:
+            {
+               Method method = (Method)rsTypes.get(destination.getName());
+               if(method != null)
+               {
+                  try
+                  {
+                     value = method.invoke(rs, new Object[]{new Integer(index)});
+                     if(rs.wasNull())
+                     {
+                        value = null;
+                     }
+
+                     if(log.isTraceEnabled()) {
+                        log.trace("Get result: index=" + index + 
+                              ", javaType=" + destination.getName() + 
+                              ", Simple, value=" + value);
+                     }
+                  } catch(IllegalAccessException e)
+                  {
+                     // Whatever, I guess non-binary will not work for this field.
+                  } catch(InvocationTargetException e)
+                  {
+                     // Whatever, I guess non-binary will not work for this field.
+                  }
+               }
+               else
+               {
+                  value = rs.getObject(index);
+                  if(log.isTraceEnabled()) {
+                     log.trace("Get result: index=" + index + 
+                           ", javaType=" + destination.getName() + 
+                           ", Object, value=" + value);
+                  }
+               }
+            }
       }
 
       //
@@ -489,10 +596,10 @@ public final class JDBCUtil
    {
       return (Types.BINARY == jdbcType ||
             Types.BLOB == jdbcType ||
-            Types.JAVA_OBJECT == jdbcType ||
+     //     Types.JAVA_OBJECT == jdbcType ||
             Types.LONGVARBINARY == jdbcType ||
-            Types.OTHER == jdbcType ||
-            Types.STRUCT == jdbcType ||
+     //     Types.OTHER == jdbcType ||
+     //     Types.STRUCT == jdbcType ||
             Types.VARBINARY == jdbcType);
    }
    
@@ -573,56 +680,155 @@ public final class JDBCUtil
    }
    
    /**
-    * Coverts the byte array into an object.
-    * @param bytes the bytes to convert
-    * @param destination the desired resultant type
-    * @return the object repsentation of the byte array
+    * Coverts the input into an object.
+    * @param input the bytes to convert
+    * @return the object repsentation of the input stream
     * @throws SQLException if a problem occures in the conversion
     */
-   private static Object convertByteArrayToObject(byte[] bytes) 
+   private static Object convertToObject(byte[] input) 
          throws SQLException
    {
-      ByteArrayInputStream bais = null;
-      ObjectInputStream ois = null;
+      ByteArrayInputStream bais = new ByteArrayInputStream(input);
       try
       {
-         Object value;
-         
-         // deserialize result
-         bais = new ByteArrayInputStream(bytes);
-         ois = new ObjectInputStream(bais);
-         value = ois.readObject();
-         
-         // de-marshall value if possible
-         if(value instanceof MarshalledValue)  {
-            value = ((MarshalledValue)value).get();
-         } else if(value instanceof MarshalledObject) {
-            value = ((MarshalledObject)value).get();
-         }
-         
-         // ejb-reference: get the object back from the handle
-         if(value instanceof Handle)
-         {
-            value = ((Handle)value).getEJBObject();
-         }
-         return value;
-      } catch (RemoteException e)
+         return convertToObject(bais);
+      }
+      finally
       {
-         throw new SQLException("Unable to load EJBObject back from Handle: " 
-               + e);
-      } catch (IOException e)
-      {
-         throw new SQLException("Unable to load to deserialize result: "+e);
-      } catch (ClassNotFoundException e)
-      {
-         throw new SQLException("Unable to load to deserialize result: "+e);
-      } finally
-      {
-         safeClose(ois);
          safeClose(bais);
       }
    }
+
+
+   /**
+    * Coverts the input into an object.
+    * @param input the bytes to convert
+    * @return the object repsentation of the input stream
+    * @throws SQLException if a problem occures in the conversion
+    */
+   private static Object convertToObject(InputStream input) 
+         throws SQLException
+   {
+      Object value = null;
+      if (input != null)
+      {
+         ObjectInputStream ois = null;
+         try
+         {
+            
+            // deserialize result
+            ois = new ObjectInputStream(input);
+            value = ois.readObject();
+            
+            // de-marshall value if possible
+            if(value instanceof MarshalledValue)
+            {
+               value = ((MarshalledValue)value).get();
+            }
+            else if(value instanceof MarshalledObject)
+            {
+               value = ((MarshalledObject)value).get();
+            }
+            
+            // ejb-reference: get the object back from the handle
+            if(value instanceof Handle)
+            {
+               value = ((Handle)value).getEJBObject();
+            }
+
+         } catch (RemoteException e)
+         {
+            throw new SQLException("Unable to load EJBObject back from Handle: " 
+                  + e);
+         } catch (IOException e)
+         {
+            throw new SQLException("Unable to load to deserialize result: "+e);
+         } catch (ClassNotFoundException e)
+         {
+            throw new SQLException("Unable to load to deserialize result: "+e);
+         } finally
+         {
+            safeClose(ois);
+         }
+      }
+      return value;
+   }
    
+   /**
+    * Get the indicated result set parameter as a character stream and return
+    * it's entire content as a String.
+    * 
+    * @param rs the <code>ResultSet</code> from which a result is 
+    *    being retrieved.
+    * @param index index of the result column.
+    * @return a String containing the content of the result column
+    */
+   private static String getLongString(ResultSet rs, int index)
+         throws SQLException
+   {
+      String value;
+      Reader textData = rs.getCharacterStream(index);
+      if (textData != null)
+      {
+         try
+         {
+            // Use a modest buffer here to reduce function call overhead
+            // when reading extremely large data.
+            StringBuffer textBuffer = new StringBuffer();
+            char[] tmpBuffer = new char[1000];
+            int charsRead;
+            while ((charsRead = textData.read(tmpBuffer)) != -1)
+               textBuffer.append(tmpBuffer, 0, charsRead);
+            value = textBuffer.toString();
+         }
+         catch (java.io.IOException ioException)
+         {
+            throw new SQLException(ioException.getMessage());
+         }
+         finally
+         {
+            safeClose(textData);
+         }
+      }
+      else
+         value = null;
+      return value;
+   }
+
+
+   /**
+    * Read the entire input stream provided and return its content as a byte
+    * array.
+    * 
+    * @param input the <code>InputStream</code> from which a result is 
+    *    being retrieved.
+    * @return a byte array containing the content of the input stream
+    */
+    private static byte[] getByteArray(InputStream input)
+         throws SQLException
+   {
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      try
+      {
+         // Use a modest buffer here to reduce function call overhead
+         // when reading extremely large data.
+         byte[] tmpBuffer = new byte[1000];
+         int bytesRead;
+         while ((bytesRead = input.read(tmpBuffer)) != -1)
+            baos.write(tmpBuffer, 0, bytesRead);
+         return baos.toByteArray();
+      }
+      catch (java.io.IOException ioException)
+      {
+         throw new SQLException(ioException.getMessage());
+      }
+      finally
+      {
+         safeClose(baos);
+      }
+   }
+
+
    //
    // Simple helper methods
    //
@@ -721,7 +927,7 @@ public final class JDBCUtil
          // double
          rsTypes.put(Double.TYPE.getName(),
                ResultSet.class.getMethod("getDouble", arg));
-         // byte[]
+         // byte[]   (scoy: I expect that this will no longer be invoked)
          rsTypes.put("[B",
                ResultSet.class.getMethod("getBytes", arg));
       } catch(NoSuchMethodException e)
