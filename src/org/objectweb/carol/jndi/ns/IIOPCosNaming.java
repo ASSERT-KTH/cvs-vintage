@@ -94,7 +94,7 @@ public class IIOPCosNaming implements NameService {
 		    Runtime.getRuntime().addShutdownHook(new Thread() {
 			    public void run() {
 				try {
-				    stop();
+				    IIOPCosNaming.this.stop();
 				} catch (Exception e) {
 				    TraceCarol.error("IIOPCosNaming ShutdownHook problem" ,e);
 				}

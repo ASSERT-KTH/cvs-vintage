@@ -66,7 +66,7 @@ public class JeremieRegistry implements NameService {
 		    Runtime.getRuntime().addShutdownHook(new Thread() {
 			    public void run() {
 				try {
-				    stop();
+				    JeremieRegistry.this.stop();
 				} catch (Exception e) {
 				    TraceCarol.error("JeremieRegistry ShutdownHook problem" ,e);
 				}

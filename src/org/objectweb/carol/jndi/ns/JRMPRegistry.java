@@ -68,7 +68,7 @@ public class JRMPRegistry implements NameService {
 		    Runtime.getRuntime().addShutdownHook(new Thread() {
 			    public void run() {
 				try {
-				    stop();
+				    JRMPRegistry.this.stop();
 				} catch (Exception e) {
 				    TraceCarol.error("JRMPRegistry ShutdownHook problem" ,e);
 				}
