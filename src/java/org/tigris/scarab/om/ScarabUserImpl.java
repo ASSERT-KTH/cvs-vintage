@@ -92,7 +92,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.53 2002/03/02 02:32:58 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.54 2002/03/08 00:10:42 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -278,6 +278,8 @@ public class ScarabUserImpl
 
     /**
      * @see org.tigris.scarab.om.ScarabUser#hasPermission(String, ModuleEntity)
+     * Determine if a user has a permission, either within the specified
+     * module or within the 'Global' module.
      */
     public boolean hasPermission(String perm, ModuleEntity module)
     {
@@ -620,14 +622,6 @@ public class ScarabUserImpl
         throws Exception
     {
         internalUser.resetDefaultQuery(module, issueType);
-    }
-    
-    /**
-     * If user has no default query set, gets a default default query.
-     */
-    public String getDefaultDefaultQuery() throws Exception
-    {
-        return internalUser.getDefaultDefaultQuery();
     }
     
     /**

@@ -75,27 +75,50 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * This class contains common code for the use in ScarabUser implementations.
- * It would be preferrable that the code here be provided in an 
- * AbstractScarabUser that implementations could extend.  This is possible
- * to do with the turbine security user, but will require the build process
- * to build fulcrum's security service using a modified xml schema.  Until
- * that is done, functionality that is not implementation specific should
- * go here.
+ * Functionality that is not implementation specific should go here.
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AbstractScarabUser.java,v 1.18 2002/03/07 23:06:52 elicia Exp $
+ * @author <a href="mailto:jon@collab.net">John McNally</a>
+ * @version $Id: AbstractScarabUser.java,v 1.19 2002/03/08 00:10:42 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
 {
+    /** Method name used as part of a cache key */
+    private static final String GET_R_MODULE_USERATTRIBUTES = 
+        "getRModuleUserAttributes";
+    /** Method name used as part of a cache key */
+    private static final String GET_R_MODULE_USERATTRIBUTE = 
+        "getRModuleUserAttribute";
+    /** Method name used as part of a cache key */
+    private static final String GET_DEFAULT_QUERY_USER = 
+        "getDefaultQueryUser";
+
+    /** 
+     * counter used as part of a key to store an Issue the user is 
+     * currently entering 
+     */
     private int issueCount = 0;
+
+    /** 
+     * Map to store <code>Issue</code>'s the user is  currently entering 
+     */
     private Map issueMap;
+
+    /** 
+     * counter used as part of a key to store an Report the user is 
+     * currently editing
+     */
     private int reportCount = 0;
+
+    /** 
+     * Map to store <code>Report</code>'s the user is  currently entering 
+     */
     private Map reportMap;
 
     /**
-        Call the superclass constructor to initialize this object.
-    */
+     * Calls the superclass constructor to initialize this object.
+     */
     public AbstractScarabUser()
     {
         super();
@@ -103,15 +126,32 @@ public abstract class AbstractScarabUser
         reportMap = new HashMap();
     }
 
+    /** The Primary Key used to reference this user in storage */
     public abstract NumberKey getUserId();
-    public abstract String getEmail();
-    public abstract String getFirstName();
-    public abstract String getLastName();
-    public abstract boolean hasPermission(String perm, ModuleEntity module);
-
 
     /**
-     * The user's full name.
+     * @see org.tigris.scarab.om.ScarabUser#getEmail()
+     */
+    public abstract String getEmail();
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#getFirstName()
+     */
+    public abstract String getFirstName();
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#getLastName()
+     */
+    public abstract String getLastName();
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#hasPermission(String, ModuleEntity)
+     */
+    public abstract boolean hasPermission(String perm, ModuleEntity module);
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#getName()
+     * It will be the "FirstName LastName", if  both names have a value.
      */
     public String getName()
     {
@@ -169,9 +209,6 @@ public abstract class AbstractScarabUser
         return editModules;
      }
 
-    private static final String GET_R_MODULE_USERATTRIBUTES = 
-        "getRModuleUserAttributes";
-
 
     /**
      * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttributes(ModuleEntity, IssueType)
@@ -204,12 +241,12 @@ public abstract class AbstractScarabUser
         return result;
     }
 
+    /**
+     * Should return a list of <code>RModuleUserAttribute</code>'s that
+     * meet the given criteria. 
+     */
     protected abstract Vector getRModuleUserAttributes(Criteria crit)
         throws TorqueException;
-            
-    private static final String GET_R_MODULE_USERATTRIBUTE = 
-        "getRModuleUserAttribute";
-
 
     /**
      * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttribute(ModuleEntity, Attribute, IssueType)
@@ -258,20 +295,6 @@ public abstract class AbstractScarabUser
         }
         return result;
     }
-
-
-
-    /* *
-     * @see org.tigris.scarab.om.ScarabUser#getModules(Role)
-     * /
-    public List getModules(Role role) 
-        throws Exception
-    {
-        if (true)
-            throw new Exception ("FIXME: This method doesn't belong here!");
-        return null;
-    }
-    */
 
     /**
      * @see org.tigris.scarab.om.ScarabUser#getReportingIssue(String)
@@ -381,12 +404,8 @@ public abstract class AbstractScarabUser
     }
 
 
-    private static final String GET_DEFAULT_QUERY_USER = 
-        "getDefaultQueryUser";
-
-
     /**
-     * Clears default query-user map for this module/issuetype.
+     * @see org.tigris.scarab.om.ScarabUser#getDefaultQueryUser(ModuleEntity, IssueType)
      */
     public RQueryUser getDefaultQueryUser(ModuleEntity me, IssueType issueType)
         throws Exception
@@ -416,11 +435,16 @@ public abstract class AbstractScarabUser
         {
             rqu = (RQueryUser)result.get(0);
         }
+        else 
+        {
+            // could call getDefaultDefaultQuery here
+        }
+        
         return rqu;
     }
 
     /**
-     * gets default query for this module/issuetype.
+     * @see org.tigris.scarab.om.ScarabUser#getDefaultQuery(ModuleEntity, IssueType)
      */
     public Query getDefaultQuery(ModuleEntity me, IssueType issueType)
         throws Exception
@@ -435,7 +459,7 @@ public abstract class AbstractScarabUser
     }
 
     /**
-     * Clears default query for this module/issuetype.
+     * @see org.tigris.scarab.om.ScarabUser#resetDefaultQuery(ModuleEntity, IssueType)
      */
     public void resetDefaultQuery(ModuleEntity me, IssueType issueType)
         throws Exception
@@ -451,7 +475,7 @@ public abstract class AbstractScarabUser
     /**
      * If user has no default query set, gets a default default query.
      */
-    public String getDefaultDefaultQuery() throws Exception
+    private String getDefaultDefaultQuery() throws Exception
     {
         StringBuffer buf = new StringBuffer("&searchcb=");
         buf.append(getEmail());
@@ -460,31 +484,28 @@ public abstract class AbstractScarabUser
 
     /**
      * @see org.apache.torque.om.Persistent#save()
-     * this implementation will throw a ScarabException as it is 
-     * not really implemented here.
+     * this implementation throws an UnsupportedOperationException.
      */
     public void save() throws Exception
     {
-        throw new ScarabException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     /**
      * @see org.apache.torque.om.Persistent#save(String)
-     * this implementation will throw a ScarabException as it is 
-     * not really implemented here.
+     * this implementation throws an UnsupportedOperationException.
      */
     public void save(String dbName) throws Exception
     {
-        throw new ScarabException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     /**
      * @see org.apache.torque.om.Persistent#save(DBConnection)
-     * this implementation will throw a ScarabException as it is 
-     * not really implemented here.
+     * this implementation throws an UnsupportedOperationException.
      */
     public void save(DBConnection dbCon) throws Exception
     {
-        throw new ScarabException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

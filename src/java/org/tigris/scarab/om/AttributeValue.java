@@ -50,7 +50,7 @@ package org.tigris.scarab.om;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.apache.commons.util.ObjectUtils;
+import org.apache.commons.lang.Objects;
 // Turbine classes
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
@@ -390,7 +390,7 @@ public abstract class AttributeValue
     protected void setOptionIdOnly(NumberKey optionId)
         throws TorqueException
     {
-        if ( !ObjectUtils.equals(optionId, getOptionId()) )
+        if ( !Objects.equals(optionId, getOptionId()) )
         { 
             // if the value is set multiple times before saving only
             // save the last saved value
@@ -429,7 +429,7 @@ public abstract class AttributeValue
     protected void setUserIdOnly(NumberKey value)
         throws TorqueException
     {
-        if ( !ObjectUtils.equals(value, getUserId()) )
+        if ( !Objects.equals(value, getUserId()) )
         { 
             // if the value is set multiple times before saving only
             // save the last saved value
@@ -511,7 +511,7 @@ public abstract class AttributeValue
 
     protected void setValueOnly(String value)
     {
-        if ( !ObjectUtils.equals(value, getValue()) )
+        if ( !Objects.equals(value, getValue()) )
         { 
             // if the value is set multiple times before saving only
             // save the last saved value
