@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.8 2004/06/16 18:52:52 starksm Exp $
+$Id: jboss_4_0.dtd,v 1.9 2004/06/19 02:32:55 starksm Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -387,7 +387,7 @@ jnp-context?)>
 <!ELEMENT session (ejb-name , jndi-name? , local-jndi-name?, call-by-value?, configuration-name?,
  invoker-bindings?, security-proxy? , ejb-ref* ,  ejb-local-ref* , service-ref*, security-identity? ,
  resource-ref* , resource-env-ref* , clustered? , cluster-config?, method-attributes?, depends*,
- ior-security-config?)>
+ ior-security-config?, port-component*)>
 
 <!--
   The message-driven element holds information specific to jboss and not declared
@@ -1390,7 +1390,16 @@ is either true or false.
 
 <!--
 auth-method element describes the authentication method. The only supported value
-is USERNAME_PASSWORD
+for as-context is USERNAME_PASSWORD
+
+For port-component, the auth-method element is used to configure the
+authentication mechanism for the web service. As a prerequisite to gaining
+access to any web service which are protected by an authorization
+constraint, a user must have authenticated using the configured
+mechanism. Legal values for this element are "BASIC", or "CLIENT-CERT".
+
+Used in: as-context, port-component
+
 -->  
 <!ELEMENT auth-method ( #PCDATA )> 
 
@@ -1411,3 +1420,35 @@ caller-propagation element indicates if the target will accept propagated caller
 The values are NONE or SUPPORTED.
 -->  
 <!ELEMENT caller-propagation ( #PCDATA) >
+
+<!-- The port-component element specifies a mapping from a webservice
+port-component whose service-impl-bean/ejb-link value maps to an ejb.
+
+Used in: session
+-->
+<!ELEMENT port-component (port-component-name, port-uri?, auth-method?,
+ transport-guarantee?) >
+
+<!-- Relative path combined with web server root to form fully qualified
+endpoint address for a web service endpoint.
+
+Used in: port-component
+-->
+<!ELEMENT port-uri (#PCDATA) >
+
+<!--
+The transport-guarantee element specifies that the communication
+between client and server should be NONE, INTEGRAL, or
+CONFIDENTIAL. NONE means that the application does not require any
+transport guarantees. A value of INTEGRAL means that the application
+requires that the data sent between the client and server be sent in
+such a way that it can't be changed in transit. CONFIDENTIAL means
+that the application requires that the data be transmitted in a
+fashion that prevents other entities from observing the contents of
+the transmission. In most cases, the presence of the INTEGRAL or
+CONFIDENTIAL flag will indicate that the use of SSL is required.
+
+Used in: port-component
+-->
+<!ELEMENT transport-guarantee (#PCDATA)>
+
