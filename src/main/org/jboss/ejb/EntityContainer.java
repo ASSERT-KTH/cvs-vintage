@@ -7,61 +7,24 @@
 package org.jboss.ejb;
 
 import java.lang.ClassLoader;
-import java.lang.reflect.Method;
-import java.rmi.RemoteException;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.ejb.EJBException;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBLocalHome;
-import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBMetaData;
-import javax.ejb.EJBObject;
-import javax.ejb.EntityContext;
 import javax.ejb.Timer;
-import javax.management.Attribute;
-import javax.management.AttributeList;
-import javax.management.AttributeNotFoundException;
-import javax.management.DynamicMBean;
-import javax.management.InvalidAttributeValueException;
-import javax.management.MBeanConstructorInfo;
 import javax.management.MBeanException;
 import javax.management.MBeanInfo;
-import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
 import javax.management.ReflectionException;
-import javax.transaction.Transaction;
-import javax.transaction.TransactionRolledbackException;
-import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.timer.ContainerTimer;
 import org.jboss.ejb.entity.EntityInvocationRegistry;
 import org.jboss.ejb.entity.EntityPersistenceManager;
 import org.jboss.ejb.entity.EntityPersistenceManagerXMLFactory;
-import org.jboss.ejb.plugins.lock.Entrancy;
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.InvocationType;
-import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.PayloadKey;
-import org.jboss.logging.Logger;
 import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.monitor.StatisticsProvider;
 import org.jboss.security.SecurityAssociation;
-import org.jboss.util.collection.SerializableEnumeration;
-import org.jboss.util.MethodHashing;
 
 /**
  * This is a Container for EntityBeans (both BMP and CMP).
@@ -77,7 +40,7 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.96 $
+ * @version $Revision: 1.97 $
  */
 public class EntityContainer
    extends Container implements
@@ -100,8 +63,8 @@ public class EntityContainer
    private OptionDInvalidator optionDInvalidator;
 
    // These members contains statistics variable
-   private long createCount = 0;
-   private long removeCount = 0;
+   //private long createCount = 0;
+   //private long removeCount = 0;
 
    /**
     * Determines if state can be written to resource manager.
@@ -171,10 +134,8 @@ public class EntityContainer
     * Sets the persistence manager for this entity.
     * @param entityPersistenceManager the new persistence manager for this
     * entity; must not be null
-    * @throws IlllegalArgumentException if entityPersistenceManager is null
     */
-   public void setPersistenceManager(
-         EntityPersistenceManager entityPersistenceManager)
+   public void setPersistenceManager(EntityPersistenceManager entityPersistenceManager)
    {
       if(entityPersistenceManager == null)
       {
@@ -182,7 +143,6 @@ public class EntityContainer
       }
       this.entityPersistenceManager = entityPersistenceManager;
    }
-
 
    /**
     * Describe <code>typeSpecificInitialize</code> method here.
@@ -197,24 +157,19 @@ public class EntityContainer
       setLockManager(createBeanLockManager(((EntityMetaData)getBeanMetaData()).isReentrant(),conf.getLockConfig(), getClassLoader()));
 
       EntityMetaData entityMetaData = (EntityMetaData)metaData;
-      if(entityMetaData.getPrimaryKeyClass() != null) {
-         primaryKeyClass = classLoader.loadClass(
-            entityMetaData.getPrimaryKeyClass());
+      if(entityMetaData.getPrimaryKeyClass() != null)
+      {
+         primaryKeyClass = classLoader.loadClass(entityMetaData.getPrimaryKeyClass());
       }
 
-
       // Persistence Manager
-      EntityPersistenceManagerXMLFactory factory =
-         new EntityPersistenceManagerXMLFactory();
-      entityPersistenceManager = factory.create(
-         this,
-         conf.getPersistenceManagerElement());
+      EntityPersistenceManagerXMLFactory factory =  new EntityPersistenceManagerXMLFactory();
+      entityPersistenceManager = factory.create(this, conf.getPersistenceManagerElement());
       entityPersistenceManager.setContainer(this);
       entityPersistenceManager.create();
       readOnly = ((EntityMetaData)metaData).isReadOnly();
       // Init instance cache
       getInstanceCache().create();
-
    }
 
    /*
@@ -348,7 +303,6 @@ public class EntityContainer
 
          // Start the persistence manager
          getPersistenceManager().stop();
-
    }
    /*
    protected void stopService() throws Exception
@@ -531,7 +485,6 @@ public class EntityContainer
    }
 
    public void handleEjbTimeout( Timer pTimer ) {
-      EntityCache cache = (EntityCache) getInstanceCache();
 //AS      EntityContext lContext = (EntityContext) ( (ContainerTimer) pTimer ).getContext();
       Object id = ((ContainerTimer)pTimer).getKey();
 
@@ -636,10 +589,6 @@ public class EntityContainer
     */
    public MBeanInfo getMBeanInfo()
    {
-      MBeanParameterInfo miInfo = new MBeanParameterInfo("method", Invocation.class.getName(), "Invocation data");
-      MBeanConstructorInfo[] ctorInfo = null;
-
-      MBeanParameterInfo[] miInfoParams = new MBeanParameterInfo[] {new MBeanParameterInfo("method", Invocation.class.getName(), "Invocation data")};
       MBeanParameterInfo[] noParams = new MBeanParameterInfo[] {};
 
       MBeanInfo superInfo = super.getMBeanInfo();
