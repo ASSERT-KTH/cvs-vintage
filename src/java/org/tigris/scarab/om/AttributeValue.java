@@ -75,6 +75,10 @@ public abstract class AttributeValue
     extends BaseAttributeValue
     implements Persistent
 {
+    // need a local reference
+    private Attribute aAttribute;
+
+    private static String className = "AttributeValue";
     
     /** Creates a new attribute. Do not do anything here.
      * All initialization should be performed in init().
@@ -170,8 +174,6 @@ public abstract class AttributeValue
                  && getUserId() == null);
     }
 
-    // need a local reference
-    private Attribute aAttribute;                 
     public Attribute getAttribute() throws Exception
     {
         if ( aAttribute==null && (getAttributeId() != null) )
@@ -249,7 +251,6 @@ public abstract class AttributeValue
         return result;
     }
 
-    private static String className = "AttributeValue";
     static String getCacheKey(ObjectKey key)
     {
         String keyString = key.getValue().toString();
