@@ -74,7 +74,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.9 2002/02/19 22:16:13 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.10 2002/02/21 22:12:35 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -108,7 +108,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 if (Attribute.checkForDuplicate(attributeName))
                 {
                     data.setMessage("Cannot create a duplicate Attribute with the same name!");
-                    intake.remove(attrGroup);
+                    //intake.remove(attrGroup);
                     return;
                 }
             }
