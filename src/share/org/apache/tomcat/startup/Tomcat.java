@@ -227,6 +227,12 @@ public class Tomcat extends Logger.Helper {
 	catch (java.net.BindException be) {
 	    log("Starting Tomcat: " + be.getMessage(), Logger.ERROR);
 	    System.out.println(sm.getString("tomcat.bindexception"));
+	    try {
+		cm.stop();
+	    }
+	    catch (Exception e) {
+		log("Stopping ContextManager", e);
+	    }
 	}
     }
 

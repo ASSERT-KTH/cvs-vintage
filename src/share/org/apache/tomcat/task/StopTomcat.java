@@ -90,6 +90,7 @@ public class StopTomcat {
     {
 	// Find Ajp12 connector
 	int portInt=8007;
+	InetAddress address=null;
 	Enumeration enum=cm.getConnectors();
 	while( enum.hasMoreElements() ) {
 	    Object con=enum.nextElement();
@@ -98,13 +99,16 @@ public class StopTomcat {
 		if( tcpCon.getTcpConnectionHandler()
 		    instanceof Ajp12ConnectionHandler ) {
 		    portInt=tcpCon.getPort();
+		    address=tcpCon.getAddress();
 		}
 	    }
 	}
 
 	// use Ajp12 to stop the server...
 	try {
-	    Socket socket = new Socket("localhost", portInt);
+	    if (address == null)
+		address = InetAddress.getLocalHost();
+	    Socket socket = new Socket(address, portInt);
 	    OutputStream os=socket.getOutputStream();
 	    byte stopMessage[]=new byte[2];
 	    stopMessage[0]=(byte)254;
@@ -112,7 +116,7 @@ public class StopTomcat {
 	    os.write( stopMessage );
 	    socket.close();
 	} catch(Exception ex ) {
-	    throw new TomcatException("Error stopping Tomcat with Ajp12", ex);
+	    throw new TomcatException("Error stopping Tomcat with Ajp12 on " + address + ":" + portInt, ex);
 	}
     }
     

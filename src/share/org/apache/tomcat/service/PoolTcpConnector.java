@@ -228,6 +228,10 @@ public final class PoolTcpConnector implements ServerConnector, LogAware {
     	return port;
     }
 
+    public InetAddress getAddress() {
+	return address;
+    }
+
     /** Generic configure system - this allows Connector
      * 	configuration using name/value.
      *
