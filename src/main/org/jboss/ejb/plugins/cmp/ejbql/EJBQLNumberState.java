@@ -1,0 +1,209 @@
+package org.jboss.ejb.plugins.cmp.ejbql;
+
+import java.io.PushbackReader;
+import java.io.IOException;
+import java.io.CharArrayWriter;
+
+public class EJBQLNumberState implements TokenizerState {
+	private TokenizerState symbolState = new SymbolState();
+
+	public EJBQLNumberState() {
+	}
+
+	public Token nextToken(PushbackReader in, char c, Tokenizer tokenizer)
+			throws IOException {
+				
+		if(!Character.isDigit(c) && c != '.') {
+			throw new IllegalArgumentException("EJBQLWordState must begin with a digit or a '.': c="+c);
+		}
+		
+		// do we just have a peroid
+		if(c == '.') {
+			int peek = peekChar(in);
+			if(!Character.isDigit((char)peek)) {
+				// deligate to the symbolState 
+				return symbolState.nextToken(in, c, tokenizer);
+			}
+		}
+			
+		//
+		// Now we are definately working on a number
+		//
+	
+		// put the first characte back on, makes the code easier to write
+		in.unread(c);
+		
+		// output buffer
+		CharArrayWriter out = new CharArrayWriter(16);
+		
+		// whole number part
+		readWholeNumberPart(in, out);
+		
+		// fractional part
+		readFractionalPart(in, out);
+		
+		// exponent part
+		readExponentPart(in, out);
+		
+		// exponent part
+		readSuffix(in, out);
+		
+		String number = out.toString().toLowerCase();
+		System.out.println("number is ["+number+"]");
+		if(isExactNumeric(number)) {
+			return createExactNumericLiteral(number);
+		} else {
+			return createApproximateNumericLiteral(number);
+		}
+	}
+	
+	private void readWholeNumberPart(PushbackReader in, CharArrayWriter out) throws IOException {
+		int first = peekChar(in);
+		if(Character.isDigit((char)first)) {
+			// read the first digit off the stream and write it out
+			out.write(in.read());
+
+			// is it a hex number
+			int second = peekChar(in);	
+			System.out.println("HEX? " + (char)first + (char)second);
+			if(first == '0' && (second == 'x' || second == 'X')) {
+				// read the x off the stream and write it out
+				out.write(in.read());
+				
+				readNumber(in, out, 16);
+				
+			} else {
+				// can't check for octal yet, because we don't
+				// know if this is a float number yet, but dec will work for now
+				readNumber(in, out, 10);
+			}
+		} 
+	}
+	
+	private void readFractionalPart(PushbackReader in, CharArrayWriter out) throws IOException {
+		int peek = peekChar(in);
+		if(peek == '.') {
+
+			// read the peroid off the stream and write it out
+			out.write(in.read());
+			
+			// get all the decimal digits
+			readNumber(in, out, 10);
+			
+			System.out.println("Read fractional part numebr is ["+out.toString()+"]");
+		}
+	}
+	
+	private void readExponentPart(PushbackReader in, CharArrayWriter out) throws IOException {
+		int peek = peekChar(in);
+		if(peek == 'e' || peek == 'E') {
+
+			// read the e off the stream and write it out
+			out.write(in.read()); 
+
+			// check for a sign in the exponent
+			peek = peekChar(in);
+			if(peek == '+' || peek == '-') {
+				// read the sign off the stream and write it out
+				out.write(in.read());
+			}
+			
+			// read the integer
+			readNumber(in, out, 10);
+		}
+	}
+		
+	private void readSuffix(PushbackReader in, CharArrayWriter out) throws IOException {
+		int peek = peekChar(in);
+		if(peek == 'l' || peek == 'L' ||
+				peek == 'f' || peek == 'F' ||
+				peek == 'd' || peek == 'D') {
+
+			// read the suffix off the stream and write it out
+			out.write(in.read());
+		}
+	}
+	
+	private void readNumber(PushbackReader in, CharArrayWriter out, int radix) throws IOException {
+		// which the read character is a digit in the specified radix
+		int c = in.read(); 
+		while(Character.digit((char)c, radix) != -1) {
+			out.write(c);
+			c = in.read();
+		}
+		// unread that last character because it is not a digit
+		if(c != -1) {
+			in.unread(c);
+		}
+	}
+	
+	private boolean isExactNumeric(String number) {
+		// is this a hexadecimal number
+		if(number.startsWith("0x") || number.startsWith("0X")){
+		   return true;
+		}
+		
+		// does it contain a peroid
+		if(number.indexOf('.')>=0) {
+	   	return false;
+		} 
+		
+		// does it contain an exponent
+		if(number.indexOf('e')>=0 || number.indexOf('E')>=0) {
+			return false;
+		}
+		
+		// does it end with an f
+		if(number.endsWith("f") || number.endsWith("F")) {
+			return false;
+		}
+		
+		// does it end with a d
+		if(number.endsWith("d") || number.endsWith("D")) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	/**
+	 * This function is broken.  It does not support bit field style
+	 * integers and longs 0xffffffff
+	 */
+	private ExactNumericLiteral createExactNumericLiteral(String number) throws IOException {
+		// long suffix
+		if(number.endsWith("l") || number.endsWith("L")) {
+			// chop off the suffix
+			number = number.substring(0, number.length()-1);
+			System.out.println("decode long number ["+number+"]");
+			return new ExactNumericLiteral(Long.decode(number).longValue()); 
+		} else { 
+			return new ExactNumericLiteral(Integer.decode(number.toUpperCase()).intValue()); 
+		}
+	}
+	
+	private ApproximateNumericLiteral createApproximateNumericLiteral(String number) throws IOException {
+		// float suffix
+		if(number.endsWith("f") || number.endsWith("F")) {
+			// chop off the suffix
+			number = number.substring(0, number.length()-1);
+			return new ApproximateNumericLiteral(Float.parseFloat(number));
+		} 
+		
+		// ends with a d suffix, chop it off
+		if(number.endsWith("d") || number.endsWith("D")) {
+			number = number.substring(0, number.length()-1);
+		}
+	
+		// regular double
+		return new ApproximateNumericLiteral(Double.parseDouble(number));		
+	}
+
+	private int peekChar(PushbackReader in) throws IOException {
+		int nextChar = in.read();
+		if(nextChar != -1) {
+			in.unread(nextChar);
+		}
+		return nextChar;
+	}
+}
