@@ -98,12 +98,16 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
 			       BaseInterceptor module)
 	throws TomcatException
     {
-	// Just override parent 
+	// Just override parent
     }
 
     /** Set the security manager, so that policy will be used
      */
     public void engineInit(ContextManager cm) throws TomcatException {
+	initSecurityManager( cm );
+    }
+    
+    public void initSecurityManager(ContextManager cm) throws TomcatException {
 	if( System.getSecurityManager() != null ) return;
 	try {
 	    if( null == System.getProperty("java.security.policy")) {
@@ -134,13 +138,16 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
 	    Class c=Class.forName(securityManagerClass);
 	    Object o=c.newInstance();
 	    Policy.getPolicy().refresh();
+	    
 	    System.setSecurityManager((SecurityManager)o);
-	    log("Security Manager set to " + securityManagerClass +
-		" " + System.getProperty("java.security.policy"));
+	    log("SANDBOX mode enabled");
+	    if( ! "java.lang.SecurityManager".equals(securityManagerClass) )
+		log( "Security Manager=" + securityManagerClass);
 	} catch( ClassNotFoundException ex ) {
 	    log("SecurityManager Class not found: " +
 			       securityManagerClass, Log.ERROR);
 	} catch( Exception ex ) {
+	    ex.printStackTrace();
             log("SecurityManager Class could not be loaded: " +
 			       securityManagerClass, Log.ERROR);
 	}
