@@ -1,37 +1,37 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.system;
 
 import java.net.URL;
 import java.io.InputStream;
 
-
-
 /**
-* The URLClassLoader is associated with a given URL.
-* It can load jar and sar (or jsr).
-* 
-* <p>The ServiceLibraries keeps track of the UCL and asks everyone for
-*    resources and classes.
-*
-* @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
-* @author <a href="christoph.jung@jboss.org">Christoph G. Jung</a>
-* @author <a href="scott.stark@jboss.org">Scott Stark/a>
-* @version $Revision: 1.3 $
-* 
-* <p><b>20010830 marc fleury:</b>
-* <ul>
-*   <li>Initial import
-* </ul>
-* <p><b>20011009 cgj:</b>
-* <ul>
-*   <li>fixed default resolution behaviour
-* </ul>
-*/
+ * The URLClassLoader is associated with a given URL.
+ * It can load jar and sar (or jsr).
+ * 
+ * <p>The ServiceLibraries keeps track of the UCL and asks everyone for
+ *    resources and classes.
+ *
+ * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="christoph.jung@jboss.org">Christoph G. Jung</a>
+ * @author <a href="scott.stark@jboss.org">Scott Stark/a>
+ * @version $Revision: 1.4 $
+ * 
+ * <p><b>20010830 marc fleury:</b>
+ * <ul>
+ *   <li>Initial import
+ * </ul>
+ *
+ * <p><b>20011009 cgj:</b>
+ * <ul>
+ *   <li>fixed default resolution behaviour
+ * </ul>
+ */
 public class UnifiedClassLoader
    extends java.net.URLClassLoader
    implements UnifiedClassLoaderMBean
@@ -75,27 +75,18 @@ public class UnifiedClassLoader
       }
       catch(Exception e)
       {
-         e.printStackTrace();
-         log.warn("URL "+url+" could not be opened");
+	 //
+	 // FIXME: Should not mask exceptionsd like this, if it is an error, then
+	 //        propagate it to caller tyo handle
+	 //
+	 log.warn("URL "+url+" could not be opened", e);
       }
    }
    
    /**
-   * loadClass
-   *
-   * We intercept the load class to know exactly the dependencies
-   * of the underlying jar
-   */
-   
-   
-   /*
-   USE THIS TO TRACE CLASS LOADING
-   if (name.endsWith("CHANGEME"))
-   {
-   log.debug("UCL LOAD "+this.hashCode()+" in loadClass "+name);
-   }
-   */
-   
+    * We intercept the load class to know exactly the dependencies
+    * of the underlying jar
+    */
    public Class loadClass(String name, boolean resolve)
       throws ClassNotFoundException
    {
@@ -104,14 +95,13 @@ public class UnifiedClassLoader
    
    
    public Class loadClassLocally (String name, boolean resolve)
-   throws ClassNotFoundException
+      throws ClassNotFoundException
    {
       return super.loadClass(name, resolve);
    }
    
    public URL getResource(String name)
    {
-      
       URL resource = super.getResource(name);
       
       if (resource == null)
