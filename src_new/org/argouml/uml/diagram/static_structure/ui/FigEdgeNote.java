@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.16 2005/01/20 23:20:39 linus Exp $
+// $Id: FigEdgeNote.java,v 1.17 2005/01/23 20:41:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,6 +71,7 @@ public class FigEdgeNote
 	setBetweenNearestPoints(true);
 	((FigPoly) _fig).setRectilinear(false);
 	setDashed(true);
+	allowRemoveFromDiagram(false);
     }
 
     /**

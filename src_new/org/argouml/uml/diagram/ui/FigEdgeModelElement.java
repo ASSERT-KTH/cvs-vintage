@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.79 2005/01/20 23:20:41 linus Exp $
+// $Id: FigEdgeModelElement.java,v 1.80 2005/01/23 20:41:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,6 +95,12 @@ public abstract class FigEdgeModelElement
 
     private static final Logger LOG =
         Logger.getLogger(FigEdgeModelElement.class);
+    
+    /**
+     * Set the removeFromDiagram to false if this edge may not 
+     * be removed from the diagram.
+     */
+    private boolean removeFromDiagram = true;
 
     /**
      * <code>BUNDLE</code>
@@ -254,7 +260,9 @@ public abstract class FigEdgeModelElement
         // POPUP_ADD_OFFSET should be equal to the number of items added here:
         popUpActions.addElement(new JSeparator());
         popUpActions.addElement(ActionProperties.getSingleton());
-        popUpActions.addElement(ActionDeleteFromDiagram.getSingleton());
+        if (removeFromDiagram) {
+            popUpActions.addElement(ActionDeleteFromDiagram.getSingleton());
+        }
         return popUpActions;
     }
 
@@ -922,4 +930,10 @@ public abstract class FigEdgeModelElement
         return ITALIC_LABEL_FONT;
     }
 
+    /**
+     * @param allowed true if the function RemoveFromDiagram is allowed
+     */
+    protected void allowRemoveFromDiagram(boolean allowed) {
+        this.removeFromDiagram = allowed;
+    }
 } /* end class FigEdgeModelElement */
