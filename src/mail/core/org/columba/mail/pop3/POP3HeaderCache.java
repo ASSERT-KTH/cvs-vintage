@@ -44,6 +44,8 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 	 */
 	public POP3HeaderCache(POP3Server server) {
 		super(server.getConfigFile());
+		
+		this.server = server;
 	}
 
 	public StatusObservable getObservable() {
