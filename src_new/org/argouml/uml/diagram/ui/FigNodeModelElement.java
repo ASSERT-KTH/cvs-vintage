@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.105 2004/06/24 06:25:43 linus Exp $
+// $Id: FigNodeModelElement.java,v 1.106 2004/06/27 17:32:32 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -216,12 +216,18 @@ public abstract class FigNodeModelElement
      */
     public FigText _stereo; // TODO: - public!! Make private!
 
-    // TODO: could somebody please javadoc what _enclosedFigs is.
-    // Is it just a duplicate of the collection in a FigGroup.
-    // Is this anything to do with FigClass inside FigPackage in
-    // a class diagram? Bob Tarling 28 Jan 2004
+    /**
+     * _enclosedFigs are the Figs that are enclosed by this figure. Say that
+     * it is a Package then these are the Classes, Interfaces, Packages etc
+     * that are on this figure. This is not the same as the figures in the
+     * FigGroup that this FigNodeModelElement "is", since these are the
+     * figures that make up this high-level primitive figure.
+     */
     protected Vector _enclosedFigs = new Vector();
+
+    /** The figure enclosing this figure */
     protected Fig _encloser = null;
+
     protected boolean _readyToEdit = true;
     protected boolean suppressCalcBounds = false;
     /**
@@ -434,13 +440,21 @@ public abstract class FigNodeModelElement
         }
 	if (encloser != _encloser) {
 	    if (_encloser instanceof FigNodeModelElement) {
-		((FigNodeModelElement) _encloser)._enclosedFigs.remove(this);
+		((FigNodeModelElement) _encloser).removeEnclosedFig(this);
             }
 	    if (encloser instanceof FigNodeModelElement) {
-		((FigNodeModelElement) encloser)._enclosedFigs.add(this);
+		((FigNodeModelElement) encloser).addEnclosedFig(this);
             }
 	}
         _encloser = encloser;
+    }
+
+    public void addEnclosedFig(Fig fig) {
+        _enclosedFigs.add(fig);
+    }
+
+    public void removeEnclosedFig(Fig fig) {
+        _enclosedFigs.remove(fig);
     }
 
     public Vector getEnclosedFigs() {
