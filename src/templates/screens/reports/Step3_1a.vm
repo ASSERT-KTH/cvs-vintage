@@ -31,8 +31,8 @@
 		<tr>
 			<th width="120">report date</th>
              <td>
-                <input type="text" size="20" name="$reportIntake.NewDate.Key" 
-                    value="$reportIntake.NewDate" />
+                <input type="text" size="20" name="$intakeReport.NewDate.Key" 
+                    value="$intakeReport.NewDate" />
             </td>
         </tr>
 		<tr>
@@ -41,7 +41,7 @@
 			<td>
 			    <select name="$intakeReport.Axis1Category.Key">
 			        <option value="">select criteria</option>
-#set ($options = $scarabR.Report.Axis1Categories)
+#set ($options = $scarabR.Report.AxisCategories)
 #foreach ( $option in $options )
 		  	        <option value="$option.Value">$option.Name</option>
 #end		  
@@ -54,7 +54,7 @@
 			<td>
 			    <select name="$intakeReport.Axis2Category.Key">
 			        <option value="">select criteria</option>
-#set ($options = $scarabR.Report.Axis2Categories)
+#set ($options = $scarabR.Report.AxisCategories)
 #foreach ( $option in $options )
 		  	        <option value="$option.Value"$option.Selected>$option.Name</option>
 #end

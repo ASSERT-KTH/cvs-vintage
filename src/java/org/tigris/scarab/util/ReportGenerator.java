@@ -263,11 +263,6 @@ public class ReportGenerator
         {
             date = (Date)dates.get(dates.size()-1);
         }
-        else 
-        {
-            // no dates have been specified, assume now
-            date = new Date();
-        }
 
         return date;
     }
@@ -319,20 +314,19 @@ public class ReportGenerator
     private boolean isFilterAttribute(RModuleAttribute rma)
         throws Exception
     {
-        String test = AttributeOrOptionSelectOption.getKey(rma);
+        String test = getKey(rma);
         return isFilterAttributeOrOption(test);
     }
 
     private boolean isFilterOption(RModuleOption rmo)
         throws Exception
     {
-        String test = AttributeOrOptionSelectOption.getKey(rmo);
+        String test = getKey(rmo);
         boolean isFilterOption = isFilterAttributeOrOption(test);
         if ( !isFilterOption ) 
         {
             // check that the whole attribute is not picked
-            test = AttributeOrOptionSelectOption
-                .getKey(rmo.getAttributeOption().getAttribute());
+            test = getKey(rmo.getAttributeOption().getAttribute());
             isFilterOption = isFilterAttributeOrOption(test);
         }
         
@@ -462,10 +456,10 @@ public class ReportGenerator
         this.queryKey = v;
     }
 
-}
     // *********************************************************
 
-    class SimpleSelectOption
+
+    public static class SimpleSelectOption
     {
         protected String name;
         protected String value;
@@ -477,7 +471,7 @@ public class ReportGenerator
 
         public SimpleSelectOption(String value, String name)
         {
-            this(name, value, false);
+            this(value, name, false);
         }
 
         public SimpleSelectOption(int value, String name)
@@ -576,7 +570,7 @@ public class ReportGenerator
 
     // *********************************************************
 
-    class AttributeOrOptionSelectOption
+    public static class AttributeOrOptionSelectOption
         extends SimpleSelectOption
     {
         private boolean isAttribute;
@@ -597,28 +591,6 @@ public class ReportGenerator
             setValue( getKey(rmo) );
         }
 
-        static String getKey(RModuleAttribute rma)
-            throws Exception
-        {
-            return getKey(rma.getAttribute());
-        }
-
-        static String getKey(Attribute a)
-        {
-            return "a" + a.getQueryKey();
-        }
-
-        static String getKey(RModuleOption rmo)
-            throws Exception
-        {
-            return getKey(rmo.getAttributeOption());
-        }
-
-        static String getKey(AttributeOption o)
-        {
-            return o.getQueryKey();
-        }
-        
         /**
          * Get the value of isAttribute.
          * @return value of isAttribute.
@@ -637,6 +609,31 @@ public class ReportGenerator
             this.isAttribute = v;
         }   
     }    
+
+        private static String getKey(RModuleAttribute rma)
+            throws Exception
+        {
+            return getKey(rma.getAttribute());
+        }
+
+        private static String getKey(Attribute a)
+        {
+            return "a" + a.getQueryKey();
+        }
+
+        private static String getKey(RModuleOption rmo)
+            throws Exception
+        {
+            return getKey(rmo.getAttributeOption());
+        }
+
+        private static String getKey(AttributeOption o)
+        {
+            return o.getQueryKey();
+        }
+        
+
+}
 
 
  

@@ -49,7 +49,7 @@ seperate column (i.e. side-by-side comparison).</p>
 			<select name="$intakeReport.FilterAttributesAndOptions.Key" 
                 multiple="multiple" size="20">
 
-                #attributeOptionOptionList( $report.getFilterSelectOptions($module) )
+                #attributeOptionOptionList( $report.getAllFilterOptions($module) )
 			</select>
 		
 			</td>

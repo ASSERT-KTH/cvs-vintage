@@ -86,7 +86,7 @@ import org.tigris.scarab.util.ReportGenerator;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.1 2001/09/21 20:54:52 jmcnally Exp $
+    @version $Id: GenerateReport.java,v 1.2 2001/09/24 17:52:24 jmcnally Exp $
 */
 public class GenerateReport 
     extends TemplateAction
@@ -108,7 +108,7 @@ public class GenerateReport
     public void doStep2agoto3( RunData data, TemplateContext context )
     {
         step2a(data, context);
-        setTarget(data, "reports,Step3.vm");            
+        setTarget(data, "reports,Step3_1a.vm");            
     }
 
     public void step2a( RunData data, TemplateContext context )
@@ -118,7 +118,7 @@ public class GenerateReport
     public void doStep2b( RunData data, TemplateContext context )
         throws Exception
     {
-        setTarget(data, "reports,Step3.vm");
+        setTarget(data, "reports,Step3_1a.vm");
     }
 
     public void doStep3_1a( RunData data, TemplateContext context )
