@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.addressbook.gui.dialog.contact;
 
 import java.awt.event.ActionEvent;
@@ -29,11 +30,15 @@ import javax.swing.JTextField;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.VCARD;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.LabelWithMnemonic;
 
 import com.jgoodies.forms.layout.FormLayout;
 
-
+/**
+ * The panel shown in the ContactDialog.
+ */
 public class IdentityPanel extends JPanel implements ActionListener {
     private JButton nameButton;
     private JTextField nameTextField;
@@ -49,8 +54,6 @@ public class IdentityPanel extends JPanel implements ActionListener {
     private JTextField urlTextField;
     private AttributComboBox emailComboBox;
     private JTextField emailTextField;
-    private List emailList;
-    
     
     public FullNameDialog dialog;
     
@@ -60,7 +63,6 @@ public class IdentityPanel extends JPanel implements ActionListener {
     	this.contact = contact;
     	
         initComponent();
-        
         layoutComponents();
     }
 
@@ -85,24 +87,24 @@ public class IdentityPanel extends JPanel implements ActionListener {
     }
 
     public void updateComponents(boolean b) {
-        emailComboBox.updateComponents( b);
+        emailComboBox.updateComponents(b);
 
-        if (b == true) {
-            nameTextField.setText(contact.formatGet(VCARD.FN)); //$NON-NLS-1$
+        if (b) {
+            nameTextField.setText(contact.formatGet(VCARD.FN));
             
-            organisationTextField.setText(contact.get(VCARD.ORG)); //$NON-NLS-1$
-            displayNameTextField.setText(contact.get(VCARD.DISPLAYNAME)); //$NON-NLS-1$
-            nickNameTextField.setText(contact.get(VCARD.NICKNAME)); //$NON-NLS-1$
-            positionTextField.setText(contact.get(VCARD.ROLE)); //$NON-NLS-1$
-            urlTextField.setText(contact.get(VCARD.URL)); //$NON-NLS-1$
+            organisationTextField.setText(contact.get(VCARD.ORG));
+            displayNameTextField.setText(contact.get(VCARD.DISPLAYNAME));
+            nickNameTextField.setText(contact.get(VCARD.NICKNAME));
+            positionTextField.setText(contact.get(VCARD.ROLE));
+            urlTextField.setText(contact.get(VCARD.URL));
         } else {
-        	contact.formatSet(VCARD.FN, nameTextField.getText()); //$NON-NLS-1$
-            
-        	contact.set(VCARD.ORG, organisationTextField.getText()); //$NON-NLS-1$
-        	contact.set(VCARD.DISPLAYNAME, displayNameTextField.getText()); //$NON-NLS-1$
-        	contact.set(VCARD.NICKNAME, nickNameTextField.getText()); //$NON-NLS-1$
-        	contact.set(VCARD.ROLE, positionTextField.getText()); //$NON-NLS-1$
-        	contact.set(VCARD.URL, urlTextField.getText()); //$NON-NLS-1$
+            contact.formatSet(VCARD.FN, nameTextField.getText());
+
+            contact.set(VCARD.ORG, organisationTextField.getText());
+            contact.set(VCARD.DISPLAYNAME, displayNameTextField.getText());
+            contact.set(VCARD.NICKNAME, nickNameTextField.getText());
+            contact.set(VCARD.ROLE, positionTextField.getText());
+            contact.set(VCARD.URL, urlTextField.getText());
         }
     }
 
@@ -138,59 +140,49 @@ public class IdentityPanel extends JPanel implements ActionListener {
     }
     
     protected void initComponent() {
-    
-        //LOCALIZE
-        nameButton = new JButton(AddressbookResourceLoader.getString("dialog",
-                    "contact", "full_name")); //$NON-NLS-1$
-        nameButton.setActionCommand("NAME"); //$NON-NLS-1$
+        nameButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
+                    "dialog", "contact", "full_name"));
         nameButton.addActionListener(this);
         nameTextField = new JTextField(20);
        
-
-        //LOCALIZE
-        nickNameLabel = new JLabel(AddressbookResourceLoader.getString(
-                    "dialog", "contact", "nickname")); //$NON-NLS-1$
+        nickNameLabel = new LabelWithMnemonic(AddressbookResourceLoader.getString(
+                    "dialog", "contact", "nickname"));
         nickNameTextField = new JTextField(20);
-        
+        nickNameLabel.setLabelFor(nickNameTextField);
 
-        //LOCALIZE
-        displayNameLabel = new JLabel(AddressbookResourceLoader.getString(
-                    "dialog", "contact", "sorting_displayname")); //$NON-NLS-1$
+        displayNameLabel = new LabelWithMnemonic(AddressbookResourceLoader.getString(
+                    "dialog", "contact", "sorting_displayname"));
         displayNameTextField = new JTextField(20);
+        displayNameLabel.setLabelFor(displayNameTextField);
         
-
         //b.appendSeparator();
-        //LOCALIZE
-        positionLabel = new JLabel(AddressbookResourceLoader.getString(
-                    "dialog", "contact", "position")); //$NON-NLS-1$
+        positionLabel = new LabelWithMnemonic(AddressbookResourceLoader.getString(
+                    "dialog", "contact", "position"));
         positionTextField = new JTextField(20);
-       
+        positionLabel.setLabelFor(positionTextField);
 
-        //LOCALIZE
-        organisationLabel = new JLabel(AddressbookResourceLoader.getString(
-                    "dialog", "contact", "organisation")); //$NON-NLS-1$
+        organisationLabel = new LabelWithMnemonic(AddressbookResourceLoader.getString(
+                    "dialog", "contact", "organisation"));
         organisationTextField = new JTextField(20);
-      
+        organisationLabel.setLabelFor(organisationTextField);
 
         //b.appendSeparator();
-        //LOCALIZE
-        urlLabel = new JLabel(AddressbookResourceLoader.getString("dialog",
-                    "contact", "website")); //$NON-NLS-1$
+        urlLabel = new LabelWithMnemonic(AddressbookResourceLoader.getString("dialog",
+                    "contact", "website"));
         urlTextField = new JTextField(20);
+        urlLabel.setLabelFor(urlTextField);
      
-        emailList = new Vector();
-        emailList.add(VCARD.EMAIL_TYPE_INTERNET); //$NON-NLS-1$
-        emailList.add(VCARD.EMAIL_TYPE_X400); //$NON-NLS-1$
-        emailList.add(VCARD.EMAIL_TYPE_PREF); //$NON-NLS-1$
+        Vector emailList = new Vector(3);
+        emailList.add(VCARD.EMAIL_TYPE_INTERNET);
+        emailList.add(VCARD.EMAIL_TYPE_X400);
+        emailList.add(VCARD.EMAIL_TYPE_PREF);
         emailTextField = new JTextField(20);
-        emailComboBox = new AttributComboBox(VCARD.EMAIL, emailList, emailTextField, contact); //$NON-NLS-1$
-        
+        emailComboBox = new AttributComboBox(VCARD.EMAIL, emailList, emailTextField,
+            contact);
     }
 
     public void actionPerformed(ActionEvent ev) {
-        String action = ev.getActionCommand();
-
-        if (action.equals("NAME")) { //$NON-NLS-1$
+        if (ev.getSource() == nameButton) {
             dialog.setVisible(true);
         }
     }

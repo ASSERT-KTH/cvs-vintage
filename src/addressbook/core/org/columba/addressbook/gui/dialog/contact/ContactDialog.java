@@ -21,15 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
@@ -40,45 +32,40 @@ import org.columba.core.gui.util.ButtonWithMnemonic;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-
+/**
+ * A dialog for editing a contact's data.
+ */
 public class ContactDialog extends JDialog implements ActionListener {
     private JTabbedPane centerPane;
     private IdentityPanel identityPanel;
     //private AddressPanel addressPanel;
     private JButton okButton;
-    private boolean result;
+    private boolean result = false;
     
     private Contact contact;
     
     public ContactDialog(JFrame frame, Contact contact) {
         super(frame, true);
-        
         this.contact = contact;
 
         //LOCALIZE
         setTitle(AddressbookResourceLoader.getString("dialog", "contact",
                 "add_contact")); //$NON-NLS-1$
         initComponents();
-        
         updateComponents(true);
         
         pack();
         setLocationRelativeTo(null);
-        
         setVisible(true);
     }
 
     public void updateComponents(boolean b) {
         identityPanel.updateComponents(b);
         //addressPanel.updateComponents(b);
-
-       
     }
 
     protected void initComponents() {
         JPanel contentPane = new JPanel(new BorderLayout(0, 0));
-
-      
         identityPanel = new IdentityPanel(contact);
         identityPanel.dialog = new FullNameDialog(this, identityPanel, contact);
 
@@ -95,13 +82,12 @@ public class ContactDialog extends JDialog implements ActionListener {
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         okButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
-                    "global", "ok")); //$NON-NLS-1$ //$NON-NLS-2$
-        okButton.setActionCommand("OK"); //$NON-NLS-1$
+                    "global", "ok"));
+        okButton.setActionCommand("OK");
         okButton.addActionListener(this);
         buttonPanel.add(okButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
 
-        //contentPane.add(bottomPanel, BorderLayout.SOUTH);
         setContentPane(contentPane);
 
         FormLayout layout = new FormLayout("fill:default:grow",
@@ -115,29 +101,23 @@ public class ContactDialog extends JDialog implements ActionListener {
 
         getRootPane().setDefaultButton(okButton);
 
-        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
-                    "global", "cancel")); //$NON-NLS-1$ //$NON-NLS-2$
-        cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
+        JButton cancelButton = new ButtonWithMnemonic(
+            AddressbookResourceLoader.getString("global", "cancel"));
+        cancelButton.setActionCommand("CANCEL");
         cancelButton.addActionListener(this);
         buttonPanel.add(cancelButton);
-        getRootPane().registerKeyboardAction(this, "CANCEL", //$NON-NLS-1$
+        getRootPane().registerKeyboardAction(this, "CANCEL",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
     public void actionPerformed(ActionEvent event) {
         String action = event.getActionCommand();
-
-        if (action.equals("OK")) { //$NON-NLS-1$
+        if (action.equals("OK")) {
             result = true;
-            
             updateComponents(false);
-            
-            setVisible(false);
-        } else if (action.equals("CANCEL")) { //$NON-NLS-1$
-            result = false;
-            setVisible(false);
         }
+        setVisible(false);
     }
 
     public boolean getResult() {
