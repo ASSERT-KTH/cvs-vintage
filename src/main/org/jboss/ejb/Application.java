@@ -27,10 +27,10 @@ import org.jboss.management.j2ee.EJB;
  *    deployment unit.
  *      
  * @see Container
- * @see ContainerFactory
+ * @see EJBDeployer
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class Application
    implements Service
@@ -61,7 +61,7 @@ public class Application
 
    /**
     * Add a container to this application. This is called by the
-    * ContainerFactory.
+    * EJBDeployer.
     *
     * @param   con  
     */
