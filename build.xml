@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.136 2003/02/19 03:13:22 jboynes Exp $ -->
+<!-- $Id: build.xml,v 1.137 2003/02/20 13:45:14 ejort Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -210,7 +210,6 @@
         <include name="org/jboss/logging/**/*.java"/>
         <include name="org/jboss/naming/**/*.java"/>
         <include name="org/jboss/web/**/*.java"/>
-        <include name="org/jboss/tm/**/*.java"/>
       </fileset>
       <mbeaninterface mergedir="${project.tools}/etc/xdoclet/templates"/>
     </jmxdoclet>
@@ -408,13 +407,6 @@ THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFI
         <include name="org/jboss/ejb/plugins/TxSupport*.class"/>
         <include name="org/jboss/ejb/plugins/lock/ApplicationDeadlockException.class"/>
         <include name="org/jboss/monitor/client/*.class"/>
-        <include name="org/jboss/tm/TransactionPropagationContextFactory.class"/>
-        <include name="org/jboss/tm/JBossRollbackException.class"/>
-        <include name="org/jboss/tm/JBossTransactionRolledBackException.class"/>
-        <include name="org/jboss/tm/GlobalId.class"/>
-        <include name="org/jboss/tm/usertx/client/*.class"/>
-        <include name="org/jboss/tm/usertx/interfaces/*.class"/>
-        <include name="org/jboss/tm/usertx/server/*Stub.class"/>
       </fileset>
     </jar>
 
