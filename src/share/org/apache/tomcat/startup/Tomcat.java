@@ -31,6 +31,7 @@ public class Tomcat extends Log {
     String home=null;
     String args[];
     ClassLoader parentClassLoader;
+    boolean sandbox=false;
     
     // null means user didn't set one
     String configFile=null;
@@ -56,6 +57,10 @@ public class Tomcat extends Log {
 	action=s;
     }
 
+    public void setSandbox( boolean b ) {
+	sandbox=b;
+    }
+    
     public void setParentClassLoader( ClassLoader cl ) {
 	parentClassLoader=cl;
     }
@@ -140,6 +145,8 @@ public class Tomcat extends Log {
         if (cl==null) cl=this.getClass().getClassLoader();
 
         tcat.getContextManager().setParentLoader(cl);
+	if( sandbox )
+	    tcat.getContextManager().setProperty( "sandbox", "true");
 	tcat.initContextManager();
 
 	tcat.start();
@@ -169,6 +176,10 @@ public class Tomcat extends Log {
 		return false;
 	    } else if (arg.equals("-stop")) {
 		action="stop";
+	    } else if (arg.equals("-sandbox")) {
+		sandbox=true;
+	    } else if (arg.equals("-security")) {
+		sandbox=true;
 	    } else if (arg.equals("-enableAdmin")) {
 		action="enableAdmin";
 	    } else if (arg.equals("-g") || arg.equals("-generateConfigs")) {
