@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.13 2004/05/22 09:46:40 linus Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.14 2004/06/26 06:54:43 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,6 +66,8 @@ public final class ResourceLoaderWrapper {
 	ResourceLoader.lookupIconResource("Join");
     private static ImageIcon branchIcon =
 	ResourceLoader.lookupIconResource("Branch");
+    private static ImageIcon junctionIcon =
+        ResourceLoader.lookupIconResource("Junction"); 
     private static ImageIcon finalStateIcon =
 	ResourceLoader.lookupIconResource("FinalState");
     private static ImageIcon realizeIcon =
@@ -277,6 +279,9 @@ public final class ResourceLoaderWrapper {
 		if (helper.equalsBRANCHKind(kind)) {
 		    icon = branchIcon;
 		}
+		if (helper.equalsJUNCTIONKind(kind)) {
+		    icon = junctionIcon;
+		} 
 		// if (MPseudostateKind.FINAL.equals(kind))
 		// icon = _FinalStateIcon;
 	    }

@@ -1,4 +1,4 @@
-// $Id: DataTypesHelper.java,v 1.10 2004/03/31 22:22:58 d00mst Exp $
+// $Id: DataTypesHelper.java,v 1.11 2004/06/26 06:54:43 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -121,6 +121,14 @@ public class DataTypesHelper {
         
         return MPseudostateKind.BRANCH.equals(kind);
     }
+    
+    public boolean equalsJUNCTIONKind(Object kind) {
+    
+        if (!(kind instanceof MPseudostateKind)) {
+            throw new IllegalArgumentException();
+        }
+        return MPseudostateKind.JUNCTION.equals(kind);
+    } 
 
     /**
      * Converts a Multiplicity to a String.

@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.47 2004/02/29 12:35:44 linus Exp $
+// $Id: UMLStateDiagram.java,v 1.48 2004/06/26 06:54:44 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: UMLStateDiagram
 // Original Author: your email here
 
-// $Id: UMLStateDiagram.java,v 1.47 2004/02/29 12:35:44 linus Exp $
+// $Id: UMLStateDiagram.java,v 1.48 2004/06/26 06:54:44 mvw Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -110,6 +110,11 @@ public class UMLStateDiagram extends UMLDiagram {
             ModelFacade.TRANSITION,
             "Transition");
 
+    protected static Action _actionJunctionPseudoState =
+        new ActionCreatePseudostate(
+            ModelFacade.JUNCTION_PSEUDOSTATEKIND,
+            "Junction"); 
+    
     ////////////////////////////////////////////////////////////////
     // contructors
 
@@ -252,7 +257,7 @@ public class UMLStateDiagram extends UMLDiagram {
     }
 
     /**
-     * Get the actions from which to create a toolbar or equivilent
+     * Get the actions from which to create a toolbar or equivalent
      * graphic triggers.
      */
     protected Object[] getUmlActions() {
@@ -264,6 +269,7 @@ public class UMLStateDiagram extends UMLDiagram {
 	    null,
 	    _actionStartPseudoState,
 	    _actionFinalPseudoState,
+	    _actionJunctionPseudoState,
 	    _actionBranchPseudoState,
 	    _actionForkPseudoState,
 	    _actionJoinPseudoState,

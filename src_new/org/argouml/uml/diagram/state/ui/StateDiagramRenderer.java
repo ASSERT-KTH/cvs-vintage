@@ -1,4 +1,4 @@
-// $Id: StateDiagramRenderer.java,v 1.14 2004/02/13 21:53:10 mvw Exp $
+// $Id: StateDiagramRenderer.java,v 1.15 2004/06/26 06:54:44 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,8 @@ import org.tigris.gef.presentation.FigNode;
  *  FinalState         ---  FigFinalState
  *  Pseudostate        ---  FigPseudostate
  *    Inititial         ---  FigInitialState
- *    Branch            ---  FigBranchState
+ *    Branch (Choice)   ---  FigBranchState
+ *    Junction          ---  FigJunctionState
  *    Fork              ---  FigForkState
  *    Join              ---  FigJoinState
  *    DeepHistory       ---  FigDeepHistoryState
@@ -94,6 +95,9 @@ public class StateDiagramRenderer
             else if (kind.equals(ModelFacade.BRANCH_PSEUDOSTATEKIND)) {
                 return new FigBranchState(gm, node);
             }
+            else if (kind.equals(ModelFacade.JUNCTION_PSEUDOSTATEKIND)) {
+                return new FigJunctionState(gm, node);
+            } 
             else if (kind.equals(ModelFacade.FORK_PSEUDOSTATEKIND)) {
                 return new FigForkState(gm, node);
             }
