@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Frequently Asked Questions</h2>
-<h4>$Id: faq.html,v 1.9 2002/09/19 18:42:21 jon Exp $</h4>
+<h4>$Id: faq.html,v 1.10 2002/10/02 22:05:21 jon Exp $</h4>
 
 <hr noshade="noshade" size="1" />
 
@@ -60,6 +60,10 @@ are not going to get into here, but the primary disadvantages are:
         in the Open Source version of Scarab yet. We are hoping
         that the community will implement this for us since 
         CollabNet is not making this part available at this time.
+        
+        <strong>Update: the beginnings of workflow have been checked
+        into a branch of CVS by a member of our community. it is not
+        complete, but it is a start.</strong>
 </p>
 
 <p>
@@ -304,7 +308,9 @@ to the Admin->Modules->Manage modules screen and edit the particular
 module that you are interested in tracking issue changes in. Set the
 'Archive email' address to the email address that you want. Please note, do
 not try to do this in the Global module, only modules which are children of 
-the Global module.
+the Global module. If you want this email to go to multiple people, setup
+a mailing list and subscribe the people to that mailing list and then
+set the 'Archive email' address to be the address of the mailing list.
 </p>
 
 <hr noshade="noshade" size="1" />
@@ -334,7 +340,7 @@ versions of Scarab did not have this functionality.</p>
 <p><strong>How can I set defaults for the various attributes on
 issue entry?</strong></p>
 
-<p>RIght now, that is what issue templates do. Click on the 'Templates'
+<p>Right now, that is what issue templates do. Click on the 'Templates'
 link in the left hand side navigation, create the template and it will
 then show up when you go to enter a new issue. You can create as many
 templates as you wish and just 'apply' them when you enter a new issue.
@@ -445,6 +451,20 @@ I can deploy Scarab as a WAR.
 
 <p>
 In your build.properties, add the line: <code>scarab.copy.templates=true</code>
+</p>
+
+<hr noshade="noshade" size="1" />
+<p><strong>
+What is the best way to make duplicate installations of Scarab on multiple
+machines/databases? In other words, I want to have multiple installations
+of Scarab and I don't want to have to setup each one by hand.
+</strong></p>
+
+<p>
+Right now, the easiest way is to setup one installation of Scarab, then
+mysqldump the database and import it into the other database.
+Eventually, we will have the ability to export/import the Scarab
+'settings'.
 </p>
 
 <hr noshade="noshade" size="1" />
