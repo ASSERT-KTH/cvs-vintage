@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.84 2004/09/15 15:48:58 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.85 2004/09/22 09:04:52 loubyansky Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -1627,6 +1627,11 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
             <java-type>java.util.Date</java-type>
             <jdbc-type>DATE</jdbc-type>
             <sql-type>DATE</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.sql.Timestamp</java-type>
+            <jdbc-type>TIMESTAMP</jdbc-type>
+            <sql-type>TIMESTAMP</sql-type>
          </mapping>
       </type-mapping>
 
