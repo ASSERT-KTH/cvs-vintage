@@ -57,7 +57,7 @@
  *
  */ 
 
-package org.apache.tomcat.util.http;
+package org.apache.tomcat.util.collections;
 
 import org.apache.tomcat.util.collections.*;
 import org.apache.tomcat.util.MessageBytes;
@@ -66,113 +66,63 @@ import java.io.*;
 import java.util.*;
 import java.text.*;
 
-// XXX many methods should be deprecated and removed after
-// the core is changed. 
+/** Enumerate the distinct header names.
+    Each nextElement() is O(n) ( a comparation is
+    done with all previous elements ).
 
-/**
- * 
- * @author dac@eng.sun.com
- * @author James Todd [gonzo@eng.sun.com]
- * @author Costin Manolache
- */
-public class Headers extends MultiMap {
+    This is less frequesnt than add() -
+    we want to keep add O(1).
+*/
+public final class MultiMapNamesEnumeration implements Enumeration {
+    int pos;
+    int size;
+    String next;
+    MultiMap headers;
+
+    // toString and unique options are not implemented -
+    // we allways to toString and unique.
     
-    /** Initial size - should be == average number of headers per request
-     *  XXX  make it configurable ( fine-tuning of web-apps )
+    /** Create a new multi-map enumeration.
+     * @param  headers the collection to enumerate 
+     * @param  toString convert each name to string 
+     * @param  unique return only unique names
      */
-    public static final int DEFAULT_HEADER_SIZE=8;
-    
-    /**
-     * Creates a new MimeHeaders object using a default buffer size.
-     */
-    public Headers() {
-	super( DEFAULT_HEADER_SIZE );
+    MultiMapNamesEnumeration(MultiMap headers, boolean toString,
+			     boolean unique) {
+	this.headers=headers;
+	pos=0;
+	size = headers.size();
+	findNext();
     }
 
-    // Old names
-    
-    /**
-     * Clears all header fields.
-     */
-    public void clear() {
-	super.recycle();
-    }
-
-    /** Find the index of a header with the given name.
-     */
-    public int findHeader( String name, int starting ) {
-	return super.findIgnoreCase( name, starting );
-    }
-    
-    // -------------------- Adding headers --------------------
-    
-    /** Create a new named header , return the MessageBytes
-     *  container for the new value
-     */
-    public MessageBytes addValue( String name ) {
-	int pos=addField();
-	getName(pos).setString(name);
-	return getValue(pos);
-    }
-
-    /** Create a new named header using un-translated byte[].
-	The conversion to chars can be delayed until
-	encoding is known.
-     */
-    public MessageBytes addValue(byte b[], int startN, int endN)
-    {
-	int pos=addField();
-	getName(pos).setBytes(b, startN, endN);
-	return getValue(pos);
-    }
-
-    /** Allow "set" operations - 
-        return a MessageBytes container for the
-	header value ( existing header or new
-	if this .
-    */
-    public MessageBytes setValue( String name ) {
- 	MessageBytes value=getValue(name);
-	if( value == null ) {
-	    value=addValue( name );
+    private void findNext() {
+	next=null;
+	for(  ; pos< size; pos++ ) {
+	    next=headers.getName( pos ).toString();
+	    for( int j=0; j<pos ; j++ ) {
+		if( headers.getName( j ).equalsIgnoreCase( next )) {
+		    // duplicate.
+		    next=null;
+		    break;
+		}
+	    }
+	    if( next!=null ) {
+		// it's not a duplicate
+		break;
+	    }
 	}
-	return value;
+	// next time findNext is called it will try the
+	// next element
+	pos++;
     }
-
-    //-------------------- Getting headers --------------------
-    /**
-     * Finds and returns a header field with the given name.  If no such
-     * field exists, null is returned.  If more than one such field is
-     * in the header, an arbitrary one is returned.
-     */
-    public MessageBytes getValue(String name) {
-        int pos=findIgnoreCase( name, 0 );
-        if( pos <0 ) return null;
-	return getValue( pos );
-    }
-
-    // bad shortcut - it'll convert to string ( too early probably,
-    // encoding is guessed very late )
     
-    public String getHeader(String name) {
-	int pos=findIgnoreCase( name, 0 );
-	if( pos <0 ) return null;
-	MessageBytes mh = getValue(pos);
-	return mh.toString();
+    public boolean hasMoreElements() {
+	return next!=null;
     }
 
-    /**
-     * Removes a header field with the specified name.  Does nothing
-     * if such a field could not be found.
-     * @param name the name of the header field to be removed
-     */
-    public void removeHeader(String name) {
-	int pos=0;
-	while( pos>=0 ) {
-	    // next header with this name
-	    pos=findIgnoreCase( name, pos );
-	    remove( pos );
-	}
+    public Object nextElement() {
+	String current=next;
+	findNext();
+	return current;
     }
 }
-

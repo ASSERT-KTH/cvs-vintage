@@ -221,11 +221,4 @@ public final class Ascii {
 	return n;
     }
 
-    public static boolean equalsIgnoreCase(String str, MessageBytes mB ) {
-	return mB.equalsIgnoreCase( str );
-    }
-
-
-    
-
 }

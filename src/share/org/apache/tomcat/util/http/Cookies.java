@@ -61,6 +61,7 @@ package org.apache.tomcat.util.http;
 
 import org.apache.tomcat.util.collections.*;
 import org.apache.tomcat.util.MessageBytes;
+import org.apache.tomcat.util.ByteChunk;
 import org.apache.tomcat.util.MimeHeaders;
 import org.apache.tomcat.util.DateTool;
 
@@ -167,9 +168,10 @@ public final class Cookies { // extends MultiMap {
 	    // Uncomment to test the new parsing code
 	    if( cookieValue.getType() == MessageBytes.T_BYTES ) {
 		if( dbg>0 ) log( "Parsing b[]: " + cookieValue.toString());
-		processCookieHeader( cookieValue.getBytes(),
-				     cookieValue.getOffset(),
-				     cookieValue.getLength());
+		ByteChunk bc=cookieValue.getByteChunk();
+		processCookieHeader( bc.getBytes(),
+				     bc.getOffset(),
+				     bc.getLength());
 	    } else {
 		if( dbg>0 ) log( "Parsing S: " + cookieValue.toString());
 		processCookieHeader( cookieValue.toString() );

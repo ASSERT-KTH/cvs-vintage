@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/DateTool.java,v 1.6 2000/08/28 06:08:18 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/08/28 06:08:18 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/DateTool.java,v 1.7 2000/12/07 18:34:51 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/12/07 18:34:51 $
  *
  * ====================================================================
  *
@@ -131,7 +131,10 @@ public class DateTool {
         StringManager.getManager("org.apache.tomcat.resources");
     
     public static long parseDate( MessageBytes value ) {
-	String dateString=value.toString();
+	return parseDate( value.toString());
+    }
+
+    public static long parseDate( String dateString ) {
 	Date date=null;
         try {
             date = DateTool.rfc1123Format.parse(dateString);
