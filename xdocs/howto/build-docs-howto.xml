@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<document>
+
+<properties>
+    <title>How To Build Scarab Docs</title>
+    <author email="epugh@upstate.com">Eric Pugh</author>
+</properties>
+
+<body>
+
+<section name="How To Build Scarab Docs">
+<p>
+	The Scarab documenation is a mix currently of old html documenation in the /www directory, and newer <a href="http://maven.apache.org">Maven</a>
+	generated documentation.  If you haven't used Maven before, follow the <a href="http://maven.apache.org/start/index.html">Getting Started</a>
+	directions.
+</p>
+	<subsection name="Updating HTML Docs">
+	<p>
+	To update the old HTML documentation, just make the changes to the files in the /www directory and then commit them.
+	When you commit them to CVS, they will soon show up on the main Scarab site under the root (/) directory.
+	</p>
+	</subsection>
+	<subsection name="Generating Maven Managed Docs">
+	<p>
+	Newer documentation should all be written in the xdoc format, and stored under the /xdocs directory.  When you
+	are ready to generate the documentation, you can run Maven's site generation goal via 'maven site'.  If you don't
+	want to bother to run the unit tests, then run 'maven site -Dmaven.test.skip=true'.  This will generate all
+	the site documentation, as well as the FAQ, Javadocs, and various code analysis reports in the directory "/target/docs".
+	</p>
+	</subsection>	
+	<subsection name="Committing Maven Managed Docs">
+	<p>
+	By default, Scarab is set up to ignore any files in the /target directory.  So, to commit updated documentation, instead
+	we use another project called "Scarab-Gen".  This allows us to only have to deal with committing update documentation when 
+	we are actively working with the documents, and allows most developers to not have to check out from CVS multiple megabytes of
+	documentation that they can either browse online, or generate for themselves.
+	</p>
+	<p>
+	First check out the "scarab-gen" project from CVS.  This project has all the same permissions etc as the main Scarab project
+	itself.  
+	</p>
+	<p>
+	Then, if you are updating the HEAD version of the documentation, then copy the documentation from $SCARAB_HOME/target/docs/
+	to $SCARAB_GEN_HOME/www/head/.	
+	</p>
+	<p>
+	If you are cutting a release, then instead generate the documentation, then copy the documentation from $SCARAB_HOME/target/docs/
+	to $SCARAB_GEN_HOME/www/{betarelease}/.  So, for beta19, you would copy to $SCARAB_GEN_HOME/www/b19/.
+	</p>
+	<p>
+	When you commit your new code you may need to do it in chunks.  CVS can timeout if you attempt to commit everything all at once
+	as the documentation is quite large.
+	</p>
+	</subsection>	
+</section>
+
+</body>
+</document>

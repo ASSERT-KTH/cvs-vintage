@@ -13,6 +13,8 @@
     <p>
       <ul>
       	<li><a href="build-howto.html">Building Scarab Howto</a></li>
+    	<li><a href="build-docs-howto.html">Building Scarab Docs Howto</a></li>
+    	<li><a href="release-howto.html">Releasing Scarab Howto</a></li>
         <li><a href="firewall-howto.html">Scarab Behind Firewall Howto</a></li>
         
       </ul>
