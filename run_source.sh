@@ -1,2 +1,4 @@
 #!/bin/sh
-java org.columba.main.Main
+
+COLUMBA_HOME=`dirname $0`
+java -cp "$COLUMBA_HOME" org.columba.main.Main $*
