@@ -167,6 +167,14 @@
     <attribute name="WarDeployerName">:service=EmbeddedTomcat</attribute>
   </mbean>
 
+  <!-- Uncomment this and disable previous J2eeDeployer entry to enable an alternative "scoped" deployment
+  <mbean code="org.jboss.deployment.scope.J2eeGlobalScopeDeployer" name="J2EE:service=J2eeDeployer">
+    <attribute name="DeployerName">Default</attribute>
+    <attribute name="JarDeployerName">:service=ContainerFactory</attribute>
+    <attribute name="WarDeployerName">:service=EmbeddedTomcat</attribute>
+  </mbean> 
+  -->
+
   <!-- ==================================================================== -->
   <!-- JBossCX setup, for J2EE connector architecture support               -->
   <!-- ==================================================================== -->
