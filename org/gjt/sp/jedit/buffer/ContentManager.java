@@ -32,7 +32,7 @@ import javax.swing.text.Segment;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: ContentManager.java,v 1.3 2001/10/21 11:13:34 spestov Exp $
+ * @version $Id: ContentManager.java,v 1.4 2001/10/22 07:52:16 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ContentManager
@@ -159,7 +159,7 @@ public class ContentManager
 	//{{{ ensureCapacity() method
 	private void ensureCapacity(int capacity)
 	{
-		if(capacity > text.length)
+		if(capacity >= text.length)
 		{
 			char[] textN = new char[capacity * 2];
 			System.arraycopy(text,0,textN,0,length);
