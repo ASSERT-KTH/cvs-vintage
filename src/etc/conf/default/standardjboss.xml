@@ -5,7 +5,7 @@
 <!--  Standard JBoss Configuration                                         -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.54 2002/11/12 18:16:14 dsundstrom Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.55 2002/12/19 21:25:48 slaboure Exp $ -->
 <jboss>
   <invoker-proxy-bindings>
     <invoker-proxy-binding>
@@ -701,7 +701,7 @@
         @jca.connection.interceptor@
         <interceptor>org.jboss.ejb.plugins.StatefulHASessionSynchronisationInterceptor</interceptor>
       </container-interceptors>
-      <instance-cache>org.jboss.ejb.plugins.StatefulSessionInstanceCache</instance-cache>
+      <instance-cache>org.jboss.ejb.plugins.StatefulHASessionInstanceCache</instance-cache>
       <persistence-manager>org.jboss.ejb.plugins.StatefulHASessionPersistenceManager</persistence-manager>
       <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
       <container-cache-conf>
