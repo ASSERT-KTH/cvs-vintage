@@ -54,8 +54,4 @@ public class Lock {
 		return owner;
 	}
 	
-	public boolean isLocked()
-	{
-		return locked;
-	}
 }
