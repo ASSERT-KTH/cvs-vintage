@@ -649,7 +649,7 @@ public abstract class TxSupport
          throws Exception
       {
          Transaction tx = tm.getTransaction();
-         if (!TxUtils.isActive(tx))
+         if (tx == null || (tx.getStatus() != Status.STATUS_ACTIVE && tx.getStatus() != Status.STATUS_MARKED_ROLLBACK))
          {
             return invokeInOurTx(invocation, next, tm);
          } // end of if ()
@@ -688,7 +688,7 @@ public abstract class TxSupport
          throws Exception
       {
          Transaction tx = tm.getTransaction();
-         if (TxUtils.isActive(tx))
+         if (tx != null && (tx.getStatus() == Status.STATUS_ACTIVE || tx.getStatus() == Status.STATUS_MARKED_ROLLBACK))
          {
             tm.suspend();
             try
