@@ -1,4 +1,4 @@
-// $Id: ArgoSingletonModule.java,v 1.3 2003/06/30 19:23:17 linus Exp $
+// $Id: ArgoSingletonModule.java,v 1.4 2004/03/06 09:15:17 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,12 +38,16 @@ public interface ArgoSingletonModule extends ArgoModule {
     /** Allows verification that the current singleton can be
      *  activated.  This is useful for determining menu entry
      *  availability, among other things.
+     *  @return <code>true</code> if the singleton can be activated
+     *          <code>false</code> otherwise.
      */
     public boolean canActivateSingleton();
 
     /** Allows verification that the current singleton can be
      *  deactivated.  This is useful for determining menu entry
      *  availability, among other things.
+     *  @return <code>true</code> if the singleton can be deactivated
+                <code>false</code> otherwise.
      */
     public boolean canDeactivateSingleton();
 
