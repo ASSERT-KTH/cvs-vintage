@@ -64,4 +64,9 @@
     <dependency service="TransactionManager" required="true"/>
     <dependency service="Configuration" required="true"/>
   </service>
+  <service name="J2eeDeployer">
+    <dependency service="EmbededTomcat" required="false"/>
+    <dependency service="ContainerFactory" required="true"/>
+  </service>
+
 </server>
