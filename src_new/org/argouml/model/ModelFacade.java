@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.252 2005/01/20 23:20:34 linus Exp $
+// $Id: ModelFacade.java,v 1.253 2005/01/21 21:10:15 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1916,6 +1916,21 @@ public class ModelFacade {
     return illegalArgumentBoolean(handle);
     }
 
+    /**
+     * Recognizer for ConcurrentRegion
+     *
+     * @param handle candidate
+     * @return true if handle is a ConcurrentRegion
+     */
+    public static boolean isAConcurrentRegion(Object handle) {
+        if ((handle instanceof MCompositeState)
+                && (getContainer(handle)!=null)) {
+            return (isConcurrent(getContainer(handle)));
+        }
+        return illegalArgumentBoolean(handle);
+    }
+
+    
     /**
      * Recognizer for constructor.
      *

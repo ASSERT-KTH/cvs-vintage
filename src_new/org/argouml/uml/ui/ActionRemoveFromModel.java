@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.53 2005/01/11 13:03:14 bobtarling Exp $
+// $Id: ActionRemoveFromModel.java,v 1.54 2005/01/21 21:10:16 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,7 @@ import org.argouml.model.ModelFacade;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.UMLDiagram;
+import org.argouml.uml.diagram.ui.ActionDeleteConcurrentRegion;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
@@ -136,7 +137,13 @@ public class ActionRemoveFromModel extends UMLAction {
                     target = ((Fig) target).getOwner();
                 }
                 newTarget = getNewTarget(target);
-                p.moveToTrash(target);
+                if (ModelFacade.isAConcurrentRegion(target)) {
+                    ActionDeleteConcurrentRegion.getSingleton()
+                        .actionPerformed(ae);
+                }
+                else {
+                    p.moveToTrash(target);
+                }
             }
         }
 

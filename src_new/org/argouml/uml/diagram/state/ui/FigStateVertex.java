@@ -1,4 +1,4 @@
-// $Id: FigStateVertex.java,v 1.21 2005/01/20 23:20:30 linus Exp $
+// $Id: FigStateVertex.java,v 1.22 2005/01/21 21:09:46 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,15 +72,15 @@ public abstract class FigStateVertex extends FigNodeModelElement {
         if (encloser != null
                 && (ModelFacade.isACompositeState(encloser.getOwner()))) {
             compositeState = encloser.getOwner();
+            ((FigStateVertex) encloser).redrawEnclosedFigs();
         } else {
             compositeState = Model.getStateMachinesHelper().getTop(
                     Model.getStateMachinesHelper()
                             .getStateMachine(stateVertex));
         }
-        if (compositeState != null) {
-            Model.getStateMachinesHelper().setContainer(stateVertex,
+        if (compositeState != null)
+            Model.getStateMachinesHelper().setContainer(stateVertex, 
                     compositeState);
-        }
     }
 
     /**
