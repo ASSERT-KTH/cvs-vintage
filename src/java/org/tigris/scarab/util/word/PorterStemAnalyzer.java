@@ -47,13 +47,17 @@ package org.tigris.scarab.util.word;
  */
 
 import java.io.Reader;
+import java.io.IOException;
 import org.apache.lucene.analysis.PorterStemFilter;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
 public class PorterStemAnalyzer extends Analyzer
 {
+    private static final boolean DEBUG = false;
+
     /** 
      * Constructs a {@link StandardAnalyzer} filtered by a {@link
      * PorterStemFilter}.
@@ -63,6 +67,35 @@ public class PorterStemAnalyzer extends Analyzer
         TokenStream result = new StandardAnalyzer()
             .tokenStream(fieldName, reader);
         result = new PorterStemFilter(result);
+        if (DEBUG) 
+        {
+            final TokenStream delegate = result;
+            result = new TokenStream()
+                {
+                    /** 
+                     * Returns the next token in the stream, or null at EOS. 
+                     */
+                    public Token next() throws IOException
+                    {
+                        Token token = delegate.next();
+                        if (token != null) 
+                        {
+                            System.out.println("Token (" + token.type() + 
+                                               "): " + token.termText());   
+                        }        
+                        return token;
+                    }
+    
+                    /** 
+                     * Releases resources associated with this stream. 
+                     */
+                    public void close() throws IOException 
+                    {
+                        delegate.close();
+                    }
+                };
+        }
+        
         return result;
-    }
+    }    
 }
