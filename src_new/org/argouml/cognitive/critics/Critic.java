@@ -24,7 +24,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.1 2000/09/04 12:50:28 1sturm Exp $
+// $Id: Critic.java,v 1.2 2001/07/19 12:08:18 1sturm Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -95,7 +95,7 @@ public class Critic implements Poster, java.io.Serializable {
   /** Arguments used to configure the critic. */
   private Hashtable _args = new Hashtable();
 
-  public static Icon DEFAULT_CLARIFIER = Util.loadIconResource("PostIt0");
+  public static Icon DEFAULT_CLARIFIER = ResourceLoader.lookupIconResource("PostIt0");
   protected Icon _clarifier = DEFAULT_CLARIFIER;
 
   /** The decision category that this critic is relevant to. The idea

@@ -24,7 +24,7 @@
 // File: SelectionState.java
 // Classes: SelectionState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionState.java,v 1.2 2001/04/02 14:28:41 5heyden Exp $
+// $Id: SelectionState.java,v 1.3 2001/07/19 12:08:19 1sturm Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -41,7 +41,7 @@ import ru.novosoft.uml.behavior.activity_graphs.*;
 import org.tigris.gef.base.*;
 import org.tigris.gef.presentation.*;
 import org.tigris.gef.graph.*;
-import org.tigris.gef.util.Util;
+import org.tigris.gef.util.*;
 
 import org.argouml.uml.diagram.ui.*;
 import org.argouml.uml.diagram.state.*;
@@ -49,7 +49,7 @@ import org.argouml.uml.diagram.state.*;
 public class SelectionState extends SelectionWButtons {
   ////////////////////////////////////////////////////////////////
   // constants
-  public static Icon trans = Util.loadIconResource("Transition");
+  public static Icon trans = ResourceLoader.lookupIconResource("Transition");
 
   ////////////////////////////////////////////////////////////////
   // instance varables

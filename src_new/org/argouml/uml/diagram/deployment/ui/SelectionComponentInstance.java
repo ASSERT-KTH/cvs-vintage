@@ -24,7 +24,7 @@
 // File: SelectionComponentInstance.java
 // Classes: SelectionComponentInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SelectionComponentInstance.java,v 1.1 2000/09/04 12:50:20 1sturm Exp $
+// $Id: SelectionComponentInstance.java,v 1.2 2001/07/19 12:08:19 1sturm Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -40,14 +40,14 @@ import ru.novosoft.uml.behavior.common_behavior.*;
 import org.tigris.gef.base.*;
 import org.tigris.gef.presentation.*;
 import org.tigris.gef.graph.*;
-import org.tigris.gef.util.Util;
+import org.tigris.gef.util.*;
 
 import org.argouml.uml.diagram.ui.*;
 
 public class SelectionComponentInstance extends SelectionWButtons {
   ////////////////////////////////////////////////////////////////
   // constants
-  public static Icon dep = Util.loadIconResource("Dependency");
+  public static Icon dep = ResourceLoader.lookupIconResource("Dependency");
 
 
 

@@ -24,7 +24,7 @@
 // File: SelectionActor.java
 // Classes: SelectionActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionActor.java,v 1.2 2001/01/02 15:19:45 boger Exp $
+// $Id: SelectionActor.java,v 1.3 2001/07/19 12:08:20 1sturm Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -40,14 +40,14 @@ import ru.novosoft.uml.behavior.use_cases.*;
 import org.tigris.gef.base.*;
 import org.tigris.gef.presentation.*;
 import org.tigris.gef.graph.*;
-import org.tigris.gef.util.Util;
+import org.tigris.gef.util.*;
 
 import org.argouml.uml.diagram.ui.*;
 
 public class SelectionActor extends SelectionWButtons {
   ////////////////////////////////////////////////////////////////
   // constants
-  public static Icon assoc = Util.loadIconResource("Association");
+  public static Icon assoc = ResourceLoader.lookupIconResource("Association");
 
 
 

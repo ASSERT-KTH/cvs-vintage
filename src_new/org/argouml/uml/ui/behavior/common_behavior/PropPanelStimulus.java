@@ -26,7 +26,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.7 2001/07/10 11:53:21 1sturm Exp $
+// $Id: PropPanelStimulus.java,v 1.8 2001/07/19 12:08:20 1sturm Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -44,11 +44,11 @@ import org.argouml.uml.ui.*;
 import org.argouml.uml.ui.foundation.core.*;
 import org.argouml.uml.*;
 
-import org.tigris.gef.util.Util;
+import org.tigris.gef.util.*;
 
 public class PropPanelStimulus extends PropPanelModelElement {
 
-   protected static ImageIcon _stimulusIcon = Util.loadIconResource("Stimulus");
+   protected static ImageIcon _stimulusIcon = ResourceLoader.lookupIconResource("Stimulus");
 
   public PropPanelStimulus() {
     super("Stimulus Properties",_stimulusIcon, 2);
