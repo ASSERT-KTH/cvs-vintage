@@ -10,7 +10,5 @@ import org.apache.torque.om.Persistent;
  * long as it does not already exist in the output directory.
  */
 public  class OptionWorkflow 
-    extends org.tigris.scarab.om.BaseOptionWorkflow
-    implements Persistent
 {
 }
