@@ -31,6 +31,7 @@ import org.columba.mail.config.*;
 public class ThinColumbaTheme extends DefaultCTheme
 {
 
+	/*
 	private final ColorUIResource secondary1 = new ColorUIResource(148, 148, 148);
 	private final ColorUIResource secondary2 = new ColorUIResource(160, 160, 160);
 	private final ColorUIResource secondary3 = new ColorUIResource(213, 213, 213);
@@ -41,17 +42,24 @@ public class ThinColumbaTheme extends DefaultCTheme
 
 	private final ColorUIResource foreground;
 	private final ColorUIResource background;
-
+	*/
+	
+	protected static final String thinPackage = "org.columba.core.gui.themes.thincolumba.";
+	
 	public ThinColumbaTheme(ThemeItem item)
 	{
 		super(item);
 
+		
+		/*
 		foreground = new ColorUIResource(item.getForeground());
 
 		background = new ColorUIResource(item.getBackground());
+		*/
 		// mainFont = mFont;
 		// messageFont = eFont;
 	}
+	/*
 
 	// menu border, labels
 	protected ColorUIResource getPrimary1()
@@ -81,6 +89,7 @@ public class ThinColumbaTheme extends DefaultCTheme
 	{
 		return secondary3;
 	}
+	*/
 
 	public String getName()
 	{
@@ -89,7 +98,49 @@ public class ThinColumbaTheme extends DefaultCTheme
 
 	public void addCustomEntriesToTable(UIDefaults table)
 	{
-
+		Object map[] =
+		{
+			"ButtonUI", thinPackage + "ThinButtonUI",
+			"CheckBoxUI", thinPackage + "ThinCheckBoxUI",
+			"CheckBoxMenuItemUI", thinPackage + "ThinCheckBoxMenuItemUI",
+			"ComboBoxUI", thinPackage + "ThinComboBoxUI",
+			"DesktopIconUI", thinPackage + "ThinDesktopIconUI",
+			"EditorPaneUI", thinPackage + "ThinEditorPaneUI",
+			"FileChooserUI", thinPackage + "ThinFileChooserUI",
+			"InternalFrameUI", thinPackage + "ThinInternalFrameUI",
+			"LabelUI", thinPackage + "ThinLabelUI",
+			"MenuUI", thinPackage + "ThinMenuUI",
+			"MenuBarUI", thinPackage + "ThinMenuBarUI",
+			"MenuItemUI", thinPackage + "ThinMenuItemUI",
+			"PasswordFieldUI", thinPackage + "ThinPasswordFieldUI",
+			"ProgressBarUI", thinPackage + "ThinProgressBarUI",
+			"PopupMenuSeparatorUI", thinPackage + "ThinPopupMenuSeparatorUI",
+			"RadioButtonUI", thinPackage + "ThinRadioButtonUI",
+			"RadioButtonMenuItemUI", thinPackage + "ThinRadioButtonMenuItemUI",
+			"ScrollBarUI", thinPackage + "ThinScrollBarUI",
+			"ScrollPaneUI", thinPackage + "ThinScrollPaneUI",
+			"SplitPaneUI", thinPackage + "ThinSplitPaneUI",
+			"SliderUI", thinPackage + "ThinSliderUI",
+			"SeparatorUI", thinPackage + "ThinSeparatorUI",
+			"TabbedPaneUI", thinPackage + "ThinTabbedPaneUI",
+			"TextAreaUI", thinPackage + "ThinTextAreaUI",
+			"TextFieldUI", thinPackage + "ThinTextFieldUI",
+			"TextPaneUI", thinPackage + "ThinTextPaneUI",
+			"ToggleButtonUI", thinPackage + "ThinToggleButtonUI",
+			"ToolBarUI", thinPackage + "ThinToolBarUI",
+			"ToolTipUI", thinPackage + "ThinToolTipUI",
+			"TreeUI", thinPackage + "ThinTreeUI"
+		};
+		table.putDefaults(map);
+		
+		// antialiasing==0 -> no antialiasing
+		// antialiasing==1 -> antialiasing of everything
+		// antialiasing==2 -> antialiasing for message-component only
+		table.put("antialiasing","0");
+		
+		
+		
+		/*
 		table.put("Tree.selectionBackground", background);
 		table.put("Table.selectionBackground", background);
 		table.put("TextField.selectionBackground", background);
@@ -102,13 +153,7 @@ public class ThinColumbaTheme extends DefaultCTheme
 		table.put("TextArea.selectionForeground", foreground);
 		table.put("List.selectionForeground", foreground);
 
-		/*
-		table.put( "SeparatorUI","org.columba.core.gui.themes.thincolumba.ThinColumbaSeparatorUI");
-		*/
 		
-		/*
-		table.put("Separator", new ThinColumbaSeparator() );
-		*/
 		table.put(
 			"SplitPaneUI",
 			"org.columba.core.gui.themes.thincolumba.ThinColumbaSplitPaneUI");
@@ -159,7 +204,7 @@ public class ThinColumbaTheme extends DefaultCTheme
 
 		table.put("ComboBox.listBackground", new ColorUIResource(255,255,255) );
 
-		
+		*/
 
 	}
 

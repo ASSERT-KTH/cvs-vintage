@@ -24,7 +24,6 @@ import javax.swing.plaf.*;
 
 import org.columba.core.gui.themes.thincolumba.*;
 import org.columba.core.config.*;
-import org.columba.core.gui.themes.contrastcolumba.*;
 import org.columba.mail.config.*;
 import org.columba.main.*;
 
@@ -50,16 +49,13 @@ public class ThemeSwitcher {
 					}
 				case 2 :
 					{
-						/*
-						MainInterface.columbaTheme =
-							new ThinColumbaTheme(Config.getOptionsConfig().getThemeItem());
-						*/
+						
 						
 						MainInterface.lookAndFeel = new MetalLookAndFeel();
 						MainInterface.lookAndFeel.setCurrentTheme(new ThinColumbaTheme(Config.getOptionsConfig().getThemeItem())
 							);
 						UIManager.setLookAndFeel(MainInterface.lookAndFeel);
-
+						
 						break;
 					}
 				/*
