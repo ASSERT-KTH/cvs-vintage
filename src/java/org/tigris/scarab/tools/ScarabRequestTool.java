@@ -1321,23 +1321,23 @@ try{
         IssueSearch search = getSearch();
         List matchingIssueIds = new ArrayList();
         boolean searchSuccess = true;
-        Intake intake = new Intake();
+        Intake intake = null;
 
         if (currentQueryString == null)
         {
             data.setMessage("Please enter a query.");
             searchSuccess = false;
+            intake = new Intake();
         }
         else
         {
            intake = parseQuery(currentQueryString);
         }
-        
 
         // If they have entered users to search on, and that returns no results
         // Don't bother running search
-        if (data.getParameters().getStrings("user_list") != null
-            && data.getParameters().getStrings("user_list").length > 0)
+        String[] userList = data.getParameters().getStrings("user_list");
+        if ( userList != null && userList.length > 0)
         {
             List issueIdsFromUserSearch = getIssueIdsFromUserSearch();
             if (issueIdsFromUserSearch.size() > 0)
