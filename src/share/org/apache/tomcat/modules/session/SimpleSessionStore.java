@@ -426,7 +426,6 @@ class SimpleSessionManager
 	if (session == null) {
 	    session = new ServerSession();
 	    session.setManager( this );
-	    recycled.put( session );
 	}
 	
 	// XXX can return MessageBytes !!!
