@@ -38,7 +38,7 @@ import org.gjt.sp.util.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.24 2003/01/12 03:08:23 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.25 2003/02/19 23:26:01 spestov Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 {
@@ -444,10 +444,24 @@ public class VFSFileChooserDialog extends EnhancedDialog
 					{
 						int caret = filenameField
 							.getCaretPosition();
-						filenameField.setText(files[0].name);
-						filenameField.setCaretPosition(
-							files[0].name.length());
-						filenameField.moveCaretPosition(caret);
+						String path = files[0].path;
+						String name = files[0].name;
+						if(MiscUtilities.getParentOfPath(path)
+							.equals(browser.getDirectory()))
+						{
+							filenameField.setText(name);
+							filenameField.setCaretPosition(
+								name.length());
+							filenameField.moveCaretPosition(caret);
+						}
+						else
+						{
+							filenameField.setText(path);
+							filenameField.setCaretPosition(
+								path.length());
+							filenameField.moveCaretPosition(caret
+								+ (path.length() - name.length()));
+						}
 					}
 				}
 			});

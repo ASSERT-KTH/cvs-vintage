@@ -28,11 +28,11 @@ import org.gjt.sp.jedit.Buffer;
 //}}}
 
 /**
- * A class internal to jEdit's document model. You should not use it
- * directly.
+ * @deprecated Used to implement backwards-compatibility with jEdit 3.2.2-style
+ * document model.
  *
  * @author Slava Pestov
- * @version $Id: LineElement.java,v 1.1 2001/10/20 09:32:23 spestov Exp $
+ * @version $Id: LineElement.java,v 1.2 2003/02/19 23:26:01 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class LineElement implements Element
