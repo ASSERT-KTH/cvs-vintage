@@ -74,6 +74,7 @@ public class ModuleManager
         AttributeGroupManager.addCacheListener(this);
         RModuleOptionManager.addCacheListener(this);
         AttributeManager.addCacheListener(this);
+        AttributeOptionManager.addCacheListener(this);
     }
 
     // -------------------------------------------------------------------
@@ -129,6 +130,10 @@ public class ModuleManager
         {
             getMethodResult().clear();
         }
+        else if (om instanceof AttributeOption) 
+        {
+            getMethodResult().clear();
+        }
     }
 
     public void refreshedObject(Persistent om)
@@ -145,6 +150,7 @@ public class ModuleManager
         interestedCacheFields.add(RModuleIssueTypePeer.MODULE_ID);
         interestedCacheFields.add(AttributeGroupPeer.MODULE_ID);
         interestedCacheFields.add(AttributePeer.ATTRIBUTE_ID);
+        interestedCacheFields.add(AttributeOptionPeer.OPTION_ID);
         return interestedCacheFields;
     }
 }
