@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.3 1999/10/20 11:22:54 akv Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/20 11:22:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.4 1999/10/21 21:50:20 mandar Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/10/21 21:50:20 $
  *
  * ====================================================================
  * 
@@ -313,7 +313,6 @@ public class JspParseEventListener extends BaseJspListener {
 	//writer.println("} catch (Throwable t) {");
 	writer.println("} catch (Exception ex) {");
 	writer.pushIndent();
-        writer.println("ex.printStackTrace();");
         writer.println("if (out.getBufferSize() != 0)");
         writer.pushIndent(); writer.println("out.clear();"); writer.popIndent();
 	writer.println("pageContext.handlePageException(ex);");
