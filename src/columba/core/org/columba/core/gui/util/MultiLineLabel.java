@@ -186,4 +186,13 @@ public class MultiLineLabel extends JComponent {
             pen.y += layout.getDescent() + layout.getLeading() + lineSpacing;
         }
     }
+    
+	
+	/**
+	 * @see java.awt.Component#getPreferredSize()
+	 */
+	public Dimension getPreferredSize() {
+		
+		return getMinimumSize();
+	}
 }
