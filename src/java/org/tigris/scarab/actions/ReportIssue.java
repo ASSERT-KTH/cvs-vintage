@@ -87,34 +87,19 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.50 2001/10/04 23:21:13 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.51 2001/10/05 16:35:31 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
-
-    private Field getSummaryField(IntakeTool intake, Issue issue)
-        throws Exception
-    {
-        AttributeValue aval = (AttributeValue)issue
-            .getModuleAttributeValuesMap().get("SUMMARY");
-        Group group = intake.get("AttributeValue", aval.getQueryKey());
-        return group.get("Value");
-    }
-
     public void doSubmitattributes( RunData data, TemplateContext context )
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        
-        // Summary is always required (because we are going to search on it.)
         ScarabUser user = (ScarabUser)data.getUser();
-
         Issue issue = user.getReportingIssue(scarabR.getCurrentModule());
-        Field summary = getSummaryField(intake, issue);
-        summary.setRequired(true);
 
-        // set any other required flags
+        // set any required flags
         Attribute[] requiredAttributes = 
             issue.getScarabModule().getRequiredAttributes();
         SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
@@ -181,11 +166,7 @@ public class ReportIssue extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
 
-        String query = getSummaryField(intake, 
-                            user.getReportingIssue(scarabR.getCurrentModule()))
-                                .toString();
-
-        List matchingIssues = searchIssues(query, scarabR.getCurrentModule(), 
+        List matchingIssues = searchIssues(scarabR.getCurrentModule(), 
                                            intake, 25);                  
                 
         // set the template to dedupe unless none exist, then skip
@@ -210,15 +191,14 @@ public class ReportIssue extends RequireLoginFirstAction
         return beatThreshold;
     }
 
-    private List searchIssues( String query, ModuleEntity module, 
+    private List searchIssues( ModuleEntity module, 
                                IntakeTool intake, int maxResults)
         throws Exception
     { 
         // search on the option attributes and keywords
-        IssueSearch search = new IssueSearch();
-        search.setSearchWords(query);
-        
+        IssueSearch search = new IssueSearch();        
         search.setModuleCast(module);
+
         SequencedHashtable avMap = search.getModuleAttributeValuesMap(); 
         Iterator i = avMap.iterator();
         while (i.hasNext()) 
@@ -247,7 +227,6 @@ public class ReportIssue extends RequireLoginFirstAction
 
         Issue issue = user.getReportingIssue(scarabR.getCurrentModule());
         AttributeValue aval = null;
-        String summary = getSummaryField(intake, issue).toString();
 
         // set any other required flags
         Criteria crit = new Criteria(3)
@@ -351,10 +330,15 @@ public class ReportIssue extends RequireLoginFirstAction
                     data.getParameters().add("issue_0id", 
                                              issue.getIssueId().toString());
                 }
+
+                // need to not hardcode summary here. !FIXME!
+                String summary = 
+                    ((AttributeValue)avMap.get("SUMMARY")).getValue();
+                summary = summary == null ? "" : " - " + summary;
                 StringBuffer subj = new StringBuffer("[");
                 subj.append(issue.getScarabModule().getRealName().toUpperCase());
                 subj.append("] Issue #").append(issue.getUniqueId());
-                subj.append(" - ").append(summary);
+                subj.append(summary);
                 transaction.sendEmail(new ContextAdapter(context), issue, 
                                       subj.toString(),
                                       "email/NewIssueNotification.vm"); 
