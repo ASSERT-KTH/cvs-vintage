@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.43 2004/08/08 20:42:28 mvw Exp $
+// $Id: FigUseCase.java,v 1.44 2004/08/14 15:26:11 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -383,7 +383,7 @@ public class FigUseCase extends FigNodeModelElement {
         ArgoJMenu addMenu = new ArgoJMenu(BUNDLE, "menu.popup.add");
 
         addMenu.add(ActionAddExtensionPoint.singleton());
-        addMenu.add(ActionAddNote.SINGLETON);
+        addMenu.add(ActionAddNote.getSingleton());
 
         popUpActions.insertElementAt(addMenu,
             popUpActions.size() - POPUP_ADD_OFFSET);

@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.69 2004/08/12 20:16:33 mvw Exp $
+// $Id: FigInterface.java,v 1.70 2004/08/14 15:26:11 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -262,8 +262,8 @@ public class FigInterface extends FigNodeModelElement {
     public Vector getPopUpActions(MouseEvent me) {
         Vector popUpActions = super.getPopUpActions(me);
         ArgoJMenu addMenu = new ArgoJMenu(BUNDLE, "menu.popup.add");
-        addMenu.add(ActionAddOperation.SINGLETON);
-        addMenu.add(ActionAddNote.SINGLETON);
+        addMenu.add(ActionAddOperation.getSingleton());
+        addMenu.add(ActionAddNote.getSingleton());
         popUpActions.insertElementAt(addMenu,
             popUpActions.size() - POPUP_ADD_OFFSET);
         ArgoJMenu showMenu = new ArgoJMenu(BUNDLE, "menu.popup.show");
@@ -664,7 +664,7 @@ public class FigInterface extends FigNodeModelElement {
         if (cls == null) {
             return;
         }
-        ActionAddOperation.SINGLETON.actionPerformed(null);
+        ActionAddOperation.getSingleton().actionPerformed(null);
         // TODO: in future version of GEF call getFigs returning array
         CompartmentFigText ft =
             (CompartmentFigText) new Vector(fg.getFigs(null)).lastElement();

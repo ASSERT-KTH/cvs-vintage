@@ -1,4 +1,4 @@
-// $Id: ActionAddMessage.java,v 1.1 2003/10/27 22:41:31 alexb Exp $
+// $Id: ActionAddMessage.java,v 1.2 2004/08/14 15:26:11 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import org.argouml.model.ModelFacade;
 
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.targetmanager.TargetManager;
-import org.argouml.uml.diagram.ui.FigMessage;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
@@ -46,18 +45,24 @@ public class ActionAddMessage extends UMLChangeAction {
     ////////////////////////////////////////////////////////////////
     // static variables
     
-    public static ActionAddMessage SINGLETON = new ActionAddMessage(); 
+    private static ActionAddMessage singleton = new ActionAddMessage(); 
 
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
+    /**
+     * The constructor.
+     */
     public ActionAddMessage() { super("action.add-message"); }
 
 
     ////////////////////////////////////////////////////////////////
     // main methods
 
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
     public void actionPerformed(ActionEvent ae) {
     	Object target =  TargetManager.getInstance().getModelTarget();
     
@@ -75,13 +80,14 @@ public class ActionAddMessage extends UMLChangeAction {
      * Factory method and then it creates the Fig and adds it to the
      * diagram </p>
      * @param ar the associationRole to which the new message must be added
-     **/
+     * @return the MMessage object
+     */
     public Object/*MMessage*/ addMessage(Object/*MAssociationRole*/ ar) {
         Object/*MCollaboration*/ collab = ModelFacade.getNamespace(ar);
-        Object/*MMessage*/ msg =
-	    UmlFactory.getFactory().getCollaborations().buildMessage(collab, ar);
-        String nextStr =
-	    "" + ModelFacade.getMessages((ModelFacade.getInteractions(collab).toArray())[0]).size();	
+        Object/*MMessage*/ msg = UmlFactory.getFactory().getCollaborations()
+                                                .buildMessage(collab, ar);
+        String nextStr = "" + ModelFacade.getMessages(
+                (ModelFacade.getInteractions(collab).toArray())[0]).size();	
         Editor e = Globals.curEditor();
         GraphModel gm = e.getGraphModel();
         Layer lay = e.getLayerManager().getActiveLayer();
@@ -92,9 +98,19 @@ public class ActionAddMessage extends UMLChangeAction {
         return msg;
     }
 
+    /**
+     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
+     */
     public boolean shouldBeEnabled() {
 	Object target =  TargetManager.getInstance().getModelTarget();
-	return super.shouldBeEnabled() && ModelFacade.isAAssociationRole(target);
+	return super.shouldBeEnabled() 
+	    && ModelFacade.isAAssociationRole(target);
     }
     
+    /**
+     * @return Returns the singleton.
+     */
+    public static ActionAddMessage getSingleton() {
+        return singleton;
+    }
 }  /* end class ActionAddMessage */

@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.107 2004/08/12 20:16:33 mvw Exp $
+// $Id: FigClass.java,v 1.108 2004/08/14 15:26:11 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -275,9 +275,9 @@ public class FigClass extends FigNodeModelElement {
         Vector popUpActions = super.getPopUpActions(me);
 
         ArgoJMenu addMenu = new ArgoJMenu(BUNDLE, "menu.popup.add");
-        addMenu.add(ActionAddAttribute.SINGLETON);
-        addMenu.add(ActionAddOperation.SINGLETON);
-        addMenu.add(ActionAddNote.SINGLETON);
+        addMenu.add(ActionAddAttribute.getSingleton());
+        addMenu.add(ActionAddOperation.getSingleton());
+        addMenu.add(ActionAddNote.getSingleton());
         popUpActions.insertElementAt(addMenu,
             popUpActions.size() - POPUP_ADD_OFFSET);
 
@@ -742,9 +742,9 @@ public class FigClass extends FigNodeModelElement {
             return;
         }
         if (fg == getAttributesFig()) {
-            ActionAddAttribute.SINGLETON.actionPerformed(null);
+            ActionAddAttribute.getSingleton().actionPerformed(null);
         } else {
-            ActionAddOperation.SINGLETON.actionPerformed(null);
+            ActionAddOperation.getSingleton().actionPerformed(null);
         }
         // TODO: When available use getFigs() returning array
         ft = (CompartmentFigText) new Vector(fg.getFigs(null)).lastElement();

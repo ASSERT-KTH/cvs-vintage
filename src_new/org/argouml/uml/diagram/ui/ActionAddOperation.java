@@ -1,4 +1,4 @@
-// $Id: ActionAddOperation.java,v 1.4 2004/08/01 07:50:46 mkl Exp $
+// $Id: ActionAddOperation.java,v 1.5 2004/08/14 15:26:11 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,16 +44,22 @@ public class ActionAddOperation extends UMLChangeAction {
     ////////////////////////////////////////////////////////////////
     // static variables
 
-    public static ActionAddOperation SINGLETON = new ActionAddOperation();
+    private static ActionAddOperation singleton = new ActionAddOperation();
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
+    /**
+     * The constructor.
+     */
     public ActionAddOperation() { super("button.new-operation", true); }
 
     ////////////////////////////////////////////////////////////////
     // main methods
 
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
     public void actionPerformed(ActionEvent ae) {
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 	Project p = ProjectManager.getManager().getCurrentProject();
@@ -67,7 +73,7 @@ public class ActionAddOperation extends UMLChangeAction {
 	else
 	    return;
 
-	Object/*MOperation*/ oper = UmlFactory.getFactory().getCore().buildOperation(cls);
+	Object oper = UmlFactory.getFactory().getCore().buildOperation(cls);
         TargetManager.getInstance().setTarget(oper);
 
         Iterator it =
@@ -83,6 +89,9 @@ public class ActionAddOperation extends UMLChangeAction {
 	super.actionPerformed(ae);
     }
 
+    /**
+     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
+     */
     public boolean shouldBeEnabled() {
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 	Object target =  TargetManager.getInstance().getModelTarget();
@@ -90,5 +99,11 @@ public class ActionAddOperation extends UMLChangeAction {
 	    && (ModelFacade.isAClassifier(target)
 		|| ModelFacade.isAFeature(target))
 	    && !ModelFacade.isASignal(target);
+    }
+    /**
+     * @return Returns the singleton.
+     */
+    public static ActionAddOperation getSingleton() {
+        return singleton;
     }
 } /* end class ActionAddOperation */

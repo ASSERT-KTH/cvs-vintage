@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.69 2004/08/12 19:50:11 mvw Exp $
+// $Id: FigAssociation.java,v 1.70 2004/08/14 15:26:11 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -396,18 +396,18 @@ public class FigAssociation extends FigEdgeModelElement {
             ArgoJMenu multMenu =
 		new ArgoJMenu(BUNDLE, "menu.popup.multiplicity");
 
-            multMenu.add(ActionMultiplicity.SrcMultOne);
-            multMenu.add(ActionMultiplicity.SrcMultZeroToOne);
-            multMenu.add(ActionMultiplicity.SrcMultOneToMany);
-            multMenu.add(ActionMultiplicity.SrcMultZeroToMany);
+            multMenu.add(ActionMultiplicity.getSrcMultOne());
+            multMenu.add(ActionMultiplicity.getSrcMultZeroToOne());
+            multMenu.add(ActionMultiplicity.getSrcMultOneToMany());
+            multMenu.add(ActionMultiplicity.getSrcMultZeroToMany());
             popUpActions.insertElementAt(multMenu, 
                 popUpActions.size() - POPUP_ADD_OFFSET);
 
             ArgoJMenu aggMenu = new ArgoJMenu(BUNDLE, "menu.popup.aggregation");
         
-	    aggMenu.add(ActionAggregation.SrcAggNone);
-	    aggMenu.add(ActionAggregation.SrcAgg);
-	    aggMenu.add(ActionAggregation.SrcAggComposite);
+	    aggMenu.add(ActionAggregation.getSrcAggNone());
+	    aggMenu.add(ActionAggregation.getSrcAgg());
+	    aggMenu.add(ActionAggregation.getSrcAggComposite());
 	    popUpActions.insertElementAt(aggMenu, 
 					 (popUpActions.size()
 					  - POPUP_ADD_OFFSET));
@@ -415,18 +415,18 @@ public class FigAssociation extends FigEdgeModelElement {
 	else if (destDeterminingFactor < rSquared) {
             ArgoJMenu multMenu =
 		new ArgoJMenu(BUNDLE, "menu.popup.multiplicity");
-	    multMenu.add(ActionMultiplicity.DestMultOne);
-	    multMenu.add(ActionMultiplicity.DestMultZeroToOne);
-	    multMenu.add(ActionMultiplicity.DestMultOneToMany);
-	    multMenu.add(ActionMultiplicity.DestMultZeroToMany);
+	    multMenu.add(ActionMultiplicity.getDestMultOne());
+	    multMenu.add(ActionMultiplicity.getDestMultZeroToOne());
+	    multMenu.add(ActionMultiplicity.getDestMultOneToMany());
+	    multMenu.add(ActionMultiplicity.getDestMultZeroToMany());
 	    popUpActions.insertElementAt(multMenu, 
 					 (popUpActions.size()
 					  - POPUP_ADD_OFFSET));
 
             ArgoJMenu aggMenu = new ArgoJMenu(BUNDLE, "menu.popup.aggregation");
-	    aggMenu.add(ActionAggregation.DestAggNone);
-	    aggMenu.add(ActionAggregation.DestAgg);
-	    aggMenu.add(ActionAggregation.DestAggComposite);
+	    aggMenu.add(ActionAggregation.getDestAggNone());
+	    aggMenu.add(ActionAggregation.getDestAgg());
+	    aggMenu.add(ActionAggregation.getDestAggComposite());
 	    popUpActions.insertElementAt(aggMenu, 
 					 (popUpActions.size()
 					  - POPUP_ADD_OFFSET));
