@@ -1,4 +1,4 @@
-// $Id: DataTypesHelper.java,v 1.1 2005/02/10 23:56:53 linus Exp $
+// $Id: DataTypesHelper.java,v 1.2 2005/03/19 22:05:08 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,18 +89,50 @@ public interface DataTypesHelper {
     String multiplicityToString(Object multiplicity);
 
     /**
+     * Sets the body of an expression.
+     *
+     * TODO: This operation is fooling the user
+     * in thinking that the body of the object is changed.
+     * Instead, a new object is created.
+     * There is no other way: a MExpression can not be altered,
+     * once created!
+     * So, this operation returns a newly created object instead.
+     *
+     * @param handle The expression to modify.
+     * @param body The body to set.
+     * @return The newly created expression.
+     */
+    Object setBody(Object handle, String body);
+
+    /**
+     * Gets the body of an expression.
+     *
+     * @param handle The expression to get.
+     * @return The body (a String).
+     */
+    String getBody(Object handle);
+
+    /**
      * Sets the language of an expression.
      *
      * TODO: This operation is fooling the user
      * in thinking that the body of the object is changed.
-     * Instead, a new object is created and as a side-effect the body is lost.
+     * Instead, a new object is created.
      * There is no other way: a MExpression can not be altered,
      * once created!
-     * So, this operation should return the created object instead!
-     * Or should it simply copy the body?
+     * So, this operation returns a newly created object instead.
      *
-     * @param handle is the expression
-     * @param language is the lang
+     * @param handle The expression.
+     * @param language The new language.
+     * @return The newly created Object.
      */
-    void setLanguage(Object handle, String language);
+    Object setLanguage(Object handle, String language);
+
+    /**
+     * Gets the language of an expression.
+     *
+     * @param handle The expression to get.
+     * @return The language (a String).
+     */
+    String getLanguage(Object handle);
 }

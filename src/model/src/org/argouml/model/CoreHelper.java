@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.1 2005/02/10 23:56:53 linus Exp $
+// $Id: CoreHelper.java,v 1.2 2005/03/19 22:05:08 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -814,10 +814,12 @@ public interface CoreHelper {
     void setRaisedSignals(Object handle, Collection raisedSignals);
 
     /**
-     * Sets a body of a given Method, Constraint or Expression.
+     * Sets a body of a given Method or Constraint.
      *
-     * @param handle is the method, expression
-     * @param expr is the body string for the expression
+     * @param handle The method or constraint.
+     * @param expr The body of the expression.
+     *             If it is a method, this must be a ProcedureExpression.
+     *             If it is a Constraint, this must be a BooleanExpression.
      */
     void setBody(Object handle, Object expr);
 

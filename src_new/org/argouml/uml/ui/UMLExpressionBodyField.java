@@ -1,4 +1,4 @@
-// $Id: UMLExpressionBodyField.java,v 1.18 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLExpressionBodyField.java,v 1.19 2005/03/19 22:05:08 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,6 +40,9 @@ public class UMLExpressionBodyField
     extends JTextArea
     implements DocumentListener, UMLUserInterfaceComponent {
 
+    /**
+     * Logger.
+     */
     private static final Logger LOG =
         Logger.getLogger(UMLExpressionBodyField.class);
 
@@ -66,7 +69,9 @@ public class UMLExpressionBodyField
      */
     public void targetChanged() {
 	LOG.debug("UMLExpressionBodyField: targetChanged");
-	if (notifyModel) model.targetChanged();
+	if (notifyModel) {
+	    model.targetChanged();
+	}
         update();
     }
 
@@ -111,17 +116,18 @@ public class UMLExpressionBodyField
      */
     public void propertySet(final MElementEvent event) {
        	LOG.debug("UMLExpressionBodyField: propertySet" + event);
+       	update();
     }
 
     private void update() {
         String oldText = getText();
-        Object newText = model.getBody();
+        String newText = model.getBody();
 	LOG.debug("UMLExpressionBodyField: update: " + oldText + " " + newText);
 
 	if (oldText == null || newText == null || !oldText.equals(newText)) {
             if (oldText != newText) {
 		LOG.debug("setNewText!!");
-                setText((String) newText);
+                setText(newText);
             }
         }
     }

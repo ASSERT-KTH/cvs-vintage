@@ -1,4 +1,4 @@
-// $Id: DataTypesHelperImpl.java,v 1.4 2005/01/20 23:20:36 linus Exp $
+// $Id: DataTypesHelperImpl.java,v 1.5 2005/03/19 22:05:07 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,13 +27,20 @@ package org.argouml.model.uml;
 import java.util.Iterator;
 
 import org.argouml.model.DataTypesHelper;
-import org.argouml.model.Model;
 
 import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.foundation.data_types.MActionExpression;
+import ru.novosoft.uml.foundation.data_types.MArgListsExpression;
+import ru.novosoft.uml.foundation.data_types.MBooleanExpression;
 import ru.novosoft.uml.foundation.data_types.MExpression;
-import ru.novosoft.uml.foundation.data_types.MExpressionEditor;
+import ru.novosoft.uml.foundation.data_types.MIterationExpression;
+import ru.novosoft.uml.foundation.data_types.MMappingExpression;
 import ru.novosoft.uml.foundation.data_types.MMultiplicity;
+import ru.novosoft.uml.foundation.data_types.MObjectSetExpression;
+import ru.novosoft.uml.foundation.data_types.MProcedureExpression;
 import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
+import ru.novosoft.uml.foundation.data_types.MTimeExpression;
+import ru.novosoft.uml.foundation.data_types.MTypeExpression;
 import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
 
 /**
@@ -186,33 +193,112 @@ class DataTypesHelperImpl implements DataTypesHelper {
     }
 
     /**
+     * @see org.argouml.model.DataTypesHelper#getBody(java.lang.Object)
+     */
+    public String getBody(Object handle) {
+        if (handle instanceof MExpression) {
+            return ((MExpression) handle).getBody();
+        }
+        throw new IllegalArgumentException("handle: " + handle);
+    }
+
+    /**
+     * @see org.argouml.model.DataTypesHelper#getLanguage(java.lang.Object)
+     */
+    public String getLanguage(Object handle) {
+        if (handle instanceof MExpression) {
+            return ((MExpression) handle).getLanguage();
+        }
+        throw new IllegalArgumentException("handle: " + handle);
+    }
+
+    /**
+     * TODO: This operation is fooling the user
+     * in thinking that the body of the object is changed.
+     * Instead, a new object is created.
+     * There is no other way: a MExpression can not be altered,
+     * once created!
+     * So, this operation returns a newly created object instead.
+     *
+     * @see org.argouml.model.DataTypesHelper#setBody(Object, String)
+     */
+    public Object setBody(Object handle, String body) {
+        String language;
+        if (!(handle instanceof MExpression)) {
+            throw new IllegalArgumentException("handle: " + handle);
+        }
+
+        language = ((MExpression) handle).getLanguage();
+        return newExpression(handle, body, language);
+    }
+
+    /**
      * Sets the language of an expression.
      *
      * TODO: This operation is fooling the user
      * in thinking that the body of the object is changed.
-     * Instead, a new object is created and as a side-effect the body is lost.
+     * Instead, a new object is created.
      * There is no other way: a MExpression can not be altered,
      * once created!
-     * So, this operation should return the created object instead!
-     * Or should it simply copy the body?
+     * So, this operation returns a newly created object instead.
      *
-     * @param handle is the expression
-     * @param language is the lang
+     * @param handle The expression.
+     * @param language The language.
+     * @return The newly created expression.
      */
-    public void setLanguage(Object handle, String language) {
-        if (handle instanceof MExpression) {
-            MExpressionEditor expressionEditor =
-                (MExpressionEditor)
-                	Model.getDataTypesFactory().
-                		createExpressionEditor(handle);
-            expressionEditor.setLanguage(language);
-            handle = expressionEditor.toExpression();
-            // TODO: Is something missing here?
-
-            return;
+    public Object setLanguage(Object handle, String language) {
+        String body;
+        if (!(handle instanceof MExpression)) {
+            throw new IllegalArgumentException("handle: " + handle);
         }
-        throw new IllegalArgumentException("handle: " + handle
-                + " or language: " + language);
+
+        body = ((MExpression) handle).getBody();
+        return newExpression(handle, body, language);
+    }
+
+    /**
+     * Create a new expression of the same type as the one given but with
+     * the new body and language.
+     *
+     * @param handle The expression with the type that we want.
+     * @param body The body.
+     * @param language The language.
+     * @return A newly created expression.
+     */
+    private Object newExpression(Object handle, String body, String language) {
+        if (handle instanceof MActionExpression) {
+            return new MActionExpression(language, body);
+        }
+        if (handle instanceof MArgListsExpression) {
+            return new MArgListsExpression(language, body);
+        }
+        if (handle instanceof MBooleanExpression) {
+            return new MBooleanExpression(language, body);
+        }
+        if (handle instanceof MIterationExpression) {
+            return new MIterationExpression(language, body);
+        }
+        if (handle instanceof MMappingExpression) {
+            return new MMappingExpression(language, body);
+        }
+        if (handle instanceof MObjectSetExpression) {
+            return new MObjectSetExpression(language, body);
+        }
+        if (handle instanceof MProcedureExpression) {
+            return new MProcedureExpression(language, body);
+        }
+        if (handle instanceof MTimeExpression) {
+            return new MTimeExpression(language, body);
+        }
+        if (handle instanceof MTypeExpression) {
+            return new MTypeExpression(language, body);
+        }
+
+        if (handle instanceof MExpression) {
+            return new MExpression(language, body);
+        }
+
+        throw new IllegalArgumentException("Not an expression: " + handle);
     }
 }
 

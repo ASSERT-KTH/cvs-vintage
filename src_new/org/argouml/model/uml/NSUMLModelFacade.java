@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.6 2005/02/06 21:49:39 mvw Exp $
+// $Id: NSUMLModelFacade.java,v 1.7 2005/03/19 22:05:08 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1981,11 +1981,7 @@ public class NSUMLModelFacade implements Facade {
     }
 
     /**
-     * Get the body of an method/constraint/expression.
-     *
-     *
-     * @param handle expression.
-     * @return the body.
+     * @see org.argouml.model.Facade#getBody(java.lang.Object)
      */
     public Object getBody(Object handle) {
         if (handle instanceof MMethod) {
