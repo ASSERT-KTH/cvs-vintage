@@ -21,11 +21,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JOptionPane;
 
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;

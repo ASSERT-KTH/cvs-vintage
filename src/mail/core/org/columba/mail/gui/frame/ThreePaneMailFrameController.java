@@ -22,8 +22,8 @@ import org.columba.mail.gui.table.action.DownAction;
 import org.columba.mail.gui.table.action.UpAction;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.TreeController;
-import org.columba.mail.gui.tree.action.RenameFolderAction;
 import org.columba.mail.gui.tree.action.ApplyFilterAction;
+import org.columba.mail.gui.tree.action.RenameFolderAction;
 import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 import org.columba.mail.main.MailInterface;
 

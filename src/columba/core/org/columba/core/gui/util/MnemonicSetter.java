@@ -17,7 +17,6 @@
 package org.columba.core.gui.util;
 
 import javax.swing.AbstractButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 
 /**

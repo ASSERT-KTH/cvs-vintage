@@ -17,7 +17,6 @@
 package org.columba.core.externaltools;
 
 import java.io.File;
-
 import java.net.URL;
 
 import org.columba.core.plugin.PluginInterface;

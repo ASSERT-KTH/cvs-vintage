@@ -16,26 +16,21 @@
 
 package org.columba.mail.gui.composer.html;
 
-import java.awt.BorderLayout;
 import java.awt.Font;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.ChangedCharSetException;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
-import javax.swing.text.StyleConstants;
 import javax.swing.text.html.HTML;
 
 import org.columba.core.logging.ColumbaLogger;

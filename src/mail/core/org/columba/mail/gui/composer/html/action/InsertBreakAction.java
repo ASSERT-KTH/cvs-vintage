@@ -21,13 +21,10 @@ import java.util.Observer;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.util.SwingWorker;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
-import org.columba.mail.gui.composer.html.util.FormatInfo;
-import org.columba.mail.gui.composer.util.ExternalEditor;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

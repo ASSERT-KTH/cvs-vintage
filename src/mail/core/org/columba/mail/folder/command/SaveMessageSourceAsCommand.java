@@ -16,7 +16,13 @@
 
 package org.columba.mail.folder.command;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -24,13 +30,11 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.ristretto.message.Address;
 
 
 /**

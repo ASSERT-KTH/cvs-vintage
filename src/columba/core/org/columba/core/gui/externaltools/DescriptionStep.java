@@ -18,7 +18,6 @@ package org.columba.core.gui.externaltools;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
-
 import java.net.URL;
 
 import javax.swing.JComponent;

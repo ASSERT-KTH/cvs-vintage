@@ -3,7 +3,8 @@
  */
 package org.columba.core.gui.util;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import javax.swing.Icon;

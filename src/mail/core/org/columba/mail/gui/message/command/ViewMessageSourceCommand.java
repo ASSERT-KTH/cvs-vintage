@@ -16,13 +16,18 @@
 
 package org.columba.mail.gui.message.command;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.io.DiskIO;
 import org.columba.core.io.TempFileStore;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;

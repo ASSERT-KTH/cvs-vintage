@@ -22,6 +22,7 @@ import org.columba.core.command.Worker;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
@@ -33,7 +34,6 @@ import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.io.CharSequenceSource;
-import org.columba.mail.composer.MessageBuilderHelper;
 
 /**
  * Forward message inline, which is the same as replying to someone who is not

@@ -20,7 +20,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataLookup;
@@ -29,7 +36,6 @@ import net.javaprog.ui.wizard.DataModel;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.WizardTextField;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.main.MailInterface;

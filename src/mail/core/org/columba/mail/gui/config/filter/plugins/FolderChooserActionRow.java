@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

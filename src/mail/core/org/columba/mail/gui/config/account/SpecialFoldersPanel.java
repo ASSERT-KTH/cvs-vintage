@@ -33,7 +33,6 @@ import javax.swing.border.Border;
 
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SpecialFoldersItem;

@@ -33,6 +33,7 @@ import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
+import javax.swing.text.html.HTMLEditorKit.HTMLFactory;
 
 /**
   * This class extends HTMLEditorKit so that it can provide other renderer classes

@@ -17,7 +17,6 @@
 package org.columba.mail.folder.command;
 
 import java.io.IOException;
-
 import java.text.MessageFormat;
 
 import javax.swing.JOptionPane;

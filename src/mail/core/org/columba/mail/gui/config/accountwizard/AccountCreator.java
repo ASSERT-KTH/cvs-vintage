@@ -20,7 +20,6 @@ import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 
-import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.ImapItem;

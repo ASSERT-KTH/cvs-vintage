@@ -3,12 +3,9 @@
  */
 package org.columba.mail.config;
 
-import org.columba.core.config.DefaultItem;
-import org.columba.core.xml.XmlElement;
-
-import com.sun.rsasign.e;
-
 import junit.framework.TestCase;
+
+import org.columba.core.xml.XmlElement;
 
 /**
  * Test cases for the <code>AccountItem</code> class.

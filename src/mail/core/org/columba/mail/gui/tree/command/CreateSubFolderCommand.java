@@ -21,7 +21,6 @@ import java.util.Hashtable;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.FolderTreeNode;

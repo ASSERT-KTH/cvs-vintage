@@ -3,9 +3,9 @@
  */
 package org.columba.mail.filter;
 
-import org.columba.core.xml.XmlElement;
-
 import junit.framework.TestCase;
+
+import org.columba.core.xml.XmlElement;
 
 /**
  * Tests for the <code>FilterList</code> class. 

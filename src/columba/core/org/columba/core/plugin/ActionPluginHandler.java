@@ -17,7 +17,6 @@
 package org.columba.core.plugin;
 
 import java.util.HashMap;
-import java.util.ListIterator;
 import java.util.Map;
 
 import org.columba.core.action.BasicAction;

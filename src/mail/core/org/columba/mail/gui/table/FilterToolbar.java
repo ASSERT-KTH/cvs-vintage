@@ -36,7 +36,6 @@ import org.columba.core.gui.util.CTextField;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.ToolbarToggleButton;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.table.model.TableModelFilter;
 import org.columba.mail.main.MailInterface;

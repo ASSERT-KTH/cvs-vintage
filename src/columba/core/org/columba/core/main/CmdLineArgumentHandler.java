@@ -6,12 +6,9 @@
 package org.columba.core.main;
 
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.parser.MailUrlParser;
-import org.columba.mail.parser.text.HtmlParser;
 
 /**
  * This class handles given arguments (in style of commandline arguments. If for example the 

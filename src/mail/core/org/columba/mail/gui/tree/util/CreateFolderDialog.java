@@ -45,7 +45,6 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.DialogStore;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;

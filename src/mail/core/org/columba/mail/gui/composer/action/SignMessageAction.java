@@ -7,19 +7,14 @@
 package org.columba.mail.gui.composer.action;
 
 import java.awt.event.ActionEvent;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.JCheckBoxMenuItem;
 
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.facade;
 
-import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.main.MailInterface;
 

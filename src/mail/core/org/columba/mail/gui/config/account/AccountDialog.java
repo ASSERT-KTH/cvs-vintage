@@ -34,7 +34,6 @@ import javax.swing.KeyStroke;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.SmtpItem;

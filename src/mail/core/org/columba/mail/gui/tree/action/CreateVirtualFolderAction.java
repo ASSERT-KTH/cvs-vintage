@@ -16,7 +16,6 @@ import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.gui.frame.AbstractMailFrameController;

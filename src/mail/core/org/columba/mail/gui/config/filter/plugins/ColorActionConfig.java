@@ -11,7 +11,9 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 
-import org.columba.core.gui.util.*;
+import org.columba.core.gui.util.ColorFactory;
+import org.columba.core.gui.util.ColorItem;
+import org.columba.core.gui.util.ColorItemRenderer;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.gui.config.filter.ActionList;
 
