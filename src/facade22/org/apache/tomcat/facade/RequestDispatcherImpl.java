@@ -195,6 +195,9 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
 	// Rethrow original error if present
 	if ( realResponse.isExceptionPresent() ) {
+	    // if error URI not set, set our URI
+	    if ( null == realResponse.getErrorURI() )
+		realResponse.setErrorURI( context.getPath() + path );
 	    Exception ex = realResponse.getErrorException();
 	    if ( ex instanceof IOException )
 		throw (IOException) ex;
@@ -353,6 +356,9 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
 	// Rethrow original error if present
 	if ( realResponse.isExceptionPresent() ) {
+	    // if error URI not set, set our URI
+	    if ( null == realResponse.getErrorURI() )
+		realResponse.setErrorURI( context.getPath() + path );
 	    Exception ex = realResponse.getErrorException();
 	    if ( ex instanceof IOException )
 		throw (IOException) ex;
@@ -393,6 +399,9 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
 	// Rethrow original error if present
 	if ( realResponse.isExceptionPresent() ) {
+	    // if error URI not set, set our URI
+	    if ( null == realResponse.getErrorURI() )
+		realResponse.setErrorURI( "named servlet: " + name );
 	    Exception ex = realResponse.getErrorException();
 	    if ( ex instanceof IOException )
 		throw (IOException) ex;
@@ -429,6 +438,9 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
 	// Rethrow original error if present
 	if ( realResponse.isExceptionPresent() ) {
+	    // if error URI not set, set our URI
+	    if ( null == realResponse.getErrorURI() )
+		realResponse.setErrorURI( "named servlet: " + name );
 	    Exception ex = realResponse.getErrorException();
 	    if ( ex instanceof IOException )
 		throw (IOException) ex;

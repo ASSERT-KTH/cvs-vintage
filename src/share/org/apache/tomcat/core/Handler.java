@@ -226,7 +226,11 @@ public class Handler {
 	} catch( Exception ex ) {
 	    // save error state on request and response
 	    serviceException=ex;
-	    saveError( req, res, ex);
+	    // if new exception, update info
+	    if ( ex != res.getErrorException() ) {
+		res.setErrorException(ex);
+		res.setErrorURI(null);
+	    }
 	}
 
 	// continue with the postService ( roll back transactions, etc )
@@ -289,22 +293,6 @@ public class Handler {
 	    contextM.log(s, t);
 	else
 	    logger.log(s, t);
-    }
-
-    // --------------- Error Handling ----------------
-
-    /** If an error happens during init or service it will be saved in
-     *  the response.
-     */
-    // XXX error handling in Handler shouldn't be exposed to childs, need
-    // simplifications
-    protected final void saveError( Request req, Response res, Exception ex ) {
-	// if a new exception
-	if ( res.getErrorException() != ex ) {
-	    res.setErrorException( ex );
-	    res.setErrorURI( (String)req.
-			  getAttribute("javax.servlet.include.request_uri"));
-	}
     }
 
     // -------------------- Notes --------------------

@@ -418,8 +418,9 @@ public final class ServletHandler extends Handler {
 	    if( state== STATE_DISABLED || state==STATE_DELAYED_INIT ) {
 		// the init failed because of an exception
 		Exception ex=getErrorException();
-		// save error state on request and response
-		saveError( req, res, ex );
+		// save error info
+		res.setErrorException(ex);
+		res.setErrorURI(null);
 		handleInitError( req, res, ex );
 		return;
 	    } 
@@ -484,7 +485,8 @@ public final class ServletHandler extends Handler {
 	} catch ( UnavailableException ex ) {
 	    // if new exception, save and set timer if necessary
 	    if ( res.getErrorException() != ex ) {
-		saveError( req, res, ex );
+		res.setErrorException(ex);
+		res.setErrorURI(null);
 		if ( ex.isPermanent() ) {
 		    setState( STATE_DISABLED );
 		    // XXX spec says we must destroy the servlet
@@ -505,8 +507,31 @@ public final class ServletHandler extends Handler {
 	    handleServiceError( req, res, ex );
 	    return;
 	}
-	// clear any error exceptions, since none were thrown
-	saveError( req, res, null);
+	// clear any error exception since none were thrown
+	res.setErrorException(null);
+	res.setErrorURI(null);
+    }
+
+    private void handleError( Request req, Response res, Throwable t ) {
+	if (t instanceof UnavailableException) {
+	    int unavailableTime = -1;
+	    if ( !((UnavailableException)t).isPermanent() ) {
+		unavailableTime = ((UnavailableException)t).getUnavailableSeconds();
+		// if unavailable time not known, use 1 second
+		if ( unavailableTime <= 0 )
+		    unavailableTime = 1;
+		res.setHeader("Retry-After", Integer.toString(unavailableTime));
+	    }
+	    String msg=t.getMessage();
+	    log( "UnavailableException in: " + req +
+			", time remaining " + unavailableTime + " seconds : " + msg, t);
+	    req.setAttribute("javax.servlet.error.message", msg );
+            req.setAttribute("tomcat.servlet.error.service.unavailableTime", new Integer(unavailableTime));
+	    contextM.handleStatus( req, res, HttpServletResponse.SC_SERVICE_UNAVAILABLE );
+	    return;
+	} else {
+	    contextM.handleError( req, res, t );
+	}
     }
 
     protected void handleInitError( Request req, Response res, Throwable t )
@@ -516,14 +541,14 @@ public final class ServletHandler extends Handler {
 	if( t instanceof ClassNotFoundException )
 	    contextM.handleStatus( req, res, 404 );
 	else
-	    contextM.handleError( req, res, t );
+	    handleError( req, res, t );
     }
 
     protected void handleServiceError( Request req, Response res, Throwable t )
     {
 	// if in included, defer handling to higher level
 	if (res.isIncluded()) return;
-	contextM.handleError( req, res, t );
+	handleError( req, res, t );
     }
 
     // -------------------- Unavailable --------------------
@@ -553,7 +578,7 @@ public final class ServletHandler extends Handler {
 	    // disable the error - it expired
 	    unavailableTime=-1;
 	    setErrorException(null);
-	    context.log(getName() +
+	    log(getName() +
 			" unavailable time expired, trying again ");
 	    return true;
 	}
@@ -587,8 +612,9 @@ public final class ServletHandler extends Handler {
 	int secs=1;
 	if( moreTime > 0 )
 	    secs = (int)((moreTime + 999) / 1000);
-	// save error state on request and response
-	saveError( req, res, new UnavailableException(ex.getMessage(), secs) );
+	// save error info
+	res.setErrorException(new UnavailableException(ex.getMessage(), secs));
+	res.setErrorURI(null);
 	// still unavailable
 	return false;
     }
