@@ -43,7 +43,7 @@ import org.jboss.security.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class SecurityInterceptor
    extends AbstractInterceptor
@@ -90,23 +90,19 @@ public class SecurityInterceptor
           throw new java.rmi.RemoteException("checkSecurityAssociation", new SecurityException("Role mapping manager has not been set"));
       }
 
-      Principal principal = SecurityAssociation.getPrincipal();
-      Object credential = SecurityAssociation.getCredential();
-      if (principal == null)
-      {
-         principal = mi.getPrincipal();
-         credential = mi.getCredential();
-         if (principal == null || !securityManager.isValid( principal, credential ))
-         {
-            // should log illegal access
-            throw new java.rmi.RemoteException("checkSecurityAssociation", new SecurityException("Authentication exception"));
-         }
-         else
-         {
-            SecurityAssociation.setPrincipal( principal );
-            SecurityAssociation.setCredential( credential );
-         }
-      }
+     // Check the security info from the method invocation
+     Principal principal = mi.getPrincipal();
+     Object credential = mi.getCredential();
+     if (principal == null || !securityManager.isValid( principal, credential ))
+     {
+        // should log illegal access
+        throw new java.rmi.RemoteException("checkSecurityAssociation", new SecurityException("Authentication exception"));
+     }
+     else
+     {
+        SecurityAssociation.setPrincipal( principal );
+        SecurityAssociation.setCredential( credential );
+     }
       Set methodPermissions = container.getMethodPermissions( mi.getMethod(), home );
 
       if (methodPermissions != null && !realmMapping.doesUserHaveRole( principal, methodPermissions ))
