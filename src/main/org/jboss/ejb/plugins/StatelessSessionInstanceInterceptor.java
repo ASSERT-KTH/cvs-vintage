@@ -27,8 +27,9 @@ import javax.xml.rpc.handler.MessageContext;
  * the EnvironmentInterceptor, since acquiring instances requires a proper
  * JNDI environment to be set
  *
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.24 $
+ * @author Rickard Oberg
+ * @author Scott.Stark@jboss.org
+ * @version $Revision: 1.25 $
  */
 public class StatelessSessionInstanceInterceptor
    extends AbstractInterceptor
@@ -69,8 +70,24 @@ public class StatelessSessionInstanceInterceptor
    
    public Object invokeHome(final Invocation mi) throws Exception
    {
-      // We don't need an instance since the call will be handled by container
-      return getNext().invokeHome(mi);
+      InstancePool pool = container.getInstancePool();
+      StatelessSessionEnterpriseContext ctx = null;
+      try
+      {
+         // Acquire an instance in case the ejbCreate throws a CreateException  
+         ctx = (StatelessSessionEnterpriseContext) pool.get();
+         mi.setEnterpriseContext(ctx);
+         // Dispatch the method to the container
+         return getNext().invokeHome(mi);
+      }
+      finally
+      {
+         mi.setEnterpriseContext(null);
+         // If an instance was created, return it to the pool
+         if( ctx != null )
+            pool.free(ctx);
+      }
+
    }
 
    public Object invoke(final Invocation mi) throws Exception
