@@ -100,7 +100,7 @@ public class Attachment
      * Returns the data field converted to a string for attachments that
      * have their data stored within the database (all except files).
      */
-    public String getDataAsString() throws Exception
+    public String getDataAsString() throws TorqueException
     {
         byte[] data = getData();
         String dataString = null;
@@ -115,8 +115,8 @@ public class Attachment
     /**
      * Converts a String comment into a byte[]
      */
-    public void setDataAsString(String data) throws Exception
-    {
+    public void setDataAsString(String data) throws TorqueException
+    {        
         setData(data.getBytes());
     }
 
@@ -197,6 +197,28 @@ public class Attachment
         {
             throw new TorqueException("Cannot save an attachment before saving"
                                       + " the issue to which it is attached.");
+        }
+        if (AttachmentTypePeer.URL_PK.equals(getTypeId())) 
+        {
+            String url = getDataAsString();
+            int stop = Math.min(url.indexOf('/'), url.indexOf('?'));
+            String test = null;
+            if (stop > 0) 
+            {
+                test = url.substring(0, stop);
+            }
+            else 
+            {
+                test = url;
+            }
+            int colon = test.indexOf(':');
+            if (colon < 0) 
+            {
+                // add default http protocol
+                StringBuffer sb = new StringBuffer(url.length() + 7);
+                sb.append("http://").append(url);
+                setDataAsString(sb.toString());
+            }
         }
         super.save(dbCon);
         
