@@ -36,6 +36,8 @@ import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.NullWorkerStatusController;
 import org.columba.core.command.StatusObservable;
+import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.ListTools;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.ImapItem;
@@ -53,6 +55,7 @@ import org.columba.mail.message.HeaderList;
 import org.columba.mail.pop3.AuthenticationManager;
 import org.columba.mail.pop3.AuthenticationSecurityComparator;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.auth.AuthenticationException;
 import org.columba.ristretto.auth.AuthenticationFactory;
 import org.columba.ristretto.imap.IMAPDate;
 import org.columba.ristretto.imap.IMAPDisconnectedException;
@@ -486,14 +489,35 @@ public class IMAPServer {
 			try {
 				if( loginMethod == AuthenticationManager.LOGIN ) {
 					protocol.login(item.get("user"), password);
+
+					// If no exception happened we have successfully logged
+					// in
+					authenticated = true;
 				} else {
-					//AUTH
-					protocol.authenticate(AuthenticationManager.getSaslName(loginMethod), item.get("user"), password);					
+					try {
+						//AUTH
+						protocol.authenticate(AuthenticationManager.getSaslName(loginMethod), item.get("user"), password);
+
+						// If no exception happened we have successfully logged
+						// in
+						authenticated = true;
+					} catch (AuthenticationException e) {
+						// Some error in the client/server communication
+						//  --> fall back to default login process
+						int result = JOptionPane.showConfirmDialog(MainInterface.frameModel.getActiveFrame(),
+							    new MultiLineLabel( e.getMessage() + "\n" + MailResourceLoader.getString("dialog", "error",
+								"authentication_fallback_to_default")), MailResourceLoader.getString("dialog", "error",
+								"authentication_process_error"), JOptionPane.OK_CANCEL_OPTION);
+						
+						if( result == JOptionPane.OK_OPTION ) {
+							loginMethod = AuthenticationManager.LOGIN;
+							item.set("login_method", Integer.toString(loginMethod));
+						} else {
+							throw new CommandCancelledException();
+						}
+					}					
 				}
 
-				// If no exception happened we have successfully logged
-				// in
-				authenticated = true;
 			} catch (IMAPException ex) {
 				// login failed?
 				IMAPResponse response = ex.getResponse();

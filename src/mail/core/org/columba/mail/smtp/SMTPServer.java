@@ -30,6 +30,8 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.ProgressObservedInputStream;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
@@ -42,6 +44,7 @@ import org.columba.mail.pop3.AuthenticationManager;
 import org.columba.mail.pop3.AuthenticationSecurityComparator;
 import org.columba.mail.pop3.POP3Store;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.auth.AuthenticationException;
 import org.columba.ristretto.auth.AuthenticationFactory;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;
@@ -249,7 +252,21 @@ public class SMTPServer {
                 try {
                     protocol.auth(AuthenticationManager.getSaslName(authMethod), username, password);
                     authenticated = true;
-                } catch (SMTPException e) {
+                } catch (AuthenticationException e) {
+					// Some error in the client/server communication
+					//  --> fall back to default login process
+					int result = JOptionPane.showConfirmDialog(MainInterface.frameModel.getActiveFrame(),
+						    new MultiLineLabel( e.getMessage() + "\n" + MailResourceLoader.getString("dialog", "error",
+							"authentication_fallback_to_default")), MailResourceLoader.getString("dialog", "error",
+							"authentication_process_error"), JOptionPane.OK_CANCEL_OPTION);
+					
+					if( result == JOptionPane.OK_OPTION ) {
+						authMethod = AuthenticationManager.SASL_PLAIN;
+						smtpItem.set("login_method", Integer.toString(authMethod));
+					}	else {
+						throw new CommandCancelledException();
+					}					
+				} catch (SMTPException e) {
                     passDialog.showDialog(username, smtpItem.get("host"),
                             new String(password), savePassword);
 

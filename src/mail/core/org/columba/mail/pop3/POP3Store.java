@@ -32,6 +32,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
@@ -42,6 +43,7 @@ import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler;
 import org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.auth.AuthenticationException;
 import org.columba.ristretto.auth.AuthenticationFactory;
 import org.columba.ristretto.pop3.MessageNotOnServerException;
 import org.columba.ristretto.pop3.POP3Exception;
@@ -349,12 +351,32 @@ public class POP3Store {
 				if(loginMethod == AuthenticationManager.USER ) 
 				{
 					protocol.userPass(popItem.get("user"), password);
+					login = true;
 				} else if(loginMethod == AuthenticationManager.APOP ){
 					protocol.apop(popItem.get("user"), password);
+					login = true;
 				} else {
-					protocol.auth(AuthenticationManager.getSaslName(loginMethod), popItem.get("user"), password);
+					try {
+						//AUTH
+						protocol.auth(AuthenticationManager.getSaslName(loginMethod), popItem.get("user"), password);
+
+						login = true;
+					} catch (AuthenticationException e) {
+						// Some error in the client/server communication
+						//  --> fall back to default login process
+						int result = JOptionPane.showConfirmDialog(MainInterface.frameModel.getActiveFrame(),
+							    new MultiLineLabel( e.getMessage() + "\n" + MailResourceLoader.getString("dialog", "error",
+								"authentication_fallback_to_default")), MailResourceLoader.getString("dialog", "error",
+								"authentication_process_error"), JOptionPane.OK_CANCEL_OPTION);
+						
+						if( result == JOptionPane.OK_OPTION ) {
+							loginMethod = AuthenticationManager.USER;
+							popItem.set("login_method", Integer.toString(loginMethod));
+						}	else {
+							throw new CommandCancelledException();
+						}					
+					}					
 				}
-				login = true;
 			} catch (POP3Exception e) {
 				JOptionPane.showMessageDialog(null, e.getMessage(),
 						"Authorization failed!", JOptionPane.ERROR_MESSAGE);
