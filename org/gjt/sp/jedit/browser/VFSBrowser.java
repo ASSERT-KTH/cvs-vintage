@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.109 2004/07/12 19:25:07 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.110 2004/07/14 05:18:50 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -1514,6 +1514,12 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 		public void run()
 		{
 			String path = (String)loadInfo[0];
+			if(path == null)
+			{
+				// there was an error
+				return;
+			}
+
 			VFS.DirectoryEntry[] list = (VFS.DirectoryEntry[])
 				loadInfo[1];
 
