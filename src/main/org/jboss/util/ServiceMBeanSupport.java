@@ -18,6 +18,7 @@ import org.apache.log4j.Category;
    
 import org.jboss.logging.Log;
 import org.jboss.logging.LogToCategory;
+import org.jboss.logging.log4j.JBossCategory;
 
 /** An abstract base class JBoss services can subclass to implement a
 service that conforms to the ServiceMBean interface. Subclasses must
@@ -30,7 +31,10 @@ as approriate.
 
 <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.14 $
+@version $Revision: 1.15 $
+
+Revisions:
+20010619 scott.stark: use the full service class name as the log4j category name
 */
 public abstract class ServiceMBeanSupport
    extends NotificationBroadcasterSupport
@@ -41,9 +45,16 @@ public abstract class ServiceMBeanSupport
    private MBeanServer server;
    private int id = 0;
    protected Log log;
-   protected Category category;
+   protected JBossCategory category;
 
    // Static --------------------------------------------------------
+
+   // Constructors --------------------------------------------------
+   public ServiceMBeanSupport()
+   {
+      category = (JBossCategory) JBossCategory.getInstance(getClass());
+      log = new LogToCategory(category);
+   }
 
    // Public --------------------------------------------------------
    public abstract String getName();
@@ -66,23 +77,20 @@ public abstract class ServiceMBeanSupport
     public void init()
             throws Exception
     {
-        category = Category.getInstance(getName());
-        log = new LogToCategory(category);
-        log.log("Initializing");
         log.setLog(log);
+        category.info("Initializing");
         try
         {
            initService();
         } catch (Exception e)
         {
-           log.error("Initialization failed");
-           log.exception(e);
+           category.error("Initialization failed", e);
            throw e;
         } finally
         {
            log.unsetLog();
         }
-        log.log("Initialized");
+        category.info("Initialized");
     }
 	
    public void start()
@@ -94,7 +102,7 @@ public abstract class ServiceMBeanSupport
       state = STARTING;
 	  //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
       sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" starting", "State", "java.lang.Integer", new Integer(STOPPED), new Integer(STARTING)));
-      log.log("Starting");
+      category.info("Starting");
       log.setLog(log);
       try
       {
@@ -104,8 +112,7 @@ public abstract class ServiceMBeanSupport
          state = STOPPED;
 	     //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
          sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" stopped", "State", "java.lang.Integer", new Integer(STARTING), new Integer(STOPPED)));
-         log.error("Stopped");
-         log.exception(e);
+         category.error("Stopped", e);
          throw e;
       } finally
       {
@@ -114,7 +121,7 @@ public abstract class ServiceMBeanSupport
       state = STARTED;
       //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
       sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" started", "State", "java.lang.Integer", new Integer(STARTING), new Integer(STARTED)));
-      log.log("Started");
+      category.info("Started");
    }
    
     public void stop()
@@ -125,7 +132,7 @@ public abstract class ServiceMBeanSupport
       state = STOPPING;
       //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
       sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" stopping", "State", "java.lang.Integer", new Integer(STARTED), new Integer(STOPPING)));
-      log.log("Stopping");
+      category.info("Stopping");
       log.setLog(log);
       
       try
@@ -133,33 +140,33 @@ public abstract class ServiceMBeanSupport
          stopService();
       } catch (Throwable e)
       {
-         log.exception(e);
+         category.error(e);
       }
       
       state = STOPPED;
       //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
       sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" stopped", "State", "java.lang.Integer", new Integer(STOPPING), new Integer(STOPPED)));
-      log.log("Stopped");
+      category.info("Stopped");
       log.unsetLog();
    }
    
    public void destroy()
    {
-        if (getState() != STOPPED)
-                stop();
+      if (getState() != STOPPED)
+         stop();
 	
-   	log.log("Destroying");
+   	category.info("Destroying");
    	log.setLog(log);
    	try
    	{
    	   destroyService();
    	} catch (Exception e)
    	{
-   	   log.exception(e);
+   	   category.error(e);
    	}
    	
    	log.unsetLog();
-   	log.log("Destroyed");
+   	category.info("Destroyed");
    }
 	
    public ObjectName preRegister(MBeanServer server, ObjectName name)
@@ -172,14 +179,9 @@ public abstract class ServiceMBeanSupport
 
    public void postRegister(java.lang.Boolean registrationDone)
    {
-      if (!registrationDone.booleanValue()) {
-         if( category == null ) {
-            category = Category.getInstance(getName());
-         }
-         if( log == null ) {
-            log = new LogToCategory(category);
-         }
-         log.log( "Registration is not done -> destroy" );
+      if (!registrationDone.booleanValue())
+      {
+         category.info( "Registration is not done -> destroy" );
          destroy();
       }
    }
