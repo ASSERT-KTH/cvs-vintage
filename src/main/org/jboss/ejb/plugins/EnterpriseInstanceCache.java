@@ -13,6 +13,7 @@ import java.rmi.NoSuchObjectException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
+import javax.ejb.EJBException;
 import org.w3c.dom.Element;
 import org.jboss.util.CachePolicy;
 import org.jboss.util.Executable;
@@ -23,6 +24,7 @@ import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.Container;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
+import org.jboss.logging.Logger;
 
 /**
  * Base class for caches of entity and stateful beans. <p>
@@ -35,7 +37,7 @@ import org.jboss.metadata.XmlLoadable;
  * </ul>
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public abstract class EnterpriseInstanceCache 
 	implements InstanceCache, XmlLoadable
@@ -477,4 +479,20 @@ class PassivatorQueue extends WorkerQueue
 			m_queueThread.setContextClassLoader(cl);
 		}
 	}
+	protected void logJobException(Exception x) 
+	{
+		// Log system exceptions
+		if (x instanceof EJBException)
+		{
+			Logger.error("BEAN EXCEPTION:"+x.getMessage());
+			Exception nestedX = ((EJBException)x).getCausedByException();
+			if (nestedX != null)
+			{
+				Logger.exception(nestedX);
+			}
+		} else {
+			Logger.exception(x);
+		}
+	}
+
 }
