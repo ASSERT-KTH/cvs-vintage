@@ -17,28 +17,34 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.command;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
-
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.Message;
-import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.StreamableMimePart;
+import org.columba.ristretto.message.io.Source;
+import org.columba.ristretto.message.io.TempSourceFactory;
 import org.columba.ristretto.parser.MessageParser;
-
 
 /**
  * Open message in composer.
- *
+ * 
  * @author fdietz
  */
 public class OpenMessageWithComposerCommand extends FolderCommand {
@@ -46,11 +52,11 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
     protected ComposerModel model;
 
     /**
-     * Constructor for OpenMessageInComposerCommand.
-     *
-     * @param frameMediator
-     * @param references
-     */
+	 * Constructor for OpenMessageInComposerCommand.
+	 * 
+	 * @param frameMediator
+	 * @param references
+	 */
     public OpenMessageWithComposerCommand(DefaultCommandReference[] references) {
         super(references);
     }
@@ -67,48 +73,111 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
     }
 
     public void execute(Worker worker) throws Exception {
+        model = new ComposerModel();
+
         // get selected folder
-        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        Folder folder =
+            (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
 
         // get first selected message
         Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
-        String source = folder.getMessageSource(uids[0]);
+        //TODO keep track of progress here
+        Source tempSource =
+            TempSourceFactory.createTempSource(
+                folder.getMessageSourceStream(uids[0]),
+                -1,
+                null);
 
-        model = new ComposerModel();
+        Message message = MessageParser.parse(tempSource);
 
-        Message message = MessageParser.parse(new CharSequenceSource(source));
+        initHeader(message);
+
+        // select the account this mail was received from
+        Integer accountUid =
+            (Integer) folder.getAttribute(uids[0], "columba.accountuid");
+        AccountItem accountItem =
+            MessageBuilderHelper.getAccountItem(accountUid);
+        model.setAccountItem(accountItem);
+
+        XmlElement html =
+            MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
+                "/options/html");
+
+        boolean preferHtml =
+            Boolean.valueOf(html.getAttribute("prefer")).booleanValue();
+
+        initBody(message, preferHtml);
+    }
+
+    private void initBody(Message message, boolean preferHtml) {
+        MimeTree mimeTree = message.getMimePartTree();
+
+        // Which Bodypart shall be shown? (html/plain)
+        LocalMimePart bodyPart = null;
+
+        if (preferHtml) {
+            bodyPart = (LocalMimePart) mimeTree.getFirstTextPart("html");
+        } else {
+            bodyPart = (LocalMimePart) mimeTree.getFirstTextPart("plain");
+        }
+
+        if (bodyPart != null) {
+            if (bodyPart
+                .getHeader()
+                .getMimeType()
+                .getSubtype()
+                .equals("html")) {
+                // html
+                model.setHtml(true);
+            } else {
+                model.setHtml(false);
+            }
+            model.setBodyText(bodyPart.getBody().toString());
+        }
+
+        initAttachments(mimeTree, bodyPart);
+    }
+
+    private void initHeader(Message message) {
         Header header = message.getHeader();
-        BasicHeader basicHeader = new BasicHeader(header);
+
+        BasicHeader rfcHeader = new BasicHeader(header);
+        // set subject
+        model.setSubject(rfcHeader.getSubject());
+
+        model.setTo(rfcHeader.getTo());
 
         // copy every headerfield the original message contains
         model.setHeader(header);
+    }
 
-        model.setTo(header.get("To"));
+    private void initAttachments(MimeTree collection, MimePart bodyPart) {
+        // Get all MimeParts
+        List displayedMimeParts = collection.getAllLeafs();
 
-        // try to good guess the correct account
-        Integer accountUid = (Integer) folder.getAttribute(uids[0],
-                "columba.accountuid");
-        String host = (String) folder.getAttribute(uids[0], "columba.host");
-        String address = header.get("To");
-        AccountItem accountItem = MessageBuilderHelper.getAccountItem(accountUid,
-                host, address);
-        model.setAccountItem(accountItem);
+        if (bodyPart != null) {
+            MimePart bodyParent = bodyPart.getParent();
 
-        model.setSubject(basicHeader.getSubject());
-
-        LocalMimePart bodyPart = (LocalMimePart) message.getMimePartTree()
-                                                        .getFirstTextPart("html");
-
-        // No conversion needed - the composer now supports both html and text
-        if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
-            // html
-            model.setHtml(true);
-        } else {
-            model.setHtml(false);
+            if (bodyParent != null) {
+                if (bodyParent
+                    .getHeader()
+                    .getMimeType()
+                    .getSubtype()
+                    .equals("alternative")) {
+                    List bodyParts = bodyParent.getChilds();
+                    displayedMimeParts.removeAll(bodyParts);
+                } else {
+                    displayedMimeParts.remove(bodyPart);
+                }
+            }
+            
+            Iterator it = displayedMimeParts.iterator();
+            while( it.hasNext() ) {
+                model.addMimePart( (StreamableMimePart) it.next()); 
+            }
         }
 
-        //model.setBodyText(bodyPart.getBody().toString());
-        model.setBodyText(MessageBuilderHelper.createBodyText(bodyPart));
     }
+
 }

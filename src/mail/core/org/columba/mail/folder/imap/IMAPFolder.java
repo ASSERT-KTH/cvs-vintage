@@ -21,6 +21,8 @@
 package org.columba.mail.folder.imap;
 
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -50,11 +52,15 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.CharsetDecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.imap.IMAPFlags;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MessageFolderInfo;
+import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.StreamableMimePart;
@@ -939,11 +945,43 @@ public class IMAPFolder extends RemoteFolder {
      */
     public InputStream getMimePartSourceStream(Object uid, Integer[] address)
         throws Exception {
-        //TODO Implement this with the IMAP protocol
+
         return ((StreamableMimePart) getStore().getMimePartSource(uid, address,
             getImapPath())).getInputStream();
     }
 
+    private InputStream decodeStream(MimeHeader header, InputStream bodyStream) {
+        String charsetName = header.getContentParameter("charset");
+        int encoding = header.getContentTransferEncoding();
+        
+        switch (encoding) {
+            case MimeHeader.QUOTED_PRINTABLE :
+                {
+                    bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+                    break;
+                }
+
+               case MimeHeader.BASE64 :
+                   {
+                       bodyStream = new Base64DecoderInputStream(bodyStream);
+                       break;
+                   }
+        }
+
+        if (charsetName != null) {
+            Charset charset;
+
+            try {
+                charset = Charset.forName(charsetName);
+            } catch (UnsupportedCharsetException e) {
+                charset = Charset.forName(System.getProperty("file.encoding"));
+            }
+
+            bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
+        }
+        return bodyStream;
+    }
+    
     /*
      * (non-Javadoc)
      *
@@ -952,10 +990,10 @@ public class IMAPFolder extends RemoteFolder {
      */
     public InputStream getMimePartBodyStream(Object uid, Integer[] address)
         throws Exception {
-        return ((StreamableMimePart) getStore().getMimePart(uid, address,
-            getImapPath())).getInputStream();
-
-        //;
+        StreamableMimePart mimePart = (StreamableMimePart) getStore().getMimePart(uid, address,
+            getImapPath());
+        
+        return decodeStream(mimePart.getHeader(), mimePart.getInputStream() );
     }
 
     /*

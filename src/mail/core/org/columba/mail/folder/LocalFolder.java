@@ -16,6 +16,8 @@
 package org.columba.mail.folder;
 
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
@@ -27,11 +29,14 @@ import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.folder.search.LuceneQueryEngine;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
-import org.columba.ristretto.message.Attributes;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.CharsetDecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.Message;
+import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.io.CharSequenceSource;
@@ -430,9 +435,48 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         LocalMimePart mimepart = (LocalMimePart) message.getMimePartTree()
                                                         .getFromAddress(address);
 
-        return mimepart.getInputStream();
+        InputStream bodyStream = mimepart.getInputStream();
+        MimeHeader header = mimepart.getHeader();
+        
+        bodyStream = decodeStream(header, bodyStream);
+        
+        
+        return bodyStream; 
     }
 
+    private InputStream decodeStream(MimeHeader header, InputStream bodyStream) {
+        String charsetName = header.getContentParameter("charset");
+        int encoding = header.getContentTransferEncoding();
+        
+        switch (encoding) {
+            case MimeHeader.QUOTED_PRINTABLE :
+                {
+                    bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+                    break;
+                }
+
+               case MimeHeader.BASE64 :
+                   {
+                       bodyStream = new Base64DecoderInputStream(bodyStream);
+                       break;
+                   }
+        }
+
+        if (charsetName != null) {
+            Charset charset;
+
+            try {
+                charset = Charset.forName(charsetName);
+            } catch (UnsupportedCharsetException e) {
+                charset = Charset.forName(System.getProperty("file.encoding"));
+            }
+
+            bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
+        }
+        return bodyStream;
+    }
+    
+    
     /** {@inheritDoc} */
     public InputStream getMimePartSourceStream(Object uid, Integer[] address)
         throws Exception {

@@ -221,6 +221,7 @@ public interface MailboxInterface {
 
     /**
      * Gets the InputStream from the body of the mimepart. This excludes the header.
+     * If the stream was encoded with QuotedPrintable or Base64 decoding is already done.
      *
      * @param uid The UID of the message
      * @param address The address of the mimepart

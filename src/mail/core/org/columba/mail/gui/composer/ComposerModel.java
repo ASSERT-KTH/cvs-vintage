@@ -15,22 +15,20 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.parser.AddressParser;
-import org.columba.addressbook.parser.ListParser;
-
-import org.columba.core.logging.ColumbaLogger;
-
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.message.ColumbaMessage;
-
-import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.StreamableMimePart;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.parser.AddressParser;
+import org.columba.addressbook.parser.ListParser;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.message.ColumbaMessage;
+import org.columba.ristretto.message.Address;
+import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.StreamableMimePart;
 
 
 /**
@@ -107,6 +105,22 @@ public class ComposerModel {
         charsetName = "auto";
     }
 
+    public void setTo(Address[] a) {
+        for (int i=0; i<a.length; i++) {
+            HeaderItem item = new HeaderItem(HeaderItem.CONTACT);
+            String displayName = a[i].getDisplayName();
+            if( displayName != null ) {
+                item.add("displayname", displayName);
+            } else {
+                item.add("displayname", a[i].getMailAddress());
+            }
+            item.add("email;internet", a[i].getMailAddress());
+            item.add("field", "To");
+
+            getToList().add(item);
+        }        
+    }
+    
     public void setTo(String s) {
         ColumbaLogger.log.info("to-headerfield:" + s);
 

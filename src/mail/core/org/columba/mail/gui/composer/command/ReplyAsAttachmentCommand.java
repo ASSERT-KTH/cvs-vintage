@@ -19,7 +19,6 @@ package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
@@ -27,33 +26,39 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.message.ColumbaMessage;
-
-import org.columba.ristretto.coder.EncodedWord;
+import org.columba.ristretto.message.Address;
+import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.InputStreamMimePart;
 import org.columba.ristretto.message.MimeHeader;
-import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.MimeType;
-
 
 /**
  * Reply to message, while keeping the original message as attachment. In
  * comparison to quoting the bodytext inline.
- *
+ * 
  * @author fdietz
  */
 public class ReplyAsAttachmentCommand extends FolderCommand {
+    private static final String[] headerfields =
+        new String[] {
+            "Subject",
+            "From",
+            "To",
+            "Reply-To",
+            "Message-ID",
+            "In-Reply-To",
+            "References" };
+
     protected ComposerController controller;
     protected ComposerModel model;
 
     /**
-     * Constructor for ReplyCommand.
-     *
-     * @param frameMediator
-     * @param references
-     */
+	 * Constructor for ReplyCommand.
+	 * 
+	 * @param frameMediator
+	 * @param references
+	 */
     public ReplyAsAttachmentCommand(DefaultCommandReference[] references) {
         super(references);
     }
@@ -70,91 +75,55 @@ public class ReplyAsAttachmentCommand extends FolderCommand {
     }
 
     public void execute(Worker worker) throws Exception {
-        // get selected foloder
-        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        // create composer model
+        model = new ComposerModel();
+
+        // get selected folder
+        Folder folder =
+        (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
 
         // get first selected message
         Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
-        // create new message object
-        ColumbaMessage message = new ColumbaMessage();
+        // setup to, references and account
+        initHeader(folder, uids);
+        
+        // initialize MimeHeader as RFC822-compliant-message
+        MimeHeader mimeHeader = new MimeHeader();
+        mimeHeader.setMimeType(new MimeType("message", "rfc822"));
 
+        // add mimepart to model
+        model.addMimePart(new InputStreamMimePart(mimeHeader, folder.getMessageSourceStream(uids[0])));
+    }
+
+    private void initHeader(Folder folder, Object[] uids) throws Exception {
         // get headerfields
-        Header header = folder.getHeaderFields(uids[0],
-                new String[] {
-                    "Subject", "To", "From", "Reply-To", "Message-ID",
-                    "In-Reply-To", "References"
-                });
-        message.setHeader(header);
+        Header header = folder.getHeaderFields(uids[0], headerfields);
 
-        // get mimeparts
-        MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
-        message.setMimePartTree(mimePartTree);
-
-        // get message source
-        String source = folder.getMessageSource(uids[0]);
-        message.setStringSource(source);
-
-        // create composer model
-        model = new ComposerModel();
-
-        // get bodypart
-        MimePart bodyPart = message.getBodyPart();
-
-        // set character set
-        if (bodyPart != null) {
-            String charset = bodyPart.getHeader().getContentParameter("charset");
-
-            if (charset != null) {
-                model.setCharsetName(charset);
-            }
-        }
-
+        BasicHeader rfcHeader = new BasicHeader(header);
         // set subject
-        model.setSubject(MessageBuilderHelper.createReplySubject(header.get(
-                    "Subject")));
+        model.setSubject(
+                MessageBuilderHelper.createReplySubject(rfcHeader.getSubject()));
 
-        // original message is sent as attachment - model is setup according to
-        // the stored option for html / text
-        model.setHtml(MessageBuilderHelper.isHTMLEnabled());
-
-        // decode To: headerfield
-        String to = MessageBuilderHelper.createTo(header);
-
-        if (to != null) {
-            to = EncodedWord.decode(to).toString();
-            model.setTo(to);
-
-            // TODO: automatically add sender to addressbook
-            // -> split to-headerfield, there can be more than only one
-            // recipients!
-            MessageBuilderHelper.addSenderToAddressbook(to);
+        // Use reply-to field if given, else use from
+        Address[] to = rfcHeader.getReplyTo();
+        if (to.length == 0) {
+            to = new Address[] { rfcHeader.getFrom()};
         }
+
+        // Add addresses to the addressbook
+        MessageBuilderHelper.addAddressesToAddressbook(to);
+        model.setTo(to);
 
         // create In-Reply-To:, References: headerfields
         MessageBuilderHelper.createMailingListHeaderItems(header, model);
 
-        // try to good guess the correct account
-        Integer accountUid = (Integer) folder.getAttribute(uids[0],
-                "columba.accountuid");
-        String host = (String) folder.getAttribute(uids[0], "columba.host");
-        String address = header.get("To");
-        AccountItem accountItem = MessageBuilderHelper.getAccountItem(accountUid,
-                host, address);
+        // select the account this mail was received from
+        Integer accountUid =
+        (Integer) folder.getAttribute(uids[0], "columba.accountuid");
+        AccountItem accountItem =
+        MessageBuilderHelper.getAccountItem(accountUid);
         model.setAccountItem(accountItem);
-
-        //		original message is sent as attachment - model is setup according to
-        //the stored option for html / text
-        model.setHtml(MessageBuilderHelper.isHTMLEnabled());
-
-        //	append message as mimepart
-        if (message.getSource() != null) {
-            // initialize MimeHeader as RFC822-compliant-message
-            MimeHeader mimeHeader = new MimeHeader();
-            mimeHeader.setMimeType(new MimeType("message", "rfc822"));
-
-            // add mimepart to model
-            model.addMimePart(new LocalMimePart(mimeHeader, message.getSource()));
-        }
     }
+    
 }

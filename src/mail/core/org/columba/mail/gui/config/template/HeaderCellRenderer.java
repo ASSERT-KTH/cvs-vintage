@@ -6,14 +6,13 @@
  */
 package org.columba.mail.gui.config.template;
 
-import org.columba.mail.message.HeaderList;
-
-import org.columba.ristretto.message.HeaderInterface;
-
 import java.awt.Component;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
+
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderList;
 
 
 /**
@@ -40,8 +39,8 @@ public class HeaderCellRenderer extends DefaultListCellRenderer {
         int arg2, boolean arg3, boolean arg4) {
         super.getListCellRendererComponent(arg0, arg1, arg2, arg3, arg4);
 
-        HeaderInterface header = (HeaderInterface) list.get(arg1);
-        String subject = (String) header.get("Subject");
+        ColumbaHeader header = (ColumbaHeader) list.get(arg1);
+        String subject = (String) header.get("columba.subject");
 
         setText(subject);
 
