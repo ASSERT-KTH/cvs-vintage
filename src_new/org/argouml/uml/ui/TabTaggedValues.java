@@ -1,5 +1,5 @@
 
-// $Id: TabTaggedValues.java,v 1.25 2003/10/26 16:40:02 alexb Exp $
+// $Id: TabTaggedValues.java,v 1.26 2003/10/26 19:45:08 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -269,6 +269,8 @@ class TableModelTaggedValues extends AbstractTableModel
 
 	if (columnIndex != 0 && columnIndex != 1) return;
 	if (!(aValue instanceof String)) return;
+        if (aValue == null) aValue = "";
+        
 	Vector tvs = new Vector(ModelFacade.getTaggedValuesCollection(_target));
 	if (tvs.size() <= rowIndex) {
 	    Object tv = UmlFactory.getFactory().getExtensionMechanisms().createTaggedValue();
@@ -291,7 +293,6 @@ class TableModelTaggedValues extends AbstractTableModel
 	    Object tv = tvs.elementAt(rowIndex);
 	    if (columnIndex == 0) ModelFacade.setTag(tv,(String) aValue);
 	    if (columnIndex == 1)  {
-		ModelFacade.setTag(tv,"");
                 ModelFacade.setValue(tv,(String) aValue);
             }
 	    mEvent = new TableModelEvent(this, rowIndex);
