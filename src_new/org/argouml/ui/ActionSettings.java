@@ -1,4 +1,4 @@
-// $Id: ActionSettings.java,v 1.15 2003/10/31 20:04:02 jjones Exp $
+// $Id: ActionSettings.java,v 1.16 2003/11/03 20:28:44 jjones Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -144,12 +144,10 @@ public class ActionSettings extends UMLAction
 						   minimumWidth),
 					  tabs.getPreferredSize().height));
 
-                    dlg.setContent(tabs);                    
+                    dlg.setContent(tabs);        
                 }
                 catch (Exception exception) {
-                    Argo.log.error("got an Exception in ActionSettings");
-                    Argo.log.error(exception);
-                    exception.printStackTrace();
+                    Argo.log.error("got an Exception in ActionSettings", exception);
                 }
             }
             
