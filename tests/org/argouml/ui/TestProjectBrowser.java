@@ -1,4 +1,4 @@
-// $Id: TestProjectBrowser.java,v 1.3 2002/12/21 19:48:10 linus Exp $
+// $Id: TestProjectBrowser.java,v 1.4 2003/01/09 19:53:20 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,36 +41,34 @@ public class TestProjectBrowser extends TestCase {
     public TestProjectBrowser(String arg0) {
         super(arg0);
     }
-    
-    
+
     /**
      * Tests wether it is possible to construct a standalone projectbrowser
      */
     public void testConstruction() {
-	ProjectBrowser pb;
-	try {
-	    pb = new ProjectBrowser("test", false);
-	} catch (java.lang.InternalError e) {
-	    // This is when we cannot connect to the display system.
-	    // The test is inconclusive
-	    return;
-	}
-        assertNotNull(pb.TheInstance);
+        ProjectBrowser pb;
+        try {
+            pb = new ProjectBrowser("test", false);
+            assertNotNull(ProjectBrowser.TheInstance);
+        } catch (java.lang.InternalError e) {
+            // This is when we cannot connect to the display system.
+            // The test is inconclusive
+        }
     }
-    
+
     /**
      * Tests the construction of the splashscreen
      */
     public void testSplashScreen() {
-	ProjectBrowser pb;
-	try {
-	    pb = new ProjectBrowser("test", true);
-	} catch (java.lang.NoClassDefFoundError e) {
-	    // Some problem caused by the lack of display system.
-	    // The test is inconclusive
-	    return;
-	}
-        assertNotNull(pb.TheInstance.getSplashScreen());
+        ProjectBrowser pb;
+        try {
+            pb = new ProjectBrowser("test", true);
+            assertNotNull(ProjectBrowser.TheInstance.getSplashScreen());
+        } catch (java.lang.NoClassDefFoundError e) {
+            // Some problem caused by the lack of display system.
+            // The test is inconclusive
+        }
+
     }
 
     /**

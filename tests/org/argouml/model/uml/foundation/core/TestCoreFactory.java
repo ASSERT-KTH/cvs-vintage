@@ -21,26 +21,23 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+// $Id: TestCoreFactory.java,v 1.6 2003/01/09 19:53:20 kataka Exp $
+
 package org.argouml.model.uml.foundation.core;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
-import junit.framework.*;
-
-
+import junit.framework.TestCase;
 
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.modelmanagement.ModelManagementFactory;
-import org.argouml.util.*;
+import org.argouml.util.CheckUMLModelHelper;
 
 import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.foundation.core.MConstraint;
 import ru.novosoft.uml.foundation.core.MDependency;
 import ru.novosoft.uml.foundation.core.MModelElement;
-import ru.novosoft.uml.foundation.core.MNamespaceImpl;
 import ru.novosoft.uml.model_management.MModel;
 
 
