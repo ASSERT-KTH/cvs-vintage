@@ -24,7 +24,7 @@
 // File: NavPerspective.java
 // Classes: NavPerspective
 // Original Author: your email address here
-// $Id: NavPerspective.java,v 1.6 2002/07/14 14:06:54 linus Exp $
+// $Id: NavPerspective.java,v 1.7 2002/09/02 15:32:38 kataka Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extends/includes and extension points in the package centric
@@ -165,7 +165,9 @@ implements Serializable, TreeModel, Cloneable {
     packageCentric.addSubTreeModel(new GoUseCaseToExtensionPoint());
     packageCentric.addSubTreeModel(new GoClassifierToStr());
     packageCentric.addSubTreeModel(new GoClassifierToBeh());
-    packageCentric.addSubTreeModel(new GoAssocRoleMessages());
+    // packageCentric.addSubTreeModel(new GoAssocRoleMessages());
+    packageCentric.addSubTreeModel(new GoCollaborationInteraction());
+    packageCentric.addSubTreeModel(new GoInteractionMessage());
 
     packageCentric.addSubTreeModel(new GoLinkStimuli());
     packageCentric.addSubTreeModel(new GoStimulusAction());
