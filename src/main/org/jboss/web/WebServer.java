@@ -39,7 +39,7 @@ import org.jboss.logging.Logger;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.21 $
+ *   @version $Revision: 1.22 $
  *
  *   Revisions:
  *   
@@ -88,6 +88,7 @@ public class WebServer
     {
         port = p; 
     }
+   
     /** Get the http listening port
      @return the http listening port
      */
@@ -103,6 +104,12 @@ public class WebServer
             address = bindAddress.getHostAddress();
         return address;
     }
+
+    public String getBindHostname()
+    {
+       return bindAddress.getHostName();
+    }
+   
     public void setBindAddress(String host)
     {
         try
