@@ -1,7 +1,7 @@
 package org.tigris.scarab.security;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000 Collab.Net.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -46,41 +46,42 @@ package org.tigris.scarab.security;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
-
 // Turbine
-import org.apache.turbine.util.Log;
-import org.apache.turbine.util.TurbineException;
-
-// Helm
-/*
-import org.tigris.helm.om.Project;
-import org.tigris.helm.om.ProjectPeer;
-import org.tigris.helm.om.User;
-import org.tigris.helm.om.UserPeer;
-import org.tigris.helm.om.RolePeer;
-import org.tigris.helm.security.AccessControlList;
-import org.tigris.helm.security.ACLException;
-*/
+import org.apache.turbine.services.pool.InitableRecyclable;
+import org.apache.turbine.services.pull.ApplicationTool;
+import org.apache.turbine.RunData;
+//import org.apache.turbine.util.TurbineException;
 
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.ScarabUser;
 
 /**
- * Security wrapper around helm
+ * This class currently assumes all users have no permissions as an
+ * external implementation of security should be specified which
+ * extends this class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: HelmScarabSecurity.java,v 1.5 2001/07/21 00:52:51 jmcnally Exp $
+ * @version $Id: DefaultScarabSecurityPull.java,v 1.1 2001/07/21 00:52:51 jmcnally Exp $
 */
-public class HelmScarabSecurity 
-    extends DefaultScarabSecurity
+public class DefaultScarabSecurityPull
+    implements ScarabSecurityPull, InitableRecyclable, ApplicationTool
 {
+    /** the object containing request specific data */
+    protected RunData data; 
+
+    /** 
+        class that implements funtionality not requiring attributes such as
+        RunData
+    */
+    protected ScarabSecurity security;
+
     /**
-     * does nothing
+     * ctor
      */
-    public HelmScarabSecurity()
+    public DefaultScarabSecurityPull()
     {
     }
+
 
     /**
      * Determine if a user has a permission within a module.
@@ -95,34 +96,7 @@ public class HelmScarabSecurity
     public boolean hasPermission(String permission, 
                                  ScarabUser user, ModuleEntity module)
     {
-        boolean hasPermission = false;
-        /*
-        try
-        {
-            //assumes ScarabUser's db pk will be same as helm User
-            User helmUser = UserPeer.getInstance( 
-                user.getPrimaryKey().toString() );
-            //assumes Module's db pk will be same as helm Project
-            Project project = ProjectPeer
-                .getInstance( module.getPrimaryKey().toString() );
-            AccessControlList acl = AccessControlList.getACL(helmUser);
-            try
-            {
-                acl.assertPermission(permission, project);
-                hasPermission = true;
-            }
-            catch (ACLException e)
-            {
-                hasPermission = false;
-            }
-        }
-        catch (Exception e)
-        {
-            hasPermission = false;
-            Log.error("Permission check failed on:" + permission, e);
-        }
-        */
-        return hasPermission;
+        return false;
     }
 
     /**
@@ -135,39 +109,96 @@ public class HelmScarabSecurity
      */
     public ScarabUser[] getUsers(String permission, ModuleEntity module)
     {
-        /*
-        //assumes Module's db pk will be same as helm Project
-        Project project = ProjectPeer
-            .getInstance( module.getPrimaryKey().toString() );
-        // note the following code is just a stab in the dark
-        Vector roleIds = RolePeer.getRoleIDsWithAction(permission);
-        // copy code from Project.getUsersWithRoles() since it is private
-        Vector myIDs = project.getEffectiveProjectIDs();
-        Criteria c = new Criteria(4)
-            .addJoin(UserPeer.USER_ID, UserRoleProjectPeer.USER_ID)
-            .addIn(UserRoleProjectPeer.ROLE_ID, roleIDs)
-            .addIn(UserRoleProjectPeer.PROJECT_ID, myIDs);
-        c.setDistinct();
-        List usersAndGroups = UserPeer.doSelect(c);
-        List effectiveUsers = new ArrayList(usersAndGroups.size());
-        List baseUsers = new ArrayList(usersAndGroups.size());
-        for (Iterator i = usersAndGroups.iterator(); i.hasNext();)
-        {
-            User u = (User)i.next();
-            effectiveUsers.addAll(u.expand());            
-        }
-        for (Iterator i = effectiveUsers.iterator(); i.hasNext();)
-        {
-            User u = (User)i.next();
-            if (u.isBase())
-            {
-                baseUsers.add(u);
-            }
-        }
-        //loop over baseUsers getting pk's and put together an IN
-        // query to get ScarabUsers
-        return scarabUsers;
-        */
         return null;
     }
+
+    /**
+     * Determine if the user currently interacting with the scarab
+     * application has a permission within the user's currently
+     * selected module.
+     *
+     * @param permission a <code>String</code> permission value, which should
+     * be a constant in this interface.
+     * @return false
+     */
+    public boolean hasPermission(String permission)
+    {
+        return false;
+    }
+
+    /**
+     * Determine if the user currently interacting with the scarab
+     * application has a permission within a module.
+     *
+     * @param permission a <code>String</code> permission value, which should
+     * be a constant in this interface.
+     * @param module a <code>ModuleEntity</code> value
+     * @return false
+     */
+    public boolean hasPermission(String permission, ModuleEntity module)
+    {
+        return false;
+    }
+
+    // ************** ApplicationTool implementation ***********************
+
+    /**
+     * Implementation of ApplicationTool refresh() is not needed for this
+     * tool as it is request scoped
+     */
+    public void refresh()
+    {
+        // empty
+    }
+
+    /**
+     * This method should be called after retrieving the object from
+     * the pool.
+     */
+    public void init(Object runData)
+    // throws TurbineException
+    {
+        this.data = (RunData)runData;
+    }
+
+    // ****************** Recyclable implementation ************************
+
+    private boolean disposed;
+
+    /**
+     * Recycles the object for a new client. Recycle methods with
+     * parameters must be added to implementing object and they will be
+     * automatically called by pool implementations when the object is
+     * taken from the pool for a new client. The parameters must
+     * correspond to the parameters of the constructors of the object.
+     * For new objects, constructors can call their corresponding recycle
+     * methods whenever applicable.
+     * The recycle methods must call their super.
+     */
+    public void recycle()
+    {
+        disposed = false;
+    }
+
+    /**
+     * Disposes the object after use. The method is called
+     * when the object is returned to its pool.
+     * The dispose method must call its super.
+     */
+    public void dispose()
+    {
+        data = null;
+
+        disposed = true;
+    }
+
+    /**
+     * Checks whether the recyclable has been disposed.
+     * @return true, if the recyclable is disposed.
+     */
+    public boolean isDisposed()
+    {
+        return disposed;
+    }
 }
+

@@ -83,9 +83,6 @@ public class Attribute
     extends BaseAttribute
     implements Persistent
 {
-    public static final NumberKey STATUS__PK = new NumberKey("3");
-    public static final NumberKey RESOLUTION__PK = new NumberKey("4");
-
     private static final String className = "Attribute";
 
     private static Criteria allOptionsCriteria;
@@ -149,8 +146,11 @@ public class Attribute
         }
         catch (ObjectExpiredException oee)
         {
-            attribute = AttributePeer.retrieveByPK(attId);
-            if ( attribute == null) // is this check needed?
+            try
+            {
+                attribute = AttributePeer.retrieveByPK(attId);
+            }
+            catch (Exception e)
             {
                 throw new ScarabException("Attribute with ID " + attId + 
                                           " can not be found");

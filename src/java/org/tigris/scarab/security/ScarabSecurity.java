@@ -56,38 +56,17 @@ import org.tigris.scarab.om.ScarabUser;
  * Constants for permissions should be grouped here as well.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.3 2001/07/17 21:40:31 jon Exp $
+ * @version $Id: ScarabSecurity.java,v 1.4 2001/07/21 00:52:51 jmcnally Exp $
 */
 public interface ScarabSecurity
 {
+    public static final String TOOL_KEY = 
+        "services.PullService.tool.request.security";
+
     /** 
      * Specifies that a User is valid as an assignee for an issue.
      */
-    public static final String CAN_EDIT_ISSUES = "can_edit_issues";
-
-    /**
-     * Determine if the user currently interacting with the scarab
-     * application has a permission within the user's currently
-     * selected module.
-     *
-     * @param permission a <code>String</code> permission value, which should
-     * be a constant in this interface.
-     * @return true if the permission exists for the user within the
-     * current module, false otherwise
-     */
-    public boolean hasPermission(String permission);
-
-    /**
-     * Determine if the user currently interacting with the scarab
-     * application has a permission within a module.
-     *
-     * @param permission a <code>String</code> permission value, which should
-     * be a constant in this interface.
-     * @param module a <code>ModuleEntity</code> value
-     * @return true if the permission exists for the user within the
-     * given module, false otherwise
-     */
-    public boolean hasPermission(String permission, ModuleEntity module);
+    public static final String EDIT_ISSUE = "Issue | Edit";
 
     /**
      * Determine if a user has a permission within a module.

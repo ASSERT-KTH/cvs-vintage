@@ -1,7 +1,7 @@
-package org.tigris.scarab.screens.entry;
+package org.tigris.scarab.security;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000 Collab.Net.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -46,58 +46,73 @@ package org.tigris.scarab.screens.entry;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Turbine Stuff 
-import org.apache.turbine.RunData;
+import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.TemplateSecureScreen;
-import org.apache.turbine.services.template.TurbineTemplate;
+import org.apache.turbine.util.Log;
 
-// Scarab Stuff
-import org.tigris.scarab.security.ScarabSecurityPull;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.tools.ScarabRequestTool;
-import org.tigris.scarab.pages.ScarabPage;
 
 /**
-    This class is responsible for building the Context up
-    for the Issue Entry templates.
-
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.10 2001/07/21 00:52:51 jmcnally Exp $
-*/
-public class Default extends TemplateSecureScreen
+ *  Returns an instance of the SearchIndex specified in Scarab.properties
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
+ * @version $Id: SecurityFactory.java,v 1.1 2001/07/21 00:52:51 jmcnally Exp $
+ */
+public class SecurityFactory
 {
-    /**
-        builds up the context for display of variables on the page.
-    */
-    public void doBuildTemplate( RunData data, TemplateContext context ) 
-        throws Exception 
-    {   
+    private static final ScarabSecurity baseSecurity;
+
+    static
+    {
+        String pullClassName = Turbine.getConfiguration()
+            .getString(ScarabSecurity.TOOL_KEY);
+        if ( pullClassName == null || pullClassName.length() == 0 ) 
+        {
+            pullClassName = 
+                "org.tigris.scarab.security.DefaultScarabSecurityPull";
+        }
+        
+        String baseClassName = pullClassName
+            .substring(0, pullClassName.length()-4);
+        ScarabSecurity base = null;
+        try
+        {
+            base = (ScarabSecurity)Class.forName(baseClassName).newInstance();
+        }
+        catch (Exception e)
+        {
+            base = new DefaultScarabSecurity();
+            Log.warn("Security class was not specified, so maximum" +
+                     " restrictions are in place.");
+        }
+        baseSecurity = base;
     }
 
     /**
-     * sets the template to Login.vm if the user hasn't logged in yet
+     * Returns an instance of ScarabSecurity based on the security pull tool
+     * specified in TurbineResources.properties. This instance has no
+     * attributes so the same instance is always returned.
+     *
+     * @return a <code>ScarabSecurity</code> value
      */
-    protected boolean isAuthorized( RunData data ) throws Exception
+    public static ScarabSecurity getInstance()
     {
-        TemplateContext context = getTemplateContext(data);
-        ScarabSecurityPull security = (ScarabSecurityPull)context
-            .get(ScarabConstants.SECURITY_TOOL);
-        ScarabRequestTool scarab = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
-        
-        if ( !(scarab.getUser().hasLoggedIn()
-               && security.hasPermission(ScarabSecurityPull.EDIT_ISSUE, 
-                                         scarab.getUser().getCurrentModule())))
-        {
-            // Note: we need to replace '/' with ',' so that 
-            //       the hidden input field will have the right
-            //       value for ParameterParser to parse.
-            context.put( ScarabConstants.NEXT_TEMPLATE, 
-               ScarabPage.getScreenTemplate(data).replace('/',',') );
-            setTarget(data, "Login.vm");
-            return false;
-        }
-        return true;
+        return baseSecurity;
     }
+
+    /**
+     * Returns an instance of ScarabSecurity based on the security pull tool
+     * specified in TurbineResources.properties.  This instance will be
+     * returned to a pool at the end of one request cycle.
+     *
+     * @return a <code>ScarabSecurity</code> value
+     */
+    public static ScarabSecurity getInstance(TemplateContext ctx)
+    {
+        return (ScarabSecurityPull)ctx
+            .get(ScarabConstants.SECURITY_TOOL);
+
+    }
+
+
 }

@@ -67,6 +67,8 @@ import org.apache.turbine.services.db.map.DatabaseMap;
 // Scarab classes
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.security.ScarabSecurity;
+import org.tigris.scarab.security.SecurityFactory;
 import org.tigris.scarab.util.ScarabException;
 
 /** 
@@ -404,52 +406,59 @@ public class Issue
      * @return a <code>List</code> value
      */
     public List getEligibleAssignees()
+        throws Exception
     {
+        ScarabSecurity security = SecurityFactory.getInstance();
+        ScarabUser[] users = 
+            security.getUsers(ScarabSecurity.EDIT_ISSUE, getScarabModule());
+        // remove those already assigned
+        List assigneeAVs = getAssigneeAttributeValues();
+        if ( users != null && assigneeAVs != null ) 
+        {        
+            for ( int i=users.length-1; i>=0; i-- ) 
+            {
+                for ( int j=assigneeAVs.size()-1; j>=0; j-- ) 
+                {
+                    if ( ((AttributeValue)assigneeAVs.get(j)).getUserId()
+                         .equals( users[i].getUserId() ) )
+                    {
+                        users[i] = null;
+                        break;
+                    }
+                }
+            }
+        }
 
-        //#foreach ($user in $security.getUsers($attr.Permission, $module))
-        return null;
+        List eligibleUsers = new ArrayList(users.length);
+        for ( int i=0; i<users.length; i++ ) 
+        {
+            if ( users[i] != null )
+            {
+                eligibleUsers.add(users[i]);
+            }
+        }
+
+        return eligibleUsers;
     }
-    /*
-#macro (userSelectBox $attrValue $size)
-    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
-    #set ( $attr = $attrValue.Attribute )
-    #set ( $module = $attrValue.Issue.Module )
-
-        <select name="$attrInput.UserId.Key" 
-                #if($size.length())size="$size"#end class="select">
-            #if ($size.length() == 0)
-            <option value="">Choose...</option>
-            #end
-
-              #set ( $selected = "" )
-              #if ($attrInput.UserId.Value && $user.PrimaryKey == $attrInput.UserId.Value)
-                #set ( $selected = " selected" )
-              #end
-              <option$selected value="$user.PrimaryKey">
-                  $user.UserName</option>
-            #end
-        </select>
-#end
-    */      
-
 
     /**
      * Returns userids, the value of the "AssignedTo" Attribute 
      */
-    public List getAssignedUsers() throws Exception
+    public List getAssigneeAttributeValues() throws Exception
     {
         ArrayList assignees = new ArrayList();
         Criteria crit = new Criteria()
-            .addJoin(AttributeValuePeer.ATTRIBUTE_ID, 
-                     AttributePeer.ATTRIBUTE_ID)        
-            .add(AttributePeer.ATTRIBUTE_NAME, "Assigned To");
+            .add(AttributeValuePeer.ATTRIBUTE_ID,AttributePeer.ASSIGNED_TO__PK)
+            .add(AttributeValuePeer.DELETED, false);
         List attValues = getAttributeValues(crit);
+        /*
         for ( int i=0; i<attValues.size(); i++ ) 
         {
             AttributeValue attVal = (AttributeValue) attValues.get(i);
             assignees.add(attVal.getValue());
         }
-        return assignees;
+        */
+        return attValues;
     }
 
         
@@ -642,14 +651,14 @@ public class Issue
     {
         Date closedDate = null;
         AttributeValue status = 
-            getAttributeValue(Attribute.getInstance(Attribute.STATUS__PK));
+            getAttributeValue(Attribute.getInstance(AttributePeer.STATUS__PK));
         if ( status != null && 
              status.getOptionId().equals(AttributeOption.STATUS__CLOSED__PK) ) 
         {
             // the issue is currently in a closed state, we can get the date
             Criteria crit = new Criteria()
                 .add(ActivityPeer.ISSUE_ID, getIssueId())
-                .add(ActivityPeer.ATTRIBUTE_ID, Attribute.STATUS__PK)
+                .add(ActivityPeer.ATTRIBUTE_ID, AttributePeer.STATUS__PK)
                 .addJoin(ActivityPeer.TRANSACTION_ID, 
                          TransactionPeer.TRANSACTION_ID)
                 .add( ActivityPeer.NEW_VALUE, 

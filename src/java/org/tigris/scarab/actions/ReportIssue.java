@@ -84,7 +84,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.30 2001/07/19 21:30:06 jon Exp $
+    @version $Id: ReportIssue.java,v 1.31 2001/07/21 00:52:50 jmcnally Exp $
 */
 public class ReportIssue extends TemplateAction
 {
@@ -322,11 +322,20 @@ public class ReportIssue extends TemplateAction
                 String template = data.getParameters()
                     .getString(ScarabConstants.NEXT_TEMPLATE, 
                                "entry,Wizard4.vm");
+                if ( template.equals("AssignIssue.vm") ) 
+                {
+                    data.getParameters().add("intake-grp", "issue"); 
+                    data.getParameters().add("issue", "_0"); 
+                    data.getParameters().add("issue_0id", 
+                                             issue.getIssueId().toString());
+                }
                 setTarget(data, template);
                 // !FIXME! this should be uncommented to allow jumping 
                 // directly back to entering another issue, but an easy
                 // update of intake is difficult at the moment
-                // intake.removeAll();
+                intake.removeAll();
+                data.getParameters().add("issue_id", 
+                                         issue.getIssueId().toString());
             }
             else 
             {

@@ -405,7 +405,6 @@ try{
     public Issue getIssue()
         throws Exception
     {
-        try{
         if (issue == null)
         {
             Group issueGroup = getIntakeTool()
@@ -423,16 +422,24 @@ try{
                         .retrieveByPK(new NumberKey(issueId));
                 }
             }
+            else if ( data.getParameters().getString("issue_id") != null ) 
+            {                
+                String issueId = data.getParameters().getString("issue_id");
+                if ( issueId.length() == 0 )
+                {
+                    issue = new Issue();
+                }
+                else 
+                {
+                    issue = IssuePeer
+                        .retrieveByPK(new NumberKey(issueId));
+                }
+            }
             else 
             {
                 issue = new Issue();
             }
         }        
-}catch(Exception e)
-{
-e.printStackTrace(); 
-throw e;
-}
 
         return issue;
     }

@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
  * Security wrapper around turbine's implementation
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TurbineDBScarabSecurity.java,v 1.10 2001/07/17 21:40:31 jon Exp $
+ * @version $Id: TurbineDBScarabSecurity.java,v 1.11 2001/07/21 00:52:51 jmcnally Exp $
 */
 public class TurbineDBScarabSecurity 
     extends DefaultScarabSecurity
@@ -81,59 +81,6 @@ public class TurbineDBScarabSecurity
      */
     public TurbineDBScarabSecurity()
     {
-    }
-
-    /**
-     * Determine if the user currently interacting with the scarab
-     * application has a permission within the user's currently
-     * selected module.
-     *
-     * @param permission a <code>String</code> permission value, which should
-     * be a constant in this interface.
-     * @return true if the permission exists for the user within the
-     * current module, false otherwise
-     */
-    public boolean hasPermission(String permission)
-    {
-        boolean hasPermission = false;
-        try
-        {
-            ModuleEntity module = 
-                ((ScarabUser)data.getUser()).getCurrentModule();
-            hasPermission = hasPermission(permission, module);
-        }
-        catch (Exception e)
-        {
-            hasPermission = false;
-            Log.error("Permission check failed on:" + permission, e);
-        }
-        return hasPermission;
-    }
-
-    /**
-     * Determine if the user currently interacting with the scarab
-     * application has a permission within a module.
-     *
-     * @param permission a <code>String</code> permission value, which should
-     * be a constant in this interface.
-     * @param module a <code>ModuleEntity</code> value
-     * @return true if the permission exists for the user within the
-     * given module, false otherwise
-     */
-    public boolean hasPermission(String permission, ModuleEntity module)
-    {
-        boolean hasPermission = false;
-        try
-        {
-            hasPermission = data.getACL()
-                .hasPermission(permission, (Group)module);
-        }
-        catch (Exception e)
-        {
-            hasPermission = false;
-            Log.error("Permission check failed on:" + permission, e);
-        }
-        return hasPermission;
     }
 
     /**

@@ -57,53 +57,21 @@ import org.tigris.scarab.om.ScarabUser;
 
 /**
  * This class currently assumes all users have no permissions as an
- * external implementation of security should be specified which
- * extends this class.
+ * external implementation of security should be specified.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefaultScarabSecurity.java,v 1.5 2001/07/17 21:40:31 jon Exp $
+ * @version $Id: DefaultScarabSecurity.java,v 1.6 2001/07/21 00:52:51 jmcnally Exp $
 */
 public class DefaultScarabSecurity 
-    implements ScarabSecurity, InitableRecyclable, ApplicationTool
+    implements ScarabSecurity
 {
-    /** the object containing request specific data */
-    protected RunData data; 
-
     /**
-     * does nothing
+     * ctor
      */
     public DefaultScarabSecurity()
     {
     }
 
-    /**
-     * Determine if the user currently interacting with the scarab
-     * application has a permission within the user's currently
-     * selected module.
-     *
-     * @param permission a <code>String</code> permission value, which should
-     * be a constant in this interface.
-     * @return false
-     */
-    public boolean hasPermission(String permission)
-    {
-        return false;
-    }
-
-    /**
-     * Determine if the user currently interacting with the scarab
-     * application has a permission within a module.
-     *
-     * @param permission a <code>String</code> permission value, which should
-     * be a constant in this interface.
-     * @param module a <code>ModuleEntity</code> value
-     * @return true if the permission exists for the user within the
-     * given module, false otherwise
-     */
-    public boolean hasPermission(String permission, ModuleEntity module)
-    {
-        return false;
-    }
 
     /**
      * Determine if a user has a permission within a module.
@@ -133,66 +101,5 @@ public class DefaultScarabSecurity
     {
         return null;
     }
-
-    // ************** ApplicationTool implementation ***********************
-
-    /**
-     * Implementation of ApplicationTool refresh() is not needed for this
-     * tool as it is request scoped
-     */
-    public void refresh()
-    {
-        // empty
-    }
-
-    /**
-     * This method should be called after retrieving the object from
-     * the pool.
-     */
-    public void init(Object runData)
-    // throws TurbineException
-    {
-        this.data = (RunData)runData;
-    }
-
-    // ****************** Recyclable implementation ************************
-
-    private boolean disposed;
-
-    /**
-     * Recycles the object for a new client. Recycle methods with
-     * parameters must be added to implementing object and they will be
-     * automatically called by pool implementations when the object is
-     * taken from the pool for a new client. The parameters must
-     * correspond to the parameters of the constructors of the object.
-     * For new objects, constructors can call their corresponding recycle
-     * methods whenever applicable.
-     * The recycle methods must call their super.
-     */
-    public void recycle()
-    {
-        disposed = false;
-    }
-
-    /**
-     * Disposes the object after use. The method is called
-     * when the object is returned to its pool.
-     * The dispose method must call its super.
-     */
-    public void dispose()
-    {
-        data = null;
-
-        disposed = true;
-    }
-
-    /**
-     * Checks whether the recyclable has been disposed.
-     * @return true, if the recyclable is disposed.
-     */
-    public boolean isDisposed()
-    {
-        return disposed;
-    }
-
 }
+

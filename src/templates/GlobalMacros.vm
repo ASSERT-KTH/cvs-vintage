@@ -71,13 +71,13 @@
 
 #macro ( fieldErrorMsg $field $br)
     #if ( !$field.isValid() )
-        <font color="red">$field.Message</font>$br
+       <p><font color="red">$field.Message</font></p>$br
     #end
 #end
 
 #macro ( actionErrorMsg )
     #if ($data.Message)
-        <font color="red">$data.Message</font>
+        <p><font color="red">$data.Message</font></p>
     #end
 #end
 

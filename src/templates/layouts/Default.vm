@@ -26,6 +26,7 @@
        <p class="crumbing"><a href="#">crumbing</a> &gt; <a href="#">item1</a> &gt; item2</p>
        <p><a href="#">primaryfeaturenav</a> | <a href="#">item1</a> | <a href="#">item2</a></p>
       </div>
+#actionErrorMsg()
 $renderer.render("screens", $data, $template) 
 ##$screen_placeholder
      </td>

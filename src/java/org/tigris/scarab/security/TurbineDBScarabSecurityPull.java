@@ -1,7 +1,7 @@
 package org.tigris.scarab.security;
 
 /* ================================================================
- * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
+ * Copyright (c) 2000 Collab.Net.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -49,37 +49,39 @@ package org.tigris.scarab.security;
 import java.util.List;
 
 // Turbine
+import org.apache.turbine.services.db.util.Criteria;
 import org.apache.turbine.util.Log;
 import org.apache.turbine.util.TurbineException;
-
-// Helm
-/*
-import org.tigris.helm.om.Project;
-import org.tigris.helm.om.ProjectPeer;
-import org.tigris.helm.om.User;
-import org.tigris.helm.om.UserPeer;
-import org.tigris.helm.om.RolePeer;
-import org.tigris.helm.security.AccessControlList;
-import org.tigris.helm.security.ACLException;
-*/
+import org.apache.turbine.services.security.TurbineSecurity;
+import org.apache.turbine.services.db.om.Persistent;
+import org.apache.turbine.services.security.entity.User;
+import org.apache.turbine.services.security.entity.Group;
+import org.apache.turbine.services.security.impl.db.entity
+    .TurbinePermissionPeer;
+import org.apache.turbine.services.security.impl.db.entity
+    .TurbineUserGroupRolePeer;
+import org.apache.turbine.services.security.impl.db.entity
+    .TurbineRolePermissionPeer;
 
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabUserImplPeer;
 
 /**
- * Security wrapper around helm
+ * Security wrapper around turbine's implementation
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: HelmScarabSecurity.java,v 1.5 2001/07/21 00:52:51 jmcnally Exp $
+ * @version $Id: TurbineDBScarabSecurityPull.java,v 1.1 2001/07/21 00:52:51 jmcnally Exp $
 */
-public class HelmScarabSecurity 
-    extends DefaultScarabSecurity
+public class TurbineDBScarabSecurityPull 
+    extends DefaultScarabSecurityPull
 {
     /**
-     * does nothing
+     * ctor
      */
-    public HelmScarabSecurity()
+    public TurbineDBScarabSecurityPull()
     {
+        security = new TurbineDBScarabSecurity();
     }
 
     /**
@@ -95,34 +97,7 @@ public class HelmScarabSecurity
     public boolean hasPermission(String permission, 
                                  ScarabUser user, ModuleEntity module)
     {
-        boolean hasPermission = false;
-        /*
-        try
-        {
-            //assumes ScarabUser's db pk will be same as helm User
-            User helmUser = UserPeer.getInstance( 
-                user.getPrimaryKey().toString() );
-            //assumes Module's db pk will be same as helm Project
-            Project project = ProjectPeer
-                .getInstance( module.getPrimaryKey().toString() );
-            AccessControlList acl = AccessControlList.getACL(helmUser);
-            try
-            {
-                acl.assertPermission(permission, project);
-                hasPermission = true;
-            }
-            catch (ACLException e)
-            {
-                hasPermission = false;
-            }
-        }
-        catch (Exception e)
-        {
-            hasPermission = false;
-            Log.error("Permission check failed on:" + permission, e);
-        }
-        */
-        return hasPermission;
+        return security.hasPermission(permission, user, module);
     }
 
     /**
@@ -135,39 +110,60 @@ public class HelmScarabSecurity
      */
     public ScarabUser[] getUsers(String permission, ModuleEntity module)
     {
-        /*
-        //assumes Module's db pk will be same as helm Project
-        Project project = ProjectPeer
-            .getInstance( module.getPrimaryKey().toString() );
-        // note the following code is just a stab in the dark
-        Vector roleIds = RolePeer.getRoleIDsWithAction(permission);
-        // copy code from Project.getUsersWithRoles() since it is private
-        Vector myIDs = project.getEffectiveProjectIDs();
-        Criteria c = new Criteria(4)
-            .addJoin(UserPeer.USER_ID, UserRoleProjectPeer.USER_ID)
-            .addIn(UserRoleProjectPeer.ROLE_ID, roleIDs)
-            .addIn(UserRoleProjectPeer.PROJECT_ID, myIDs);
-        c.setDistinct();
-        List usersAndGroups = UserPeer.doSelect(c);
-        List effectiveUsers = new ArrayList(usersAndGroups.size());
-        List baseUsers = new ArrayList(usersAndGroups.size());
-        for (Iterator i = usersAndGroups.iterator(); i.hasNext();)
-        {
-            User u = (User)i.next();
-            effectiveUsers.addAll(u.expand());            
-        }
-        for (Iterator i = effectiveUsers.iterator(); i.hasNext();)
-        {
-            User u = (User)i.next();
-            if (u.isBase())
-            {
-                baseUsers.add(u);
-            }
-        }
-        //loop over baseUsers getting pk's and put together an IN
-        // query to get ScarabUsers
-        return scarabUsers;
-        */
-        return null;
+        return security.getUsers(permission, module);
     }
+
+    /**
+     * Determine if the user currently interacting with the scarab
+     * application has a permission within the user's currently
+     * selected module.
+     *
+     * @param permission a <code>String</code> permission value, which should
+     * be a constant in this interface.
+     * @return true if the permission exists for the user within the
+     * current module, false otherwise
+     */
+    public boolean hasPermission(String permission)
+    {
+        boolean hasPermission = false;
+        try
+        {
+            ModuleEntity module = 
+                ((ScarabUser)data.getUser()).getCurrentModule();
+            hasPermission = hasPermission(permission, module);
+        }
+        catch (Exception e)
+        {
+            hasPermission = false;
+            Log.error("Permission check failed on:" + permission, e);
+        }
+        return hasPermission;
+    }
+
+    /**
+     * Determine if the user currently interacting with the scarab
+     * application has a permission within a module.
+     *
+     * @param permission a <code>String</code> permission value, which should
+     * be a constant in this interface.
+     * @param module a <code>ModuleEntity</code> value
+     * @return true if the permission exists for the user within the
+     * given module, false otherwise
+     */
+    public boolean hasPermission(String permission, ModuleEntity module)
+    {
+        boolean hasPermission = false;
+        try
+        {
+            hasPermission = data.getACL()
+                .hasPermission(permission, (Group)module);
+        }
+        catch (Exception e)
+        {
+            hasPermission = false;
+            Log.error("Permission check failed on:" + permission, e);
+        }
+        return hasPermission;
+    }
+
 }

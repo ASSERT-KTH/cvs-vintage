@@ -172,6 +172,7 @@
     </field>
     <field name="DataAsString" key="das" type="String">
         <rule name="maxLength" value="8388607">Please keep the description to less than 8MB</rule>
+        <required-message>Please enter a short comment</required-message>
     </field>
     <field name="File" key="d" type="FileItem">
         <rule name="maxLength" value="16777215">Files larger than 16MB are not allowed</rule>
