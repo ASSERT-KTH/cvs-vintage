@@ -1,13 +1,13 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: AddPermission.vm,v 1.6 2002/05/24 03:26:12 jmcnally Exp $
+@version $Id: AddPermission.vm,v 1.7 2002/07/30 19:14:28 csjank Exp $
 *#
 
 #set ($lastAction = $data.Parameters.getString("lastAction"))
 
 <div id="addpermission" class="app">
 
-<h3>Add permission</h3>
+<h3>$l10n.AddPermission</h3>
 
 <form name="EditUserForm" action="admin%2cAddPermission.vm" method="post">
   <input type="hidden" name="action" value="admin.ManagePermissions" />
@@ -24,7 +24,7 @@
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
- <th>Permission</th>
+ <th>$l10n.Permission</th>
  <td>
    <input name="$regGroup.PermissionName.Key" value="$permissionNameData" type="text" size="25" />
    #fieldErrorMsg($regGroup.PermissionName "")
@@ -34,8 +34,8 @@
 </div>
 
 <div class="functnbar2">
- <input type="submit" name="eventSubmit_doAddpermission" value="Add" />&#160;
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+ <input type="submit" name="eventSubmit_doAddpermission" value="$l10n.Add" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" />
 </div>
 
 $intake.declareGroups()
