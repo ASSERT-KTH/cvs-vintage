@@ -40,7 +40,7 @@ public class CheckableTree extends JTree {
      */
     public CheckableTree(CheckableItem root) {
         super(root);
-        
+        setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 0));
         setCellRenderer(new CheckRenderer());
     }
 }
