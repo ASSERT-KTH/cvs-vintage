@@ -183,7 +183,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		int iGetMsgValue;
 
 		hDialog = CreateDialog( hInstance, MAKEINTRESOURCE(IDD_DIALOG1), 0, DialogProc );
-//		ShowWindow(hDialog, SW_SHOW);
+		ShowWindow(hDialog, SW_SHOW);
 
 		isDialogOpen = TRUE;
 		//Message pump
