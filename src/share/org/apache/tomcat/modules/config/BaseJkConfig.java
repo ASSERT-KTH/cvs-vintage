@@ -1,4 +1,4 @@
-/* $Id: BaseJkConfig.java,v 1.5 2001/10/02 02:55:13 larryi Exp $
+/* $Id: BaseJkConfig.java,v 1.6 2001/10/08 05:27:18 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -121,7 +121,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     <p>
     @author Costin Manolache
     @author Larry Isaacs
-	@version $Revision: 1.5 $
+	@version $Revision: 1.6 $
  */
 public class BaseJkConfig  extends BaseInterceptor { 
     protected File configHome = null;
@@ -286,7 +286,7 @@ public class BaseJkConfig  extends BaseInterceptor {
         }
     }
 
-    protected void initProtocol(ContextManager cm) {
+    protected void initWorker(ContextManager cm) {
 	// Find Ajp1? connectors
 	BaseInterceptor ci[]=cm.getContainer().getInterceptors();
 	    

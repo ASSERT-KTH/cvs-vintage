@@ -131,7 +131,7 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Gal Shachor
-	@version $Revision: 1.9 $
+	@version $Revision: 1.10 $
  */
 public class IISConfig extends BaseJkConfig  { 
 
@@ -197,7 +197,7 @@ public class IISConfig extends BaseJkConfig  {
     {
         try {
 	    initProperties(cm);
-	    initProtocol(cm);
+	    initWorker(cm);
 
             PrintWriter regfile = new PrintWriter(new FileWriter(regConfig));
             PrintWriter uri_worker = new PrintWriter(new FileWriter(uriConfig));        

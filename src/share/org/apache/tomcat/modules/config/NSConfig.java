@@ -89,9 +89,15 @@ import java.util.*;
      <li><b>objConfig</b> - path to use for writing Netscape obj.conf
                             file. If not set, defaults to
                             "conf/auto/obj.conf".</li>
+     <li><b>objectName</b> - Name of the Object to execute the requests.
+                             Defaults to "servlet".</li>
      <li><b>workersConfig</b> - path to workers.properties file used by 
                                 nsapi_redirect. If not set, defaults to
                                 "conf/jk/workers.properties".</li>
+     <li><b>nsapiJk</b> - path to Netscape mod_jk plugin file.  If not set,
+                        defaults to "bin/nsapi_redirect.dll" on windows,
+                        "bin/nsapi_rd.nlm" on netware, and
+                        "bin/nsapi_redirector.so" everywhere else.</li>
      <li><b>jkLog</b> - path to log file to be used by nsapi_redirect.</li>
      <li><b>jkDebug</b> - Loglevel setting.  May be debug, info, error, or emerg.
                           If not set, defaults to emerg.</li>
@@ -127,15 +133,31 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Gal Shachor
-	@version $Revision: 1.6 $
+	@version $Revision: 1.7 $
  */
 public class NSConfig  extends BaseJkConfig { 
 
     public static final String WORKERS_CONFIG = "/conf/jk/workers.properties";
     public static final String NS_CONFIG = "/conf/auto/obj.conf";
     public static final String NSAPI_LOG_LOCATION = "/logs/nsapi_redirect.log";
+    /** default location of nsapi plug-in. */
+    public static final String NSAPI_REDIRECTOR;
+    
+    //set up some defaults based on OS type
+    static{
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.indexOf("windows")>=0){
+           NSAPI_REDIRECTOR = "bin/nsapi_redirect.dll";
+        }else if(os.indexOf("netware")>=0){
+           NSAPI_REDIRECTOR = "bin/nsapi_rd.nlm";
+        }else{
+           NSAPI_REDIRECTOR = "bin/nsapi_redirector.so";
+        }
+    }
 
     private File objConfig = null;
+    private File nsapiJk = null;
+    private String objectName = "servlet";
 
     Log loghelper = Log.getLog("tc_log", this);
     
@@ -153,8 +175,25 @@ public class NSConfig  extends BaseJkConfig {
         <p>
         @param <b>path</b> String path to a file
     */
-    public void setObjConfig(String path){
+    public void setObjConfig(String path) {
 	objConfig= (path==null)?null:new File(path);
+    }
+
+    /**
+        set the path to the nsapi plugin module
+        @param <b>path</b> String path to a file
+    */
+    public void setNsapiJk(String path) {
+        nsapiJk=( path==null?null:new File(path));
+    }
+
+    /**
+        Set the name for the Object that implements the
+        jk_service call.
+        @param <b>name</b> Name of the obj.conf Object
+    */
+    public void setObjectName(String name) {
+        objectName = name;
     }
 
     // -------------------- Initialize/guess defaults --------------------
@@ -167,6 +206,11 @@ public class NSConfig  extends BaseJkConfig {
 
 	objConfig=FileUtil.getConfigFile( objConfig, configHome, NS_CONFIG);
 	workersConfig=FileUtil.getConfigFile( workersConfig, configHome, WORKERS_CONFIG);
+
+	if( nsapiJk == null )
+	    nsapiJk=new File(NSAPI_REDIRECTOR);
+	else
+	    nsapiJk =FileUtil.getConfigFile( nsapiJk, configHome, NSAPI_REDIRECTOR );
 	jkLog=FileUtil.getConfigFile( jkLog, configHome, NSAPI_LOG_LOCATION);
     }
 
@@ -184,103 +228,170 @@ public class NSConfig  extends BaseJkConfig {
     {
         try {
 	    initProperties(cm);
-	    initProtocol(cm);
+	    initWorker(cm);
 
             PrintWriter objfile = new PrintWriter(new FileWriter(objConfig));
-           
-            objfile.println("###################################################################");		    
-            objfile.println("# Auto generated configuration. Dated: " +  new Date());
-            objfile.println("###################################################################");		    
-            objfile.println();
+    	    log("Generating netscape web server config = "+objConfig );
 
-            objfile.println("#");        
-            objfile.println("# You will need to merge the content of this file with your ");
-            objfile.println("# regular obj.conf and then restart (=stop + start) your Netscape server. ");
-            objfile.println("#");        
-            objfile.println();
-            
-            objfile.println("#");                    
-            objfile.println("# Loading the redirector into your server");
-            objfile.println("#");        
-            objfile.println();            
-            objfile.println("Init fn=\"load-modules\" funcs=\"jk_init,jk_service\" shlib=\"<put full path to the redirector here>\"");
-            objfile.println("Init fn=\"jk_init\" worker_file=\"" + 
-                            workersConfig.toString().replace('\\', '/') +  
-                            "\" log_level=\"" + jkDebug + "\" log_file=\"" + 
-                            jkLog.toString().replace('\\', '/') + 
-                            "\"");
-            objfile.println();
-            
-            objfile.println("<Object name=default>");            
-            objfile.println("#");                    
-            objfile.println("# Redirecting the root context requests to tomcat.");
-            objfile.println("#");        
-            objfile.println("NameTrans fn=\"assign-name\" from=\"/servlet/*\" name=\"servlet\""); 
-            objfile.println("NameTrans fn=\"assign-name\" from=\"/*.jsp\" name=\"servlet\""); 
-            objfile.println();
+	    generateNsapiHead( objfile );
 
-	        // Set up contexts
-	        // XXX deal with Virtual host configuration !!!!
-	        Enumeration enum = cm.getContexts();
-	        while (enum.hasMoreElements()) {
-		        Context context = (Context)enum.nextElement();
-		        String path  = context.getPath();
-		        String vhost = context.getHost();
+            objfile.println("<Object name=default>");
 
-		        if(vhost != null) {
-		            // Vhosts are not supported yet for Netscape
-		            continue;
-		        }
-		        if(path.length() > 1) {            
-		            // Calculate the absolute path of the document base
-		            String docBase = context.getDocBase();
-		            if (!FileUtil.isAbsolute(docBase))
-			        docBase = tomcatHome + "/" + docBase;
-		            docBase = FileUtil.patch(docBase).replace('\\', '/');
-		            
-                    // Static files will be served by Apache
-                    objfile.println("#########################################################");		    
-                    objfile.println("# Auto configuration for the " + path + " context starts.");
-                    objfile.println("#########################################################");		    
-                    objfile.println();
-            
-                    objfile.println("#");		    
-                    objfile.println("# The following line mounts all JSP file and the /servlet/ uri to tomcat");
-                    objfile.println("#");                        
-                    objfile.println("NameTrans fn=\"assign-name\" from=\"" + path + "/servlet/*\" name=\"servlet\""); 
-                    objfile.println("NameTrans fn=\"assign-name\" from=\"" + path + "/*.jsp\" name=\"servlet\""); 
-                    objfile.println("NameTrans fn=pfx2dir from=\"" + path + "\" dir=\"" + docBase + "\"");
-                    objfile.println();            
-                    objfile.println("#######################################################");		    
-                    objfile.println("# Auto configuration for the " + path + " context ends.");
-                    objfile.println("#######################################################");		    
-                    objfile.println();
-		        }
-	        }
+            // Set up contexts
+            // XXX deal with Virtual host configuration !!!!
+            Enumeration enum = cm.getContexts();
+            while (enum.hasMoreElements()) {
+                Context context = (Context)enum.nextElement();
 
-            objfile.println("#######################################################");		    
-            objfile.println("# Protecting the web inf directory.");
-            objfile.println("#######################################################");		    
-            objfile.println("PathCheck fn=\"deny-existence\" path=\"*/WEB-INF/*\""); 
-            objfile.println();
-            
-            objfile.println("</Object>");            
-            objfile.println();
-            
-            
-            objfile.println("#######################################################");		    
-            objfile.println("# New object to execute your servlet requests.");
-            objfile.println("#######################################################");		    
-            objfile.println("<Object name=servlet>");
-            objfile.println("ObjectType fn=force-type type=text/html");
-            objfile.println("Service fn=\"jk_service\" worker=\""+ jkWorker + "\" path=\"/*\"");
-            objfile.println("</Object>");
-            objfile.println();
+                String vhost = context.getHost();
+                if(vhost != null) {
+                    // Vhosts are not supported yet for Netscape
+                    continue;
+                }
 
-	        
-            objfile.close();	        
+		if( forwardAll )
+		    generateStupidMappings( context, objfile );
+		else
+		    generateContextMappings( context, objfile );
+            }
+
+            generateNsapiTail(objfile);
+
+            objfile.close();
         } catch(Exception ex) {
             loghelper.log("Error generating automatic Netscape configuration", ex);
         }
-    }    
+    }
+
+    private void generateNsapiHead(PrintWriter objfile)
+	throws TomcatException
+    {
+        objfile.println("###################################################################");		    
+        objfile.println("# Auto generated configuration. Dated: " +  new Date());
+        objfile.println("###################################################################");		    
+        objfile.println();
+
+        objfile.println("#");        
+        objfile.println("# You will need to merge the content of this file with your ");
+        objfile.println("# regular obj.conf and then restart (=stop + start) your Netscape server. ");
+        objfile.println("#");        
+        objfile.println();
+            
+        objfile.println("#");                    
+        objfile.println("# Loading the redirector into your server");
+        objfile.println("#");        
+        objfile.println();            
+        objfile.println("Init fn=\"load-modules\" funcs=\"jk_init,jk_service\" shlib=\"<put full path to the redirector here>\"");
+        objfile.println("Init fn=\"jk_init\" worker_file=\"" + 
+                        workersConfig.toString().replace('\\', '/') +  
+                        "\" log_level=\"" + jkDebug + "\" log_file=\"" + 
+                        jkLog.toString().replace('\\', '/') + 
+                        "\"");
+        objfile.println();
+    }
+
+    private void generateNsapiTail(PrintWriter objfile)
+	throws TomcatException
+    {
+        objfile.println();
+        objfile.println("#######################################################");		    
+        objfile.println("# Protecting the WEB-INF and META-INF directories.");
+        objfile.println("#######################################################");		    
+        objfile.println("PathCheck fn=\"deny-existence\" path=\"*/WEB-INF/*\""); 
+        objfile.println("PathCheck fn=\"deny-existence\" path=\"*/META-INF/*\""); 
+        objfile.println();
+
+        objfile.println("</Object>");            
+        objfile.println();
+
+        objfile.println("#######################################################");		    
+        objfile.println("# New object to execute your servlet requests.");
+        objfile.println("#######################################################");		    
+        objfile.println("<Object name=" + objectName + ">");
+        objfile.println("ObjectType fn=force-type type=text/html");
+        objfile.println("Service fn=\"jk_service\" worker=\""+ jkWorker + "\" path=\"/*\"");
+        objfile.println("</Object>");
+        objfile.println();
+    }
+
+    // -------------------- Forward all mode --------------------
+    
+    /** Forward all requests for a context to tomcat.
+	The default.
+     */
+    private void generateStupidMappings(Context context, PrintWriter objfile )
+    {
+        String ctxPath  = context.getPath();
+	String nPath=("".equals(ctxPath)) ? "/" : ctxPath;
+
+        if( noRoot &&  "".equals(ctxPath) ) {
+            log("Ignoring root context in forward-all mode  ");
+            return;
+        } 
+
+        objfile.println("NameTrans fn=\"assign-name\" from=\"" + ctxPath + "\" name=\"" + objectName + "\""); 
+        objfile.println("NameTrans fn=\"assign-name\" from=\"" + ctxPath + "/*\" name=\"" + objectName + "\""); 
+    }
+
+
+    // -------------------- Netscape serves static mode --------------------
+    // This is not going to work for all apps. We fall back to stupid mode.
+    
+    private void generateContextMappings(Context context, PrintWriter objfile )
+    {
+        String ctxPath  = context.getPath();
+	String nPath=("".equals(ctxPath)) ? "/" : ctxPath;
+
+        if( noRoot &&  "".equals(ctxPath) ) {
+            log("Ignoring root context in non-forward-all mode  ");
+            return;
+        } 
+
+        // Static files will be served by Netscape
+        objfile.println("#########################################################");		    
+        objfile.println("# Auto configuration for the " + nPath + " context starts.");
+        objfile.println("#########################################################");		    
+        objfile.println();
+
+        // XXX Need to determine what if/how static mappings are done
+
+	// InvokerInterceptor - it doesn't have a container,
+	// but it's implemented using a special module.
+	
+	// XXX we need to better collect all mappings
+	addMapping( ctxPath + "/servlet/*", objfile );
+	    
+	Enumeration servletMaps=context.getContainers();
+	while( servletMaps.hasMoreElements() ) {
+	    Container ct=(Container)servletMaps.nextElement();
+	    addMapping( context, ct , objfile );
+	}
+
+        // XXX ErrorDocument
+        // Security and filter mappings
+
+    }
+
+    /** Add a Netscape extension mapping.
+     */
+    protected boolean addExtensionMapping( String ctxPath, String ext,
+					 PrintWriter objfile )
+    {
+        if( debug > 0 )
+            log( "Adding extension map for " + ctxPath + "/*." + ext );
+        objfile.println("NameTrans fn=\"assign-name\" from=\"" +
+                    ctxPath + "/*." + ext + "\" name=\"" + objectName + "\""); 
+	return true;
+    }
+
+    /** Add a fulling specified Netscape mapping.
+     */
+    protected boolean addMapping( String fullPath, PrintWriter objfile ) {
+        if( debug > 0 )
+            log( "Adding map for " + fullPath );
+        objfile.println("NameTrans fn=\"assign-name\" from=\"" +
+                        fullPath + "\" name=\"" + objectName + "\""); 
+	return true;
+    }
+
 }

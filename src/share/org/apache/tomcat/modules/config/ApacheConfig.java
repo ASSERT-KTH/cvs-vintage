@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.27 2001/10/02 02:55:13 larryi Exp $
+/* $Id: ApacheConfig.java,v 1.28 2001/10/08 05:27:18 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -149,7 +149,7 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Mel Martinez
-	@version $Revision: 1.27 $ $Date: 2001/10/02 02:55:13 $
+	@version $Revision: 1.28 $ $Date: 2001/10/08 05:27:18 $
  */
 public class ApacheConfig  extends BaseJkConfig { 
     
@@ -283,7 +283,7 @@ public class ApacheConfig  extends BaseJkConfig {
     public void execute(ContextManager cm) throws TomcatException {
     	try {
 	    initProperties(cm);
-	    initProtocol(cm);
+	    initWorker(cm);
 
             NamedVirtualHosts = new Hashtable();  
 
