@@ -7,6 +7,8 @@
 
 package org.jboss.ejb.plugins.jaws.jdbc;
 
+import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
+
 /**
  * JAWSPersistenceManager JDBCFindAllCommand
  *
@@ -15,15 +17,15 @@ package org.jboss.ejb.plugins.jaws.jdbc;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCFindAllCommand extends JDBCFinderCommand
 {
    // Constructors --------------------------------------------------
    
-   public JDBCFindAllCommand(JDBCCommandFactory factory)
+   public JDBCFindAllCommand(JDBCCommandFactory factory, FinderMetaData f)
    {
-      super(factory, "FindAll");
+      super(factory, f);
       
       String sql = "SELECT " + getPkColumnList() + " FROM " + jawsEntity.getTableName();
 

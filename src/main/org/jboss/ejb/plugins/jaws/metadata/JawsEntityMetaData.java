@@ -34,7 +34,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- *	@version $Revision: 1.7 $
+ *	@version $Revision: 1.8 $
  */
 public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -60,8 +60,8 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 	// do we use tuned updates?
 	private boolean tunedUpdates;
 
-        // do we use 'SELECT ... FOR UPDATE' syntax?
-        private boolean selectForUpdate;
+   // do we use 'SELECT ... FOR UPDATE' syntax?
+   private boolean selectForUpdate;
 
 	// is the bean read-only?
 	private boolean readOnly;

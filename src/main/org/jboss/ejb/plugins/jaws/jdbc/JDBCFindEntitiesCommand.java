@@ -22,6 +22,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 import org.jboss.ejb.plugins.jaws.bmp.CustomFindByEntitiesCommand;
+import org.jboss.util.FinderResults;
 
 /**
  * Keeps a map from finder name to specific finder command, and
@@ -32,7 +33,7 @@ import org.jboss.ejb.plugins.jaws.bmp.CustomFindByEntitiesCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
 {
@@ -68,7 +69,7 @@ public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
 					 knownFinderCommands.put(remoteName, new CustomFindByEntitiesCommand(m));
 					 factory.getLog().debug("Added custom finder " + remoteName +".");
 				 } catch (IllegalArgumentException e) {
-				    factory.getLog().debug("Could not create the custom finder " + remoteName+".");
+				    factory.getLog().error("Could not create the custom finder " + remoteName+".");
 				 }
 			 }
 		  }
@@ -85,8 +86,12 @@ public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
          
          if ( !knownFinderCommands.containsKey(f.getName()) )
          {
-            JPMFindEntitiesCommand finderCommand =
-               factory.createDefinedFinderCommand(f);
+            JPMFindEntitiesCommand finderCommand = null;
+            if (f.getName().equals("findAll")) {
+               finderCommand = factory.createFindAllCommand(f);
+            } else {
+               finderCommand = factory.createDefinedFinderCommand(f);
+            }
                
             knownFinderCommands.put(f.getName(), finderCommand);
          }
@@ -105,12 +110,14 @@ public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
          {
             if (name.equals("findAll"))
             {
-               knownFinderCommands.put(name, factory.createFindAllCommand());
+               FinderMetaData f = new FinderMetaData("findAll");
+               knownFinderCommands.put(name, factory.createFindAllCommand(f));
             } else if (name.startsWith("findBy")  && !name.equals("findByPrimaryKey"))
             {
                try
                {
-                  knownFinderCommands.put(name, factory.createFindByCommand(m));
+                  FinderMetaData f = new FinderMetaData(name);
+                  knownFinderCommands.put(name, factory.createFindByCommand(m, f));
                } catch (IllegalArgumentException e)
                {
                   factory.getLog().debug("Could not create the finder " + name +
@@ -124,7 +131,7 @@ public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
    
    // JPMFindEntitiesCommand implementation -------------------------
    
-   public Collection execute(Method finderMethod,
+   public FinderResults execute(Method finderMethod,
                              Object[] args,
                              EntityEnterpriseContext ctx)
       throws RemoteException, FinderException
@@ -142,6 +149,6 @@ public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
       // JF: Shouldn't tolerate the "not found" case!
       
       return (finderCommand != null) ?
-         finderCommand.execute(finderMethod, args, ctx) : new ArrayList();
+         finderCommand.execute(finderMethod, args, ctx) : new FinderResults(new ArrayList(),null,null,null);
    }
 }

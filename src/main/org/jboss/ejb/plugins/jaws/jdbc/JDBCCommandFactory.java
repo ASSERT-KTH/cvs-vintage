@@ -25,6 +25,7 @@ import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
 import org.jboss.ejb.plugins.jaws.JPMCreateEntityCommand;
 import org.jboss.ejb.plugins.jaws.JPMRemoveEntityCommand;
 import org.jboss.ejb.plugins.jaws.JPMLoadEntityCommand;
+import org.jboss.ejb.plugins.jaws.JPMLoadEntitiesCommand;
 import org.jboss.ejb.plugins.jaws.JPMStoreEntityCommand;
 import org.jboss.ejb.plugins.jaws.JPMActivateEntityCommand;
 import org.jboss.ejb.plugins.jaws.JPMPassivateEntityCommand;
@@ -42,7 +43,7 @@ import org.jboss.logging.Log;
  * JAWSPersistenceManager JDBCCommandFactory
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCCommandFactory implements JPMCommandFactory
 {
@@ -130,9 +131,9 @@ public class JDBCCommandFactory implements JPMCommandFactory
       return beanExistsCommand;
    }
    
-   public JPMFindEntitiesCommand createFindAllCommand()
+   public JPMFindEntitiesCommand createFindAllCommand(FinderMetaData f)
    {
-      return new JDBCFindAllCommand(this);
+      return new JDBCFindAllCommand(this, f);
    }
    
    public JPMFindEntitiesCommand createDefinedFinderCommand(FinderMetaData f)
@@ -140,7 +141,7 @@ public class JDBCCommandFactory implements JPMCommandFactory
       return new JDBCDefinedFinderCommand(this, f);
    }
    
-   public JPMFindEntitiesCommand createFindByCommand(Method finderMethod)
+   public JPMFindEntitiesCommand createFindByCommand(Method finderMethod, FinderMetaData f)
       throws IllegalArgumentException
    {
       return new JDBCFindByCommand(this, finderMethod);
@@ -204,6 +205,11 @@ public class JDBCCommandFactory implements JPMCommandFactory
    public JPMLoadEntityCommand createLoadEntityCommand()
    {
       return new JDBCLoadEntityCommand(this);
+   }
+   
+   public JPMLoadEntitiesCommand createLoadEntitiesCommand()
+   {
+      return new JDBCLoadEntitiesCommand(this);
    }
    
    public JPMStoreEntityCommand createStoreEntityCommand()

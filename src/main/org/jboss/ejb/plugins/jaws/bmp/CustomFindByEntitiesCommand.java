@@ -19,6 +19,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.logging.Logger;
 import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
 import org.jboss.metadata.BeanMetaData;
+import org.jboss.util.FinderResults;
 
 /**
  * JAWSPersistenceManager CustomFindByEntitiesCommand.
@@ -29,7 +30,7 @@ import org.jboss.metadata.BeanMetaData;
  *
  * @see org.jboss.ejb.plugins.jaws.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class CustomFindByEntitiesCommand implements JPMFindEntitiesCommand
 {
@@ -57,22 +58,24 @@ public class CustomFindByEntitiesCommand implements JPMFindEntitiesCommand
    
    // JPMFindEntitiesCommand implementation -------------------------
 
-   public Collection execute(Method finderMethod,
+   public FinderResults execute(Method finderMethod,
                              Object[] args,
                              EntityEnterpriseContext ctx)
       throws java.rmi.RemoteException, FinderException
    {
-      Collection result = null;
+      FinderResults result = null;
 
       // invoke implementation method on ejb instance
       try {
       	// if expected return type is Collection, return as is
       	// if expected return type is not Collection, wrap result in Collection
       	if (finderMethod.getReturnType().equals(Collection.class))  {
-      		result = (Collection)finderImplMethod.invoke(ctx.getInstance(),args);
+      		Collection coll = (Collection)finderImplMethod.invoke(ctx.getInstance(),args);
+            result = new FinderResults(coll, null, null, null);
       	} else {
-      		result = new ArrayList(1);
-      		result.add(finderImplMethod.invoke(ctx.getInstance(),args));
+      		Collection coll = new ArrayList(1);
+      		coll.add(finderImplMethod.invoke(ctx.getInstance(),args));
+            result = new FinderResults(coll, null, null, null);
       	}
       } catch (IllegalAccessException e1) {
 			throw new FinderException("Unable to access finder implementation:"+finderImplMethod.getName());

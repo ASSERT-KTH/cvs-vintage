@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.ejb.EntityBean;
 import javax.ejb.CreateException;
@@ -33,6 +34,9 @@ import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.metadata.EntityMetaData;
 
+import org.jboss.util.FinderResults;
+import org.jboss.util.Sync;
+
 /**
 *   The CMP Persistence Manager implements the semantics of the CMP
 *  EJB 1.1 call back specification.
@@ -42,7 +46,7 @@ import org.jboss.metadata.EntityMetaData;
 *
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.18 $
+*   @version $Revision: 1.19 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {
@@ -278,21 +282,43 @@ implements EntityPersistenceManager {
     }
 
     public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
-    throws Exception {
-
+        throws Exception 
+    {
        // The store will find the id and return a collection of PrimaryKeys
-       Collection ids = store.findEntities(finderMethod, args, ctx);
+       FinderResults ids = store.findEntities(finderMethod, args, ctx);
 
-       // Build a collection of cacheKeys
-       ArrayList list = new ArrayList(ids.size());
-        Iterator idEnum = ids.iterator();
-        while(idEnum.hasNext()) {
+       AbstractInstanceCache cache = (AbstractInstanceCache)con.getInstanceCache();
+       Map contextMap = new HashMap();
+       ArrayList keyList = new ArrayList();
+       Iterator idEnum = ids.iterator();
+       while(idEnum.hasNext()) {
+          Object key = idEnum.next();
+          Object cacheKey = ((EntityCache)cache).createCacheKey(key);
+          keyList.add(cacheKey);
+                   
+          Sync mutex = (Sync)cache.getLock(cacheKey);
+          try
+          {
+             mutex.acquire();
 
-         // Get a cache key for it
-         list.add(((EntityCache) con.getInstanceCache()).createCacheKey(idEnum.next()));
-         }
+             // Get context
+             ctx = (EntityEnterpriseContext)cache.get(cacheKey);
+             // if ctx has a transaction, we skip it - either it's our Tx
+             //    or we plain don't want to block here.
+             if (ctx.getTransaction() == null) {
+                contextMap.put(key, ctx);
+             } 
+          } catch (InterruptedException ignored) {
+          } finally {
+             mutex.release();
+          }
+       }
+       
+       ids.setEntityMap(contextMap);
+       
+       store.loadEntities(ids);
 
-       return list;
+       return keyList;
     }
 
     /*
@@ -344,32 +370,7 @@ implements EntityPersistenceManager {
         // Have the store load the fields of the instance
         store.loadEntity(ctx);
 
-        try {
-
-            // Call ejbLoad on bean instance, wake up!
-            ejbLoad.invoke(ctx.getInstance(), new Object[0]);
-
-        } catch (IllegalAccessException e)
-        {
-        	// Throw this as a bean exception...(?)
-        	throw new EJBException(e);
-        } catch (InvocationTargetException ite)
-        {
-        	Throwable e = ite.getTargetException();
-        	if (e instanceof RemoteException)
-        	{
-        		// Rethrow exception
-        		throw (RemoteException)e;
-        	} else if (e instanceof EJBException)
-        	{
-        		// Rethrow exception
-        		throw (EJBException)e;
-        	} else if (e instanceof RuntimeException)
-        	{
-        		// Wrap runtime exceptions
-        		throw new EJBException((Exception)e);
-        	}
-        }
+        invokeLoad(ctx);
     }
 
     public void storeEntity(EntityEnterpriseContext ctx)
@@ -468,6 +469,35 @@ implements EntityPersistenceManager {
         }
 
         store.removeEntity(ctx);
+    }
+    
+    protected void invokeLoad(EntityEnterpriseContext ctx) throws RemoteException {        
+        try {
+
+           // Call ejbLoad on bean instance, wake up!
+           ejbLoad.invoke(ctx.getInstance(), new Object[0]);
+
+        } catch (IllegalAccessException e)
+        {
+           // Throw this as a bean exception...(?)
+        	  throw new EJBException(e);
+        } catch (InvocationTargetException ite)
+        {
+        	  Throwable e = ite.getTargetException();
+        	  if (e instanceof RemoteException)
+        	  {
+        		  // Rethrow exception
+        		  throw (RemoteException)e;
+        	  } else if (e instanceof EJBException)
+        	  {
+        		  // Rethrow exception
+        		  throw (EJBException)e;
+        	  } else if (e instanceof RuntimeException)
+        	  {
+        		  // Wrap runtime exceptions
+        		  throw new EJBException((Exception)e);
+        	  }
+        }
     }
 
     // Z implementation ----------------------------------------------

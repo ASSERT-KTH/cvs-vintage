@@ -23,7 +23,9 @@ import javax.ejb.FinderException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
+import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
+import org.jboss.util.FinderResults;
 
 /**
  * Abstract superclass of finder commands that return collections.
@@ -33,31 +35,52 @@ import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public abstract class JDBCFinderCommand
    extends JDBCQueryCommand
    implements JPMFindEntitiesCommand
 {
+   protected FinderMetaData finderMetaData = null;
    // Constructors --------------------------------------------------
 
-   public JDBCFinderCommand(JDBCCommandFactory factory, String name)
+   public JDBCFinderCommand(JDBCCommandFactory factory, FinderMetaData f)
    {
-      super(factory, name);
+      super(factory, f.getName());
+      
+      finderMetaData = f;
+   }
+   
+   public FinderMetaData getFinderMetaData() {
+      return finderMetaData;
    }
 
    // JPMFindEntitiesCommand implementation -------------------------
 
-   public Collection execute(Method finderMethod,
+   public FinderResults execute(Method finderMethod,
                              Object[] args,
                              EntityEnterpriseContext ctx)
       throws RemoteException, FinderException
    {
-      Collection result = null;
+      FinderResults result = null;
 
       try
       {
-         result = (Collection)jdbcExecute(args);
+         Collection keys = (Collection)jdbcExecute(args);
+         /** @todo: remove this next bit and add 'getWhereClause' to FinderCommands */
+         //look for 'where' and ditch everything before it
+         String sql = getSQL(args);
+         sql.toUpperCase();
+         int pos = sql.indexOf("WHERE");
+         String where = "";
+         if (pos != -1) {
+            where = sql.substring(pos);
+         }
+         if (finderMetaData.hasReadAhead()) {
+            result = new FinderResults(keys, where, this, args);
+         } else {
+            result = new FinderResults(keys, null, null, null);
+         }
       } catch (Exception e)
       {
          log.debug(e);

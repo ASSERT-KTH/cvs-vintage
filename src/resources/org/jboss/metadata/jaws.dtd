@@ -28,8 +28,20 @@ This is the XML DTD for the JAWS deployment descriptor.
  bean in this ejb-jar. This includes query specifications for any finders that
  either do not correspond to a single cmp-field or that require a specific 
  ordering. it must contain an ejb-name element, can contain 0 or more cmp-field
- elements and my contain 0 or more finder elements. -->
-<!ELEMENT entity (ejb-name,cmp-field*,finder*)>
+ elements and my contain 0 or more finder elements. 
+ Other options include:
+ read-ahead: When a finder is called, load all data for all entities.
+ read-only: Do not persist any changes to the bean's state.
+ table-name: Name of the corresponding table.
+ tuned-updates: emit 'update' SQL statements that update only changed fields.
+ create-table: On deploy, create the table if it doesn't exist.
+ remove-table: On undeploy, drop the table from the database (with _all_ _data_!!! 
+ select-for-update: On loading the bean, use the 'select ... for update' syntax,
+      locking the row.
+ pk-constraint: If create-table is on, create it with a primary key.
+ time-out: -->
+<!ELEMENT entity (ejb-name,cmp-field*,finder*,read-ahead?,read-only?,
+                  table-name?,tuned-updates?,create-table?,remove-table?,select-for-update?)>
 
 <!-- ejb-name within an entity element must contain the ejb-name as specified
  in ejb-jar.xml. -->
@@ -38,8 +50,10 @@ This is the XML DTD for the JAWS deployment descriptor.
 <!-- the finder element overrides JAWS default behavior for a finder, or
  specifies JAWS behavior for finders requiring multi-column where clauses or
  a specific ordering. it must contain name and query elements and my contain
- 1 order element -->
-<!ELEMENT finder (name,query,order?)>
+ 1 order element.
+ After JBoss version 2.3, it may contain a read-ahead element indicating whether
+ or not all data for the entities selected should be loaded immediatly. -->
+<!ELEMENT finder (name,query,order?,read-ahead?)>
 
 <!-- the name within a finder element must contain the name of the finder 
  method from the bean's home interface -->

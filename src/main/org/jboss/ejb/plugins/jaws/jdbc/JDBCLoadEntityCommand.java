@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import java.util.Iterator;
+import java.util.HashMap;
 
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
@@ -23,6 +24,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JAWSPersistenceManager;
 import org.jboss.ejb.plugins.jaws.JPMLoadEntityCommand;
 import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
+import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
 
 /**
@@ -34,7 +36,7 @@ import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCLoadEntityCommand
    extends JDBCQueryCommand
@@ -46,22 +48,7 @@ public class JDBCLoadEntityCommand
    {
       super(factory, "Load");
 
-      // Select SQL
-      String sql = "SELECT ";
-      Iterator it = jawsEntity.getCMPFields();
-      boolean first = true;
-
-      while (it.hasNext())
-      {
-         CMPFieldMetaData cmpField = (CMPFieldMetaData)it.next();
-         
-         sql += (first ? "" : ",") +
-                cmpField.getColumnName();
-         first = false;
-      }
-      
-      sql += " FROM " + jawsEntity.getTableName() +
-             " WHERE " + getPkColumnWhereList();
+      String sql = createSelectClause() + " WHERE " + getPkColumnWhereList();
       if (jawsEntity.hasSelectForUpdate())
       {
          sql += " FOR UPDATE";
@@ -70,6 +57,39 @@ public class JDBCLoadEntityCommand
       setSQL(sql);
    }
 
+   protected String createSelectClause() {
+      // Select SQL
+      String sql = "SELECT ";
+      HashMap alreadyListed = new HashMap();
+      // put the key fields in first 
+      Iterator keyIt = jawsEntity.getPkFields();
+      boolean first = true;
+      while (keyIt.hasNext())
+      {
+         PkFieldMetaData pkField = (PkFieldMetaData)keyIt.next();
+         
+         sql += (first ? "" : ",") +
+                pkField.getColumnName();
+         alreadyListed.put(pkField.getColumnName().toUpperCase(), pkField);
+         first = false;
+      }
+      
+      Iterator it = jawsEntity.getCMPFields();
+
+      while (it.hasNext())
+      {
+         CMPFieldMetaData cmpField = (CMPFieldMetaData)it.next();
+         if (alreadyListed.get(cmpField.getColumnName().toUpperCase()) == null) {
+            sql += "," + cmpField.getColumnName();
+            alreadyListed.put(cmpField.getColumnName().toUpperCase(), cmpField);
+         }
+      }
+      
+      sql += " FROM " + jawsEntity.getTableName();
+      
+      return sql;
+   }
+   
    // JPMLoadEntityCommand implementation ---------------------------
 
    public void execute(EntityEnterpriseContext ctx)
@@ -107,6 +127,13 @@ public class JDBCLoadEntityCommand
       }
 
       // Set values
+System.out.print("!");
+      loadOneEntity(rs, ctx);
+      
+      return null;
+   }
+
+   protected void loadOneEntity(ResultSet rs, EntityEnterpriseContext ctx) throws Exception {      
       int idx = 1;
       
       Iterator iter = jawsEntity.getCMPFields();
@@ -125,9 +152,9 @@ public class JDBCLoadEntityCommand
       if (jawsEntity.isReadOnly()) pCtx.lastRead = System.currentTimeMillis();
       pCtx.state = getState(ctx);
 
-      return null;
-   }
 
+   }
+   
    // Protected -----------------------------------------------------
 
    protected boolean isTimedOut(EntityEnterpriseContext ctx)

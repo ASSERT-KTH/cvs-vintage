@@ -35,6 +35,7 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.util.FinderResults;
 
 /**
  *	<description> 
@@ -42,7 +43,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.8 $
+ *	@version $Revision: 1.9 $
  */
 public class CMPFilePersistenceManager
    implements EntityPersistenceStore
@@ -137,7 +138,7 @@ public class CMPFilePersistenceManager
          return null;
    }
      
-   public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
+   public FinderResults findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
       throws RemoteException
    {
       if (finderMethod.getName().equals("findAll"))
@@ -154,10 +155,10 @@ public class CMPFilePersistenceManager
             }
             
 //         Logger.debug("Find all entities done");
-         return result;
+         return new FinderResults(result,null,null,null);
       } else
       {
-         return new java.util.ArrayList();
+         return new FinderResults(new java.util.ArrayList(),null,null,null);
       }
    }
 
@@ -191,7 +192,11 @@ public class CMPFilePersistenceManager
       }
    }
       
-   	private void storeEntity(Object id, Object obj) 
+   public void loadEntities(FinderResults keys) {
+      //this is a no op for this persistence store.
+   }
+   
+   private void storeEntity(Object id, Object obj) 
    	throws RemoteException {
 	  
       try

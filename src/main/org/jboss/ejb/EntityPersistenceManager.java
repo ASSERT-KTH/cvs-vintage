@@ -14,6 +14,8 @@ import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 
+import org.jboss.util.FinderResults;
+
 /**
  *	This interface is implemented by any EntityBean persistence managers plugins.
  *
@@ -24,7 +26,7 @@ import javax.ejb.RemoveException;
  *
  *	@see EntityContainer
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public interface EntityPersistenceManager
    extends ContainerPlugin

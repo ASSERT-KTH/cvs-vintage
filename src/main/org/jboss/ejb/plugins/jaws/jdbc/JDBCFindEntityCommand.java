@@ -29,7 +29,7 @@ import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCFindEntityCommand implements JPMFindEntityCommand
 {
@@ -60,15 +60,16 @@ public class JDBCFindEntityCommand implements JPMFindEntityCommand
       }
       else
       {
-         ArrayList result =
-            (ArrayList)findEntitiesCommand.execute(finderMethod, args, ctx);
+         Collection result =
+            (Collection)findEntitiesCommand.execute(finderMethod, args, ctx);
          
          if (result.size() == 0)
          {
             throw new ObjectNotFoundException("No such entity!");
          } else if (result.size() == 1)
          {
-            return result.get(0);
+            Object [] objects = result.toArray();
+            return objects[0];
          } else
          {
             throw new FinderException("More than one entity matches the finder criteria.");

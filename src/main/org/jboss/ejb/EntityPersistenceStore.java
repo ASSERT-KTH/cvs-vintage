@@ -9,12 +9,14 @@ package org.jboss.ejb;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.util.Collection;
+import java.util.Map;
 
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 
 import org.jboss.ejb.ContainerPlugin;
+import org.jboss.util.FinderResults;
 
 /**
  *	This interface is implemented by any EntityBean persistence Store.
@@ -26,8 +28,9 @@ import org.jboss.ejb.ContainerPlugin;
  * 
  *	@see EntityPersistenceManager
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.3 $
+ * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
+ *	@version $Revision: 1.4 $
  */
 public interface EntityPersistenceStore
 extends ContainerPlugin
@@ -78,7 +81,7 @@ extends ContainerPlugin
 	 * @exception   RemoteException  thrown if some system exception occurs
 	 * @exception   FinderException  thrown if some heuristic problem occurs
 	 */
-   public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext instance)
+   public FinderResults findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext instance)
       throws Exception;
 
 
@@ -106,6 +109,17 @@ extends ContainerPlugin
 	 * @exception   RemoteException  thrown if some system exception occurs
 	 */
    public void loadEntity(EntityEnterpriseContext instance)
+      throws RemoteException;
+      
+   /**
+    * This method is called whenever a set of entities should be preloaded from
+    * the underlying storage. The persistence store is allowed to make this a 
+    * null operation
+    * 
+    * @param instances the EntityEnterpriseContexts for the entities that must be loaded
+    * @param keys a PagableKeyCollection previously returned from findEntities. 
+    */
+   public void loadEntities(FinderResults keys)
       throws RemoteException;
       
 	/**

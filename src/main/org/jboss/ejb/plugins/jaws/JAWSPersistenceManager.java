@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 
 import java.util.Collection;
+import java.util.Map;
 
 import javax.ejb.CreateException;
 import javax.ejb.DuplicateKeyException;
@@ -25,16 +26,18 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.jdbc.JDBCCommandFactory;
 
 import org.jboss.logging.Log;
+import org.jboss.util.FinderResults;
 
 /**
  *   Just Another Web Store - an O/R mapper
  *
  * @see org.jboss.ejb.EntityPersistenceStore
+ * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceStore
@@ -55,10 +58,12 @@ public class JAWSPersistenceManager
    JPMCreateEntityCommand createEntityCommand;
    JPMRemoveEntityCommand removeEntityCommand;
    JPMLoadEntityCommand loadEntityCommand;
+   JPMLoadEntitiesCommand loadEntitiesCommand;
    JPMStoreEntityCommand storeEntityCommand;
 
    JPMActivateEntityCommand activateEntityCommand;
    JPMPassivateEntityCommand passivateEntityCommand;
+   
 
    Log log = Log.createLog("JAWS");
 
@@ -87,6 +92,7 @@ public class JAWSPersistenceManager
       createEntityCommand = commandFactory.createCreateEntityCommand();
       removeEntityCommand = commandFactory.createRemoveEntityCommand();
       loadEntityCommand = commandFactory.createLoadEntityCommand();
+      loadEntitiesCommand = commandFactory.createLoadEntitiesCommand();
       storeEntityCommand = commandFactory.createStoreEntityCommand();
 
       activateEntityCommand = commandFactory.createActivateEntityCommand();
@@ -130,7 +136,7 @@ public class JAWSPersistenceManager
       return findEntityCommand.execute(finderMethod, args, ctx);
    }
 
-   public Collection findEntities(Method finderMethod,
+   public FinderResults findEntities(Method finderMethod,
                                   Object[] args,
                                   EntityEnterpriseContext ctx)
       throws RemoteException, FinderException
@@ -148,6 +154,12 @@ public class JAWSPersistenceManager
       throws RemoteException
    {
       loadEntityCommand.execute(ctx);
+   }
+   
+   public void loadEntities(FinderResults keys) 
+      throws RemoteException
+   {
+      loadEntitiesCommand.execute(keys);
    }
 
    public void storeEntity(EntityEnterpriseContext ctx)
