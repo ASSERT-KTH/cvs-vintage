@@ -34,6 +34,12 @@
             Runs "maven site" and then copies all the resulting files to ${scarab.docs.head}.  It does some regular expression replacing on dates in the documentation to reduce the number of changes that need to be committed into Scarab Gen.  Theorectically running this goal twice means the second time you won't have to commit any changes!
           </td>
         </tr>                          
+        <tr>
+          <td>scarab:fix_linefeeds</td>
+          <td>
+            Changes all CRLF's in the source to just LF, and removes any DOS eof characters.
+          </td>
+        </tr>
       </table>
     </section>
  </body>

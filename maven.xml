@@ -218,4 +218,13 @@
   	<ant:copy file="${genDocs}/scarab_properties.xml" toFile="${genDocs}/scarab_properties_final.xml" overwrite="true"/>
 
   </postGoal> 
+  
+  <goal name="scarab:fix_linefeeds">
+  	<ant:fixcrlf 
+  		srcDir="${maven.src.dir}"
+  		eol="lf"  	
+  		eof="remove"
+  		includes="**/*.java"
+  	/>
+  </goal>
 </project>
