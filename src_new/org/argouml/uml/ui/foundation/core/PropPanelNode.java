@@ -25,7 +25,7 @@
 // File: PropPanelNode.java
 // Classes: PropPanelNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNode.java,v 1.7 2002/03/21 17:42:46 jeremybennett Exp $
+// $Id: PropPanelNode.java,v 1.8 2002/03/29 11:04:57 mkl Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -54,18 +54,21 @@ public class PropPanelNode extends PropPanelClassifier {
     addCaption("Specializes:",2,0,0);
     addField(extendsScroll,2,0,0);
 
-    addCaption("Modifiers:",3,0,0);
+    addCaption("Stereotype:",3,0,0);
+    addField(new UMLComboBoxNavigator(this,"NavStereo",stereotypeBox),3,0,0);
+
+    addCaption("Modifiers:",4,0,0);
     JPanel modifiersPanel = new JPanel(new GridLayout(0,3));
     modifiersPanel.add(new UMLCheckBox(localize("abstract"),this,new UMLReflectionBooleanProperty("isAbstract",mclass,"isAbstract","setAbstract")));
     modifiersPanel.add(new UMLCheckBox(localize("final"),this,new UMLReflectionBooleanProperty("isLeaf",mclass,"isLeaf","setLeaf")));
     modifiersPanel.add(new UMLCheckBox(localize("root"),this,new UMLReflectionBooleanProperty("isRoot",mclass,"isRoot","setRoot")));
-    addField(modifiersPanel,3,0,0);
+    addField(modifiersPanel,4,0,0);
 
-    addCaption("Namespace:",4,0,0);
-   addField(namespaceScroll,4,0,0);
+    addCaption("Namespace:",5,0,0);
+   addField(namespaceScroll,5,0,0);
 
-    addCaption("Generalizes:",5,0,1);
-    addField(derivedScroll,5,0,1);
+    addCaption("Generalizes:",6,0,1);
+    addField(derivedScroll,6,0,1);
 
     addCaption("Components:",0,1,1);
     JList compList = new UMLList(new UMLReflectionListModel(this,"component",true,"getResidents","setResidents",null,null),true);
