@@ -99,7 +99,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * to define a query or running a canned query and listing the results.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ModuleQuery.java,v 1.5 2002/07/19 00:07:25 jmcnally Exp $
+ * @version $Id: ModuleQuery.java,v 1.6 2002/07/25 18:13:49 jmcnally Exp $
  */
 public class ModuleQuery extends RequireLoginFirstAction
 {
@@ -146,6 +146,9 @@ public class ModuleQuery extends RequireLoginFirstAction
                 }
                 user.setCurrentMITList(null);
                 user.addRMITsToCurrentMITList(rmits);
+                // Another oddity due to ScarabUserImpl not extending
+                // AbstractScarabUser
+                user.getCurrentMITList().setScarabUser(user);
             }
         }
         
