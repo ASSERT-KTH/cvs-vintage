@@ -55,6 +55,9 @@ import org.apache.fulcrum.template.TemplateContext;
 import org.apache.fulcrum.template.DefaultTemplateContext;
 import org.apache.fulcrum.template.TemplateEmail;
 
+import org.apache.fulcrum.TurbineServices;
+import org.apache.fulcrum.velocity.VelocityService;
+
 import org.apache.turbine.Turbine;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
@@ -65,7 +68,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.2 2002/03/22 05:07:04 jon Exp $
+ * @version $Id: Email.java,v 1.3 2002/04/04 00:57:08 jon Exp $
  */
 public class Email
 {
@@ -90,90 +93,106 @@ public class Email
         {
             return true;
         }
-
-        boolean success = true;
-        TemplateEmail te = new TemplateEmail();
-        if ( context == null ) 
-        {
-            context = new DefaultTemplateContext();
-        }        
-        te.setContext(context);
-        
-        if (fromUser instanceof ScarabUser)
-        {
-            ScarabUser u = (ScarabUser)fromUser;
-            te.setFrom(u.getName(), u.getEmail());
-        }
-        else
-        {
-            // assume string
-            String key = (String)fromUser;	    
-            if (fromUser == null)
-            {
-                key = "scarab.email.default";
-            } 
-            
-            te.setFrom(Turbine.getConfiguration().getString
-                       (key + ".fromName", "Scarab System"), 
-                       Turbine.getConfiguration().getString
-                       (key + ".fromAddress",
-                        "help@scarab.tigris.org"));
-        }
-        
-        if (subject == null)
-        {
-            te.setSubject((Turbine.getConfiguration().
-                           getString("scarab.email.default.subject")));
-        }
-        else
-        {
-            te.setSubject(subject);
-        }
-        
-        if (template == null)
-        {
-            te.setTemplate(Turbine.getConfiguration().
-                           getString("scarab.email.default.template"));
-        }
-        else
-        {
-            te.setTemplate(template);
-        }
-        
-        Iterator iter = toUsers.iterator();
-        while ( iter.hasNext() ) 
-        {
-            ScarabUser toUser = (ScarabUser)iter.next();
-            te.addTo(toUser.getEmail(),
-                     toUser.getFirstName() + " " + toUser.getLastName());
-        }
-        
-        if (ccUsers != null)
-        {
-            iter = ccUsers.iterator();
-            while ( iter.hasNext() ) 
-            {
-                ScarabUser ccUser = (ScarabUser)iter.next();
-                te.addCc(ccUser.getEmail(),
-                         ccUser.getFirstName() + " " + ccUser.getLastName());
-            }
-        }
-        
-        String archiveEmail = module.getArchiveEmail();
-        if (archiveEmail != null && archiveEmail.trim().length() > 0)
-        {
-            te.addCc(archiveEmail, null);
-        }
-        
+        VelocityService vs = null;
         try
         {
-            te.sendMultiple();
+            // turn off the event cartridge handling so that when
+            // we process the email, the html codes are escaped.
+            vs = (VelocityService) TurbineServices
+                .getInstance().getService(VelocityService.SERVICE_NAME);
+            vs.setEventCartridgeEnabled(false);
+
+            boolean success = true;
+            TemplateEmail te = new TemplateEmail();
+            if ( context == null ) 
+            {
+                context = new DefaultTemplateContext();
+            }        
+            te.setContext(context);
+            
+            if (fromUser instanceof ScarabUser)
+            {
+                ScarabUser u = (ScarabUser)fromUser;
+                te.setFrom(u.getName(), u.getEmail());
+            }
+            else
+            {
+                // assume string
+                String key = (String)fromUser;	    
+                if (fromUser == null)
+                {
+                    key = "scarab.email.default";
+                } 
+                
+                te.setFrom(Turbine.getConfiguration().getString
+                           (key + ".fromName", "Scarab System"), 
+                           Turbine.getConfiguration().getString
+                           (key + ".fromAddress",
+                            "help@scarab.tigris.org"));
+            }
+            
+            if (subject == null)
+            {
+                te.setSubject((Turbine.getConfiguration().
+                               getString("scarab.email.default.subject")));
+            }
+            else
+            {
+                te.setSubject(subject);
+            }
+            
+            if (template == null)
+            {
+                te.setTemplate(Turbine.getConfiguration().
+                               getString("scarab.email.default.template"));
+            }
+            else
+            {
+                te.setTemplate(template);
+            }
+            
+            Iterator iter = toUsers.iterator();
+            while ( iter.hasNext() ) 
+            {
+                ScarabUser toUser = (ScarabUser)iter.next();
+                te.addTo(toUser.getEmail(),
+                         toUser.getFirstName() + " " + toUser.getLastName());
+            }
+            
+            if (ccUsers != null)
+            {
+                iter = ccUsers.iterator();
+                while ( iter.hasNext() ) 
+                {
+                    ScarabUser ccUser = (ScarabUser)iter.next();
+                    te.addCc(ccUser.getEmail(),
+                             ccUser.getFirstName() + " " + ccUser.getLastName());
+                }
+            }
+            
+            String archiveEmail = module.getArchiveEmail();
+            if (archiveEmail != null && archiveEmail.trim().length() > 0)
+            {
+                te.addCc(archiveEmail, null);
+            }
+            
+            try
+            {
+                te.sendMultiple();
+            }
+            catch (SendFailedException e)
+            {
+                success = false;
+            }
+            return success;
         }
-        catch (SendFailedException e)
+        finally
         {
-            success = false;
+            if (vs != null)
+            {
+                vs.setEventCartridgeEnabled(true);
+            }
         }
-        return success;
     }
 
     /**
