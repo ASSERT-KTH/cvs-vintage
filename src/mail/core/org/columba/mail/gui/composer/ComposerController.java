@@ -86,17 +86,11 @@ public class ComposerController
 					"/options/gui/view")));
 
 		getView().addWindowListener(this);
-
 		getView().loadWindowPosition();
-
 		headerController.view.getTable().initFocus(subjectController.view);
-
 		getView().setVisible(true);
-
 		initAddressCompletion();
-
 		headerController.editLastRow();
-
 	}
 
 	public void charsetChanged(CharsetEvent e) {
@@ -115,14 +109,11 @@ public class ComposerController
 
 	public void updateComponents(boolean b) {
 		subjectController.updateComponents(b);
-
 		editorController.updateComponents(b);
 		priorityController.updateComponents(b);
 		accountController.updateComponents(b);
 		attachmentController.updateComponents(b);
-
 		headerController.updateComponents(b);
-
 		getCharsetManager().displayCharset(composerModel.getCharsetName());
 		//headerController.appendRow();
 	}
@@ -317,21 +308,13 @@ public class ComposerController
 	 */
 	protected void init() {
 		identityInfoPanel = new IdentityInfoPanel();
-
 		attachmentController = new AttachmentController(this);
-
 		headerController = new HeaderController(this);
-
 		subjectController = new SubjectController(this);
-
 		priorityController = new PriorityController(this);
-
 		accountController = new AccountController(this);
-
 		editorController = new EditorController(this);
-
 		composerSpellCheck = new ComposerSpellCheck(this);
-
 		XmlElement optionsElement =
 			MailConfig.get("composer_options").getElement("/options");
 		XmlElement charsetElement = optionsElement.getElement("charset");
@@ -341,7 +324,6 @@ public class ComposerController
 
 			optionsElement.addElement(charsetElement);
 		}
-
 		setCharsetManager(new CharsetManager(charsetElement));
 		getCharsetManager().addCharsetListener(this);
 	}
@@ -352,7 +334,6 @@ public class ComposerController
 	public ComposerModel getModel() {
 		if (composerModel == null)
 			composerModel = new ComposerModel();
-
 		return composerModel;
 	}
 
@@ -361,7 +342,6 @@ public class ComposerController
 	 */
 	public void setComposerModel(ComposerModel model) {
 		composerModel = model;
-
 		updateComponents(true);
 	}
 
@@ -369,13 +349,11 @@ public class ComposerController
 	 * @see org.columba.core.gui.frame.AbstractFrameController#close()
 	 */
 	public void close() {
-
-		ColumbaLogger.log.info("closing ComposerController");
-
+                if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("closing ComposerController");
+                }
 		view.saveWindowPosition();
-
 		view.setVisible(false);
-
 	}
 
 	/**
@@ -391,5 +369,4 @@ public class ComposerController
 	public void setCharsetManager(CharsetManager manager) {
 		charsetManager = manager;
 	}
-
 }
