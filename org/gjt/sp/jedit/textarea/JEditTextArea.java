@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.303 2004/01/25 04:27:41 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.304 2004/01/29 02:37:00 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5412,7 +5412,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			selEndScreenLine = -1;
 
 		int lineStart = buffer.getLineStartOffset(physicalLine);
-			int x1, x2;
+		int x1, x2;
 
 		if(s instanceof Selection.Rect)
 		{

@@ -4,7 +4,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2001, 2003 Slava Pestov
+ * Copyright (C) 2001, 2004 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.93 2003/12/23 02:15:05 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.94 2004/01/29 02:36:58 spestov Exp $
  */
 class ChunkCache
 {
@@ -64,6 +64,11 @@ class ChunkCache
 	int getScreenLineOfOffset(int line, int offset)
 	{
 		if(line < textArea.getFirstPhysicalLine())
+		{
+			return -1;
+		}
+		else if(line == textArea.getFirstPhysicalLine()
+			&& offset < getLineInfo(0).offset)
 		{
 			return -1;
 		}
