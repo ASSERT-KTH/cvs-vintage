@@ -20,5 +20,6 @@
 	<classpathentry kind="lib" path="/thirdparty/apache-axis/lib/wsdl4j.jar"/>
 	<classpathentry kind="lib" path="/thirdparty/apache-axis/lib/axis.jar"/>
 	<classpathentry kind="lib" path="/thirdparty/apache-commons/lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="/thirdparty/sun-servlet/lib/servlet-api.jar"/>
 	<classpathentry kind="output" path="output/eclipse-classes"/>
 </classpath>
