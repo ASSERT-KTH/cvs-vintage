@@ -47,7 +47,7 @@ import org.gjt.sp.jedit.syntax.*;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.174 2003/01/14 02:09:23 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.175 2003/01/14 20:05:20 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -806,6 +806,7 @@ public class JEditTextArea extends JComponent
 	 */
 	public int getPhysicalLineOfScreenLine(int screenLine)
 	{
+		chunkCache.updateChunksUpTo(screenLine);
 		return chunkCache.getLineInfo(screenLine).physicalLine;
 	} //}}}
 

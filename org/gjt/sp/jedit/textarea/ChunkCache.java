@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.syntax.*;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.53 2003/01/14 02:09:23 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.54 2003/01/14 20:05:19 spestov Exp $
  */
 class ChunkCache
 {
@@ -206,6 +206,24 @@ class ChunkCache
 			}
 			else
 			{
+				int lastValidLine = -1;
+
+				// chunk cache does not allow only the last
+				// (visibleLines - lastValidLine) lines to
+				// be invalid; only entire physical lines can
+				// be invalidated.
+				for(int i = visibleLines - 1; i >= 0; i--)
+				{
+					if(DEBUG)
+					{
+						System.err.println("Scan " + i);
+					}
+					if(lineInfo[i].lastSubregion)
+						break;
+					else
+						lineInfo[i].chunksValid = false;
+				}
+
 				if(firstScreenLine != visibleLines)
 				{
 					System.arraycopy(lineInfo,firstScreenLine,
