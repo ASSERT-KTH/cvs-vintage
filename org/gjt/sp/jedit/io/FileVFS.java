@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.13 2001/11/30 11:40:16 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.14 2001/12/02 07:34:52 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -113,7 +113,7 @@ public class FileVFS extends VFS
 		if(!file.exists())
 		{
 			buffer.setNewFile(true);
-			return false;
+			return true;
 		}
 		else
 			buffer.setReadOnly(!file.canWrite());

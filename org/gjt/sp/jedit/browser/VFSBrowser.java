@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.17 2001/12/01 05:48:47 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.18 2001/12/02 07:34:51 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -81,7 +81,10 @@ public class VFSBrowser extends JPanel implements EBComponent
 		DockableWindowManager wm = view.getDockableWindowManager();
 		VFSBrowser browser = (VFSBrowser)wm.getDockable(NAME);
 		if(browser != null)
+		{
+			wm.showDockableWindow(NAME);
 			browser.setDirectory(path);
+		}
 		else
 		{
 			if(path != null)
@@ -241,7 +244,7 @@ public class VFSBrowser extends JPanel implements EBComponent
 		if(path == null)
 			path = jEdit.getProperty("vfs.browser.path.tmp");
 
-		if(path == null)
+		if(path == null || path.length() == 0)
 		{
 			String userHome = System.getProperty("user.home");
 			String defaultPath = jEdit.getProperty("vfs.browser.defaultPath");

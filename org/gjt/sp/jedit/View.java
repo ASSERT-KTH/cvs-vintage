@@ -28,7 +28,7 @@ import java.awt.event.*;
 import java.util.*;
 import org.gjt.sp.jedit.msg.*;
 import org.gjt.sp.jedit.gui.*;
-import org.gjt.sp.jedit.search.SearchBar;
+import org.gjt.sp.jedit.search.*;
 import org.gjt.sp.jedit.textarea.*;
 import org.gjt.sp.util.Log;
 
@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.4 2001/10/04 07:41:15 spestov Exp $
+ * @version $Id: View.java,v 1.5 2001/12/02 07:34:51 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -94,14 +94,21 @@ public class View extends JFrame implements EBComponent
 			return;
 		}
 
-		String text = getTextArea().getSelectedText();
-		if(text != null && text.indexOf('\n') != -1)
-			text = null;
-
 		searchBar.setHyperSearch(true);
-		searchBar.getField().setText(text);
-		searchBar.getField().selectAll();
-		searchBar.getField().requestFocus();
+
+		String text = getTextArea().getSelectedText();
+		if(text != null && text.indexOf('\n') == -1)
+		{
+			HistoryModel.getModel("find").addItem(text);
+			SearchAndReplace.setSearchString(text);
+			SearchAndReplace.setSearchFileSet(new CurrentBufferSet());
+			SearchAndReplace.hyperSearch(this);
+		}
+		else
+		{
+			searchBar.getField().setText(null);
+			searchBar.getField().requestFocus();
+		}
 	}
 
 	/**

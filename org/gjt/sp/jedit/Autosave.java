@@ -25,7 +25,7 @@ import java.awt.event.ActionListener;
 
 /**
  * @author Slava Pestov
- * @version $Id: Autosave.java,v 1.2 2001/09/08 04:50:46 spestov Exp $
+ * @version $Id: Autosave.java,v 1.3 2001/12/02 07:34:51 spestov Exp $
  */
 class Autosave implements ActionListener
 {
@@ -61,6 +61,10 @@ class Autosave implements ActionListener
 
 	public void actionPerformed(ActionEvent evt)
 	{
+		// save list of open files
+		if(jEdit.getFirstView() != null)
+			jEdit.saveOpenFiles(jEdit.getFirstView());
+
 		Buffer[] bufferArray = jEdit.getBuffers();
 		for(int i = 0; i < bufferArray.length; i++)
 			bufferArray[i].autosave();

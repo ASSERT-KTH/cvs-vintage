@@ -30,13 +30,14 @@ import javax.swing.text.Segment;
 /**
  * A set of parser rules.
  * @author mike dillon
- * @version $Id: ParserRuleSet.java,v 1.3 2001/12/01 05:48:48 spestov Exp $
+ * @version $Id: ParserRuleSet.java,v 1.4 2001/12/02 07:34:52 spestov Exp $
  */
 public class ParserRuleSet
 {
 	//{{{ ParserRuleSet constructor
-	public ParserRuleSet(Mode mode)
+	public ParserRuleSet(String name, Mode mode)
 	{
+		this.name = name;
 		this.mode = mode;
 		ruleMapFirst = new ParserRule[RULE_BUCKET_COUNT];
 		ruleMapLast = new ParserRule[RULE_BUCKET_COUNT];
@@ -173,9 +174,17 @@ public class ParserRuleSet
 		defaultToken = def;
 	} //}}}
 
+	//{{{ toString() method
+	public String toString()
+	{
+		return getClass().getName() + "[" + mode.getName() + "::"
+			+ name + "]";
+	} //}}}
+
 	//{{{ Private members
 	private static final int RULE_BUCKET_COUNT = 32;
 
+	private String name;
 	private Mode mode;
 	private Hashtable props;
 
