@@ -69,7 +69,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  * not in the templates.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: SelectIssueType.java,v 1.10 2002/07/03 17:43:40 jon Exp $
+ * @version $Id: SelectIssueType.java,v 1.11 2002/08/26 01:45:07 jmcnally Exp $
  */
 public class SelectIssueType extends RequireLoginFirstAction
 {
@@ -93,10 +93,20 @@ public class SelectIssueType extends RequireLoginFirstAction
             .getInstance(new NumberKey(newIssueType), false);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         scarabR.setCurrentIssueType(issueType);
-        scarabR.setReportingIssue(null);
-        data.getParameters().remove(ScarabConstants.REPORTING_ISSUE);
 
-        setTarget(data, scarabR.getNextEntryTemplate());
+        String nextTemplate = 
+            data.getParameters().getString(ScarabConstants.NEXT_TEMPLATE);
+        if (nextTemplate == null) 
+        {
+            scarabR.setReportingIssue(null);
+            data.getParameters().remove(ScarabConstants.REPORTING_ISSUE);
+            setTarget(data, scarabR.getNextEntryTemplate());
+        }
+        else 
+        {
+            setTarget(data, nextTemplate);
+        }
+        
     }
 
     /**
