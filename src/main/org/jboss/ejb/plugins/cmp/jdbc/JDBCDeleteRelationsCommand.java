@@ -9,6 +9,7 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Iterator;
+import java.util.List;
 import javax.ejb.EJBException;
 import javax.sql.DataSource;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
@@ -21,7 +22,7 @@ import org.jboss.logging.Logger;
  * Deletes relations from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCDeleteRelationsCommand {
    private JDBCStoreManager manager;
@@ -48,33 +49,29 @@ public class JDBCDeleteRelationsCommand {
          return;
       }
 
-      boolean debug = log.isDebugEnabled();
-
       String sql = createSQL(relationData);
-
+      
       Connection con = null;
       PreparedStatement ps = null;
-      JDBCRelationMetaData relationMetaData =
+      JDBCRelationMetaData relationMetaData = 
             relationData.getLeftCMRField().getRelationMetaData();
       try {
          // get the connection
          DataSource dataSource = relationMetaData.getDataSource();
          con = dataSource.getConnection();
-
+         
          // create the statement
-         if (debug)
-            log.debug("Executing SQL: " + sql);
+         log.debug("Executing SQL: " + sql);
          ps = con.prepareStatement(sql);
-
+         
          // set the parameters
          setParameters(ps, relationData);
 
          // execute statement
          int rowsAffected = ps.executeUpdate();
-         if (debug)
-            log.debug("Create: Rows affected = " + rowsAffected);
+         log.debug("Create: Rows affected = " + rowsAffected);
       } catch(Exception e) {
-         throw new EJBException("Could not delete relations from " +
+         throw new EJBException("Could not delete relations from " + 
                relationMetaData.getTableName(), e);
       } finally {
          JDBCUtil.safeClose(ps);
@@ -114,27 +111,25 @@ public class JDBCDeleteRelationsCommand {
          PreparedStatement ps,
          RelationData relationData) throws Exception {
       
-      int parameterIndex = 1;
+      int index = 1;
       Iterator pairs = relationData.removedRelations.iterator();
       while(pairs.hasNext()) {
          RelationPair pair = (RelationPair)pairs.next();
          
          // left keys
          Object leftId = pair.getLeftId();
-         JDBCCMPFieldBridge[] leftKeyFields = 
-               relationData.getLeftCMRField().getTableKeyFields();
-         for(int i=0; i<leftKeyFields.length; i++) {
-            parameterIndex = leftKeyFields[i].setPrimaryKeyParameters(
-                  ps, parameterIndex, leftId);
+         List leftFields = relationData.getLeftCMRField().getTableKeyFields();
+         for(Iterator fields=leftFields.iterator(); fields.hasNext();) {
+            JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)fields.next();
+            index = field.setPrimaryKeyParameters(ps, index, leftId);
          }
                
          // right keys
          Object rightId = pair.getRightId();
-         JDBCCMPFieldBridge[] rightKeyFields = 
-               relationData.getRightCMRField().getTableKeyFields();
-         for(int i=0; i<rightKeyFields.length; i++) {
-            parameterIndex = rightKeyFields[i].setPrimaryKeyParameters(
-                  ps, parameterIndex, rightId);
+         List rightFields = relationData.getRightCMRField().getTableKeyFields();
+         for(Iterator fields=rightFields.iterator(); fields.hasNext();) {
+            JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)fields.next();
+            index = field.setPrimaryKeyParameters(ps, index, rightId);
          }
       }
    }
