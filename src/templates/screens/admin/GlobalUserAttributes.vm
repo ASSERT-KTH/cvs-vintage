@@ -1,12 +1,12 @@
-<div class="app" id=""div3-0-0-1"">
+<div class="app" id="div3-0-0-1">
 
 #set ($module = $scarabR.CurrentModule)
 
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 <tr>
-<td><a href="$link.setPage("admin,GlobalAttributeShow.vm")" title="#">$l10n.GlobalAttributes</a></td>
-<th>Global user attributes</th>
+<td><a href="$link.setPage("admin,GlobalAttributeShow.vm")">$l10n.GlobalAttributes</a></td>
+<th>$l10n.GlobalUserAttributes</th>
 </tr>
 </table>
 </div>
@@ -17,7 +17,6 @@
 <input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="admin,GlobalUserAttributes.vm" />
 <input type="hidden" name="attributeType" value="user" />
 
-        
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn",""))
 #set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
@@ -28,7 +27,6 @@
    #set ($sortPolarity = "asc")
 #end
 #set ($userAttrs = $scarabG.getUserAttributes($sortColumn, $sortPolarity))
-
 
 ## PAGINATION
 ## if results exceed limit, get subset list
@@ -60,15 +58,21 @@
 <th>$l10n.BasePermission</th>
 <th>#sort("user" "$l10n.Author")</th>
 <th>#sort("date" "$l10n.CreationDate")</th>
-<th>$l10n.Deleted</th>
 </tr>
-       
+
+#macro (strikeS $attribute)
+#if($attribute.Deleted)<strike>#end
+#end
+#macro (strikeE $attribute)
+#if($attribute.Deleted)</strike>#end
+#end
+
 #foreach ($attr in $userAttrs)
   #set ($attgroup = $intake.Attribute.mapTo($attr))
   #indexedRows($velocityCount)
   <td><input type="checkbox" name="action_$attr.AttributeId"></td>
-  <td>$link.setPage("admin,UserAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").addPathInfo("$scarabG.Constant.LAST_TEMPLATE", "admin,GlobalUserAttributes.vm").setLabel("$attr.Name")</td>
-  <td>$attr.Description</td>
+  <td>#strikeS($attr)$link.setPage("admin,UserAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").addPathInfo("$scarabG.Constant.LAST_TEMPLATE", "admin,GlobalUserAttributes.vm").setLabel("$attr.Name")#strikeE($attr)</td>
+  <td>#strikeS($attr)$attr.Description#strikeE($attr)</td>
   <td>
     #fieldErrorMsg($attgroup.Action "")
     <select name="$attgroup.Action.Key" size="1">
@@ -90,9 +94,8 @@
     #end
     </select>
   </td>
-  <td>#attributeCreatedBy($attr)</td>
-  <td>$format.getDate($scarabR.DateFormat, $attr.CreatedDate)</td>
-  <td>$attgroup.Deleted</td>
+  <td>#strikeS($attr)#attributeCreatedBy($attr)#strikeE($attr)</td>
+  <td>#strikeS($attr)$format.getDate($scarabR.DateFormat, $attr.CreatedDate)#strikeE($attr)</td>
   </tr>
 #end        
 </table>
@@ -104,7 +107,7 @@
 #end
 <input type="submit" value="$l10n.CreateNew"  name="eventSubmit_doCreatenew" />&#160;
 #if (!$userAttrs.isEmpty())
-<input type="submit" value="$l10n.CopySelected"  name="eventSubmit_doCopy" />&#160;
+<input type="submit" value="$l10n.CopySelected"  name="eventSubmit_doCopy" />
 #end
 </div>
 

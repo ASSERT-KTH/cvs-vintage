@@ -1,9 +1,5 @@
 <div id="globalattributeshow" class="app">
-
 <form action="$link.setPage("admin,GlobalAttributeShow.vm")" method="post">
-<p>
-$l10n.PageForSelectingAttributes
-</p>
 
 #set ($sortColumn = $data.Parameters.getString("sortColumn",""))
 #set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
@@ -20,20 +16,6 @@ $l10n.PageForSelectingAttributes
 #set ($searchString = $data.Parameters.getString("searchString" , ""))
 #set ($searchField = $data.Parameters.getString("searchField" , ""))
 
-<div class="axial">
-<table border="0" cellspacing="2" cellpadding="3">
-  <tr>
-   <th>$l10n.FilterString</th>
-   <td><input type="text" name="searchString" value="$searchString" />&nbsp;
-     <select name="searchField" >
-      <option value="Any" #if($searchField.equals("Any")) selected="selected"#end>$l10n.Any</option>
-      <option value="Name" #if($searchField.equals("Name")) selected="selected"#end>$l10n.Name</option>
-      <option value="Description" #if($searchField.equals("Description")) selected="selected"#end>$l10n.Description</option>
-     </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="$l10n.Filter" /></td>
-  </tr>
-</table>
-</div>
-
 #if ($searchString && $searchString.length() > 0)
    #set ($attributes = $scarabR.AttributeSearchResults) 
    #if ( $attributes.isEmpty())
@@ -41,7 +23,6 @@ $l10n.PageForSelectingAttributes
       #set ($attributes = $allAttributes)
    #end
 #end
-
 
 ## PAGINATION
 ## if results exceed limit, get subset list
@@ -56,7 +37,6 @@ $l10n.PageForSelectingAttributes
 #end
 
 ## INPUT FORM
-
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,GlobalAttributeShow.vm" />
@@ -67,9 +47,7 @@ $l10n.PageForSelectingAttributes
 <th>
 $l10n.GlobalAttributes
 </th>
-
 <td><a href="$link.setPage("admin,GlobalUserAttributes.vm")">$l10n.GlobalUserAttributes</a></td>
-
 </tr>
 </table>
 </div>
@@ -80,19 +58,39 @@ $l10n.GlobalAttributes
 
 <h3>$l10n.GlobalAttributes</h3>
 
+<div class="axial">
+<table border="0" cellspacing="2" cellpadding="3">
+  <tr>
+   <th>$l10n.FilterString</th>
+   <td><input type="text" name="searchString" value="$searchString" />&nbsp;
+     <select name="searchField" >
+      <option value="Any" #if($searchField.equals("Any")) selected="selected"#end>$l10n.Any</option>
+      <option value="Name" #if($searchField.equals("Name")) selected="selected"#end>$l10n.Name</option>
+      <option value="Description" #if($searchField.equals("Description")) selected="selected"#end>$l10n.Description</option>
+     </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="$l10n.Filter" /></td>
+  </tr>
+</table>
+</div>
+
 #if ($attributes.isEmpty())
 <p class="alert">$l10n.ClickCreateNew</p>
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th>$l10n.Select</th>
-<th>#sortWithSearch ("name" "Name" $searchString $searchField)</th>
-<th>#sortWithSearch ("desc" "Description" $searchString $searchField)</th>
-<th>#sortWithSearch("type" "Input type" $searchString $searchField)</th>
-<th>#sortWithSearch ("user" "Author" $searchString $searchField)</th>
-<th>#sortWithSearch("date" "Creation date" $searchString $searchField)</th>
-<th>$l10n.Deleted</th>
+<th>#sortWithSearch ("name" "$l10n.Name" $searchString $searchField)</th>
+<th>#sortWithSearch ("desc" "$l10n.Description" $searchString $searchField)</th>
+<th>#sortWithSearch("type" "$l10n.InputType" $searchString $searchField)</th>
+<th>#sortWithSearch ("user" "$l10n.Author" $searchString $searchField)</th>
+<th>#sortWithSearch("date" "$l10n.CreationDate" $searchString $searchField)</th>
 </tr>
+
+#macro (strikeS $attribute)
+#if($attribute.Deleted)<strike>#end
+#end
+#macro (strikeE $attribute)
+#if($attribute.Deleted)</strike>#end
+#end
 
 #foreach( $attribute in $attributes )
   #if (!$attribute.isUserAttribute()) 
@@ -101,34 +99,17 @@ $l10n.GlobalAttributes
     #set ($attType = $attribute.AttributeType)
 
   <td><input type="checkbox" name="action_$attribute.AttributeId"></td>
-  #if ($attribute.Deleted)
-  <td><strike>$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").setLabel("$attribute.Name")</strike></td>
-  <td><strike>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</strike></td>
+  <td>#strikeS($attribute)$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").setLabel("$attribute.Name")#strikeE($attribute)</td>
+  <td>#strikeS($attribute)#if ($attribute.Description) $attribute.Description #else &nbsp; #end#strikeE($attribute)</td>
   <td>
     #foreach ( $atype in $attribute.AllAttributeTypes )
       #if ($attType.AttributeTypeId == $atype.AttributeTypeId)
-        <strike>$atype.Name</strike>
+        #strikeS($attribute)$atype.Name#strikeE($attribute)
       #end
     #end
   </td>
-  <td><strike>#attributeCreatedBy($attribute)</strike></td>
-  <td><strike>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</strike></td>
-  #else
-  <td>$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").setLabel("$attribute.Name")</td>
-  <td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
-  <td>
-    ## Input type
-    #set ($attType = $attribute.AttributeType)
-    #foreach ( $atype in $attribute.AllAttributeTypes )
-      #if ($attType.AttributeTypeId == $atype.AttributeTypeId)
-        $atype.Name
-      #end
-    #end
-  </td>
-  <td>#attributeCreatedBy($attribute)</td>
-  <td>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
-#end
-  <td>$attgroup.Deleted</td>
+  <td>#strikeS($attribute)#attributeCreatedBy($attribute)#strikeE($attribute)</td>
+  <td>#strikeS($attribute)$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)#strikeE($attribute)</td>
   </tr>
   #end
 #end
