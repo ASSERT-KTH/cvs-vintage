@@ -9,8 +9,8 @@
  </head>
 
  <body>
-<div class="docs" id="introduction"> 
-  <h2>Scarab overview</h2>
+<div class="docs" id="navigation"> 
+  <h2>Navigating Scarab</h2>
   <div id="toc"> 
     <ul>
       <li>Scarab Help 
