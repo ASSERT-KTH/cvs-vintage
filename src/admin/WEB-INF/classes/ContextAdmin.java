@@ -61,7 +61,7 @@ public class ContextAdmin {
 	context = cm.getContext(contextName);
 
 	v.addElement("DOC BASE: " + context.getDocBase());
-	v.addElement("FULL DOC BASE: " + context.getDocumentBase().toString());
+	v.addElement("FULL DOC BASE: " + context.getAbsolutePath());
 	v.addElement("PATH: " + context.getPath());
 	if (context.getWorkDir() != null)
 	   v.addElement("WORK DIR: " + RequestUtil.URLDecode(context.getWorkDir().getName()));
