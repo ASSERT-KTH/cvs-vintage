@@ -966,7 +966,7 @@ public class Issue
         int id = -1;
         String key = getIdTableKey();
         DatabaseMap dbMap = IssuePeer.getTableMap().getDatabaseMap();
-        IDBroker idbroker = null;
+        IDBroker idbroker = dbMap.getIDBroker();
         try
         {
             id = idbroker.getIdAsInt(con, key);
