@@ -127,7 +127,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.31 2002/05/13 22:04:32 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.32 2002/05/13 22:07:23 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1288,27 +1288,27 @@ public abstract class AbstractScarabModule
         List allRModuleOptions = null;
         allRModuleOptions = getAllRModuleOptions(attribute, issueType);
 
-if (allRModuleOptions != null)
-{
-        if ( activeOnly )
+        if (allRModuleOptions != null)
         {
-            List activeRModuleOptions =
-                    new ArrayList(allRModuleOptions.size());
-            for ( int i=0; i<allRModuleOptions.size(); i++ )
+            if ( activeOnly )
             {
-                RModuleOption rmo =
-                    (RModuleOption)allRModuleOptions.get(i);
-                if ( rmo.getActive() )
+                List activeRModuleOptions =
+                    new ArrayList(allRModuleOptions.size());
+                for ( int i=0; i<allRModuleOptions.size(); i++ )
                 {
-                    activeRModuleOptions.add(rmo);
+                    RModuleOption rmo =
+                        (RModuleOption)allRModuleOptions.get(i);
+                    if ( rmo.getActive() )
+                    {
+                        activeRModuleOptions.add(rmo);
+                    }
                 }
+                allRModuleOptions =  activeRModuleOptions;
             }
-            allRModuleOptions =  activeRModuleOptions;
         }
-}
         return allRModuleOptions;
     }
-
+    
 
     private List getAllRModuleOptions(Attribute attribute, IssueType issueType)
         throws Exception
