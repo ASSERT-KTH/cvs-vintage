@@ -330,7 +330,45 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	Enumeration e=newParams.keys();
 	while(e.hasMoreElements() ) {
 	    String key=(String)e.nextElement();
-	    parameters.put( key, newParams.get(key));
+	    Object oldValue = parameters.get(key);
+	    Object newValue = newParams.get(key);
+	    // The simple case -- no existing parameters with this name
+	    if (oldValue == null) {
+		parameters.put( key, newValue);
+		continue;
+	    }
+	    // Construct arrays of the old and new values
+	    String oldValues[] = null;
+	    if (oldValue instanceof String[]) {
+		oldValues = (String[]) oldValue;
+	    } else if (oldValue instanceof String) {
+		oldValues = new String[1];
+		oldValues[0] = (String) oldValue;
+	    } else {
+		// Can not happen?
+		oldValues = new String[1];
+		oldValues[0] = oldValue.toString();
+	    }
+	    String newValues[] = null;
+	    if (newValue instanceof String[]) {
+		newValues = (String[]) newValue;
+	    } else if (newValue instanceof String) {
+		newValues = new String[1];
+		newValues[0] = (String) newValue;
+	    } else {
+		// Can not happen?
+		newValues = new String[1];
+		newValues[0] = newValue.toString();
+	    }
+	    // Merge the two sets of values into a new array
+	    String mergedValues[] =
+		new String[newValues.length + oldValues.length];
+	    for (int i = 0; i < newValues.length; i++)
+		mergedValues[i] = newValues[i];	// New values first per spec
+	    for (int i = newValues.length; i < mergedValues.length; i++)
+		mergedValues[i] = oldValues[i - newValues.length];
+	    // Save the merged values list in the original request
+	    parameters.put(key, mergedValues);
 	}
     }
 
