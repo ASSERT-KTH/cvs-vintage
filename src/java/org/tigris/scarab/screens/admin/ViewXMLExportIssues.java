@@ -68,7 +68,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * Sends XML Export issues contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportIssues.java,v 1.4 2002/09/18 00:16:37 jon Exp $
+ * @version $Id: ViewXMLExportIssues.java,v 1.5 2002/12/12 23:02:29 jon Exp $
  */
 public class ViewXMLExportIssues extends Default
 {
@@ -111,6 +111,7 @@ public class ViewXMLExportIssues extends Default
         {
             data.setTarget("admin,XMLExportIssues.vm");
             scarabR.setAlertMessage(l10n.get("EnterIssues"));
+            return;
         }
         else
         {
