@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.26 2002/02/10 17:19:50 luke_t Exp $
+ * $Id: AbstractVerifier.java,v 1.27 2002/03/05 18:44:23 ejort Exp $
  */
 
 // standard imports
@@ -77,7 +77,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -137,7 +137,6 @@ public abstract class AbstractVerifier implements VerificationStrategy {
             ClassLoader parent = Thread.currentThread().getContextClassLoader();
             this.classloader   = new URLClassLoader(list, parent);
         }
-
     }
 
 
@@ -148,6 +147,11 @@ public abstract class AbstractVerifier implements VerificationStrategy {
  *
  *************************************************************************
  */
+
+    public abstract boolean isCreateMethod(Method m);
+
+    public abstract boolean isEjbCreateMethod(Method m);
+
 
     public boolean hasLegalRMIIIOPArguments(Method method) {
 
@@ -424,11 +428,6 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return (m.getName().startsWith("find"));
     }
 
-    public boolean isCreateMethod(Method m) {
-        return (m.getName().equals(CREATE_METHOD));
-    }
-
-
     /**
      * Checks for at least one non-static field.
      */
@@ -451,11 +450,9 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
         Method[] method = c.getMethods();
 
-        for (int i = 0; i < method.length; ++i) {
-
-            String name = method[i].getName();
-
-            if (name.equals(CREATE_METHOD))
+        for (int i = 0; i < method.length; ++i) 
+        {
+            isCreateMethod(method[i]);
                 return true;
         }
 
@@ -469,11 +466,9 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
         Method[] method = c.getMethods();
 
-        for (int i = 0; i < method.length; ++i) {
-
-            String name = method[i].getName();
-
-            if (name.equals(EJB_CREATE_METHOD))
+        for (int i = 0; i < method.length; ++i)
+        {
+            if (isEjbCreateMethod(method[i]))
                 if (!isStatic(method[i])
                         && !isFinal(method[i])
                         && ((isSession && hasVoidReturnType(method[i]))
@@ -498,9 +493,8 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
         for (int i = 0; i < method.length; ++i) {
 
-            String name = method[i].getName();
-
-            if (name.equals(CREATE_METHOD)) {
+            if (isCreateMethod(method[i]))
+            {
                 Class[] params = method[i].getParameterTypes();
 
                 if (params.length == 0)
@@ -623,7 +617,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         Method[] method = c.getMethods();
 
         for (int i = 0; i < method.length; ++i)
-            if (method[i].getName().equals(EJB_CREATE_METHOD))
+            if (isEjbCreateMethod(method[i]))
                 ejbCreates.add(method[i]);
 
         return ejbCreates.iterator();
@@ -650,9 +644,8 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
         for (int i = 0; i < method.length; ++i) {
 
-            String name = method[i].getName();
-
-            if (name.equals(CREATE_METHOD)) {
+            if (isCreateMethod(method[i]))
+            {
                 ++count;
             }
         }
@@ -707,9 +700,9 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return (a.getReturnType() == b.getReturnType());
     }
 
-    public boolean hasMatchingEJBPostCreate(Class bean, Method ejbCreate) {
+    public boolean hasMatchingEJBPostCreate(Class bean, Method create) {
         try {
-            return (bean.getMethod(EJB_POST_CREATE_METHOD, ejbCreate.getParameterTypes()) != null);
+            return (bean.getMethod(getMatchingEJBPostCreateName(create.getName()), create.getParameterTypes()) != null);
         }
         catch (NoSuchMethodException e) {
             return false;
@@ -719,17 +712,17 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
     public boolean hasMatchingEJBCreate(Class bean, Method create) {
         try {
-            return (bean.getMethod(EJB_CREATE_METHOD, create.getParameterTypes()) != null);
+            return (bean.getMethod(getMatchingEJBCreateName(create.getName()), create.getParameterTypes()) != null);
         }
         catch (NoSuchMethodException e) {
             return false;
         }
     }
 
-    public Method getMatchingEJBPostCreate(Class bean, Method ejbCreate) {
+    public Method getMatchingEJBPostCreate(Class bean, Method create) {
 
         try {
-            return bean.getMethod(EJB_POST_CREATE_METHOD, ejbCreate.getParameterTypes());
+            return bean.getMethod(getMatchingEJBPostCreateName(create.getName()), create.getParameterTypes());
         }
         catch (NoSuchMethodException e) {
             return null;
@@ -739,7 +732,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     public Method getMatchingEJBCreate(Class bean, Method create) {
 
         try {
-            return bean.getMethod(EJB_CREATE_METHOD, create.getParameterTypes());
+            return bean.getMethod(getMatchingEJBCreateName(create.getName()), create.getParameterTypes());
         }
         catch (NoSuchMethodException e) {
             return null;
@@ -1032,6 +1025,15 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return true;
     }
 
+    private String getMatchingEJBCreateName(String createName)
+    {
+       return "ejb" + createName.substring(0,1).toUpperCase() + createName.substring(1);
+    }
+    private String getMatchingEJBPostCreateName(String createName)
+    {
+       int createIdx = createName.indexOf("Create");
+       return "ejbPost" + createName.substring(createIdx>=0?createIdx:0);
+    }
 
 /*
  *************************************************************************
@@ -1063,16 +1065,13 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     private final static String EJB_FIND_BY_PRIMARY_KEY =
         "ejbFindByPrimaryKey";
 
-    private final static String EJB_CREATE_METHOD     =
+    protected final static String EJB_CREATE_METHOD     =
         "ejbCreate";
 
     private final static String EJB_POST_CREATE_METHOD =
         "ejbPostCreate";
 
-    private final static String EJB_POST_METHOD       =
-        "ejbCreate";
-
-    private final static String CREATE_METHOD         =
+    protected final static String CREATE_METHOD         =
         "create";
 
     private final static String FINALIZE_METHOD       =

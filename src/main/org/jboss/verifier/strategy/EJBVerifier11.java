@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.28 2001/06/18 20:01:29 mnf999 Exp $
+ * $Id: EJBVerifier11.java,v 1.29 2002/03/05 18:44:24 ejort Exp $
  */
 
 
@@ -55,7 +55,7 @@ import org.jboss.metadata.EntityMetaData;
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  * @author  Vinay Menon   (menonv@cpw.co.uk)
  *
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  * @since   JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
@@ -132,6 +132,15 @@ public class EJBVerifier11 extends AbstractVerifier {
         }
     }
 
+    public boolean isCreateMethod(Method m) 
+    {
+        return m.getName().equals(CREATE_METHOD);
+    }
+
+    public boolean isEjbCreateMethod(Method m) 
+    {
+        return m.getName().equals(EJB_CREATE_METHOD);
+    }
 
 
 /*

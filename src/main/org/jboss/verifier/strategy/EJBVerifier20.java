@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.9 2001/01/03 08:28:48 tobias Exp $
+ * $Id: EJBVerifier20.java,v 1.10 2002/03/05 18:44:24 ejort Exp $
  */
 
 
@@ -43,7 +43,7 @@ import org.jboss.metadata.EntityMetaData;
  * EJB 2.0 bean verifier.
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier20 extends AbstractVerifier {
@@ -64,21 +64,29 @@ public class EJBVerifier20 extends AbstractVerifier {
  ***********************************************************************
  */
     
-    public void checkSession(SessionMetaData session) {
-            
-            // NOT IMPLEMENTED YET
+    public void checkSession(SessionMetaData session)
+    {
+       System.out.println("WARNING: EJBVerifier2.0 Session verification not implemented");        
     }            
 
-    public void checkEntity(EntityMetaData entity) {
-            
-            // NOT IMPLEMENTED YET
+    public void checkEntity(EntityMetaData entity)
+    {
+       System.out.println("WARNING: EJBVerifier2.0 Entity verification not implemented");        
     }        
         
-    public void checkMessageBean(BeanMetaData bean) {
-            
-            // NOT IMPLEMENTED YET
+    public void checkMessageBean(BeanMetaData bean)
+    {
+       System.out.println("WARNING: EJBVerifier2.0 Message verification not implemented");        
     }
-        
-    
+
+    public boolean isCreateMethod(Method m) 
+    {
+        return m.getName().startsWith(CREATE_METHOD);
+    }
+
+    public boolean isEjbCreateMethod(Method m) 
+    {
+        return m.getName().startsWith(EJB_CREATE_METHOD);
+    }
 }
 
