@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeModel.java,v 1.15 2004/07/09 07:32:35 linus Exp $
+// $Id: ExplorerTreeModel.java,v 1.16 2004/07/09 08:24:59 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -498,14 +498,19 @@ public class ExplorerTreeModel extends DefaultTreeModel
     private void mergeChildren(ExplorerTreeNode node, List children,
 			       List newChildren) {
 	Set removeObjects = prepareAddRemoveSets(children, newChildren);
+	// Remember that children are not TreeNodes but UserObjects
+	Vector actualNodes = new Vector();
+	Enumeration childrenEnum = node.children();
+	while (childrenEnum.hasMoreElements()) {
+	    actualNodes.add(childrenEnum.nextElement());
+	}
 
 	int position = 0;
-	// Remember that children are not TreeNodes but UserObjects
-	Enumeration childNodes = node.children();
+	Iterator childNodes = actualNodes.iterator();
 	Iterator newNodes = newChildren.iterator();
 	Object firstNew = newNodes.hasNext() ? newNodes.next() : null;
-	while (childNodes.hasMoreElements()) {
-	    Object childObj = childNodes.nextElement();
+	while (childNodes.hasNext()) {
+	    Object childObj = childNodes.next();
 	    if (!(childObj instanceof DefaultMutableTreeNode)) {
 		continue;
 	    }
