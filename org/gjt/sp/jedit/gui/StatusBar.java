@@ -49,7 +49,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.27 2002/05/14 11:20:41 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.28 2002/05/16 08:01:24 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -168,9 +168,9 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 
 		dim = lineSep.getPreferredSize();
 		lineSep.setPreferredSize(new Dimension(Math.max(
-			Math.max((int)font.getStringBounds("U",frc).getWidth(),
-			(int)font.getStringBounds("W",frc).getWidth()),
-			(int)font.getStringBounds("M",frc).getWidth()),
+			Math.max(fm.charWidth('U'),
+			fm.charWidth('W')),
+			fm.charWidth('M')),
 			dim.height));
 
 		// UI hack because BoxLayout does not give all components the

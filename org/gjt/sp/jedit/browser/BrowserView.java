@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.34 2002/05/14 10:52:02 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.35 2002/05/16 08:01:24 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
@@ -631,7 +631,10 @@ public class BrowserView extends JPanel
 						browser.filesSelected();
 						super.processMouseEvent(evt);
 					}
-					if(evt.getClickCount() == 2)
+					// A double click is not only when clickCount == 2
+					// because every other click can open a new directory
+					if(evt.getClickCount() % 2 == 0)
+
 					{
 						// don't pass double-clicks to tree, otherwise
 						// directory nodes will be expanded and we don't

@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.28 2002/04/06 06:00:48 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.29 2002/05/16 08:01:24 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -166,8 +166,7 @@ public class GUIUtilities
 
 	//{{{ loadMenu() method
 	/**
-	 * Creates a menu. This form of loadMenu() does not need to be used
-	 * by plugins; use the other form instead.
+	 * Creates a menu.
 	 * @param view The view to load the menu for
 	 * @param name The menu name
 	 * @since jEdit 2.6pre2
