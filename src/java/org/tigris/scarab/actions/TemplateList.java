@@ -81,14 +81,10 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.21 2002/02/13 22:24:51 elicia Exp $
+    @version $Id: TemplateList.java,v 1.22 2002/02/14 22:27:08 elicia Exp $
 */
 public class TemplateList extends RequireLoginFirstAction
 {
-
-    private static final String ERROR_MESSAGE = "More information was " +
-                                "required to submit your request. Please " +
-                                "see error messages."; 
 
     /**
         Saves template.

@@ -101,13 +101,10 @@ import org.tigris.scarab.tools.Email;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.35 2002/02/14 22:13:43 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.36 2002/02/14 22:27:08 elicia Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
-    private static final String ERROR_MESSAGE = "More information was " +
-                                "required to submit your request. Please " +
-                                "scroll down to see error messages."; 
 
     private static final String EMAIL_ERROR = "Your changes were saved, " +
                                 "but could not send notification email due " + 

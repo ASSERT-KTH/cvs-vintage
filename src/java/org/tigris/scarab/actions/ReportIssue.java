@@ -98,13 +98,10 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.113 2002/02/13 20:06:05 elicia Exp $
+ * @version $Id: ReportIssue.java,v 1.114 2002/02/14 22:27:08 elicia Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
-    private static final String ERROR_MESSAGE = "More information was " +
-        "required to submit your request. Please " +
-        "scroll down to see error messages."; 
     
     public void doCheckforduplicates(RunData data, TemplateContext context)
         throws Exception

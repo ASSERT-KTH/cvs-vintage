@@ -109,13 +109,10 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.75 2002/02/13 20:06:05 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.76 2002/02/14 22:27:08 elicia Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
-    private static final String ERROR_MESSAGE = 
-        "More information was required to submit your request. Please " +
-        "scroll down to see error messages."; 
 
     private static final String EMAIL_ERROR = ", but could not send " +
         "notification email due to a mail server error.";
