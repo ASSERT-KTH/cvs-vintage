@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.10 2003/04/22 19:27:57 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.11 2003/05/12 03:05:20 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -548,7 +548,8 @@ public class BufferIORequest extends WorkRequest
 			// the entire save operation can be aborted...
 			setAbortable(true);
 
-			path = vfs._canonPath(session,path,view);
+			path = vfs._canonPath(session,path,view);			if(!MiscUtilities.isURL(path))
+				path = MiscUtilities.resolveSymlinks(path);
 
 			// Only backup once per session
 			if(buffer.getProperty(Buffer.BACKED_UP) == null

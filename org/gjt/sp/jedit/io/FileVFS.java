@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.35 2003/04/30 05:28:55 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.36 2003/05/12 03:05:20 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -131,8 +131,7 @@ public class FileVFS extends VFS
 	public String _canonPath(Object session, String path, Component comp)
 		throws IOException
 	{
-		return MiscUtilities.resolveSymlinks(
-			MiscUtilities.canonPath(path));
+		return MiscUtilities.canonPath(path);
 	} //}}}
 
 	//{{{ LocalDirectoryEntry class
