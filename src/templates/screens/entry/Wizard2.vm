@@ -6,7 +6,7 @@ $page.setTitle("Identified as duplicate")
 #set ($currentIssue = $user.ReportingIssue)
 
 
-<h2>$page.getTitle</h2>
+<h2>$page.Title</h2>
 
 <form method="get" name="Report2Form" action="$action">
 

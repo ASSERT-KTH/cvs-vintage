@@ -7,7 +7,7 @@ $page.setTitle("Enter New Issue")
 #set ($issue = $user.ReportingIssue)
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 
-<h2>$page.getTitle</h2>
+<h2>$page.Title</h2>
 <form name="ReportForm" method="get" action="$action">
 
 <p class="functnbar">
