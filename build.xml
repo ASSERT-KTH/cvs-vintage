@@ -17,7 +17,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.112 2002/09/10 22:07:57 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.113 2002/09/11 19:40:12 d_jencks Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -194,7 +194,7 @@
 
   <!-- Generate parsers -->
   <target name="generate-parsers" depends="init">
-    <mkdir dir="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql"/>
+    <mkdir dir="${build.gen-src}/org/jboss/ejb/plugins/cmp/ejbql"/>
 
     <!--
        | make sure to generate the JBoss-QL parser first so the node
@@ -204,21 +204,21 @@
     <!-- JBoss-QL parser -->
     <jjtree
       target="${source.java}/org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jjt" 
-	   outputdirectory="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql"
+	   outputdirectory="${build.gen-src}/org/jboss/ejb/plugins/cmp/ejbql"
 	   javacchome="${sun.javacc.lib}"/>
 
     <javacc
-      target="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jj"
+      target="${build.gen-src}/org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jj"
 	   javacchome="${sun.javacc.lib}"/>
 
     <!-- EJB-QL parser -->
     <jjtree
       target="${source.java}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jjt" 
-	   outputdirectory="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql"
+	   outputdirectory="${build.gen-src}/org/jboss/ejb/plugins/cmp/ejbql"
 	   javacchome="${sun.javacc.lib}"/>
 
     <javacc
-      target="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jj" 
+      target="${build.gen-src}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jj" 
 	   javacchome="${sun.javacc.lib}"/>
 
   </target>
@@ -250,8 +250,9 @@
   <target name="compile-bean-sources" depends="init">
     <taskdef name="ejbdoclet" classname="xdoclet.modules.ejb.EjbDocletTask" classpathref="xdoclet.task.classpath"/>
 
-    <mkdir dir="${build.beans}/ejbadaptor"/>
-    <ejbdoclet destdir="${build.beans}/ejbadaptor"
+    <mkdir dir="${build.gen-src}"/>
+    <mkdir dir="${build.resources}/ejbadaptor/META-INF"/>
+    <ejbdoclet destdir="${build.gen-src}"
 	     ejbspec="1.1"
 	     excludedtags="@version,@author">
       <fileset dir="${source.java}">
@@ -262,8 +263,8 @@
       <remoteinterface/>
       <homeinterface/>
       <session/>
-      <deploymentdescriptor xmlencoding="UTF-8" destdir="${build.beans}/ejbadaptor/META-INF"/>
-      <jboss xmlencoding="UTF-8" version="3.0" destdir="${build.beans}/ejbadaptor/META-INF"/>
+      <deploymentdescriptor xmlencoding="UTF-8" destdir="${build.resources}/ejbadaptor/META-INF"/>
+      <jboss xmlencoding="UTF-8" version="3.0" destdir="${build.resources}/ejbadaptor/META-INF"/>
     </ejbdoclet>
 
   </target>
@@ -321,8 +322,6 @@
        <classpath refid="javac.classpath"/>
 
        <src path="${source.java}"/>
-       <src path="${build.parsers}"/>
-       <src path="${build.beans}"/>
        <src path="${build.gen-src}"/>
 
        <include name="${javac.includes}"/>
@@ -517,7 +516,7 @@
         <include name="org/jboss/jmx/adaptor/interfaces/**"/>
         <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
       </fileset>
-      <fileset dir="${build.beans}/ejbadaptor">
+      <fileset dir="${build.resources}/ejbadaptor">
         <include name="META-INF/**"/>
       </fileset>
     </jar>
