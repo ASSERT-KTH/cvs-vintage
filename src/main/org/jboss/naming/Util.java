@@ -7,6 +7,7 @@
 package org.jboss.naming;
 
 import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.Name;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
@@ -16,7 +17,7 @@ import org.jboss.logging.Logger;
  *
  * @author Scott.Stark@jboss.org
  * @author adrian@jboss.com
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class Util
 {
@@ -139,5 +140,126 @@ public class Util
             break;
          }
       }
+   }
+   
+   /**
+    * Lookup an object in the default initial context
+    * 
+    * @param name the name to lookup
+    * @param clazz the expected type
+    * @return the object
+    * @throws Exception for any error
+    */
+   public static Object lookup(String name, Class clazz) throws Exception
+   {
+      InitialContext ctx = new InitialContext();
+      try
+      {
+         return lookup(ctx, name, clazz);
+      }
+      finally
+      {
+         ctx.close();
+      }
+   }
+   
+   /**
+    * Lookup an object in the default initial context
+    * 
+    * @param name the name to lookup
+    * @param clazz the expected type
+    * @return the object
+    * @throws Exception for any error
+    */
+   public static Object lookup(Name name, Class clazz) throws Exception
+   {
+      InitialContext ctx = new InitialContext();
+      try
+      {
+         return lookup(ctx, name, clazz);
+      }
+      finally
+      {
+         ctx.close();
+      }
+   }
+   
+   /**
+    * Lookup an object in the given context
+    * 
+    * @param context the context
+    * @param name the name to lookup
+    * @param clazz the expected type
+    * @return the object
+    * @throws Exception for any error
+    */
+   public static Object lookup(Context context, String name, Class clazz) throws Exception
+   {
+      Object result = context.lookup(name);
+      checkObject(context, name, result, clazz);
+      return result;
+   }
+   
+   /**
+    * Lookup an object in the given context
+    * 
+    * @param context the context
+    * @param name the name to lookup
+    * @param clazz the expected type
+    * @return the object
+    * @throws Exception for any error
+    */
+   public static Object lookup(Context context, Name name, Class clazz) throws Exception
+   {
+      Object result = context.lookup(name);
+      checkObject(context, name.toString(), result, clazz);
+      return result;
+   }
+   
+   
+   /**
+    * Checks an object implements the given class
+    * 
+    * @param context the context
+    * @param name the name to lookup
+    * @param object the object
+    * @param clazz the expected type
+    */
+   protected static void checkObject(Context context, String name, Object object, Class clazz) throws Exception
+   {
+      Class objectClass = object.getClass();
+      if (clazz.isAssignableFrom(objectClass) == false)
+      {
+         StringBuffer buffer = new StringBuffer(100);
+         buffer.append("Object at '").append(name);
+         buffer.append("' in context ").append(context.getEnvironment());
+         buffer.append(" is not an instance of ");
+         appendClassInfo(buffer, clazz);
+         buffer.append(" object class is ");
+         appendClassInfo(buffer, object.getClass());
+         throw new ClassCastException(buffer.toString());
+      }
+   }
+   
+   /**
+    * Append Class Info
+    *
+    * @param buffer the buffer to append to
+    * @param clazz the class to describe
+    */
+   protected static void appendClassInfo(StringBuffer buffer, Class clazz)
+   {
+      buffer.append("[class=").append(clazz.getName());
+      buffer.append(" classloader=").append(clazz.getClassLoader());
+      buffer.append(" interfaces={");
+      Class[] interfaces = clazz.getInterfaces();
+      for (int i=0; i<interfaces.length; ++i)
+      {
+         if (i > 0)
+            buffer.append(", ");
+         buffer.append("interface=").append(interfaces[i].getName());
+         buffer.append(" classloader=").append(interfaces[i].getClassLoader());
+      }
+      buffer.append("}]");
    }
 }
