@@ -88,15 +88,15 @@ public class DateTool {
 
     /** format for RFC 1123 date string -- "Sun, 06 Nov 1994 08:49:37 GMT"
      */
-    private final static String RFC1123_PATTERN =
+    public final static String RFC1123_PATTERN =
         "EEE, dd MMM yyyy HH:mm:ss z";
 
     // format for RFC 1036 date string -- "Sunday, 06-Nov-94 08:49:37 GMT"
-    private final static String rfc1036Pattern =
+    public final static String rfc1036Pattern =
         "EEEEEEEEE, dd-MMM-yy HH:mm:ss z";
 
     // format for C asctime() date string -- "Sun Nov  6 08:49:37 1994"
-    private final static String asctimePattern =
+    public final static String asctimePattern =
         "EEE MMM d HH:mm:ss yyyy";
 
     /** Pattern used for old cookies
@@ -157,13 +157,19 @@ public class DateTool {
     public static void formatOldCookie( Date d, StringBuffer sb,
 					  FieldPosition fp )
     {
-	oldCookieFormat.format( d, sb, fp );
+	synchronized(oldCookieFormat) {
+	    oldCookieFormat.format( d, sb, fp );
+	}
     }
 
     // Called from ServerCookie
     public static String formatOldCookie( Date d )
     {
-	return oldCookieFormat.format( d );
+	String ocf=null;
+	synchronized(oldCookieFormat) {
+	    ocf= oldCookieFormat.format( d );
+	}
+	return ocf;
     }
 
     
@@ -171,24 +177,18 @@ public class DateTool {
 	Not efficient - but not very used.
      */
     public static long parseDate( String dateString ) {
+	DateFormat [] format = {rfc1123Format,rfc1036Format,asctimeFormat};
+	return parseDate(dateString,format);
+    }
+    public static long parseDate( String dateString, DateFormat []format ) {
 	Date date=null;
-        try {
-            date = DateTool.rfc1123Format.parse(dateString);
-	    return date.getTime();
-	} catch (ParseException e) { }
-          catch (StringIndexOutOfBoundsException e) { }
-	
-        try {
-	    date = DateTool.rfc1036Format.parse(dateString);
-	    return date.getTime();
-	} catch (ParseException e) { }
-          catch (StringIndexOutOfBoundsException e) { }
-	
-        try {
-            date = DateTool.asctimeFormat.parse(dateString);
-	    return date.getTime();
-        } catch (ParseException pe) { }
-          catch (StringIndexOutOfBoundsException e) { }
+	for(int i=0; i < format.length; i++) {
+	    try {
+		date = format[i].parse(dateString);
+		return date.getTime();
+	    } catch (ParseException e) { }
+	    catch (StringIndexOutOfBoundsException e) { }
+	}
 	String msg = sm.getString("httpDate.pe", dateString);
 	throw new IllegalArgumentException(msg);
     }

@@ -70,6 +70,7 @@ import java.io.*;
 import java.net.*;
 import java.security.*;
 import java.util.*;
+import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -94,6 +95,11 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     ServletInputStreamFacade isFacade=new ServletInputStreamFacade();
     boolean isFacadeInitialized=false;
     BufferedReader reader;
+    DateFormat []dateFormats = {
+	new SimpleDateFormat(DateTool.RFC1123_PATTERN),
+	new SimpleDateFormat(DateTool.rfc1036Pattern),
+	new SimpleDateFormat(DateTool.asctimePattern)
+	    };
     
     private boolean usingStream = false;
     private boolean usingReader = false;
@@ -195,7 +201,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	String value=request.getHeader( name );
 	if( value==null) return -1;
 	
-	long date=DateTool.parseDate(value);
+	long date=DateTool.parseDate(value,dateFormats);
 	if( date==-1) {
 	    String msg = sm.getString("httpDate.pe", value);
 	    throw new IllegalArgumentException(msg);
