@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.209 2004/08/26 23:03:17 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.210 2004/08/27 09:48:12 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2860,6 +2860,18 @@ public class ModelFacade {
             return ((MCollaboration) handle).getConstrainingElements();
         }
 	return illegalArgumentCollection(handle);
+    }
+
+    /** 
+     * Returns the collection of ConstrainedElements of a constraint
+     * @param handle the Constraint
+     * @return the collection of ConstrainedElements
+     */
+    public static Collection getConstrainedElements(Object handle) {
+        if (handle instanceof MConstraint) {
+            return ((MConstraint) handle).getConstrainedElements();
+        }
+        return illegalArgumentCollection(handle);
     }
 
     /**
