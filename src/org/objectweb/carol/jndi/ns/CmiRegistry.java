@@ -100,8 +100,9 @@ public class CmiRegistry implements NameService {
                 }
             }
         } catch (Exception e) {
-            throw new NameServiceException(
-                "can not start cluster registry: " + e);
+            String msg = "can not start cluster registry: " + e; 
+            TraceCarol.error(msg);
+            throw new NameServiceException(msg);
         }
     }
 
