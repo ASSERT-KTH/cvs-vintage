@@ -13,9 +13,8 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.io;
 
-import org.columba.core.gui.util.NotifyDialog;
+package org.columba.core.io;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,32 +25,30 @@ import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-
 /**
+ * Zip archive operations are handled by this class.
+ *
  * @author fdietz
- *
- * zip archive operations are handled by this class
- *
  */
 public class ZipFileIO {
+    
     /**
- * default constructor
- */
-    public ZipFileIO() {
-        super();
-    }
+     * No instances needed.
+     */
+    private ZipFileIO() {}
 
     /**
- *
- * extract zip file to destination folder
- *
- * @param file                        zip file to extract
- * @param destination        destinatin folder
- */
-    public static void extract(File file, File destination) {
+     * Extract zip file to destination folder.
+     *
+     * @param file                        zip file to extract
+     * @param destination        destinatin folder
+     */
+    public static void extract(File file, File destination) throws IOException {
+        ZipInputStream in = null;
+        OutputStream out = null;
         try {
             // Open the ZIP file
-            ZipInputStream in = new ZipInputStream(new FileInputStream(file));
+            in = new ZipInputStream(new FileInputStream(file));
 
             // Get the first entry
             ZipEntry entry = null;
@@ -63,8 +60,7 @@ public class ZipFileIO {
                 if (entry.isDirectory()) {
                     new File(destination, outFilename).mkdirs();
                 } else {
-                    OutputStream out = new FileOutputStream(new File(
-                                destination, outFilename));
+                    out = new FileOutputStream(new File(destination, outFilename));
 
                     // Transfer bytes from the ZIP file to the output file
                     byte[] buf = new byte[1024];
@@ -78,31 +74,29 @@ public class ZipFileIO {
                     out.close();
                 }
             }
-
+        } finally {
             // Close the stream
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(e);
+            if (in != null) {
+                in.close();
+            }
+            if (out != null) {
+                out.close();
+            }
         }
     }
 
     /**
- *
- * Return the first directory of this archive
- *
- * This is needed to determine the plugin directory.
- *
- *
- * @param zipFile
- * @return        <class>File</class> containing the first entry of this archive
- */
-    public static File getFirstFile(File zipFile) {
+     * Return the first directory of this archive. This is needed to determine
+     * the plugin directory.
+     *
+     * @param zipFile
+     * @return        <class>File</class> containing the first entry of this archive
+     */
+    public static File getFirstFile(File zipFile) throws IOException {
+        ZipInputStream in = null;
         try {
             // Open the ZIP file
-            ZipInputStream in = new ZipInputStream(new FileInputStream(zipFile));
+            in = new ZipInputStream(new FileInputStream(zipFile));
 
             // Get the first entry
             ZipEntry entry = null;
@@ -114,16 +108,12 @@ public class ZipFileIO {
                     return new File(outFilename);
                 }
             }
-
-            // Close the stream
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(e);
+        } finally {
+            if (in != null) {
+                // Close the stream
+                in.close();
+            }
         }
-
         return null;
     }
 }

@@ -13,13 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.plugin;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.InfoViewerDialog;
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.help.HelpManager;
 import org.columba.core.io.DirectoryIO;
 import org.columba.core.io.ZipFileIO;
@@ -30,38 +30,20 @@ import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.util.MailResourceLoader;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import java.io.File;
+import java.io.IOException;
 
 import java.net.URL;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileFilter;
-
 
 /**
  * @author fdietz
@@ -75,25 +57,24 @@ import javax.swing.filechooser.FileFilter;
  * - enable/disable plugins
  * - view plugin info (readme.txt in plugin folder)
  */
-public class PluginManagerDialog extends JDialog implements ActionListener,
-    TreeSelectionListener {
+public class PluginManagerDialog extends JDialog
+implements ActionListener, TreeSelectionListener {
     private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
-    JButton installButton;
-    JButton removeButton;
-    JButton optionsButton;
-    JButton infoButton;
-    JButton helpButton;
-    JButton closeButton;
-    PluginTree table;
-    ConfigPluginHandler configHandler;
+    
+    protected JButton installButton;
+    protected JButton removeButton;
+    protected JButton optionsButton;
+    protected JButton infoButton;
+    protected JButton helpButton;
+    protected JButton closeButton;
+    protected PluginTree table;
+    protected ConfigPluginHandler configHandler;
     protected PluginNode selectedNode;
 
     public PluginManagerDialog() {
         // modal JDialog
-        super(new JFrame(), true);
-
-        setTitle(GlobalResourceLoader.getString(
-                "org.columba.core.i18n.dialog", "pluginmanager", "title"));
+        super(new JFrame(), GlobalResourceLoader.getString(
+                RESOURCE_PATH, "pluginmanager", "title"), true);
 
         try {
             configHandler = (ConfigPluginHandler) MainInterface.pluginManager.getHandler(
@@ -103,10 +84,8 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
         }
 
         initComponents();
-
         pack();
         setLocationRelativeTo(null);
-
         setVisible(true);
     }
 
@@ -158,7 +137,7 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
         nameLabel.setEnabled(false);
         topPanel.add(nameLabel);
 
-        topPanel.add(Box.createRigidArea(new java.awt.Dimension(10, 0)));
+        topPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         topPanel.add(Box.createHorizontalGlue());
 
         Component glue = Box.createVerticalGlue();
@@ -241,7 +220,7 @@ centerPanel.add(scrollPane);
 
         JButton closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
                     "global", "close"));
-        closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
+        closeButton.setActionCommand("CLOSE");
         closeButton.addActionListener(this);
         buttonPanel.add(closeButton);
 
@@ -262,9 +241,6 @@ centerPanel.add(scrollPane);
             "extending_columba_1");
     }
 
-    /* (non-Javadoc)
- * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
- */
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
 
@@ -274,12 +250,10 @@ centerPanel.add(scrollPane);
             String id = selectedNode.getId();
 
             URL url = MainInterface.pluginManager.getInfoURL(id);
-
-            if (url == null) {
-                NotifyDialog d = new NotifyDialog();
-                d.showDialog("No readme file found.");
-            } else {
-                new InfoViewerDialog(url);
+            if (url != null) {
+                try {
+                    new InfoViewerDialog(url);
+                } catch (IOException ioe) {}
             }
         } else if (action.equals("OPTIONS")) {
             String id = selectedNode.getId();
@@ -288,7 +262,8 @@ centerPanel.add(scrollPane);
             new ConfigurationDialog(id);
         } else if (action.equals("REMOVE")) {
             // get plugin directory
-            File directory = MainInterface.pluginManager.getFolder(selectedNode.getId());
+            File directory = MainInterface.pluginManager.getFolder(
+                selectedNode.getId());
 
             // delete plugin from disk
             DirectoryIO.delete(directory);
@@ -298,16 +273,16 @@ centerPanel.add(scrollPane);
         } else if (action.equals("INSTALL")) {
             JFileChooser chooser = new JFileChooser();
             chooser.addChoosableFileFilter(new FileFilter() {
-                    public boolean accept(File file) {
-                        return file.isDirectory() ||
+                public boolean accept(File file) {
+                    return file.isDirectory() ||
                         file.getName().toLowerCase().endsWith(".zip");
-                    }
+                }
 
-                    public String getDescription() {
-                        return GlobalResourceLoader.getString(RESOURCE_PATH,
-                            "pluginmanager", "filefilter");
-                    }
-                });
+                public String getDescription() {
+                    return GlobalResourceLoader.getString(RESOURCE_PATH,
+                        "pluginmanager", "filefilter");
+                }
+            });
             chooser.setAcceptAllFileFilterUsed(false);
 
             int result = chooser.showOpenDialog(this);
@@ -320,9 +295,6 @@ centerPanel.add(scrollPane);
         }
     }
 
-    /* (non-Javadoc)
- * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
- */
     public void valueChanged(TreeSelectionEvent arg0) {
         selectedNode = (PluginNode) arg0.getPath().getLastPathComponent();
 
@@ -350,17 +322,13 @@ centerPanel.add(scrollPane);
             // if plugin has config extension point
             String id = selectedNode.getId();
             id = id.substring(id.lastIndexOf(".") + 1, id.length());
-            if (configHandler.exists(id)) {
-                optionsButton.setEnabled(true);
-            } else {
-                optionsButton.setEnabled(false);
-            }
+            optionsButton.setEnabled(configHandler.exists(id));
         }
     }
 
     /**
- * @return
- */
+     * Returns the currently selected node or null if none is selected.
+     */
     public PluginNode getSelectedNode() {
         return selectedNode;
     }
@@ -370,10 +338,19 @@ centerPanel.add(scrollPane);
         File destination = new File(MainInterface.config.getConfigDirectory(),
                 "plugins");
 
-        // extract plugin
-        ZipFileIO.extract(file, destination);
+        File pluginDirectory;
+        try {
+            // extract plugin
+            ZipFileIO.extract(file, destination);
 
-        File pluginDirectory = ZipFileIO.getFirstFile(file);
+            pluginDirectory = ZipFileIO.getFirstFile(file);
+        } catch (IOException ioe) {
+            JOptionPane.showMessageDialog(this, GlobalResourceLoader.getString(
+                RESOURCE_PATH, "pluginmanager", "errExtract.msg"),
+                GlobalResourceLoader.getString(RESOURCE_PATH, "pluginmanager",
+                "errExtract.title"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         if (pluginDirectory != null) {
             String id = MainInterface.pluginManager.addPlugin(pluginDirectory);
