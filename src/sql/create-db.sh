@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.23 2003/09/16 22:35:40 tenersen Exp $
+# $Id: create-db.sh,v 1.24 2003/09/16 23:00:25 tenersen Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -350,7 +350,7 @@ echo "exit" > /tmp/${PPID}exit.sql
 if [ -f /tmp/${PPID}preamble.sql ] ; then 
     rm -f /tmp/${PPID}preamble.sql 
 fi 
-echo "alter session set NLS_TIMESTAMP_FORMAT='YYYY-MM-DD HH24:MI:SS';" > /tmp/${PPID}preamble.sql 
+echo "alter session set NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS';" > /tmp/${PPID}preamble.sql 
 
 FILES=`cat ${LOAD_ORDER}`
 for i in ${FILES} ; do 
