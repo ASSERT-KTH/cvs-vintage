@@ -601,7 +601,7 @@ public class ContextManager implements LogAware {
 	resp.setRequest( req );
 	req.setResponse( resp );
 	req.setContextManager( this );
-	((ResponseImpl)resp).init();
+	resp.init();
     }
 
     /** This is the entry point in tomcat - the connectors ( or any other
@@ -867,9 +867,7 @@ public class ContextManager implements LogAware {
 
 	/** Creates an "internal" request
 	 */
-	RequestImpl lr = new RequestImpl();
-	//	RequestAdapterImpl reqA=new RequestAdapterImpl();
-	//lr.setRequestAdapter( reqA);
+	Request lr = new Request();
 	lr.setRequestURI( urlPath );
 	lr.setQueryString( queryString );
 	//	lr.processQueryString();
@@ -992,8 +990,8 @@ public class ContextManager implements LogAware {
 	if( ! path.startsWith( "/" ) ) {
 	    return ctx.getServletByName( path );
 	}
-	RequestImpl req1=new RequestImpl();
-	ResponseImpl res1=new ResponseImpl();
+	Request req1=new Request();
+	Response res1=new Response();
 	initRequest( req1, res1 );
 
 	req1.setRequestURI( ctx.getPath() + path );

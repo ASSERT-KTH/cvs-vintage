@@ -151,8 +151,8 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	// Ugly code to trick JSPServlet into loading this.
 	ContextManager cm=context.getContextManager();
 	String path=result.getPath();
-	RequestImpl request = new RequestImpl();
-	ResponseImpl response = new ResponseImpl();
+	Request request = new Request();
+	Response response = new Response();
 	request.setContextManager( cm );
 	request.recycle();
 	response.recycle();

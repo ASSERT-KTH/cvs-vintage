@@ -1,8 +1,8 @@
 
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorResponse.java,v 1.5 2000/07/18 18:42:46 craigmcc Exp $
- * $Revision: 1.5 $
- * $Date: 2000/07/18 18:42:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorResponse.java,v 1.6 2000/08/12 04:55:47 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/08/12 04:55:47 $
  *
  * ====================================================================
  *
@@ -73,7 +73,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 
-public class Ajp13ConnectorResponse extends ResponseImpl 
+public class Ajp13ConnectorResponse extends Response 
 {
 	public static final int  MAX_SEND_SIZE = TcpConnector.MAX_PACKET_SIZE - 
 	                                         TcpConnector.H_SIZE - 

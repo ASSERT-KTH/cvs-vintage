@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.24 2000/08/11 21:20:36 costin Exp $
- * $Revision: 1.24 $
- * $Date: 2000/08/11 21:20:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.25 2000/08/12 04:55:48 costin Exp $
+ * $Revision: 1.25 $
+ * $Date: 2000/08/12 04:55:48 $
  *
  * ====================================================================
  *
@@ -73,7 +73,7 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-public class HttpRequestAdapter extends RequestImpl {
+public class HttpRequestAdapter extends Request {
     static StringManager sm = StringManager.getManager("org.apache.tomcat.resources");
     private Socket socket;
     private boolean moreRequests = false;

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.13 2000/08/11 21:20:33 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2000/08/11 21:20:33 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.14 2000/08/12 04:55:47 costin Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/08/12 04:55:47 $
  *
  * ====================================================================
  *
@@ -202,7 +202,7 @@ public class JNIConnectionHandler {
                      int cnt);
 }
 
-class JNIRequestAdapter extends RequestImpl {
+class JNIRequestAdapter extends Request {
     static StringManager sm = StringManager.getManager("org.apache.tomcat.resources");
     ContextManager contextM;
     boolean shutdown=false;
@@ -328,7 +328,7 @@ class JNIRequestAdapter extends RequestImpl {
 
 
 // Ajp use Status: instead of Status
-class JNIResponseAdapter extends ResponseImpl {
+class JNIResponseAdapter extends Response {
 
     JNIConnectionHandler h;
     long s;

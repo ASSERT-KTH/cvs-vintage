@@ -132,7 +132,7 @@ public class EmbededTomcat { // extends WebService
 	sc.setAttribute( "socketFactory",
 			 "org.apache.tomcat.net.SSLSocketFactory");
 	//	log("XXX " + keyFile + " " + keyPass);
-	HttpConnectionHandler ch=new HttpConnectionHandler();
+	HttpConnectionHandler hc=new HttpConnectionHandler();
 	hc.setSecure(true);
 	sc.setTcpConnectionHandler( hc );
 	// XXX add the secure socket

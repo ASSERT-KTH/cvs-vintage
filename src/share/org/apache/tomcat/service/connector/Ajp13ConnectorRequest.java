@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.8 2000/08/11 06:14:13 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/08/11 06:14:13 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.9 2000/08/12 04:55:47 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/08/12 04:55:47 $
  *
  * ====================================================================
  *
@@ -71,7 +71,7 @@ import org.apache.tomcat.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-public class Ajp13ConnectorRequest extends RequestImpl 
+public class Ajp13ConnectorRequest extends Request 
 {
 	public static final int  MAX_READ_SIZE = TcpConnector.MAX_PACKET_SIZE - 
 	                                         TcpConnector.H_SIZE - 

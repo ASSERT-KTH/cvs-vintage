@@ -104,22 +104,22 @@ public class AccountingInterceptor extends  BaseInterceptor implements RequestIn
 
 
     public int requestMap(Request request ) {
-	if( acc && request instanceof RequestImpl ) {
-	    ((RequestImpl)request).setAccount( RequestImpl.ACC_PRE_RMAP, System.currentTimeMillis() );
+	if( acc ) {
+	    request.setAccount( Request.ACC_PRE_RMAP, System.currentTimeMillis() );
 	}
 	return 0;
     }
 
     public int contextMap( Request request ) {
-	if( acc && request instanceof RequestImpl ) {
-	    ((RequestImpl)request).setAccount( RequestImpl.ACC_PRE_CMAP, System.currentTimeMillis() );
+	if( acc ) {
+	    request.setAccount( Request.ACC_PRE_CMAP, System.currentTimeMillis() );
 	}
 	return 0;
     }
 
     public int authenticate(Request request, Response response) {
-	if( acc && request instanceof RequestImpl ) {
-	    ((RequestImpl)request).setAccount( RequestImpl.ACC_POST_MAP, System.currentTimeMillis() );
+	if( acc  ) {
+	    request.setAccount( Request.ACC_POST_MAP, System.currentTimeMillis() );
 	}
 	return 0;
     }
@@ -130,8 +130,8 @@ public class AccountingInterceptor extends  BaseInterceptor implements RequestIn
 
 
     public int preService(Request request, Response response) {
-	if( acc && request instanceof RequestImpl ) {
-	    ((RequestImpl)request).setAccount( RequestImpl.ACC_PRE_SERVICE, System.currentTimeMillis() );
+	if( acc ) {
+	    request.setAccount( Request.ACC_PRE_SERVICE, System.currentTimeMillis() );
 	}
 	return 0;
     }
@@ -150,21 +150,21 @@ public class AccountingInterceptor extends  BaseInterceptor implements RequestIn
     }
 
     public int postService(Request request, Response response) {
-	if( acc && request instanceof RequestImpl ) {
-	    ((RequestImpl)request).setAccount( RequestImpl.ACC_POST_SERVICE, System.currentTimeMillis() );
+	if( acc  ) {
+	    request.setAccount( Request.ACC_POST_SERVICE, System.currentTimeMillis() );
 
-	    long t1=((RequestImpl)request).getAccount( RequestImpl.ACC_PRE_CMAP );
-	    long t2=((RequestImpl)request).getAccount( RequestImpl.ACC_PRE_RMAP );
-	    long t3=((RequestImpl)request).getAccount( RequestImpl.ACC_POST_MAP );
-	    long t4=((RequestImpl)request).getAccount( RequestImpl.ACC_PRE_SERVICE );
-	    long t5=((RequestImpl)request).getAccount( RequestImpl.ACC_POST_SERVICE );
+	    long t1=request.getAccount( Request.ACC_PRE_CMAP );
+	    long t2=request.getAccount( Request.ACC_PRE_RMAP );
+	    long t3=request.getAccount( Request.ACC_POST_MAP );
+	    long t4=request.getAccount( Request.ACC_PRE_SERVICE );
+	    long t5=request.getAccount( Request.ACC_POST_SERVICE );
 
 	    long t21=t2-t1;
 	    long t31=t3-t1;
 	    long t54=t5-t4;
 	    long t41=t4-t1;
 
-	    long tout=((RequestImpl)request).getAccount( RequestImpl.ACC_OUT_COUNT );
+	    long tout=request.getAccount( Request.ACC_OUT_COUNT );
 	    StringBuffer sb=new StringBuffer();
 	    // ContextMap, Map, Service, Pre-Service-Overhead
 	    sb.append(t21).append(",");

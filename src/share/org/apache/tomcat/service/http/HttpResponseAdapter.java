@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.14 2000/08/11 06:14:15 costin Exp $
- * $Revision: 1.14 $
- * $Date: 2000/08/11 06:14:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.15 2000/08/12 04:55:48 costin Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/08/12 04:55:48 $
  *
  * ====================================================================
  *
@@ -80,7 +80,7 @@ import javax.servlet.http.*;
 
 /**
  */
-public class HttpResponseAdapter extends  ResponseImpl {
+public class HttpResponseAdapter extends  Response {
     protected OutputStream sout;
 
     protected static final int DEFAULT_HEAD_BUFFER_SIZE = 1024;
@@ -107,7 +107,7 @@ public class HttpResponseAdapter extends  ResponseImpl {
     public void endHeaders()  throws IOException {
 	super.endHeaders();
 	
-	sendStatus( status, ResponseImpl.getMessage( status ));
+	sendStatus( status, Response.getMessage( status ));
 
 	int count=headers.size();
 	for( int i=0; i<count; i++ ) {

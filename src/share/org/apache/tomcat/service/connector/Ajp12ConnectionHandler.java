@@ -172,7 +172,7 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
     
 }
 
-class AJP12RequestAdapter extends RequestImpl {
+class AJP12RequestAdapter extends Request {
     static StringManager sm = StringManager.getManager("org.apache.tomcat.resources");
     Socket socket;
     InputStream sin;
