@@ -20,7 +20,7 @@ import org.jboss.deployment.DeploymentException;
  * An abstract base class for metadata containers.
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public abstract class MetaData
    implements Cloneable, XmlLoadable
@@ -164,28 +164,24 @@ public abstract class MetaData
    public static String getElementContent(Element element, String defaultStr)
       throws DeploymentException
    {
-      if (element == null) return defaultStr;
-		
-      NodeList children = element.getChildNodes();
-      
-      if (children.getLength() > 0)
-      {
-         String result = "";
-         for (int i = 0; i < children.getLength(); i++)
-         {
-            if (children.item(i).getNodeType() == Node.TEXT_NODE || 
-                children.item(i).getNodeType() == Node.CDATA_SECTION_NODE) {
-               result += children.item(i).getNodeValue();
-            }
-            else {
-               result += children.item(i).getFirstChild();
-            }
-         }
-         return result;
-      } else
-      {
+      if (element == null)
          return defaultStr;
+
+      NodeList children = element.getChildNodes();
+      String result = "";
+      for (int i = 0; i < children.getLength(); i++)
+      {
+         if (children.item(i).getNodeType() == Node.TEXT_NODE || 
+             children.item(i).getNodeType() == Node.CDATA_SECTION_NODE)
+         {
+            result += children.item(i).getNodeValue();
+         }
+         else
+         {
+            result += children.item(i).getFirstChild();
+         }
       }
+      return result;
    }
 
    /**
