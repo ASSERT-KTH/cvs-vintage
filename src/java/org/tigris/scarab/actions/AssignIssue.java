@@ -57,6 +57,7 @@ import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.turbine.tool.IntakeTool;
+import org.apache.turbine.modules.ContextAdapter;
 
 import org.apache.commons.util.SequencedHashtable;
 
@@ -64,6 +65,7 @@ import org.apache.torque.util.Criteria;
 import org.apache.torque.om.NumberKey;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
+import org.apache.fulcrum.template.TemplateEmail;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -91,7 +93,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.14 2001/10/04 23:21:13 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.15 2001/10/24 20:19:22 jon Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -100,7 +102,7 @@ public class AssignIssue extends RequireLoginFirstAction
     public static final String NEW_ELIGIBLE_USERS = "newremoveusers";
     public static final String ELIGIBLE_USERS = "removedusers";
 
-    public void doAdd( RunData data, TemplateContext context ) 
+    public void doAdd(RunData data, TemplateContext context) 
         throws Exception
     {
         String[] newAssigneeIds = data.getParameters()
@@ -128,7 +130,7 @@ public class AssignIssue extends RequireLoginFirstAction
         context.put("actionLink", actionLink);
     }
 
-    public void doRemove( RunData data, TemplateContext context ) 
+    public void doRemove(RunData data, TemplateContext context) 
         throws Exception
     {
         String[] newEligibleUserIds = 
@@ -175,13 +177,13 @@ public class AssignIssue extends RequireLoginFirstAction
      */
     private void nullOutDuplicates(String[] s1, String[] s2)
     {
-        if ( s1 != null && s2 != null ) 
+        if (s1 != null && s2 != null) 
         {
-            for ( int i=s1.length-1; i>=0; i-- ) 
+            for (int i=s1.length-1; i>=0; i--) 
             {
-                for ( int j=s2.length-1; j>=0; j-- ) 
+                for (int j=s2.length-1; j>=0; j--) 
                 {
-                    if ( s1[i].equals(s2[j]) ) 
+                    if (s1[i].equals(s2[j])) 
                     {
                         s2[j] = null;
                     }
@@ -192,19 +194,19 @@ public class AssignIssue extends RequireLoginFirstAction
     
     private void populateLink(ScarabLink link, String key, String[] ids)
     {
-        if ( ids != null ) 
+        if (ids != null) 
         {        
             // quickly remove duplicate ids by sticking in a Map
             Map idMap = new HashMap(ids.length);
-            for ( int i=0; i<ids.length; i++ )
+            for (int i=0; i<ids.length; i++)
             {
                 idMap.put (ids[i], null);
             }
-            for ( Iterator iterator = 
-                    idMap.keySet().iterator(); iterator.hasNext() ; ) 
+            for (Iterator iterator = 
+                    idMap.keySet().iterator(); iterator.hasNext() ;) 
             {
                 String id = (String) iterator.next();
-                if ( id != null ) 
+                if (id != null) 
                 {
                     link.addPathInfo(key, id);
                 }
@@ -214,19 +216,19 @@ public class AssignIssue extends RequireLoginFirstAction
 
     private void addToParameters(RunData data, String key, String[] ids)
     {
-        if ( ids != null ) 
+        if (ids != null) 
         {
             // quickly remove duplicate ids by sticking in a Map
             Map idMap = new HashMap(ids.length);
-            for ( int i=0; i<ids.length; i++ )
+            for (int i=0; i<ids.length; i++)
             {
                 idMap.put (ids[i], null);
             }
-            for ( Iterator iterator = 
-                    idMap.keySet().iterator(); iterator.hasNext() ; ) 
+            for (Iterator iterator = 
+                    idMap.keySet().iterator(); iterator.hasNext() ;) 
             {
                 String id = (String) iterator.next();
-                if ( id != null ) 
+                if (id != null) 
                 {
                     data.getParameters().add(key, id);
                 }
@@ -235,7 +237,7 @@ public class AssignIssue extends RequireLoginFirstAction
     }
 
 
-    public void doSubmit( RunData data, TemplateContext context ) 
+    public void doSubmit(RunData data, TemplateContext context) 
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -246,7 +248,7 @@ public class AssignIssue extends RequireLoginFirstAction
                                      attachment.getQueryKey(), false);
         group.get("DataAsString").setRequired(true);
 
-        if ( intake.isAllValid() ) 
+        if (intake.isAllValid()) 
         {
             // set the comment
             group.setProperties(attachment);
@@ -260,22 +262,24 @@ public class AssignIssue extends RequireLoginFirstAction
             List users = UserManager.getUsers(newUsernames);
 
             List issues = scarabR.getIssues();
-            if ( issues == null ) 
+            if (issues == null) 
             {
                 scarabR.getIssue()
-                    .assignUsers(users, comment, modifyingUser);            
+                    .assignUsers(users, comment, modifyingUser);
+                emailAssignIssueToUsers(scarabR.getIssue(), users, 
+                    comment, context);
             }
             else 
             {
-                for ( int i=0; i<issues.size(); i++ ) 
+                for (int i=0; i<issues.size(); i++) 
                 {
                     ((Issue)issues.get(i))
                         .assignUsers(users, comment, modifyingUser);
+                    emailAssignIssueToUsers((Issue)issues.get(i), users, 
+                        comment, context);
                 }
             }
             
-            // set up email to users here !FIXME!
-
             data.setMessage("Your changes to the assignee list" +
                             " have been saved.");
             
@@ -290,14 +294,62 @@ public class AssignIssue extends RequireLoginFirstAction
             String[] assignees = 
                 data.getParameters().getStrings(ASSIGNEES);
             context.put("actionLink", 
-                        getActionLink(data, eligibleUsers, assignees) );
+                        getActionLink(data, eligibleUsers, assignees));
         }
     }
 
     /**
-        This manages clicking the Cancel button
-    */
-    public void doCancel( RunData data, TemplateContext context ) throws Exception
+     * Takes care of giving an email notice about an issue to a list of users 
+     * with a comment.
+     *
+     * @param issue a <code>Issue</code> to notify users about being assigned to.
+     * @param users a <code>List</code> of users to be notified.
+     * @param comment <code>String</code>
+     * @param context <code>TemplateContext</code>
+     */
+    private void emailAssignIssueToUsers(Issue issue, List users, 
+                                     String comment, TemplateContext context)
+        throws Exception
+    {
+
+        if (issue == null || users == null)
+        {
+            return;
+        }
+
+        context.put("issue", issue);
+        context.put("comment", comment);
+
+        Iterator iter = users.iterator();
+        while (iter.hasNext())
+        {
+            ScarabUser su = (ScarabUser)iter.next();
+            TemplateEmail te = new TemplateEmail();
+            te.setContext(new ContextAdapter(context));
+            te.setTo(su.getFirstName() + " " + su.getLastName(), su.getEmail());
+            te.setFrom(
+                Turbine.getConfiguration()
+                    .getString("scarab.email.assignissue.fromName",
+                               "Scarab System"),
+                Turbine.getConfiguration()
+                    .getString("scarab.email.assignissue.fromAddress",
+                               "help@scarab.tigris.org"));
+            te.setSubject(
+                Turbine.getConfiguration()
+                    .getString("scarab.email.assignissue.subject",
+                               "Assign Issue"));
+            te.setTemplate(
+                Turbine.getConfiguration()
+                    .getString("scarab.email.assignissue.template",
+                               "email/AssignIssue.vm"));
+            te.send();
+        }
+    }
+
+    /**
+     * This manages clicking the Cancel button
+     */
+    public void doCancel(RunData data, TemplateContext context) throws Exception
     {
         String template = Turbine.getConfiguration()
             .getString("template.homepage", "Start.vm");
@@ -305,9 +357,9 @@ public class AssignIssue extends RequireLoginFirstAction
     }
 
     /**
-        calls doCancel()
-    */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
+     * calls doCancel()
+     */
+    public void doPerform(RunData data, TemplateContext context) throws Exception
     {
         doCancel(data, context);
     }
