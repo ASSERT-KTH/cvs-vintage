@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * This class records and runs macros.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.18 2002/04/08 05:33:31 spestov Exp $
+ * @version $Id: Macros.java,v 1.19 2002/05/27 07:53:14 spestov Exp $
  */
 public class Macros
 {
@@ -148,40 +148,6 @@ public class Macros
 
 		return JOptionPane.showConfirmDialog(comp,prompt,
 			jEdit.getProperty("macro-confirm.title"),buttons,type);
-	} //}}}
-
-	//{{{ browseSystemMacros() method
-	/**
-	 * Opens the system macro directory in a VFS browser.
-	 * @param view The view
-	 * @since jEdit 2.7pre2
-	 */
-	public static void browseSystemMacros(View view)
-	{
-		if(systemMacroPath == null)
-		{
-			GUIUtilities.error(view,"no-webstart",null);
-			return;
-		}
-
-		VFSBrowser.browseDirectory(view,systemMacroPath);
-	} //}}}
-
-	//{{{ browseUserMacros() method
-	/**
-	 * Opens the user macro directory in a VFS browser.
-	 * @param view The view
-	 * @since jEdit 2.7pre2
-	 */
-	public static void browseUserMacros(View view)
-	{
-		if(userMacroPath == null)
-		{
-			GUIUtilities.error(view,"no-settings",null);
-			return;
-		}
-
-		VFSBrowser.browseDirectory(view,userMacroPath);
 	} //}}}
 
 	//{{{ loadMacros() method

@@ -27,7 +27,7 @@ package org.gjt.sp.jedit.syntax;
  * builds a linked list of tokens.
  *
  * @author Slava Pestov
- * @version $Id: DefaultTokenHandler.java,v 1.6 2002/05/26 07:38:43 spestov Exp $
+ * @version $Id: DefaultTokenHandler.java,v 1.7 2002/05/27 07:53:15 spestov Exp $
  * @since jEdit 4.1pre1
  */
 public class DefaultTokenHandler implements TokenHandler
@@ -64,11 +64,9 @@ public class DefaultTokenHandler implements TokenHandler
 	public void handleToken(byte id, int offset, int length,
 		TokenMarker.LineContext context)
 	{
-		ParserRuleSet rules = getParserRuleSet(context);
-
-		Token token = createToken(id,offset,length,rules);
+		Token token = createToken(id,offset,length,context);
 		if(token != null)
-			addToken(token,rules);
+			addToken(token,context);
 	} //}}}
 
 	//{{{ Protected members
@@ -90,9 +88,9 @@ public class DefaultTokenHandler implements TokenHandler
 
 	//{{{ createToken() method
 	protected Token createToken(byte id, int offset, int length,
-		ParserRuleSet rules)
+		TokenMarker.LineContext context)
 	{
-		return new Token(id,offset,length,rules);
+		return new Token(id,offset,length,getParserRuleSet(context));
 	} //}}}
 
 	//{{{ addToken() method
@@ -100,7 +98,7 @@ public class DefaultTokenHandler implements TokenHandler
 	 * @return False if the new token was merged with the last one; true
 	 * otherwise.
 	 */
-	protected boolean addToken(Token token, ParserRuleSet rules)
+	protected boolean addToken(Token token, TokenMarker.LineContext context)
 	{
 		if(firstToken == null)
 		{
@@ -109,7 +107,7 @@ public class DefaultTokenHandler implements TokenHandler
 		}
 		else
 		{
-			if((lastToken.id == rules.getDefault()
+			if((lastToken.id == context.rules.getDefault()
 				&& token.id == Token.WHITESPACE)
 				|| (lastToken.id == token.id
 				&& lastToken.rules == token.rules))

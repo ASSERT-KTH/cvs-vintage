@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.69 2002/05/26 05:43:53 spestov Exp $
+ * @version $Id: jEdit.java,v 1.70 2002/05/27 07:53:14 spestov Exp $
  */
 public class jEdit
 {
@@ -3343,6 +3343,9 @@ loop:		for(int i = 0; i < list.length; i++)
 
 			view.close();
 			removeViewFromList(view);
+
+			if(view == activeView)
+				activeView = null;
 		}
 	} //}}}
 

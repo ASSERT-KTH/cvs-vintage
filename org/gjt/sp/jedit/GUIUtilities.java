@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.29 2002/05/16 08:01:24 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.30 2002/05/27 07:53:14 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -180,9 +180,18 @@ public class GUIUtilities
 		else if(name.equals("recent-directories"))
 			return new RecentDirectoriesMenu();
 		else if(name.equals("current-directory"))
-			return new CurrentDirectoryMenu();
+			return new DirectoryMenu("current-directory",null);
 		else if(name.equals("markers"))
 			return new MarkersMenu();
+		else if(name.equals("jedit-directory"))
+			return new DirectoryMenu("jedit-directory",jEdit.getJEditHome());
+		else if(name.equals("settings-directory"))
+		{
+			String settings = jEdit.getSettingsDirectory();
+			if(settings == null)
+				settings = jEdit.getJEditHome();
+			return new DirectoryMenu("settings-directory",settings);
+		}
 		else if(name.equals("macros"))
 			return new MacrosMenu();
 		else
