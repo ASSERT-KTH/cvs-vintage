@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  *      
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.7 $
+ *	@version $Revision: 1.8 $
  */
 public final class JDBCApplicationMetaData {
 	public final static String JDBC_PM = "org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager";
@@ -73,6 +73,11 @@ public final class JDBCApplicationMetaData {
 	private final Map valueClasses = new HashMap();
 		
 	/**
+	 * Map from abstract schema name to entity name 
+	 */
+	private final Map entitiesByAbstractSchemaName = new HashMap();
+	 
+	/**
 	 * Constructs jdbc application meta data with the data from the applicationMetaData.
 	 *
 	 * @param applicationMetaData the application data loaded from the ejb-jar.xml file
@@ -99,7 +104,7 @@ public final class JDBCApplicationMetaData {
 				if(entity.isCMP() && entity.getContainerConfiguration().getPersistenceManager().equals(JDBC_PM)) {
 					JDBCEntityMetaData jdbcEntity = new JDBCEntityMetaData(this, entity);
 					entities.put(entity.getEjbName(), jdbcEntity);
-
+					entitiesByAbstractSchemaName.put(jdbcEntity.getAbstractSchemaName(), jdbcEntity);
 					entityRoles.put(entity.getEjbName(), new HashMap());
 				}
 			}
@@ -153,13 +158,16 @@ public final class JDBCApplicationMetaData {
 
 		// get default settings for the beans (optional, but always set in standardjbosscmp-jdbc.xml)
 		entities.putAll(defaultValues.entities);
+		entitiesByAbstractSchemaName.putAll(defaultValues.entitiesByAbstractSchemaName);
 		Element defaults = MetaData.getOptionalChild(element, "defaults");
 		if(defaults != null) {
 			ArrayList values = new ArrayList(entities.values());
 			for(Iterator i = values.iterator(); i.hasNext(); ) {
 				JDBCEntityMetaData entityMetaData = (JDBCEntityMetaData)i.next();
 				entityMetaData = new JDBCEntityMetaData(this, defaults, entityMetaData);
+				// replace the old meta data with the new
 				entities.put(entityMetaData.getName(), entityMetaData);
+				entitiesByAbstractSchemaName.put(entityMetaData.getAbstractSchemaName(), entityMetaData);
 			}
 		}		
 		
@@ -176,6 +184,7 @@ public final class JDBCApplicationMetaData {
 				if(entityMetaData != null) {
 					entityMetaData = new JDBCEntityMetaData(this, beanElement, entityMetaData);
 					entities.put(entityMetaData.getName(), entityMetaData);
+					entitiesByAbstractSchemaName.put(entityMetaData.getAbstractSchemaName(), entityMetaData);
 				} else {
 					Logger.warning("Warning: data found in jbosscmp-jdbc.xml for entity " + ejbName + " but bean is not a jbosscmp-jdbc-managed cmp entity in ejb-jar.xml"); 
 				}
@@ -292,5 +301,14 @@ public final class JDBCApplicationMetaData {
 	 */
 	public JDBCEntityMetaData getBeanByEjbName(String name) { 
 		return (JDBCEntityMetaData)entities.get(name);
+	}
+	
+	/**
+	 * Gets the metadata for an entity bean by the abstract schema name.
+	 * @param name the abstract schema name of the entity meta data to return
+	 * @return the entity meta data for the specified name
+	 */
+	public JDBCEntityMetaData getBeanByAbstractSchemaName(String name) { 
+		return (JDBCEntityMetaData)entitiesByAbstractSchemaName.get(name);
 	}
 }
