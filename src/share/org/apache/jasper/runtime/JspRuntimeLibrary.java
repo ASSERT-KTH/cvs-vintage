@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspRuntimeLibrary.java,v 1.5 2000/07/25 12:13:53 glenn Exp $
- * $Revision: 1.5 $
- * $Date: 2000/07/25 12:13:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspRuntimeLibrary.java,v 1.6 2000/11/15 14:53:07 larryi Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/11/15 14:53:07 $
  *
  * ====================================================================
  * 
@@ -322,7 +322,7 @@ public class JspRuntimeLibrary {
 	    } else if (t.equals(boolean.class)) {
 		boolean[] tmpval = new boolean[values.length];
 		for (int i = 0 ; i < values.length; i++)
-		    tmpval[i] = Boolean.getBoolean (values[i]);
+		    tmpval[i] = (Boolean.valueOf(values[i])).booleanValue();
 		method.invoke (bean, new Object[] {tmpval});
 	    } else if (t.equals(short.class)) {
 		short[] tmpval = new short[values.length];
