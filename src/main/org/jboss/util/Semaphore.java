@@ -19,7 +19,7 @@ import java.io.PrintWriter;
  * and can be used instead of synchronized blocks
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class Semaphore 
 	implements Sync
@@ -28,7 +28,7 @@ public class Semaphore
 	private static final long DEADLOCK_TIMEOUT = 5*60*1000;
 
 	// Attributes ----------------------------------------------------
-	private final static boolean m_debug = true;
+	private final static boolean m_debug = false;
 	private int m_users;
 	private int m_allowed;
 	private Map m_logMap;
