@@ -15,7 +15,7 @@
     <copydir src="src/webpages" dest="${tomcat.build}/webpages"/>
     <copydir src="src/examples" dest="${tomcat.build}/examples"/>
     <copydir src="src/share/javax" dest="${tomcat.build}/src/javax"/>
-    <copyfile src="../jakarta-tools/projectx-tr2.jar" dest="${tomcat.build}/lib/xml.jar"/>
+    <copyfile src="../jakarta-ant/lib/xml.jar" dest="${tomcat.build}/lib/xml.jar"/>
 
     <copydir src="src/shell" dest="${tomcat.build}" />
 
@@ -85,7 +85,7 @@
 
     <copydir src="src/share/javax" dest="${tomcat.home}/src/javax"/>
     <copyfile src="../jakarta-tools/ant.jar" dest="${tomcat.home}/lib/ant.jar"/>
-    <copyfile src="../jakarta-tools/projectx-tr2.jar" dest="${tomcat.home}/lib/xml.jar"/>
+    <copyfile src="../jakarta-ant/lib/xml.jar" dest="${tomcat.home}/lib/xml.jar"/>
 
     <copydir src="src/shell" dest="${tomcat.home}" />
 
