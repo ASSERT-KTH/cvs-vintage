@@ -63,7 +63,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * A Testing Suite for the om.ScarabModule class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.15 2003/09/15 23:45:50 jmcnally Exp $
+ * @version $Id: ScarabModuleTest.java,v 1.16 2003/09/17 02:27:23 jmcnally Exp $
  */
 public class ScarabModuleTest extends BaseTestCase
 {
@@ -132,9 +132,6 @@ public class ScarabModuleTest extends BaseTestCase
 
             testGetAllAttributeValuesMap(issue);
             testGetAttributeGroups(issueType);
-            testGetActiveAttributes(issueType);
-            testGetQuickSearchAttributes(issueType);
-            testGetRequiredAttributes(issueType);
             testGetUserAttributes(issueType);
         }
     }
@@ -189,39 +186,6 @@ public class ScarabModuleTest extends BaseTestCase
                 }
             }
         }
-    }
-
-    private void testGetActiveAttributes(IssueType issueType)
-        throws Exception
-    {
-        System.out.println ("testGetActiveAttributes");
-        List attrs =  newModule.getActiveAttributes(issueType);
-        assertEquals (getExpectedSize(issueType), attrs.size());
-    }
-
-    private void testGetQuickSearchAttributes(IssueType issueType)
-        throws Exception
-    {
-        System.out.println ("testGetQuickSearchAttributes");
-        List attrs =  newModule.getQuickSearchAttributes(issueType);
-        assertEquals (1, attrs.size());
-    }
-
-    private void testGetRequiredAttributes(IssueType issueType)
-        throws Exception
-    {
-        System.out.println ("testGetRequiredAttributes");
-        List attrs =  newModule.getRequiredAttributes(issueType);
-        int expectedSize = 0;
-        switch (Integer.parseInt(issueType.getIssueTypeId().toString()))
-        {
-            case 1: expectedSize = 4;break;
-            case 3: expectedSize = 4;break;
-            case 5: expectedSize = 2;break;
-            case 7: expectedSize = 2;break;
-            case 9: expectedSize = 2;break;
-        }
-        assertEquals (expectedSize, attrs.size());
     }
 
     private void testGetUserAttributes(IssueType issueType)

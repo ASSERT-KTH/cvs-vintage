@@ -72,7 +72,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.77 2003/09/15 23:45:50 jmcnally Exp $
+ * @version $Id: Module.java,v 1.78 2003/09/17 02:27:00 jmcnally Exp $
  */
 public interface Module
     extends Serializable
@@ -226,13 +226,6 @@ public interface Module
         throws Exception;
 
     /**
-     * Returns the attribute group this attribute is associated with.
-     */
-    AttributeGroup getAttributeGroup(IssueType issueType, 
-                                            Attribute attribute)
-        throws Exception;
-
-    /**
      * This method is used within Wizard1.vm to get a list of attribute
      * groups which are marked as dedupe and have a list of attributes
      * in them.
@@ -358,32 +351,6 @@ public interface Module
     List getSavedReports(ScarabUser user)
         throws Exception;
 
-    /**
-     * Array of Attributes used for quick search given the specified <code>issueType</code>
-     *
-     * @param issueType
-     * @return an <code>List</code> of Attribute objects
-     */
-    List getQuickSearchAttributes(IssueType issueType)
-        throws Exception;
-
-    /**
-     * Array of Attributes which are active and required for an Issue Type.
-     *
-     * @param issueType
-     * @return an <code>List</code> of Attribute objects
-     */
-    List getRequiredAttributes(IssueType issueType)
-        throws Exception;
-
-    /**
-     * Array of active Attributes for an Issue Type.
-     *
-     * @return an <code>List</code> of Attribute objects
-     */
-    List getActiveAttributes(IssueType issueType)
-        throws Exception;
-
     List getUserAttributes(IssueType issueType, boolean activeOnly)
         throws Exception;
 
@@ -400,16 +367,6 @@ public interface Module
         throws Exception;
 
     void addAttributeOption(IssueType issueType, AttributeOption option)
-        throws Exception;
-
-    /**
-     * if an RMA is the chosen attribute for email subjects then return it.
-     * if not explicitly chosen, choose the highest ordered text attribute.
-     *
-     * @return the Attribute to use as the email subject,
-     * or null if no suitable Attribute could be found. 
-     */
-    Attribute getDefaultTextAttribute(IssueType issueType)
         throws Exception;
 
     /**

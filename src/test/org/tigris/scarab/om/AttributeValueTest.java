@@ -54,7 +54,7 @@ import org.tigris.scarab.om.ActivitySetManager;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: AttributeValueTest.java,v 1.8 2003/03/25 20:31:54 jmcnally Exp $
+ * @version $Id: AttributeValueTest.java,v 1.9 2003/09/17 02:27:23 jmcnally Exp $
  */
 public class AttributeValueTest extends BaseTestCase
 {
@@ -92,7 +92,6 @@ public class AttributeValueTest extends BaseTestCase
         testIsRequired();
         testIsSet();
         testIsSet2();
-        testIsQuickSearchAttribute();
         testGetRModuleAttribute();
         testGetAttributeOption();
     }
@@ -152,12 +151,6 @@ public class AttributeValueTest extends BaseTestCase
         System.out.println("\ntestIsSet2()");
         attVal2.setValue("description");
         assertEquals(true, attVal2.isSet());
-    }
-
-    private void testIsQuickSearchAttribute() throws Exception
-    {
-        System.out.println("\ntestIsQuickSearchAttribute()");
-        assertEquals(false, newAttVal.isQuickSearchAttribute());
     }
 
     private void testGetRModuleAttribute() throws Exception

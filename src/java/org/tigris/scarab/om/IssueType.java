@@ -46,10 +46,12 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -59,6 +61,8 @@ import org.apache.torque.TorqueException;
 import org.apache.torque.manager.MethodResultCache;
 import org.apache.fulcrum.localization.Localization;
 
+import org.tigris.scarab.da.AttributeAccess;
+import org.tigris.scarab.da.DAFactory;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssuePeer;
@@ -72,7 +76,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.61 2003/09/15 23:45:50 jmcnally Exp $
+ * @version $Id: IssueType.java,v 1.62 2003/09/17 02:27:00 jmcnally Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -904,18 +908,24 @@ public  class IssueType
     /**
      * Gets a list of non-user AttributeValues which match a given Module.
      * It is used in the MoveIssue2.vm template
+     * @return right now this does need to return torque 
+     * <code>Attribute</code>s
      */
-    public List getMatchingAttributeValuesList(Module oldModule, Module newModule, 
-                                               IssueType newIssueType)
+    public List getMatchingAttributesList(Module oldModule, Module newModule, 
+                                          IssueType newIssueType)
           throws Exception
     {
+        AttributeAccess aa = DAFactory.getAttributeAccess();
         List matchingAttributes = new ArrayList();
-        List srcActiveAttrs = oldModule.getActiveAttributes(this);
-        List destActiveAttrs = newModule.getActiveAttributes(newIssueType);
-        for (int i = 0; i<srcActiveAttrs.size(); i++)
+        Collection srcActiveAttrs = aa.retrieveActiveAttributeOMs(
+            oldModule.getModuleId().toString(), 
+            this.getIssueTypeId().toString(), true);
+        Collection destActiveAttrs = aa.retrieveActiveAttributeOMs(
+            newModule.getModuleId().toString(), 
+            newIssueType.getIssueTypeId().toString(), false);
+        for (Iterator i = srcActiveAttrs.iterator(); i.hasNext();)
         {
-            Attribute attr = (Attribute)srcActiveAttrs.get(i);
-                
+            Attribute attr = (Attribute)i.next();
             if (destActiveAttrs.contains(attr))
             {
                 matchingAttributes.add(attr);
@@ -927,23 +937,51 @@ public  class IssueType
     /**
      * Gets a list of Attributes which do not match a given Module.
      * It is used in the MoveIssue2.vm template
+     * @return right now this does need to return torque 
+     * <code>Attribute</code>s
      */
-    public List getOrphanAttributeValuesList(Module oldModule, Module newModule, 
-                                             IssueType newIssueType)
+    public List getOrphanAttributesList(Module oldModule, Module newModule, 
+                                        IssueType newIssueType)
           throws Exception
     {
+        AttributeAccess aa = DAFactory.getAttributeAccess();
         List orphanAttributes = new ArrayList();
-        List srcActiveAttrs = oldModule.getActiveAttributes(this);
-        List destActiveAttrs = newModule.getActiveAttributes(newIssueType);
-        for (int i = 0; i<srcActiveAttrs.size(); i++)
+        Collection srcActiveAttrs = aa.retrieveActiveAttributeOMs(
+            oldModule.getModuleId().toString(), 
+            this.getIssueTypeId().toString(), true);
+        Collection destActiveAttrs = aa.retrieveActiveAttributeOMs(
+            newModule.getModuleId().toString(), 
+            newIssueType.getIssueTypeId().toString(), false);
+        for (Iterator i = srcActiveAttrs.iterator(); i.hasNext();)
         {
-            Attribute attr = (Attribute)srcActiveAttrs.get(i);
+            Attribute attr = (Attribute)i.next();
             if (!destActiveAttrs.contains(attr))
             {
                 orphanAttributes.add(attr);
-            }
+            } 
         }
         return orphanAttributes;
+    }
+
+    /**
+     * Get the attribute ID for the default text attribute.  if one has
+     * not been explicitly selected, the highest ranked, active text 
+     * attribute will be used.
+     *
+     * @param module a <code>Module</code> value
+     * @return a <code>String</code> attribute ID
+     */
+    public String getDefaultTextAttributeId(Module module)
+    {
+        AttributeAccess aa = DAFactory.getAttributeAccess();
+        String id = aa.retrieveDefaultTextAttributeID(
+            module.getModuleId().toString(), getIssueTypeId().toString());
+        if (id == null)
+        {
+            id = aa.retrieveFirstActiveTextAttributeID(
+                module.getModuleId().toString(), getIssueTypeId().toString());
+        }
+        return id;
     }
 
     /**

@@ -73,6 +73,7 @@ import org.apache.fulcrum.localization.Localization;
 import org.apache.turbine.Turbine;
 
 // Scarab classes
+import org.tigris.scarab.da.DAFactory;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Attribute;
@@ -125,7 +126,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.110 2003/09/17 01:44:10 dlr Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.111 2003/09/17 02:27:00 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -134,8 +135,6 @@ public abstract class AbstractScarabModule
     // the following Strings are method names that are used in caching results
     protected static final String GET_R_MODULE_ATTRIBUTES = 
         "getRModuleAttributes";
-    protected static final String GET_ATTRIBUTE_GROUP = 
-        "getAttributeGroup";
     protected static final String GET_DEDUPE_GROUPS_WITH_ATTRIBUTES = 
         "getDedupeGroupsWithAttributes";
     protected static final String GET_SAVED_REPORTS = 
@@ -146,12 +145,6 @@ public abstract class AbstractScarabModule
         "getIssueTypes";
     protected static final String GET_NAV_ISSUE_TYPES = 
         "getNavIssueTypes";
-    protected static final String GET_QUICK_SEARCH_ATTRIBUTES = 
-        "getQuickSearchAttributes";
-    protected static final String GET_REQUIRED_ATTRIBUTES = 
-        "getRequiredAttributes";
-    protected static final String GET_ACTIVE_ATTRIBUTES = 
-        "getActiveAttributes";
     protected static final String GET_ALL_R_MODULE_OPTIONS = 
         "getAllRModuleOptions";
     protected static final String GET_LEAF_R_MODULE_OPTIONS = 
@@ -166,8 +159,6 @@ public abstract class AbstractScarabModule
         "getUnapprovedQueries";
     protected static final String GET_UNAPPROVED_TEMPLATES = 
         "getUnapprovedTemplates";
-    protected static final String GET_DEFAULT_TEXT_ATTRIBUTE = 
-        "getDefaultTextAttribute";
     protected static final String GET_AVAILABLE_ISSUE_TYPES =
         "getAvailableIssueTypes";
 
@@ -373,41 +364,7 @@ public abstract class AbstractScarabModule
         return result;
     }
 
-    /**
-     * Get this attribute's attribute group.
-     */
-    public AttributeGroup getAttributeGroup(IssueType issueType, 
-                                            Attribute attribute)
-        throws Exception
-    {
-        AttributeGroup group = null;
-        Object obj = ScarabCache.get(this, GET_ATTRIBUTE_GROUP, 
-                                     issueType, attribute); 
-        if (obj == null)
-        {
-            Criteria crit = new Criteria()
-                .add(AttributeGroupPeer.MODULE_ID, getModuleId())
-                .add(AttributeGroupPeer.ISSUE_TYPE_ID, 
-                     issueType.getIssueTypeId())
-                .addJoin(RAttributeAttributeGroupPeer.GROUP_ID, 
-                   AttributeGroupPeer.ATTRIBUTE_GROUP_ID)
-                .add(RAttributeAttributeGroupPeer.ATTRIBUTE_ID, 
-                     attribute.getAttributeId());
-            List results = AttributeGroupPeer.doSelect(crit);
-            if (results.size() > 0)
-            {
-                group = (AttributeGroup)results.get(0);
-                ScarabCache.put(group, this, GET_ATTRIBUTE_GROUP, 
-                                issueType, attribute);
-            }
-        }
-        else 
-        {
-            group = (AttributeGroup)obj;
-        }
-        return group;
-    }
-         
+
     /**
      * List of active dedupe attribute groups associated with this module.
      */
@@ -772,10 +729,14 @@ public abstract class AbstractScarabModule
             result = new LinkedList();
             Attribute[] attributes = new Attribute[3];
             int count = 0;
-            attributes[count++] = getDefaultTextAttribute(issueType);
-            if (attributes[0] == null) 
+            String id = DAFactory.getAttributeAccess()
+                .retrieveDefaultTextAttributeID(
+                    getModuleId().toString(), 
+                    issueType.getIssueTypeId().toString());
+            if (id != null) 
             {
-                count = 0;
+                attributes[count++] = 
+                    AttributeManager.getInstance(new Integer(id));
             }
             
             List rma1s = getRModuleAttributes(issueType, true, NON_USER);
@@ -826,70 +787,6 @@ public abstract class AbstractScarabModule
         }
         return result;
     }
-
-
-    /**
-     * if an RMA is the chosen attribute for email subjects then return it.
-     * if not explicitly chosen, choose the highest ordered text attribute.
-     *
-     * @return the Attribute to use as the email subject,
-     * or null if no suitable Attribute could be found. 
-     */
-    public Attribute getDefaultTextAttribute(IssueType issueType)
-        throws Exception
-    {
-        Attribute result = null;
-        Object obj = ScarabCache.get(this, GET_DEFAULT_TEXT_ATTRIBUTE); 
-        if (obj == null) 
-        {        
-            // get related RMAs
-            Criteria crit = new Criteria()
-                .add(RModuleAttributePeer.ISSUE_TYPE_ID, 
-                     issueType.getIssueTypeId());
-            crit.addAscendingOrderByColumn(
-                RModuleAttributePeer.PREFERRED_ORDER);
-            List rmas = getRModuleAttributes(crit);
-            
-            // the code to find the correct attribute could be quite simple by
-            // looping and calling RMA.isDefaultText().  The code from
-            // that method can be restructured here to more efficiently
-            // answer this question.
-            Iterator i = rmas.iterator();
-            while (i.hasNext()) 
-            {
-                RModuleAttribute rma = (RModuleAttribute)i.next();
-                if (rma.getDefaultTextFlag()) 
-                {
-                    result = rma.getAttribute();
-                    break;
-                }
-            }
-            
-            if (result == null) 
-            {
-                // locate the highest ranked text attribute
-                i = rmas.iterator();
-                while (i.hasNext()) 
-                {
-                    RModuleAttribute rma = (RModuleAttribute)i.next();
-                    Attribute testAttr = rma.getAttribute();
-                    if (testAttr.isTextAttribute() && 
-                         getAttributeGroup(issueType, testAttr).getActive()) 
-                    {
-                        result = testAttr;
-                        break;
-                    }
-                }
-            }
-            ScarabCache.put(result, this, GET_DEFAULT_TEXT_ATTRIBUTE);
-        }
-        else 
-        {
-            result = (Attribute)obj;
-        }
-        return result;
-    }
-
     /**
      * This method is useful for getting an issue object
      * by a String id. It has some logic in it for appending
@@ -1080,108 +977,6 @@ public abstract class AbstractScarabModule
         rmo.setDisplayValue(option.getName());
         rmo.setOrder(getLastAttributeOption(option.getAttribute(), issueType) + 1);
         return rmo;
-    }
-
-    /**
-     * Array of Attributes used for quick search.
-     *
-     * @return an <code>List</code> of Attribute objects
-     */
-    public List getQuickSearchAttributes(IssueType issueType)
-        throws Exception
-    {
-        List attributes = null;
-        Object obj = ScarabCache.get(this, GET_QUICK_SEARCH_ATTRIBUTES, 
-                                     issueType); 
-        if (obj == null) 
-        {        
-            Criteria crit = new Criteria(3)
-                .add(RModuleAttributePeer.QUICK_SEARCH, true);
-            addOrderByClause(crit, issueType);
-            attributes = getAttributes(crit);
-            ScarabCache.put(attributes, this, GET_QUICK_SEARCH_ATTRIBUTES, 
-                            issueType);
-        }
-        else 
-        {
-            attributes = (List)obj;
-        }
-        return attributes;
-    }
-
-    /**
-     * Array of Attributes which are active and required by this module.
-     * Whose attribute group's are also active.
-     * @return an <code>List</code> of Attribute objects
-     */
-    public List getRequiredAttributes(IssueType issueType)
-        throws Exception
-    {
-
-        List attributes = null;
-        Object obj = ScarabCache.get(this, GET_REQUIRED_ATTRIBUTES, 
-                                     issueType); 
-        if (obj == null) 
-        {        
-            Criteria crit = new Criteria(3)
-                .add(RModuleAttributePeer.REQUIRED, true);
-            crit.add(RModuleAttributePeer.ACTIVE, true);
-            addOrderByClause(crit, issueType);
-            List temp =  getAttributes(crit);
-            List requiredAttributes  = new ArrayList();
-            for (int i=0; i <temp.size(); i++)
-            {
-                Attribute att = (Attribute)temp.get(i);
-                AttributeGroup group = getAttributeGroup(issueType, att);
-                if (group != null && group.getActive())
-                {
-                    requiredAttributes.add(att);
-                }
-            }
-            attributes = requiredAttributes;
-            ScarabCache.put(attributes, this, GET_REQUIRED_ATTRIBUTES, 
-                            issueType);
-        }
-        else 
-        {
-            attributes = (List)obj;
-        }
-        return attributes;
-
-    }
-
-    /**
-     * Array of active Attributes for an issue type.
-     *
-     * @return an <code>List</code> of Attribute objects
-     */
-    public List getActiveAttributes(IssueType issueType)
-        throws Exception
-    {
-        List attributes = null;
-        Object obj = ScarabCache.get(this, GET_ACTIVE_ATTRIBUTES, issueType);
-        if (obj == null)
-        {
-            Criteria crit = new Criteria(2);
-            crit.add(RModuleAttributePeer.ACTIVE, true);
-            addOrderByClause(crit, issueType);
-            attributes = getAttributes(crit);
-            ScarabCache.put(attributes, this, GET_ACTIVE_ATTRIBUTES, 
-                            issueType);
-        }
-        else
-        {
-            attributes = (List)obj;
-        }
-        return attributes;
-    }
-
-    private void addOrderByClause(Criteria crit, IssueType issueType)
-    {
-        crit.addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
-        crit.addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
-        crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, 
-                 issueType.getIssueTypeId());
     }
 
     public RModuleAttribute getRModuleAttribute(Attribute attribute, 

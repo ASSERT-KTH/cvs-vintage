@@ -71,7 +71,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.100 2003/09/16 00:52:09 elicia Exp $
+ * @version $Id: AttributeValue.java,v 1.101 2003/09/17 02:27:00 jmcnally Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -679,29 +679,6 @@ Leaving here so that John can remove or fix.
             .getAttributeOption(getOptionId());
     }
 
-    /**
-     * if the Attribute related to this value is marked as relevant
-     * to quick search in the module related to the Issue
-     * related to this value.
-     *
-     * @return a <code>boolean</code> value
-     */
-    public boolean isQuickSearchAttribute()
-        throws Exception
-    {
-        boolean result = false;
-        List qsAttributes = getIssue().getModule()
-            .getQuickSearchAttributes(getIssue().getIssueType());
-        for (int i=qsAttributes.size()-1; i>=0; i--) 
-        {
-            if (((Attribute)qsAttributes.get(i)).equals(getAttribute())) 
-            {
-                result = true;
-                break;
-            }
-        }
-        return result;
-    }
 
     /**
      * Creates, initializes and returns a new AttributeValue.
