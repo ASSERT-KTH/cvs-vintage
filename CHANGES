@@ -3,12 +3,16 @@ Columba v1.0 RC2
 New features:
 - international IMAP mailbox naming using UTF-7 encoding/decoding (tstich)
 - added show next/previous message and unread message actions (fdietz)
-- show/hide message preview panel (fdietz)
+- #999257, show/hide message preview panel (fdietz)
 - offer three choices for viewing email headers: default, custom, all (fdietz)
 - #1000003, doubleclick From: header, displayname included (fdietz)
 - #999871, "subject or sender contains" should do filtering on typing (fdietz)
 - show recent message count in folder tree using blue font (fdietz)
 - cleanup of menu, added many new shortcuts (fdietz)
+- #1000002, doubleclick support for addressbook (cliffb53)
+- #986558, Dbl-click in contact table should open edit dialog (cliffb53)
+- #1011978, Reply All- Keyboard Command (fdietz)
+- #999748, in preview panel,full emailadress should be displayed beside (fdietz)
 
 Fixed bugs:
 - #773118 é in name of Directory (tstich)
