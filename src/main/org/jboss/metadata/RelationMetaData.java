@@ -6,7 +6,6 @@
  */
 package org.jboss.metadata;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.w3c.dom.Element;
@@ -17,7 +16,7 @@ import org.jboss.deployment.DeploymentException;
  * file's relationships elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class RelationMetaData
    extends MetaData
@@ -88,8 +87,12 @@ public class RelationMetaData
    public void importEjbJarXml( Element element )
       throws DeploymentException
    {
-      // name
+      // name - treating empty values as not specified
       relationName = getOptionalChildContent(element, "ejb-relation-name");
+      if ("".equals(relationName))
+      {
+         relationName = null;
+      }
 
       // left role
       Iterator iter = getChildrenByTagName(element, "ejb-relationship-role");
