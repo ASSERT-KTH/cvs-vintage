@@ -1,5 +1,5 @@
 @echo off
-rem $Id: runtest.bat,v 1.1 1999/10/15 21:37:44 costin Exp $
+rem $Id: runtest.bat,v 1.2 1999/10/15 22:16:50 costin Exp $
 rem Startup batch file for servlet runner.
 
 rem This batch file written and tested under Windows NT
@@ -9,21 +9,12 @@ set host=localhost
 set port=8080
 set test=testlist.txt
 
-set topDir=..\..\..
-set tomcatBuildDir=%topDir%\build\tomcat
-set toolsDir=%topDir%\jakarta-tools
-
-set jsdkJars=%tomcatBuildDir%\webserver.jar;%tomcatBuildDir%\lib\servlet.jar
-set jspJars=%tomcatBuildDir%\lib\jasper.jar
-set beanJars=
-set miscJars=%toolsDir%\projectx-tr2.jar;%toolsDir%\moo.jar
-set appJars=%jsdkJars%;%jspJars%;%miscJars%
-set sysJars=%JAVA_HOME%\lib\tools.jar
-
-set appClassPath=.\classes;%appJars%
 set cp=%CLASSPATH%
 
-set CLASSPATH=%appClassPath%;%sysJars%
+set CLASSPATH=classes;lib\moo.jar
+
+set TOMCAT_HOME=..
+%TOMCAT_HOME%\tomcatEnv.bat
 
 if "%cp%" == "" goto next
 
@@ -46,12 +37,6 @@ set CLASSPATH=%cp%
 set port=
 set host=
 set test=
-set jsdkJars=
-set jspJars=
-set beanJars=
-set miscJars=
-set appJars=
-set appClassPath=
 set cp=
 
 rem pause
