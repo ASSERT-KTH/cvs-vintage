@@ -1,4 +1,4 @@
-// $Id: JasonsTheme.java,v 1.5 2003/08/30 18:47:05 alexb Exp $
+// $Id: JasonsTheme.java,v 1.6 2004/08/21 07:04:01 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,25 +57,75 @@ public class JasonsTheme extends MetalTheme {
     private final FontUIResource smallFont =
 	new FontUIResource("Dialog", Font.PLAIN, 9);
 
+    /**
+     * @see javax.swing.plaf.metal.MetalTheme#getName()
+     */
     public String getName() { return "Default"; }
 
     // these are blue in Metal Default Theme
+    /**
+     * @see javax.swing.plaf.metal.MetalTheme#getPrimary1()
+     */
     protected ColorUIResource getPrimary1() { return primary1; } 
+    /**
+     * @see javax.swing.plaf.metal.MetalTheme#getPrimary2()
+     */
     protected ColorUIResource getPrimary2() { return primary2; }
+    /**
+     * @see javax.swing.plaf.metal.MetalTheme#getPrimary3()
+     */
     protected ColorUIResource getPrimary3() { return primary3; }
   
     // these are gray in Metal Default Theme
+    /**
+     * @see javax.swing.plaf.metal.MetalTheme#getSecondary1()
+     */
     protected ColorUIResource getSecondary1() { return secondary1; }
+    
+    /**
+     * @see javax.swing.plaf.metal.MetalTheme#getSecondary2()
+     */
     protected ColorUIResource getSecondary2() { return secondary2; }
+    
+    /**
+     * @see javax.swing.plaf.metal.MetalTheme#getSecondary3()
+     */
     protected ColorUIResource getSecondary3() { return secondary3; }
   
+    /**
+     * @see javax.swing.plaf.metal.MetalTheme#getControlTextFont()
+     */
     public FontUIResource getControlTextFont() { return controlFont; }
+    
+    /**
+     * @see javax.swing.plaf.metal.MetalTheme#getSystemTextFont()
+     */
     public FontUIResource getSystemTextFont() { return systemFont; }
+    
+    /**
+     * @see javax.swing.plaf.metal.MetalTheme#getUserTextFont()
+     */
     public FontUIResource getUserTextFont() { return userFont; }
+    
+    /**
+     * @see javax.swing.plaf.metal.MetalTheme#getMenuTextFont()
+     */
     public FontUIResource getMenuTextFont() { return controlFont; }
+    
+    /**
+     * TODO: Should this be getTextHighlightColor?
+     * @return
+     */
     public FontUIResource getEmphasisTextFont() { return windowTitleFont; }
+  
+    /**
+     * @see javax.swing.plaf.metal.MetalTheme#getSubTextFont()
+     */
     public FontUIResource getSubTextFont() { return smallFont; }
   
+    /**
+     * @see javax.swing.plaf.metal.MetalTheme#getWindowTitleFont()
+     */
     public FontUIResource getWindowTitleFont() { return windowTitleFont; }
 
 

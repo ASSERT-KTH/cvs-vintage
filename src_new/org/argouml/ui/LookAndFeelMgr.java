@@ -1,4 +1,4 @@
-// $Id: LookAndFeelMgr.java,v 1.17 2004/07/17 22:29:05 linus Exp $
+// $Id: LookAndFeelMgr.java,v 1.18 2004/08/21 07:04:01 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,6 +116,9 @@ public class LookAndFeelMgr {
 
     /**
      * Detecting the theme from the command line.
+     *
+     * @param arg the argument from the command line
+     * @return the theme
      */
     public String getThemeFromArg(String arg) {
         if (arg.equalsIgnoreCase("-big")) {
@@ -353,6 +356,9 @@ public class LookAndFeelMgr {
         Configuration.setString(Argo.KEY_THEME_CLASS, themeValue);
     }
     
+    /**
+     * @return the standard textfield font
+     */
     public Font getStandardFont() {
         Font font = UIManager.getDefaults().getFont("TextField.font");
         if (font == null) {
@@ -361,6 +367,9 @@ public class LookAndFeelMgr {
         return font;
     }
 
+    /**
+     * @return the small font
+     */
     public Font getSmallFont() {
         Font font = getStandardFont();
         if (font.getSize2D() >= 12f) {
