@@ -167,26 +167,6 @@
 <input type="text" name="$field.Key" value="$!field.Value"#if($maxLength) maxlength="$maxLength"#end#if($size.length()) size="$size"#end />
 #end
 
-#macro (listUsers $attribute)
-  #if ($currentIssue.AssigneeAttributeValues.isEmpty())
-	 None assigned.
-  #else
-	#set ($assignedUsers = $currentIssue.getAttributeValues($attribute))
-	#foreach ($assignee in $assignedUsers)
-	  #if ($velocityCount == $assignedUsers.size())
-		#set ($comma = "")
-	  #else
-		#set ($comma = ",")
-	  #end
-	  #set ($assignedUser = $scarabR.getUser($assignee.UserId))
-	  <a href="mailto:$assignedUser.Email">$assignedUser.FirstName $assignedUser.LastName</a>$comma
-	#end
-  #end
-    #if ($canEdit)
-     &#160;$link.setPage("AssignIssue.vm").addPathInfo("$intake.Attribute.Default.Id.Key", $attribute.AttributeId).setLabel("Edit")
-    #end
-#end
-
 #macro (userSelectBox $attrValue $size $multiple)
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
 #set ($attr = $attrValue.Attribute)
