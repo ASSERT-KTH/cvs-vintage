@@ -120,7 +120,7 @@ public class Reaper extends Thread {
 	this.start();
     }
 
-    public void stopReaper() {
+    public synchronized void stopReaper() {
 	running=false;
 	this.notify();
     }
