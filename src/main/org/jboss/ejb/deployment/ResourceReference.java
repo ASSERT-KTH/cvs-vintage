@@ -20,7 +20,7 @@ import com.dreambean.ejx.xml.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class ResourceReference
    extends com.dreambean.ejx.ejb.ResourceReference
@@ -68,6 +68,7 @@ public class ResourceReference
       } else // EJB-JAR XML
       {
          super.importXml(elt);
+			setResourceName(getName());
       }
    }
    
