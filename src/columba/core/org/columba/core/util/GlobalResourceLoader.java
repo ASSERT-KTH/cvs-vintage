@@ -73,28 +73,26 @@ public class GlobalResourceLoader {
 		"org.columba.core.i18n.global.global";
 
 	static {
+		XmlElement locale =
+			Config.get("options").getElement("/options/locale");
+
+		// no configuration available, create default config
+		if (locale == null) {
+			// create new locale xml treenode
+			locale = new XmlElement("locale");
+			locale.addAttribute("language", "en");
+			Config.get("options").getElement("/options").addElement(
+				locale);
+
+		}
+			
+		String language = locale.getAttribute("language");
+                String country = locale.getAttribute("country", "");
+                String variant = locale.getAttribute("variant", "");
+		Locale.setDefault(new Locale(language, country, variant));
+		initClassLoader();
 		try {
-			XmlElement locale =
-				Config.get("options").getElement("/options/locale");
-
-			// no configuration available, create default config
-			if (locale == null) {
-				// create new locale xml treenode
-				locale = new XmlElement("locale");
-				locale.addAttribute("language", "en");
-				Config.get("options").getElement("/options").addElement(
-					locale);
-
-			}
-			
-			String language = locale.getAttribute("language");
-                        String country = locale.getAttribute("country", "");
-                        String variant = locale.getAttribute("variant", "");
-			Locale.setDefault(new Locale(language, country, variant));
-			
-			initClassLoader();
-			globalBundle =
-				ResourceBundle.getBundle(
+			globalBundle = ResourceBundle.getBundle(
 					GLOBAL_BUNDLE_PATH,
 					Locale.getDefault(),
 					classLoader);
