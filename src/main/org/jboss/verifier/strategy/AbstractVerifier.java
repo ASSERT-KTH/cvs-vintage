@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.34 2002/08/20 15:25:59 lqd Exp $
+ * $Id: AbstractVerifier.java,v 1.35 2002/09/11 14:38:01 lqd Exp $
  */
 package org.jboss.verifier.strategy;
 
@@ -83,7 +83,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  * @since   JDK 1.3
  */
 public abstract class AbstractVerifier
@@ -204,9 +204,11 @@ public abstract class AbstractVerifier
       return true;
    }
 
-   /*
-    * checks if the method includes java.rmi.RemoteException or its
+   /**
+    * Checks if the method includes java.rmi.RemoteException or its
     * subclass in its throws clause.
+    *
+    * See bug report #434739 and #607805
     */
    public boolean throwsRemoteException(Method method)
    {
@@ -214,6 +216,11 @@ public abstract class AbstractVerifier
 
       for (int i = 0; i < exception.length; ++i)
       {
+         // Fix for bug #607805: an IOException is OK for local interfaces
+         if( exception[i].equals(java.io.IOException.class) )
+         {
+            continue;
+         }
 // Not true see bug report #434739
 //            if (java.rmi.RemoteException.class.isAssignableFrom(exception[i]))
 // According to the RMI spec. a remote interface must throw an RemoteException
