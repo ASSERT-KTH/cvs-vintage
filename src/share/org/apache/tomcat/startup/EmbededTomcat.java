@@ -22,7 +22,7 @@ import java.lang.reflect.*;
    lib/common, and without lib/container. It'll deal with setting a separate
    class loader for container and applications.
 
-   - home property must be set, or TOMCAT_HOME env.
+   - tomcat.install or tomcat.home property must be set ( from TOMCAT_HOME env.)
 
 */
 
@@ -388,15 +388,14 @@ public class EmbededTomcat {
 	if( initialized ) return;
 	if( home==null )
 	    home = System.getProperty("tomcat.home");
-	if( home==null ) {
-	    IntrospectionUtils.guessInstall("tomcat.install",
-					    "tomcat.home","tomcat.jar");
-	    home = System.getProperty("tomcat.home");
-	    if( dL > 0 ) debug( "Guessed home " + home );
+	if( installDir==null ) {
+	    installDir=IntrospectionUtils.guessInstall("tomcat.install",
+						       "tomcat.home","tomcat.jar");
+	    if( dL > 0 ) debug( "Guessed installDir " + installDir );
 	}
 
-	contextM.setHome( home );
 	if( installDir==null ) installDir=home;
+	contextM.setInstallDir( installDir );
 
 	try {
 	    setTomcatProperties();
