@@ -109,20 +109,6 @@
         <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
         <filter token="TOMCAT_SHUTDOWN_PORT" value="${scarab.tomcat.shutdown.port}"/>
         <filter token="TOMCAT_HTTP_PORT" value="${scarab.tomcat.http.port}"/>
-        <filter token="SCARAB_EMAIL_REGISTER_FROMNAME" value="${scarab.email.register.fromName}"/>
-        <filter token="SCARAB_EMAIL_REGISTER_FROMADDRESS" value="${scarab.email.register.fromAddress}"/>
-        <filter token="SCARAB_EMAIL_MODIFYISSUE_FROMNAME" value="${scarab.email.modifyissue.fromName}"/>
-        <filter token="SCARAB_EMAIL_MODIFYISSUE_FROMADDRESS" value="${scarab.email.modifyissue.fromAddress}"/>
-        <filter token="SCARAB_EMAIL_APPROVAL_FROMNAME" value="${scarab.email.approval.fromName}"/>
-        <filter token="SCARAB_EMAIL_APPROVAL_FROMADDRESS" value="${scarab.email.approval.fromAddress}"/>
-        <filter token="SCARAB_EMAIL_REQUIREAPPROVAL_FROMNAME" value="${scarab.email.requireapproval.fromName}"/>
-        <filter token="SCARAB_EMAIL_REQUIREAPPROVAL_FROMADDRESS" value="${scarab.email.requireapproval.fromAddress}"/>
-        <filter token="SCARAB_EMAIL_FORGOTPASSWORD_FROMNAME" value="${scarab.email.forgotpassword.fromName}"/>
-        <filter token="SCARAB_EMAIL_FORGOTPASSWORD_FROMADDRESS" value="${scarab.email.forgotpassword.fromAddress}"/>
-        <filter token="SCARAB_EMAIL_ASSIGNISSUE_FROMNAME" value="${scarab.email.assignissue.fromName}"/>
-        <filter token="SCARAB_EMAIL_ASSIGNISSUE_FROMADDRESS" value="${scarab.email.assignissue.fromAddress}"/>
-        <filter token="SCARAB_EMAIL_MOVEISSUE_FROMNAME" value="${scarab.email.moveissue.fromName}"/>
-        <filter token="SCARAB_EMAIL_MOVEISSUE_FROMADDRESS" value="${scarab.email.moveissue.fromAddress}"/>
         <copy todir="${build.dir}/conf" filtering="yes">
             <fileset dir="${tomcat.dist.dir}/conf"/>
         </copy>
@@ -317,6 +303,35 @@
         <filter token="TEMPLATE_CACHE" value="${scarab.template.cache}"/>
         <filter token="EMAIL_ENCODING" value="${scarab.email.encoding}"/>
         
+        <filter token="SCARAB_EMAIL_REGISTER_FROMNAME" 
+            value="${scarab.email.register.fromName}"/>
+        <filter token="SCARAB_EMAIL_REGISTER_FROMADDRESS" 
+            value="${scarab.email.register.fromAddress}"/>
+        <filter token="SCARAB_EMAIL_MODIFYISSUE_FROMNAME" 
+            value="${scarab.email.modifyissue.fromName}"/>
+        <filter token="SCARAB_EMAIL_MODIFYISSUE_FROMADDRESS" 
+            value="${scarab.email.modifyissue.fromAddress}"/>
+        <filter token="SCARAB_EMAIL_APPROVAL_FROMNAME" 
+            value="${scarab.email.approval.fromName}"/>
+        <filter token="SCARAB_EMAIL_APPROVAL_FROMADDRESS" 
+            value="${scarab.email.approval.fromAddress}"/>
+        <filter token="SCARAB_EMAIL_REQUIREAPPROVAL_FROMNAME" 
+            value="${scarab.email.requireapproval.fromName}"/>
+        <filter token="SCARAB_EMAIL_REQUIREAPPROVAL_FROMADDRESS" 
+            value="${scarab.email.requireapproval.fromAddress}"/>
+        <filter token="SCARAB_EMAIL_FORGOTPASSWORD_FROMNAME" 
+            value="${scarab.email.forgotpassword.fromName}"/>
+        <filter token="SCARAB_EMAIL_FORGOTPASSWORD_FROMADDRESS" 
+            value="${scarab.email.forgotpassword.fromAddress}"/>
+        <filter token="SCARAB_EMAIL_ASSIGNISSUE_FROMNAME" 
+            value="${scarab.email.assignissue.fromName}"/>
+        <filter token="SCARAB_EMAIL_ASSIGNISSUE_FROMADDRESS" 
+            value="${scarab.email.assignissue.fromAddress}"/>
+        <filter token="SCARAB_EMAIL_MOVEISSUE_FROMNAME" 
+            value="${scarab.email.moveissue.fromName}"/>
+        <filter token="SCARAB_EMAIL_MOVEISSUE_FROMADDRESS" 
+            value="${scarab.email.moveissue.fromAddress}"/>
+
         <copy todir="${build.project.webinf}/conf" filtering="yes" overwrite="true">
             <fileset dir="${src.conf.dir}/">
                 <include name="*.properties"/>
