@@ -19,7 +19,7 @@
 // File: SampleNode2.java
 // Classes: SampleNode2
 // Original Author: ics125b spring 1996
-// $Id: SampleNode2.java,v 1.2 1998/02/11 22:30:14 jrobbins Exp $
+// $Id: SampleNode2.java,v 1.3 1998/03/25 22:07:34 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -45,8 +45,8 @@ public class SampleNode2 extends SampleNode {
     *  future nodes. Maybe I should think about doing virtual
     *  copies?<p> */
 
-  public void initialize(NetNode deft, Object model) {
-    super.initialize(deft, model);
+  public void initialize(Hashtable args) {
+    super.initialize(args);
    }
 
   public FigNode makePresentation(Layer lay) {
@@ -64,11 +64,11 @@ public class SampleNode2 extends SampleNode {
     temp_list.addElement(obj5);
     temp_list.addElement(obj6);
     FigNode fn = new FigNode(this, temp_list);
-    fn.setBlinkPorts(true);
     fn.bindPort(north, obj3);
     fn.bindPort(south, obj4);
     fn.bindPort(east, obj5);
     fn.bindPort(west, obj6);
+    fn.setBlinkPorts(true);
     return fn;
   }
 

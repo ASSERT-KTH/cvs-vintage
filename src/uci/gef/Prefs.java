@@ -19,7 +19,7 @@
 // File: Prefs.java
 // Classes: Prefs
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Prefs.java,v 1.1 1998/01/26 22:19:23 jrobbins Exp $
+// $Id: Prefs.java,v 1.2 1998/03/25 22:07:16 jrobbins Exp $
 
 package uci.gef;
 
@@ -57,7 +57,7 @@ public class Prefs {
   public Hashtable rubberbandAttrs() { return _rubberbandAttrs; }
 
   /** The color of the handles used to manipulate Fig's */
-  private Color _handleColor = new Color(0x33, 0x33, 0x99);
+  private Color _handleColor = new Color(0x55, 0x55, 0xaa);
   /** The color of the handles used to indicate locked Fig's */
   private Color _lockedHandleColor = new Color(0x55, 0x55, 0x55);
   /** The color of the handles used to manipulate Fig's */

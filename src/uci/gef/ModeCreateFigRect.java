@@ -19,11 +19,11 @@
 // File: ModeCreateFigRect.java
 // Classes: ModeCreateFigRect
 // Original Author: ics125b spring 1996
-// $Id: ModeCreateFigRect.java,v 1.1 1998/01/26 22:19:24 jrobbins Exp $
+// $Id: ModeCreateFigRect.java,v 1.2 1998/03/25 22:07:03 jrobbins Exp $
 
 package uci.gef;
 
-import java.awt.Event;
+import java.awt.event.MouseEvent;
 
 /** A Mode to interpert user input while creating a FigRect. All of
  *  the actual event handling is inherited from ModeCreate. This class
@@ -46,7 +46,7 @@ public class ModeCreateFigRect extends ModeCreate {
 
   /** Create a new FigRect instance based on the given mouse down
    *  event and the state of the parent Editor. */
-  public Fig createNewItem(Event e, int snapX, int snapY) {
+  public Fig createNewItem(MouseEvent me, int snapX, int snapY) {
     return new FigRect(snapX, snapY, 0, 0, _editor.graphAttrs());
   }
 

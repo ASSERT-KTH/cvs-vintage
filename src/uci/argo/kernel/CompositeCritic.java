@@ -19,7 +19,7 @@
 // File: CompositeCritic.java
 // Classes: CompositeCritic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CompositeCritic.java,v 1.1 1998/03/20 02:30:39 jrobbins Exp $
+// $Id: CompositeCritic.java,v 1.2 1998/03/25 22:10:09 jrobbins Exp $
 
 
 package uci.argo.kernel;

@@ -27,7 +27,7 @@
 // File: DefaultGraphEdgeRenderer.java
 // Classes: DefaultGraphEdgeRenderer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DefaultGraphEdgeRenderer.java,v 1.2 1998/02/12 02:27:49 jrobbins Exp $
+// $Id: DefaultGraphEdgeRenderer.java,v 1.3 1998/03/25 22:08:26 jrobbins Exp $
 
 package uci.graph;
 
@@ -40,7 +40,7 @@ import uci.gef.Layer;
  *
  * @see uci.graph.demo.TranscriptionRenderer */
 
-public class DefaultGraphEdgeRenderer {
+public class DefaultGraphEdgeRenderer implements GraphEdgeRenderer {
   /** Return a Fig that can be used to represent the given Edge */
   public FigEdge getFigEdgeFor(GraphModel graph, Layer lay, Object edge) {
     if (edge instanceof NetEdge)

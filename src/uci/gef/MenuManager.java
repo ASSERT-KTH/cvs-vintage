@@ -19,7 +19,7 @@
 // File: MenuManager.java
 // Classes: MenuManager
 // Original Author: ics125b spring 1996
-// $Id: MenuManager.java,v 1.1 1998/01/26 22:19:23 jrobbins Exp $
+// $Id: MenuManager.java,v 1.2 1998/03/25 22:06:56 jrobbins Exp $
 
 package uci.gef;
 
@@ -226,7 +226,7 @@ public class MenuManager extends Object { //implements GEF {
     else if ("Rotate".equals(arg)) act = new ActionRotate();
     else return false;
 
-    _editor.executeAction(act, e);
+    _editor.executeAction(act, null);
     return true;
   }
 

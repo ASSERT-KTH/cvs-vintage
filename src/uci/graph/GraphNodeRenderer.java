@@ -27,7 +27,7 @@
 // File: GraphNodeRenderer.java
 // Interfaces: GraphNodeRenderer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GraphNodeRenderer.java,v 1.2 1998/02/12 02:28:04 jrobbins Exp $
+// $Id: GraphNodeRenderer.java,v 1.3 1998/03/25 22:08:29 jrobbins Exp $
 
 package uci.graph;
 
@@ -42,6 +42,6 @@ import uci.gef.Layer;
 
 public interface GraphNodeRenderer {
   /** Return a Fig that can be used to represent the given node */
-  FigNode getFigNodeFor(GraphModel graph, Layer lay, Object node);
+  FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node);
 
 } /* end interface GraphNodeRenderer */

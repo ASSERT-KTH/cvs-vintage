@@ -19,7 +19,7 @@
 // File: ToDoItem.java
 // Classes: ToDoItem
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoItem.java,v 1.1 1998/03/20 02:30:48 jrobbins Exp $
+// $Id: ToDoItem.java,v 1.2 1998/03/25 22:10:15 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -72,9 +72,9 @@ public class ToDoItem implements java.io.Serializable {
   ////////////////////////////////////////////////////////////////
   // constructors
 
-  public ToDoItem(Critic c, String h, int p, String d, String m,
+  public ToDoItem(Poster poster, String h, int p, String d, String m,
 		  Set offs) {
-    _poster = c;
+    _poster = poster;
     _headline = h;
     _offenders = offs;
     _priority = p;

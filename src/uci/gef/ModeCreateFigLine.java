@@ -19,11 +19,11 @@
 // File: ModeCreateFigLine.java
 // Classes: ModeCreateFigLine
 // Original Author: ics125b spring 1996
-// $Id: ModeCreateFigLine.java,v 1.1 1998/01/26 22:19:24 jrobbins Exp $
+// $Id: ModeCreateFigLine.java,v 1.2 1998/03/25 22:07:01 jrobbins Exp $
 
 package uci.gef;
 
-import java.awt.Event;
+import java.awt.event.MouseEvent;
 
 /** A Mode to interpert user input while creating a FigLine. All of
  *  the actual event handling is inherited from ModeCreate. This class
@@ -45,7 +45,7 @@ public class ModeCreateFigLine extends ModeCreate {
 
   /** Make a new FigLine based on the given mouse down event and the
    *  parent Editor's default graphical attributes. */
-  public Fig createNewItem(Event e, int snapX, int snapY) {
+  public Fig createNewItem(MouseEvent me, int snapX, int snapY) {
     return new FigLine(snapX, snapY, snapX, snapY, _editor.graphAttrs());
   }
 

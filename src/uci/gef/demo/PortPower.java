@@ -19,14 +19,16 @@
 // File: PortPower.java
 // Classes: PortPower
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PortPower.java,v 1.1 1998/01/26 22:19:27 jrobbins Exp $
+// $Id: PortPower.java,v 1.2 1998/03/25 22:07:33 jrobbins Exp $
 
 package uci.gef.demo;
 
 import java.awt.*;
 import java.util.Vector;
 import java.io.*;
+
 import uci.gef.*;
+import uci.graph.*;
 
 /** An example subclass of NetPort for the Example application. As
  *  part of the example I constrain the ports to only be on
@@ -71,10 +73,10 @@ public class PortPower extends NetPort {
   /** Add the constraint that PortPower's can only be connected to
    *  other ports of the same type. And SOCKETs can only be connected
    *  to RECEPTICALs. */
-  public boolean canConnectTo(NetPort anotherPort) {
-    return (super.canConnectTo(anotherPort)) &&
-      (anotherPort.getClass() == this.getClass()) &&
-      (this.type() != ((PortPower)anotherPort).type())  &&
+  public boolean canConnectTo(GraphModel gm, Object otherPort) {
+    return (super.canConnectTo(gm, otherPort)) &&
+      (otherPort.getClass() == this.getClass()) &&
+      (this.type() != ((PortPower)otherPort).type())  &&
       _edges.size() == 0;
     // needs-more-work: should work with subclasses too. This is
     // really a java.lang.Class method that is missing: isSubclass()

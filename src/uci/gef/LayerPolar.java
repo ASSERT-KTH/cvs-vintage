@@ -19,7 +19,7 @@
 // File: LayerPolar.java
 // Classes: LayerPolar
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerPolar.java,v 1.1 1998/01/26 22:19:23 jrobbins Exp $
+// $Id: LayerPolar.java,v 1.2 1998/03/25 22:06:55 jrobbins Exp $
 
 package uci.gef;
 
@@ -149,7 +149,7 @@ public class LayerPolar extends Layer {
       hidden(false);
       Editor ce = Globals.curEditor();
       if (ce != null) {
-	Dimension d = ce.size();
+	Dimension d = ce.getAwtComponent().size();
 	origin(d.width / 2, d.height / 2);
       }
       else origin(100,100);

@@ -19,7 +19,7 @@
 // File: ExecuteActionWindow.java
 // Classes: ExecuteActionWindow
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ExecuteActionWindow.java,v 1.1 1998/01/26 22:19:21 jrobbins Exp $
+// $Id: ExecuteActionWindow.java,v 1.2 1998/03/25 22:06:47 jrobbins Exp $
 
 package uci.gef;
 
@@ -127,7 +127,7 @@ public class ExecuteActionWindow extends Frame {
     Editor ce = Globals.curEditor();
     System.out.println("executing: " + _actionNames.getSelectedItem());
     Action act = Action.actionAtIndex(_actionNames.getSelectedIndex());
-    ce.executeAction(act, e);
+    ce.executeAction(act, null);
   }
 
   protected void describeCommand() {

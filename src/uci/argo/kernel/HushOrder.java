@@ -19,7 +19,7 @@
 // File: HushOrder.java
 // Classes: HushOrder
 // Original Author: jrobbins@ics.uci.edu
-// $Id: HushOrder.java,v 1.1 1998/03/20 02:30:46 jrobbins Exp $
+// $Id: HushOrder.java,v 1.2 1998/03/25 22:10:14 jrobbins Exp $
 
 package uci.argo.kernel;
 

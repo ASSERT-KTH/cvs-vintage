@@ -19,7 +19,7 @@
 // File: NodeCPU.java
 // Classes: NodeCPU
 // Original Author: jrobbins@ics.uci.edu
-// $Id: NodeCPU.java,v 1.2 1998/02/11 22:30:03 jrobbins Exp $
+// $Id: NodeCPU.java,v 1.3 1998/03/25 22:07:31 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -103,63 +103,6 @@ public class NodeCPU extends SampleNode {
   public void setHasCDROM(boolean r) { _hasCDROM = r; }
 
   public void setOwnerInfo(String oi) { _ownerInfo = oi; }
-
-  public Object get(String key) {
-    if (key.equals(pMEGS_OF_RAM))
-      return new Integer(getMegsOfRAM());
-    else if (key.equals(pBUS_SPEED_MHZ))
-      return new Integer(getBusSpeedMHz());
-    else if (key.equals(pCPU_SPEED_MHZ))
-      return new Integer(getCPUSpeedMhz());
-    else if (key.equals(pHAS_CD_ROM))
-      return getHasCDROM() ? Boolean.TRUE : Boolean.FALSE;
-    else if (key.equals(pOWNER_INFO))
-      return getOwnerInfo();
-    else
-      return super.get(key);
-  }
-
-  public boolean put(String key, Object value) {
-    int i = 0;
-    if (value instanceof Integer) i = ((Integer)value).intValue();
-    //
-    boolean b = false;
-    if (value instanceof Boolean) b = ((Boolean)value).booleanValue();
-    //
-    if (key.equals(pMEGS_OF_RAM)) setMegsOfRAM(i);
-    else if (key.equals(pBUS_SPEED_MHZ)) setBusSpeedMHz(i);
-    else if (key.equals(pCPU_SPEED_MHZ)) setCPUSpeedMhz(i);
-    else if (key.equals(pHAS_CD_ROM)) setHasCDROM(b);
-    else if (key.equals(pOWNER_INFO)) setOwnerInfo((String)value);
-    else return super.put(key, value);
-    setChanged();
-    notifyObservers();
-    return true;
-  }
-
-  public static Vector _ModelKeys = null;
-
-  public Enumeration keysIn(String category) {
-    if (_ModelKeys == null) {
-      _ModelKeys = new Vector();
-      _ModelKeys.addElement(pMEGS_OF_RAM);
-      // _ModelKeys.addElement(pBUS_SPEED_MHZ);
-      // note that bus speed is not shown in property sheet
-      _ModelKeys.addElement(pCPU_SPEED_MHZ);
-      _ModelKeys.addElement(pHAS_CD_ROM);
-      _ModelKeys.addElement(pOWNER_INFO);
-    }
-    if (category.equals("Model"))
-      return _ModelKeys.elements();
-    else
-      return EnumerationEmpty.theInstance();
-  }
-
-  public boolean canPut(String key) {
-    return key.equals(pMEGS_OF_RAM) || key.equals(pBUS_SPEED_MHZ) ||
-      key.equals(pCPU_SPEED_MHZ) || key.equals(pHAS_CD_ROM);
-    // note that pOWNER_INFO is not editable
-  }
 
   static {
     Vector possibleCPUSpeeds = new Vector();

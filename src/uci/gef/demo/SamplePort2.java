@@ -19,14 +19,16 @@
 // File: SamplePort2.java
 // Classes: SamplePort2
 // Original Author: ics125b spring 1996
-// $Id: SamplePort2.java,v 1.1 1998/01/26 22:19:27 jrobbins Exp $
+// $Id: SamplePort2.java,v 1.2 1998/03/25 22:07:36 jrobbins Exp $
 
 package uci.gef.demo;
 
 import java.awt.*;
 import java.util.Vector;
 import java.io.*;
+
 import uci.gef.*;
+import uci.graph.*;
 
 /** An example subclass of NetPort for the Example application. As
  * part of the example I constrain the ports to only be on
@@ -57,8 +59,8 @@ public class SamplePort2 extends SamplePort {
 
   /** Add the constraint that SamplePort2's can only be connected to
    * other ports of the same type. */
-  public boolean canConnectTo(NetPort anotherPort) {
-    return (super.canConnectTo(anotherPort)) &&
+  public boolean canConnectTo(GraphModel gm, Object anotherPort) {
+    return (super.canConnectTo(gm, anotherPort)) &&
       (anotherPort.getClass() == this.getClass());
     // needs-more-work: should work with subclasses too. This is
     // really a java.lang.Class method that is missing: isSubclass()

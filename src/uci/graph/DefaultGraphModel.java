@@ -27,7 +27,7 @@
 // File: DefaultGraphModel.java
 // Interfaces: DefaultGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DefaultGraphModel.java,v 1.2 1998/02/12 02:27:51 jrobbins Exp $
+// $Id: DefaultGraphModel.java,v 1.3 1998/03/25 22:08:27 jrobbins Exp $
 
 package uci.graph;
 
@@ -167,7 +167,7 @@ public class DefaultGraphModel extends MutableGraphSupport {
     if (srcPort instanceof NetPort && destPort instanceof NetPort) {
       NetPort s = (NetPort) srcPort;
       NetPort d = (NetPort) destPort;
-      return s.canConnectTo(d) && d.canConnectTo(s);
+      return s.canConnectTo(this, d) && d.canConnectTo(this, s);
     }
     else return false;
   }
@@ -175,7 +175,7 @@ public class DefaultGraphModel extends MutableGraphSupport {
   /** Return true if the two given ports can be connected by the given
    * kind of edge. */
   public boolean canConnect(Object srcPort, Object destPort, Class edgeClass) {
-    // needs-more-work: take ask edgeClass
+    // needs-more-work: ask edgeClass
     return canConnect(srcPort, destPort);
   }
 
@@ -209,7 +209,7 @@ public class DefaultGraphModel extends MutableGraphSupport {
   }
 
   protected Object connectInternal(NetPort s, NetPort d, NetEdge e) {
-    e.connect(s, d);
+    e.connect(this, s, d);
     addEdge(e);
     return e;
   }

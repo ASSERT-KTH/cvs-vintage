@@ -19,11 +19,12 @@
 // File: SampleNode.java
 // Classes: SampleNode
 // Original Author: ics125b spring 1996
-// $Id: SampleNode.java,v 1.3 1998/02/12 02:23:08 jrobbins Exp $
+// $Id: SampleNode.java,v 1.4 1998/03/25 22:07:33 jrobbins Exp $
 
 package uci.gef.demo;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 import java.io.*;
 import uci.gef.*;
@@ -46,7 +47,7 @@ public class SampleNode extends NetNode {
     *  future nodes. Maybe I should think about doing virtual copies?<p>
     */
 
-  public void initialize(NetNode deft, Object model) {
+  public void initialize(Hashtable args) {
     addPort(east = new SamplePort2(this));
     addPort(west = new SamplePort2(this));
     addPort(north = new SamplePort(this));
@@ -76,57 +77,53 @@ public class SampleNode extends NetNode {
   }
 
   /** Sample event handler: prints a message to the console. */
-  public boolean mouseEnter(Event e, int x, int y) {
+  public void mouseEntered(MouseEvent e) {
     //    System.out.println("sample node got mouseEnter");
-    return super.mouseEnter(e, x, y);
   }
 
   /** Sample event handler: prints a message to the console. */
-  public boolean mouseExit(Event e, int x, int y) {
+  public void mouseExited(MouseEvent e) {
     //    System.out.println("sample node got mouseExit");
-    return super.mouseExit(e, x, y);
   }
 
   /** Sample event handler: prints a message to the console. */
-  public boolean mouseUp(Event e, int x, int y) {
+  public void mouseReleased(MouseEvent e) {
     //    System.out.println("sample node got mouseUp");
-    return super.mouseUp(e, x, y);
   }
 
   /** Sample event handler: prints a message to the console. */
-  public boolean mouseDown(Event e, int x, int y) {
+  public void mousePressed(MouseEvent e) {
     //    System.out.println("sample node got mouseDown");
-    return super.mouseDown(e, x, y);
   }
 
   /** Sample event handler: prints a message to the console. */
-  public boolean mouseDrag(Event e, int x, int y) {
+  public void mouseClicked(MouseEvent e) {
+    //    System.out.println("sample node got mouseDown");
+  }
+
+  /** Sample event handler: prints a message to the console. */
+  public void mouseDragged(MouseEvent e) {
     //    System.out.println("sample node got mouseDrag");
-    return super.mouseDrag(e, x, y);
   }
 
   /** Sample event handler: prints a message to the console. */
-  public boolean mouseMove(Event e, int x, int y) {
+  public void mouseMoved(MouseEvent e) {
     //    System.out.println("sample node got mouseMove");
-    return super.mouseMove(e, x, y);
   }
 
   /** Sample event handler: prints a message to the console. */
-  public boolean keyUp(Event e, int key) {
+  public void keyTyped(KeyEvent e) {
     //    System.out.println("sample node got keyUp");
-    return super.keyUp(e, key);
   }
 
   /** Sample event handler: prints a message to the console. */
-  public boolean keyDown(Event e, int key) {
+  public void keyReleased(KeyEvent e) {
+    //    System.out.println("sample node got keyUp");
+  }
+
+  /** Sample event handler: prints a message to the console. */
+  public void keyPressed(KeyEvent e) {
     //    System.out.println("sample node got keyDown");
-    return super.keyDown(e, key);
-  }
-
-  /** Sample event handler: prints a message to the console. */
-  public boolean handleMenuEvent(Event e) {
-    //    System.out.println("sample node got handleMenuEvent");
-    return super.handleMenuEvent(e);
   }
 
 } /* end class SampleNode */

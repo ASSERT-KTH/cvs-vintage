@@ -19,7 +19,7 @@
 // File: NetList.java
 // Classes: NetList
 // Original Author: ics125b spring 1996
-// $Id: NetList.java,v 1.2 1998/02/12 02:20:59 jrobbins Exp $
+// $Id: NetList.java,v 1.3 1998/03/25 22:07:09 jrobbins Exp $
 
 package uci.gef;
 
@@ -73,11 +73,11 @@ public class NetList extends NetPrimitive {
    *
    * @see Editor#add */
   public void addNode(NetNode n) {
-    setChanged();
+    //setChanged();
     Vector v = new Vector(2);
     v.addElement("add");
     v.addElement(n);
-    notifyObservers(v);
+    //notifyObservers(v);
     _nodes.addElement(n);
   }
 
@@ -89,8 +89,8 @@ public class NetList extends NetPrimitive {
       Vector v = new Vector(2);
       v.addElement(Globals.REMOVE);
       v.addElement(n);
-      setChanged();
-      notifyObservers(v);
+      //setChanged();
+      //notifyObservers(v);
     }
   }
 
@@ -100,11 +100,11 @@ public class NetList extends NetPrimitive {
    *
    * @see Editor#add */
   public void addEdge(NetEdge a) {
-    setChanged();
+    //setChanged();
     Vector v = new Vector(2);
     v.addElement("add");
     v.addElement(a);
-    notifyObservers(v);
+    //notifyObservers(v);
     _edges.addElement(a);
   }
 
@@ -116,8 +116,8 @@ public class NetList extends NetPrimitive {
       Vector v = new Vector(2);
       v.addElement(Globals.REMOVE);
       v.addElement(a);
-      setChanged();
-      notifyObservers(v);
+      //setChanged();
+      //notifyObservers(v);
     }
   }
 

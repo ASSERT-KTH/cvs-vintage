@@ -27,7 +27,7 @@
 // File: DefaultGraphNodeRenderer.java
 // Classes: DefaultGraphNodeRenderer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DefaultGraphNodeRenderer.java,v 1.2 1998/02/12 02:27:55 jrobbins Exp $
+// $Id: DefaultGraphNodeRenderer.java,v 1.3 1998/03/25 22:08:27 jrobbins Exp $
 
 package uci.graph;
 
@@ -40,7 +40,7 @@ import uci.gef.Layer;
  *
  * @see uci.graph.demo.WordNodeRenderer */
 
-public class DefaultGraphNodeRenderer {
+public class DefaultGraphNodeRenderer implements GraphNodeRenderer {
   /** Return a Fig that can be used to represent the given node */
   public FigNode getFigNodeFor(GraphModel graph, Layer lay, Object node) {
     if (node instanceof NetNode)

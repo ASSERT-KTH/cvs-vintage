@@ -19,9 +19,11 @@
 // File: Poster.java
 // Classes: Poster
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Poster.java,v 1.1 1998/03/20 02:30:47 jrobbins Exp $
+// $Id: Poster.java,v 1.2 1998/03/25 22:10:15 jrobbins Exp $
 
 package uci.argo.kernel;
+
+import java.util.*;
 
 /** Interface that defines methods required on any object that can
  *  post a ToDoItem to the Designer's ToDoList. Basically requires that
@@ -50,6 +52,7 @@ public interface Poster {
   boolean stillValid(ToDoItem i, Designer d);
 
   boolean supports(Decision d);
+  Vector getSupportedDecisions();
   boolean supports(Goal g);
   boolean includesKnowledgeType(int knowledgeType);
   
