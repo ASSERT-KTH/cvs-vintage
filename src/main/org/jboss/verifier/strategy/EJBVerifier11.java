@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.17 2000/09/25 17:43:27 juha Exp $
+ * $Id: EJBVerifier11.java,v 1.18 2000/09/30 07:38:43 juha Exp $
  */
 
 
@@ -61,7 +61,7 @@ import org.jboss.metadata.EntityMetaData;
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  *
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
@@ -1414,11 +1414,16 @@ public class EJBVerifier11 extends AbstractVerifier {
                             }
                         } catch(NullPointerException e) {} // That's OK - the implementor expected the fields to have values
                     } catch(IllegalAccessException e) {
-                        fireSpecViolationEvent(entity, new Section("9.2.9.a"));
-                        status = false;
+                        // [FIXME] The two error messages below are incorrect.
+                        //         The RMI-IDL language mapping does not require
+                        //         the value types to have a no args constructor.
+                        //                                                  [JPL]
+                        //
+                        //fireSpecViolationEvent(entity, new Section("9.2.9.a"));
+                        //status = false;
                     } catch(InstantiationException e) {
-                        fireSpecViolationEvent(entity, new Section("9.2.9.a"));
-                        status = false;
+                        //fireSpecViolationEvent(entity, new Section("9.2.9.a"));
+                        //status = false;
                     }
                 }
             } catch(ClassNotFoundException e) {
