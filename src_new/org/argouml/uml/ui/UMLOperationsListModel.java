@@ -33,7 +33,7 @@ import java.util.*;
 import java.awt.*;
 import java.lang.reflect.*;
 
-import org.argouml.ui.ProjectBrowser;import org.argouml.uml.MMUtil;import org.argouml.uml.diagram.ui.FigNodeModelElement;
+import org.argouml.model.uml.UmlFactory;import org.argouml.ui.ProjectBrowser;import org.argouml.uml.MMUtil;import org.argouml.uml.diagram.ui.FigNodeModelElement;
 
 public class UMLOperationsListModel extends UMLModelElementCachedListModel  {
 
@@ -89,7 +89,7 @@ public class UMLOperationsListModel extends UMLModelElementCachedListModel  {
         if(target instanceof MClassifier) {
             MClassifier classifier = (MClassifier) target;
             Collection oldFeatures = classifier.getFeatures();
-            MOperation newOp = MMUtil.SINGLETON.buildOperation(classifier);            newOp.addMElementListener((FigNodeModelElement)(ProjectBrowser.TheInstance.getActiveDiagram().presentationFor(classifier)));
+            MOperation newOp = UmlFactory.getFactory().getCore().buildOperation(classifier);            newOp.addMElementListener((FigNodeModelElement)(ProjectBrowser.TheInstance.getActiveDiagram().presentationFor(classifier)));
             classifier.setFeatures(addElement(oldFeatures, index, newOp,
                                    _operations.isEmpty()?null:_operations.get(index)));
             fireContentsChanged(this,index-1,index);
