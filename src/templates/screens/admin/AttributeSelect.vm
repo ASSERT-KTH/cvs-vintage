@@ -1,4 +1,5 @@
 $page.setTitle("Select global attribute")
+#set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
 
 #macro (AttributeSelectBar $val)
 <div class="functnbar$val">
@@ -7,7 +8,7 @@ $page.setTitle("Select global attribute")
 <tr>
 <td class="firstchild" nowrap="nowrap">
 <div>General functions</div>
-#if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
+#if ($canEditDomain)
 <input type="submit" value="Create new" name="eventSubmit_doCreatenewglobalattribute"/>
  &#160;
 #end
@@ -22,7 +23,7 @@ $page.setTitle("Select global attribute")
 </td>
 <td nowrap="nowrap">
 <div>General functions</div>
-#if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
+#if ($canEditDomain)
 <input type="submit" value="Create new" name="eventSubmit_doCreatenewglobalattribute"/>
  &#160;
 #end

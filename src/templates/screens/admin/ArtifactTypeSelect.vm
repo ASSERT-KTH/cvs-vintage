@@ -1,4 +1,5 @@
 $page.setTitle("Artifact Type Select")
+#set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
 
 <div class="app" id="artifactTypeSelect">
 
@@ -16,7 +17,7 @@ $page.setTitle("Artifact Type Select")
     <tr>
     <td class="firstchild">
        <div>General functions</div>
-    #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
+    #if ($canEditDomain)
       <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />&#160;
     #end
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
@@ -35,7 +36,7 @@ $page.setTitle("Artifact Type Select")
     <tr>
     <td class="firstchild">
        <div>General functions</div>
-    #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
+    #if ($canEditDomain)
       <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />&#160;
     #end
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
@@ -56,7 +57,7 @@ $page.setTitle("Artifact Type Select")
     
     <td>
     <div>General functions:</div>
-    #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
+    #if ($canEditDomain)
       <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />&#160;
     #end
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
@@ -96,7 +97,7 @@ $page.setTitle("Artifact Type Select")
     
     <td>
     <div>General functions:</div>
-    #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
+    #if ($canEditDomain)
        <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />&#160;
     #end
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />

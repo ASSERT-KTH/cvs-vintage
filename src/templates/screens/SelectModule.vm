@@ -21,7 +21,7 @@ $page.setTitle("Select Module")
 </tr>
 </table>
 
-#set ($canEdit = $security.hasPermission("Module | Edit", $currentModule))
+#set ($canEdit = $scarabR.hasPermission($scarabG.Permission.MODULE__EDIT, $currentModule))
 #if ($canEdit)
 <form action="$link.setPage("ModifyModule.vm")" method="post">
 <div class="functnbar2">

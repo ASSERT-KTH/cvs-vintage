@@ -30,7 +30,7 @@ $page.setTitle("Stored query list")
   <td>
   <div>Select list item(s) to</div>
   <input type="submit" value="Copy" name="eventSubmit_doCopyquery" />&#160;
-  #if ($security.hasPermission("Item | Delete") || !$module.getPrivateQueries($user).isEmpty())
+  #if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE) || !$module.getPrivateQueries($user).isEmpty())
    <input type="submit" value="Delete" name="eventSubmit_doDeletequeries" />&#160;
   #end
   <input type="submit" value="Subscribe" name="eventSubmit_doSubscribe" />&#160;
@@ -110,7 +110,7 @@ $page.setTitle("Stored query list")
   <td>
   <div>Select list item(s) to</div>
   <input type="submit" value="Copy" name="eventSubmit_doCopyquery" />&#160;
-  #if ($security.hasPermission("Item | Delete") || !$module.getPrivateQueries($user).isEmpty())
+  #if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE) || !$module.getPrivateQueries($user).isEmpty())
    <input type="submit" value="Delete" name="eventSubmit_doDeletequeries" />&#160;
   #end
   <input type="submit" value="Subscribe" name="eventSubmit_doSubscribe" />&#160;

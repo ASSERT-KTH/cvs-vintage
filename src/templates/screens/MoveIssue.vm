@@ -59,7 +59,7 @@ $issue.Module.Name
 <p>
 <select name="$moveIssueGroup.ModuleId.Key">
  <option>Select Module...</option>
- #foreach ($module in $security.getModules($user, "Issue | Enter"))
+ #foreach ($module in $user.getModules($scarabG.Permission.ISSUE__ENTER))
   #if ($module.ModuleId.equals($moduleId))
     <option selected="selected" value="$module.ModuleId">$module.Name</option>
   #else

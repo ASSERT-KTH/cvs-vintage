@@ -56,7 +56,7 @@ $page.setTitle("Approve/reject user submitted items")
   <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
   <td>$module.Name</td>
   <td>#set ($comma = "")
-   #foreach ($role in $security.getRoles($createdUser, $module))
+   #foreach ($role in $createdUser.getRoles($module))
     $role.Name$comma
     #set ($comma = ",")
    #end

@@ -152,7 +152,7 @@
  #if ($size.length() == 0)
  <option value="">Choose...</option>
  #end
- #foreach ($user in $security.getUsers($attr.Permission, $module))
+ #foreach ($user in $module.getUsers($attr.Permission))
    #set ($selected = "")
    #if ($attrInput.UserId.Value && $user.PrimaryKey == $attrInput.UserId.Value)
    <option selected="selected" value="$user.PrimaryKey">$user.UserName</option>

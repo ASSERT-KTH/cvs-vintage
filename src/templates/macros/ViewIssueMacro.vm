@@ -11,9 +11,10 @@
 </table>
 </div>
 
-#set ($canEdit = $security.hasPermission("Issue | Edit", $module))
+#set ($canEdit = $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module))
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
-
+$scarabG.Permission.ISSUE__EDIT
+$canEdit
 <h3>Issue ID: $currentIssue.UniqueId</h3>
 
 <div class="axial">
@@ -356,7 +357,7 @@
        <a href="mailto:$commentUser.Email">$commentUser.FirstName $commentUser.LastName</a>
        </th>
        <td>
-       #if ($security.hasPermission("Module | Edit"))
+       #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
          <textarea rows="2" cols="35" name="edit_comment_$comment.AttachmentId">$comment.DataAsString</textarea>
        #else
          $comment.DataAsString
@@ -383,7 +384,7 @@
  <tr>
   <td class="firstchild">
      <input type="submit" value="Add comment" name="eventSubmit_doSubmitcomment" />
-     #if ($security.hasPermission("Module | Edit"))
+     #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
        &#160;<input type="submit" value="Edit comment(s)" name="eventSubmit_doEditcomment" />
      #end
   </td>

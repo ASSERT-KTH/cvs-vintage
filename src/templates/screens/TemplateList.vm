@@ -90,13 +90,13 @@ $page.setTitle("Template list")
 
 #foreach ($template in $module.getGlobalTemplates($issueType))
 #indexedRows($velocityCount)
-#if ($security.hasPermission("Item | Delete", $module))
+#if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
   <td><input type="checkbox" name="delete_$template.IssueId" /></td>
 #else
   <td>&#160;</td>
 #end
   <td>
-    #if ($security.hasPermission("Item | Delete", $module))
+    #if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
       #set ($editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
       <a href="$editLink">$template.TemplateInfo.Name</a>
     #else

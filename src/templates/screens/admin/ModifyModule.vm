@@ -11,7 +11,7 @@
 #else
   $page.setTitle("Modify Module") 
   #set ($editModule = $scarabR.getModule($moduleId))
-  #set ($canEdit = $security.hasPermission("Module | Edit", $editModule))
+  #set ($canEdit = $scarabR.hasPermission($scarabG.Permission.MODULE__EDIT, $editModule))
 #end
 
 #macro (ModifyModuleBar $var)
