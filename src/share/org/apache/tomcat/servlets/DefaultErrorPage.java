@@ -109,6 +109,7 @@ public class DefaultErrorPage extends HttpServlet {
 
     // -------------------- Default error page --------------------
     private void sendPrivateError(Request request, Response response, int sc, String msg) throws IOException {
+
 	response.setContentType("text/html");
 
 	response.setStatus( sc );
@@ -135,7 +136,9 @@ public class DefaultErrorPage extends HttpServlet {
 
     // -------------------- Redirect page --------------------
     public void redirect(Request request, Response response, String location) throws IOException {
+
         location = makeAbsolute(request, location);
+
 	response.setContentType("text/html");	// ISO-8859-1 default
 	response.setHeader("Location", location);
 

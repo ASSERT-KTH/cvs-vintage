@@ -81,6 +81,7 @@ public class AuthServlet extends HttpServlet {
 	Request req=((HttpServletRequestFacade)request).getRealRequest();
 	Context ctx=req.getContext();
 	String realm=ctx.getRealmName();
+
 	if( "EXPERIMENTAL_FORM".equals( ctx.getAuthMethod() )) {
 	    // the code is not uglier that the spec, we are just implementing it.
 	    // if you don't understand what's here - you're not alone !

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.9 2000/04/08 00:02:18 craigmcc Exp $
- * $Revision: 1.9 $
- * $Date: 2000/04/08 00:02:18 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.10 2000/04/13 01:45:54 craigmcc Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/04/13 01:45:54 $
  *
  * ====================================================================
  *
@@ -155,7 +155,7 @@ implements HttpServletResponse {
     public void sendError(int sc, String msg) throws IOException {
 	if (isCommitted())
 	    throw new IllegalStateException(sm.getString("hsrf.error.ise"));
-	else
+	else if (sc != HttpServletResponse.SC_UNAUTHORIZED)	// CRM: FIXME
 	    reset();
 	setStatus( sc );
 	Request request=response.getRequest();
