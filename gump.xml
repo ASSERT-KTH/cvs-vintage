@@ -14,11 +14,10 @@
       <property name="jaxp.home" reference="home" project="jaxp"/>
       <property name="ant.home" reference="home" project="jakarta-ant"/>
       <property name="jsse.home" reference="home" project="jsse"/>
+      <property name="jmx.jar" project="jmx" path="jmx/lib/jmxri.jar" />
 
       <property name="jakarta-tomcat-connectors" reference="srcdir"
         project="jakarta-tomcat-connectors"/>
-      <property name="jakarta-tomcat-jasper" reference="srcdir"
-        project="jakarta-tomcat-jasper"/>
     </ant>
     <depend project="xml-xerces"/>
     <depend project="jakarta-ant"/>
@@ -26,7 +25,7 @@
     <depend project="jakarta-tomcat-util"/>
     <depend project="jakarta-tomcat-connectors"/>
     <depend project="jsse"/>
-    <option project="mx4j"/>
+    <depend project="jmx"/>
     <work nested="build/tomcat/classes"/>
     <home nested="build/tomcat"/>
     <jar name="lib/common/tomcat_core.jar"/>
