@@ -24,7 +24,7 @@
 // File: CollabDiagramRenderer.java
 // Classes: CollabDiagramRenderer
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramRenderer.java,v 1.1 2000/09/04 12:50:18 1sturm Exp $
+// $Id: CollabDiagramRenderer.java,v 1.2 2002/08/18 21:24:32 kataka Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -56,19 +56,7 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
   public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {
     if (edge instanceof MAssociationRole) {
       MAssociationRole asr = (MAssociationRole) edge;
-      FigAssociationRole asrFig = new FigAssociationRole(asr);
-      Collection connections = asr.getConnections();
-      if (connections == null) System.out.println("null connections....");
-      MAssociationEndRole fromEnd = (MAssociationEndRole) ((Object[])connections.toArray())[0];
-      MClassifier fromCls = (MClassifier) fromEnd.getType();
-      MAssociationEndRole toEnd = (MAssociationEndRole) ((Object[])connections.toArray())[1];
-      MClassifier toCls = (MClassifier) toEnd.getType();
-      FigNode fromFN = (FigNode) lay.presentationFor(fromCls);
-      FigNode toFN = (FigNode) lay.presentationFor(toCls);
-      asrFig.setSourcePortFig(fromFN);
-      asrFig.setSourceFigNode(fromFN);
-      asrFig.setDestPortFig(toFN);
-      asrFig.setDestFigNode(toFN);
+      FigAssociationRole asrFig = new FigAssociationRole(edge, lay);
       return asrFig;
     }
 
