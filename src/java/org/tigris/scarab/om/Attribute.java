@@ -76,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.77 2004/05/07 05:57:42 dabbous Exp $
+  * @version $Id: Attribute.java,v 1.78 2004/05/10 21:04:45 dabbous Exp $
   */
 public class Attribute 
     extends BaseAttribute

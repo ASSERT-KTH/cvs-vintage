@@ -63,7 +63,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @since 0.16.25
- * @version $Id: IssueSearchFactory.java,v 1.5 2004/05/07 05:57:48 dabbous Exp $
+ * @version $Id: IssueSearchFactory.java,v 1.6 2004/05/10 21:04:50 dabbous Exp $
  */
 public class IssueSearchFactory
 {
@@ -169,10 +169,10 @@ public class IssueSearchFactory
                         } 
                         else // maxWait == 0 
                         {
-                            throw MaxConcurrentSearchException.create(
-                                    L10NKeySet.ExceptionMaxConcurrentSearch,
-                                    ""+this.getMaxWait()
-                                    );
+                            throw new MaxConcurrentSearchException(
+                                L10NKeySet.ExceptionMaxConcurrentSearch,
+                                ""+this.getMaxWait()
+                                );
                         }
                     }
                     catch(InterruptedException e) 
@@ -183,10 +183,10 @@ public class IssueSearchFactory
                     if(maxWait > 0 && 
                        ((System.currentTimeMillis() - starttime) >= maxWait)) 
                     {
-                        throw MaxConcurrentSearchException.create(
-                                L10NKeySet.ExceptionMaxConcurrentSearch,
-                                ""+this.getMaxWait()
-                                );
+                        throw new MaxConcurrentSearchException(
+                            L10NKeySet.ExceptionMaxConcurrentSearch,
+                            ""+this.getMaxWait()
+                            );
                     }
                 }    
                 numActive++;

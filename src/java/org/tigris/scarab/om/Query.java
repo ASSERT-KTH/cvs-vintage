@@ -62,7 +62,6 @@ import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
-import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.EmailContext;
@@ -72,7 +71,7 @@ import org.tigris.scarab.util.Log;
  * This class manages the Query table.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Query.java,v 1.63 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: Query.java,v 1.64 2004/05/10 21:04:45 dabbous Exp $
  */
 public class Query 
     extends org.tigris.scarab.om.BaseQuery

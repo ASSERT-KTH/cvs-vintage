@@ -67,7 +67,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: UpdateSearchIndex.java,v 1.15 2004/05/07 05:48:09 dabbous Exp $
+ * @version $Id: UpdateSearchIndex.java,v 1.16 2004/05/10 21:04:44 dabbous Exp $
  */
 public class UpdateSearchIndex extends RequireLoginFirstAction
 {

@@ -123,7 +123,7 @@ public class IssueManager
 
     public static Issue getIssueById(Issue.FederatedId fid)
     {
-        return getManager().getIssueByIdImpl(fid);
+        return IssueManager.getIssueByIdImpl(fid);
     }
 
     public static Issue getIssueByIdImpl(Issue.FederatedId fid)

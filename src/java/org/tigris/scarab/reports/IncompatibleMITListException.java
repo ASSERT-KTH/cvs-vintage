@@ -57,13 +57,14 @@ import org.tigris.scarab.util.ScarabException;
 public class IncompatibleMITListException
     extends ScarabException
 {
-        /**
-         * Constructs a new <code>IncompatibleMITListException</code> with specified 
-         * detail message.
-         *
-         * @param msg the error message.
-         */
-        public IncompatibleMITListException(LocalizationKey l10nKey)
+
+    /**
+     * Constructs a new <code>IncompatibleMITListException</code> with specified 
+     * detail message.
+     * 
+     * @param l10nKey the error message.
+     */
+    public IncompatibleMITListException(LocalizationKey l10nKey)
         {
             super(l10nKey);
         }
@@ -71,8 +72,8 @@ public class IncompatibleMITListException
         /**
          * Constructs a new <code>IncompatibleMITListException</code> with specified 
          * detail message.
-         *
-         * @param msg the error message.
+         * 
+         * @param l10nMessage the error message.
          */
         public IncompatibleMITListException(L10NMessage l10nMessage)
         {
@@ -83,7 +84,8 @@ public class IncompatibleMITListException
          * Constructs a new <code>IncompatibleMITListException</code> with specified 
          * detail message.
          *
-         * @param msg the error message.
+         * @param l10nMessage the error message.
+         * @param nested
          */
         public IncompatibleMITListException(L10NMessage l10nMessage, Throwable nested)
         {
@@ -94,23 +96,22 @@ public class IncompatibleMITListException
          * Constructs a new <code>IncompatibleMITListException</code> with specified 
          * resource and a list of parameters.
          * @param theKey the l10n error key.
+         * @param theParams
          */
-        public static ScarabException create(LocalizationKey theKey, Object[] theParams)
+        public IncompatibleMITListException(LocalizationKey theKey, Object[] theParams)
         {
-            L10NMessage l10nMessage = new L10NMessage(theKey, theParams);
-            return new IncompatibleMITListException(l10nMessage);
+            super(theKey, theParams);
         }
 
-     
         /**
-         * Convenience method: Constructs a new <code>IncompatibleMITListException</code>
+         * Convenience constructor: Constructs a new <code>IncompatibleMITListException</code>
          * with specified resource, nested Throwable and an aritrary set of parameters.
          * @param theKey the l10n error key.
+         * @param nested
+         * @param theParams
          */
-        public static ScarabException create(LocalizationKey theKey, Throwable nested, Object[] theParams)
+        public IncompatibleMITListException(LocalizationKey theKey, Throwable nested, Object[] theParams)
         {
-            L10NMessage l10nMessage = new L10NMessage(theKey, theParams);
-            ScarabException result = new IncompatibleMITListException(l10nMessage, nested);
-            return result;
+            super(theKey, nested, theParams);
         }
 }

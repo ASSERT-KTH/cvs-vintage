@@ -73,7 +73,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.105 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: AttributeValue.java,v 1.106 2004/05/10 21:04:45 dabbous Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -136,7 +136,7 @@ public abstract class AttributeValue
             else if (v.getAttribute() != null 
                      && !v.getAttribute().equals(getAttribute()))
             {
-                throw ScarabException.create(L10NKeySet.ExceptionCantChainAttributeValues,
+                throw new ScarabException(L10NKeySet.ExceptionCantChainAttributeValues,
                                           v.getAttributeId(),
                                           getAttributeId());
             }
@@ -148,7 +148,7 @@ public abstract class AttributeValue
             else if (v.getIssue() != null 
                       && !v.getIssue().equals(getIssue()))
             {
-                throw ScarabException.create(L10NKeySet.ExceptionCantChainIssues,
+                throw new ScarabException(L10NKeySet.ExceptionCantChainIssues,
                                           v.getIssueId(),
                                           getIssueId());
             }

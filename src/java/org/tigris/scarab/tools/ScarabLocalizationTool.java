@@ -63,6 +63,7 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.LocalizationTool;
 import org.tigris.scarab.tools.localization.Localizable;
+import org.tigris.scarab.tools.localization.LocalizationKey;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ReferenceInsertionFilter;
 import org.tigris.scarab.util.SkipFiltering;
@@ -148,8 +149,24 @@ public class ScarabLocalizationTool extends LocalizationTool
      * the Turbine default settings and the System Locale, 
      * if the Turbine Default Locale is not defined.
      */
+    public String get(LocalizationKey key)
+    {
+        String theKey = key.toString();
+        return this.get(theKey);
+    }
+
+    /**
+     * Return the localized property value.
+     * Take into account the Browser settings (in order of preference), 
+     * the Turbine default settings and the System Locale, 
+     * if the Turbine Default Locale is not defined.
+     * @deprecated Please use {@link #get(LocalizationKey)} instead
+     */
     public String get(String key)
     {
+        // [HD]Note: This method will become private after the 
+        // L10N framework has been fully applied to the Scarab code base.
+
         String value = null;
         try
         {
@@ -729,8 +746,19 @@ public class ScarabLocalizationTool extends LocalizationTool
         } 
         else
         {   
-            // note we reuse getLocalizedMessage() in case the exception 
+            // [HD] note we reuse getLocalizedMessage() in case the exception 
             // coming from a third party library is also localized.
+            // [JEROME] After rethinking this, I am not sure that this else {}
+            // would work. The intent is nice but the implementation perhaps 
+            // naive. As I said in the Localizable javadoc, implementation of 
+            // getLocalizedMessage() probably requires the implementation of 
+            // an IoC pattern. That means somebody would have to say to the 
+            // third party library which locale to use for the localization. 
+            // Perhaps register it to the instance, or to a global Localizer, 
+            // or anything that the getLocalizedMessage() implementation
+            // would use to properly localize. Just calling getLocalizedMessage()
+            // wouldn't work without this prior registration, which might be 
+            // library dependent.
             result = t.getLocalizedMessage();
         }
         return result;    

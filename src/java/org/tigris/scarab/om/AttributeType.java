@@ -62,7 +62,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class represents an AttributeType
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AttributeType.java,v 1.16 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: AttributeType.java,v 1.17 2004/05/10 21:04:45 dabbous Exp $
  */
 public class AttributeType 
     extends BaseAttributeType
@@ -151,7 +151,7 @@ public class AttributeType
             List attributeTypes = AttributeTypePeer.doSelect(crit);
             if(attributeTypes.size() > 1)
             {
-                throw ScarabException.create(L10NKeySet.ExceptionDuplicateAttributeTypeName,
+                throw new ScarabException(L10NKeySet.ExceptionDuplicateAttributeTypeName,
                                           attributeTypeName);
             }
             result = (AttributeType)attributeTypes.get(0);

@@ -100,7 +100,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.335 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: Issue.java,v 1.336 2004/05/10 21:04:45 dabbous Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -631,11 +631,11 @@ public class Issue
                                 comment, attachment);
 
         if (!activitySet.sendEmail(this))
-        {   L10NMessage commentSaved    = new L10NMessage(L10NKeySet.CommentSaved);
-            L10NMessage l10niSendFailed = new L10NMessage(L10NKeySet.CouldNotSendEmail);
-            throw ScarabException.create(L10NKeySet.ExceptionSavedButErrors,
-                                      commentSaved,
-                                      l10niSendFailed);
+        {   Localizable commentSaved = new L10NMessage(L10NKeySet.CommentSaved);
+            Localizable sendFailed   = new L10NMessage(L10NKeySet.CouldNotSendEmail);
+            throw new ScarabException(L10NKeySet.ExceptionSavedButErrors,
+                    commentSaved,
+                    sendFailed);
         }
 
         return activitySet;
@@ -2113,7 +2113,7 @@ public class Issue
                             .error("Error trying to create ID_TABLE entry for "
                                    + getIdTableKey(), badException);
                         // throw the original
-                        throw ScarabException.create(
+                        throw new ScarabException(
                             L10NKeySet.ExceptionRetrievingIssueId,
                             badException);
                     }
@@ -2540,7 +2540,7 @@ public class Issue
         // check if the module accepts multiple votes
         if (!getModule().allowsMultipleVoting() && previousVotes > 0)
         {
-            throw ScarabException.create(L10NKeySet.ExceptionMultipleVoteForUnallowed,
+            throw new ScarabException(L10NKeySet.ExceptionMultipleVoteForUnallowed,
                                       user.getUserName(), 
                                       getUniqueId());
         }
@@ -3354,7 +3354,7 @@ public class Issue
             {
                 Localizable urlDescSaved = new L10NMessage(L10NKeySet.UrlDescChangedDesc);
                 Localizable emailError   = new L10NMessage(L10NKeySet.CouldNotSendEmail);
-                throw ScarabException.create(L10NKeySet.ExceptionSavedButErrors,
+                throw new ScarabException(L10NKeySet.ExceptionSavedButErrors,
                                        urlDescSaved,
                                        emailError);
             }
@@ -3401,7 +3401,7 @@ public class Issue
             {
                 Localizable urlChanged = new L10NMessage(L10NKeySet.UrlChangedDesc, oldUrl, newUrl);
                 Localizable emailError = new L10NMessage(L10NKeySet.CouldNotSendEmail);
-                throw ScarabException.create(L10NKeySet.ExceptionSavedButErrors,
+                throw new ScarabException(L10NKeySet.ExceptionSavedButErrors,
                                           urlChanged,
                                           emailError);
             }
@@ -3762,7 +3762,7 @@ public class Issue
             {
                 Localizable commentSaved = new L10NMessage( L10NKeySet.CommentSaved,oldComment,newComment);
                 Localizable emailError   = new L10NMessage( L10NKeySet.CouldNotSendEmail);
-                throw ScarabException.create(L10NKeySet.ExceptionSavedButErrors,
+                throw new ScarabException(L10NKeySet.ExceptionSavedButErrors,
                                           commentSaved,
                                           emailError);
             }

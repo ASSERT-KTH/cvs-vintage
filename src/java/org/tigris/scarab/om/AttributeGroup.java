@@ -360,7 +360,7 @@ public  class AttributeGroup
             if (issueType.getLocked())
             { 
                 
-                throw ScarabException.create(L10NKeySet.ExceptionGroupDeleteForbidden,
+                throw new ScarabException(L10NKeySet.ExceptionGroupDeleteForbidden,
                           this.getName(),
                           issueType.getName());
             }            

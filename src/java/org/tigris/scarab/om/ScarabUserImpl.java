@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.119 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.120 2004/05/10 21:04:45 dabbous Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 

@@ -75,7 +75,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
  * @author <a href="mailto:mpoeschl@martmot.at">Martin Poeschl</a>
- * @version $Id: ManageUser.java,v 1.27 2004/05/07 05:48:09 dabbous Exp $
+ * @version $Id: ManageUser.java,v 1.28 2004/05/10 21:04:44 dabbous Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {

@@ -70,7 +70,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.44 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: MITList.java,v 1.45 2004/05/10 21:04:45 dabbous Exp $
  */
 public class MITList
     extends org.tigris.scarab.om.BaseMITList

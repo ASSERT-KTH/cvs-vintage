@@ -62,6 +62,8 @@ import org.apache.fulcrum.util.parser.ValueParser;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.LocalizationKey;
 import org.tigris.scarab.screens.Default;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -72,17 +74,17 @@ import org.tigris.scarab.om.Module;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.54 2004/05/07 05:48:09 dabbous Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.55 2004/05/10 21:04:45 dabbous Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
     private static final Logger LOG = Logger.getLogger("org.tigris.scarab");
 
-    protected static final String ERROR_MESSAGE = "MoreInformationWasRequired";
-    protected static final String NO_PERMISSION_MESSAGE = "YouDoNotHavePermissionToAction";
-    protected static final String DEFAULT_MSG = "YourChangesWereSaved";
-    protected static final String EMAIL_ERROR = "CouldNotSendEmail";
-    protected static final String NO_CHANGES_MADE = "NoChangesMade";
+    protected static final LocalizationKey ERROR_MESSAGE         = L10NKeySet.MoreInformationWasRequired;
+    protected static final LocalizationKey NO_PERMISSION_MESSAGE = L10NKeySet.YouDoNotHavePermissionToAction;
+    protected static final LocalizationKey DEFAULT_MSG           = L10NKeySet.YourChangesWereSaved;
+    protected static final LocalizationKey EMAIL_ERROR           = L10NKeySet.CouldNotSendEmail;
+    protected static final LocalizationKey NO_CHANGES_MADE       = L10NKeySet.NoChangesMade;
 
 
     /**

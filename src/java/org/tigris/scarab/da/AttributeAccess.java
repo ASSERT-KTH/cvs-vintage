@@ -64,7 +64,6 @@ import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.om.RModuleUserAttributePeer;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.tools.localization.L10NKeySet;
-import org.tigris.scarab.util.ScarabException;
 
 /**
  * Access to data relating to attributes.
@@ -116,7 +115,7 @@ public class AttributeAccess
      * @throws DAException If any problems are encountered.
      */
     public List retrieveQueryColumnIDs(String userID, String listID,
-                                       String moduleID, String artifactTypeID) throws ScarabException
+                                       String moduleID, String artifactTypeID) throws DAException
     {
         List result = null;
         Object obj = ScarabCache.get(thisKey,
@@ -153,7 +152,7 @@ public class AttributeAccess
             }
             catch (Exception e)
             {
-                throw DAException.create(L10NKeySet.ExceptionFailedToReadIdentifierList,
+                throw new DAException(L10NKeySet.ExceptionFailedToReadIdentifierList,
                                       e);
             }
             ScarabCache.put(result, AttributeAccess.class,
@@ -182,7 +181,7 @@ public class AttributeAccess
      */
     public void deleteQueryColumnIDs(String userID, String listID,
                                      String moduleID, String artifactTypeID)
-        throws ScarabException
+        throws DAException
     {
         Criteria crit = new Criteria();
         crit.add(RModuleUserAttributePeer.USER_ID, userID);
@@ -202,7 +201,7 @@ public class AttributeAccess
         }
         catch (Exception e)
         {
-            throw DAException.create(L10NKeySet.ExceptionFailedToDeleteIdentifierList,
+            throw new DAException(L10NKeySet.ExceptionFailedToDeleteIdentifierList,
                                   e);
         }
     }
@@ -221,7 +220,7 @@ public class AttributeAccess
      */
     public Set retrieveRequiredAttributeIDs(String moduleID, 
                                             String artifactTypeID)
-    throws ScarabException
+    throws DAException
     {
         Set attributes = null;
         Object obj = ScarabCache.get(thisKey, RETRIEVE_REQUIRED_ATTRIBUTES, 
@@ -259,7 +258,7 @@ public class AttributeAccess
      */
     public Set retrieveQuickSearchAttributeIDs(String moduleID, 
                                                String artifactTypeID)
-    throws ScarabException
+    throws DAException
     {
         Set attributes = null;
         Object obj = ScarabCache.get(thisKey, RETRIEVE_QUICK_SEARCH_ATTRIBUTES,
@@ -283,7 +282,7 @@ public class AttributeAccess
     }
 
     private Set getRMAAttributeIdSet(Criteria crit)
-        throws ScarabException
+        throws DAException
     {
         crit.addSelectColumn(RModuleAttributePeer.ATTRIBUTE_ID);
         Set attributes = null;
@@ -298,7 +297,7 @@ public class AttributeAccess
         }
         catch (Exception e)
         {
-            throw DAException.create(L10NKeySet.ExceptionFailedToReadIdentifierList, e);
+            throw new DAException(L10NKeySet.ExceptionFailedToReadIdentifierList, e);
         }
         return attributes;
     }
@@ -334,7 +333,7 @@ public class AttributeAccess
     public Collection retrieveActiveAttributeOMs(String moduleID,
                                                  String artifactTypeID, 
                                                  boolean isOrdered)
-    throws ScarabException
+    throws DAException
     {
         Collection attributes = null;
         Boolean ordered = isOrdered ? Boolean.TRUE : Boolean.FALSE;
@@ -371,7 +370,7 @@ public class AttributeAccess
             }
             catch (Exception e)
             {
-                throw DAException.create(L10NKeySet.ExceptionFailedToReadIdentifierList, e);
+                throw new DAException(L10NKeySet.ExceptionFailedToReadIdentifierList, e);
             }
             if (isOrdered) 
             {
@@ -412,7 +411,7 @@ public class AttributeAccess
      */
     public String retrieveDefaultTextAttributeID(String moduleID, 
                                                  String artifactTypeID)
-        throws ScarabException
+        throws DAException
     {
         String result = null;
         Object obj = ScarabCache.get(thisKey, RETRIEVE_DEFAULT_TEXT_ATTRIBUTE, 
@@ -438,7 +437,7 @@ public class AttributeAccess
     }
 
     private String getRMAAttributeId(Criteria crit)
-        throws ScarabException
+        throws DAException
     {
         String result = null;
         crit.addSelectColumn(RModuleAttributePeer.ATTRIBUTE_ID);
@@ -456,7 +455,7 @@ public class AttributeAccess
         }
         catch (Exception e)
         {
-            throw DAException.create(L10NKeySet.ExceptionFailedToReadIdentifierList, e);
+            throw new DAException(L10NKeySet.ExceptionFailedToReadIdentifierList, e);
         }
         return result;
     }
@@ -477,7 +476,7 @@ public class AttributeAccess
      */
     public String retrieveFirstActiveTextAttributeID(String moduleID, 
                                                      String artifactTypeID)
-        throws ScarabException
+        throws DAException
     {
         String result = null;
 

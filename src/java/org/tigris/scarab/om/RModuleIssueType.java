@@ -53,7 +53,6 @@ import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
 import org.tigris.scarab.tools.localization.L10NKeySet;
-import org.tigris.scarab.util.ScarabConstants;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.util.ScarabException;
@@ -68,7 +67,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleIssueType
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleIssueType.java,v 1.36 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: RModuleIssueType.java,v 1.37 2004/05/10 21:04:45 dabbous Exp $
  */
 public  class RModuleIssueType 
     extends org.tigris.scarab.om.BaseRModuleIssueType

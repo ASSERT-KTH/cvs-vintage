@@ -103,7 +103,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.118 2004/05/07 05:57:41 dabbous Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.119 2004/05/10 21:04:45 dabbous Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -405,7 +405,7 @@ public abstract class AbstractScarabModule
             String permission = attribute.getPermission();
             if (permission == null) 
             {
-                throw ScarabException.create(
+                throw new ScarabException(
                         L10NKeySet.ExceptionNoAttributePermission,
                         attribute.getName());
             }
@@ -1536,7 +1536,7 @@ public abstract class AbstractScarabModule
         // state
         if (issueType == null) 
         {
-            throw ValidationException.create(L10NKeySet.ExceptionIntegrityCheckFailure,
+            throw new ValidationException(L10NKeySet.ExceptionIntegrityCheckFailure,
                     "NULL",
                     getName(),
                     "Issue type was null");
@@ -1545,7 +1545,7 @@ public abstract class AbstractScarabModule
         // check that the issueType is not already added.
         if (includesIssueType(issueType)) 
         {
-            throw ValidationException.create(L10NKeySet.ExceptionDuplicateIssueType,
+            throw new ValidationException(L10NKeySet.ExceptionDuplicateIssueType,
                     issueType,
                     getName());
         }
@@ -1558,7 +1558,7 @@ public abstract class AbstractScarabModule
             if (testGroups == null) 
             {
                 Localizable l10nMessage = new L10NMessage(L10NKeySet.IssueTypeWasNull);
-                throw ValidationException.create(L10NKeySet.ExceptionIntegrityCheckFailure,
+                throw new ValidationException(L10NKeySet.ExceptionIntegrityCheckFailure,
                         typeName,
                         getName(),
                         l10nMessage);
@@ -1579,7 +1579,7 @@ public abstract class AbstractScarabModule
                             if (attr == null) 
                             {
                                 L10NMessage l10nMessage = new L10NMessage(L10NKeySet.AttributesContainsNull);
-                                throw ValidationException.create(L10NKeySet.ExceptionIntegrityCheckFailure,
+                                throw new ValidationException(L10NKeySet.ExceptionIntegrityCheckFailure,
                                         typeName,
                                         getName(),
                                         l10nMessage);
@@ -1591,7 +1591,7 @@ public abstract class AbstractScarabModule
                             if (raag == null) 
                             {
                                 L10NMessage l10nMessage = new L10NMessage(L10NKeySet.AttributeMappingIsMissing, attr.getName());
-                                throw ValidationException.create(L10NKeySet.ExceptionIntegrityCheckFailure,
+                                throw new ValidationException(L10NKeySet.ExceptionIntegrityCheckFailure,
                                         typeName,
                                         getName(),
                                         l10nMessage);
@@ -1603,7 +1603,7 @@ public abstract class AbstractScarabModule
                             if (ria == null) 
                             {
                                 L10NMessage l10nMessage = new L10NMessage(L10NKeySet.AttributeToIssueTypeMappingIsMissing, attr.getName());
-                                throw ValidationException.create(L10NKeySet.ExceptionIntegrityCheckFailure,
+                                throw new ValidationException(L10NKeySet.ExceptionIntegrityCheckFailure,
                                         typeName,
                                         getName(),
                                         l10nMessage);
@@ -1618,7 +1618,7 @@ public abstract class AbstractScarabModule
                                     if (k.next() == null) 
                                     {
                                         L10NMessage l10nMessage = new L10NMessage(L10NKeySet.ListOfOptionsMissing, attr.getName());
-                                                throw ValidationException.create(L10NKeySet.ExceptionIntegrityCheckFailure,
+                                                throw new ValidationException(L10NKeySet.ExceptionIntegrityCheckFailure,
                                                 typeName,
                                                 getName(),
                                                 l10nMessage);
@@ -1636,7 +1636,10 @@ public abstract class AbstractScarabModule
         }
         catch (Exception e)
         {
-            throw ValidationException.create(L10NKeySet.ExceptionGeneral, new Object[]{e.getMessage()}, e);
+            throw new ValidationException(
+                    L10NKeySet.ExceptionGeneral, 
+                    e.getMessage(),
+                    e);
         }
 
         // okay we passed, start modifying tables
@@ -1849,7 +1852,7 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         isInitializing = true;
-        ScarabException ve = null;
+        ValidationException ve = null;
         try
         {
         // Add defaults for issue types and attributes 
@@ -1877,7 +1880,7 @@ public abstract class AbstractScarabModule
                     }
                     else 
                     {
-                        ve = ValidationException.create(
+                        ve = new ValidationException(
                                 L10NKeySet.ExceptionMultipleProblems,
                                 ve.getMessage(),
                                 e);//WORK: what about the stack trace ?
@@ -2176,6 +2179,9 @@ public abstract class AbstractScarabModule
      */
     public int compareTo(Object obj)
     {
+        //TODO [HD] what about using instanceof, or
+        //          probably better delete the whole
+        //          if-block (see note n ScarabModule.compereTo()
         if (this.getClass() != obj.getClass())
         {
             throw new ClassCastException(); //EXCEPTION 

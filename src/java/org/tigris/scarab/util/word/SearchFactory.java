@@ -54,7 +54,7 @@ import org.tigris.scarab.util.Log;
  *  Returns an instance of the SearchIndex specified in Scarab.properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SearchFactory.java,v 1.16 2004/05/07 05:57:49 dabbous Exp $
+ * @version $Id: SearchFactory.java,v 1.17 2004/05/10 21:04:50 dabbous Exp $
  */
 public class SearchFactory
 {

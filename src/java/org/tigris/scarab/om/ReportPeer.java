@@ -59,7 +59,7 @@ public class ReportPeer
         }
         else if (reports.size() > 1) 
         {
-            throw ScarabException.create(L10NKeySet.ExceptionMultipleReports,
+            throw new ScarabException(L10NKeySet.ExceptionMultipleReports,
                                       name);
         }
         

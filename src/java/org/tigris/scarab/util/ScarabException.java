@@ -58,10 +58,10 @@ import org.tigris.scarab.tools.localization.Localizable;
     functionality.  It should be used to mark Scarab specific 
     exceptions. 
     In order to ensure localization of Exception messages,
-    ScarabExcetpion adds a new type of message, the L10NMessage.
+    ScarabException adds a new type of message, the L10NMessage.
     
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ScarabException.java,v 1.6 2004/05/07 05:57:47 dabbous Exp $
+    @version $Id: ScarabException.java,v 1.7 2004/05/10 21:04:50 dabbous Exp $
 */
 public class ScarabException extends TurbineException implements Localizable
 {
@@ -71,6 +71,7 @@ public class ScarabException extends TurbineException implements Localizable
      */
     Localizable l10nMessage;
     
+
     /**
      * Constructs a new <code>ScarabException</code> with specified 
      * resource and no parameters.
@@ -80,12 +81,36 @@ public class ScarabException extends TurbineException implements Localizable
     {
          l10nMessage = new L10NMessage(theKey);
     }
- 
+
+    /**
+     * Constructs a new <code>ScarabException</code> with specified 
+     * resource and a nested Throwable.
+     * @param theKey the l10n error key.
+     * @param nested
+     */
+    public ScarabException(LocalizationKey theKey, Throwable nested)
+    {
+        super(nested);
+        l10nMessage = new L10NMessage(theKey, nested);
+    }
+
+
+    /**
+     * Constructs a new <code>ScarabException</code> with specified 
+     * Localizable .
+     * @param theL10nInstance the l10n error key.
+     */
     public ScarabException(Localizable theL10nInstance)
     {
          l10nMessage = theL10nInstance;
     }
  
+    /**
+     * Constructs a new <code>ScarabException</code> with specified 
+     * Localizable and a nested Throwable.
+     * @param theL10nInstance the l10n error key.
+     * @param nested
+     */
     public ScarabException(Localizable theL10nInstance, Throwable nested)
     {
         super(nested);
@@ -96,85 +121,101 @@ public class ScarabException extends TurbineException implements Localizable
     /**
      * Constructs a new <code>ScarabException</code> with specified 
      * resource and a list of parameters.
-     * @param theKey the l10n error key.
+     * @param theL10nInstance the l10n error key.
+     * @param theParams
      */
-    public static ScarabException create(LocalizationKey theKey, Object[] theParams)
+    public ScarabException (LocalizationKey theKey, Object[] theParams)
     {
-        Localizable l10nMessage = new L10NMessage(theKey, theParams);
-        return new ScarabException(l10nMessage);
+        l10nMessage = new L10NMessage(theKey, theParams);
     }
  
     /**
-     * Convenience method: Constructs a new <code>ScarabException</code>
+     * convenience constructor: Constructs a new <code>ScarabException</code>
      * with specified resource and one parameter.
-     * @param theKey the l10n error key.
+     * @param theL10nInstance the l10n error key.
+     * @param p1
      */
-    public static ScarabException create(LocalizationKey theKey, Object p1)
+    public ScarabException (LocalizationKey theKey, Object p1)
     {
-        return create(theKey, new Object[] {p1});
+        this(theKey, new Object[] {p1});
     }
  
     /**
-     * Convenience method: Constructs a new <code>ScarabException</code>
+     * convenience constructor: Constructs a new <code>ScarabException</code>
      * with specified resource and two parameters.
-     * @param theKey the l10n error key.
+     * @param theL10nInstance the l10n error key.
+     * @param p1
+     * @param p2
      */
-    public static ScarabException create(LocalizationKey theKey, Object p1, Object p2)
+    public ScarabException (LocalizationKey theKey, Object p1, Object p2)
     {
-        return create(theKey, new Object[] {p1, p2});
+        this(theKey, new Object[] {p1, p2});
     }
  
     /**
-     * Convenience method: Constructs a new <code>ScarabException</code>
+     * convenience constructor: Constructs a new <code>ScarabException</code>
      * with specified resource and three parameters.
-     * @param theKey the l10n error key.
+     * @param theL10nInstance the l10n error key.
+     * @param p1
+     * @param p2
+     * @param p3
      */
-    public static ScarabException create(LocalizationKey theKey, Object p1, Object p2, Object p3)
+    public ScarabException (LocalizationKey theKey, Object p1, Object p2, Object p3)
     {
-        return create(theKey, new Object[] {p1, p2, p3});
+        this(theKey, new Object[] {p1, p2, p3});
     }
   
- 
+
     /**
-     * Convenience method: Constructs a new <code>ScarabException</code>
+     * convenience constructor: Constructs a new <code>ScarabException</code>
      * with specified resource, nested Throwable and an aritrary set of parameters.
-     * @param theKey the l10n error key.
+     * 
+     * @param theKey
+     * @param nested
+     * @param theParams
      */
-    public static ScarabException create(LocalizationKey theKey, Throwable nested, Object[] theParams)
+    public ScarabException (LocalizationKey theKey, Throwable nested, Object[] theParams)
     {
-        Localizable l10nMessage = new L10NMessage(theKey, theParams);
-        ScarabException result = new ScarabException(l10nMessage, nested);
-        return result;
+        this(new L10NMessage(theKey, theParams),nested);
     }
 
     /**
-     * Convenience method: Constructs a new <code>ScarabException</code>
+     * convenience constructor: Constructs a new <code>ScarabException</code>
      * with specified resource, nested Throwable and one parameter.
-     * @param theKey the l10n error key.
+     * @param theKey
+     * @param nested
+     * @param p1
      */
-    public static ScarabException create(LocalizationKey theKey, Throwable nested, Object p1)
+    public ScarabException (LocalizationKey theKey, Throwable nested, Object p1)
     {
-        return create(theKey, nested, new Object[] {p1});
+        this(new L10NMessage(theKey, p1),nested);
     }
 
     /**
-     * Convenience method: Constructs a new <code>ScarabException</code>
+     * convenience constructor: Constructs a new <code>ScarabException</code>
      * with specified resource, nested Throwable and two parameters.
-     * @param theKey the l10n error key.
+     * @param theKey
+     * @param nested
+     * @param p1
+     * @param p2
      */
-    public static ScarabException create(LocalizationKey theKey, Throwable nested, Object p1, Object p2)
+    public ScarabException (LocalizationKey theKey, Throwable nested, Object p1, Object p2)
     {
-        return create(theKey, nested, new Object[] {p1, p2});
+        this(new L10NMessage(theKey, p1, p2),nested);
     }
 
     /**
-     * Convenience method: Constructs a new <code>ScarabException</code>
+     * convenience constructor: Constructs a new <code>ScarabException</code>
      * with specified resource, nested Throwable and three parameters.
-     * @param theKey the l10n error key.
+     * @param theKey
+     * @param nested
+     * @param p1
+     * @param p2
+     * @param p3
      */
-    public static ScarabException create(LocalizationKey theKey, Throwable nested, Object p1, Object p2, Object p3)
+    public ScarabException (LocalizationKey theKey, Throwable nested, Object p1, Object p2, Object p3)
     {
-        return create(theKey, nested, new Object[] {p1, p2, p3});
+        this(new L10NMessage(theKey, p1, p2, p3),nested);
     }
 
     /**

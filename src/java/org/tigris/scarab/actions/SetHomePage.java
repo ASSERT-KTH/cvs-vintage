@@ -58,7 +58,7 @@ import org.tigris.scarab.util.Log;
  * Sets the home page to the current target
  *  
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SetHomePage.java,v 1.5 2003/07/10 23:08:42 jmcnally Exp $
+ * @version $Id: SetHomePage.java,v 1.6 2004/05/10 21:04:44 dabbous Exp $
  */
 public class SetHomePage extends RequireLoginFirstAction
 {
@@ -68,6 +68,8 @@ public class SetHomePage extends RequireLoginFirstAction
     public void doPerform(RunData data, TemplateContext context) throws Exception
     {
         String target = data.getTarget();
+        //TODO [HD] Maybe this hard coded reference shall be 
+        //          parametrized at some day. (refactoring candidate).
         if ("ModuleNotReady.vm".equals(target)) 
         {
             Log.get()

@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Depend.java,v 1.26 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: Depend.java,v 1.27 2004/05/10 21:04:45 dabbous Exp $
  */
 public class Depend 
     extends BaseDepend
@@ -174,7 +174,7 @@ public class Depend
     {
         if (getDefaultModule() == null)
         {
-            throw ScarabException.create( L10NKeySet.ExceptionDependInternalWorkflow,
+            throw new ScarabException( L10NKeySet.ExceptionDependInternalWorkflow,
                                        "setDefaultModule()",
                                        "setObserverUniqueId()");
         }

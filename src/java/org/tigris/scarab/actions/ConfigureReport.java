@@ -66,6 +66,9 @@ import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.L10NMessage;
+import org.tigris.scarab.tools.localization.LocalizationKey;
 import org.tigris.scarab.reports.ReportBridge;
 import org.tigris.scarab.om.Report;
 import org.tigris.scarab.om.ReportPeer;
@@ -87,7 +90,7 @@ import org.tigris.scarab.util.export.ExportFormat;
 /**
  * This class is responsible for report generation forms
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConfigureReport.java,v 1.32 2004/05/07 05:48:08 dabbous Exp $
+ * @version $Id: ConfigureReport.java,v 1.33 2004/05/10 21:04:44 dabbous Exp $
  */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -327,8 +330,8 @@ public class ConfigureReport
                 params.setString("heading", "0");
             }
 
-            String l10nMsg = getHeadingConfirmMessageKey(report, l10n);
-            scarabR.setConfirmMessage(l10nMsg);
+            String msg = getLocalizedHeadingConfirmMessage(report, l10n);
+            scarabR.setConfirmMessage(msg);
 
 /*
             //testing
@@ -343,22 +346,23 @@ public class ConfigureReport
     }
 
 
-    private static String getHeadingConfirmMessageKey(ReportBridge report, ScarabLocalizationTool l10n)
+    private static String getLocalizedHeadingConfirmMessage(ReportBridge report, ScarabLocalizationTool l10n)
     {
-        String l10nMsg = null;
+        LocalizationKey key;
         if (report.isReadyForCalculation()) 
         {
-            l10nMsg = report.isNew() ? 
-                l10n.get("ReportUpdatedDoMoreOrCalculate") :
-                l10n.get("ReportUpdatedNotSavedDoMoreOrCalculate");
+            key = report.isNew() ? 
+                L10NKeySet.ReportUpdatedDoMoreOrCalculate:
+                L10NKeySet.ReportUpdatedNotSavedDoMoreOrCalculate;
         }
         else 
         {
-            l10nMsg = report.isNew() ? 
-                l10n.get("ReportUpdatedDoMore") :
-                l10n.get("ReportUpdatedNotSavedDoMore");
+            key = report.isNew() ? 
+                L10NKeySet.ReportUpdatedDoMore:
+                L10NKeySet.ReportUpdatedNotSavedDoMore;
         }
-        return l10nMsg;
+        L10NMessage msg = new L10NMessage(key);
+        return msg.getMessage(l10n);
     }
 
     /**
@@ -437,8 +441,8 @@ public class ConfigureReport
                 params.setString("heading", "0");
             }
 
-            String l10nMsg = getHeadingConfirmMessageKey(report, l10n);
-            scarabR.setConfirmMessage(l10nMsg);
+            String msg = getLocalizedHeadingConfirmMessage(report, l10n);
+            scarabR.setConfirmMessage(msg);
         }
         else 
         {

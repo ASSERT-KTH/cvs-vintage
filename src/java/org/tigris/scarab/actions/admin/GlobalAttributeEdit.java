@@ -72,13 +72,13 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.services.cache.ScarabCache;  
+import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.67 2004/05/07 05:48:09 dabbous Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.68 2004/05/10 21:04:44 dabbous Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {

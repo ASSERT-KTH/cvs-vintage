@@ -59,7 +59,7 @@ import org.apache.torque.om.NumberKey;
  *
  * @author <a href="mailto:jmcnally@collab.net">JohnMcNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivitySetManager.java,v 1.8 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: ActivitySetManager.java,v 1.9 2004/05/10 21:04:45 dabbous Exp $
  */
 public class ActivitySetManager
     extends BaseActivitySetManager
@@ -122,8 +122,6 @@ public class ActivitySetManager
     {
         if (attachment != null && attachment.getAttachmentId() == null) 
         {
-            String mesg = 
-                "Attachment must be saved before starting activitySet";
             throw new ScarabException(L10NKeySet.ExceptionNeedToSaveAttachement);
         }
         ActivitySet activitySet = new ActivitySet();

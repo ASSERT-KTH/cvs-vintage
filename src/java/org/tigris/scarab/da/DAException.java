@@ -46,13 +46,11 @@ package org.tigris.scarab.da;
  * individuals on behalf of CollabNet.
  */
 
-import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.tigris.scarab.tools.localization.L10NMessage;
 import org.tigris.scarab.tools.localization.LocalizationKey;
 import org.tigris.scarab.util.ScarabException;
 
 /**
- * The unchecked exception thrown to indicate data access layer
+ * The exception thrown to indicate data access layer
  * problems.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
@@ -68,54 +66,9 @@ public class DAException
      *
      * @param msg the error message.
      */
-    public DAException(LocalizationKey l10nKey)
+    public DAException(LocalizationKey l10nKey, Throwable nested)
     {
-        super(l10nKey);
+        super(l10nKey, nested);
     }
 
-    /**
-     * Constructs a new <code>DAException</code> with specified 
-     * detail message.
-     *
-     * @param msg the error message.
-     */
-    public DAException(L10NMessage l10nMessage)
-    {
-        super(l10nMessage);
-    }
-
-    /**
-     * Constructs a new <code>DAException</code> with specified 
-     * detail message.
-     *
-     * @param msg the error message.
-     */
-    public DAException(L10NMessage l10nMessage, Throwable nested)
-    {
-        super(l10nMessage, nested);
-    }
-
-    /**
-     * Constructs a new <code>DAException</code> with specified 
-     * resource and a list of parameters.
-     * @param theKey the l10n error key.
-     */
-    public static ScarabException create(LocalizationKey theKey, Object[] theParams)
-    {
-        L10NMessage l10nMessage = new L10NMessage(theKey, theParams);
-        return new DAException(l10nMessage);
-    }
-
- 
-    /**
-     * Convenience method: Constructs a new <code>DAException</code>
-     * with specified resource, nested Throwable and an aritrary set of parameters.
-     * @param theKey the l10n error key.
-     */
-    public static ScarabException create(LocalizationKey theKey, Throwable nested, Object[] theParams)
-    {
-        L10NMessage l10nMessage = new L10NMessage(theKey, theParams);
-        ScarabException result = new DAException(l10nMessage, nested);
-        return result;
-    }
 }

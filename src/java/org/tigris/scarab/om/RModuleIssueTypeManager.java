@@ -59,7 +59,7 @@ import org.apache.torque.om.ComboKey;
 /** 
  * This class manages RModuleIssueType objects.  
  *
- * @version $Id: RModuleIssueTypeManager.java,v 1.11 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: RModuleIssueTypeManager.java,v 1.12 2004/05/10 21:04:45 dabbous Exp $
  */
 public class RModuleIssueTypeManager
     extends BaseRModuleIssueTypeManager

@@ -97,7 +97,7 @@ import org.xml.sax.SAXParseException;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ImportIssues.java,v 1.33 2004/05/07 05:57:49 dabbous Exp $
+ * @version $Id: ImportIssues.java,v 1.34 2004/05/10 21:04:50 dabbous Exp $
  * @since Scarab beta 14
  */
 public class ImportIssues

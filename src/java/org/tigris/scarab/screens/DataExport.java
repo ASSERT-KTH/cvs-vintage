@@ -230,6 +230,8 @@ class DataExport extends Default
         {
             if (writer == null)
             {
+                //TODO [HD] Shouldn't this be better a NPE ?
+                //          That better hits the truth...
                 throw new IllegalArgumentException
                     ("TSVPrinter constructor requires a non-null writer"); //EXCEPTION
             }

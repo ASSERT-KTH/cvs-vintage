@@ -67,11 +67,11 @@ import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.services.cache.ScarabCache;  
+import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: IssueTypeAttributeEdit.java,v 1.15 2004/01/31 18:51:39 dep4b Exp $
+ * @version $Id: IssueTypeAttributeEdit.java,v 1.16 2004/05/10 21:04:44 dabbous Exp $
  */
 public class IssueTypeAttributeEdit extends RequireLoginFirstAction
 {

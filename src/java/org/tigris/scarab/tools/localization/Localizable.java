@@ -89,7 +89,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * different framework, because that framework may be or may become localized
  * one day.
  *
- * @version $Id: Localizable.java,v 1.1 2004/05/01 19:04:31 dabbous Exp $
+ * @version $Id: Localizable.java,v 1.2 2004/05/10 21:04:49 dabbous Exp $
  * @author <a href="mailto:dabbous@saxess.com">Hussayn Dabbous</a>
  */
 
@@ -100,7 +100,7 @@ public interface Localizable
      * Note: This method should return english messages independent of
      * any l10n settings. If a ScarabLocalizationTool instance is 
      * available, it is preferreable to use 
-     * { @link resolve(ScarabLocalizationTool) } instead.
+     * {@link resolve(ScarabLocalizationTool) } instead.
      * @return the resolved String
      */
     public String getMessage();

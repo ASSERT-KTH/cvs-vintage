@@ -58,14 +58,13 @@ import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.EmailContext;
-import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 
 /** 
  * This class represents the IssueTemplateInfo object.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueTemplateInfo.java,v 1.27 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: IssueTemplateInfo.java,v 1.28 2004/05/10 21:04:45 dabbous Exp $
  */
 public  class IssueTemplateInfo 
     extends org.tigris.scarab.om.BaseIssueTemplateInfo

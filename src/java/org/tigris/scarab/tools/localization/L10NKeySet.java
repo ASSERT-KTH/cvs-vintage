@@ -61,7 +61,7 @@ package org.tigris.scarab.tools.localization;
  * Note: The velocity templates use much more resource keys, which are NOT
  * defined here, because they are not relevant for the java-part of this software.
  * 
- * @version $Id: L10NKeySet.java,v 1.1 2004/05/01 19:04:31 dabbous Exp $
+ * @version $Id: L10NKeySet.java,v 1.2 2004/05/10 21:04:47 dabbous Exp $
  *
  * Default implementation of a Localization Key.
  * <p>
@@ -143,7 +143,9 @@ public class L10NKeySet
     public static final LocalizationKey AttributeToIssueTypeMappingIsMissing = new L10NKey("AttributeToIssueTypeMappingIsMissing");
     public static final LocalizationKey ListOfOptionsMissing                 = new L10NKey("ListOfOptionsMissing");
     public static final LocalizationKey ErrorProcessingQuery                 = new L10NKey("ErrorProcessingQuery");
-
+    public static final LocalizationKey YourChangesWereSaved                 = new L10NKey("YourChangesWereSaved");
+    public static final LocalizationKey MoreInformationWasRequired           = new L10NKey("MoreInformationWasRequired");
+    public static final LocalizationKey NoChangesMade                        = new L10NKey("NoChangesMade");
     // The following set is originally been generated from the java sources.
     
     public static final LocalizationKey PasswordsDoNotMatch = new L10NKey("PasswordsDoNotMatch");

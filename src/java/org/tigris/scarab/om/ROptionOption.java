@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabException;
   * This class represents the SCARAB_R_OPTION_OPTION table.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ROptionOption.java,v 1.15 2004/05/07 05:57:42 dabbous Exp $
+  * @version $Id: ROptionOption.java,v 1.16 2004/05/10 21:04:45 dabbous Exp $
   */
 public class ROptionOption 
     extends org.tigris.scarab.om.BaseROptionOption
@@ -129,7 +129,7 @@ public class ROptionOption
             }
             catch (Exception e)
             {
-                throw ScarabException.create(L10NKeySet.ExceptionOptionNotFound,
+                throw new ScarabException(L10NKeySet.ExceptionOptionNotFound,
                                           parent.toString(),
                                           child.toString());
             }

@@ -62,7 +62,7 @@ import org.apache.fulcrum.security.util.UnknownEntityException;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserManager.java,v 1.11 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: ScarabUserManager.java,v 1.12 2004/05/10 21:04:45 dabbous Exp $
  */
 public class ScarabUserManager
     extends BaseScarabUserManager

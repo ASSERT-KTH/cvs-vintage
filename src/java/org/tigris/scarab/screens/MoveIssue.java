@@ -60,7 +60,7 @@ import org.tigris.scarab.util.Log;
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MoveIssue.java,v 1.6 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: MoveIssue.java,v 1.7 2004/05/10 21:04:46 dabbous Exp $
  */
 public class MoveIssue extends Default
 {

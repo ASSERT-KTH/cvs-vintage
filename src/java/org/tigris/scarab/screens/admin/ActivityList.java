@@ -72,7 +72,7 @@ import org.tigris.scarab.om.ActivitySetPeer;
  * fromdate and todate can be entered in "yyyy-MM-dd HH:mm:ss" format
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ActivityList.java,v 1.7 2004/05/07 05:57:43 dabbous Exp $
+ * @version $Id: ActivityList.java,v 1.8 2004/05/10 21:04:46 dabbous Exp $
  */
 public class ActivityList extends Default
 {
@@ -203,6 +203,8 @@ public class ActivityList extends Default
 
         if (date == null) 
         {
+            //TODO [HD] Shouldn't this be better a NPE ?
+            //          That better hits the truth...
             throw new ParseException(s + " could not be parsed as a date", 0); //EXCEPTION
         }
         return date;

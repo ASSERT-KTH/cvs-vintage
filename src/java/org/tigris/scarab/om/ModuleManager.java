@@ -62,7 +62,7 @@ import org.tigris.scarab.util.Log;
  * This class manages Module objects.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ModuleManager.java,v 1.28 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: ModuleManager.java,v 1.29 2004/05/10 21:04:45 dabbous Exp $
  */
 public class ModuleManager
     extends BaseModuleManager

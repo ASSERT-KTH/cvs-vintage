@@ -63,7 +63,7 @@ import org.tigris.scarab.util.Log;
  * current thread.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabCache.java,v 1.9 2004/05/07 05:57:43 dabbous Exp $
+ * @version $Id: ScarabCache.java,v 1.10 2004/05/10 21:04:46 dabbous Exp $
  */
 public class ScarabCache 
     extends BaseService

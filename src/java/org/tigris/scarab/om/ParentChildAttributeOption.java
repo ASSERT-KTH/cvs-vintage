@@ -66,7 +66,7 @@ import org.tigris.scarab.util.ScarabException;
   * to create combination of a ROptionOption and a AttributeOption
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ParentChildAttributeOption.java,v 1.20 2004/05/07 05:57:42 dabbous Exp $
+  * @version $Id: ParentChildAttributeOption.java,v 1.21 2004/05/10 21:04:45 dabbous Exp $
   */
 public class ParentChildAttributeOption 
     implements Retrievable, java.io.Serializable

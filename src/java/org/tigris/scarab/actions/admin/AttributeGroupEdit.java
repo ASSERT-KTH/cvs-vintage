@@ -75,17 +75,20 @@ import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.LocalizationKey;
 import org.tigris.scarab.services.cache.ScarabCache; 
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.workflow.WorkflowFactory;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.ScarabLocalizedTorqueException;
 
 /**
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.59 2004/05/07 05:48:09 dabbous Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.60 2004/05/10 21:04:44 dabbous Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -153,12 +156,13 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         String groupId = data.getParameters().getString("groupId");
         AttributeGroup ag = AttributeGroupManager
                             .getInstance(new NumberKey(groupId), false);
-        String l10nMsg = l10n.get(DEFAULT_MSG);
+        
+        LocalizationKey l10nKey = DEFAULT_MSG;
 
         // Check if issue type is locked
         if (!ag.isGlobal() && issueType.getLocked())
         {
-            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            scarabR.setAlertMessage(l10n.get(L10NKeySet.LockedIssueType));
             return false;
         }
 
@@ -166,8 +170,9 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         if (areThereDupeSequences(ag.getRAttributeAttributeGroups(), intake,
                 "RAttributeAttributeGroup", "Order", 0))
         {
-            scarabR.setAlertMessage(l10n.format("DuplicateSequenceNumbersFound",
-                l10n.get("Attributes").toLowerCase()));
+            scarabR.setAlertMessage(
+                l10n.format("DuplicateSequenceNumbersFound",
+                l10n.get(L10NKeySet.Attributes).toLowerCase()));
             return false;
         }
 
@@ -240,7 +245,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                         {
                             if (!rma.getRequired())
                             {
-                                l10nMsg = l10n.get("ChangesSavedButDefaultTextAttributeRequired");
+                                l10nKey = L10NKeySet.ChangesSavedButDefaultTextAttributeRequired;
                                 intake.remove(rmaGroup);
                             }
                             rma.setIsDefaultText(true);
@@ -256,13 +261,17 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                                          raag.getQueryKey(), false);
                             raagGroup.setProperties(raag);
                             raag.save();
-                            scarabR.setConfirmMessage(l10nMsg);
+                            scarabR.setConfirmMessage(l10n.get(l10nKey));
                         }
-                        catch (TorqueException e) 
+                        catch (ScarabLocalizedTorqueException slte) 
                         {
-                            String l10nKey = e.getMessage();
-                            l10nMsg = l10n.get(l10nKey);
-                            scarabR.setAlertMessage(l10nMsg);
+                            String msg = slte.getMessage(l10n);
+                            scarabR.setAlertMessage(msg);
+                        }
+                        catch (TorqueException te) 
+                        {
+                            String msg = te.getMessage();
+                            scarabR.setAlertMessage(msg);
                         }
                     }
 
@@ -277,7 +286,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         else
         {
             success = false;
-            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+            scarabR.setAlertMessage(l10n.get(L10NKeySet.MoreInformationWasRequired));
         }
         return success;
     }
@@ -361,7 +370,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                     {
                         if (!ria.getRequired())
                         {
-                            l10nMsg = l10n.get("ChangesSavedButDefaultTextAttributeRequired");
+                            l10nMsg = l10n.get(L10NKeySet.ChangesSavedButDefaultTextAttributeRequired);
                         }
                         ria.setIsDefaultText(true);
                         ria.setRequired(true);

@@ -116,7 +116,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.126 2004/05/07 05:57:48 dabbous Exp $
+ * @version $Id: IssueSearch.java,v 1.127 2004/05/10 21:04:50 dabbous Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -1228,9 +1228,9 @@ public class IssueSearch
                 }
                 else 
                 {
-                    throw ScarabException.create(L10NKeySet.ExceptionIncompatibleIssueIds,
-                                              minId,
-                                              maxId);
+                    throw new ScarabException(L10NKeySet.ExceptionIncompatibleIssueIds,
+                            minId,
+                            maxId);
                 }
             }
             if (domain != null) 
@@ -1448,7 +1448,7 @@ public class IssueSearch
                 }
                 else 
                 {
-                    throw ScarabException.create(L10NKeySet.ExceptionMaxdateBeforeMindate,
+                    throw new ScarabException(L10NKeySet.ExceptionMaxdateBeforeMindate,
                             this.maxDate,
                             minUtilDate);
                 }
@@ -2006,6 +2006,8 @@ public class IssueSearch
                                                                  tableAliases);
             if (joinCounter > MAX_INNER_JOIN) 
             {
+                //WORK [HD} Need refactoring here. How can a user
+                //          create too complex queries ?
                 throw new ComplexQueryException(L10NKeySet.ExceptionQueryTooComplex);
             }
             // the matchingIssueIds are text search matches.  if length == 0,
@@ -2057,6 +2059,8 @@ public class IssueSearch
                                                         new HashSet());
         if (joinCounter > MAX_INNER_JOIN) 
         {
+            //WORK [HD} Need refactoring here. How can a user
+            //          create too complex queries ?
             throw new ComplexQueryException(L10NKeySet.ExceptionQueryTooComplex);
         }
         

@@ -93,7 +93,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.183 2004/05/07 05:48:08 dabbous Exp $
+ * @version $Id: ModifyIssue.java,v 1.184 2004/05/10 21:04:44 dabbous Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -243,7 +243,7 @@ public class ModifyIssue extends BaseModifyIssue
                 ActivitySet activitySet = issue.setAttributeValues(null, 
                                                 newAttVals, attachment, user);
                 intake.removeAll();
-                sendEmail(activitySet, issue, DEFAULT_MSG, context);
+                sendEmail(activitySet, issue, l10n.get(DEFAULT_MSG), context);
                 scarabR.setConfirmMessage(l10n.get("ChangesSaved"));
             }
             catch (Exception se)

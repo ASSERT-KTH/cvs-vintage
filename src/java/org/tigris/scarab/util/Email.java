@@ -77,7 +77,7 @@ import org.tigris.scarab.tools.localization.L10NKeySet;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.44 2004/05/07 05:57:47 dabbous Exp $
+ * @version $Id: Email.java,v 1.45 2004/05/10 21:04:49 dabbous Exp $
  */
 public class Email extends TemplateEmail
 {
@@ -208,13 +208,14 @@ public class Email extends TemplateEmail
             }
             Log.get().debug("Added CC: " + email);
         }
+
         try{
-        te.sendMultiple();
-    }
+            te.sendMultiple();
+        }
         catch(SendFailedException sfe)
         {
             Throwable t = sfe.getNextException();
-            throw ScarabException.create(L10NKeySet.ExceptionEmailFailure,t);
+            throw new ScarabException(L10NKeySet.ExceptionEmailFailure,t);
         }
     }
 

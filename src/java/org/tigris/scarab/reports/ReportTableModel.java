@@ -70,7 +70,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class represents a ReportTableModel.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ReportTableModel.java,v 1.9 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: ReportTableModel.java,v 1.10 2004/05/10 21:04:46 dabbous Exp $
  */
 public class ReportTableModel 
     extends TableModel

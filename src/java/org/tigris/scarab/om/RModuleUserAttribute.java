@@ -59,7 +59,7 @@ import java.util.Iterator;
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: RModuleUserAttribute.java,v 1.15 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: RModuleUserAttribute.java,v 1.16 2004/05/10 21:04:45 dabbous Exp $
  */
 public  class RModuleUserAttribute 
     extends org.tigris.scarab.om.BaseRModuleUserAttribute

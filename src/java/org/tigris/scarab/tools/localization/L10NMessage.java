@@ -92,7 +92,7 @@ public class L10NMessage implements Localizable
     public L10NMessage(LocalizationKey theKey)
     {
         l10nKey = theKey;
-        parameters = null;
+        this.parameters = null;
     }
 
     /**
@@ -145,7 +145,7 @@ public class L10NMessage implements Localizable
      * resolve the instance to the ScarabLocalizationTool.DEFAULT_LOCALE
      * Note: This method returns english messages independent of
      * any l10n settings. it is preferreable to use 
-     * { @link resolve(ScarabLocalizationTool) }
+     * {@link resolve(ScarabLocalizationTool) }
      * @return the resolved String
      */
     public String getMessage()

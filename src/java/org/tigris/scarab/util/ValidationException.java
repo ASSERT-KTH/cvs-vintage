@@ -55,7 +55,7 @@ import org.tigris.scarab.tools.localization.LocalizationKey;
     would result in a bad state.
     
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ValidationException.java,v 1.4 2004/05/07 05:57:48 dabbous Exp $
+    @version $Id: ValidationException.java,v 1.5 2004/05/10 21:04:50 dabbous Exp $
 */
 public class ValidationException extends ScarabException
 {
@@ -97,23 +97,50 @@ public class ValidationException extends ScarabException
      * resource and a list of parameters.
      * @param theKey the l10n error key.
      */
-    public static ScarabException create(LocalizationKey theKey, Object[] theParams)
+    public ValidationException (LocalizationKey theKey, Object[] theParams)
     {
-        L10NMessage l10nMessage = new L10NMessage(theKey, theParams);
-        return new ValidationException(l10nMessage);
+        super(theKey,theParams);
+    }
+
+    /**
+     * convenience constructor: Constructs a new <code>ScarabException</code>
+     * with specified resource and one parameter.
+     * @param theKey the l10n error key.
+     */
+    public ValidationException (LocalizationKey theKey, Object p1)
+    {
+        this(theKey, new Object[] {p1});
+    }
+ 
+    /**
+     * convenience constructor: Constructs a new <code>ScarabException</code>
+     * with specified resource and two parameters.
+     * @param theKey the l10n error key.
+     */
+    public ValidationException (LocalizationKey theKey, Object p1, Object p2)
+    {
+        this(theKey, new Object[] {p1, p2});
+    }
+ 
+    /**
+     * convenience constructor: Constructs a new <code>ScarabException</code>
+     * with specified resource and three parameters.
+     * @param theKey the l10n error key.
+     */
+    public ValidationException(LocalizationKey theKey, Object p1, Object p2, Object p3)
+    {
+        this(theKey, new Object[] {p1, p2, p3});
     }
 
  
     /**
-     * Convenience method: Constructs a new <code>ScarabException</code>
+     * convenience constructor: Constructs a new <code>ScarabException</code>
      * with specified resource, nested Throwable and an aritrary set of parameters.
      * @param theKey the l10n error key.
      */
-    public static ScarabException create(LocalizationKey theKey, Throwable nested, Object[] theParams)
+    public ValidationException(LocalizationKey theKey, Throwable nested, Object[] theParams)
     {
-        L10NMessage l10nMessage = new L10NMessage(theKey, theParams);
-        ScarabException result = new ValidationException(l10nMessage, nested);
-        return result;
+        super(theKey, nested, theParams);
     }
     
 }

@@ -103,7 +103,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.151 2004/05/07 05:57:42 dabbous Exp $
+ * @version $Id: ScarabModule.java,v 1.152 2004/05/10 21:04:45 dabbous Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -668,14 +668,18 @@ public class ScarabModule
             }
             catch (TorqueException te)
             {
-             throw new ScarabLocalizedTorqueException(ScarabException.create(L10NKeySet.ExceptionTorqueGeneric, te));
+             throw new ScarabLocalizedTorqueException(
+                     new ScarabException(
+                             L10NKeySet.ExceptionTorqueGeneric, te));
             }
             
             if (result.size() > 0)
             {
-                throw new ScarabLocalizedTorqueException(ScarabException.create(L10NKeySet.ExceptionModuleAllreadyExists,
-                                        getRealName(), 
-                                        getParentId()));
+                throw new ScarabLocalizedTorqueException(
+                        new ScarabException(
+                                L10NKeySet.ExceptionModuleAllreadyExists,
+                        getRealName(), 
+                        getParentId()));
             }
 
             String code = getCode();
@@ -692,7 +696,7 @@ public class ScarabModule
                 }
                 catch (Exception e)
                 {
-                    throw new ScarabLocalizedTorqueException(ScarabException.create(L10NKeySet.ExceptionCantPropagateModuleCode, e));
+                    throw new ScarabLocalizedTorqueException(new ScarabException(L10NKeySet.ExceptionCantPropagateModuleCode, e));
                 }
             }
 
@@ -705,7 +709,7 @@ public class ScarabModule
             }
             catch (Exception e)
             {
-                throw new ScarabLocalizedTorqueException(ScarabException.create(L10NKeySet.ExceptionGeneric, e));
+                throw new ScarabLocalizedTorqueException(new ScarabException(L10NKeySet.ExceptionGeneric, e));
             }
             
             if (getOwnerId() == null) 
@@ -724,7 +728,7 @@ public class ScarabModule
             }
             catch (Exception e)
             {
-                throw new ScarabLocalizedTorqueException(ScarabException.create(L10NKeySet.ExceptionGeneric, e));
+                throw new ScarabLocalizedTorqueException(new ScarabException(L10NKeySet.ExceptionGeneric, e));
             }
         }
         else

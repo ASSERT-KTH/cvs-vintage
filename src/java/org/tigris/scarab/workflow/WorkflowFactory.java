@@ -59,7 +59,7 @@ import org.tigris.scarab.util.ScarabException;
  * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: WorkflowFactory.java,v 1.14 2004/05/07 05:57:50 dabbous Exp $
+ * @version $Id: WorkflowFactory.java,v 1.15 2004/05/10 21:04:50 dabbous Exp $
  */
 public class WorkflowFactory 
 {
@@ -136,15 +136,15 @@ public class WorkflowFactory
         }
         catch (InstantiationException ie)
         {
-            throw ScarabException.create(L10NKeySet.ExceptionInstantiation, className, ie);
+            throw new ScarabException(L10NKeySet.ExceptionInstantiation, className, ie);
         }
         catch (IllegalAccessException iae)
         {
-            throw ScarabException.create(L10NKeySet.ExceptionIllegalAccess, className, iae);
+            throw new ScarabException(L10NKeySet.ExceptionIllegalAccess, className, iae);
         }
         catch (ClassNotFoundException cnfe)
         {
-            throw ScarabException.create(L10NKeySet.ExceptionClassNotFound, className, cnfe);
+            throw new ScarabException(L10NKeySet.ExceptionClassNotFound, className, cnfe);
         }
         return wf;
     }

@@ -1845,9 +1845,8 @@ e.printStackTrace();
         catch (Exception e)
         {
             matchingIssueIds = IteratorWithSize.EMPTY;
-            ScarabLocalizationTool l10n = getLocalizationTool();
             L10NMessage l10nMessage = new L10NMessage(L10NKeySet.ErrorProcessingQuery,e);
-            setAlertMessage(l10nMessage.getMessage(l10n));
+            setAlertMessage(l10nMessage.getMessage(getLocalizationTool()));
             Log.get().info("Error processing a query", e);
         }
         

@@ -74,7 +74,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * respective localized values upon initial startup of Fulcrum.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DatabaseInitializer.java,v 1.18 2004/05/07 05:57:43 dabbous Exp $
+ * @version $Id: DatabaseInitializer.java,v 1.19 2004/05/10 21:04:46 dabbous Exp $
  */
 public class DatabaseInitializer
     extends BaseService
