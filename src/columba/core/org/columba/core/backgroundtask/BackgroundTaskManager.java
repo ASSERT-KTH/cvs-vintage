@@ -86,5 +86,10 @@ public class BackgroundTaskManager implements ActionListener {
 			task.run();
 		}
 	}
+	
+	public void stop()
+	{
+		timer.stop();
+	}
 
 }

@@ -50,6 +50,10 @@ public class ShutdownManager implements ActionListener {
 	}
 
 	public void shutdown() {
+		
+		// stop background-manager so it doesn't interfere with
+		// shutdown manager
+		MainInterface.backgroundTaskManager.stop();
 
 		// we start from the end, to be sure that
 		// the core-plugins are saved as last
