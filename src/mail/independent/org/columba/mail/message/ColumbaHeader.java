@@ -18,7 +18,6 @@ package org.columba.mail.message;
 
 import java.awt.Color;
 
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.BasicHeader;
@@ -192,8 +191,6 @@ public class ColumbaHeader implements HeaderInterface {
 		if( s.startsWith("columba.")) {
 			attributes.put(s, o);
 		} else {
-			ColumbaLogger.log.debug("o="+o);
-			
 			header.set(HeaderParser.normalizeKey(s), (String) o);
 		}
 	}

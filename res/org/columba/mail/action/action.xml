@@ -44,6 +44,8 @@
  <action name="MarkAsUnflagged" class="org.columba.mail.gui.table.action.MarkAsUnflaggedAction"/>
  <action name="MarkAsExpunged" class="org.columba.mail.gui.table.action.MarkAsExpungedAction"/>
  <action name="MarkAsUnexpunged" class="org.columba.mail.gui.table.action.MarkAsUnexpungedAction"/>
+ <action name="MarkAsSpam" class="org.columba.mail.gui.table.action.MarkAsSpamAction"/>
+ <action name="MarkAsNotSpam" class="org.columba.mail.gui.table.action.MarkAsNotSpamAction"/>
  <action name="CopyMessage" class="org.columba.mail.gui.table.action.CopyMessageAction"/>
  <action name="MoveMessage" class="org.columba.mail.gui.table.action.MoveMessageAction"/>
  <action name="DeleteMessage" class="org.columba.mail.gui.table.action.DeleteMessageAction"/>

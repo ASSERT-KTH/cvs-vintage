@@ -82,6 +82,19 @@ public class ExternalToolsPluginHandler extends AbstractPluginHandler {
 
 		// check configuration
 		XmlElement root = getConfiguration(toolID);
+		
+		if ( root == null )
+		{
+			// create xml node
+			XmlElement parent = Config.get("external_tools").getElement("tools");
+			XmlElement child = new XmlElement("tool");
+			child.addAttribute("first_time", "true");
+			child.addAttribute("name", toolID);
+			parent.addElement(child);
+			
+			root = child;
+		}
+		
 		boolean firsttime = false;
 
 		if (root.getAttribute("first_time").equals("true"))

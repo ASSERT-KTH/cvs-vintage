@@ -23,8 +23,6 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
 
-import org.columba.core.logging.ColumbaLogger;
-
 /**
  * @author fdietz
  */
@@ -51,7 +49,6 @@ public class ObjectWriter {
 	public void writeObject(Object value) throws Exception {
 		Object o = value;
 
-		ColumbaLogger.log.debug("value=" + value);
 		if (o == null) {
 			oos.writeInt(NULL);
 		} else if (o instanceof String) {

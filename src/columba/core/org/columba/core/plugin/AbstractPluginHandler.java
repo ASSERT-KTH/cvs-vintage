@@ -1,4 +1,5 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -9,7 +10,8 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -32,27 +34,26 @@ import org.columba.core.xml.XmlElement;
 /**
  * 
  * 
- *
+ * 
  * Every entrypoint is represented by this abstract handler class
  * <p>
  * We use the Strategy Pattern here.
  * <p>
- * The <class>AbstractPluginHandler</class> is the Context of the 
- * Strategy pattern.
+ * The <class>AbstractPluginHandler</class> is the Context of the Strategy
+ * pattern.
  * <p>
- * The plugins (<interface>PluginInterface</interface>) represent
- * the used strategy.
+ * The plugins (<interface>PluginInterface</interface>) represent the used
+ * strategy.
  * <p>
- * Therefore, the context is responsible to set the appropriate 
- * strategy we use.
+ * Therefore, the context is responsible to set the appropriate strategy we
+ * use.
  * <p>
- * In other words the plugin handler decides which plugin should be
- * executed and returns an instance of the plugin class.
+ * In other words the plugin handler decides which plugin should be executed
+ * and returns an instance of the plugin class.
  * <p>
  * 
- * example of loading a plugin:
- * <code>
- *   
+ * example of loading a plugin: <code>
+ * 
  * ActionPluginHandler handler = (ActionPluginHandler) 
  *           MainInterface.pluginManager.getHandler("org.columba.core.action");
  * 
@@ -61,11 +62,10 @@ import org.columba.core.xml.XmlElement;
  * Action action = handler.getPlugin("MoveAction", parameter);
  * </code>
  * <p>
- * Please read the documentation of the corresponding methods for more
- * details.
+ * Please read the documentation of the corresponding methods for more details.
  * 
  * @author fdietz
- * 
+ *  
  */
 public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 	protected String id;
@@ -118,19 +118,18 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 	 * 
 	 * example plugin constructor:
 	 * 
-	 * public Action(JFrame frame, String text)
-	 * {
-	 *   .. do anything ..
-	 * }
+	 * public Action(JFrame frame, String text) { .. do anything .. }
 	 * 
 	 * --> arguments:
 	 * 
 	 * Object[] args = { frame, text };
 	 * 
-	 * @param name		name of plugin 
-	 * @param args		constructor arguments needed to instanciate the plugin
-	 * @return 			instance of plugin class
-	 *
+	 * @param name
+	 *            name of plugin
+	 * @param args
+	 *            constructor arguments needed to instanciate the plugin
+	 * @return instance of plugin class
+	 * 
 	 * @throws Exception
 	 */
 	public Object getPlugin(String name, Object[] args) throws Exception {
@@ -142,7 +141,7 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 
 		if (className == null) {
 			XmlElement.printNode(parentNode, " ");
-			
+
 			// if className isn't specified show error dialog
 			NotifyDialog dialog = new NotifyDialog();
 			dialog.showDialog(
@@ -160,8 +159,8 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 	 * @param name
 	 * @param className
 	 * @param args
-	 * @return
-	 * @throws Exception
+	 * @return @throws
+	 *         Exception
 	 */
 	protected Object getPlugin(String name, String className, Object[] args)
 		throws Exception {
@@ -187,11 +186,11 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 		}
 	}
 
-	
-
 	/**
-	 * @param name      example: "org.columba.example.TextPlugin"
-	 * @param id		this is usually just "class"
+	 * @param name
+	 *            example: "org.columba.example.TextPlugin"
+	 * @param id
+	 *            this is usually just "class"
 	 * @return
 	 */
 	protected String getPluginClassName(String name, String id) {
@@ -203,14 +202,28 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 			XmlElement action = parentNode.getElement(i);
 
 			String s = action.getAttribute("name");
+
+			/*
+			 * if (transformationTable.contains(id)) { // this is an external
+			 * plugin
+			 *  // -> extract the correct id // example original id:
+			 * org.columba.mail.SpamAssassin$spamassassin // example result:
+			 * spamassassin
+			 * 
+			 * s = s.substring(s.indexOf('$'));
+			 * System.out.println("class-id="+s); }
+			 */
+
+			// FIXME
 			/*
 			if (s.indexOf('$') != -1) {
 				// this is an external plugin
 				// -> extract the correct id
-				s = s.substring(0, s.indexOf('$'));
-
+				s = s.substring(s.indexOf('$')+1);
+				System.out.println("class-id="+s);
 			}
 			*/
+			
 			if (name.equals(s)) {
 
 				String clazz = action.getAttribute(id);
@@ -227,10 +240,11 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 	 * 
 	 * return value of xml attribute of specific plugin
 	 * 
-	 * 
-	 * @param name			name of plugin
-	 * @param attribute		key of xml attribute
-	 * @return				value of xml attribute
+	 * @param name
+	 *            name of plugin
+	 * @param attribute
+	 *            key of xml attribute
+	 * @return value of xml attribute
 	 */
 	public String getAttribute(String name, String attribute) {
 		int count = parentNode.count();
@@ -266,7 +280,7 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 	/**
 	 * Return array of enabled plugins.
 	 * 
-	 * @return	array of enabled plugins
+	 * @return array of enabled plugins
 	 */
 	public String[] getPluginIdList() {
 		int count = parentNode.count();
@@ -278,24 +292,21 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 		for (int i = 0; i < count; i++) {
 			XmlElement action = parentNode.getElement(i);
 			String s = action.getAttribute("name");
-			
 
 			XmlElement element =
 				MainInterface.pluginManager.getPluginElement(s);
 			if (element == null) {
 				// this is no external plugin
 				// -> just add it to the list
-				
-				
+
 				list.add(s);
 				continue;
 			}
-			
+
 			String enabled = element.getAttribute("enabled");
 			if (enabled == null)
 				enabled = "true";
 			boolean e = Boolean.valueOf(enabled).booleanValue();
-			
 
 			if (e)
 				list.add(s);
@@ -345,12 +356,11 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 		return pluginManager;
 	}
 
-
 	/**
 	 * @param className
 	 * @param args
-	 * @return
-	 * @throws Exception
+	 * @return @throws
+	 *         Exception
 	 */
 	protected Object loadPlugin(String className, Object[] args)
 		throws Exception {
@@ -390,6 +400,12 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 		return null;
 	}
 
+	/**
+	 * Register plugin at this extension point.
+	 * 
+	 * @param id
+	 * @param extension
+	 */
 	public void addExtension(String id, XmlElement extension) {
 		// add external plugin to list
 		// --> this is used to distinguish internal/external plugins
@@ -399,20 +415,25 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 		XmlElement action;
 		while (iterator.hasNext()) {
 			action = (XmlElement) iterator.next();
+			action.addAttribute("uservisiblename", action.getAttribute("name"));
+			/*
 			String newName = id + '$' + action.getAttribute("name");
 			String userVisibleName = action.getAttribute("name");
 
 			// associate id with newName for later reference
-			//transformationTable.put(id, newName);
+			transformationTable.put(id, newName);
 
 			action.addAttribute("name", newName);
 			action.addAttribute("uservisiblename", userVisibleName);
-
+			*/
+			
 			parentNode.addElement(action);
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.core.plugin.PluginHandlerInterface#getParent()
 	 */
 	public XmlElement getParent() {

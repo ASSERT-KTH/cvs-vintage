@@ -51,10 +51,12 @@
 		 <menuitem action="MarkAsRead"/>
 		 <menuitem action="MarkAsFlagged"/>
 		 <menuitem action="MarkAsExpunged"/>
+		 <menuitem action="MarkAsSpam" />
 		 <separator/>
 		 <menuitem action="MarkAsUnread"/>
 		 <menuitem action="MarkAsUnflagged"/>
 		 <menuitem action="MarkAsUnexpunged"/>
+		 <menuitem action="MarkAsNotSpam"/>
 		</menu>
 	</menu>
 	

@@ -179,19 +179,19 @@ public abstract class AbstractHeaderCache {
 
 		for (int j = 0; j < columnNames.length; j++) {
 
-			ColumbaLogger.log.debug("key=" + columnNames[j]);
+			
 			h.set(columnNames[j], reader.readObject());
-			ColumbaLogger.log.debug("value=" + h.get(columnNames[j]));
+			
 		}
 
 		//		load default headerfields, as defined in RFC822
 		columnNames = CachedHeaderfields.getDefaultHeaderfields();
 		for (int j = 0; j < columnNames.length; j++) {
 
-			ColumbaLogger.log.debug("key=" + columnNames[j]);
+		
 
 			h.set(columnNames[j], reader.readObject());
-			ColumbaLogger.log.debug("value=" + h.get(columnNames[j]));
+			
 		}
 
 		// load user-specified additional headerfields
@@ -227,14 +227,14 @@ public abstract class AbstractHeaderCache {
 		String[] columnNames = CachedHeaderfields.INTERNAL_HEADERFIELDS;
 		Object o;
 		for (int j = 0; j < columnNames.length; j++) {
-			ColumbaLogger.log.debug("key=" + columnNames[j]);
+			
 			writer.writeObject(h.get(columnNames[j]));
 		}
 
 		// save default headerfields, as defined in RFC822
 		columnNames = CachedHeaderfields.DEFAULT_HEADERFIELDS;
 		for (int j = 0; j < columnNames.length; j++) {
-			ColumbaLogger.log.debug("key=" + columnNames[j]);
+			
 			writer.writeObject(h.get(columnNames[j]));
 		}
 

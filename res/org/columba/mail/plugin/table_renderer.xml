@@ -8,5 +8,6 @@
  <renderer name="Flagged" size="fixed" icon="mark-as-important-16.png" class="org.columba.mail.gui.table.plugins.FlaggedRenderer" />
  <renderer name="Priority" size="fixed" icon="priority-high.png" class="org.columba.mail.gui.table.plugins.PriorityRenderer" />
  <renderer name="From" class="org.columba.mail.gui.table.plugins.FromRenderer" />
+ <renderer name="Spam" class="org.columba.mail.gui.table.plugins.SpamRenderer" />
 </rendererlist>
 

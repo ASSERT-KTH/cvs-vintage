@@ -20,16 +20,17 @@ package org.columba.mail.gui.table.plugins;
 import java.awt.Component;
 
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.ristretto.message.Address;
 
-public class FromRenderer extends DefaultLabelRenderer {
+public class SpamRenderer extends DefaultLabelRenderer {
 
-	public FromRenderer() {
+	public SpamRenderer() {
 		super();
 
+		setHorizontalAlignment(SwingConstants.RIGHT);
 	}
 
 	public void updateUI() {
@@ -53,7 +54,17 @@ public class FromRenderer extends DefaultLabelRenderer {
 		ColumbaHeader header =
 			(ColumbaHeader) ((MessageNode) value).getHeader();
 
-		setText(((Address) header.get("columba.from")).getShortAddress());
+		Boolean bool = (Boolean) header.getAttributes().get("columba.spam");
+		if ( bool == null ) 
+		{
+			setText("No");
+		}else
+		{	
+			if ( bool.equals(Boolean.TRUE) )
+				setText( "Yes" );
+			else
+				setText( "No" );
+		}
 
 		return super.getTableCellRendererComponent(
 			table,
