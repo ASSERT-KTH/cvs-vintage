@@ -6,6 +6,7 @@
 */
 package org.jboss.invocation;
 
+import javax.transaction.Transaction;
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -16,7 +17,7 @@ import java.lang.reflect.UndeclaredThrowableException;
 * An InvokerInterceptor that does not optimize in VM invocations
 *
 * @author Scott.Stark@jboss.org
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 */
 public class MarshallingInvokerInterceptor
    extends InvokerInterceptor
@@ -44,6 +45,11 @@ public class MarshallingInvokerInterceptor
          MarshalledInvocation mi = new MarshalledInvocation(invocation);
          MarshalledValue copy = new MarshalledValue(mi);
          Invocation invocationCopy = (Invocation) copy.get();
+
+         // copy the Tx
+         Transaction tx = invocation.getTransaction();
+         invocationCopy.setTransaction(tx);
+
          try
          {
             rtnValue = localInvoker.invoke(invocationCopy);
