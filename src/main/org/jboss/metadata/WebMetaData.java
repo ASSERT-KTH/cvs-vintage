@@ -32,7 +32,7 @@ import java.util.Set;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class WebMetaData extends MetaData
 {
@@ -60,8 +60,8 @@ public class WebMetaData extends MetaData
    private boolean java2ClassLoadingCompliance = false;
    /** The war context root as specified at the jboss-web.xml descriptor level. */
    private String contextRoot;
-   /** The jboss-web.xml server container virtual host the war should be deployed into */
-   private String virtualHost;
+   /** The jboss-web.xml server container virtual hosts the war should be deployed into */
+   private ArrayList virtualHosts = new ArrayList();
    /** The jboss-web.xml JNDI name of the security domain implementation */
    private String securityDomain;
 
@@ -211,9 +211,9 @@ public class WebMetaData extends MetaData
    /** The servlet container virtual host the war should be deployed into. If
     null then the servlet container default host should be used.
     */
-   public String getVirtualHost()
+   public Iterator getVirtualHosts()
    {
-      return virtualHost;
+      return virtualHosts.iterator();
    }
 
    /**
@@ -389,10 +389,14 @@ public class WebMetaData extends MetaData
       if( securityDomainElement != null )
          securityDomain = getElementContent(securityDomainElement);
 
-      // Parse the jboss-web/virtual-host element
-      Element virtualHostElement = getOptionalChild(jbossWeb, "virtual-host");
-      if( virtualHostElement != null )
-         virtualHost = getElementContent(virtualHostElement);
+      // Parse the jboss-web/depends elements
+      for( Iterator virtualHostElements = getChildrenByTagName(jbossWeb, "virtual-host");
+         virtualHostElements.hasNext();)
+      {
+         Element virtualHostElement = (Element)virtualHostElements.next();
+         String virtualHostName = getElementContent(virtualHostElement);
+         virtualHosts.add(virtualHostName);
+      } // end of for ()
 
       // Parse the jboss-web/resource-ref elements
       Iterator iterator = getChildrenByTagName(jbossWeb, "resource-ref");
