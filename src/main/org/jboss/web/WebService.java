@@ -11,20 +11,20 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Properties;
 import java.util.Enumeration;
 
 import javax.management.*;
 
-import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
 /** The WebService implementation. It configures a WebServer instance to
  perform dynamic class and resource loading.
 
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.8 $
+ *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
+ *   @version $Revision: 1.9 $
  */
 public class WebService
    extends ServiceMBeanSupport
@@ -33,10 +33,9 @@ public class WebService
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-   WebServer server;
-	
-   Log log = Log.createLog(this.getClass().getName() + "#" + getName());
-   
+   private WebServer server;
+   private String host;
+
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
@@ -57,12 +56,30 @@ public class WebService
 				String type = mimeTypes.getProperty(extension);
 				server.addMimeType(extension, type);
 			}
-      } catch (IOException e)
+      }
+      catch (IOException e)
       {
-         e.printStackTrace(System.err);
+         category.error("Failed to load mime.types", e);
+      }
+      // Get the public host name
+      try
+      {
+         host = System.getProperty("java.rmi.server.hostname");
+      }
+      catch(SecurityException e)
+      {
+      }
+      try
+      {
+         if( host == null )
+            host = InetAddress.getLocalHost().getHostName();
+      }
+      catch(IOException e)
+      {
+         category.error("Failed to get localhost name", e);
       }
    }
-   
+
    // Public --------------------------------------------------------
    public ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
@@ -76,30 +93,26 @@ public class WebService
    }
 
    /** Start the web server for dynamic downloading of classes and resources.
-    This sets the system java.rmi.server.hostname property to the local hostname
-    if it has not been set. The system java.rmi.server.codebase is also set to
-    "http://"+java.rmi.server.hostname+":"+getPort()+"/" if the 
-    java.rmi.server.codebase has not been set.
+    The system java.rmi.server.codebase is also set to
+    "http://"+getHost()":"+getPort()+"/" if the property has not been set.
     */
    public void startService()
       throws Exception
    {
+      // Start the WebServer running
       server.start();
-      // Set the rmi host and codebase if they are not already set
-      String host = System.getProperty("java.rmi.server.hostname");
-      if( host == null )
-          host = InetAddress.getLocalHost().getHostName();
-      
+      category.info("Started webserver with address: " + server.getBindAddress() + " port: "+server.getPort());
+
+      // Set the rmi codebase if it is not already set
       String codebase = System.getProperty("java.rmi.server.codebase");
       if( codebase == null )
       {
         codebase = "http://"+host+":"+getPort()+"/";
         System.setProperty("java.rmi.server.codebase", codebase);
       }
-      log.log("Codebase set to "+codebase);
-      log.log("Started webserver on port "+server.getPort());
+      category.info("Codebase set to: "+codebase);
    }
-   
+
    public void stopService()
    {
       server.stop();
@@ -114,7 +127,7 @@ public class WebService
    {
       server.removeClassLoader(cl);
    }
-	
+
 	public void setPort(int port)
 	{
 		server.setPort(port);
@@ -124,7 +137,56 @@ public class WebService
    {
    	return server.getPort();
    }
- 
+
+	public void setHost(String host)
+	{
+		this.host = host;
+	}
+	
+   public String getHost()
+   {
+   	return host;
+   }
+
+   /** Get the specific address the WebService listens on.t
+    @return the interface name or IP address the WebService binds to.
+    */
+   public String getBindAddress()
+   {
+      return server.getBindAddress();
+   }
+   /** Set the specific address the WebService listens on.  This can be used on
+    a multi-homed host for a ServerSocket that will only accept connect requests
+    to one of its addresses.
+    @param host, the interface name or IP address to bind. If host is null,
+    connections on any/all local addresses will be allowed.
+    */
+   public void setBindAddress(String host) throws UnknownHostException
+   {
+      server.setBindAddress(host);
+   }
+
+   /** Get the WebService listen queue backlog limit. The maximum queue length
+    for incoming connection indications (a request to connect) is set to the
+    backlog parameter. If a connection indication arrives when the queue is
+    full, the connection is refused. 
+    @return the queue backlog limit. 
+    */
+   public int getBacklog()
+   {
+      return server.getBacklog();
+   }
+   /** Set the WebService listen queue backlog limit. The maximum queue length
+    for incoming connection indications (a request to connect) is set to the
+    backlog parameter. If a connection indication arrives when the queue is
+    full, the connection is refused. 
+    @param backlog, the queue backlog limit. 
+    */
+   public void setBacklog(int backlog)
+   {
+      server.setBacklog(backlog);
+   }
+
    /** A flag indicating if the server should attempt to download classes from
     * thread context class loader when a request arrives that does not have a
     * class loader key prefix.

@@ -14,9 +14,11 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.ServerSocket;
+import java.net.UnknownHostException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Properties;
@@ -36,10 +38,11 @@ import org.jboss.logging.log4j.JBossCategory;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  *
  *   Revisions:
  *   
+ *   20010806 scott.stark: Allow binding of listening port to a specific IP address
  *   20010619 scott.stark: Use log4j JBossCategory to enable trace level msgs
  *   20010618 scott.stark: Fixed extraction of mime-type from file extension in getMimeType
  *   20010627 scott.stark: Restore ability to download from the server classpath if no loader key is found
@@ -53,7 +56,14 @@ public class WebServer
    // Attributes ----------------------------------------------------
    private static JBossCategory category = (JBossCategory)JBossCategory.getInstance(WebServer.class);
    /** The port the web server listens on */
-   private int port = 8080;
+   private int port = 8083;
+
+   /** The interface to bind to. This is useful for multi-homed hosts
+      that want control over which interfaces accept connections. */
+   private InetAddress bindAddress;
+   /** The serverSocket listen queue depth */
+   private int backlog = 50;
+
    /** The map of class loaders registered with the web server */
    private HashMap loaderMap = new HashMap();
    /** The web server http listening socket */
@@ -70,6 +80,7 @@ public class WebServer
    private ThreadPool threadPool = new ThreadPool();
 
    // Public --------------------------------------------------------
+
     /** Set the http listening port
      */
     public void setPort(int p) 
@@ -82,6 +93,43 @@ public class WebServer
     public int getPort() 
     {
         return port; 
+    }
+
+    public String getBindAddress()
+    {
+        String address = null;
+        if( bindAddress != null )
+            address = bindAddress.getHostAddress();
+        return address;
+    }
+    public void setBindAddress(String host)
+    {
+        try
+        {
+            if (host != null)
+                bindAddress = InetAddress.getByName(host);
+        }
+        catch(UnknownHostException e)
+        {
+            String msg = "Invalid host address specified: " + host;
+            category.error(msg, e);
+        }
+    }
+
+    /** Get the server sockets listen queue depth
+     @return the listen queue depth
+     */
+    public int getBacklog()
+    {
+        return backlog;
+    }
+    /** Set the server sockets listen queue depth
+     */
+    public void setBacklog(int backlog)
+    {
+        if( backlog <= 0 )
+            backlog = 50;
+        this.backlog = backlog;
     }
 
    public boolean getDownloadServerClasses()
@@ -109,14 +157,12 @@ public class WebServer
     {
         try
         {
-            server = null;
-            server = new ServerSocket(getPort());
-            debug("Started on port " + getPort());
+            server = new ServerSocket(port, backlog, bindAddress);
+            category.debug("Started server: "+server);
             listen();
         }
         catch (IOException e)
         {
-            debug("Could not start on port " + getPort());
             throw e;
         }
     }
@@ -167,7 +213,7 @@ public class WebServer
                 e.printStackTrace();
             }
         }
-        trace("Added ClassLoader: "+cl+" URL: "+loaderURL);
+        category.trace("Added ClassLoader: "+cl+" URL: "+loaderURL);
         return loaderURL;
     }
 
@@ -201,7 +247,7 @@ public class WebServer
         {
             // If the server is not null meaning we were not stopped report the err
             if( server != null )
-               debug("DynaServer error: " + e.getMessage());
+               category.error("Failed to accept connection", e);
             return;
         }
 
@@ -221,8 +267,8 @@ public class WebServer
                 int separator = rawPath.indexOf('/');
                 String filePath = rawPath.substring(separator+1);
                 String loaderKey = rawPath.substring(0, separator+1);
-                trace("loaderKey = "+loaderKey);
-                trace("filePath = "+filePath);
+                category.trace("loaderKey = "+loaderKey);
+                category.trace("filePath = "+filePath);
                 ClassLoader loader = (ClassLoader) loaderMap.get(loaderKey);
                 /* If we did not find a class loader check to see if the raw path
                  begins with className + '@' + cl.hashCode() + '/' by looking for
@@ -232,19 +278,19 @@ public class WebServer
                 if( loader == null && rawPath.indexOf('@') < 0 )
                 {
                    filePath = rawPath;
-                   trace("No loader, reset filePath = "+filePath);
+                   category.trace("No loader, reset filePath = "+filePath);
                    loader = Thread.currentThread().getContextClassLoader();
                 }
-                trace("loader = "+loader);
+                category.trace("loader = "+loader);
                 byte[] bytes;
                 if( filePath.endsWith(".class") )
                 {
                     // A request for a class file
                     String className = filePath.substring(0, filePath.length()-6).replace('/','.');
-                    trace("loading className = "+className);
+                    category.trace("loading className = "+className);
                     Class clazz = loader.loadClass(className);
                     URL clazzUrl = clazz.getProtectionDomain().getCodeSource().getLocation();
-                    trace("clazzUrl = "+clazzUrl);
+                    category.trace("clazzUrl = "+clazzUrl);
                     if (clazzUrl.getFile().endsWith(".jar"))
                        clazzUrl = new URL("jar:"+clazzUrl+"!/"+filePath);
                     else
@@ -258,7 +304,7 @@ public class WebServer
                 else // Resource
                 {
                     // Try getting resource
-                    trace("loading resource = "+filePath);
+                    category.trace("loading resource = "+filePath);
                     URL resourceUrl = loader.getResource(filePath);             
                     if (resourceUrl == null)
                         throw new FileNotFoundException("Resource not found:"+filePath);
@@ -302,7 +348,7 @@ public class WebServer
         {
             // eat exception (could log error to log file, but
             // write out to stdout for now).
-            debug("error writing response: " + ex.getMessage());
+            category.debug("error writing response: " + ex.getMessage());
             ex.printStackTrace();
         }
         finally 
@@ -331,15 +377,6 @@ public class WebServer
         return key;
     }
 
-    protected void trace(String msg)
-    {
-        category.trace(msg);
-    }
-    protected void debug(String msg)
-    {
-        category.debug(msg);
-    }
-
     protected void listen()
     {
         threadPool.run(this);
@@ -351,7 +388,7 @@ public class WebServer
     protected String getPath(BufferedReader in) throws IOException
     {
         String line = in.readLine();
-        trace("raw request="+line);
+        category.trace("raw request="+line);
         // Find the request path by parsing the 'REQUEST_TYPE filePath HTTP_VERSION' string
         int start = line.indexOf(' ')+1;
         int end = line.indexOf(' ', start+1);
@@ -365,7 +402,7 @@ public class WebServer
     protected byte[] getBytes(URL url) throws IOException
     {
         InputStream in = new BufferedInputStream(url.openStream());
-        debug("Retrieving "+url.toString());
+        category.debug("Retrieving "+url.toString());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         byte[] tmp = new byte[1024];
         int bytes;
