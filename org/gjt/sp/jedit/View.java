@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.29 2002/06/18 06:55:59 spestov Exp $
+ * @version $Id: View.java,v 1.30 2002/06/18 11:51:25 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -896,6 +896,12 @@ public class View extends JFrame implements EBComponent
 			handleBufferUpdate((BufferUpdate)msg);
 		else if(msg instanceof EditPaneUpdate)
 			handleEditPaneUpdate((EditPaneUpdate)msg);
+	} //}}}
+
+	//{{{ getMinimumSize() method
+	public Dimension getMinimumSize()
+	{
+		return new Dimension(0,0);
 	} //}}}
 
 	//{{{ Package-private members
