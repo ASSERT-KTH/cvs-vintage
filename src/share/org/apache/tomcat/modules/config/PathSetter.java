@@ -196,6 +196,19 @@ public final class PathSetter extends BaseInterceptor {
 	    log( " work=" + workDir);
     }
 
+    public void engineState( ContextManager cm , int state )
+	throws TomcatException
+    {
+	if( state!=ContextManager.STATE_CONFIG ) return;
+	Enumeration ctxsE= cm.getContexts();
+	while( ctxsE.hasMoreElements() ) {
+	    // Set the paths - we do this in advanced, at this stage we should be
+	    // ready to do so.
+	    Context context=(Context)ctxsE.nextElement();
+	    addContext( cm, context);
+	}
+    }
+    
     /** Adjust paths for a context - make the base and all loggers
      *  point to canonical paths.
      */
