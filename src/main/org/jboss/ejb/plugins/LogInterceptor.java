@@ -40,7 +40,7 @@ import org.jboss.metadata.BeanMetaData;
  *
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.18 $
+ *   @version $Revision: 1.19 $
  */
 public class LogInterceptor
    extends AbstractInterceptor
@@ -188,9 +188,10 @@ public class LogInterceptor
       if (e instanceof EJBException)
       {
          EJBException ex = (EJBException) e;
-         log.error("BEAN EXCEPTION:"+ex.getMessage());
          if( ex.getCausedByException() != null )
-            log.error("CausedBy", ex.getCausedByException());
+            log.error("EJBException, causedBy:", ex.getCausedByException());
+         else
+            log.error("EJBException:", ex);
 
          // Client sees RemoteException
          toThrow = new ServerException("Bean exception. Notify the application administrator", ex);
@@ -198,7 +199,7 @@ public class LogInterceptor
       else if (e instanceof RuntimeException)
       {
          RuntimeException ex = (RuntimeException) e;
-         log.error("CONTAINER EXCEPTION:", e);
+         log.error("CONTAINER EXCEPTION:", ex);
          
          // Client sees RemoteException
          toThrow = new ServerException("Container exception. Notify the container developers :-)", ex);
@@ -206,7 +207,6 @@ public class LogInterceptor
       else if (e instanceof TransactionRolledbackException)
       {
          TransactionRolledbackException ex = (TransactionRolledbackException) e;
-         log.error("TRANSACTION ROLLBACK EXCEPTION: "+ex.getMessage());
          // Log the rollback cause
          // Sometimes it wraps EJBException - let's unwrap it
          Throwable cause = ex.detail;
@@ -217,7 +217,11 @@ public class LogInterceptor
             {
                cause = ((EJBException) cause).getCausedByException();
             }
-            log.error("Detail", cause);
+            log.error("TransactionRolledbackException, causedBy:", cause);
+         }
+         else
+         {
+            log.error("TransactionRolledbackException:", ex);
          }
          toThrow = ex;
       }
