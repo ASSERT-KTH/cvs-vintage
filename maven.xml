@@ -1,0 +1,9 @@
+
+<project default="default"
+    xmlns:j="jelly:core"
+    xmlns:u="jelly:util">
+  <!--preGoal name="java:jar-resources"-->
+  <!--/preGoal-->
+  <!--preGoal name="java:test-resources"-->
+  <!--/preGoal-->
+</project>
