@@ -1,0 +1,314 @@
+<!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
+    "http://collabnet.com/dtds/collabnet_transitional_10.dtd">
+<html>
+ <head>
+  <title>Scarab</title>
+<!--  <meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" /> -->
+<!--  <meta http-equiv="Content-type" content="text/html; charset=EUC-KR" /> -->
+  <meta http-equiv="Content-type" content="text/html" />
+
+  <style type="text/css">
+  @import url(../csi/style/ns4_toxins.css);
+  </style>
+
+  <link rel="stylesheet" type="text/css" href="../csi/style/main.css" />
+  <link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
+  <link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
+ </head>
+<body marginwidth="0" marginheight="0">
+ <div id="banner">
+  <table border="0" cellspacing="0" cellpadding="8" width="100%">
+  <tr>
+  <td>
+  <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/Index.vm"><img src="../csi/images/logo.gif" alt="Scarab" width="118" height="23" border="0" /></a>
+  </td>
+  <td>
+  <div align="right" id="login">
+         <div>
+    Logged in: <strong class="username">Elicia David</strong>
+   </div>
+            
+   <div>
+        <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/Login.vm/action/Logout">Logout</a>
+   </div>
+  </div>
+  </td>
+  </tr>
+  </table>
+ </div>
+
+<div class="modbar">
+   <small><strong>Current Module:&nbsp;<a href="#">Turbine</a>&nbsp;&gt;&nbsp;<a href="#">Source</a></strong>
+</div>
+<table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
+ <tr valign="top">
+  <td id="leftcol" width="20%">
+ <div id="navcolumn">
+
+<div><strong><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/Index.vm">Index</a></strong></div>
+<div><strong><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/SelectArtifactType.vm">Artifact types</a></strong>
+      <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/1">Defect</a></small></div>
+        <div><small><strong>Patch</strong></small>
+    <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/entry%2CWizard1.vm"> Enter new</a></small></div>
+    <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/AdvancedQuery.vm">Advanced Query</a></small></div>
+    <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/Search.vm">Custom Query</a></small></div>
+    <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/QueryList.vm">Saved queries</a></small></div>
+    <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/TemplateList.vm">Template list</a></small></div>
+    <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/reports%2CStep1.vm">New report</a></small></div>
+    <div><small>Saved reports</small></div></div>
+        <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/5">Task</a></small></div>
+        <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/7">Feature</a></small></div>
+        <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/9">Enhancement</a></small></div>
+  </div>
+
+
+</div>
+  <div id="helptext">
+ <table border="0" cellspacing="0" cellpadding="3" width="100%">
+ <tr>
+ <th>How do I...?</th>
+ </tr>
+ <tr>
+ <td>
+  <div>Learn
+ more about this project? </div> <div>Print this page...</div>
+<div>Troubleshoot...
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td width="100%" id="bodycol">
+ <!-- Scarab - App -->
+ <div id="topmodule">
+  <table border="0" cellspacing="0" cellpadding="3" width="100%">
+  <tr>
+   <td nowrap="nowrap">
+    <form action="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/IssueList.vm/action/Search" method="post">
+                  <input type="text" name="id" size="15" maxlength="255" />&#160;
+        <input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
+        <input type="submit" value="Artifact Id" name="eventSubmit_doGonext" />&#160;
+        <img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
+     <small>
+      <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/AdvancedQuery.vm">Advanced</a>&#160;|&#160;
+      <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/Search.vm">Custom</a>
+     </small>
+   </form>
+   </td>
+  </tr>
+  </table>
+ </div>
+ <!-- Scarab - App -->
+
+
+<div class="app" id="viewissue">
+
+
+
+
+
+  <form method="post" action="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/ModifyIssue">
+   <input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
+
+    <input type="hidden" name="fullHistory" value="" />
+  <input type="hidden" name="id" value="TBNS1" />
+
+ 
+
+	<!-- Scarab - App -->
+	<div class="app" id="div2-1-0">
+		
+		<p class="alert"><strong><img src="../csi/images/icon_alertsml.gif" width="17" height="15" alt="Alert notification" border="0" /> Alert!</strong> <small>Please enter required information where indicated.</small></p>
+		
+		<h2>Enter issue (2.1.0)</h2>
+				
+		<div class="tabs">
+			<table cellpadding="3" cellspacing="0" border="0">
+			<tr>
+			<th>1: Attribute group 1</th>
+			<td>2: Duplicate check</td>
+			<td>3: Attribute group 2</td>
+			</tr>
+			</table>
+		</div>
+				
+		<p class="functnbar"><input type="submit" value="Next" />&#160;<input type="reset" value="Reset" /></p>
+		
+		<h3>Apply issue entry template</h3>
+		
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+			<tr>
+			<th width="120">My templates</th>
+			
+			<td><select>
+			<option>
+			No template
+			</option>
+			<option>
+			Template X
+			</option>
+			
+			<option>
+			Template Y
+			</option>
+			
+			<option>
+			Template Z
+			</option>
+			</select> &#160;<input type="submit" value="select" /> &#160;<a href="#">View all Patch templates</a></td>
+			</tr>
+			</table>
+		</div>		
+		
+		<h3>Input your issue</h3>
+		
+		<div class="axial">
+			<table width="100%" cellspacing="2" cellpadding="3" border="1">
+			<tr>
+			<th width="120">issue summary</th>
+			<td><input type="text" value="" size="" />
+			
+			<p class="alert"><small><strong>Alert:</strong> This module requires data for this attribute.</small></p>
+			
+			</td>
+			</tr>
+		
+			<tr>
+			<th width="120">version</th>
+			<td><select>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+	
+			<tr>
+			<th width="120">platform</th>
+			<td><select>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select>
+			
+			<p class="alert"><small><strong>Alert:</strong> This module requires that you select an option for this attribute.</small></p>
+   			
+			</td>
+			</tr>
+	
+			<tr>
+			<th width="120">os</th>
+			<td><select>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+	
+			<tr>
+			<th width="120">found during</th>
+			<td><select>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+	
+			<tr>
+			<th width="120">issue type</th>
+			<td><select>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+	
+			<tr>
+			<th width="120">functional area</th>
+			<td><input type="checkbox" /> UI <input type="checkbox" />setup <input type="checkbox" />help</td>
+			</tr>
+	
+			<tr>
+			<th width="120">severity</th>
+			<td><select>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+	
+			<tr>
+			<th width="120">priority</th>
+			<td><select>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+			</table>
+		</div>
+		<p class="functnbar2"><input type="submit" value="Next" />&#160;<input type="reset" value="Reset" /></p>
+	</div>
+	<!-- Scarab - App -->
+
+</td>
+</tr>
+</table>
+<div id="footer">
+<table border="0" cellspacing="0" cellpadding="4">
+<tr><td>
+&copy; 2001 <a href="http://www.collab.net/">CollabNet</a> | 
+<a href="http://scarab.tigris.org/">Scarab</a> |
+<a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/rissue/0/template/Links.vm">Links</a> |
+
+    <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/rissue/0/template/Login.vm/action/Logout">Logout</a>
+
+</td></tr>
+</table>
+</div>
+
+ </body>
+</html>
