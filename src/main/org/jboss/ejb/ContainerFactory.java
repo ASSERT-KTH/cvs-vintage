@@ -59,7 +59,7 @@ import org.jboss.ejb.plugins.*;
  *   @see Container
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public class ContainerFactory
    implements ContainerFactoryMBean, MBeanRegistration
@@ -151,10 +151,21 @@ public class ContainerFactory
          beanCtx.add(efm);
          
          // Load XML
-         jBossEjbJar jar = efm.load(url);
+			jBossEjbJar jar;
+			if (url.getProtocol().startsWith("file"))
+			{
+				// This will copy the jar first so it isn't locked by the CL
+				efm.load(new File(url.getFile()));
+				jar = efm.getEjbJar();
+			}
+			else
+			{
+				jar = efm.load(url);
+			}
 			
 			// Create classloader for this application
-         ClassLoader cl = new EJBClassLoader(new URL[] {url}, getClass().getClassLoader(), jar.isSecure());
+//         ClassLoader cl = new EJBClassLoader(new URL[] {url}, getClass().getClassLoader(), jar.isSecure());
+         ClassLoader cl = efm.getClassLoader();
          
 			// Get list of beans for which we will create containers
          Iterator beans = jar.getEnterpriseBeans().iterator();
