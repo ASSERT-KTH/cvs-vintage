@@ -291,12 +291,41 @@ public class Issue
 
 
     /**
-     * Use this instead of setScarabModule.
+     * Throws UnsupportedOperationException.  Use
+     * <code>getModule()</code> instead.
+     *
+     * @return a <code>ScarabModule</code> value
+     */
+    public ScarabModule getScarabModule()
+    {
+        throw new UnsupportedOperationException(
+            "Should use getModule");
+    }
+
+    /**
+     * Throws UnsupportedOperationException.  Use
+     * <code>setModule(ModuleEntity)</code> instead.
+     *
+     */
+    public void setScarabModule(ScarabModule module)
+    {
+        throw new UnsupportedOperationException(
+            "Should use setModule(ModuleEntity). Note module cannot be new.");
+    }
+
+    /**
+     * Use this instead of setScarabModule.  Note: module cannot be new.
      */
     public void setModule(ModuleEntity me)
         throws Exception
     {
-        setModuleId(me.getModuleId());
+        NumberKey id = me.getModuleId();
+        if (id == null) 
+        {
+            throw new ScarabException("Modules must be saved prior to " +
+                                      "being associated with other objects.");
+        }
+        setModuleId(id);
     }
 
     /**
@@ -311,7 +340,7 @@ public class Issue
         ObjectKey id = getModuleId();
         if ( id != null ) 
         {
-            module = ModuleManager.getInstance(getModuleId());
+            module = ModuleManager.getInstance(id);
         }
         
         return module;

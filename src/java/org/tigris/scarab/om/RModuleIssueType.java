@@ -2,6 +2,8 @@ package org.tigris.scarab.om;
 
 import java.util.List;
 
+import org.apache.torque.om.ObjectKey;
+import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
 import org.tigris.scarab.util.ScarabConstants;
@@ -9,6 +11,7 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.services.module.ModuleManager;
 
 /** 
  * You should add additional methods to this class to meet the
@@ -20,12 +23,41 @@ public  class RModuleIssueType
     implements Persistent
 {
     /**
-     * FIXME: Should use ModuleManager.  Use this instead of setScarabModule.
+     * Throws UnsupportedOperationException.  Use
+     * <code>getModule()</code> instead.
+     *
+     * @return a <code>ScarabModule</code> value
+     */
+    public ScarabModule getScarabModule()
+    {
+        throw new UnsupportedOperationException(
+            "Should use getModule");
+    }
+
+    /**
+     * Throws UnsupportedOperationException.  Use
+     * <code>setModule(ModuleEntity)</code> instead.
+     *
+     */
+    public void setScarabModule(ScarabModule module)
+    {
+        throw new UnsupportedOperationException(
+            "Should use setModule(ModuleEntity). Note module cannot be new.");
+    }
+
+    /**
+     * Use this instead of setScarabModule.  Note: module cannot be new.
      */
     public void setModule(ModuleEntity me)
         throws Exception
     {
-        super.setScarabModule((ScarabModule)me);
+        NumberKey id = me.getModuleId();
+        if (id == null) 
+        {
+            throw new ScarabException("Modules must be saved prior to " +
+                                      "being associated with other objects.");
+        }
+        setModuleId(id);
     }
 
     /**
@@ -36,8 +68,16 @@ public  class RModuleIssueType
     public ModuleEntity getModule()
         throws Exception
     {
-        return getScarabModule();
+        ModuleEntity module = null;
+        ObjectKey id = getModuleId();
+        if ( id != null ) 
+        {
+            module = ModuleManager.getInstance(id);
+        }
+        
+        return module;
     }
+
 
     /**
      * Checks if user has permission to delete module-issue type mapping.
