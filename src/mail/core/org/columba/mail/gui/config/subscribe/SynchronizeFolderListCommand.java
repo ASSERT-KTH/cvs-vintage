@@ -17,10 +17,10 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.subscribe;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -69,13 +69,25 @@ public class SynchronizeFolderListCommand extends Command {
 		node = createTreeStructure();
 	}
 
+	private List fetchUnsubscribedFolders(String reference) throws Exception {
+		ListInfo[] list = store.list(reference, "*");
+		ArrayList result = new ArrayList(Arrays.asList(list));
+		
+		for( int i=0; i< list.length; i++) {
+			if( ! list[i].getName().equals(reference)) {
+				result.addAll( fetchUnsubscribedFolders(list[i].getName() + store.getDelimiter()));
+			}
+		}
+		
+		return result;
+	}
+	
 	private TreeNode createTreeStructure() throws Exception {
-		ListInfo[] list = store.list("", "*");
 		ListInfo[] lsub = store.fetchSubscribedFolders();
 
 		// Create list of unsubscribed folders
 		List subscribedFolders = Arrays.asList(lsub);
-		List unsubscribedFolders = new LinkedList(Arrays.asList(list));
+		List unsubscribedFolders = fetchUnsubscribedFolders("");
 		ListTools.substract(unsubscribedFolders, subscribedFolders);
 
 		// Now we have the subscribed folders in subscribedFolders
@@ -84,10 +96,10 @@ public class SynchronizeFolderListCommand extends Command {
 		DefaultMutableTreeNode root = new CheckableItemImpl();
 
 		// Initialize the Pattern
-		String pattern = "([^\\" + list[0].getDelimiter() + "]+)\\"
-				+ list[0].getDelimiter() + "?";
+		String pattern = "([^\\" + store.getDelimiter() + "]+)\\"
+				+ store.getDelimiter() + "?";
 		delimiterPattern = Pattern.compile(pattern);
-		delimiter = list[0].getDelimiter();
+		delimiter = store.getDelimiter();
 
 		Iterator it = subscribedFolders.iterator();
 
