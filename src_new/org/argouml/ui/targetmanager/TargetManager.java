@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.6 2003/05/02 11:11:20 kataka Exp $
+// $Id: TargetManager.java,v 1.7 2003/05/02 14:01:51 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -160,7 +160,9 @@ public final class TargetManager {
                     _newTarget = null;
                 }
             } else {
-                _targets = new Object[0];
+                Object[] targets = new Object[] {null};
+                fireTargetSet(targets);
+                _targets = targets;
                 _modelTarget = null;
                 _figTarget = null;
             }

@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.28 2003/05/02 12:12:50 kataka Exp $
+// $Id: PropPanelOperation.java,v 1.29 2003/05/02 14:01:51 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -293,19 +293,7 @@ public class PropPanelOperation extends PropPanelModelElement {
            addRaisedSignal(new Integer(1));
         }
     }
-/*
-    public void navigateUp() {
-        
-        Object target = getTarget();
-        if(target instanceof MOperation) {
-            MOperation oper = (MOperation) target;
-            MClassifier owner = oper.getOwner();
-            if(owner != null) {
-                navigateTo(owner);
-            }
-        }
-    }
-*/
+
     /**
      *   Appropriate namespace is the namespace of our class,
      *      not the class itself
