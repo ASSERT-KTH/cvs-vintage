@@ -1,3 +1,5 @@
+package org.tigris.scarab.reports;
+
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
@@ -43,8 +45,6 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */ 
-
-package org.tigris.scarab.reports;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -96,12 +96,23 @@ import org.tigris.scarab.om.AttributeManager;
  *     </cells>
  *   </y-axis>
  * </report>
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: ReportDefinition.java,v 1.9 2003/03/28 00:00:16 jon Exp $
  */
 public class ReportDefinition
     implements java.io.Serializable
                //Retrievable
 {
-    String name;
+    private String name;
+
+    private String description;
+
+    private List moduleIssueTypes;
+
+    private List reportAxisList;
+
+    private ReportDate defaultDate;
 
     /**
      * Get the Name value.
@@ -121,8 +132,6 @@ public class ReportDefinition
         this.name = newName;
     }
 
-    String description;
-
     /**
      * Get the Description value.
      * @return the Description value.
@@ -140,8 +149,6 @@ public class ReportDefinition
     {
         this.description = newDescription;
     }
-
-    List moduleIssueTypes;
 
     /**
      * Get the ModuleIssueTypes value.
@@ -179,8 +186,6 @@ public class ReportDefinition
         }
     }
 
-    List reportAxisList;
-
     /**
      * Get the ReportAxisList value.
      * @return the ReportAxisList value.
@@ -211,8 +216,6 @@ public class ReportDefinition
         }
         reportAxisList.add(newReportAxis);
     }
-
-    ReportDate defaultDate;
 
     /**
      * Get the ReportDate value used if no axis is time.

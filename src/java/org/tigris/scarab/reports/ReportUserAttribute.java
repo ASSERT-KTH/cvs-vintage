@@ -1,3 +1,5 @@
+package org.tigris.scarab.reports;
+
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
@@ -37,17 +39,24 @@
  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  */
 
-package org.tigris.scarab.reports;
-
 import org.apache.fulcrum.intake.Retrievable;
 import org.apache.commons.lang.ObjectUtils;
 import org.tigris.scarab.util.Log;
 
+/** 
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: ReportUserAttribute.java,v 1.5 2003/03/28 00:00:16 jon Exp $
+ */
 public class ReportUserAttribute
     implements java.io.Serializable,
                Retrievable
 {
-    Integer attributeId;
+    private Integer attributeId;
+
+    private Integer userId;
+
+    private String queryKey;
 
     /**
      * Get the AttributeId value.
@@ -66,8 +75,6 @@ public class ReportUserAttribute
     {
         this.attributeId = newAttributeId;
     }
-
-    Integer userId;
 
     /**
      * Get the UserId value.
@@ -115,8 +122,6 @@ public class ReportUserAttribute
     {
         return super.toString() + " {a=" + attributeId + ", u=" + userId + "}";
     }
-
-    private String queryKey;
 
     /**
      * Get the QueryKey value.

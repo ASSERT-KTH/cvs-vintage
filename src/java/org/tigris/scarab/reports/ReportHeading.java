@@ -1,3 +1,5 @@
+package org.tigris.scarab.reports;
+
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
@@ -37,8 +39,6 @@
  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  */
 
-package org.tigris.scarab.reports;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,10 +48,27 @@ import org.apache.fulcrum.intake.Retrievable;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.AttributeOptionManager;
 
+/**
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: ReportHeading.java,v 1.6 2003/03/28 00:00:16 jon Exp $
+ */
 public class ReportHeading
     implements java.io.Serializable,
                Retrievable
 {
+    private List reportGroups;
+
+    private List reportOptionAttributes;
+
+    private List reportDates;
+
+    private List reportUserAttributes;
+
+    private List reportDateRanges;
+
+    private String queryKey;
+
     public int calculateType()
     {
         int type = 0;
@@ -325,10 +342,7 @@ public class ReportHeading
 
         return result;
     }
-
     
-    List reportGroups;
-
     /**
      * Get the ReportGroups value.
      * @return the ReportGroups value.
@@ -390,8 +404,6 @@ public class ReportHeading
         }
     }
 
-    List reportOptionAttributes;
-
     /**
      * Get the ReportOptionAttributes value.
      * @return the ReportOptionAttributes value.
@@ -425,8 +437,6 @@ public class ReportHeading
             reportOptionAttributes.add(newReportOptionAttribute);            
         }
     }
-
-    List reportUserAttributes;
 
     /**
      * Get the ReportUserAttributes value.
@@ -465,9 +475,6 @@ public class ReportHeading
         }
     }
 
-
-    List reportDateRanges;
-
     /**
      * Get the ReportDateRanges value.
      * @return the ReportDateRanges value.
@@ -499,8 +506,6 @@ public class ReportHeading
         reportDateRanges.add(newReportDateRange);
     }
 
-    List reportDates;
-
     /**
      * Get the ReportDates value.
      * @return the ReportDates value.
@@ -531,8 +536,6 @@ public class ReportHeading
         }
         reportDates.add(newReportDate);
     }
-
-    private String queryKey;
 
     /**
      * Get the QueryKey value.

@@ -1,3 +1,5 @@
+package org.tigris.scarab.reports;
+
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
@@ -37,16 +39,21 @@
  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  */
 
-package org.tigris.scarab.reports;
-
 import java.util.Date;
 import org.apache.fulcrum.intake.Retrievable;
 
+/**
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: ReportDate.java,v 1.4 2003/03/28 00:00:16 jon Exp $
+ */
 public class ReportDate
     implements java.io.Serializable,
                Retrievable
 {
-    long time;
+    private long time;
+
+    private String queryKey;
 
     /**
      * Get the Time time.
@@ -70,8 +77,6 @@ public class ReportDate
     {
         return new Date(time);
     }
-
-    private String queryKey;
 
     /**
      * Get the QueryKey value.

@@ -1,3 +1,5 @@
+package org.tigris.scarab.reports;
+
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
@@ -37,18 +39,27 @@
  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  */
 
-package org.tigris.scarab.reports;
-
 import java.util.List;
 import java.util.ArrayList;
 import org.apache.fulcrum.intake.Retrievable;
 import org.apache.commons.lang.ObjectUtils;
 
+/**
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: ReportGroup.java,v 1.4 2003/03/28 00:00:16 jon Exp $
+ */
 public class ReportGroup
     implements java.io.Serializable,
                Retrievable
 {
-    String name;
+    private String name;
+
+    private List reportOptionAttributes;
+
+    private List reportUserAttributes;
+
+    private String queryKey;
 
     /**
      * Get the Name value.
@@ -67,8 +78,6 @@ public class ReportGroup
     {
         this.name = newName;
     }
-
-    List reportOptionAttributes;
 
     /**
      * Get the ReportOptionAttributes value.
@@ -101,8 +110,6 @@ public class ReportGroup
         reportOptionAttributes.add(newReportOptionAttribute);
     }
     
-    List reportUserAttributes;
-
     /**
      * Get the ReportUserAttributes value.
      * @return the ReportUserAttributes value.
@@ -165,9 +172,6 @@ public class ReportGroup
     {
         return name == null ? 0 : name.hashCode();
     }
-
-
-    private String queryKey;
 
     /**
      * Get the QueryKey value.

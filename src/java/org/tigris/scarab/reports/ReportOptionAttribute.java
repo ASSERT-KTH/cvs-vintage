@@ -1,3 +1,5 @@
+package org.tigris.scarab.reports;
+
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
@@ -37,16 +39,19 @@
  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  */
 
-package org.tigris.scarab.reports;
-
 import org.apache.fulcrum.intake.Retrievable;
 import org.apache.commons.lang.ObjectUtils;
 
+/** 
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: ReportOptionAttribute.java,v 1.4 2003/03/28 00:00:16 jon Exp $
+ */
 public class ReportOptionAttribute
     implements java.io.Serializable,
                Retrievable
 {
-    Integer optionId;
+    private Integer optionId;
 
     /**
      * Get the OptionId value.

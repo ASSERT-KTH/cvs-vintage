@@ -1,3 +1,5 @@
+package org.tigris.scarab.reports;
+
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
@@ -37,16 +39,23 @@
  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  */
 
-package org.tigris.scarab.reports;
-
 import java.util.List;
 import java.util.ArrayList;
 import org.apache.fulcrum.intake.Retrievable;
 
+/**
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: ReportAxis.java,v 1.4 2003/03/28 00:00:16 jon Exp $
+ */
 public class ReportAxis
     implements java.io.Serializable,
                Retrievable
 {
+    private List reportHeadings;
+
+    private String queryKey;
+
     /**
      * Gets the heading at the given index.
      * if headingIndex is negative, a new ReportHeading is returned
@@ -79,8 +88,6 @@ public class ReportAxis
         return heading;
     }
 
-    List reportHeadings;
-
     /**
      * Get the ReportHeadings value.
      * @return the ReportHeadings value.
@@ -111,8 +118,6 @@ public class ReportAxis
         }
         reportHeadings.add(newReportHeading);
     }
-
-    private String queryKey;
 
     /**
      * Get the QueryKey value.
