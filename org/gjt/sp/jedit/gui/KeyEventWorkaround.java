@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.Debug;
  * across Java implementations.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.23 2003/06/19 19:19:45 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.24 2003/06/25 03:38:33 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -149,22 +149,29 @@ public class KeyEventWorkaround
 			// in HistoryTextFields
 			if((ch < 0x20 || ch == 0x7f || ch == 0xff)
 				&& ch != '\b' && ch != '\t' && ch != '\n')
+			{
+				System.err.println("control");
 				return null;
+			}
 
 			if(System.currentTimeMillis() - lastKeyTime < 750)
 			{
 				if(!Debug.ALTERNATIVE_DISPATCHER)
 				{
-					if((modifiers & InputEvent.CTRL_MASK) != 0
-						^ (modifiers & InputEvent.ALT_MASK) != 0
+					if(((modifiers & InputEvent.CTRL_MASK) != 0
+						^ (modifiers & InputEvent.ALT_MASK) != 0)
 						|| (modifiers & InputEvent.META_MASK) != 0)
+					{
+						System.err.println("mods");
 						return null;
+					}
 				}
 
 				// if the last key was a numeric keypad key
 				// and NumLock is off, filter it out
 				if(last == LAST_NUMKEYPAD)
 				{
+					System.err.println("not");
 					last = LAST_NOTHING;
 					if((ch >= '0' && ch <= '9') || ch == '.'
 						|| ch == '/' || ch == '*'

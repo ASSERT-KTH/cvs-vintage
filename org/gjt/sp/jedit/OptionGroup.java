@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * option pane instances.
  *
  * @author Mike Dillon
- * @version $Id: OptionGroup.java,v 1.8 2003/06/24 23:24:39 spestov Exp $
+ * @version $Id: OptionGroup.java,v 1.9 2003/06/25 03:38:33 spestov Exp $
  */
 public class OptionGroup
 {
@@ -159,6 +159,12 @@ public class OptionGroup
 				label = jEdit.getProperty("options."
 					+ name + ".label","NO LABEL PROPERTY: "
 					+ name);
+			}
+			else if(obj instanceof String)
+			{
+				label = jEdit.getProperty("options."
+					+ obj + ".label","NO LABEL PROPERTY: "
+					+ obj);
 			}
 			else if(obj instanceof OptionGroup)
 				label = ((OptionGroup)obj).getLabel();

@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * The default input handler. It maps sequences of keystrokes into actions
  * and inserts key typed events into the text area.
  * @author Slava Pestov
- * @version $Id: DefaultInputHandler.java,v 1.33 2003/06/21 18:45:29 spestov Exp $
+ * @version $Id: DefaultInputHandler.java,v 1.34 2003/06/25 03:38:33 spestov Exp $
  */
 public class DefaultInputHandler extends InputHandler
 {
@@ -383,6 +383,33 @@ public class DefaultInputHandler extends InputHandler
 
 			if(input != '\0')
 				userInput(input);
+			else
+			{
+				// this is retarded. excuse me while I drool
+				// and make stupid noises
+				switch(keyStroke.key)
+				{
+				case KeyEvent.VK_NUMPAD0:
+				case KeyEvent.VK_NUMPAD1:
+				case KeyEvent.VK_NUMPAD2:
+				case KeyEvent.VK_NUMPAD3:
+				case KeyEvent.VK_NUMPAD4:
+				case KeyEvent.VK_NUMPAD5:
+				case KeyEvent.VK_NUMPAD6:
+				case KeyEvent.VK_NUMPAD7:
+				case KeyEvent.VK_NUMPAD8:
+				case KeyEvent.VK_NUMPAD9:
+				case KeyEvent.VK_MULTIPLY:
+				case KeyEvent.VK_ADD:
+				/* case KeyEvent.VK_SEPARATOR: */
+				case KeyEvent.VK_SUBTRACT:
+				case KeyEvent.VK_DECIMAL:
+				case KeyEvent.VK_DIVIDE:
+				System.err.println("numkey");
+					KeyEventWorkaround.numericKeypadKey();
+					break;
+				}
+			}
 		}
 		else if(o instanceof Hashtable)
 		{
