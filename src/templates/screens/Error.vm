@@ -9,23 +9,17 @@ $page.setTitle("Scarab Error")
  #if ($data.StackTrace)
   <h3>Stack Trace</h3>
 
-<table width="30%">
-<tr>
-<td>
+<pre>
 If the stack trace below has at the top a mention of
-"ResourceNotFoundException", that means that a template
-could not be found (404) and is probably the result of a
-broken link. If the stack trace has something else, please
-send a copy of it <strong>and an explanation of what you did
-to cause it</strong> to <a
-href="mailto:jon@latchkey.com?subject=Scarab%20StackTrace">Jon</a>
-for analysis. If you are a developer and think you know what
-the problem is, feel free to send in a patch to fix the
-problem. We would love your help and kiss your ass for 1000
-days in appreciation.
-</td>
-</tr>
-</table>
+"ResourceNotFoundException", that means that a template could not be
+found (404) and is probably the result of a broken link.
+
+If the stack trace has something else, please enter a copy of the stack
+trace <strong>and an explanation of what you did to cause it</strong> to the 
+<a href="http://scarab.tigris.org/servlets/ProjectIssues">Issue Tracking System</a> for analysis. If you are a developer and think you 
+know what the problem is, feel free to send in a patch to fix the
+problem.
+</pre>
 
   <pre>
   $data.StackTrace
