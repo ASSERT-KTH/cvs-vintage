@@ -1047,31 +1047,47 @@ public class IMAPServer implements IMAPListener {
 			StatusObservable observable = getObservable();
 			
 			ensureSelectedState(folder);
-			if (messageFolderInfo.getExists() > 0) {
+			if (messageFolderInfo.getExists() - startIdx > 0) {
 				SequenceSet set = new SequenceSet();
 				set.addRightOpen(startIdx);
 
 				SequenceSet[] packs = divide(set);
-				IMAPFlags[] result = new IMAPFlags[set.getLength(messageFolderInfo.getExists())];
 				
 				// update the progress
 				if( observable != null ) {
 					observable.setCurrent(0);
-					observable.setMax(result.length);					
+					observable.setMax(set.getLength(messageFolderInfo.getExists()));					
 				}
+				
+				List allResults = new ArrayList(packs.length);
 				
 				int pos=0;				
 				
+				
+				// store the intermediate results in a list
 				for( int i=0; i<packs.length; i++) {
-					int packLength = packs[i].getLength(messageFolderInfo.getExists());
-					System.arraycopy(protocol.fetchFlags(packs[i]),0,result, pos, packLength );
-					pos += packLength;
+					IMAPFlags[] r = protocol.fetchFlags(packs[i]);					
+					pos += r.length;
+					
+					allResults.add(r);
 					
 					// update the progress
 					if( observable != null ) {
 						observable.setCurrent(pos);
 					}					
 				}
+				
+				//Combine the results in one array
+				IMAPFlags[] result = new IMAPFlags[pos];
+				Iterator it = allResults.iterator();
+				
+				pos = 0;
+				while( it.hasNext() ) {
+					IMAPFlags[] r = (IMAPFlags[])it.next();
+					System.arraycopy(result,0,r,pos,r.length);
+					
+					pos += r.length;
+				}				
 				
 				return result;
 			} else {
@@ -1141,10 +1157,12 @@ public class IMAPServer implements IMAPListener {
 						i * IMAPServer.STEP_SIZE, (i + 1) * IMAPServer.STEP_SIZE));
 				getObservable().setCurrent(i);
 			}
-
-			doFetchHeaderList(headerList, list
-					.subList(count * IMAPServer.STEP_SIZE, count
-							* IMAPServer.STEP_SIZE + rest));
+			
+			if( rest > 0 ) {
+				doFetchHeaderList(headerList, list
+						.subList(count * IMAPServer.STEP_SIZE, count
+								* IMAPServer.STEP_SIZE + rest));
+			}
 			
 			getObservable().setCurrent(count+1);
 		} catch (IMAPDisconnectedException e) {
