@@ -211,10 +211,10 @@ public class DefaultCMSetter extends BaseInterceptor {
          * Initialize default FilePermissions for Context if using SecurityManager
          */
         if( sm != null ) {
-            p = context.getPermissions();
+            p = (Permissions)context.getPermissions();
             if( p == null ) {
                 // Clone the Permissions to overcome readonly status
-                Permissions perms = cm.getPermissions();
+                Permissions perms = (Permissions)cm.getPermissions();
                 p = new Permissions();
                 Enumeration enum=perms.elements();
                 while(enum.hasMoreElements()) {
