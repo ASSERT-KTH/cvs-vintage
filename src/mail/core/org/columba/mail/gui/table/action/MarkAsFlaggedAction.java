@@ -51,9 +51,6 @@ public class MarkAsFlaggedAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_markasflagged_tooltip"));
 					
-		// action command
-		setActionCommand("MARK_AS_FLAGGED");
-		
 		// icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("mark-as-important-16.png"));
 		
@@ -79,9 +76,10 @@ public class MarkAsFlaggedAction
 
 		MainInterface.processor.addOp(c);
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

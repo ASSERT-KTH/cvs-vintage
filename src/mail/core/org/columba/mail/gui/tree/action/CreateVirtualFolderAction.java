@@ -55,9 +55,6 @@ public class CreateVirtualFolderAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_folder_newvirtualfolder"));
 
-		// action command
-		setActionCommand("CREATE_VIRTUAL_SUBFOLDER");
-		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("virtualfolder.png"));
 		setLargeIcon(ImageLoader.getImageIcon("virtualfolder.png"));
@@ -117,12 +114,9 @@ public class CreateVirtualFolderAction
 				 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 				 */
 	public void selectionChanged(SelectionChangedEvent e) {
-
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
 			setEnabled(true);
 		else
 			setEnabled(false);
-
 	}
-
 }

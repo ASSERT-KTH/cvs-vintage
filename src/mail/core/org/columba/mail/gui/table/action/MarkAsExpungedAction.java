@@ -51,9 +51,6 @@ public class MarkAsExpungedAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_markasexpunged_tooltip"));
 		
-		// action command
-		setActionCommand("MARK_AS_EXPUNGED");
-		
 		// icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_delete-16.png"));
 		
@@ -77,9 +74,10 @@ public class MarkAsExpungedAction
 
 		MainInterface.processor.addOp(c);
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

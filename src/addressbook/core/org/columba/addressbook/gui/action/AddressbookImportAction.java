@@ -41,10 +41,6 @@ public class AddressbookImportAction extends FrameAction {
 		setTooltipText(
 				AddressbookResourceLoader.getString(
 					"menu", "mainframe", "menu_utilities_addressbook"));
-					
-		// action command
-		setActionCommand("ADDRESSBOOK_IMPORT");
-
 	}
 
 	/* (non-Javadoc)
@@ -53,5 +49,4 @@ public class AddressbookImportAction extends FrameAction {
 	public void actionPerformed(ActionEvent evt) {
 		new ImportWizardLauncher().launchWizard();
 	}
-
 }

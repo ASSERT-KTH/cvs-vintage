@@ -49,9 +49,6 @@ public class SignMessageAction extends CheckBoxAction {
 				MailResourceLoader.getString(
 					"menu", "composer", "menu_message_sign"));
 					
-		// action command
-		setActionCommand("SIGN");
-		
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("16_sign.png"));
 			 
@@ -89,7 +86,5 @@ public class SignMessageAction extends CheckBoxAction {
         // let the model knowing if signing is preferred or not
         //ComposerModel model = (ComposerModel) ((ComposerController)getFrameController()).getModel();
         this.composerController.getModel().setSignMessage( getCheckBoxMenuItem().isSelected() );
-     
     }
-
 }

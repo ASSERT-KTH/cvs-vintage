@@ -50,9 +50,6 @@ public class AddAllSendersToAddressbookAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_addallsenders"));
 		
-		// action command
-		setActionCommand("ADD_ALLSENDERS");
-
 		setEnabled(false);
 		((AbstractMailFrameController)frameController).registerTableSelectionListener(this);
 	}

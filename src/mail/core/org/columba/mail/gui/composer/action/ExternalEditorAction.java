@@ -43,10 +43,6 @@ public class ExternalEditorAction extends FrameAction {
 		setTooltipText(
 				MailResourceLoader.getString(
 					"menu", "composer", "menu_edit_extern_edit"));
-		
-		// action command
-		setActionCommand("EXTERNEDIT");
-		
 	}
 
 	/* (non-Javadoc)
@@ -78,7 +74,5 @@ public class ExternalEditorAction extends FrameAction {
 			}
 		};
 		worker.start(); //required for SwingWorker 3
-
 	}
-
 }

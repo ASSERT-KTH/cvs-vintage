@@ -48,7 +48,6 @@ public class SaveMessageBodyAsAction
 		setTooltipText(
 				MailResourceLoader.getString(
 						"menu", "mainframe", "menu_message_save_tooltip"));
-		setActionCommand("SAVE");
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_save.png"));
 
@@ -63,7 +62,6 @@ public class SaveMessageBodyAsAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-
 		// get selected stuff
 		FolderCommandReference[] r =
 				((AbstractMailFrameController) getFrameMediator()).

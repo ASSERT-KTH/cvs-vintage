@@ -49,17 +49,12 @@ public class AddVCardAction extends FrameAction {
 		setTooltipText(
 				AddressbookResourceLoader.getString(
 					"menu", "mainframe", "menu_file_addvcard"));
-		
-		// action command
-		setActionCommand("ADD_VCARD");
-
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-
 		AddressbookFrameController addressbookFrameController =
 			(AddressbookFrameController) frameMediator;
 
@@ -98,12 +93,9 @@ public class AddVCardAction extends FrameAction {
 					ex.printStackTrace();
 				}
 			}
-
 		}
 
 		addressbookFrameController.getTable().getView().setFolder(
 			destinationFolder);
-
 	}
-
 }

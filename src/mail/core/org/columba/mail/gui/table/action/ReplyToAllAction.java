@@ -51,9 +51,6 @@ public class ReplyToAllAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_replytoall_tooltip"));
 		
-		// action command
-		setActionCommand("REPLY_TO_ALL");
-		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("replytoall_small.png"));
 		setLargeIcon(ImageLoader.getImageIcon("reply-to-all.png"));
@@ -73,9 +70,10 @@ public class ReplyToAllAction
 			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 		MainInterface.processor.addOp(new ReplyToAllCommand(r));
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

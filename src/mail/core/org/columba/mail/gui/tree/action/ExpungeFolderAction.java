@@ -56,9 +56,6 @@ public class ExpungeFolderAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_folder_expungefolder"));
 		
-		// action command
-		setActionCommand("EXPUNGE_FOLDER");
-
 		// shortcut key
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(
@@ -86,7 +83,6 @@ public class ExpungeFolderAction
 					 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 					 */
 	public void selectionChanged(SelectionChangedEvent e) {
-
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
 			FolderTreeNode folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
 

@@ -45,9 +45,6 @@ public class DeleteAction extends FrameAction {
 				AddressbookResourceLoader.getString(
 					"menu", "mainframe", "menu_edit_delete"));
 					
-		// action command
-		setActionCommand("DELETE");
-		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_paste-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_paste.png"));

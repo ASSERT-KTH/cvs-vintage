@@ -44,9 +44,6 @@ public class CloseAction extends FrameAction {
 				GlobalResourceLoader.getString(
 					null, null, "close"));
 					
-		// action command
-		setActionCommand("CLOSE");
-
 		// short cut key
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(

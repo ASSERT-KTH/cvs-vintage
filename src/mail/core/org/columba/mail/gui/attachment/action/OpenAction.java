@@ -47,9 +47,6 @@ public class OpenAction extends FrameAction implements SelectionListener {
 				MailResourceLoader.getString(
 					"menu", "mainframe", "attachmentopen_tooltip"));
 		
-		// action command
-		setActionCommand("OPEN");
-		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_open.png"));
 		setLargeIcon(ImageLoader.getSmallImageIcon("stock_open.png"));
@@ -83,5 +80,4 @@ public class OpenAction extends FrameAction implements SelectionListener {
 			setEnabled( false );
 		}
 	}
-
 }

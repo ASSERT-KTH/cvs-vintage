@@ -49,9 +49,6 @@ public class PrintAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_print_tooltip"));
 		
-		// action command
-		setActionCommand("PRINT");
-
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_print-16.png"));
 		

@@ -50,9 +50,6 @@ public class ReplyToListAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_replyto_tooltip"));
 		
-		// action command
-		setActionCommand("REPLY_MAILINGLIST");
-		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);
@@ -68,9 +65,10 @@ public class ReplyToListAction
 			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 		MainInterface.processor.addOp(new ReplyToMailingListCommand(r));
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

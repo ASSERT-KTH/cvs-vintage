@@ -30,10 +30,6 @@ public class PluginManagerAction extends FrameAction {
 		setTooltipText(
 				GlobalResourceLoader.getString(
 					null, null, "menu_edit_pluginmanager"));
-		
-		// action command
-		setActionCommand("PLUGIN_MANAGER");
-
 	}
 
 	/* (non-Javadoc)

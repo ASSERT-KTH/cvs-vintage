@@ -39,9 +39,6 @@ public class FindAction extends FrameAction {
 				GlobalResourceLoader.getString(
 					null, null, "menu_edit_find_tooltip"));
 		
-		// action command
-		setActionCommand("FIND");
-
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_search-16.png"));
 		

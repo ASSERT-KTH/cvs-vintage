@@ -38,10 +38,6 @@ public class ShowFAQAction extends FrameAction {
 				frameController,
 				GlobalResourceLoader.getString(
 					null, null, "menu_help_faq"));
-		
-		// action command
-		setActionCommand("FAQ");
-		
 	}
 
 	/* (non-Javadoc)

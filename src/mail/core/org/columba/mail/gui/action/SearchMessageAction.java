@@ -43,9 +43,6 @@ public class SearchMessageAction extends FrameAction {
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_edit_searchmessages"));
 		
-		// action command
-		setActionCommand("SEARCH_MESSAGE");
-		
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("virtualfolder.png"));
 		
@@ -71,5 +68,4 @@ public class SearchMessageAction extends FrameAction {
 				(AbstractMailFrameController) getFrameMediator(),
 				searchFolder);				
 	}
-
 }

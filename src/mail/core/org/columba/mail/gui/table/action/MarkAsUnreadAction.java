@@ -59,7 +59,6 @@ public class MarkAsUnreadAction
 		// TODO: i18n missing here
 
 		super(frameController, "As Unread");
-		setActionCommand("MARK_AS_UNREAD");
 		setSmallIcon(ImageLoader.getSmallImageIcon("mail-new.png"));
 		setLargeIcon(ImageLoader.getImageIcon("mail-new.png"));
 
@@ -90,6 +89,7 @@ public class MarkAsUnreadAction
 
 		MainInterface.processor.addOp(c);
 	}
+        
 	/*
 	 * (non-Javadoc)
 	 * 

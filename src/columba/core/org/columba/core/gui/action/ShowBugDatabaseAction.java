@@ -48,10 +48,6 @@ public class ShowBugDatabaseAction extends FrameAction {
 				frameController,
 				GlobalResourceLoader.getString(
 					null, null, "menu_help_bug"));
-		
-		// action command
-		setActionCommand("BUGREPORT");
-		
 	}
 
 	/* (non-Javadoc)

@@ -48,9 +48,6 @@ public class ViewMessageSourceAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_view_source_tooltip"));
 		
-		// action command
-		setActionCommand("VIEW_SOURCE");
-
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("viewsource.png"));
 			 
@@ -77,15 +74,14 @@ public class ViewMessageSourceAction
 
 		MainInterface.processor.addOp(c);
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
-
 		if (((TableSelectionChangedEvent) e).getUids().length > 0)
 			setEnabled(true);
 		else
 			setEnabled(false);
-
 	}
 }

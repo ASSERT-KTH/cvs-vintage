@@ -50,9 +50,6 @@ public class CreateFilterOnFromAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_filteronfrom_tooltip"));
 		
-		// action command
-		setActionCommand("FILTER_ON_FROM");
-
 		setEnabled(false);
 
 		((AbstractMailFrameController) frameController)
@@ -64,10 +61,6 @@ public class CreateFilterOnFromAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		/*
-		 * *20030620, karlpeder* Action has been implemented
-		 */
-
 		// get selected stuff
 		FolderCommandReference[] r =
 				((AbstractMailFrameController) getFrameMediator()).

@@ -38,10 +38,6 @@ public class ShowLicenseAction extends FrameAction {
 				frameController,
 				GlobalResourceLoader.getString(
 					null, null, "menu_help_license"));
-		
-		// action command
-		setActionCommand("LICENSE");
-		
 	}
 
 	/* (non-Javadoc)

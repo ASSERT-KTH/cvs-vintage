@@ -50,9 +50,6 @@ public class SubscribeFolderAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_folder_subscribe"));
 		
-		// action command
-		setActionCommand("SUBSCRIBE");
-		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("remotehost.png"));
 		setLargeIcon(ImageLoader.getImageIcon("remotehost.png"));
@@ -80,11 +77,9 @@ public class SubscribeFolderAction
 					 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 					 */
 	public void selectionChanged(SelectionChangedEvent e) {
-
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
 			setEnabled(true);
 		else
 			setEnabled(false);
-
 	}
 }

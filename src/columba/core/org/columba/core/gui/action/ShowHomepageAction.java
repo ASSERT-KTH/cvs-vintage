@@ -40,12 +40,8 @@ public class ShowHomepageAction extends FrameAction {
 				GlobalResourceLoader.getString(
 					null, null, "menu_help_homepage"));
 		
-		// action command
-		setActionCommand("HOMEPAGE");
-		
 		// small icon for menu
 		setSmallIcon(ImageLoader.getImageIcon("stock_home_16.png"));
-		
 	}
 
 	/* (non-Javadoc)

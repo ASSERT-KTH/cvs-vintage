@@ -39,9 +39,6 @@ public class SelectAllAction extends FrameAction {
 				GlobalResourceLoader.getString(
 					null, null, "menu_edit_selectall_tooltip"));
 		
-		// action command
-		setActionCommand("SELECTALL");
-		
 		// shortcut key
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(
@@ -50,11 +47,11 @@ public class SelectAllAction extends FrameAction {
 		setEnabled(false);
 		MainInterface.focusManager.setSelectAllAction(this);
 	}
+        
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		MainInterface.focusManager.selectAll();
 	}
-
 }

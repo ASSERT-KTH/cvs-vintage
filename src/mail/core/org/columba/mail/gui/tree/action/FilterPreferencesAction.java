@@ -50,9 +50,6 @@ public class FilterPreferencesAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_folder_filterconfig"));
 		
-		// action command
-		setActionCommand("FILTER_PREFERENCES");
-		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTreeSelectionListener(
 			this);
@@ -82,11 +79,9 @@ public class FilterPreferencesAction
 					 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 					 */
 	public void selectionChanged(SelectionChangedEvent e) {
-
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
 			setEnabled(true);
 		else
 			setEnabled(false);
-
 	}
 }

@@ -36,10 +36,6 @@ public class ViewToolbarAction extends CheckBoxAction implements Observer{
 		setTooltipText(
 				GlobalResourceLoader.getString(
 					null, null, "menu_view_showtoolbar"));
-					
-		// action command
-		setActionCommand("SHOW_TOOLBAR");
-		
 	}
 
 	/* (non-Javadoc)
@@ -49,7 +45,6 @@ public class ViewToolbarAction extends CheckBoxAction implements Observer{
 		frameMediator.getView().showToolbar();
 	}
 
-	
 	/**
 	 * Update checked state of menu item if change occured
 	 * 
@@ -58,5 +53,4 @@ public class ViewToolbarAction extends CheckBoxAction implements Observer{
 	public void update(Observable o, Object arg) {
 		// TODO: implement ViewToolbar->update()
 	}
-
 }

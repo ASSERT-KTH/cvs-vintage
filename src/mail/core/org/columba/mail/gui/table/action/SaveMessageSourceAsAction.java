@@ -51,9 +51,6 @@ public class SaveMessageSourceAsAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_file_save_tooltip"));
 		
-		// action command
-		setActionCommand("SAVE_SOURCE");
-		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_save.png"));

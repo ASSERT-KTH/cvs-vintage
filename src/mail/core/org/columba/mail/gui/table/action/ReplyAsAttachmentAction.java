@@ -52,9 +52,6 @@ public class ReplyAsAttachmentAction
 					"mainframe",
 					"menu_message_replyasattachment_tooltip"));
 					
-		// action command
-		setActionCommand("REPLY_AS_ATTACHMENT");
-
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);
@@ -70,9 +67,10 @@ public class ReplyAsAttachmentAction
 			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 		MainInterface.processor.addOp(new ReplyAsAttachmentCommand(r));
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

@@ -50,10 +50,6 @@ public class OpenNewAddressbookWindowAction extends FrameAction {
 		setSmallIcon(
 			ImageLoader.getSmallImageIcon("stock_book-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_book.png"));
-
-		// action command
-		setActionCommand("OPEN_NEW_ADDRESSBOOK_WINDOW");
-
 	}
 
 	/*

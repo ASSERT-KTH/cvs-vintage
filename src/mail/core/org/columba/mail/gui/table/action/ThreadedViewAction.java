@@ -63,9 +63,6 @@ public class ThreadedViewAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_view_viewthreaded_tooltip"));
 					
-		// action command
-		setActionCommand("VIEW_THREADED");
-		
 		// shortcut key
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(
@@ -97,8 +94,6 @@ public class ThreadedViewAction
 					false);
 
 			updateTable(enableThreadedView);
-
-			
 			
 			try {
 				SwingUtilities.invokeAndWait(new Runnable() {
@@ -119,7 +114,6 @@ public class ThreadedViewAction
 	}
 
 	public void actionPerformed(ActionEvent e) {
-
 		if ((frameMediator instanceof TableViewOwner) == false)
 			return;
 
@@ -139,12 +133,10 @@ public class ThreadedViewAction
 			enableThreadedView);
 
 		updateTable(getState());
-
 	}
 
 	protected void updateTable(boolean enableThreadedView) {
-
-		if ((frameMediator instanceof TableViewOwner) == false)
+		if (!(frameMediator instanceof TableViewOwner))
 			return;
 
 		((TableViewOwner) frameMediator)

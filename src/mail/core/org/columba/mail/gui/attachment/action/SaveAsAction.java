@@ -47,9 +47,6 @@ public class SaveAsAction extends FrameAction implements SelectionListener {
 				MailResourceLoader.getString(
 					"menu", "mainframe", "attachmentsaveas_tooltip"));
 		
-		// action command
-		setActionCommand("SAVE_AS");
-		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_save_as.png"));
@@ -61,7 +58,6 @@ public class SaveAsAction extends FrameAction implements SelectionListener {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		
 		MainInterface.processor.addOp(
 			new SaveAttachmentCommand(
 				getFrameMediator()
@@ -80,5 +76,4 @@ public class SaveAsAction extends FrameAction implements SelectionListener {
 			setEnabled( false );
 		}
 	}
-
 }

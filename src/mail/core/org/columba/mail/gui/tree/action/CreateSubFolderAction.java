@@ -55,9 +55,6 @@ public class CreateSubFolderAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_folder_newfolder"));
 					
-		// action command
-		setActionCommand("CREATE_SUBFOLDER");
-		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("folder.png"));
 		setLargeIcon(ImageLoader.getImageIcon("folder.png"));
@@ -95,11 +92,9 @@ public class CreateSubFolderAction
 			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 			 */
 	public void selectionChanged(SelectionChangedEvent e) {
-
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
 			setEnabled(true);
 		else
 			setEnabled(false);
-
 	}
 }

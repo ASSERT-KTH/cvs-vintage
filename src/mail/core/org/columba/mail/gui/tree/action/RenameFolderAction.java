@@ -58,9 +58,6 @@ public class RenameFolderAction
 				"mainframe",
 				"menu_folder_renamefolder"));
 
-		// action command
-		setActionCommand("RENAME_FOLDER");
-
 		// shortcut key
 		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 

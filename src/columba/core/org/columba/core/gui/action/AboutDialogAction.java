@@ -38,9 +38,6 @@ public class AboutDialogAction extends FrameAction {
  				GlobalResourceLoader.getString(
  					null, null, "menu_help_about"));
 
-		// action command
-		setActionCommand("ABOUT");
-		
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_about-16.png"));
 

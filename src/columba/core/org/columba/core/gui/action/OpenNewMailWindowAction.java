@@ -29,10 +29,6 @@ public class OpenNewMailWindowAction extends FrameAction {
 				controller,
 				GlobalResourceLoader.getString(
 					null, null, "menu_file_new_mail"));
-					
-		// action command
-		setActionCommand("OPEN_NEW_MAIL_WINDOW");
-
 	}
 
 	/* (non-Javadoc)
@@ -42,5 +38,4 @@ public class OpenNewMailWindowAction extends FrameAction {
 		FrameModel.openView("ThreePaneMail");
 		//getFrameController().getModel().openView();
 	}
-
 }

@@ -39,7 +39,6 @@ public class ReceiveMessagesAction extends FrameAction {
 				controller,
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_file_receive"));
-		setActionCommand("RECEIVE");
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(
 					KeyEvent.VK_T, ActionEvent.CTRL_MASK));
@@ -49,7 +48,6 @@ public class ReceiveMessagesAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		
 		// Select INBOX
 		FolderCommandReference[] refs = new FolderCommandReference[1];
 		refs[0] = new FolderCommandReference(MailInterface.treeModel.getFolder(101));
@@ -77,5 +75,4 @@ public class ReceiveMessagesAction extends FrameAction {
 			MainInterface.processor.addOp(c);
 		}		
 	}
-
 }

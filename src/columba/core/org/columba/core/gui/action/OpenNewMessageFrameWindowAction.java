@@ -38,11 +38,7 @@ public class OpenNewMessageFrameWindowAction extends FrameAction {
 				frameController,
 				GlobalResourceLoader.getString(
 					null, null, "menu_file_new_message"));
-		
-		// action command
-		setActionCommand("OPEN_NEW_MESSAGEFRAME_WINDOW");
 	}
-
 	
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)

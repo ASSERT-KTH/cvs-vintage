@@ -38,12 +38,8 @@ public class ShowHelpAction extends FrameAction {
 			GlobalResourceLoader.getString(
 				null, null, "menu_help_help"));
 				
-		// action command
-		setActionCommand("HELP");
-
 		// small icon for menu
 		setSmallIcon(ImageLoader.getImageIcon("stock_help_16.png"));
-		
 	}
 
 	/* (non-Javadoc)

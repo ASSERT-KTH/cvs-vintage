@@ -35,16 +35,13 @@ public class ViewAccountInfoPanelAction extends CheckBoxAction {
 
 	public ViewAccountInfoPanelAction(FrameMediator frameController) {
 		super(frameController, "AccountInfoPanel");
-		setActionCommand("SHOW_ACCOUNTINFOPANEL");
 	}
 
 	public void actionPerformed(ActionEvent evt) {
-
 		((ComposerView) frameMediator.getView()).showAccountInfoPanel();
 	}
 
 	protected boolean getInitState() {
-
 		return frameMediator.isToolbarEnabled(ComposerView.ACCOUNTINFOPANEL);
 	}
 
@@ -56,5 +53,4 @@ public class ViewAccountInfoPanelAction extends CheckBoxAction {
 
 		getCheckBoxMenuItem().setSelected(getInitState());
 	}
-
 }

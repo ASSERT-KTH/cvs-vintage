@@ -49,17 +49,12 @@ public class SaveAsDraftAction extends FrameAction {
 		setTooltipText(
 				MailResourceLoader.getString(
 					"menu", "composer", "menu_file_savedraft"));
-		
-		// action command
-		setActionCommand("SAVEDRAFT");
-
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		
 		final ComposerController composerController = (ComposerController ) getFrameMediator();
 		if (composerController.checkState())
 			return;

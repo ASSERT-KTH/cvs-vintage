@@ -62,8 +62,6 @@ public class ForwardAsAttachmentAction
 				"mainframe",
 				"menu_message_forward_as_attachment_tooltip"));
 
-		setActionCommand("FORWARD_AS_ATTACHMENT");
-
 		setEnabled(false);
 		(
 			(
@@ -81,9 +79,10 @@ public class ForwardAsAttachmentAction
 				.getTableSelection();
 		MainInterface.processor.addOp(new ForwardCommand(r));
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

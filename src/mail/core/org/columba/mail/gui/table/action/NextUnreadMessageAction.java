@@ -61,9 +61,6 @@ public class NextUnreadMessageAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_view_nextunreadmessage_tooltip"));
 		
-		// action command
-		setActionCommand("NEXT_UNREAD_MESSAGE");
-		
 		// Shortcut key
 		setAcceleratorKey(KeyStroke.getKeyStroke("N"));
 			
@@ -132,9 +129,10 @@ public class NextUnreadMessageAction
 		}
 		*/
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

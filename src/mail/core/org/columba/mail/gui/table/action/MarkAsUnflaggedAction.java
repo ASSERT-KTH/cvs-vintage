@@ -43,7 +43,6 @@ public class MarkAsUnflaggedAction
 		// TODO: i18n missing here
 		
 		super(frameController, "Not Flagged");
-		setActionCommand("MARK_AS_UNFLAGGED");
 		/*
 		super(
 			frameMediator,
@@ -72,9 +71,10 @@ public class MarkAsUnflaggedAction
 
 		MainInterface.processor.addOp(c);
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

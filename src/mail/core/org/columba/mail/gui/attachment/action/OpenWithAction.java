@@ -46,9 +46,6 @@ public class OpenWithAction extends FrameAction implements SelectionListener {
 				MailResourceLoader.getString(
 					"menu", "mainframe", "attachmentopen_with_tooltip"));
 		
-		// action command
-		setActionCommand("OPEN_WITH");
-
 		frameController.getSelectionManager().registerSelectionListener("mail.attachment", this);
 	}
 
@@ -75,5 +72,4 @@ public class OpenWithAction extends FrameAction implements SelectionListener {
 			setEnabled( false );
 		}
 	}
-	
 }

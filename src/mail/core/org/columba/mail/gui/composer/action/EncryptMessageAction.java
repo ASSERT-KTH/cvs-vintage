@@ -44,10 +44,6 @@ public class EncryptMessageAction extends CheckBoxAction {
 		setTooltipText(
 				MailResourceLoader.getString(
 					"menu", "composer", "menu_message_encrypt"));
-		
-		// action command
-		setActionCommand("ENCRYPT");
-		
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("encrypt_small.png"));
 		
@@ -63,5 +59,4 @@ public class EncryptMessageAction extends CheckBoxAction {
 		ComposerModel model = (ComposerModel) ((ComposerController)getFrameMediator()).getModel();
 		model.setEncryptMessage( getCheckBoxMenuItem().isSelected() );
 	}
-
 }

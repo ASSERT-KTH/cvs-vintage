@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
@@ -49,9 +50,6 @@ public class CreateFilterOnToAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_filteronto_tooltip"));
 		
-		// action command
-		setActionCommand("FILTER_ON_TO");
-
 		setEnabled(false);
 
 		((AbstractMailFrameController) frameController)
@@ -63,10 +61,6 @@ public class CreateFilterOnToAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		/*
-		 * *20030620, karlpeder* Action has been implemented
-		 */
-
 		// get selected stuff
 		FolderCommandReference[] r =
 				((AbstractMailFrameController) getFrameMediator()).

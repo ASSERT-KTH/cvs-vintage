@@ -54,9 +54,6 @@ public class MarkAsReadAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_markasread_tooltip"));
 		
-		// action command
-		setActionCommand("MARK_AS_READ");
-		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("mail-read.png"));
 		setLargeIcon(ImageLoader.getImageIcon("mail-read.png"));
@@ -68,8 +65,6 @@ public class MarkAsReadAction
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);
 	}
-
-	
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -83,9 +78,10 @@ public class MarkAsReadAction
 
 		MainInterface.processor.addOp(c);
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

@@ -49,18 +49,13 @@ public class ViewFolderInfoPanelAction extends CheckBoxAction {
 				frameController,
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_view_folderinfopanel"));
-		
-		setActionCommand("SHOW_FOLDERINFOPANEL");
-
 	}
 
 	public void actionPerformed(ActionEvent evt) {
-
 		((MailFrameView)frameMediator.getView()).showFolderInfoPanel();
 	}
 
 	protected boolean getInitState() {
-
 		return frameMediator.isToolbarEnabled(MailFrameView.FOLDERINFOPANEL);
 	}
 
@@ -72,5 +67,4 @@ public class ViewFolderInfoPanelAction extends CheckBoxAction {
 
 		getCheckBoxMenuItem().setSelected(getInitState());
 	}
-
 }

@@ -44,12 +44,8 @@ public class ImportAction extends FrameAction implements ActionListener {
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_utilities_importmailbox"));
 		
-		// action command
-		setActionCommand("IMPORT");
-		
 		// set small icon for menu
 		setSmallIcon(ImageLoader.getImageIcon("stock_convert-16.png"));
-		
 	}
 
 	/* (non-Javadoc)

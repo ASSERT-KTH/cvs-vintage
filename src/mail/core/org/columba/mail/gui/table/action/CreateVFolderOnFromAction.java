@@ -50,9 +50,6 @@ public class CreateVFolderOnFromAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_vfolderonfrom_tooltip"));
 		
-		// action command
-		setActionCommand("VFOLDER_ON_FROM");
-
 		setEnabled(false);
 
 		((AbstractMailFrameController) frameController)
@@ -64,10 +61,6 @@ public class CreateVFolderOnFromAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		/*
-		 * *20030621, karlpeder* Action has been implemented
-		 */
-
 		// get selected stuff
 		FolderCommandReference[] r =
 				((AbstractMailFrameController) getFrameMediator()).

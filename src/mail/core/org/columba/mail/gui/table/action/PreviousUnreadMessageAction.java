@@ -48,9 +48,6 @@ public class PreviousUnreadMessageAction
 				MailResourceLoader.getString(
 					"menu", "mainframe","menu_view_prevunreadmessage_tooltip"));
 		
-		// action command
-		setActionCommand("PREV_UNREAD_MESSAGE");
-
 		// shortcut key
 		setAcceleratorKey(KeyStroke.getKeyStroke("P"));
 
@@ -71,9 +68,10 @@ public class PreviousUnreadMessageAction
 	public void actionPerformed(ActionEvent evt) {
 		// TODO implement action
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

@@ -51,12 +51,8 @@ public class SendLaterAction extends FrameAction {
 				MailResourceLoader.getString(
 					"menu", "composer", "menu_file_sendlater"));
 		
-		// action command
-		setActionCommand("SENDLATER");
-		
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("send-later-16.png"));
-		
 	}
 
 	/* (non-Javadoc)
@@ -82,5 +78,4 @@ public class SendLaterAction extends FrameAction {
 
 		MainInterface.processor.addOp(c);
 	}
-
 }

@@ -41,9 +41,6 @@ public class ExitAction extends FrameAction {
 				GlobalResourceLoader.getString(
 					null, null, "menu_file_exit"));
 		
-		// action command
-		setActionCommand("EXIT");
-		
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_exit-16.png"));
 		

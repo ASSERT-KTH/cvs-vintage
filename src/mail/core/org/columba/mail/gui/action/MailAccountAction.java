@@ -37,12 +37,8 @@ public class MailAccountAction extends FrameAction {
 				MailResourceLoader.getString(
 					"menu",	"mainframe", "menu_edit_accountconfig"));
 		
-		// action command
-		setActionCommand("MAIL_ACCOUNT");
-		
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("configure_16_mail.png"));
-
 	}
 
 	/* (non-Javadoc)
@@ -51,5 +47,4 @@ public class MailAccountAction extends FrameAction {
 	public void actionPerformed(ActionEvent evt) {
 		new ConfigFrame();		
 	}
-
 }

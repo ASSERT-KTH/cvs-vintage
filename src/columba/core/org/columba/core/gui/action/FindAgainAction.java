@@ -35,9 +35,6 @@ public class FindAgainAction extends FrameAction {
 				GlobalResourceLoader.getString(
 					null, null, "menu_edit_findagain_tooltip"));
 		
-		// action command
-		setActionCommand("FIND_AGAIN");
-		
 		setEnabled(false);
 	}
         

@@ -36,9 +36,6 @@ public class PrintSetupAction extends FrameAction {
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_file_printsetup"));
 		
-		// action command
-		setActionCommand("PRINT_SETUP");
-		
 		setEnabled(false);
 	}
 
@@ -48,5 +45,4 @@ public class PrintSetupAction extends FrameAction {
 	public void actionPerformed(ActionEvent evt) {
 		ColumbaLogger.log.info("not yet implemented");
 	}
-
 }

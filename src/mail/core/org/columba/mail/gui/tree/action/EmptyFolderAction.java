@@ -46,9 +46,6 @@ public class EmptyFolderAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_folder_emptyfolder"));
 		
-		// action command
-		setActionCommand("EMPTY_FOLDER");
-		
 		setEnabled(false);
 		// FIXME
 		//  -> uncomment to enable/disable action
@@ -68,11 +65,9 @@ public class EmptyFolderAction
 					 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 					 */
 	public void selectionChanged(SelectionChangedEvent e) {
-
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
 			setEnabled(true);
 		else
 			setEnabled(false);
-
 	}
 }

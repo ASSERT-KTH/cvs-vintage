@@ -51,9 +51,6 @@ public class OpenMessageWithMessageFrameAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_opennew_tooltip"));
 		
-		// action command
-		setActionCommand("OPEN_MESSAGE_IN_NEW_WINDOW");
-
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

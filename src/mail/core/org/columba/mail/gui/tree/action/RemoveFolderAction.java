@@ -56,9 +56,6 @@ public class RemoveFolderAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_folder_removefolder"));
 
-		// action command
-		setActionCommand("REMOVE_FOLDER");
-		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_delete-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_delete.png"));
@@ -107,7 +104,6 @@ public class RemoveFolderAction
 					 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 					 */
 	public void selectionChanged(SelectionChangedEvent e) {
-
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
 			FolderTreeNode folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
 

@@ -56,9 +56,6 @@ public class ApplyFilterAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_folder_applyfilter"));
 
-		// action command
-		setActionCommand("APPLYFILTER");
-		
 		// icon
 		setSmallIcon(ImageLoader.getSmallImageIcon("apply-filters-16.png"));
 
@@ -86,12 +83,9 @@ public class ApplyFilterAction
 		 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 		 */
 	public void selectionChanged(SelectionChangedEvent e) {
-
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
 			setEnabled(true);
 		else
 			setEnabled(false);
-
 	}
-
 }

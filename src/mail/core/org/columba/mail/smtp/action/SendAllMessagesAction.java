@@ -57,9 +57,6 @@ public class SendAllMessagesAction extends FrameAction {
 					"mainframe",
 					"menu_file_sendunsentmessages_tooltip"));
 		
-		// action command
-		setActionCommand("SENDALL");
-		
 		// icon
 		setLargeIcon(ImageLoader.getImageIcon("send-24.png"));
 		
@@ -87,5 +84,4 @@ public class SendAllMessagesAction extends FrameAction {
 
 		MainInterface.processor.addOp(c);		
 	}
-
 }

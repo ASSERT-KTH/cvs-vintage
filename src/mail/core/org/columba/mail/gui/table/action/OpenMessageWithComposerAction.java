@@ -53,9 +53,6 @@ public class OpenMessageWithComposerAction
 					"mainframe",
 					"menu_message_openwithcomposer_tooltip"));
 		
-		// action command
-		setActionCommand("OPEN_MESSAGE");
-		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("openmessage_small.png"));
 		setLargeIcon(ImageLoader.getImageIcon("compose-message.png"));
@@ -73,9 +70,10 @@ public class OpenMessageWithComposerAction
 			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 		MainInterface.processor.addOp(new OpenMessageWithComposerCommand(r));
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

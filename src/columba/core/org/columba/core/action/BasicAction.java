@@ -106,10 +106,6 @@ public abstract class BasicAction extends AbstractAction {
 	 */
 	public BasicAction(String name) {
 		super(name);
-		
-		// in case their's no action command specified
-		// we just pre-fill the name
-                setActionCommand(name);
 	}
         
         /**
@@ -132,26 +128,6 @@ public abstract class BasicAction extends AbstractAction {
                 putValue(NAME, name);
         }
         
-        /**
-         * NOTE: This method is a temporary means to enable compilation -
-         * it will soon be removed. BasicAction subclasses should directly
-         * communicate with the underlying Hashtable instead of using there
-         * accessor methods.
-         */
-        public String getActionCommand() {
-                return (String)getValue(ACTION_COMMAND_KEY);
-        }
-        
-        /**
-         * NOTE: This method is a temporary means to enable compilation -
-         * it will soon be removed. BasicAction subclasses should directly
-         * communicate with the underlying Hashtable instead of using there
-         * accessor methods.
-         */
-        public void setActionCommand(String actionCommand) {
-                putValue(ACTION_COMMAND_KEY, actionCommand);
-        }
-
 	/**
 	 * Return true if toolbar text should be visible
 	 * 

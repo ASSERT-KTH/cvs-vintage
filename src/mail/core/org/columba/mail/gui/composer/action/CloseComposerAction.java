@@ -46,9 +46,6 @@ public class CloseComposerAction extends FrameAction {
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_file_close"));
 		
-		// action command
-		setActionCommand("EXIT");
-		
 		// large icon for toolbar
 		setLargeIcon(ImageLoader.getImageIcon("stock_exit.png"));
 		
@@ -66,8 +63,6 @@ public class CloseComposerAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		
-		
 		//getFrameController().close();
 		
 		
@@ -76,5 +71,4 @@ public class CloseComposerAction extends FrameAction {
 		composerInterface.composerController.hideComposerWindow();
 		*/
 	}
-
 }

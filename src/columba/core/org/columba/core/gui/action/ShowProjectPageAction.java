@@ -39,9 +39,6 @@ public class ShowProjectPageAction extends FrameAction {
 				GlobalResourceLoader.getString(
 					null, null, "menu_help_sourceforge"));
 		
-		// action command
-		setActionCommand("SOURCEFORGE");
-		
 	}
 
 	/* (non-Javadoc)

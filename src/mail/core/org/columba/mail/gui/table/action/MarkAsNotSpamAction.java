@@ -55,9 +55,6 @@ public class MarkAsNotSpamAction
 				"mainframe",
 				"menu_message_markasnotspam_tooltip"));
 
-		// action command
-		setActionCommand("MARK_AS_NOTSPAM");
-
 		setEnabled(false);
 		(
 			(

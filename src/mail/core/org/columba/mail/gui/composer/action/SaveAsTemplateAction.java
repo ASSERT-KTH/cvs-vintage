@@ -52,17 +52,12 @@ public class SaveAsTemplateAction extends FrameAction {
 					"menu", "composer", "menu_file_savetemplate"));
 		
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_news.png"));
-		
-		// action command
-		setActionCommand("SAVETEMPLATE");
-		
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		
 		final ComposerController composerController = (ComposerController ) getFrameMediator();
 		if (composerController.checkState())
 			return;
