@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.21 2004/10/25 12:33:59 euluis Exp $
+// $Id: GeneratorCpp.java,v 1.22 2004/11/01 00:57:31 euluis Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1026,6 +1026,8 @@ public class GeneratorCpp extends Generator2
             }
             else if (returnType != null) {
                 sb.append(generateNameWithPkgSelection(returnType)).append(' ');
+                // fixing 2862 - apply modifiers, i.e., pointer or reference TV
+                sb.append(generateAttributeParameterModifier(rp));
             }
         }
 
@@ -1247,9 +1249,7 @@ public class GeneratorCpp extends Generator2
         if (generatorPass != HEADER_PASS) return sb;
 
         String sClassifierKeyword;
-        if (ModelFacade.isAClass(cls)) {
-            sClassifierKeyword = "class";
-        } else if (ModelFacade.isAInterface(cls)) {
+        if (ModelFacade.isAClass(cls) || ModelFacade.isAInterface(cls)) {
             sClassifierKeyword = "class";
         } else {
             return null; // actors, use cases etc.
