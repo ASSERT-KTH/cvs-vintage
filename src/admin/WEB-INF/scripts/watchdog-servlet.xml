@@ -16,6 +16,8 @@
 	<pathelement 
 		path="../lib/ant.jar" />
 	<pathelement 
+		path="../lib/ant-launcher.jar" />
+	<pathelement 
 		path="${stests.home}/WEB-INF/classes" />
 	<pathelement 
 		path="${tomcat.home}/lib/container/jaxp.jar" />

@@ -29,7 +29,7 @@
      curPort = String.valueOf(request.getServerPort());
    String curProto = request.getParameter("server.proto");
    if ( curProto == null )
-     curProto = "HTTP/1.0";
+     curProto = "HTTP/1.1";
    String webServer = request.getParameter("web.server");
    if ( webServer == null )
      webServer = "Tomcat";
@@ -58,8 +58,8 @@
 <tr><td valign="top">Expected protocol:</td>
     <td valign="top"><select name="server.proto" >
         <% listOptions(protocols, curProto, out); %></select></td>
-    <td valign="top">Specify HTTP/1.0 for Tomcat as the host web server<br>
-        Specify HTTP/1.1 for others.</td></tr>
+    <td valign="top">Specify HTTP/1.0 for Tomcat when using deprecated HTTP 1.0 connector.<br>
+        Specify HTTP/1.1 for Tomcat with new HTTP 1.1 connector and for other servers.</td></tr>
 <tr><td valign="top">Static Page Server: </td>
     <td valign="top"><select name="static.server" >
         <% listOptions(webservers, staticServer, out); %></select></td>

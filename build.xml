@@ -60,6 +60,7 @@
   <property name="ant.bin" location="${ant.home}/bin"/>
   <property name="ant.lib" location="${ant.home}/lib"/>
   <property name="ant.jar" location="${ant.home}/lib/ant.jar"/>
+  <property name="ant-launcher.jar" location="${ant.home}/lib/ant-launcher.jar"/>
   <property name="optional.jar" location="${ant.home}/lib/optional.jar"/>
   <property name="ant-optional.jar" location="${ant.home}/lib/ant-optional.jar"/>
 
@@ -837,11 +838,14 @@
     </copy>
     <copy tofile="${tomcat.build}/webapps/admin/WEB-INF/lib/ant.jar"
           file="${ant.jar}"/>
+    <copy tofile="${tomcat.build}/webapps/admin/WEB-INF/lib/ant-launcher.jar"
+          file="${ant-launcher.jar}"/>
     <jar jarfile="${tomcat.build}/webapps/admin/WEB-INF/lib/tomcat_util_test.jar"
          basedir="${tomcat.build}/classes">
       <include name="org/apache/tomcat/util/**"/>
     </jar>
     <javac srcdir="src/admin/WEB-INF/classes"
+           debug="${debug}"
            optimize="${optimize}"
            destdir="${tomcat.build}/webapps/admin/WEB-INF/classes">
            <classpath>
