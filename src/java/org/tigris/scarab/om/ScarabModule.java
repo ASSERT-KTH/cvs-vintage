@@ -54,14 +54,19 @@ import org.apache.turbine.om.*;
 
 import org.tigris.scarab.util.*;
 
+import org.apache.turbine.util.security.RoleSet;
+import org.apache.turbine.util.security.TurbineSecurityException;
+import org.apache.turbine.om.security.*;
+
 /**
  * Implementation of a ScarabModule. For now, we just extend Module
  * so there isn't much here.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabModule.java,v 1.3 2001/05/24 17:00:17 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.4 2001/05/27 06:38:02 jmcnally Exp $
  */
 public class ScarabModule extends Module
+    implements Group,  Comparable
 {
     /**
      * Gets users which are currently associated (relationship has not 
@@ -122,23 +127,146 @@ public class ScarabModule extends Module
     /**
      * Saves the module into the database
      */
-    public void save() throws Exception
+    public void save() throws TurbineSecurityException
     {
-        // if new, relate the Module to the user who created it.
-        if ( isNew() ) 
+        try
         {
-            RModuleUserRole relation = new RModuleUserRole();
-            if ( getOwnerId() == null ) 
+            // if new, relate the Module to the user who created it.
+            if ( isNew() ) 
             {
-                throw new ScarabException("Can't save a project without" + 
-                    "first assigning an owner.");
-            }         
-            relation.setUserId(getOwnerId());
-            // !FIXME! this needs to be set to the Module Owner Role
-            relation.setRoleId(new NumberKey("1"));
-            relation.setDeleted(false);
-            addRModuleUserRole(relation);
+                RModuleUserRole relation = new RModuleUserRole();
+                if ( getOwnerId() == null ) 
+                {
+                    throw new ScarabException(
+                    "Can't save a project without first assigning an owner.");
+                }         
+                relation.setUserId(getOwnerId());
+                // !FIXME! this needs to be set to the Module Owner Role
+                relation.setRoleId(new NumberKey("1"));
+                relation.setDeleted(false);
+                addRModuleUserRole(relation);
+            }
+            super.save();
         }
-        super.save();        
+        catch (Exception e)
+        {
+            throw new TurbineSecurityException(e.getMessage(), e);
+        }
     }
+
+
+    public static String getGroupFromModule(Module module)
+    {
+        return null;
+    }
+
+    public String getModuleNameFromGroup(Group group)
+    {
+        String gname = group.getName();
+        int lastDash = gname.lastIndexOf('-');
+        return null;
+
+    }
+
+    // *******************************************************************
+    // Turbine Group implementation get/setName and save are defined above
+    // *******************************************************************
+
+
+    /**
+     * Removes a group from the system.
+     *
+     * @throws TurbineSecurityException if the Group could not be removed.
+     */
+    public void remove()
+        throws TurbineSecurityException
+    {
+        throw new TurbineSecurityException("Not implemented");
+    }
+
+    /**
+     * Renames the group.
+     *
+     * @param name The new Group name.
+     * @throws TurbineSecurityException if the Group could not be renamed.
+     */
+    public void rename(String name)
+        throws TurbineSecurityException
+    {
+        throw new TurbineSecurityException("Not implemented");
+    }
+
+    /**
+     * Grants a Role in this Group to an User.
+     *
+     * @param user An User.
+     * @param role A Role.
+     * @throws TurbineSecurityException if there is a problem while assigning
+     * the Role.
+     */
+    public void grant(User user, Role role)
+        throws TurbineSecurityException
+    {
+        throw new TurbineSecurityException("Not implemented");
+    }
+
+    /**
+     * Grants Roles in this Group to an User.
+     *
+     * @param user An User.
+     * @param roleSet A RoleSet.
+     * @throws TurbineSecurityException if there is a problem while assigning
+     * the Roles.
+     */
+    public void grant(User user, RoleSet roleSet)
+        throws TurbineSecurityException
+    {
+        throw new TurbineSecurityException("Not implemented");
+    }
+
+    /**
+     * Revokes a Role in this Group from an User.
+     *
+     * @param user An User.
+     * @param role A Role.
+     * @throws TurbineSecurityException if there is a problem while unassigning
+     * the Role.
+     */
+    public void revoke(User user, Role role)
+        throws TurbineSecurityException
+    {
+        throw new TurbineSecurityException("Not implemented");
+    }
+
+    /**
+     * Revokes Roles in this group from an User.
+     *
+     * @param user An User.
+     * @param roleSet a RoleSet.
+     * @throws TurbineSecurityException if there is a problem while unassigning
+     * the Roles.
+     */
+    public void revoke(User user, RoleSet roleSet)
+        throws TurbineSecurityException
+    {
+        throw new TurbineSecurityException("Not implemented");
+    }
+
+    /**
+     * Used for ordering Groups.
+     *
+     * @param obj The Object to compare to.
+     * @return -1 if the name of the other object is lexically greater than 
+     * this group, 1 if it is lexically lesser, 0 if they are equal.
+     */
+    public int compareTo(Object obj)
+    {
+        if(this.getClass() != obj.getClass())
+            throw new ClassCastException();
+        String name1 = ((Group)obj).getName();
+        String name2 = this.getName();
+
+        return name2.compareTo(name1);
+    }
+
 }

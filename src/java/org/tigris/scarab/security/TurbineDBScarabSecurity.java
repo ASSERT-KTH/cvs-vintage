@@ -54,10 +54,12 @@ import org.apache.turbine.util.db.Criteria;
 import org.apache.turbine.util.Log;
 import org.apache.turbine.util.TurbineException;
 import org.apache.turbine.services.security.TurbineSecurity;
+import org.apache.turbine.om.Persistent;
 import org.apache.turbine.om.security.User;
+import org.apache.turbine.om.security.Group;
 import org.apache.turbine.om.security.peer.*;
 
-import org.tigris.scarab.om.Module;
+import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserPeer;
 
@@ -65,7 +67,7 @@ import org.tigris.scarab.om.ScarabUserPeer;
  * Security wrapper around turbine's implementation
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TurbineDBScarabSecurity.java,v 1.2 2001/05/24 02:17:25 jmcnally Exp $
+ * @version $Id: TurbineDBScarabSecurity.java,v 1.3 2001/05/27 06:38:02 jmcnally Exp $
 */
 public class TurbineDBScarabSecurity 
     extends DefaultScarabSecurity
@@ -92,7 +94,8 @@ public class TurbineDBScarabSecurity
         boolean hasPermission = false;
         try
         {
-            Module module = ((ScarabUser)data.getUser()).getCurrentModule();
+            ModuleEntity module = 
+                ((ScarabUser)data.getUser()).getCurrentModule();
             hasPermission = hasPermission(permission, module);
         }
         catch (Exception e)
@@ -109,17 +112,17 @@ public class TurbineDBScarabSecurity
      *
      * @param permission a <code>String</code> permission value, which should
      * be a constant in this interface.
-     * @param module a <code>Module</code> value
+     * @param module a <code>ModuleEntity</code> value
      * @return true if the permission exists for the user within the
      * given module, false otherwise
      */
-    public boolean hasPermission(String permission, Module module)
+    public boolean hasPermission(String permission, ModuleEntity module)
     {
         boolean hasPermission = false;
         try
         {
-            String groupName = module.getDomain() + module.getName();
-            hasPermission = data.getACL().hasPermission(permission, groupName);
+            hasPermission = data.getACL()
+                .hasPermission(permission, (Group)module);
         }
         catch (Exception e)
         {
@@ -135,19 +138,18 @@ public class TurbineDBScarabSecurity
      * @param permission a <code>String</code> permission value, which should
      * be a constant in this interface.
      * @param user a <code>ScarabUser</code> value
-     * @param module a <code>Module</code> value
+     * @param module a <code>ModuleEntity</code> value
      * @return true if the permission exists for the user within the
      * given module, false otherwise
      */
     public boolean hasPermission(String permission, 
-                                 ScarabUser user, Module module)
+                                 ScarabUser user, ModuleEntity module)
     {
         boolean hasPermission = false;
         try
         {
-            String groupName = module.getDomain() + module.getName();
             hasPermission = TurbineSecurity.getACL(user)
-                .hasPermission(permission, groupName);
+                .hasPermission(permission, (Group)module);
         }
         catch (Exception e)
         {
@@ -162,19 +164,18 @@ public class TurbineDBScarabSecurity
      * permission in the given module.
      *
      * @param permission a <code>String</code> value
-     * @param module a <code>Module</code> value
+     * @param module a <code>ModuleEntity</code> value
      * @return null
      */
-    public ScarabUser[] getUsers(String permission, Module module)
+    public ScarabUser[] getUsers(String permission, ModuleEntity module)
     {
-        String groupName = module.getDomain() + module.getName();
         Criteria crit = new Criteria();
         crit.add(PermissionPeer.NAME, permission);
         crit.addJoin(PermissionPeer.PERMISSION_ID, 
                      RolePermissionPeer.PERMISSION_ID);
         crit.addJoin(RolePermissionPeer.ROLE_ID, UserGroupRolePeer.ROLE_ID);
-        crit.addJoin(UserGroupRolePeer.GROUP_ID, GroupPeer.GROUP_ID);
-        crit.add(GroupPeer.NAME, groupName);
+        crit.add(UserGroupRolePeer.GROUP_ID, 
+                 ((Persistent)module).getPrimaryKey());
         crit.addJoin(ScarabUserPeer.USER_ID, UserGroupRolePeer.USER_ID);
         ScarabUser[] scarabUsers = null;
         try

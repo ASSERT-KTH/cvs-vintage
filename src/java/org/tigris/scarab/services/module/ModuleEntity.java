@@ -64,7 +64,7 @@ import org.tigris.scarab.om.Module;
  * This class describes a Module
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.3 2001/05/24 02:39:21 jmcnally Exp $
+ * @version $Id: ModuleEntity.java,v 1.4 2001/05/27 06:38:02 jmcnally Exp $
  */
 public interface ModuleEntity
 {
@@ -99,6 +99,13 @@ public interface ModuleEntity
     public void setModuleRelatedByParentId(Module module) throws Exception;
 
     public String getQueryKey();
+
+    public boolean getDeleted();
+    public void setDeleted(boolean b);
+
+    public NumberKey getParentId();
+    public void setParentId(String v ) throws Exception;
+    public void setParentId(NumberKey v ) throws Exception;
 
 /*    
     
