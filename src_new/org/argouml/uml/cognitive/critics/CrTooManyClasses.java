@@ -1,4 +1,4 @@
-// $Id: CrTooManyClasses.java,v 1.8 2004/09/21 19:03:26 mvw Exp $
+// $Id: CrTooManyClasses.java,v 1.9 2004/09/28 11:12:20 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrTooManyClasses.java
 // Classes: CrTooManyClasses
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyClasses.java,v 1.8 2004/09/21 19:03:26 mvw Exp $
+// $Id: CrTooManyClasses.java,v 1.9 2004/09/28 11:12:20 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -60,8 +60,7 @@ public class CrTooManyClasses extends CrUML {
 	UMLClassDiagram d = (UMLClassDiagram) dm;
 
 	int threshold = ((Integer) getArg(THRESHOLD)).intValue();
-	Vector nodes = d.getGraphModel().getNodes();
-	if (nodes.size() <= threshold) return NO_PROBLEM;
+	if (d.getGraphModel().getNodes().size() <= threshold) return NO_PROBLEM;
 	return PROBLEM_FOUND;
     }
 

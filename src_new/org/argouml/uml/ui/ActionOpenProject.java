@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.40 2004/09/12 23:52:47 bobtarling Exp $
+// $Id: ActionOpenProject.java,v 1.41 2004/09/28 11:12:21 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -221,7 +221,7 @@ public class ActionOpenProject
                 throw new IllegalStateException("Filename " + url.getFile()  
                                 + " is not of a known file type");
             }
-          
+            
             p = persister.loadProject(url);
 
             ProjectBrowser.getInstance().showStatus(
@@ -242,7 +242,7 @@ public class ActionOpenProject
 			  + "requirements of argouml and how to install it.");
             p = oldProject;
         } finally {
-            if (!ArgoParser.SINGLETON.getLastLoadStatus()) {
+            if (!ArgoParser.getInstance().getLastLoadStatus()) {
                 p = oldProject;
                 showErrorPane(
 			      "Problem in loading the project "
@@ -251,7 +251,7 @@ public class ActionOpenProject
 			      + "Project file probably corrupt from "
 			      + "an earlier version or ArgoUML.\n"
 			      + "Error message:\n"
-			      + ArgoParser.SINGLETON.getLastLoadMessage()
+			      + ArgoParser.getInstance().getLastLoadMessage()
 			      + "\n"
 			      + "Since the project was incorrectly "
 			      + "saved some things might be missing "

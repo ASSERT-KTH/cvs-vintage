@@ -1,4 +1,4 @@
-// $Id: ModeCreateEdgeAndNode.java,v 1.25 2004/09/11 06:34:51 mvw Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.26 2004/09/28 11:12:21 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.25 2004/09/11 06:34:51 mvw Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.26 2004/09/28 11:12:21 bobtarling Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -286,7 +286,7 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
             // FigNode to see if a port exists 
             Object foundPort = destFigNode.deepHitPort(x, y);
             if (foundPort == null) {
-                Iterator it = destFigNode.getPortFigs(null).iterator();
+                Iterator it = destFigNode.getPortFigs().iterator();
                 if (it.hasNext()) {
                     foundPort = ((Fig) it.next()).getOwner();
                 }

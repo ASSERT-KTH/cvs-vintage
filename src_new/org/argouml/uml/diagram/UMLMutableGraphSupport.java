@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.11 2004/08/05 19:27:07 mvw Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.12 2004/09/28 11:12:20 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import org.argouml.model.uml.UmlException;
 import org.argouml.model.uml.UmlHelper;
 
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 import org.apache.log4j.Logger;
 
@@ -70,12 +71,12 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
      * @see org.tigris.gef.graph.MutableGraphSupport#getNodes()
      * @return Vector of nodes in the graphmodel/diagram
      */    
-    public Vector getNodes() { return nodes; }
+    public List getNodes() { return nodes; }
     
     /** get all the edges from the graphmodel/diagram
      * @return Vector of edges in the graphmodel/diagram
      */    
-    public Vector getEdges() { return edges; }
+    public List getEdges() { return edges; }
     
     
     /**

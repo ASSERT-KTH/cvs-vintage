@@ -1,4 +1,4 @@
-// $Id: ActionEdgesDisplay.java,v 1.4 2004/08/14 19:28:19 mvw Exp $
+// $Id: ActionEdgesDisplay.java,v 1.5 2004/09/28 11:12:21 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import java.util.*;
 /** An action that makes all edges on the selected node visible/not visible
  *  on the diagram.
  *
- * <p>$Id: ActionEdgesDisplay.java,v 1.4 2004/08/14 19:28:19 mvw Exp $
+ * <p>$Id: ActionEdgesDisplay.java,v 1.5 2004/09/28 11:12:21 bobtarling Exp $
  *
  * @author David Manura
  * @since 0.13.5
@@ -92,14 +92,14 @@ public class ActionEdgesDisplay extends UMLAction {
                 mgm.addNodeRelatedEdges(owner);
             }
             else { // remove
-                Vector edges = mgm.getInEdges(owner);
+                List edges = mgm.getInEdges(owner);
                 edges.addAll(mgm.getOutEdges(owner));
-                Enumeration e2 = edges.elements();
-                while (e2.hasMoreElements()) {
-                    Object edge = e2.nextElement();
+                Iterator e2 = edges.iterator();
+                while (e2.hasNext()) {
+                    Object edge = e2.next();
                     Fig fig = d.presentationFor(edge);
                     if (fig != null)
-                        fig.delete();
+                        fig.removeFromDiagram();
                 }
             }
         }

@@ -1,4 +1,4 @@
-// $Id: ArgoFilePersister.java,v 1.13 2004/09/20 22:15:05 bobtarling Exp $
+// $Id: ArgoFilePersister.java,v 1.14 2004/09/28 11:12:20 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -172,9 +172,9 @@ public class ArgoFilePersister extends AbstractFilePersister {
         try {
             // read the argo 
             // the "true" means that members should be added.
-            ArgoParser.SINGLETON.readProject(url, true);
-            Project p = ArgoParser.SINGLETON.getProject();
-            ArgoParser.SINGLETON.setProject(null); // clear up project refs
+            ArgoParser.getInstance().readProject(url, true);
+            Project p = ArgoParser.getInstance().getProject();
+            ArgoParser.getInstance().setProject(null); // clear up project refs
             p.postLoad();
             return p;
         } catch (IOException e) {
