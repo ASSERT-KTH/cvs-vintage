@@ -1,6 +1,6 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: AddRole.vm,v 1.1 2001/11/29 21:25:15 dr Exp $
+@version $Id: AddRole.vm,v 1.2 2002/01/22 00:48:04 jon Exp $
 *#
 
 #set ($lastAction = $data.Parameters.getString("lastAction"))
@@ -39,20 +39,11 @@ $page.setTitle("Role Administration")
 </div>
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
  <input type="submit" name="eventSubmit_doAddrole" value="Add Role" />
-  </td>
- </tr>
-</table>
 </div>
 
 $intake.declareGroups()
 
 </form>
 </div>
-
-
-

@@ -69,14 +69,8 @@ Modifying roles for <b>$user.FirstName $user.LastName</b> [$user.UserName]
 </table>
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
  <input type="submit" name="eventSubmit_doRoles" value="Update Roles" />
-  </td>
- </tr>
-</table>
 </div>
 
 </form>

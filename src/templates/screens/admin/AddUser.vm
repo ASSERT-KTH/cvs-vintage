@@ -77,14 +77,8 @@ $page.setTitle("User Administration")
 <p>* Required field</p>
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
  <input type="submit" name="eventSubmit_doAdduser" value="Add New User" />
-  </td>
- </tr>
-</table>
 </div>
 
 $intake.declareGroups()
