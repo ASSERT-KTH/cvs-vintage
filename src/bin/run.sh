@@ -5,7 +5,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-### $Id: run.sh,v 1.31 2001/12/08 18:10:11 starksm Exp $ ###
+### $Id: run.sh,v 1.32 2001/12/08 18:23:39 starksm Exp $ ###
 
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
@@ -36,7 +36,9 @@ fi
 JBOSS_BOOT_CLASSPATH="$JBOSS_HOME/bin/run.jar"
 # Include the JDK javac compiler for JSP pages. The default is for a Sun JDK
 # compatible distribution which JAVA_HOME points to
-JAVAC_JAR=$JAVA_HOME/lib/tools.jar
+if [ "x$JAVAC_JAR" = "x" ]; then
+    JAVAC_JAR=$JAVA_HOME/lib/tools.jar
+fi
 if [ "x$JBOSS_CLASSPATH" = "x" ]; then
     JBOSS_CLASSPATH="$JBOSS_BOOT_CLASSPATH:$JAVAC_JAR:"
 else
