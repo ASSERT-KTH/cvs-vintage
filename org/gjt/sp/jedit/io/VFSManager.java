@@ -44,10 +44,16 @@ import org.gjt.sp.util.WorkThreadPool;
 /**
  * jEdit's virtual filesystem allows it to transparently edit files
  * stored elsewhere than the local filesystem, for example on an FTP
- * site. See the {@link VFS} class for implementation details.
+ * site. See the {@link VFS} class for implementation details.<p>
+ *
+ * Note that most of the jEdit API is not thread-safe, so special care
+ * must be taken when making jEdit API calls. Also, it is not safe to
+ * call <code>SwingUtilities.invokeAndWait()</code> from a work request;
+ * it can cause a deadlock if the given runnable then later calls
+ * {@link #waitForRequests()}.
  *
  * @author Slava Pestov
- * @version $Id: VFSManager.java,v 1.14 2004/03/28 00:07:26 spestov Exp $
+ * @version $Id: VFSManager.java,v 1.15 2004/05/10 03:21:11 spestov Exp $
  */
 public class VFSManager
 {
