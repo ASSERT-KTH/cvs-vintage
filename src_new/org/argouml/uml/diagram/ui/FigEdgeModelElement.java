@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.85 2005/02/13 10:28:59 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.86 2005/02/13 16:12:51 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,6 +69,7 @@ import org.argouml.ui.cmd.CmdSetPreferredSize;
 import org.argouml.uml.UUIDHelper;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.tigris.gef.base.Globals;
+import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdgePoly;
@@ -768,7 +769,8 @@ public abstract class FigEdgeModelElement
         super.removeFromDiagram();
         
         //This partly solves issue 3042.
-        this.getLayer().remove(this);
+        Layer l = this.getLayer();
+        if (l != null) l.remove(this);
     }
 
     /**
