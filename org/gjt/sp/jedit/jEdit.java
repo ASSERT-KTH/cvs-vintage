@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.64 2002/04/22 09:48:07 spestov Exp $
+ * @version $Id: jEdit.java,v 1.65 2002/04/26 07:28:54 spestov Exp $
  */
 public class jEdit
 {
@@ -466,6 +466,12 @@ public class jEdit
 						caption,pluginErrors,true);
 					pluginErrors.removeAllElements();
 				} //}}}
+
+				// in one case not a single AWT class will
+				// have been touched (splash screen off +
+				// -nogui -nobackground switches on command
+				// line)
+				Toolkit.getDefaultToolkit();
 			}
 		}); //}}}
 	} //}}}
@@ -2953,7 +2959,7 @@ public class jEdit
 		boolean socksEnabled = jEdit.getBooleanProperty("socks.enabled");
 		if(!socksEnabled)
 		{
-			Log.log(Log.DEBUG,this,"SOCKS proxy disabled");
+			Log.log(Log.DEBUG,jEdit.class,"SOCKS proxy disabled");
                         System.getProperties().remove("socksProxyHost");
                         System.getProperties().remove("socksProxyPort");
 		}
