@@ -17,6 +17,9 @@
   <property name="tomcat.build.modules" value="${tomcat.build}/modules"/>
   <property name="tomcat.dist.modules" value="${tomcat.dist}/modules"/>
 
+  <property name="tomcat.classes.dir" location="${tomcat.build}/classes"/>
+  <property name="tomcat.classes" value="${tomcat.classes.dir}"/>
+
   <!-- ==================== Initialization - check if build and dist present ========== -->
   <target name="init">
     <available file="${tomcat.build.modules}" property="build.modules.available"/>
@@ -49,7 +52,7 @@
 	   optimize="${optimize}"
            debug="${debug}"
 	   destdir="${tomcat.build.modules}/StreamHandler/WEB-INF/classes" 
-	   classpath="${tomcat.build}/classes"/>
+	   classpath="${tomcat.classes}"/>
 
     <mkdir dir="${tomcat.build.modules}/StreamHandler/WEB-INF/lib"/>
 

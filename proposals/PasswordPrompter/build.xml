@@ -17,6 +17,12 @@
   <property name="tomcat.build.modules" value="${tomcat.build}/modules"/>
   <property name="tomcat.dist.modules" value="${tomcat.dist}/modules"/>
 
+  <property name="commons-logging.jar" location="${tomcat.build}/lib/common/commons-logging.jar" />
+
+  <property name="tomcat.classes.dir" location="${tomcat.build}/classes"/>
+  <property name="jtc.util.jar" location="${tomcat.build}/lib/common/tomcat-util.jar"/>
+  <property name="tomcat.classes" value="${tomcat.classes.dir};${jtc.util.jar}"/>
+
   <!-- ==================== Initialization - check if build and dist present ========== -->
   <target name="init">
     <available file="${tomcat.build.modules}" property="build.modules.available"/>
@@ -49,9 +55,8 @@
 	   optimize="${optimize}"
            debug="${debug}"
 	   destdir="${tomcat.build.modules}/PasswordPrompter/WEB-INF/classes">
-       <classpath location="${tomcat.build}/classes"/>
-       <classpath location="${tomcat.build}/lib/common/tomcat-util.jar"/>
-       <classpath location="${tomcat.build}/lib/common/commons-logging.jar"/>
+       <classpath path="${tomcat.classes}"/>
+       <classpath location="${commons-logging.jar}"/>
     </javac>
 
     <mkdir dir="${tomcat.build.modules}/PasswordPrompter/WEB-INF/lib"/>
