@@ -52,28 +52,76 @@ import org.apache.turbine.TurbineException;
 import org.apache.turbine.Valve;
 import org.apache.turbine.pipeline.AbstractValve;
 import org.apache.turbine.ValveContext;
-
-import org.tigris.scarab.services.cache.ScarabCache;
+import org.apache.log4j.Logger;
+import org.apache.turbine.modules.Module;
+import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
- * This valve resets the cache that is used by business objects to avoid
- * multiple, duplicate db queries.  
+ * This valve stores the system time in the request object on first invocation
+ * and reports the elapsed time on later invocations.  It generally would be
+ * set as the first and last valve in a pipeline.  This valve also sets a
+ * large response buffer, so that timing results are those of the server.
+ * This will actually make the system appear slower to clients so it should
+ * not be used in a production system.  You need to compile this valve
+ * with DEBUG=true for it to be functional.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ResetCacheValve.java,v 1.5 2002/11/22 20:33:54 jmcnally Exp $
+ * @version $Id: TimingInfoValve.java,v 1.1 2002/11/22 20:33:54 jmcnally Exp $
  */
-public final class ResetCacheValve 
+public class TimingInfoValve 
     extends AbstractValve
 {
+    private static final Logger log = 
+        Logger.getLogger( TimingInfoValve.class );
+        
+    private static final String KEY = 
+        TimingInfoValve.class.getName() + ".start";
+
+    private static final boolean DEBUG = false;
+
     /**
      * @see org.apache.turbine.Valve#invoke(RunData, ValveContext)
      */
-    public final void invoke( RunData data, ValveContext context )
+    public void invoke( RunData data, ValveContext context )
         throws IOException, TurbineException
     {
-        // clear the short-term cache
-        ScarabCache.clear();
-
+        if (DEBUG) 
+        {
+            Long start = (Long)data.getRequest().getAttribute(KEY);
+            if (start == null) 
+            {
+                try 
+                {
+                    data.getResponse().setBufferSize(10000000);
+                }
+                catch (Exception e)
+                {
+                    log.debug("Could not set high buffer size so client may " +
+                              "affect timing results.");
+                }
+                ((ScarabRequestTool)Module.getTemplateContext(data)
+                    .get("scarabR")).startTimer();
+                data.getRequest()
+                    .setAttribute(KEY, new Long(System.currentTimeMillis()));
+            }
+            else
+            {
+                String s = "Action=" + data.getAction() + " and template=" + 
+                    data.getTarget() + " took: " + 
+                    (System.currentTimeMillis() - start.longValue()) + " ms";
+                log.debug(s);
+                try 
+                {
+                    data.getResponse().getWriter().println(s);        
+                }
+                catch (Exception ignore)
+                {
+                    // maybe this was a binary response?
+                    // we still logged it, so ignore
+                }
+            }
+        }
+            
         // Pass control to the next Valve in the Pipeline
         context.invokeNext( data );
     }

@@ -1,7 +1,8 @@
 <pipeline>
-  <name>TurbineClassicPipeline</name>
+  <name>DefaultScarabPipeline</name>
   <valves>
 
+    <valve className="org.tigris.scarab.pipeline.TimingInfoValve"/>
     <valve className="org.tigris.scarab.pipeline.DetermineCharsetValve"/>
 
     <!-- reset the cache in the event an exception prevented it at the end -->
@@ -24,6 +25,7 @@
 
     <!-- reset the cache as soon as we are done with the pipeline -->
     <valve className="org.tigris.scarab.pipeline.ResetCacheValve"/>
+    <valve className="org.tigris.scarab.pipeline.TimingInfoValve"/>
 
   </valves>
 </pipeline>
