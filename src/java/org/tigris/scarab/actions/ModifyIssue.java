@@ -82,6 +82,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.util.ScarabUtil;
 
 import org.tigris.scarab.attribute.OptionAttribute;
 
@@ -92,7 +93,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.174 2003/07/29 05:16:00 dlr Exp $
+ * @version $Id: ModifyIssue.java,v 1.175 2003/08/01 00:21:54 elicia Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -1073,8 +1074,12 @@ public class ModifyIssue extends BaseModifyIssue
             pp.setString("mv_0rb", "move");
             ((IntakeTool)context.get("intake")).get("MoveIssue")
                 .getDefault().get("Action").init(pp);
-            pp.add("issue_ids", ((ScarabRequestTool)getScarabRequestTool(context))
-                .getIssue().getUniqueId());
+            String[] issueIds = pp.getStrings("issue_ids");
+            String currentIssueId = ((ScarabRequestTool)getScarabRequestTool(context)).getIssue().getUniqueId();
+            if (!ScarabUtil.contains(issueIds, currentIssueId))
+            {
+                pp.add("issue_ids", currentIssueId);
+            }
             setTarget(data, "MoveIssue.vm");
         }
         else
@@ -1101,8 +1106,12 @@ public class ModifyIssue extends BaseModifyIssue
         pp.setString("mv_0rb", "copy");
         ((IntakeTool)context.get("intake")).get("MoveIssue")
             .getDefault().get("Action").init(pp);
-        pp.add("issue_ids", ((ScarabRequestTool)getScarabRequestTool(context))
-               .getIssue().getUniqueId());
+        String[] issueIds = pp.getStrings("issue_ids");
+        String currentIssueId = ((ScarabRequestTool)getScarabRequestTool(context)).getIssue().getUniqueId();
+        if (!ScarabUtil.contains(issueIds, currentIssueId))
+        {
+            pp.add("issue_ids", currentIssueId);
+        }
         setTarget(data, "MoveIssue.vm");            
     }
 
