@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MultiOrbInitialContextFactory.java,v 1.8 2005/03/10 10:05:02 benoitf Exp $
+ * $Id: MultiOrbInitialContextFactory.java,v 1.9 2005/03/11 14:04:53 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -77,11 +77,16 @@ public class MultiOrbInitialContextFactory implements InitialContextFactory {
             }
             // Need to know the factory to use if it is not provided
             String initFactory = (String) env.get(Context.INITIAL_CONTEXT_FACTORY);
+
+            // if factory is multi factory, reset it
+            if (initFactory != null && initFactory.equals(CarolDefaultValues.MULTI_JNDI)) {
+                initFactory = null;
+            }
             if (initFactory == null) {
                 String protocolName = CarolDefaultValues.getRMIProtocol(providerURL);
                 Properties protocolConfig = CarolCurrentConfiguration.getCurrent().getRMIProperties(protocolName);
                 if (protocolConfig == null) {
-                    throw new IllegalArgumentException("No configuration in carol for protocol '" + protocolName + "'.");
+                    throw new NamingException("No configuration in carol for protocol '" + protocolName + "'.");
                 }
                 initFactory = (String) protocolConfig.get(Context.INITIAL_CONTEXT_FACTORY);
                 env.put(Context.INITIAL_CONTEXT_FACTORY, initFactory);
