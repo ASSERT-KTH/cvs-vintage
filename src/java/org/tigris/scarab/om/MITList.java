@@ -70,7 +70,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.38 2003/10/14 04:59:23 jmcnally Exp $
+ * @version $Id: MITList.java,v 1.39 2003/11/14 22:16:50 dep4b Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -724,17 +724,16 @@ public  class MITList
         RModuleUserAttribute result = RModuleUserAttributeManager.getInstance();
         result.setUserId(getUserId());
         result.setAttributeId(attribute.getAttributeId());
-        if (!isNew()) 
-        {
-            result.setListId(getListId());
-        }
-        else
-        {
+        
             if (isSingleModuleIssueType())
             {
                 result.setModuleId(getModule().getModuleId());
                 result.setIssueTypeId(getIssueType().getIssueTypeId());
             }
+		
+        if (!isNew()) 
+        {
+            result.setListId(getListId());
         }
         return result;
     }
