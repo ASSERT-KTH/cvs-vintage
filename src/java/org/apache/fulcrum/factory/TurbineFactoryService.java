@@ -54,18 +54,18 @@ package org.apache.fulcrum.factory;
  * <http://www.apache.org/>.
  */
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-import java.util.ArrayList;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
-import org.apache.fulcrum.ServiceException;
-import org.apache.fulcrum.pool.ObjectInputStreamForContext;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.fulcrum.BaseService;
 import org.apache.fulcrum.InitializationException;
+import org.apache.fulcrum.ServiceException;
+import org.apache.fulcrum.pool.ObjectInputStreamForContext;
 
 /**
  * The Factory Service instantiates objects using specified
@@ -73,7 +73,7 @@ import org.apache.fulcrum.InitializationException;
  * will be used.
  *
  * @author <a href="mailto:ilkka.priha@simsoft.fi">Ilkka Priha</a>
- * @version $Id: TurbineFactoryService.java,v 1.1 2004/10/24 22:12:31 dep4b Exp $
+ * @version $Id: TurbineFactoryService.java,v 1.2 2004/10/25 10:51:39 dep4b Exp $
  */
 public class TurbineFactoryService
     extends BaseService
