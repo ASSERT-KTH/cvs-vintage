@@ -1,4 +1,4 @@
-// $Id: NSUMLModelImplementation.java,v 1.8 2005/02/24 23:08:28 bobtarling Exp $
+// $Id: NSUMLModelImplementation.java,v 1.9 2005/03/18 13:27:16 mkl Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.model.uml;
 
-import java.beans.PropertyChangeSupport;
 import java.io.Writer;
 
 import org.argouml.model.ActivityGraphsFactory;

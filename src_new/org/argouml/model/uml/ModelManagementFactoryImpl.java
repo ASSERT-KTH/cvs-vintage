@@ -1,4 +1,4 @@
-// $Id: ModelManagementFactoryImpl.java,v 1.6 2005/02/28 22:31:41 bobtarling Exp $
+// $Id: ModelManagementFactoryImpl.java,v 1.7 2005/03/18 13:27:16 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.model.uml;
 
 import org.apache.log4j.Logger;
-import org.argouml.kernel.Project;
 import org.argouml.model.ModelManagementFactory;
 
 import ru.novosoft.uml.MFactory;

@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactoryImpl.java,v 1.6 2005/02/28 22:31:41 bobtarling Exp $
+// $Id: ExtensionMechanismsFactoryImpl.java,v 1.7 2005/03/18 13:27:16 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.Collection;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.ExtensionMechanismsFactory;
-import org.argouml.uml.cognitive.critics.WizOperName;
 
 import ru.novosoft.uml.MFactory;
 import ru.novosoft.uml.foundation.core.MModelElement;

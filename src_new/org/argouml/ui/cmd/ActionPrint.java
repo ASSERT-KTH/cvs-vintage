@@ -1,4 +1,4 @@
-// $Id: ActionPrint.java,v 1.4 2005/03/07 21:54:04 bobtarling Exp $
+// $Id: ActionPrint.java,v 1.5 2005/03/18 13:31:20 mkl Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,10 +30,6 @@ import javax.swing.AbstractAction;
 
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
-import org.argouml.kernel.ProjectManager;
-import org.argouml.uml.ui.UMLAction;
-import org.tigris.gef.base.CmdPrint;
-import org.tigris.gef.base.Diagram;
 
 
 ////////////////////////////////////////////////////////////////

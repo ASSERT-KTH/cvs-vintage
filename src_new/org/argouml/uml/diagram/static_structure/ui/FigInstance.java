@@ -1,4 +1,4 @@
-// $Id: FigInstance.java,v 1.12 2005/03/05 10:37:20 mvw Exp $
+// $Id: FigInstance.java,v 1.13 2005/03/18 13:37:07 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.awt.Rectangle;
 import java.util.Iterator;
 
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
-import org.tigris.gef.base.Globals;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
