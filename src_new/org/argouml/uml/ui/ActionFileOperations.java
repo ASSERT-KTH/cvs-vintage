@@ -1,4 +1,4 @@
-// $Id: ActionFileOperations.java,v 1.12 2005/01/02 04:08:33 bobtarling Exp $
+// $Id: ActionFileOperations.java,v 1.13 2005/01/02 07:51:19 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -204,8 +204,12 @@ public abstract class ActionFileOperations extends AbstractAction {
                     }
                 }
                 ProjectManager.getManager().setCurrentProject(p);
-                LOG.info("There are " + p.getMembers().size()
-                        + " members in the current project");
+                if (p == null) {
+                    LOG.info("The current project is null");
+                } else {
+                    LOG.info("There are " + p.getMembers().size()
+                            + " members in the current project");
+                }
                 Designer.enableCritiquing();
             }
         }
