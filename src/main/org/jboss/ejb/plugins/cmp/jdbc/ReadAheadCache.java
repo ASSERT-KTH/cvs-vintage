@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  * basis. The read ahead data for each entity is stored with a soft reference.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class ReadAheadCache {
    /**
@@ -44,6 +44,7 @@ public class ReadAheadCache {
    private final Logger log;
    private Map listMap;
    private ListCache listCache;
+   private int listCacheMax;
 
    public ReadAheadCache(JDBCStoreManager manager) {
       this.manager = manager;
@@ -60,7 +61,7 @@ public class ReadAheadCache {
       listMap = new HashMap();
 
       // Create the list cache
-      int listCacheMax = manager.getEntityBridge().getListCacheMax();
+      listCacheMax = manager.getEntityBridge().getListCacheMax();
       listCache = new ListCache(listCacheMax);
    }
 
@@ -81,7 +82,7 @@ public class ReadAheadCache {
          List results,
          JDBCReadAheadMetaData readahead) {
 
-      if(results.size() < 2) {
+      if(listCacheMax == 0 || results.size() < 2) {
          // nothing to see here... move along
          return;
       }
@@ -99,7 +100,7 @@ public class ReadAheadCache {
       }
 
       // 
-      // Create a map between the entity prumary keys and the list.
+      // Create a map between the entity primary keys and the list.
       // The primary key will point to the last list added that contained the
       // primary key.
       //
@@ -482,6 +483,11 @@ public class ReadAheadCache {
       }
       
       public void promote(List list) {
+         if(max == 0) {
+            // we're not caching lists, so we're done
+            return;
+         }
+            
          IdentityObject object = new IdentityObject(list);
          if(cache.remove(object)) {
             // it was in the cache so add it to the front
@@ -490,10 +496,20 @@ public class ReadAheadCache {
       }
       
       public void remove(List list) {
+         if(max == 0) {
+            // we're not caching lists, so we're done
+            return;
+         }
+            
          cache.remove(new IdentityObject(list));
       }
 
       public void clear() {
+         if(max == 0) {
+            // we're not caching lists, so we're done
+            return;
+         }
+            
          cache.clear();
       }
 
