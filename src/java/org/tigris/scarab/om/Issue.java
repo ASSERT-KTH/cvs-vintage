@@ -97,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.323 2003/08/26 16:30:21 venkatesh Exp $
+ * @version $Id: Issue.java,v 1.324 2003/09/04 22:34:59 dlr Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2737,14 +2737,14 @@ public class Issue
         AttributeValue aval = null;
 
         Map setMap = this.getAttributeValuesMap();
-        for (Iterator iter = setMap.keySet().iterator(); iter.hasNext();)
+        for (Iterator iter = setMap.values().iterator(); iter.hasNext();)
         {
-            aval = (AttributeValue)setMap.get(iter.next());
+            aval = (AttributeValue) iter.next();
             List values = getAttributeValues(aval.getAttribute());
             // loop thru the values for this attribute
-            for (int i = 0; i<values.size(); i++)
+            for (Iterator i = values.iterator(); i.hasNext(); )
             {
-                AttributeValue attVal = (AttributeValue)values.get(i);
+                AttributeValue attVal = (AttributeValue) i.next();
                 RModuleAttribute modAttr = newModule.
                     getRModuleAttribute(aval.getAttribute(), newIssueType);
 
@@ -2781,12 +2781,14 @@ public class Issue
                         }
                         catch (Exception e)
                         {
-                            e.printStackTrace();
+                            Log.get().error("Unable to retrieve user for "
+                                            + "attribute", e);
                         }
                         Attribute attr = attVal.getAttribute();
-                        ScarabUser[] userArray = newModule.getUsers(attr.getPermission());
-                        // If user exists in destination module with this permission,
-                        // Add as matching value
+                        ScarabUser[] userArray =
+                            newModule.getUsers(attr.getPermission());
+                        // If user exists in destination module with
+                        // this permission, add as matching value.
                         if (!Arrays.asList(userArray).contains(user))
                         {
                             orphanAttributes.add(attVal);
