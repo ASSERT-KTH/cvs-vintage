@@ -540,9 +540,6 @@ public class MessageComposer {
 
         InputStream in = renderer.renderMimePart(root);
         
-        message.setSourceStream(in);
-
-        //StreamUtils.streamCopy(message.getSourceStream(), System.out);
         // size
         int size = in.available() / 1024;
         header.set("columba.size", new Integer(size));
@@ -550,6 +547,9 @@ public class MessageComposer {
         message.setHeader(header);
 
         message.setAccountUid(accountUid);
+
+        //Do not access the inputstream after this line!
+        message.setSourceStream(in);
 
         return message;
     }
