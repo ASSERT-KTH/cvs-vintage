@@ -2,9 +2,9 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.71 2001/11/19 03:15:25 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.72 2001/12/04 03:44:14 jmcnally Exp $ -->
 
-<database name="@DATABASE_NAME@">
+<database name="@DATABASE_PROP_NAME@">
 <!--
     History of changes made to the attributes of an issue.
 -->
