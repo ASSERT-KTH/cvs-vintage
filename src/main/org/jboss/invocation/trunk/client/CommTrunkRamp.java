@@ -46,11 +46,6 @@ public final class CommTrunkRamp implements java.lang.Cloneable
    private volatile boolean pumpingData = false;
 
    /**
-    * Pump mutex
-    */
-   private Object pumpMutex = new Object();
-
-   /**
     * Requst create slots to wait for responses,
     * those slots are stored in this hashmap.
     * 
@@ -70,10 +65,8 @@ public final class CommTrunkRamp implements java.lang.Cloneable
    ITrunkListner trunkListner;
 
    /**
-    * The that new request get placed into when they arrived.
+    * The Trunk that this ramp is attached to.
     */
-   LinkedQueue requestQueue = new LinkedQueue();
-
    ICommTrunk trunk;
 
    /**
@@ -102,7 +95,7 @@ public final class CommTrunkRamp implements java.lang.Cloneable
 
             pool = new PooledExecutor(Integer.MAX_VALUE);
             pool.setMinimumPoolSize(0);
-            pool.setKeepAliveTime(1000 * 20);
+            pool.setKeepAliveTime(1000 * 60);
             pool.setThreadFactory(new ThreadFactory()
             {
                public Thread newThread(Runnable r)
@@ -139,154 +132,6 @@ public final class CommTrunkRamp implements java.lang.Cloneable
       this.trunkListner = requestListner;
    }
 
-   /**
-    *  Pumps messages from the input stream.
-    *  
-    *  If the request object is not null, then the target message is 
-    *  the response object for the request argument.  The target
-    *  message is returned.
-    * 
-    *  If the request object is null, then the target message is 
-    *  the first new request that is encountered.  The new request 
-    *  messag is returned.
-    * 
-    *  All message received before the target message are pumped.
-    *  A pumped message is placed in either Response Slots or
-    *  the Request Queue depending on if the message is a response
-    *  or requests.
-    * 
-    * @param request The request object that is waiting for a response.
-    * @return the request or reponse object that this method was looking for
-    * @exception  IOException  Description of Exception
-    */
-   private Object pumpMessages(TunkRequest request, Channel mySlot)
-      throws IOException, ClassNotFoundException, InterruptedException
-   {
-
-      synchronized (pumpMutex)
-      {
-         // Is somebody else pumping data??
-         if (pumpingData)
-            return null;
-         else
-            pumpingData = true;
-      }
-
-      try
-      {
-         while (true)
-         {
-            if (mySlot != null)
-            {
-               // Do we have our response sitting in our slot allready??
-               Object o;
-               while ((o = mySlot.peek()) != null)
-               {
-                  o = mySlot.take();
-                  if (o != this)
-                  {
-                     return o;
-                  }
-               }
-            }
-
-            boolean tracing = log.isTraceEnabled();
-            Object o = trunk.getNextMessage();
-            if (o instanceof TunkRequest)
-            {
-               TunkRequest newRequest = (TunkRequest) o;
-
-               // Are we looking for a request??
-               if (request == null)
-               {
-                  if (tracing)
-                     log.trace("Target message arrvied: returning the new request: " + newRequest);
-                  return newRequest;
-               }
-               else
-               {
-                  if (tracing)
-                     log.trace("Not the target message: queueing the new request: " + newRequest);
-                  requestQueue.put(newRequest);
-               }
-
-            }
-            else
-            {
-
-               // Response received... find the response slot
-               if (tracing)
-                  log.trace("Reading Response Message");
-
-               TrunkResponse response = (TrunkResponse) o;
-
-               // No reponse id to response to..
-               if (response.correlationRequestId == null)
-                  continue;
-
-               // Is this the response object we are looking for
-               if (request != null && request.requestId.equals(response.correlationRequestId))
-               {
-                  if (tracing)
-                     log.trace("Target message arrvied: returning the response: " + response);
-                  return response;
-               }
-               else
-               {
-                  if (tracing)
-                     log.trace("Not the target message: Sending to request slot: " + response);
-
-                  Slot slot;
-                  synchronized (responseSlotsMutex)
-                  {
-                     HashMap newMap = (HashMap) responseSlots.clone();
-                     slot = (Slot) newMap.remove(response.correlationRequestId);
-                     responseSlots = newMap;
-                  }
-
-                  if (slot != null)
-                  {
-                     slot.put(response);
-                  }
-                  else
-                  {
-                     // This should not happen...
-                     log.warn("No slot registered for: " + response);
-                  }
-               }
-            }
-         } // while         
-      }
-      finally
-      {
-         synchronized (pumpMutex)
-         {
-            pumpingData = false;
-         }
-
-         // We are done, let somebody know that they can 
-         // start pumping us again.         
-         HashMap snapShot = responseSlots;
-         if (snapShot.size() > 0)
-         {
-            Iterator i = snapShot.values().iterator();
-            while (i.hasNext())
-            {
-               Slot s = (Slot) i.next();
-               if (s != mySlot)
-                  s.offer(this, 0);
-            }
-         }
-
-         // Only notify the request waiter if we are not
-         // giving him a message on this method call.
-         if (request != null)
-         {
-            requestQueue.put(this);
-         }
-      }
-   }
-
    public TrunkResponse synchRequest(TunkRequest request)
       throws IOException, InterruptedException, ClassNotFoundException
    {
@@ -298,37 +143,7 @@ public final class CommTrunkRamp implements java.lang.Cloneable
       registerResponseSlot(request, slot);
       trunk.sendRequest(request);
 
-      Object o = null;
-      while (true)
-      {
-         // Do we have something in our queue??
-         if (o != null)
-         {
-            // was is a request message??
-            if (o != this)
-            {
-               if (log.isTraceEnabled())
-                  log.trace("Got response: " + o);
-               return (TrunkResponse) o;
-            }
-            // See if we have another message in the queue.
-            o = slot.peek();
-            if (o != null)
-               o = slot.take();
-         }
-         else
-         {
-            // We did not have any messages in the slot,
-            // so we have to go pumping..
-            o = pumpMessages(request, slot);
-            if (o == null)
-            {
-               // Somebody else is in the pump, wait till we 
-               // are notified to get in.
-               o = slot.take();
-            }
-         }
-      } // end while
+      return (TrunkResponse)slot.take();
    }
 
    public void exceptionEvent(Exception e)
@@ -336,56 +151,54 @@ public final class CommTrunkRamp implements java.lang.Cloneable
       trunkListner.exceptionEvent(trunk, e);
    }
 
-   /*
-    * The blocking trunk's connection thread uses this method 
-    * to ensure that new requests are serviced.  This method returns
-    * when the trunk disconnects.
-    */
-   public void pumpRequest() throws IOException, InterruptedException, ClassNotFoundException
-   {
-      Object o = null;
-      while (trunk.isConnected())
-      {
-         // Do we have something in our queue??
-         if (o != null)
-         {
-            // was is a request message??
-            if (o != this)
-            {
-               deliver((TunkRequest) o);
-               return;
-            }
-            // See if we have another message in the queue.
-            o = requestQueue.peek();
-            if (o != null)
-               o = requestQueue.take();
-         }
-         else
-         {
-            // We did not have any messages in the queue,
-            // so we have to go pumping..
-            o = pumpMessages(null, requestQueue);
-            if (o == null)
-            {
-               // Somebody else is in the pump, wait till we 
-               // are notified to get in.
-               o = requestQueue.take();
-            }
-         }
-      } // end while
-   }
 
    /*
-    * The non-blocking trunk's connection thread uses method 
-    * to deliver new requests.  There is no need to have a thread
-    * dedicated to powering the pumpRequest() methods because
-    * the non-blocking trunk gets events when new requests 
-    * arrive.
+    * The Trunk should deliver reponses to the Ramp via this 
+    * method.
     */
-   public void deliver(TunkRequest request) throws InterruptedException
+   public void deliverTrunkResponse(TrunkResponse response) throws InterruptedException
+   {
+      boolean tracing = log.isTraceEnabled();
+      
+      // Response received... find the response slot
+      if (tracing)
+         log.trace("Delivering Response Message");
+
+      // No reponse id to response to..
+      if (response.correlationRequestId == null) {
+         if (tracing)
+            log.trace("No correlation id found, cannot deliver response.");
+         return;
+      }
+
+      Slot slot;
+      synchronized (responseSlotsMutex)
+      {
+         HashMap newMap = (HashMap) responseSlots.clone();
+         slot = (Slot) newMap.remove(response.correlationRequestId);
+         responseSlots = newMap;
+      }
+
+      if (slot != null)
+      {
+         slot.put(response);
+      }
+      else
+      {
+         // This should not happen...
+         log.warn("No slot registered for: " + response);
+      }      
+   }
+   
+   /*
+    * The Trunk should deliver requests to the Ramp via this 
+    * method.
+    */
+   public void deliverTrunkRequest(TunkRequest request) throws InterruptedException
    {
       pool.execute(new RequestRunner(request));
    }
+   
 
    public class RequestRunner implements Runnable
    {

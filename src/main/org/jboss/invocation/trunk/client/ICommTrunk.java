@@ -36,12 +36,6 @@ public interface ICommTrunk
    public void sendRequest(TunkRequest request) throws IOException;
 
    /**
-    * Gets the next message that is waiting for us in the trunk.
-    * This method blocks until a message is received.
-    */
-   public Object getNextMessage() throws IOException, InterruptedException, ClassNotFoundException;
-
-   /**
     * Set the CommTrunkRamp that is CommTrunk will be using.
     */
    public void setCommTrunkRamp(CommTrunkRamp ramp);

@@ -17,6 +17,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 
 import org.jboss.invocation.trunk.client.CommTrunkRamp;
+import org.jboss.invocation.trunk.client.Compression;
 import org.jboss.invocation.trunk.client.ICommTrunk;
 import org.jboss.invocation.trunk.client.TrunkResponse;
 import org.jboss.invocation.trunk.client.TunkRequest;
@@ -61,6 +62,8 @@ public class NonBlockingSocketTrunk implements ICommTrunk
 
    private static final byte REQUEST_MESSAGE = 0;
    private static final byte RESPONSE_MESSAGE = 1;
+   private static final byte REQUEST_MESSAGE_COMPRESSED = 2;
+   private static final byte RESPONSE_MESSAGE_COMPRESSED = 3;
 
    SocketChannel client;
    Selector selector;
@@ -70,11 +73,6 @@ public class NonBlockingSocketTrunk implements ICommTrunk
     * Holds message that need to be sent down the socket.
     */
    LinkedQueue outputQueue = new LinkedQueue();
-
-   /**
-    * Holds Response messages that have been read off the socket.
-    */
-   LinkedQueue responseQueue = new LinkedQueue();
 
    /**
     * We only enabled the OP_WRITE selection key if we have something waiting to 
@@ -113,12 +111,19 @@ public class NonBlockingSocketTrunk implements ICommTrunk
 
       try
       {
-
+         
+         byte messageType = RESPONSE_MESSAGE;
          byte data[] = response.serialize();
+         byte compressed[] = Compression.compress(data);
+         if( compressed != null ) {
+            messageType = RESPONSE_MESSAGE_COMPRESSED;
+            data = compressed;
+         }         
+         
          ByteBuffer buff = ByteBuffer.allocate(data.length + 1 + 4);
 
          buff.putInt(data.length + 1);
-         buff.put(RESPONSE_MESSAGE);
+         buff.put(messageType);
          buff.put(data);
          buff.flip();
          try
@@ -159,10 +164,17 @@ public class NonBlockingSocketTrunk implements ICommTrunk
 
       try
       {
+         byte messageType = REQUEST_MESSAGE;
          byte data[] = request.serialize();
+         byte compressed[] = Compression.compress(data);
+         if( compressed != null ) {
+            messageType = REQUEST_MESSAGE_COMPRESSED;
+            data = compressed;
+         }         
+         
          ByteBuffer buff = ByteBuffer.allocate(data.length + 1 + 4);
          buff.putInt(data.length + 1);
-         buff.put(REQUEST_MESSAGE);
+         buff.put(messageType);
          buff.put(data);
          buff.flip();
          try
@@ -189,17 +201,6 @@ public class NonBlockingSocketTrunk implements ICommTrunk
          throw e;
       }
 
-   }
-
-   /**
-    * Since new requests are delivered asynch via the devliver() method call,
-    * getNextMessage() will only return TrunkResponse messages.
-    */
-   public Object getNextMessage() throws IOException, InterruptedException, ClassNotFoundException
-   {
-      if (log.isTraceEnabled())
-         log.trace("Waiting for message");
-      return (TrunkResponse) responseQueue.take();
    }
 
    public String toString()
@@ -429,12 +430,16 @@ public class NonBlockingSocketTrunk implements ICommTrunk
                      readOnNewFrame = true;
 
                      byte code = readBuffer.get();
-                     if (code == REQUEST_MESSAGE)
+                     
+                     // get the rest of the buffer.
+                     byte data[] = new byte[readBuffer.limit() - 1];
+                     readBuffer.get(data);
+                     
+                     if( code == REQUEST_MESSAGE_COMPRESSED || code == RESPONSE_MESSAGE_COMPRESSED )
+                        data = Compression.uncompress(data);            
+            
+                     if (code == REQUEST_MESSAGE || code == REQUEST_MESSAGE_COMPRESSED)
                      {
-                        // get the rest of the buffer.
-                        byte data[] = new byte[readBuffer.limit() - 1];
-                        readBuffer.get(data);
-
                         try
                         {
                            if (tracing)
@@ -442,7 +447,7 @@ public class NonBlockingSocketTrunk implements ICommTrunk
 
                            TunkRequest newRequest = new TunkRequest();
                            newRequest.deserialize(data);
-                           trunkRamp.deliver(newRequest);
+                           trunkRamp.deliverTrunkRequest(newRequest);
                         }
                         catch (ClassNotFoundException e)
                         {
@@ -451,10 +456,6 @@ public class NonBlockingSocketTrunk implements ICommTrunk
                      }
                      else
                      {
-                        // get the rest of the buffer.
-                        byte data[] = new byte[readBuffer.limit() - 1];
-                        readBuffer.get(data);
-
                         try
                         {
                            if (tracing)
@@ -462,7 +463,7 @@ public class NonBlockingSocketTrunk implements ICommTrunk
 
                            TrunkResponse response = new TrunkResponse();
                            response.deserialize(data);
-                           responseQueue.put(response);
+                           trunkRamp.deliverTrunkResponse(response);
                         }
                         catch (ClassNotFoundException e)
                         {

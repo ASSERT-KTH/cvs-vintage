@@ -72,7 +72,7 @@ public class TrunkResponse
 
    public byte[] serialize() throws IOException
    {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
       ObjectOutputStream out = new CustomObjectOutputStream(baos);
 
       if (correlationRequestId == null)

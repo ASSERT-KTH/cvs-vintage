@@ -58,7 +58,7 @@ public class TunkRequest
 
    public byte[] serialize() throws IOException
    {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      ByteArrayOutputStream baos = new ByteArrayOutputStream(1000);
       ObjectOutputStream out = new CustomObjectOutputStream(baos);
 
       out.writeByte(operation);
@@ -80,7 +80,6 @@ public class TunkRequest
 
       out.close();
       return baos.toByteArray();
-
    }
 
    public void deserialize(byte data[]) throws IOException, ClassNotFoundException

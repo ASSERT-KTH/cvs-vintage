@@ -151,15 +151,17 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
 
       Class serverClass = BlockingServer.class;
       // Try to use the NonBlockingClient if possible
-      try {
-         serverClass = Class.forName("org.jboss.invocation.trunk.server.nbio.NonBlockingServer");
-         log.debug("Using the Non Blocking version of the server");
-      } catch ( Throwable e ) {
-         if( log.isTraceEnabled() )
-            log.trace("Cannot used NBIO: "+e);
-         log.debug("Using the Blocking version of the server");
+      if( "true".equals( System.getProperty("org.jboss.invocation.trunk.enable_nbio", "true") ) ) {
+         try {
+            serverClass = Class.forName("org.jboss.invocation.trunk.server.nbio.NonBlockingServer");
+            log.debug("Using the Non Blocking version of the server");
+         } catch ( Throwable e ) {
+            if( log.isTraceEnabled() )
+               log.trace("Cannot used NBIO: "+e);
+            log.debug("Using the Blocking version of the server");
+         }
       }
-      
+            
       serverProtocol = (IServer)serverClass.newInstance();
 
       ServerSocket serverSocket = serverProtocol.bind(this, bindAddress, serverBindPort, 50, enableTcpNoDelay);

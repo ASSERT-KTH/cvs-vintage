@@ -95,19 +95,22 @@ public class ConnectionManager
    protected ConnectionManager()
    {
       clientClass = BlockingClient.class;
+      
       // Try to use the NonBlockingClient if possible
-      try
-      {
-         clientClass = Class.forName("org.jboss.invocation.trunk.client.nbio.NonBlockingClient");
-         log.debug("Using the Non Blocking version of the client");
+      if( "true".equals( System.getProperty("org.jboss.invocation.trunk.enable_nbio", "true") ) ) {
+         try
+         {
+            clientClass = Class.forName("org.jboss.invocation.trunk.client.nbio.NonBlockingClient");
+            log.debug("Using the Non Blocking version of the client");
+         }
+         catch (Throwable e)
+         {
+            if (log.isTraceEnabled())
+               log.trace("Cannot used NBIO: " + e);
+            log.debug("Using the Blocking version of the client");
+         }
       }
-      catch (Throwable e)
-      {
-         if (log.isTraceEnabled())
-            log.trace("Cannot used NBIO: " + e);
-         log.debug("Using the Blocking version of the client");
-      }
-
+      
       log.debug("Setting the clockDaemon's thread factory");
       clockDaemon.setThreadFactory(new ThreadFactory()
       {

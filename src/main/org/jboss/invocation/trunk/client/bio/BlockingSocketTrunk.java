@@ -15,8 +15,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 import org.jboss.invocation.trunk.client.CommTrunkRamp;
+import org.jboss.invocation.trunk.client.Compression;
 import org.jboss.invocation.trunk.client.ICommTrunk;
 import org.jboss.invocation.trunk.client.TrunkResponse;
 import org.jboss.invocation.trunk.client.TunkRequest;
@@ -79,6 +83,8 @@ public class BlockingSocketTrunk implements Runnable, ICommTrunk
 
    private static final byte REQUEST_MESSAGE = 0;
    private static final byte RESPONSE_MESSAGE = 1;
+   private static final byte REQUEST_MESSAGE_COMPRESSED = 2;
+   private static final byte RESPONSE_MESSAGE_COMPRESSED = 3;
 
    public BlockingSocketTrunk(Socket socket, ThreadGroup threadGroup) throws IOException
    {
@@ -107,11 +113,19 @@ public class BlockingSocketTrunk implements Runnable, ICommTrunk
 
       try
       {
+         byte messageType = RESPONSE_MESSAGE;
          byte data[] = response.serialize();
+         
+         byte compressed[] = Compression.compress(data);
+         if( compressed != null ) {
+            messageType = RESPONSE_MESSAGE_COMPRESSED;
+            data = compressed;
+         }
+         
          synchronized (out)
          {
-            out.writeInt(data.length+1);
-            out.writeByte(RESPONSE_MESSAGE);
+            out.writeInt(data.length + 1);
+            out.writeByte(messageType);
             out.write(data);
             out.flush();
          }
@@ -136,11 +150,19 @@ public class BlockingSocketTrunk implements Runnable, ICommTrunk
 
       try
       {
+         byte messageType = REQUEST_MESSAGE;
          byte data[] = request.serialize();
+         
+         byte compressed[] = Compression.compress(data);
+         if( compressed != null ) {
+            messageType = REQUEST_MESSAGE_COMPRESSED;
+            data = compressed;
+         }
+         
          synchronized (out)
          {
-            out.writeInt(data.length+1);
-            out.writeByte(REQUEST_MESSAGE);
+            out.writeInt(data.length + 1);
+            out.writeByte(messageType);
             out.write(data);
             out.flush();
          }
@@ -151,40 +173,6 @@ public class BlockingSocketTrunk implements Runnable, ICommTrunk
          throw e;
       }
 
-   }
-
-   public Object getNextMessage() throws IOException, InterruptedException, ClassNotFoundException
-   {
-      if (log.isTraceEnabled())
-         log.trace("Waiting for message");
-         
-      int size = in.readInt();
-      byte code = in.readByte();
-      boolean tracing = log.isTraceEnabled();
-      if (code == REQUEST_MESSAGE)
-      {
-         // Request received... pass it up
-         if (tracing)
-            log.trace("Reading Request Message");
-         byte data[] = new byte[size-1];
-         in.readFully(data);
-
-         TunkRequest newRequest = new TunkRequest();
-         newRequest.deserialize(data);
-         return newRequest;
-
-      }
-      else
-      {
-         if (tracing)
-            log.trace("Reading Response Message");
-         byte data[] = new byte[size-1];
-         in.readFully(data);
-
-         TrunkResponse response = new TrunkResponse();
-         response.deserialize(data);
-         return response;
-      }
    }
 
    public String toString()
@@ -265,8 +253,9 @@ public class BlockingSocketTrunk implements Runnable, ICommTrunk
       }
    }
 
-   public boolean isConnected() {
-      return ( state == STATE_CONNECTED );
+   public boolean isConnected()
+   {
+      return (state == STATE_CONNECTED);
    }
 
    /**
@@ -276,7 +265,38 @@ public class BlockingSocketTrunk implements Runnable, ICommTrunk
    {
       try
       {
-         trunkRamp.pumpRequest();
+         while (state == STATE_CONNECTED)
+         {
+            if (log.isTraceEnabled())
+               log.trace("Waiting for message");
+
+            int size = in.readInt();
+            byte code = in.readByte();
+
+            boolean tracing = log.isTraceEnabled();
+            if (tracing)
+               log.trace("Reading Message");
+
+            byte data[] = new byte[size - 1];
+            in.readFully(data);
+            
+            if( code == REQUEST_MESSAGE_COMPRESSED || code == RESPONSE_MESSAGE_COMPRESSED )
+               data = Compression.uncompress(data);            
+            
+            if (code == REQUEST_MESSAGE || code == REQUEST_MESSAGE_COMPRESSED)
+            {
+               // Request received... pass it up
+               TunkRequest newRequest = new TunkRequest();
+               newRequest.deserialize(data);
+               trunkRamp.deliverTrunkRequest(newRequest);
+            }
+            else
+            {
+               TrunkResponse response = new TrunkResponse();
+               response.deserialize(data);
+               trunkRamp.deliverTrunkResponse(response);
+            }
+         }
       }
       catch (Exception e)
       {
