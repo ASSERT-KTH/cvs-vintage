@@ -1,4 +1,4 @@
-// $Id: LastRecentlyUsedMenuList.java,v 1.1 2004/09/28 19:45:05 mvw Exp $
+// $Id: LastRecentlyUsedMenuList.java,v 1.2 2004/11/29 22:13:12 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -128,6 +128,7 @@ public class LastRecentlyUsedMenuList {
 					     maxCountDefault);
         Configuration.setInteger(Argo.KEY_NUMBER_LAST_RECENT_USED, maxCount);
         confKeys = new ConfigurationKey[maxCount];
+        menuItems = new JMenuItem[maxCount];
         
         // create all nessessary configuration keys for lru
         for (i = 0; i < maxCount; i++) {
