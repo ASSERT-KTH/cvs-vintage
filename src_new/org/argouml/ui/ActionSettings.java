@@ -1,4 +1,4 @@
-// $Id: ActionSettings.java,v 1.14 2003/10/12 08:55:24 linus Exp $
+// $Id: ActionSettings.java,v 1.15 2003/10/31 20:04:02 jjones Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -149,6 +149,7 @@ public class ActionSettings extends UMLAction
                 catch (Exception exception) {
                     Argo.log.error("got an Exception in ActionSettings");
                     Argo.log.error(exception);
+                    exception.printStackTrace();
                 }
             }
             
