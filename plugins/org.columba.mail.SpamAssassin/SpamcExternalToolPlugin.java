@@ -38,6 +38,11 @@ public class SpamcExternalToolPlugin extends AbstractExternalToolsPlugin {
 		} catch (MalformedURLException mue) {
 		} //does not happen
 	}
+	
+	public SpamcExternalToolPlugin()
+	{
+		super();
+	}
 
 	public String getDescription() {
 

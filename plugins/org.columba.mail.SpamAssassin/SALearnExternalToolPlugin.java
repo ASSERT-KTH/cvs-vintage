@@ -38,6 +38,11 @@ public class SALearnExternalToolPlugin extends AbstractExternalToolsPlugin {
 		} catch (MalformedURLException mue) {
 		} //does not happen
 	}
+	
+	public SALearnExternalToolPlugin()
+	{
+		super();
+	}
 
 	public String getDescription() {
 

@@ -64,7 +64,7 @@ public class LearnHamCommand extends FolderCommand {
 		String path = srcFolder.getDirectoryFile().getAbsolutePath();
 
 		ColumbaLogger.log.debug("creating process..");
-		ipcHelper.executeCommand("sa-learn --ham --dir " + path);
+		ipcHelper.executeCommand(ExternalToolsHelper.getSALearn()+" --ham --dir " + path);
 
 		int exitCode = ipcHelper.waitFor();
 		ColumbaLogger.log.debug("exitcode=" + exitCode);

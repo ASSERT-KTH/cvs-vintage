@@ -38,6 +38,11 @@ public class SpamassassinExternalToolPlugin
 			} //does not happen
 		}
 		
+	public SpamassassinExternalToolPlugin()
+	{
+		super();
+	}
+		
 	public String getDescription() {
 
 		return "<html><body><p>spamassassin - mail filter to identify spam using text analysis</p></body></html>";

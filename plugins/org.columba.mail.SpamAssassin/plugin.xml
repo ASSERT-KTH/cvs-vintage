@@ -35,19 +35,19 @@
   <menu name="menu_utilities" extensionpoint="mail_bottom">
     <menu name="SpamAssassin">
      <menu name="Train Bayesian Filter">
-  	  <menuitem action="org.columba.mail.SpamAssassin$LearnSpam"/>
-  	  <menuitem action="org.columba.mail.SpamAssassin$LearnHam"/>
+  	  <menuitem action="LearnSpam"/>
+  	  <menuitem action="LearnHam"/>
   	 </menu>
   	 <separator/>
-  	 <menuitem action="org.columba.mail.SpamAssassin$AddAddressToWhitelist"/>
-  	 <menuitem action="org.columba.mail.SpamAssassin$AddAddressToBlacklist"/>
-  	 <menuitem action="org.columba.mail.SpamAssassin$RemoveAddressFromWhitelist"/>
+  	 <menuitem action="AddAddressToWhitelist"/>
+  	 <menuitem action="AddAddressToBlacklist"/>
+  	 <menuitem action="RemoveAddressFromWhitelist"/>
   	 <separator/>
-  	  <menuitem action="org.columba.mail.SpamAssassin$AnalyzeFolder"/>
-  	  <menuitem action="org.columba.mail.SpamAssassin$AnalyzeMessage"/>
+  	  <menuitem action="AnalyzeFolder"/>
+  	  <menuitem action="AnalyzeMessage"/>
   	 <separator/>
-  	  <menuitem action="org.columba.mail.SpamAssassin$MarkMessageAsSpam"/>
-  	  <menuitem action="org.columba.mail.SpamAssassin$MarkMessageAsHam"/>
+  	  <menuitem action="MarkMessageAsSpam"/>
+  	  <menuitem action="MarkMessageAsHam"/>
   	</menu>
   </menu>
  </extension>

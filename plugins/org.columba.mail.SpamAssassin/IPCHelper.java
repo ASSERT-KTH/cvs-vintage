@@ -2,18 +2,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.OutputStream;
+
+import org.columba.core.io.StreamUtils;
 
 /*
  * Created on 15.07.2003
- *
+ * 
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 
 /**
  * @author frd
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -21,11 +23,12 @@ public class IPCHelper {
 
 	protected StreamThread outputStream = null;
 	protected StreamThread errorStream = null;
-	protected PrintWriter inputStream = null;
+	protected OutputStream inputStream = null;
 	protected Process p;
 
 	public IPCHelper() {
 	}
+
 
 	/**
 	 * 
@@ -41,23 +44,22 @@ public class IPCHelper {
 
 		errorStream = new StreamThread(p.getErrorStream());
 		outputStream = new StreamThread(p.getInputStream());
-		inputStream = new PrintWriter(p.getOutputStream());
+		inputStream = p.getOutputStream();
 
 		errorStream.start();
 		outputStream.start();
 	}
 
-	/**
-	 * 
-	 * send input to process
-	 * 
-	 */
-	public void send(String str) throws Exception {
-
-		inputStream.println(str);
+	public void send( String in) throws Exception {
+		inputStream.write( in.getBytes() );
 		inputStream.flush();
 		inputStream.close();
+	}
 
+	public void send(InputStream in) throws Exception {
+		StreamUtils.streamCopy(in, inputStream);
+		inputStream.flush();
+		inputStream.close();
 	}
 
 	public int waitFor() throws Exception {
@@ -68,10 +70,10 @@ public class IPCHelper {
 
 	/**
 	 * 
-	 * return error 
+	 * return error
 	 * 
-	 * @return
-	 * @throws Exception
+	 * @return @throws
+	 *         Exception
 	 */
 	public String getErrorString() throws Exception {
 		String str = errorStream.getBuffer();
@@ -82,8 +84,8 @@ public class IPCHelper {
 	 * 
 	 * return output
 	 * 
-	 * @return
-	 * @throws Exception
+	 * @return @throws
+	 *         Exception
 	 */
 	public String getOutputString() throws Exception {
 		String str = outputStream.getBuffer();
@@ -92,7 +94,7 @@ public class IPCHelper {
 
 	/*
 	 * wait for stream threads to die
-	 * 
+	 *  
 	 */
 	public void waitForThreads() throws Exception {
 		outputStream.join();
