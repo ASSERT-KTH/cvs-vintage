@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!-- The JBoss specific elements used to integrate the servlet web.xml elements into a
+JBoss deployment.
+-->
+<!-- The jboss-web element is the root element.
+-->
+<!ELEMENT jboss-web (resource-ref* , ejb-ref*)>
+
+<!ELEMENT ejb-ref (ejb-ref-name , jndi-name)>
+
+<!ELEMENT ejb-ref-name (#PCDATA)>
+
+<!ELEMENT jndi-name (#PCDATA)>
+
+<!ELEMENT resource-ref (res-ref-name , jndi-name)>
+
+<!ELEMENT res-ref-name (#PCDATA)>
+
