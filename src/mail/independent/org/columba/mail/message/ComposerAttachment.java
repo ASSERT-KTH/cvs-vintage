@@ -63,7 +63,13 @@ public class ComposerAttachment extends MimePart {
 	public void setFileAttachment(File file) {
 		this.fileAttachment = file;
 
-		mimeHeader.contentTransferEncoding = "base64";			
+		if( mimeHeader.contentType.equals( "text" ) ) {
+			mimeHeader.contentTransferEncoding = "quoted-printable";			
+		} else {			
+			mimeHeader.contentTransferEncoding = "base64";
+		}			
+		
+		
 		mimeHeader.putContentParameter("name",file.getName());		
 		mimeHeader.putDispositionParameter("filename",file.getName());		
 		mimeHeader.contentDisposition = "attachment";

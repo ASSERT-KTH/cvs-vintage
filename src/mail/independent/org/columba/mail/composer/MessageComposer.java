@@ -31,7 +31,6 @@ import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.MessageIDGenerator;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
-import org.columba.mail.message.MimePartTree;
 import org.columba.mail.message.PgpMimePart;
 import org.columba.mail.message.SendableHeader;
 import org.columba.mail.util.RFC822Date;
@@ -39,7 +38,6 @@ import org.columba.mail.util.RFC822Date;
 public class MessageComposer {
 	private ComposerModel model;
 	private ComposerController controller;
-	private String bound;
 	private int accountUid;
 
 	public MessageComposer(ComposerController controller) {
@@ -151,6 +149,7 @@ public class MessageComposer {
 
 		return false;
 	}
+	
 	protected String getSignature(IdentityItem item) {
 		
 		File file = new File(item.getSignatureFile());
@@ -309,6 +308,7 @@ public class MessageComposer {
 		return message;
 	}
 
+/*
 	private String createBoundary() {
 		StringBuffer bound = new StringBuffer();
 
@@ -381,5 +381,5 @@ public class MessageComposer {
 
 		return output.toString();
 	}
-
+*/
 }

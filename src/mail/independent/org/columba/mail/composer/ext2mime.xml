@@ -127,6 +127,12 @@
 <mime-type>
 	<name>text/plain</name>
 	<ext>txt</ext>
+	<ext>c</ext>
+	<ext>cpp</ext>
+	<ext>c++</ext>
+	<ext>cc</ext>
+	<ext>h</ext>
+	<ext>java</ext>
 </mime-type>
 
 <mime-type>

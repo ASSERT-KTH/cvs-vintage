@@ -42,9 +42,9 @@ public class MultipartRenderer extends MimePartRenderer {
 		// First Render Header		
 		appendHeader( result, header );
 		
-		result.append( "\n\n" );
+		result.append( "\n" );
 		
-		result.append( "\tMIME-Multipart Message composed with Columba - visit columba.sourceforge.net\n\n");
+		result.append( "\tMIME-Multipart Message composed with Columba - visit columba.sourceforge.net\n");
 		
 		for( int i=0; i<part.countChilds(); i++ ) {		
 			result.append( "\n--" );

@@ -172,7 +172,7 @@ public class MimeTypeLookup
 	   if( extTable.containsKey( ext ) )
            return (String) extTable.get( ext );
 
-	   else return new String( "application/octet-stream" );
+	   else return "application/octet-stream";
     }
 
 }
