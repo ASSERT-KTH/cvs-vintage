@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.76 2002/06/18 02:59:49 spestov Exp $
+ * @version $Id: jEdit.java,v 1.77 2002/06/19 05:12:22 spestov Exp $
  */
 public class jEdit
 {
@@ -3007,13 +3007,8 @@ public class jEdit
 
 		for(int i = 0; i < snippets.length; ++i)
 		{
-			String snippet = snippets[i];
-			if(!snippet.toLowerCase().endsWith(".bsh"))
-				continue;
-
-			String path = new File(directory,snippet).getPath();
-
-			BeanShell.runScript(null,path,null,false);
+			Macros.runScript(null,new File(
+				directory,snippets[i]).getPath(),true);
 		}
 	} //}}}
 

@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * A panel containing a text area. Each edit pane can edit one buffer at
  * a time.
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.26 2002/05/29 09:53:13 spestov Exp $
+ * @version $Id: EditPane.java,v 1.27 2002/06/19 05:12:22 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -73,8 +73,8 @@ public class EditPane extends JPanel implements EBComponent
 		if(this.buffer == buffer)
 			return;
 
-		if(buffer.insideCompoundEdit())
-			buffer.endCompoundEdit();
+		//if(buffer.insideCompoundEdit())
+		//	buffer.endCompoundEdit();
 
 		recentBuffer = this.buffer;
 		if(recentBuffer != null)
