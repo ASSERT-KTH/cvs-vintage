@@ -28,31 +28,32 @@ import java.util.Set;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@arcor.de">Thomas Diesler</a>.
  *
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  */
 public class ApplicationMetaData
    extends MetaData
 {
    public static final int EJB_1x = 1;
    public static final int EJB_2x = 2;
-
+   /** The ejb jar URL */
    private URL url;
-
-   // verion of the dtd used to create ejb-jar.xml
+   /** version of the dtd used to create ejb-jar.xml */
    protected int ejbVersion;
    protected int ejbMinorVersion;
-
+   /** ArrayList<BeanMetaData> for the ejbs */
    private ArrayList beans = new ArrayList();
-
    /**
     * List of relations in this application.
     * Items are instance of RelationMetaData.
     */
    private ArrayList relationships = new ArrayList();
-
+   /** The assembly-descriptor/security-roles */
    private ArrayList securityRoles = new ArrayList();
+   /** A HashMap<String, ConfigurationMetaData> for container configs */   
    private HashMap configurations = new HashMap();
+   /** A HashMap<String, InvokerProxyBindingMetaData> for invoker bindings */
    private HashMap invokerBindings = new HashMap();
+   /** A HashMap<String, String> of res-name to JNDI name/URL */
    private HashMap resources = new HashMap();
    private HashMap plugins = new HashMap();
    /** The user defined JMX name for the EJBModule */
@@ -60,7 +61,7 @@ public class ApplicationMetaData
    /** The security-domain value assigned to the application */
    private String securityDomain;
    /** The  unauthenticated-principal value assigned to the application */
-   private String  unauthenticatedPrincipal;
+   private String unauthenticatedPrincipal;
    private boolean enforceEjbRestrictions;
    /** ClassLoader is needed for webservices service-ref to lookup wsdl and other required files */
    private ClassLoader classLoader;
@@ -105,11 +106,11 @@ public class ApplicationMetaData
       return ejbVersion == 2;
    }
 
-   public boolean isEJB21() 
+   public boolean isEJB21()
    {
-      return isEJB2x() && ejbMinorVersion==1;
+      return isEJB2x() && ejbMinorVersion == 1;
    }
-   
+
    /**
     */
    public Iterator getEnterpriseBeans()
@@ -125,13 +126,13 @@ public class ApplicationMetaData
     * @return BeanMetaData pertaining to the given ejb-name,
     *   <code>null</code> if none found
     */
-   public BeanMetaData getBeanByEjbName( String ejbName )
+   public BeanMetaData getBeanByEjbName(String ejbName)
    {
       Iterator iterator = getEnterpriseBeans();
       while (iterator.hasNext())
       {
          BeanMetaData current = (BeanMetaData) iterator.next();
-         if( current.getEjbName().equals(ejbName) )
+         if (current.getEjbName().equals(ejbName))
          {
             return current;
          }
@@ -157,7 +158,7 @@ public class ApplicationMetaData
 
    public ConfigurationMetaData getConfigurationMetaDataByName(String name)
    {
-      return (ConfigurationMetaData)configurations.get(name);
+      return (ConfigurationMetaData) configurations.get(name);
    }
 
    public Iterator getInvokerProxyBindings()
@@ -168,13 +169,13 @@ public class ApplicationMetaData
    public InvokerProxyBindingMetaData getInvokerProxyBindingMetaDataByName(
       String name)
    {
-      return (InvokerProxyBindingMetaData)invokerBindings.get(name);
+      return (InvokerProxyBindingMetaData) invokerBindings.get(name);
    }
 
    public String getResourceByName(String name)
    {
       // if not found, the container will use default
-      return (String)resources.get(name);
+      return (String) resources.get(name);
    }
 
    public void addPluginData(String pluginName, Object pluginData)
@@ -213,50 +214,55 @@ public class ApplicationMetaData
     * @throws DeploymentException When there was an error encountered
     *         while parsing ejb-jar.xml
     */
-   public void importEjbJarXml( Element element )
+   public void importEjbJarXml(Element element)
       throws DeploymentException
    {
       // EJB version is determined by the doc type that was used to
       // verify the ejb-jar.xml.
       DocumentType docType = element.getOwnerDocument().getDoctype();
 
-      if( docType == null )
+      if (docType == null)
       {
          // test if this is a 2.1 schema-based descriptor
-         if("http://java.sun.com/xml/ns/j2ee".equals(element.getNamespaceURI())) {
-            ejbVersion=2;
+         if ("http://java.sun.com/xml/ns/j2ee".equals(element.getNamespaceURI()))
+         {
+            ejbVersion = 2;
             //TODO we should have a look at the version attribute
-            ejbMinorVersion=1;
-         } else {
+            ejbMinorVersion = 1;
+         }
+         else
+         {
             // No good, EJB 1.1/2.1 requires a DOCTYPE declaration
-            throw new DeploymentException( "ejb-jar.xml must either obey "+
-               "the right xml schema or define a valid DOCTYPE!" );
-         } 
-      } else {
+            throw new DeploymentException("ejb-jar.xml must either obey " +
+               "the right xml schema or define a valid DOCTYPE!");
+         }
+      }
+      else
+      {
          String publicId = docType.getPublicId();
-         if( publicId == null )
+         if (publicId == null)
          {
             // We need a public Id
-            throw new DeploymentException( "The DOCTYPE declaration in " +
-               "ejb-jar.xml must define a PUBLIC id" );
+            throw new DeploymentException("The DOCTYPE declaration in " +
+               "ejb-jar.xml must define a PUBLIC id");
          }
 
          // Check for a known public Id
-         if( publicId.startsWith(
-            "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0") )
+         if (publicId.startsWith(
+            "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0"))
          {
             ejbVersion = 2;
          }
-         else if( publicId.startsWith(
-            "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1") )
+         else if (publicId.startsWith(
+            "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1"))
          {
             ejbVersion = 1;
          }
          else
          {
             // Unknown
-            throw new DeploymentException( "Unknown PUBLIC id in " +
-               "ejb-jar.xml: " + publicId );
+            throw new DeploymentException("Unknown PUBLIC id in " +
+               "ejb-jar.xml: " + publicId);
          }
       }
 
@@ -268,7 +274,7 @@ public class ApplicationMetaData
       Iterator iterator = getChildrenByTagName(enterpriseBeans, "entity");
       while (iterator.hasNext())
       {
-         Element currentEntity = (Element)iterator.next();
+         Element currentEntity = (Element) iterator.next();
          EntityMetaData entityMetaData = new EntityMetaData(this);
          try
          {
@@ -276,34 +282,34 @@ public class ApplicationMetaData
          }
          catch (DeploymentException e)
          {
-            throw new DeploymentException( "Error in ejb-jar.xml " +
+            throw new DeploymentException("Error in ejb-jar.xml " +
                "for Entity Bean " + entityMetaData.getEjbName() + ": " +
                e.getMessage());
          }
 
          // Ensure unique-ness of <abstract-schema-name>
          String abstractSchemaName = entityMetaData.getAbstractSchemaName();
-         if( abstractSchemaName != null )
+         if (abstractSchemaName != null)
          {
-            if( schemaNameMap.containsKey(abstractSchemaName) )
+            if (schemaNameMap.containsKey(abstractSchemaName))
             {
                //
-               throw new DeploymentException( entityMetaData.getEjbName() +
+               throw new DeploymentException(entityMetaData.getEjbName() +
                   ": Duplicate abstract-schema name '" + abstractSchemaName +
                   "'. Already defined for Entity '" +
-                  ((EntityMetaData)schemaNameMap.get(abstractSchemaName)).getEjbName() + "'." );
+                  ((EntityMetaData) schemaNameMap.get(abstractSchemaName)).getEjbName() + "'.");
             }
-            schemaNameMap.put( abstractSchemaName, entityMetaData );
+            schemaNameMap.put(abstractSchemaName, entityMetaData);
          }
 
-         beans.add( entityMetaData );
+         beans.add(entityMetaData);
       }
 
       // Session Beans
       iterator = getChildrenByTagName(enterpriseBeans, "session");
       while (iterator.hasNext())
       {
-         Element currentSession = (Element)iterator.next();
+         Element currentSession = (Element) iterator.next();
          SessionMetaData sessionMetaData = new SessionMetaData(this);
          try
          {
@@ -311,9 +317,9 @@ public class ApplicationMetaData
          }
          catch (DeploymentException e)
          {
-            throw new DeploymentException( "Error in ejb-jar.xml for " +
+            throw new DeploymentException("Error in ejb-jar.xml for " +
                "Session Bean " + sessionMetaData.getEjbName() + ": " +
-               e.getMessage() );
+               e.getMessage());
          }
          beans.add(sessionMetaData);
       }
@@ -322,17 +328,17 @@ public class ApplicationMetaData
       iterator = getChildrenByTagName(enterpriseBeans, "message-driven");
       while (iterator.hasNext())
       {
-         Element currentMessageDriven = (Element)iterator.next();
+         Element currentMessageDriven = (Element) iterator.next();
          MessageDrivenMetaData messageDrivenMetaData =
-            new MessageDrivenMetaData( this );
+            new MessageDrivenMetaData(this);
 
          try
          {
-            messageDrivenMetaData.importEjbJarXml( currentMessageDriven );
+            messageDrivenMetaData.importEjbJarXml(currentMessageDriven);
          }
          catch (DeploymentException e)
          {
-            throw new DeploymentException( "Error in ejb-jar.xml for " +
+            throw new DeploymentException("Error in ejb-jar.xml for " +
                "Message Driven Bean " +
                messageDrivenMetaData.getEjbName() + ": " + e.getMessage());
          }
@@ -342,33 +348,33 @@ public class ApplicationMetaData
       // Enforce unique-ness of declared ejb-name Elements
       Set ejbNames = new HashSet();
       Iterator beanIt = beans.iterator();
-      while( beanIt.hasNext() )
+      while (beanIt.hasNext())
       {
-         BeanMetaData bmd = (BeanMetaData)beanIt.next();
+         BeanMetaData bmd = (BeanMetaData) beanIt.next();
 
          String beanName = bmd.getEjbName();
-         if( ejbNames.contains(beanName) )
+         if (ejbNames.contains(beanName))
          {
-            throw new DeploymentException( "Duplicate definition of an " +
-               "EJB with name '" + beanName + "'." );
+            throw new DeploymentException("Duplicate definition of an " +
+               "EJB with name '" + beanName + "'.");
          }
 
-         ejbNames.add( beanName );
+         ejbNames.add(beanName);
       }
 
       // Relationships
       Element relationshipsElement = getOptionalChild(element,
          "relationships");
-      if(relationshipsElement != null)
+      if (relationshipsElement != null)
       {
          // used to assure that a relationship name is not reused
          Set relationNames = new HashSet();
 
          iterator = getChildrenByTagName(relationshipsElement,
             "ejb-relation");
-         while(iterator.hasNext())
+         while (iterator.hasNext())
          {
-            Element relationElement = (Element)iterator.next();
+            Element relationElement = (Element) iterator.next();
             RelationMetaData relationMetaData = new RelationMetaData();
             try
             {
@@ -376,23 +382,23 @@ public class ApplicationMetaData
             }
             catch (DeploymentException e)
             {
-               throw new DeploymentException( "Error in ejb-jar.xml " +
+               throw new DeploymentException("Error in ejb-jar.xml " +
                   "for relation " + relationMetaData.getRelationName() +
-                  ": " + e.getMessage() );
+                  ": " + e.getMessage());
             }
 
             // if the relationship has a name, assure that it has not
             // already been used
             String relationName = relationMetaData.getRelationName();
-            if( relationName != null )
+            if (relationName != null)
             {
-               if( relationNames.contains(relationName) )
+               if (relationNames.contains(relationName))
                {
                   throw new DeploymentException("ejb-relation-name must " +
-                  "be unique in ejb-jar.xml file: ejb-relation-name is " +
-                  relationName );
+                     "be unique in ejb-jar.xml file: ejb-relation-name is " +
+                     relationName);
                }
-               relationNames.add( relationName );
+               relationNames.add(relationName);
             }
 
             relationships.add(relationMetaData);
@@ -400,25 +406,25 @@ public class ApplicationMetaData
       }
 
       // read the assembly descriptor (optional)
-      Element assemblyDescriptor = getOptionalChild( element,
+      Element assemblyDescriptor = getOptionalChild(element,
          "assembly-descriptor");
-      if( assemblyDescriptor != null )
+      if (assemblyDescriptor != null)
       {
          // set the security roles (optional)
          iterator = getChildrenByTagName(assemblyDescriptor, "security-role");
          while (iterator.hasNext())
          {
-            Element securityRole = (Element)iterator.next();
+            Element securityRole = (Element) iterator.next();
             try
             {
-               String role = getElementContent( getUniqueChild(securityRole,
-                  "role-name") );
+               String role = getElementContent(getUniqueChild(securityRole,
+                  "role-name"));
                securityRoles.add(role);
             }
             catch (DeploymentException e)
             {
-               throw new DeploymentException( "Error in ejb-jar.xml " +
-                  "for security-role: " + e.getMessage() );
+               throw new DeploymentException("Error in ejb-jar.xml " +
+                  "for security-role: " + e.getMessage());
             }
          }
 
@@ -429,14 +435,14 @@ public class ApplicationMetaData
          {
             while (iterator.hasNext())
             {
-               Element methodPermission = (Element)iterator.next();
+               Element methodPermission = (Element) iterator.next();
                // Look for the unchecked element
                Element unchecked = getOptionalChild(methodPermission,
                   "unchecked");
 
                boolean isUnchecked = false;
                Set roles = null;
-               if( unchecked != null )
+               if (unchecked != null)
                {
                   isUnchecked = true;
                }
@@ -446,12 +452,12 @@ public class ApplicationMetaData
                   roles = new HashSet();
                   Iterator rolesIterator = getChildrenByTagName(
                      methodPermission, "role-name");
-                  while( rolesIterator.hasNext() )
+                  while (rolesIterator.hasNext())
                   {
                      roles.add(getElementContent(
-                        (Element)rolesIterator.next()) );
+                        (Element) rolesIterator.next()));
                   }
-                  if( roles.size() == 0 )
+                  if (roles.size() == 0)
                      throw new DeploymentException("An unchecked " +
                         "element or one or more role-name elements " +
                         "must be specified in method-permission");
@@ -464,8 +470,8 @@ public class ApplicationMetaData
                {
                   // load the method
                   MethodMetaData method = new MethodMetaData();
-                  method.importEjbJarXml((Element)methods.next());
-                  if( isUnchecked )
+                  method.importEjbJarXml((Element) methods.next());
+                  if (isUnchecked)
                   {
                      method.setUnchecked();
                   }
@@ -476,10 +482,10 @@ public class ApplicationMetaData
 
                   // give the method to the right bean
                   BeanMetaData bean = getBeanByEjbName(method.getEjbName());
-                  if( bean == null )
+                  if (bean == null)
                   {
-                     throw new DeploymentException( method.getEjbName() +
-                        " doesn't exist" );
+                     throw new DeploymentException(method.getEjbName() +
+                        " doesn't exist");
                   }
                   bean.addPermissionMethod(method);
                }
@@ -487,8 +493,8 @@ public class ApplicationMetaData
          }
          catch (DeploymentException e)
          {
-            throw new DeploymentException( "Error in ejb-jar.xml, " +
-               "in method-permission: " + e.getMessage() );
+            throw new DeploymentException("Error in ejb-jar.xml, " +
+               "in method-permission: " + e.getMessage());
          }
 
          // set the container transactions (optional)
@@ -498,61 +504,61 @@ public class ApplicationMetaData
          {
             while (iterator.hasNext())
             {
-               Element containerTransaction = (Element)iterator.next();
+               Element containerTransaction = (Element) iterator.next();
 
                // find the type of the transaction
                byte transactionType;
-               String type = getElementContent( getUniqueChild(
-                  containerTransaction, "trans-attribute") );
+               String type = getElementContent(getUniqueChild(
+                  containerTransaction, "trans-attribute"));
 
-               if( type.equalsIgnoreCase("NotSupported") ||
-                  type.equalsIgnoreCase("Not_Supported") )
+               if (type.equalsIgnoreCase("NotSupported") ||
+                  type.equalsIgnoreCase("Not_Supported"))
                {
                   transactionType = TX_NOT_SUPPORTED;
                }
-               else if( type.equalsIgnoreCase("Supports") )
+               else if (type.equalsIgnoreCase("Supports"))
                {
                   transactionType = TX_SUPPORTS;
                }
-               else if( type.equalsIgnoreCase("Required") )
+               else if (type.equalsIgnoreCase("Required"))
                {
                   transactionType = TX_REQUIRED;
                }
-               else if( type.equalsIgnoreCase("RequiresNew") ||
-                  type.equalsIgnoreCase("Requires_New") )
+               else if (type.equalsIgnoreCase("RequiresNew") ||
+                  type.equalsIgnoreCase("Requires_New"))
                {
                   transactionType = TX_REQUIRES_NEW;
                }
-               else if( type.equalsIgnoreCase("Mandatory") )
+               else if (type.equalsIgnoreCase("Mandatory"))
                {
                   transactionType = TX_MANDATORY;
                }
-               else if( type.equalsIgnoreCase("Never") )
+               else if (type.equalsIgnoreCase("Never"))
                {
                   transactionType = TX_NEVER;
                }
                else
                {
-                  throw new DeploymentException( "invalid " +
+                  throw new DeploymentException("invalid " +
                      "<transaction-attribute> : " + type);
                }
 
                // find the methods
                Iterator methods = getChildrenByTagName(
-                  containerTransaction, "method" );
+                  containerTransaction, "method");
                while (methods.hasNext())
                {
                   // load the method
                   MethodMetaData method = new MethodMetaData();
-                  method.importEjbJarXml((Element)methods.next());
+                  method.importEjbJarXml((Element) methods.next());
                   method.setTransactionType(transactionType);
 
                   // give the method to the right bean
                   BeanMetaData bean = getBeanByEjbName(method.getEjbName());
-                  if( bean == null )
+                  if (bean == null)
                   {
-                     throw new DeploymentException( "bean " +
-                        method.getEjbName() + " doesn't exist" );
+                     throw new DeploymentException("bean " +
+                        method.getEjbName() + " doesn't exist");
                   }
                   bean.addTransactionMethod(method);
                }
@@ -560,14 +566,14 @@ public class ApplicationMetaData
          }
          catch (DeploymentException e)
          {
-            throw new DeploymentException( "Error in ejb-jar.xml, " +
+            throw new DeploymentException("Error in ejb-jar.xml, " +
                "in <container-transaction>: " + e.getMessage());
          }
 
          // Get the exclude-list methods
          Element excludeList = getOptionalChild(assemblyDescriptor,
             "exclude-list");
-         if( excludeList != null )
+         if (excludeList != null)
          {
             iterator = getChildrenByTagName(excludeList, "method");
             while (iterator.hasNext())
@@ -582,8 +588,8 @@ public class ApplicationMetaData
                BeanMetaData bean = getBeanByEjbName(method.getEjbName());
                if (bean == null)
                {
-                  throw new DeploymentException( "bean " +
-                     method.getEjbName() + " doesn't exist" );
+                  throw new DeploymentException("bean " +
+                     method.getEjbName() + " doesn't exist");
                }
                bean.addExcludedMethod(method);
             }
@@ -600,7 +606,7 @@ public class ApplicationMetaData
 
       // Get the enforce-ejb-restrictions
       Element enforce = getOptionalChild(element, "enforce-ejb-restrictions");
-      if( enforce != null )
+      if (enforce != null)
       {
          String tmp = getElementContent(enforce);
          enforceEjbRestrictions = Boolean.valueOf(tmp).booleanValue();
@@ -609,7 +615,7 @@ public class ApplicationMetaData
       // Get any user defined JMX name
       Element jmxNameElement = getOptionalChild(element,
          "jmx-name");
-      if( jmxNameElement != null )
+      if (jmxNameElement != null)
       {
          jmxName = getElementContent(jmxNameElement);
       }
@@ -617,7 +623,7 @@ public class ApplicationMetaData
       // Get the security domain name
       Element securityDomainElement = getOptionalChild(element,
          "security-domain");
-      if( securityDomainElement != null )
+      if (securityDomainElement != null)
       {
          securityDomain = getElementContent(securityDomainElement);
       }
@@ -625,7 +631,7 @@ public class ApplicationMetaData
       // Get the unauthenticated-principal name
       Element unauth = getOptionalChild(element,
          "unauthenticated-principal");
-      if( unauth != null )
+      if (unauth != null)
       {
          unauthenticatedPrincipal = getElementContent(unauth);
       }
@@ -640,7 +646,7 @@ public class ApplicationMetaData
 
          while (iterator.hasNext())
          {
-            Element invoker = (Element)iterator.next();
+            Element invoker = (Element) iterator.next();
             String invokerName = getElementContent(getUniqueChild(
                invoker, "name"));
 
@@ -662,9 +668,9 @@ public class ApplicationMetaData
             }
             catch (DeploymentException e)
             {
-               throw new DeploymentException( "Error in jboss.xml " +
+               throw new DeploymentException("Error in jboss.xml " +
                   "for invoker-proxy-binding " + invokerMetaData.getName() +
-                  ": " + e.getMessage() );
+                  ": " + e.getMessage());
             }
          }
       }
@@ -678,11 +684,11 @@ public class ApplicationMetaData
 
          while (iterator.hasNext())
          {
-            Element conf = (Element)iterator.next();
+            Element conf = (Element) iterator.next();
             String confName = getElementContent(getUniqueChild(conf,
                "container-name"));
             String parentConfName = conf.getAttribute("extends");
-            if( parentConfName != null && parentConfName.trim().length() == 0 )
+            if (parentConfName != null && parentConfName.trim().length() == 0)
             {
                parentConfName = null;
             }
@@ -693,30 +699,30 @@ public class ApplicationMetaData
             // attribute, or if extends was not specified, an
             // existing configuration with the same.
             ConfigurationMetaData configurationMetaData = null;
-            if( parentConfName != null )
+            if (parentConfName != null)
             {
                configurationMetaData = getConfigurationMetaDataByName(
                   parentConfName);
-               if( configurationMetaData == null )
+               if (configurationMetaData == null)
                {
-                  throw new DeploymentException( "Failed to find " +
-                     "parent config=" + parentConfName );
+                  throw new DeploymentException("Failed to find " +
+                     "parent config=" + parentConfName);
                }
 
                // Make a copy of the existing configuration
                configurationMetaData =
                   (ConfigurationMetaData) configurationMetaData.clone();
-               configurations.put( confName, configurationMetaData );
+               configurations.put(confName, configurationMetaData);
             }
 
-            if( configurationMetaData == null )
+            if (configurationMetaData == null)
             {
                configurationMetaData =
                   getConfigurationMetaDataByName(confName);
             }
 
             // Create a new configuration if none was found
-            if( configurationMetaData == null )
+            if (configurationMetaData == null)
             {
                configurationMetaData = new ConfigurationMetaData(confName);
                configurations.put(confName, configurationMetaData);
@@ -725,9 +731,10 @@ public class ApplicationMetaData
             try
             {
                configurationMetaData.importJbossXml(conf);
-            } catch (DeploymentException e)
+            }
+            catch (DeploymentException e)
             {
-               throw new DeploymentException( "Error in jboss.xml " +
+               throw new DeploymentException("Error in jboss.xml " +
                   "for container-configuration " +
                   configurationMetaData.getName() + ": " + e.getMessage());
             }
@@ -736,14 +743,14 @@ public class ApplicationMetaData
 
       // update the enterprise beans
       Element entBeans = getOptionalChild(element, "enterprise-beans");
-      if( entBeans != null )
+      if (entBeans != null)
       {
          String ejbName = null;
          try
          {
             // Entity Beans
-            iterator = getChildrenByTagName( entBeans, "entity" );
-            while( iterator.hasNext() )
+            iterator = getChildrenByTagName(entBeans, "entity");
+            while (iterator.hasNext())
             {
                Element bean = (Element) iterator.next();
                ejbName = getElementContent(getUniqueChild(bean, "ejb-name"));
@@ -788,21 +795,21 @@ public class ApplicationMetaData
          }
          catch (DeploymentException e)
          {
-            throw new DeploymentException( "Error in jboss.xml for " +
-               "Bean " + ejbName + ": " + e.getMessage() );
+            throw new DeploymentException("Error in jboss.xml for " +
+               "Bean " + ejbName + ": " + e.getMessage());
          }
       }
 
       // set the resource managers
       Element resmans = getOptionalChild(element, "resource-managers");
-      if( resmans != null )
+      if (resmans != null)
       {
          iterator = getChildrenByTagName(resmans, "resource-manager");
          try
          {
             while (iterator.hasNext())
             {
-               Element resourceManager = (Element)iterator.next();
+               Element resourceManager = (Element) iterator.next();
                String resName = getElementContent(getUniqueChild(
                   resourceManager, "res-name"));
 
@@ -812,30 +819,31 @@ public class ApplicationMetaData
                String url = getElementContent(getOptionalChild(
                   resourceManager, "res-url"));
 
-               if( jndi != null && url == null )
+               if (jndi != null && url == null)
                {
                   resources.put(resName, jndi);
                }
-               else if( jndi == null && url != null )
+               else if (jndi == null && url != null)
                {
                   resources.put(resName, url);
                }
                else
                {
-                  throw new DeploymentException( resName +
-                     " : expected res-url or res-jndi-name tag" );
+                  throw new DeploymentException(resName +
+                     " : expected res-url or res-jndi-name tag");
                }
             }
          }
          catch (DeploymentException e)
          {
-            throw new DeploymentException( "Error in jboss.xml, in " +
-               "resource-manager: " + e.getMessage() );
+            throw new DeploymentException("Error in jboss.xml, in " +
+               "resource-manager: " + e.getMessage());
          }
       }
    }
 
 }
+
 /*
 vim:ts=3:sw=3:et
 */
