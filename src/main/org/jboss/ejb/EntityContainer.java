@@ -30,13 +30,13 @@ import org.jboss.util.SerializableEnumeration;
 
 /**
 *   This is a Container for EntityBeans (both BMP and CMP).
-*      
+*
 *   @see Container
 *   @see EntityEnterpriseContext
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.34 $
+*   @version $Revision: 1.35 $
 */
 public class EntityContainer
 extends Container
@@ -75,63 +75,63 @@ implements ContainerInvokerContainer, InstancePoolContainer
 
    // Public --------------------------------------------------------
    public void setContainerInvoker(ContainerInvoker ci)
-   { 
+   {
       if (ci == null)
          throw new IllegalArgumentException("Null invoker");
 
-         this.containerInvoker = ci; 
+         this.containerInvoker = ci;
       ci.setContainer(this);
    }
 
    public ContainerInvoker getContainerInvoker()
-   { 
-      return containerInvoker; 
+   {
+      return containerInvoker;
    }
 
    public void setInstancePool(InstancePool ip)
-   { 
+   {
       if (ip == null)
          throw new IllegalArgumentException("Null pool");
 
-         this.instancePool = ip; 
+         this.instancePool = ip;
       ip.setContainer(this);
    }
 
    public InstancePool getInstancePool()
-   { 
-      return instancePool; 
+   {
+      return instancePool;
    }
 
    public void setInstanceCache(InstanceCache ic)
-   { 
+   {
       if (ic == null)
          throw new IllegalArgumentException("Null cache");
 
-         this.instanceCache = ic; 
+         this.instanceCache = ic;
       ic.setContainer(this);
    }
 
    public InstanceCache getInstanceCache()
-   { 
-      return instanceCache; 
+   {
+      return instanceCache;
    }
 
    public EntityPersistenceManager getPersistenceManager()
-   { 
-      return persistenceManager; 
+   {
+      return persistenceManager;
    }
 
    public void setPersistenceManager(EntityPersistenceManager pm)
-   { 
+   {
       if (pm == null)
          throw new IllegalArgumentException("Null persistence manager");
 
-         persistenceManager = pm; 
+         persistenceManager = pm;
       pm.setContainer(this);
    }
 
    public void addInterceptor(Interceptor in)
-   { 
+   {
       if (interceptor == null)
       {
          interceptor = in;
@@ -150,8 +150,8 @@ implements ContainerInvokerContainer, InstancePoolContainer
    }
 
    public Interceptor getInterceptor()
-   { 
-      return interceptor; 
+   {
+      return interceptor;
    }
 
    public Class getHomeClass()
@@ -177,7 +177,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
       remoteInterface = classLoader.loadClass(metaData.getRemote());
 
       // Call default init
-      super.init();      
+      super.init();
 
       // Map the bean methods
       setupBeanMapping();
@@ -185,7 +185,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
       // Map the home methods
       setupHomeMapping();
 
-      // Initialize pool 
+      // Initialize pool
       instancePool.init();
 
       // Init container invoker
@@ -206,7 +206,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
          in = in.getNext();
       }
 
-      // Reset classloader  
+      // Reset classloader
       Thread.currentThread().setContextClassLoader(oldCl);
    }
 
@@ -232,7 +232,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
       // Start the instance pool
       instancePool.start();
 
-      // Start all interceptors in the chain      
+      // Start all interceptors in the chain
       Interceptor in = interceptor;
       while (in != null)
       {
@@ -265,7 +265,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
       // Stop the instance pool
       instancePool.stop();
 
-      // Stop all interceptors in the chain        
+      // Stop all interceptors in the chain
       Interceptor in = interceptor;
       while (in != null)
       {
@@ -298,7 +298,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
       // Destroy the pool
       instancePool.destroy();
 
-      // Destroy all the interceptors in the chain     
+      // Destroy all the interceptors in the chain
       Interceptor in = interceptor;
       while (in != null)
       {
@@ -416,9 +416,9 @@ implements ContainerInvokerContainer, InstancePoolContainer
       {
 
          // Single entity finder
-         Object id = getPersistenceManager().findEntity(mi.getMethod(), 
-            mi.getArguments(), 
-            (EntityEnterpriseContext)mi.getEnterpriseContext());    
+         Object id = getPersistenceManager().findEntity(mi.getMethod(),
+            mi.getArguments(),
+            (EntityEnterpriseContext)mi.getEnterpriseContext());
 
          //create the EJBObject
          return (EJBObject)containerInvoker.getEntityEJBObject(id);
@@ -438,23 +438,23 @@ implements ContainerInvokerContainer, InstancePoolContainer
    {
 
       // The persistence manager takes care of the wiring and creating the EJBObject
-      getPersistenceManager().createEntity(mi.getMethod(),mi.getArguments(), 
+      getPersistenceManager().createEntity(mi.getMethod(),mi.getArguments(),
          (EntityEnterpriseContext) mi.getEnterpriseContext());
 
-      // The context implicitely carries the EJBObject 
+      // The context implicitely carries the EJBObject
       return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
    }
 
    /**
    * A method for the getEJBObject from the handle
-   * 
+   *
    */
-   public EJBObject getEJBObject(MethodInvocation mi) 
+   public EJBObject getEJBObject(MethodInvocation mi)
    throws java.rmi.RemoteException
    {
 
       // All we need is an EJBObject for this Id;
-      return (EJBObject)containerInvoker.getEntityEJBObject(((EntityInstanceCache) instanceCache).createCacheKey(mi.getId()));        
+      return (EJBObject)containerInvoker.getEntityEJBObject(((EntityCache) instanceCache).createCacheKey(mi.getId()));
    }
 
 
@@ -466,7 +466,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    throws java.rmi.RemoteException, RemoveException
    {
       throw new Error("Not yet implemented");
-   }      
+   }
 
    public EJBMetaData getEJBMetaDataHome(MethodInvocation mi)
    throws java.rmi.RemoteException
@@ -508,7 +508,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
             if (m[i].getName().startsWith("find"))
             {
                map.put(m[i], this.getClass().getMethod("find", new Class[] { MethodInvocation.class }));
-            }else            
+            }else
             {
                map.put(m[i], this.getClass().getMethod(m[i].getName()+"Home", new Class[] { MethodInvocation.class }));
             }
@@ -535,7 +535,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
             try
             {
 
-               //Get only the one called handle.getEJBObject 
+               //Get only the one called handle.getEJBObject
                if (handleMethods[j].getName().equals("getEJBObject"))
                {
 
@@ -552,7 +552,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
          }
       }
       catch (Exception e)
-      { 
+      {
          // DEBUG Logger.exception(e);
       }
 
@@ -579,7 +579,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
             {
                // Implemented by container
                map.put(m[i], getClass().getMethod(m[i].getName(), new Class[]
-                  { MethodInvocation.class 
+                  { MethodInvocation.class
                   }));
                }
             } catch (NoSuchMethodException e)
@@ -610,7 +610,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
       {
       }
       public Interceptor getNext()
-      { return null; 
+      { return null;
       }
 
       public void init()
@@ -690,8 +690,8 @@ implements ContainerInvokerContainer, InstancePoolContainer
             try
             {
                return m.invoke(EntityContainer.this, new Object[]
-               { 
-                  mi 
+               {
+                  mi
                });
             } catch (IllegalAccessException e)
             {
@@ -708,12 +708,12 @@ implements ContainerInvokerContainer, InstancePoolContainer
                   throw (Exception)ex;
                else
                   throw (Error)ex;
-            } 
+            }
          }
          else
          {
             //wire the transaction on the context, this is how the instance remember the tx
-            if (mi.getEnterpriseContext().getTransaction() == null) 
+            if (mi.getEnterpriseContext().getTransaction() == null)
                mi.getEnterpriseContext().setTransaction(mi.getTransaction());
 
             // Invoke and handle exceptions
@@ -735,7 +735,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
                   throw (Exception)ex;
                else
                   throw (Error)ex;
-            } 
+            }
          }
       }
    }
