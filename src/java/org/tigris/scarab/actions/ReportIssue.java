@@ -87,7 +87,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.61 2001/10/26 22:52:12 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.62 2001/10/31 20:44:51 elicia Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -230,6 +230,8 @@ public class ReportIssue extends RequireLoginFirstAction
                          && !aval.isSet()
                        ) 
                     {
+System.out.println( requiredAttributes[j].getPrimaryKey());
+System.out.println("field="+ field);
                         field.setRequired(true);
                         break;
                     }                    
@@ -440,6 +442,15 @@ public class ReportIssue extends RequireLoginFirstAction
         throws Exception
     {
         setTarget(data, "entry,Wizard3.vm");
+    }
+
+    public void doUsetemplates(RunData data, TemplateContext context)
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        intake.removeAll();
+        String template = getCurrentTemplate(data, null);
+        setTarget(data, template);
     }
 
     /**
