@@ -9,6 +9,7 @@ package org.tigris.scarab.util;
 import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.mimetype.MimeTypeService;
 import org.apache.turbine.services.yaaficomponent.YaafiComponentService;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 
 /**
  * @author Eric Pugh
@@ -47,8 +48,10 @@ public class ComponentLocator {
 		try {
 			return yaafi.lookup(clazz.getName());
 		} catch (Exception e) {
-			throw new RuntimeException("Problem looking up service for class "
-					+ clazz.getName(), e);
+			throw new ScarabRuntimeException(
+			        L10NKeySet.ExceptionComponentLocator,
+				    clazz.getName(),
+				    e);
 		}
 	}
 }

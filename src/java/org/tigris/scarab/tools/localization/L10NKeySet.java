@@ -61,7 +61,7 @@ package org.tigris.scarab.tools.localization;
  * Note: The velocity templates use much more resource keys, which are NOT
  * defined here, because they are not relevant for the java-part of this software.
  * 
- * @version $Id: L10NKeySet.java,v 1.7 2004/12/02 21:13:20 dabbous Exp $
+ * @version $Id: L10NKeySet.java,v 1.8 2004/12/03 22:26:53 dabbous Exp $
  *
  * Default implementation of a Localization Key.
  * <p>
@@ -127,6 +127,7 @@ public class L10NKeySet
     public static final LocalizationKey ExceptionInstantiation               = new L10NKey("ExceptionInstantiation");
     public static final LocalizationKey ExceptionIllegalAccess               = new L10NKey("ExceptionIllegalAccess");
     public static final LocalizationKey ExceptionClassNotFound               = new L10NKey("ExceptionClassNotFound");
+    public static final LocalizationKey ExceptionComponentLocator            = new L10NKey("ExceptionComponentLocator");
   
     
     public static final LocalizationKey ScarabBundle                         = new L10NKey("ScarabBundle");
