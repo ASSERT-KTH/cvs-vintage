@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
  * to the implementations of this class to do so.
  *
  * @author Slava Pestov
- * @version $Id: InputHandler.java,v 1.17 2003/04/14 02:41:01 spestov Exp $
+ * @version $Id: InputHandler.java,v 1.18 2003/04/14 22:43:16 spestov Exp $
  * @see org.gjt.sp.jedit.gui.DefaultInputHandler
  */
 public abstract class InputHandler extends KeyAdapter
@@ -75,6 +75,16 @@ public abstract class InputHandler extends KeyAdapter
 			break;
 		}
 	} //}}}
+
+	//{{{ addKeyBinding() method
+	/**
+	 * Adds a key binding to this input handler.
+	 * @param keyBinding The key binding (the format of this is
+	 * input-handler specific)
+	 * @param action The action
+	 */
+	public abstract void addKeyBinding(String keyBinding, String action);
+	//}}}
 
 	//{{{ addKeyBinding() method
 	/**
@@ -185,6 +195,18 @@ public abstract class InputHandler extends KeyAdapter
 	public void resetLastActionCount()
 	{
 		lastActionCount = 0;
+	} //}}}
+
+	//{{{ invokeAction() method
+	/**
+	 * Invokes the specified action, repeating and recording it as
+	 * necessary.
+	 * @param action The action
+	 * @since jEdit 4.2pre1
+	 */
+	public void invokeAction(String action)
+	{
+		invokeAction(jEdit.getAction(action));
 	} //}}}
 
 	//{{{ invokeAction() method

@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
 /**
  * Tool bar editor.
  * @author Slava Pestov
- * @version $Id: ToolBarOptionPane.java,v 1.11 2003/01/12 03:08:24 spestov Exp $
+ * @version $Id: ToolBarOptionPane.java,v 1.12 2003/04/14 22:43:17 spestov Exp $
  */
 public class ToolBarOptionPane extends AbstractOptionPane
 {
@@ -500,7 +500,7 @@ class ToolBarEditDialog extends EnhancedDialog
 			{
 				action.setSelected(true);
 				ActionSet set = jEdit.getActionSetForAction(
-					jEdit.getAction(current.actionName));
+					current.actionName);
 				combo.setSelectedItem(set);
 				updateList();
 				list.setSelectedValue(current,true);
