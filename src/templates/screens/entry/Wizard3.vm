@@ -124,12 +124,14 @@
       </TD>
       <TD COLSPAN="3">
 
-    #attrValueErrorMsg( $issue "URL" )<br>
     #set ( $attrValue = $issue.ModuleAttributeValuesMap.get("URL") )
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+    #if ( !$attrInput.Url.isValid() )
+        $attrInput.Url.Message<br>
+    #end
    <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
-   <input name= "$attrInput.Value.Key"
-        value="$!attrInput.Value.Value" size="30" type="text">
+   <input name= "$attrInput.Url.Key"
+        value="$!attrInput.Url.Value" size="30" type="text">
 
       </TD>
     </TR>
@@ -143,8 +145,8 @@
     #set ( $attrValue = $issue.ModuleAttributeValuesMap.get("DESCRIPTION") )
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
    <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
-   <textarea name= "$attrInput.Value.Key" cols="40" rows="5">
-        $!attrInput.Value.Value</textarea>
+   <textarea name= "$attrInput.Value.Key" cols="40" 
+           rows="5">$!attrInput.Value.Value</textarea>
 
       </TD>
     </TR>

@@ -53,7 +53,7 @@ $page.setTitle("Welcome to Scarab")
     #end
 
    <input name= "$login.Username.Key"
-        value="$!attrInput.Username.Value" size="25" type="text">
+        value="$!login.Username.Value" size="25" type="text">
 
 <!--
                 <INPUT name="Email" value="$!data.Parameters.Email" TYPE="text" SIZE="25">
