@@ -17,7 +17,7 @@ import java.util.Iterator;
 /** The configuration information for an EJB container.
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.24 $
+ *   @version $Revision: 1.25 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/08/02: marcf</b>
@@ -31,6 +31,10 @@ import java.util.Iterator;
  *  <p><b>2002/03/08: billb</b>
  *  <ol>
  *   <li>Added client-interceptor config
+ *  </ol>
+ *  <p><b>2002/03/10: reverbel</b>
+ *  <ol>
+ *   <li>Added IIOP tags and web-class-loader element
  *  </ol>
  *
  */
@@ -55,6 +59,12 @@ public class ConfigurationMetaData extends MetaData
    public static final String CLUSTERED_CMP_1x_13 = "Clustered CMP EntityBean"; // we do not support JDK < 1.3
    public static final String CLUSTERED_BMP_13 = "Clustered BMP EntityBean"; // we do not support JDK < 1.3
 
+   public static final String IIOP_CMP_2x_13 = "IIOP CMP 2.x EntityBean";
+   public static final String IIOP_CMP_1x_13 = "IIOP CMP EntityBean";
+   public static final String IIOP_BMP_13 = "IIOP BMP EntityBean";
+   public static final String IIOP_STATELESS_13 = "IIOP Stateless SessionBean";
+   public static final String IIOP_STATEFUL_13 = "IIOP Stateful SessionBean";
+
    public static final byte A_COMMIT_OPTION = 0;
    public static final byte B_COMMIT_OPTION = 1;
    public static final byte C_COMMIT_OPTION = 2;
@@ -69,6 +79,7 @@ public class ConfigurationMetaData extends MetaData
    private String instanceCache;
    private String persistenceManager;
    private String transactionManager;
+   private String webClassLoader = "org.jboss.web.WebClassLoader";
    // This is to provide backward compatibility with 2.4 series jboss.xml
    // but it should come from standardjboss alone 
    // marcf:FIXME deprecate the "hardcoded string"
@@ -115,8 +126,10 @@ public class ConfigurationMetaData extends MetaData
 
    public String getTransactionManager() { return transactionManager; }
 
+   public String getWebClassLoader() { return webClassLoader; }
+
    public String getLockClass() {return lockClass;} 
-	
+
    public Element getContainerInvokerConf() { return containerInvokerConf; }
    public Element getContainerPoolConf() { return containerPoolConf; }
    public Element getContainerCacheConf() { return containerCacheConf; }
@@ -160,9 +173,12 @@ public class ConfigurationMetaData extends MetaData
       // set the transaction manager
       transactionManager = getElementContent(getOptionalChild(element, "transaction-manager"), transactionManager);
 
+      // set the web classloader
+      webClassLoader = getElementContent(getOptionalChild(element, "web-class-loader"), webClassLoader);
+ 
       // set the lock class
       lockClass = getElementContent(getOptionalChild(element, "locking-policy"), lockClass);
-		 
+
       // set the security domain
       securityDomain = getElementContent(getOptionalChild(element, "security-domain"), securityDomain);
       // set the authentication module
