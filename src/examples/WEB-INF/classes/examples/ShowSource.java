@@ -20,7 +20,9 @@ public class ShowSource
     }
 
     public int doEndTag() throws JspException {
-	if (jspFile.indexOf( ".." ) >= 0)
+	if ((jspFile.indexOf( ".." ) >= 0) ||
+            (jspFile.toUpperCase().indexOf("/WEB-INF/") >= 0) ||
+            (jspFile.toUpperCase().indexOf("/META-INF/") >= 0))
 	    throw new JspTagException("Invalid JSP file " + jspFile);
 
         InputStream in
