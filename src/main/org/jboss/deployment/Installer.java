@@ -58,7 +58,7 @@ import org.w3c.dom.Element;
  *
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
- *	@version $Revision: 1.7 $
+ *	@version $Revision: 1.8 $
  */
 public class Installer
 {
@@ -168,8 +168,10 @@ public class Installer
 
 				// check for referenced libraries
 				Manifest mf = new JarFile(f).getManifest ();
-				if (mf != null)
-					addLibraries (mf, src);
+                if (mf != null)
+                {
+                    addLibraries (mf, src);
+                }
 
 				m.localUrls.add (f.toURL());
 
@@ -206,7 +208,8 @@ public class Installer
 				try
 				{
 					InputStream in = jarFile.getInputStream(jarFile.getEntry(files[type]));
-					Element root = XmlFileLoader.getDocument (in).getDocumentElement ();
+                    XmlFileLoader xfl = new XmlFileLoader();
+					Element root = xfl.getDocument(in, files[type]).getDocumentElement ();
 					app = new J2eeApplicationMetaData (root);
 					in.close();
 				}
@@ -452,6 +455,7 @@ public class Installer
 		if (attr != null)
 		{
 			StringTokenizer st = new StringTokenizer (attr);
+System.out.println("addLibraries: "+attr);
 			while (st.hasMoreTokens())
 			{
 				String tk = st.nextToken ();
