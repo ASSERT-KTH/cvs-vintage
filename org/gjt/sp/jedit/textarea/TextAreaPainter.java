@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.109 2005/02/13 17:22:46 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.110 2005/02/21 07:52:25 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -755,6 +755,7 @@ public class TextAreaPainter extends JComponent implements TabExpander
 	/* package-private since they are accessed by inner classes and we
 	 * want this to be fast */
 	JEditTextArea textArea;
+	FastRepaintManager repaintMgr;
 
 	SyntaxStyle[] styles;
 	Color caretColor;
@@ -819,7 +820,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 	//{{{ Private members
 
 	//{{{ Instance variables
-	private FastRepaintManager repaintMgr;
 	private ExtensionManager extensionMgr;
 	private PaintCaret caretExtension;
 	private RenderingHints renderingHints;
