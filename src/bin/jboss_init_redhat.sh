@@ -34,6 +34,9 @@ JBOSSCP=${JBOSSCP:-"$JBOSS_HOME/lib/ext/jboss.jar"}
 #define the script to use to start jboss
 JBOSSSH=${JBOSSSH:-"$JBOSS_HOME/bin/run.sh"}
 
+#define what will be done with the console log
+JBOSS_CONSOLE=${JBOSS_CONSOLE:-"/dev/null"}
+
 #define the user under which jboss will run, or use RUNASIS to run as the current user
 JBOSSUS=${JBOSSUS:-"jboss"}
 
@@ -63,9 +66,9 @@ case "$1" in
 start)
     cd $JBOSS_HOME/bin
     if [ -z "$SUBIT" ]; then
-        eval $CMD_START >/dev/null 2>&1 &
+        eval $CMD_START >${JBOSS_CONSOLE} 2>&1 &
     else
-        $SUBIT "$CMD_START >/dev/null 2>&1 &" 
+        $SUBIT "$CMD_START >${JBOSS_CONSOLE} 2>&1 &" 
     fi
     ;;
 stop)
