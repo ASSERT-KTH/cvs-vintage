@@ -23,32 +23,23 @@ import org.columba.core.gui.util.ImageLoader;
  */
 public class RemoveCardAction extends FrameAction {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public RemoveCardAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			AddressbookResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_remove"),
-			AddressbookResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_remove"),
-			"REMOVE",
-			ImageLoader.getSmallImageIcon("stock_delete-16.png"),
-			ImageLoader.getImageIcon("stock_delete.png"),
-			'0',
-			null);
+				frameController,
+				AddressbookResourceLoader.getString(
+					"menu", "mainframe", "menu_file_remove"));
+		
+		// tooltip text
+		setTooltipText(
+				AddressbookResourceLoader.getString(
+					"menu", "mainframe", "menu_file_remove"));
+		
+		// action command
+		setActionCommand("REMOVE");
+		
+		// icons
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_delete-16.png"));
+		setLargeIcon(ImageLoader.getImageIcon("stock_delete.png"));
 
 	}
 

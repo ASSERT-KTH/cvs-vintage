@@ -29,34 +29,22 @@ import org.columba.core.gui.frame.AbstractFrameController;
  */
 public class AddVCardAction extends FrameAction {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public AddVCardAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			AddressbookResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_addvcard"),
-			AddressbookResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_addvcard"),
-			"ADD_VCARD",
-			null,
-			null,
-			'0',
-			null);
+				frameController,
+				AddressbookResourceLoader.getString(
+					"menu", "mainframe", "menu_file_addvcard"));
+		
+		// tooltip text
+		setTooltipText(
+				AddressbookResourceLoader.getString(
+					"menu", "mainframe", "menu_file_addvcard"));
+		
+		// action command
+		setActionCommand("ADD_VCARD");
 
 	}
+
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */

@@ -29,32 +29,23 @@ import org.columba.core.gui.util.ImageLoader;
  */
 public class EditPropertiesAction extends FrameAction {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public EditPropertiesAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			AddressbookResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_properties"),
-			AddressbookResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_properties"),
-			"PROPERTIES",
-			ImageLoader.getSmallImageIcon("stock_edit-16.png"),
-			ImageLoader.getImageIcon("stock_edit.png"),
-			'0',
-			null);
+				frameController,
+				AddressbookResourceLoader.getString(
+					"menu", "mainframe", "menu_file_properties"));
+					
+		// tooltip text
+		setTooltipText(
+				AddressbookResourceLoader.getString(
+					"menu", "mainframe", "menu_file_properties"));
+					
+		// action command
+		setActionCommand("PROPERTIES");
+		
+		// icons
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_edit-16.png"));
+		setLargeIcon(ImageLoader.getImageIcon("stock_edit.png"));
 
 	}
 

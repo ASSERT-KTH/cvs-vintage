@@ -21,32 +21,19 @@ import org.columba.core.gui.frame.AbstractFrameController;
  */
 public class AddressbookImportAction extends FrameAction {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public AddressbookImportAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			AddressbookResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_utilities_addressbook"),
-			AddressbookResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_utilities_addressbook"),
-			"ADDRESSBOOK_IMPORT",
-			null,
-			null,
-			'0',
-			null);
+				frameController,
+				AddressbookResourceLoader.getString(
+					"menu", "mainframe", "menu_utilities_addressbook"));
+		
+		// tooltip text
+		setTooltipText(
+				AddressbookResourceLoader.getString(
+					"menu", "mainframe", "menu_utilities_addressbook"));
+					
+		// action command
+		setActionCommand("ADDRESSBOOK_IMPORT");
 
 	}
 

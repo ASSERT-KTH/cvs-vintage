@@ -25,32 +25,23 @@ import org.columba.core.gui.util.ImageLoader;
  */
 public class AddGroupCardAction extends FrameAction {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public AddGroupCardAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			AddressbookResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_addgroup"),
-			AddressbookResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_addgroup"),
-			"ADDGROUP",
-			ImageLoader.getSmallImageIcon("group_small.png"),
-			ImageLoader.getImageIcon("group.png"),
-			'0',
-			null);
+				frameController,
+				AddressbookResourceLoader.getString(
+					"menu", "mainframe", "menu_file_addgroup"));
+					
+		// tooltip text
+		setTooltipText(
+				AddressbookResourceLoader.getString(
+					"menu", "mainframe", "menu_file_addgroup"));
+		
+		// action command
+		setActionCommand("ADDGROUP");
+		
+		// icons
+		setSmallIcon(ImageLoader.getSmallImageIcon("group_small.png"));
+		setLargeIcon(ImageLoader.getImageIcon("group.png"));
 
 	}
 
@@ -59,31 +50,33 @@ public class AddGroupCardAction extends FrameAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		
-		AddressbookFrameController addressbookFrameController = (AddressbookFrameController) frameController;
+		AddressbookFrameController addressbookFrameController =
+				(AddressbookFrameController) frameController;
 		
 		Folder folder =
-				(Folder) addressbookFrameController.getTree().getView().getSelectedFolder();
-			if (folder == null) return;
+				(Folder) addressbookFrameController.getTree().
+					getView().getSelectedFolder();
+		if (folder == null) return;
 
-			EditGroupDialog dialog =
+		EditGroupDialog dialog =
 				new EditGroupDialog(
-		addressbookFrameController.getView(),
+					addressbookFrameController.getView(),
 					addressbookFrameController,
 					null);
 
-			dialog.setHeaderList(folder.getHeaderItemList());
+		dialog.setHeaderList(folder.getHeaderItemList());
 
-			dialog.setVisible(true);
+		dialog.setVisible(true);
 
-			if (dialog.getResult()) {
-				// Ok
-				GroupListCard card = new GroupListCard();
+		if (dialog.getResult()) {
+			// Ok
+			GroupListCard card = new GroupListCard();
 
-				dialog.updateComponents(card, null, false);
+			dialog.updateComponents(card, null, false);
 
-				folder.add(card);
-				addressbookFrameController.getTable().getView().setFolder(folder);
-			}
+			folder.add(card);
+			addressbookFrameController.getTable().getView().setFolder(folder);
+		}
 	}
 
 }

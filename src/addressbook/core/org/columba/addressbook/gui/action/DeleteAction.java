@@ -24,32 +24,31 @@ import org.columba.core.gui.util.ImageLoader;
  */
 public class DeleteAction extends FrameAction {
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
 	public DeleteAction(AbstractFrameController frameController) {
 		super(
-			frameController,
-			AddressbookResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_edit_delete"),
-			AddressbookResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_edit_delete"),
-			"DELETE",
-			ImageLoader.getSmallImageIcon("stock_paste-16.png"),
-			ImageLoader.getImageIcon("stock_paste.png"),
-			'D',
-			KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
+				frameController,
+				AddressbookResourceLoader.getString(
+					"menu", "mainframe", "menu_edit_delete"));
+		
+		// tooltip text
+		setTooltipText(
+				AddressbookResourceLoader.getString(
+					"menu", "mainframe", "menu_edit_delete"));
+					
+		// action command
+		setActionCommand("DELETE");
+		
+		// icons
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_paste-16.png"));
+		setLargeIcon(ImageLoader.getImageIcon("stock_paste.png"));
+		
+		// TODO: Use & to define mnemonic
+		setMnemonic('D');
+		
+		// shortcut key
+		setAcceleratorKey(
+				KeyStroke.getKeyStroke(
+					KeyEvent.VK_D, ActionEvent.CTRL_MASK));
 		
 	}
 
