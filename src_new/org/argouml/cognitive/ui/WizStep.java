@@ -1,4 +1,4 @@
-// $Id: WizStep.java,v 1.19 2003/09/19 21:28:41 d00mst Exp $
+// $Id: WizStep.java,v 1.20 2003/10/14 06:27:01 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -202,10 +202,14 @@ public class WizStep extends JPanel
 	    updateTabToDo();
 	}
     }
+
+    /**
+     * Called when the Help button is pressed.
+     */
     public void doHelp() {
-	if (!(TargetManager.getInstance().getTarget() instanceof ToDoItem))
+	if (!(_target instanceof ToDoItem))
 	    return;
-	ToDoItem item = (ToDoItem) TargetManager.getInstance().getTarget();
+	ToDoItem item = (ToDoItem) _target;
 	String urlString = item.getMoreInfoURL();
 	StartBrowser.openUrl(urlString);
     }
