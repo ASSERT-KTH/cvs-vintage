@@ -1,35 +1,39 @@
-<?xml version='1.0' encoding='us-ascii'?>
-<!-- DTD for configuration file". -->
+<?xml version="1.0" encoding="UTF-8"?>
 
+<!ELEMENT tree (folder*)>
 
-<!ELEMENT tree ( folder* )>
-<!ELEMENT folder (folder*, name, type, accessrights, mailfolder, subfolder, add, remove, filterlist, uid,accountuid)>
-<!ELEMENT filterlist (filter*)>
+<!ELEMENT folder (filterlist?,folder*)>
+<!ATTLIST folder
+ name CDATA #REQUIRED
+ type (columba|virtual|outbox) #REQUIRED
+ uid CDATA #REQUIRED
+ source_uid CDATA #IMPLIED
+ mailfolder (true|false) "true"
+ accessrights (user|system) #REQUIRED
+>
 
+<!ELEMENT filterlist (filter+)>
+<!ELEMENT filter (rule,actionlist?)>
+<!ATTLIST filter
+ enabled (true|false) "true"
+ description CDATA #IMPLIED
+>
 
-<!ELEMENT filtercriteria (headeritem, criteria, pattern)>
-<!ELEMENT filterrule (filtercriteria*, condition)>
-<!ELEMENT action (move| copy | markasread | delete )>
-<!ELEMENT copy ( uid )>
-<!ELEMENT move ( uid )>
-<!ELEMENT filter ( filterrule, actionlist, enabled, description)>
-<!ELEMENT actionlist ( filteraction*)>
+<!ELEMENT rule (criterion+)>
+<!ATTLIST rule
+ match (all|any) #REQUIRED
+>
 
+<!ELEMENT criterion EMPTY>
+<!ATTLIST criterion
+ target (subject|flags) #REQUIRED
+ type (contains|containsnot|is|isnot|beginswith|endswith) #REQUIRED
+ pattern CDATA #REQUIRED
+>
 
-<!ELEMENT name (#PCDATA)>
-<!ELEMENT type (#PCDATA)>
-<!ELEMENT uid (#PCDATA)>
-<!ELEMENT description (#PCDATA)>
-<!ELEMENT enabled ( true | false )>
-<!ELEMENT pattern (#PCDATA)>
-<!ELEMENT filtername (#PCDATA)>
-
-<!ELEMENT type ( columba | imap | imaproot | neutral | virtual | outbox)>
-<!ELEMENT accessrights ( user | system )>
-<!ELEMENT mailfolder ( true | false )>
-
-<!ELEMENT criteria ( contains | containsnot | is | isnot | beginswith | endswith )>
-<!ELEMENT condition ( matchall | matchany)>
-
-
-
+<!ELEMENT actionlist (action+)>
+<!ELEMENT action EMPTY>
+<!ATTLIST action
+ type (move|copy|markasread|delete) #REQUIRED
+ uid CDATA #IMPLIED
+>
