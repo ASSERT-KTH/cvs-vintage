@@ -159,7 +159,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.45 $
+@version $Revision: 1.46 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -258,9 +258,6 @@ public abstract class AbstractWebContainer
       {
          log.error("Problem in init ", e); throw new DeploymentException(e);
       }
-      
-      // invoke super-class initialization
-      processNestedDeployments(di);
       
       log.debug("End init");
    }
