@@ -66,13 +66,27 @@ public class cParagraph extends cPrintObject {
 		}			
 	}
 	
+	/**
+	 * Inserts space between newlines if necessary to avoid
+	 * empty lines. Also inserts a space at the beginning if
+	 * the text starts with a newline.
+	 * @param t		Text to validate
+	 * @return		Validated text
+	 */
 	private String validate(String t) {
-		if (t.indexOf("\n\n") == -1)
+		if ((t.indexOf("\n\n") == -1) && (!t.startsWith("\n"))) {
 			return t;
+		}
 
 		StringBuffer result = new StringBuffer();
-		char last = ' ';
 
+		// ensure that the text does not start with a newline
+		if (t.startsWith("\n")) {
+			result.append(' ');
+		}
+
+		// insert space btw. double newlines
+		char last = ' ';
 		for (int i = 0; i < t.length(); i++) {
 			if ((t.charAt(i) == '\n') && (last == '\n')) {
 				result.append(" \n");
