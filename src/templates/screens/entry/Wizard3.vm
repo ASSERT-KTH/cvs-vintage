@@ -4,7 +4,7 @@
 #set ($issue = $user.ReportingIssue)
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 
-
+$security
 <FORM METHOD="get" NAME="Report3Form" action="$action">
 
 <p>Please review the attributes you have set so far and fill out the remaining
@@ -31,21 +31,19 @@ attributes to submit the issue.</p>
         <b>*</b>
     #end
 
-
     $attVal.Attribute.Name:
+    #attrValueErrorMsg ( $attVal $field )<br>
 
-    #if ($attVal.Attribute.AttributeType.Name == "combo-box" )
-          <font color="red">
-            #attrValueErrorMsg ( $attVal $field )
-          </font>
-          <br>
+    #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
+
+          #userSelectBox ($attVal "")
+
+    #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+
           #attrValueLeafSelect ($attVal $field "")
+
     #else
 
-          <font color="red">
-            #attrValueErrorMsg ( $attVal $field )
-          </font>
-          <br>
         #if ($attVal.Attribute.AttributeType.Name == "long-string" )        
 
             <textarea name="$attrInput.Value.Key" cols="40" 
@@ -83,19 +81,18 @@ attributes to submit the issue.</p>
     #end
 
     $attVal.Attribute.Name:
+    #attrValueErrorMsg ( $attVal $field )<br>
 
-    #if ($attVal.Attribute.AttributeType.Name == "combo-box" )
-          <font color="red">
-            #attrValueErrorMsg ( $attVal $field )
-          </font>
-          <br>
+    #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
+
+          #userSelectBox ($attVal "")
+
+    #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+
           #attrValueLeafSelect ($attVal $field "")
+
     #else
 
-          <font color="red">
-            #attrValueErrorMsg ( $attVal $field )
-          </font>
-          <br>
         #if ($attVal.Attribute.AttributeType.Name == "long-string" )        
 
             <textarea name= "$attrInput.Value.Key" cols="40" 
@@ -104,8 +101,8 @@ attributes to submit the issue.</p>
 
            <input name= "$attrInput.Value.Key"
                 value="$!attrInput.Value" size="20" type="text">
-
         #end
+
     #end
 <br><br>
   #end

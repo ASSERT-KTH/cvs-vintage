@@ -10,7 +10,7 @@
             #end
             #foreach ($option in $module.getLeafRModuleOptions($attr))
               #set ( $selected = "" )
-              #if ( $option.OptionId == $attrInput.get($optionFieldName).Value )
+              #if ( $attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value )
                 #set ( $selected = " selected" )
               #end
               <option$selected value="$option.OptionId">
@@ -32,7 +32,7 @@
             #end
             #foreach ($option in $module.getOptionTree($attr))
               #set ( $selected = "" )
-              #if ($option.OptionId == $attrInput.get($optionFieldName).Value)
+              #if ($attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value)
                 #set ( $selected = " selected" )
               #end
 
@@ -94,4 +94,29 @@
     #end
 
     <input type="text" name="$field.Key" value="$!field.Value"#if($maxLength) maxlength="$maxLength"#end#if($size.length()) size="$size"#end>
+#end
+
+
+#macro (userSelectBox $attrValue $size)
+    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+    #set ( $attr = $attrValue.Attribute )
+    #set ( $module = $attrValue.Issue.Module )
+
+        <select name="$attrInput.UserId.Key" 
+                #if($size.length())size="$size"#end>
+            #if ($size.length() == 0)
+            <option value="">Choose...</option>
+            #end
+$security
+$attr.Permission
+$module
+            #foreach ($user in $security.getUsers($attr.Permission, $module))
+              #set ( $selected = "" )
+              #if ($attrInput.UserId.Value && $user.PrimaryKey == $attrInput.UserId.Value)
+                #set ( $selected = " selected" )
+              #end
+              <option$selected value="$user.PrimaryKey">
+                  $user.UserName $velocityCount</option>
+            #end
+        </select>
 #end
