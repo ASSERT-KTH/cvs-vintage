@@ -1,38 +1,51 @@
-<div class="app" id="assignissue">
 $page.setTitle("Assign users to issue")
+
+<div class="app" id="assignissue">
+
 <h2>$page.Title</h2>
-#if ( !$actionLink )
- #set ( $actionLink = $link.setPage("AssignIssue.vm").setAction("AssignIssue").addPathInfo("nextTemplate", "Index.vm") )
-#end
-#set ($module = $scarabR.CurrentModule)
+
 #if (!$scarabR.Issue.isNew())
  #set ($issue = $scarabR.Issue)
 #elseif ( $scarabR.Issues )
  #set ($multiple = true)
  #set ($issue = $scarabR.Issues.get(0))
-#elseif ( $issueIdList )
+#elseif ($issueIdList)
  #set ($multiple = true)
- #set ( $issue = $scarabR.getIssue($issueIdList.get(0)) )
+ #set ($issue = $scarabR.getIssue($issueIdList.get(0)))
 #else  ## this could grab all the issues
  #set ($multiple = true)
- #set ( $issue = $scarabR.IssueList.get(0) )
+ #set ($issue = $scarabR.IssueList.get(0))
 #end
-#if ( $data.Parameters.getString("action") && $data.Parameters.getString("action") == "AssignIssue" )
+#if ($data.Parameters.getString("action") && $data.Parameters.getString("action").equals("AssignIssue"))
  #set ( $reentry = true )
 #end
+
 #if ($reentry)
+
  <p><strong class="alert">
   Remember to add note and submit, when ready to save changes.
  </strong></p>
+
+#end
+
+#if ( !$actionLink )
+ #set ($actionLink = $link.setPage("AssignIssue.vm").setAction("AssignIssue").addPathInfo("nextTemplate", "Index.vm").toString())
 #end
 <form action="$actionLink" method="get">
-<div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
+
+<div class="functnbar">
+ <table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" name="eventSubmit_doSubmit" value="Submit" /> &nbsp;<input type="submit" name="eventSubmit_doCancel" value="Cancel" />&nbsp; <input type="reset" value="Reset" /></td>
+  <td class="firstchild">
+  <input type="submit" name="eventSubmit_doSubmit" value="Submit" />&#160; 
+  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160; 
+  <input type="reset" value="Reset" />
+  </td>
  </tr>
  </table>
 </div>
-#set ( $issueGroup = $intake.Issue.Default )
+
+#set ($issueGroup = $intake.Issue.Default)
 #if ($multiple)
  #if ($issueIdList)
   #foreach ($id in $issueIdList)
@@ -50,6 +63,7 @@ $page.setTitle("Assign users to issue")
 #else
  <input type="hidden" name="$issueGroup.Id.Key" value="$issueGroup.Id" />
 #end
+
 <div class="sidebyside">
  <table cellpadding="3" cellspacing="2" border="1" width="100%">
  <tr>
@@ -59,17 +73,17 @@ $page.setTitle("Assign users to issue")
  <tr>
   <td>
   #if (!$reentry)
-   #foreach ( $userAssignee in $issue.EligibleAssignees )
+   #foreach ($userAssignee in $issue.EligibleAssignees)
     <input type="hidden" name="removedusers" value="$userAssignee.UserName" />
    #end
   #end
   <select name="newaddusers" size="8" multiple="multiple">
   #if (!$reentry)
-   #foreach ( $userAssignee in $issue.EligibleAssignees )
+   #foreach ($userAssignee in $issue.EligibleAssignees)
     <option value="$userAssignee.UserName">$userAssignee.UserName</option>
    #end
   #else
-   #foreach ( $username in $data.Parameters.getStrings("removedusers") )
+   #foreach ($username in $data.Parameters.getStrings("removedusers"))
     <option value="$username">$username</option>
    #end
   #end
@@ -78,17 +92,17 @@ $page.setTitle("Assign users to issue")
   </td>
   <td>
   #if (!$reentry)
-   #foreach ( $assignee in $issue.AssigneeAttributeValues )
+   #foreach ($assignee in $issue.AssigneeAttributeValues)
    <input type="hidden" name="addedusers" value="$assignee.Value" />
    #end
   #end
   <select name="newremoveusers" size="8" multiple="multiple">
   #if (!$reentry)
-   #foreach ( $assignee in $issue.AssigneeAttributeValues )
+   #foreach ($assignee in $issue.AssigneeAttributeValues)
    <option value="$assignee.Value">$assignee.Value</option>
    #end
   #else
-   #foreach ( $username in $data.Parameters.getStrings("addedusers") )
+   #foreach ($username in $data.Parameters.getStrings("addedusers"))
    <option value="$username">$username</option>
    #end
   #end
@@ -98,18 +112,27 @@ $page.setTitle("Assign users to issue")
   </tr>
  </table>
 </div>
-#set ( $atch = $scarabR.Attachment )
-#set( $intakeAttachment = $intake.Attachment.mapTo($atch) )
+
+#set ($atch = $scarabR.Attachment)
+#set ($intakeAttachment = $intake.Attachment.mapTo($atch))
+
 <h3>Note #fieldErrorMsg($intakeAttachment.DataAsString "")</h3>
 <p>
 <textarea name="$intakeAttachment.DataAsString.Key" rows="4" cols="40">$!intakeAttachment.DataAsString</textarea>
 </p>
+
 <div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" name="eventSubmit_doSubmit" value="Submit" /> &nbsp;<input type="submit" name="eventSubmit_doCancel" value="Cancel" />&nbsp; <input type="reset" value="Reset" /></td>
+  <td class="firstchild">
+  <input type="submit" name="eventSubmit_doSubmit" value="Submit" />&#160; 
+  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160; 
+  <input type="reset" value="Reset" />
+  </td>
  </tr>
  </table>
-</div>$intake.declareGroups()
+</div>
+
+$intake.declareGroups()
 </form>
 </div>
