@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.43 2002/04/14 18:59:49 starksm Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.44 2002/04/14 19:42:56 reverbel Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -118,6 +118,7 @@
     <attribute name="IIOPServerName">JBoss</attribute>
     <attribute name="IIOPPort">5000</attribute>
     <attribute name="PortableInterceptorInitializerClass">org.jboss.ejb.plugins.iiop.server.CodebaseInterceptorInitializer</attribute>
+    <attribute name="Verbosity">1</attribute>
   </mbean>
   -->
 
