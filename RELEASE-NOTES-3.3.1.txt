@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.29 2002/02/03 03:53:05 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.30 2002/02/05 02:11:00 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -85,13 +85,12 @@ Bug No.  Description
          the locale and character set encoding of the directory listings
          are derived.
 
-         Added a socketCloseDelay attribute to Http10Interceptor.  The
-         default is -1, disabled.  If set to 0, a Thread.yield() is executed
-         before the socket is closed.  If set greater than 0, it spins
-         for the specified amount of time in milliseconds.  This was needed
-         by Cactus when run some systems.  This helps insure the client end
-         of the socket gets a chance to read the returned response before the
-         socket is closed.  Otherwise, "Socket reset by peer" errors occur.
+         Added a delaySocketClose attribute to Http10Interceptor.  The
+         default is false.  If set true, a Thread.sleep(0) is executed
+         before the socket is closed.  This was needed by Cactus when
+         run on a high powered Windows XP box.  The sleep(0) helps ensure
+         the test get a chance to receive its input before the socket
+         is closed.  Otherwise, "Socket reset by peer" errors occur.
 
 	 Make the App-classloader configurable to allow using the 1.1
 	 loader even when running under Java2.  This should allow for better
@@ -120,6 +119,17 @@ Bug No.  Description
          security manager, otherwise security exceptions will prevent
          JSPs from compiling.
 
+         Added "reloadable" attribute to AutoWebApp module.  If true,
+         reloading will be enabled in all added contexts.  If false, reloading
+         will be disabled.  The default is true.
+
+         Added "defaultRedirectStatus" attribute to ErrorHandler module. It
+         may be set to "301" or "302".  The default is "301".  It determines
+         the status code set by the "redirect" handler if a status code has
+         not already been set.  This primarily affects the status code used
+         when the StaticInterceptor module redirects a "directory" URL that
+         doesn't end with a '/'.
+
 
 Server:
 
@@ -132,6 +142,9 @@ Bug No.  Description
          DecodeInterceptor was updated to not convert '+' to space in the
          path portion of the request URL.  RFC2396 allows '+' in the path
          of a URL.
+
+         Modified IntrospectionUtils.getClassPath() to add "classes"
+         directory to the list prior to jars.
 
 1657     JSPs with tag names that contain '-' or '.' will now compile without
          an "Invalid expression" error
@@ -212,6 +225,7 @@ Bug No.  Description
 	 reported bug, it was mostly a nuisance.  In other cases (see 6143)
 	 it was causing major problems.
 
+
 Configuration:
 
 Bug No.  Description
@@ -226,6 +240,9 @@ Bug No.  Description
 	 actually a JSP page.
 
 5365	 Fixed the JasperMangler to handle Java reserved words correctly.
+
+5958     ApacheConfig, IISConfig, and NSConfig were updated so mappings that
+         end with "/*" will write a mapping with and without the ending "/*".
 
 6004     Updated Http10Connector to accept any attribute.  The attributes
          without predefined setters will be included with the predefined
