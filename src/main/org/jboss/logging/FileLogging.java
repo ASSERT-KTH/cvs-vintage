@@ -22,7 +22,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class FileLogging
    extends ServiceMBeanSupport
@@ -124,7 +124,8 @@ public class FileLogging
       throws javax.management.MalformedObjectNameException
    {
       this.server = server;
-      this.name = name == null ? new ObjectName(OBJECT_NAME) : name;
+      this.name = name == null ? new ObjectName(OBJECT_NAME + (sources == null ? "" : ",sources=" + sources))
+                               : name;
       return this.name;
    }
    
