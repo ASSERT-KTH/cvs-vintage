@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.20 2001/10/16 22:15:36 patriot1burke Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.21 2001/10/18 20:03:42 vharcq Exp $ -->
 
 <jboss>
    <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -336,7 +336,6 @@
 	 <instance-cache>org.jboss.ejb.plugins.StatefulSessionInstanceCache</instance-cache>
 	 <persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
 	 <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-	 <locking-policy>org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock</locking-policy>
 	 <container-invoker-conf>
 	    <RMIObjectPort>4444</RMIObjectPort>
 	    <Optimized>True</Optimized>
