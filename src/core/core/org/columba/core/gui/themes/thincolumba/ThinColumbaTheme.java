@@ -151,7 +151,7 @@ public class ThinColumbaTheme extends DefaultCTheme {
 		// antialiasing==0 -> no antialiasing
 		// antialiasing==1 -> antialiasing of everything
 		// antialiasing==2 -> antialiasing for message-component only
-		table.put("antialiasing", ANTI_ALIASING_MESSAGE_ONLY);
+		table.put("antialiasing", ANTI_ALIASING_DISABLED);
 
 		table.put("Tree.selectionBackground", background);
 		table.put("Table.selectionBackground", background);

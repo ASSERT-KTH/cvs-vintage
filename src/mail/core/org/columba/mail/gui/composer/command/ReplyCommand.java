@@ -51,8 +51,7 @@ public class ReplyCommand extends FolderCommand {
 		Folder folder = (Folder) ( (FolderCommandReference) getReferences()[0] ).getFolder();
 		Object[] uids = ( (FolderCommandReference) getReferences()[0] ).getUids();
 
-		Message message = (Message) folder.getMessage(uids[0], worker);
-		
+		Message message = new Message();
 
 		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 		MimePartTree mimePartTree = folder.getMimePartTree(uids[0], worker);

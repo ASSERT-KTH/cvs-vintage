@@ -51,8 +51,10 @@ public class ViewMessageCommand extends FolderCommand {
 		this.uid = uid;
 		bodyPart = null;
 
-		AbstractMessage message = srcFolder.getMessage(uid, wsc);
-		header = message.getHeader();
+		//AbstractMessage message = srcFolder.getMessage(uid, wsc);
+		//header = message.getHeader();
+		header = srcFolder.getMessageHeader(uid,wsc);
+		
 		mimePartTree = srcFolder.getMimePartTree(uid, wsc);
 
 		boolean viewhtml =
@@ -81,7 +83,7 @@ public class ViewMessageCommand extends FolderCommand {
 	 */
 	public void updateGUI() throws Exception {
 		((MailFrameController) frameController).messageController.showMessage(
-			bodyPart);
+			header, bodyPart);
 
 		if ((mimePartTree.count() > 1)
 			|| (!mimePartTree.get(0).getHeader().contentType.equals("text"))) {
@@ -99,11 +101,13 @@ public class ViewMessageCommand extends FolderCommand {
 				.getView()
 				.hideAttachmentViewer();
 
+		/*
 		((MailFrameController) frameController)
 			.headerController
 			.getView()
 			.setHeader(
 			header);
+		*/
 
 		if ( header.getFlags().getSeen() == false )
 		{

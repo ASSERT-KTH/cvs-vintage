@@ -314,9 +314,10 @@ public class Rfc822Parser extends AbstractParser
 							shortFrom.substring(0, shortFrom.length() - 1);
 				}
 
-			} else
+			} 
+			/*else
 				shortFrom = shortFrom;
-
+			*/
 			//m.setShortFrom( shortFrom );
 			h.set("columba.from", shortFrom);
 		} else {

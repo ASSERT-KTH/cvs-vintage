@@ -19,10 +19,12 @@ import java.awt.Component;
 interface DocumentViewer
 {
     abstract public void setDoc( String str );
+    /*
     abstract public String getDoc();
     abstract public void setActive( boolean b );
     abstract public boolean isActive();
     abstract public void clearDoc();
     abstract public String getSelectedText();
     abstract public void setHeader( Component header );
+    */
 }

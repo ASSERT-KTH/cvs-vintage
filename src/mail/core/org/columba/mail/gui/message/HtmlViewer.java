@@ -88,11 +88,13 @@ public class HtmlViewer
 
 	public void setDoc(String str) {
 
+		
 		HTMLDocument newdoc =
 			(HTMLDocument) getEditorKit().createDefaultDocument();
 
 		try {
 
+			
 			String validated = validateHTMLString(str);
 			//System.out.println("validate:\n"+validated);
 
@@ -101,10 +103,10 @@ public class HtmlViewer
 				newdoc.getReader(0),
 				true);
 			setDocument(newdoc);
+			
+				//setText( str );
 
-			//setText( str );
-
-			//setCaretPosition(0);
+			setCaretPosition(0);
 
 		} catch (Exception e) {
 			e.printStackTrace();

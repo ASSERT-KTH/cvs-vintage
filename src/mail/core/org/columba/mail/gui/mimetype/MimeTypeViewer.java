@@ -78,6 +78,7 @@ public class MimeTypeViewer
 	return viewer.openWithURL( url );
     }
 
+	/*
     public void openWithBrowserURL( URL url )
     {
         boolean b = MainInterface.frameController.messageController.getView().enableViewer( MessageView.HTML );
@@ -107,4 +108,5 @@ public class MimeTypeViewer
             }
         }
     }
+    */
 }

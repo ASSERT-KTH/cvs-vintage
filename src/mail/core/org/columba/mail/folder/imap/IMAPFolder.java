@@ -143,6 +143,8 @@ public class IMAPFolder extends RemoteFolder {
 	public Folder instanceNewChildNode(AdapterNode node, FolderItem item) {
 		return new IMAPFolder(node, item, this.item, this.parent);
 	}
+	
+	
 
 	public boolean addFolder(String name) throws Exception {
 
@@ -364,6 +366,9 @@ public class IMAPFolder extends RemoteFolder {
 		Object[] uids,
 		WorkerStatusController worker)
 		throws Exception {
+			
+		getStore().copy( ((IMAPFolder)destFolder).getImapPath(), uids, worker, getImapPath() );
+		
 	}
 
 	public Object addMessage(

@@ -364,7 +364,8 @@ public abstract class Folder extends FolderTreeNode {
 	 * @return AbstractMessage
 	 * @throws Exception
 	 */
-	public abstract AbstractMessage getMessage(Object uid, WorkerStatusController worker) throws Exception;
+	
+	//protected abstract AbstractMessage getMessage(Object uid, WorkerStatusController worker) throws Exception;
 
 	/**
 	 * Method addFolderListener.

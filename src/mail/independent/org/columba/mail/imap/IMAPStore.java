@@ -573,6 +573,36 @@ public class IMAPStore {
 
 		return true;
 	}
+	
+	public void copy(String destFolder, Object[] uids, WorkerStatusController worker, String path) throws Exception {
+		
+		isLogin(worker);
+		
+		isSelected(worker,path);
+		
+		
+		try {
+			
+			MessageSet set = new MessageSet(uids);
+
+			IMAPResponse[] responses = imap.copy(destFolder, set.getString() );
+
+			//expungedUids = FlagsParser.parseFlags(responses);
+
+		} catch (BadCommandException ex) {
+			System.out.println("bad command exception");
+			System.out.println("no messages on server");
+		} catch (CommandFailedException ex) {
+			System.out.println("command failed exception");
+		} catch (DisconnectedException ex) {
+			state = STATE_NONAUTHENTICATE;
+			
+		} finally {
+
+		}
+
+		
+	}
 
 	public IMAPFlags[] fetchFlagsList(
 		WorkerStatusController worker,

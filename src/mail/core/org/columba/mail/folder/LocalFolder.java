@@ -14,8 +14,6 @@
 
 package org.columba.mail.folder;
 
-import java.util.Vector;
-
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.AdapterNode;
 import org.columba.core.io.DiskIO;
@@ -24,6 +22,7 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
@@ -68,7 +67,8 @@ public abstract class LocalFolder extends Folder {
 
 	public abstract DataStorageInterface getDataStorageInstance();
 
-	public boolean exists(Object uid, WorkerStatusController worker) throws Exception {
+	public boolean exists(Object uid, WorkerStatusController worker)
+		throws Exception {
 		return getDataStorageInstance().exists(uid);
 	}
 
@@ -86,7 +86,7 @@ public abstract class LocalFolder extends Folder {
 		String source = message.getSource();
 
 		getDataStorageInstance().saveMessage(source, newUid);
-		
+
 		getMessageFolderInfo().incExists();
 
 		return newUid;
@@ -99,19 +99,20 @@ public abstract class LocalFolder extends Folder {
 		ColumbaLogger.log.debug("new UID=" + newUid);
 
 		getDataStorageInstance().saveMessage(source, newUid);
-		
+
 		getMessageFolderInfo().incExists();
 
 		return newUid;
 	}
 
-	public void removeMessage(Object uid, WorkerStatusController worker) throws Exception {
+	public void removeMessage(Object uid, WorkerStatusController worker)
+		throws Exception {
 		getDataStorageInstance().removeMessage(uid);
-		
+
 		getMessageFolderInfo().decExists();
 	}
 
-	public AbstractMessage getMessage(
+	protected AbstractMessage getMessage(
 		Object uid,
 		WorkerStatusController worker)
 		throws Exception {
@@ -125,11 +126,13 @@ public abstract class LocalFolder extends Folder {
 		}
 
 		String source = getMessageSource(uid, worker);
-		
+		//ColumbaHeader h = getMessageHeader(uid, worker);
+
 		AbstractMessage message =
-			new Rfc822Parser().parse(source, true, null, 0);
+			new Rfc822Parser().parse(source, true, null , 0);
 		message.setUID(uid);
-		message.setSource( source );
+		message.setSource(source);
+		//message.setHeader(h);
 
 		aktMessage = message;
 
@@ -171,6 +174,7 @@ public abstract class LocalFolder extends Folder {
 		Object uid,
 		WorkerStatusController worker)
 		throws Exception {
+
 		AbstractMessage message = getMessage(uid, worker);
 
 		MimePartTree mptree = message.getMimePartTree();
@@ -199,7 +203,7 @@ public abstract class LocalFolder extends Folder {
 		throws Exception {
 		return getSearchEngineInstance().searchMessages(filter, uids, worker);
 	}
-	
+
 	public Object[] searchMessages(
 		Filter filter,
 		WorkerStatusController worker)
@@ -207,5 +211,4 @@ public abstract class LocalFolder extends Folder {
 		return getSearchEngineInstance().searchMessages(filter, worker);
 	}
 
-	
 }

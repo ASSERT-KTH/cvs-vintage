@@ -484,5 +484,22 @@ public class IMAPProtocol {
 
 		return responses;
 	}
+	
+	public IMAPResponse[] copy( String messageSet, String mailbox) throws Exception {
+
+		Arguments args = new Arguments();
+		args.add(messageSet);
+		args.add(mailbox);
+		
+		IMAPResponse[] responses = sendCommand("COPY", args);
+
+		notifyResponseHandler(responses);
+
+		IMAPResponse r = responses[responses.length - 1];
+
+		handleResult(r);
+
+		return responses;
+	}
 
 }

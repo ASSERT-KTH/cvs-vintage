@@ -98,7 +98,6 @@ public class FrameView extends JFrame {
 		TreeView tree,
 		TableView table,
 		FilterToolbar filterToolbar,
-		HeaderView header,
 		MessageView message,
 		AttachmentView attachment,
 		StatusBar statusBar) {
@@ -128,7 +127,7 @@ public class FrameView extends JFrame {
 
 		JPanel messagePanel = new JPanel();
 		messagePanel.setLayout( new BorderLayout() );
-		messagePanel.add( header, BorderLayout.NORTH );
+		//messagePanel.add( header, BorderLayout.NORTH );
 		messagePanel.add( message, BorderLayout.CENTER );
 		
 		tablePanel = new JPanel();

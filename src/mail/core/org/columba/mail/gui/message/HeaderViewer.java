@@ -1,0 +1,115 @@
+package org.columba.mail.gui.message;
+
+import java.awt.Insets;
+import java.util.Vector;
+
+import javax.swing.JTextPane;
+import javax.swing.text.html.HTMLEditorKit;
+
+import org.columba.addressbook.parser.ListParser;
+import org.columba.mail.message.HeaderInterface;
+
+/**
+ * @author freddy
+ *
+ * To change this generated comment edit the template variable "typecomment":
+ * Window>Preferences>Java>Templates.
+ * To enable and disable the creation of type comments go to
+ * Window>Preferences>Java>Code Generation.
+ */
+public class HeaderViewer extends JTextPane {
+
+	// background: ebebeb
+	// frame: d5d5d5
+	private static final String LEFT_COLUMN_PROPERTIES =
+		"border=\"0\" nowrap font=\"dialog\" align=\"right\" valign=\"top\"";
+	private static final String RIGHT_COLUMN_PROPERTIES =
+		"border=\"0\" align=\"left\" valign=\"top\" width=\"90%\"";
+	private static final String TABLE_PROPERTIES =
+		"border=\"1\" cellspacing=\"1\" cellpadding=\"1\" align=\"left\" width=\"100%\" style=\"border-width:1px; border-style:solid;  background-color:#ebebeb\"";
+	private static final String GLOBAL_CSS =
+		"td {font-family:Dialog; font-size:12pt}";
+	private static final String CSS =
+		"<style type=\"text/css\"><!--" + GLOBAL_CSS + "--></style>";
+
+	String[] keys;
+
+	public HeaderViewer() {
+		setMargin(new Insets(5, 5, 5, 5));
+		setEditable(false);
+		setEditorKit(new HTMLEditorKit());
+
+		keys = new String[7];
+		keys[0] = "Subject";
+		keys[1] = "Date";
+		keys[3] = "To";
+		keys[2] = "From";
+		keys[4] = "Reply-To";
+		keys[5] = "Cc";
+		keys[6] = "Bcc";
+	}
+
+	void setHeader(HeaderInterface header) {
+		// rahmen #949494
+		// background #989898
+		// #a0a0a0
+		// hell #d5d5d5
+
+		StringBuffer buf = new StringBuffer();
+		buf.append(
+			"<HTML><HEAD>"
+				+ CSS
+				+ "</HEAD><BODY ><TABLE "
+				+ TABLE_PROPERTIES
+				+ ">");
+		for (int i = 0; i < keys.length; i++) {
+			if ( header.get(keys[i]) == null ) continue;
+			
+			if ( ((String)header.get(keys[i])).length() == 0 ) continue;
+			
+			buf.append("<TR><TD " + LEFT_COLUMN_PROPERTIES + ">");
+			buf.append("<B>" + keys[i] + " : </B>");
+			buf.append("</TD><TD " + RIGHT_COLUMN_PROPERTIES + ">");
+			buf.append(
+				" " + parseHeader(keys[i], (String) header.get(keys[i])));
+			buf.append("</TD></TR>");
+		}
+		buf.append("</TABLE></BODY></HTML>");
+
+		setText(buf.toString());
+
+	}
+
+	protected String parseHeader(String headerField, String value) {
+		
+		
+		boolean addressList = false;
+
+		for ( int i=2; i<keys.length; i++ )
+		{
+			if (headerField.equalsIgnoreCase( keys[i] ) )
+				addressList |= true;
+		}
+		
+		if (addressList) {
+			Vector v = ListParser.parseString(value);
+			StringBuffer buf = new StringBuffer();
+
+			for (int i = 0; i < v.size(); i++) {
+				String s = ((String)v.get(i)).trim();
+				
+				buf.append(
+					"<A href=\""
+						+ s
+						+ "\">"
+						+ s
+						+ "</A>");
+				if ( i!=v.size()-1 ) buf.append(" ,");
+			}
+
+			return buf.toString();
+		} else
+			return value;
+			
+	}
+}

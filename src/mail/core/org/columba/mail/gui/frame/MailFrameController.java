@@ -102,7 +102,6 @@ public class MailFrameController extends FrameController {
 			treeController.getView(),
 			tableController.getView(),
 			filterToolbar,
-			headerController.getView(),
 			messageController.getView(),
 			attachmentController.getView(),
 			statusBar);

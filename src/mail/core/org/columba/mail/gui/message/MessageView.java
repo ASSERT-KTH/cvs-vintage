@@ -14,191 +14,247 @@
 
 package org.columba.mail.gui.message;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.MouseListener;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.text.JTextComponent;
 
-import org.columba.core.gui.util.CScrollPane;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.message.HeaderInterface;
 
-public class MessageView extends CScrollPane
-{
-    public static final int MAX = 3;
-    public static final int HTML = 2;
-    public static final int ADVANCED = 1;
-    public static final int SIMPLE = 0;
+public class MessageView extends JScrollPane {
 
-    private DocumentViewer[] list;
-    private HtmlViewer debug;
+	public static final int VIEWER_HTML = 1;
+	public static final int VIEWER_SIMPLE = 0;
 
-    protected MouseListener listener;
-    //protected MessageController messageViewer;
-    protected int active;
-    
-   
+	private DocumentViewer[] list;
+	//private HtmlViewer debug;
 
-
-    public MessageView()
-    {
-        super();
-
-        //this.messageViewer = messageViewer;
-        list = new DocumentViewer[MAX];
-		enableWheelMouseSupport();
-        initViewers();
-    }
-
+	protected MouseListener listener;
+	//protected MessageController messageViewer;
+	protected int active;
 	
+	//HyperlinkTextViewer viewer;
+	//JList list;
+	protected JPanel panel;
 	
-    protected void initViewer( int index )
-    {
-        switch( index )
-        {
-            case 0:
-                 list[index] = new SimpleTextViewer();
-                break;
-            case 1:
-                 list[index] = new HyperlinkTextViewer();
-                break;
-            case 2:
-                 list[index] = new HtmlViewer();
-                 debug = (HtmlViewer) list[index];
-                break;
-        }
-
-        if ( listener != null )
-           ( (JComponent) list[index]).addMouseListener( listener );
-
-        //( (JComponent) list[index]).addFocusListener( messageViewer.getFocusListener() );
-    }
-
-    protected void initViewers()
-    {
-
-
-        boolean b = MailConfig.getMainFrameOptionsConfig().getWindowItem().getAdvancedViewer();
-
-
-
-            if ( b==true )
-            {
-
-                initViewer( 1 );
-                setViewportView( (JTextComponent) list[1] );
-                active=1;
-            }
-            else
-            {
-
-                initViewer( 0 );
-                setViewportView( (JTextComponent) list[0] );
-
-
-                active=0;
-            }
-
-
-    }
-
-
-	public void setHeader( Component header )
-	{
-		DocumentViewer viewer = (DocumentViewer) list[active];
-       
-        viewer.setHeader( header );
+	protected HeaderViewer hv;
+	
+	public MessageView() {
+		super();
+		
+		
+		//viewer = new HyperlinkTextViewer();
+		panel = new JPanel();
+		panel.setLayout( new BorderLayout() );
+		
+		setViewportView(panel);
+		
+		active = VIEWER_SIMPLE;
+		
+		setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		//this.messageViewer = messageViewer;
+		list = new DocumentViewer[2];
+		initViewer( VIEWER_SIMPLE );
+		initViewer( VIEWER_HTML );
+		
+		hv = new HeaderViewer();
+		
+		panel.add( hv, BorderLayout.NORTH );				
+		panel.add( (JTextComponent) list[active], BorderLayout.CENTER );
+		//enableWheelMouseSupport();
+		//initViewers();
 	}
 
-    public boolean enableViewer( int index )
-    {
+	
+	protected void initViewer(int index) {
+		switch (index) {
+			case 0 :
+				list[index] = new HyperlinkTextViewer();
+				break;
+			case 1 :
+				list[index] = new HtmlViewer();
+				break;
+		}
 
+		/*
+		if (listener != null)
+			 ((JComponent) list[index]).addMouseListener(listener);
+		*/
+		//( (JComponent) list[index]).addFocusListener( messageViewer.getFocusListener() );
+	}
+	
+	protected void switchViewer( boolean html )
+	{
+		if ( html )
+		{
+			if ( active == VIEWER_HTML )
+			{
+				// do nothing
+			}
+			else
+			{
+				active = VIEWER_HTML;
+				panel.removeAll();
+				panel.add( hv, BorderLayout.NORTH );				
+				panel.add( (JTextComponent) list[active], BorderLayout.CENTER );
+				panel.validate();
+			}
+		}
+		else
+		{
+			if ( active == VIEWER_SIMPLE )
+			{
+				// do nothing
+			}
+			else
+			{
+				active = VIEWER_SIMPLE;
+				panel.removeAll();
+				panel.add( hv, BorderLayout.NORTH );				
+				panel.add( (JTextComponent) list[active], BorderLayout.CENTER );
+				panel.validate();
+			}
+		}
+	}
+	
+	public void setDoc( HeaderInterface header, String str, boolean html )
+	{
+		switchViewer( html );
+		
+		if ( header != null ) hv.setHeader( header );
+		
+		list[active].setDoc( str );
+		
+	}
+	
+	
+	/*
+	protected void initViewers() {
 
-        if ( active == index ) return false;
+		boolean b =
+			MailConfig
+				.getMainFrameOptionsConfig()
+				.getWindowItem()
+				.getAdvancedViewer();
 
-        DocumentViewer viewer = (DocumentViewer) list[index];
-        if ( viewer == null )
-        {
-            initViewer( index );
-            viewer = list[index];
-        }
+		if (b == true) {
 
+			initViewer(1);
+			setViewportView((JTextComponent) list[1]);
+			active = 1;
+		} else {
 
-        viewer.clearDoc();
+			initViewer(0);
+			setViewportView((JTextComponent) list[0]);
 
-        JTextComponent v = (JTextComponent) list[index];
-        setViewportView( v );
+			active = 0;
+		}
 
-        active = index;
+	}
+	*/
+	
+	/*
+	public void setHeader(Component header) {
+		DocumentViewer viewer = (DocumentViewer) list[active];
 
+		viewer.setHeader(header);
+	}
+	*/
+	/*
+	public boolean enableViewer(int index) {
 
-        return true;
-    }
+		if (active == index)
+			return false;
 
+		DocumentViewer viewer = (DocumentViewer) list[index];
+		if (viewer == null) {
+			initViewer(index);
+			viewer = list[index];
+		}
 
+		viewer.clearDoc();
 
-    public void setDoc( String str )
-    {
-	DocumentViewer viewer = (DocumentViewer) list[active];
-        viewer.setDoc( str );
+		JTextComponent v = (JTextComponent) list[index];
+		setViewportView(v);
 
+		active = index;
 
+		return true;
+	}
+	*/
+	
+	/*
+	public void insertHtml( HtmlViewer v )
+	{
+		viewer.setText("Hello");
+		
+		viewer.setCaretPosition(4);
+		//viewer.select(0,0);
+		viewer.insertComponent( new JButton("test") );
+	}
+	
+	public void setDoc(String str) {
+		//viewer = (DocumentViewer) list[active];
+		viewer.setDoc(str);
 
-    }
+	}
+	*/	
+	
+	/*
+	public String getSelectedText() {
+		DocumentViewer viewer = (DocumentViewer) list[active];
+		return viewer.getSelectedText();
+	}
+	*/
+	
+	/*
+	public void setCaretPosition(int i) {
+		JTextComponent viewer = (JTextComponent) list[active];
+		viewer.setCaretPosition(i);
+	}
+	*/
+	
+	/*
+	public DocumentViewer getViewer(int index) {
+		DocumentViewer viewer = null;
 
-    public String getSelectedText()
-    {
-    	DocumentViewer viewer = (DocumentViewer) list[active];
-    	return viewer.getSelectedText();
-    }
+		viewer = list[index];
 
-    public void setCaretPosition( int i )
-    {
-        JTextComponent viewer = (JTextComponent) list[active];
-        viewer.setCaretPosition( i );
-    }
+		return viewer;
+	}
+	*/
+	
+	/*
+	public DocumentViewer getActiveViewer() {
+		DocumentViewer viewer = null;
 
-    public DocumentViewer getViewer( int index )
-    {
-        DocumentViewer viewer = null;
+		viewer = list[active];
 
-        viewer = list[index];
+		return viewer;
+	}
 
-        return viewer;
-    }
+	public boolean isAdvancedViewActive() {
+		if (active == ADVANCED)
+			return true;
+		else
+			return false;
+	}
+	*/
 
-    public DocumentViewer getActiveViewer()
-    {
-        DocumentViewer viewer = null;
+	public void setPopupListener(MouseListener l) {
+		listener = l;
 
-        viewer = list[active];
-
-        return viewer;
-    }
-
-
-    public boolean isAdvancedViewActive()
-    {
-        if ( active == ADVANCED ) return true;
-           else return false;
-    }
-
-    public void setPopupListener( MouseListener l )
-    {
-        listener = l;
-
-        for ( int i=0; i<list.length; i++)
-        {
-            JTextComponent c = (JTextComponent) list[i];
-            if ( c != null )
-               c.addMouseListener( l );
-        }
-    }
-
-
-
-
+		for (int i = 0; i < list.length; i++) {
+			JTextComponent c = (JTextComponent) list[i];
+			if (c != null)
+				c.addMouseListener(l);
+		}
+	}
 
 }
-
-

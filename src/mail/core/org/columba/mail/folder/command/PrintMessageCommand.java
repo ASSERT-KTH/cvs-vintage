@@ -147,7 +147,7 @@ public class PrintMessageCommand extends FolderCommand {
 			Object uid = uids[j];
 			//ColumbaLogger.log.debug("copying UID=" + uid);
 
-			Message message = (Message) srcFolder.getMessage(uid, worker);
+			Message message = new Message();
 
 			ColumbaHeader header = srcFolder.getMessageHeader(uid, worker);
 

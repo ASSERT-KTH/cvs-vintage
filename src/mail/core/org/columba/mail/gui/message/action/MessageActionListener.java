@@ -70,29 +70,38 @@ public class MessageActionListener implements ActionListener
 		}
 		else if ( action.equals( dictAction.getActionCommand() ) )
 		{
+			// FIXME
+			/*
 			String text = messageController.getView().getSelectedText();
 
 
 			DictLookup dict = DictLookup.getInstance();
 			dict.lookup( text );
+			*/
 		}
 
 	}
 
 	public void copy()
 	{
+		// FIXME
+		/*
 		JTextComponent c =
 			(JTextComponent) messageController.getView().getActiveViewer();
 
 		c.copy();
+		*/
 	}
 
 	public void selectAll()
 	{
+		// FIXME
+		/*
 		JTextComponent c =
 			(JTextComponent) messageController.getView().getActiveViewer();
 
 		c.selectAll();
+		*/
 	}
 
 }

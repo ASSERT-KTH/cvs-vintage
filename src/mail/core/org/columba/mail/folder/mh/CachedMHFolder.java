@@ -74,7 +74,7 @@ public class CachedMHFolder extends MHFolder {
 		ColumbaHeader header = getMessageHeader(uid, worker);
 		
 		AbstractMessage message =
-			new Rfc822Parser().parse(source, false, header, 0);
+			new Rfc822Parser().parse(source, true, header, 0);
 		message.setUID(uid);
 		message.setSource( source );
 

@@ -132,11 +132,12 @@ public class URLController implements ActionListener {
 		viewer.openWithURL(url);
 	}
 
+	/*
 	public void openWithBrowser(URL url) {
 		MimeTypeViewer viewer = new MimeTypeViewer();
 		viewer.openWithBrowserURL(url);
 	}
-
+	*/
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 		if (action.equals("COMPOSE")) {
@@ -148,7 +149,7 @@ public class URLController implements ActionListener {
 		} else if (action.equals("OPEN_WITH")) {
 			openWith(getLink());
 		} else if (action.equals("OPEN_WITHINTERNALBROWSER")) {
-			openWithBrowser(getLink());
+			//openWithBrowser(getLink());
 		}
 	}
 }
