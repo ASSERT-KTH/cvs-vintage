@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.65 2003/05/20 14:28:05 mkl Exp $
+// $Id: Project.java,v 1.66 2003/05/28 07:46:04 mkl Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,6 +51,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Category;
 import org.argouml.application.api.Argo;
+import org.argouml.application.ArgoVersion;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ProjectMemberTodoList;
 import org.argouml.cognitive.ToDoList;
@@ -135,7 +136,7 @@ public class Project implements java.io.Serializable, TargetListener {
 
     private String _authorname = "";
     private String _description = "";
-    private String _version = "";
+    private String _version = ArgoVersion.getVersion();
 
     private Vector _searchpath = new Vector();
     private Vector _members = new Vector();
@@ -643,6 +644,7 @@ public class Project implements java.io.Serializable, TargetListener {
     public void save(boolean overwrite, File file)
         throws IOException, Exception {
         setFile(file);
+        setVersion(ArgoVersion.getVersion());
 
         if (expander == null) {
             java.util.Hashtable templates = TemplateReader.readFile(ARGO_TEE);
