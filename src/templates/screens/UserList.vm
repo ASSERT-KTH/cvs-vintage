@@ -49,8 +49,8 @@
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
     <th nowrap="nowrap">&#160;</th>
-    <th>Name</th>
-    <th>Email</th>
+    <th>$l10n.Name</th>
+    <th>$l10n.Username</th>
   </tr>
   ##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
     
@@ -58,7 +58,7 @@
     <tr class="a">
     <td><input type="checkbox" name="user_list" value="$user.UserId" /></td>
     <td><strong>$!user.Name</strong></td>
-    <td><a href="mailTo:$user.Email">$user.Email</a></td>
+    <td><a href="mailTo:$user.Email">$user.UserName</a></td>
     </tr>
    #end
 </table>  

@@ -189,14 +189,14 @@
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
   <th>$l10n.Name</th>
-  <th>$l10n.Email</th>
+  <th>$l10n.Username</th>
   <th>$l10n.Association</th>
 </tr>
 
 <tr class="a">
   #set ($createdUser = $currentIssue.CreatedBy)
   <td>$!createdUser.Name</td>
-  <td><a href="mailTo:$createdUser.Email">$createdUser.Email</a></td>
+  <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
   <td>Committed by</td>
 </tr>
 

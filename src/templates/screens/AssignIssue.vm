@@ -85,9 +85,9 @@
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr>
 		<th nowrap="nowrap">Select</th>
-		<th>Name</th>
-		<th>Email</th>
-		<th>Association</th>
+		<th>$l10n.Name</th>
+		<th>$l10n.Username</th>
+		<th>$l10n.Association</th>
 		</tr>
 
 #if (!$tempList)
@@ -98,7 +98,7 @@
     <tr class="a">
     <td><input type="checkbox" name="remove_user_$userId" value=$attrId>
     <td><strong>$!assignedUser.Name</strong></td>
-    <td><a href="mailto:$assignedUser.Email">$assignedUser.Email</a></td>
+    <td><a href="mailto:$assignedUser.Email">$assignedUser.UserName</a></td>
     <td><select name="temp_user_attr_$userId">
      #foreach ($selectUserAttr in $userAttrs)
         #set ($selected = "")
@@ -124,7 +124,7 @@
 			<tr class="a">
 			<td><input type="checkbox" name="remove_user_$userId" value=$attrId>
 			<td><strong>$!assignedUser.Name</strong></td>
-			<td><a href="mailto:$assignedUser.Email">$assignedUser.Email</a></td>
+			<td><a href="mailto:$assignedUser.Email">$assignedUser.UserName</a></td>
 			<td><select name="temp_user_attr_$userId">
 			 #foreach ($selectUserAttr in $userAttrs)
                 #set ($selected = "")
@@ -250,7 +250,7 @@
      <select name="searchField" >
       <option value="First Name">First name</option>
       <option value="Last Name">Last name</option>
-      <option value="Email">Email</option>
+      <option value="Username">Username</option>
      </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="Filter" /></td>
   </tr>
 </table>
@@ -282,14 +282,14 @@
 	<tr>
 	<th nowrap="nowrap">Select</th>
     <th>#userSort ("name" "Name")</th>
-	<th>#userSort ("email" "Email")</th>
+	<th>#userSort ("username" "Username")</th>
 	<th>Association</th>
 	</tr>
    #foreach ($user in $searchResults)
     #indexedRows($velocityCount)
     <td><input type="checkbox" name="add_user_$user.UserId" value="$user.UserId" /></td>
     <td><strong>$user.Name</strong></td>
-    <td><a href="mailTo:$user.Email">$user.Email</a></td>
+    <td><a href="mailTo:$user.Email">$user.UserName</a></td>
     <td><select name="user_attr_$user.UserId">
      #foreach ($userAttr in $userAttrs)
       #if ($user.hasPermission($userAttr.Permission, $module))

@@ -95,7 +95,7 @@ from:&#160;<input type="text" size="20"
 <tr>
 <th nowrap="nowrap">Select</th>
 <th align="left"><strong>Name</strong></th>
-<th align="left"><strong>Email</strong></th>
+<th align="left"><strong>Username</strong></th>
 <th align="left"><strong>Association</strong></th>
 </tr>
 #set ($userList = $data.Parameters.getStrings("user_list"))
@@ -115,9 +115,9 @@ from:&#160;<input type="text" size="20"
 #else
   #set ($selectedAttr = $data.Parameters.getString("user_attr_$userId"))
 #end
-  <td><input type="checkbox" name="delete_user_$userId" /></td>
+  <td><a href="mailto:$user.Email"><input type="checkbox" name="delete_user_$userId" /></a></td>
   <td><strong>$!user.FirstName $!user.LastName</strong></td>
-  <td><a href="mailto:$user.Email">$user.Email</a></td>
+  <td><a href="mailto:$user.Email">$user.UserName</a></td>
   <td>
    <select name="user_attr_$userId" size="" >
       <option value="any"
