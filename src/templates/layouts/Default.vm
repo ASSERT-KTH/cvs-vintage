@@ -4,6 +4,9 @@
  <head>
   <title>Scarab: $title</title>
   <meta http-equiv="Content-type" content="$data.ContentType" />
+  #if ($updateFrequency && $updateFrequency.length() > 0)
+  <meta http-equiv="refresh" content="$updateFrequency" />
+  #end
   <style type="text/css">
   @import url($staticLink.setPath("/style/tigris.css"));
   @import url($staticLink.setPath("/style/scarab.css"));

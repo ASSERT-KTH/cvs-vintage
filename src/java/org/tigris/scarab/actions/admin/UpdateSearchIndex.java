@@ -61,32 +61,77 @@ import org.tigris.scarab.util.word.SearchFactory;
 import org.tigris.scarab.util.word.SearchIndex;
 
 /**
- * This class allows an admin to update the search index.
+ * This class allows an admin to update the search index. It performs
+ * its magic by creating a background thread which executes until it is
+ * finished. The page will continue to refresh until the thread is 
+ * done executing.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: UpdateSearchIndex.java,v 1.3 2002/11/07 00:20:00 jon Exp $
+ * @version $Id: UpdateSearchIndex.java,v 1.4 2002/12/20 20:36:55 jon Exp $
  */
 public class UpdateSearchIndex extends RequireLoginFirstAction
 {
+    private static ThreadGroup tg = null;
+
     public void doPerform( RunData data, TemplateContext context )
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        try
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        
+        synchronized (this)
         {
-            SearchIndex indexer = SearchFactory.getInstance();
-            indexer.updateIndex();
-    
-            ScarabLocalizationTool l10n = getLocalizationTool(context);
-            scarabR.setConfirmMessage(l10n.get("SearchIndexUpdated"));
+            if (tg == null)
+            {
+                try
+                {
+                    tg = new ThreadGroup("UpdateIndex");
+                    Thread updateThread = new Thread(tg, new UpdateThread());
+                    updateThread.start();
+                    context.put("updateFrequency", "5");
+                    scarabR.setConfirmMessage(l10n.get("SearchIndexDoNoteLeavePage"));
+                }
+                catch (Exception e)
+                {
+                    tg = null;
+                    scarabR.setAlertMessage(e.getMessage());            
+                }
+            }
+            else if (tg.activeCount() == 0)
+            {
+                tg = null;
+                scarabR.setConfirmMessage(l10n.get("SearchIndexUpdated"));
+            }
+            else
+            {
+                context.put("updateFrequency", "5");
+                scarabR.setConfirmMessage(l10n.get("SearchIndexDoNoteLeavePage"));
+            }
         }
-        catch (Exception e)
-        {
-            scarabR.setConfirmMessage(e.getMessage());            
-        }
+
         String template = getCurrentTemplate(data, null);
         String nextTemplate = getNextTemplate(data, template);
         setTarget(data, nextTemplate);
+    }
+
+    public class UpdateThread implements Runnable
+    {
+        public UpdateThread()
+        {
+        }
+
+        public void run()
+        {
+            try
+            {
+                SearchIndex indexer = SearchFactory.getInstance();
+                indexer.updateIndex();
+            }
+            catch (Exception e)
+            {
+                log().debug("Update index failed:", e);
+            }
+        }
     }
 }
