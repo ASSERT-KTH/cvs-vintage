@@ -101,10 +101,10 @@ public class JspInterceptor extends BaseInterceptor {
 	}
     }
 
-    public void preServletInit( Context ctx, ServletWrapper sw )
+    public void preServletInit( Context ctx, Handler sw )
 	throws TomcatException
     {
-	Servlet theServlet = sw.getServlet();
+	Servlet theServlet = ((ServletWrapper)sw).getServlet();
 	if (theServlet instanceof HttpJspBase)  {
 	    if( debug > 0 )
 		log( "PreServletInit: HttpJspBase.setParentClassLoader" + sw );
@@ -114,7 +114,7 @@ public class JspInterceptor extends BaseInterceptor {
     }
 
     public int requestMap( Request req ) {
-	ServletWrapper wrapper=req.getWrapper();
+	ServletWrapper wrapper=(ServletWrapper)req.getWrapper();
 	if( wrapper!=null && ! "jsp".equals( wrapper.getName())
 	    && wrapper.getPath() == null)
 	    return 0;
@@ -161,13 +161,16 @@ public class JspInterceptor extends BaseInterceptor {
 	// The memory usage is smaller than JspSerlvet anyway, but
 	// can be further improved.
 	try {
-	    wrapper=ctx.getServletByName( servletName );
+	    wrapper=(ServletWrapper)ctx.getServletByName( servletName );
 	    // We may want to replace the class and reset it if changed
 	    
 	    if( wrapper==null ) {
-		wrapper=ctx.addServlet( servletName, classN );
-		wrapper.setPath( servletName );
-		wrapper.setOrigin( ServletWrapper.ORIGIN_INVOKER );
+		wrapper=new ServletWrapper();
+		wrapper.setContext(ctx);
+		wrapper.setServletName(servletName);
+		wrapper.setPath(classN);
+		wrapper.setOrigin( Handler.ORIGIN_INVOKER );
+		ctx.addServlet( wrapper );
 		
 		ctx.addServletMapping( servletPath ,
 				       servletPath );

@@ -314,12 +314,12 @@ public interface Request  {
      *  Similar with "handler" in Apache.
      *  @deprecated - use Container instead
      */
-    public ServletWrapper getWrapper() ;
+    public Handler getWrapper() ;
 
     /**
      *  @deprecated - use Container instead
      */
-    public void setWrapper(ServletWrapper handler) ;
+    public void setWrapper(Handler handler) ;
 
     // -------------------- Included requests --------------------
     public static final int MAX_INCLUDE=10;

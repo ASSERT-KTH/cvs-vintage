@@ -215,7 +215,7 @@ public class StaticInterceptor extends BaseInterceptor {
 /** Serve the content of a file ( and nothing more !).
  *
  */
-class FileHandler extends ServletWrapper  {
+class FileHandler extends Handler  {
     int realFileNote;
     
     FileHandler() {
@@ -339,7 +339,7 @@ class FileHandler extends ServletWrapper  {
 /** HTML-display for directories ( and nothing more !).
  *  This is the handler for static resources of type "dir".
  */
-class DirHandler extends ServletWrapper  {
+class DirHandler extends Handler  {
     private static final String datePattern = "EEE, dd MMM yyyyy HH:mm z";
     int realFileNote;
     

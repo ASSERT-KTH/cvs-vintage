@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.8 2000/07/11 03:48:43 alex Exp $
- * $Revision: 1.8 $
- * $Date: 2000/07/11 03:48:43 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.9 2000/08/02 02:17:11 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/08/02 02:17:11 $
  *
  * ====================================================================
  *
@@ -129,6 +129,13 @@ public class Handler {
 	return context;
     }
 
+    public void reload() {
+    }
+
+    public int getLoadOnStartUp() {
+	return 0;
+    }
+    
     public boolean isInternal() {
 	return internal;
     }
@@ -180,14 +187,14 @@ public class Handler {
 	initialized=false;
 
 	if( ! internal )
-	    contextM.doPreServletDestroy( context, (ServletWrapper)this);
+	    contextM.doPreServletDestroy( context, this);
 	
 	// XXX post will not be called if any error happens in destroy.
 	// That's how tomcat worked before - I think it's a bug !
 	doDestroy();
 
 	if( ! internal )
-	    contextM.doPostServletDestroy( context, (ServletWrapper)this);
+	    contextM.doPostServletDestroy( context, this);
     }
 
     /** Initialize the handler. Handler can override this
@@ -212,14 +219,14 @@ public class Handler {
 	    }
 	    
 	    if( ! internal )
-		contextM.doPreServletInit( context, (ServletWrapper)this);
+		contextM.doPreServletInit( context, this);
 	    doInit();
 
 	    // if an exception is thrown in init, no end interceptors will
 	    // be called. that was in the origianl code J2EE used
 
 	    if( ! internal )
-		contextM.doPostServletInit( context, (ServletWrapper)this);
+		contextM.doPostServletInit( context, this);
 	    
 	} catch( Exception ex ) {
 	    initialized=false;

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.11 2000/06/15 19:34:27 jon Exp $
- * $Revision: 1.11 $
- * $Date: 2000/06/15 19:34:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.12 2000/08/02 02:17:10 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/08/02 02:17:10 $
  *
  * ====================================================================
  *
@@ -156,15 +156,15 @@ public interface ContextInterceptor {
     /** Servlet Init notification.
      *  XXX do we need "pre/post" for init/destroy ? transactions? 
      */
-    public void preServletInit( Context ctx, ServletWrapper sw ) throws TomcatException;
+    public void preServletInit( Context ctx, Handler sw ) throws TomcatException;
     
-    public void postServletInit( Context ctx, ServletWrapper sw ) throws TomcatException;
+    public void postServletInit( Context ctx, Handler sw ) throws TomcatException;
 
 
     /** Servlet Destroy  notification
      */
-    public void preServletDestroy( Context ctx, ServletWrapper sw ) throws TomcatException;
+    public void preServletDestroy( Context ctx, Handler sw ) throws TomcatException;
     
-    public void postServletDestroy( Context ctx, ServletWrapper sw ) throws TomcatException;
+    public void postServletDestroy( Context ctx, Handler sw ) throws TomcatException;
 
 }

@@ -137,10 +137,10 @@ public class InvokerInterceptor extends BaseInterceptor {
 		 " SP=" + newServletPath +
 		 " PI=" + newPathInfo);
 	
-	ServletWrapper wrapper = ctx.getServletByName(servletName);
  	req.setServletPath(newServletPath);
 	req.setPathInfo(newPathInfo);
 	
+	Handler wrapper = ctx.getServletByName(servletName);
 	if (wrapper != null) {
 	    req.setWrapper( wrapper );
 	    return 0;
@@ -153,10 +153,15 @@ public class InvokerInterceptor extends BaseInterceptor {
 	// it's a much cleaner way to construct the servlet and
 	// make sure all interceptors are up to date.
 	try {
-	    wrapper = ctx.addServlet( servletName, servletName );
+	    ServletWrapper sw=new ServletWrapper();
+	    sw.setContext(ctx);
+	    sw.setServletName(servletName);
+	    sw.setServletClass( servletName );
+	    sw.setOrigin( Handler.ORIGIN_INVOKER );
+	    wrapper=sw;
+	    ctx.addServlet( sw );
 	    ctx.addServletMapping( newServletPath + "/*" ,
 				   servletName );
-	    wrapper.setOrigin( ServletWrapper.ORIGIN_INVOKER );
 	    if( debug > 0)
 		log( "Added mapping " + wrapper +
 		     " path=" + newServletPath + "/*" );

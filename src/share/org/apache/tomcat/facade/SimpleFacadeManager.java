@@ -165,9 +165,9 @@ public final class SimpleFacadeManager implements FacadeManager {
     }
 
 
-    public ServletConfig createServletConfig(ServletWrapper sw) {
+    public ServletConfig createServletConfig(Handler sw) {
 	//	if( sw.getContext() != ctx ) return null;
-	return new ServletConfigImpl(sw);
+	return new ServletConfigImpl((ServletWrapper)sw);
     }
 
 

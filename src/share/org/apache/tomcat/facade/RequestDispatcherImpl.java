@@ -187,7 +187,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
 
 	// CM should have set the wrapper - call it
-	ServletWrapper wr=realRequest.getWrapper();
+	Handler wr=realRequest.getWrapper();
 	if( wr!=null ) wr.service(realRequest, realResponse);
 
 	// close the response - output after this point will be discarded.
@@ -304,7 +304,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
  	// now it's really strange: we call the wrapper on the subrequest
 	// for the realRequest ( since the real request will still have the
 	// original handler/wrapper )
-	ServletWrapper wr=subRequest.getWrapper();
+	Handler wr=subRequest.getWrapper();
 	if( wr!=null ) wr.service(realRequest, realResponse);
 
 	// After request, we want to restore the include attributes - for
@@ -340,7 +340,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	// Use the original request - as in specification !
 
 	// We got here if name!=null, so assert it
-	ServletWrapper wrapper = context.getServletByName( name );
+	Handler wrapper = context.getServletByName( name );
 	Request realR=((HttpServletRequestFacade)request).getRealRequest();
 	if( wrapper!=null)
 	    wrapper.service( realR, realR.getResponse());
@@ -351,7 +351,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     public void forwardNamed(ServletRequest request, ServletResponse response)
 	throws ServletException, IOException
     {
-	ServletWrapper wrapper = context.getServletByName( name );
+	Handler wrapper = context.getServletByName( name );
 	Request realR=((HttpServletRequestFacade)request).getRealRequest();
 
 	if( wrapper!=null)

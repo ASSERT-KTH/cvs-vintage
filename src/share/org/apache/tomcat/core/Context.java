@@ -144,7 +144,7 @@ public class Context implements LogAware {
     Hashtable envEntryTypes=new Hashtable();
     Hashtable envEntryValues=new Hashtable();
 
-    // Maps specified in web.xml ( String url -> ServletWrapper  )
+    // Maps specified in web.xml ( String url -> Handler  )
     private Hashtable mappings = new Hashtable();
     Hashtable constraints=new Hashtable();
 
@@ -153,7 +153,7 @@ public class Context implements LogAware {
     Container defaultContainer = null; // generalization, will replace most of the
     // functionality. By using a default container we avoid a lot of checkings
     // and speed up searching, and we can get rid of special properties.
-    private ServletWrapper defaultServlet = null;
+    private Handler defaultServlet = null;
 
     // Authentication properties
     String authMethod;
@@ -527,12 +527,15 @@ public class Context implements LogAware {
 	    Container ct=(Container)containers.get( path );
 	    removeContainer( ct );
 	}
-        ServletWrapper sw = (ServletWrapper)servlets.get(servletName);
+        Handler sw = (Handler)servlets.get(servletName);
 	if (sw == null) {
+	    // Strict web.xml
+	    throw new TomcatException( "Mapping with invalid servlet name " +
+				       path + " " + servletName );
 	    // Workaround for frequent "bug" in web.xmls
 	    // Declare a default mapping
-	    log("Mapping with unregistered servlet " + servletName );
-	    sw = addServlet( servletName, servletName );
+	    // log("Mapping with unregistered servlet " + servletName );
+	    // 	    sw = addServlet( servletName, servletName );
 	}
 	if( "/".equals(path) )
 	    defaultServlet = sw;
@@ -598,7 +601,7 @@ public class Context implements LogAware {
 	containers.remove(ct.getPath());
     }
 
-//     public ServletWrapper getDefaultServlet() {
+//     public Handler getDefaultServlet() {
 // 	if( defaultServlet==null)
 // 	    defaultServlet=getServletByName(Constants.DEFAULT_SERVLET_NAME );
 // 	return defaultServlet;
@@ -615,8 +618,8 @@ public class Context implements LogAware {
 	servlets.remove( servletName );
     }
 
-    public ServletWrapper getServletByName(String servletName) {
-	return (ServletWrapper)servlets.get(servletName);
+    public Handler getServletByName(String servletName) {
+	return (Handler)servlets.get(servletName);
     }
 
     /**
@@ -626,11 +629,11 @@ public class Context implements LogAware {
      *
      * Called to add a new servlet from web.xml
      */
-    public void addServlet(ServletWrapper wrapper)
+    public void addServlet(Handler wrapper)
     	throws TomcatException
     {
 	wrapper.setContext( this );
-	String name=wrapper.getServletName();
+	String name=wrapper.getName();
 	//	log("Adding servlet " + name  + " " + wrapper);
 
         // check for duplicates
@@ -642,21 +645,21 @@ public class Context implements LogAware {
 	servlets.put(name, wrapper);
     }
 
-    public ServletWrapper addServlet(String name, String classN)
-	throws TomcatException
-    {
-	ServletWrapper sw = new ServletWrapper();
-	sw.setContext(this);
+//     public Handler addServlet(String name, String classN)
+// 	throws TomcatException
+//     {
+// 	Handler sw = new Handler();
+// 	sw.setContext(this);
 	
-	sw.setServletName(name);
-	if ( classN.startsWith("/")) {
-	    sw.setPath(classN);
-	} else {
-	    sw.setServletClass(classN);
-	}
-	addServlet( sw );
-	return sw;
-    }
+// 	sw.setServletName(name);
+// 	if ( classN.startsWith("/")) {
+// 	    sw.setPath(classN);
+// 	} else {
+// 	    sw.setServletClass(classN);
+// 	}
+// 	addServlet( sw );
+// 	return sw;
+//     }
 
     public Enumeration getServletNames() {
 	return servlets.keys();
@@ -701,14 +704,12 @@ public class Context implements LogAware {
 	Enumeration sE=servlets.elements();
 	while( sE.hasMoreElements() ) {
 	    try {
-		ServletWrapper sw=(ServletWrapper)sE.nextElement();
-		if( sw.getServletClassName() != null ) {
-		    // this is dynamicaly added, probably a JSP.
-		    // in any case, we can't save it
-		    sw.reload();
-		}
-		// 		log( "Removing " + sw.getName());
-		// 		removeServletByName( sw.getName());
+		Handler sw=(Handler)sE.nextElement();
+		// 		if( sw.getServletClassName() != null ) {
+		// 		    // this is dynamicaly added, probably a JSP.
+		// 		    // in any case, we can't save it
+		sw.reload();
+		//		}
 	    } catch( Exception ex ) {
 		log( "Reload exception: " + ex);
 	    }

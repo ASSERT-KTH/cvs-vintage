@@ -141,7 +141,7 @@ public class RequestImpl  implements Request {
     // LookupResult - used by sub-requests and
     // set by interceptors
     protected String servletName;
-    protected ServletWrapper handler = null;
+    protected Handler handler = null;
     Container container;
 
     protected String mappedPath = null;
@@ -506,11 +506,11 @@ public class RequestImpl  implements Request {
 	return cookieArray;
     }
     // -------------------- LookupResult
-    public ServletWrapper getWrapper() {
+    public Handler getWrapper() {
 	return handler;
     }
 
-    public void setWrapper(ServletWrapper handler) {
+    public void setWrapper(Handler handler) {
 	this.handler=handler;
     }
 

@@ -326,7 +326,7 @@ class SecurityConstraints {
     }
 }
 
-class BasicAuthHandler extends ServletWrapper {
+class BasicAuthHandler extends Handler {
     
     BasicAuthHandler() {
 	initialized=true;
@@ -351,7 +351,7 @@ class BasicAuthHandler extends ServletWrapper {
     XXX If we have user/pass, but still no permission  - display
     error page.
 */
-class FormAuthHandler extends ServletWrapper {
+class FormAuthHandler extends Handler {
     
     FormAuthHandler() {
 	initialized=true;
@@ -408,7 +408,7 @@ class FormAuthHandler extends ServletWrapper {
 
     This is called after the user POST the form login page.
 */
-class FormSecurityCheckHandler extends ServletWrapper {
+class FormSecurityCheckHandler extends Handler {
     
     FormSecurityCheckHandler() {
 	initialized=true;

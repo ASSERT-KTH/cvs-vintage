@@ -203,20 +203,20 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
 
     /** Servlet Init  notification
      */
-    public void preServletInit( Context ctx, ServletWrapper sw ) throws TomcatException {
+    public void preServletInit( Context ctx, Handler sw ) throws TomcatException {
     }
 
     
-    public void postServletInit( Context ctx, ServletWrapper sw ) throws TomcatException {
+    public void postServletInit( Context ctx, Handler sw ) throws TomcatException {
     }
 
     /** Servlet Destroy  notification
      */
-    public void preServletDestroy( Context ctx, ServletWrapper sw ) throws TomcatException {
+    public void preServletDestroy( Context ctx, Handler sw ) throws TomcatException {
     }
 
     
-    public void postServletDestroy( Context ctx, ServletWrapper sw ) throws TomcatException {
+    public void postServletDestroy( Context ctx, Handler sw ) throws TomcatException {
     }
 
 }

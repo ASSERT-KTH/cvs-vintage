@@ -165,7 +165,7 @@ final class ServletContextFacade implements ServletContext {
 	    return null;
 
 	// We need to do the checks
-	ServletWrapper wrapper = context.getServletByName( name );
+	Handler wrapper = context.getServletByName( name );
 	if (wrapper == null)
 	    return null;
 	RequestDispatcherImpl rD=new RequestDispatcherImpl( context );

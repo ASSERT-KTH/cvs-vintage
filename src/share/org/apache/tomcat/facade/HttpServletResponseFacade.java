@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.10 2000/07/31 02:35:16 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/07/31 02:35:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.11 2000/08/02 02:17:25 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/08/02 02:17:25 $
  *
  * ====================================================================
  *
@@ -165,6 +165,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	if( osFacade!=null) return osFacade;
 	//if( response.getOutputBuffer() != null ) {
 	osFacade=new ServletOutputStreamFacade(response);
+	response.setServletOutputStream( osFacade );
 	//}
 	return osFacade;
 
@@ -191,6 +192,9 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	}
 
 	writer=((ResponseImpl)response).getWriter( osFacade );
+	response.setServletOutputStream( osFacade );
+	response.setWriter(  writer );
+
 	return writer;
     }
 

@@ -179,7 +179,8 @@ public class WebXmlReader extends BaseInterceptor {
 	    // Servlet
 	    xh.addRule("web-app/servlet", xh.objectCreate("org.apache.tomcat.core.ServletWrapper") ); // servlet-wrapper
 	    xh.addRule("web-app/servlet", xh.setParent( "setContext") ); // remove it from stack when done
-	    xh.addRule("web-app/servlet", xh.addChild("addServlet", null) ); // remove it from stack when done
+	    xh.addRule("web-app/servlet", xh.addChild("addServlet", "org.apache.tomcat.core.Handler") );
+	    // remove it from stack when done
 	    xh.addRule("web-app/servlet/servlet-name", xh.methodSetter("setServletName",0) );
 	    xh.addRule("web-app/servlet/servlet-class", xh.methodSetter("setServletClass",0));
 	    xh.addRule("web-app/servlet/jsp-file",xh.methodSetter("setPath",0));

@@ -70,7 +70,7 @@ import org.apache.tomcat.core.Request;
 	HttpSessions hashtable from the SessionManager and then using a
 	special internal class ObjectInputStream that uses the newly created
 	classloader to de-serialize the sessions. This class is called from
-	within the ServletWrapper.handleReload() method. Much of this code
+	within the Handler.handleReload() method. Much of this code
 	is essentially the same as what I put into the Apache JServ release
 	so it is pretty well tested. It also depends on having HttpSession
 	implement the read/writeObject methods properly to only accept 

@@ -376,7 +376,7 @@ public class ContextManager implements LogAware {
 	Enumeration enum = ctx.getServletNames();
 	while (enum.hasMoreElements()) {
 	    String key = (String)enum.nextElement();
-	    ServletWrapper wrapper = ctx.getServletByName( key );
+	    Handler wrapper = ctx.getServletByName( key );
 	    ctx.removeServletByName( key );
 	    try {
 		wrapper.destroy();
@@ -675,7 +675,7 @@ public class ContextManager implements LogAware {
 	}
     }
 
-    /** Will find the ServletWrapper for a servlet, assuming we already have
+    /** Will find the Handler for a servlet, assuming we already have
      *  the Context. This is also used by Dispatcher and getResource -
      *  where the Context is already known.
      */
@@ -772,7 +772,6 @@ public class ContextManager implements LogAware {
     {
 	if (!res.isBufferCommitted()) {
 	    res.endHeaders();
-	    res.setBufferCommitted(true);
 	}
 	if( cnt>0 ) {
 	    doBeforeCommit( req, res );
@@ -991,7 +990,7 @@ public class ContextManager implements LogAware {
 	errorServlet.service( req, res );
     }
 
-    public ServletWrapper getHandlerForPath( Context ctx, String path ) {
+    public Handler getHandlerForPath( Context ctx, String path ) {
 	if( ! path.startsWith( "/" ) ) {
 	    return ctx.getServletByName( path );
 	}
@@ -1296,7 +1295,7 @@ public class ContextManager implements LogAware {
 	}
     }
 
-    public void doPreServletInit(Context ctx, ServletWrapper sw)
+    public void doPreServletInit(Context ctx, Handler sw)
 	throws TomcatException
     {
 	ContextInterceptor cI[]=getContextInterceptors();
@@ -1309,7 +1308,7 @@ public class ContextManager implements LogAware {
 	}
     }
 
-    public void doPostServletInit(Context ctx, ServletWrapper sw)
+    public void doPostServletInit(Context ctx, Handler sw)
 	throws TomcatException
     {
 	ContextInterceptor cI[]=getContextInterceptors();
@@ -1322,7 +1321,7 @@ public class ContextManager implements LogAware {
 	}
     }
 
-    public void doPreServletDestroy(Context ctx, ServletWrapper sw)
+    public void doPreServletDestroy(Context ctx, Handler sw)
 	throws TomcatException
     {
 	ContextInterceptor cI[]=getContextInterceptors();
@@ -1335,7 +1334,7 @@ public class ContextManager implements LogAware {
 	}
     }
 
-    public void doPostServletDestroy(Context ctx, ServletWrapper sw)
+    public void doPostServletDestroy(Context ctx, Handler sw)
 	throws TomcatException
     {
 	ContextInterceptor cI[]=getContextInterceptors();

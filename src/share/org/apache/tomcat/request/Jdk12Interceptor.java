@@ -84,7 +84,7 @@ public final class Jdk12Interceptor extends  BaseInterceptor {
 	debug=i;
     }
 
-    public void preServletInit( Context ctx, ServletWrapper sw )
+    public void preServletInit( Context ctx, Handler sw )
 	throws TomcatException
     {
 	fixJDKContextClassLoader(ctx);
@@ -92,13 +92,13 @@ public final class Jdk12Interceptor extends  BaseInterceptor {
 
     /** Servlet Destroy  notification
      */
-    public void preServletDestroy( Context ctx, ServletWrapper sw )
+    public void preServletDestroy( Context ctx, Handler sw )
 	throws TomcatException
     {
 	fixJDKContextClassLoader(ctx);
     }
     
-    public void postServletInit( Context ctx, ServletWrapper sw )
+    public void postServletInit( Context ctx, Handler sw )
 	throws TomcatException
     {
 	// no need to change the cl - next requst will do that

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.36 2000/07/31 02:35:15 costin Exp $
- * $Revision: 1.36 $
- * $Date: 2000/07/31 02:35:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.37 2000/08/02 02:17:12 costin Exp $
+ * $Revision: 1.37 $
+ * $Date: 2000/08/02 02:17:12 $
  *
  * ====================================================================
  *
@@ -100,15 +100,23 @@ public class ResponseImpl implements Response {
 
     protected MimeHeaders headers = new MimeHeaders();
 
-    //    protected BufferedServletOutputStream out;
+    // When getWriter is called on facade, both sos and writer are
+    // set.
+    // usingStream== ( sos!=null && writer ==null)
+    // usingWriter== ( writer != null )
+    // started == ( sos!=null )
+    protected ServletOutputStream sos;
     protected PrintWriter writer;
+
+    protected boolean commited = false;
+
     //    protected ByteBuffer bBuffer;
     protected OutputBuffer oBuffer;
 
+    // @deprecated
     protected boolean usingStream = false;
     protected boolean usingWriter = false;
     protected boolean started = false;
-    protected boolean commited = false;
     
     boolean notIncluded=true;
 
@@ -188,6 +196,7 @@ public class ResponseImpl implements Response {
 	usingStream = false;
 	sessionId=null;
 	writer=null;
+	sos=null;
 	started = false;
 	commited = false;
 	notIncluded=true;
@@ -243,16 +252,30 @@ public class ResponseImpl implements Response {
 	//	if( out!=null ) out.setUsingWriter(true);
     }
 
+    public void setWriter( PrintWriter w ) {
+	this.writer=w;
+    }
+    
     public PrintWriter getWriter() throws IOException {
+	// usingWriter
+	if( writer != null )
+	    return writer;
+
+	sos=getFacade().getOutputStream();
+	    
+	writer=getWriter( sos );
+
+	return writer;
+   
 	// 	if( out !=null )
 	// 	    return getWriter( out );
 	
 	// it will know what to do. This method is here
 	// just to keep old code happy ( internal error handlers)
-	if( usingStream ) {
-	    return getWriter( getFacade().getOutputStream());
-	}
-	return getFacade().getWriter();
+	//if( usingStream ) {
+	//    return getWriter( getFacade().getOutputStream());
+	//}
+	//return getFacade().getWriter();
     }
 
     public PrintWriter getWriter(ServletOutputStream outs) throws IOException {
@@ -304,10 +327,17 @@ public class ResponseImpl implements Response {
     public ServletOutputStream getOutputStream() throws IOException {
 	started = true;
 // 	if( out!=null)
-// 	    return out; 
-	return getFacade().getOutputStream();
+// 	    return out;
+	// neither writer or output stream used
+	if( sos == null )
+	    sos=getFacade().getOutputStream();
+
+	return sos;
     }
 
+    public void setServletOutputStream( ServletOutputStream s ) {
+	sos=s;
+    }
 
     // -------------------- Headers --------------------
     public MimeHeaders getMimeHeaders() {
@@ -464,6 +494,7 @@ public class ResponseImpl implements Response {
      *  interceptors to fix headers.
      */
     public void notifyEndHeaders() throws IOException {
+	commited=true;
 	//	log("End headers " + request.getProtocol());
 	if(request.getProtocol()==null) // HTTP/0.9 
 	    return;

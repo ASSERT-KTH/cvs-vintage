@@ -118,7 +118,7 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	    Enumeration sOnLevel =  ((Vector)loadableServlets.get( key )).elements();
 	    while (sOnLevel.hasMoreElements()) {
 		String servletName = (String)sOnLevel.nextElement();
-		ServletWrapper  result = ctx.getServletByName(servletName);
+		ServletWrapper  result = (ServletWrapper)ctx.getServletByName(servletName);
 
 		if( ctx.getDebug() > 0 ) ctx.log("Loading " + key + " "  + servletName );
 		if(result==null)
@@ -181,7 +181,7 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	Enumeration enum=ctx.getServletNames();
 	while(enum.hasMoreElements()) {
 	    String name=(String)enum.nextElement();
-	    ServletWrapper sw=ctx.getServletByName( name );
+	    Handler sw= ctx.getServletByName( name );
 	    int i=sw.getLoadOnStartUp();
 	    Integer level=new Integer(i);
 	    if( i!= 0) {

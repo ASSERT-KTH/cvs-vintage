@@ -120,17 +120,17 @@ public class LogEvents extends BaseInterceptor {
 
     /** Notify when a new servlet is added
      */
-    public void addServlet( Context ctx, ServletWrapper sw) throws TomcatException {
+    public void addServlet( Context ctx, Handler sw) throws TomcatException {
 	ctx.log( "Add servlet " + sw);
     }
     
     /** Notify when a servlet is removed from context
      */
-    public void removeServlet( Context ctx, ServletWrapper sw) throws TomcatException {
+    public void removeServlet( Context ctx, Handler sw) throws TomcatException {
 	ctx.log( "Remove servlet " + sw);
     }
 
-    public void addMapping( Context ctx, String path, ServletWrapper servlet) throws TomcatException {
+    public void addMapping( Context ctx, String path, Handler servlet) throws TomcatException {
 	ctx.log( "Add mapping " + path + "->" + servlet);
     }
 
@@ -197,23 +197,23 @@ public class LogEvents extends BaseInterceptor {
 
     /** Servlet Init  notification
      */
-    public void preServletInit( Context ctx, ServletWrapper sw ) throws TomcatException {
+    public void preServletInit( Context ctx, Handler sw ) throws TomcatException {
 	ctx.log( "Pre servlet init " + sw);
     }
 
     
-    public void postServletInit( Context ctx, ServletWrapper sw ) throws TomcatException {
+    public void postServletInit( Context ctx, Handler sw ) throws TomcatException {
 	ctx.log( "Post servlet init " + sw);
     }
 
     /** Servlet Destroy  notification
      */
-    public void preServletDestroy( Context ctx, ServletWrapper sw ) throws TomcatException {
+    public void preServletDestroy( Context ctx, Handler sw ) throws TomcatException {
 	ctx.log( "Pre servlet destroy " + sw);
     }
 
     
-    public void postServletDestroy( Context ctx, ServletWrapper sw ) throws TomcatException {
+    public void postServletDestroy( Context ctx, Handler sw ) throws TomcatException {
 	ctx.log( "Post servlet destroy " + sw);
     }
 

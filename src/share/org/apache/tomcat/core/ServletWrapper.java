@@ -141,6 +141,10 @@ public class ServletWrapper extends Handler {
 	isReloadable = reloadable;
     }
 
+    public String getName() {
+	return getServletName();
+    }
+    
     public String getServletName() {
 	if(name!=null) return name;
 	return path;
@@ -187,8 +191,12 @@ public class ServletWrapper extends Handler {
 		log( "Error in destroy ", ex );
 	    }
 	}
-	servlet=null;
-	servletClass=null;
+
+	if( servletClassName != null ) {
+	    // I can survive reload
+	    servlet=null;
+	    servletClass=null;
+	}
 	initialized=false;
     }
     
@@ -389,7 +397,7 @@ public class ServletWrapper extends Handler {
 	// I don't think that ever worked anyway - and I don't think
 	// it can work without integrating Jsp handling into tomcat
 	// ( using interceptor )
-	ServletWrapper jspServletW = context.getServletByName("jsp");
+	ServletWrapper jspServletW = (ServletWrapper)context.getServletByName("jsp");
 	servletClassName = jspServletW.getServletClass();
     }
     

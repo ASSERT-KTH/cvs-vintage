@@ -131,7 +131,7 @@ public class Container implements Cloneable {
 
     /** The handler associated with this container.
      */
-    ServletWrapper handler;
+    Handler handler;
     
     /** Security constraints associated with this Container
      */
@@ -270,13 +270,13 @@ public class Container implements Cloneable {
     
     /** The handler for this container
      */
-    public ServletWrapper getHandler() {
+    public Handler getHandler() {
 	return handler;
     }
 
     /** The handler ( servlet ) for this container
      */
-    public void setHandler(ServletWrapper h) {
+    public void setHandler(Handler h) {
 	handler=h;
     }
 

@@ -75,7 +75,7 @@ import javax.servlet.http.*;
 // the Context directly - same security checks.
 
 // For core use ( creation of Facade objects ) we can call directly.
-// In fact, there is only one call ( in ServletWrapper ) and SW
+// In fact, there is only one call ( in Handler ) and SW
 // belongs to Facade anyway - so it may not need this.
 // Removing it will also make things simpler.
 
@@ -92,7 +92,7 @@ public interface FacadeManager {
 
     public  HttpServletResponse createHttpServletResponseFacade(Response res);
 
-    public ServletConfig createServletConfig(ServletWrapper sw);
+    public ServletConfig createServletConfig(Handler sw);
 
     public  void recycle( Request req );
 
