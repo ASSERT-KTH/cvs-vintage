@@ -241,7 +241,7 @@ public class FrameModel {
             c.close();
         }
 
-        isSavingAll = false; // reset flag
+        System.exit(0);
     }
 
     /**
@@ -273,6 +273,7 @@ public class FrameModel {
                     // store view settings
                     viewList.addElement(v.getRoot());
                     saveDefaultView(v);
+                    System.exit(0);
                 } else {
                     // just remove reference - and save view settings
                     saveDefaultView(c.getViewItem());

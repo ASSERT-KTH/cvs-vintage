@@ -55,6 +55,5 @@ public class ExitAction extends AbstractColumbaAction {
         //MainInterface.frameModel.saveAll();
         //MainInterface.addressbookModel.saveAll();
         FrameModel.saveAndCloseAll();
-        System.exit(0);
     }
 }
