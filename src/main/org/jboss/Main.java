@@ -21,7 +21,6 @@ import java.util.*;
 
 import javax.management.*;
 import javax.management.loading.*;
-import com.sun.management.jmx.MBeanServerImpl;
 
 import org.jboss.system.SecurityAssociation;
 
@@ -30,7 +29,7 @@ import org.jboss.system.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public class Main
 {
@@ -105,7 +104,7 @@ public class Main
          // Load all configurations - one MBeanServer for each configuration
          for (int i = 0; i < configurations.length; i++)
          {
-             final MBeanServer server = new MBeanServerImpl();
+             final MBeanServer server = MBeanServerFactory.createMBeanServer();
       
              // Create MLet
              MLet mlet = new MLet();
