@@ -48,6 +48,8 @@ package org.tigris.scarab.util.word;
 
 // JDK classes
 import java.io.File;
+import java.util.List;
+import java.util.ArrayList;
 
 // Turbine classes
 import org.apache.turbine.Turbine;
@@ -73,7 +75,7 @@ import com.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdaptor.java,v 1.7 2001/08/09 07:59:54 jon Exp $
+ * @version $Id: LuceneAdaptor.java,v 1.8 2001/08/10 23:54:20 jmcnally Exp $
  */
 public class LuceneAdaptor 
     implements SearchIndex
@@ -82,10 +84,10 @@ public class LuceneAdaptor
     private final String path;
 
     /** the attributes that will be searched */
-    private NumberKey[] attributeIds;
+    private List attributeIds;
 
     /** the words and boolean operators */
-    private String query;
+    private List queryText;
 
     /**
      * Ctor.  Sets up an index directory if one does not yet exist in the
@@ -119,35 +121,15 @@ public class LuceneAdaptor
                 new IndexWriter(path, new StandardAnalyzer(), true);
             indexer.close();   
         }        
+
+        attributeIds = new ArrayList(5);
+        queryText = new ArrayList(5);
     }
 
-    /**
-     * The text attributes that will be searched.
-     *
-     * @param ids, a NumberKey array of attribute ids.
-     */
-    public void setAttributeIds(NumberKey[] ids)
+    public void addQuery(NumberKey[] ids, String text)
     {
-        this.attributeIds = ids;
-    }        
-
-    /**
-     *  Specify search criteria. This is incremental.
-     */
-    public void addQuery(String text) 
-        throws Exception
-    {
-            query = text;
-            /*
-        if ( query == null ) 
-        {
-            query = text;
-        }
-        else 
-        {
-            query += " " + text;
-        }
-            */
+        attributeIds.add(ids);
+        queryText.add(text);
     }
 
     /**
@@ -157,43 +139,48 @@ public class LuceneAdaptor
     public NumberKey[] getRelatedIssues() 
         throws Exception
     {
+        NumberKey[] issueIds = null; 
         // if there are no words to search for return no results 
-        if ( query == null || query.length() == 0)
-        {
-            return EMPTY_LIST; 
-        }
-        
-        StringBuffer fullQuery = null; 
-        if ( attributeIds != null ) 
-        {
-            fullQuery = new StringBuffer(10*attributeIds.length + 
-                ATTRIBUTE_ID.length() + query.length() + 3 );
-            
-            fullQuery.append("+(");
-            for ( int i=attributeIds.length-1; i>=0; i-- ) 
+        if ( queryText.size() != 0)
+        {        
+            // compute approximate size of buffer needed. !FIXME!
+            StringBuffer fullQuery = new StringBuffer(100);
+
+            for ( int j=attributeIds.size()-1; j>=0; j-- ) 
             {
-                fullQuery.append(ATTRIBUTE_ID)
-                .append(':')
-                .append(attributeIds[i].toString())
-                    .append(' ');
+                NumberKey[] ids = (NumberKey[])attributeIds.get(j);
+                String query = (String)queryText.get(j);
+
+                if ( ids != null && ids.length != 0 ) 
+                {
+                    fullQuery.append("+((");
+                    for ( int i=ids.length-1; i>=0; i-- ) 
+                    {
+                        fullQuery.append(ATTRIBUTE_ID)
+                            .append(':')
+                            .append(ids[i].toString());
+                        if ( i != 0 ) 
+                        {
+                            fullQuery.append(" OR ");
+                        }
+                    }
+                    fullQuery.append(") AND (")
+                        .append(query)
+                        .append("))");            
+                }
+                else
+                {
+                    fullQuery
+                        .append("+(")
+                        .append(query)
+                        .append(')');
+                }
             }
-            fullQuery.append(") ");
+            System.out.println("Querybefore=" + fullQuery);
+            Query q = QueryParser.parse(fullQuery.toString(), TEXT, 
+                                        new StandardAnalyzer());
+            System.out.println("Queryafter=" + q.toString("text"));
             
-        }
-        else 
-        {
-            fullQuery = new StringBuffer( query.length() + 3 );            
-        }
-        fullQuery
-            .append("+(")
-            .append(query)
-            .append(')');
-
-        System.out.println("Querybefore=" + fullQuery);
-        Query q = QueryParser.parse(fullQuery.toString(), TEXT, 
-                                    new StandardAnalyzer());
-        System.out.println("Queryafter=" + q.toString("text"));
-
         /*
         System.out.println("Query: " + q.toString(TEXT));
         IndexReader ir = IndexReader.open(path);
@@ -214,22 +201,27 @@ public class LuceneAdaptor
           });
         */      
         
-        IndexSearcher is = new IndexSearcher(path); 
-        Hits hits = is.search(q);
-        // remove duplicates
-        StringStack deduper = new StringStack();
-        for ( int i=0; i<hits.length(); i++) 
-        {
-            deduper.add( hits.doc(i).get(ISSUE_ID) );
+            IndexSearcher is = new IndexSearcher(path); 
+            Hits hits = is.search(q);
+            // remove duplicates
+            StringStack deduper = new StringStack();
+            for ( int i=0; i<hits.length(); i++) 
+            {
+                deduper.add( hits.doc(i).get(ISSUE_ID) );
+            }
+            
+            issueIds = new NumberKey[deduper.size()];
+            for ( int i=0; i<issueIds.length; i++) 
+            {
+                issueIds[i] = new NumberKey(deduper.get(i));
+            }
+            
+            is.close();
         }
-
-        NumberKey[] issueIds = new NumberKey[deduper.size()];
-        for ( int i=0; i<issueIds.length; i++) 
+        else
         {
-            issueIds[i] = new NumberKey(deduper.get(i));
+            issueIds = EMPTY_LIST; 
         }
-        
-        is.close();
         
         return issueIds;
     }

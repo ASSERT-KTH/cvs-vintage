@@ -80,7 +80,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class handles vocabulary information for a single issue
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor Karpelevitch</a>
- * @version $Id: Vocabulary.java,v 1.7 2001/08/02 07:11:44 jon Exp $
+ * @version $Id: Vocabulary.java,v 1.8 2001/08/10 23:54:20 jmcnally Exp $
  */
 public class Vocabulary
     implements SearchIndex
@@ -136,16 +136,6 @@ public class Vocabulary
     }
 
     /**
-     * The text attributes that will be searched.
-     *
-     * @param ids, a NumberKey array of attribute ids.
-     */
-    public void setAttributeIds(NumberKey[] ids)
-    {
-        this.attributeIds = ids;
-    }        
-
-    /**
      *  used to determine whether a word should not be indexed
      *  should return true for very frequently used word or non-words
      *  or in other cases when apropriate
@@ -162,8 +152,10 @@ public class Vocabulary
     /**
      *  Add words and phrases to search on. this is incremental.
      */
-    public void addQuery(String text) throws Exception
+    public void addQuery(NumberKey[] ids, String text) throws Exception
     {
+        this.attributeIds = ids;
+
         StringTokenizer st = new StringTokenizer(text.toLowerCase());
         String tok;
         HashSet newEntries = new HashSet();
@@ -251,7 +243,8 @@ public class Vocabulary
     public void index(AttributeValue aval)
         throws Exception
     {
-        addQuery(aval.getValue());
+        NumberKey[] id = {aval.getAttributeId()};
+        addQuery(id, aval.getValue());
 
             //should we remove old records first?
             for(Iterator i = getEntries().iterator(); i.hasNext();)

@@ -53,20 +53,20 @@ import org.apache.turbine.util.Log;
  *  Returns an instance of the SearchIndex specified in Scarab.properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SearchFactory.java,v 1.5 2001/07/17 21:40:32 jon Exp $
+ * @version $Id: SearchFactory.java,v 1.6 2001/08/10 23:54:20 jmcnally Exp $
  */
 public class SearchFactory
 {
-    private static final SearchIndex searchIndex;
+    private static final Class searchIndex;
 
     static
     {
         String className = Turbine.getConfiguration()
             .getString(SearchIndex.CLASSNAME);
-        SearchIndex si = null;
+        Class si = null;
         try
         {
-            si = (SearchIndex)Class.forName(className).newInstance();
+            si = Class.forName(className);
         }
         catch (Exception e)
         {
@@ -77,7 +77,8 @@ public class SearchFactory
     }
 
     public static SearchIndex getInstance()
+        throws InstantiationException, IllegalAccessException
     {
-        return searchIndex;
+        return (SearchIndex)searchIndex.newInstance();
     }
 }
