@@ -50,7 +50,7 @@ import org.jboss.proxy.InvocationHandler;
  *   Castor JDO support
  *
  *   @author Oleg Nitz (on@ibis.odessa.ua)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class CastorJDOImpl extends ServiceMBeanSupport 
         implements DataObjects, ObjectFactory, Referenceable, Serializable,
@@ -100,7 +100,6 @@ public class CastorJDOImpl extends ServiceMBeanSupport
 
         // Bind in JNDI
         bind(new InitialContext(), "java:/" + _jndiName, this);
-        log.debug("DataObjects factory for " + _dataSourceName + " bound to " + _jndiName);
 
         _jdo.setTransactionManager("java:/TransactionManager");
         _jdo.setConfiguration(_dbConf);
@@ -119,6 +118,7 @@ public class CastorJDOImpl extends ServiceMBeanSupport
         } catch (Exception ex) {
         }
         _instances.put(_jndiName, this);
+        log.debug("DataObjects factory for " + _dataSourceName + " bound to " + _jndiName);
     }
 
     public void stopService() {
