@@ -13,6 +13,8 @@
 
 <module name="PolicyLoader" javaClass="org.apache.tomcat.modules.config.PolicyLoader"/>
 
+<module name="MxInterceptor" javaClass="org.apache.tomcat.modules.config.MxInterceptor"/>
+
 <module name="AutoWebApp" javaClass="org.apache.tomcat.modules.config.AutoWebApp"/>
 
 <module name="Http10Interceptor" javaClass="org.apache.tomcat.modules.server.Http10Interceptor"/>
