@@ -49,6 +49,7 @@ package org.tigris.scarab.tools;
 import java.text.DateFormat;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -57,6 +58,7 @@ import org.apache.turbine.Log;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.ComboKey;
+import org.apache.torque.util.Criteria;
 import org.apache.turbine.RunData;
 import org.apache.turbine.modules.Module;
 import org.apache.turbine.tool.IntakeTool;
@@ -81,6 +83,7 @@ import org.tigris.scarab.om.IssueTemplateInfo;
 import org.tigris.scarab.om.IssueTemplateInfoPeer;
 import org.tigris.scarab.om.Depend;
 import org.tigris.scarab.om.DependPeer;
+import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.om.ScopePeer;
 import org.tigris.scarab.om.FrequencyPeer;
 import org.tigris.scarab.om.Attribute;
@@ -414,6 +417,15 @@ try{
             e.printStackTrace();
         }
         return su;
+    }
+
+    /**
+     * Return a specific User by username.
+     */
+    public ScarabUser getUserByUserName(String username)
+     throws Exception
+    {
+        return UserManager.getInstance(username, getIssue().getIdDomain());
     }
 
     /**
@@ -1233,6 +1245,55 @@ try{
          }
          return query.toString();
     }
+
+    public List getUserSearchResults()  throws Exception
+    {
+        String searchString = data.getParameters()
+               .getString("searchString"); 
+        String searchField = data.getParameters()
+               .getString("searchField"); 
+        String[] assigneeIds = 
+            data.getParameters().getStrings("addedusers");
+  
+        // Build list of eligible assignees for this issue
+        List eligibleAssignees = getIssue().getEligibleAssignees();
+        List userIds = new ArrayList();
+        for (int i = 0; i < eligibleAssignees.size(); i++)
+        {
+            userIds.add(((ScarabUser)eligibleAssignees.get(i)).getUserId());
+        }
+
+        // Remove already-added users from search results
+        if (assigneeIds != null)
+        {
+            ArrayList assigneeIdList = new ArrayList();
+            for (int i = 0; i < assigneeIds.length; i++)
+            {
+                assigneeIdList.add(assigneeIds[i]);
+            }
+            userIds.remove(assigneeIdList);
+        }             
+        Criteria crit = new Criteria();
+        crit.addIn(ScarabUserImplPeer.USER_ID, userIds);
+        String searchTerm = "%" + searchString + "%";
+        if (searchField.equals("First Name"))
+        {
+            crit.add(ScarabUserImplPeer.FIRST_NAME, 
+                    (Object)searchTerm, Criteria.LIKE);
+        }
+        else if (searchField.equals("Last Name"))
+        {
+            crit.add(ScarabUserImplPeer.LAST_NAME,  
+                    (Object)searchTerm, Criteria.LIKE);
+        }
+        else
+        {
+            crit.add(ScarabUserImplPeer.LOGIN_NAME, 
+                    (Object)searchTerm, Criteria.LIKE);
+        }
+        return ScarabUserImplPeer.doSelect(crit);
+    }
+
 
     /**
      * Return a subset of the passed-in list.
