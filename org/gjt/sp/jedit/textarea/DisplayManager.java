@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.84 2003/12/16 03:04:32 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.85 2004/02/23 05:50:12 spestov Exp $
  */
 public class DisplayManager
 {
@@ -343,6 +343,12 @@ public class DisplayManager
 			// this line is the start of a fold
 
 			int index = fvmget(line + 1);
+			if(index == -1)
+			{
+				expandAllFolds();
+				return -1;
+			}
+
 			start = fvm[index];
 			if(index != fvmcount - 1)
 				end = fvm[index + 1] - 1;
@@ -364,6 +370,12 @@ public class DisplayManager
 		else
 		{
 			int index = fvmget(line);
+			if(index == -1)
+			{
+				expandAllFolds();
+				return -1;
+			}
+
 			start = fvm[index];
 			if(index != fvmcount - 1)
 				end = fvm[index + 1] - 1;
