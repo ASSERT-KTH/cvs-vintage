@@ -1,0 +1,166 @@
+#set ($action = $link.setPage("MoveIssue2.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "Links.vm"))
+
+#set ($issueId = $data.Parameters.getString("issue_id"))
+#set ($issue = $scarabR.getIssue($issueId))
+#set ($moduleId = $data.Parameters.getString("module_id"))
+#set ($module = $scarabR.CurrentModule)
+
+<form method="post" action="$action" >
+
+<h3>Issue to be copied / moved</h3>
+<input type="hidden" name="id" value="$issueId">
+<input type="hidden" name="module_id" value="$moduleId">
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th><a href="#" title="sort">issue summary:</a></th>
+
+         <th><a href="#" title="sort">date committed:</a></th>
+
+         <th><a href="#" title="sort">committed by:</a></th>
+        </tr>
+        <tr class="a">
+         <td>
+             #set ($attrValues = $issue.AllAttributeValuesMap)
+             #set( $attVal =  $attrValues.get("SUMMARY"))
+             #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
+           $attVal.Value
+         </td>  
+
+         <td>$format.getDate($scarabG.DateFormat, $issue.CreatedDate)</td>
+
+         <td>
+             #set ($createdUser = $scarabR.getUser($issue.CreatedBy.toString()) )
+             <a href="mailTo:$createdUser.Email">$createdUser.UserName</a>
+         </td>
+        </tr>
+        </table>
+
+          <h3>destination project</h3>
+          <P>
+          #set($newModule = $scarabR.getModule($moduleId) )
+           $newModule.Name
+           
+          </p>
+          
+          <h3>Action</h3>
+          <p><input type="radio" name="select_action" value="copy" 
+             #if ($select_action.equals("copy") )
+                checked
+             #end />&nbsp;copy
+          </p>
+          <p><input type="radio" name="select_action" value="move" 
+             #if ($select_action.equals("move") )
+                checked
+             #end />&nbsp;move
+          </p>  
+          
+
+          <h3>issue attribute mapping results</h3>
+
+<div class="sidebyside">
+       <table border="1" cellspacing="2" cellpadding="3" width="100%">
+        <tr>
+         <th>attributes from issue to be copied/moved</th>
+         <th>matching attributes in destination project</th>
+</tr>
+<tr>
+<td>
+
+           <div class="datatablechild">
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th>Attribute name (alias)</th>
+         
+         <th>value (list option/content)</th>
+         
+        </tr>
+#foreach( $attr in $matchingAttributes )
+         #if( $velocityCount % 2 > 0 )
+            <tr class="a">
+         #else 
+            <tr class="b">
+         #end
+         <td>$attr.Attribute.Name 
+           #set( $displayValue = $module.getRModuleAttribute($attr.Attribute).getDisplayValue() )
+           #if (!$attr.Attribute.Name.equals($displayValue))
+                ($displayValue)
+           #end 
+         </td>
+
+         <td>$attr.Value</td>
+        </tr>
+#end
+        </table>
+                </div>
+                </td>
+        <td>
+
+           <div class="datatablechild">
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+         <th>Attribute name (alias)</th>
+         
+         <th>value (list option/content)</th>
+         
+        </tr>
+#foreach( $attr in $matchingAttributes )
+         #if( $velocityCount % 2 > 0 )
+            <tr class="a">
+         #else 
+            <tr class="b">
+         #end
+         <td>$attr.Attribute.Name
+           #set( $displayValue = $newModule.getRModuleAttribute($attr.Attribute).getDisplayValue() )
+           #if (!$attr.Attribute.Name.equals($displayValue))
+                ($displayValue)
+           #end
+         </td>
+
+         <td>$attr.Value</td>
+    #end
+        </tr>
+        </table>
+                </div>
+                
+                </td>
+
+        </tr>
+        </table>
+</div>
+
+
+#if (!$orphanAttributes.isEmpty()) 
+          <h3>attributes that do not exist in destination project (saved as comment)</h3>
+
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th><a href="#" title="sort">include=checked</a></th>
+
+         <th><a href="#" title="sort">attribute name</a></th>
+         
+         <th><a href="#" title="sort">option name</a></th>
+         
+        </tr>
+#foreach( $attr in $orphanAttributes )
+         #if( $velocityCount % 2 > 0 )
+            <tr class="a">
+         #else 
+            <tr class="b">
+         #end
+         <td><input type="checkbox" name="x" value="x" checked /></td>
+
+         <td><input type="text" name="x" value="$attr.Attribute.Name" /></td>
+
+         <td><input type="text" name="x" value="$attr.Value" /></td>
+
+        </tr>
+#end
+
+        </table>
+#end                        
+<p class="functnbar"><input type="submit" value="move / copy" name="eventSubmit_doSaveissue" />&nbsp;<input type="submit" value="cancel" class="button" name="eventSubmit_doCancel" /></p>
+        
+     </div></td>
+    </tr>
+   </table>
+  </form>
+
