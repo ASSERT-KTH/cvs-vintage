@@ -117,9 +117,12 @@ public class ContextXmlReader extends BaseInterceptor {
 	if (configFile == null)
 	    configFile=DEFAULT_CONFIG;
 
+        if (File.separatorChar != '/')
+            configFile=configFile.replace('/',File.separatorChar);
+
         f=new File(configFile);
 	if( !f.isAbsolute())
-	    f=new File( cm.getHome(), "/" + configFile);
+	    f=new File( cm.getHome(), configFile);
 
 	if( f.exists() )
 	    ServerXmlReader.loadConfigFile(xh,f,cm);
