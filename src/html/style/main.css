@@ -1,4 +1,3 @@
-
 body {
 	background: white;
 	color: black;
@@ -34,14 +33,14 @@ th, td {
 	color: blue; 
 	}
 a:active, a:hover, #leftcol a:active, #leftcol a:hover {
-	color: #f60 !important;
+	color: #f30 !important;
 	}
 #login a:link, #login a:visited {
 	color: white; 
 	text-decoration: underline;
 	}
-#login a:active, #login a:hover {
-	color: #f60 !important;
+#banner a:active, #banner a:hover {
+	color: #f90 !important;
 	}
 #helptext a {
  text-decoration: none;
@@ -62,30 +61,31 @@ a:active, a:hover, #leftcol a:active, #leftcol a:hover {
 .datatablechild tr.a td {
 	background: #cf9;
 	}
-.axial th {
+.app .axial th {
 	background-color: #efefef;
 	text-align: right;
 	color: black
 	}
 .alert {
-	background: #ffc;
-	font-weight: bold
+	background: #ff0;
 	}
 .selection {
 	background: #ffc;
 	font-weight: bold
 	}
-.stb	{
+body td .stb	{
 	margin-top: 1em;
+	text-indent: 0;
 	}
-.mtb	{
+body td .mtb	{
 	margin-top: 2em;
+	text-indent: 0;
 	}
 dd	{
 	margin-bottom: .67em;
 	}
 #footer {
- margin: 8px
+ margin: 4px
  }
 .username {
 	white-space: nowrap;
@@ -97,7 +97,7 @@ dd	{
 	font-weight: bold;
 	}
 #helptext {
-	margin-top: 2em
+	margin-top: 1em
 	}
 #helptext td div {
 	margin: .5em
@@ -136,11 +136,14 @@ dd	{
 body #banner #login a { 
 	color: white;
 	}
-.tabs th {
-	color: white;
-	background-color: #999;
+.tabs td, .tabs th {
+	background-color: #ccc;
 	padding-left: 7px;
 	padding-right: 7px;
+	}
+.app .tabs th {
+	background-color: #999;
+	color: #fff;
 	}
 .tabs td {
 	background-color: #ccc;

@@ -1,4 +1,3 @@
-
 html body, body div, body p, body th, body td, body li, body dl, body dd, input, select, textarea, .app h3, .app h4 	{
 	font-family:	Verdana, Helvetica, Arial, sans-serif;
 	}
@@ -142,15 +141,8 @@ ul.tasks li {
 #navcolumn div div {
 	background-image: url(/@SCARAB_CONTEXT@/images/strich.gif);
 	background-repeat: no-repeat;
-	background-position:  .5em 60%;
+	background-position:  .5em .5em;
  }
-#navcolumn div div div, #navcolumn div.selected {
-	background-image: none;
-	background-color: white;
-	padding-top: .2em;
-	padding-bottom: .3em;
- }
-
 /* Scarab/App - styles start here */
 .functnbar {
 	background: #666 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat top left;
