@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.81 2004/07/12 21:24:11 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.82 2004/07/21 16:54:08 loubyansky Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -1424,6 +1424,8 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
          <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
          <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
          <auto-increment-template>?1 IDENTITY</auto-increment-template>
+         <add-column-template>ALTER TABLE ?1 ADD COLUMN ?2 ?3</add-column-template>
+         <drop-column-template>ALTER TABLE ?1 DROP COLUMN ?2</drop-column-template>
          <alias-header-prefix>t</alias-header-prefix>
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
@@ -1716,6 +1718,7 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
          -->
          <fk-constraint-template>ALTER TABLE ?1 ADD INDEX (?3), ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
          <auto-increment-template>?1 auto_increment</auto-increment-template>
+         <alter-column-template>ALTER TABLE ?1 MODIFY ?2 ?3</alter-column-template>
          <alias-header-prefix>t</alias-header-prefix>
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
@@ -1855,6 +1858,7 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
          <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
          <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
          <auto-increment-template>?1 IDENTITY</auto-increment-template>
+         <alter-column-template>ALTER TABLE ?1 ALTER COLUMN ?2 ?3</alter-column-template>
          <alias-header-prefix>t</alias-header-prefix>
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
