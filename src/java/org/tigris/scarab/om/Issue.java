@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.211 2002/11/12 16:33:27 thierrylach Exp $
+ * @version $Id: Issue.java,v 1.212 2002/11/12 19:04:02 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2862,17 +2862,23 @@ public class Issue
         SequencedHashMap avMap = getModuleAttributeValuesMap(); 
         AttributeValue oldAttVal = null;
         AttributeValue newAttVal = null;
-        Iterator iter = avMap.iterator();
+        Iterator iter = newAttVals.keySet().iterator();
         while (iter.hasNext())
         {
-            oldAttVal = (AttributeValue)avMap.get(iter.next());
-            newAttVal = (AttributeValue)newAttVals.get(oldAttVal.getAttributeId());
-            if (newAttVal != null)
+            NumberKey attrId = (NumberKey)iter.next();
+            Attribute attr = AttributeManager.getInstance(attrId);
+            oldAttVal = (AttributeValue)avMap.get(attr.getName().toUpperCase());
+            newAttVal = (AttributeValue)newAttVals.get(attrId);
+            if (newAttVal.getValue() != null && newAttVal.getValue() != "")
             {
-                oldAttVal.startActivitySet(activitySet);
                 oldAttVal.setProperties(newAttVal);
-                oldAttVal.save();
             }
+            else
+            {
+                oldAttVal.setDeleted(true);
+            }
+            oldAttVal.startActivitySet(activitySet);
+            oldAttVal.save();
         }
         return activitySet;
     }

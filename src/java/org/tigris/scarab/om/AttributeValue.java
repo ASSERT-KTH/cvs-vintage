@@ -75,7 +75,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.76 2002/11/04 23:41:28 elicia Exp $
+ * @version $Id: AttributeValue.java,v 1.77 2002/11/12 19:04:02 elicia Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -740,7 +740,7 @@ public abstract class AttributeValue
     public void save(Connection dbcon)
         throws TorqueException
     {
-        if ( isModified() && !getDeleted() && !getAttribute().isUserAttribute())
+        if ( isModified() && !getAttribute().isUserAttribute())
         {
             try
             {
@@ -752,87 +752,103 @@ public abstract class AttributeValue
             }
             // Save activity record
             String desc = getActivityDescription();
-            saveActivity = ActivityManager
-                            .create(getIssue(), getAttribute(), activitySet, 
-                                    desc, null,
-                                    oldNumericValue, getNumericValue(), oldUserId,
-                                    getUserId(), oldOptionId, getOptionId(), 
-                                    oldValue, getValue(), dbcon);
+            if (getDeleted())
+            {
+                saveActivity = ActivityManager
+                                .create(getIssue(), getAttribute(), activitySet, 
+                                        desc, null, getNumericValue(), 0, 
+                                        getUserId(), null, getOptionId(), null, 
+                                        getValue(), null, dbcon);
+            }
+            else
+            {
+                saveActivity = ActivityManager
+                                .create(getIssue(), getAttribute(), activitySet, 
+                                        desc, null, oldNumericValue, getNumericValue(), 
+                                        oldUserId, getUserId(), oldOptionId, getOptionId(), 
+                                        oldValue, getValue(), dbcon);
+            }
         }
         super.save(dbcon);
         if ( chainedValue != null ) 
         {
             chainedValue.save(dbcon);
         }
-        
         endActivitySet();
     }
 
-    /**
-     * Gets the Activity record associated with this AttributeValue
-     * It can only be retrieved after the save() method has been called 
-     * since that is when it is generated.
-     */
-    public Activity getActivity()
-    {
-        return this.saveActivity;
-    }
-
-    /**
-     * Allows you to override the description for
-     * the activity that is generated when this attributevalue
-     * is saved.
-     */
-    public void setActivityDescription(String string)
-    {
-        this.activityDescription = string;
-    }
-
-    /**
-     * Not sure it is a good idea to save description in activity record
-     * the description can be generated from the other data and it brings
-     * up i18n issues.
-     */
-    private String getActivityDescription()
-        throws TorqueException
-    {
-        if (activityDescription != null)
+        /**
+         * Gets the Activity record associated with this AttributeValue
+         * It can only be retrieved after the save() method has been called 
+         * since that is when it is generated.
+         */
+        public Activity getActivity()
         {
-            return activityDescription;
+            return this.saveActivity;
         }
-        String name = getAttribute().getName();
-        String newValue = getValue();
-        StringBuffer sb = new StringBuffer()
-            .append(name);
-        if ( oldValue == null ) 
+
+        /**
+         * Allows you to override the description for
+         * the activity that is generated when this attributevalue
+         * is saved.
+         */
+        public void setActivityDescription(String string)
         {
-            sb.append(" set");
+            this.activityDescription = string;
         }
-        else
+
+        /**
+         * Not sure it is a good idea to save description in activity record
+         * the description can be generated from the other data and it brings
+         * up i18n issues.
+         */
+        private String getActivityDescription()
+            throws TorqueException
         {
-            sb.append(" changed from '");
-            if (oldValue.length() > 25) 
+            if (activityDescription != null)
             {
-                sb.append(oldValue.substring(0,25)).append("...");
+                return activityDescription;
+            }
+            String name = getAttribute().getName();
+            String newValue = getValue();
+            StringBuffer sb = new StringBuffer()
+                .append(name);
+            if (getDeleted())
+            {
+               sb.append(" has been undefined.");        
             }
             else
             {
-                sb.append(oldValue);
-            }
-            sb.append('\'');
-        }
-        sb.append(" to '");
-        if (newValue.length() > 25) 
-        {
-            sb.append(newValue.substring(0,25)).append("...");
-        }
-        else
-        {
-            sb.append(newValue);
-        }
-        sb.append('\'');
-        return sb.toString();
-    }
+               if ( oldValue == null ) 
+               {
+                   sb.append(" set");
+               }
+               else
+               {
+                   sb.append(" changed from '");
+                   if (oldValue.length() > 25) 
+                   {
+                       sb.append(oldValue.substring(0,25)).append("...");
+                   }
+                   else
+                   {
+                       sb.append(oldValue);
+                   }
+                   sb.append('\'');
+               }
+               sb.append(" to '");
+               if (newValue.length() > 25) 
+               {
+                   sb.append(newValue.substring(0,25)).append("...");
+               }
+               else
+               {
+                   sb.append(newValue);
+               }
+               sb.append('\'');
+           }
+           return sb.toString();
+       }
 
 
     /**
