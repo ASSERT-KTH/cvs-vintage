@@ -24,7 +24,7 @@
 // File: Notation.java
 // Classes: Notation
 // Original Author: Thierry Lach
-// $Id: Notation.java,v 1.13 2002/06/09 14:48:56 linus Exp $
+// $Id: Notation.java,v 1.14 2002/07/18 09:47:04 kataka Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -136,7 +136,7 @@ implements PropertyChangeListener {
   private static boolean reportedNotationProblem = false;
 
   public static NotationName getDefaultNotation() {
-      NotationName n = NotationNameImpl.findNotation(Configuration.getString(KEY_DEFAULT_NOTATION, NOTATION_ARGO.getConfigurationValue()));
+    NotationName n = NotationNameImpl.findNotation(Configuration.getString(KEY_DEFAULT_NOTATION, NOTATION_ARGO.getConfigurationValue()));
       // Needs-more-work:
       // This is needed for the case when the default notation is 
       // not loaded at this point.

@@ -25,7 +25,7 @@
 // File: UMLChangeDispatch.java
 // Classes: UMLChangeDispatch
 // Original Author:
-// $Id: UMLChangeDispatch.java,v 1.8 2002/07/15 15:12:13 kataka Exp $
+// $Id: UMLChangeDispatch.java,v 1.9 2002/07/18 09:47:04 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added named constants
 
@@ -212,7 +212,7 @@ public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
      *    new target on completion of dispatch.
      */
     public void run() {
-        dispatch(_container);
+        dispatch(_container); 
         //
         //   now that we have finished all the UI updating
         //
