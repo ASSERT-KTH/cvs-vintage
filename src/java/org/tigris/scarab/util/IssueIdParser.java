@@ -69,7 +69,7 @@ import org.tigris.scarab.om.Issue;
  * This class contains logic for finding issue ids in generic text.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueIdParser.java,v 1.6 2003/02/03 19:12:22 jmcnally Exp $
+ * @version $Id: IssueIdParser.java,v 1.7 2003/02/07 21:29:37 jon Exp $
  */
 public class IssueIdParser
 {
@@ -178,17 +178,20 @@ public class IssueIdParser
         if (re.match(token)) 
         {
             id = re.getParen(0);
-            if (id.charAt(0) >= '0' && id.charAt(0) <= '9') 
+            Issue issue = null;
+            try
             {
-                id = module.getCode() + id;
+                issue = module.getIssueById(id);
             }
-            Issue issue = IssueManager.getIssueById(id);
+            catch(Exception e)
+            {
+                // Ignored on purpose
+            }
             if (issue == null || issue.getDeleted()) 
             {
                 id = null;
             }
         }
-
         return id;
     }
 
