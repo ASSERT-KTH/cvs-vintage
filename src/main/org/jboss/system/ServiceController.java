@@ -5,6 +5,9 @@
  * See terms of license at gnu.org.
  */
 package org.jboss.system;
+
+
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -13,13 +16,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-
 import java.util.Map;
 import javax.management.InstanceNotFoundException;
 import javax.management.JMException;
 import javax.management.JMRuntimeException;
 import javax.management.MBeanException;
-
 import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanRegistration;
@@ -30,8 +31,8 @@ import javax.management.ReflectionException;
 import javax.management.RuntimeErrorException;
 import javax.management.RuntimeMBeanException;
 import javax.management.RuntimeOperationsException;
-
 import org.w3c.dom.Element;
+import javax.management.IntrospectionException;
 
 /**
  * This is the main Service Controller. A controller can deploy a service to a
@@ -40,7 +41,7 @@ import org.w3c.dom.Element;
  * @see org.jboss.system.Service
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.10 $ <p>
+ * @version $Revision: 1.11 $ <p>
  *
  * <b>Revisions:</b> <p>
  *
@@ -64,6 +65,25 @@ public class ServiceController
     * index into the ServiceProxy.hasOp array.
     */
    private static HashMap serviceOpMap = new HashMap();
+   /**
+    * Map between mbeans and the mbean references they have
+    */
+   private static HashMap mbeanToMBeanRefsMap = new HashMap();
+   //inverse map
+   private static HashMap mbeanRefToMBeansMap = new HashMap();
+
+   /**
+    * The set of mbeans that can't find all their mbean references, mapped to 
+    * the mbeans they can't find.
+    */
+   private static HashMap suspendedToMissingMBeanMap = new HashMap();
+
+   /**
+    * The map between missing mbeans and what is waiting for them : 
+    * inverse of suspendedToMissingMBeanMap
+    */
+   private static HashMap missingToSuspendedMBeanMap = new HashMap();
+
 
    /**
     * Helper classes to create and configure the classes
@@ -80,7 +100,7 @@ public class ServiceController
    MBeanServer server;
 
    /** The array list keeps the order of deployment. */
-   List services = new ArrayList();
+   List startedServices = new ArrayList();
    
    /** The map keeps the list of objectNames to services. */
    Map nameToServiceMap = new HashMap();
@@ -109,8 +129,8 @@ public class ServiceController
     */
    public ObjectName[] getDeployed()
    {
-      ObjectName[] deployed = new ObjectName[services.size()];
-      services.toArray(deployed);
+      ObjectName[] deployed = new ObjectName[startedServices.size()];
+      startedServices.toArray(deployed);
 
       return deployed;
    }
@@ -139,8 +159,8 @@ public class ServiceController
    {
       // The ObjectName of the bean
       ObjectName objectName = parseObjectName(mbeanElement);
-
-      undeploy(objectName);
+      //at least make a new version!
+      //undeploy(objectName);
 
       // It is not there so really create the component now
       try
@@ -179,35 +199,78 @@ public class ServiceController
       }
       
       // Configure the MBean
+      boolean waiting = false;
       try
       {
-         configurator.configure(mbeanElement);
+         ArrayList mBeanRefs = configurator.configure(mbeanElement);
+         if (mBeanRefs.size() > 0) 
+         {
+            synchronized (this)
+            {
+               mbeanToMBeanRefsMap.put(objectName, mBeanRefs);
+               //ArrayList waitingFor = new ArrayList();
+               Iterator refs = mBeanRefs.iterator();
+               while (refs.hasNext()) 
+               {
+                  //First, record dependencies
+                  ObjectName ref = (ObjectName)refs.next();
+                  ArrayList backRefs = (ArrayList)mbeanRefToMBeansMap.get(ref);
+                  if (backRefs == null) 
+                  {
+                     backRefs = new ArrayList();
+                     mbeanRefToMBeansMap.put(ref, backRefs);
+                  } // end of if ()
+                  if (!backRefs.contains(objectName)) 
+                  {
+                     backRefs.add(objectName);        
+                  } // end of if ()   
+                  //Now, does the needed mbean exist? if not, note suspension.
+                  //We could use the mbean server or our own service map.
+                  //if (!nameToServiceMap.containsKey(ref)) 
+                  if (!startedServices.contains(ref)) 
+                  {
+                     //Not there, mark suspended.
+                     markWaiting(ref, objectName);
+                  } // end of if ()
+               } // end of while ()
+            }   
+         
+         } // end of if (mBeanRefs.size() > 0)
       }
       catch (ConfigurationException e)
       {
          log.error("Could not configure MBean: " + objectName, e);
          throw e;
       }
-
       String serviceFactory = mbeanElement.getAttribute("serviceFactory");
-
-      MBeanInfo info = server.getMBeanInfo(objectName);
-
-      Service service = getServiceInstance(objectName,
-            server.getMBeanInfo(objectName),
-            mbeanElement.getAttribute("serviceFactory"));
-
-      //Mbeans are init'ed and started by ServiceDeployer now.
-
-      // we need to keep an order on the MBean it encapsulates dependencies
-      services.add(objectName);
-      // Keep track
-      nameToServiceMap.put(objectName, service);
-
-      //You are done
+      registerAndStartService(objectName, serviceFactory);
       return objectName;
    }
 
+   //needs to be an mbean method, for e.g. RARDeployer to register RAR's for dependency.
+   //puts a mbean that you created some other way (such as deployed rar) 
+   //into dependency system so other beans can be started/stopped on its 
+   //existence (or registration)
+   public void registerAndStartService(ObjectName serviceName, String serviceFactory) throws Exception
+   {
+      try 
+      {
+         Service service = getServiceInstance(serviceName, serviceFactory);
+         // Keep track
+         nameToServiceMap.put(serviceName, service);
+
+         start(serviceName);
+         //You are done
+      }
+      catch (Exception e) 
+      {
+         log.error("Problem in registerAndStartService", e);
+         //dont let anyone think we're started if we're not!
+         nameToServiceMap.remove(serviceName);
+         throw e;
+      } // end of try-catch
+
+   }
    /**
     * #Description of the Method
     *
@@ -229,6 +292,45 @@ public class ServiceController
     */
    public void undeploy(ObjectName objectName) throws Exception
    {
+      stop(objectName);
+      destroy(objectName);
+      //We are not needing anyone or waiting for anyone
+      ArrayList weNeededList = (ArrayList)mbeanToMBeanRefsMap.remove(objectName);
+      if (weNeededList != null) 
+      {
+         //remove the back reference for each mbean we needed.
+         Iterator needed = weNeededList.iterator();
+         while (needed.hasNext()) 
+         {
+            ObjectName neededName = (ObjectName)needed.next();
+            ArrayList needingList = (ArrayList)mbeanRefToMBeansMap.get(neededName);
+            if (needingList != null) 
+            {
+               needingList.remove(objectName);
+            } // end of if ()
+            
+         } // end of while ()
+         
+      } // end of if ()
+      
+      ArrayList weSuspendedForList = (ArrayList)suspendedToMissingMBeanMap.remove(objectName);
+      if (weSuspendedForList != null) 
+      {
+         //remove the back reference for each mbean we suspended for.
+         Iterator suspendedFor = weSuspendedForList.iterator();
+         while (suspendedFor.hasNext()) 
+         {
+            ObjectName suspendedForName = (ObjectName)suspendedFor.next();
+            ArrayList suspendedOnList = (ArrayList)missingToSuspendedMBeanMap.get(suspendedForName);
+            if (suspendedOnList != null) 
+            {
+               suspendedOnList.remove(objectName);
+            } // end of if ()
+            
+         } // end of while ()
+         
+      } // end of if ()
+      
       
       // Do we have a deployed MBean?
       if (server.isRegistered(objectName))
@@ -238,7 +340,7 @@ public class ServiceController
          }
          
          //Remove from local maps
-         services.remove(objectName);
+         startedServices.remove(objectName);
          Service service = (Service)nameToServiceMap.remove(objectName);
 
          // Remove the MBean from the MBeanServer
@@ -281,6 +383,13 @@ public class ServiceController
       return name == null ? new ObjectName(OBJECT_NAME) : name;
    }
 
+   // methods about suspension.
+
+   public synchronized boolean isSuspended(ObjectName objectName)
+   {
+      return suspendedToMissingMBeanMap.containsKey(objectName);
+   }
+
    // Service implementation ----------------------------------------
 
    /**
@@ -292,9 +401,9 @@ public class ServiceController
           throws Exception
    {
 
-      log.info("Initializing " + services.size() + " services");
+      log.info("Initializing " + startedServices.size() + " startedServices");
 
-      List servicesCopy = new ArrayList(services);
+      List servicesCopy = new ArrayList(startedServices);
       Iterator enum = servicesCopy.iterator();
       int serviceCounter = 0;
       ObjectName name = null;
@@ -324,9 +433,9 @@ public class ServiceController
    public void start()
           throws Exception
    {
-      log.info("Starting " + services.size() + " services");
+      log.info("Starting " + startedServices.size() + " services");
 
-      List servicesCopy = new ArrayList(services);
+      List servicesCopy = new ArrayList(startedServices);
       Iterator enum = servicesCopy.iterator();
       int serviceCounter = 0;
       ObjectName name = null;
@@ -349,13 +458,13 @@ public class ServiceController
    }
 
    /**
-    * #Description of the Method
+    * This is the only one we should have of these lifecycle methods!
     */
    public void stop()
    {
-      log.info("Stopping " + services.size() + " services");
+      log.info("Stopping " + startedServices.size() + " services");
 
-      List servicesCopy = new ArrayList(services);
+      List servicesCopy = new ArrayList(startedServices);
       ListIterator enum = servicesCopy.listIterator();
       int serviceCounter = 0;
       ObjectName name = null;
@@ -398,7 +507,7 @@ public class ServiceController
     /*
       log.info("Destroying " + services.size() + " services");
 
-      List servicesCopy = new ArrayList(services);
+      List servicesCopy = new ArrayList(startedServices);
       ListIterator enum = servicesCopy.listIterator();
       int serviceCounter = 0;
       ObjectName name = null;
@@ -435,16 +544,7 @@ public class ServiceController
     */
    public void init(ObjectName serviceName) throws Exception
    {
-      if (nameToServiceMap.containsKey(serviceName))
-      {
-
-         ((Service)nameToServiceMap.get(serviceName)).init();
-      }
-      else
-      {
-         throw new InstanceNotFoundException
-            ("Could not find " + serviceName.toString());
-      }
+      throw new Exception("init(serviceName) is obsolete");
    }
 
    /**
@@ -455,16 +555,58 @@ public class ServiceController
     */
    public void start(ObjectName serviceName) throws Exception
    {
+      if (suspendedToMissingMBeanMap.containsKey(serviceName)) 
+      {
+         log.debug("waiting to start " + serviceName + " until dependencies are resolved");
+         return;     
+      } // end of if ()
+       
       if (nameToServiceMap.containsKey(serviceName))
       {
 
+         ((Service)nameToServiceMap.get(serviceName)).init();
          ((Service)nameToServiceMap.get(serviceName)).start();
+         startedServices.add(serviceName);
       }
       else
       {
          throw new InstanceNotFoundException
             ("Could not find " + serviceName.toString());
       }
+      ArrayList waitingList = (ArrayList)missingToSuspendedMBeanMap.remove(serviceName);
+      if (waitingList != null) 
+      {
+         Iterator waiting = waitingList.iterator();
+         while (waiting.hasNext()) 
+         {
+            ObjectName waitingName = (ObjectName)waiting.next();        
+            //Is it waiting for anyone else?
+            ArrayList waitingFor = (ArrayList)suspendedToMissingMBeanMap.get(waitingName);
+            if (waitingFor == null) 
+            {
+               //maybe should be DeploymentException, but it might pull in too many classes.
+               throw new Exception("Missing suspended to Missing map entry between suspended: " + waitingName + " and missing: " + serviceName);                    
+            } // end of if ()
+            waitingFor.remove(serviceName);
+            if (waitingFor.size() == 0) 
+            {
+               //not waiting for anyone else, can finish deploying.
+               log.debug("missing mbeans now present, finishing deployment of " + waitingName);
+               suspendedToMissingMBeanMap.remove(waitingName);
+               //init(waitingName);
+               start(waitingName);
+            } // end of if ()
+            else 
+            {
+               log.debug("There are still missing mbeans, deployment of " + waitingName + " postponed");
+
+            } // end of else
+            
+         } // end of while ()
+         
+              
+      } // end of if ()
+      
    }
 
    /**
@@ -475,6 +617,26 @@ public class ServiceController
     */
    public void stop(ObjectName serviceName) throws Exception
    {
+      ArrayList usingList = (ArrayList)mbeanRefToMBeansMap.get(serviceName);
+      if (usingList != null) 
+      {
+         //we have to stop and destroy these beans that depend on serviceName. 
+         Iterator using = usingList.iterator();  
+         while (using.hasNext()) 
+         {
+            ObjectName usingName = (ObjectName)using.next();
+            log.debug("stopping/destroying object " + usingName + " using " + serviceName);
+            if (!isWaitingFor(serviceName, usingName)) 
+            {
+               markWaiting(serviceName, usingName);
+               stop(usingName);
+               destroy(usingName);
+            } // end of if ()
+           
+         } // end of while ()
+         
+      } // end of if ()
+      
       if (nameToServiceMap.containsKey(serviceName))
       {
 
@@ -521,9 +683,8 @@ public class ServiceController
     * @throws IllegalAccessException
     */
    private Service getServiceInstance(ObjectName objectName,
-                                      MBeanInfo info,
                                       String serviceFactory)
-          throws ClassNotFoundException, InstantiationException, IllegalAccessException
+       throws ClassNotFoundException, InstantiationException, IllegalAccessException, JMException//, InstanceNotFoundException, IntrospectionException
    {
       Service service = null;
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -535,6 +696,7 @@ public class ServiceController
       }
       else
       {
+         MBeanInfo info = server.getMBeanInfo(objectName);
          MBeanOperationInfo[] opInfo = info.getOperations();
          Class[] interfaces = {org.jboss.system.Service.class};
          InvocationHandler handler = new ServiceProxy(objectName, opInfo);
@@ -598,6 +760,41 @@ public class ServiceController
       }
       e.printStackTrace();
       log.error(e);
+   }
+
+   private void markWaiting(ObjectName missing, ObjectName waiting)
+   {
+      ArrayList waitingList = (ArrayList)missingToSuspendedMBeanMap.get(missing);
+      if (waitingList == null) 
+      {
+         waitingList = new ArrayList();
+         missingToSuspendedMBeanMap.put(missing, waitingList);
+      } // end of if ()
+      if (!waitingList.contains(waiting)) 
+      {
+         waitingList.add(waiting);        
+      } // end of if ()          
+      //Now do the other way.         
+      ArrayList missingList = (ArrayList)suspendedToMissingMBeanMap.get(waiting);
+      if (missingList == null) 
+      {
+         missingList = new ArrayList();
+         suspendedToMissingMBeanMap.put(waiting, missingList);
+      } // end of if ()
+      if (!missingList.contains(missing)) 
+      {
+         missingList.add(missing);        
+      } // end of if ()                   
+   }
+
+   private boolean isWaitingFor(ObjectName serviceName, ObjectName usingName)
+   {
+      ArrayList waitingList = (ArrayList)missingToSuspendedMBeanMap.get(serviceName);
+      if (waitingList == null) 
+      {
+         return false;//noone is waiting for this guy.        
+      } // end of if ()
+      return waitingList.contains(usingName);
    }
 
    // Inner classes -------------------------------------------------

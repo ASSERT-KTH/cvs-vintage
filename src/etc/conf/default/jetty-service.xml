@@ -2,7 +2,6 @@
 
 <server>
 
-  <depends>JBOSS-SYSTEM:service=Naming</depends>
 
   <classpath archives="
 	javac.jar, 

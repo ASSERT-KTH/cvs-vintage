@@ -6,6 +6,7 @@
  */
 package org.jboss.deployment;
 
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -25,7 +26,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
 import org.jboss.system.ServiceMBeanSupport;
@@ -35,7 +37,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
  * <p><b>Revisions:</b>
  *
@@ -48,8 +50,11 @@ public abstract class DeployerMBeanSupport
    implements DeployerMBean
 {
    // Constants -----------------------------------------------------
-    
-   // Attributes ----------------------------------------------------
+   private static final String SERVICE_CONTROLLER_NAME = "JBOSS-SYSTEM:spine=ServiceController";
+   // Attributes --------------------------------------------------------
+
+   private ObjectName serviceControllerName;
+
 
    private Map deployments = new HashMap();
 
@@ -558,8 +563,10 @@ public abstract class DeployerMBeanSupport
              */
            public boolean accept(File file)
            {
-              return file.getName().endsWith(".jar") 
-                 || file.getName().endsWith(".zip");
+              return !(file.getName().endsWith(".sar") 
+                 || file.getName().endsWith(".war")
+                 || file.getName().endsWith(".ear")
+                 || file.getName().endsWith(".rar"));
            }
         };
      //these go directly into classpath
@@ -595,14 +602,31 @@ public abstract class DeployerMBeanSupport
                  || file.getName().endsWith(".rar");
            }
         };
-     Collection deployables = getUrlsInDir(unpackedDir, jarFilter);
+     Collection deployables = getUrlsInDir(unpackedDir, unpackFilter);
      Iterator subdeploy = deployables.iterator();
      while (subdeploy.hasNext()) 
      {
         recursiveUnpack((URL)subdeploy.next(), urls, xmls);         
      }
      return unpackedDir;
-  }
+   }
+
+   protected ObjectName getServiceControllerName() throws DeploymentException
+   {
+      if (serviceControllerName == null)
+      {
+         try
+         {
+            serviceControllerName = new ObjectName(SERVICE_CONTROLLER_NAME);
+         }
+         catch(MalformedObjectNameException mone)
+         {
+            throw new DeploymentException("Can't construct service controller object name!!" + mone);
+         }
+      }
+      return serviceControllerName;
+   }
+
 
    // Private -------------------------------------------------------
 

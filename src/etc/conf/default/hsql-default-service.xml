@@ -7,15 +7,14 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: hsqldb-default-service.xml,v 1.2 2001/11/10 21:38:06 d_jencks Exp $ -->
+<!-- $Id: hsql-default-service.xml,v 1.5 2001/11/10 21:38:06 d_jencks Exp $ -->
 
 
 <server>
 
-
   <classpath archives="
-	 hsqldb.jar,
-	 hsqldb-plugin.jar"/>
+	 hsql.jar, 
+	 hsql-plugin.jar"/>
 
   <!-- ==================================================================== -->
   <!-- JDBC - Initialize the databases                                      -->
@@ -32,8 +31,8 @@
 
   <mbean code="org.jboss.resource.ConnectionFactoryLoader" 
 	 name="JBOSS-SYSTEM:service=ConnectionFactoryLoader,name=DefaultDS">
-    <attribute name="ManagedConnectionFactoryProperties">ConnectionURL=jdbc:hsqldb:hsql://localhost:1476
-  DriverClass=org.hsqldb.jdbcDriver
+    <attribute name="ManagedConnectionFactoryProperties">ConnectionURL=jdbc:HypersonicSQL:hsql://localhost:1476
+  DriverClass=org.hsql.jdbcDriver
   UserName=sa</attribute>
     <attribute name="JndiName">DefaultDS</attribute>
     <attribute name="TransactionManagerName">java:/TransactionManager</attribute>
@@ -59,12 +58,14 @@
     <attribute name="PrincipalMappingProperties">UserName=sa</attribute>
   </mbean>
 
+
+  <!--NoTransDS is for the jdbc persistence manager for jbossmq.-->
   <mbean code="org.jboss.resource.ConnectionFactoryLoader" 
-	 name="JBossMQ:service=ConnectionFactoryLoader,name=NoTransDS">
-    <attribute name="ManagedConnectionFactoryProperties">ConnectionURL=jdbc:hsqldb:hsql://localhost:1476
-  DriverClass=org.hsqldb.jdbcDriver
-  UserName=sa
-  AutoCommit=true</attribute>
+	 name="JBOSSMQ:service=ConnectionFactoryLoader,name=NoTransDS">
+    <attribute name="ManagedConnectionFactoryProperties">ConnectionURL=jdbc:HypersonicSQL:hsql://localhost:1476
+  AutoCommit=true
+  DriverClass=org.hsql.jdbcDriver
+  UserName=sa</attribute>
     <attribute name="JndiName">NoTransDS</attribute>
     <attribute name="TransactionManagerName">java:/TransactionManager</attribute>
     <mbean-ref name="ResourceAdapterName">JCA:service=RARDeployment,name=Minerva JDBC LocalTransaction ResourceAdapter</mbean-ref>

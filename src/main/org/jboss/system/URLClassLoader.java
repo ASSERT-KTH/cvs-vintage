@@ -30,7 +30,7 @@ import javax.management.loading.MLet;
  *
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="christoph.jung@jboss.org">Christoph G. Jung</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * 
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -58,44 +58,7 @@ public class URLClassLoader
    /** All SCL are just in orbit around a basic ServiceLibraries */
    private static ServiceLibraries libraries;
 	
-	/**
-	* One url per SCL
-	*
-	* @param String application
-	* @param ClassLoader parent
-	*/
-   /*public URLClassLoader( String pUrl )
-   {
-      super( new URL[] {} );
-      try
-      {
-         URL lUrl = new URL( pUrl );
-         addURL( lUrl );
-         this.keyUrl = lUrl;
-      }
-      catch( Exception e )
-      {
-         System.out.println("[GPA] WARNING: URL "+keyUrl+" is not valid");
-      }
-
-      try
-      {
-			
-         //url.openStream();
-			
-			
-         if (libraries == null) libraries = ServiceLibraries.getLibraries();
-			
-
-         // A URL enabled SCL must register itself with the libraries to be queried
-         libraries.addClassLoader(this);
-      }
-      catch(Exception e) 
-      { 
-         System.out.println("[GPA] WARNING: URL "+keyUrl+" could not be opened");
-      }
-   }*/
-
+	
    /**
     * One url per SCL
     *
@@ -106,21 +69,14 @@ public class URLClassLoader
    {
       super(urls);
       this.keyUrl = keyUrl;
-
       try
       {
-          //url.openStream();
 			
          if (libraries == null)
          {
             libraries = ServiceLibraries.getLibraries();
          }
 			
-         /*
-         //Reload the library if necessary
-         if (reload) 
-         libraries.removeClassLoader(this) ;
-         */
 
          // A URL enabled SCL must register itself with the libraries to
          // be queried
@@ -172,6 +128,7 @@ public class URLClassLoader
    {
       if (name.endsWith("CHANGEME"))
       {
+
          System.out.println("UCL GETRESOURCE "+name+ " in UCL " +
                             this.hashCode());
       }

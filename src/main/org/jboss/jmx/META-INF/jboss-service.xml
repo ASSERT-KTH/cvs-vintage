@@ -7,7 +7,6 @@
 
 <server>
 
-  <depends>JBOSS-SYSTEM:service=Naming</depends>
 
   <mbean code="com.sun.jdmk.comm.HtmlAdaptorServer" name="Adaptor:name=html">
     <attribute name="MaxActiveClientCount">10</attribute>

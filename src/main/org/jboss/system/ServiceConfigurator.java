@@ -6,41 +6,43 @@
  */
 package org.jboss.system;
 
-import java.io.Writer;   
-import java.io.StringWriter;
-import java.util.Hashtable;
+
+
+
+
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
+import java.io.StringWriter;
+import java.io.Writer;   
 import java.lang.reflect.Method;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
-import javax.management.MBeanInfo;
+import java.util.ArrayList;
+import java.util.Hashtable;
 import javax.management.Attribute;
-import javax.management.ObjectName;
-import javax.management.MBeanServer;
-import javax.management.ObjectInstance;
-import javax.management.MBeanAttributeInfo;
 import javax.management.InstanceNotFoundException;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanInfo;
+import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
-
+import javax.management.ObjectInstance;
+import javax.management.ObjectName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Text;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Document;
-
+import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
 import org.jboss.util.DOMWriter;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 /**
  * Service configuration helper.
  * 
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:hiram@jboss.org">Hiram Chirino</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -149,7 +151,20 @@ public class ServiceConfigurator
 	
    // Public -----------------------------------------------------
 	
-   public void configure(Element mbeanElement) 
+    /**
+     * The <code>configure</code> method configures an mbean based on the xml element configuration
+     * passed in.  Three formats are supported:
+     * &lt;attribute name="(name)"&gt;(value)&lt;/attribute&gt;
+     * &lt;mbean-ref name="(name)"&gt;(object name of mbean referenced)&lt;/mbean-ref&gt;
+     * &lt;mbean-ref-list name="(name)"&gt;
+     * [list of]  &lt;/mbean-ref-list-element&gt;(object name)&lt;/mbean-ref-list-element&gt;
+     * &lt;/mbean-ref-list&gt;
+     *
+     * @param mbeanElement an <code>Element</code> value
+     * @return a <code>ArrayList</code> of all the mbeans this one references.
+     * @exception Exception if an error occurs
+     */
+    public ArrayList configure(Element mbeanElement) 
       throws Exception 
    {
 		
@@ -163,8 +178,10 @@ public class ServiceConfigurator
          info = server.getMBeanInfo(objectName);
       } catch (InstanceNotFoundException e) {
          // The MBean is no longer available
-         // It's ok, just return
-         return;
+         // It's ok, just return It is ????? Why??  Oh yeah?
+         throw new DeploymentException("trying to configure nonexistent mbean: " + objectName);
+         //log.debug("object name " + objectName + " is no longer available");
+         //return true;
       }
 		
       // Set attributes
@@ -218,6 +235,83 @@ public class ServiceConfigurator
             }
          }
       }
+      // Set mbean references (object names)
+      ArrayList mBeanRefs = new ArrayList();
+      NodeList mbeanRefElements = mbeanElement.getElementsByTagName("mbean-ref");
+      log.debug("found " + mbeanRefElements.getLength() + " mbean-ref elements");
+      for (int j = 0; j < mbeanRefElements.getLength(); j++) {
+         Element mbeanRefElement = (Element)mbeanRefElements.item(j);
+         String mbeanRefName = mbeanRefElement.getAttribute("name");
+         if (!mbeanRefElement.hasChildNodes()) 
+         {
+            throw new DeploymentException("No ObjectName supplied for mbean-ref " + mbeanRefName);   
+
+         }		
+         // Get the mbeanRef value
+         String mbeanRefValue = ((Text)mbeanRefElement.getFirstChild()).getData().trim();
+         ObjectName mbeanRefObjectName = new ObjectName(mbeanRefValue);
+         log.debug("considering " + mbeanRefName + " with object name " + mbeanRefObjectName);
+         MBeanAttributeInfo[] attributes = info.getAttributes();
+         for (int k = 0; k < attributes.length; k++) {
+            if (mbeanRefName.equals(attributes[k].getName())) {
+               String typeName = attributes[k].getType();
+               if (!"javax.management.ObjectName".equals(typeName)) 
+               {
+                  throw new DeploymentException("Trying to set " + mbeanRefName + " as an MBeanRef when it is not of type ObjectName");   
+               } // end of if ()
+               if (!mBeanRefs.contains(mbeanRefObjectName)) 
+               {
+                  mBeanRefs.add(mbeanRefObjectName);
+               } // end of if ()
+
+               log.debug(mbeanRefName + " set to " + mbeanRefValue + " in " + objectName);
+               server.setAttribute(objectName, new Attribute(mbeanRefName, mbeanRefObjectName));
+
+               break;
+            }
+         }
+         
+      }
+      // Set lists of mbean references (object names)
+
+      NodeList mbeanRefLists = mbeanElement.getElementsByTagName("mbean-ref-list");
+      for (int j = 0; j < mbeanRefLists.getLength(); j++) {
+         Element mbeanRefListElement = (Element)mbeanRefLists.item(j);
+         String mbeanRefListName = mbeanRefListElement.getAttribute("name");
+
+         MBeanAttributeInfo[] attributes = info.getAttributes();
+         for (int k = 0; k < attributes.length; k++) {
+            if (mbeanRefListName.equals(attributes[k].getName())) {
+
+               NodeList mbeanRefList = mbeanRefListElement.getElementsByTagName("mbean-ref-list-element");
+               ArrayList mbeanRefs = new ArrayList();
+               for (int l = 0; l < mbeanRefList.getLength(); l++) 
+               {
+                  Element mbeanRefElement = (Element)mbeanRefList.item(l);
+                  if (!mbeanRefElement.hasChildNodes()) 
+                  {
+                     throw new DeploymentException("Empty mbean-ref-list-element!");    
+                  } // end of if ()
+
+                  // Get the mbeanRef value
+                  String mbeanRefValue = ((Text)mbeanRefElement.getFirstChild()).getData().trim();
+                  ObjectName mbeanRefObjectName = new ObjectName(mbeanRefValue);
+                  if (!mBeanRefs.contains(mbeanRefObjectName)) 
+                  {
+                     mBeanRefs.add(mbeanRefObjectName);
+                  } // end of if ()
+                  
+               } // end of for ()
+
+               log.debug(mbeanRefListName + " set to " + mbeanRefs + " in " + objectName);
+               server.setAttribute(objectName, new Attribute(mbeanRefListName, mbeanRefs));
+
+               break;
+            }
+
+         }
+      }
+      return mBeanRefs;
    }
 	
    /**

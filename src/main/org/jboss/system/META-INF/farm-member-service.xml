@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <server>
-
-   <depends>JBOSS-SYSTEM:service=Naming</depends>
-   <depends>JBOSS-SYSTEM:service=ServiceDeployer</depends>
-   <depends>JMX:name=Connector,type=RMI</depends>
+   <!--is there some way to turn this into an mbean-ref??->
+   <!--depends>JMX:name=Connector,type=RMI</depends-->
    
    <mbean code="org.jboss.system.FarmMemberService" 
       name="JBOSS-SYSTEM:spine=FarmMember">

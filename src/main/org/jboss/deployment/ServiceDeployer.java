@@ -34,6 +34,7 @@ import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
+import javax.management.RuntimeErrorException;
 import javax.management.RuntimeMBeanException;
 import javax.management.loading.MLet;
 import javax.xml.parsers.DocumentBuilder;
@@ -57,7 +58,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version   $Revision: 1.11 $ <p>
+ * @version   $Revision: 1.12 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -89,19 +90,13 @@ public class ServiceDeployer
        extends DeployerMBeanSupport
        implements ServiceDeployerMBean
 {
-   private static final String SERVICE_CONTROLLER_NAME = "JBOSS-SYSTEM:spine=ServiceController";
    // Attributes --------------------------------------------------------
 
-   private ObjectName serviceControllerName;
-
    //Find all the deployment info for a url
-   private Map urlToSarDeploymentInfoMap;
-
-   //Find what packages are waiting for mbeans in depends elements
-   private Map objectNameToWaitingPackagesMap;
+   private final Map urlToSarDeploymentInfoMap = new HashMap();
 
    //Find what package an mbean came from.
-   private Map objectNameToSupplyingPackageMap;
+   private final Map objectNameToSupplyingPackageMap = new HashMap();
 
 
    // JMX
@@ -209,74 +204,10 @@ public class ServiceDeployer
          {
              log.error("Problem copying local directory", e);
          } // end of try-catch
-
-         // Support for depends tag
-         Collection weNeedMBeans = sdi.weNeedMBeans;
-         //get rid of old contents, might have changed...
-         weNeedMBeans.clear();
-         // Attempt to parse all depends tags first, catches all errors before we get too far.
-         try {
-            NodeList nl = sdi.dd.getElementsByTagName("depends");
-            for (int i = 0 ; i < nl.getLength() ; i++) 	
-            {
-               //get object name for dependent mbean
-               Element dependsElement = (Element) nl.item(i);
-               weNeedMBeans.add(parseObjectName(dependsElement));
-            }
-   
-         } 
-         catch(Exception e) 
-         { 
-            throw new DeploymentException("Error parsing depends elements.",e);
-         }
-         Iterator names = weNeedMBeans.iterator();
-         while (names.hasNext()) 
-         {
-            ObjectName objectName = (ObjectName) names.next();
-   
-            //check if mbean is registered (deployed)
-            if(!server.isRegistered(objectName))
-            {
-               log.debug("Deployment of '"+url+"' will have to wait for mbean "+objectName);
-   
-               sdi.waitingForMBeans.add(objectName);
-               
-               Set waitingPackages = (Set) objectNameToWaitingPackagesMap.get(objectName);
-               if(waitingPackages == null)
-               {
-                  waitingPackages = new HashSet();
-                  objectNameToWaitingPackagesMap.put(objectName, waitingPackages);
-               }
-   
-               waitingPackages.add(url);
-               log.debug("recorded " + url + " waiting for mbean " + objectName);
-            }
-            else 
-            {
-               //record ourselves where it came from for auto-undeploy
-               URL supplyingUrl = (URL)objectNameToSupplyingPackageMap.get(objectName);        
-               if (supplyingUrl != null) 
-               {
-                   SarDeploymentInfo supplyingSdi = getSdi(supplyingUrl, false);
-                   Collection suppliedToUrls = (Collection)supplyingSdi.weSupplyMBeansTo.get(objectName);
-                   if (suppliedToUrls == null) 
-                   {
-                      suppliedToUrls = new ArrayList();
-                      supplyingSdi.weSupplyMBeansTo.put(objectName, suppliedToUrls);
-                   } // end of if ()
-                   
-                   if (!suppliedToUrls.contains(url)) 
-                   {
-                      suppliedToUrls.add(url);
-                   } // end of if ()
-               } // end of if ()
-            } // end of else
-         }
-
          //if we are suspended, we must wait till all classes are available.
          if (!suspended) 
          {
-            deployMBeans(url, sdi);
+            addMBeans(url, sdi);
          } // end of if ()
 
       }
@@ -290,7 +221,7 @@ public class ServiceDeployer
       while (suspensions.hasNext()) 
       {
          //check if all suspension dependencies resolved and if so call
-         //deployMBeans on it.
+         //addMBeans on it.
          URL suspendedUrl = (URL) suspensions.next();
          SarDeploymentInfo suspendedSdi = getSdi(suspendedUrl, false);
          if (suspendedSdi.state != SUSPENDED) 
@@ -315,80 +246,11 @@ public class ServiceDeployer
          } // end of while ()
          if (canDeploySuspended) 
          {
-            deployMBeans(suspendedUrl, suspendedSdi);        
+            addMBeans(suspendedUrl, suspendedSdi);        
          } // end of if ()
       } // end of while ()
    }
      
-
-   private void deployMBeans(URL url, SarDeploymentInfo sdi) throws DeploymentException
-   {
-      log.debug("in deployMBeans for url " + url);
-      LinkedList toDeploy = new LinkedList();
-      //if we have no dependents we can deploy
-      if(sdi.waitingForMBeans.isEmpty())
-      {
-         toDeploy.addLast(url);
-      }
-
-      //loop, continuing to deploy until all possible deployments are made
-      while(!toDeploy.isEmpty())
-      {
-         URL dependingUrl = (URL) toDeploy.removeFirst();
-         log.debug("actually deploying mbeans for url " + dependingUrl); 
-         SarDeploymentInfo dependingSdi = getSdi(dependingUrl, false);
-
-         try
-         {
-            log.debug("Deploying mbeans for '"+dependingUrl+"'");
-            addMBeans(dependingUrl, dependingSdi);
-         }
-         catch(Exception e)
-         {
-            log.error("Error during deployment of '"+dependingUrl+"'.",e);
-         }
-         log.debug("deployed " + dependingSdi.mbeans.size() + " mbeans for url " + dependingUrl);
-         Iterator deployedMBeans = dependingSdi.mbeans.iterator();
-
-         //for each deployed mbean check for pending deployments waiting for it.
-         while(deployedMBeans.hasNext())
-         {
-            ObjectName mbean = (ObjectName) deployedMBeans.next();
-            Set waitingPackages = (Set)objectNameToWaitingPackagesMap.remove(mbean);
-            
-            if(waitingPackages != null)
-            {
-               //for each pending deployment remove mbean and see whether we can now deploy
-               Iterator urls = waitingPackages.iterator();
-               while(urls.hasNext())
-               {
-                  URL nextUrl = (URL)urls.next();
-                  SarDeploymentInfo waitingSdi = getSdi(nextUrl, false);
-		  waitingSdi.waitingForMBeans.remove(mbean);		
-                  if(waitingSdi.waitingForMBeans.isEmpty())
-                  {
-                     log.debug("Found available deployment "+nextUrl+" to do.");
-                     toDeploy.addLast(nextUrl);
-                  }
-                  else 
-                  {
-                     log.debug("can't redeploy "+nextUrl+" yet, still " + waitingSdi.waitingForMBeans.size() + " left to wait for. " + waitingSdi.waitingForMBeans);
-                  } // end of else
-                  
-
-               }
-            }
-            else 
-            {
-                log.debug("no packages are waiting for mbean " + mbean);
-
-
-            } // end of else
-            
-         }// for each deployed mbean...
-
-      }// while we still have deployments to do
-   }
 
    private SarDeploymentInfo deployLocalClasses(URL url, URL needsme, boolean reloadSuspended) 
         throws DeploymentException
@@ -637,7 +499,7 @@ public class ServiceDeployer
       SarDeploymentInfo sdi = getSdi(url, false);
       
       //first of all, undeploy the depending (via depends tag) packages' mbeans and our mbeans.
-      undeployMBeans(url, sdi);
+      removeMBeans(url, sdi);
 
       //Now undeploy mbeans from packages we supply classes to.
       //Mark them suspended.. they are waiting for our classes to come back.
@@ -648,7 +510,7 @@ public class ServiceDeployer
          SarDeploymentInfo suppliedToSdi = getSdi(suppliedToPackage, false);
          if (suppliedToSdi.state == MBEANSLOADED) 
          {
-            undeployMBeans(suppliedToPackage, suppliedToSdi);
+            removeMBeans(suppliedToPackage, suppliedToSdi);
             suppliedToSdi.state = SUSPENDED;
          } // end of if ()
          
@@ -679,7 +541,6 @@ public class ServiceDeployer
             {
                //bye bye
                undeploy(packageWeUse, null);
-                //urlToSarDeploymentInfoMap.remove(packageWeUse);                
             } // end of if ()
          } // end of if ()
          
@@ -705,52 +566,6 @@ public class ServiceDeployer
    }
       
 
-   private void undeployMBeans(URL url, SarDeploymentInfo sdi) throws DeploymentException
-   {
-      log.debug("undeployMBeans: url " + url + " mbean count " + sdi.mbeans.size());
-      Iterator mbeans = sdi.mbeans.iterator();
-      while (mbeans.hasNext()) 
-      {
-         ObjectName suppliedMBean = (ObjectName)mbeans.next();
-         //Who is relying on this?
-         Collection dependingUrlList = (Collection)sdi.weSupplyMBeansTo.remove(suppliedMBean);
-         if (dependingUrlList != null) //could be no one is 
-         {
-            Iterator dependingUrls = dependingUrlList.iterator();
-            while (dependingUrls.hasNext()) 
-            {
-               URL dependingUrl = (URL)dependingUrls.next();
-               SarDeploymentInfo dependingSdi = getSdi(dependingUrl, false);
-               //tell it to wait for this mbean
-               if (!dependingSdi.waitingForMBeans.contains(suppliedMBean)) 
-               {
-                  dependingSdi.waitingForMBeans.add(suppliedMBean);
-               } // end of if ()
-               //if its mbeans are loaded, unload them
-               if (dependingSdi.state == MBEANSLOADED) 
-               {
-                  undeployMBeans(dependingUrl, dependingSdi);
-                  //Remember they are waiting for this mbean
-                  Set waitingPackages = (Set) objectNameToWaitingPackagesMap.get(suppliedMBean);
-                  if(waitingPackages == null)
-                  {
-                     waitingPackages = new HashSet();
-                     objectNameToWaitingPackagesMap.put(suppliedMBean, waitingPackages);
-                  }
-                  waitingPackages.add(dependingUrl);
-               } // end of if ()
-               
-               
-            } // end of while ()
-            
-         } // end of if ()
-         
-         
-      } // end of while ()
-      //Now we've unloaded depending mbeans, we can remove our own for real.
-      removeMBeans(url, sdi);
-   }
-
    /**
     * MBeanRegistration interface. Get the mbean server.
     *
@@ -766,6 +581,7 @@ public class ServiceDeployer
       log.debug("ServiceDeployer preregistered with mbean server");
       this.server = server;
       super.initService();//set up the deploy temp directory
+      super.startService();//why not?
 
       return name == null ? new ObjectName(OBJECT_NAME) : name;
    }
@@ -783,14 +599,6 @@ public class ServiceDeployer
    {
       try
       {
-
-         //Encapsulate with a ServiceClassLoader
-
-         urlToSarDeploymentInfoMap = new HashMap();//does sync do any good? deploy and undeploy are synchronized in parent class.
-         objectNameToWaitingPackagesMap = new HashMap();
-         objectNameToSupplyingPackageMap = new HashMap();
-
-
 
          //Initialize the libraries for the server by default we add the libraries in lib/services
          // and client
@@ -880,49 +688,28 @@ public class ServiceDeployer
    }
 
    // Private --------------------------------------------------------
-    private void addMBeans(URL url, SarDeploymentInfo sdi) throws DeploymentException
-    {
-        log.debug("addMBeans: url " + url);
-       List mbeans = sdi.mbeans;
-       mbeans.clear();
-       NodeList nl = sdi.dd.getElementsByTagName("mbean");
-       for (int i = 0; i < nl.getLength(); i++)
-       {
+   private void addMBeans(URL url, SarDeploymentInfo sdi) throws DeploymentException
+   {
+      log.debug("addMBeans: url " + url);
+      List mbeans = sdi.mbeans;
+      mbeans.clear();
+      NodeList nl = sdi.dd.getElementsByTagName("mbean");
+      for (int i = 0; i < nl.getLength(); i++)
+      {
 
-          Element mbean = (Element)nl.item(i);
-          log.debug("deploying with ServiceController mbean " + mbean);
-          ObjectName service = (ObjectName)invoke(getServiceControllerName(),
-                   "deploy",
-                   new Object[]{mbean},
-                   new String[]{"org.w3c.dom.Element"});
-          // marcf: I don't think we should keep track and undeploy...
-          //david jencks what do you mean by this???
-          if (service != null)
-          {
-             mbeans.add(service);
-             objectNameToSupplyingPackageMap.put(service, url);
-          }
-       }
-   
-       //init the mbeans in our package
-       for (Iterator it = mbeans.iterator(); it.hasNext(); )
-       {
-          ObjectName service = (ObjectName)it.next();
-          invoke(getServiceControllerName(),
-                   "init",
-                   new Object[]{service},
-                   new String[]{"javax.management.ObjectName"});
-   
-       }
-   
-       //iterate through services and start.
-       for (Iterator it = mbeans.iterator(); it.hasNext(); )
-       {
-          ObjectName service = (ObjectName)it.next();
-          invoke(getServiceControllerName(),
-                   "start",
-                   new Object[]{service},
-                   new String[]{"javax.management.ObjectName"});
+         Element mbean = (Element)nl.item(i);
+         log.debug("deploying with ServiceController mbean " + mbean);
+         ObjectName service = (ObjectName)invoke(getServiceControllerName(),
+                                                 "deploy",
+                                                 new Object[]{mbean},
+                                                 new String[]{"org.w3c.dom.Element"});
+         // marcf: I don't think we should keep track and undeploy...
+         //david jencks what do you mean by this???
+         if (service != null)
+         {
+            mbeans.add(service);
+            objectNameToSupplyingPackageMap.put(service, url);
+         }
       }
       sdi.state = MBEANSLOADED;
    }
@@ -933,40 +720,15 @@ public class ServiceDeployer
       log.debug("removeMBeans: url " + url);
       List services = sdi.mbeans;
       int lastService = services.size();
-
-      //stop services
-      ListIterator iterator = services.listIterator(lastService);
-      while (iterator.hasPrevious())
+      //stop services in reverse order.
+      for (ListIterator i = services.listIterator(lastService); i.hasPrevious();)
       {
-         ObjectName name = (ObjectName)iterator.previous();
-         invoke(getServiceControllerName(),
-                "stop",
-                new Object[]{name},
-                new String[]{"javax.management.ObjectName"});
-
-      }
-
-      //destroy services
-      iterator = services.listIterator(lastService);
-      while (iterator.hasPrevious())
-      {
-          ObjectName name = (ObjectName)iterator.previous();
-          invoke(getServiceControllerName(),
-                 "destroy",
-                 new Object[]{name},
-                 new String[]{"javax.management.ObjectName"});
-
-      }
-
-      iterator = services.listIterator(lastService);
-      while (iterator.hasPrevious())
-      {
-         ObjectName name = (ObjectName)iterator.previous();
+         ObjectName name = (ObjectName)i.previous();
          log.debug("undeploying mbean " + name);
          invoke(getServiceControllerName(),
                  "undeploy",
-                 new Object[]{name},
-                 new String[]{"javax.management.ObjectName"});
+                 new Object[] {name},
+                 new String[] {"javax.management.ObjectName"});
          //we don't supply it any more, maybe someone else will later.
          objectNameToSupplyingPackageMap.remove(name);
       }
@@ -1011,6 +773,10 @@ public class ServiceDeployer
       {
          log.error("Runtime Mbean exception while executing " + method + " on " + args, rbe.getTargetException());
       }
+      catch (RuntimeErrorException ree)
+      {
+         log.error("Runtime Error exception while executing " + method + " on " + args, ree.getTargetError());
+      }
       catch (ReflectionException re)
       {
          log.error("ReflectionException while executing " + method + " on " + args, re);
@@ -1026,21 +792,6 @@ public class ServiceDeployer
       return null;
    }
 
-   private ObjectName getServiceControllerName() throws DeploymentException
-   {
-      if (serviceControllerName == null)
-      {
-         try
-         {
-            serviceControllerName = new ObjectName(SERVICE_CONTROLLER_NAME);
-         }
-         catch(MalformedObjectNameException mone)
-         {
-            throw new DeploymentException("Can't construct service controller object name!!" + mone);
-         }
-      }
-      return serviceControllerName;
-   }
 
    private SarDeploymentInfo getSdi(URL url, boolean createIfMissing) throws DeploymentException
    {
@@ -1070,15 +821,12 @@ public class ServiceDeployer
 
    private static class SarDeploymentInfo
    {
-      public URLClassLoader classloader;
-      public Collection weNeedClassesFrom = new ArrayList();
-      public Collection weSupplyClassesTo = new ArrayList();
-      public Collection weNeedMBeans = new ArrayList();
-      public Map weSupplyMBeansTo = new HashMap();
-      public Set waitingForMBeans = new HashSet();
-      public List mbeans = new ArrayList();
-      public Document dd;
-      public int state = EMPTY;
+      URLClassLoader classloader;
+      Collection weNeedClassesFrom = new ArrayList();
+      Collection weSupplyClassesTo = new ArrayList();
+      List mbeans = new ArrayList();
+      Document dd;
+      int state = EMPTY;
    }
 
 

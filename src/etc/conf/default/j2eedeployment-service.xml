@@ -2,8 +2,6 @@
 
 <server>
 
-  <depends>JBOSS-SYSTEM:service=Naming</depends>
-  <depends>JBOSS-SYSTEM:service=Jetty</depends>
 
   <!-- ==================================================================== -->
   <!-- J2EE deployment                                                      -->
@@ -18,6 +16,8 @@
     <attribute name="BeanCacheJMSMonitoringEnabled">false</attribute>
   </mbean>
 
+
+<!-- should be mbean refs-->
   <!-- Make sure you change EmbeddedTomcat to Jetty if you are using Jetty -->
   <mbean code="org.jboss.deployment.J2eeDeployer"
 	 name="J2EE:service=J2eeDeployer">

@@ -20,7 +20,7 @@ import org.w3c.dom.Document;
  * @see Service
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -38,6 +38,11 @@ public interface ServiceControllerMBean
    //
    
    ObjectName deploy(Element mbean) throws Exception;
+
+   //puts a mbean that you created some other way (such as deployed rar) 
+   //into dependency system so other beans can be started/stopped on its 
+   //existence (or registration)
+   void registerAndStartService(ObjectName serviceName, String serviceFactory) throws Exception;
    void undeploy(Element mbean) throws Exception;
    void undeploy(ObjectName mbeanName) throws Exception;
 
