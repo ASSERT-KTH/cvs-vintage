@@ -4,6 +4,10 @@
 #set ($attType = $attribute.AttributeType)
 #set ($attTypeName = $attType.AttributeClass.Name)
 #set ($ria = $issueType.getRIssueTypeAttribute($attribute))
+#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,AttributeGroupEdit.vm"))
+#if ($cancelTemplate.equals("admin,ModuleAttributeEdit.vm"))
+    #set ($cancelTemplate = "admin,AttributeGroupEdit.vm")
+#end
 
 #macro (ModuleAttributeEditBar $val)
 <div class="functnbar$val">
@@ -24,7 +28,6 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").</em></p>
 <form action="$link.setPage("admin,ModuleAttributeEdit.vm")" method="post">
 <input type="hidden" name="action" value="admin.ModuleAttributeEdit" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,AttributeOptionSelect.vm" />
-#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,AttributeGroupEdit.vm"))
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 <input type="hidden" name="att_0id" value="$attribute.AttributeId" />
 <input type="hidden" name="attributeid" value="$attribute.AttributeId" />

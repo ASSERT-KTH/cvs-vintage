@@ -58,6 +58,7 @@ import org.apache.fulcrum.intake.model.Group;
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.RIssueTypeAttribute;
 import org.tigris.scarab.om.RIssueTypeOption;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeOption;
@@ -70,7 +71,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: IssueTypeAttributeEdit.java,v 1.13 2003/08/22 18:20:51 venkatesh Exp $
+ * @version $Id: IssueTypeAttributeEdit.java,v 1.14 2003/09/10 00:20:38 elicia Exp $
  */
 public class IssueTypeAttributeEdit extends RequireLoginFirstAction
 {
@@ -117,6 +118,20 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
                 }
             }
         }
+        if (attribute.isOptionAttribute())
+        {
+            List options = issueType.getRIssueTypeOptions(attribute, true);
+            if (options == null || options.isEmpty())
+            {
+                RIssueTypeAttribute ria = issueType.getRIssueTypeAttribute(attribute);
+                if (ria.getRequired())
+                {
+                    ria.setRequired(false);        
+                    ria.save();
+                    scarabR.setAlertMessage(l10n.get("DeletedOptionsFromRequiredAttribute"));
+                }
+            }
+        }
     }
 
     /**
@@ -127,12 +142,15 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         IssueType issueType = scarabR.getIssueType();
+            RIssueTypeAttribute ria1 = issueType.getRIssueTypeAttribute(scarabR.getAttribute());
+        Attribute attribute = scarabR.getAttribute();
+
         if (issueType.isSystemDefined())
         {
-            scarabR.setAlertMessage(getLocalizationTool(context)
-                                       .get("SystemSpecifiedIssueType"));
+            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
             return;
         }
         ParameterParser params = data.getParameters();
@@ -150,7 +168,7 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
                   .getInstance(new Integer(optionId));
 
                RIssueTypeOption rio = issueType.getRIssueTypeOption(option);
-               List rios = issueType.getRIssueTypeOptions(option.getAttribute(),
+               List rios = issueType.getRIssueTypeOptions(attribute,
                                                           false);
                try
                {
@@ -161,10 +179,23 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
                {
                    scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                }
-               //ScarabCache.clear();
-               scarabR.setConfirmMessage(getLocalizationTool(context).get(DEFAULT_MSG));
+               scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
             }
         }        
+        if (attribute.isOptionAttribute())
+        {
+            List options = issueType.getRIssueTypeOptions(attribute, true);
+            if (options == null || options.isEmpty())
+            {
+                RIssueTypeAttribute ria = issueType.getRIssueTypeAttribute(attribute);
+                if (ria.getRequired())
+                {
+                    ria.setRequired(false);        
+                    ria.save();
+                    scarabR.setAlertMessage(l10n.get("DeletedOptionsFromRequiredAttribute"));
+                }
+            }
+        }
     }
 
 

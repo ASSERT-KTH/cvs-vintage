@@ -280,6 +280,56 @@ public  class AttributeGroup
         return result;
     }
 
+    /**
+     * List of issuetype-attribute mappings in this group.
+     */
+    public List getRModuleAttributes()
+        throws Exception
+    {
+       List rmas = null;
+       List attrs = getAttributes();
+       Iterator i = attrs.iterator();
+       if (!attrs.isEmpty())
+       {
+            rmas = new ArrayList(attrs.size());
+            while (i.hasNext()) 
+            {
+                Attribute attr = (Attribute)i.next();
+                RModuleAttribute rma = getModule().getRModuleAttribute(attr, getIssueType());
+                if (rma != null)
+                {
+                    rmas.add(rma);
+                }
+            }
+        }
+        return rmas;
+    }
+            
+        
+    /**
+     * List of global issuetype-attribute mappings in this group.
+     */
+    public List getRIssueTypeAttributes()
+        throws Exception
+    {
+        List rias = null;
+        List attrs = getAttributes();
+        Iterator i = attrs.iterator();
+        if (!attrs.isEmpty())
+        {
+             rias = new ArrayList(attrs.size());
+             while (i.hasNext()) 
+             {
+                Attribute attr = (Attribute)i.next();
+                RIssueTypeAttribute ria = getIssueType().getRIssueTypeAttribute(attr);
+                if (ria != null)
+                {
+                    rias.add(ria);
+                }
+            }
+        }
+        return rias;
+    }
 
     public void delete()
          throws Exception
