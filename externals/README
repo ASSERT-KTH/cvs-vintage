@@ -1,7 +1,13 @@
+# ObjectWeb components :
+jeremie.tag		JEREMIE_4_2
+jonathan.tag	JONATHAN_CORE_4_1
+kilim.tag       KILIM_1_1_3
+monolog.tag		MONOLOG_1_8_2
+
+# Apache :
 Commons CLI		1.0
+
+# others :
 JavaGroups		2.0.6
-Jeremie			JEREMIE_4_0
-Jonathancore	JONATHAN_CORE_4_0
 Junit			3.8.1
-Monolog			MONOLOG_1_8_2
-Velocity		1.4
+nanoXML 		2.2.1
