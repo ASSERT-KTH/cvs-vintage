@@ -47,7 +47,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.102 $
+ * @version $Revision: 1.103 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -1040,7 +1040,7 @@ public class EntityContainer
          {
             try
             {
-               return m.invoke(EntityContainer.this, new Object[] { mi });
+               return mi.performCall(EntityContainer.this, m, new Object[] { mi });
             }
             catch (Exception e)
             {
@@ -1051,7 +1051,7 @@ public class EntityContainer
          {
             try
             {
-               return m.invoke(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), mi.getArguments());
+               return mi.performCall(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), m, mi.getArguments());
             }
             catch (Exception e)
             {
@@ -1081,7 +1081,7 @@ public class EntityContainer
             // Invoke and handle exceptions
             try
             {
-               return m.invoke(EntityContainer.this, new Object[]{ mi });
+               return mi.performCall(EntityContainer.this, m, new Object[]{ mi });
             }
             catch (Exception e)
             {
@@ -1093,7 +1093,7 @@ public class EntityContainer
             // Invoke and handle exceptions
             try
             {
-               return m.invoke(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), mi.getArguments());
+               return mi.performCall(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), m, mi.getArguments());
             }
             catch (Exception e)
             {

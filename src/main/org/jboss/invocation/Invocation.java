@@ -8,6 +8,7 @@
 package org.jboss.invocation;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.Principal;
 import java.util.Map;
@@ -27,7 +28,8 @@ import javax.transaction.Transaction;
  *    pointers.  But really it is just  a repository of objects. 
  *
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.19 $
+ * @author  <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
+ * @version $Revision: 1.20 $
  */
 public class Invocation
 {
@@ -328,7 +330,16 @@ public class Invocation
       return payload;
    }
 
-
+   /**
+    * This method will be called by the container(ContainerInterceptor) to issue the
+    * ultimate method call represented by this invocation. It is overwritten, e.g., by the
+    * WS4EE invocation in order to realize JAXRPC pre- and postprocessing. 
+    */
+   public Object performCall(Object instance, Method m, Object[] arguments) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, Exception
+   {
+      return m.invoke(instance,arguments);
+   }
+   
 }
 /*
 vim:ts=3:sw=3:et

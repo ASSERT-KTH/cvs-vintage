@@ -30,7 +30,7 @@ import org.jboss.invocation.Invocation;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.49 $
+ * @version $Revision: 1.50 $
  */
 public class StatelessSessionContainer
    extends SessionContainer
@@ -184,7 +184,7 @@ public class StatelessSessionContainer
 
          try
          {
-            return m.invoke(StatelessSessionContainer.this, mi.getArguments());
+            return mi.performCall(StatelessSessionContainer.this, m, mi.getArguments());
          }
          catch (Exception e)
          {
@@ -217,7 +217,7 @@ public class StatelessSessionContainer
          {
             try
             {
-               return m.invoke(StatelessSessionContainer.this, new Object[] { mi });
+               return mi.performCall(StatelessSessionContainer.this, m, new Object[] { mi });
             }
             catch (Exception e)
             {
@@ -230,7 +230,7 @@ public class StatelessSessionContainer
             try
             {
                Object bean = ctx.getInstance();
-               return m.invoke(bean, mi.getArguments());
+               return mi.performCall(bean, m, mi.getArguments());
             }
             catch (Exception e)
             {

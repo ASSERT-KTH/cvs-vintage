@@ -37,7 +37,7 @@ import org.jboss.util.NullArgumentException;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -457,7 +457,7 @@ public class MessageDrivenContainer
          try
          {
             messageCount++;
-            return m.invoke(ctx.getInstance(), mi.getArguments());
+            return mi.performCall(ctx.getInstance(), m, mi.getArguments());
          }
          catch (Exception e)
          {

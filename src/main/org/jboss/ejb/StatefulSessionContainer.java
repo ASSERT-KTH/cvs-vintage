@@ -33,7 +33,7 @@ import org.jboss.invocation.Invocation;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version <tt>$Revision: 1.62 $</tt>
+ * @version <tt>$Revision: 1.63 $</tt>
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -474,7 +474,7 @@ public class StatefulSessionContainer
 
          try
          {
-            return m.invoke(StatefulSessionContainer.this, new Object[] { mi });
+            return mi.performCall(StatefulSessionContainer.this, m, new Object[] { mi });
          }
          catch (Exception e)
          {
@@ -509,7 +509,7 @@ public class StatefulSessionContainer
             // Invoke and handle exceptions
             try
             {
-               return m.invoke(StatefulSessionContainer.this, new Object[] { mi });
+               return mi.performCall(StatefulSessionContainer.this, m, new Object[] { mi });
             }
             catch (Exception e)
             {
@@ -522,7 +522,7 @@ public class StatefulSessionContainer
             try
             {
                Object bean = ctx.getInstance();
-               return m.invoke(bean, mi.getArguments());
+               return mi.performCall(bean, m, mi.getArguments());
             }
             catch (Exception e)
             {
