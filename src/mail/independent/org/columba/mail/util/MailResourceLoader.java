@@ -31,7 +31,7 @@ import org.columba.core.util.GlobalResourceLoader;
 
 public class MailResourceLoader extends GlobalResourceLoader {
 	protected static final String MAIL_RESOURCE_PATH =
-		"org.columba.modules.mail.i18n";
+		"org.columba.mail.i18n";
 
 	//This is used when package name and file name are different.
 	//Example: getString("dialog", "composer", "statusbar_label");

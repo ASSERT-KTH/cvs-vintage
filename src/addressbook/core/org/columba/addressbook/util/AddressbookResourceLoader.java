@@ -32,7 +32,7 @@ import org.columba.core.util.GlobalResourceLoader;
 public class AddressbookResourceLoader extends GlobalResourceLoader {
 
 	protected static final String ADDRESSBOOK_RESOURCE_PATH =
-		"org.columba.modules.addressbook.i18n";
+		"org.columba.addressbook.i18n";
 
 	//This is used when package name and file name are different.
 	//Example: getString("dialog", "composer", "statusbar_label");

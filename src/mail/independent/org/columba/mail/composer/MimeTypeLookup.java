@@ -53,7 +53,7 @@ public class MimeTypeLookup
 
 		// Get InputStream of ext2mime
 	    try	{
-	    extList = DiskIO.getResourceStream( "org/columba/modules/mail/composer/ext2mime.xml" );
+	    extList = DiskIO.getResourceStream( "org/columba/mail/composer/ext2mime.xml" );
 		}
 		catch (IOException e)
 			{

@@ -28,7 +28,7 @@ import org.columba.mail.message.MimeHeader;
 public class MimeRouter {
 
 	private static final String parserPath =
-		"org.columba.modules.mail.parser.mimetypeparsers.";
+		"org.columba.mail.parser.mimetypeparsers.";
 
 	private static final String[] parsers =
 		{ "MimeMultipartParser", "MimeMessageParser", };
@@ -220,7 +220,7 @@ public class MimeRouter {
 				if (actClass
 					.getSuperclass()
 					.getName()
-					.equals("org.columba.modules.mail.parser.MimeTypeParser")) {
+					.equals("org.columba.mail.parser.MimeTypeParser")) {
 
 					MimeTypeParser parser =
 						(MimeTypeParser) actClass.newInstance();
