@@ -124,8 +124,6 @@ public class IssueSearch
     public static final String CREATED_BY_KEY = "created_by";
     public static final String ANY_KEY = "any";
 
-    private static final NumberKey ALL_TEXT = new NumberKey("0");
-
     // column names only
     private static final String AV_OPTION_ID = 
         AttributeValuePeer.OPTION_ID.substring(
@@ -219,7 +217,7 @@ public class IssueSearch
 
     private static int NO_ATTRIBUTE_SORT = -1;
 
-    private static NumberKey NUMBERKEY_0 = new NumberKey(0);
+    private static final NumberKey NUMBERKEY_0 = new NumberKey(0);
 
     /**
      * The managed database connection used while iterating over large
@@ -443,7 +441,7 @@ public class IssueSearch
     /**
      * Get the words for which to search.
      *
-     * @return Value of {@link searchWords}.
+     * @return Value of {@link #searchWords}.
      */
     public String getSearchWords() 
     {
@@ -453,7 +451,7 @@ public class IssueSearch
     /**
      * Set the words for which to search.
      *
-     * @param v Value to assign to {@link searchWords}.
+     * @param v Value to assign to {@link #searchWords}.
      */
     public void setSearchWords(String  v) 
     {
@@ -504,7 +502,7 @@ public class IssueSearch
         {
             for (int i = textScope.length - 1; i >= 0; i--)
             {
-                if (ALL_TEXT.equals(textScope[i])) 
+                if (NUMBERKEY_0.equals(textScope[i])) 
                 {
                     textScope = getTextScopeForAll();
                     break;
@@ -546,7 +544,7 @@ public class IssueSearch
         {
             for (int i=v.length-1; i>=0; i--) 
             {
-                if (v[i].equals(ALL_TEXT)) 
+                if (v[i].equals(NUMBERKEY_0)) 
                 {
                     v = getTextScopeForAll();
                     break;
@@ -978,7 +976,7 @@ public class IssueSearch
 
     public NumberKey getALL_TEXT()
     {
-        return ALL_TEXT;
+        return NUMBERKEY_0;
     }
 
     public List getQuickSearchTextAttributeValues()
