@@ -647,13 +647,7 @@ public class IncomingServerPanel extends DefaultPanel implements
 				return false;
 			}
 		}
-		else if (!AccountItem.validHostname(host))
-		{
-			JOptionPane.showMessageDialog(null, MailResourceLoader.getString(
-					"dialog", "account", "invalid_inhostname"));
-			return false;		  
-		}
-	
+
 		return true;
 	}
 }

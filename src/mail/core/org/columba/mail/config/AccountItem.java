@@ -16,7 +16,6 @@
 
 package org.columba.mail.config;
 
-import java.util.regex.Pattern;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
@@ -27,16 +26,6 @@ import org.columba.ristretto.parser.ParserException;
 
 public class AccountItem extends DefaultItem {
   
-  	private static final String 
-  		HOSTNAME_REGEXP = "^[a-zA-Z0-9-]+\\.[a-zA-Z0-9-\\.]+\\.[a-zA-Z]{2,}+$",
-  		DOTTED_IPV4_REGEXP = 
-  		  "^[1-9]{1,3}+\\.[0-9]{1,3}+\\.[0-9]{1,3}+\\.[1-9]{1,3}+$";
-  	
-  	private static final Pattern 	
-  		hostnamePattern = Pattern.compile(HOSTNAME_REGEXP),
-  		dottedIpv4Pattern = Pattern.compile(DOTTED_IPV4_REGEXP);														
-  	
-  	
   	/*
   	 * Add supported account formats here
   	 * */
@@ -78,11 +67,6 @@ public class AccountItem extends DefaultItem {
      * mail.us.myhost.com
      * 127.0.0.1
      * */
-		public static boolean validHostname(String hostname)
-		{
-		  return (dottedIpv4Pattern.matcher(hostname).matches() ||
-		      		hostnamePattern.matcher(hostname).matches());
-		}
     
     public final String getAccountTypeDescription()
     {

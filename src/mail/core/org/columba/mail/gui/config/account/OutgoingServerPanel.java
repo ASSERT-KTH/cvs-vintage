@@ -462,11 +462,6 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
                 return false;
             }
-        } else if (!AccountItem.validHostname(host)) {
-            JOptionPane.showMessageDialog(null,
-                MailResourceLoader.getString("dialog",
-                    "account","invalid_outhostname"));
-            return false;
         }
         
         return true;
