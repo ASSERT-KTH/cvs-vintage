@@ -580,10 +580,15 @@ static const char *jk_set_worker_file(cmd_parms *cmd,
                                       char *worker_file)
 {
     server_rec *s = cmd->server;
+    struct stat statbuf;
+
     jk_server_conf_t *conf =
         (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
 
     conf->worker_file = worker_file;
+
+    if (stat(worker_file, &statbuf) == -1)
+        return "Can't find the workers file specified";
 
     return NULL;
 }
