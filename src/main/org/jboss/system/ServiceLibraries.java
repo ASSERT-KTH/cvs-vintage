@@ -8,7 +8,6 @@ package org.jboss.system;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,7 +28,8 @@ import org.jboss.system.URLClassLoader;
  *
  * @see <related>
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.4 $ <p>
+ * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
+ * @version $Revision: 1.5 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -37,6 +37,11 @@ import org.jboss.system.URLClassLoader;
  *      </ul>
  *      <b>20010908 david jencks:</b>
  *      <ul>Modified to make undeploy work better.
+ *        <li>
+ *      <b>20011003 Ole Husgaard:</b>
+ *      <ul>Changed synchronization to avoid deadlock with SUNs
+ *          java.lang.Classloader implementation. Kudos to Dr. Christoph Jung
+ *          and Sacha Labourey for identifying this problem.
  *        <li>
  *      </ul>
  *
@@ -51,18 +56,37 @@ public class ServiceLibraries
 
    // Static --------------------------------------------------------
    private static ServiceLibraries libraries;
+
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
 
 
-   // The classloaders
+   /**
+    *  The classloaders we use for loading classes here.
+    */
    private Set classLoaders;
 
-   // The classes kept in this library
-   private Map classes, resources,
-   // A given classloader loads a set of class
-         clToClassSetMap, clToResourceSetMap;
+   /*
+    *  Maps class names of the classes loaded here to the classes.
+    */
+   private Map classes;
+
+   /*
+    *  Maps class loaders to the set of classes they loaded here.
+    */
+   private Map clToClassSetMap;
+
+   /*
+    *  Maps resource names of resources looked up here to the URLs used to
+    *  load them.
+    */
+   private Map resources;
+
+   /*
+    *  Maps class loaders to the set of resource names they looked up here.
+    */
+   private Map clToResourceSetMap;
 
    // Constructors --------------------------------------------------
 
@@ -76,9 +100,7 @@ public class ServiceLibraries
    public static ServiceLibraries getLibraries()
    {
       if (libraries == null)
-      {
          libraries = new ServiceLibraries();
-      }
 
       return libraries;
    }
@@ -86,7 +108,7 @@ public class ServiceLibraries
    // ServiceClassLoaderMBean implementation ------------------------
 
    /**
-    * Gets the Name attribute of the ServiceLibraries object
+    * Gets the Name attribute of the ServiceLibraries object.
     *
     * @return The Name value
     */
@@ -97,58 +119,56 @@ public class ServiceLibraries
 
 
    /**
-    * Gets the Resource attribute of the ServiceLibraries object
+    *  Find a resource in the ServiceLibraries object.
     *
-    * @param name Description of Parameter
-    * @param scl Description of Parameter
-    * @return The Resource value
+    *  @param name The name of the resource
+    *  @param scl The asking class loader
+    *  @return An URL for reading the resource, or <code>null</code> if the
+    *          resource could not be found.
     */
    public URL getResource(String name, ClassLoader scl)
    {
+      Set classLoaders2;
+      Map resources2;
+      Map clToResourceSetMap2;
 
-      // Is it in the global map?
-      if (resources.containsKey(name))
-      {
+      synchronized (this) {
+         // Is it in the global map?
+         if (resources.containsKey(name))
+            return (URL)resources.get(name);
 
-         return (URL)resources.get(name);
+         // No, make copies of the references to avoid working on or changing
+         // a later version of these.
+         classLoaders2 = classLoaders;
+         resources2 = resources;
+         clToResourceSetMap2 = clToResourceSetMap;
       }
 
       URL resource = null;
 
       // First ask for the class to the asking class loader
       if (scl instanceof URLClassLoader)
-      {
          resource = ((URLClassLoader)scl).getResourceLocally(name);
-      }
 
       if (resource == null)
       {
          // If not start asking around to URL classloaders for it
-         int i = 1;
-         synchronized (classLoaders)
-         {
-            Iterator allLoaders = classLoaders.iterator();
-            while (allLoaders.hasNext())
-            {
-               URLClassLoader cl = (URLClassLoader)allLoaders.next();
+         for (Iterator iter = classLoaders2.iterator(); iter.hasNext();) {
+            URLClassLoader cl = (URLClassLoader)iter.next();
 
-               if (!cl.equals(scl))
-               {
+            if (!cl.equals(scl)) { // already tried this one
+               resource = cl.getResourceLocally(name);
 
-                  resource = cl.getResourceLocally(name);
-
-                  if (resource != null)
-                  {
-
+               if (resource != null) {
+                  synchronized (this) {
                      // We can keep track
-                     resources.put(name, resource);
+                     resources2.put(name, resource);
 
                      // When we cycle the cl we also need to remove the classes it loaded
-                     Set set = (Set)clToResourceSetMap.get(cl);
-                     if (set == null)
-                     {
+                     Set set = (Set)clToResourceSetMap2.get(cl);
+                     if (set == null) {
                         set = new HashSet();
-                        clToResourceSetMap.put(cl, set);
+                        clToResourceSetMap2.put(cl, set);
                      }
 
                      //set.add(resource);
@@ -156,102 +176,110 @@ public class ServiceLibraries
 
                      return resource;
                   }
-                  //Just cycle through the class loaders until you find it
-               }
+               } // if we found it
             }
-            //allLoaders
-         }
-         //Synchronization
-      }
-      // If we reach here, all of the classloaders currently in the VM don't know about the resource
+         } // for all ClassLoaders
+      } // If we reach here, all of the classloaders currently in the VM don't know about the resource
+
       return resource;
    }
 
 
    /**
-    * Adds a feature to the ClassLoader attribute of the ServiceLibraries object
+    *  Add a ClassLoader to the ServiceLibraries object.
     *
-    * @param cl The feature to be added to the ClassLoader attribute
+    *  @param cl The class loader to be added.
     */
-   public void addClassLoader(URLClassLoader cl)
+   public synchronized void addClassLoader(URLClassLoader cl)
    {
-      synchronized (classLoaders)
-      {
+      // we allow for duplicate class loader definitions in the services.xml files
+      // we should however only keep the first classloader declared
 
-         // we allow for duplicate class loader definitions in the services.xml files
-         // we should however only keep the first classloader declared
+      if (!classLoaders.contains(cl)) {
+         // We create a new copy of the classLoaders set.
+         classLoaders = new HashSet(classLoaders);
 
-         if (!classLoaders.contains(cl))
-         {
-            classLoaders.add(cl);
-            System.out.println("Libraries adding URLClassLoader " + cl.hashCode() + " key URL " + ((URLClassLoader)cl).getKeyURL().toString());
-         }
-         else
-         {
-            System.out.println("Libraries skipping duplicate URLClassLoader for key URL " + ((URLClassLoader)cl).getKeyURL().toString());
-         }
-      }
+         classLoaders.add(cl);
+
+         System.out.println("Libraries adding URLClassLoader " + cl.hashCode() + " key URL " + ((URLClassLoader)cl).getKeyURL().toString());
+      } else
+         System.out.println("Libraries skipping duplicate URLClassLoader for key URL " + ((URLClassLoader)cl).getKeyURL().toString());
    }
 
    /**
-    * #Description of the Method
+    *  Remove a ClassLoader from the ServiceLibraries object.
     *
-    * @param cl Description of Parameter
+    *  @param cl The ClassLoader to be removed.
     */
-   public void removeClassLoader(URLClassLoader cl)
+   public synchronized void removeClassLoader(URLClassLoader cl)
    {
-      synchronized (classLoaders)
-      {
-         System.out.println("removing classloader " + cl);
+      System.out.println("removing classloader " + cl);
 
-         classLoaders.remove(cl);
+      if (!classLoaders.contains(cl))
+         return; // nothing to remove
+
+      // We create a new copy of the classLoaders set.
+      classLoaders = new HashSet(classLoaders);
+      classLoaders.remove(cl);
+
+      if (clToClassSetMap.containsKey(cl)) {
+         // Create a new copy of the map
+         clToClassSetMap = new HashMap(clToClassSetMap);
 
          Set clClasses = (Set)clToClassSetMap.remove(cl);
-         if (clClasses != null)
-         {
-            Iterator iterator = clClasses.iterator();
-            while (iterator.hasNext())
-            {
-               Object o = iterator.next();
-               Object o1 = classes.remove(o);
-               System.out.println("removing class " + o + ", removed: " + o1);
-            }
-         }
 
-         Set clResources = (Set)clToResourceSetMap.remove(cl);
-         if (clResources != null)
-         {
-            Iterator iterator2 = clResources.iterator();
-            while (iterator2.hasNext())
-            {
-               Object o = iterator2.next();
-               Object o1 = resources.remove(o);
-               System.out.println("removing resource " + o + ", removed: " + o1);
-            }
+         for (Iterator iter = clClasses.iterator(); iter.hasNext();) {
+            Object o = iter.next();
+            Object o1 = classes.remove(o);
+            System.out.println("removing class " + o + ", removed: " + o1);
          }
       }
-      ;
+      
+      // Same procedure for resources
+      if (clToResourceSetMap.containsKey(cl)) {
+         clToResourceSetMap = new HashMap(clToResourceSetMap);
+
+         Set clResources = (Set)clToResourceSetMap.remove(cl);
+
+         for (Iterator iter = clResources.iterator(); iter.hasNext();) {
+            Object o = iter.next();
+            Object o1 = resources.remove(o);
+            System.out.println("removing resource " + o + ", removed: " + o1);
+         }
+      }
    }
 
 
    /**
-    * #Description of the Method
+    *  Load a class in the ServiceLibraries object.
     *
-    * @param name Description of Parameter
-    * @param resolve Description of Parameter
-    * @param scl Description of Parameter
-    * @return Description of the Returned Value
-    * @exception ClassNotFoundException Description of Exception
+    *  @param name The name of the class
+    *  @param resolve If <code>true</code>, the class will be resolved
+    *  @param scl The asking class loader
+    *  @return The loaded class.
+    *          resource could not be found.
+    *  @throws ClassNotFoundException If the class could not be found.
     */
    public Class loadClass(String name, boolean resolve, ClassLoader scl)
           throws ClassNotFoundException
    {
-      // Try the local map already
-      Class foundClass = (Class)classes.get(name);
+      Class foundClass;
+      Set classLoaders2;
+      Map classes2;
+      Map clToClassSetMap2;
 
-      if (foundClass != null)
-      {
-         return foundClass;
+      synchronized (this) {
+         // Try the local map already
+         foundClass = (Class)classes.get(name);
+
+         if (foundClass != null)
+            return foundClass;
+
+         // Not found, make copies of the references to avoid working on
+         // or changing a later version of these.
+         classLoaders2 = classLoaders;
+         classes2 = classes;
+         clToClassSetMap2 = clToClassSetMap;
       }
 
       // If not start asking around to URL classloaders for it
@@ -259,66 +287,49 @@ public class ServiceLibraries
       // who will find it?
       URLClassLoader cl = null;
 
-      if (scl instanceof URLClassLoader)
-      {
+      if (scl instanceof URLClassLoader) {
          // First ask the asking classloader chances are the dependent class is in there
-         try
-         {
-
+         try {
             foundClass = ((URLClassLoader)scl).loadClassLocally(name, resolve);
 
             //If we get here we know the scl is the right one
             cl = (URLClassLoader)scl;
-         }
-         catch (ClassNotFoundException ignored)
-         {
+         } catch (ClassNotFoundException ignored) {
          }
       }
 
-      synchronized (classLoaders)
-      {
+      Iterator allLoaders = classLoaders2.iterator();
+      while (allLoaders.hasNext() && (foundClass == null)) {
+         // next!
+         cl = (URLClassLoader)allLoaders.next();
 
-         Iterator allLoaders = classLoaders.iterator();
-         while (allLoaders.hasNext() && (foundClass == null))
-         {
-            // next!
-            cl = (URLClassLoader)allLoaders.next();
-
-            if (!scl.equals(cl))
-            {
-               try
-               {
-
-                  foundClass = cl.loadClassLocally(name, resolve);
-               }
-               catch (ClassNotFoundException ignored2)
-               {
-                  //try next loader
-               }
+         if (!scl.equals(cl)) {
+            try {
+               foundClass = cl.loadClassLocally(name, resolve);
+            } catch (ClassNotFoundException ignored2) {
+               //try next loader
             }
          }
-         //allLoaders
+      } //allLoaders
 
-         if (foundClass != null)
-         {
+      if (foundClass != null) {
+         synchronized (this) {
             // We can keep track
-            classes.put(name, foundClass);
+            classes2.put(name, foundClass);
 
             // When we cycle the cl we also need to remove the classes it loaded
-            Set set = (Set)clToClassSetMap.get(cl);
-            if (set == null)
-            {
+            Set set = (Set)clToClassSetMap2.get(cl);
+            if (set == null) {
                set = new HashSet();
-               clToClassSetMap.put(cl, set);
+               clToClassSetMap2.put(cl, set);
             }
 
             //set.add(foundClass);
             set.add(name);
-
-            return foundClass;
          }
+
+         return foundClass;
       }
-      //Synchronization
 
       // If we reach here, all of the classloaders currently in the VM don't know about the class
       throw new ClassNotFoundException(name);
@@ -338,14 +349,13 @@ public class ServiceLibraries
    public ObjectName preRegister(MBeanServer server, ObjectName name)
           throws java.lang.Exception
    {
-
       //this.server = server;
 
-      classLoaders = Collections.synchronizedSet(new HashSet());
-      classes = Collections.synchronizedMap(new HashMap());
-      resources = Collections.synchronizedMap(new HashMap());
-      clToResourceSetMap = Collections.synchronizedMap(new HashMap());
-      clToClassSetMap = Collections.synchronizedMap(new HashMap());
+      classLoaders = new HashSet();
+      classes = new HashMap();
+      resources = new HashMap();
+      clToResourceSetMap = new HashMap();
+      clToClassSetMap = new HashMap();
 
       System.out.println("[GPA] Microkernel ClassLoaders and Libraries initialized");
       return name == null ? new ObjectName(OBJECT_NAME) : name;
