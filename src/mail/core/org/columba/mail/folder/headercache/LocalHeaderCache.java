@@ -15,21 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
-import org.columba.core.main.MainInterface;
-import org.columba.core.util.ListTools;
-
-import org.columba.mail.folder.DataStorageInterface;
-import org.columba.mail.folder.LocalFolder;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
-import org.columba.mail.util.MailResourceLoader;
-
-import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.MessageFolderInfo;
-import org.columba.ristretto.message.io.Source;
-import org.columba.ristretto.parser.HeaderParser;
-
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -40,6 +25,20 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
+
+import org.columba.core.main.MainInterface;
+import org.columba.core.util.ListTools;
+import org.columba.mail.folder.DataStorageInterface;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.LocalFolder;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderList;
+import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.MessageFolderInfo;
+import org.columba.ristretto.message.io.Source;
+import org.columba.ristretto.parser.HeaderParser;
 
 
 /**
@@ -347,6 +346,8 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
                     LOG.severe("Error syncing HeaderCache :" + ex.getLocalizedMessage());
                 }
             }
+            
+            
 
             if (header.get("columba.flags.recent").equals(Boolean.TRUE)) {
                 messageFolderInfo.incRecent();
@@ -355,11 +356,14 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
             if (header.get("columba.flags.seen").equals(Boolean.FALSE)) {
                 messageFolderInfo.incUnseen();
             }
+            
 
             header = null;
 
+            
             messageFolderInfo.incExists();
-
+            
+            
             ((LocalFolder) folder).setNextMessageUid(((Integer) uids[uids.length
                                                                      - 1]).intValue() + 1);
 

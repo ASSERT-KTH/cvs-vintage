@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
+import java.util.logging.Logger;
 
 import javax.swing.event.EventListenerList;
 import javax.swing.tree.TreeNode;
@@ -34,8 +35,6 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.search.DefaultSearchEngine;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.CharsetDecoderInputStream;
@@ -74,6 +73,10 @@ import org.columba.ristretto.message.MimeHeader;
  * @author freddy @created 19. Juni 2001
  */
 public abstract class Folder extends FolderTreeNode implements MailboxInterface {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger
+            .getLogger("org.columba.mail.folder");
 
     /**
      * total/unread/recent count of messages in this folder
@@ -164,17 +167,17 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
     public void addFolderListener(FolderListener l) {
         listenerList.add(FolderListener.class, l);
     }
-    
+
     /**
      * Removes a previously registered listener.
      */
     public void removeFolderListener(FolderListener l) {
         listenerList.remove(FolderListener.class, l);
     }
-    
+
     /**
-     * Propagates an event to all registered listeners notifying them
-     * of a message addition.
+     * Propagates an event to all registered listeners notifying them of a
+     * message addition.
      */
     protected void fireMessageAdded(Object uid) {
         getMessageFolderInfo().incExists();
@@ -183,10 +186,11 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
             if (flags.getRecent()) {
                 getMessageFolderInfo().incRecent();
             }
-            if (flags.getSeen()) {
+            if (!flags.getSeen()) {
                 getMessageFolderInfo().incUnseen();
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         setChanged(true);
         FolderEvent e = new FolderEvent(this, null);
         // Guaranteed to return a non-null array
@@ -200,23 +204,30 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
             }
         }
     }
-    
+
     /**
-     * Propagates an event to all registered listeners notifying them
-     * of a message removal.
+     * Propagates an event to all registered listeners notifying them of a
+     * message removal.
      */
     protected void fireMessageRemoved(Object uid, Flags flags) {
-        try {
-            getHeaderListStorage().removeMessage(uid);
-        } catch (Exception e) {}
+        
         getMessageFolderInfo().decExists();
-        if (flags.getSeen()) {
+        if (!flags.getSeen()) {
             getMessageFolderInfo().decUnseen();
         }
         if (flags.getRecent()) {
             getMessageFolderInfo().decRecent();
         }
+        
+        
+        try {
+            getHeaderListStorage().removeMessage(uid);
+        } catch (Exception e) {
+        }
+        
+        
         setChanged(true);
+        
         FolderEvent e = new FolderEvent(this, uid);
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
@@ -229,10 +240,10 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
             }
         }
     }
-    
+
     /**
-     * Propagates an event to all registered listeners notifying them
-     * that this folder has been renamed.
+     * Propagates an event to all registered listeners notifying them that this
+     * folder has been renamed.
      */
     protected void fireFolderRenamed(String name) {
         FolderEvent e = new FolderEvent(this, name);
@@ -249,8 +260,8 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
     }
 
     /**
-     * Propagates an event to all registered listeners notifying them
-     * that a subfolder has been added to this folder.
+     * Propagates an event to all registered listeners notifying them that a
+     * subfolder has been added to this folder.
      */
     protected void fireFolderAdded(Folder folder) {
         FolderEvent e = new FolderEvent(this, folder);
@@ -267,8 +278,8 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
     }
 
     /**
-     * Propagates an event to all registered listeners notifying them
-     * that a subfolder has been removed from this folder.
+     * Propagates an event to all registered listeners notifying them that a
+     * subfolder has been removed from this folder.
      */
     protected void fireFolderRemoved(Folder folder) {
         FolderEvent e = new FolderEvent(this, folder);
@@ -301,7 +312,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
         if (parent instanceof RootFolder) {
             return parent;
         } else {
-            return ((Folder)parent).getRootFolder();
+            return ((Folder) parent).getRootFolder();
         }
     }
 
@@ -540,9 +551,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
     protected void markMessage(Object uid, int variant) throws Exception {
         Flags flags = getFlags(uid);
 
-        if (flags == null) {
-            return; 
-        }
+        if (flags == null) { return; }
 
         switch (variant) {
         case MarkMessageCommand.MARK_AS_READ:
@@ -588,7 +597,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 
         case MarkMessageCommand.MARK_AS_EXPUNGED:
             {
-                if (flags.getSeen()) {
+                if (!flags.getSeen()) {
                     getMessageFolderInfo().decUnseen();
                 }
 
@@ -646,6 +655,54 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
         setChanged(true);
     }
 
+    /** {@inheritDoc} */
+    public void expungeFolder() throws Exception {
+
+        // get list of all uids
+        Object[] uids = getUids();
+
+        for (int i = 0; i < uids.length; i++) {
+            Object uid = uids[i];
+
+            if (uid == null) {
+                continue;
+            }
+
+            // if message with uid doesn't exist -> skip
+            if (!exists(uid)) {
+                LOG.info("uid " + uid + " doesn't exist");
+
+                continue;
+            }
+
+            if (getFlags(uid).getExpunged()) {
+                // move message to trash if marked as expunged
+                LOG.info("removing uid=" + uid);
+
+                // remove message
+                removeMessage(uid);
+            }
+        }
+
+        // folder was modified
+        setChanged(true);
+    }
+
+    /**
+     * Remove message from folder.
+     * 
+     * @param uid
+     *            UID identifying the message to remove
+     * @throws Exception
+     */
+    protected void removeMessage(Object uid) throws Exception {
+        // notify listeners
+        fireMessageRemoved(uid, getFlags(uid));
+        
+        // remove from header-list
+        getHeaderListStorage().removeMessage(uid);
+    }
+       
     /** ****************************** AttributeStorage *********************** */
 
     /**
@@ -794,4 +851,5 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 
         return bodyStream;
     }
+
 }

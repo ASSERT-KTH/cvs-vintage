@@ -384,26 +384,7 @@ public class VirtualFolder extends Folder {
         headerList.add(virtualHeader, newUid);
     }
 
-    /**
- * @see org.columba.modules.mail.folder.Folder#expungeFolder(WorkerStatusController)
- */
-    public void expungeFolder() throws Exception {
-        Object[] uids = getUids();
-
-        for (int i = 0; i < uids.length; i++) {
-            Object uid = uids[i];
-
-            if (!exists(uid)) {
-                continue;
-            }
-
-            if (getFlags(uid).getExpunged()) {
-                // remove message
-                removeMessage(uid);
-            }
-        }
-    }
-
+    
     /**
  * @see org.columba.modules.mail.folder.Folder#markMessage(Object[], int,
  *      WorkerStatusController)
@@ -415,19 +396,11 @@ public class VirtualFolder extends Folder {
     /**
  * @see org.columba.modules.mail.folder.Folder#removeMessage(Object)
  */
-    public void removeMessage(Object uid) throws Exception {
-        ColumbaHeader header = (ColumbaHeader) getMessageHeader(uid);
-
-        if (!header.getFlags().getSeen()) {
-            getMessageFolderInfo().decUnseen();
-        }
-
-        if (header.getFlags().getRecent()) {
-            getMessageFolderInfo().decRecent();
-        }
+    protected void removeMessage(Object uid) throws Exception {
+        super.removeMessage(uid);
 
         headerList.remove(uid);
-        fireMessageRemoved(uid, header.getFlags());
+        
     }
 
     /**

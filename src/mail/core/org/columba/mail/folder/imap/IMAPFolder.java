@@ -465,7 +465,12 @@ public class IMAPFolder extends RemoteFolder {
      * @see org.columba.mail.folder.Folder#removeMessage(java.lang.Object,
      *      org.columba.core.command.WorkerStatusController)
      */
-    public void removeMessage(Object uid) throws Exception {
+    protected void removeMessage(Object uid) throws Exception {
+        super.removeMessage(uid);
+        
+//      remove message
+        //headerList.remove(uid);
+        getHeaderListStorage().removeMessage(uid);
     }
 
 
@@ -478,37 +483,7 @@ public class IMAPFolder extends RemoteFolder {
 
         if (!result) { return; }
 
-        Object[] uids = getUids();
-
-        if (uids != null) {
-            for (int i = 0; i < uids.length; i++) {
-                Object uid = uids[i];
-
-                ColumbaHeader h = (ColumbaHeader) headerList.get(uid);
-                Flags flags = getFlags(uid);
-
-                if (flags.getExpunged()) {
-                    // move message to trash
-                    LOG.info("moving message with UID " + uid
-                            + " to trash");
-
-                    /*
-                     * if (flags.getRecent()) {
-                     * getMessageFolderInfo().decRecent(); }
-                     *
-                     * if (!flags.getSeen()) {
-                     * getMessageFolderInfo().decUnseen(); }
-                     */
-                    getMessageFolderInfo().decExists();
-
-                    // remove message
-                    headerList.remove(uid);
-                }
-            }
-        }
-
-        // mailbox was modified
-        changed = true;
+        super.expungeFolder();
     }
 
     /**

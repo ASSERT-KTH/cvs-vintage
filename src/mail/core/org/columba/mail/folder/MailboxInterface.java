@@ -88,14 +88,7 @@ public interface MailboxInterface {
     public abstract void markMessage(Object[] uids, int variant)
             throws Exception;
 
-    /**
-     * Remove message from folder.
-     * 
-     * @param uid
-     *            UID identifying the message to remove
-     * @throws Exception
-     */
-    public void removeMessage(Object uid) throws Exception;
+  
 
     /**
      * 

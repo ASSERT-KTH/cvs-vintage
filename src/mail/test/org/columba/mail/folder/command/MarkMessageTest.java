@@ -16,12 +16,14 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.folder;
+package org.columba.mail.folder.command;
 
 import java.io.ByteArrayInputStream;
 
 import org.columba.core.util.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.AbstractFolderTest;
+import org.columba.mail.folder.FolderTestHelper;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.MessageFolderInfo;

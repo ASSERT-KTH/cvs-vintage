@@ -17,12 +17,11 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-
-import org.columba.ristretto.message.MessageFolderInfo;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.MessageFolderInfo;
 
 /**
  * Add message to folder testcase.
@@ -30,31 +29,40 @@ import java.io.InputStream;
  * @author fdietz
  */
 public class AddMessageFolderTest extends AbstractFolderTest {
+
     /**
- * Constructor for CachedMHFolderTest.
- * 
- * @param arg0
- */
+     * Constructor for CachedMHFolderTest.
+     * 
+     * @param arg0
+     */
     public AddMessageFolderTest(String arg0) {
         super(arg0);
     }
 
     /**
- * Add a message as InputStream to MHCachedFolder.
- * <p>
- * Check if message in folder is identical.
- * <p>
- * Check if total message count of folder was incremented correctly.
- * 
- * @throws Exception
- */
+     * Add a message as InputStream to MHCachedFolder.
+     * <p>
+     * Check if message in folder is identical.
+     * <p>
+     * Check if total message count of folder was incremented correctly.
+     * 
+     * @throws Exception
+     */
     public void testAddMessage() throws Exception {
+
+        Object[] uids1 = getSourceFolder().getUids();
+        assertEquals("starting with empty folder", 0, uids1.length);
+
+        MessageFolderInfo info1 = getSourceFolder().getMessageFolderInfo();
+        assertEquals("starting with empty folder", 0, info1.getExists());
+
         // add message "0.eml" as inputstream to folder
         String input = FolderTestHelper.getString(0);
         System.out.println("input=" + input);
 
         // create stream from string
-        ByteArrayInputStream inputStream = FolderTestHelper.getByteArrayInputStream(input);
+        ByteArrayInputStream inputStream = FolderTestHelper
+                .getByteArrayInputStream(input);
 
         // add stream to folder
         Object uid = getSourceFolder().addMessage(inputStream);
@@ -66,10 +74,13 @@ public class AddMessageFolderTest extends AbstractFolderTest {
         String output = FolderTestHelper.getStringFromInputStream(outputStream);
 
         // compare both messages
-        assertEquals(input, output);
+        assertEquals("message source should be equal", input, output);
+
+        Object[] uids = getSourceFolder().getUids();
+        assertEquals("one message should be in this folder", 1, uids.length);
 
         MessageFolderInfo info = getSourceFolder().getMessageFolderInfo();
-        assertEquals("one message should be in this folder", 1, info.getExists());
+        assertEquals("message-folderinfo exists", 1, info.getExists());
 
         // close streams
         inputStream.close();
@@ -77,28 +88,36 @@ public class AddMessageFolderTest extends AbstractFolderTest {
     }
 
     /**
- * Check if MailFolderInfo is properly set based on message attributes.
- * <p>
- */
+     * Check if MailFolderInfo is properly set based on message attributes.
+     * <p>
+     */
     public void testAddAttributesTest() throws Exception {
+
+        Object[] uids1 = getSourceFolder().getUids();
+        assertEquals("starting with empty folder", 0, uids1.length);
+
+        MessageFolderInfo info1 = getSourceFolder().getMessageFolderInfo();
+        assertEquals("starting with empty folder", 0, info1.getExists());
+
         //		 add message "0.eml" as inputstream to folder
         String input = FolderTestHelper.getString(0);
         System.out.println("input=" + input);
 
         // create stream from string
-        ByteArrayInputStream inputStream = FolderTestHelper.getByteArrayInputStream(input);
+        ByteArrayInputStream inputStream = FolderTestHelper
+                .getByteArrayInputStream(input);
 
         // add stream to folder
         Object uid = getSourceFolder().addMessage(inputStream);
-
-        getSourceFolder().setAttribute(uid, "columba.flags.seen", "true");
+        Flags flags = getSourceFolder().getFlags(uid);
+        flags.setSeen(true);
 
         MessageFolderInfo info = getSourceFolder().getMessageFolderInfo();
 
-        assertEquals("one message should be in this folder", 1, info.getExists());
+        assertEquals("message-folderinfo exists", 1, info.getExists());
         assertEquals("Number of unseen messages in folder", 1, info.getUnseen());
-        assertEquals("Number of seen messages in folder", 0,
-            info.getExists() - info.getUnseen());
+        assertEquals("Number of seen messages in folder", 0, info.getExists()
+                - info.getUnseen());
 
         // close streams
         inputStream.close();

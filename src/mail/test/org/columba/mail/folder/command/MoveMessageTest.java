@@ -16,24 +16,26 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.folder;
+package org.columba.mail.folder.command;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.columba.core.util.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.AbstractFolderTest;
+import org.columba.mail.folder.FolderTestHelper;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.ristretto.message.MessageFolderInfo;
 
 /**
 * @author fdietz
 */
-public class MoveMessageFolderTest extends AbstractFolderTest {
+public class MoveMessageTest extends AbstractFolderTest {
 	/**
 	 * @param arg0
 	 */
-	public MoveMessageFolderTest(String arg0) {
+	public MoveMessageTest(String arg0) {
 		super(arg0);
 	}
      

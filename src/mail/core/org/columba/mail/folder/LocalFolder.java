@@ -196,42 +196,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         return mptree;
     }
 
-    /** {@inheritDoc} */
-    public void expungeFolder() throws Exception {
-        if (aktMessage != null) {
-            aktMessage.close();
-            aktMessage = null;
-        }
-
-        // get list of all uids
-        Object[] uids = getUids();
-
-        for (int i = 0; i < uids.length; i++) {
-            Object uid = uids[i];
-
-            if (uid == null) {
-                continue;
-            }
-
-            // if message with uid doesn't exist -> skip
-            if (!exists(uid)) {
-                LOG.info("uid " + uid + " doesn't exist");
-
-                continue;
-            }
-
-            if (getFlags(uid).getExpunged()) {
-                // move message to trash if marked as expunged
-                LOG.info("removing uid=" + uid);
-
-                // remove message
-                removeMessage(uid);
-            }
-        }
-
-        // folder was modified
-        changed = true;
-    }
+    
 
     /** {@inheritDoc} */
     public InputStream getMessageSourceStream(Object uid) throws Exception {
@@ -293,9 +258,12 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 
             Object destuid = destFolder.addMessage(
                     getMessageSourceStream(uids[i]), getAttributes(uids[i]));
+            
             ((LocalFolder) destFolder).setFlags(destuid, (Flags) getFlags(
                     uids[i]).clone());
-
+            
+            //destFolder.fireMessageAdded(uids[i]);
+            
             if (getObservable() != null) {
                 getObservable().setCurrent(i);
             }
@@ -314,6 +282,9 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
     public Object addMessage(InputStream in, Attributes attributes)
             throws Exception {
 
+        // before adding message, load header list
+        getHeaderListStorage().getHeaderList();
+        
         // generate UID for new message
         Object newUid = generateNextMessageUid();
 
@@ -322,16 +293,38 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 
         // close stream
         in.close();
+        
+        Source source = getDataStorageInstance().getMessageSource(newUid);
+
+        // parse header
+        Header header = HeaderParser.parse(source);
 
         if (attributes != null) {
-            Source source = getDataStorageInstance().getMessageSource(newUid);
-
-            // parse header
-            Header header = HeaderParser.parse(source);
-
             // save header and attributes
             getHeaderListStorage().addMessage(newUid, header, attributes);
+        } else {
+            ColumbaHeader h = new ColumbaHeader(header);
+            getHeaderListStorage().addMessage(newUid, header, h.getAttributes());
         }
+        /*else {
+            
+            
+            
+            ColumbaHeader header = new ColumbaHeader();
+            header.set("columba.uid", newUid);
+            
+            
+            // we have to assign the initial default flags
+            Flags flags = header.getFlags();
+            flags.setSeen(false);
+            flags.setRecent(true);
+            flags.setExpunged(false);
+            flags.setFlagged(false);
+            
+            getHeaderListStorage().addMessage(newUid, header.getHeader(), header.getAttributes());
+            
+        }
+        */
 
         fireMessageAdded(newUid);
         return newUid;
@@ -468,6 +461,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         getDataStorageInstance().removeMessage(uid);
 
         fireMessageRemoved(uid, getFlags(uid));
+        
     }
 
     /**
@@ -485,8 +479,13 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
     }
 
     /**
-     * @param uid
-     * @param flags
+     * Changes the selected message flags and updates the {@link MailFolderInfo}
+     * accordingly.
+     * <p>
+     * This method is only used for innerCopy().
+     * 
+     * @param uid				selected message UID
+     * @param flags				new flags
      * @throws Exception
      */
     protected void setFlags(Object uid, Flags flags) throws Exception {
@@ -496,6 +495,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         Flags oldFlags = h.getFlags();
         h.setFlags(flags);
 
+        
         // update MessageFolderInfo
         if (oldFlags.get(Flags.RECENT) && !flags.get(Flags.RECENT)) {
             getMessageFolderInfo().decRecent();
@@ -512,6 +512,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         if (!oldFlags.get(Flags.SEEN) && flags.get(Flags.SEEN)) {
             getMessageFolderInfo().decUnseen();
         }
+        
     }
 
     /**
@@ -553,4 +554,19 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
             return subHeader;
         }
     }
+    /**
+     * @see org.columba.mail.folder.MailboxInterface#expungeFolder()
+     */
+    public void expungeFolder() throws Exception {
+        // make sure to close all file handles
+        // to the currently cached message
+        // -> necessary for windows to be able to delete the local file
+        if (aktMessage != null) {
+            aktMessage.close();
+            aktMessage = null;
+        }
+        
+        super.expungeFolder();
+    }
+   
 }

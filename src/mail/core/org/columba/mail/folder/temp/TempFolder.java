@@ -85,22 +85,6 @@ public class TempFolder extends Folder {
         return messageList.keySet().toArray();
     }
 
-    public void expungeFolder() throws Exception {
-        Object[] uids = getUids();
-
-        for (int i = 0; i < uids.length; i++) {
-            Object uid = uids[i];
-
-            if (getFlags(uid).getExpunged()) {
-                // move message to trash
-                LOG.fine("moving message with UID " + uid + " to trash");
-
-                // remove message
-                removeMessage(uid);
-            }
-        }
-    }
-
     protected Object generateNextUid() {
         return new Integer(nextUid++);
     }
@@ -134,7 +118,9 @@ public class TempFolder extends Folder {
     /**
      * @see org.columba.modules.mail.folder.Folder#removeMessage(Object)
      */
-    public void removeMessage(Object uid) throws Exception {
+    protected void removeMessage(Object uid) throws Exception {
+        super.removeMessage(uid);
+        
         Flags flags = getFlags(uid);
         headerList.remove(uid);
         messageList.remove(uid);

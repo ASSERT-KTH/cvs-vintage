@@ -117,8 +117,19 @@ public class CopyMessageCommand extends FolderCommand {
             worker.setProgressBarMaximum(uids.length);
 
             if (srcFolder.getRootFolder().equals(destFolder.getRootFolder())) {
+                // folders have same root folder
+                // -> for example: two IMAP folders on the same server
+                // -----> this means we use server-side copying which
+                // -----> is much faster than using inputstreams here
+                //
+                // also used for local folders, which saves some parsing work
                 srcFolder.innerCopy(destFolder, uids);
             } else {
+                // two different root folders
+                // -> get inputstream from source-folder and add it to
+                // -> destination-folder as inputstream
+                // -----> moving of raw message source
+                // (works also for copying from local to IMAP folders, etc.
                 for (int j = 0; (j < uids.length) && !worker.cancelled();
                         j++) {
                     if (!srcFolder.exists(uids[j])) {
