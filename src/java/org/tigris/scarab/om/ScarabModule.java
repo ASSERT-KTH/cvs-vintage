@@ -88,7 +88,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.46 2001/10/18 00:34:41 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.47 2001/10/18 00:41:20 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -484,7 +484,6 @@ public class ScarabModule
     public Vector getRModuleAttributes(Criteria crit)
         throws Exception
     {
-System.out.println(crit);
         Vector rModAtts = super.getRModuleAttributes(crit);
 
         if ( rModAtts == null || rModAtts.size() == 0 ) 

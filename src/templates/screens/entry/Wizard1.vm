@@ -5,7 +5,6 @@ $page.setTitle("Enter issue")
 #set ($issue = $scarabR.ReportingIssue)
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($attrValues = $issue.getModuleAttributeValuesMap($issueType))
-$attrValues
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
 

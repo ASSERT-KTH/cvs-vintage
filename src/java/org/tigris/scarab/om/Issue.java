@@ -308,13 +308,11 @@ public class Issue
      */
     public SequencedHashtable getModuleAttributeValuesMap(IssueType issueType) throws Exception
     {
-System.out.println("HELLOP");
         SequencedHashtable map = null; 
         Attribute[] attributes = null;
         HashMap siaValuesMap = null;
 
         attributes = getModule().getActiveAttributes(issueType);
-System.out.println(attributes);
         siaValuesMap = getAttributeValuesMap();
 
         map = new SequencedHashtable( (int)(1.25*attributes.length + 1) );
