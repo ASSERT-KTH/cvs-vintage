@@ -1,5 +1,5 @@
-// $Id: CheckManager.java,v 1.6 2003/12/07 09:23:11 linus Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: CheckManager.java,v 1.7 2004/01/10 14:15:48 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -27,7 +27,7 @@
 // File: CheckManager.java
 // Class: CheckManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CheckManager.java,v 1.6 2003/12/07 09:23:11 linus Exp $
+// $Id: CheckManager.java,v 1.7 2004/01/10 14:15:48 linus Exp $
 
 package org.argouml.cognitive.checklist;
 
@@ -121,8 +121,6 @@ public class CheckManager implements Serializable {
             }
         }
         
-        // We have not found it! Enter the class to speed up the next search
-        _Lists.put(cls, null);
         return null;
     }
                     

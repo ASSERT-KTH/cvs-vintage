@@ -1,5 +1,5 @@
-// $Id: TabChecklist.java,v 1.19 2003/11/10 12:13:37 jhraigniac Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: TabChecklist.java,v 1.20 2004/01/10 14:15:48 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -34,6 +34,7 @@ import java.beans.VetoableChangeListener;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -51,6 +52,7 @@ import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
+import org.argouml.i18n.Translator;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.TabSpawnable;
 import org.argouml.ui.targetmanager.TargetEvent;
@@ -100,10 +102,11 @@ public class TabChecklist extends TabSpawnable
 	_table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 	_table.sizeColumnsToFit(-1);
 
-	//JScrollPane sp = JTable.createScrollPaneForTable(_table);
 	JScrollPane sp = new JScrollPane(_table);
 
 	setLayout(new BorderLayout());
+	add(new JLabel(Translator.localize("tab.checklist.warning")), 
+	    BorderLayout.NORTH);
 	add(sp, BorderLayout.CENTER);
     }
     
