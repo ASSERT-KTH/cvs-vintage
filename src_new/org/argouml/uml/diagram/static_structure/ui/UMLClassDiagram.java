@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.37 2003/08/22 17:37:30 bobtarling Exp $
+// $Id: UMLClassDiagram.java,v 1.38 2003/09/14 12:26:19 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.37 2003/08/22 17:37:30 bobtarling Exp $
+// $Id: UMLClassDiagram.java,v 1.38 2003/09/14 12:26:19 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -52,7 +52,6 @@ import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.foundation.core.MDependency;
 import ru.novosoft.uml.foundation.core.MGeneralization;
 import ru.novosoft.uml.foundation.core.MInterface;
-import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.core.MPermission;
 import ru.novosoft.uml.foundation.core.MUsage;
 import ru.novosoft.uml.foundation.data_types.MAggregationKind;
@@ -124,7 +123,7 @@ public class UMLClassDiagram extends UMLDiagram {
     }
 
     public UMLClassDiagram(String name, Object m) {
-        super(name, (MNamespace) m);
+        super(name, /*(MNamespace)*/ m);
     }
 
     public UMLClassDiagram(Object m) {
@@ -136,12 +135,12 @@ public class UMLClassDiagram extends UMLDiagram {
 	    cat.error("Illegal argument. Object " + handle + " is not a namespace");
 	    throw new IllegalArgumentException("Illegal argument. Object " + handle + " is not a namespace");
         }
-        MNamespace m = (MNamespace) handle;
+        Object m = /*(MNamespace)*/ handle;
         super.setNamespace(m);
         ClassDiagramGraphModel gm = new ClassDiagramGraphModel();
         gm.setNamespace(m);
         setGraphModel(gm);
-        LayerPerspective lay = new LayerPerspectiveMutable(m.getName(), gm);
+        LayerPerspective lay = new LayerPerspectiveMutable(ModelFacade.getName(m), gm);
         setLayer(lay);
         ClassDiagramRenderer rend = new ClassDiagramRenderer(); // singleton
         lay.setGraphNodeRenderer(rend);

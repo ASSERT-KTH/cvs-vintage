@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.19 2003/09/07 18:03:14 bobtarling Exp $
+// $Id: FigComment.java,v 1.20 2003/09/14 12:26:19 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigComment.java
 // Classes: FigComment
 // Original Author: a_rueckert@gmx.net
-// $Id: FigComment.java,v 1.19 2003/09/07 18:03:14 bobtarling Exp $
+// $Id: FigComment.java,v 1.20 2003/09/14 12:26:19 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -109,7 +109,7 @@ public class FigComment
     // instance variables
 
     // The model element the note is attached to.
-    private MModelElement _noteOwner = null;
+    private Object _noteOwner = null;
 
     // The figure that holds the text of the note.
     FigText _text;    
@@ -257,7 +257,7 @@ public class FigComment
     public void mouseClicked(MouseEvent me) {
         if (!_readyToEdit) {
             if (org.argouml.model.ModelFacade.isAModelElement(getOwner())) {
-                MModelElement own = (MModelElement) getOwner();
+                Object own = /*(MModelElement)*/ getOwner();
                 _readyToEdit = true;
             } else {
                 cat.debug("not ready to edit note");

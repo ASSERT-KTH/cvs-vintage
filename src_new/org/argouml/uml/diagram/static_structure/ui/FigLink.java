@@ -1,4 +1,4 @@
-// $Id: FigLink.java,v 1.6 2003/06/30 18:00:34 linus Exp $
+// $Id: FigLink.java,v 1.7 2003/09/14 12:26:19 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: FigLink
 // Original Author: your email address here
 
-// $Id: FigLink.java,v 1.6 2003/06/30 18:00:34 linus Exp $
+// $Id: FigLink.java,v 1.7 2003/09/14 12:26:19 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -35,8 +35,6 @@ import java.awt.Color;
 import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorHelper;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.tigris.gef.presentation.Fig;
-import ru.novosoft.uml.behavior.common_behavior.MLink;
-
 public class FigLink extends FigEdgeModelElement {
 
     ////////////////////////////////////////////////////////////////
@@ -62,7 +60,7 @@ public class FigLink extends FigEdgeModelElement {
     protected Object getDestination() {
         if (getOwner() != null) {
             return CommonBehaviorHelper.getHelper()
-		.getDestination((MLink) getOwner());
+		.getDestination(/*(MLink)*/ getOwner());
         }
         return null;
     }
@@ -73,10 +71,9 @@ public class FigLink extends FigEdgeModelElement {
     protected Object getSource() {
         if (getOwner() != null) {
             return CommonBehaviorHelper.getHelper()
-		.getSource((MLink) getOwner());
+		.getSource(/*(MLink)*/ getOwner());
         }
         return null;
     }
 
 } /* end class FigLink */
-
