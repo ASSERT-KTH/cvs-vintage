@@ -124,16 +124,19 @@ public class ServletWrapper extends Handler {
     // -------------------- Servlet specific properties 
     public void setLoadOnStartUp( int level ) {
 	loadOnStartup=level;
+	// here setting a level implies loading
+	loadingOnStartup=true;
     }
 
     public void setLoadOnStartUp( String level ) {
-	loadOnStartup=new Integer(level).intValue();
+	if (level.length() > 0)
+	    loadOnStartup=new Integer(level).intValue();
+	else
+	    loadOnStartup=-1;
+	// here setting a level implies loading
+	loadingOnStartup=true;
     }
 
-    public int getLoadOnStartUp() {
-	return loadOnStartup;
-    }
-    
     void setReloadable(boolean reloadable) {
 	isReloadable = reloadable;
     }

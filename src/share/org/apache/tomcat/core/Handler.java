@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.12 2000/08/27 20:37:29 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2000/08/27 20:37:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.13 2000/09/10 21:41:08 larryi Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/09/10 21:41:08 $
  *
  * ====================================================================
  *
@@ -103,7 +103,7 @@ public class Handler {
 	cases
     */
     public static final int ORIGIN_DYNAMIC=3;
-    /** The servlet was added by the admin, it should be safed
+    /** The servlet was added by the admin, it should be saved
 	preferably in web.xml
     */
     public static final int ORIGIN_ADMIN=4;
@@ -114,7 +114,8 @@ public class Handler {
     protected String path;
     protected String servletClassName;
     protected String servletName;
-    protected int loadOnStartup;
+    protected int loadOnStartup=-1;
+    protected boolean loadingOnStartup=false;
     
     // Debug
     protected int debug=0;
@@ -175,6 +176,14 @@ public class Handler {
 
     public int getLoadOnStartUp() {
 	return loadOnStartup;
+    }
+
+    public void setLoadingOnStartUp( boolean load ) {
+	loadingOnStartup=load;
+    }
+
+    public boolean getLoadingOnStartUp() {
+	return loadingOnStartup;
     }
 
     // -------------------- Jsp specific code
@@ -357,7 +366,7 @@ public class Handler {
 
     // -------------------- Accounting --------------------
 
-    /** ServletWrapper counts. The accounting desing is not
+    /** ServletWrapper counts. The accounting design is not
 	final, but all this is needed to tune up tomcat
 	( and to understand and be able to implement a good
 	solution )
