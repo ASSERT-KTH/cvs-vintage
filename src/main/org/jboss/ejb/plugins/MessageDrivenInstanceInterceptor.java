@@ -16,28 +16,44 @@ import org.jboss.ejb.MethodInvocation;
  * This container acquires the given instance. This must be used after
  * the EnvironmentInterceptor, since acquiring instances requires a proper
  * JNDI environment to be set.
- * 
- * <p>For MessageDriven Beans, we inherit the StatelessSession for now,
- *    since message driven beans is much like them.
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.5 $
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.6 $
  */
 public class MessageDrivenInstanceInterceptor
-   extends StatelessSessionInstanceInterceptor
+   extends AbstractInterceptor
 {
+   /** The container for this interceptor. */
    protected MessageDrivenContainer container;
 
+   /**
+    * Set the container for this interceptor.
+    *
+    * @param container    A <tt>MessageDrivenContainer</tt>.
+    *
+    * @throws ClassCastException    Not a <tt>MessageDrivenContainer</tt>.
+    */
    public void setContainer(final Container container) 
    { 
       this.container = (MessageDrivenContainer)container; 
    }
 
    /**
+    * Return the container for this interceptor.
+    *
+    * @return   The <tt>MessageDrivenContainer</tt> for this interceptor.
+    */
+   public Container getContainer()
+   {
+      return container;
+   }
+   
+   /**
     * Message driven beans do not have homes.
     *
-    * @throws Error  Not valid for MessageDriven beans
+    * @throws Error    Not valid for MessageDriven beans.
     */
    public Object invokeHome(final MethodInvocation mi)
       throws Exception
