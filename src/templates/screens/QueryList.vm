@@ -22,6 +22,11 @@
 <p><b>Click query name to edit. Click on location to execute.</b></p>
 
 <h3>Saved Queries</h3>
+
+<div class="functnbar">        
+<input type="submit" value="Done"  name="eventSubmit_doSave" />&#160;
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+</div>
  
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
@@ -76,6 +81,7 @@
 
 <div class="functnbar2">        
 <input type="submit" value="Done"  name="eventSubmit_doSave" />&#160;
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
 </div>
 
 $intake.declareGroups()
