@@ -1,23 +1,18 @@
+@echo off
 
 if "%1" == "restore" goto restore
 
-set TOM_CLASSPATH=.
-set TOM_CLASSPATH=%TOMCAT_HOME%\lib\webserver.jar;%TOM_CLASSPATH%
-set TOM_CLASSPATH=%TOMCAT_HOME%\lib\servlet.jar;%TOM_CLASSPATH%
-set TOM_CLASSPATH=%TOMCAT_HOME%\lib\jasper.jar;%TOM_CLASSPATH%
-set TOM_CLASSPATH=%TOMCAT_HOME%\lib\xml.jar;%TOM_CLASSPATH%
-set TOM_CLASSPATH=%TOMCAT_HOME%\classes;%TOM_CLASSPATH%
-
-set TOM_CLASSPATH=%JAVA_HOME%\lib\tools.jar;%TOM_CLASSPATH%
-
-
 set TOM_PREV_CLASSPATH=%CLASSPATH%
-set CLASSPATH=%TOM_CLASSPATH%;%CLASSPATH%
 
-goto end 
+if "%TOMCAT_HOME%" == "" goto bin
+call %TOMCAT_HOME%\bin\tomcat env
+goto :eof
 
-restore:
+:bin
+CALL bin\tomcat env
+goto eof
+
+:restore
 set CLASSPATH=%TOM_PREV_CLASSPATH%
 
-end:
-
+:eof
