@@ -13,6 +13,10 @@ import java.net.URL;
 import javax.management.MBeanException;
 import javax.management.RuntimeMBeanException;
 
+import org.jboss.system.MBeanClassLoader;
+import org.jboss.system.ServiceLibraries;
+import org.jboss.system.UnifiedClassLoader;
+
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
@@ -24,7 +28,7 @@ import org.jboss.system.ServerConfig;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.61 $
+ * @version $Revision: 1.62 $
  */
 public class Main
    implements Runnable
