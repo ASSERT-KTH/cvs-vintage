@@ -68,9 +68,7 @@ $renderer.render("navigations", $template, "Default.vm")
    </tr>
    <tr>
    <td>
-     <div>Learn more about this project? </div>
-     <div>Print this page...</div>
-     <div>Troubleshoot...</div>
+     $renderer.render("navigations", "Help.vm")
    </td>
    </tr>
    </table>
