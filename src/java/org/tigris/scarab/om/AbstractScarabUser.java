@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.27 2002/06/20 18:13:37 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.28 2002/06/26 01:43:52 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -121,6 +121,11 @@ public abstract class AbstractScarabUser
      * After entering an issue
      */
     private int enterIssueRedirect = 0;
+
+    /**
+     * The template/tab to show for the home page.
+     */
+    private String homePage;
 
     /**
      * The list of MITListItems that will be searched in a 
@@ -607,17 +612,57 @@ public abstract class AbstractScarabUser
     public void setEnterIssueRedirect(int templateCode)
         throws Exception
     {
+        UserPreference up = getUserPreference();
+        up.setEnterIssueRedirect(templateCode);
+        up.save();
+        enterIssueRedirect = templateCode;
+    }
+
+
+    /**
+     * The template/tab to show for the home page.
+     */
+    public String getHomePage()
+        throws Exception
+    {
+        if (homePage == null)
+        {
+            UserPreference up = UserPreference.getInstance(getUserId());
+            if (up != null)
+            {
+                homePage = up.getHomePage();
+            }
+            if (homePage == null) 
+            {
+                homePage = "home,EnterNew.vm";
+            }
+        } 
+        return homePage;
+    }
+    
+    /**
+     * The template/tab to show for the home page.
+     */
+    public void setHomePage(String homePage)
+        throws Exception
+    {
+        UserPreference up = getUserPreference();
+        up.setHomePage(homePage);
+        up.save();
+        this.homePage = homePage;
+    }
+
+    private UserPreference getUserPreference()
+        throws Exception
+    {
         UserPreference up = UserPreference.getInstance(getUserId());
-        String userPreference = null;
         if (up == null)
         {
             up = UserPreference.getInstance();
             up.setUserId(getUserId());
             up.setPasswordExpire(null);
         }
-        up.setEnterIssueRedirect(templateCode);
-        up.save();
-        enterIssueRedirect = templateCode;
+        return up;
     }
 
     public List getMITLists()

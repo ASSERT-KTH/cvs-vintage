@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.102 2002/06/19 03:44:25 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.103 2002/06/26 01:43:52 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -1159,8 +1159,9 @@
         here just as an FYI and in the hope that one day, Torque will generate
         the right methods even for aliased tables.
     -->
-    <column name="PASSWORD_EXPIRE" primaryKey="false" required="false" type="TIMESTAMP"/>
-    <column name="ENTER_ISSUE_REDIRECT" primaryKey="false" required="false" type="INTEGER"/>
+    <column name="PASSWORD_EXPIRE" type="TIMESTAMP"/>
+    <column name="ENTER_ISSUE_REDIRECT" type="INTEGER"/>
+    <column name="HOME_PAGE" type="VARCHAR" size="32"/>
 
     <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>

@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.62 2002/06/19 03:44:25 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.63 2002/06/26 01:43:52 jmcnally Exp $
  */
 public interface ScarabUser extends User
 {
@@ -310,6 +310,19 @@ public interface ScarabUser extends User
      */
     public int getEnterIssueRedirect()
         throws Exception;
+
+    /**
+     * The template/tab to show for the home page.
+     */
+    public String getHomePage()
+        throws Exception;
+    
+    /**
+     * The template/tab to show for the home page.
+     */
+    public void setHomePage(String homePage)
+        throws Exception;
+
 
     public List getMITLists()
         throws TorqueException;
