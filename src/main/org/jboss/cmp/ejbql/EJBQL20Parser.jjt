@@ -40,25 +40,25 @@ void SelectClause() #Select :
 void FromClause() #From :
 {}
 {
-  <FROM> IdentificationVariableDeclaration() ( "," IdentificationVariableDeclaration() )*
+  <FROM> RangeVariableDeclaration() ( "," IdentificationVariableDeclaration() )*
 }
 
-void IdentificationVariableDeclaration() #IdDeclaration :
+void IdentificationVariableDeclaration() :
 {}
 {
-  ( AbstractSchemaName() | CollectionMember() ) [<AS>] Identifier()
+  RangeVariableDeclaration() | CollectionMemberDeclaration()
 }
 
-void CollectionMember() :
+void CollectionMemberDeclaration() #IdDeclaration :
 {}
 {
-  <IN> "(" PathExpression() ")"
+  <IN> "(" PathExpression() ")"  [<AS>] Identifier()
 }
 
-void AbstractSchemaName() :
+void RangeVariableDeclaration() #IdDeclaration :
 {}
 {
-  Identifier()
+  Identifier() [<AS>] Identifier()
 }
 
 void WhereClause() #Where :
