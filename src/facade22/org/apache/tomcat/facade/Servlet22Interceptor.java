@@ -188,6 +188,8 @@ public final class Servlet22Interceptor
 		Object value = sess.getAttribute(key);
 
 		if( value instanceof  HttpSessionBindingListener) {
+		    if( debug > 0 )
+			log("valueUnbound " + sess.getId() + " " + key );
 		    ((HttpSessionBindingListener) value).valueUnbound
 			(new HttpSessionBindingEvent(httpSess , key));
 		    if( removed==null) removed=new Vector();

@@ -241,12 +241,12 @@ public class JasperMangler implements Mangler{
 	    if( lastComp > 0 )
 		baseClassN=jspFile.substring( lastComp+1 );
 	    else
-		baseClassN=jspFile.substring( 1 );
+		baseClassN=jspFile.substring( 0 );
 	} else {
 	    if( lastComp > 0 )
 		baseClassN=jspFile.substring( lastComp+1, extIdx );
 	    else
-		baseClassN=jspFile.substring( 1, extIdx );
+		baseClassN=jspFile.substring( 0, extIdx );
 	}
 
 	if( JavaGeneratorTool.isKeyword( baseClassN ) )
