@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.326 2004/10/17 04:36:32 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.327 2004/10/30 18:21:44 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4898,7 +4898,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		if(displayManager != null && !bufferChanging)
 		{
 			displayManager.updateWrapSettings();
-			displayManager._notifyScreenLineChanges();
+			displayManager.notifyScreenLineChanges();
 		}
 
 		gutter.repaint();
