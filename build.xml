@@ -239,7 +239,7 @@
     <copy file ="src/build/readme/readme.common"
           tofile="${tomcat.build}/lib/common/README" />
 
-    <copy tofile="${tomcat.build}/lib/container/commons-logging.jar"
+    <copy tofile="${tomcat.build}/lib/common/commons-logging.jar"
           file="${commons-logging.jar}"/>
 
     <!-- This act as a "default", Tomcat3.3 will not load it in
@@ -534,6 +534,9 @@
 
     <copy todir="${tomcat.build}/lib/container"
           file="${jakarta-tomcat-connectors}/jk/build/lib/tomcat-jk2.jar"/>
+
+    <copy todir="${tomcat.build}/conf"
+          file="${jakarta-tomcat-connectors}/jk/conf/jk2.properties"/>
 
   </target>
 
