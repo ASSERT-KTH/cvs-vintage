@@ -271,6 +271,7 @@ public class PageContextImpl extends PageContext {
 	    break;
 
 	    default:
+		throw new IllegalArgumentException( "Invalid scope " + scope );
 	}
     }
 
@@ -298,6 +299,7 @@ public class PageContextImpl extends PageContext {
 	    break;
 
 	    default:
+		throw new IllegalArgumentException( "Invalid scope " + scope );
 	}
     }
 
