@@ -1542,23 +1542,17 @@ try{
         {
            intake = parseQuery(currentQueryString);
 
-            // If they have entered users to search on, and that returns no results
-            // Don't bother running search
+            // If they have entered users to search on, add them to the search
             StringValueParser parser = new StringValueParser();
             parser.parse(currentQueryString, '&', '=', true);
             String[] userList = parser.getStrings("user_list");
             if ( userList != null && userList.length > 0)
             {
-                List issueIdsFromUserSearch = 
-                    getIssueIdsFromUserSearch(user, parser);
-                if (issueIdsFromUserSearch.size() > 0)
+                for (int i =0; i<userList.length; i++)
                 {
-                    search.setIssueIdsFromUserSearch(issueIdsFromUserSearch);
-                }
-                else
-                {
-                    searchSuccess = false;
-                    setInfoMessage("No matching issues.");
+                    String userId = userList[i];
+                    String attrId = parser.getString("user_attr_" + userId);
+                    search.addUserCriteria(userId, attrId);
                 }
             }
         }
@@ -1719,172 +1713,6 @@ try{
             success = false;
         }
         return success;
-    }
-
-    /**
-     * Searches on user attributes.
-    */
-    private List getIssueIdsFromUserSearch(ScarabUser loggedInUser, 
-                                           ValueParser vp)
-        throws Exception
-    {
-        Criteria userCrit = new Criteria();
-        boolean atLeastOneMatch = false;
-        Object[] keys =  vp.getKeys();
-        for (int i =0; i<keys.length; i++)
-        {
-            String key = keys[i].toString();
-            if (key.startsWith("user_attr_"))
-            {
-                Criteria tempCrit = new Criteria();
-                MITList currentList = loggedInUser.getCurrentMITList();
-                if (currentList == null) 
-                {
-                    tempCrit
-                        .add(IssuePeer.MODULE_ID, 
-                             getCurrentModule().getModuleId())
-                        .add(IssuePeer.TYPE_ID, 
-                             getCurrentIssueType().getIssueTypeId());
-                }
-                else 
-                {
-                    currentList.addToCriteria(tempCrit);
-                }
-                
-
-               String userId = key.substring(10);
-               String attrId = vp.getString(key);
-
-               if (attrId == null)
-               {
-                  attrId = "any";
-               }
-               List tempIssueList = null;
-               List tempIssueIds = new ArrayList();
-               
-               // Build Criteria for created by
-               Criteria createdByCrit = new Criteria()
-                   .addJoin(ActivitySetPeer.TRANSACTION_ID, 
-                                ActivityPeer.TRANSACTION_ID)
-                   .addJoin(ActivityPeer.ISSUE_ID, IssuePeer.ISSUE_ID)
-                   .add(ActivitySetPeer.TYPE_ID, 
-                        ActivitySetTypePeer.CREATE_ISSUE__PK)
-                   .add(ActivitySetPeer.CREATED_BY, userId);
-
-               // If attribute is "committed by", search for creating user
-               if (attrId.equals("created_by"))
-               {
-                   List createdList = IssuePeer.doSelect(createdByCrit);
-                   if (createdList.size() > 0)
-                   {
-                       List createdIdList = new ArrayList();
-                       for (int j=0; j < createdList.size(); j++)
-                       {
-                           createdIdList
-                               .add(((Issue)createdList.get(j)).getIssueId());
-                       }
-                       Criteria.Criterion cCreated = tempCrit
-                           .getNewCriterion(IssuePeer.ISSUE_ID, 
-                               createdIdList, Criteria.IN); 
-                       tempCrit.add(cCreated);
-                       tempIssueList = IssuePeer.doSelect(tempCrit);
-                   }
-               }
-               // If attribute is "any", search across user attributes
-               else if (attrId.equals("any"))
-               {
-                   Criteria.Criterion cCreated = null;
-                   Criteria.Criterion cAttr = null;
-
-                   // First get results of searching across user attributes
-                   Criteria attrCrit = new Criteria()
-                     .add(AttributeValuePeer.USER_ID, userId)
-                     .addJoin(AttributeValuePeer.ISSUE_ID, IssuePeer.ISSUE_ID)
-                     .add(AttributeValuePeer.DELETED, false);
-                   List attrList = IssuePeer.doSelect(attrCrit);
-                   List attrIdList = new ArrayList();
-                   for (int j=0; j < attrList.size(); j++)
-                   {
-                       attrIdList.add(((Issue)attrList.get(j)).getIssueId());
-                   }
-
-                   // Then get results of searching createdBy
-                   List createdList = IssuePeer.doSelect(createdByCrit);
-                   List createdIdList = new ArrayList();
-                   for (int j=0; j < createdList.size(); j++)
-                   {
-                       createdIdList.add(((Issue)createdList.get(j)).getIssueId());
-                   }
-
-                   // Combine the two searches with an OR
-                   if (createdIdList.size() > 0 || attrIdList.size() > 0)
-                   {
-                   if (createdIdList.size() > 0)
-                   {
-                       cCreated = attrCrit.getNewCriterion(IssuePeer.ISSUE_ID, 
-                                           createdIdList, Criteria.IN); 
-                   }
-                   if (attrIdList.size() > 0)
-                   {
-                       cAttr = attrCrit.getNewCriterion(IssuePeer.ISSUE_ID, 
-                                                        attrIdList, Criteria.IN);
-                   }
-                   if (cCreated != null && cAttr != null)
-                   {
-                       cAttr.or(cCreated);
-                       tempCrit.and(cAttr);
-                   }
-                   else if (cCreated != null)
-                   {
-                       tempCrit.add(cCreated);
-                   }
-                   else if (cAttr != null)
-                   {
-                       tempCrit.add(cAttr);
-                   }
-                   tempIssueList = IssuePeer.doSelect(tempCrit);
-                   }
-               }
-               else
-               {
-                   // A user attribute was selected to search on 
-                   tempCrit.add(AttributeValuePeer.ATTRIBUTE_ID, attrId)
-                     .add(AttributeValuePeer.USER_ID, userId)
-                     .addJoin(AttributeValuePeer.ISSUE_ID, IssuePeer.ISSUE_ID)
-                     .add(AttributeValuePeer.DELETED, false);
-                   tempIssueList = IssuePeer.doSelect(tempCrit);
-               }
-               if (tempIssueList != null && !tempIssueList.isEmpty())
-               {
-                   atLeastOneMatch = true;
-                   // Get issue id list from issue result set
-                   for (int l = 0; l < tempIssueList.size();l++)
-                   {
-                       tempIssueIds.add(((Issue)tempIssueList.get(l)).getIssueId());
-                   }
-
-                   // Create a criteria that is the results of an OR 
-                   // Between the different users that were searched on.
-                   Criteria.Criterion c1 = userCrit.
-                                            getNewCriterion(IssuePeer.ISSUE_ID, 
-                                            tempIssueIds, Criteria.IN);
-                   userCrit.or(c1);
-               }
-            }
-        }
-
-        List finalIssueIds = new ArrayList();
-        if (atLeastOneMatch)
-        {
-            // Turn final issue list resulting from OR into an id list
-            // And set search property
-            List finalIssueList = IssuePeer.doSelect(userCrit);
-            for (int l = 0; l<finalIssueList.size();l++)
-            {
-                finalIssueIds.add(((Issue)finalIssueList.get(l)).getIssueId());
-            }
-        }
-        return finalIssueIds;
     }
 
 

@@ -105,13 +105,87 @@ public class IssueSearch
     public static final String ASC = "asc";
     public static final String DESC = "desc";
 
+    public static final String CREATED_BY_KEY = "created_by";
+    public static final String ANY_KEY = "any";
+
     private static final NumberKey ALL_TEXT = new NumberKey("0");
 
-    private static final String PARENT_ID;
-    private static final String CHILD_ID;
-    private static final String AV_ISSUE_ID;
-    private static final String AV_OPTION_ID;
-    private static final String AV_USER_ID;
+    private static final String PARENT_ID = ROptionOptionPeer.OPTION1_ID;
+    private static final String CHILD_ID = ROptionOptionPeer.OPTION2_ID;
+
+    // column names only
+    private static final String AV_OPTION_ID = 
+        AttributeValuePeer.OPTION_ID.substring(
+        AttributeValuePeer.OPTION_ID.indexOf('.')+1);
+    private static final String AV_ISSUE_ID = 
+        AttributeValuePeer.ISSUE_ID.substring(
+        AttributeValuePeer.ISSUE_ID.indexOf('.')+1);
+    private static final String AV_USER_ID =
+        AttributeValuePeer.USER_ID.substring(
+        AttributeValuePeer.USER_ID.indexOf('.')+1);
+
+    private static final String ACTIVITYSETALIAS = "srchcobyactset";
+    private static final String USERAVALIAS = "srchuav";
+    private static final String ACTIVITYALIAS = "srchcobyact";
+
+    private static final String CREATED_BY = "CREATED_BY";
+    private static final String TYPE_ID = "TYPE_ID";
+    private static final String ATTRIBUTE_ID = "ATTRIBUTE_ID";
+    private static final String USER_ID = "USER_ID";
+    private static final String DELETED = "DELETED";
+
+    private static final String ACT_TRAN_ID = 
+        ActivityPeer.TRANSACTION_ID.substring(
+        ActivityPeer.TRANSACTION_ID.indexOf('.')+1);
+    private static final String ACTSET_TRAN_ID = 
+        ActivitySetPeer.TRANSACTION_ID.substring(
+        ActivitySetPeer.TRANSACTION_ID.indexOf('.')+1);
+    private static final String ACTIVITYALIAS_TRANSACTION_ID =
+        ACTIVITYALIAS + "." + ACT_TRAN_ID;
+    private static final String 
+        ACTIVITYALIAS_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID =
+        ACTIVITYALIAS_TRANSACTION_ID + "=" + 
+        ACTIVITYSETALIAS + "." + ACTSET_TRAN_ID;
+
+    private static final String ACT_ISSUE_ID = 
+        ActivityPeer.ISSUE_ID.substring(ActivityPeer.ISSUE_ID.indexOf('.')+1);
+    private static final String ACTIVITYALIAS_ISSUE_ID =
+        ACTIVITYALIAS + "." + ACT_ISSUE_ID;
+    private static final String 
+        ACTIVITYALIAS_ISSUE_ID__EQUALS__ISSUEPEER_ISSUE_ID =
+        ACTIVITYALIAS_ISSUE_ID + "=" + IssuePeer.ISSUE_ID;
+
+    private static final String ACT_ATTR_ID = 
+        ActivityPeer.ATTRIBUTE_ID.substring(
+        ActivityPeer.ATTRIBUTE_ID.indexOf('.')+1);
+    private static final String AV_ATTR_ID = 
+        AttributeValuePeer.ATTRIBUTE_ID.substring(
+        AttributeValuePeer.ATTRIBUTE_ID.indexOf('.')+1);
+    private static final String ACTIVITYALIAS_ATTRIBUTE_ID =
+        ACTIVITYALIAS + "." + ACT_ATTR_ID;
+    private static final String 
+        ACTIVITYALIAS_ATTR_ID__EQUALS__USERAVALIAS_ATTR_ID =
+        ACTIVITYALIAS_ATTRIBUTE_ID + "=" + USERAVALIAS + "." + AV_ATTR_ID;
+
+    private static final String USERAVALIAS_ISSUE_ID =
+        USERAVALIAS + "." + AV_ISSUE_ID;
+    private static final String 
+        USERAVALIAS_ISSUE_ID__EQUALS__ISSUEPEER_ISSUE_ID =
+        USERAVALIAS_ISSUE_ID + "=" + IssuePeer.ISSUE_ID;
+
+    private static final String 
+        ACTIVITYALIAS_ISSUE_ID__EQUALS__USERAVALIAS_ISSUE_ID =
+        ACTIVITYALIAS_ISSUE_ID + "=" + USERAVALIAS + "." + AV_ISSUE_ID;
+
+    private static final String ACT_NEW_USER_ID = 
+        ActivityPeer.NEW_USER_ID.substring(
+        ActivityPeer.NEW_USER_ID.indexOf('.')+1);
+    private static final String ACTIVITYALIAS_NEW_USER_ID =
+        ACTIVITYALIAS + "." + ACT_NEW_USER_ID;
+    private static final String 
+        ACTIVITYALIAS_NEW_USER_ID__EQUALS__USERAVALIAS_USER_ID =
+        ACTIVITYALIAS_NEW_USER_ID + "=" + USERAVALIAS + "." + AV_USER_ID;
+
 
     private SimpleDateFormat formatter;
 
@@ -128,8 +202,6 @@ public class IssueSearch
     private NumberKey stateChangeToOptionId;
     private String stateChangeFromDate;
     private String stateChangeToDate;
-    private NumberKey[] issueIdsFromTextSearch;
-    private List issueIdsFromUserSearch;
 
     private NumberKey sortAttributeId;
     private String sortPolarity;
@@ -137,16 +209,7 @@ public class IssueSearch
      
     static 
     {
-        PARENT_ID = ROptionOptionPeer.OPTION1_ID;
-        CHILD_ID = ROptionOptionPeer.OPTION2_ID;
 
-        // column names only
-        AV_OPTION_ID = AttributeValuePeer.OPTION_ID.substring(
-            AttributeValuePeer.OPTION_ID.indexOf('.')+1);
-        AV_ISSUE_ID = AttributeValuePeer.ISSUE_ID.substring(
-            AttributeValuePeer.ISSUE_ID.indexOf('.')+1);
-        AV_USER_ID = AttributeValuePeer.USER_ID.substring(
-            AttributeValuePeer.USER_ID.indexOf('.')+1);
     }
 
     public IssueSearch(Issue issue)
@@ -315,42 +378,6 @@ public class IssueSearch
     public void setSearchWords(String  v) 
     {
         this.searchWords = v;
-    }
-
-    /**
-     * Set the value of issueIdsFromUserSearch
-     * This is the search criterion resulting from user search.
-     * @param l Value to assign to issueIdsFromUserSearch
-     */
-    public void setIssueIdsFromUserSearch(List l)
-    {
-        this.issueIdsFromUserSearch = l;
-    }
-
-    /**
-     * Get the value of issueIdsFromUserSearch
-     */
-    public List getIssueIdsFromUserSearch() 
-    {
-        return issueIdsFromUserSearch;
-    }
-
-    /**
-     * Set the value of issueIdsFromTextSearch
-     * This is the search criterion resulting from user search.
-     * @param l Value to assign to issueIdsFromTextSearch
-     */
-    public void setIssueIdsFromTextSearch(NumberKey[] n)
-    {
-        this.issueIdsFromTextSearch = n;
-    }
-
-    /**
-     * Get the value of issueIdsFromTextSearch
-     */
-    public NumberKey[] getIssueIdsFromTextSearch() 
-    {
-        return issueIdsFromTextSearch;
     }
 
     /**
@@ -688,7 +715,38 @@ public class IssueSearch
     {
         this.sortPolarity = v;
     }
-    
+
+
+    private List userIdList;
+    private List userSearchCriteriaList;
+    /**
+     * Describe <code>addUserSearch</code> method here.
+     *
+     * @param userId a <code>String</code> represention of the PrimaryKey
+     * @param searchCriteria a <code>String</code> either a String 
+     * representation of an Attribute PrimaryKey, or the Strings "created_by" 
+     * "any"
+     */
+    public void addUserCriteria(String userId, String searchCriteria)
+    {
+        if (userId == null) 
+        {
+            throw new IllegalArgumentException("userId cannot be null.");
+        }
+        if (searchCriteria == null) 
+        {
+            searchCriteria = ANY_KEY;
+        }
+
+        if (userIdList == null) 
+        {
+            userIdList = new ArrayList(4);
+            userSearchCriteriaList = new ArrayList(4);
+        }
+        
+        userIdList.add(userId);
+        userSearchCriteriaList.add(searchCriteria);
+    }
 
     public NumberKey getALL_TEXT()
     {
@@ -889,36 +947,6 @@ public class IssueSearch
         }
     }
 
-    private void combineUserAndTextCriteria(Criteria crit)
-        throws ScarabException
-    {
-        Criteria.Criterion c1 = null;
-        Criteria.Criterion c2 = null;
-
-        if (issueIdsFromTextSearch != null && issueIdsFromTextSearch.length > 0)
-        {
-            c1 = crit.getNewCriterion(IssuePeer.ISSUE_ID, 
-                                       issueIdsFromTextSearch, Criteria.IN);
-        }
-        if (issueIdsFromUserSearch != null && issueIdsFromUserSearch.size() > 0)
-        {
-            c2 = crit.getNewCriterion(IssuePeer.ISSUE_ID, 
-                                       issueIdsFromUserSearch, Criteria.IN);
-        }
-        if (c1 != null && c2 != null)
-        {
-            c2.and(c1);
-            crit.add(c2);
-        }
-        else if (c1 != null)
-        {
-            crit.add(c1);
-        }
-        else if (c2 != null)
-        {
-            crit.add(c2);
-        }
-    }
 
     /**
      * give reasonable defaults if module code was not specified
@@ -1222,7 +1250,162 @@ public class IssueSearch
     }
 
 
-    private NumberKey[] addTextMatches(Criteria crit, List attValues)
+    private void addUserCriteria(Criteria crit)
+    {
+        if (userIdList != null) 
+        {
+            boolean isAnyUserAV = false;
+            boolean isAnyCreatedBy = false;
+            Iterator iter = userSearchCriteriaList.iterator();
+            while (iter.hasNext())
+            {
+                String userCriteria = (String)iter.next();
+               if (CREATED_BY_KEY.equals(userCriteria)) 
+               {
+                   isAnyCreatedBy = true;
+               }
+               else if (ANY_KEY.equals(userCriteria)) 
+               {
+                   isAnyCreatedBy = true;
+                   isAnyUserAV = true;
+               }               
+               else 
+               {
+                   isAnyUserAV = true;
+               }
+            }
+
+            for (int i =0; i<userIdList.size(); i++)
+            {
+               String userId = (String)userIdList.get(i);
+               String attrId = (String)userSearchCriteriaList.get(i);
+
+               addUserCriteria(userId, attrId, isAnyCreatedBy, isAnyUserAV, crit);
+            }
+        }
+    }
+
+
+    public void addUserCriteria(String userId, String attrId, 
+        boolean isAnyCreatedBy, boolean isAnyUserAttr, Criteria crit)
+    {
+        if (attrId == null)
+        {
+            attrId = ANY_KEY;
+        }
+
+        Criteria.Criterion newCrit = null;
+        if (attrId.equals(CREATED_BY_KEY) || attrId.equals(ANY_KEY))
+        {
+            // Build Criteria for created by
+            newCrit = crit.getNewCriterion(
+                ACTIVITYSETALIAS, CREATED_BY, userId, Criteria.EQUAL);
+            newCrit.and( crit.getNewCriterion(
+                ACTIVITYSETALIAS, TYPE_ID, 
+                ActivitySetTypePeer.CREATE_ISSUE__PK, Criteria.EQUAL) );
+            //addJoin(ActivitySetPeer.TRANSACTION_ID, 
+            //        ActivityPeer.TRANSACTION_ID)
+            newCrit.and( crit.getNewCriterion(
+                ACTIVITYALIAS_TRANSACTION_ID,
+                ACTIVITYALIAS_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID, 
+                Criteria.CUSTOM) );
+            //addJoin(ActivityPeer.ISSUE_ID, IssuePeer.ISSUE_ID)
+            newCrit.and( crit.getNewCriterion(
+                ACTIVITYALIAS_ISSUE_ID,
+                ACTIVITYALIAS_ISSUE_ID__EQUALS__ISSUEPEER_ISSUE_ID,
+                Criteria.CUSTOM) );
+
+            if (isAnyUserAttr) 
+            {
+                // this addition improves timing and reduces dupes
+                // AND srchact0.ISSUE_ID=srchuav0.ISSUE_ID
+                // AND srchact0.ATTRIBUTE_ID=srchuav0.ATTRIBUTE_ID
+                newCrit.and( crit.getNewCriterion(
+                    ACTIVITYALIAS_ISSUE_ID,
+                    ACTIVITYALIAS_ISSUE_ID__EQUALS__USERAVALIAS_ISSUE_ID,
+                    Criteria.CUSTOM) );                
+                newCrit.and( crit.getNewCriterion(
+                    ACTIVITYALIAS_ATTRIBUTE_ID,
+                    ACTIVITYALIAS_ATTR_ID__EQUALS__USERAVALIAS_ATTR_ID, 
+                        Criteria.CUSTOM) );  
+            }
+
+            crit.addAlias(ACTIVITYALIAS, ActivityPeer.TABLE_NAME);
+            crit.addAlias(ACTIVITYSETALIAS, ActivitySetPeer.TABLE_NAME);
+
+            if (attrId.equals(ANY_KEY))
+            {
+                newCrit.or(getUserCriterion(crit, userId, isAnyCreatedBy));
+            }   
+        }
+        else
+        {
+            // A user attribute was selected to search on 
+            newCrit = getUserCriterion(crit, userId, isAnyCreatedBy);
+            newCrit.and( crit.getNewCriterion(
+                USERAVALIAS, ATTRIBUTE_ID, attrId, Criteria.EQUAL) );
+        }
+
+        Criteria.Criterion firstCrit = crit.getCriterion(
+            ACTIVITYSETALIAS, CREATED_BY);
+        if (firstCrit == null) 
+        {
+            firstCrit = 
+                crit.getCriterion(USERAVALIAS, USER_ID);
+        }
+        if (firstCrit == null) 
+        {            
+                crit.and(newCrit);
+        }
+        else 
+        {
+            firstCrit.or(newCrit);
+        }            
+    }
+
+
+    private Criteria.Criterion getUserCriterion(Criteria crit, String userId, 
+                                               boolean isAnyCreatedBy)
+    {
+        crit.addAlias(USERAVALIAS, AttributeValuePeer.TABLE_NAME);
+        
+        // Get results of searching across user attributes
+        Criteria.Criterion attrCrit = crit.getNewCriterion(
+            USERAVALIAS, USER_ID, userId, Criteria.EQUAL);
+        attrCrit.and( crit.getNewCriterion(
+            USERAVALIAS, DELETED, Boolean.FALSE, Criteria.EQUAL) );
+        //addJoin(AttributeValuePeer.ISSUE_ID, IssuePeer.ISSUE_ID)
+        attrCrit.and( crit.getNewCriterion(
+            USERAVALIAS_ISSUE_ID,
+            USERAVALIAS_ISSUE_ID__EQUALS__ISSUEPEER_ISSUE_ID,
+            Criteria.CUSTOM) );
+        if (isAnyCreatedBy) 
+        {
+            // the addition of the following improves timing and reduces dupes
+            // AND srchuav0.USER_ID = srchact0.NEW_USER_ID
+            // AND srchact0.ISSUE_ID=srchuav0.ISSUE_ID
+            // AND srchact0.ATTRIBUTE_ID=srchuav0.ATTRIBUTE_ID
+            // AND srchact0.TRANSACTION_ID=srchactset0.TRANSACTION_ID
+            attrCrit.and( crit.getNewCriterion( ACTIVITYALIAS_NEW_USER_ID,
+                ACTIVITYALIAS_NEW_USER_ID__EQUALS__USERAVALIAS_USER_ID, 
+                Criteria.CUSTOM) );
+            attrCrit.and( crit.getNewCriterion( ACTIVITYALIAS_ISSUE_ID,
+                ACTIVITYALIAS_ISSUE_ID__EQUALS__USERAVALIAS_ISSUE_ID,
+                Criteria.CUSTOM) );                
+            attrCrit.and( crit.getNewCriterion( ACTIVITYALIAS_ATTRIBUTE_ID,
+                ACTIVITYALIAS_ATTR_ID__EQUALS__USERAVALIAS_ATTR_ID,
+                Criteria.CUSTOM) );                
+            attrCrit.and( crit.getNewCriterion( 
+                ACTIVITYALIAS_TRANSACTION_ID,
+                ACTIVITYALIAS_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID, 
+                Criteria.CUSTOM) );
+        }
+
+        return attrCrit;
+    }
+
+
+    private NumberKey[] getTextMatches(List attValues)
         throws Exception
     {
         NumberKey[] matchingIssueIds = null;
@@ -1260,7 +1443,6 @@ public class IssueSearch
             }
         }
 
-        setIssueIdsFromTextSearch(matchingIssueIds);
         return matchingIssueIds;
     }
 
@@ -1338,7 +1520,7 @@ public class IssueSearch
         addSelectedAttributes(crit, attValues);
 
         // search for issues based on text
-        NumberKey[] matchingIssueIds = addTextMatches(crit, attValues);
+        NumberKey[] matchingIssueIds = getTextMatches(attValues);
 
         List sortedIssues = null;
         if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
@@ -1348,12 +1530,23 @@ public class IssueSearch
             addMinimumVotes(crit);
 
             // add user values
-            combineUserAndTextCriteria(crit);
+            addUserCriteria(crit);
+
+            // add text search matches
+            addIssuePKsCriteria(crit, matchingIssueIds);
 
             // state change query
             addStateChangeQuery(crit);
         }
         return matchingIssueIds;
+    }
+
+    private void addIssuePKsCriteria(Criteria crit, NumberKey[] ids)
+    {
+       if (ids != null && ids.length > 0)
+       {
+           crit.add(IssuePeer.ISSUE_ID, ids, Criteria.IN);
+       }     
     }
 
     /**
@@ -1369,6 +1562,9 @@ public class IssueSearch
         Criteria crit = new Criteria();
         NumberKey[] matchingIssueIds = addCoreSearchCriteria(crit);
         List sortedIssues = null;
+        // the matchingIssueIds are text search matches.  if length == 0,
+        // then no need to search further.  if null then there was no
+        // text to search, so continue the search process.
         if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
         {            
             // Get matching issues, with sort criteria
