@@ -115,7 +115,7 @@ public class TomcatLogger extends Logger {
 	
 	LogEntry(String message, Throwable t) {
 	    // avoid expensive system call
-	    if (TomcatLogger.this.timeStamp)
+	    if (TomcatLogger.this.timestamp)
 		this.date = System.currentTimeMillis();
 	    this.message = message;
 	    this.t = t;
@@ -145,16 +145,17 @@ public class TomcatLogger extends Logger {
 		val.append("> ");
 	    }
 
-	    if (TomcatLogger.this.timeStamp) {
-		val.append(new Date(date).toString());
-		val.append(" ");
+	    if (TomcatLogger.this.timestamp) {
+		formatTimestamp( date, val );
+		val.append(" - ");
 	    }
 
-	    if (message != null)
+	    if (message != null) {
 		val.append(message);
-
+	    }
+	    
 	    if (t != null) {
-		val.append(" ");
+		val.append(" - ");
 		val.append(throwableToString( t ));
 	    }
 
@@ -224,6 +225,12 @@ class LogDaemon extends Thread {
 	setDaemon(true);
     }
 
+    static char[] newline;
+    static {
+	String separator = System.getProperty("line.separator", "\n");
+	newline = separator.toCharArray();
+    }
+    
     Runnable flusher = new Runnable() {
 	    public void run() {
 		do {
@@ -233,6 +240,7 @@ class LogDaemon extends Thread {
 		    if (writer != null)
 			try {
 			    writer.write(logEntry.toString());
+			    writer.write(newline);
 			    writer.flush();
 			} catch (Exception ex) { // IOException
 			    ex.printStackTrace();
