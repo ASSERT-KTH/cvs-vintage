@@ -1,4 +1,4 @@
-// $Id: ActionNewPseudoState.java,v 1.7 2004/12/04 13:50:10 mvw Exp $
+// $Id: ActionNewPseudoState.java,v 1.8 2004/12/05 19:31:04 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,7 @@ public class ActionNewPseudoState extends AbstractActionNewModelElement {
      * @param n the to be localized name for the pseudostate kind
      */
     public ActionNewPseudoState(Object k, String n) {
-        this();
+        super();
         kind = k;
         putValue(Action.NAME, Translator.localize(n));
     }
