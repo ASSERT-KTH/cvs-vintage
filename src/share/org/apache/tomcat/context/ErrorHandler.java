@@ -67,6 +67,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.security.*;
+import javax.servlet.*;
 
 
 import org.apache.tomcat.util.log.*;
@@ -179,7 +180,13 @@ public final class ErrorHandler extends BaseInterceptor {
 	if( debug>0 )
 	    ctx.log( "Handler " + errorServlet + " " + errorPath);
 
-	errorServlet.service( req, res );
+	try {
+	    errorServlet.service( req, res );
+	} catch( IOException e ) {
+	    ;   // ASSERT: Only thrown by included servlets
+	} catch( ServletException e) {
+	    ;   // ASSERT: Only thrown by included servlets
+	}
     }
 
     // XXX XXX Security - we should log the message, but nothing
@@ -270,7 +277,13 @@ public final class ErrorHandler extends BaseInterceptor {
 	if( debug>0 )
 	    ctx.log( "Handler " + errorServlet + " " + errorPath);
 
-	errorServlet.service( req, res );
+	try {
+	    errorServlet.service( req, res );
+	} catch( IOException e ) {
+	    ;   // ASSERT: Only thrown by included servlets
+	} catch( ServletException e) {
+	    ;   // ASSERT: Only thrown by included servlets
+	}
     }
 
     public final Handler getHandlerForPath( ContextManager cm,

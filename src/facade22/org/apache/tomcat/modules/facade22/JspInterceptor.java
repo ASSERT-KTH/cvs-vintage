@@ -221,6 +221,11 @@ public class JspInterceptor extends BaseInterceptor {
 	    }
 	    wrapper.setServletClass( classN );
 	    wrapper.setNote( jspInfoNOTE, jspInfo );
+	    // set initial exception on the servlet if one is present
+	    if ( jspInfo.isExceptionPresent() ) {
+		wrapper.setErrorException(jspInfo.getCompileException());
+		wrapper.setExceptionPermanent(true);
+	    }
 	} catch( TomcatException ex ) {
 	    log("mapJspPage: request=" + req + ", jspInfo=" + jspInfo + ", servletName=" + servletName + ", classN=" + classN, ex);
 	    return ;
@@ -263,6 +268,7 @@ public class JspInterceptor extends BaseInterceptor {
 	    if(debug>0)log( "Compiled to " + jspInfo.realClassPath );
 	} catch( Exception ex ) {
 	    log("compile: req="+req+", jspInfo=" + jspInfo, ex);
+	    jspInfo.setCompileException(ex);
 	}
     }
     
@@ -386,6 +392,8 @@ class JspInfo {
     File jspSource; // used to avoid File allocation for lastModified
     long compileTime;// tstamp of last compile attemp
 
+    Exception compileException; // translation/compile exception 
+
     JspInfo( Request req ) {
 	init( req );
     }
@@ -465,6 +473,7 @@ class JspInfo {
      */
     void init(Request req ) {
 	this.request = req;
+	compileException = null;
 	// 	String includeUri
 	// 	    = (String) req.getAttribute(Constants.INC_SERVLET_PATH);
 	uri=req.getServletPath();
@@ -516,6 +525,7 @@ class JspInfo {
 	} else {
 	    version=0;
 	    updateVersionedPaths();
+	    compileTime=0;
 	}
 
 	if( debug>0  )
@@ -576,11 +586,20 @@ class JspInfo {
     void updateCompileTime() {
 	File f=new File( realClassPath );
 	compileTime=0;
-	if( ! f.exists() ) {
-	    f=new File( javaFilePath );
-	    if ( ! f.exists() ) return;
-	}
+	if ( ! f.exists() ) return;
 	compileTime=f.lastModified();
+    }
+
+    void setCompileException(Exception ex) {
+	compileException = ex;
+    }
+
+    Exception getCompileException() {
+	return compileException;
+    }
+
+    boolean isExceptionPresent() {
+	return ( compileException != null );
     }
 
     void log(String s) {

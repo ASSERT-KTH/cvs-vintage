@@ -105,6 +105,12 @@ public class Response {
     protected boolean usingWriter = false;
     protected boolean included=false;
 
+    // holds request error exception
+    // set this just once during request processing
+    Exception errorException=null;
+    // holds request error URI
+    String errorURI=null;
+
     // 
     protected String contentType = DEFAULT_CONTENT_TYPE;
     protected String contentLanguage = null;
@@ -198,6 +204,39 @@ public class Response {
 
     public void setBufferCommitted( boolean v ) {
 	this.commited=v;
+    }
+
+    // -----------------Error State --------------------
+
+    /** Set the error Exception that occurred during
+	request processing.
+     */
+    public void setErrorException(Exception ex) {
+	errorException = ex;
+    }
+
+    /** Get the Exception that occurred during request
+	processing.
+     */
+    public Exception getErrorException() {
+	return errorException;
+    }
+
+    public boolean isExceptionPresent() {
+	return ( errorException != null );
+    }
+
+    /** Set request URI that caused an error during
+	request processing.
+     */
+    public void setErrorURI(String uri) {
+	errorURI = uri;
+    }
+
+    /** Get the request URI that caused the original error.
+     */
+    public String getErrorURI() {
+	return errorURI;
     }
 
     // -------------------- Methods --------------------
@@ -445,6 +484,8 @@ public class Response {
 	usingStream = false;
 	commited = false;
 	included=false;
+	errorException=null;
+	errorURI=null;
 	if ( oBuffer != null ) oBuffer.recycle();
 	headers.clear();
     }

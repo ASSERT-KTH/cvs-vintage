@@ -90,10 +90,9 @@ public class ServletWrapper extends Handler {
     // optional informations
     protected String description = null;
 
-    // If init() fails, this will keep the reason.
-    // init may be called when the servlet starts, but we need to
-    // report the error later, to the client
-    Exception unavailable=null;
+    // If init() fails, Handler.errorException will hold the reason.
+    // In the case of an UnavailableException, this field will hold
+    // the expiration time if UnavailableException is not permanent.
     long unavailableTime=-1;
     
     // Usefull info for class reloading
@@ -179,6 +178,23 @@ public class ServletWrapper extends Handler {
 	servlet=null; // reset the servlet, if it was set
 	servletClass=null;
     }
+
+    public Exception getErrorException() {
+	Exception ex = super.getErrorException();
+	if ( ex != null ) {
+	    if ( ex instanceof UnavailableException &&
+		    ! ((UnavailableException)ex).isPermanent()) {
+		// make updated UnavailableException, reporting a minimum of 1 second
+		int secs=1;
+		long moreWaitTime=unavailableTime - System.currentTimeMillis();
+		if( moreWaitTime > 0 )
+		    secs = (int)((moreWaitTime + 999) / 1000);
+		ex = new UnavailableException(ex.getMessage(), secs);
+	    }
+	}
+	return ex;
+    }
+
 
     public void reload() {
 	if( initialized ) {
@@ -308,20 +324,32 @@ public class ServletWrapper extends Handler {
     public void init()
     	throws Exception
    {
-	// make sure the servlet is loaded before calling preInit
+	// if initialized, then we were sync blocked when first init() succeeded
+	if( initialized ) return;
+	// if exception present, then we were sync blocked when first init() failed
+	// or an interceptor set an inital exeception
+	// in the latter case, preServletInit() and postServletInit() interceptors
+	// don't get called
+	if ( isExceptionPresent() ) return;
+
+       // make sure the servlet is loaded before calling preInit
 	// Jsp case - maybe another Jsp engine is used
 	if( servlet==null && path != null &&  servletClassName == null) {
 	    log("Calling handleJspInit " + servletClassName);
 	    handleJspInit();
 	}
-	// Will throw exception if it can't load, let upper
-	// levels handle this
-	//	try {
-	if( servlet==null ) loadServlet();
-	//	} catch( ClassNotFoundException ex ) {
-	//	} catch( InstantiationException ex ) {
-	//} catch( IllegalStateException ex ) {
-	//}
+
+	if( servlet==null ) {
+	    // try to load servlet, save exception if one occurs
+	    try {
+		loadServlet();
+	    } catch ( Exception ex ) {
+		// save init exception
+		setErrorException( ex );
+		setExceptionPermanent( true );
+		return;
+	    }
+	}
 
 	// Call pre, doInit and post
 	BaseInterceptor cI[]=context.getContainer().getInterceptors();
@@ -334,9 +362,8 @@ public class ServletWrapper extends Handler {
 	}
 
 	doInit();
-	
-	// if an exception is thrown in init, no end interceptors will
-	// be called. that was in the origianl code J2EE used
+
+	// doInit() catches exceptions, so post interceptors are always called	
 	for( int i=0; i< cI.length; i++ ) {
 	    try {
 		cI[i].postServletInit( context, this );
@@ -349,32 +376,21 @@ public class ServletWrapper extends Handler {
     protected void doInit()
 	throws Exception
     {
-	// The servlet is loaded and not null - otherwise init()
-	// throws exception
-        if( initialized )
-            return;
+	// ASSERT synchronized at higher level, initialized must be false
 	try {
-	    // if multiple threads will call the same servlet at once,
-	    // we should have only one init
-	    synchronized( this ) {
-		// we may have 2 threads entering doInit,
-		// the first one may init the servlet
-		if( initialized )
-		    return;
-		final Servlet sinstance = servlet;
-		final ServletConfig servletConfig = configF;
-		
-		// init - only if unavailable was null or
-		// unavailable period expired
-		servlet.init(servletConfig);
-		initialized=true;
-	    }
+	    final Servlet sinstance = servlet;
+	    final ServletConfig servletConfig = configF;
+	    servlet.init(servletConfig);
+	    initialized=true;
 	} catch( UnavailableException ex ) {
-	    unavailable=ex;
-	    unavailableTime=System.currentTimeMillis();
-	    unavailableTime += ex.getUnavailableSeconds() * 1000;
+	    setServletUnavailable( ex );
+	    servlet=null;
 	} catch( Exception ex ) {
-	    unavailable=ex;
+	    // other init exceptions are treated as permanent
+	    // XXX need a context setting for unavailable time
+	    setErrorException(ex);
+	    setExceptionPermanent(true);
+	    servlet=null;
 	}
     }
 
@@ -383,6 +399,7 @@ public class ServletWrapper extends Handler {
 	JspHandler
     */
     public void service(Request req, Response res) 
+	throws IOException, ServletException
     {
 	// <servlet><jsp-file> case
 	if( path!=null ) {
@@ -395,23 +412,22 @@ public class ServletWrapper extends Handler {
 	    req.setAttribute( "javax.servlet.include.servlet_path", path );
 	}
 
-	if( unavailable!=null  ) {
-	    // Don't load at all if permanently unavailable 
-	    if (((UnavailableException) unavailable).getUnavailableSeconds() == -1) { 
-		   initialized = false; 
-		   return; 
-	    } 
-
-	    // Don't load if Unavailable timer is in place
-	    if(  stillUnavailable() ) {
-		handleUnavailable( req, res );
-		initialized=false;
-		return;
+	// if servlet is not available
+	if ( isExceptionPresent() ) {
+	    // get if error has expired
+	    checkErrorExpired( req, res );
+	    // if we have an error on this request
+	    if ( req.isExceptionPresent()) {
+		// if in included, defer handling to higher level
+		if ( res.isIncluded() )
+		    return;
+		// otherwise handle error
+		contextM.handleError( req, res, getErrorException());
 	    }
-	    unavailable=null;// timer expired
+	    context.log(getServletName() + " unavailable time expired, trying again ");
 	}
 
-	// called only if unavailable==null or timer expired.
+	// we reach here of there is no error or the exception has expired
 	// will do an init
 	super.service( req, res );
     }
@@ -438,7 +454,25 @@ public class ServletWrapper extends Handler {
 	    res.setFacade( resF );
 	}
 	
-	doService( reqF, resF );
+	try {
+	    doService( reqF, resF );
+	} catch ( Exception ex ) {
+	    if ( ex instanceof UnavailableException ) {
+		// if error not set
+		if ( ! isExceptionPresent() ) {
+		    synchronized(this) {
+			if ( ! isExceptionPresent() ) {
+			    setServletUnavailable( (UnavailableException)ex );
+			    // XXX if the UnavailableException is permanent we are supposed
+			    // to destroy the servlet.  Synchronization of this destruction
+			    // needs review before adding this.
+			}
+		    }
+		}
+	    }
+	    // save error state on request and response
+	    saveError( req, res, ex );
+	}
     }
 
     protected void doService(HttpServletRequest req, HttpServletResponse res)
@@ -466,50 +500,44 @@ public class ServletWrapper extends Handler {
 	ServletWrapper jspServletW = (ServletWrapper)context.getServletByName("jsp");
 	servletClassName = jspServletW.getServletClass();
     }
-    
 
-    // -------------------- Unavailable --------------------
-    /** Check if we can try again an init
-     */
-    private boolean stillUnavailable() {
-	// we have a timer - maybe we can try again - how much
-	// do we have to wait - (in mSec)
-	long moreWaitTime=unavailableTime - System.currentTimeMillis();
-	if( unavailableTime > 0 && ( moreWaitTime < 0 )) {
-	    // we can try again
-	    unavailable=null;
-	    unavailableTime=-1;
-	    log(getServletName() + " unavailable time expired," +
-			" try again ");
-	    return false;
+    // -------------------- Utility methods --------------------
+
+    private void setServletUnavailable( UnavailableException ex ) {
+	// servlet exception state
+	setErrorException( ex );
+	if ( ex.isPermanent() ) {
+	    setExceptionPermanent( true );
 	} else {
-	    return true;
+	    setExceptionPermanent( false );
+	    unavailableTime=System.currentTimeMillis();
+	    unavailableTime += ex.getUnavailableSeconds() * 1000;
 	}
     }
-    
-    /** Send 503. Should be moved in ErrorHandling
+
+    /** Check if error exception is present and if so, has the error
+	expired.  Sets error on request and response if un-expired
+	error found.
      */
-    private void handleUnavailable( Request req, Response res ) {
-	if( unavailable instanceof UnavailableException ) {
-	    int unavailableTime = ((UnavailableException)unavailable).
-		getUnavailableSeconds();
-	    if( unavailableTime > 0 ) {
-		res.setHeader("Retry-After",
-			      Integer.toString(unavailableTime));
+
+    private void checkErrorExpired( Request req, Response res ) {
+	// synchronize so another request can't expire the error
+	synchronized(this) {
+	    // if error still present
+	    if ( isExceptionPresent() ) {
+		// if permanent exception or timer not expired
+		if ( isExceptionPermanent() ||
+			(unavailableTime - System.currentTimeMillis()) > 0) {
+		    // save error state on request and response
+		    saveError( req, res, getErrorException() );
+		} else {
+		    // we can try again
+		    setErrorException(null);
+		    setExceptionPermanent(false);
+		    unavailableTime=-1;
+		}
 	    }
 	}
-
-	String msg=unavailable.getMessage();
-	long moreWaitTime=unavailableTime - System.currentTimeMillis();
-	log( "Error in " + getServletName() +
-		     "init(), error happened at " +
-		     unavailableTime + " wait " + moreWaitTime +
-		     " : " + msg, unavailable);
-	req.setAttribute("javax.servlet.error.message", msg );
-	res.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE); // 503
-	contextM.handleStatus( req, res,
-			       HttpServletResponse.SC_SERVICE_UNAVAILABLE );
-	return;
     }
 
 }

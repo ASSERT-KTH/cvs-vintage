@@ -62,6 +62,7 @@ import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import javax.servlet.*;
 
 /**
  * The class that will generate the actual response.
@@ -129,6 +130,9 @@ public class Handler {
 
     protected int loadOnStartup=-1;
     protected boolean loadingOnStartup=false;
+
+    protected Exception errorException=null;
+    protected boolean exceptionPermanent=false;
     
     // Debug
     protected int debug=0;
@@ -224,6 +228,34 @@ public class Handler {
 	return loadingOnStartup;
     }
 
+    /** Sets an exception that relates to the ability of the
+	servlet to execute.  An exception may be set by an
+	interceptor if there is an error during the creation
+	of the servlet. 
+     */
+    public void setErrorException(Exception ex) {
+	errorException = ex;
+    }
+
+    /** Gets the exception that relates to the servlet's
+	ability to execute.
+     */
+    public Exception getErrorException() {
+	return errorException;
+    }
+
+    public boolean isExceptionPresent() {
+	return ( errorException != null );
+    }
+
+    public void setExceptionPermanent( boolean permanent ) {
+	exceptionPermanent = permanent;
+    }
+
+    public boolean isExceptionPermanent() {
+	return exceptionPermanent;
+    }
+
     // -------------------- Jsp specific code
     
     public String getPath() {
@@ -264,13 +296,17 @@ public class Handler {
     /** Destroy a handler, and notify all the interested interceptors
      */
     public void destroy() throws Exception {
-	if ( ! initialized ) return;// already destroyed or not init.
+	if ( ! initialized ) {
+	    errorException = null;
+	    return;// already destroyed or not init.
+	}
 	initialized=false;
 
 	// XXX post will not be called if any error happens in destroy.
 	// That's how tomcat worked before - I think it's a bug !
 	doDestroy();
 
+	errorException=null;
     }
 
 
@@ -279,63 +315,93 @@ public class Handler {
     public void init()
 	throws Exception
     {
+	// if initialized, then we were sync blocked when first init() succeeded
+	if( initialized ) return;
+	// if exception present, then we were sync blocked when first init() failed
+	// or an interceptor set an inital exeception
+	if (errorException != null) throw errorException;
 	try {
-	    if( initialized ) return;
 	    doInit();
-	    return;
 	} catch( Exception ex ) {
-	    initialized=false;
+	    // save error, assume permanent
+	    setErrorException(ex);
+	    setExceptionPermanent(true);
 	}
     }
 
     /** Call the service method, and notify all listeners
+     *
+     * @exception IOException if an input/output error occurs and we are
+     *  processing an included servlet (otherwise it is swallowed and
+     *  handled by the top level error handler mechanism)
+     * @exception ServletException if a servlet throws an exception and
+     *  we are processing an included servlet (otherwise it is swallowed
+     *  and handled by the top level error handler mechanism)
      */
-    public void service(Request req, Response res) 
+    public void service(Request req, Response res)
+	throws IOException, ServletException
     {
 	if( ! initialized ) {
-	    try {
-		synchronized( this ) {
-		    // we may be initialized when we enter the sync block
-		    if( ! initialized )
+	    Exception ex=null;
+	    synchronized( this ) {
+		// we may be initialized when we enter the sync block
+		if( ! initialized ) {
+		    try {
 			init();
+		    } catch ( Exception e ) {
+			errorException = e;
+			exceptionPermanent = true;
+		    }
 		}
-	    } catch( Exception ex ) {
-		initialized=false;
-		if( ex instanceof ClassNotFoundException ) {
-		    contextM.handleStatus( req, res, 404);
-		    return;
-		}
+		// get copy of exception, if any, before leaving sync lock
+		ex=errorException;
+	    }
+	    // if error occurred
+	    if ( ex != null ) {
+		// save error state on request and response
+		saveError( req, res, ex );
 		context.log("Exception in init  " + ex.getMessage(), ex );
-		contextM.handleError( req, res, ex );
+		// if in included, defer handling to higher level
+		if (res.isIncluded()) return;
+		// handle init error since at top level
+		if( ex instanceof ClassNotFoundException )
+		    contextM.handleStatus( req, res, 404 );
+		else
+		    contextM.handleError( req, res, ex );
 		return;
 	    }
 	}
 
-	BaseInterceptor reqI[]=
-	    req.getContainer().getInterceptors(Container.H_postService);
-
 	if( ! internal ) {
+	    BaseInterceptor reqI[]=
+		req.getContainer().getInterceptors(Container.H_preService);
 	    for( int i=0; i< reqI.length; i++ ) {
 		reqI[i].preService( req, res );
 	    }
 	}
 
-	Throwable t=null;
 	try {
 	    doService( req, res );
-	} catch( Throwable t1 ) {
-	    t=t1;
+	} catch( Exception ex ) {
+	    // save error state on request and response
+	    saveError( req, res, ex );
 	}
 
 	// continue with the postService
 	if( ! internal ) {
+	    BaseInterceptor reqI[]=
+		req.getContainer().getInterceptors(Container.H_postService);
 	    for( int i=0; i< reqI.length; i++ ) {
 		reqI[i].postService( req, res );
 	    }
 	}
 
-	if( t==null ) return;
-	contextM.handleError( req, res, t );
+	// if no error
+	if( ! res.isExceptionPresent() ) return;
+	// if in included, defer handling to higher level
+	if (res.isIncluded()) return;
+	// handle original error since at top level
+	contextM.handleError( req, res, res.getErrorException() );
     }
 
     // -------------------- Abstract methods --------------------
@@ -385,6 +451,17 @@ public class Handler {
 	context.log(s, t);
     }
 
+    // --------------- Error Handling ----------------
+
+    public final void saveError( Request req, Response res, Exception ex ) {
+	// save current exception on the request
+	req.setErrorException( ex );
+	// if the first exception, save info on the response
+	if ( ! res.isExceptionPresent() ) {
+	    res.setErrorException( ex );
+	    res.setErrorURI( (String)req.getAttribute("javax.servlet.include.request_uri") );
+	}
+    }
 
     // -------------------- Notes --------------------
     public final void setNote( int pos, Object value ) {
