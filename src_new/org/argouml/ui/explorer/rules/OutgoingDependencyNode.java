@@ -1,4 +1,4 @@
-// $Id: OutgoingDependencyNode.java,v 1.4 2004/07/17 22:29:05 linus Exp $
+// $Id: OutgoingDependencyNode.java,v 1.5 2004/08/29 20:34:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,11 +36,18 @@ import org.argouml.ui.explorer.WeakExplorerNode;
 public class OutgoingDependencyNode implements WeakExplorerNode {
     private Object parent;
 
-    /** Creates a new instance of AssociationsNode */
+    /** 
+     * Creates a new instance of AssociationsNode
+     * 
+     * @param p the parent
+     */
     public OutgoingDependencyNode(Object p) {
         parent = p;
     }
 
+    /**
+     * @return the parent
+     */
     public Object getParent() {
 	return parent;
     }

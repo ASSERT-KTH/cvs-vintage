@@ -1,4 +1,4 @@
-// $Id: OperationsNode.java,v 1.4 2004/07/17 22:29:05 linus Exp $
+// $Id: OperationsNode.java,v 1.5 2004/08/29 20:34:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,19 +30,26 @@ import org.argouml.ui.explorer.WeakExplorerNode;
  * This class is a support class for The Navigation panel Go Rules.
  * Don't confuse it with anything to do with GEF nodes or the like.
  *
- * $Revision: 1.4 $
+ * $Revision: 1.5 $
  *
- * @author  alexb, $Author: linus $
+ * @author  alexb, $Author: mvw $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class OperationsNode implements WeakExplorerNode {
     private Object parent;
     
-    /** Creates a new instance of OperationsNode */
+    /** 
+     * Creates a new instance of OperationsNode
+     * 
+     * @param p the parent
+     */
     public OperationsNode(Object p) {
         parent = p;
     }
     
+    /**
+     * @return the parent
+     */
     public Object getParent() {
 	return parent;
     }

@@ -1,4 +1,4 @@
-// $Id: AbstractPerspectiveRule.java,v 1.4 2004/06/23 07:02:45 linus Exp $
+// $Id: AbstractPerspectiveRule.java,v 1.5 2004/08/29 20:34:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,10 +32,19 @@ import java.util.Collection;
  */
 public abstract class AbstractPerspectiveRule implements PerspectiveRule {
     
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
+     */
     public abstract Collection getChildren(Object parent);
     
+    /**
+     * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
+     */
     public abstract String getRuleName();
 
+    /**
+     * @see java.lang.Object#toString()
+     */
     public String toString() {
         return getRuleName();
     }

@@ -1,4 +1,4 @@
-// $Id: IncomingDependencyNode.java,v 1.3 2004/06/24 06:25:41 linus Exp $
+// $Id: IncomingDependencyNode.java,v 1.4 2004/08/29 20:34:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,19 +37,32 @@ public class IncomingDependencyNode implements WeakExplorerNode {
 
     private Object parent;
 
-    /** Creates a new instance of DepedencyNode */
-    public IncomingDependencyNode(Object parent) {
-        this.parent = parent;
+    /** 
+     * Creates a new instance of DepedencyNode
+     * 
+     * @param theParent the parent node
+     */
+    public IncomingDependencyNode(Object theParent) {
+        this.parent = theParent;
     }
     
+    /**
+     * @return the parent
+     */
     public Object getParent() {
 	return parent;
     }
 
+    /**
+     * @see java.lang.Object#toString()
+     */
     public String toString() {
 	return "Incoming Dependencies";
     }
 
+    /**
+     * @see org.argouml.ui.explorer.WeakExplorerNode#subsumes(java.lang.Object)
+     */
     public boolean subsumes(Object obj) {
 	return obj instanceof IncomingDependencyNode;
     }

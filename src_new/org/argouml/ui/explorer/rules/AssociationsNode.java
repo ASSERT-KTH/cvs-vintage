@@ -1,4 +1,4 @@
-// $Id: AssociationsNode.java,v 1.2 2004/06/22 13:24:40 d00mst Exp $
+// $Id: AssociationsNode.java,v 1.3 2004/08/29 20:34:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,29 +30,42 @@ import org.argouml.ui.explorer.WeakExplorerNode;
  * This class is a support class for The Navigation panel Go Rules.
  * Don't confuse it with anything to do with GEF nodes or the like.
  *
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  *
- * @author  alexb, $Author: d00mst $
+ * @author  alexb, $Author: mvw $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class AssociationsNode implements WeakExplorerNode {
 
-    Object parent;
+    private Object parent;
 
-    /** Creates a new instance of AssociationsNode */
-    public AssociationsNode(Object parent) {
+    /** 
+     * Creates a new instance of AssociationsNode
+     * 
+     * @param theParent the parent object
+     */
+    public AssociationsNode(Object theParent) {
         
-        this.parent = parent;
+        this.parent = theParent;
     }
 
+    /**
+     * @return the parent
+     */
     public Object getParent() {
 	return parent;
     }
 
+    /**
+     * @see java.lang.Object#toString()
+     */
     public String toString() {
 	return "Associations";
     }
 
+    /**
+     * @see org.argouml.ui.explorer.WeakExplorerNode#subsumes(java.lang.Object)
+     */
     public boolean subsumes(Object obj) {
 	return obj instanceof AssociationsNode;
     }
