@@ -68,11 +68,20 @@ import org.tigris.scarab.util.word.SearchIndex;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: UpdateSearchIndex.java,v 1.4 2002/12/20 20:36:55 jon Exp $
+ * @version $Id: UpdateSearchIndex.java,v 1.5 2002/12/20 20:57:25 jon Exp $
  */
 public class UpdateSearchIndex extends RequireLoginFirstAction
 {
     private static ThreadGroup tg = null;
+    private static int seconds = 5;
+    private static int counter = 0;
+
+    private void reset()
+    {
+        seconds = 5;
+        counter = 0;
+        tg = null;
+    }    
 
     public void doPerform( RunData data, TemplateContext context )
         throws Exception
@@ -82,6 +91,7 @@ public class UpdateSearchIndex extends RequireLoginFirstAction
         
         synchronized (this)
         {
+            Object[] time = {new Integer(seconds)};
             if (tg == null)
             {
                 try
@@ -89,24 +99,33 @@ public class UpdateSearchIndex extends RequireLoginFirstAction
                     tg = new ThreadGroup("UpdateIndex");
                     Thread updateThread = new Thread(tg, new UpdateThread());
                     updateThread.start();
-                    context.put("updateFrequency", "5");
-                    scarabR.setConfirmMessage(l10n.get("SearchIndexDoNoteLeavePage"));
+                    context.put("updateFrequency", time[0]);
+                    scarabR.setConfirmMessage(l10n.format("SearchIndexDoNoteLeavePage",time));
                 }
                 catch (Exception e)
                 {
-                    tg = null;
+                    reset();
                     scarabR.setAlertMessage(e.getMessage());            
                 }
             }
             else if (tg.activeCount() == 0)
             {
-                tg = null;
+                reset();
                 scarabR.setConfirmMessage(l10n.get("SearchIndexUpdated"));
             }
             else
             {
-                context.put("updateFrequency", "5");
-                scarabR.setConfirmMessage(l10n.get("SearchIndexDoNoteLeavePage"));
+                if (counter > 5)
+                {
+                    seconds = 10;
+                }
+                else if (counter > 10)
+                {
+                    seconds = 15;
+                }
+                context.put("updateFrequency", time[0]);
+                scarabR.setConfirmMessage(l10n.format("SearchIndexDoNoteLeavePage",time));
+                counter++;
             }
         }
 
