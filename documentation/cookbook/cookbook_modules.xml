@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: cookbook_modules.xml,v 1.10 2003/01/13 19:49:18 linus Exp $ -->
+<!-- $Id: cookbook_modules.xml,v 1.11 2003/02/14 08:40:59 mkl Exp $ -->
 <sect1 id="modules_and_plugins">
 <!--
 <sect1info>
@@ -690,7 +690,7 @@ which is used as follows:
 	  <primary>NSUML</primary>
 	  <secondary>understanding</secondary>
 	</indexterm>
-	<para>Florent wrote a small tutorial for creating modules. It can be found on the <ulink url="http://argopno.tigris.org/documentation/tutoriel/new_module.html">ArgoPNO website</ulink>.
+	<para>Florent wrote a small tutorial for creating modules. It can be found on the <ulink url="http://argopno.tigris.org/documentation/argouml.html">ArgoPNO website</ulink>.
 </para>
 </sect2>
 
