@@ -45,8 +45,8 @@ import org.columba.ristretto.imap.MessageSet;
 import org.columba.ristretto.imap.parser.FlagsParser;
 import org.columba.ristretto.imap.parser.IMAPHeaderParser;
 import org.columba.ristretto.imap.parser.ListInfoParser;
+import org.columba.ristretto.imap.parser.MessageAttributeParser;
 import org.columba.ristretto.imap.parser.MessageFolderInfoParser;
-import org.columba.ristretto.imap.parser.MessageSourceParser;
 import org.columba.ristretto.imap.parser.MimePartParser;
 import org.columba.ristretto.imap.parser.MimeTreeParser;
 import org.columba.ristretto.imap.parser.SearchResultParser;
@@ -58,6 +58,7 @@ import org.columba.ristretto.imap.protocol.CommandFailedException;
 import org.columba.ristretto.imap.protocol.DisconnectedException;
 import org.columba.ristretto.imap.protocol.IMAPException;
 import org.columba.ristretto.imap.protocol.IMAPProtocol;
+import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
@@ -1217,17 +1218,20 @@ public class IMAPStore {
 	 * @return message source
 	 * @throws Exception
 	 */
-	public String getMessageSource(Object uid, String path) throws Exception {
+	public Source getMessageSource(Object uid, String path) throws Exception {
 
 		ensureLoginState();
 		ensureSelectedState(path);
 
 		try {
 			IMAPResponse[] responses = getProtocol().fetchMessageSource(uid);
-
-			String source = MessageSourceParser.parse(responses);
-
-			return source;
+			
+			for( int i=0; i<responses.length; i++) {
+				if( responses[i].getResponseType() == IMAPResponse.RESPONSE_MESSAGE_DATA) {
+					Attributes attributes = MessageAttributeParser.parse(responses[i].getResponseMessage());
+					return responses[i].getData((String) attributes.get("BODY"));
+				}
+			}
 		} catch (BadCommandException ex) {
 		} catch (CommandFailedException ex) {
 		} catch (DisconnectedException ex) {

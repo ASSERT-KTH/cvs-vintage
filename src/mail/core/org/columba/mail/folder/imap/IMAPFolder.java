@@ -51,7 +51,7 @@ import org.columba.ristretto.message.MessageFolderInfo;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.StreamableMimePart;
-import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.message.io.SourceInputStream;
 
 public class IMAPFolder extends RemoteFolder {
@@ -653,7 +653,7 @@ public class IMAPFolder extends RemoteFolder {
 	 * @see org.columba.mail.folder.Folder#getMessageSource(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
 	public String getMessageSource(Object uid) throws Exception {
-		return getStore().getMessageSource(uid, getImapPath());
+		return getStore().getMessageSource(uid, getImapPath()).toString();
 	}
 
 	/**
@@ -808,9 +808,9 @@ public class IMAPFolder extends RemoteFolder {
 	 * @see org.columba.mail.folder.MailboxInterface#getMessageSourceStream(java.lang.Object)
 	 */
 	public InputStream getMessageSourceStream(Object uid) throws Exception {
-		String stringSource = getStore().getMessageSource(uid, getImapPath());
+		Source source = getStore().getMessageSource(uid, getImapPath());
 
-		return new SourceInputStream((new CharSequenceSource(stringSource)));
+		return new SourceInputStream(source);
 	}
 
 	/* (non-Javadoc)
