@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.64 2002/02/17 04:10:36 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.65 2002/02/17 04:22:25 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -188,11 +188,11 @@
     <!-- Modules -->
     <!-- ======= -->
 
-    <!-- J2EE -->
-    <property name="jboss.j2ee.root" value="${project.root}/j2ee/output"/>
-    <property name="jboss.j2ee.lib" value="${jboss.j2ee.root}/lib"/>
-    <path id="jboss.j2ee.classpath">
-      <pathelement path="${jboss.j2ee.lib}/jboss-j2ee.jar"/>
+    <!-- Plastic -->
+    <property name="jboss.plastic.root" value="${project.root}/plastic/output"/>
+    <property name="jboss.plastic.lib" value="${jboss.plastic.root}/lib"/>
+    <path id="jboss.plastic.classpath">
+      <pathelement path="${jboss.plastic.lib}/jboss-plastic-j2ee.jar"/>
     </path>
 
     <!-- Common -->
@@ -211,7 +211,7 @@
 
     <!-- The combined dependant module classpath -->
     <path id="dependentmodule.classpath">
-      <path refid="jboss.j2ee.classpath"/>
+      <path refid="jboss.plastic.classpath"/>
       <path refid="jboss.common.classpath"/>
       <path refid="jboss.naming.classpath"/>
     </path>
@@ -499,7 +499,13 @@
         <include name="org/jboss/version.properties"/>
       </fileset>
 
-      <!-- HACK, HACK, HACK to allow core components to use these common classes -->
+      <!-- 
+         | HACK, HACK, HACK 
+         |
+         | Allows core components to use these common classes.  Should 
+         | fix this so they can be loaded from the net.  May need to abstract
+         | Server to a Loader, whichs setsup SCL and then loads + starts Server...
+       -->
       <fileset dir="${jboss.common.root}/classes">
         <include name="org/jboss/util/jmx/ObjectNameFactory*.class"/>
       </fileset>
