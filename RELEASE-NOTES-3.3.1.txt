@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.41 2002/02/28 03:34:23 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.42 2002/02/28 03:45:30 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -252,6 +252,7 @@ Bug No.  Description
 6604	 Fix a problem when using the AccessLog without a "Default Context" 
 	 defined.  
 
+
 Configuration:
 
 Bug No.  Description
@@ -287,14 +288,21 @@ Bug No.  Description
 6717	 Fix a problem where the Http10 Connector would fail to parse the 
 	 HTTP headers if the headers are extremely big.
 
+
 Connectors:
+
+Bug No.  Description
 
          A bug was fixed in isapi_redirect.dll where it would mistake an
          encoded '?' in the URI path as the query string delimitor.
 
+5769     A -n option has been added to jk_nt_service.exe so that the service
+         display name can be different from the service name should it contain
+         characters not valid for the service name.
 
-6579	 Make certain that we don't dump more out put than is available when 
+6579	 Make certain that we don't dump more output than is available when 
 	 debugging Ajp13.
+
 
 Documentation:
 
