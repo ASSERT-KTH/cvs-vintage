@@ -17,12 +17,10 @@ package org.columba.mail.gui.table.command;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.SelectiveGuiUpdateCommand;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
@@ -40,7 +38,7 @@ import org.columba.mail.message.HeaderList;
  * @author Timo Stich (tstich@users.sourceforge.net)
  *
  */
-public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
+public class ViewHeaderListCommand extends Command {
     private HeaderList headerList;
     private Folder folder;
 

@@ -15,10 +15,10 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
-import org.columba.core.util.Mutex;
-
 import java.util.List;
 import java.util.Vector;
+
+import org.columba.core.util.Mutex;
 
 
 /**
@@ -35,12 +35,19 @@ public class DefaultProcessor extends Thread {
     private List worker;
     private Mutex operationMutex;
     private Mutex workerMutex;
+    
+    
+    /**
+     * Processor is busy or waiting.
+     */
     private boolean isBusy;
+    
     private UndoManager undoManager;
     private TaskManager taskManager;
     private int timeStamp;
 
     /**
+     * Constructs a DefaultProcessor.
      *
      */
     public DefaultProcessor() {
@@ -48,6 +55,7 @@ public class DefaultProcessor extends Thread {
 
         worker = new Vector();
 
+        // Create the workers
         for (int i = 0; i < MAX_WORKERS; i++) {
             worker.add(new Worker(this));
         }
@@ -64,17 +72,22 @@ public class DefaultProcessor extends Thread {
     }
 
     /**
-     * @param op
+     * Add a Command to the Queue.
+     * Calls {@link #addOp(Command, int)} with Command.FIRST_EXECUTION.
+     *
+     * @param op the command to add
      */
-    public void addOp(Command op) {
+    public void addOp(final Command op) {
         addOp(op, Command.FIRST_EXECUTION);
     }
 
     /**
-     * @param op
-     * @param operationMode
+     * Adds a Command to the queue.
+     *
+     * @param op the command
+     * @param operationMode the mode in wich the command should be processed
      */
-    synchronized void addOp(Command op, int operationMode) {
+    synchronized void addOp(final Command op, final int operationMode) {
         //ColumbaLogger.log.debug( "Adding Operation..." );
         boolean needToRelease = false;
 
@@ -84,12 +97,16 @@ public class DefaultProcessor extends Thread {
             int p = operationQueue.size() - 1;
             OperationItem nextOp;
 
-            // Sort in with respect to priority
+            // Sort in with respect to priority and synchronize:
+            // Commands with higher priority will be processed
+            // before commands with lower priority.
+            // If there is a command that is of type synchronize
+            // don't put this command in front.
             while (p != -1) {
                 nextOp = (OperationItem) operationQueue.get(p);
 
-                if ((nextOp.operation.getPriority() < op.getPriority()) &&
-                        !nextOp.operation.isSynchronize()) {
+                if ((nextOp.getOperation().getPriority() < op.getPriority()) &&
+                        !nextOp.getOperation().isSynchronize()) {
                     p--;
                 } else {
                     break;
@@ -108,15 +125,20 @@ public class DefaultProcessor extends Thread {
     }
 
     /**
-     * @param opItem
-     * @return
+     * Checks if the command can be processed. This is true
+     * if all references are not blocked.
+     *
+     * @param opItem the internal command structure
+     * @return true if the operation will not be blocked
      */
-    private boolean canBeProcessed(OperationItem opItem) {
-        return opItem.operation.canBeProcessed(opItem.operationMode);
+    private boolean canBeProcessed(final OperationItem opItem) {
+        return opItem.getOperation().canBeProcessed(opItem.getOperationMode());
     }
 
     /**
-     * @return
+     * Get the next Operation from the queue.
+     *
+     * @return the next non-blocking operation or null if none found.
      */
     private OperationItem getNextOpItem() {
         OperationItem nextOp = null;
@@ -128,7 +150,7 @@ public class DefaultProcessor extends Thread {
             for (int i = 0; i < operationQueue.size(); i++) {
                 nextOp = (OperationItem) operationQueue.get(i);
 
-                if ((i != 0) && (nextOp.operation.isSynchronize())) {
+                if ((i != 0) && (nextOp.getOperation().isSynchronize())) {
                     nextOp = null;
 
                     break;
@@ -137,9 +159,9 @@ public class DefaultProcessor extends Thread {
 
                     break;
                 } else {
-                    nextOp.operation.incPriority();
+                    nextOp.getOperation().incPriority();
 
-                    if (nextOp.operation.getPriority() >= Command.DEFINETLY_NEXT_OPERATION_PRIORITY) {
+                    if (nextOp.getOperation().getPriority() >= Command.DEFINETLY_NEXT_OPERATION_PRIORITY) {
                         nextOp = null;
 
                         break;
@@ -158,12 +180,15 @@ public class DefaultProcessor extends Thread {
     }
 
     /**
-     * @param op
-     * @param w
+     * Called by the worker to signal that his operation has finished.
+     *
+     * @param op the command the worker has processed
+     * @param w the worker himself
      */
-    public synchronized void operationFinished(Command op, Worker w) {
+    public synchronized void operationFinished(final Command op, final Worker w) {
         boolean needToRelease = false;
 
+        // add the worker to the workerlist
         try {
             needToRelease = workerMutex.getMutex();
 
@@ -174,12 +199,14 @@ public class DefaultProcessor extends Thread {
             }
         }
 
-        //ColumbaLogger.log.debug( "Operation finished" );
+        // notify that a new worker is available
         notify();
     }
 
     /**
-     * @return
+     * Get an available Worker from the workerpool.
+     *
+     * @return a available worker or null if none available.
      */
     private Worker getWorker() {
         Worker result = null;
@@ -201,7 +228,7 @@ public class DefaultProcessor extends Thread {
     }
 
     /**
-     *
+     * Wait until a worker is available or a new command is added.
      */
     private synchronized void waitForNotify() {
         isBusy = false;
@@ -209,6 +236,7 @@ public class DefaultProcessor extends Thread {
         try {
             wait();
         } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         isBusy = true;
@@ -216,15 +244,16 @@ public class DefaultProcessor extends Thread {
         //ColumbaLogger.log.debug( "Operator woke up" );
     }
 
-    /* (non-Javadoc)
+    /**
+     * 
      * @see java.lang.Runnable#run()
      */
-    public void run() // Scheduler
+    public void run()
      {
         OperationItem opItem = null;
         Worker worker = null;
 
-        while (true) {
+        while (true) {        	
             while ((opItem = getNextOpItem()) == null)
                 waitForNotify();
 
@@ -233,7 +262,7 @@ public class DefaultProcessor extends Thread {
                 waitForNotify();
 
             //ColumbaLogger.log.debug( "Found Worker for new Operation" );
-            worker.process(opItem.operation, opItem.operationMode, timeStamp++);
+            worker.process(opItem.getOperation(), opItem.getOperationMode(), timeStamp++);
 
             //ColumbaLogger.log.debug( "Worker initilized" );
             worker.register(taskManager);
@@ -246,54 +275,23 @@ public class DefaultProcessor extends Thread {
     }
 
     /**
-     * @return
+     * Is the processor busy?
+     * 
+     * @return processor busy
      */
     public boolean isBusy() {
         return isBusy();
     }
 
     /**
-     * @return
-     */
-    public boolean hasFinishedCommands() {
-        boolean result;
-        boolean needToRelease = false;
-
-        try {
-            needToRelease = workerMutex.getMutex();
-            result = (worker.size() == MAX_WORKERS);
-        } finally {
-            if (needToRelease) {
-                workerMutex.releaseMutex();
-            }
-        }
-
-        try {
-            needToRelease = operationMutex.getMutex();
-            result = result && (operationQueue.size() == 0);
-        } finally {
-            if (needToRelease) {
-                operationMutex.releaseMutex();
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * @return
-     */
-    /**
      * Returns the undoManager.
+     * 
      * @return UndoManager
      */
     public UndoManager getUndoManager() {
         return undoManager;
     }
 
-    /**
-     * @return
-     */
     /**
      * Returns the taskManager.
      * @return TaskManager
@@ -315,12 +313,26 @@ public class DefaultProcessor extends Thread {
 }
 
 
+/**
+ * Intern represenation of the Commands.
+ * 
+ * @author Timo Stich <tstich@users.sourceforge.net>
+ */
 class OperationItem {
-    public Command operation;
-    public int operationMode;
+    private Command operation;
+    
+    private int operationMode;
 
     public OperationItem(Command op, int opMode) {
         operation = op;
         operationMode = opMode;
+    }
+
+    public Command getOperation() {
+        return operation;
+    }
+
+    public int getOperationMode() {
+        return operationMode;
     }
 }

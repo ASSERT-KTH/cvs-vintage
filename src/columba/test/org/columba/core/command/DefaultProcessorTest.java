@@ -79,11 +79,11 @@ public class DefaultProcessorTest extends TestCase {
 
         List result = processor.getOperationQueue();
 
-        assertTrue(((OperationItem) result.get(0)).operation == command3);
-        assertTrue(((OperationItem) result.get(1)).operation == command1);
-        assertTrue(((OperationItem) result.get(2)).operation == command2);
-        assertTrue(((OperationItem) result.get(3)).operation == command5);
-        assertTrue(((OperationItem) result.get(4)).operation == command4);
+        assertTrue(((OperationItem) result.get(0)).getOperation() == command3);
+        assertTrue(((OperationItem) result.get(1)).getOperation() == command1);
+        assertTrue(((OperationItem) result.get(2)).getOperation() == command2);
+        assertTrue(((OperationItem) result.get(3)).getOperation() == command5);
+        assertTrue(((OperationItem) result.get(4)).getOperation() == command4);
     }
 
     public void testAddOp_PriorityOrderingWithSynchronized() {
@@ -112,11 +112,11 @@ public class DefaultProcessorTest extends TestCase {
 
         List result = processor.getOperationQueue();
 
-        assertTrue(((OperationItem) result.get(0)).operation == command1);
-        assertTrue(((OperationItem) result.get(1)).operation == command2);
-        assertTrue(((OperationItem) result.get(2)).operation == command3);
-        assertTrue(((OperationItem) result.get(3)).operation == command4);
-        assertTrue(((OperationItem) result.get(4)).operation == command5);
+        assertTrue(((OperationItem) result.get(0)).getOperation() == command1);
+        assertTrue(((OperationItem) result.get(1)).getOperation() == command2);
+        assertTrue(((OperationItem) result.get(2)).getOperation() == command3);
+        assertTrue(((OperationItem) result.get(3)).getOperation() == command4);
+        assertTrue(((OperationItem) result.get(4)).getOperation() == command5);
     }
 }
 

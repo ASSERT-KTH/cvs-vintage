@@ -115,10 +115,10 @@ public class UndoManagerTest extends TestCase {
         undoManager.undoLast();
 
         List result = processor.getOperationQueue();
-        assertTrue(((OperationItem) result.get(0)).operation == command4);
-        assertTrue(((OperationItem) result.get(1)).operation == command2);
-        assertTrue(((OperationItem) result.get(2)).operation == command3);
-        assertTrue(((OperationItem) result.get(3)).operation == command1);
+        assertTrue(((OperationItem) result.get(0)).getOperation() == command4);
+        assertTrue(((OperationItem) result.get(1)).getOperation() == command2);
+        assertTrue(((OperationItem) result.get(2)).getOperation() == command3);
+        assertTrue(((OperationItem) result.get(3)).getOperation() == command1);
     }
 
     public void testRedoLast() {
@@ -151,10 +151,10 @@ public class UndoManagerTest extends TestCase {
         undoManager.redoLast();
         undoManager.redoLast();
 
-        assertTrue(((OperationItem) result.get(0)).operation == command1);
-        assertTrue(((OperationItem) result.get(1)).operation == command3);
-        assertTrue(((OperationItem) result.get(2)).operation == command2);
-        assertTrue(((OperationItem) result.get(3)).operation == command4);
+        assertTrue(((OperationItem) result.get(0)).getOperation() == command1);
+        assertTrue(((OperationItem) result.get(1)).getOperation() == command3);
+        assertTrue(((OperationItem) result.get(2)).getOperation() == command2);
+        assertTrue(((OperationItem) result.get(3)).getOperation() == command4);
     }
 }
 
