@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * Class that implements regular expression and literal search within
  * jEdit buffers.
  * @author Slava Pestov
- * @version $Id: SearchAndReplace.java,v 1.22 2002/03/06 05:10:27 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.23 2002/03/07 10:03:25 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -776,21 +776,24 @@ loop:			while(path != null)
 
 				// Leave buffer in a consistent state if
 				// an error occurs
+				int retVal = 0;
+
 				try
 				{
 					buffer.beginCompoundEdit();
-					int retVal = _replace(view,buffer,
+					retVal = _replace(view,buffer,
 						0,buffer.getLength());
-					if(retVal != 0)
-					{
-						fileCount++;
-						occurCount += retVal;
-						jEdit.commitTemporary(buffer);
-					}
 				}
 				finally
 				{
 					buffer.endCompoundEdit();
+				}
+
+				if(retVal != 0)
+				{
+					fileCount++;
+					occurCount += retVal;
+					jEdit.commitTemporary(buffer);
 				}
 			}
 		}

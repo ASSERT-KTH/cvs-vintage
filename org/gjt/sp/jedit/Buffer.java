@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.73 2002/03/03 07:37:10 spestov Exp $
+ * @version $Id: Buffer.java,v 1.74 2002/03/07 10:03:24 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2974,24 +2974,6 @@ public class Buffer implements EBComponent
 	//}}}
 
 	//{{{ Methods that really shouldn't be public...
-
-	//{{{ _getScreenLineCount() method
-	/**
-	 * Plugins should not call this method.
-	 */
-	public int _getScreenLineCount(int line)
-	{
-		return offsetMgr.getScreenLineCount(line);
-	} //}}}
-
-	//{{{ _setScreenLineCount() method
-	/**
-	 * Plugins should not call this method.
-	 */
-	public void _setScreenLineCount(int line, int count)
-	{
-		offsetMgr.setScreenLineCount(line,count);
-	} //}}}
 
 	//{{{ _getFoldVisibilityManager() method
 	/**
