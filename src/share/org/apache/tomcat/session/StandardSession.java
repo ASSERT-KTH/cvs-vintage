@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.14 2000/06/18 22:18:20 craigmcc Exp $
- * $Revision: 1.14 $
- * $Date: 2000/06/18 22:18:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.15 2000/06/18 22:21:49 jon Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/06/18 22:21:49 $
  *
  * ====================================================================
  *
@@ -97,7 +97,7 @@ import org.apache.tomcat.util.StringManager;
  *
  * @author Craig R. McClanahan
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Revision: 1.14 $ $Date: 2000/06/18 22:18:20 $
+ * @version $Revision: 1.15 $ $Date: 2000/06/18 22:21:49 $
  */
 
 final class StandardSession
@@ -757,9 +757,6 @@ final class StandardSession
 		isValid = ((Boolean) stream.readObject()).booleanValue();
 
 		attributes = (Hashtable) stream.readObject();
-
-                // Set constant instance variables
-                sm = StringManager.getManager("org.apache.tomcat.session");
     }
 
 
