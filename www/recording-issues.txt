@@ -1,4 +1,4 @@
-$Id: recording-issues.txt,v 1.2 2002/10/23 02:13:05 jon Exp $
+$Id: recording-issues.txt,v 1.3 2002/11/01 01:50:18 jon Exp $
 
 This document details all of the database modifications for each
 'action'. In other words, if you want to create a dependency (the
@@ -25,6 +25,7 @@ Attributes:
 Dependencies:
 URL:
 Comments:
+Dedupe notes (wizard2 note entry):
 User assignment:
 File attachments:
 
@@ -319,6 +320,34 @@ Comments:
                 MODIFIED_DATE = SET to mod date
                 CREATED_DATE = DO NOT TOUCH
                 DELETED = 1
+
+Dedupe notes (wizard2 note entry):
+
+    Create:
+    
+        One ActivitySet
+            TYPE_ID = 2 (ActivitySetTypePeer.EDIT_ISSUE__PK)
+            AttachmentId = null
+            User = user who created the note
+        
+        Activity 1
+            IssueId = SCB1 (100)
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            OLD_VALUE = NULL
+            NEW_VALUE = NULL
+            DESCRIPTION = 'Added note to issue'
+            AttachmentId = 
+                ATTACHMENT_TYPE_ID = 2 (Attachment.COMMENT__PK)
+                ATTACHMENT_NAME = comment (this column can't be null)
+                ATTACHMENT_DATA = 'All of the note details'
+                ATTACHMENT_FILE_PATH = null
+                ATTACHMENT_MIME_TYPE = text/plain
+                MODIFIED_BY = null
+                CREATED_BY = SET to creator
+                MODIFIED_DATE = null
+                CREATED_DATE = SET to cre date
+                DELETED = 0
 
 User assignment:
 
