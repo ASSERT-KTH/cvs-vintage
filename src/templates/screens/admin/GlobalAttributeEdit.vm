@@ -90,7 +90,7 @@ Back to $link.setPage("admin,GlobalAttributeShow.vm").setLabel("Attribute Select
 </div>
 
 <div class="functnbar3">
-   <input type="submit" value="save"  name="eventSubmit_doSaveattributedata" />
+   <input type="submit" value="Save"  name="eventSubmit_doSaveattributedata" />
 </div>
 
 
@@ -185,7 +185,9 @@ itself). Therefore, please use caution when creating new Attribute
 Options because you can quickly end up with a mess.</strong></p>
 
 <div class="functnbar3">
-<input type="submit" value="save"  name="eventSubmit_doSaveoptions" />&#160;<input type="submit" value="add new"  name="eventSubmit_doSaveoptions" />&#160;<input type="submit" value="delete selected"  name="eventSubmit_doSaveoptions" />&#160;
+<input type="submit" value="Save"  name="eventSubmit_doSaveoptions" />&#160;
+<input type="submit" value="Add new"  name="eventSubmit_doSaveoptions" />&#160;
+<input type="submit" value="Delete selected"  name="eventSubmit_doSaveoptions" />&#160;
 </div>
 
 #end

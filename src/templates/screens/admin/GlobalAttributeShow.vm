@@ -20,12 +20,12 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>deleted</th>
-<th>input type</th>
-<th>attribute name</th>
-<th>description</th>
-<th>author</th>
-<th>Creation Date</th>
+<th>Deleted</th>
+<th>Input type</th>
+<th>Attribute name</th>
+<th>Description</th>
+<th>Author</th>
+<th>Creation date</th>
 </tr>
 #set ($allAttributes = $scarabG.AllAttributes)
 #foreach( $attribute in $allAttributes )
@@ -52,11 +52,15 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 $intake.declareGroups()
 
 <div class="functnbar3">
-<input type="submit" value="create new"  name="eventSubmit_doCreatenew" />&#160;<input type="submit" value="copy selected" />&#160;<input type="submit" value="delete selected"  name="eventSubmit_doSave" />&#160;<small>attribute</small>&#160;
+<input type="submit" value="Create new"  name="eventSubmit_doCreatenew" />&#160;
+<input type="submit" value="Copy selected" />&#160;
+<input type="submit" value="Delete selected"  name="eventSubmit_doSave" />&#160;
+<small>attribute(s)</small>&#160;
 </div>
 
 <div class="functnbar2">
-<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
+<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
 </div>       
 
 </form>
