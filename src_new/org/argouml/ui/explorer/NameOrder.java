@@ -1,4 +1,4 @@
-// $Id: NameOrder.java,v 1.3 2003/11/10 12:33:14 jhraigniac Exp $
+// $Id: NameOrder.java,v 1.4 2003/12/04 22:58:21 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ public class NameOrder
             String name = ModelFacade.getName(obj)==null?"":ModelFacade.getName(obj);
             String name1 = ModelFacade.getName(obj1)==null?"":ModelFacade.getName(obj1);
             
-            int ret = name.compareToIgnoreCase(name1);
+            int ret = name.compareTo(name1);
             return ret;
         }
         else

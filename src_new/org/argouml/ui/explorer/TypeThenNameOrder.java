@@ -1,4 +1,4 @@
-// $Id: TypeThenNameOrder.java,v 1.4 2003/11/10 12:33:14 jhraigniac Exp $
+// $Id: TypeThenNameOrder.java,v 1.5 2003/12/04 22:58:21 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ public class TypeThenNameOrder extends NameOrder{
         typeName1.indexOf("Diagram") != -1)
             return compareUserObjects(userObject,userObject1);
         
-        int typeNameOrder = typeName.compareToIgnoreCase(typeName1);
+        int typeNameOrder = typeName.compareTo(typeName1);
         if(typeNameOrder == 0)
             return compareUserObjects(userObject,userObject1);
         
