@@ -25,6 +25,8 @@ import org.jboss.security.SimplePrincipal;
 import org.jboss.webservice.metadata.ServiceRefMetaData;
 import org.w3c.dom.Element;
 
+import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
+
 
 /**
  * A common meta data class for the entity, message-driven and session beans.
@@ -38,7 +40,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.71 $
+ * @version $Revision: 1.72 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -106,11 +108,13 @@ public abstract class BeanMetaData
    private HashMap messageDestinationReferences = new HashMap();
    /** The method attributes */
    private ArrayList methodAttributes = new ArrayList();
-   private HashMap cachedMethodAttributes = new HashMap();
+   private ConcurrentReaderHashMap cachedMethodAttributes = new ConcurrentReaderHashMap();
    /** The assembly-descriptor/method-permission element(s) info */
    private ArrayList permissionMethods = new ArrayList();
    /** The assembly-descriptor/container-transaction element(s) info */
    private ArrayList transactionMethods = new ArrayList();
+   /** A cache mapping methods to transaction attributes. */
+   private ConcurrentReaderHashMap methodTx = new ConcurrentReaderHashMap();
    /** The assembly-descriptor/exclude-list method(s) */
    private ArrayList excludedMethods = new ArrayList();
    /** The invoker names to JNDI name mapping */
@@ -455,6 +459,27 @@ public abstract class BeanMetaData
       return result;
    }
 
+   // This should be cached, since this method is called very often
+   public byte getTransactionMethod(Method m, InvocationType iface)
+   {
+      if(m == null)
+      {
+         return MetaData.TX_SUPPORTS;
+      }
+
+      Byte b = (Byte) methodTx.get(m);
+      if (b != null) return b.byteValue();
+
+      byte result = getMethodTransactionType(m.getName(), m.getParameterTypes(), iface);
+
+      // provide default if method is not found in descriptor
+      if (result == MetaData.TX_UNKNOWN) 
+         result = MetaData.TX_REQUIRED;
+
+      methodTx.put(m, new Byte(result));
+      return result;
+   }
+
    public Collection getDepends()
    {
       Collection allDepends = new LinkedList(depends);
@@ -470,6 +495,9 @@ public abstract class BeanMetaData
     */
    private MethodAttributes methodAttributesForMethod(String methodName)
    {
+      if (methodName == null)
+         methodName = "*null*";
+      
       MethodAttributes ma =
               (MethodAttributes) cachedMethodAttributes.get(methodName);
 
