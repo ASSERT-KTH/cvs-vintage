@@ -48,6 +48,12 @@ file for complete configuration information:
             <Parameter name="port" value="8007"/>
         </Connector>
 
+        <!-- AJP12 - current JServ module -->
+        <Connector className="org.apache.tomcat.service.TcpEndpointConnector">
+            <Parameter name="handler" value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
+            <Parameter name="port" value="8009"/>
+        </Connector>
+
         <!-- New Ajp23, you need to compile the new/experimental module -->
         <Connector className="org.apache.tomcat.service.TcpEndpointConnector">
             <Parameter name="handler" value="org.apache.tomcat.service.connector.Ajp23ConnectionHandler"/>
