@@ -394,28 +394,6 @@ public final class ServletHandler extends Handler {
 	}
     }
 
-    /** Handle the case of a JSP servlet that JspInterceptor hasn't seen.
-     *  This shouldn't be any of our business, but for the moment we have
-     *  to help JspInterceptor out.
-     */
-     void loadJsp(  )  throws Exception{
-        BaseInterceptor ri[];
-	ContextManager cm=context.getContextManager();
-	String path=sw.getJspFile();
-	String requestURI = path + "?jsp_precompile=true";
-	Request request = cm.createRequest(context, requestURI);
-	Response response = request.getResponse();
-	request.setHandler(this);
-
-	ri=context.getContainer().
-	    getInterceptors(Container.H_requestMap);
-	for( int i=0; i< ri.length; i++ ) {
-	    if( debug > 1 )
-		log( "RequestMap " + ri[i] );
-	    int status=ri[i].requestMap( request );
-	    if( status!=0 ) return ;
-	}
-    }
     // Special hook
     protected void preInit() throws Exception
     {
@@ -428,9 +406,6 @@ public final class ServletHandler extends Handler {
 	    // remain in STATE_DELAYED_INIT state
 	    return;
 	}
-	if(sw.getJspFile() != null && 
-	   (servletClassName==null || servletClassName==name ))
-	    loadJsp();
 	// clear STATE_DELAYED_INIT if set
 	setState( STATE_ADDED );
 	
@@ -467,6 +442,18 @@ public final class ServletHandler extends Handler {
     public void service ( Request req, Response res )
 	throws Exception
     {
+        BaseInterceptor ri[];
+	ri=context.getContainer().
+	    getInterceptors(Container.H_preInitCheck);
+	for( int i=0; i< ri.length; i++ ) {
+	    int status = ri[i].preInitCheck(req, this);
+	    if(status != 0) {
+		if(status >= 300){
+		    contextM.handleStatus(req, res, status);
+		}
+		return;
+	    }
+	}
 	if( state!=STATE_READY ) {
 	    if( state!= STATE_DISABLED ) {
 		init();
@@ -480,6 +467,15 @@ public final class ServletHandler extends Handler {
 		handleInitError( req, res, ex );
 		return;
 	    } 
+	}
+	ri=context.getContainer().
+	    getInterceptors(Container.H_postInitCheck);
+	for( int i=0; i< ri.length; i++ ) {
+	    int status = ri[i].postInitCheck(req, this);
+	    if(status != 0) {
+		contextM.handleStatus(req, res, status);
+		return;
+	    }
 	}
 
 	super.service( req, res );

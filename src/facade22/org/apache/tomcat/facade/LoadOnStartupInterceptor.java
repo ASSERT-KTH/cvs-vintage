@@ -148,7 +148,27 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 
     void loadJsp( Context context, Handler result ) throws Exception {
 	// A Jsp initialized in web.xml -
-	// Moved to ServletHandler.
+        BaseInterceptor ri[];
+	String path=((ServletHandler)result).getServletInfo().getJspFile();
+	String requestURI = path + "?jsp_precompile=true";
+
+	Request req = cm.createRequest(context, requestURI);
+	ri=context.getContainer().
+	    getInterceptors(Container.H_preInitCheck);
+	for( int i=0; i< ri.length; i++ ) {
+	    int status = ri[i].preInitCheck(req, result);
+	    if(status != 0) {
+		return;
+	    }
+	}
+	ri=context.getContainer().
+	    getInterceptors(Container.H_postInitCheck);
+	for( int i=0; i< ri.length; i++ ) {
+	    int status = ri[i].postInitCheck(req, result);
+	    if(status != 0) {
+		return;
+	    }
+	}
     }
     // -------------------- 
     // Old logic from Context - probably something cleaner can replace it.

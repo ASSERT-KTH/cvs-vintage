@@ -362,8 +362,6 @@ public class JspInterceptor extends BaseInterceptor {
 	    }
 
 	    jspServlet.setServletClassName(jspServletCN);
-	} else {
-	    ctx.addServlet( new JspPrecompileH());
 	}
 
         if( useWebAppCL ) {
@@ -466,6 +464,20 @@ public class JspInterceptor extends BaseInterceptor {
 	    if( jspFile==null )
 		return 0; // not a jsp
 	}
+	return 0;
+    }
+
+    /** Check if the JSP page needs to be re-compiled.
+     */
+    public int preInitCheck(Request req, Handler sw)
+	throws TomcatException {
+	
+	if(sw == null || !(sw instanceof ServletHandler))
+	    return 0;
+	ServletHandler handler = (ServletHandler)sw;
+	String jspFile=handler.getServletInfo().getJspFile();
+	if(jspFile == null)
+	    return 0;
 
 	// if it's a jsp_precompile request, don't execute - just
 	// compile ( if needed ). Since we'll compile the jsp on
@@ -513,9 +525,8 @@ public class JspInterceptor extends BaseInterceptor {
 
 	    // Future: detail information about compile results
 	    // and if indeed we had to do something or not
-	    Context ctxr = req.getContext();
-	    req.setHandler(  ctxr.
-			     getServletByName( "tomcat.jspPrecompileHandler"));
+	    doPreCompileService(req);
+	    return 200;
 	}
 	
 	return 0;
@@ -569,35 +580,24 @@ public class JspInterceptor extends BaseInterceptor {
 	return wrapper;
     }
 
-}
+    private void doPreCompileService(Request req) {
+	Response res = req.getResponse();
+	if( res == null || res.getBuffer() == null){
+	    return; // A load-on-startup Request
+	}
+	try {
+	    res.setContentType("text/html");	
 
-// -------------------- Jsp_precompile handler --------------------
+	    String msg="<h1>Jsp Precompile Done</h1>";
+	    
+	    res.setContentLength(msg.length());
 
-/** What to do for jsp precompile
- */
-class JspPrecompileH extends Handler {
-    static StringManager sm=StringManager.
-	getManager("org.apache.tomcat.resources");
-    
-    JspPrecompileH() {
-	name="tomcat.jspPrecompileHandler";
-    }
-
-    public void doService(Request req, Response res)
-	throws Exception
-    {
-	res.setContentType("text/html");	
-
-	String msg="<h1>Jsp Precompile Done</h1>";
-
-	res.setContentLength(msg.length());
-
-	res.getBuffer().write( msg );
+	    res.getBuffer().write( msg );
+	} catch(IOException iex) {
+	    log("Pre-compile error",iex);
+	}
     }
 }
-
-
-
 
 // -------------------- The main Jasper Liaison --------------------
 
