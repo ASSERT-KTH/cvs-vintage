@@ -17,7 +17,7 @@ import javax.management.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class Log
 {
@@ -31,7 +31,20 @@ public class Log
    Object source = null;
    
    // Static --------------------------------------------------------
-   static ThreadLocal currentLog = new InheritableThreadLocal();
+//   static ThreadLocal currentLog = new ThreadLocal();
+   
+   static ThreadLocal currentLog = new InheritableThreadLocal()
+   {
+   		// Child threads should get same stack, but only a copy of it
+   		public Object childValue(Object obj)
+   		{
+			if (obj != null)
+				return ((Stack)obj).clone();
+			else	
+				return null;
+   		}
+   };
+   
    static Log defaultLog = new Log();
    
    public static void setLog(Log log)
