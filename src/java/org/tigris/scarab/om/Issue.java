@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.240 2002/12/20 00:23:49 jon Exp $
+ * @version $Id: Issue.java,v 1.241 2002/12/20 00:58:24 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -505,10 +505,6 @@ public class Issue
                                   Attachment attachment, ScarabUser user)
         throws Exception
     {
-        String desc = Localization.getString(
-            ScarabConstants.DEFAULT_BUNDLE_NAME,
-            Locale.getDefault(),
-            "AddComment");
         attachment.setIssue(this);
         attachment.setTypeId(Attachment.COMMENT__PK);
         attachment.setName("comment");
@@ -526,12 +522,17 @@ public class Issue
         String summary = attachment.getData();
         if (summary != null)
         {
-            if (summary.length() > 254)
+            String desc = Localization.getString(
+                ScarabConstants.DEFAULT_BUNDLE_NAME,
+                Locale.getDefault(),
+                "AddComment");
+            int total = 248 - desc.length();
+            if (summary.length() > total)
             {
-                summary = summary.substring(0,254) + "...";
+                summary = summary.substring(0,total) + "...";
             }
             summary = desc + " '" + summary + "'";
-        }                
+        }
         
         ActivityManager
             .createTextActivity(this, activitySet,
@@ -2960,9 +2961,9 @@ public class Issue
                 Locale.getDefault(),
                 "UrlDescChangedDesc", args);
 
-            if (desc.length() > 254)
+            if (desc.length() > 248)
             { 
-                desc = desc.substring(0,249) + "...";
+                desc = desc.substring(0,248) + "...";
             }
             if (activitySet == null)
             {
@@ -2999,9 +3000,9 @@ public class Issue
                 Locale.getDefault(),
                 "UrlChangedDesc", args);
 
-            if (desc.length() > 254)
+            if (desc.length() > 248)
             { 
-                desc = desc.substring(0,249) + "...";
+                desc = desc.substring(0,248) + "...";
             }
             if (activitySet == null)
             {
@@ -3092,14 +3093,14 @@ public class Issue
         {
             // Save activitySet record
             activitySet = ActivitySetManager
-                .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
+                .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user, attachment);
             activitySet.save();
         }
 
         // enter the values into the activitySet
         SequencedHashMap avMap = getModuleAttributeValuesMap(); 
         Iterator iter = avMap.iterator();
-        while (iter.hasNext()) 
+        while (iter.hasNext())
         {
             AttributeValue aval = (AttributeValue)avMap.get(iter.next());
             try
@@ -3112,14 +3113,7 @@ public class Issue
                     se.getMessage() + " Please start over.");    
             }
         }
-
         save();
-        if (attachment.getData() != null 
-             && attachment.getData().length() > 0) 
-        {
-            addComment(activitySet, attachment, user);
-        }
-
         return activitySet;
     }
 
