@@ -69,8 +69,7 @@
 
         <Jdk12Interceptor /> 
 
-       <!-- UnComment the following and comment out the
-            above to enable JMX monitoring.
+       <!-- Use MxInterceptor to enable JMX monitoring.
             
             options are :
             
@@ -92,7 +91,7 @@
             Note, if you're using a JMX console, you don't have to 
             use the http adaptor
             
-            <MXInterceptor port="8999" authentification="basic" 
+            <MxInterceptor port="8999" authentification="basic" 
                            user="admin" password="changeillico"/>
         
 		-->
