@@ -90,6 +90,8 @@ public class MHDataStorage implements DataStorageInterface {
 
 		HeaderList headerList = new HeaderList();
 
+		worker.setDisplayText("Recreating Header-Cache");
+
 		if (folder == null)
 			return null;
 

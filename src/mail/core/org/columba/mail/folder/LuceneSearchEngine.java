@@ -120,9 +120,9 @@ public class LuceneSearchEngine
 		}
 		
 		// Check if index is consitent with mailbox
-		if( getReader().numDocs() != folder.size() ) {
-			recreateIndex();
-		}
+		//if( getReader().numDocs() != folder.size() ) {
+		//	recreateIndex();
+		//}
 
 		indexLock = new Lock();
 	}

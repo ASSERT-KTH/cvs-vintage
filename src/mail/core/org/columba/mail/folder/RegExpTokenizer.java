@@ -24,9 +24,9 @@ public class RegExpTokenizer extends Tokenizer {
 
 	private static final String fileRegexp = "\\b\\w{2,}\\b";
 
-	private static Pattern pattern;
-	private static PatternMatcher matcher;
-	
+	private Pattern pattern;
+	private PatternMatcher matcher;
+
 	private PatternMatcherInput input;
 
 	/**
@@ -35,47 +35,42 @@ public class RegExpTokenizer extends Tokenizer {
 	public RegExpTokenizer(Reader reader) {
 		super();
 
-		if( pattern == null ) {
-			try {
-				pattern = new Perl5Compiler().compile(fileRegexp);
-			} catch (MalformedPatternException e) {
-				e.printStackTrace();
-			}
-			matcher = new Perl5Matcher();
+		try {
+			pattern = new Perl5Compiler().compile(fileRegexp);
+		} catch (MalformedPatternException e) {
+			e.printStackTrace();
 		}
-		
+		matcher = new Perl5Matcher();
+
 		try {
 			StringBuffer buffer = new StringBuffer();
 
 			char[] charBuffer = new char[100];
-			
+
 			int read = reader.read(charBuffer);
-			
-			while( read != -1) {
-				buffer.append(charBuffer,0,read);
+
+			while (read != -1) {
+				buffer.append(charBuffer, 0, read);
 				read = reader.read(charBuffer);
 			}
-			
+
 			input = new PatternMatcherInput(buffer.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-				
+
 	}
 
 	/**
 	 * @see org.apache.lucene.analysis.TokenStream#next()
 	 */
 	public Token next() throws IOException {
-		if( matcher.contains(input,pattern)) {
-			return new Token( input.match(),0,0);
+		if (matcher.contains(input, pattern)) {
+			return new Token(input.match(), 0, 0);
 		}
-		
+
 		return null;
 	}
-	
-	
 
 	/**
 	 * @see org.apache.lucene.analysis.TokenStream#close()
