@@ -26,9 +26,9 @@ document.write('<link rel="stylesheet" type="text/css" href="$staticLink.setPath
 <script language="Javascript" id="js1">
 var calPopup = new CalendarPopup("datePopupDiv");
 calPopup.showNavigationDropdowns();
-setMonthNames("$l10n.January", "$l10n.February", "$l10n.March", "$l10n.April", "$l10n.May", "$l10n.June", "$l10n.July", "$l10n.August", "$l10n.September", "$l10n.October", "$l10n.November", "$l10n.December");
-setWeekDay($l10n.DateFirstWeekDay);
-setDayNames($l10n.DateWeekDays);
+calPopup.setMonthNames("$l10n.January", "$l10n.February", "$l10n.March", "$l10n.April", "$l10n.May", "$l10n.June", "$l10n.July", "$l10n.August", "$l10n.September", "$l10n.October", "$l10n.November", "$l10n.December");
+calPopup.setWeekStartDay($l10n.DateFirstWeekDay);
+calPopup.setDayHeaders($l10n.DateWeekDays);
 </script>
 #set ($hide_bars = $scarabG.getTurbineConfiguration().getString("scarab.dhtml.hide_bars").toLowerCase().equals("true"))
 #set ($autoresize = $scarabG.getTurbineConfiguration().getString("scarab.dhtml.autoresize_textarea").toLowerCase().equals("true"))
