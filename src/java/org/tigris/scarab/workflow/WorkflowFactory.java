@@ -56,10 +56,20 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: WorkflowFactory.java,v 1.6 2002/08/20 21:27:52 dlr Exp $
+ * @Version $Id: WorkflowFactory.java,v 1.7 2002/08/20 21:30:38 dlr Exp $
  */
 public class WorkflowFactory 
 {
+    /**
+     * Creates a new instance of the configured {@link
+     * org.tigris.scarab.workflow.Workflow} implementation, defaulting
+     * to {@link org.tigris.scarab.workflow.DefaultWorkflow} if not
+     * specified.
+     *
+     * @return A <code>Workflow</code> instance.
+     * @exception ScarabException Trouble creating
+     * <code>Workflow</code>.
+     */
     public static Workflow getInstance() throws ScarabException
     {
         Workflow wf = null;
