@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.39 2004/07/22 20:17:25 linus Exp $
+// $Id: ActionRemoveFromModel.java,v 1.40 2004/07/25 18:41:04 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -129,24 +129,40 @@ public class ActionRemoveFromModel extends UMLChangeAction {
         } else
             targets = getTargets();
         Object target = null;
-        for (int i = 0; i < targets.length; i++) {
+        Object newTarget = null;
+        for (int i = targets.length-1; i >= 0; i--) {
             target = targets[i];
             if (sureRemove(target)) {
                 // remove from the model
                 if (target instanceof Fig) {
                     target = ((Fig) target).getOwner();
                 }
+                newTarget = getNewTarget(target);
                 p.moveToTrash(target);
+                /*
                 if (target instanceof Diagram) {
                     Diagram firstDiagram = (Diagram) p.getDiagrams().get(0);
                     if (target != firstDiagram)
                         TargetManager.getInstance().setTarget(firstDiagram);
                 }
+                */
 
             }
         }
-        //      move the pointer to the target in the NavPane to some
-        //      other target
+        
+        if (newTarget != null)
+            TargetManager.getInstance().setTarget(newTarget);
+        super.actionPerformed(ae);
+    }
+    
+    /**
+     * Gets the object that should be target after the given target is deleted from the model.
+     * @param target the target to delete
+     * @param p the current project
+     * @return
+     */
+    private Object getNewTarget(Object target) {
+        Project p = ProjectManager.getManager().getCurrentProject();
         Object newTarget = null;
         target = target instanceof Fig ? ((Fig) target).getOwner() : target;
         if (ModelFacade.isABase(target)) {
@@ -163,10 +179,8 @@ public class ActionRemoveFromModel extends UMLChangeAction {
             }
         } else {
             newTarget = p.getRoot();
-        }       
-        if (newTarget != null)
-            TargetManager.getInstance().setTarget(newTarget);
-        super.actionPerformed(ae);
+        }      
+        return newTarget;
     }
 
     /**
