@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * The default input handler. It maps sequences of keystrokes into actions
  * and inserts key typed events into the text area.
  * @author Slava Pestov
- * @version $Id: DefaultInputHandler.java,v 1.32 2003/06/21 00:28:50 spestov Exp $
+ * @version $Id: DefaultInputHandler.java,v 1.33 2003/06/21 18:45:29 spestov Exp $
  */
 public class DefaultInputHandler extends InputHandler
 {
@@ -403,21 +403,7 @@ public class DefaultInputHandler extends InputHandler
 	//{{{ setCurrentBindings() method
 	private void setCurrentBindings(Hashtable bindings)
 	{
-		String prefixStr = (String)bindings.get(PREFIX_STR);
-		if(prefixStr != null)
-		{
-			if(currentBindings != this.bindings)
-			{
-				//XXX this won't work past 2 levels of prefixing
-				prefixStr = currentBindings.get(PREFIX_STR)
-					+ " " + prefixStr;
-			}
-
-			view.getStatus().setMessage(prefixStr);
-		}
-		else
-			view.getStatus().setMessage(null);
-
+		view.getStatus().setMessage((String)bindings.get(PREFIX_STR));
 		currentBindings = bindings;
 	} //}}}
 
@@ -435,10 +421,17 @@ public class DefaultInputHandler extends InputHandler
 	{
 		Hashtable current = bindings;
 
+		String prefixStr = null;
+
 		StringTokenizer st = new StringTokenizer(keyBinding);
 		while(st.hasMoreTokens())
 		{
 			String keyCodeStr = st.nextToken();
+			if(prefixStr == null)
+				prefixStr = keyCodeStr;
+			else
+				prefixStr = prefixStr + " " + keyCodeStr;
+
 			KeyEventTranslator.Key keyStroke = KeyEventTranslator.parseKey(keyCodeStr);
 			if(keyStroke == null)
 				return;
@@ -451,7 +444,7 @@ public class DefaultInputHandler extends InputHandler
 				else
 				{
 					Hashtable hash = new Hashtable();
-					hash.put(PREFIX_STR,keyCodeStr);
+					hash.put(PREFIX_STR,prefixStr);
 					o = hash;
 					current.put(keyStroke,o);
 					current = (Hashtable)o;

@@ -22,6 +22,7 @@
 
 package org.gjt.sp.jedit.browser;
 
+//{{{ Imports
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
@@ -29,10 +30,12 @@ import java.io.File;
 import org.gjt.sp.jedit.gui.HistoryTextField;
 import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.MiscUtilities;
+import org.gjt.sp.jedit.OperatingSystem;
+//}}}
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSFileNameField.java,v 1.13 2003/06/11 01:20:19 spestov Exp $
+ * @version $Id: VFSFileNameField.java,v 1.14 2003/06/21 18:45:29 spestov Exp $
  * @since jEdit 4.2pre1
  */
 class VFSFileNameField extends HistoryTextField
@@ -134,6 +137,14 @@ class VFSFileNameField extends HistoryTextField
 						return;
 					}
 					path = files[0].path;
+				}
+				else if(OperatingSystem.isDOSDerived()
+					&& path.length() == 3
+					&& path.charAt(1) == ':')
+				{
+					browser.setDirectory(path);
+					VFSManager.waitForRequests();
+					setText(null);
 				}
 
 				VFS vfs = VFSManager.getVFSForPath(path);

@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.97 2003/06/19 19:59:19 spestov Exp $
+ * @version $Id: View.java,v 1.98 2003/06/21 18:45:29 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -333,6 +333,16 @@ public class View extends JFrame implements EBComponent
 	public final SearchBar getSearchBar()
 	{
 		return searchBar;
+	} //}}}
+
+	//{{{ getActionBar() method
+	/**
+	 * Returns the action bar.
+	 * @since jEdit 4.2pre3
+	 */
+	public final ActionBar getActionBar()
+	{
+		return actionBar;
 	} //}}}
 
 	//{{{ getStatus() method
