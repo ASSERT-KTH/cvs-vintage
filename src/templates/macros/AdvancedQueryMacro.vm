@@ -195,7 +195,7 @@ from:&#160;<input type="text" size="20"
  #else
         $attVal.Attribute.Name
  #end
-                </option>
+    </option>
     #end
 #end
      </select>
@@ -227,7 +227,7 @@ from:&#160;<input type="text" size="20"
  #end
     <option#selected($selected) value="$option.OptionId">
         $option.DisplayValue
-                </option>
+    </option>
 #end
   </select> $l10n.To
   <select name="$searchGroup.StateChangeToOptionId.Key">
@@ -243,14 +243,14 @@ from:&#160;<input type="text" size="20"
     #end
     <option#selected($selected) value="$option.OptionId">
         $option.DisplayValue
-                </option>
+    </option>
 #end
       </select>
     </td>
  </tr>
  <tr>
     <th width="120">
-        Date range
+        $l10n.DateRange
     </th>
     <td>
         #fieldErrorMsg($searchGroup.StateChangeFromDate "")
