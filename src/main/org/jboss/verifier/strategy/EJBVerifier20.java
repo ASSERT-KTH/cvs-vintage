@@ -18,7 +18,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.24 2002/06/04 15:18:10 lqd Exp $
+ * $Id: EJBVerifier20.java,v 1.25 2002/08/08 12:56:47 lqd Exp $
  */
 
 
@@ -46,7 +46,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  *
  * @author  Juha Lindfors   (jplindfo@helsinki.fi)
  * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  * @since   JDK 1.3
  */
 public class EJBVerifier20
@@ -1956,6 +1956,14 @@ public class EJBVerifier20
          {
             Method m = bean.getMethod(getName, new Class[0]);
             fieldType = m.getReturnType();
+
+            // The getter must not return 'void' according to the JavaBeans
+            // Spec
+            if( fieldType == Void.TYPE )
+            {
+               fireSpecViolationEvent( entity,
+                  new Section("jb.7.1.b", "Field: " + fieldName) );
+            }
          }
          catch (NoSuchMethodException nsme)
          {
@@ -1972,10 +1980,22 @@ public class EJBVerifier20
          try
          {
             Method m = bean.getMethod(setName, args);
+            fieldType = m.getReturnType();
+
+            // According to the JavaBeans Spec, a setter method must
+            // return 'void'
+            if( fieldType != Void.TYPE )
+            {
+               fireSpecViolationEvent( entity,
+                  new Section("jb.7.1.a", "Field: " + fieldName) );
+            }
          }
          catch (NoSuchMethodException nsme)
          {
             // Try with java.util.Collection
+            //
+            // FIXME: This should only be tried for CMR methods; a CMP
+            //        setter cannot accept a Collection!
             try
             {
                args[0] = classloader.loadClass("java.util.Collection");
