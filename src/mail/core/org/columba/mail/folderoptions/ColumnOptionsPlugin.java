@@ -160,10 +160,11 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
                 tc.setPreferredWidth(size);
 
                 // TODO: fix position handling
+                /*
                 System.out.println("position="+position);
                 // move column to new position
                 view.moveColumn(tc.getModelIndex(), position);
-                
+                */
                 index++;
                 
             }
