@@ -69,10 +69,6 @@ public class ConfigFrame extends JDialog
 	private Filter filter;
 	//private JDialog dialog;
 
-	JPanel centerPanel;
-	JPanel eastPanel;
-	JPanel jPanel1;
-
 	JTextField nameTextField = new JTextField();
 	JLabel nameLabel = new JLabel();
 
@@ -193,7 +189,7 @@ public class ConfigFrame extends JDialog
 
 		gridBagLayout = new GridBagLayout();
 		c = new GridBagConstraints();
-		eastPanel.setLayout(gridBagLayout);
+		JPanel eastPanel = new JPanel(gridBagLayout);
 		mainPanel.add(eastPanel, BorderLayout.EAST);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -262,8 +258,7 @@ public class ConfigFrame extends JDialog
 
 		// centerpanel
 
-		centerPanel = new JPanel();
-		centerPanel.setLayout(new BorderLayout());
+		JPanel centerPanel = new JPanel(new BorderLayout());
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 		listView = new FilterListTable(filterList, this);
 		listView.getSelectionModel().addListSelectionListener(this);
@@ -364,7 +359,7 @@ public class ConfigFrame extends JDialog
 		} else if (action.equals("HELP")) {
 			URLController c = new URLController();
 			try {
-				c.open(new URL("http://columba.sourceforge.net/phpwiki/index.php/User%20manual#x34.x2e.5"));
+				c.open(new URL("http://columba.sourceforge.net/phpwiki/index.php/Using%20Columba#x34.x2e.5"));
 			} catch (MalformedURLException mue) {}
 		}
 	}
