@@ -293,7 +293,7 @@
   #set ($comments = $currentIssue.getComments(false))
 #end
 
-#if (!$comments || $canEdit)
+#if (!$comments.size() > 0 || $canEdit)
 <h3>Comments</h3>
   #foreach ($comment in $comments)
      #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
@@ -322,7 +322,7 @@
    #if ($canEdit)
    <div class="functnbar3">
       <input type="submit" value="Save" name="eventSubmit_doSubmitcomment" />
-      #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT) && $comments)
+      #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT) && $comments.size() > 0)
         &#160;<input type="submit" value="Edit comment(s)" name="eventSubmit_doEditcomment" />
       #end
    </div>
