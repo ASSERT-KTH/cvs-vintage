@@ -74,7 +74,7 @@ import org.tigris.scarab.om.RModuleIssueType;
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.21 2003/04/01 23:58:05 jmcnally Exp $
+ * @version $Id: FreshenUserValve.java,v 1.22 2003/04/07 18:47:54 jmcnally Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
@@ -301,7 +301,8 @@ public class FreshenUserValve
         }
         else 
         {
-            Log.get().debug("Did not set current IssueType");
+            user.setCurrentIssueType(null);
+            Log.get().debug("Set current IssueType to null");
         }
     }
 }

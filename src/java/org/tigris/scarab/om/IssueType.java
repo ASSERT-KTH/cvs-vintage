@@ -67,7 +67,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.44 2003/03/25 16:57:53 jmcnally Exp $
+ * @version $Id: IssueType.java,v 1.45 2003/04/07 18:47:54 jmcnally Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -823,5 +823,10 @@ public  class IssueType
     private MethodResultCache getMethodResult()
     {
         return IssueTypeManager.getMethodResult();
+    }
+
+    public String toString()
+    {
+        return '{' + super.toString() + ": name=" + getName() + '}';
     }
 }
