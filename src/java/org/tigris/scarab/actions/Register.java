@@ -87,7 +87,7 @@ import org.xbill.DNS.Type;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.28 2002/08/08 17:20:51 jon Exp $
+ * @version $Id: Register.java,v 1.29 2002/08/12 04:31:20 jon Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -160,16 +160,27 @@ public class Register extends ScarabTemplateAction
                     .getBoolean("scarab.register.email.checkValidA", false))
             {
                 String domain = getDomain(email);
-                Record[] records = dns.getRecords(domain, Type.A);
-                if (records == null || records.length == 0)
+                Record[] records = null;
+                if (domain != null)
                 {
-                    setTarget(data, template);
-                    getScarabRequestTool(context).setAlertMessage(
-                        "Sorry, the domain for that email does not have a DNS A record defined. " + 
-                        "It is likely that the domain is invalid and that we cannot send you email. " + 
-                        "Please see ftp://ftp.isi.edu/in-notes/rfc2505.txt for more details. " + 
-                        "Please try another email address or contact your system administrator.");
-                    return;
+                    try
+                    {
+                        records = dns.getRecords(domain, Type.A);
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                    if (records == null || records.length == 0)
+                    {
+                        setTarget(data, template);
+                        getScarabRequestTool(context).setAlertMessage(
+                            "Sorry, the domain (" + domain + ") for that email (" + email + ") " + 
+                            "does not have a DNS A record defined. " + 
+                            "It is likely that the domain is invalid and that we cannot send you email. " + 
+                            "Please see ftp://ftp.isi.edu/in-notes/rfc2505.txt for more details. " + 
+                            "Please try another email address or contact your system administrator.");
+                        return;
+                    }
                 }
             }
             String[] badEmails = Turbine.getConfiguration().getStringArray("scarab.register.email.badEmails");
@@ -489,7 +500,7 @@ public class Register extends ScarabTemplateAction
             {
                 dotCount++;
             }
-            if (dotCount == 2)
+            if (dotCount == 2 || emailChar[i] == '@')
             {
                 result = email.substring(i+1,email.length());
                 break;
