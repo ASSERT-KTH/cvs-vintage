@@ -1,4 +1,4 @@
-// $Id: CrConsiderSingleton.java,v 1.11 2003/01/26 09:35:23 linus Exp $
+// $Id: CrConsiderSingleton.java,v 1.12 2003/02/02 14:53:18 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -124,7 +124,7 @@ public class CrConsiderSingleton extends CrUML {
 
 
 	// If there is an outgoing association => no problem
-	Iterator ends = ModelFacade.getAssociationEnds(dm);
+	Iterator ends = ModelFacade.getAssociationEnds(dm).iterator();
 
 	while (ends.hasNext()) {
 	    Iterator otherends = 

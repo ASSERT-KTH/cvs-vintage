@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.15 2003/02/02 14:14:45 kataka Exp $
+// $Id: ModelFacade.java,v 1.16 2003/02/02 14:53:18 kataka Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -506,12 +506,10 @@ public class ModelFacade {
      * @param handle the object that we get the association ends from.
      * @return Iterator with association ends.
      */
-    public static Iterator getAssociationEnds(Object handle) {
+    public static Collection getAssociationEnds(Object handle) {
         if (handle instanceof MClassifier) {
-            Collection endc = ((MClassifier)handle).getAssociationEnds();
-            if (endc == null)
-                return emptyIterator();
-            return endc.iterator();
+            Collection endc = ((MClassifier)handle).getAssociationEnds();            
+            return endc;
         }
 
         //...

@@ -1,4 +1,4 @@
-// $Id: CrNoAssociations.java,v 1.10 2003/01/29 05:42:16 mkl Exp $
+// $Id: CrNoAssociations.java,v 1.11 2003/02/02 14:53:18 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,40 +41,40 @@ import org.argouml.model.ModelFacade;
 
 public class CrNoAssociations extends CrUML {
 
-  public CrNoAssociations() {
-    setHeadline("Add Associations to <ocl>self</ocl>");
-    addSupportedDecision(CrUML.decRELATIONSHIPS);
-    setKnowledgeTypes(Critic.KT_COMPLETENESS);
-    addTrigger("associationEnd");
-  }
+    public CrNoAssociations() {
+        setHeadline("Add Associations to <ocl>self</ocl>");
+        addSupportedDecision(CrUML.decRELATIONSHIPS);
+        setKnowledgeTypes(Critic.KT_COMPLETENESS);
+        addTrigger("associationEnd");
+    }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isAClassifier(dm)))
-	    return NO_PROBLEM;
-	if (!(ModelFacade.isPrimaryObject(dm)))
-	    return NO_PROBLEM;
+        if (!(ModelFacade.isAClassifier(dm)))
+            return NO_PROBLEM;
+        if (!(ModelFacade.isPrimaryObject(dm)))
+            return NO_PROBLEM;
 
-	// if the object does not have a name,
-	// than no problem
-	if ((ModelFacade.getName(dm) == null) ||
-	    ("".equals(ModelFacade.getName(dm))))
-	    return NO_PROBLEM;
+        // if the object does not have a name,
+        // than no problem
+        if ((ModelFacade.getName(dm) == null)
+            || ("".equals(ModelFacade.getName(dm))))
+            return NO_PROBLEM;
 
-	// types can probably have associations, but we should not nag at them
-	// not having any.
-	// utility is a namespace collection - also not strictly required 
-	// to have associations.
-	if (ModelFacade.isType(dm))
-	    return NO_PROBLEM;
-	if (ModelFacade.isUtility(dm))
-	    return NO_PROBLEM;
+        // types can probably have associations, but we should not nag at them
+        // not having any.
+        // utility is a namespace collection - also not strictly required 
+        // to have associations.
+        if (ModelFacade.isType(dm))
+            return NO_PROBLEM;
+        if (ModelFacade.isUtility(dm))
+            return NO_PROBLEM;
 
-	//TODO: different critic or special message for classes
-	//that inherit all ops but define none of their own.
+        //TODO: different critic or special message for classes
+        //that inherit all ops but define none of their own.
 
-	if (findAssociation(dm, 0))
-	    return NO_PROBLEM;
-	return PROBLEM_FOUND;
+        if (findAssociation(dm, 0))
+            return NO_PROBLEM;
+        return PROBLEM_FOUND;
     }
 
     /**
@@ -84,26 +84,25 @@ public class CrNoAssociations extends CrUML {
      *		or in any of its generalizations.
      */
     private boolean findAssociation(Object dm, int depth) {
-	if (ModelFacade.getAssociationEnds(dm).hasNext())
-	    return true;
+        if (ModelFacade.getAssociationEnds(dm).iterator().hasNext())
+            return true;
 
-	if (depth > 50)
-	    return false;
+        if (depth > 50)
+            return false;
 
-	Iterator iter = ModelFacade.getGeneralizations(dm);
+        Iterator iter = ModelFacade.getGeneralizations(dm);
 
-	while (iter.hasNext()) {
-	    Object parent = ModelFacade.getParent(iter.next());
+        while (iter.hasNext()) {
+            Object parent = ModelFacade.getParent(iter.next());
 
-	    if (parent == dm)
-		continue;
+            if (parent == dm)
+                continue;
 
-	    if (ModelFacade.isAClassifier(parent))
-		if (findAssociation(parent, depth + 1))
-		    return true;
-	}
-	return false;
+            if (ModelFacade.isAClassifier(parent))
+                if (findAssociation(parent, depth + 1))
+                    return true;
+        }
+        return false;
     }
 
 } /* end class CrNoAssociations */
-

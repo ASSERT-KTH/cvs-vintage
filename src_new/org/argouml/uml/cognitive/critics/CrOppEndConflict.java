@@ -1,91 +1,1 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
-// Rights Reserved. Permission to use, copy, modify, and distribute this
-// software and its documentation without fee, and without a written
-// agreement is hereby granted, provided that the above copyright notice
-// and this paragraph appear in all copies.  This software program and
-// documentation are copyrighted by The Regents of the University of
-// California. The software program and documentation are supplied "AS
-// IS", without any accompanying services from The Regents. The Regents
-// does not warrant that the operation of the program will be
-// uninterrupted or error-free. The end-user understands that the program
-// was developed for research purposes and is advised not to rely
-// exclusively on the program for any reason.  IN NO EVENT SHALL THE
-// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
-// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
-// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
-// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
-// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
-// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
-// PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
-// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
-// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-
-
-
-// File: CrOppEndConflict.java
-// Classes: CrOppEndConflict
-// Original Author: jrobbins@ics.uci.edu
-// $Id: CrOppEndConflict.java,v 1.3 2002/10/20 21:11:15 linus Exp $
-
-package org.argouml.uml.cognitive.critics;
-
-import java.util.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.behavior.collaborations.*;
-
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
-
-/** Well-formedness rule [2] for MClassifier. See page 29 of UML 1.1
- *  Semantics. OMG document ad/97-08-04. */
-
-//TODO: split into an inherited attr critic and a local
-//attr critic
-
-public class CrOppEndConflict extends CrUML {
-
-  public CrOppEndConflict() {
-    setHeadline("Rename MAssociation Roles");
-    addSupportedDecision(CrUML.decINHERITANCE);
-    addSupportedDecision(CrUML.decRELATIONSHIPS);
-    addSupportedDecision(CrUML.decNAMING);
-    setKnowledgeTypes(Critic.KT_SYNTAX);
-    addTrigger("associationEnd");
-  }
-
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof MClassifier)) return NO_PROBLEM;
-    MClassifier cls = (MClassifier) dm;
-    Vector namesSeen = new Vector();
-    Collection assocEnds = cls.getAssociationEnds();
-    if (assocEnds == null) return NO_PROBLEM;
-    Iterator enum = assocEnds.iterator();
-    // warn about inheritied name conflicts, different critic?
-    while (enum.hasNext()) {
-      MAssociationEnd myAe = (MAssociationEnd) enum.next();
-      MAssociation asc = (MAssociation) myAe.getAssociation();
-      if (asc == null) continue;
-      Collection conns = asc.getConnections();
-      if (asc instanceof MAssociationRole)
-	conns = ((MAssociationRole)asc).getConnections();
-      if (conns == null) continue;
-      Iterator enum2 = conns.iterator();
-      while (enum2.hasNext()) {
-	MAssociationEnd ae = (MAssociationEnd) enum2.next();
-	if (ae.getType() == cls) continue;
-	String aeName = ae.getName();
-	if ("".equals(aeName)) continue;
-	String aeNameStr = aeName;
-	if (aeNameStr.length() == 0) continue;
-	if (namesSeen.contains(aeNameStr)) return PROBLEM_FOUND;
-	namesSeen.addElement(aeNameStr);
-      }
-    }
-    return NO_PROBLEM;
-  }
-
-} /* end class CrOppEndConflict.java */
-
+// Copyright (c) 1996-99 The Regents of the University of California. All// Rights Reserved. Permission to use, copy, modify, and distribute this// software and its documentation without fee, and without a written// agreement is hereby granted, provided that the above copyright notice// and this paragraph appear in all copies.  This software program and// documentation are copyrighted by The Regents of the University of// California. The software program and documentation are supplied "AS// IS", without any accompanying services from The Regents. The Regents// does not warrant that the operation of the program will be// uninterrupted or error-free. The end-user understands that the program// was developed for research purposes and is advised not to rely// exclusively on the program for any reason.  IN NO EVENT SHALL THE// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE// PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.// File: CrOppEndConflict.java// Classes: CrOppEndConflict// Original Author: jrobbins@ics.uci.edu// $Id: CrOppEndConflict.java,v 1.4 2003/02/02 14:53:18 kataka Exp $package org.argouml.uml.cognitive.critics;import java.util.ArrayList;import java.util.Collection;import java.util.Iterator;import java.util.List;import org.argouml.cognitive.Designer;import org.argouml.cognitive.critics.Critic;import org.argouml.model.ModelFacade;import org.argouml.model.uml.foundation.core.CoreHelper;/** Well-formedness rule [2] for MClassifier. See page 29 of UML 1.1 *  Semantics. OMG document ad/97-08-04. *///TODO: split into an inherited attr critic and a local//attr criticpublic class CrOppEndConflict extends CrUML {        public CrOppEndConflict() {        setHeadline("Rename MAssociation Roles");        addSupportedDecision(CrUML.decINHERITANCE);        addSupportedDecision(CrUML.decRELATIONSHIPS);        addSupportedDecision(CrUML.decNAMING);        setKnowledgeTypes(Critic.KT_SYNTAX);        addTrigger("associationEnd");    }        public boolean predicate2(Object dm, Designer dsgr) {        boolean problem = NO_PROBLEM;        if (ModelFacade.isAClassifier(dm)) {            Collection col = CoreHelper.getHelper().getAssociations(dm);            List names = new ArrayList();            Iterator it = col.iterator();            String name = null;            while (it.hasNext()) {                name = ModelFacade.getName(it.next());                if (name == null || name.equals("")) continue;                if (names.contains(name)) {                    problem = PROBLEM_FOUND;                    break;                }            }        }        return problem;    }                        } /* end class CrOppEndConflict.java */
