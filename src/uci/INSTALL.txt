@@ -1,5 +1,5 @@
-// FILE: INSTALL.txt
-// $Id: INSTALL.txt,v 1.1 1998/01/26 22:19:17 jrobbins Exp $
+  // FILE: INSTALL.txt
+// $Id: INSTALL.txt,v 1.2 1998/02/06 02:34:40 jrobbins Exp $
 
 Notes on how to install and compile the UCI Graph Editing Framework
 source code.
