@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.232 2002/12/13 00:15:26 jon Exp $
+ * @version $Id: Issue.java,v 1.233 2002/12/17 16:19:30 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1710,7 +1710,7 @@ public class Issue
                                        Issue childIssue, ScarabUser user)
         throws Exception
     {
-        // Check whether the entered issue is already dependant on this
+        // Check whether the entered issue is already dependent on this
         // Issue. If so, and it had been marked deleted, mark as undeleted.
         Depend prevDepend = this.getDependency(childIssue);
         if (prevDepend != null && prevDepend.getDeleted())
@@ -1725,7 +1725,8 @@ public class Issue
             throw new Exception("This issue already has a dependency" 
                                   + " on the issue id you entered.");
         }
-
+        // we definitely want to do an insert here so force it.
+        depend.setNew(true);
         depend.save();
 
         if (activitySet == null)
@@ -1738,7 +1739,6 @@ public class Issue
             activitySet.save();
         }
 
-        // Save activitySet record for parent
         Object[] args = {
             this.getUniqueId(),
             childIssue.getUniqueId(),
@@ -1762,8 +1762,8 @@ public class Issue
     }
 
     /**
-     * Returns type of dependency the passed-in issue has on
-     * This issue.
+     * Checks to see if this issue has a dependency on the passed in issue.
+     * or if the passed in issue has a dependency on this issue.
      */
     public Depend getDependency(Issue childIssue) throws Exception
     {
@@ -1772,15 +1772,13 @@ public class Issue
         if ( obj == null ) 
         {
             Criteria crit = new Criteria(2)
-                .add(DependPeer.OBSERVED_ID, getIssueId() )        
-                .add(DependPeer.OBSERVER_ID, childIssue.getIssueId() );
+                .add(DependPeer.OBSERVED_ID, getIssueId())        
+                .add(DependPeer.OBSERVER_ID, childIssue.getIssueId());
             List depends = DependPeer.doSelect(crit);
-            
             Criteria crit2 = new Criteria(2)
                 .add(DependPeer.OBSERVER_ID, getIssueId() )        
                 .add(DependPeer.OBSERVED_ID, childIssue.getIssueId() );
             List depends2 = DependPeer.doSelect(crit2);
-            
             if (depends.size() > 0 )
             {
                 result = (Depend)depends.get(0);
@@ -2629,9 +2627,9 @@ public class Issue
     }
 
     /**
-     * Assigns user to issue.
+     * Assigns user to issue. Give description.
      */
-    public ActivitySet assignUser(ActivitySet activitySet, 
+    public ActivitySet assignUser(ActivitySet activitySet, String description,
                                   ScarabUser assignee, ScarabUser assigner,
                                   Attribute attribute, Attachment attachment)
         throws Exception
@@ -2648,12 +2646,15 @@ public class Issue
             attVal.startActivitySet(activitySet);
         }
 
-        // Save activity record
-        String actionString = getAssignUserChangeString(assigner, assignee, 
-                                                        attribute);
+        if (description == null)
+        {
+            // Save activity record
+            description = getAssignUserChangeString(assigner, assignee, 
+                                                            attribute);
+        }
         ActivityManager
             .createUserActivity(this, attribute, activitySet,
-                                actionString, new Attachment(),
+                                description, null,
                                 null, assignee.getUserId());
 
         // Save user attribute values
@@ -2664,6 +2665,19 @@ public class Issue
         attVal.save();
 
         return activitySet;
+    }
+
+    /**
+     * Assigns user to issue.
+     */
+    public ActivitySet assignUser(ActivitySet activitySet, 
+                                  ScarabUser assignee, ScarabUser assigner,
+                                  Attribute attribute, Attachment attachment)
+        throws Exception
+    {                
+        return assignUser(activitySet, 
+                          assignee, assigner,
+                          attribute, attachment);
     }
 
     /**
@@ -2951,7 +2965,8 @@ public class Issue
      * changes the dependency type as well as. will not change deptype
      * for deleted deps
      */
-    public ActivitySet doChangeDependencyType(ActivitySet activitySet, Depend depend, DependType newDependType,
+    public ActivitySet doChangeDependencyType(ActivitySet activitySet, Depend depend, 
+                                              DependType newDependType,
                                               DependType oldDependType, ScarabUser user)
         throws Exception
     {
