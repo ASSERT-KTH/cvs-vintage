@@ -18,6 +18,7 @@ package org.columba.core.plugin;
 import java.io.File;
 import java.util.Vector;
 
+import org.columba.core.config.ConfigPath;
 import org.columba.core.logging.ColumbaLogger;
 
 /**
@@ -36,23 +37,44 @@ public class PluginFinder {
 	public PluginFinder() {
 		super();
 	}
-	
-	public static File[] searchPlugins()
-	{
+
+	public static File[] searchPlugins() {
 		Vector v = new Vector();
-		
+		File[] programList = null;
+		File[] configList = null;
+
 		File programFolder = new File("plugins");
-		
-		if ( programFolder.exists() )
-		{
-			File[] list = programFolder.listFiles();
-			
-			return list;
+		if (programFolder.exists()) {
+			programList = programFolder.listFiles();
+
+		} else
+			ColumbaLogger.log.info("Folder \"plugins\" doesn't exist.");
+
+		File configFolder = new File(ConfigPath.configDirectory, "plugins");
+		if (configFolder.exists()) {
+			configList = configFolder.listFiles();
+		} else
+			ColumbaLogger.log.info("Folder \"plugins\" doesn't exist.");
+
+		if (programList != null && configList != null) {
+
+			File[] result = new File[programList.length + configList.length];
+			System.arraycopy(programList, 0, result, 0, programList.length);
+			System.arraycopy(
+				configList,
+				0,
+				result,
+				programList.length,
+				configList.length);
+			return result;
 		}
-		else ColumbaLogger.log.info("Folder \"plugins\" doesn't exist.");
+		else if ( programList != null )
+		{
+			return programList;
+		}
+		else if ( configList != null )
+			return configList;
 			
-		
-		
 		return null;
 	}
 }
