@@ -59,7 +59,7 @@
 #foreach ($item in $pair)
   #set ($attr = $item.get(0))
   #set ($user = $item.get(1))
-#set ($userId = $user.UserId)
+  #set ($userId = $user.UserId)
     <tr class="a">
     <td><input type="checkbox" name="remove_user_$user.UserId" value="$attr.AttributeId" />
     <td><a href="mailto:$user.Email">$user.UserName</a></td>
@@ -191,9 +191,9 @@
 
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr>
-	<th nowrap="nowrap">Select</th>
-	<th>#userSort ("username" "Username")</th>
-    <th>#userSort ("name" "Name")</th>
+	<th nowrap="nowrap">$l10n.Select</th>
+	<th>#userSort ("username" "$l10n.Username")</th>
+    <th>#userSort ("name" "$l10n.FullName")</th>
 	<th>$l10n.Association</th>
 	</tr>
    #foreach ($user in $searchResults)
