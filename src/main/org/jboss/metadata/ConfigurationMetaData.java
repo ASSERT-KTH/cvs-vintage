@@ -10,12 +10,10 @@ import org.w3c.dom.Element;
 
 import org.jboss.ejb.DeploymentException;
 
-/**
- *   <description>
- *
- *   @see <related>
+/** The configuration information for an EJB container.
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.13 $
+ *   @author Scott.Stark@jboss.org
+ *   @version $Revision: 1.14 $
  */
 public class ConfigurationMetaData extends MetaData {
 
@@ -50,6 +48,7 @@ public class ConfigurationMetaData extends MetaData {
     private boolean callLogging;
     private boolean readOnlyGetMethods;
 
+    private String securityDomain;
     private String authenticationModule;
     private String roleMappingManager;
 
@@ -77,6 +76,7 @@ public class ConfigurationMetaData extends MetaData {
 
 	public String getPersistenceManager() { return persistenceManager; }
 
+	public String getSecurityDomain() { return securityDomain; }
 	public String getAuthenticationModule() { return authenticationModule; }
 
 	public String getRoleMappingManager() { return roleMappingManager; }
@@ -98,67 +98,87 @@ public class ConfigurationMetaData extends MetaData {
 
 	public void importJbossXml(Element element) throws DeploymentException {
 
-		// everything is optional to allow jboss.xml to modify part of a configuration
-		// defined in standardjboss.xml
+        // everything is optional to allow jboss.xml to modify part of a configuration
+        // defined in standardjboss.xml
 
-		// set call logging
-		callLogging = Boolean.valueOf(getElementContent(getOptionalChild(element, "call-logging"), String.valueOf(callLogging))).booleanValue();
+        // set call logging
+        callLogging = Boolean.valueOf(getElementContent(getOptionalChild(element, "call-logging"), String.valueOf(callLogging))).booleanValue();
 
-		// set read-only get methods
-		readOnlyGetMethods = Boolean.valueOf(getElementContent(getOptionalChild(element, "read-only-get-methods"))).booleanValue();
+        // set read-only get methods
+        readOnlyGetMethods = Boolean.valueOf(getElementContent(getOptionalChild(element, "read-only-get-methods"))).booleanValue();
 
-		// set the container invoker
-		containerInvoker = getElementContent(getOptionalChild(element, "container-invoker"), containerInvoker);
+        // set the container invoker
+        containerInvoker = getElementContent(getOptionalChild(element, "container-invoker"), containerInvoker);
 
-		// set the instance pool
-		instancePool = getElementContent(getOptionalChild(element, "instance-pool"), instancePool);
+        // set the instance pool
+        instancePool = getElementContent(getOptionalChild(element, "instance-pool"), instancePool);
 
-		// set the instance cache
-		instanceCache = getElementContent(getOptionalChild(element, "instance-cache"), instanceCache);
+        // set the instance cache
+        instanceCache = getElementContent(getOptionalChild(element, "instance-cache"), instanceCache);
 
-		// set the persistence manager
-		persistenceManager = getElementContent(getOptionalChild(element, "persistence-manager"), persistenceManager);
+        // set the persistence manager
+        persistenceManager = getElementContent(getOptionalChild(element, "persistence-manager"), persistenceManager);
 
-		// set the transaction manager
-		transactionManager = getElementContent(getOptionalChild(element, "transaction-manager"), transactionManager);
+        // set the transaction manager
+        transactionManager = getElementContent(getOptionalChild(element, "transaction-manager"), transactionManager);
 
-		// set the authentication module
-		authenticationModule = getElementContent(getOptionalChild(element, "authentication-module"), authenticationModule);
+        // set the security domain
+        securityDomain = getElementContent(getOptionalChild(element, "security-domain"), securityDomain);
+        // set the authentication module
+        authenticationModule = getElementContent(getOptionalChild(element, "authentication-module"), authenticationModule);
+        // set the role mapping manager
+        roleMappingManager = getElementContent(getOptionalChild(element, "role-mapping-manager"), roleMappingManager);
+        /* If the authenticationModule == roleMappingManager just set the securityDomain
+            as this is the combination of the authentication-module and role-mapping-manager
+            behaviors
+        */
+        if( authenticationModule != null && roleMappingManager != null &&
+            roleMappingManager.equals(authenticationModule) )
+        {
+            securityDomain = authenticationModule;
+            authenticationModule = null;
+            roleMappingManager = null;
+        }
+        // Don't allow only a authentication-module or role-mapping-manager
+        else if( (authenticationModule == null && roleMappingManager != null) 
+            || (authenticationModule != null && roleMappingManager == null) )
+        {
+            String msg = "Either a security-domain or both authentication-module "
+                + "and role-mapping-manager must be specified";
+            throw new DeploymentException(msg);
+        }
 
-		// set the role mapping manager
-		roleMappingManager = getElementContent(getOptionalChild(element, "role-mapping-manager"), roleMappingManager);
+        // set the commit option
+        String commit = getElementContent(getOptionalChild(element, "commit-option"), commitOptionToString(commitOption));
 
-                // set the commit option
-		String commit = getElementContent(getOptionalChild(element, "commit-option"), commitOptionToString(commitOption));
-
-		commitOption = stringToCommitOption(commit);
+        commitOption = stringToCommitOption(commit);
 
                 //get the refresh rate for option D
-		String refresh = getElementContent(getOptionalChild(element, "optiond-refresh-rate"), Long.toString(optionDRefreshRate));
-		optionDRefreshRate = stringToRefreshRate(refresh);
+        String refresh = getElementContent(getOptionalChild(element, "optiond-refresh-rate"), Long.toString(optionDRefreshRate));
+        optionDRefreshRate = stringToRefreshRate(refresh);
 
-		// the classes which can understand the following are dynamically loaded during deployment :
-		// We save the Elements for them to use later
+        // the classes which can understand the following are dynamically loaded during deployment :
+        // We save the Elements for them to use later
 
         // The configuration for the container interceptors
         containerInterceptorsConf = getOptionalChild(element, "container-interceptors", containerInterceptorsConf);
 
-		// configuration for container invoker
-	    containerInvokerConf = getOptionalChild(element, "container-invoker-conf", containerInvokerConf);
+        // configuration for container invoker
+        containerInvokerConf = getOptionalChild(element, "container-invoker-conf", containerInvokerConf);
 
-		// configuration for instance pool
-		containerPoolConf = getOptionalChild(element, "container-pool-conf", containerPoolConf);
+        // configuration for instance pool
+        containerPoolConf = getOptionalChild(element, "container-pool-conf", containerPoolConf);
 
-		// configuration for instance cache
-		containerCacheConf = getOptionalChild(element, "container-cache-conf", containerCacheConf);
+        // configuration for instance cache
+        containerCacheConf = getOptionalChild(element, "container-cache-conf", containerCacheConf);
 
-      // DEPRECATED: Remove this in JBoss 4.0
-      if (containerInvoker.equals("org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker") ||
+        // DEPRECATED: Remove this in JBoss 4.0
+        if (containerInvoker.equals("org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker") ||
           containerInvoker.equals("org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker"))
-      {
-         System.out.println("Deprecated container invoker. Change to org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker");
-         containerInvoker = "org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker";
-      }
+        {
+            System.out.println("Deprecated container invoker. Change to org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker");
+            containerInvoker = "org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker";
+        }
 	}
 
 	// Package protected ---------------------------------------------
