@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/collections/Attic/SimplePool.java,v 1.2 2001/02/28 19:24:32 larryi Exp $
- * $Revision: 1.2 $
- * $Date: 2001/02/28 19:24:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/collections/Attic/SimplePool.java,v 1.3 2001/03/23 02:25:32 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2001/03/23 02:25:32 $
  *
  * ====================================================================
  *
@@ -69,7 +69,7 @@ package org.apache.tomcat.util.collections;
  * The pool will ignore overflow and return null if empty.
  *
  * @author Gal Shachor
- * @author Costin
+ * @author Costin Manolache
  */
 public final class SimplePool  {
     /*
@@ -78,35 +78,52 @@ public final class SimplePool  {
     private Object pool[];
 
     private int max;
+    private int last;
     private int current=-1;
-
-    Object lock;
-    public static final int DEFAULT_SIZE=16;
+    
+    private Object lock;
+    public static final int DEFAULT_SIZE=32;
+    static final int debug=0;
     
     public SimplePool() {
-	this.max=DEFAULT_SIZE;
-	pool=new Object[max];
-	lock=new Object();
+	this(DEFAULT_SIZE,DEFAULT_SIZE);
     }
 
-    public SimplePool(int max) {
+    public SimplePool(int size) {
+	this(size, size);
+    }
+
+    public SimplePool(int size, int max) {
 	this.max=max;
-	pool=new Object[max];
+	pool=new Object[size];
+	this.last=size-1;
 	lock=new Object();
     }
 
     public  void set(Object o) {
 	put(o);
     }
+
     /**
      * Add the object to the pool, silent nothing if the pool is full
      */
     public  void put(Object o) {
 	synchronized( lock ) {
-	    if( current < (max-1) ) {
-		current += 1;
+	    if( current < last ) {
+		current++;
 		pool[current] = o;
-            }
+            } else if( current < max ) {
+		// realocate
+		int newSize=pool.length*2;
+		if( newSize > max ) newSize=max+1;
+		Object tmp[]=new Object[newSize];
+		last=newSize-1;
+		System.arraycopy( pool, 0, tmp, 0, pool.length);
+		pool=tmp;
+		current++;
+		pool[current] = o;
+	    }
+	    if( debug > 0 ) log("put " + o + " " + current + " " + max );
 	}
     }
 
@@ -120,6 +137,8 @@ public final class SimplePool  {
 		item = pool[current];
 		current -= 1;
 	    }
+	    if( debug > 0 ) 
+		log("get " + item + " " + current + " " + max);
 	}
 	return item;
     }
@@ -129,5 +148,16 @@ public final class SimplePool  {
      */
     public int getMax() {
 	return max;
+    }
+
+    /**
+     * Number of object in the pool
+     */
+    public int getCount() {
+	return current+1;
+    }
+
+    private void log( String s ) {
+	System.out.println("SimplePool: " + s );
     }
 }
