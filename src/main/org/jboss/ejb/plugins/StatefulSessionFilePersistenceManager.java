@@ -30,8 +30,6 @@ import org.jboss.ejb.StatefulSessionEnterpriseContext;
 import org.jboss.system.server.ServerConfigLocator;
 import org.jboss.system.ServiceMBeanSupport;
 
-import org.jboss.util.jmx.MBeanServerLocator;
-
 import org.jboss.util.id.UID;
 
 /**
@@ -51,7 +49,7 @@ import org.jboss.util.id.UID;
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  * 
- * @version <tt>$Revision: 1.38 $</tt>
+ * @version <tt>$Revision: 1.39 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
