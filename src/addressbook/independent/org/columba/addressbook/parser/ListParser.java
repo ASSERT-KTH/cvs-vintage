@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.addressbook.parser;
@@ -24,12 +26,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-
 /**
- * @version         1.0
+ * @version 1.0
  * @author
  */
 public class ListParser {
+
     public ListParser() {
     }
 
@@ -44,13 +46,11 @@ public class ListParser {
         while (pos < listLength) {
             char ch = list.charAt(pos);
 
-            //System.out.println("ch=" + ch);
             if ((ch == ',') && (bracket == false)) {
                 // found new message
                 String address = buf.toString();
                 result.add(address);
 
-                //System.out.println("address:" + address);
                 buf = new StringBuffer();
                 pos++;
             } else if (ch == '"') {
@@ -73,20 +73,15 @@ public class ListParser {
         String address = buf.toString();
         result.add(address);
 
-        //System.out.println("address:" + address);
         return result;
     }
 
     public static List parseVector(List list) {
         List result = new Vector();
 
-        //		int size = list.size();
         for (Iterator it = list.iterator(); it.hasNext();) {
             HeaderItem item = (HeaderItem) it.next();
 
-            //		for (int i = 0; i < size; i++)
-            //		{
-            //			HeaderItem item = (HeaderItem) list.get(i);
             if (item == null) {
                 continue;
             }
@@ -99,7 +94,7 @@ public class ListParser {
                 }
 
                 result.add(address);
-                System.out.println("parsed item:" + address);
+
             } else {
                 // group item
                 Object uid = item.getUid();
@@ -110,14 +105,12 @@ public class ListParser {
                 for (int j = 0; j < card.members(); j++) {
                     Object memberID = card.getMember(j);
 
-                    //System.out.println("memberID:" + memberID);
-                    ContactCard contactCard = (ContactCard) folder.get(memberID);
+                    ContactCard contactCard = (ContactCard) folder
+                            .get(memberID);
                     String address = contactCard.get("email", "internet");
 
-                    //System.out.println("address:" + address);
                     result.add(address.trim());
 
-                    System.out.println("parsed item:" + address);
                 }
             }
         }
@@ -128,13 +121,9 @@ public class ListParser {
     public static String parse(List list) {
         StringBuffer output = new StringBuffer();
 
-        //		int size = list.size();
         for (Iterator it = list.iterator(); it.hasNext();) {
             HeaderItem item = (HeaderItem) it.next();
 
-            //		for (int i = 0; i < size; i++)
-            //		{
-            //			HeaderItem item = (HeaderItem) list.get(i);
             if (item == null) {
                 continue;
             }
@@ -147,7 +136,7 @@ public class ListParser {
                 }
 
                 output.append(address);
-                System.out.println("parsed item:" + address);
+
                 output.append(",");
             } else {
                 // group item
@@ -159,13 +148,12 @@ public class ListParser {
                 for (int j = 0; j < card.members(); j++) {
                     Object memberID = card.getMember(j);
 
-                    //System.out.println("memberID:" + memberID);
-                    ContactCard contactCard = (ContactCard) folder.get(memberID);
+                    ContactCard contactCard = (ContactCard) folder
+                            .get(memberID);
                     String address = contactCard.get("email", "internet");
 
-                    //System.out.println("address:" + address);
                     output.append(address);
-                    System.out.println("parsed item:" + address);
+
                     output.append(",");
                 }
             }
@@ -180,18 +168,12 @@ public class ListParser {
 
     protected static String isValid(HeaderItem headerItem) {
         String address = (String) headerItem.get("email;internet");
-        System.out.println("address to parse:" + address);
 
-        if (AddressParser.isValid(address)) {
-            return address.trim();
-        }
+        if (AddressParser.isValid(address)) { return address.trim(); }
 
         address = (String) headerItem.get("displayname");
-        System.out.println("address to parse:" + address);
 
-        if (AddressParser.isValid(address)) {
-            return address.trim();
-        }
+        if (AddressParser.isValid(address)) { return address.trim(); }
 
         return null;
     }
