@@ -309,7 +309,7 @@
 
   <!-- ==================== Old "compile all" ==================== -->
   <target name="tomcat-compile" >
-    <javac srcdir="src/share" destdir="${tomcat.build}/classes"
+    <javac srcdir="src/share;src/facade22" destdir="${tomcat.build}/classes"
       classpath="${servlet.jar};${jaxp}/jaxp.jar" 
       debug="${debug}" 
       optimize="${optimize}"
@@ -330,12 +330,6 @@
 	unless="jdk12.present"/>
       <exclude name="**/SSLSocketFactory.java"
 	unless="jsse.present" />
-    </javac>
-    <javac srcdir="src/facade22" destdir="${tomcat.build}/classes"
-      classpath="${servlet.jar};${jaxp}/jaxp.jar" 
-      debug="${debug}" 
-      optimize="${optimize}"
-      deprecation="off" >
     </javac>
 
     <copydir src="src/share" dest="${tomcat.build}/classes"
@@ -463,7 +457,7 @@
     <mkdir dir="${tomcat.home}/webapps/ROOT/javadoc" />
 <!--    <javadoc packagenames="org.apache.tomcat.*"-->
     <javadoc packagenames="org.apache.tomcat.core"
-             sourcepath="src/share"
+             sourcepath="src/share;src/facade22"
              destdir="${tomcat.home}/webapps/ROOT/javadoc"
              author="true"
              version="true"
