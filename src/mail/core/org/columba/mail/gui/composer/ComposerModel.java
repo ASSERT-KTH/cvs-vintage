@@ -68,10 +68,11 @@ public class ComposerModel {
 	 * this regular expression should cover anything from a@a.pt or a@a.com to
 	 * a@a.info. Permits usage of invalid top domains though.
 	 * <p>
-	 * [bug] fdietz: added "." and "-" as regular characters (example:mail@toplevel.mail.de)
+	 * [bug] fdietz: added "." and "-" as regular characters
+	 * (example:mail@toplevel.mail.de)
 	 * <p>
 	 * TODO: see if we can replace the matching code with Ristretto stuff
-	 * 
+	 *  
 	 */
 	private static final String emailRegExp = "^[a-zA-Z0-9]+@[a-zA-Z0-9\\.\\-]+\\.[a-zA-Z]{2,4}+$";
 
@@ -406,6 +407,7 @@ public class ComposerModel {
 	/**
 	 * Checks if there are any invalid email address in the to,cc and bcc lists
 	 * [bug] fdietz: added trimming of leading/trailing whitespaces
+	 * 
 	 * @return null if there are no offending email addresses or the offending
 	 *         email address
 	 */
@@ -420,30 +422,33 @@ public class ComposerModel {
 			String adr = (String) toList.get(i);
 			// remove leading/trailing whitespaces
 			adr = adr.trim();
-			System.out.println("adr="+adr);
+			System.out.println("adr=" + adr);
 			if (!emailPattern.matcher(adr).matches())
 				return adr;
 
 		}
 
-		//validate CC: list
-		for (int i = 0; i < ccList.size(); i++) {
-			String adr = (String) ccList.get(i);
-			// remove leading/trailing whitespaces
-			adr = adr.trim();
-			if (!emailPattern.matcher(adr).matches())
-				return adr;
+		if (ccList != null) {
+			//validate CC: list
+			for (int i = 0; i < ccList.size(); i++) {
+				String adr = (String) ccList.get(i);
+				// remove leading/trailing whitespaces
+				adr = adr.trim();
+				if (!emailPattern.matcher(adr).matches())
+					return adr;
 
+			}
 		}
+		if (bccList != null) {
+			//validate BCC: list
+			for (int i = 0; i < bccList.size(); i++) {
+				String adr = (String) bccList.get(i);
+				// remove leading/trailing whitespaces
+				adr = adr.trim();
+				if (!emailPattern.matcher(adr).matches())
+					return adr;
 
-		//validate BCC: list
-		for (int i = 0; i < bccList.size(); i++) {
-			String adr = (String) bccList.get(i);
-			// remove leading/trailing whitespaces
-			adr = adr.trim();
-			if (!emailPattern.matcher(adr).matches())
-				return adr;
-
+			}
 		}
 
 		return null;
