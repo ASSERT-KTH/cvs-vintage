@@ -148,7 +148,7 @@ final class ServletInputStreamFacade extends ServletInputStream {
 	    }
 	    return numRead;
 	} else {
-	    return 0;
+	    return -1;
 	    //return doRead(b, off, len);
 	}
     }
