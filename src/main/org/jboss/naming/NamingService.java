@@ -32,7 +32,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  *
  * @jmx:mbean name="jboss:service=Naming"
  *            extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
@@ -214,12 +214,12 @@ public class NamingService
       }
    }
    
-   public void preDeregister() throws Exception
+   public void postDeregister() 
    {
-      super.preDeregister();
       if( mJNDI != null ) {
          // Destroy the JSR-77 management representation
          JNDIResource.destroy( server, "LocalJNDI" );
       }
+      super.postDeregister();
    }
 }
