@@ -5,7 +5,7 @@ $page.setTitle("Artifact Type Select")
 <h2>$page.Title</h2>
 
 <form action="$link.setPage("admin,ArtifactTypeSelect.vm")" method="get">
-<input type="hidden" name="action" value="admin.ModifyModuleAttributes">
+<input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
 
 #set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
 #if ($issueTypes.isEmpty())
@@ -19,15 +19,16 @@ $page.setTitle("Artifact Type Select")
       <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />&#160;
     #end
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+    </td>
     </tr>
     </table>
 </div>
 
-    <p class="alert">
+    <p><strong class="alert">
     There are no more issue types to add to this module. 
     #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
     Please click the Create New button to create a new issue type.
-    #end
+    #end</strong>
     </p>
 
 #else
