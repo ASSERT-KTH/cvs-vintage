@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.10 2004/09/13 21:11:30 bobtarling Exp $
+// $Id: ZargoFilePersister.java,v 1.11 2004/09/20 20:44:16 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -233,8 +233,7 @@ public class ZargoFilePersister extends AbstractFilePersister {
 
                 // the "false" means that members should not be added,
                 // we want to do this by hand from the zipped stream.
-                ArgoParser.SINGLETON.setURL(url);
-                ArgoParser.SINGLETON.readProject(zis, false);
+                ArgoParser.SINGLETON.readProject(url, false);
                 p = ArgoParser.SINGLETON.getProject();
                 ArgoParser.SINGLETON.setProject(null); // clear up project refs
 
