@@ -1,9 +1,0 @@
-<bean 
-  class="org.jboss.ejb.deployment.jBossEjbJar"
-  displayname="jBoss"
-  iconcolor16="/images/container.gif">
-  
-  <property 
-    name="Secure" class="boolean" 
-    displayname="Enforce EJB 1.1 bean restrictions" propertyeditor="com.dreambean.awt.editors.BooleanEditor"/>
-</bean>

@@ -1,9 +1,0 @@
-<bean 
-  class="org.jboss.ejb.deployment.ResourceManagers"
-  displayname="Resource managers"
-  iconcolor16="/images/container.gif">
-
-  <method name="createResourceManager" displayname="Add resource manager">
-    <parameter displayname="Resource manager class" propertyeditor="org.jboss.ejb.deployment.editors.ResourceTypeEditor"/>
-  </method>
-</bean>

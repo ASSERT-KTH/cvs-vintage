@@ -1,7 +1,0 @@
-<bean
-  class="org.jboss.ejb.deployment.InstanceCacheSupportConfiguration">
-
-  <property
-    name="CachePolicy" class="java.lang.String"
-    displayname="Cache policy" propertyeditor="org.jboss.ejb.deployment.editors.CachePolicyTypeEditor"/>
-</bean>

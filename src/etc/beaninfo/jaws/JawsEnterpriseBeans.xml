@@ -1,5 +1,0 @@
-<bean 
-  class="org.jboss.ejb.plugins.jaws.deployment.JawsEnterpriseBeans"
-  displayname="Deployed beans"
-  iconcolor16="/images/container.gif">
-</bean>

@@ -1,0 +1,867 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project-module [ <!ENTITY config SYSTEM "file:./config.xml"> ]>
+
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--  JBoss, the OpenSource EJB server                                      -->
+<!--                                                                        -->
+<!--  Distributable under LGPL license.                                     -->
+<!--  See terms of license at http://www.gnu.org.                           -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
+
+<!-- $Id: build.xml,v 1.2 2001/08/11 05:20:20 user57 Exp $ -->
+
+<project default="main">
+
+  <!-- ================================================================== -->
+  <!-- Basic module configuration                                         -->
+  <!-- ================================================================== -->
+
+  <!--
+     |  Give users a chance to use a different Buildmagic.
+    -->
+  <property file="${user.home}/.buildmagic.properties"/>
+
+  <!-- 
+     |  Load Buildmagic Ant extentions. 
+    -->
+  <property name="planet57.buildmagic.root" value="${basedir}/../tools/planet57/buildmagic"/>
+  <property name="planet57.buildmagic.lib" value="${planet57.buildmagic.root}/lib"/>
+  <path id="planet57.buildmagic.classpath">
+    <fileset dir="${planet57.buildmagic.lib}">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+  <taskdef name="taskdef" classname="planet57.tools.buildmagic.task.Taskdef"
+	   classpathref="planet57.buildmagic.classpath"/>
+  <taskdef classpathref="planet57.buildmagic.classpath"
+	   resource="planet57/tools/buildmagic/task/autoload.properties"/>
+
+  <!--
+     |  Setup the basic module roots.
+     |
+     |  module.root     - Should be the directory this file is in
+     |  project.root    - Where the project root directory is
+     |  project.config  - Where the project configuration files live
+   -->
+  <property name="module.root" value="${basedir}"/>
+  <property name="project.root">
+    <findroot basedir="." suffix="build/build.xml"/>
+  </property>
+  <property name="project.config" value="${project.root}/build"/>
+
+  <!-- 
+     |  Include user, project and module property overrides.
+     |
+     |  override.properties     - Used rarely (ignore)
+     |  .buildmagic.properties  - Provide Buildmagic specific properties
+     |  .ant.properties         - Ant properties
+     |  local.properties        - User local module properties
+     |  config.properties       - Used rarely (ignore)
+    -->
+  <property file="${project.config}/override.properties"/>
+  <property file="${module.root}/override.properties"/>
+  <property file="${user.home}/.buildmagic.properties"/>
+  <property file="${user.home}/.ant.properties"/>
+  <property file="${module.root}/local.properties"/>
+  <property file="${project.config}/local.properties"/>
+  <property file="${module.root}/config.properties"/>
+  <property file="${moudle.parent.config}/config.properties"/>
+
+  <!-- 
+     |  Setup the basic environment for a source module.
+     |
+     |  module.source    - The module source root
+     |  module.output    - The root where generated files will be placed
+     |  module.build     - Where build files will be placed
+     |  module.release   - Where released files will be placed
+     |  tools.root       - Where to build support tools live
+     |  thirdparty.root  - Where to thirdparty libraries live
+    -->
+  <property name="module.source" value="${module.root}/src"/>
+  <property name="module.output" value="${module.root}/output"/>
+  <property name="module.build" value="${module.output}"/>
+  <property name="module.release" value="${module.output}"/>
+  <property name="tools.root" value="${project.root}/tools"/>
+  <property name="thirdparty.root" value="${project.root}/thirdparty"/>
+
+  <!-- 
+     |  Load project configuration.
+     |
+     |  config.xml  - Define most configuration elements here (required).
+    -->
+  &config;
+
+  
+  <!-- ================================================================== -->
+  <!-- Initialize, Configure and Bootstrap the build system               -->
+  <!-- ================================================================== -->
+
+  <!-- 
+     |  Bootstrap all required extensions.
+     |
+     |  Build local Ant extensions here if they are required.
+     |
+     |  This target will not run once the bootstraped-already is set.
+    -->
+  <target name="bootstrap" 
+	  depends="bootstrap-init" 
+	  unless="bootstraped-already">
+    <property name="bootstraped-already" value="true"/>
+  </target>
+
+  <!-- Fail if the required bootstrapping dependencies are missing -->
+  <target name="bootstrap-init" 
+	  depends="bootstrap-check" 
+	  unless="have-bootstrap-dependencies-already">
+    <echo>Missing some or all of the required dependencies.</echo>
+    <fail message="Can not continue."/>
+  </target>
+
+  <!-- Check for required libraries -->
+  <target name="bootstrap-check" unless="bootstraped-already">
+    <!-- Check for required extensions here -->
+    <property name="have-bootstrap-dependencies-already" value="true"/>
+  </target>
+
+  <!-- 
+     |  Configure the module build system.
+     |
+     |  o Updates/installs example files if they exist
+     |  o Invokes the 'configure-hook' target, which should be defined in 
+     |    config.xml.
+     |
+     |  This target will not run once the configured-already property is set.
+    -->
+  <target name="configure" 
+	  unless="configured-already"
+	  description="Configure the module build system.">
+    <property name="module.examples" value="${module.root}/etc"/>
+    <property name="module.examples.extension" value="-example"/>
+    <copy todir="${module.root}" filtering="yes">
+      <fileset dir="${module.examples}/">
+         <include name="**/*${module.examples.extension}"/>
+      </fileset>
+      <mapper type="glob" from="*${module.examples.extension}" to="*"/>
+    </copy>
+
+    <antcall target="configure-hook"/>
+    <property name="configured-already" value="true"/>
+  </target>
+
+  <!-- Disable execution of the configure target -->
+  <target name="disable-configure">
+    <property name="configured-already" value="true"/>
+  </target>
+
+  <!-- 
+     |  Initialize the build system.
+     |
+     |  o Sets the timestamp and build.number properties
+     |  o Installs property defaults
+     |  o Displays some module information
+     |  o Invokes to 'init-hook' target which should be defined in config.xml
+     |  o Resolves properties for psuedo late-binding
+     |  o Installs filters for each property
+     |
+     |  This target will not run once the initialized-already property is set.
+    -->
+  <target name="init" 
+	  depends="configure, bootstrap" 
+	  unless="initialized-already">
+    <tstamp>
+      <format property="build.number" pattern="yyyyMMddHHmm"/>
+    </tstamp>
+    <property name="build.id" value="${build.number}"/>
+    <property resource="planet57/tools/buildmagic/common.properties"/>
+    <property resource="planet57/tools/buildmagic/task.properties"/>
+    <moduleinfo/>
+    <call target="init-hook" unless="bypass-init-hook"/>
+    <resolver force="${buildmagic.resolveproperties.force}"/>
+    <propertyfilter all="${buildmagic.propertyfilter.all}"/>
+    <property name="initialized-already" value="true"/>
+  </target>
+
+  <!-- Disable execution of the init target -->
+  <target name="disable-init">
+    <property name="initialized-already" value="true"/>
+  </target>
+
+  <!-- Disable execution of the init-hook target -->
+  <target name="disable-init-hook">
+    <property name="bypass-init-hook" value="true"/>
+  </target>
+
+
+  <!-- ================================================================== -->
+  <!-- Compile                                                            -->
+  <!-- ================================================================== -->
+
+  <!-- 
+     |  Compile everything.
+     |
+     |  This target should depend on other compile-* targets for each 
+     |  different type of compile that needs to be performed, short of
+     |  documentation compiles.
+    -->
+  <target name="compile" 
+	  depends="compile-classes, compile-rmi, compile-etc, compile-resources, compile-bin"
+	  description="Compile all source files."/>
+
+  <!-- Compile all class files -->
+  <target name="compile-classes" depends="init">
+    <mkdir dir="${build.classes}"/>
+    <javac destdir="${build.classes}"
+           optimize="${javac.optimize}"
+	   target="${javac.target}"
+           debug="${javac.debug}"
+	   depend="${javac.depend}"
+	   verbose="${javac.verbose}"
+	   deprecation="${javac.deprecation}"
+	   includeAntRuntime="${javac.include.ant.runtime}"
+	   includeJavaRuntime="${javac.include.java.runtime}"
+	   failonerror="${javac.fail.onerror}">
+       <src path="${source.java}"/>
+       <classpath refid="javac.classpath"/>
+       <include name="${javac.includes}"/>
+       <exclude name="${javac.excludes}"/>
+
+       <!-- This is currently contains outdated package references. -->
+       <exclude name="test/**"/>
+    </javac>
+  </target>
+
+  <!-- Compile RMI stubs -->
+  <target name="compile-rmi" depends="compile-classes">
+    <rmic base="${build.classes}"
+	  verify="${rmic.verify}"
+	  iiop="${rmic.iiop}"
+	  iiopopts="${rmic.iiopops}"
+	  idl="${rmic.idl}"
+	  idlopts="${rmic.idlops}"
+	  debug="${rmic.debug}"
+          stubVersion="${rmic.stubVersion}">
+      <classpath refid="javac.classpath"/>
+      <include name="${rmic.includes}"/>
+      <exclude name="${rmic.excludes}"/>
+
+      <include name="org/jboss/tm/usertx/server/UserTransactionSessionFactoryImpl.class"/>
+      <include name="org/jboss/tm/usertx/server/UserTransactionSessionImpl.class"/>
+      <include name="org/jboss/jmx/server/JMXAdaptorImpl.class"/>
+      <include name="org/jboss/jmx/server/RMIConnectorImpl.class"/>
+      <include name="org/jboss/jmx/client/RMIClientConnectorImpl*Listener.class"/>
+      <include name="org/jboss/ejb/plugins/jrmp/server/JRMPContainerInvoker.class"/>
+    </rmic>
+  </target>
+
+  <!-- Compile resource files -->
+  <target name="compile-resources" depends="init">
+    <mkdir dir="${build.resources}"/>
+    <copy todir="${build.resources}" filtering="yes">
+      <fileset dir="${source.resources}">
+         <include name="**/*"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <!-- Compile etc files (manifests and such) -->
+  <target name="compile-etc" depends="init">
+    <mkdir dir="${build.etc}"/>
+    <copy todir="${build.etc}" filtering="yes">
+      <fileset dir="${source.etc}">
+         <include name="**/*"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <!-- Compile bin scripts -->
+  <target name="compile-bin" depends="init">
+    <mkdir dir="${build.bin}"/>
+    <copy todir="${build.bin}" filtering="yes">
+      <fileset dir="${source.bin}">
+         <include name="**/*"/>
+      </fileset>
+    </copy>
+
+    <fixcrlf srcdir="${build.bin}" cr="remove" eof="remove"
+	     includes="**/*.sh"/>
+
+    <fixcrlf srcdir="${build.bin}" cr="add" eof="remove"
+	     includes="**/*.bat, **/*.cmd"/>
+
+    <chmod perm="+x">
+      <fileset dir="${build.bin}">
+         <include name="**/*.sh"/>
+      </fileset>
+    </chmod>
+  </target>
+
+
+  <!-- ================================================================== -->
+  <!-- Build Jars                                                         -->
+  <!-- ================================================================== -->
+
+  <!-- 
+     |  Build all jar files.
+    -->
+  <target name="jars" depends="compile" description="Builds all jar files.">
+    <mkdir dir="${build.jars}"/>
+
+    <!-- Build jboss.jar -->
+    <jar jarfile="${build.jars}/jboss.jar"
+         manifest="${build.etc}/jboss.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/**"/>
+
+        <!-- Exclude Main, it will go into run.jar -->
+        <exclude name="org/jboss/Main*"/>
+
+        <!-- ??? -->
+        <exclude name="org/jboss/tm/GlobalId.class"/>
+
+        <!-- Exclude the security classes that must be on the classpath -->
+        <exclude name="org/jboss/security/AnybodyPrincipal.class"/>
+        <exclude name="org/jboss/security/NobodyPrincipal.class"/>
+        <exclude name="org/jboss/security/SimplePrincipal.class"/>
+      </fileset>
+
+      <fileset dir="${build.resources}">
+        <include name="org/jboss/**"/>
+        <exclude name="org/jboss/ejb/deployment/**"/>
+        <exclude name="org/jboss/ejb/plugins/**"/>
+        <exclude name="org/jboss/jms/ra/META-INF*"/>
+      </fileset>
+    </jar>
+
+    <!-- Build jboss-client.jar -->
+    <jar jarfile="${build.jars}/jboss-client.jar"
+         manifest="${build.etc}/jboss-client.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/ejb/DeploymentException.class"/>
+        <include name="org/jboss/proxy/**"/>
+        <include name="org/jboss/ejb/plugins/jrmp/server/*Stub.class"/>
+        <include name="org/jboss/ejb/plugins/jrmp/interfaces/**"/>
+        <include name="org/jboss/ejb/plugins/jrmp12/interfaces/**"/>
+        <include name="org/jboss/ejb/plugins/jrmp13/interfaces/**"/>
+        <include name="org/jboss/ejb/CacheKey.class"/>
+        <include name="org/jboss/ejb/FastKey.class"/>
+        <include name="org/jboss/monitor/client/*.class"/>
+        <include name="org/jboss/tm/TransactionPropagationContextFactory.class"/>
+        <include name="org/jboss/tm/GlobalId.class"/>
+        <include name="org/jboss/tm/usertx/client/*.class"/>
+        <include name="org/jboss/tm/usertx/interfaces/*.class"/>
+        <include name="org/jboss/tm/usertx/server/*Stub.class"/>
+        <include name="org/jboss/util/SerializableEnumeration.class"/>
+      </fileset>
+    </jar>
+
+    <!-- Build run.jar -->
+    <jar jarfile="${build.jars}/run.jar"
+         manifest="${build.etc}/run.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/Main*"/>
+      </fileset>
+    </jar>
+
+    <!-- Build verifier.jar -->
+    <jar jarfile="${build.jars}/verifier.jar"
+         manifest="${build.etc}/verifier.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/verifier/**"/>
+      </fileset>
+      <fileset dir="${build.resources}/org/jboss/verifier"/>
+    </jar>
+
+    <!-- Build rmiconnector.jar -->
+    <jar jarfile="${build.jars}/rmiconnector.jar"
+         manifest="${build.etc}/rmiconnector.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/jmx/interfaces/JMXConnector**"/>
+        <include name="org/jboss/jmx/interfaces/RMI**"/>
+        <include name="org/jboss/jmx/server/RMIConnector**"/>
+        <include name="org/jboss/jmx/server/ObjectHandler.class"/>
+        <include name="org/jboss/util/Service**"/>
+        <include name="org/jboss/logging/Log.class"/>
+        <include name="org/jboss/logging/Log$$**"/>
+        <include name="org/jboss/naming/**"/>
+
+        <!-- why ?? -->
+        <include name="test/jboss/jmx/TestServer**"/>
+      </fileset>
+    </jar>
+
+    <!-- Build deploy.jar -->
+    <jar jarfile="${build.jars}/deploy.jar"
+         manifest="${build.etc}/deploy.mf">
+      <fileset dir="${build.classes}">
+         <include name="org/jboss/jmx/client/Deployer.class"/>
+         <include name="org/jboss/jmx/interfaces/JMXAdaptor.class"/>
+         <include name="org/jboss/jmx/server/JMXAdaptorImpl_Stub.class"/>
+         <include name="org/jboss/ejb/CacheKey.class"/>
+         <include name="org/jboss/util/FastKey.class"/>
+      </fileset>
+    </jar>
+
+    <!-- Build stop.jar -->
+    <jar jarfile="${build.jars}/stop.jar"
+         manifest="${build.etc}/stop.mf">
+      <fileset dir="${build.classes}">
+         <include name="org/jboss/jmx/client/Stop.class"/>
+         <include name="org/jboss/jmx/interfaces/JMXAdaptor.class"/>
+         <include name="org/jboss/jmx/server/JMXAdaptorImpl_Stub.class"/>
+         <include name="org/jboss/ejb/CacheKey.class"/>
+         <include name="org/jboss/util/FastKey.class"/>
+      </fileset>
+    </jar>
+
+    <!-- Build connector.jar -->
+    <jar jarfile="${build.jars}/connector.jar"
+         manifest="${build.etc}/connector.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/jmx/interfaces/JMXConnector.class"/>
+        <include name="org/jboss/jmx/interfaces/JMXConnectorMBean.class"/>
+        <include name="org/jboss/jmx/interfaces/RMIConnector.class"/>
+        <include name="org/jboss/jmx/interfaces/RMINotificationListener.class"/>
+        <include name="org/jboss/jmx/client/RMIClientConnectorImpl*.class"/>
+        <include name="org/jboss/jmx/server/RMIConnectorImpl_Stub.class"/>
+        <include name="org/jboss/jmx/server/ObjectHandler.class"/>
+        <include name="org/jboss/jmx/client/ConnectorFactory*.class"/>
+        <include name="org/jboss/util/Service.class"/>
+        <include name="org/jboss/util/ServiceMBean*.class"/>
+        <include name="org/jboss/logging/Log.class"/>
+        <include name="org/jboss/logging/Log$$*.class"/>
+        <include name="org/jboss/logging/LogToCategory.class"/>
+
+        <!-- why? -->
+        <include name="test/jboss/jmx/TestClient*.class"/>
+      </fileset>
+    </jar>
+
+    <!-- Build jms-ra.rar -->
+    <jar jarfile="${build.jars}/jms-ra.rar">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/jms/ra/**"/>
+      </fileset>
+      <fileset dir="${build.resources}/org/jboss/jms/ra/">
+        <include name="**"/>
+      </fileset>
+    </jar>
+
+    <!-- HACK Build jboss-security.jar -->
+    <jar jarfile="${build.jars}/jboss-security.jar">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/security/**"/>
+      </fileset>
+    </jar>
+
+    <!-- The following might not be needed any more -->
+
+    <!-- Build jboss-metadata.jar -->
+    <jar jarfile="${build.jars}/jboss-metadata.jar">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/metadata/**"/>
+        <include name="org/jboss/ejb/DeploymentException.class"/>
+      </fileset>
+      <fileset dir="${build.etc}/conf/default">
+        <include name="standardjboss.xml"/>
+      </fileset>
+    </jar>
+
+    <!-- Build jboss-util.jar -->
+    <jar jarfile="${build.jars}/jboss-util.jar">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/util/Service.class"/>
+        <include name="org/jboss/util/ServiceMBean*"/>
+        <include name="org/jboss/util/MBeanProxy*"/>
+        <include name="org/jboss/proxy/**"/>
+        <include name="org/jboss/logging/Log.class"/>
+        <include name="org/jboss/logging/LogWriter.class"/>
+        <include name="org/jboss/monitor/MetricsConstants.class"/>
+      </fileset>
+    </jar>
+
+    <!-- Build jboss-deployer.jar -->
+    <jar jarfile="${build.jars}/jboss-deployer.jar">
+      <fileset dir="${build.classes}">
+         <include name="org/jboss/deployment/DeployerMBean*"/>
+         <include name="org/jboss/deployment/DeploymentException*"/>
+      </fileset>
+    </jar>
+
+    <!-- Build jboss-castorjdo.jar -->
+    <!-- This should move to an plugin module
+    <jar jarfile="${build.jars}/jboss-castorjdo.jar">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/jdo/castor/**"/>
+      </fileset>
+    </jar>
+    -->
+
+  </target>
+
+
+  <!-- ================================================================== -->
+  <!-- Build documents                                                    -->
+  <!-- ================================================================== -->
+
+  <!-- 
+     |  Create all generated documenation.
+     |
+     |  This target should depend on other docs-* targets for each 
+     |  different type of docuementation that is to be generated.
+    -->
+  <target name="docs" depends="docs-api, docs-static"
+	  description="Builds all documentation."/>
+
+  <!-- Javadocs is an exception, but provide a docs-api to conform. -->
+  <target name="docs-api" depends="javadocs"/>
+
+  <!-- 
+     |  Check if we need to build javadocs 
+     |
+     |  Javadocs will only be generated if one or more .java source files
+     |  is newer than the generated index.html.
+    -->
+  <target name="javadocs-check" depends="init">
+    <!-- if index.html is newer than the sources we are up to date -->
+    <uptodate property="javadoc-generated-already"
+	      targetfile="${build.api}/index.html">
+      <srcfiles dir="${source.java}" includes="**/*.java"/>
+    </uptodate>
+
+    <!-- create the directory here to prevent install/release from failing -->
+    <mkdir dir="${build.api}"/>
+  </target>	      
+
+  <!-- Generate Javadoc if we are out of date -->
+  <target name="javadocs" 
+	  depends="javadocs-check" 
+	  unless="javadoc-generated-already">
+    <javadoc packagenames="${javadoc.packages}"
+             sourcepath="${source.java}"
+             destdir="${build.api}"
+             classpathref="javadoc.classpath"
+             windowtitle="${javadoc.windowtitle}"
+	     splitindex="${javadoc.splitindex}"
+             doctitle="${javadoc.doctitle}"
+             author="${javadoc.author}"
+             version="${javadoc.version}"
+             public="${javadoc.public}"
+             package="${javadoc.package}"
+             protected="${javadoc.protected}"
+             private="${javadoc.private}"
+             use="${javadoc.use}"
+	     verbose="${javadoc.verbose}">
+      <!-- <group title="???" packages="*"/> -->
+    </javadoc>
+  </target>
+
+  <!-- Compile static documents -->
+  <target name="docs-static" depends="init">
+    <mkdir dir="${build.docs}"/>
+    <copy todir="${build.docs}" filtering="yes">
+      <fileset dir="${source.docs}">
+         <include name="**/*"/>
+      </fileset>
+    </copy>
+  </target>
+
+
+  <!-- ================================================================== -->
+  <!-- Builds a release distribution.                                     -->
+  <!-- ================================================================== -->
+
+  <target name="release" depends="all, release-dependencies"
+	  description="Builds a release distribution.">
+    <!-- Copy the generated libraries (lib/ext) -->
+    <mkdir dir="${release.lib.ext}"/>
+    <copy todir="${release.lib.ext}" filtering="no">
+      <fileset dir="${build.jars}">
+         <include name="jboss.jar"/>
+      </fileset>
+    </copy>
+
+    <!-- Copy the generated libraries (client) -->
+    <mkdir dir="${release.client}"/>
+    <copy todir="${release.client}" filtering="no">
+      <fileset dir="${build.jars}">
+         <include name="*-client.jar"/>
+         <include name="connector.jar"/>
+
+         <!-- Shouldn't these go into bin ? -->
+         <include name="stop.jar"/>
+         <include name="deploy.jar"/>
+      </fileset>
+    </copy>
+
+    <!-- Setup the deployment directory (deploy) -->
+    <mkdir dir="${release.deploy}"/>
+    <copy todir="${release.deploy}" filtering="no">
+      <fileset dir="${build.etc}">
+         <include name="deploy.txt"/>
+      </fileset>
+    </copy>
+
+    <!-- Copy the generated deployment libraries (deploy/lib) -->
+    <mkdir dir="${release.deploy.lib}"/>
+    <copy todir="${release.deploy.lib}" filtering="no">
+      <fileset dir="${build.jars}">
+         <include name="jms-ra.rar"/>
+      </fileset>
+    </copy>
+
+    <!-- Copy the generated scripts & runnable jars (bin) -->
+    <mkdir dir="${release.bin}"/>
+    <copy todir="${release.bin}" filtering="no">
+      <fileset dir="${build.bin}">
+         <include name="**/*"/>
+      </fileset>
+      <fileset dir="${build.jars}">
+         <include name="run.jar"/>
+      </fileset>
+    </copy>
+    <!-- since copy does not preserve permissions, do this here (again) -->
+    <chmod perm="+x">
+      <fileset dir="${release.bin}">
+         <include name="**/*.sh"/>
+      </fileset>
+    </chmod>
+
+    <!-- Copy the static documents (docs) -->
+    <mkdir dir="${release.docs}"/>
+    <copy todir="${release.docs}" filtering="no">
+      <fileset dir="${build.docs}">
+         <include name="**/*"/>
+      </fileset>
+    </copy>
+
+    <!-- Copy the generated javadocs (docs/api/<module>) -->
+    <mkdir dir="${release.module.api}"/>
+    <copy todir="${release.module.api}" filtering="no">
+      <fileset dir="${build.api}">
+         <include name="**/*"/>
+      </fileset>
+    </copy>
+
+    <!-- Copy the default configuration files (conf) -->
+    <mkdir dir="${release.conf}"/>
+    <copy todir="${release.conf}" filtering="no">
+      <fileset dir="${build.etc}/conf">
+         <include name="**/*"/>
+      </fileset>
+    </copy>
+
+    <!-- Setup the database directory (db) -->
+    <mkdir dir="${release.db}"/>
+    <copy todir="${release.db}" filtering="no">
+      <fileset dir="${build.etc}">
+         <include name="db.properties"/>
+      </fileset>
+    </copy>
+
+    <!-- Setup the log file directory (log) -->
+    <mkdir dir="${release.log}"/>
+    <copy todir="${release.log}" filtering="no">
+      <fileset dir="${build.etc}">
+         <include name="log.properties"/>
+      </fileset>
+    </copy>
+
+    <!-- Setup the temporary file directory (tmp) -->
+    <mkdir dir="${release.tmp}"/>
+    <copy todir="${release.tmp}" filtering="no">
+      <fileset dir="${build.etc}">
+         <include name="tmp.properties"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="release-dependencies" depends="init">
+    <mkdir dir="${release.lib}"/>
+    <copy todir="${release.lib}" filtering="no">
+      <fileset dir="${sun.jmx.lib}">
+        <include name="jmxri.jar"/>
+      </fileset>
+      <fileset dir="${sun.jaxp.lib}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${sun.jaas.lib}">
+        <include name="jaas.jar"/>
+      </fileset>
+    </copy>
+
+    <mkdir dir="${release.lib.ext}"/>
+    <copy todir="${release.lib.ext}" filtering="no">
+      <fileset dir="${sun.jndi.lib}">
+        <include name="jndi.jar"/>
+      </fileset>
+      <fileset dir="${sun.jmx.lib}">
+        <include name="jmxtools.jar"/>
+      </fileset>
+      <fileset dir="${sun.jaf.lib}">
+        <include name="activation.jar"/>
+      </fileset>
+      <fileset dir="${sun.javamail.lib}">
+        <include name="mail.jar"/>
+      </fileset>
+      <fileset dir="${sun.jts.lib}">
+        <include name="jts.jar"/>
+      </fileset>
+      <fileset dir="${apache.log4j.lib}">
+        <include name="log4j.jar"/>
+      </fileset>
+      <fileset dir="${oswego.concurrent.lib}">
+        <include name="concurrent.jar"/>
+      </fileset>
+      <fileset dir="${gjt.jpl-util.lib}">
+        <include name="*.jar"/>
+      </fileset>
+      <!-- *HACK* -->
+      <fileset dir="${hack.jsr77.lib}">
+        <include name="jsr77.jar"/>
+      </fileset>
+    </copy>
+
+    <mkdir dir="${release.client}"/>
+    <copy todir="${release.client}" filtering="no">
+      <fileset dir="${sun.jndi.lib}">
+        <include name="jndi.jar"/>
+      </fileset>
+      <fileset dir="${apache.log4j.lib}">
+        <include name="log4j.jar"/>
+      </fileset>
+      <fileset dir="${oswego.concurrent.lib}">
+        <include name="concurrent.jar"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="release-archive-prepare" depends="release">
+    <mkdir dir="${module.release}"/>
+    <property name="release.archive.basename"
+	      value="${module.release}/${release.id}"/>
+  </target>
+
+  <target name="release-zip" depends="release-archive-prepare"
+	  description="Builds a ZIP release distribution.">
+    <zip zipfile="${release.archive.basename}.zip">
+      <fileset dir="${module.release}">
+        <include name="${release.id}/**"/>
+      </fileset>
+    </zip>
+  </target>
+
+  <target name="release-tar" depends="release-archive-prepare"
+	  description="Builds a TAR release distribution.">
+    <tar tarfile="${release.archive.basename}.tar" longfile="gnu"
+	 basedir="${module.release}"
+	 includes="${release.id}/**">
+    </tar>
+  </target>
+
+  <target name="release-tgz" depends="release-tar"
+	  description="Builds a TAR-GZIP release distribution.">
+    <gzip src="${release.archive.basename}.tar"
+	  zipfile="${release.archive.basename}.tgz"/>
+  </target>
+
+  <target name="release-all" depends="release-zip, release-tgz"
+	  description="Builds a distribution for each archive type."/>
+
+
+  <!-- ================================================================== -->
+  <!-- Run tests                                                          -->
+  <!-- ================================================================== -->
+
+  <target name="tests" depends="tests-junit"
+	  description="Execute all tests."/>
+
+  <target name="tests-junit" depends="jars">
+    <mkdir dir="${build.reports}"/>
+    <junit dir="${module.output}"
+	   printsummary="${junit.printsummary}" 
+	   haltonerror="${junit.haltonerror}" 
+	   haltonfailure="${junit.haltonfailure}" 
+	   fork="${junit.fork}"
+	   timeout="${junit.timeout}"
+	   jvm="${junit.jvm}">
+
+      <!-- junit.jvm.options must have a valid value -->
+      <jvmarg value="${junit.jvm.options}"/>
+      <sysproperty key="jbosstest.deploy.dir" file="${build.jars}"/>
+
+      <classpath>
+        <pathelement location="${build.classes}"/>
+        <path refid="javac.classpath"/>
+        <path refid="apache.ant.classpath"/>
+        <path refid="apache.ant.ext.classpath"/>
+      </classpath>
+
+      <formatter type="${junit.formatter.type}"
+		 usefile="${junit.formatter.usefile}"/>
+
+      <batchtest todir="${build.reports}"
+		 haltonerror="${junit.batchtest.haltonerror}" 
+		 haltonfailure="${junit.batchtest.haltonfailure}" 
+		 fork="${junit.batchtest.fork}">
+
+        <fileset dir="${build.classes}">
+          <include name="**/Test*.class"/>
+          <include name="**/*Test.class"/>
+          <include name="**/AllJUnitTests.class"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+
+  <!-- ================================================================== -->
+  <!-- Cleans up generated stuff                                          -->
+  <!-- ================================================================== -->
+
+  <!-- Clean up all build output -->
+  <target name="clean" depends="disable-configure, disable-init-hook, init"
+	  description="Cleans up most generated files.">
+    <delete dir="${module.build}"/>
+    <delete dir="${module.release}"/>
+    <delete dir="${module.output}"/>
+  </target>
+
+  <!-- Clean up all generated files -->
+  <target name="clobber" depends="clean"
+	  description="Cleans up all generated files.">
+    <!-- Clean up configure generated files -->
+    <delete file="${module.root}/local.properties" quiet="true"/>
+  </target>
+
+
+  <!-- ================================================================== -->
+  <!-- Other Targets                                                      -->
+  <!-- ================================================================== -->
+
+  <target name="help">
+    <projecthelp>
+      <header><![CDATA[
+  The ${module.Name} module.
+]]></header>
+      <footer><![CDATA[
+    -projecthelp for all targets
+    -help for full options
+]]></footer>
+    </projecthelp>
+  </target>
+
+  <target name="main" depends="most"
+	  description="Executes the default target (most)."/>
+    
+  <target name="all" depends="jars, docs"
+	  description="Builds everything."/>
+
+  <target name="most" depends="jars"
+	  description="Builds almost everything."/>
+
+  <target name="min" depends="compile"
+	  description="Builds a minimal subset."/>
+
+</project>

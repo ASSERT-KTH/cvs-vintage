@@ -93,6 +93,7 @@
     <attribute name="Trace">false</attribute>
   </mbean>
 
+  <!-- FIXME Having a little trouble with this under buildmagic FIXME
   <mbean code="org.jboss.jdbc.XADataSourceLoader" name="DefaultDomain:service=XADataSource,name=InstantDB">
     <attribute name="PoolName">InstantDB</attribute>
     <attribute name="DataSourceClass">org.jboss.pool.jdbc.xa.wrapper.XADataSourceImpl</attribute>
@@ -113,6 +114,7 @@
     <attribute name="MaxIdleTimeoutPercent">1.0</attribute>
     <attribute name="MinSize">0</attribute>
   </mbean>
+  -->
 
   <mbean code="org.jboss.jdbc.XADataSourceLoader" name="DefaultDomain:service=XADataSource,name=DefaultDS">
     <attribute name="PoolName">DefaultDS</attribute>

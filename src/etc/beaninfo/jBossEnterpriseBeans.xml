@@ -1,9 +1,0 @@
-<bean 
-  class="org.jboss.ejb.deployment.jBossEnterpriseBeans"
-  displayname="Application settings"
-  iconcolor16="/images/container.gif">
-
-  <method name="addJndiPrefix" displayname="Add JNDI name prefix">
-    <parameter displayname="JNDI prefix"/>
-  </method>
-</bean>

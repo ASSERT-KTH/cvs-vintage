@@ -1,7 +1,0 @@
-<bean
-  class="org.jboss.ejb.deployment.StatefulSessionInstanceCacheConfiguration"
-  displayname="Instance cache"
-  iconcolor16="/images/container.gif"
-  stopclass="org.jboss.ejb.deployment.InstanceCacheSupportConfiguration">
-</bean>
-
