@@ -67,26 +67,21 @@ public class ScopedURLClassLoader extends URLClassLoader {
     
     /** redirects loadClass in case that it could not be found locally
      * @param name name of the class
-     *
      * @param resolve whether the class should be resolved
-     *
      * @throws ClassNotFoundException if the class could not be found
-     *
      * @return the found java class
-     *
      */
     protected Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
         try{
             return super.loadClass(name,resolve);
         } catch(ClassNotFoundException e) {
             // redirect
-            return scope.loadClass(name,this,resolve);
+            return scope.loadClass(name,resolve,this);
         }
     }
             
     /** exposes the proper getResource call
      * @param name name of the resource
-     *
      * @return URL pointing to the resource, null if it could not be found
      *
      */

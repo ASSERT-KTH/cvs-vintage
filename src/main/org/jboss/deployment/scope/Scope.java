@@ -122,7 +122,7 @@ public class Scope {
     }
     
     /** loads a class on behalf of a given classloader */
-    public Class loadClass(String className, ScopedURLClassLoader source, boolean resolve)
+    public Class loadClass(String className, boolean resolve, ScopedURLClassLoader source)
     throws ClassNotFoundException {
         
         // short look into the class location cache, is synchronized in
