@@ -158,10 +158,17 @@ public class Context {
     // Maps specified in web.xml ( String url -> ServletWrapper  )
     private Hashtable mappings = new Hashtable();
     
-    // Maps specified in web.xml ( String->ServletWrapper )
+    // XXX deprecated, will be removed.
+    //Maps specified in web.xml ( String->ServletWrapper )
     private Hashtable prefixMappedServlets = new Hashtable();
     private Hashtable extensionMappedServlets = new Hashtable();
     private Hashtable pathMappedServlets = new Hashtable();
+
+    // Authentication properties
+    String authMethod;
+    String realmName;
+    String formLoginPage;
+    String formErrorPage;
 
     int debug=0;
     
@@ -689,6 +696,38 @@ public class Context {
         return (String)errorPages.get(errorCode);
     }
 
+
+    /** Authentication method, if any specified
+     */
+    public String getAuthMethod() {
+	return authMethod;
+    }
+
+    /** Realm to be used
+     */
+    public String getRealmName() {
+	return realmName;
+    }
+
+    public String getFormLoginPage() {
+	return formLoginPage;
+    }
+
+    public String getFormErrorPage() {
+	return formErrorPage;
+    }
+
+    public void setLoginConfig( String authMethod, String realmName,
+				String formLoginPage, String formErrorPage)
+    {
+	System.out.println("Login config: " + authMethod + " " + realmName + " " +
+			   formLoginPage + " " + formErrorPage);
+	this.authMethod=authMethod;
+	this.realmName=realmName;
+	this.formLoginPage=formLoginPage;
+	this.formErrorPage=formErrorPage;
+    }   
+    
     ServletContextFacade getFacade() {
         if(contextFacade==null )
 	    contextFacade = new ServletContextFacade(contextM, this);

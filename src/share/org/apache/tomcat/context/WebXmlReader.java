@@ -70,6 +70,12 @@ public class WebXmlReader extends BaseContextInterceptor  implements ContextInte
 	    xh.addRule("web-app/env-entry/env-entry-value", xh.methodParam(2) ); 
 	    xh.addRule("web-app/env-entry/description", xh.methodParam(3) ); 
 	    
+	    xh.addRule("web-app/login-config", xh.methodSetter("setLoginConfig", 4) ); 
+	    xh.addRule("web-app/login-config/auth-method", xh.methodParam(0) ); 
+	    xh.addRule("web-app/login-config/realm-name", xh.methodParam(1) ); 
+	    xh.addRule("web-app/login-config/form-login-config/form-login-page", xh.methodParam(2) ); 
+	    xh.addRule("web-app/login-config/form-login-config/form-error-page", xh.methodParam(3) ); 
+	    
 	    xh.addRule("web-app/mime-mapping", xh.methodSetter("addContentType", 2) ); 
 	    xh.addRule("web-app/mime-mapping/extension", xh.methodParam(0) ); 
 	    xh.addRule("web-app/mime-mapping/mime-type", xh.methodParam(1) );
