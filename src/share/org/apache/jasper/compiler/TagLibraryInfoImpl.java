@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.23 2000/07/28 21:41:44 jiricka Exp $
- * $Revision: 1.23 $
- * $Date: 2000/07/28 21:41:44 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.24 2000/08/04 14:57:19 jiricka Exp $
+ * $Revision: 1.24 $
+ * $Date: 2000/08/04 14:57:19 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -144,7 +144,8 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
             return ctxt.getResourceAsStream(uri);
         } else {
             // assume it translates to a real file, and use getRealPath
-            return new FileInputStream(ctxt.getRealPath(uri));
+            String real = ctxt.getRealPath(uri);
+            return (real == null) ? null : new FileInputStream(real);
         }
     }
 
