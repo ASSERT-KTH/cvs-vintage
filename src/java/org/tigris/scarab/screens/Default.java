@@ -73,7 +73,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.36 2001/12/31 23:45:07 elicia Exp $
+ * @version $Id: Default.java,v 1.37 2002/01/11 18:10:07 jmcnally Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -205,12 +205,8 @@ public class Default extends TemplateSecureScreen
 
     private static void setTargetLogin(RunData data)
     {
-        // Note: we need to replace '/' with ',' so that 
-        //       the hidden input field will have the right
-        //       value for ParameterParser to parse.
-        getTemplateContext(data).put( ScarabConstants.NEXT_TEMPLATE,
-                                      ScarabPage.getScreenTemplate(data)
-                                          .replace('/',',') );
+        getTemplateContext(data).put( ScarabConstants.NEXT_TEMPLATE, 
+            data.getParameters().getString("template") );
         setTarget(data, "Login.vm");        
     }
 }
