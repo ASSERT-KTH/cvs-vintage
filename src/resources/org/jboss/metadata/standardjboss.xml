@@ -29,19 +29,21 @@
 	 		<container-name>jdk1.2.2 CMP EntityBean</container-name>
 	 		<call-logging>false</call-logging>
 			<container-invoker>org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker</container-invoker>
-			<instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
-			<instance-cache>org.jboss.ejb.plugins.NoPassivationEntityInstanceCache</instance-cache>
-			<persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
-			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-			<container-invoker-conf>
-				<Optimized>False</Optimized>
-			</container-invoker-conf>
-			<container-cache-conf />
-			<container-pool-conf>
-				<MaximumSize>100</MaximumSize>
-				<MinimumSize>10</MinimumSize>
-			</container-pool-conf>
-			<commit-option>A</commit-option>
+                        <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
+                        <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
+                        <persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
+                        <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+                        <container-invoker-conf>
+                                <Optimized>False</Optimized>
+                        </container-invoker-conf>
+                        <container-cache-conf>
+                                <cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
+                        </container-cache-conf>
+                        <container-pool-conf>
+                                <MaximumSize>100</MaximumSize>
+                                <MinimumSize>10</MinimumSize>
+                        </container-pool-conf>
+                        <commit-option>A</commit-option>
         </container-configuration>
 		
 		<container-configuration>
@@ -97,13 +99,16 @@
 			<container-name>jdk1.2.2 Stateful SessionBean</container-name>
 			<call-logging>false</call-logging>
 			<container-invoker>org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker</container-invoker>
-			<instance-cache>org.jboss.ejb.plugins.NoPassivationStatefulSessionInstanceCache</instance-cache>
-			<persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
-			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-			<container-invoker-conf>
-			<Optimized>False</Optimized>
-			</container-invoker-conf>
-		</container-configuration>
+		        <instance-cache>org.jboss.ejb.plugins.StatefulSessionInstanceCache</instance-cache>
+                        <persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
+                        <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+                        <container-invoker-conf>
+                        <Optimized>False</Optimized>
+                        </container-invoker-conf>
+                        <container-cache-conf>
+                                <cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
+                        </container-cache-conf>
+                </container-configuration>
 		
        	<container-configuration>
 			<container-name>Standard BMP EntityBean</container-name>
@@ -131,19 +136,21 @@
 		 	<call-logging>false</call-logging>
 		 	<container-invoker>org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker</container-invoker>
 		 	<instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
-		 	<instance-cache>org.jboss.ejb.plugins.NoPassivationEntityInstanceCache</instance-cache>
-		 	<persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
-		 	<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-		 	<container-invoker-conf>
-		   		<Optimized>False</Optimized>
-		 	</container-invoker-conf>
-		 	<container-cache-conf />
-		 	<container-pool-conf>
-		   	<MaximumSize>100</MaximumSize>
-		   	<MinimumSize>10</MinimumSize>
-		 	</container-pool-conf>
-		 	<commit-option>A</commit-option>
-		</container-configuration>
+		        <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
+                        <persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
+                        <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+                        <container-invoker-conf>
+                                <Optimized>False</Optimized>
+                        </container-invoker-conf>
+                        <container-cache-conf>
+                                <cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
+                        </container-cache-conf>
+                        <container-pool-conf>
+                        <MaximumSize>100</MaximumSize>
+                        <MinimumSize>10</MinimumSize>
+                        </container-pool-conf>
+                        <commit-option>A</commit-option>
+                </container-configuration>
     
 	</container-configurations>
     <resource-managers />
