@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.54 2002/12/17 16:17:09 jon Exp $
+  * @version $Id: Attribute.java,v 1.55 2003/01/18 19:35:26 jon Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -104,7 +104,9 @@ public class Attribute
         "getOrderedROptionOptionList";
 
     private static final String SELECT_ONE = "select-one";
-    
+    private static final String USER_ATTRIBUTE = "user";
+    private static final String[] TEXT_TYPES = {"string", "email", "long-string"};
+
     private List orderedROptionOptionList = null;
     private List orderedAttributeOptionList = null;
     private List parentChildAttributeOptions = null;
@@ -193,17 +195,18 @@ public class Attribute
     /**
      * Helper method that takes a NumberKey
      */
-    public String getCreatedUserName () throws Exception
+    public String getCreatedUserName() throws Exception
     {
-        String userId = Integer.toString(getCreatedBy());
+        String createdBy = Integer.toString(getCreatedBy());
         String userName = null;
-        if (userId.equals("0"))
+        if ("0".equals(createdBy))
         {
+            // FIXME: l10n
             userName = "Default";
         }
         else
         {
-            ScarabUser su = ScarabUserManager.getInstance(new NumberKey(userId));
+            ScarabUser su = ScarabUserManager.getInstance(new NumberKey(createdBy));
             userName = su.getFirstName() + su.getLastName();
         }
         return userName;
@@ -289,7 +292,7 @@ public class Attribute
         if ( getTypeId() != null ) 
         {
             return getAttributeType().getAttributeClass().getName()
-                .equals("select-one");
+                .equals(SELECT_ONE);
         }
         return false;
     }
@@ -300,7 +303,7 @@ public class Attribute
         if ( getTypeId() != null ) 
         {
             return getAttributeType().getAttributeClass().getName()
-                .equals("user");
+                .equals(USER_ATTRIBUTE);
         }
         return false;
     }
@@ -308,13 +311,12 @@ public class Attribute
     public boolean isTextAttribute()
         throws Exception
     {
-        String[] textTypes = {"string", "email", "long-string"};
         boolean isText = false;
         if ( getTypeId() != null ) 
         {
-            for ( int i=0; i<textTypes.length && !isText; i++ ) 
+            for ( int i=0; i<TEXT_TYPES.length && !isText; i++ ) 
             {
-                isText = textTypes[i].equals(getAttributeType().getName());
+                isText = TEXT_TYPES[i].equals(getAttributeType().getName());
             }
         }
         return isText;
