@@ -1,18 +1,13 @@
 package org.columba.mail.gui.message;
 
 import java.awt.Insets;
-import java.net.URL;
+import java.io.StringReader;
 
-import javax.swing.JEditorPane;
 import javax.swing.JTextPane;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 
 import org.columba.mail.gui.message.util.DocumentParser;
-import org.columba.mail.gui.util.URLController;
 
 /**
  * @author freddy
@@ -31,26 +26,36 @@ public class BodyTextViewer extends JTextPane {
 
 	private DocumentParser parser;
 
+	private HTMLEditorKit htmlEditorKit;
+
 	public BodyTextViewer() {
 		setMargin(new Insets(5, 5, 5, 5));
 		setEditable(false);
-		setEditorKit(new HTMLEditorKit());
+
+		htmlEditorKit = new HTMLEditorKit();
+		setEditorKit(htmlEditorKit);
 
 		parser = new DocumentParser();
 		
 		
-	}
 
-	
+	}
 
 	public void setBodyText(String bodyText, boolean html) {
 		if (html) {
 			try {
-
+				
 				String validated = parser.validateHTMLString(bodyText);
 
-				setText(validated);
+				//htmlEditorKit.write(new StringReader(validated),getDocument(),0,validated.length());
+				//setText(validated);
 
+				getDocument().remove(0,getDocument().getLength()-1);
+				
+				((HTMLDocument) getDocument()).getParser().parse(
+					new StringReader(validated),
+					((HTMLDocument) getDocument()).getReader(0),
+					true);
 				setCaretPosition(0);
 
 			} catch (Exception e) {
@@ -85,6 +90,7 @@ public class BodyTextViewer extends JTextPane {
 
 				buf.replace(pos, pos + 1, "<br>");
 
+				pos+=3;
 			}
 
 			pos++;
@@ -93,8 +99,5 @@ public class BodyTextViewer extends JTextPane {
 		buf.append("</P></BODY></HTML>");
 
 	}
-
-	
-	
 
 }
