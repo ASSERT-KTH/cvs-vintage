@@ -24,12 +24,12 @@ $page.setTitle("Create artifact type")
 <div class="axial">
   <table border="0" cellspacing="2" cellpadding="3">
     <tr>
-    <th>Artifact type name</th>
+    <th>* Artifact type name</th>
     <td><input type="text" size="25" name="$group.Name.Key" value="$!group.Name.Value"/>
     </td>
     </tr>
     <tr>
-    <th>Artifact type desc</th>
+    <th>* Artifact type desc</th>
     <td>#textAreaMedium("$group.Description.Key" $group.Description.Value)</td>
     </tr>
   </table>

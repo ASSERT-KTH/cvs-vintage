@@ -43,9 +43,9 @@ $page.setTitle("Select global attribute")
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th nowrap="nowrap"></th>
-<th>Input type</th>
 <th>Attribute name</th>
 <th>Description</th>
+<th>Input type</th>
 <th>Author</th>
 <th>Creation date</th>
 </tr>
@@ -53,9 +53,9 @@ $page.setTitle("Select global attribute")
 #foreach ($attribute in $attributes)
  #indexedRows($velocityCount)
   <td><input type="radio" name="$attGroup.Id.Key" value="$attribute.AttributeId" /></td>
-  <td>$attribute.AttributeType.Name</td>
   <td>$attribute.Name</td>
   <td>$attribute.Description</td>
+  <td>$attribute.AttributeType.Name</td>
   #set ($createdUser = $scarabR.getUser($attribute.CreatedBy))
   <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
   <td>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
