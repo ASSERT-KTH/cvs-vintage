@@ -65,7 +65,7 @@ import org.w3c.dom.NodeList;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -320,6 +320,10 @@ public class ProxyFactory
          context.setValue(InvocationKey.EJB_METADATA, ejbMetaData);
          context.setInvokerProxyBinding(invokerMetaData.getName());
 
+         // Tell the client container that it should use by value call semantics
+         BeanMetaData beanMetaData = container.getBeanMetaData();
+         context.setValue(InvocationKey.CALL_BY_VALUE, new Boolean(beanMetaData.isCallByValue()));
+
          ClientContainer client = new ClientContainer(context);
          loadInterceptorChain(homeInterceptorClasses, client);
          
@@ -346,6 +350,10 @@ public class ProxyFactory
             context.setInvoker(beanInvoker);
             context.setInvokerProxyBinding(invokerMetaData.getName());
             context.setValue(InvocationKey.EJB_HOME, home);
+
+            // Tell the client container that it should use by value call semantics
+            context.setValue(InvocationKey.CALL_BY_VALUE, new Boolean(beanMetaData.isCallByValue()));
+
             client = new ClientContainer(context);
             
             loadInterceptorChain(beanInterceptorClasses, client);
@@ -463,6 +471,10 @@ public class ProxyFactory
       context.setInvokerProxyBinding(invokerMetaData.getName());
       context.setValue(InvocationKey.EJB_HOME, home);
 
+      // Tell the client container that it should use by value call semantics
+      BeanMetaData beanMetaData = container.getBeanMetaData();
+      context.setValue(InvocationKey.CALL_BY_VALUE, new Boolean(beanMetaData.isCallByValue()));
+
       ClientContainer client = new ClientContainer(context);
       try
       {
@@ -497,6 +509,10 @@ public class ProxyFactory
       context.setInvoker(beanInvoker);
       context.setInvokerProxyBinding(invokerMetaData.getName());
       context.setValue(InvocationKey.EJB_HOME, home);
+
+      // Tell the client container that it should use by value call semantics
+      BeanMetaData beanMetaData = container.getBeanMetaData();
+      context.setValue(InvocationKey.CALL_BY_VALUE, new Boolean(beanMetaData.isCallByValue()));
 
       ClientContainer client = new ClientContainer(context);
       
@@ -538,6 +554,10 @@ public class ProxyFactory
          context.setInvokerProxyBinding(invokerMetaData.getName());
          context.setValue(InvocationKey.EJB_HOME, home);
 
+         // Tell the client container that it should use by value call semantics
+         BeanMetaData beanMetaData = container.getBeanMetaData();
+         context.setValue(InvocationKey.CALL_BY_VALUE, new Boolean(beanMetaData.isCallByValue()));
+         
          ClientContainer client = new ClientContainer(context);
       
          try
