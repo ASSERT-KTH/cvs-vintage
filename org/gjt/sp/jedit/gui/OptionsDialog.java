@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.19 2002/12/18 20:49:20 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.20 2002/12/24 23:17:50 spestov Exp $
  */
 public abstract class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -245,6 +245,7 @@ public abstract class OptionsDialog extends EnhancedDialog
 		setContentPane(content);
 
 		JPanel stage = new JPanel(new BorderLayout(6,6));
+		stage.setMinimumSize(new Dimension(200,100));
 
 		// currentLabel displays the path of the currently selected
 		// OptionPane at the top of the stage area

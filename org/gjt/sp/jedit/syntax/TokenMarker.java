@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.43 2002/10/07 21:13:20 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.44 2002/12/24 23:17:50 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -228,8 +228,7 @@ main_loop:	for(pos = line.offset; pos < lineLength; pos++)
 
 				handleNoWordBreak();
 
-				if(keywords != null)
-					markKeyword(false);
+				markKeyword(false);
 
 				if(lastOffset != pos)
 				{
