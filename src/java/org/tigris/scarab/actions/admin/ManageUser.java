@@ -72,20 +72,20 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImpl;
 import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.actions.base.ScarabTemplateAction;
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.tools.ScarabRequestTool;
 
 
 /**
- * This class is responsible for dealing with the ManageUserSearch
- * Action.
+ * This class is responsible for dealing with the user management
+ * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageUser.java,v 1.1 2001/11/27 18:45:19 dr Exp $
+ * @version $Id: ManageUser.java,v 1.2 2001/12/12 19:12:43 dr Exp $
  */
-public class ManageUser extends ScarabTemplateAction
+public class ManageUser extends RequireLoginFirstAction
 {
-        /**
+    /**
      * This manages clicking the Add User button
      */
     public void doAdduser( RunData data, TemplateContext context ) throws Exception
@@ -176,72 +176,73 @@ public class ManageUser extends ScarabTemplateAction
             if (user != null && user instanceof ScarabUser)
             {
                 register = intake.get("Register",
-                              ((ScarabUser)user).getQueryKey(), false);
+                                          ((ScarabUser)user).getQueryKey(), false);
             }
             else
             {
                 register = intake.get("Register",
-                              IntakeTool.DEFAULT_KEY, false);
+                                      IntakeTool.DEFAULT_KEY, false);
             }
             
             
             // if we got here, then all must be good...
             try
             {
-                    su = (ScarabUser) TurbineSecurity
-                        .getUser(data.getParameters().getString("username"));
-                    if ((su != null) && (register != null))
+                su = (ScarabUser) TurbineSecurity
+                    .getUser(data.getParameters().getString("username"));
+                if ((su != null) && (register != null))
+                {
+                    // update the first name, last name, email and username
+                    su.setFirstName(register.get("FirstName").toString());
+                    su.setLastName(register.get("LastName").toString());
+                    
+                    String newEmail = register.get("Email").toString();
+                    if (!newEmail.equals(data.getParameters().getString("username")))
                     {
-                        // update the first name, last name, email and username
-                        su.setFirstName(register.get("FirstName").toString());
-                        su.setLastName(register.get("LastName").toString());
+                        su.setEmail(newEmail);
+                        //su.setUserName(newEmail);
                         
-                        String newEmail = register.get("Email").toString();
-                        if (!newEmail.equals(data.getParameters().getString("username")))
+                        if (!ScarabUserImplPeer.checkExists(su))
                         {
-                            su.setEmail(newEmail);
-                            //su.setUserName(newEmail);
-                            
-                            if (!ScarabUserImplPeer.checkExists(su))
-                            {
-                                setTarget(data, template);
-                                data.setMessage(
-                                    "Sorry, a user with that email address [" + 
-                                    newEmail + "] already exists!");
+                            setTarget(data, template);
+                            data.setMessage(
+                                            "Sorry, a user with that email address [" + 
+                                                newEmail + "] already exists!");
                             data.getParameters().setString("state","showedituser");
-                                return;
-                            }
+                            return;
                         }
-    
-                        // only update their password if the field is non-empty, 
-                        // and then make sure they change the password at next login
-                        String password = data.getParameters()
-                            .getString("editpassword");
-                        if ((password != null) && (!password.trim().equals("")))
-                        {
-                        //su.setPassword(password.trim());
-                        TurbineSecurity.forcePassword(su, password);
-                            su.setPasswordExpire(Calendar.getInstance());                        
-                        }
+                    }
+                    TurbineSecurity.saveUser(su);
+                    
+                    // only update their password if the field is non-empty, 
+                    // and then make sure they change the password at next login
+                    String password = data.getParameters()
+                        .getString("editpassword");
+                    if ((password != null) && (!password.trim().equals("")))
+                    {
+                        su.setPasswordExpire(Calendar.getInstance());                        
                         TurbineSecurity.saveUser(su);
                         
-                        data.setMessage("SUCCESS: changes to the user have " + 
-                            " been saved [username: " + 
-                            register.get("Email").toString() +"]");
-                        data.getParameters().setString("state","showedituser");
-                        data.getParameters().setString("lastAction","editeduser");
-                        
-                        setTarget(data, nextTemplate);
-                        return;
+                        TurbineSecurity.forcePassword(su, password.trim());
                     }
-                    else
-                    {
-                        data.setMessage("ERROR: couldn't retrieve the user " + 
-                            " from the DB [username: " + 
-                            register.get("Email").toString() +"]");
-                        data.getParameters().setString("state","showedituser");                    
-                    }
+                    
+                    data.setMessage("SUCCESS: changes to the user have " + 
+                                        " been saved [username: " + 
+                                        register.get("Email").toString() +"]");
+                    data.getParameters().setString("state","showedituser");
+                    data.getParameters().setString("lastAction","editeduser");
+                    
+                    setTarget(data, nextTemplate);
+                    return;
                 }
+                else
+                {
+                    data.setMessage("ERROR: couldn't retrieve the user " + 
+                                        " from the DB [username: " + 
+                                        register.get("Email").toString() +"]");
+                    data.getParameters().setString("state","showedituser");                    
+                }
+            }
             catch (Exception e)
             {
                 setTarget(data, template);
@@ -258,15 +259,18 @@ public class ManageUser extends ScarabTemplateAction
             data.getParameters().setString("lastAction","");
         }
     }
-
+    
     public void doDeleteuser( RunData data, TemplateContext context )
         throws Exception
     {
         data.setMessage("SUCCESS (sorta): the user <b>SHOULD</b> have been " + 
-            "deleted [username: " + data.getParameters()
-            .getString("username") +"]");
+                            "deleted [username: " + data.getParameters()
+                            .getString("username") +"]");
+        setTarget(data, data.getParameters()
+                      .getString(ScarabConstants.NEXT_TEMPLATE, "admin,AdminIndex.vm"));
+        
     }
-
+    
     
     /**
      * This manages clicking the 'Update Roles' button
@@ -305,7 +309,7 @@ public class ManageUser extends ScarabTemplateAction
             }
         }
     }
-
+    
     
     /**
      This manages clicking the Cancel button
@@ -315,7 +319,7 @@ public class ManageUser extends ScarabTemplateAction
         setTarget(data, data.getParameters()
                       .getString(ScarabConstants.CANCEL_TEMPLATE, "admin,AdminIndex.vm"));
     }
-
+    
     
     
     
@@ -359,7 +363,7 @@ public class ManageUser extends ScarabTemplateAction
     {
         setTarget(data, "admin,AddUser.vm");
     }
-
+    
     /**
      calls doCancel()
      */
@@ -369,3 +373,4 @@ public class ManageUser extends ScarabTemplateAction
         System.out.println("doPerform();");
     }
 }
+
