@@ -98,7 +98,7 @@ import org.tigris.scarab.om.AttributeManager;
  * </report>
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ReportDefinition.java,v 1.9 2003/03/28 00:00:16 jon Exp $
+ * @version $Id: ReportDefinition.java,v 1.10 2003/05/19 23:40:24 dlr Exp $
  */
 public class ReportDefinition
     implements java.io.Serializable
@@ -554,7 +554,7 @@ public class ReportDefinition
             sb.setLength(sb.length() - 2);
             summary = sb.toString();
         }
-        // date ranges are not implemented yet.
+        // FIXME: Date ranges are not implemented yet.
         else if (heading.getReportDates() != null 
                  && !heading.getReportDates().isEmpty())
             //|| heading.getReportDateRanges() != null) 
