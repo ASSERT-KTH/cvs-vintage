@@ -382,14 +382,7 @@ public class Response {
     }
 
     public void setBufferSize(int size) throws IllegalStateException {
-	// Force the PrintWriter to flush the data to the OutputStream.
-	//	if (usingWriter == true && writer != null ) writer.flush();
-        try{
-            oBuffer.flushChars();
-        }catch(IOException ex){
-                ;
-        }
-	if( oBuffer.getBytesWritten() >0) {
+	if( !oBuffer.isNew() ) {
 	    throw new IllegalStateException ( sm.getString("servletOutputStreamImpl.setbuffer.ise"));
 	}
 	oBuffer.setBufferSize( size );
