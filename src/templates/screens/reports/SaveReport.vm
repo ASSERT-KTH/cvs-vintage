@@ -31,13 +31,11 @@ Go to your $link.setPage("ReportList.vm").setLabel("saved reports list").
      #textAreaMedium("$intakeReport.Description.Key" $intakeReport.Description)
    </td>
   </tr>
-#if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
   <tr>
    <th width="120">Availability</th>
    <td>#reportScopeSelectBox ($intakeReport)
    </td>
   </tr>
-#end
   <tr>
    <th width="120">Module</th>
    <td>$module.Name</td>
