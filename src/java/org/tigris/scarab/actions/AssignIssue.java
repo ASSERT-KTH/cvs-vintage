@@ -85,7 +85,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.75 2002/12/24 22:54:32 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.76 2002/12/28 00:09:45 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -371,7 +371,7 @@ public class AssignIssue extends BaseModifyIssue
         String[] replyToUser = module.getSystemEmail();
         String template = Turbine.getConfiguration().
            getString("scarab.email.assignissue.template",
-                     "email/AssignIssue.vm");
+                     "email/ModifyIssue.vm");
         Object[] subjArgs = {
             issue.getModule().getRealName().toUpperCase(), 
             issue.getUniqueId(), assignee.getUserName()
