@@ -85,7 +85,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.76 2002/12/28 00:09:45 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.77 2002/12/28 03:04:20 jon Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -277,13 +277,8 @@ public class AssignIssue extends BaseModifyIssue
                                                   activitySet,
                                                   assignee, assigner, 
                                                   oldAttVal, newAttr, attachment);
-                            actionString = issue.getUserAttributeChangeString(
-                                                  assignee, assigner,
-                                                  oldAttr,
-                                                  newAttr);
 
-                            if (!notify(context, issue, assignee, assigner, 
-                                        actionString))
+                            if (!notify(activitySet, context, issue, assignee, assigner))
                             {
                                 scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
                             }
@@ -295,11 +290,8 @@ public class AssignIssue extends BaseModifyIssue
                 {
                     activitySet = issue.assignUser(activitySet, assignee, assigner,  
                                                    newAttr, attachment);
-                    
-                    // Notification email
-                    actionString = issue.getAssignUserChangeString(assigner, 
-                                                                   assignee, newAttr);
-                    if (!notify(context, issue, assignee, assigner, actionString))
+
+                    if (!notify(activitySet, context, issue, assignee, assigner))
                     {
                          scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
                     }
@@ -327,10 +319,7 @@ public class AssignIssue extends BaseModifyIssue
                     // delete the user
                     activitySet = issue.deleteUser(activitySet, assignee, 
                                                    assigner, oldAttVal, attachment);
-                    actionString = issue.getUserDeleteString(assigner, assignee, 
-                                                             oldAttr);
-                    if (!notify(context, issue, assignee, 
-                                assigner, actionString))
+                    if (!notify(activitySet, context, issue, assignee, assigner))
                     {
                         scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
                     }
@@ -344,7 +333,7 @@ public class AssignIssue extends BaseModifyIssue
             scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
         }
     }
-     
+
     /**
      * Takes care of giving an email notice about an issue to a list of users 
      * with a comment.
@@ -354,9 +343,9 @@ public class AssignIssue extends BaseModifyIssue
      * @param assigner a <code>ScarabUser</code> user assigned.
      * @param action <code>String</code> text to email to others.
      */
-    private boolean notify(TemplateContext context, Issue issue, 
-                           ScarabUser assignee, ScarabUser assigner,
-                           String actionString)     
+    private boolean notify(ActivitySet activitySet, TemplateContext context,
+                           Issue issue, 
+                           ScarabUser assignee, ScarabUser assigner)
         throws Exception
     {
         if (issue == null)
@@ -364,11 +353,8 @@ public class AssignIssue extends BaseModifyIssue
             return false;
         }
 
-        boolean success = true;
-        Module module = issue.getModule();
         context.put("issue", issue);
 
-        String[] replyToUser = module.getSystemEmail();
         String template = Turbine.getConfiguration().
            getString("scarab.email.assignissue.template",
                      "email/ModifyIssue.vm");
@@ -381,39 +367,20 @@ public class AssignIssue extends BaseModifyIssue
                 Locale.getDefault(),
                 "AssignIssueEmailSubject", subjArgs);
 
-        // email users associated with issue as well as the assignee
-        context.put("actionString", actionString);
         List toUsers = issue.getUsersToEmail(AttributePeer.EMAIL_TO);
         List ccUsers = issue.getUsersToEmail(AttributePeer.CC_TO);
-        boolean assigneeIncluded = false;
-        for (int i=0; i<toUsers.size(); i++)
-        {
-            ScarabUser su = (ScarabUser)toUsers.get(i);
-            if (su.equals(assignee))
-            {
-                assigneeIncluded = true;
-            }
-        }
+        
+        // add the assignee to the to List
+        boolean assigneeIncluded = toUsers.contains(assignee);
         if (!assigneeIncluded) 
         {
             toUsers.add(assignee);
         }
         // assignee will be in to list so remove them from cc 
-        for (int i=0; i<ccUsers.size(); i++)
-        {
-            ScarabUser su = (ScarabUser)ccUsers.get(i);
-            if (su.equals(assignee))
-            {
-                ccUsers.remove(su);  
-            }
-        }
-        
-        if (!Email.sendEmail(new ContextAdapter(context), module, assigner, 
-                            replyToUser, toUsers, ccUsers, subject, template))
-        {
-            success = false;
-        }
-        return success;
+        ccUsers.remove(assignee);
+
+        return activitySet.sendEmail(new ContextAdapter(context), issue, 
+                                  toUsers, ccUsers, subject, template);
     }
 
     /**
