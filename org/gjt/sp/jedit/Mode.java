@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * One instance of this class is created for each supported edit mode.
  *
  * @author Slava Pestov
- * @version $Id: Mode.java,v 1.5 2002/08/12 16:28:35 spestov Exp $
+ * @version $Id: Mode.java,v 1.6 2002/08/29 22:09:26 spestov Exp $
  */
 public class Mode
 {
@@ -53,7 +53,7 @@ public class Mode
 		props = new Hashtable();
 	} //}}}
 
-	//{{{ init()
+	//{{{ init() method
 	/**
 	 * Initializes the edit mode. Should be called after all properties
 	 * are loaded and set.
@@ -140,7 +140,7 @@ public class Mode
 		//if(jEdit.getBooleanProperty(prefix + "customSettings"))
 		//{
 			String property = jEdit.getProperty(prefix + key);
-			if(property != null && property.length() != 0)
+			if(property != null)
 			{
 				Object value;
 				try
@@ -220,13 +220,19 @@ public class Mode
 	 */
 	public void setProperties(Hashtable props)
 	{
-		String filenameGlob = (String)getProperty("filenameGlob");
-		String firstlineGlob = (String)getProperty("firstlineGlob");
+		// need to carry over file name and first line globs because they are
+		// not given to us by the XMode handler, but instead are filled in by
+		// the catalog loader.
+		String filenameGlob = (String)this.props.get("filenameGlob");
+		String firstlineGlob = (String)this.props.get("firstlineGlob");
+		String filename = (String)this.props.get("file");
 		this.props = props;
 		if(filenameGlob != null)
 			props.put("filenameGlob",filenameGlob);
 		if(firstlineGlob != null)
 			props.put("firstlineGlob",firstlineGlob);
+		if(filename != null)
+			props.put("file",filename);
 	} //}}}
 
 	//{{{ accept() method

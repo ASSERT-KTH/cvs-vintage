@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.87 2002/08/28 20:51:28 spestov Exp $
+ * @version $Id: jEdit.java,v 1.88 2002/08/29 22:09:26 spestov Exp $
  */
 public class jEdit
 {
@@ -749,7 +749,7 @@ public class jEdit
 		 * - if default equals value, ignore
 		 * - if default doesn't equal value, set user
 		 */
-		if(value == null || value.length() == 0)
+		if(value == null)
 		{
 			String prop = (String)defaultProps.get(name);
 			if(prop == null || prop.length() == 0)

@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * This class records and runs macros.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.22 2002/08/21 19:28:05 spestov Exp $
+ * @version $Id: Macros.java,v 1.23 2002/08/29 22:09:26 spestov Exp $
  */
 public class Macros
 {
@@ -370,7 +370,10 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 		//{{{ Macro constructor
 		public Macro(Handler handler, String name, String label, String path)
 		{
-			super(name);
+			// in case macro file name has a space in it.
+			// spaces break the view.toolBar property, for instance,
+			// since it uses spaces to delimit action names.
+			super(name.replace(' ','_'));
 			this.handler = handler;
 			this.label = label;
 			this.path = path;

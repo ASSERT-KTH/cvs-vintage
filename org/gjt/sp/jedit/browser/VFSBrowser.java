@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.56 2002/08/14 20:11:09 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.57 2002/08/29 22:09:26 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -491,13 +491,13 @@ public class VFSBrowser extends JPanel implements EBComponent
 			strippedPath = path;
 
 		pathField.setText(strippedPath);
-		this.path = strippedPath;
 
 		if(!startRequest())
 			return;
 
 		updateFilenameFilter();
 		browserView.loadDirectory(path);
+		this.path = strippedPath;
 
 		VFSManager.runInAWTThread(new Runnable()
 		{
