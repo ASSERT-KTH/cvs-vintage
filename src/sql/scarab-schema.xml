@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.131 2003/04/11 23:05:39 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.132 2003/05/12 17:39:25 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@" defaultJavaType="object">
 <!--
@@ -585,16 +585,29 @@
         Module that issue relates to.
     -->
     <column name="MODULE_ID" required="true" type="INTEGER"></column>
+
+    <!--
+        ActivitySet that contains creation info for the issue.  This
+        is redundant as we can get this info using Activity table
+        to join ActivitySet and Issue.  But this will make some queries more 
+        straightforward and performant.
+    -->
+    <column name="CREATED_TRANS_ID" required="false" type="BIGINT"/>
+
     <!--
         Flag, which marks that issue has been deleted.
     -->
     <column name="DELETED" required="false" type="BOOLEANINT" 
         default="0" size="1" javaType="primitive"/>
+
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
         <reference local="TYPE_ID" foreign="ISSUE_TYPE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_TRANSACTION">
+        <reference local="CREATED_TRANS_ID" foreign="TRANSACTION_ID"/>
     </foreign-key>
     <index name="IX_TYPE_MODULE">
         <index-column name="TYPE_ID"/>

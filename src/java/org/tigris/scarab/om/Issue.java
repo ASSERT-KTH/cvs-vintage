@@ -96,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.299 2003/05/09 22:57:09 elicia Exp $
+ * @version $Id: Issue.java,v 1.300 2003/05/12 17:39:25 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1356,32 +1356,7 @@ public class Issue
     public ActivitySet getInitialActivitySet()
         throws Exception
     {
-        ActivitySet activitySet = null;
-        if (!isNew()) 
-        {
-            Object obj = getCachedObject(GET_INITIAL_ACTIVITYSET);
-            if (obj == null)
-            {
-                Integer[] types = {ActivitySetTypePeer.CREATE_ISSUE__PK,
-                              ActivitySetTypePeer.MOVE_ISSUE__PK};
-                Criteria crit = new Criteria();
-                crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
-                             ActivityPeer.TRANSACTION_ID);
-                crit.add(ActivityPeer.ISSUE_ID, getIssueId());
-                crit.addIn(ActivitySetPeer.TYPE_ID, types);
-                List activitySets = ActivitySetPeer.doSelect(crit);
-                if (activitySets != null && activitySets.size() > 0)
-                {
-                    activitySet = (ActivitySet)activitySets.get(0);
-                    putCachedObject(activitySet, GET_INITIAL_ACTIVITYSET);
-                }
-            }
-            else
-            {
-                activitySet = (ActivitySet)obj;
-            }
-        }
-        return activitySet;
+        return getActivitySet();
     }
 
     /**
@@ -1391,30 +1366,9 @@ public class Issue
      * @exception Exception if an error occurs
      */
     public Date getCreatedDate()
-        throws Exception
+        throws TorqueException
     {
-        Date result = null;
-        if (!isNew()) 
-        {
-            Object obj = ScarabCache.get(this, GET_CREATED_DATE); 
-            if (obj == null) 
-            {        
-                ActivitySet activitySet = getInitialActivitySet();
-                // If our associated data is in a bad state (e.g. we
-                // have no entries in the SCARAB_ACTIVITY table), we
-                // might not have an ActivitySet.
-                if (activitySet != null)
-                {
-                    result = activitySet.getCreatedDate();
-                    ScarabCache.put(result, this, GET_CREATED_DATE);
-                }
-            }
-            else 
-            {
-                result = (Date)obj;
-            }
-        }
-        return result;
+        return getActivitySet().getCreatedDate();
     }
 
     /**
@@ -1422,39 +1376,15 @@ public class Issue
      * @return a <code>ScarabUser</code> value
      */
     public ScarabUser getCreatedBy()
-        throws Exception
+        throws TorqueException
     {
-        ScarabUser result = null;
-        if (!isNew()) 
-        {
-            Object obj = ScarabCache.get(this, GET_CREATED_BY); 
-            if (obj == null) 
-            {        
-                ActivitySet activitySet = getInitialActivitySet();
-                if (activitySet != null)
-                {
-                    result = ScarabUserManager.getInstance(activitySet.getCreatedBy());
-                    ScarabCache.put(result, this, GET_CREATED_BY);
-                }
-                else
-                {
-                    String msg = "Could not find initial activity set for this issue!";
-                    log().error(msg);
-                    throw new Exception(msg);
-                }
-            }
-            else 
-            {
-                result = (ScarabUser)obj;
-            }
-        }
-        return result;
+        return getActivitySet().getScarabUser();
     }
 
     public boolean isCreatingUser(ScarabUser user)
          throws Exception
     {                
-         return (getCreatedBy().getUserId().equals(user.getUserId()));
+         return (getActivitySet().getCreatedBy().equals(user.getUserId()));
     }
 
     /**
@@ -3549,6 +3479,8 @@ public class Issue
                 .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
             activitySet.save();
         }
+        setActivitySet(activitySet);
+
         // enter the values into the activitySet
         SequencedHashMap avMap = getModuleAttributeValuesMap(); 
         Iterator iter = avMap.iterator();
@@ -3564,7 +3496,7 @@ public class Issue
                 throw new Exception("Fatal Error: " + 
                     se.getMessage() + " Please start over.");    
             }
-        }
+        }        
         this.save();
 
         // create initial issue creation activity
@@ -3584,6 +3516,7 @@ public class Issue
             activitySet.setAttachment(attachment);
         }
         activitySet.save();
+        
         // need to clear the cache since this is after the 
         // issue is saved. for some reason, things don't
         // show up properly right away.

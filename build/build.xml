@@ -1818,6 +1818,41 @@ diff -u -r1.5 project.xml
 
     </target>
 
+    <target name="migrate-b15-b16" depends="prepare">
+
+        <property name="migration.dest.dir" 
+            value="${build.dir}/migration/classes"/> 
+
+        <path id="migration-cp">
+          <path refid="classpath"/>
+          <pathelement location="${migration.dest.dir}"/>
+        </path>
+
+        <mkdir dir="${migration.dest.dir}"/>
+        <javac srcdir="${src.dir}/migration"
+            destdir="${migration.dest.dir}"
+            excludes="**/package.html,torque/**"
+            debug="${debug}"
+            deprecation="${deprecation}"
+            optimize="${optimize}">
+
+            <classpath refid="classpath"/>
+        </javac>
+
+      <taskdef name="b15b16-1" 
+       classname="org.tigris.scarab.migration.b15b16.DB_1_MoveIssueCreateInfo">
+       <classpath refid="migration-cp"/>
+      </taskdef>
+
+        <b15b16-1
+            driver="${scarab.database.jdbc.driver}"
+            url="${scarab.database.url}"
+            userid="${scarab.database.admin.username}"
+            password="${scarab.database.admin.password}">
+            <classpath refid="migration-cp"/>
+        </b15b16-1>
+
+    </target>
 
 </project>
 
