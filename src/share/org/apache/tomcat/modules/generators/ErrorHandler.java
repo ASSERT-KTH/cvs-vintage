@@ -191,8 +191,15 @@ public final class ErrorHandler extends BaseInterceptor {
 	}
 
 	boolean isDefaultHandler = false;
+        if ( statusLoop( ctx, req ) ){
+            log( "Error loop for " + req + " error code " + code);
+            return;
+        }
 	if( errorServlet==null ) {
-	    errorServlet=ctx.getServletByName( "tomcat.statusHandler");
+            if( code == 404 )
+                errorServlet=ctx.getServletByName( "tomcat.notFoundHandler");
+            else
+                errorServlet=ctx.getServletByName( "tomcat.statusHandler");
 	    isDefaultHandler = true;
 	}
 
@@ -390,8 +397,17 @@ public final class ErrorHandler extends BaseInterceptor {
 	return false;
     }
 
-
-
+    /** Handle the case of status handler generating an error
+     */
+    private boolean statusLoop( Context ctx, Request req ) {
+        if ( req.getAttribute("javax.servlet.error.status_code") != null ) {
+            if( ctx.getDebug() > 0 )
+                ctx.log( "Error: nested error inside status servlet " +
+                        req.getAttribute("javax.servlet.error.status_code"));
+            return true;
+        }
+        return false;
+    }
     
 }
 
