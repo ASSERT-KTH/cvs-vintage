@@ -18,14 +18,14 @@ import org.w3c.dom.*;
 /**
  * @author costin@dnt.ro
  */
-public class WebXmlReader extends BaseContextInterceptor  implements ContextInterceptor {
+public class WebXmlReader extends BaseInterceptor {
 
     private static StringManager sm =StringManager.getManager("org.apache.tomcat.core");
     
     public WebXmlReader() {
     }
 
-    public int contextInit(Context ctx) {
+    public void contextInit(Context ctx) {
 	//	System.out.println("Context(" + ctx.getPath() + "): " + ctx.getDocBase());
 
 	// read default web.xml
@@ -37,7 +37,6 @@ public class WebXmlReader extends BaseContextInterceptor  implements ContextInte
 	    String msg = sm.getString("context.getConfig.e",ctx.getPath() + " " + ctx.getDocBase());
 	    System.out.println(msg);
 	}
-	return 0;
 
     }
 

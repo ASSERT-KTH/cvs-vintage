@@ -74,12 +74,12 @@ import javax.servlet.http.*;
  *
  * @author costin@dnt.ro
  */
-public class DefaultCMSetter extends BaseContextInterceptor {
+public class DefaultCMSetter extends BaseInterceptor {
 
     public DefaultCMSetter() {
     }
 	
-    public int engineInit(ContextManager cm)  {
+    public void engineInit(ContextManager cm)  {
 	// set a default connector ( http ) if none defined yet
 	Enumeration conn=cm.getConnectors();
 	if( ! conn.hasMoreElements() ) {
@@ -99,8 +99,6 @@ public class DefaultCMSetter extends BaseContextInterceptor {
 
 	    cm.addRequestInterceptor(new SessionInterceptor());
 	}
-
-	return 0;
     }
 
     /** Called when a new context is added to the server.
@@ -111,7 +109,7 @@ public class DefaultCMSetter extends BaseContextInterceptor {
      *
      *  - Set up defaults for context interceptors and session if nothing is set
      */
-    public int addContext(ContextManager cm, Context ctx) {
+    public void addContext(ContextManager cm, Context ctx) {
 	// Make sure context knows about its manager.
 	ctx.setContextManager( cm );
 	setEngineHeader( ctx );
@@ -137,14 +135,11 @@ public class DefaultCMSetter extends BaseContextInterceptor {
 	    
 	    // load initial servlets
 	    ctx.addContextInterceptor(new LoadOnStartupInterceptor());
-	}
-	
+	}	
 	// XXX Loader properties - need to be set on loader!!
-	ctx.setServletLoader( new org.apache.tomcat.loader.ServletClassLoaderImpl());
-	//	    ctx.setServletLoader( new org.apache.tomcat.loader.AdaptiveServletLoader());
+	//ctx.setServletLoader( new org.apache.tomcat.loader.ServletClassLoaderImpl());
+	ctx.setServletLoader( new org.apache.tomcat.loader.AdaptiveServletLoader());
 	initURLs( ctx );
-
-	return 0;
     }
 
     private void initURLs(Context context) {

@@ -78,16 +78,16 @@ import org.apache.tomcat.task.Expand;
  * 
  * @author costin@dnt.ro
  */
-public class AutoSetup { //  implements TomcatHandler
+public class AutoSetup extends BaseInterceptor {
 
     public AutoSetup() {
     }
 	
-    public int engineInit(ContextManager cm) {
+    public void engineInit(ContextManager cm) throws TomcatException {
 	String home=cm.getHome();
 	File webappD=new File(home + "/webapps");
 	if (! webappD.exists() || ! webappD.isDirectory())
-	    return 0; // nothing to set up
+	    return ; // nothing to set up
 
 	String[] list = webappD.list();
 	for (int i = 0; i < list.length; i++) {
@@ -143,7 +143,5 @@ public class AutoSetup { //  implements TomcatHandler
 
 		
 	}
-
-	return 0;
     }
 }

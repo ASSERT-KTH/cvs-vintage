@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.5 2000/02/10 22:28:22 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/02/10 22:28:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.6 2000/02/12 03:38:50 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/02/12 03:38:50 $
  *
  * ====================================================================
  *
@@ -74,60 +74,58 @@ import javax.servlet.Servlet;
  * @author costin@dnt.ro
  */
 public interface ContextInterceptor {
-    public static final int OK=0;
 
     /** Called when the ContextManger is started
      */
-    public int engineInit(ContextManager cm);
-
+    public void engineInit(ContextManager cm) throws TomcatException;
+    
     /** Called before the ContextManager is stoped.
      *  You need to stop any threads and remove any resources.
      */
-    public int engineShutdown(ContextManager cm);
+    public void engineShutdown(ContextManager cm) throws TomcatException;
 
     /** Called when a context is added to a CM
      */
-    public int addContext( ContextManager cm, Context ctx );
+    public void addContext( ContextManager cm, Context ctx ) throws TomcatException;
 
     /** Called when a context is removed from a CM
      */
-    public int removeContext( ContextManager cm, Context ctx );
+    public void removeContext( ContextManager cm, Context ctx ) throws TomcatException;
 
     /** Notification when a context is initialized
      */
-    public int contextInit(Context ctx);
+    public void contextInit(Context ctx) throws TomcatException;
 
     /** Called when a context is stoped.
      */
-    public int contextShutdown(Context ctx);
-
+    public void contextShutdown(Context ctx) throws TomcatException;
     
     /** Notify when a new servlet is added
      */
-    public int addServlet( Context ctx, ServletWrapper sw);
+    public void addServlet( Context ctx, ServletWrapper sw) throws TomcatException;
 
     /** Notify when a servlet is removed from context
      */
-    public int removeServlet( Context ctx, ServletWrapper sw);
+    public void removeServlet( Context ctx, ServletWrapper sw) throws TomcatException;
 
     /** Notify when a mapping is added to a context
      */
-    public int addMapping( Context ctx, String path, ServletWrapper servlet);
+    public void addMapping( Context ctx, String path, ServletWrapper servlet) throws TomcatException;
 
     /** Notify when a mapping is deleted  from  a context
      */
-    public int removeMapping( Context ctx, String path );
+    public void removeMapping( Context ctx, String path ) throws TomcatException;
 
     /** Servlet Init  notification
      */
-    public int preServletInit( Context ctx, ServletWrapper sw );
+    public void preServletInit( Context ctx, ServletWrapper sw ) throws TomcatException;
     
-    public int postServletInit( Context ctx, ServletWrapper sw );
+    public void postServletInit( Context ctx, ServletWrapper sw ) throws TomcatException;
 
 
     /** Servlet Destroy  notification
      */
-    public int preServletDestroy( Context ctx, ServletWrapper sw );
+    public void preServletDestroy( Context ctx, ServletWrapper sw ) throws TomcatException;
     
-    public int postServletDestroy( Context ctx, ServletWrapper sw );
+    public void postServletDestroy( Context ctx, ServletWrapper sw ) throws TomcatException;
 }

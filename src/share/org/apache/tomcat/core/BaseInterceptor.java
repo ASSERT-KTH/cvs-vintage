@@ -58,7 +58,7 @@
  */ 
 
 
-package org.apache.tomcat.request;
+package org.apache.tomcat.core;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
@@ -69,13 +69,14 @@ import javax.servlet.http.*;
 
 /**
  */
-public class BaseInterceptor implements RequestInterceptor {
+public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
     
     protected Vector methods=new Vector();
     
     public BaseInterceptor() {
     }
-	
+
+    // -------------------- Request notifications --------------------
     public int requestMap(Request request ) {
 	return 0;
     }
@@ -105,8 +106,72 @@ public class BaseInterceptor implements RequestInterceptor {
 	return 0;
     }
 
-    public Enumeration getMethods() {
+    public Enumeration getMethods()  {
 	return methods.elements();
+    }
+
+    // -------------------- Context notifications --------------------
+    public void contextInit(Context ctx) throws TomcatException {
+    }
+
+    public void contextShutdown(Context ctx) throws TomcatException {
+    }
+
+    /** Notify when a new servlet is added
+     */
+    public void addServlet( Context ctx, ServletWrapper sw) throws TomcatException {
+    }
+    
+    /** Notify when a servlet is removed from context
+     */
+    public void removeServlet( Context ctx, ServletWrapper sw) throws TomcatException {
+    }
+
+    public void addMapping( Context ctx, String path, ServletWrapper servlet) throws TomcatException {
+    }
+
+
+    public void removeMapping( Context ctx, String path ) throws TomcatException {
+    }
+
+    /** Called when the ContextManger is started
+     */
+    public void engineInit(ContextManager cm) throws TomcatException {
+    }
+
+    /** Called before the ContextManager is stoped.
+     *  You need to stop any threads and remove any resources.
+     */
+    public void engineShutdown(ContextManager cm) throws TomcatException {
+    }
+
+
+    /** Called when a context is added to a CM
+     */
+    public void addContext( ContextManager cm, Context ctx ) throws TomcatException {
+    }
+
+    /** Called when a context is removed from a CM
+     */
+    public void removeContext( ContextManager cm, Context ctx ) throws TomcatException {
+    }
+
+    /** Servlet Init  notification
+     */
+    public void preServletInit( Context ctx, ServletWrapper sw ) throws TomcatException {
+    }
+
+    
+    public void postServletInit( Context ctx, ServletWrapper sw ) throws TomcatException {
+    }
+
+    /** Servlet Destroy  notification
+     */
+    public void preServletDestroy( Context ctx, ServletWrapper sw ) throws TomcatException {
+    }
+
+    
+    public void postServletDestroy( Context ctx, ServletWrapper sw ) throws TomcatException {
     }
 
 }

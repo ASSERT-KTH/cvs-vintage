@@ -212,11 +212,12 @@ public class ContextManager {
      *
      * @param ctx context to be added.
      */
-    public void addContext( Context ctx ) {
+    public void addContext( Context ctx ) throws TomcatException {
 	// it will replace existing context - it's better than 
 	// IllegalStateException.
 	String path=ctx.getPath();
 	if( getContext( path ) != null ) {
+	    log("Warning: replacing context for " + path);
 	    removeContext(path);
 	}
 
@@ -233,7 +234,7 @@ public class ContextManager {
      *
      * @param name Name of the Context to be removed
      */
-    public void removeContext(String name) {
+    public void removeContext(String name) throws TomcatException {
 	if (name.equals("")){
 	    throw new IllegalArgumentException(name);
 	}
@@ -462,6 +463,10 @@ public class ContextManager {
 
     // -------------------- Utils --------------------
     // Debug ( to be replaced with the real thing )
+    public void setDebug( String  level ) {
+	setDebug( new Integer( level).intValue());
+    }
+    
     public void setDebug( int level ) {
 	log( "Setting debug " + level );
 	debug=level;

@@ -126,34 +126,36 @@ public class InterceptorAdapter {
     
 }
 
-class InitInterceptorAdapter extends BaseContextInterceptor implements ContextInterceptor {
+class InitInterceptorAdapter extends BaseInterceptor implements ContextInterceptor {
     LifecycleInterceptor interceptor;
     
     InitInterceptorAdapter( LifecycleInterceptor interceptor) {
 	this.interceptor=interceptor;
     }
 
-    public int preServletInit(Context ctx, ServletWrapper sw ) {
+    public void preServletInit(Context ctx, ServletWrapper sw )
+	throws TomcatException
+    {
 	try {
 	    interceptor.preInvoke( ctx, sw.getServlet());
-	    return 0;
 	} catch( InterceptorException ex ) {
-	    return -1; // map exceptions to error codes
+	    throw new TomcatException( ex );
 	}
     }
 
-    public int postServletInit(Context ctx, ServletWrapper sw ) {
+    public void postServletInit(Context ctx, ServletWrapper sw )
+    	throws TomcatException
+    {
 	try {
 	    interceptor.postInvoke( ctx, sw.getServlet());
-	    return 0;
 	} catch( InterceptorException ex ) {
-	    return -1; // map exceptions to error codes
+	    throw new TomcatException( ex );
 	}
     }
     
 }
 
-class DestroyInterceptorAdapter extends BaseContextInterceptor implements ContextInterceptor {
+class DestroyInterceptorAdapter extends BaseInterceptor implements ContextInterceptor {
     LifecycleInterceptor interceptor;
     
     DestroyInterceptorAdapter( LifecycleInterceptor interceptor) {
@@ -161,21 +163,23 @@ class DestroyInterceptorAdapter extends BaseContextInterceptor implements Contex
     }
 
 
-    public int preServletDestroy(Context ctx, ServletWrapper sw ) {
+    public void preServletDestroy(Context ctx, ServletWrapper sw )
+    	throws TomcatException
+    {
 	try {
 	    interceptor.preInvoke( ctx, sw.getServlet());
-	    return 0;
 	} catch( InterceptorException ex ) {
-	    return -1; // map exceptions to error codes
+	    throw new TomcatException( ex );
 	}
     }
 
-    public int postServletDestroy(Context ctx, ServletWrapper sw ) {
+    public void postServletDestroy(Context ctx, ServletWrapper sw )
+    	throws TomcatException
+    {
 	try {
 	    interceptor.postInvoke( ctx, sw.getServlet());
-	    return 0;
 	} catch( InterceptorException ex ) {
-	    return -1; // map exceptions to error codes
+	    throw new TomcatException( ex );
 	}
     }
 

@@ -75,13 +75,13 @@ import javax.servlet.http.*;
  *
  * @author costin@dnt.ro
  */
-public class WebXmlInterceptor extends BaseContextInterceptor  implements ContextInterceptor {
+public class WebXmlInterceptor extends BaseInterceptor  implements ContextInterceptor {
     private static StringManager sm =StringManager.getManager("org.apache.tomcat.core");
     
     public WebXmlInterceptor() {
     }
 	
-    public int contextInit(Context ctx) {
+    public void contextInit(Context ctx) {
 	//	System.out.println("Context(" + ctx.getPath() + "): " + ctx.getDocBase());
 	    
 	// process base configuration
@@ -98,7 +98,6 @@ public class WebXmlInterceptor extends BaseContextInterceptor  implements Contex
 	    System.out.println(msg);
 	    e.printStackTrace();
 	}
-	return 0;
     }
     
 }

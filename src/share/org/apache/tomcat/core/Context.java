@@ -439,7 +439,7 @@ public class Context {
      * <p>This method may only be called once and must be called
      * before any requests are handled by this context.
      */
-    public synchronized void init() {
+    public synchronized void init() throws TomcatException {
 	if (this.initialized) {
 	    String msg = sm.getString("context.init.alreadyinit");
 	    throw new IllegalStateException(msg);
@@ -503,7 +503,7 @@ public class Context {
 	sessionManager= manager;
     }
     
-    public void shutdown() {
+    public void shutdown() throws TomcatException {
 	// shut down container
 	initialized=false;
 	Enumeration enum = servlets.keys();
@@ -720,8 +720,8 @@ public class Context {
     public void setLoginConfig( String authMethod, String realmName,
 				String formLoginPage, String formErrorPage)
     {
-	System.out.println("Login config: " + authMethod + " " + realmName + " " +
-			   formLoginPage + " " + formErrorPage);
+	// 	System.out.println("Login config: " + authMethod + " " + realmName + " " +
+	// 			   formLoginPage + " " + formErrorPage);
 	this.authMethod=authMethod;
 	this.realmName=realmName;
 	this.formLoginPage=formLoginPage;

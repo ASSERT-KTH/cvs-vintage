@@ -75,7 +75,7 @@ import javax.servlet.*;
  *
  * @author costin@dnt.ro
  */
-public class LoadOnStartupInterceptor extends BaseContextInterceptor  implements ContextInterceptor {
+public class LoadOnStartupInterceptor extends BaseInterceptor {
     private static StringManager sm =StringManager.getManager("org.apache.tomcat.context");
     int debug=0;
     
@@ -86,7 +86,7 @@ public class LoadOnStartupInterceptor extends BaseContextInterceptor  implements
 	debug=i;
     }
     
-    public int contextInit(Context ctx) {
+    public void contextInit(Context ctx) {
 	init(ctx);
 	Vector orderedKeys = new Vector();
 	Enumeration e=getInitLevels();
@@ -143,7 +143,6 @@ public class LoadOnStartupInterceptor extends BaseContextInterceptor  implements
 		}
 	    }
 	}
-	return OK;
     }
 
     void loadJsp( Context context, ServletWrapper result ) throws Exception {

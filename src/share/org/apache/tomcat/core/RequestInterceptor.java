@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.5 2000/02/03 23:41:29 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/02/03 23:41:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.6 2000/02/12 03:38:50 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/02/12 03:38:50 $
  *
  * ====================================================================
  *
@@ -78,8 +78,6 @@ public interface RequestInterceptor {
      *  in notification.
      */
     public Enumeration getMethods();
-
-
     
     /** Will detect the context path for a request.
      *  It need to set: context, contextPath, lookupPath

@@ -74,12 +74,12 @@ import javax.servlet.http.*;
  *
  * @author costin@dnt.ro
  */
-public class WorkDirInterceptor extends BaseContextInterceptor  implements ContextInterceptor {
+public class WorkDirInterceptor extends BaseInterceptor {
 
     public WorkDirInterceptor() {
     }
 	
-    public int contextInit(Context ctx) {
+    public void contextInit(Context ctx) {
 	// never null !! ( it is set by default to ./work ! )
 	//log	System.out.println("Preparing work dir " + ctx.getWorkDir() );
 
@@ -94,15 +94,13 @@ public class WorkDirInterceptor extends BaseContextInterceptor  implements Conte
 
 	ctx.setAttribute(Constants.ATTRIB_WORKDIR1, ctx.getWorkDir());
 	ctx.setAttribute(Constants.ATTRIB_WORKDIR , ctx.getWorkDir());
-	return 0;
     }
 
-    public int contextShutdown( Context ctx ) {
+    public void contextShutdown( Context ctx ) {
 	
 	if (! ctx.isWorkDirPersistent()) {
             clearDir(ctx.getWorkDir());
 	}
-	return 0;
     }
 
     private void clearDir(File dir) {

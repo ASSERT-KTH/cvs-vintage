@@ -77,15 +77,15 @@ import javax.servlet.http.*;
  *
  * @author costin@dnt.ro
  */
-public class WarWebXmlInterceptor extends BaseContextInterceptor implements ContextInterceptor {
+public class WarWebXmlInterceptor extends BaseInterceptor implements ContextInterceptor {
     private static StringManager sm =StringManager.getManager("org.apache.tomcat.core");
     
     public WarWebXmlInterceptor() {
     }
 	
-    public int contextInit(Context ctx) {
+    public void contextInit(Context ctx) {
 	if (! ctx.getDocumentBase().getProtocol().equalsIgnoreCase("war")) {
-	    return 0;
+	    return ;
 	}
 	
 	// process base configuration
@@ -112,6 +112,5 @@ public class WarWebXmlInterceptor extends BaseContextInterceptor implements Cont
 	    String msg = sm.getString("context.getConfig.e",
 				      ctx.getPath() + " " + ctx.getDocBase() );
 	}
-	return 0;
     }
 }

@@ -134,7 +134,11 @@ public class Startup {
 		context.setPath(contextConfig.getPath());
 		context.setDocumentBase(contextConfig.getDocumentBase());
 
-                contextManager.addContext(context);
+		try {
+		    contextManager.addContext(context);
+		} catch(TomcatException ex ) {
+		    ex.printStackTrace();
+		}
 
 		context.setSessionTimeOut(
 		    contextConfig.getDefaultSessionTimeOut());
