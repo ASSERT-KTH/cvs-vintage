@@ -64,7 +64,7 @@
    #set ($raagGroup = $intake.RAttributeAttributeGroup.mapTo($raag))
  #indexedRows($velocityCount)
  <td><input type="checkbox" name="att_delete_$attribute.AttributeId" /></td>
- <td>$link.setPage("admin,IssueTypeAttributeEdit.vm").addPathInfo("att_0id", "$attribute.AttributeId").addPathInfo("key", "groupId").addPathInfo("groupId", $groupId).addPathInfo("issueTypeId", $group.IssueTypeId).setLabel("$attribute.Name")</td>
+ <td>$link.setPage("admin,IssueTypeAttributeEdit.vm").addPathInfo("att_0id", "$attribute.AttributeId").addPathInfo("key", "groupId").addPathInfo("groupId", $groupId).addPathInfo("issueTypeId", $group.IssueTypeId).addPathInfo("cancelTemplate", "admin,GlobalAttributeGroupEdit.vm").setLabel("$attribute.Name")</td>
  <td>#booleanCheckbox ($riaGroup.Active)</td>
  <td>#booleanCheckbox ($riaGroup.Required)</td>
  <td>#booleanCheckbox ($riaGroup.Locked)</td>

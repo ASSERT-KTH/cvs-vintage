@@ -1,7 +1,7 @@
 
 #set ($attribute = $scarabR.Attribute)
 #set ($attType = $attribute.AttributeType)
-#set ($cancelTemplate = "admin,GlobalAttributeGroupEdit.vm")
+#set ($cancelTemplate = $data.Parameters.getString($scarabG.Constant.CANCEL_TEMPLATE))
 #set ($attTypeName = $attType.AttributeClass.Name)
 
 #macro (IssueTypeAttributeEditBar $val)
