@@ -11,22 +11,38 @@ public class LockMonitor
 
    public LockMonitor(EntityLockMonitor monitor)
    {
-      this.monitor = monitor;
+	  this.monitor = monitor;
    }
 
-   public synchronized void contending()
+   public void contending()
    {
-      num_contentions++;
-      currentContenders++;
-      if (currentContenders > maxContenders) maxContenders = currentContenders;
-      monitor.incrementContenders();
+	  synchronized(this)
+	  {
+		 num_contentions++;
+		 currentContenders++;
+         
+		 if (currentContenders > maxContenders)
+			maxContenders = currentContenders;
+	  }
+      
+	  // Remark Ulf Schroeter: DO NOT include following call into the
+	  // synchronization block because it will cause deadlocks between
+	  // LockMonitor methods and EntityLockMonitor.clearMonitor() call ! 
+	  monitor.incrementContenders();
    }
 
-   public synchronized void finishedContending(long time)
+   public void finishedContending(long time)
    {
-      total_time += time;
-      currentContenders--;
-      monitor.decrementContenders(time);
+	  synchronized(this)
+	  {	
+		 total_time += time;
+		 currentContenders--;
+	  }
+
+	// Remark Ulf Schroeter: DO NOT include following call into the
+	// synchronization block because it will cause deadlocks between
+	// LockMonitor methods and EntityLockMonitor.clearMonitor() call ! 
+	  monitor.decrementContenders(time);
    }
 }
 
