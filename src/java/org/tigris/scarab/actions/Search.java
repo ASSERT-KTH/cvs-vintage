@@ -91,7 +91,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.143 2003/10/14 04:59:22 jmcnally Exp $
+ * @version $Id: Search.java,v 1.144 2003/11/12 08:30:12 dep4b Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -628,18 +628,30 @@ public class Search extends RequireLoginFirstAction
         
     /**
        Check for duplicate query names. 
-       A user cannot create a query with the same name as another one of their queries.
-       A user cannot create a project-level query with the same name 
-       as another project-level query.
+       A user cannot create a personal query with the same name as another one 
+       of their personal queries.
+       A user cannot create a module-level query with the same name 
+       as another module-level query in the same module.
     */
     private boolean checkForDupes(Query query, ScarabUser user, Module module)
         throws Exception
     {
         boolean areThereDupes = false;
-        List prevQueries = QueryPeer.getUserQueries(user);
+        List prevQueries = new ArrayList();
         if (query.getScopeId().equals(Scope.MODULE__PK))
         {
             prevQueries.addAll(QueryPeer.getModuleQueries(module));
+        }
+        else
+        {
+            // Add personal queries only, not all module-level queries created
+            // by this user.
+            for (Iterator i = QueryPeer.getUserQueries(user).iterator(); i.hasNext(); ) 
+            {
+                Query q = (Query)i.next();
+                if (q.getModule() == null)
+                    prevQueries.add(q);
+            }
         }
         if (prevQueries != null && !prevQueries.isEmpty())
         {
