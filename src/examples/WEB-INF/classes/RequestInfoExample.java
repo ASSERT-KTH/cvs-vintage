@@ -1,4 +1,4 @@
-/* $Id: RequestInfoExample.java,v 1.1 1999/10/09 00:19:59 duncan Exp $
+/* $Id: RequestInfoExample.java,v 1.2 2001/12/07 05:15:10 billbarker Exp $
  *
  */
 
@@ -69,9 +69,21 @@ public class RequestInfoExample extends HttpServlet {
         out.println(request.getPathInfo());
         out.println("</td></tr><tr><td>");
         out.println(rb.getString("requestinfo.label.remoteaddr"));
+        out.println("</td><td>");
+ 	out.println(request.getRemoteAddr());
+ 
+ 	String cipherSuite=
+ 	    (String)request.getAttribute("javax.servlet.request.cipher_suite");
+ 
+ 	if(cipherSuite!=null){
+ 	    out.println("</td></tr><tr><td>");	
+ 	    out.println("SSLCipherSuite info");
+ 	    out.println("</td><td>");
+ 	    out.println(request.getAttribute("javax.servlet.request.cipher_suite"));
+ 	}
         out.println("</td><td>");                
         out.println(request.getRemoteAddr());
-        out.println("</table>");
+        out.println("</td></tr></table>");
     }
 
     public void doPost(HttpServletRequest request,
