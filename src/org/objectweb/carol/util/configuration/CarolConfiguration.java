@@ -402,7 +402,7 @@ public class CarolConfiguration {
                 TraceCarol.debugCarol("Start non started Name Servers");
             }
             try {
-                NameServiceManager.getNSManagerCurrent().startNonStartedNS();
+                NameServiceManager.startNonStartedNS();
             } catch (NameServiceException nse) {
                 String msg = "Can't start Name Servers";
                 TraceCarol.error(msg, nse);
@@ -454,7 +454,7 @@ public class CarolConfiguration {
     private static Properties loadPropertiesFile(String fName, ClassLoader cl) throws Exception {
         Properties result = null;
         // load the defaults configuration file
-        InputStream fInputStream = cl.getSystemResourceAsStream(fName + ".properties");
+        InputStream fInputStream = cl.getResourceAsStream(fName + ".properties");
         if (fInputStream == null) {
             // resource not found direcly, search in the jars
             ResourceBundle rb = ResourceBundle.getBundle(fName, Locale.getDefault(), cl);
@@ -477,7 +477,7 @@ public class CarolConfiguration {
                     "Carol file used is "
                         + fName
                         + ".properties in "
-                        + cl.getSystemResource(fName + ".properties").getPath());
+                        + cl.getResource(fName + ".properties").getPath());
             }
         }
         if (result == null) {
@@ -497,7 +497,7 @@ public class CarolConfiguration {
     private static String findPropertiesFile(String fName, ClassLoader cl) throws Exception {
         String result = "";
         // load the defaults configuration file
-        InputStream fInputStream = cl.getSystemResourceAsStream(fName + ".properties");
+        InputStream fInputStream = cl.getResourceAsStream(fName + ".properties");
         if (fInputStream == null) {
             // resource not found direcly, search through URLClassLoader
             ResourceBundle rb = ResourceBundle.getBundle(fName, Locale.getDefault(), cl);
@@ -509,7 +509,7 @@ public class CarolConfiguration {
                 "Carol file used is "
                     + fName
                     + ".properties in "
-                    + cl.getSystemResource(fName + ".properties").getPath();
+                    + cl.getResource(fName + ".properties").getPath();
         }
         if (result == null) {
             if (TraceCarol.isDebugCarol()) {
@@ -532,15 +532,27 @@ public class CarolConfiguration {
      * @return Properties carol properties
     */
     private static Properties getCarolProperties() throws Exception {
-        return loadPropertiesFile("carol", Thread.currentThread().getContextClassLoader());
+        Properties props = null;
+        try {
+            props = loadPropertiesFile("carol", Thread.currentThread().getContextClassLoader());
+        } catch (Exception e) {
+            TraceCarol.debugCarol("carol.properties file not found: " + e);
+        }
+        return props;
     }
 
     /**
      * get jndi properties from file
      * @return Properties default properties
     */
-    private static Properties getJndiProperties() throws Exception {
-        return loadPropertiesFile("jndi", Thread.currentThread().getContextClassLoader());
+    private static Properties getJndiProperties() {
+        Properties props = null;
+        try {
+            props = loadPropertiesFile("jndi", Thread.currentThread().getContextClassLoader());
+        } catch (Exception e) {
+            TraceCarol.debugCarol("jndi.properties file not found: " + e);
+        }
+        return props;
     }
 
     /**
