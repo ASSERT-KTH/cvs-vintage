@@ -104,7 +104,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.111 2002/05/02 00:36:23 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.112 2002/05/02 01:18:27 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -268,10 +268,6 @@ public class ScarabModule
     public void setParent(Module v)
         throws Exception
     {
-        if (isEndlessLoop(v))
-        {
-            throw new Exception("Endless parent/child relationship detected!");
-        }
         super.setModuleRelatedByParentId((ScarabModule)v);
         // setting the name to be null so that 
         // it gets rebuilt with the new information
@@ -296,19 +292,6 @@ public class ScarabModule
     public void setParentId(NumberKey id)
         throws TorqueException
     {
-        try
-        {
-            Module parent = ModuleManager.getInstance(id).getParent();
-            if (isEndlessLoop(parent))
-            {
-                throw new Exception("Endless parent/child relationship detected!");
-            }
-        }
-        catch (Exception e)
-        {
-            log().error("Problem checking endless loop", e);
-            throw new TorqueException(e.toString());
-        }
         super.setParentId(id);
         // setting the name to be null so that 
         // it gets rebuilt with the new information
