@@ -464,6 +464,15 @@ public class XmlElement {
 			} else {
 				System.out.println(indent + node.getName() + " = '" + data + "'");
 			}
+			
+			// print attributes
+			for (Enumeration enum = node.getAttributes().keys(); enum.hasMoreElements();)
+			{
+				String key =  (String) enum.nextElement();
+				String value = node.getAttribute( key);
+				System.out.println(indent+key+":"+value);
+			}
+			
 			List subs = node.getElements();
 			int i, j;
 			for (Iterator it = subs.iterator(); it.hasNext();) {

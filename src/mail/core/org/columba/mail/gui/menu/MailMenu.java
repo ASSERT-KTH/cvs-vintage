@@ -51,6 +51,8 @@ public class MailMenu extends Menu {
 			NotifyDialog d = new NotifyDialog();
 			d.showDialog(ex);
 		}
+		
+		
 
 	}
 

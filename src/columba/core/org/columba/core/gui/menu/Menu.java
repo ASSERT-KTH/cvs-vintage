@@ -90,6 +90,7 @@ public class Menu extends JMenuBar {
 
 	public void extendMenu(XmlElement menuExtension) {
 		menuGenerator.extendMenu(menuExtension);
+		menuGenerator.createMenuBar(this);
 	}
 
 	/*

@@ -60,6 +60,8 @@ public class MenuPluginHandler extends AbstractPluginHandler {
 	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
 	 */
 	public void addExtension(String id, XmlElement extension) {
+		XmlElement.printNode(extension, "  ");
+		
 		menuPlugins.add(extension.getElement("menu"));
 	}
 

@@ -16,6 +16,8 @@
 	
 	<menu name="menu_edit" extensionpoint="bottom">
 		<menuitem action="ExternalEditor"/>	
+		<extensionpoint name="top" />	
+		<extensionpoint name="bottom" />
 	</menu>
 	
 	<menu name="menu_view" extensionpoint="show_hide">
@@ -24,15 +26,21 @@
 	
 	<menu name="menu_view" extensionpoint="bottom">
 		<menuitem imenu="CharacterEncodingMenu" />
+		<extensionpoint name="top" />	
+		<extensionpoint name="bottom" />
 	</menu>
 	
 	<menu name="menu_message">
 		<menuitem action="AttachFile"/>	 
 		<menuitem action="Spellcheck"/>	
+		<extensionpoint name="top" />	
+		<extensionpoint name="bottom" />
 	</menu>
 	
 	<menu name="menu_security">
 		<menuitem checkboxaction="SignMessage"/>	
-		<menuitem checkboxaction="EncryptMessage"/>	
+		<menuitem checkboxaction="EncryptMessage"/>
+		<extensionpoint name="top" />	
+		<extensionpoint name="bottom" />	
 	</menu>
 </menubar>

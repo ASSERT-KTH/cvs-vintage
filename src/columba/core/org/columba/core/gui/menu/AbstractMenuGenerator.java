@@ -95,13 +95,20 @@ public abstract class AbstractMenuGenerator {
 		ListIterator iterator = getMenuRoot().getElements().listIterator();
 		while (iterator.hasNext()) {
 			menu = ((XmlElement) iterator.next());
+			
+			
 			if (menu.getAttribute("name").equals(menuName)) {
+
+				XmlElement.printNode(menuExtension, "  ");
+				
 				createExtension(
 					menu,
 					(XmlElement) menuExtension.clone(),
 					extensionName);
 			}
 		}
+		
+		
 
 	}
 

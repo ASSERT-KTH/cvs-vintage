@@ -20,6 +20,7 @@ import org.columba.core.action.BasicAction;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.io.DiskIO;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
@@ -35,6 +36,8 @@ public class ActionPluginHandler extends AbstractPluginHandler {
 		String name,
 		AbstractFrameController controller)
 		throws Exception {
+		
+
 		return (BasicAction) getPlugin(name, new Object[] { controller });
 	}
 
