@@ -14,6 +14,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.DatabaseMetaData;
+
 
 import org.jboss.ejb.plugins.jaws.JPMInitCommand;
 import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
@@ -26,7 +28,7 @@ import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCInitCommand
    extends JDBCUpdateCommand
@@ -65,29 +67,32 @@ public class JDBCInitCommand
       // Create table if necessary
       if (jawsEntity.getCreateTable())
       {
-          boolean created = false;
-          Connection con = null;
-          Statement st = null;
-          ResultSet rs = null;
-          try {
-              con = getConnection();
-              st = con.createStatement();
-              rs = st.executeQuery("SELECT COUNT(*) FROM "+jawsEntity.getTableName()+" WHERE 0=1");
-              if(rs.next())
+         // first check if the table already exists...
+         // (a j2ee spec compatible jdbc driver has to fully 
+         // implement the DatabaseMetaData)
+         boolean created = false;
+         Connection con = null;
+         ResultSet rs = null;
+         try 
+         {
+             con = getConnection();
+             DatabaseMetaData dmd = con.getMetaData();
+             rs = dmd.getTables(con.getCatalog(), null, jawsEntity.getTableName(), null);
+             if (rs.next ())
                 created = true;
-              rs.close();
-              rs = null;
-              st.close();
-              st = null;
-              con.close();
-              con = null;
-          } catch(SQLException e) {
-              created = false;
-          } finally {
-              if(rs != null) try {rs.close();}catch(SQLException e) {}
-              if(st != null) try {st.close();}catch(SQLException e) {}
-              if(con != null) try {con.close();}catch(SQLException e) {}
-          }
+         
+             rs.close ();
+             con.close ();
+         } 
+         catch(Exception e) 
+         {
+            throw e;
+         } 
+         finally 
+         {
+             if(rs != null) try {rs.close(); rs = null;}catch(SQLException e) {}
+             if(con != null) try {con.close();con = null;}catch(SQLException e) {}
+         }
 
          // Try to create it
          if(created) {

@@ -21,6 +21,9 @@ import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
 
+import javax.transaction.Transaction;
+import javax.transaction.Status;
+
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceManager;
@@ -37,7 +40,7 @@ import org.jboss.ejb.EntityPersistenceStore;
 *      
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.11 $
+*   @version $Revision: 1.12 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {
@@ -98,7 +101,21 @@ implements EntityPersistenceManager {
 	    }
 	   
         // Initialize the store
-        store.init();
+        // if the store performes database operations (ie: table creations) it
+        // will need a transaction to do so
+        con.getTransactionManager ().begin ();
+        try
+        {
+           store.init();
+           con.getTransactionManager ().commit ();
+        } 
+        catch (Exception _e)
+        {
+           con.getTransactionManager ().rollback ();
+           store.destroy ();
+           throw _e;
+        }
+        
     }
     
     public void start() 
@@ -112,7 +129,22 @@ implements EntityPersistenceManager {
     }
     
     public void destroy() {
-        store.destroy();
+
+      // same as inistalize...
+      // maybe the store needs to drop tables and he
+      // will need a transaction therefor
+      try
+      {
+         con.getTransactionManager ().begin ();
+         store.destroy();
+         if (con.getTransactionManager().getStatus() == Status.STATUS_ACTIVE)
+             con.getTransactionManager ().commit ();
+         else
+            con.getTransactionManager ().rollback ();
+      }
+      catch (Exception _e)
+      {
+      }
     }
     
     public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
