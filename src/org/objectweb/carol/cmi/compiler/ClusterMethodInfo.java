@@ -17,53 +17,61 @@ public class ClusterMethodInfo {
     private String[] paramTypes;
     private String className;
 
-	public ClusterMethodInfo(String clName) {
-		className = clName;
-	}
+    public ClusterMethodInfo(String clName) {
+        className = clName;
+    }
 
     public void setSignature(String sign) throws Exception {
+        System.out.println("Setting : " + sign);
         try {
             Vector p = new Vector();
             if (signature != null)
-                throw new Exception("Only one signature per method allowed, method : " + sign);
+                throw new Exception(
+                    "Only one signature per method allowed, method : " + sign);
             signature = sign;
             int obr = sign.indexOf('(');
-            if (obr < 0) badSignature(sign);
+            if (obr < 0)
+                badSignature(sign);
             int mns = sign.lastIndexOf(' ', obr) + 1;
-            if (mns <= 0) badSignature(sign);
+            if (mns <= 0)
+                badSignature(sign);
             methodName = sign.substring(mns, obr);
             int mnd = methodName.lastIndexOf('.');
             if (mnd >= 0) {
-            	methodName = methodName.substring(mnd+1);
+                methodName = methodName.substring(mnd + 1);
             }
             mns--;
-            while (sign.charAt(mns - 1) == ' ') mns--;
+            while (sign.charAt(mns - 1) == ' ')
+                mns--;
             int rts = sign.lastIndexOf(' ', mns - 1) + 1;
-            if (rts <= 0) badSignature(sign);
+            if (rts <= 0)
+                badSignature(sign);
             returnType = sign.substring(rts, mns);
             int cbr = sign.indexOf(')');
-            String params = sign.substring(obr+1, cbr);
-            params.trim();
+            String params = sign.substring(obr + 1, cbr);
+            params = params.trim();
             while (!"".equals(params)) {
-            	int com = params.indexOf(',');
-            	String param;
-            	if (com < 0) {
-            		param = params;
-            		params = "";
-            	} else {
-            		param = params.substring(0, com);
-            		params = params.substring(com + 1);
-            	}
-            	int te = param.indexOf(' ');
-            	if (te > 0)
-            		param = param.substring(0, te);
-            	p.addElement(param);
+                int com = params.indexOf(',');
+                String param;
+                if (com < 0) {
+                    param = params;
+                    params = "";
+                } else {
+                    param = params.substring(0, com);
+                    params = params.substring(com + 1);
+                }
+                int te = param.indexOf(' ');
+                if (te > 0) {
+                    param = param.substring(0, te);
+                    p.addElement(param);
+                }
+                params = params.trim();
             }
             paramTypes = new String[p.size()];
             p.copyInto(paramTypes);
         } catch (Exception e) {
-        	e.printStackTrace();
-        	throw e;
+            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -71,9 +79,8 @@ public class ClusterMethodInfo {
      * Method badSignature.
      */
     private void badSignature(String sign) throws Exception {
-    	throw new Exception("Bad method signature : " + sign);
+        throw new Exception("Bad method signature : " + sign);
     }
-
 
     private void assertType() throws Exception {
         if (type != 0)
@@ -99,7 +106,8 @@ public class ClusterMethodInfo {
         if (signature == null)
             throw new Exception("A signature has to be be provided for each method.");
         if (type == 0)
-            throw new Exception("Clustering type not provided for : " + signature);
+            throw new Exception(
+                "Clustering type not provided for : " + signature);
     }
 
     public String getSignature() {
@@ -112,14 +120,14 @@ public class ClusterMethodInfo {
 
     public String methodFieldType() {
         switch (type) {
-        case REDO_CHOICE_RETRY:
-            return "org.objectweb.StubListRandomChooser";
-        case ONE_CHOICE:
-            return null;
-        case REDO_CHOICE:
-            return null;
-        default:
-            return null;
+            case REDO_CHOICE_RETRY :
+                return "org.objectweb.StubListRandomChooser";
+            case ONE_CHOICE :
+                return null;
+            case REDO_CHOICE :
+                return null;
+            default :
+                return null;
         }
     }
 
@@ -129,15 +137,28 @@ public class ClusterMethodInfo {
      * @return boolean
      */
     public boolean match(MethodContext m) {
-    	if (!methodName.equals(m.mthName)) return false;
-    	if (!returnType.equals(m.returnTypeName)) return false;
-    	int i = paramTypes.length;
-    	String ptn[] = m.getParamTypeNames();
-    	int j = ptn.length;
-    	if (i != j) return false;
-    	for (i=0; i<j; i++) {
-    		if (!paramTypes[i].equals(ptn[i])) return false;
-    	}
-    	return true;
+        System.out.print("Testing <" + returnType + "><" + methodName + "><");
+        for (int i = 0; i < paramTypes.length; i++)
+            System.out.print("," + paramTypes[i]);
+        System.out.print("> vs <" + m.returnTypeName + "><" + m.mthName + "><");
+        String ptn2[] = m.getParamTypeNames();
+        for (int i = 0; i < ptn2.length; i++)
+            System.out.print("," + ptn2[i]);
+        System.out.println(">");
+
+        if (!methodName.equals(m.mthName))
+            return false;
+        if (!returnType.equals(m.returnTypeName))
+            return false;
+        int i = paramTypes.length;
+        String ptn[] = m.getParamTypeNames();
+        int j = ptn.length;
+        if (i != j)
+            return false;
+        for (i = 0; i < j; i++) {
+            if (!paramTypes[i].equals(ptn[i]))
+                return false;
+        }
+        return true;
     }
 }

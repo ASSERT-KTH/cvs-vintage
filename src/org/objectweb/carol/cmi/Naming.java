@@ -42,7 +42,7 @@ public final class Naming {
         if (n == 0) return null;
         ClusterRegistry r = getRegistry(hp[0].host, hp[0].port);
         if (n == 1) return r;
-        ClusterRegistryImplCStub cstub = new ClusterRegistryImplCStub(r);
+        ClusterRegistryImpl_Cluster cstub = new ClusterRegistryImpl_Cluster(r);
         for (int i = 1; i < n; i++) {
             cstub.setStub(getRegistry(hp[i].host, hp[i].port));
         }

@@ -180,11 +180,6 @@ public class ClusterStubCompiler {
         }
     }
 
-    // XXX A cluster invoker would be a way to do piggybacking of load
-    // information
-    void writeClusterInvoker(MethodContext mthctx, ClusterMethodInfo cmi) {
-    }
-
     void writeStubMethodRedoChoiceRetry(
         MethodContext mthctx,
         ClusterMethodInfo cmi) {

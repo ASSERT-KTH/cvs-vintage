@@ -22,9 +22,15 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.SocketException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -161,7 +167,8 @@ class GlobalExports {
             table.put(key, cs);
         } else if (!cs.setStub(serverId, stub))
             if (Trace.DES)
-                Trace.out("DES: Warning: Object registered in the cluster as two distinct types");
+                Trace.out(
+                    "DES: Warning: Object registered in the cluster as two distinct types");
     }
 
     public synchronized void remove(ClusterId serverId, Serializable key) {
@@ -256,6 +263,39 @@ class LocalExports {
     //    }
 }
 
+class BindAddressChooser extends Thread {
+    private MulticastSocket sock;
+    private InetAddress group;
+    private int port;
+    static final int TIMEOUT = 10;
+    static final int RETRIES = 20;
+
+    BindAddressChooser(MulticastSocket sock, InetAddress group, int port) {
+        this.sock = sock;
+        this.group = group;
+        this.port = port;
+    }
+
+    public void run() {
+        for (int i = 0; i < RETRIES; i++) {
+            byte[] msg = { 0 };
+            DatagramPacket pkt =
+                new DatagramPacket(msg, msg.length, group, port);
+            try {
+                sock.send(pkt);
+            } catch (IOException e) {
+                // Something wrong with the socket, should return ?
+            }
+            try {
+                Thread.sleep(TIMEOUT);
+            } catch (InterruptedException e1) {
+                // Work finished
+                return;
+            }
+        }
+    }
+}
+
 class DistributedEquivSystem {
     private String chan_props;
     private String groupname;
@@ -303,6 +343,90 @@ class DistributedEquivSystem {
         }
     }
 
+    private static String chooseBindAddress2(
+        String groupname_or_ip,
+        int port) {
+        int ip_ttl = 0;
+        MulticastSocket sock;
+        Thread sender;
+        try {
+            InetAddress group = InetAddress.getByName(groupname_or_ip);
+            sock = new MulticastSocket(port);
+            sender = new BindAddressChooser(sock, group, port);
+            sock.setTimeToLive(ip_ttl);
+            sock.joinGroup(group);
+        } catch (IOException e2) {
+            return null;
+        }
+
+        sender.start();
+        byte[] buf = new byte[2];
+        DatagramPacket recv = new DatagramPacket(buf, buf.length);
+        long end =
+            System.currentTimeMillis()
+                + BindAddressChooser.RETRIES * BindAddressChooser.TIMEOUT;
+        do {
+            recv.setData(buf, 0, buf.length);
+            try {
+                sock.receive(recv);
+            } catch (IOException e1) {
+                // Something wrong with the socket, cancel
+                sender.interrupt();
+                return null;
+            }
+            byte[] msg = recv.getData();
+            if ((recv.getLength() != 1) || (recv.getData()[0] != 0)) {
+                continue;
+            }
+            InetAddress a = recv.getAddress();
+            try {
+                sock.setInterface(a);
+            } catch (SocketException e) {
+                continue;
+            }
+            sender.interrupt();
+            return a.getHostAddress();
+        } while (System.currentTimeMillis() < end);
+        sender.interrupt();
+        return null;
+    }
+
+    private static String chooseBindAddress() {
+        String s = Config.getMulticastItf();
+        if (s == null) {
+            return null;
+        }
+        LinkedList l = new LinkedList();
+        try {
+            InetMask m = new InetMask(s);
+            Enumeration enum;
+            Class cl;
+            Method getInet;
+            Object[] obj0 = {
+            };
+            cl = Class.forName("java.net.NetworkInterface");
+            Method meth = cl.getMethod("getNetworkInterfaces", new Class[0]);
+            getInet = cl.getMethod("getInetAddresses", new Class[0]);
+            enum = (Enumeration) meth.invoke(cl, obj0);
+            while (enum.hasMoreElements()) {
+                Object o = enum.nextElement();
+                Enumeration enum2 = (Enumeration) getInet.invoke(o, obj0);
+                while (enum2.hasMoreElements()) {
+                    InetAddress a = (InetAddress) enum2.nextElement();
+                    if (m.match(a)) {
+                        l.add(a);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        if (l.size() != 1) {
+            return null;
+        }
+        return ((InetAddress) l.getFirst()).getHostAddress();
+    }
+
     DistributedEquivSystem()
         throws
             ConfigException,
@@ -310,12 +434,21 @@ class DistributedEquivSystem {
             org.javagroups.ChannelException,
             org.javagroups.ChannelClosedException {
         ClusterIdFactory.generate();
+        String mcast_addr = Config.getMulticastAddress();
+        int mcast_port = Config.getMulticastPort();
+        String bind_addr = chooseBindAddress();
+        if (bind_addr != null) {
+            bind_addr = ";bind_addr=" + bind_addr;
+        } else {
+            bind_addr = "";
+        }
 
         chan_props =
             "UDP(mcast_addr="
-                + Config.getMulticastAddress()
+                + mcast_addr
                 + ";mcast_port="
-                + Config.getMulticastPort()
+                + mcast_port
+                + bind_addr
                 + ";ip_ttl=32;"
                 + "mcast_send_buf_size=150000;mcast_recv_buf_size=80000):"
                 + "PING(num_initial_members=2;timeout=3000):"
@@ -519,20 +652,20 @@ class DistributedEquivSystem {
         }
 
         Address from = m.getSrc();
-//        if (o instanceof ExportsMsg) {
-//            ExportsMsg rm = (ExportsMsg) o;
-//            ClusterId id = checkServer(rm.i, from);
-//            if (id == null)
-//                return;
-//            if (Trace.DES)
-//                Trace.out(
-//                    "DES: Received exports from server " + from + " " + m);
-//            if (!self(id)) {
-//                globalExports.addExports(id, rm.getMap());
-//                if (Trace.DES)
-//                    Trace.out("DES: Exports added (" + from + ")");
-//            }
-//        } else
+        //        if (o instanceof ExportsMsg) {
+        //            ExportsMsg rm = (ExportsMsg) o;
+        //            ClusterId id = checkServer(rm.i, from);
+        //            if (id == null)
+        //                return;
+        //            if (Trace.DES)
+        //                Trace.out(
+        //                    "DES: Received exports from server " + from + " " + m);
+        //            if (!self(id)) {
+        //                globalExports.addExports(id, rm.getMap());
+        //                if (Trace.DES)
+        //                    Trace.out("DES: Exports added (" + from + ")");
+        //            }
+        //        } else
         if (o instanceof ExportMsg) {
             ExportMsg pm = (ExportMsg) o;
             ClusterId id = checkServer(pm.i, from);

@@ -37,7 +37,6 @@ import java.util.Vector;
 public class ClusterCompiler {
     private int nbClassArgs;
     private Vector classes;
-    private String stubProtocol = "std";
 
     public ClusterCompiler() {
     }

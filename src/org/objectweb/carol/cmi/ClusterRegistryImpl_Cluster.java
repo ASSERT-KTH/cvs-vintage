@@ -24,11 +24,11 @@ import java.rmi.RemoteException;
 /**
  * Cluster standard stub for ClusterRegistryImpl
  */
-public class ClusterRegistryImplCStub
+public class ClusterRegistryImpl_Cluster
     extends ClusterStub
     implements ClusterRegistry {
     // constructors
-    public ClusterRegistryImplCStub(Remote stub) throws RemoteException {
+    public ClusterRegistryImpl_Cluster(Remote stub) throws RemoteException {
         super(stub);
     }
 
