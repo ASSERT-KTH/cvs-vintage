@@ -18,16 +18,8 @@ if (document.layers)
 { 
 document.write('<link rel="stylesheet" type="text/css" href="$staticLink.setPath("/style/ns4_only.css")" media="screen" />')
 }
-
-## Handling for automatic form submittal via a drop-down value change.
-function submitFormTo(form, name) {
-  var input = document.createElement('input');
-  input.type = 'hidden';
-  input.name = name;
-  form.appendChild(input);
-  form.submit();
-}
 </script>
+<script src="$staticLink.setPath("/scripts/inputs.js")" type="text/javascript"></script>
 <script src="$staticLink.setPath("/scripts/main.js")" type="text/javascript"></script>
  </head>
 <body marginwidth="0" marginheight="0" class="composite">
