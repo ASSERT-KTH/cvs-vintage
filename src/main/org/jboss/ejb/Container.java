@@ -84,7 +84,7 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.141 $
+ * @version $Revision: 1.142 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -197,7 +197,7 @@ public abstract class Container
    public HashMap timerServices = new HashMap();
 
    /** A reference to {@link TimedObject#ejbTimeout}. */
-   protected static final Method EJB_TIMEOUT;
+   protected static final Method ejbTimeout;
 
    /**
     * Initialize <tt>TimedObject</tt> method references.
@@ -206,7 +206,7 @@ public abstract class Container
    {
       try
       {
-         EJB_TIMEOUT = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
+         ejbTimeout = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
       }
       catch (Exception e)
       {
@@ -658,9 +658,6 @@ public abstract class Container
    public void removeTimerService(Object pKey)
            throws IllegalStateException
    {
-      if (this instanceof StatefulSessionContainer)
-         throw new IllegalStateException("Statefull Session Beans are not allowed to access the TimerService");
-
       try
       {
          // Try EJBTimerServiceTx first
@@ -707,7 +704,7 @@ public abstract class Container
       {
          LocalEJBInvocation invocation = new LocalEJBInvocation(
                  id,
-                 EJB_TIMEOUT,
+                 ejbTimeout,
                  new Object[]{pTimer},
                  null,
                  null,

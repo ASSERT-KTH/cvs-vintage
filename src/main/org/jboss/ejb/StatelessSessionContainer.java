@@ -30,7 +30,7 @@ import java.util.Map;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.54 $
+ * @version $Revision: 1.55 $
  */
 public class StatelessSessionContainer
    extends SessionContainer
@@ -212,40 +212,42 @@ public class StatelessSessionContainer
             throw new EJBException(msg);
          }
 
-         //If we have a method that needs to be done by the container (EJBObject methods)
-         if (m.getDeclaringClass().equals(StatelessSessionContainer.class))
+         if (ejbTimeout.equals(mi.getMethod()))
+            ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
+         else
+            ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
+
+         try
          {
-            try
+            //If we have a method that needs to be done by the container (EJBObject methods)
+            if (m.getDeclaringClass().equals(StatelessSessionContainer.class))
             {
-               ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
-               return mi.performCall(StatelessSessionContainer.this, m, new Object[] { mi });
+               try
+               {
+                  return mi.performCall(StatelessSessionContainer.this, m, new Object[] { mi });
+               }
+               catch (Exception e)
+               {
+                  rethrow(e);
+               }
             }
-            catch (Exception e)
+            else // we have a method that needs to be done by a bean instance
             {
-               rethrow(e);
-            }
-            finally
-            {
-               ctx.popInMethodFlag();
+               // Invoke and handle exceptions
+               try
+               {
+                  Object bean = ctx.getInstance();
+                  return mi.performCall(bean, m, mi.getArguments());
+               }
+               catch (Exception e)
+               {
+                  rethrow(e);
+               }
             }
          }
-         else // we have a method that needs to be done by a bean instance
+         finally
          {
-            // Invoke and handle exceptions
-            try
-            {
-               ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
-               Object bean = ctx.getInstance();
-               return mi.performCall(bean, m, mi.getArguments());
-            }
-            catch (Exception e)
-            {
-               rethrow(e);
-            }
-            finally
-            {
-               ctx.popInMethodFlag();
-            }
+            ctx.popInMethodFlag();
          }
 
          // We will never get this far, but the compiler does not know that

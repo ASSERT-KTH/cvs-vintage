@@ -32,7 +32,7 @@ import org.jboss.metadata.InvokerProxyBindingMetaData;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  *<p><b>20011219 marc fleury:</b>
 * <ul>
@@ -73,8 +73,6 @@ extends ContainerPlugin
     * stateless session bean is needed.
     *
     * @return    An implementation of the remote interface for this container.
-    * 
-    * @throws RemoteException    Thrown if the EJBObject could not be created.
     */
    Object getStatelessSessionEJBObject();
 
@@ -85,8 +83,6 @@ extends ContainerPlugin
     * @param id    The id of the session.
     * @return      An implementation of the remote interface for this
     *              container.
-    *              
-    * @throws RemoteException    Thrown if the EJBObject could not be created.
     */
    Object getStatefulSessionEJBObject(Object id);
 
@@ -97,8 +93,6 @@ extends ContainerPlugin
     * @param id    The primary key of the entity.
     * @return      An implementation of the remote interface for this
     *              container.
-    *              
-    * @throws RemoteException    Thrown if the EJBObject could not be created.
     */
    Object getEntityEJBObject(Object id);
 
@@ -109,8 +103,6 @@ extends ContainerPlugin
     * @param enum    Enumeration of primary keys.
     * @return        A collection of EJBObjects implementing the remote
     *                interface for this container.
-    *                
-    * @throws RemoteException    Thrown if the EJBObjects could not be created.
     */
    Collection getEntityCollection(Collection enum);
 }

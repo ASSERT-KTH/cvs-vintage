@@ -6,21 +6,6 @@
  */
 package org.jboss.ejb.plugins;
 
-import java.lang.reflect.Method;
-import java.rmi.NoSuchObjectException;
-import java.rmi.RemoteException;
-
-import javax.ejb.EJBException;
-import javax.ejb.EJBObject;
-import javax.ejb.Handle;
-import javax.ejb.NoSuchObjectLocalException;
-import javax.ejb.TimedObject;
-import javax.ejb.Timer;
-import javax.transaction.RollbackException;
-import javax.transaction.Status;
-import javax.transaction.Synchronization;
-import javax.transaction.Transaction;
-
 import org.jboss.ejb.BeanLock;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EnterpriseContext;
@@ -32,6 +17,18 @@ import org.jboss.logging.Logger;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.security.SecurityAssociation;
 
+import javax.ejb.EJBException;
+import javax.ejb.EJBObject;
+import javax.ejb.Handle;
+import javax.ejb.NoSuchObjectLocalException;
+import javax.transaction.RollbackException;
+import javax.transaction.Status;
+import javax.transaction.Synchronization;
+import javax.transaction.Transaction;
+import java.lang.reflect.Method;
+import java.rmi.NoSuchObjectException;
+import java.rmi.RemoteException;
+
 /**
  * This container acquires the given instance.
  *
@@ -39,7 +36,7 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.45 $
+ * @version $Revision: 1.46 $
  *
  */
 public class StatefulSessionInstanceInterceptor
@@ -61,7 +58,6 @@ public class StatefulSessionInstanceInterceptor
    private static Method getPrimaryKey;
    private static Method isIdentical;
    private static Method remove;
-   private static Method ejbTimeout;
    private static Method getEJBObject;
 
    static
@@ -74,7 +70,6 @@ public class StatefulSessionInstanceInterceptor
          getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", noArg);
          isIdentical = EJBObject.class.getMethod("isIdentical", new Class[]{EJBObject.class});
          remove = EJBObject.class.getMethod("remove", noArg);
-         ejbTimeout = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
          getEJBObject = Handle.class.getMethod("getEJBObject", noArg);
       }
       catch (Exception e)
@@ -276,11 +271,6 @@ public class StatefulSessionInstanceInterceptor
          // Set the current security information
          ctx.setPrincipal(mi.getPrincipal());
 
-         if (ejbTimeout.equals(mi.getMethod()))
-            ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
-         else
-            ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
-
          boolean validContext = true;
          try
          {
@@ -317,8 +307,6 @@ public class StatefulSessionInstanceInterceptor
          }
          finally
          {
-            ctx.popInMethodFlag();
-
             if (validContext)
             {
                // Still a valid instance
@@ -373,7 +361,7 @@ public class StatefulSessionInstanceInterceptor
        *  The transaction we follow.
        */
       private Transaction tx;
-      
+
       /**
        *  The context we manage.
        */

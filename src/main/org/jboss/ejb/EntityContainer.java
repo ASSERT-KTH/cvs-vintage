@@ -51,7 +51,7 @@ import org.jboss.ejb.txtimer.TimedObjectInvokerImpl;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.113 $
+ * @version $Revision: 1.114 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -1114,9 +1114,14 @@ public class EntityContainer
             {
                EnterpriseContext ctx = (EnterpriseContext) mi.getEnterpriseContext();
                Object instance = ctx.getInstance();
+
+               if (ejbTimeout.equals(mi.getMethod()))
+                  ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_TIMEOUT);
+               else
+                  ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
+
                try
                {
-                  ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
                   return mi.performCall(instance, m, mi.getArguments());
                }
                finally
