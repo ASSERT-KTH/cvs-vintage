@@ -31,7 +31,7 @@ import java.util.Vector;
  * text substrings without the overhead of creating a new string object.
  *
  * @author Slava Pestov, Mike Dillon
- * @version $Id: KeywordMap.java,v 1.7 2003/06/05 00:01:49 spestov Exp $
+ * @version $Id: KeywordMap.java,v 1.8 2004/05/29 01:55:26 spestov Exp $
  */
 public class KeywordMap
 {
@@ -127,7 +127,6 @@ loop:		for(int i = 0; i < keyword.length; i++)
 			}
 		}
 
-		noWordSepStr = null;
 		map[key] = new Keyword(keyword,id,map[key]);
 	} //}}}
 
@@ -210,16 +209,7 @@ loop:		for(int i = 0; i < keyword.length; i++)
 	private Keyword[] map;
 	private boolean ignoreCase;
 	private StringBuffer noWordSep;
-	private String noWordSepStr;
 	//}}}
-
-	//{{{ getStringMapKey() method
-	private int getStringMapKey(String s)
-	{
-		return (Character.toUpperCase(s.charAt(0)) +
-				Character.toUpperCase(s.charAt(s.length()-1)))
-				% mapLength;
-	} //}}}
 
 	//{{{ getStringMapKey() method
 	private int getStringMapKey(char[] s)

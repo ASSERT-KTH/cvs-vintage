@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.20 2004/03/12 19:27:00 spestov Exp $
+ * @version $Id: EditServer.java,v 1.21 2004/05/29 01:55:24 spestov Exp $
  */
 public class EditServer extends Thread
 {
@@ -86,19 +86,26 @@ public class EditServer extends Thread
 			int port = socket.getLocalPort();
 
 			FileWriter out = new FileWriter(portFile);
-			out.write("b\n");
-			out.write(String.valueOf(port));
-			out.write("\n");
-			out.write(String.valueOf(authKey));
-			out.write("\n");
-			out.close();
+
+			try
+			{
+				out.write("b\n");
+				out.write(String.valueOf(port));
+				out.write("\n");
+				out.write(String.valueOf(authKey));
+				out.write("\n");
+			}
+			finally
+			{
+				out.close();
+			}
+
+			ok = true;
 
 			Log.log(Log.DEBUG,this,"jEdit server started on port "
 				+ socket.getLocalPort());
 			Log.log(Log.DEBUG,this,"Authorization key is "
 				+ authKey);
-
-			ok = true;
 		}
 		catch(IOException io)
 		{

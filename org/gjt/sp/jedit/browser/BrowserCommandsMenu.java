@@ -33,7 +33,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.23 2003/12/27 22:38:52 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.24 2004/05/29 01:55:24 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -169,7 +169,6 @@ public class BrowserCommandsMenu extends JPopupMenu
 	private VFSBrowser browser;
 	private HashMap encodingMenuItems;
 	private JCheckBoxMenuItem autoDetect;
-	private JRadioButtonMenuItem defaultEncoding;
 	private JRadioButtonMenuItem otherEncoding;
 
 	//{{{ createMenuItem() method

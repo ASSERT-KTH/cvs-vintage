@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * fields. Note that the list model implementation is incomplete; no events
  * are fired when the history model changes.
  * @author Slava Pestov
- * @version $Id: HistoryModel.java,v 1.16 2003/11/06 03:38:44 spestov Exp $
+ * @version $Id: HistoryModel.java,v 1.17 2004/05/29 01:55:25 spestov Exp $
  */
 public class HistoryModel extends AbstractListModel
 {
@@ -253,10 +253,11 @@ public class HistoryModel extends AbstractListModel
 
 		String lineSep = System.getProperty("line.separator");
 
+		BufferedWriter out = null;
+
 		try
 		{
-			BufferedWriter out = new BufferedWriter(
-				new FileWriter(file1));
+			out = new BufferedWriter(new FileWriter(file1));
 
 			if(models != null)
 			{
@@ -295,6 +296,17 @@ public class HistoryModel extends AbstractListModel
 		catch(IOException io)
 		{
 			Log.log(Log.ERROR,HistoryModel.class,io);
+		}
+		finally
+		{
+			try
+			{
+				if(out != null)
+					out.close();
+			}
+			catch(IOException e)
+			{
+			}
 		}
 
 		historyModTime = file2.lastModified();

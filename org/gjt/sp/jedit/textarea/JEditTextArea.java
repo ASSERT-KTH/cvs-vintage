@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.315 2004/05/28 06:03:12 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.316 2004/05/29 01:55:26 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5648,7 +5648,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		try
 		{
 			dndCallback.invoke(null,new Object[] { this, evt,
-				new Boolean(copy) });
+				Boolean.valueOf(copy) });
 		}
 		catch(Exception e)
 		{

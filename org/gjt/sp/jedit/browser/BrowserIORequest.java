@@ -32,7 +32,7 @@ import org.gjt.sp.util.*;
 /**
  * A browser I/O request.
  * @author Slava Pestov
- * @version $Id: BrowserIORequest.java,v 1.19 2003/08/04 00:23:07 spestov Exp $
+ * @version $Id: BrowserIORequest.java,v 1.20 2004/05/29 01:55:24 spestov Exp $
  */
 class BrowserIORequest extends WorkRequest
 {
@@ -65,13 +65,12 @@ class BrowserIORequest extends WorkRequest
 	 * @param browser The VFS browser instance
 	 * @param path1 The first path name to operate on
 	 * @param path2 The second path name to operate on
-	 * @param node Only used for type == LIST_DIRECTORY
 	 * @param loadInfo A two-element array filled out by the request;
 	 * element 1 is the canonical path, element 2 is the file list.
 	 */
 	BrowserIORequest(int type, VFSBrowser browser,
 		Object session, VFS vfs, String path1, String path2,
-		Object node, Object[] loadInfo)
+		Object[] loadInfo)
 	{
 		this.type = type;
 		this.browser = browser;
@@ -79,7 +78,6 @@ class BrowserIORequest extends WorkRequest
 		this.vfs = vfs;
 		this.path1 = path1;
 		this.path2 = path2;
-		this.node = node;
 		this.loadInfo = loadInfo;
 	} //}}}
 
@@ -140,7 +138,6 @@ class BrowserIORequest extends WorkRequest
 	private VFS vfs;
 	private String path1;
 	private String path2;
-	private Object node;
 	private Object[] loadInfo;
 	//}}}
 

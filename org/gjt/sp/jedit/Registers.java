@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Registers.java,v 1.20 2004/02/27 23:59:09 spestov Exp $
+ * @version $Id: Registers.java,v 1.21 2004/05/29 01:55:24 spestov Exp $
  */
 public class Registers
 {
@@ -420,10 +420,13 @@ public class Registers
 
 		String lineSep = System.getProperty("line.separator");
 
+		BufferedWriter out = null;
+
+		boolean ok = false;
+
 		try
 		{
-			BufferedWriter out = new BufferedWriter(
-				new FileWriter(file1));
+			out = new BufferedWriter(new FileWriter(file1));
 
 			out.write("<?xml version=\"1.0\"?>");
 			out.write(lineSep);
@@ -456,16 +459,30 @@ public class Registers
 			out.write("</REGISTERS>");
 			out.write(lineSep);
 
-			out.close();
-
-			/* to avoid data loss, only do this if the above
-			 * completed successfully */
-			file2.delete();
-			file1.renameTo(file2);
+			ok = true;
 		}
 		catch(Exception e)
 		{
 			Log.log(Log.ERROR,Registers.class,e);
+		}
+		finally
+		{
+			try
+			{
+				if(out != null)
+					out.close();
+			}
+			catch(IOException e)
+			{
+			}
+		}
+
+		if(ok)
+		{
+			/* to avoid data loss, only do this if the above
+			 * completed successfully */
+			file2.delete();
+			file1.renameTo(file2);
 		}
 
 		registersModTime = file2.lastModified();

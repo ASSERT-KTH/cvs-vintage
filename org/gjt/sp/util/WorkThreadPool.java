@@ -30,7 +30,7 @@ import javax.swing.SwingUtilities;
 /**
  * A pool of work threads.
  * @author Slava Pestov
- * @version $Id: WorkThreadPool.java,v 1.7 2003/08/04 00:23:07 spestov Exp $
+ * @version $Id: WorkThreadPool.java,v 1.8 2004/05/29 01:55:26 spestov Exp $
  * @see org.gjt.sp.util.WorkThread
  * @since jEdit 2.6pre1
  */
@@ -149,7 +149,7 @@ public class WorkThreadPool
 				requestCount++;
 			} //}}}
 
-			lock.notify();
+			lock.notifyAll();
 		}
 	} //}}}
 
@@ -247,8 +247,8 @@ public class WorkThreadPool
 	} //}}}
 
 	//{{{ Package-private members
-	Object lock = new String("Work thread pool request queue lock");
-	Object waitForAllLock = new String("Work thread pool waitForAll() notifier");
+	Object lock = new Object();
+	Object waitForAllLock = new Object();
 
 	//{{{ fireStatusChanged() method
 	void fireStatusChanged(WorkThread thread)

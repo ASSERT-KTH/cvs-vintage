@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.227 2004/05/15 21:57:22 spestov Exp $
+ * @version $Id: jEdit.java,v 1.228 2004/05/29 01:55:24 spestov Exp $
  */
 public class jEdit
 {
@@ -1264,15 +1264,27 @@ public class jEdit
 			if(!userCatalog.exists())
 			{
 				// create dummy catalog
+				FileWriter out = null;
 				try
 				{
-					FileWriter out = new FileWriter(userCatalog);
+					out = new FileWriter(userCatalog);
 					out.write(jEdit.getProperty("defaultCatalog"));
 					out.close();
 				}
 				catch(IOException io)
 				{
 					Log.log(Log.ERROR,jEdit.class,io);
+				}
+				finally
+				{
+					try
+					{
+						if(out != null)
+							out.close();
+					}
+					catch(IOException e)
+					{
+					}
 				}
 			}
 
