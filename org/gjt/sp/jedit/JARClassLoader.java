@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * A class loader implementation that loads classes from JAR files. All
  * instances share the same set of classes.
  * @author Slava Pestov
- * @version $Id: JARClassLoader.java,v 1.32 2004/03/05 17:26:36 spestov Exp $
+ * @version $Id: JARClassLoader.java,v 1.34 2004/03/11 05:21:00 spestov Exp $
  */
 public class JARClassLoader extends ClassLoader
 {
@@ -51,6 +51,7 @@ public class JARClassLoader extends ClassLoader
 	{
 		// for debugging
 		id = INDEX++;
+		live++;
 	} //}}}
 
 	//{{{ loadClass() method
@@ -182,6 +183,10 @@ public class JARClassLoader extends ClassLoader
 	 */
 	public static void dump()
 	{
+		Log.log(Log.DEBUG,JARClassLoader.class,
+			"Total instances created: " + INDEX);
+		Log.log(Log.DEBUG,JARClassLoader.class,
+			"Live instances: " + live);
 		synchronized(classHash)
 		{
 			Iterator entries = classHash.entrySet().iterator();
@@ -201,7 +206,16 @@ public class JARClassLoader extends ClassLoader
 	//{{{ toString() method
 	public String toString()
 	{
-		return jar.getPath() + " (" + id + ")";
+		if(jar == null)
+			return "<anonymous>(" + id + ")";
+		else
+			return jar.getPath() + " (" + id + ")";
+	} //}}}
+
+	//{{{ finalize() method
+	protected void finalize()
+	{
+		live--;
 	} //}}}
 
 	//{{{ Package-private members
@@ -254,6 +268,7 @@ public class JARClassLoader extends ClassLoader
 	private static final Object NO_CLASS = new Object();
 
 	private static int INDEX;
+	private static int live;
 	private static Hashtable classHash = new Hashtable();
 
 	private int id;
