@@ -1,4 +1,4 @@
-// $Id: ModeCreateAssociation.java,v 1.5 2005/01/11 21:03:30 mvw Exp $
+// $Id: ModeCreateAssociation.java,v 1.6 2005/01/24 23:15:57 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -313,7 +313,7 @@ public class ModeCreateAssociation extends ModeCreatePolyEdge {
 
         GraphNodeRenderer renderer = editor.getGraphNodeRenderer();
         Layer lay = editor.getLayerManager().getActiveLayer();
-        figNode = renderer.getFigNodeFor(gm, lay, association);
+        figNode = renderer.getFigNodeFor(gm, lay, association, null);
         figNode.setX(me.getX() - figNode.getWidth() / 2);
         figNode.setY(me.getY() - figNode.getHeight() / 2);
         figNode.setVisible(false);

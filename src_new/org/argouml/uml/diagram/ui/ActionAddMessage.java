@@ -1,4 +1,4 @@
-// $Id: ActionAddMessage.java,v 1.8 2005/01/08 23:27:26 linus Exp $
+// $Id: ActionAddMessage.java,v 1.9 2005/01/24 23:15:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,7 +95,7 @@ public class ActionAddMessage extends UMLAction {
         GraphModel gm = e.getGraphModel();
         Layer lay = e.getLayerManager().getActiveLayer();
         GraphNodeRenderer gr = e.getGraphNodeRenderer();
-        FigNode figMsg = gr.getFigNodeFor(gm, lay, message);
+        FigNode figMsg = gr.getFigNodeFor(gm, lay, message, null);
         ((FigMessage) figMsg).addPathItemToFigAssociationRole(lay);
         TargetManager.getInstance().setTarget(message);
     }

@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramRenderer.java,v 1.14 2005/01/09 14:58:38 linus Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.15 2005/01/24 23:15:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,13 +22,16 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: SequenceDiagramRenderer.java,v 1.14 2005/01/09 14:58:38 linus Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.15 2005/01/24 23:15:56 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.sequence.ui;
 
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
+import org.argouml.uml.diagram.UmlDiagramRenderer;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.graph.GraphEdgeRenderer;
 import org.tigris.gef.graph.GraphModel;
@@ -42,10 +45,9 @@ import org.tigris.gef.presentation.FigNode;
  *
  * @author 5eichler
  */
-public class SequenceDiagramRenderer
-	implements GraphNodeRenderer, GraphEdgeRenderer {
+public class SequenceDiagramRenderer extends UmlDiagramRenderer {
     private static final Logger LOG =
-	Logger.getLogger(SequenceDiagramRenderer.class);
+        Logger.getLogger(SequenceDiagramRenderer.class);
 
     /**
      * Return a Fig that can be used to represent the given node.
@@ -54,13 +56,14 @@ public class SequenceDiagramRenderer
      * org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer,
      * java.lang.Object)
      */
-    public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node) {
-	if (ModelFacade.isAObject(node))
-	    return new FigObject(node);
-	// if (node instanceof MStimulus) return new FigSeqStimulus(gm, node);
-	// TODO: Something here.
-	LOG.debug("SequenceDiagramRenderer getFigNodeFor");
-	return null;
+    public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node, Map styleAttributes) {
+        if (ModelFacade.isAObject(node)) {
+            return new FigObject(node);
+        }
+        // if (node instanceof MStimulus) return new FigSeqStimulus(gm, node);
+        // TODO: Something here.
+        LOG.debug("SequenceDiagramRenderer getFigNodeFor");
+        return null;
     }
 
     /**
@@ -70,26 +73,26 @@ public class SequenceDiagramRenderer
      * org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer,
      * java.lang.Object)
      */
-    public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {
-	if (ModelFacade.isALink(edge)) {
-	    Object stimulus = ModelFacade.getStimuli(edge).iterator().next();
-	    Object action = ModelFacade.getDispatchAction(stimulus);
-	    if (ModelFacade.isACallAction(action)) {
-		return new FigCallActionLink(edge);
-	    } else
-		if (ModelFacade.isAReturnAction(action)) {
-		    return new FigReturnActionLink(edge);
-		} else
-		    if (ModelFacade.isADestroyAction(edge)) {
-			return new FigDestroyActionLink(edge);
-		    } else
-			if (ModelFacade.isACreateAction(edge)) {
-			    return new FigCreateActionLink(edge);
-			}
-	}
-	// TODO: Something here.
-	LOG.debug("SequenceDiagramRenderer getFigEdgeFor");
-	return null;
+    public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge, Map styleAttributes) {
+        if (ModelFacade.isALink(edge)) {
+            Object stimulus = ModelFacade.getStimuli(edge).iterator().next();
+            Object action = ModelFacade.getDispatchAction(stimulus);
+            if (ModelFacade.isACallAction(action)) {
+        	return new FigCallActionLink(edge);
+            } else
+        	if (ModelFacade.isAReturnAction(action)) {
+        	    return new FigReturnActionLink(edge);
+        	} else
+        	    if (ModelFacade.isADestroyAction(edge)) {
+        		return new FigDestroyActionLink(edge);
+        	    } else
+        		if (ModelFacade.isACreateAction(edge)) {
+        		    return new FigCreateActionLink(edge);
+        		}
+        }
+        // TODO: Something here.
+        LOG.debug("SequenceDiagramRenderer getFigEdgeFor");
+        return null;
     }
 
 

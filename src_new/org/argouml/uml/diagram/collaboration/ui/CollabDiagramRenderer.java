@@ -1,4 +1,4 @@
-// $Id: CollabDiagramRenderer.java,v 1.15 2005/01/09 14:58:38 linus Exp $
+// $Id: CollabDiagramRenderer.java,v 1.16 2005/01/24 23:16:01 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,12 +22,15 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CollabDiagramRenderer.java,v 1.15 2005/01/09 14:58:38 linus Exp $
+// $Id: CollabDiagramRenderer.java,v 1.16 2005/01/24 23:16:01 bobtarling Exp $
 package org.argouml.uml.diagram.collaboration.ui;
+
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import org.argouml.model.ModelFacade;
+import org.argouml.uml.diagram.UmlDiagramRenderer;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.argouml.uml.diagram.static_structure.ui.FigComment;
 import org.argouml.uml.diagram.static_structure.ui.FigEdgeNote;
@@ -65,8 +68,7 @@ import org.tigris.gef.presentation.FigNode;
  *
  * @author agauthie
  */
-public class CollabDiagramRenderer
-    implements GraphNodeRenderer, GraphEdgeRenderer {
+public class CollabDiagramRenderer extends UmlDiagramRenderer {
     private static final Logger LOG =
 	Logger.getLogger(CollabDiagramRenderer.class);
 
@@ -76,7 +78,7 @@ public class CollabDiagramRenderer
      * org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer,
      * java.lang.Object)
      */
-    public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node) {
+    public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node, Map styleAttributes) {
 	if (ModelFacade.isAClassifierRole(node))
 	    return new FigClassifierRole(gm, lay, node);
 	if (ModelFacade.isAMessage(node))
@@ -96,7 +98,7 @@ public class CollabDiagramRenderer
      * org.tigris.gef.graph.GraphModel,
      * org.tigris.gef.base.Layer, java.lang.Object)
      */
-    public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {
+    public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge, Map styleAttributes) {
 	if (ModelFacade.isAAssociationRole(edge)) {
 	    FigAssociationRole asrFig = new FigAssociationRole(edge, lay);
 	    return asrFig;

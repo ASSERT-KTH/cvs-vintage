@@ -1,4 +1,4 @@
-// $Id: ActivityDiagramRenderer.java,v 1.4 2005/01/09 14:58:37 linus Exp $
+// $Id: ActivityDiagramRenderer.java,v 1.5 2005/01/24 23:16:02 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,8 @@
 
 
 package org.argouml.uml.diagram.activity.ui;
+
+import java.util.Map;
 
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.state.ui.StateDiagramRenderer;
@@ -66,7 +68,7 @@ public class ActivityDiagramRenderer extends StateDiagramRenderer {
      * org.tigris.gef.graph.GraphModel,
      * org.tigris.gef.base.Layer, java.lang.Object)
      */
-    public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node) {
+    public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node, Map styleAttributes) {
         if (ModelFacade.isAPartition(node)) {
             return new FigPartition(gm, node);
         }
@@ -79,6 +81,6 @@ public class ActivityDiagramRenderer extends StateDiagramRenderer {
         if (ModelFacade.isASubactivityState(node)) {
             return new FigSubactivityState(gm, node);
         }
-        return super.getFigNodeFor(gm, lay, node);
+        return super.getFigNodeFor(gm, lay, node, styleAttributes);
     }
 }

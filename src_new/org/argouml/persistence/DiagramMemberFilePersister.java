@@ -1,4 +1,4 @@
-// $Id: DiagramMemberFilePersister.java,v 1.5 2005/01/20 18:46:04 bobtarling Exp $
+// $Id: DiagramMemberFilePersister.java,v 1.6 2005/01/24 23:15:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,12 +66,11 @@ public class DiagramMemberFilePersister extends MemberFilePersister {
         throws OpenException {
 
         try {
-            PGMLParser parser = new PGMLParser();
             // Give the parser a map of model elements
             // keyed by their UUID. This is used to allocate
             // figs to their owner using the "href" attribute
             // in PGML.
-            parser.setOwnerRegistry(project.getUUIDRefs());
+            PGMLParser parser = new PGMLParser(project.getUUIDRefs());
             ArgoDiagram d =
                     (ArgoDiagram) parser.readDiagram(
                                   inputStream,

@@ -1,4 +1,4 @@
-// $Id: SelectionWButtons.java,v 1.10 2005/01/15 17:17:12 mvw Exp $
+// $Id: SelectionWButtons.java,v 1.11 2005/01/24 23:15:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -339,7 +339,7 @@ public abstract class SelectionWButtons extends SelectionNodeClarifiers {
         GraphNodeRenderer renderer = ce.getGraphNodeRenderer();
         LayerPerspective lay =
             (LayerPerspective) ce.getLayerManager().getActiveLayer();
-        Fig newFC = renderer.getFigNodeFor(gm, lay, newNode);
+        Fig newFC = renderer.getFigNodeFor(gm, lay, newNode, null);
 
         // calculate the position of the newly created fig.
         Rectangle outputRect =

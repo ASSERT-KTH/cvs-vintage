@@ -1,4 +1,4 @@
-// $Id: ModeCreateEdgeAndNode.java,v 1.31 2005/01/20 23:20:40 linus Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.32 2005/01/24 23:15:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -259,7 +259,7 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
             if (mgm.canAddNode(newNode)) {
                 GraphNodeRenderer renderer = editor.getGraphNodeRenderer();
                 Layer lay = editor.getLayerManager().getActiveLayer();
-                fn = renderer.getFigNodeFor(gm, lay, newNode);
+                fn = renderer.getFigNodeFor(gm, lay, newNode, null);
                 editor.add(fn);
                 mgm.addNode(newNode);
                 Fig encloser = null;
