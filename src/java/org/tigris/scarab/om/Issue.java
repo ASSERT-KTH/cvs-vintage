@@ -365,10 +365,12 @@ public class Issue
        throws Exception
     {
         Criteria crit = new Criteria(2)
+            .add(AttributeValuePeer.ISSUE_ID, getIssueId())        
             .add(AttributeValuePeer.DELETED, false)        
             .add(AttributeValuePeer.ATTRIBUTE_ID, attribute.getAttributeId());
 
-        List avals = getAttributeValues(crit);
+        List avals = getAttributeValues(crit);   
+
         AttributeValue aval = null;
         if ( avals.size() == 1 ) 
         {
