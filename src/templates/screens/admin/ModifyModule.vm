@@ -7,9 +7,9 @@
 #end
 
 #if ($createNew && $createNew.equals("true"))
-  $page.setTitle("New Module") 
+  #set ($title = "New module")
 #else
-  $page.setTitle("Modify Module") 
+  #set ($title = "Modify module")
   #set ($editModule = $scarabR.getModule($moduleId))
   #set ($canEdit = $scarabR.hasPermission($scarabG.Permission.MODULE__EDIT, $editModule))
 #end
@@ -28,7 +28,7 @@
 <div id="module" class="app">
 <h2>$page.Title</h2>
 
-<h3>Module Details</h3>
+<h3>$title</h3>
 
 <form action="$link.setPage("admin,ModifyModule.vm")" method="post">
 <input type="hidden" name="action" value="ModifyModule" /> 
@@ -84,44 +84,36 @@
   <tr>
    <th>* Parent module</th>
    <td> 
-     #set ($userModules = $data.User.EditableModules)
-
-#* Debugging
-     #foreach ($userModule in $userModules)
-     [userModule.RealName: $userModule.RealName]<br />
-     [userModule.Parent.RealName: $userModule.Parent.RealName]<br />
-     [moduleId.toString(): $moduleId.toString()]<br />
-     [userModule.ModuleId.toString(): $userModule.ModuleId.toString()]<br />
-     [editModule.Parent.ModuleId: $editModule.Parent.ModuleId] <br />
-     #end
-*#
+   #if ($editModule)
+     #set ($userModules = $data.User.getEditableModules($editModule))
+   #else
+     #set ($userModules = $data.User.getEditableModules())
+   #end
     <select name="$moduleGroup.ParentId.Key">
-    #if ($editModule && $editModule.Parent.ModuleId.toString() == "0")
-      <option value="0" selected="selected">Global</option>    
+    #if ($editModule)
+      #foreach ($userModule in $userModules)
+        #if ($editModule.Parent.ModuleId.toString().equals($userModule.ModuleId.toString()))
+          <option selected="selected" value="$userModule.ModuleId">[$userModule.Name] $userModule.RealName</option>
+        #else
+          <option value="$userModule.ModuleId">[$userModule.Name] $userModule.RealName</option>
+        #end
+      #end
     #else
-      <option value="0">Global</option>
+      #foreach ($userModule in $userModules)
+        <option value="$userModule.ModuleId">[$userModule.Name] $userModule.RealName</option>
+      #end
     #end
-     #foreach ($userModule in $userModules)
-       ## we can't assign ourselves as the parent
-       #if (!$moduleId.toString().equals($userModule.ModuleId.toString()))
-         ## if we are editing an existing module, select the right one in the popup
-         #if ($editModule && ($editModule.Parent.ModuleId.toString().equals($userModule.ModuleId.toString()) || $editModule.Parent.ModuleId.toString().equals($userModule.Parent.ModuleId.toString())))
-           <option selected="selected" value="$userModule.ModuleId">[$userModule.Name] $userModule.RealName</option>
-           <option selected="selected" value="$userModule.Parent.ModuleId">[$userModule.Parent.Name] $userModule.Parent.RealName</option>
-         #else
-           <option value="$userModule.ModuleId">[$userModule.Name] $userModule.RealName</option>
-           ## we already show the global module above, so don't show it again.
-           #if ($userModule.Parent.ModuleId.toString() != "0")
-           <option value="$userModule.Parent.ModuleId">[$userModule.Parent.Name] $userModule.Parent.RealName</option>
-           #end
-         #end
-       #end
-     #end
     </select>
     #fieldErrorMsg($moduleGroup.ParentId "")
    </td>
   </tr>
-#end  
+#end
+  <tr>
+    <th>* Deleted</td>
+    <td>
+        #booleanCheckbox($moduleGroup.Deleted)
+    </td>
+  </tr>
  </table>
 </div>
 

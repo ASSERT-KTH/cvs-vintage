@@ -1,4 +1,4 @@
-#set ($userModules = $data.User.getEditableModules(true))
+#set ($userModules = $data.User.EditableModules)
 <div id="managemodule" class="app">
 
 <h2>$page.Title</h2>
@@ -7,8 +7,9 @@
 #if ($userModules.size() > 0)
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
-    <th>Module name</th>
-    <th>Module description</th>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Deleted</th>
 </tr>
 
 #foreach ($module in $userModules)
@@ -18,6 +19,9 @@ $link.setPage("admin,ModifyModule.vm").addPathInfo("moduleId", $module.ModuleId)
 </td>
 <td>
 $module.Description
+</td>
+<td>
+$module.Deleted
 </td>
 </tr>
 #end
