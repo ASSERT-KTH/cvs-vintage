@@ -81,7 +81,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.102 2003/01/24 19:53:00 jmcnally Exp $
+ * @version $Id: Search.java,v 1.103 2003/01/30 21:17:58 elicia Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -400,14 +400,36 @@ public class Search extends RequireLoginFirstAction
         String userName = data.getParameters().getString("add_user");
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = scarabR.getUserByUserName(userName);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        
         if (user == null)
         {
-            ScarabLocalizationTool l10n = getLocalizationTool(context);
             scarabR.setAlertMessage(l10n.get("UserNotFound"));
         }
         else
         {
-            data.getParameters().add("user_list", user.getUserId().toString());
+            boolean alreadyInList = false;
+            String[] userList = data.getParameters().getStrings("user_list");
+            if (userList != null && userList.length > 0)
+            {
+                for (int i = 0; i<userList.length; i++)
+                {
+                    String userId = userList[i]; 
+                    if (userId.equals(user.getUserId().toString()))
+                    {
+                        alreadyInList = true;
+                        break;
+                    }
+                }
+            }
+            if (alreadyInList)
+            {
+                scarabR.setAlertMessage(l10n.get("UserInList"));
+            }
+            else
+            {
+                data.getParameters().add("user_list", user.getUserId().toString());
+            }
         }
     }
 
