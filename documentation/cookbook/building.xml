@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: building.xml,v 1.11 2003/09/28 01:04:02 linus Exp $ -->
+<!-- $Id: building.xml,v 1.12 2003/09/28 01:51:16 linus Exp $ -->
 
   <chapter id="buildingandtools">
     <title>Building from source</title>
@@ -1639,15 +1639,6 @@ Search for them and Reopen them.
 </para>
 	      </listitem>
 	    </orderedlist>
-	  </listitem>
-	  
-	  <listitem>
-	    <para>Update the web page</para>
-	    <para>
-The
-<ulink url="http://argouml.tigris.org/documentation/issuezilla/frequentlyusedlists.html">Lists of Issues</ulink>
-page contains a link to each version and needs to be updated.
-</para>
 	  </listitem>
 	  
 	  <listitem>
