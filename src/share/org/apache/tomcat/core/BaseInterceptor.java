@@ -151,7 +151,7 @@ public class BaseInterceptor
      *  id.
      */
     public int authenticate(Request request, Response response) {
-	return 0;
+	return DECLINED;
     }
 
     /**
