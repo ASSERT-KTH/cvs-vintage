@@ -71,7 +71,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.65 2004/02/03 11:31:47 dep4b Exp $
+ * @version $Id: IssueType.java,v 1.66 2004/03/20 19:10:02 pledbrook Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -780,7 +780,7 @@ public  class IssueType
     private List getAllRIssueTypeOptions(Attribute attribute)
         throws Exception
     {
-        List rIssueTypeOpts = null;
+        List rIssueTypeOpts;
         Object obj = ScarabCache.get(this, GET_ALL_R_ISSUETYPE_OPTIONS, 
                                      attribute); 
         if (obj == null) 
@@ -809,6 +809,10 @@ public  class IssueType
                 crit.addAscendingOrderByColumn(RIssueTypeOptionPeer.PREFERRED_ORDER);
                 crit.addAscendingOrderByColumn(AttributeOptionPeer.OPTION_NAME);
                 rIssueTypeOpts = RIssueTypeOptionPeer.doSelect(crit);
+            }
+            else
+            {
+                rIssueTypeOpts = new ArrayList(0);
             }
             ScarabCache.put(rIssueTypeOpts, this, GET_ALL_R_ISSUETYPE_OPTIONS, 
                             attribute);
