@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
  * Security wrapper around turbine's implementation
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TurbineDBScarabSecurityPull.java,v 1.4 2001/08/09 18:10:30 jmcnally Exp $
+ * @version $Id: TurbineDBScarabSecurityPull.java,v 1.5 2001/08/09 20:34:11 jmcnally Exp $
 */
 public class TurbineDBScarabSecurityPull 
     extends DefaultScarabSecurityPull
@@ -111,6 +111,19 @@ public class TurbineDBScarabSecurityPull
     public ScarabUser[] getUsers(String permission, ModuleEntity module)
     {
         return security.getUsers(permission, module);
+    }
+
+    /**
+     * Get a list of <code>ModuleEntity</code>'s that where a user has
+     * at least one of the permissions given.
+     *
+     * @param user a <code>ScarabUser</code> value
+     * @param permissions a <code>String[]</code> value
+     * @return a <code>ModuleEntity[]</code> value
+     */
+    public ModuleEntity[] getModules(ScarabUser user, String[] permissions)
+    {        
+        return security.getModules(user, permissions);
     }
 
     /**

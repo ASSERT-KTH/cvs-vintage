@@ -55,7 +55,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Constants for permissions should be grouped here as well.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.6 2001/08/02 07:11:41 jon Exp $
+ * @version $Id: ScarabSecurity.java,v 1.7 2001/08/09 20:34:11 jmcnally Exp $
 */
 public interface ScarabSecurity
 {
@@ -94,6 +94,16 @@ public interface ScarabSecurity
      * @return a <code>List</code> of <code>ScarabUser</code>'s
      */
     public ScarabUser[] getUsers(String permission, ModuleEntity module);
+
+    /**
+     * Get a list of <code>ModuleEntity</code>'s that where a user has
+     * at least one of the permissions given.
+     *
+     * @param user a <code>ScarabUser</code> value
+     * @param permissions a <code>String[]</code> value
+     * @return a <code>ModuleEntity[]</code> value
+     */
+    public ModuleEntity[] getModules(ScarabUser user, String[] permissions);
 }    
 
 

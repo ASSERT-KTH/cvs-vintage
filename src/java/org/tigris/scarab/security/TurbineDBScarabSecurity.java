@@ -46,11 +46,13 @@ package org.tigris.scarab.security;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.List;
 
 // Turbine
 import org.apache.torque.util.Criteria;
 import org.apache.turbine.util.Log;
 import org.apache.fulcrum.security.TurbineSecurity;
+import org.apache.fulcrum.security.util.AccessControlList;
 import org.apache.torque.om.Persistent;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Group;
@@ -64,12 +66,13 @@ import org.apache.fulcrum.security.impl.db.entity
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImplPeer;
+import org.tigris.scarab.om.ScarabModulePeer;
 
 /**
  * Security wrapper around turbine's implementation
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TurbineDBScarabSecurity.java,v 1.12 2001/08/02 07:11:41 jon Exp $
+ * @version $Id: TurbineDBScarabSecurity.java,v 1.13 2001/08/09 20:34:11 jmcnally Exp $
 */
 public class TurbineDBScarabSecurity 
     extends DefaultScarabSecurity
@@ -97,8 +100,11 @@ public class TurbineDBScarabSecurity
         boolean hasPermission = false;
         try
         {
-            hasPermission = TurbineSecurity.getACL(user)
-                .hasPermission(permission, (Group)module);
+            AccessControlList acl = TurbineSecurity.getACL(user);
+            if ( acl != null ) 
+            {
+                hasPermission = acl.hasPermission(permission, (Group)module);
+            }
         }
         catch (Exception e)
         {
@@ -143,5 +149,44 @@ public class TurbineDBScarabSecurity
             Log.error("An exception prevented retrieving any users", e);
         }
         return scarabUsers;
+    }
+
+
+    /**
+     * Get a list of <code>ModuleEntity</code>'s that where a user has
+     * at least one of the permissions given.
+     *
+     * @param user a <code>ScarabUser</code> value
+     * @param permissions a <code>String[]</code> value
+     * @return a <code>ModuleEntity[]</code> value
+     */
+    public ModuleEntity[] getModules(ScarabUser user, String[] permissions)
+    {        
+        Criteria crit = new Criteria();
+        crit.setDistinct();
+        crit.addIn(TurbinePermissionPeer.PERMISSION_NAME, permissions);
+        crit.addJoin(TurbinePermissionPeer.PERMISSION_ID, 
+                     TurbineRolePermissionPeer.PERMISSION_ID);
+        crit.addJoin(TurbineRolePermissionPeer.ROLE_ID, 
+                     TurbineUserGroupRolePeer.ROLE_ID);
+        crit.add(TurbineUserGroupRolePeer.USER_ID, user.getUserId());
+        crit.addJoin(ScarabModulePeer.MODULE_ID, 
+                     TurbineUserGroupRolePeer.GROUP_ID);
+
+        ModuleEntity[] modules = null;
+        try
+        {
+            List scarabModules = ScarabModulePeer.doSelect(crit);
+            modules = new ModuleEntity[modules.length];
+            for ( int i=scarabModules.size()-1; i>=0; i--) 
+            {
+                modules[i] = (ModuleEntity)scarabModules.get(i);
+            }
+        }
+        catch (Exception e)
+        {
+            Log.error("An exception prevented retrieving any modules", e);
+        }
+        return modules;
     }
 }

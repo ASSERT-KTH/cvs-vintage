@@ -68,7 +68,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Security wrapper around helm
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: HelmScarabSecurity.java,v 1.6 2001/08/02 07:11:41 jon Exp $
+ * @version $Id: HelmScarabSecurity.java,v 1.7 2001/08/09 20:34:11 jmcnally Exp $
 */
 public class HelmScarabSecurity 
     extends DefaultScarabSecurity
@@ -166,6 +166,19 @@ public class HelmScarabSecurity
         // query to get ScarabUsers
         return scarabUsers;
         */
+        return null;
+    }
+
+    /**
+     * Get a list of <code>ModuleEntity</code>'s that where a user has
+     * at least one of the permissions given.
+     *
+     * @param user a <code>ScarabUser</code> value
+     * @param permissions a <code>String[]</code> value
+     * @return a <code>ModuleEntity[]</code> value
+     */
+    public ModuleEntity[] getModules(ScarabUser user, String[] permissions)
+    {        
         return null;
     }
 }
