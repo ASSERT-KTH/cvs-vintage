@@ -10,7 +10,8 @@ import java.util.HashMap;
 import javax.transaction.Transaction;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
-import javax.transaction.Synchronization;
+
+import org.jboss.tm.TransactionLocal;
 
 import org.jboss.tm.TransactionLocal;
 
@@ -22,7 +23,7 @@ import org.jboss.tm.TransactionLocal;
  * Used in EntitySynchronizationInterceptor.
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  *
  * Revisions:
  *
@@ -53,18 +54,6 @@ public class TxEntityMap
       entityMap.put(entity.getCacheKey(), entity);
    }
 
-   /**
-    * disassociate entity from transaction
-    */
-   public void disassociate(Transaction tx, EntityEnterpriseContext entity)
-   {
-      HashMap entityMap = (HashMap) m_map.get(tx);
-      if(entityMap != null)
-      {
-         entityMap.remove(entity.getCacheKey());
-      }
-   }
-
    public EntityEnterpriseContext getCtx(Transaction tx, Object key)
    {
       HashMap entityMap = (HashMap) m_map.get(tx);
@@ -72,4 +61,10 @@ public class TxEntityMap
       return (EntityEnterpriseContext) entityMap.get(key);
    }
 
+   public EntityEnterpriseContext getCtx(Object key)
+   {
+      HashMap entityMap = (HashMap) m_map.get();
+      if(entityMap == null) return null;
+      return (EntityEnterpriseContext) entityMap.get(key);
+   }
 }

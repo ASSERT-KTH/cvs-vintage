@@ -47,7 +47,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.101 $
+ * @version $Revision: 1.102 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -503,9 +503,6 @@ public class EntityContainer
       // Get the persistence manager to do the dirty work
       EntityEnterpriseContext ctx = (EntityEnterpriseContext)mi.getEnterpriseContext();
       getPersistenceManager().removeEntity(ctx);
-
-      // remove from the txEntityMap
-      txEntityMap.disassociate(tx, ctx);
 
       // We signify "removed" with a null id
       // There is no need to synchronize on the context since all the threads reaching here have
