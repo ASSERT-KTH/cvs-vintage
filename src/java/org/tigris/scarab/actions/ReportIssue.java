@@ -98,10 +98,14 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.84 2002/01/11 00:42:47 elicia Exp $
+ * @version $Id: ReportIssue.java,v 1.85 2002/01/11 21:51:29 richard Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
+    private static final String ERROR_MESSAGE = "More information was " +
+        "required to submit your request. Please " +
+        "scroll down to see error messages."; 
+    
     public void doCheckforduplicates(RunData data, TemplateContext context)
         throws Exception
     {
@@ -431,16 +435,18 @@ public class ReportIssue extends RequireLoginFirstAction
         Issue issue = scarabR.getReportingIssue();
         IssueType issueType = issue.getIssueType();
         ScarabUser user = (ScarabUser)data.getUser();
+        Attachment attachment = new Attachment();
+        Group group = intake.get("Attachment", 
+                                 attachment.getQueryKey(), false);
         
-        // set any required flags
-        setRequiredFlags(issue, intake);
+        Field nameField = group.get("Name"); 
+        nameField.setRequired(true);
+        if (!nameField.isValid())
+        {
+            nameField.setMessage("This field requires a value.");
+        }
         if (intake.isAllValid())
         {
-            
-            // save the attachment
-            Attachment attachment = new Attachment();
-            Group group = intake.get("Attachment", 
-                                     attachment.getQueryKey(), false);
             if (group != null) 
             {
                 group.setProperties(attachment);
@@ -451,10 +457,14 @@ public class ReportIssue extends RequireLoginFirstAction
                 }
                 data.getParameters().add("intake-grp", "issue"); 
                 data.getParameters().add("id",issue.getUniqueId().toString());
-                
-                doGotowizard3(data, context);
             }
         }
+        else{
+            System.out.println("error message is set");
+            data.setMessage(ERROR_MESSAGE);
+        }
+        doGotowizard3(data, context);
+        
     }
     
     /**
@@ -627,5 +637,5 @@ public class ReportIssue extends RequireLoginFirstAction
      return historyScreen;
      }
      */
-     }
+}
 
