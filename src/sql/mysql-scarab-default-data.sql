@@ -34,11 +34,6 @@ insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DE
         values(11, 'Summary', 1, 'Summary');
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Functional Area */
         values(12, 'Functional Area', 5, 'Functional Area');
-/* 
- * removing until further discussion
- * insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Total Votes * /
- *       values(13, 'Total Votes', 9, 'Total Votes')
- */
 
 update SCARAB_ATTRIBUTE set CREATED_BY='0';
 

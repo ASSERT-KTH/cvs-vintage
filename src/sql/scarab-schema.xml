@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.81 2002/02/07 01:37:33 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.82 2002/02/13 22:51:55 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -1054,33 +1054,6 @@
             size="100"/>
 </table>
 
-<!--
-    Vote for the certain value of the attribute of an issue.
--->
-<table name="SCARAB_ISSUE_ATTRIBUTE_VOTE" idMethod="none" 
-        javaName="AttributeVote">
-    <!--
-        AttributeValue.
-    -->
-    <column name="VALUE_ID" primaryKey="true" required="true" type="INTEGER"></column>
-    <!--
-        Person that cast vote.
-    -->
-    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"></column>
-    <!--
-        Option that person voted for.
-    -->
-    <column name="OPTION_ID" required="false" type="INTEGER"></column>
-    <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
-        <reference local="OPTION_ID" foreign="OPTION_ID"/>
-    </foreign-key>
-    <foreign-key foreignTable="SCARAB_ISSUE_ATTRIBUTE_VALUE">
-        <reference local="VALUE_ID" foreign="VALUE_ID"/>
-    </foreign-key>
-    <foreign-key foreignTable="TURBINE_USER">
-        <reference local="USER_ID" foreign="USER_ID"/>
-    </foreign-key>
-</table>
 
 <!-- This table will hold dictionary index -->
 <table name="SCARAB_WORD" idMethod="idbroker" javaName="Word">
