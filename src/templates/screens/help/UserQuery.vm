@@ -15,6 +15,7 @@
              </li>
             <li><a href="$link.setPage("help,UserQueryAdvanced.vm")">$l10n.AdvancedQueries</a></li>
             <li><a href="$link.setPage("help,UserQueryCustom.vm")">$l10n.CustomQueries</a></li>
+            <li><a href="$link.setPage("help,UserQueryText.vm")">$l10n.TextQueries</a></li>
             <li><a href="$link.setPage("help,UserQuerySaved.vm")">$l10n.SavedQueries</a></li>
            </ul>
            </li>
@@ -42,6 +43,7 @@
     <li>$l10n.The <strong>$l10n.IssueId</strong> $l10n.UQP9</li>
     <li>$l10n.The <em>$l10n.AdvancedQueries</em> $l10n.UQP10</li>
     <li>$l10n.The<em>$l10n.CustomQueries</em> $l10n.UQP11</li>
+    <li>$l10n.The<em>$l10n.TextQueries</em> $l10n.UQP20</li>
     <li>$l10n.The <em>$l10n.IssueList</em> $l10n.UQP12</li>
   </ul>
   <h4><a name="issueid" id="issueid">$l10n.SearchIssue</a></h4>

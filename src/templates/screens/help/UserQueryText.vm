@@ -1,0 +1,70 @@
+<div class="docs" id="userqueryadvanced"> 
+  <div id="toc"> 
+    <ul>
+      <li>$l10n.ScarabHelp 
+        <ul>
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
+          <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a> </li>
+          <li>$l10n.SearchingDatabase 
+            <ul>
+              <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingOverview</a></li>
+              <li><strong>$l10n.AdvancedQueries</strong> 
+                <ul>
+                  <li><a href="#knowledge">$l10n.SearchingKnowledge</a></li>
+                  <li><a href="#personnel">$l10n.SearchingPerson</a></li>
+                  <li><a href="#state">$l10n.SearchingChange</a></li>
+                </ul>
+              </li>
+              <li><a href="$link.setPage("help,UserQueryAdvanced.vm")">$l10n.AdvancedQueries</a></li>
+              <li><a href="$link.setPage("help,UserQueryCustom.vm")">$l10n.CustomQueries</a></li>
+              <li><a href="$link.setPage("help,UserQuerySaved.vm")">$l10n.SavedQueries</a></li>
+            </ul>
+          </li>
+          <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <p> 
+  <h3><a name="top" id="top"></a>$l10n.TextQueries</h3>
+
+<div>$l10n.UQT1</div>
+<div>$l10n.UQT2</div>
+<div>$l10n.UQT3</div>
+<div>$l10n.UQT4</div>
+<div>$l10n.UQT5</div>
+<div>$l10n.UQT6</div>
+<div>$l10n.UQT7</div>
+<div>$l10n.UQT8</div>
+<div>$l10n.UQT9S1<pre>$l10n.UQT9S2</pre></div>
+
+<div>$l10n.UQT10</div>
+<div>$l10n.UQT11</div>
+<div><strong>$l10n.UQT12S1</strong>$l10n.UQT12S2<pre>$l10n.UQT12S3</pre></div>
+<div>$l10n.UQT13</div>
+<div><strong>$l10n.UQT14S1</strong>$l10n.UQT14S2<pre>$l10n.UQT14S3</pre></div>
+<div><strong>$l10n.UQT15S1</strong>$l10n.UQT15S2</div>
+<div><strong>OR</strong> $l10n.UQT16</div>
+<div><strong>AND</strong> $l10n.UQT17</div>
+<div><strong>+</strong> $l10n.UQT18S1<pre>$l10n.UQT18S2</pre></div>
+<div><strong>NOT</strong> $l10n.UQT19S1<pre>$l10n.UQT19S2</pre></div>
+<div>$l10n.UQT20S1<pre>$l10n.UQT20S2</pre></div>
+
+<div><strong>-</strong>  $l10n.UQTS21S1<pre>$l10n.UQT21S2</pre></div>
+<div><strong>$l10n.UQT22S1</strong>$l10n.UQT22S2<pre>$l10n.UQT22S3</pre></div>
+<div>$l10n.UQT23</div>
+
+<div><strong>$l10n.UQT24S1</strong>$l10n.UQT24S2</div>
+      <div>+ - &amp;&amp; || ! ( ) { } [ ] ^ " ~ * ? : \</div>
+
+<div>$l10n.UQT25S1<pre>\(1\+1\)\:2</pre>$l10n.UQT25S2<pre>"(1-1):2"</pre></div>
+<div>$l10n.UQT26</div>
+<div><small>$l10n.UQT27<small></div>
+
+  
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div> 
+ 
+</div>
