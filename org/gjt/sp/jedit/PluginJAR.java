@@ -30,6 +30,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.zip.*;
 import org.gjt.sp.jedit.browser.VFSBrowser;
+import org.gjt.sp.jedit.buffer.*;
 import org.gjt.sp.jedit.gui.DockableWindowManager;
 import org.gjt.sp.jedit.msg.*;
 import org.gjt.sp.util.Log;
@@ -97,7 +98,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.24 2003/05/10 03:13:54 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.25 2003/05/22 21:23:20 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -503,6 +504,22 @@ public class PluginJAR
 				return;
 
 			activated = false;
+
+			// buffers retain a reference to the fold handler in
+			// question... and the easiest way to handle fold
+			// handler unloading is this...
+			Buffer buffer = jEdit.getFirstBuffer();
+			while(buffer != null)
+			{
+				if(FoldHandler.getFoldHandler(
+					buffer.getStringProperty("folding"))
+					== null)
+				{
+					buffer.setFoldHandler(
+						new DummyFoldHandler());
+				}
+				buffer = buffer.getNext();
+			}
 
 			if(plugin != null)
 			{
@@ -1017,6 +1034,26 @@ public class PluginJAR
 					new org.gjt.sp.jedit.msg.PropertiesChanged(null));
 			}
 			EditBus.addToBus((EBPlugin)plugin);
+		}
+
+		// buffers retain a reference to the fold handler in
+		// question... and the easiest way to handle fold
+		// handler loading is this...
+		Buffer buffer = jEdit.getFirstBuffer();
+		while(buffer != null)
+		{
+			FoldHandler handler =
+				FoldHandler.getFoldHandler(
+				buffer.getStringProperty("folding"));
+			// == null before loaded
+			if(null != buffer.getFoldHandler()
+				&& handler != buffer.getFoldHandler())
+			{
+				System.err.println(handler);
+				System.err.println(buffer.getFoldHandler());
+				buffer.setFoldHandler(handler);
+			}
+			buffer = buffer.getNext();
 		}
 	} //}}}
 
