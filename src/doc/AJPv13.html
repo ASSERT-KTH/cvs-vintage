@@ -26,8 +26,8 @@ is useful, but I can't make any grand claims to perfect accuracy.  I also
 don't know why certain design decisions were made.  Where I was able, I've
 offered some possible justifications for certain choices, but those are
 only my guesses.  In general, the C code which Shachor wrote is very clean
-and comprehensible (if almost totally undocumented).  The Java code is
-pretty much a mess.
+and comprehensible (if almost totally undocumented).  I've cleaned up the
+Java code, and I think it's reasonably readable.
 
 <P>
 <B>Design Goals</B>
@@ -342,13 +342,20 @@ immediately.
   <DD>The HTTP method, encoded as a single byte:
   <P>
   <PRE>
-OPTIONS 1
-GET     2
-HEAD    3
-POST    4
-PUT     5
-DELETE  6
-TRACE   7
+OPTIONS      1
+GET          2
+HEAD         3
+POST         4
+PUT          5
+DELETE       6
+TRACE        7
+PROPFIND     8
+PROPPATCH    9
+MKCOL       10
+COPY        11
+MOVE        12
+LOCK        13
+UNLOCK      14
   </PRE>
   <P>
   </DD>
@@ -545,6 +552,10 @@ WWW-Authenticate     0xA00B
   <CODE>request_length</CODE>, the maximum send body size (XXX), and the
   number of bytes actually left to send from the request body.<P>
 
+  If there is no more data in the body (i.e. the servlet container is
+  trying to read past the end of the body), the server will send back an
+  "empty" packet, whch is a body packet with a payload length of 0.
+  
 </DL>
 
 <P>
