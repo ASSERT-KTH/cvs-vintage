@@ -101,7 +101,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.63 2004/05/10 21:28:40 thierrylach Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.64 2004/07/29 09:55:26 legout Exp $
  */
 public class ScarabGlobalTool
     implements ApplicationTool
@@ -772,6 +772,14 @@ public class ScarabGlobalTool
      */
     public static int getModuleCodeLengthPadded() {
         return getModuleCodeLength() + 6;
+    }
+
+    /**
+     * @return  Return the current turbine configuration with all keys included
+     */
+    public org.apache.commons.configuration.Configuration getTurbineConfiguration()
+    {
+        return Turbine.getConfiguration();
     }
 
 }

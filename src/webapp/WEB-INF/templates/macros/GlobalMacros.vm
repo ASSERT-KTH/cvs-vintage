@@ -567,17 +567,18 @@ selected the radio button.
 </tr>
 #end
 
+#set ($autoresize = $scarabG.getTurbineConfiguration().getString("scarab.dhtml.autoresize_textarea").toLowerCase().equals("true"))
 
 #macro (textAreaSmall $key $value)
  <textarea class="fullWidth" rows="2" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
 #end
 
 #macro (textAreaMedium $key $value)
- <textarea class="fullWidth" rows="10" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
+ <textarea class="fullWidth" #if($autoresize) onblur="outTextArea(this)" onfocus="onTextArea(this)" #else rows="10" #end wrap="virtual" name="$key">#if ($value)$value#end</textarea>
 #end
 
 #macro (textAreaLarge $key $value)
- <textarea class="fullWidth" rows="10" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
+ <textarea class="fullWidth" #if($autoresize) onblur="outTextArea(this)" onfocus="onTextArea(this)"  #else rows="10" #end wrap="virtual" name="$key">#if ($value)$value#end</textarea>
 #end
 
 #macro (attributeCreatedBy $attribute)
