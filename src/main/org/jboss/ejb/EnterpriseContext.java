@@ -46,7 +46,11 @@ import org.jboss.security.SimplePrincipal;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.35 $
+ *  @version $Revision: 1.36 $
+ *
+ *  Revisions:
+ *  2001/06/29: marcf
+ *		- Added txLock to permit locking and most of all notifying on tx demarcation only
  */
 public abstract class EnterpriseContext
 {
@@ -76,6 +80,9 @@ public abstract class EnterpriseContext
    
    // The instance is being used.  This locks it's state
    int locked = 0;  
+	
+	// The instance is used in a transaction, synchronized methods on the tx
+	Object txLock = new Object();
                   
    // Static --------------------------------------------------------
    
@@ -114,6 +121,10 @@ public abstract class EnterpriseContext
        return id; 
     }
 
+	public Object getTxLock() {
+		return txLock;
+	}
+	
    public void setTransaction(Transaction transaction) {
        
 //DEBUG       Logger.debug("EnterpriseContext.setTransaction "+((transaction == null) ? "null" : Integer.toString(transaction.hashCode()))); 
