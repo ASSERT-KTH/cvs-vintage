@@ -32,7 +32,7 @@ import javax.ejb.EJBException;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.5 $
+*   @version $Revision: 1.6 $
 */
 public class StatefulSessionInstanceInterceptor
 extends AbstractInterceptor
@@ -273,7 +273,7 @@ extends AbstractInterceptor
 		
 		public void beforeCompletion()
 		{
-			Logger.log("beforeCompletion called");
+			// DEBUG Logger.log("beforeCompletion called");
 			
 			// lock the context the transaction is being commited (no need for sync)
 			ctx.lock();
@@ -289,7 +289,7 @@ extends AbstractInterceptor
 		
 		public void afterCompletion(int status)
 		{
-			Logger.log("afterCompletion called");
+			// DEBUG Logger.log("afterCompletion called");
 			
 			// finish the transaction association
 			ctx.setTransaction(null);
