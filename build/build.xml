@@ -102,7 +102,7 @@
             <fileset dir="${src.images.dir}"/>
         </copy>
         <copy todir="${build.project}/templates" filtering="no">
-            <fileset dir="${src.templates.dir}"/>
+            <fileset dir="${src.templates.dir}" defaultexcludes="no"/>
         </copy>
         <copy todir="${build.project.webinf}" filtering="no">
             <fileset dir="${src.conf.dir}/">
