@@ -55,7 +55,6 @@ import org.apache.velocity.VelocityContext;
 import org.apache.fulcrum.velocity.TurbineVelocity;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.modules.Module;
 
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
@@ -67,7 +66,7 @@ import org.tigris.scarab.om.IssueManager;
  * Sends XML Export issues contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportIssues.java,v 1.16 2003/07/16 01:24:52 dlr Exp $
+ * @version $Id: ViewXMLExportIssues.java,v 1.17 2003/07/25 17:33:42 thierrylach Exp $
  */
 public class ViewXMLExportIssues extends Default
 {
