@@ -169,7 +169,7 @@ public class HeaderMatch extends Matcher {
 		String respValue=(resH==null)? "": resH.getValue();
 		if( respValue==null || respValue.indexOf( value ) <0 ) {
 		    log("ERROR expecting header " + key + ":" +
-			value + " \nGOT: " + respValue+ " HEADERS(" +
+			value + " \r\nGOT: " + respValue+ " HEADERS(" +
 			Header.toString(headers) + ")");
 		    
 		    return false;
