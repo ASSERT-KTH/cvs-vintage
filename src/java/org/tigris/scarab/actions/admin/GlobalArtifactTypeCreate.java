@@ -74,7 +74,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.23 2002/09/15 18:48:19 elicia Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.24 2002/09/18 20:30:24 elicia Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -352,6 +352,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                     RIssueTypeAttribute ria = issueType.addRIssueTypeAttribute(attribute);
                 }
                 doCancel(data, context);
+                ScarabCache.clear();
             }
         }
     }
