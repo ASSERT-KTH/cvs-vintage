@@ -70,7 +70,7 @@ import org.tigris.scarab.om.Issue;
  * This class contains logic for finding issue ids in generic text.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueIdParser.java,v 1.1 2002/09/05 00:03:02 jmcnally Exp $
+ * @version $Id: IssueIdParser.java,v 1.2 2002/09/05 00:38:01 jmcnally Exp $
  */
 public class IssueIdParser
 {
@@ -99,6 +99,7 @@ public class IssueIdParser
     {
         List result = new ArrayList();
         RE re = new RE(module.getIssueRegex());
+        re.setMatchFlags(RE.MATCH_CASEINDEPENDENT);
         int pos = 0;
         while (re.match(text, pos))
         {
@@ -122,6 +123,7 @@ public class IssueIdParser
     {
         List result = new ArrayList();
         RE re = new RE(module.getIssueRegex());
+        re.setMatchFlags(RE.MATCH_CASEINDEPENDENT);
         int pos = 0;
         while (re.match(text, pos))
         {
@@ -172,6 +174,7 @@ public class IssueIdParser
     public static String getIssueIdFromToken(Module module, String token)
     {
         RE re = new RE(idREProgram);
+        re.setMatchFlags(RE.MATCH_CASEINDEPENDENT);
         String id = null;
         if (re.match(token)) 
         {
