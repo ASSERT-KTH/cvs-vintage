@@ -1,10 +1,10 @@
 #set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
 
+<div class="app" id="div2-1-4-0">
+
 <form method="post" action="$link.setPage("admin,ManageArtifactTypes.vm")">
 <input type="hidden" name="action" value="admin.ManageArtifactTypes" />
 <input type="hidden" name=$scarabG.Constant.OTHER_TEMPLATE value="admin,ArtifactTypeSelect.vm" />
-
-<div class="app" id="div2-1-4-0">
 
 <h2>Manage Issue Types</h2>
 
