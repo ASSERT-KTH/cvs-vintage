@@ -1,4 +1,4 @@
-// $Id: PropPanelEvent.java,v 1.18 2004/01/06 21:47:17 jjones Exp $
+// $Id: PropPanelEvent.java,v 1.19 2004/05/31 09:32:12 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,6 +87,9 @@ public abstract class PropPanelEvent extends PropPanelModelElement {
         addField(Translator.localize("UMLMenu", "label.parameters"), getParameterScroll());
 
         addSeperator();
+        
+        new PropPanelButton(this, buttonPanel, _deleteIcon, localize("Delete"), 
+                "removeElement", null);
     }
 
     /**
