@@ -11,11 +11,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Collection;
 import javax.ejb.EJBException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.logging.Logger;
 
 /**
@@ -29,7 +33,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class JDBCStoreEntityCommand {
    private JDBCStoreManager manager;
@@ -58,12 +62,23 @@ public class JDBCStoreEntityCommand {
          return;
       }
 
+      List setFields = new ArrayList(dirtyFields);
+      if(entity.getVersionField() != null)
+         setFields.add(entity.getVersionField());
+
+      // get the list of where clause field list
+      List whereFields = new ArrayList(entity.getPrimaryKeyFields());
+      Collection lockedFields = Collections.EMPTY_LIST;
+      if(manager.getOptimisticLock(ctx) != null) {
+         lockedFields = manager.getOptimisticLock(ctx).getLockedFields();
+         whereFields.addAll(lockedFields);
+      }
+
       // generate sql
-      StringBuffer sql = new StringBuffer(); 
+      StringBuffer sql = new StringBuffer();
       sql.append("UPDATE ").append(entity.getTableName());
-      sql.append(" SET ").append(SQLUtil.getSetClause(dirtyFields));
-      sql.append(" WHERE ").append(
-            SQLUtil.getWhereClause(entity.getPrimaryKeyFields()));
+      sql.append(" SET ").append(SQLUtil.getSetClause(setFields));
+      sql.append(" WHERE ").append(SQLUtil.getWhereClause(whereFields));
 
       Connection con = null;
       PreparedStatement ps = null;
@@ -71,26 +86,46 @@ public class JDBCStoreEntityCommand {
       try {
          // get the connection
          con = entity.getDataSource().getConnection();
-         
+
          // create the statement
          if(log.isDebugEnabled()) {
             log.debug("Executing SQL: " + sql);
          }
          ps = con.prepareStatement(sql.toString());
-         
-         // set the parameters
+
+         // SET: set the dirty fields parameters
          int index = 1;
          for(Iterator iter = dirtyFields.iterator(); iter.hasNext(); ) {
             JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
             index = field.setInstanceParameters(ps, index, ctx);
          }
+
+         // SET: set new value for version field
+         if(entity.getVersionField() != null) {
+            JDBCCMPFieldBridge versionField = entity.getVersionField();
+            Object nextVal = manager.getOptimisticLock(ctx).getNextLockingValue(
+               versionField, versionField.getInstanceValue(ctx));
+            versionField.setInstanceValue(ctx, nextVal);
+            index = versionField.setArgumentParameters(ps, index, nextVal);
+         }
+
+         // WHERE: set primary key fields
          index = entity.setPrimaryKeyParameters(ps, index, ctx.getId());
+
+         // WHERE: set optimistically locked field values
+         for(Iterator iter = lockedFields.iterator(); iter.hasNext();) {
+            JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)iter.next();
+            Object lockedValue =
+               manager.getOptimisticLock(ctx).getLockedFieldValue(field);
+            index = field.setArgumentParameters(ps, index, lockedValue);
+         }
 
          // execute statement
          rowsAffected = ps.executeUpdate();
       } catch(EJBException e) {
          throw e;
       } catch(Exception e) {
+         e.printStackTrace();
          throw new EJBException("Store failed", e);
       } finally {
          JDBCUtil.safeClose(ps);
@@ -108,7 +143,7 @@ public class JDBCStoreEntityCommand {
       }
 
       // Mark the inserted fields as clean.
-      for(Iterator iter = dirtyFields.iterator(); iter.hasNext(); ) {
+      for(Iterator iter = setFields.iterator(); iter.hasNext(); ) {
          JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
          field.setClean(ctx);
       }
