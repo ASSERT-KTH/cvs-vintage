@@ -54,12 +54,17 @@ import org.apache.turbine.TemplateContext;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.screens.Default;
+import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.RModuleAttribute;
+import org.tigris.scarab.util.Log;
 
 /**
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.4 2003/05/03 02:19:00 elicia Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.5 2003/07/31 20:08:09 jmcnally Exp $
  */
 public class ModuleAttributeEdit extends Default
 {
@@ -68,9 +73,46 @@ public class ModuleAttributeEdit extends Default
                               RunData data, TemplateContext context)
         throws Exception 
    {
-        return l10n.format("EditModuleAttribute", 
-                           scarabR.getCurrentModule()
-                           .getRModuleAttribute(scarabR.getAttribute(), 
-                            scarabR.getIssueType()).getDisplayValue());
+       Attribute attribute = scarabR.getAttribute();
+       Module module = scarabR.getCurrentModule();
+       IssueType issueType = scarabR.getIssueType();
+       
+       String title;
+       if (attribute == null) 
+       {
+           title = l10n.get("NoAttributeToEdit");
+           Log.get().warn(
+               "No attribute id was specified for ModuleAttributeEdit.");
+       }
+       else 
+       {
+           if (module == null || issueType == null)
+           {
+               // such a condition is probably going to give errors
+               // elsewhere, but we can at least return a global name.
+               title = attribute.getName();
+               Log.get().warn("Current module or issue type id was not " +
+                               "specified for ModuleAttributeEdit");
+           }
+           else 
+           {
+               RModuleAttribute rma = module
+                   .getRModuleAttribute(attribute, issueType);
+               if (rma == null) 
+               {
+                   // again, such a condition is probably going to give errors
+                   // elsewhere, but we can at least return a global name.
+                   title = attribute.getName();           
+                   Log.get().warn(
+                       "rma is null in ModuleAttributeEdit.");
+               }
+               else 
+               {
+                   title = rma.getDisplayValue();
+               }
+           }
+       }
+       
+       return l10n.format("EditModuleAttribute", title);
     }
 }
