@@ -1,0 +1,50 @@
+$page.setTitle("Scarab XML Export")
+
+<div id="register" class="app">
+
+<h2>$page.Title</h2>
+
+<h3>XML Export</h3>
+
+<form action="$link.setPage("admin,XMLExportSelect.vm")" method="post" name="xmlexportselect">
+<input type="hidden" name="action" value="admin.XMLExportSelect" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm" />
+
+#set ($xmlExportSelectGroup = $intake.XMLExportSelect.Default)
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+ <th> Issues</th>
+ <td>
+  <input name="$xmlExportSelectGroup.FederatedIds.Key" value="$!xmlExportSelectGroup.FederatedIds.value" type="text" size="100" /><br>
+  Specify a comma separated list of issues and/or issue ranges.  A range is a starting issue followed by a &quot;-&quot; and finally the end issue.
+  #fieldErrorMsg($xmlExportSelectGroup.FederatedIds "")
+ </td>
+</tr>
+</table>
+</div>
+
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+   <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
+   <input type="submit" name="eventSubmit_doXmlissues" value="XML Issues" />
+  </td>
+ </tr>
+</table>
+</div>
+
+#if ($federatedIds)
+<div>
+    #xmlExportCheckNotExists($federatedIds)
+</div>
+<div>
+    <textarea rows="20" cols="100" wrap="off">#xmlExport($federatedIds)</textarea>
+</div>
+#end
+
+$intake.declareGroups()
+</form>
+</div>
+
