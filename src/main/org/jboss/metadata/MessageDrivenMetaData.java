@@ -28,7 +28,7 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  */
 public class MessageDrivenMetaData
    extends BeanMetaData
@@ -52,6 +52,7 @@ public class MessageDrivenMetaData
    private byte methodTransactionType = TX_UNSET;
    private String messagingType;
    private String destinationType;
+   private String destinationLink;
    private String messageSelector;
    private String destinationJndiName;
    private String user;
@@ -125,6 +126,11 @@ public class MessageDrivenMetaData
    public String getDestinationType()
    {
       return destinationType;
+   }
+
+   public String getDestinationLink()
+   {
+      return destinationLink;
    }
    
    public String getMessageSelector()
@@ -313,6 +319,9 @@ public class MessageDrivenMetaData
             }
          }
       }
+
+      // destination link is optional
+      destinationLink = getOptionalChildContent(element, "message-destination-link");
       
       // set the transaction type
       String transactionType = getUniqueChildContent(element, "transaction-type");

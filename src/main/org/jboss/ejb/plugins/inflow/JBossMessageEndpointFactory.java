@@ -35,6 +35,7 @@ import org.jboss.invocation.InvokerInterceptor;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ActivationConfigPropertyMetaData;
 import org.jboss.metadata.InvokerProxyBindingMetaData;
+import org.jboss.metadata.MessageDestinationMetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.metadata.MetaData;
 import org.jboss.mx.util.JMXExceptionDecoder;
@@ -53,7 +54,7 @@ import EDU.oswego.cs.dl.util.concurrent.SynchronizedInt;
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a> .
- * @version <tt>$Revision: 1.6 $</tt>
+ * @version <tt>$Revision: 1.7 $</tt>
  */
 public class JBossMessageEndpointFactory
    extends ServiceMBeanSupport
@@ -402,6 +403,29 @@ public class JBossMessageEndpointFactory
             metaData.importXml(resourceRef);
             if (properties.containsKey(metaData.getName()) == false)
                properties.put(metaData.getName(), metaData);
+         }
+      }
+      
+      // Message Destination Link
+      String link = metaData.getDestinationLink();
+      if (link != null)
+      {
+         link = link.trim();
+         if (link.length() > 0)
+         {
+            if (properties.containsKey("destination"))
+               log.warn("Ignoring message-destination-link '" + link + "' when the destination " +
+                  "is already in the activation-config.");
+            else
+            {
+               MessageDestinationMetaData destinationMetaData = metaData.getApplicationMetaData().getMessageDestination(link);
+               if (destinationMetaData == null)
+                  throw new DeploymentException("Unresolved message-destination-link '" + link + "' no message-destination in ejb-jar.xml");
+               String jndiName = destinationMetaData.getJNDIName();
+               if (jndiName == null)
+                  throw new DeploymentException("The message-destination '" + link + "' has no jndi-name in jboss.xml");
+               properties.put("destination", jndiName);
+            }
          }
       }
    }   
