@@ -40,15 +40,15 @@ insert into SCARAB_R_MODULE_ATTRIBUTE(MODULE_ID, ATTRIBUTE_ID) values(2,9);
 insert into SCARAB_R_MODULE_ATTRIBUTE(MODULE_ID, ATTRIBUTE_ID) values(2,10);
 
 /*
- * Insert a relationship between visitor_id 1 and module_id 1
- * Insert a relationship between visitor_id 1 and module_id 3
- * Insert a relationship between visitor_id 2 and module_id 1
- * Insert a relationship between visitor_id 2 and module_id 3
+ * Insert a relationship between user_id 1 and module_id 1
+ * Insert a relationship between user_id 1 and module_id 3
+ * Insert a relationship between user_id 2 and module_id 1
+ * Insert a relationship between user_id 2 and module_id 3
  */
-insert into SCARAB_R_MODULE_VISITOR(VISITOR_ID, MODULE_ID) values (1, 1);
-insert into SCARAB_R_MODULE_VISITOR(VISITOR_ID, MODULE_ID) values (1, 3);
-insert into SCARAB_R_MODULE_VISITOR(VISITOR_ID, MODULE_ID) values (2, 1);
-insert into SCARAB_R_MODULE_VISITOR(VISITOR_ID, MODULE_ID) values (2, 3);
+insert into SCARAB_R_MODULE_VISITOR(USER_ID, MODULE_ID) values (1, 1);
+insert into SCARAB_R_MODULE_VISITOR(USER_ID, MODULE_ID) values (1, 3);
+insert into SCARAB_R_MODULE_VISITOR(USER_ID, MODULE_ID) values (2, 1);
+insert into SCARAB_R_MODULE_VISITOR(USER_ID, MODULE_ID) values (2, 3);
 
 
 /*
@@ -60,7 +60,7 @@ insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID) values (1, 2);
 /* description */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, VALUE) values (1, 1, 'Docs are out of date.');
 /* assigned to visitor id 1 */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, VISITOR_ID, VALUE) values (1, 2, 1, 'jon');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, USER_ID, VALUE) values (1, 2, 1, 'jon');
 /* status is New */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 3, 2, 'New');
 /* resolution is verified */
@@ -76,7 +76,7 @@ insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALU
 /* who`s tracking issue 1 */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, VALUE) values (1, 10, 'jon, cam');
 /* Jon wants to be notified of any changes */
-insert into SCARAB_ISSUE_ATTRIBUTE_VOTE(ISSUE_ID, ATTRIBUTE_ID, VISITOR_ID, OPTION_ID) values(1, 10, 1, 73);
+insert into SCARAB_ISSUE_ATTRIBUTE_VOTE(ISSUE_ID, ATTRIBUTE_ID, USER_ID, OPTION_ID) values(1, 10, 1, 73);
 /* Cam only cares about major changes */
-insert into SCARAB_ISSUE_ATTRIBUTE_VOTE(ISSUE_ID, ATTRIBUTE_ID, VISITOR_ID, OPTION_ID) values(1, 10, 2, 72);
+insert into SCARAB_ISSUE_ATTRIBUTE_VOTE(ISSUE_ID, ATTRIBUTE_ID, USER_ID, OPTION_ID) values(1, 10, 2, 72);
 
