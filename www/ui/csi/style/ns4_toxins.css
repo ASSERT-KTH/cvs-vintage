@@ -135,7 +135,7 @@ ul, ol, dd	{
 	background: #ffc;
 	}
 #helptext th {
-	background: #cc9;
+	background: #cc9 url(../images/icon_help.gif) no-repeat right;
 	border-bottom: 1px solid #996;
 	border-right: 1px solid #996;
 	}
