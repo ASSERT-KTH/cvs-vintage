@@ -224,8 +224,9 @@ public class RModuleOption
 
     
     /**
-     * Gets a list of this attribute option's descendants
+     * Gets a list of this option's descendants
      * That are associated with this module/Issue Type
+     * @returns List of RModuleOptions
      */
     public List getDescendants(IssueType issueType)
         throws Exception
@@ -239,7 +240,7 @@ public class RModuleOption
             rmo = getModule().getRModuleOption(option, issueType);
             if (rmo != null && rmo.getOptionId().equals(option.getOptionId()))
             {
-                descendants.add(option);
+                descendants.add(rmo);
             }
         }
         return descendants;

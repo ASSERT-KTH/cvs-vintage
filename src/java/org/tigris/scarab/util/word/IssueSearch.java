@@ -82,6 +82,7 @@ import org.tigris.scarab.om.ActivityPeer;
 import org.tigris.scarab.om.ActivitySetPeer;
 import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.RModuleOptionPeer;
+import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Module;
@@ -1260,7 +1261,7 @@ public class IssueSearch
             NumberKey[] ids = new NumberKey[descendants.size()];
             for ( int j=ids.length-1; j>=0; j-- ) 
             {
-                ids[j] = ((AttributeOption)descendants.get(j))
+                ids[j] = ((RModuleOption)descendants.get(j))
                     .getOptionId();
             }
             criterion = crit.getNewCriterion( "av"+index, AV_OPTION_ID,
