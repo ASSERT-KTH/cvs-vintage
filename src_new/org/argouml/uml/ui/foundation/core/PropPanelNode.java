@@ -1,4 +1,4 @@
-// $Id: PropPanelNode.java,v 1.28 2004/07/17 13:10:41 kataka Exp $
+// $Id: PropPanelNode.java,v 1.29 2004/07/24 10:30:47 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: PropPanelNode.java
 // Classes: PropPanelNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNode.java,v 1.28 2004/07/17 13:10:41 kataka Exp $
+// $Id: PropPanelNode.java,v 1.29 2004/07/24 10:30:47 mkl Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -45,9 +45,7 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-
 import org.argouml.uml.ui.PropPanelButton;
-import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLReflectionListModel;
 import org.argouml.util.ConfigLoader;
@@ -73,7 +71,7 @@ public class PropPanelNode extends PropPanelClassifier {
         addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
         addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
-        addField(Translator.localize("UMLMenu", "label.modifiers"), _modifiersPanel);
+        add(_modifiersPanel);
         
         addSeperator();
         

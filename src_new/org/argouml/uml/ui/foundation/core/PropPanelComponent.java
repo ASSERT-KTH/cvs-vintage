@@ -1,4 +1,4 @@
-// $Id: PropPanelComponent.java,v 1.32 2004/07/17 13:10:41 kataka Exp $
+// $Id: PropPanelComponent.java,v 1.33 2004/07/24 10:30:47 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,14 +27,12 @@ package org.argouml.uml.ui.foundation.core;
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.PropPanelButton;
-
 import org.argouml.util.ConfigLoader;
-import org.argouml.uml.ui.UMLComboBoxNavigator;
 
 /**
  * PropPanel for a UML component.
  *
- * <p>$Id: PropPanelComponent.java,v 1.32 2004/07/17 13:10:41 kataka Exp $
+ * <p>$Id: PropPanelComponent.java,v 1.33 2004/07/24 10:30:47 mkl Exp $
  *
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
@@ -51,7 +49,7 @@ public class PropPanelComponent extends PropPanelClassifier {
 	// addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
 	addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
 	addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
-	addField(Translator.localize("UMLMenu", "label.modifiers"), _modifiersPanel);
+	add(_modifiersPanel);
 
 	addSeperator();
 

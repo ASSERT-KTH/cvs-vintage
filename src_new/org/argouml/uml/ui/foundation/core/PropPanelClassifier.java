@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifier.java,v 1.43 2004/07/17 13:10:41 kataka Exp $
+// $Id: PropPanelClassifier.java,v 1.44 2004/07/24 10:30:47 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,13 +24,14 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import org.argouml.model.ModelFacade;
+import javax.swing.border.TitledBorder;
 
+import org.argouml.i18n.Translator;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.swingext.GridLayout2;
@@ -131,7 +132,9 @@ abstract public class PropPanelClassifier extends PropPanelNamespace {
     private void initialize() { 
 
         _modifiersPanel =
-            new JPanel(new GridLayout2(0, 2, GridLayout2.ROWCOLPREFERRED));          
+            new JPanel(new GridLayout2(0, 2, GridLayout2.ROWCOLPREFERRED)); 
+        _modifiersPanel.setBorder(
+                new TitledBorder(Translator.localize("UMLMenu", "label.modifiers")));
         _modifiersPanel.add(
             new UMLGeneralizableElementAbstractCheckBox());
         _modifiersPanel.add(
