@@ -38,8 +38,8 @@ import java.util.*;
 /**
  * This is the main class for all import classes.
  *
- * $Revision: 1.4 $
- * $Date: 2001/05/27 19:24:59 $
+ * $Revision: 1.5 $
+ * $Date: 2001/05/31 16:55:31 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -117,6 +117,7 @@ public class Import {
 	    }
 	    catch(Exception e2) {
 		System.out.println("ERROR: " + e2.getMessage());
+		e2.printStackTrace();
 	    }
 	}
 

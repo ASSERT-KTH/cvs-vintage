@@ -1,4 +1,4 @@
-// $Id: ClassifierContext.java,v 1.2 2001/05/27 19:24:59 marcus Exp $
+// $Id: ClassifierContext.java,v 1.3 2001/05/31 16:55:32 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -48,6 +48,7 @@ class ClassifierContext extends Context
     }
 
     public MInterface getInterface(String name)
+	throws ClassifierNotFoundException
     {
 	// Check if it is this interface
 	if(name.equals(mClassifier.getName()) &&
@@ -72,6 +73,7 @@ class ClassifierContext extends Context
      * @return A classifier for the name.
      */
     public MClassifier get(String classifierName)
+	throws ClassifierNotFoundException
     {
 	// Check if it is this classifier
 	if(classifierName.equals(mClassifier.getName())) {

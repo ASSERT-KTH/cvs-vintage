@@ -1,4 +1,4 @@
-// $Id: PackageContext.java,v 1.5 2001/05/30 16:24:52 marcus Exp $
+// $Id: PackageContext.java,v 1.6 2001/05/31 16:55:32 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -52,6 +52,7 @@ class PackageContext extends Context
     }
 
     public MInterface getInterface(String name)
+	throws ClassifierNotFoundException
     {
         // Search in model
         MInterface mInterface = (MInterface)mPackage.lookup(name);
@@ -100,6 +101,7 @@ class PackageContext extends Context
        @returns Found classifier.
     */
     public MClassifier get(String name)
+	throws ClassifierNotFoundException
     {
 	// Search in model
 	MClassifier mClassifier = (MClassifier)mPackage.lookup(name);

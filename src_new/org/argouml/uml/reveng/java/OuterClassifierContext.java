@@ -1,4 +1,4 @@
-// $Id: OuterClassifierContext.java,v 1.3 2001/03/24 15:37:22 marcus Exp $
+// $Id: OuterClassifierContext.java,v 1.4 2001/05/31 16:55:32 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -64,6 +64,7 @@ class OuterClassifierContext extends Context
     }
 
     public MInterface getInterface(String name)
+	throws ClassifierNotFoundException
     {
         // Search in classifier
         MInterface mInterface =
@@ -113,6 +114,7 @@ class OuterClassifierContext extends Context
        @returns Found classifier.
     */
     public MClassifier get(String name)
+	throws ClassifierNotFoundException
     {
 	// Search in classifier
 	MClassifier iClassifier = 

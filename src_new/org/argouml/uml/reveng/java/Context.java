@@ -1,4 +1,4 @@
-// $Id: Context.java,v 1.3 2001/03/24 15:39:21 marcus Exp $
+// $Id: Context.java,v 1.4 2001/05/31 16:55:32 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -56,9 +56,11 @@ abstract class Context
        @param className The name of the classifier to find.
        @returns Found classifier.
     */
-    abstract public MClassifier get(String name);
+    abstract public MClassifier get(String name)
+	throws ClassifierNotFoundException;
 
-    abstract public MInterface getInterface(String name);
+    abstract public MInterface getInterface(String name)
+	throws ClassifierNotFoundException;
 
     /**
        Get the complete java name for a package.
