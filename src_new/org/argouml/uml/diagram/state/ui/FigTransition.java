@@ -24,7 +24,7 @@
 // File: FigTransition.java
 // Classes: FigTransition
 // Original Author: your email address here
-// $Id: FigTransition.java,v 1.12 2002/11/29 10:21:08 kataka Exp $
+// $Id: FigTransition.java,v 1.13 2003/01/24 20:20:00 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -43,6 +43,8 @@ import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.presentation.ArrowHeadGreater;
 import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.FigText;
+
+import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.behavior.state_machines.MStateVertex;
 import ru.novosoft.uml.behavior.state_machines.MTransition;
 import ru.novosoft.uml.foundation.core.MModelElement;
@@ -100,8 +102,8 @@ public class FigTransition extends FigEdgeModelElement {
   /** This is called aftern any part of the UML MModelElement has
    *  changed. This method automatically updates the name FigText.
    *  Subclasses should override and update other parts. */
-  protected void modelChanged() {
-    super.modelChanged();
+  protected void modelChanged(MElementEvent e) {
+    super.modelChanged(e);
     MModelElement me = (MModelElement) getOwner();
     if (me == null) return;
     cat.debug("FigTransition modelChanged: " + me.getClass());

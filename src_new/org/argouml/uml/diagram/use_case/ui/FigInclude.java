@@ -24,7 +24,7 @@
 // File: FigInclude.java
 // Classes: FigInclude
 // Original Author: mail@jeremybennett.com
-// $Id: FigInclude.java,v 1.3 2002/09/13 08:12:59 kataka Exp $
+// $Id: FigInclude.java,v 1.4 2003/01/24 20:20:00 kataka Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Written to support
 // Include relationships.
@@ -166,7 +166,7 @@ public class FigInclude extends FigEdgeModelElement {
      * <p>This implementation does nothing.</p>
      */
 
-    protected void modelChanged() { }
+    protected void modelChanged(MElementEvent e) { }
 
 
 } /* end class FigInclude */

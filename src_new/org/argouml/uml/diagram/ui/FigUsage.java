@@ -24,13 +24,14 @@
 // File: FigUsage.java
 // Classes: FigUsage
 // Original Author: Markus Klink
-// $Id: FigUsage.java,v 1.3 2002/11/04 08:51:08 mkl Exp $
+// $Id: FigUsage.java,v 1.4 2003/01/24 20:20:00 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
 import java.awt.*;
 import java.beans.*;
 
+import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.foundation.core.*;
 
 import org.tigris.gef.base.*;
@@ -56,8 +57,8 @@ public class FigUsage extends FigDependency {
         super(edge,lay);
     }
         
-    protected void modelChanged() {
-	super.modelChanged();
+    protected void modelChanged(MElementEvent e) {
+	super.modelChanged(e);
 	
 	String stereoTypeStr = _stereo.getText();
 

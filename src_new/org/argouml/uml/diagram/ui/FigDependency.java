@@ -24,13 +24,14 @@
 // File: FigDependency.java
 // Classes: FigDependency
 // Original Author: ics 125b course, spring 1998
-// $Id: FigDependency.java,v 1.4 2002/10/23 05:42:52 mkl Exp $
+// $Id: FigDependency.java,v 1.5 2003/01/24 20:20:00 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
 import java.awt.*;
 import java.beans.*;
 
+import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.foundation.core.*;
 
 import org.tigris.gef.base.*;
@@ -115,7 +116,7 @@ public class FigDependency extends FigEdgeModelElement {
   /** This is called aftern any part of the UML MModelElement has
    *  changed. This method automatically updates the name FigText.
    *  Subclasses should override and update other parts. */
-  protected void modelChanged() {
+  protected void modelChanged(MElementEvent e) {
     // do not set _name
     updateStereotypeText();
   }

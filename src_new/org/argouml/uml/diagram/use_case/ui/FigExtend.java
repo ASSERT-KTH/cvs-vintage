@@ -24,7 +24,7 @@
 // File: FigExtend.java
 // Classes: FigExtend
 // Original Author: mail@jeremybennett.com
-// $Id: FigExtend.java,v 1.5 2002/10/08 20:04:33 kataka Exp $
+// $Id: FigExtend.java,v 1.6 2003/01/24 20:20:00 kataka Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Written to support
 // Extend relationships.
@@ -222,7 +222,7 @@ public class FigExtend extends FigEdgeModelElement {
      *    the redrawing right.</p>
      */
 
-    protected void modelChanged() {
+    protected void modelChanged(MElementEvent e) {
 
         // Give up if we have no owner
 
@@ -235,7 +235,7 @@ public class FigExtend extends FigEdgeModelElement {
         // Let the superclass sort itself out, and then tell GEF we are going
         // to start something
 
-        super.modelChanged();
+        super.modelChanged(e);
         startTrans();
 
         // Now sort out the condition text. Use the null string if there is no
