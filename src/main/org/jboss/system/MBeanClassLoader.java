@@ -15,7 +15,7 @@ import javax.management.ObjectName;
  * The pupose of MBeanCL is to load the classes on behalf of an MBean.
  * 
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -28,7 +28,9 @@ public class MBeanClassLoader
 {
    /** All SCL are just in orbit around a basic ServiceLibraries */
    private static ServiceLibraries libraries;
-	
+	/** The bootstrap interface to the log4j system */
+	private static BootstrapLogger log = BootstrapLogger.getLogger(MBeanClassLoader.class);
+
    private ObjectName objectName;
 	
    /**
@@ -42,7 +44,8 @@ public class MBeanClassLoader
       super();
       this.objectName = objectName;
 		
-      if (libraries == null) {
+      if (libraries == null)
+      {
          libraries = ServiceLibraries.getLibraries();
       }
    }
@@ -53,7 +56,8 @@ public class MBeanClassLoader
     *
     * @return    MBean object name.
     */
-   public ObjectName getObjectName() {
+   public ObjectName getObjectName()
+   {
       return objectName;
    }
 	
@@ -64,8 +68,9 @@ public class MBeanClassLoader
    public Class loadClass(String name, boolean resolve)
       throws ClassNotFoundException
    {
-      if (name.endsWith("CHANGEME")) {
-         System.out.println("MCL LOAD " + this.hashCode() +
+      if (name.endsWith("CHANGEME"))
+      {
+         log.debug("MCL LOAD " + this.hashCode() +
                             " in loadClass " + name);
       }
 
@@ -79,19 +84,24 @@ public class MBeanClassLoader
       return loadClass(name, true);
    }
 	
-   public URL getResource(String name) {
+   public URL getResource(String name)
+   {
 		
-      if (name.endsWith("CHANGEME")) {
-         System.out.println("MCL GETRESOURCE " + name +
+      if (name.endsWith("CHANGEME"))
+      {
+         log.debug("MCL GETRESOURCE " + name +
                             " in SCL " + this.hashCode());
       }
       return libraries.getResource(name, this);
    }
 	
-   public InputStream getResourceAsStream(String name) {
-      try {
+   public InputStream getResourceAsStream(String name)
+   {
+      try
+      {
          URL url = getResource(name);
-         if (url != null) {
+         if (url != null)
+         {
             return url.openStream();
          }		
       }

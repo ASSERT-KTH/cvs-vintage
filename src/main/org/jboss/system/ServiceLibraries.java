@@ -27,7 +27,7 @@ import org.jboss.system.URLClassLoader;
  * @see <related>
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.9 $ <p>
+ * @version $Revision: 1.10 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -44,13 +44,11 @@ import org.jboss.system.URLClassLoader;
  *      </ul>
  *
  */
-
 public class ServiceLibraries
        implements ServiceLibrariesMBean, MBeanRegistration
 {
-
-   // JBoss logger version move to log4j if needed
-   //Log log = Log.createLog("VM-ClassLoader");
+	/** The bootstrap interface to the log4j system */
+   private static BootstrapLogger log = BootstrapLogger.getLogger(ServiceLibraries.class);
 
    // Static --------------------------------------------------------
    private static ServiceLibraries libraries;
@@ -149,7 +147,8 @@ public class ServiceLibraries
       Set classLoaders2;
       long clToResourceSetMapVersion2;
 
-      synchronized (this) {
+      synchronized (this)
+      {
          // Is it in the global map?
          if (resources.containsKey(name))
             return (URL)resources.get(name);
@@ -172,18 +171,24 @@ public class ServiceLibraries
       if (resource == null)
       {
          // If not start asking around to URL classloaders for it
-         for (Iterator iter = classLoaders2.iterator(); iter.hasNext();) {
+         for (Iterator iter = classLoaders2.iterator(); iter.hasNext();)
+         {
             URLClassLoader cl = (URLClassLoader)iter.next();
 
-            if (!cl.equals(scl)) { // already tried this one
+            if (!cl.equals(scl))
+            { // already tried this one
                resource = cl.getResourceLocally(name);
 
-               if (resource != null) {
-                  synchronized (this) {
+               if (resource != null)
+               {
+                  synchronized (this)
+                  {
                      // Did the version change?
-                     if (clToResourceSetMapVersion2 != clToResourceSetMapVersion) {
+                     if (clToResourceSetMapVersion2 != clToResourceSetMapVersion)
+                     {
                         // Yes. Is the class loader we used still here?
-                        if (!classLoaders.contains(cl)) {
+                        if (!classLoaders.contains(cl))
+                        {
                            // No, it was removed from under us.
                            // Don't change the maps, simply return the resource.
                            return resource;
@@ -194,7 +199,8 @@ public class ServiceLibraries
 
                      // When we cycle the cl we also need to remove the classes it loaded
                      Set set = (Set)clToResourceSetMap.get(cl);
-                     if (set == null) {
+                     if (set == null)
+                     {
                         set = new HashSet();
                         clToResourceSetMap.put(cl, set);
                      }
@@ -221,16 +227,24 @@ public class ServiceLibraries
    {
       // we allow for duplicate class loader definitions in the services.xml files
       // we should however only keep the first classloader declared
-
-      if (!classLoaders.contains(cl)) {
+      boolean trace = log.isTraceEnabled();
+      if (!classLoaders.contains(cl))
+      {
          // We create a new copy of the classLoaders set.
          classLoaders = new HashSet(classLoaders);
 
          classLoaders.add(cl);
-
-         System.out.println("Libraries adding URLClassLoader " + cl.hashCode() + " key URL " + ((URLClassLoader)cl).getKeyURL().toString());
-      } else
-         System.out.println("Libraries skipping duplicate URLClassLoader for key URL " + ((URLClassLoader)cl).getKeyURL().toString());
+         if( trace )
+         {
+            log.trace("Libraries adding URLClassLoader " + cl.hashCode() +
+               " key URL " + cl.getKeyURL().toString());
+         }
+      }
+      else if( trace )
+      {
+         log.trace("Libraries skipping duplicate URLClassLoader for key URL " +
+            cl.getKeyURL().toString());
+      }
    }
 
    /**
@@ -240,7 +254,9 @@ public class ServiceLibraries
     */
    public synchronized void removeClassLoader(URLClassLoader cl)
    {
-      System.out.println("removing classloader " + cl);
+      boolean trace = log.isTraceEnabled();
+      if( trace )
+         log.trace("removing classloader " + cl);
 
       if (!classLoaders.contains(cl))
          return; // nothing to remove
@@ -249,29 +265,35 @@ public class ServiceLibraries
       classLoaders = new HashSet(classLoaders);
       classLoaders.remove(cl);
 
-      if (clToClassSetMap.containsKey(cl)) {
+      if (clToClassSetMap.containsKey(cl))
+      {
          // We have a new version of the map
          ++clToClassSetMapVersion;
 
          Set clClasses = (Set)clToClassSetMap.remove(cl);
 
-         for (Iterator iter = clClasses.iterator(); iter.hasNext();) {
+         for (Iterator iter = clClasses.iterator(); iter.hasNext();)
+         {
             Object o = iter.next();
             Object o1 = classes.remove(o);
-            System.out.println("removing class " + o + ", removed: " + o1);
+            if( trace )
+               log.trace("removing class " + o + ", removed: " + o1);
          }
       }
       
       // Same procedure for resources
-      if (clToResourceSetMap.containsKey(cl)) {
+      if (clToResourceSetMap.containsKey(cl))
+      {
          ++clToResourceSetMapVersion;
 
          Set clResources = (Set)clToResourceSetMap.remove(cl);
 
-         for (Iterator iter = clResources.iterator(); iter.hasNext();) {
+         for (Iterator iter = clResources.iterator(); iter.hasNext();)
+         {
             Object o = iter.next();
             Object o1 = resources.remove(o);
-            System.out.println("removing resource " + o + ", removed: " + o1);
+            if( trace )
+               log.trace("removing resource " + o + ", removed: " + o1);
          }
       }
    }
@@ -294,7 +316,8 @@ public class ServiceLibraries
       Set classLoaders2;
       long clToClassSetMapVersion2;
 
-      synchronized (this) {
+      synchronized (this)
+      {
          // Try the local map already
          foundClass = (Class)classes.get(name);
 
@@ -311,41 +334,53 @@ public class ServiceLibraries
       }
 
       // If not start asking around to URL classloaders for it
-
       // who will find it?
       URLClassLoader cl = null;
 
-      if (scl instanceof URLClassLoader) {
+      if (scl instanceof URLClassLoader)
+      {
          // First ask the asking classloader chances are the dependent class is in there
-         try {
+         try
+         {
             foundClass = ((URLClassLoader)scl).loadClassLocally(name, resolve);
 
             //If we get here we know the scl is the right one
             cl = (URLClassLoader)scl;
-         } catch (ClassNotFoundException ignored) {
+         }
+         catch (ClassNotFoundException ignored)
+         {
          }
       }
 
       Iterator allLoaders = classLoaders2.iterator();
-      while (allLoaders.hasNext() && (foundClass == null)) {
+      while (allLoaders.hasNext() && (foundClass == null))
+      {
          // next!
          cl = (URLClassLoader)allLoaders.next();
 
-         if (!scl.equals(cl)) {
-            try {
+         if (!scl.equals(cl))
+         {
+            try
+            {
                foundClass = cl.loadClassLocally(name, resolve);
-            } catch (ClassNotFoundException ignored2) {
+            }
+            catch (ClassNotFoundException ignored2)
+            {
                //try next loader
             }
          }
       } //allLoaders
 
-      if (foundClass != null) {
-         synchronized (this) {
+      if (foundClass != null)
+      {
+         synchronized (this)
+         {
             // Did the version change?
-            if (clToClassSetMapVersion2 != clToClassSetMapVersion) {
+            if (clToClassSetMapVersion2 != clToClassSetMapVersion)
+            {
                // Yes. Is the class loader we used still here?
-               if (!classLoaders.contains(cl)) {
+               if (!classLoaders.contains(cl))
+               {
                   // No, it was removed from under us.
                   // Don't change the maps, simply return the class.
                   return foundClass;
@@ -356,7 +391,8 @@ public class ServiceLibraries
 
             // When we cycle the cl we also need to remove the classes it loaded
             Set set = (Set)clToClassSetMap.get(cl);
-            if (set == null) {
+            if (set == null)
+            {
                set = new HashSet();
                clToClassSetMap.put(cl, set);
             }
@@ -392,7 +428,7 @@ public class ServiceLibraries
       clToResourceSetMap = new HashMap();
       clToClassSetMap = new HashMap();
 
-      System.out.println("[GPA] Microkernel ClassLoaders and Libraries initialized");
+      log.info("[GPA] Microkernel ClassLoaders and Libraries initialized");
       return name == null ? new ObjectName(OBJECT_NAME) : name;
    }
 
@@ -433,4 +469,3 @@ public class ServiceLibraries
 
    // Inner classes -------------------------------------------------
 }
-

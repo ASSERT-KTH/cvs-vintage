@@ -20,7 +20,7 @@ import java.io.InputStream;
  *
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="christoph.jung@jboss.org">Christoph G. Jung</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * 
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -47,8 +47,9 @@ public class URLClassLoader
 	
    /** All SCL are just in orbit around a basic ServiceLibraries */
    private static ServiceLibraries libraries;
-	
-	
+	/** The bootstrap interface to the log4j system */
+	private static BootstrapLogger log = BootstrapLogger.getLogger(URLClassLoader.class);
+
    /**
     * One url per SCL
     *
@@ -67,14 +68,13 @@ public class URLClassLoader
             libraries = ServiceLibraries.getLibraries();
          }
 			
-
          // A URL enabled SCL must register itself with the libraries to
          // be queried
          libraries.addClassLoader(this);
       }
       catch(Exception e)
-      { 
-         System.out.println("[GPA] WARNING: URL "+keyUrl+" could not be opened");
+      {
+         log.warn("URL "+keyUrl+" could not be opened");
       }
    }
 
@@ -95,9 +95,9 @@ public class URLClassLoader
    {
       if (name.endsWith("CHANGEME"))
       {
-         System.out.println("UCL LOAD "+this.hashCode()+" in loadClass "+name);
+         log.debug("UCL LOAD "+this.hashCode()+" in loadClass "+name);
       }
-		
+
       return libraries.loadClass(name, resolve, this);	
    }
 	
@@ -107,7 +107,7 @@ public class URLClassLoader
    {
       if (name.endsWith("CHANGEME")) 
       {
-         System.out.println("UCL LOAD LOCALLY "+ this.hashCode() +
+         log.debug("UCL LOAD LOCALLY "+ this.hashCode() +
                             " in loadClass "+name);
       }
 		
@@ -118,11 +118,10 @@ public class URLClassLoader
    {
       if (name.endsWith("CHANGEME"))
       {
-
-         System.out.println("UCL GETRESOURCE "+name+ " in UCL " +
+         log.debug("UCL GETRESOURCE "+name+ " in UCL " +
                             this.hashCode());
       }
-      
+
       URL resource = super.getResource(name);
 		
       if (resource == null)
@@ -132,7 +131,8 @@ public class URLClassLoader
 		
       if (resource == null)
       {
-         System.out.println("Did not find the UCL resource "+name);
+         if( log.isTraceEnabled() )
+            log.trace("Did not find the UCL resource "+name);
       }
       return resource;
    }
