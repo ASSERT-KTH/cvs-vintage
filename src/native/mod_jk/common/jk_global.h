@@ -57,7 +57,7 @@
  * Description: Global definitions and include files that should exist     *
  *              anywhere                                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.7 $                                               *
+ * Version:     $Revision: 1.8 $                                               *
  ***************************************************************************/
 
 #ifndef JK_GLOBAL_H
@@ -157,7 +157,7 @@ extern "C" {
 #define JK_OPT_FWDURICOMPATUNPARSED 0x0002
 #define JK_OPT_FWDURIESCAPED        0x0003
 
-#define JK_OPT_FWDURIDEFAULT        JK_OPT_FWDURIESCAPED
+#define JK_OPT_FWDURIDEFAULT        JK_OPT_FWDURICOMPAT
 
 #define JK_OPT_FWDKEYSIZE           0x0004
 
