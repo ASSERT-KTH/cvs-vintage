@@ -30,8 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.columba.addressbook.parser.ListBuilder;
-import org.columba.addressbook.parser.ListParser;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.Main;
 import org.columba.core.main.VersionInfo;
@@ -43,6 +41,8 @@ import org.columba.mail.config.PGPItem;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.PGPMimePart;
 import org.columba.mail.message.SendableHeader;
+import org.columba.mail.parser.ListBuilder;
+import org.columba.mail.parser.ListParser;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.coder.EncodedWord;
 import org.columba.ristretto.composer.MimeTreeRenderer;
@@ -72,6 +72,8 @@ public class MessageComposer {
 	protected SendableHeader initHeader() {
 		SendableHeader header = new SendableHeader();
 
+		
+		
 		// RFC822 - Header
 		if (model.getToList() != null) {
 			String s = ListParser.createStringFromList(ListBuilder

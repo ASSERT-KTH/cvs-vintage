@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.main;
 
+import org.columba.addressbook.facade.AddressbookServiceProvider;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.backgroundtask.TaskInterface;
@@ -50,9 +51,9 @@ public class AddressbookMain extends DefaultMain {
         BackgroundTaskManager.getInstance().register(plugin);
         ShutdownManager.getShutdownManager().register(plugin);
         
-        ServiceManager.getInstance().register("IContactFacade", "org.columba.addressbook.facade.ContactFacade");
-        ServiceManager.getInstance().register("IFolderFacade", "org.columba.addressbook.facade.FolderFacade");
-        ServiceManager.getInstance().register("IConfigFacade", "org.columba.addressbook.facade.ConfigFacade");
+        ServiceManager.getInstance().register(AddressbookServiceProvider.CONTACT, "org.columba.addressbook.facade.ContactFacade");
+        ServiceManager.getInstance().register(AddressbookServiceProvider.FOLDER, "org.columba.addressbook.facade.FolderFacade");
+        ServiceManager.getInstance().register(AddressbookServiceProvider.CONFIG, "org.columba.addressbook.facade.ConfigFacade");
 		
 	}
 	

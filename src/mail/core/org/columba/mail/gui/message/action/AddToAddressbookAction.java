@@ -25,8 +25,8 @@ import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.services.ServiceManager;
 import org.columba.core.services.ServiceNotFoundException;
+import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.message.util.ColumbaURL;
@@ -75,13 +75,11 @@ public class AddToAddressbookAction extends AbstractColumbaAction
 
         IContactFacade contactFacade=null;
 		try {
-			contactFacade = (IContactFacade) ServiceManager.getInstance().createService("IContactFacade");
+			contactFacade = ServiceConnector.getContactFacade();			
 		} catch (ServiceNotFoundException e) {
-			
 			e.printStackTrace();
+			return;
 		}
-		
-		if ( contactFacade == null ) return;
         
         try {
 			// create Address from URL

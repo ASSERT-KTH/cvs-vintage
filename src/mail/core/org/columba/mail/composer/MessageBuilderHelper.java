@@ -25,12 +25,12 @@ import java.util.regex.Pattern;
 
 import org.columba.addressbook.facade.IContactFacade;
 import org.columba.core.io.StreamUtils;
-import org.columba.core.services.ServiceManager;
 import org.columba.core.services.ServiceNotFoundException;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.CharsetDecoderInputStream;
@@ -245,9 +245,10 @@ public class MessageBuilderHelper {
 	 *            The <code>ComposerModel</code> we want to pass the
 	 *            information to.
 	 * 
-	 * TODO (@author fdietz): if the References headerfield contains to many characters, we have
-	 * to remove some of the first References, before appending another one.
-	 * (RFC822 headerfields are not allowed to become that long)
+	 * TODO (@author fdietz): if the References headerfield contains to many
+	 * characters, we have to remove some of the first References, before
+	 * appending another one. (RFC822 headerfields are not allowed to become
+	 * that long)
 	 *  
 	 */
 	public static void createMailingListHeaderItems(Header header,
@@ -370,7 +371,8 @@ public class MessageBuilderHelper {
 		if (html) {
 			// html - quoting is done by inserting a div around the
 			// message formattet with a blue line at left edge
-			// TODO (@author fdietz): Implement quoting (font color, stylesheet, blockquote???)
+			// TODO (@author fdietz): Implement quoting (font color, stylesheet,
+			// blockquote???)
 
 			/*
 			 * String lcase = bodyText.toLowerCase(); StringBuffer buf = new
@@ -408,8 +410,8 @@ public class MessageBuilderHelper {
 			return false;
 
 		// get configuration
-		XmlElement optionsElement = MailConfig.getInstance()
-				.get("composer_options").getElement("/options");
+		XmlElement optionsElement = MailConfig.getInstance().get(
+				"composer_options").getElement("/options");
 		XmlElement htmlElement = optionsElement.getElement("html");
 
 		// create html element, if it doesn't exist
@@ -433,18 +435,15 @@ public class MessageBuilderHelper {
 	public static void addAddressesToAddressbook(Address[] addresses) {
 		IContactFacade contactFacade=null;
 		try {
-			contactFacade = (IContactFacade) ServiceManager.getInstance().createService("IContactFacade");
+			contactFacade = ServiceConnector.getContactFacade();
+			for (int i = 0; i < addresses.length; i++) {
+				contactFacade.addContactToCollectedAddresses(addresses[i]
+						.getMailAddress());
+
+			}
 		} catch (ServiceNotFoundException e) {
-			
 			e.printStackTrace();
 		}
-		
-		if ( contactFacade == null ) return;
-		
-		for (int i = 0; i < addresses.length; i++) {
-			contactFacade.addContactToCollectedAddresses(addresses[i]
-					.getMailAddress());
 
-		}
 	}
 }

@@ -18,8 +18,8 @@
 package org.columba.mail.filter.plugins;
 
 import org.columba.addressbook.facade.IFolderFacade;
-import org.columba.core.services.ServiceManager;
 import org.columba.core.services.ServiceNotFoundException;
+import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.message.Address;
@@ -42,7 +42,8 @@ public class AddressbookFilter extends AbstractFilter {
 	 * @see org.columba.mail.filter.plugins.AbstractFilter#process(org.columba.mail.folder.Folder,
 	 *      java.lang.Object)
 	 */
-	public boolean process(AbstractMessageFolder folder, Object uid) throws Exception {
+	public boolean process(AbstractMessageFolder folder, Object uid)
+			throws Exception {
 		Header header = folder.getHeaderFields(uid, new String[] { "From" });
 		String from = header.get("From");
 
@@ -55,15 +56,12 @@ public class AddressbookFilter extends AbstractFilter {
 
 		IFolderFacade folderFacade = null;
 		try {
-			folderFacade = (IFolderFacade) ServiceManager.getInstance()
-					.createService("IContactFacade");
+			folderFacade = ServiceConnector.getFolderFacade();
 		} catch (ServiceNotFoundException e) {
 
 			e.printStackTrace();
-		}
-
-		if (folderFacade == null)
 			return false;
+		}
 
 		org.columba.addressbook.folder.IContactFolder addressbook = folderFacade
 				.getCollectedAddresses();

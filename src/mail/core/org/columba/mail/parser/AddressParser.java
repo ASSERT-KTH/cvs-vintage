@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.addressbook.parser;
+package org.columba.mail.parser;
 
 import java.util.Iterator;
 import java.util.List;
@@ -25,23 +25,8 @@ import java.util.Vector;
  * 
  * @author fdietz
  */
-public class AddressParser {
-	public static boolean isValid(String str) {
-		if (str == null) {
-			return false;
-		}
-
-		if (str.length() == 0) {
-			return false;
-		}
-
-		if (str.indexOf("@") != -1) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
+public class AddressParser{
+	
 	/**
 	 * to normalize Mail-addresses given in an Vector in
 	 * 
@@ -54,7 +39,7 @@ public class AddressParser {
 	 *            List of Strings with mailaddresses in any format
 	 * @return List of Strings with mailaddress in format <fdietz@gmx.de>
 	 */
-	public static List normalizeRCPTVector(List in) {
+	public List normalizeRCPTVector(List in) {
 		if ( in == null ) return null;
 		
 		int v_size = in.size();

@@ -33,7 +33,7 @@ public interface IFolderFacade {
 	 *            id of folder
 	 * @return Folder
 	 */
-	IFolder getAddressbook(int uid);
+	IFolder getFolder(int uid);
 
 	/**
 	 * 
@@ -45,4 +45,8 @@ public interface IFolderFacade {
 	IContactFolder getCollectedAddresses();
 	
 	IContactFolder getLocalAddressbook();
+	
+	IFolder getFolder(String name);
+	
+
 }

@@ -15,34 +15,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.parser;
-
-import java.util.List;
-
-import org.columba.mail.parser.ListParser;
-
-import junit.framework.TestCase;
+package org.columba.addressbook.facade;
 
 /**
  * @author fdietz
  *
  */
-public class ListParserTest extends TestCase {
+public interface AddressbookServiceProvider {
 
-	public void testCreateListFromString() {
-		String s = "test@test.de";
-		
-		List l = new ListParser().createListFromString(s);
-		
-		assertEquals("list size 1", 1, l.size());
-	}
+	public static final String PACKAGE = "org.columba.addressbook.facade";
 	
-	public void testCreateListFromString2() {
-		String s = "test@test.de, test2@test2.de";
-		
-		List l = new ListParser().createListFromString(s);
-		
-		assertEquals("list size 2", 2, l.size());
-	}
-
+	public static final String CONTACT = PACKAGE+"IContactFacade";
+	public static final String CONFIG = PACKAGE+"IConfigFacade";
+	public static final String FOLDER = PACKAGE+"IFolderFacade";
+	public static final String PARSER = PACKAGE+"IParserFacade";
+	
 }

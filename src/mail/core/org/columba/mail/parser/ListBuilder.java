@@ -15,29 +15,29 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.parser;
+package org.columba.mail.parser;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.addressbook.folder.IContactStorage;
+import org.columba.addressbook.facade.IFolderFacade;
 import org.columba.addressbook.folder.GroupFolder;
-import org.columba.addressbook.gui.tree.AddressbookTreeModel;
-import org.columba.addressbook.model.Contact;
-import org.columba.addressbook.model.ContactItem;
+import org.columba.addressbook.folder.IContactStorage;
+import org.columba.addressbook.folder.IFolder;
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.HeaderItem;
-import org.columba.addressbook.model.HeaderItemList;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IContactItem;
 import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.addressbook.model.VCARD;
 import org.columba.core.main.Main;
+import org.columba.core.services.ServiceNotFoundException;
+import org.columba.mail.connector.ServiceConnector;
 
 /**
- * Provides methods for creating new lists from other
- * list formats.
+ * Provides methods for creating new lists from other list formats.
  * 
  * @author fdietz
  */
@@ -52,84 +52,87 @@ public class ListBuilder {
 	 * @return list containing only contacts
 	 */
 	public static List createFlatList(List list) {
-		if ( list == null ) return null;
-		
+		IFolderFacade folderFacade;
+		try {
+			folderFacade = ServiceConnector.getFolderFacade();
+		} catch (ServiceNotFoundException e1) {
+
+			e1.printStackTrace();
+			return new ArrayList();
+		}
+
+		if (list == null)
+			return null;
+
 		List result = new Vector();
-	
+
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			String s = (String) it.next();
-			GroupFolder groupFolder = AddressbookTreeModel.getInstance()
-					.getGroupFolder(s);
+			IFolder f = folderFacade.getFolder(s);
+
 			// if its a group item
-			if (groupFolder != null) {
+			if (f != null) {
 				ContactItemMap map = null;
 				try {
-					map = groupFolder.getContactItemMap();
+					map = ((GroupFolder) f).getContactItemMap();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				if (map == null)
 					continue;
-	
+
 				Iterator it2 = map.iterator();
 				while (it2.hasNext()) {
 					IContactItem i = (IContactItem) it2.next();
 					String address = i.getAddress();
-	
+
 					if (address == null) {
 						continue;
 					}
-	
+
 					result.add(address);
 				}
 			} else {
 				// contact item
-	
-				// check if valid email address
-				if ( AddressParser.isValid(s)) {
-					// add address to list
-					result.add(s);
-					continue;
-				}
-				
-				// this is not a valid email address
+
 				// -> check if its a contact displayname
 				// -> if so, retrieve email address from contact folder
-				
+
 				// look into both folders
-				IContactStorage personal = (IContactStorage) AddressbookTreeModel.getInstance()
-						.getFolder(101);
-				IContactStorage collected = (IContactStorage) AddressbookTreeModel.getInstance()
-						.getFolder(102);
-	
+				IContactStorage personal = (IContactStorage) folderFacade
+						.getLocalAddressbook();
+				IContactStorage collected = (IContactStorage) folderFacade
+						.getCollectedAddresses();
+
 				// try to find a matching contact item
 				IContact item = null;
 				try {
-	
+
 					Object uid = personal.exists(s);
 					if (uid != null) {
 						item = personal.get(uid);
 					}
-	
+
 					uid = collected.exists(s);
 					if (uid != null)
 						item = collected.get(uid);
-	
+
 				} catch (Exception e) {
 					if (Main.DEBUG)
 						e.printStackTrace();
 				}
-	
+
 				// if match found
 				if (item != null)
 					result
 							.add(item.get(VCARD.EMAIL,
 									VCARD.EMAIL_TYPE_INTERNET));
-	
+				else
+					result.add(s);
 			}
-	
+
 		}
-	
+
 		return result;
 	}
 
@@ -143,17 +146,17 @@ public class ListBuilder {
 	 */
 	public static List createStringListFromItemList(IHeaderItemList list) {
 		List result = new Vector();
-	
+
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			HeaderItem item = (HeaderItem) it.next();
-	
+
 			if (item == null) {
 				continue;
 			}
-	
+
 			result.add(item.getDisplayName());
 		}
-	
+
 		return result;
 	}
 

@@ -21,13 +21,13 @@ import java.util.Vector;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import org.columba.addressbook.parser.AddressParser;
-import org.columba.addressbook.parser.ListBuilder;
-import org.columba.addressbook.parser.ListParser;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.parser.AddressParser;
+import org.columba.mail.parser.ListBuilder;
+import org.columba.mail.parser.ListParser;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.StreamableMimePart;
@@ -220,7 +220,7 @@ public class ComposerModel {
 			return;
 		}
 
-		List v = ListParser.createListFromString(s);
+		List v = new ListParser().createListFromString(s);
 		toList = v;
 	}
 
@@ -420,16 +420,16 @@ public class ComposerModel {
 	public List getRCPTVector() {
 		List output = new Vector();
 
-		List l = AddressParser.normalizeRCPTVector(ListBuilder
+		List l = new AddressParser().normalizeRCPTVector(ListBuilder
 				.createFlatList(getToList()));
 		if (l != null)
 			output.addAll(l);
 
-		l = AddressParser.normalizeRCPTVector(ListBuilder
+		l = new AddressParser().normalizeRCPTVector(ListBuilder
 				.createFlatList(getCcList()));
 		if (l != null)
 			output.addAll(l);
-		l = AddressParser.normalizeRCPTVector(ListBuilder
+		l = new AddressParser().normalizeRCPTVector(ListBuilder
 				.createFlatList(getBccList()));
 		if (l != null)
 			output.addAll(l);

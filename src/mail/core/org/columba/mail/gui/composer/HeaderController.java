@@ -24,9 +24,9 @@ import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
 import org.columba.addressbook.model.IHeaderItemList;
-import org.columba.addressbook.parser.ListBuilder;
-import org.columba.addressbook.parser.ListParser;
 import org.columba.core.gui.util.NotifyDialog;
+import org.columba.mail.parser.ListBuilder;
+import org.columba.mail.parser.ListParser;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

@@ -24,10 +24,10 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.services.ServiceManager;
 import org.columba.core.services.ServiceNotFoundException;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.connector.ServiceConnector;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.message.Header;
 
@@ -88,15 +88,13 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
             return;
         }
         
-        IContactFacade contactFacade=null;
+        IContactFacade contactFacade = null;
 		try {
-			contactFacade = (IContactFacade) ServiceManager.getInstance().createService("IContactFacade");
+			contactFacade = ServiceConnector.getContactFacade();
 		} catch (ServiceNotFoundException e) {
-			
 			e.printStackTrace();
+			return;
 		}
-		
-		if ( contactFacade == null ) return;
 
         // for each message
         for (int i = 0; i < uids.length; i++) {

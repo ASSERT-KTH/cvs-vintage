@@ -15,13 +15,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.parser;
+package org.columba.mail.parser;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-
-import org.columba.addressbook.model.ContactItem;
 
 
 /**
@@ -112,25 +110,5 @@ public class ListParser {
 		}
 
 		return output.toString();
-	}
-
-	protected static String isValid(ContactItem item) {
-
-		String address = address = item.getDisplayName();
-
-		if (AddressParser.isValid(address)) {
-			return address.trim();
-		}
-
-		if (item.getAddress() != null) {
-			address = item.getAddress();
-
-			if (AddressParser.isValid(address)) {
-				return address.trim();
-			}
-		}
-
-		return null;
-
 	}
 }

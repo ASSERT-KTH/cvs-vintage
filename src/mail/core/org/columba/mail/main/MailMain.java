@@ -83,11 +83,11 @@ public class MailMain extends DefaultMain {
         // -> see documentation in class
         CachedHeaderfields.addConfiguration();
         
-        ServiceManager.getInstance().register("IConfigFactory", "org.columba.mail.facade.ConfigFactory");
-        ServiceManager.getInstance().register("IComposerFactory", "org.columba.mail.facade.ComposerFactory");
-        ServiceManager.getInstance().register("IDialogFactory", "org.columba.mail.facade.DialogFactory");
-        ServiceManager.getInstance().register("IFolderFactory", "org.columba.mail.facade.FolderFactory");
-        ServiceManager.getInstance().register("ISelectionFactory", "org.columba.mail.facade.SelectionFactory");
+        ServiceManager.getInstance().register("org.columba.mail.facade.IConfigFactory", "org.columba.mail.facade.ConfigFactory");
+        ServiceManager.getInstance().register("org.columba.mail.facade.IComposerFactory", "org.columba.mail.facade.ComposerFactory");
+        ServiceManager.getInstance().register("org.columba.mail.facade.IDialogFactory", "org.columba.mail.facade.DialogFactory");
+        ServiceManager.getInstance().register("org.columba.mail.facade.IFolderFactory", "org.columba.mail.facade.FolderFactory");
+        ServiceManager.getInstance().register("org.columba.mail.facade.ISelectionFactory", "org.columba.mail.facade.SelectionFactory");
 	}
 	
 	public static MailMain getInstance() {

@@ -25,7 +25,7 @@ import javax.swing.tree.TreeModel;
 import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.AddressbookTreeNode;
-import org.columba.addressbook.folder.GroupFolder;
+import org.columba.addressbook.folder.IFolder;
 import org.columba.addressbook.folder.Root;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.plugin.FolderPluginHandler;
@@ -149,18 +149,16 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 		return null;
 	}
 
-	public GroupFolder getGroupFolder(String name) {
+	public IFolder getFolder(String name) {
 		AddressbookTreeNode root = (AddressbookTreeNode) getRoot();
 
 		for (Enumeration e = root.breadthFirstEnumeration(); e
 				.hasMoreElements();) {
 			AddressbookTreeNode node = (AddressbookTreeNode) e.nextElement();
 
-			if (node instanceof GroupFolder) {
-				GroupFolder groupFolder = (GroupFolder) node;
-				if (groupFolder.getName().equals(name))
-					return groupFolder;
-			}
+			if (node.getName().equals(name))
+				return node;
+
 		}
 
 		return null;

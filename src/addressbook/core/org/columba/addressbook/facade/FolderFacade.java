@@ -36,7 +36,7 @@ public class FolderFacade implements IFolderFacade {
 	 *            id of folder
 	 * @return Folder
 	 */
-	public IFolder getAddressbook(int uid) {
+	public IFolder getFolder(int uid) {
 		return (IFolder) AddressbookTreeModel.getInstance().getFolder(uid);
 	}
 
@@ -62,6 +62,17 @@ public class FolderFacade implements IFolderFacade {
 		AddressbookTreeModel model = AddressbookTreeModel.getInstance();
 		if (model != null)
 			return (AbstractFolder) model.getFolder(101);
+
+		return null;
+	}
+
+	/**
+	 * @see org.columba.addressbook.facade.IFolderFacade#getFolder(java.lang.String)
+	 */
+	public IFolder getFolder(String name) {
+		AddressbookTreeModel model = AddressbookTreeModel.getInstance();
+		if (model != null)
+			return (AbstractFolder) model.getFolder(name);
 
 		return null;
 	}
