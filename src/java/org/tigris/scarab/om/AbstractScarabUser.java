@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.41 2002/07/12 21:53:34 elicia Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.42 2002/07/12 21:57:31 elicia Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -302,7 +302,6 @@ public abstract class AbstractScarabUser
              Module module = (Module)userModules[i];
              if (!module.getModuleId().equals(currentModule.getModuleId())
                  && !module.isGlobalModule())
-             if (!module.getModuleId().toString().equals("0"))
              {
                  moveToModules.add(module);
              }
