@@ -1,4 +1,4 @@
-// $Id: FigAssociationEnd.java,v 1.5 2005/01/30 20:47:54 linus Exp $
+// $Id: FigAssociationEnd.java,v 1.6 2005/01/31 19:06:00 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -172,8 +172,10 @@ public class FigAssociationEnd extends FigEdgeModelElement {
         Object stereo = null;
         if (Model.getFacade().isNavigable(owner)
                 && (Model.getFacade().isAClass(Model.getFacade().getType(owner))
-                || Model.getFacade().isAInterface(Model.getFacade().getType(owner)))) {
-            visi = Notation.generate(this, Model.getFacade().getVisibility(owner));
+                || Model.getFacade().isAInterface(Model.getFacade()
+                        .getType(owner)))) {
+            visi = 
+                Notation.generate(this, Model.getFacade().getVisibility(owner));
         }
         if (Model.getFacade().getStereotypes(owner).size() > 0) {
             stereo = Model.getFacade().getStereotypes(owner).iterator().next();
