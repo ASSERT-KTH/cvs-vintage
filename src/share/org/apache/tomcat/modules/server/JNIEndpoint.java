@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIEndpoint.java,v 1.1 2000/09/17 06:37:53 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/09/17 06:37:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIEndpoint.java,v 1.2 2001/08/15 02:32:02 mmanders Exp $
+ * $Revision: 1.2 $
+ * $Date: 2001/08/15 02:32:02 $
  *
  * ====================================================================
  *
@@ -95,13 +95,17 @@ public class JNIEndpoint {
 	// the handler is no longer useable
     	if( handler==null ) {
 	    running=false;
-	    notify();
+            synchronized(this) {
+                notify();
+            }
 	    return;
 	}
 
 	System.out.println("Running ...");
 	running=true;
-        notify();
+        synchronized(this) {
+            notify();
+        }
     }
 
     // -------------------- JNI Entry points
@@ -156,6 +160,9 @@ public class JNIEndpoint {
                 return 1;
             } catch(Throwable t) {
                 // Throwables are not allowed into the native code !!!
+                // print it out so that we can debug it later.
+                System.out.println("Caught throwable " + t);
+                t.printStackTrace();
             }
         }
         return 0;
