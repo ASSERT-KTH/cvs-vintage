@@ -289,7 +289,6 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<exclude name="classes/**"/>
 			</zipfileset>
 			<!--<zipfileset dir="." includes="native/win32/launcher/bin/columba.exe" fullpath="columba-win32-${version}-bin/columba.exe"/>-->
-			<zipfileset dir="." includes="native/win32/launcher/src/Columba.ico" fullpath="columba-win32-${version}-bin/Columba.ico"/>
 		</zip>
 	</target>
 
@@ -359,7 +358,6 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<exclude name="columba.jar"/>
 				<exclude name="classes/**"/>
 			</zipfileset>
-			<zipfileset dir="." includes="native/win32/launcher/src/Columba.ico" fullpath="columba-win32-${version}-src/Columba.ico"/>
 		</zip>
 	</target>
 
