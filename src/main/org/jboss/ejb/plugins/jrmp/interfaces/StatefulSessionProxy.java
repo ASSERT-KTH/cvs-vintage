@@ -9,8 +9,10 @@ package org.jboss.ejb.plugins.jrmp.interfaces;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.rmi.MarshalledObject;
+import javax.naming.InitialContext;
 
 import javax.ejb.EJBObject;
+import javax.ejb.EJBHome;
 import javax.naming.Name;
 
 import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
@@ -21,7 +23,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  * 		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.15 $
+ *      @version $Revision: 1.16 $
  */
 public class StatefulSessionProxy
    extends GenericProxy
@@ -36,6 +38,7 @@ public class StatefulSessionProxy
 
    static Method getPrimaryKey;
    static Method getHandle;
+   static Method getEJBHome;
    static Method isIdentical;
    static Method toStr;
    static Method eq;
@@ -48,6 +51,7 @@ public class StatefulSessionProxy
         // EJBObject methods
          getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", new Class[0]);
          getHandle = EJBObject.class.getMethod("getHandle", new Class[0]);
+         getEJBHome = EJBObject.class.getMethod("getEJBHome", new Class[0]);
          isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] { EJBObject.class });
          
         // Object methods
@@ -104,6 +108,13 @@ public class StatefulSessionProxy
       {
          return new StatefulHandleImpl(name, id);
       }
+	  
+	  
+	  else if (m.equals(getEJBHome))
+      { 
+         return (EJBHome) new InitialContext().lookup(name);
+      }
+	   
      
       else if (m.equals(getPrimaryKey))
       {

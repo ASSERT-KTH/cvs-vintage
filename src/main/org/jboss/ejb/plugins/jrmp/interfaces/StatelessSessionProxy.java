@@ -9,9 +9,11 @@ package org.jboss.ejb.plugins.jrmp.interfaces;
 import java.lang.reflect.Method;
 
 import java.rmi.MarshalledObject;
+import javax.naming.InitialContext;
+import javax.naming.Name;
 
 import javax.ejb.EJBObject;
-import javax.naming.Name;
+import javax.ejb.EJBHome;
 
 import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 
@@ -21,7 +23,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 *      @see <related>
 *      @author Rickard Öberg (rickard.oberg@telkel.com)
 * 	   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*      @version $Revision: 1.10 $
+*      @version $Revision: 1.11 $
 */
 public class StatelessSessionProxy
    extends GenericProxy
@@ -34,6 +36,7 @@ public class StatelessSessionProxy
 	
 	static Method getPrimaryKey;
 	static Method getHandle;
+	static Method getEJBHome;
 	static Method isIdentical;
 	static Method toStr;
 	static Method eq;
@@ -46,6 +49,7 @@ public class StatelessSessionProxy
 			// EJBObject methods
 			getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", new Class[0]);
 			getHandle = EJBObject.class.getMethod("getHandle", new Class[0]);
+			getEJBHome = EJBObject.class.getMethod("getEJBHome", new Class[0]);
 			isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] { EJBObject.class });
 			
 			// Object methods
@@ -125,6 +129,13 @@ public class StatelessSessionProxy
 			// are equal within a home
 			return name;
 		}
+		
+	
+	   else if (m.equals(getEJBHome))
+       { 
+           return (EJBHome) new InitialContext().lookup(name);
+       }
+	   
 		else if (m.equals(isIdentical))                 
 		{
 			// All stateless beans are identical within a home, if the names are equal we are equal
