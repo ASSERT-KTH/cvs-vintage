@@ -1,17 +1,26 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.11 2002/05/17 00:44:52 jon Exp $
+# $Id: create-db.sh,v 1.12 2002/07/09 23:02:05 jon Exp $
 #
 
 CMDNAME=`basename "$0"`
 PATHNAME=`echo $0 | sed "s,$CMDNAME\$,,"`
 
-name='scarab'
-loadorder='LoadOrder.lst'
+DB_SETTINGS="dbsettings.props"
 POPULATION_SCRIPT_DIR='../../target/webapps/scarab/WEB-INF/sql'
-username="${USER}"
-HOSTNAME='localhost'
+LOAD_ORDER="LoadOrder.lst"
+
+DB_USER="${USER}"
+DB_NAME='scarab'
+DB_HOST='localhost'
+DB_PORT='3306'
+
+# execute the settings file
+if [ -f "${POPULATION_SCRIPT_DIR}/${DB_SETTINGS}" ] ; then
+    . "${POPULATION_SCRIPT_DIR}/${DB_SETTINGS}"
+fi
+
 quiet=
 
 while [ "$#" -gt 0 ]
@@ -22,22 +31,22 @@ do
         break
         ;;
     --username|-u)
-        username="$2"
+        DB_USER="$2"
         shift;;
     --password|-p)
         password=t
         ;;
     --host|-h)
-        HOSTNAME="$2"
+        DB_HOST="$2"
         shift;;
     --port|-P)
-        port="$2"
+        DB_PORT="$2"
         shift;;
-    --name|-n)
-        name="$2"
+    --DB_NAME|-n)
+        DB_NAME="$2"
         shift;;
     --loadorder|-l)
-        loadorder="$2"
+        LOAD_ORDER="$2"
         shift;;
     --scripts|-s)
         POPULATION_SCRIPT_DIR="$2"
@@ -85,12 +94,12 @@ if [ "${usage}" ] ; then
         echo "  $CMDNAME -h localhost -u scarab"
         echo        
     echo "Options:"
-    echo "  -n, --name=DBNAME          Database name          (${name})"
-    echo "  -h, --host=HOSTNAME        Database server host   (localhost)"
+    echo "  -n, --name=DBNAME          Database name          (${DB_NAME})"
+    echo "  -h, --host=HOSTNAME        Database server host   (${DB_HOST})"
     echo "  -P, --port=PORT            Database server port   (3306 M | 5432 P)"
-    echo "  -u, --username=USERNAME    Username to connect as (${username})"
+    echo "  -u, --username=USERNAME    Username to connect as (${DB_USER})"
     echo "  -p, --password             Prompt for password"
-    echo "  -l, --loadorder=FILE       SQL file load order    (LoadOrder.lst)"
+    echo "  -l, --loadorder=FILE       SQL file load order    (${LOAD_ORDER})"
     echo "  -s, --scripts=DIR          SQL file directory"
     echo "                               (${POPULATION_SCRIPT_DIR})"
     echo "  -q, --quiet                Don't write any messages"
@@ -126,7 +135,7 @@ if [ ! -z "$password" -a "${dbtype}" = 'mysql' ] ; then
         ECHO_C='\c'
     fi
 
-	$ECHO_N "Enter password for \"${username}\": "$ECHO_C
+	$ECHO_N "Enter password for \"${DB_USER}\": "$ECHO_C
     stty -echo >/dev/null 2>&1
     read FirstPw
     stty echo >/dev/null 2>&1
@@ -161,42 +170,42 @@ if [ ! -z "${password}" ] ; then
 fi
 
 PORTCMD=
-if [ "${port}" != "" ] ; then
-    PORTCMD="--port=${port}"
+if [ "${DB_PORT}" != "" ] ; then
+    PORTCMD="--port=${DB_PORT}"
 fi
-HOSTCMD="--host=${HOSTNAME}"
+HOSTCMD="--host=${DB_HOST}"
 
 USERCMD=
-if [ "${username}" != "" ] ; then
-    USERCMD="--user=${username}"
+if [ "${DB_USER}" != "" ] ; then
+    USERCMD="--user=${DB_USER}"
 fi
 
 MYSQLCMD="${QUIETCMD} ${HOSTCMD} ${PORTCMD} ${USERCMD} ${PASSCMD}"
 
 # testing if the base already exists and removing it if needed.
 base_exists=1
-${MYSQLSHOW} ${MYSQLCMD} ${name} > /dev/null 2>&1 || base_exists=0
+${MYSQLSHOW} ${MYSQLCMD} ${DB_NAME} > /dev/null 2>&1 || base_exists=0
 if [ $base_exists -eq 1 ] ; then
     if [ -z "${quiet}" ] ; then
         echo "Removing existing database. All data will be lost."
     fi
-    echo y | ${MYSQLADMIN} ${MYSQLCMD} drop ${name} > /dev/null
+    echo y | ${MYSQLADMIN} ${MYSQLCMD} drop ${DB_NAME} > /dev/null
 fi
 
 # Creating new database and inputting default data
 
 if [ -z "${quiet}" ] ; then
-    echo "Creating database ${name}..."
+    echo "Creating database ${DB_NAME}..."
 fi
-${MYSQLADMIN} ${MYSQLCMD} create ${name}
+${MYSQLADMIN} ${MYSQLCMD} create ${DB_NAME}
 
-FILES=`cat ${loadorder}`
+FILES=`cat ${POPULATION_SCRIPT_DIR}/${LOAD_ORDER}`
 
 for i in ${FILES} ; do
     if [ -z "${quiet}" ] ; then
         echo "Importing ${i}..."
     fi
-    ${MYSQL} ${MYSQLCMD} ${name} < ${POPULATION_SCRIPT_DIR}/${i}
+    ${MYSQL} ${MYSQLCMD} ${DB_NAME} < ${POPULATION_SCRIPT_DIR}/${i}
 done
 
 ###############
@@ -226,36 +235,36 @@ if [ ! -z "${password}" ] ; then
 fi
 
 PORTCMD=
-if [ "${port}" != "" ] ; then
-    PORTCMD="-p ${port}"
+if [ "${DB_PORT}" != "" ] ; then
+    PORTCMD="-p ${DB_PORT}"
 fi
-HOSTCMD="-h ${HOSTNAME}"
+HOSTCMD="-h ${DB_HOST}"
 
 USERCMD=
-if [ "${username}" != "" ] ; then
-    USERCMD="-U ${username}"
+if [ "${DB_USER}" != "" ] ; then
+    USERCMD="-U ${DB_USER}"
 fi
 
 PSQLCMD="${QUIETCMD} ${HOSTCMD} ${PORTCMD} ${USERCMD} ${PASSCMD}"
 
 # drop the database
-${PSQLDROPDB} ${PSQLCMD} ${name}
+${PSQLDROPDB} ${PSQLCMD} ${DB_NAME}
 
 # Creating new database and inputting default data
 if [ -z "${quiet}" ] ; then
-    echo "Creating Database ${name}..."
+    echo "Creating Database ${DB_NAME}..."
 fi
 
 # create the database
-${PSQLCREATEDB} ${PSQLCMD} ${name}
+${PSQLCREATEDB} ${PSQLCMD} ${DB_NAME}
 
-FILES=`cat ${loadorder}`
+FILES=`cat ${LOAD_ORDER}`
 for i in ${FILES} ; do
     if [ -z "${quiet}" ] ; then
         echo "Importing ${i}..."
-        ${PSQL} -f ${POPULATION_SCRIPT_DIR}/${i} ${PSQLCMD} ${name}
+        ${PSQL} -f ${POPULATION_SCRIPT_DIR}/${i} ${PSQLCMD} ${DB_NAME}
     else
-        ${PSQL} -f ${POPULATION_SCRIPT_DIR}/${i} ${PSQLCMD} ${name} 2> /dev/null
+        ${PSQL} -f ${POPULATION_SCRIPT_DIR}/${i} ${PSQLCMD} ${DB_NAME} 2> /dev/null
     fi
 done
 
