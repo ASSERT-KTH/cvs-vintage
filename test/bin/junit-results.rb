@@ -2,7 +2,7 @@
 
 # Author:  Vadim Nasardinov (vadimn@redhat.com)
 # Since:   2004-12-09
-# Version: $Id: junit-results.rb,v 1.2 2005/02/01 19:13:11 el-vadimo Exp $
+# Version: $Id: junit-results.rb,v 1.3 2005/02/04 16:27:56 el-vadimo Exp $
 
 # A quick hack for generating a summary of JUnit results for CAROL
 
@@ -99,7 +99,9 @@ def collect_reports()
     return reports
 end
 
-File.open("#{RESULT_DIR}/index.html", "w") do |ff|
+RESULT_PAGE = "#{RESULT_DIR}/index.html"
+
+File.open(RESULT_PAGE, "w") do |ff|
     ff.write(HEADER)
 
     reports = collect_reports()
@@ -125,3 +127,5 @@ File.open("#{RESULT_DIR}/index.html", "w") do |ff|
 
     ff.write(FOOTER)
 end
+
+puts "Wrote\n#{RESULT_PAGE}"
