@@ -160,7 +160,7 @@ in the catalina module.
 @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.58 $
+@version $Revision: 1.59 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -255,6 +255,7 @@ public abstract class AbstractWebContainer
 
    public void create(DeploymentInfo di) throws DeploymentException
    {
+      super.create(di);
    }
 
    /** A template pattern implementation of the deploy() method. This method
@@ -277,7 +278,7 @@ public abstract class AbstractWebContainer
    java:comp/env namespace setup before any web app component can access
    this namespace.
 
-   @param di, The deployment info that contains the context-root element value
+   @param di The deployment info that contains the context-root element value
     from the J2EE application/module/web application.xml descriptor. This may
     be null if war was is not being deployed as part of an enterprise application.
     It also contains the URL of the web application war.
@@ -314,6 +315,7 @@ public abstract class AbstractWebContainer
          WebApplication warInfo = new WebApplication(metaData);
          performDeploy(warInfo, warURL.toString(), webAppParser);
          deploymentMap.put(warURL.toString(), warInfo);
+         super.start(di);
       }
       catch(DeploymentException e)
       {
@@ -360,6 +362,7 @@ public abstract class AbstractWebContainer
          performUndeploy(warUrl);
          // Remove the web application ENC...
          deploymentMap.remove(warUrl);
+         super.stop(di);
       }
       catch(DeploymentException e)
       {
@@ -374,6 +377,7 @@ public abstract class AbstractWebContainer
    public void destroy(DeploymentInfo sdi) 
       throws DeploymentException 
    {
+      super.destroy(sdi);
    }
    /** Called as part of the undeploy() method template to ask the
    subclass for perform the web container specific undeployment steps.

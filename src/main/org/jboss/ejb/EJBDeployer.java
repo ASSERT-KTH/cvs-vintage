@@ -40,7 +40,7 @@ import org.jboss.metadata.XmlFileLoader;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.31 $</tt>
+ * @version <tt>$Revision: 1.32 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -389,6 +389,7 @@ public class EJBDeployer
 
          // Init application
          serviceController.create(ejbModule);
+         super.create(di);
       }
       catch (Exception e)
       {
@@ -409,6 +410,7 @@ public class EJBDeployer
                     (di.parent == null ? "null" : di.parent.shortName) );
 
          serviceController.start(di.deployedObject);
+         super.start(di);
 
          log.debug( "Deployed: " + di.url );
       }
@@ -424,6 +426,7 @@ public class EJBDeployer
       try
       {
          serviceController.stop(di.deployedObject);
+         super.stop(di);
       }
       catch (Exception e)
       {
@@ -439,6 +442,7 @@ public class EJBDeployer
       {
          serviceController.destroy( di.deployedObject );
          serviceController.remove( di.deployedObject );
+         super.destroy(di);
       }
       catch (Exception e)
       {
