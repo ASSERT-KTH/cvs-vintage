@@ -16,8 +16,6 @@ public class ClusterConf {
     public ClusterMethodInfo getMethodInfo(MethodContext m, String className) {
         Vector mthInfos = (Vector) classInfos.get(className);
         if (mthInfos == null) {
-            //XXX
-            System.out.println("No match for class : " + className);
             return null;
         }
         for (Enumeration e = mthInfos.elements(); e.hasMoreElements();) {
@@ -25,7 +23,6 @@ public class ClusterConf {
             if (cmi.match(m))
                 return cmi;
         }
-        System.out.println("No match for method : " + m.mth.toString());
         return null;
     }
 

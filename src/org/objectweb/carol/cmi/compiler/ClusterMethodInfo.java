@@ -33,17 +33,14 @@ public class ClusterMethodInfo {
             if (mns <= 0) badSignature(sign);
             methodName = sign.substring(mns, obr);
             int mnd = methodName.lastIndexOf('.');
-//            System.out.println("Signature : " + sign);
             if (mnd >= 0) {
             	methodName = methodName.substring(mnd+1);
             }
-//          System.out.println("Method name : <" + methodName + ">");
             mns--;
             while (sign.charAt(mns - 1) == ' ') mns--;
             int rts = sign.lastIndexOf(' ', mns - 1) + 1;
             if (rts <= 0) badSignature(sign);
             returnType = sign.substring(rts, mns);
-//          System.out.println("Return type : <" + returnType + ">");
             int cbr = sign.indexOf(')');
             String params = sign.substring(obr+1, cbr);
             params.trim();
@@ -61,7 +58,6 @@ public class ClusterMethodInfo {
             	if (te > 0)
             		param = param.substring(0, te);
             	p.addElement(param);
-//          	System.out.println("Parameter type : <" + param + ">");
             }
             paramTypes = new String[p.size()];
             p.copyInto(paramTypes);
@@ -142,9 +138,6 @@ public class ClusterMethodInfo {
     	for (i=0; i<j; i++) {
     		if (!paramTypes[i].equals(ptn[i])) return false;
     	}
-		System.out.println("Match :");
-		System.out.println("-> " + signature);
-		System.out.println("-> " + m.mth.toString());
     	return true;
     }
 }

@@ -173,7 +173,7 @@ public class ClusterStubCompiler {
                     break;
                 default :
                     System.err.println(
-                        "Cluster stub compiler error: type not supported for method :\n"
+                        "Cluster stub compiler error: cluster configuration not supported for method : "
                             + mthctx.mth.toString());
                     System.exit(1);
             }
