@@ -60,7 +60,7 @@ import java.util.*;
  *
  * Version tracking now done with following ID:
  *
- * $Id: java.g,v 1.13 2003/02/04 20:07:44 thn Exp $
+ * $Id: java.g,v 1.14 2003/02/14 14:20:21 lepekhine Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
@@ -394,10 +394,18 @@ classDefinition[String javadoc, short modifiers]
 		superClassName=superClassClause
 		// it might implement some interfaces...
 		ic=implementsClause
-		{getModeller().addClass(className.getText(), modifiers, superClassName, ic, javadoc);}  
+		{
+		if (!isInCompoundStatement()) {
+			getModeller().addClass(className.getText(), modifiers, superClassName, ic, javadoc);
+		}
+		}
 		// now parse the body of the class
 		classBlock
-		{getModeller().popClassifier();}
+		{
+		if (!isInCompoundStatement()) {
+		 	getModeller().popClassifier();
+		}
+		}
 	;
 
 superClassClause returns [String superClassName = null]

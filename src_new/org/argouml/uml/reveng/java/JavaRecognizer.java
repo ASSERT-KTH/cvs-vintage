@@ -1,4 +1,4 @@
-// $ANTLR 2.7.1: "../src_new/org/argouml/uml/reveng/java/java.g" -> "JavaRecognizer.java"$
+// $ANTLR 2.7.1: "java.g" -> "JavaRecognizer.java"$
 
 package org.argouml.uml.reveng.java;
 
@@ -77,7 +77,7 @@ import antlr.collections.impl.ASTArray;
  *
  * Version tracking now done with following ID:
  *
- * $Id: JavaRecognizer.java,v 1.14 2003/02/04 20:07:44 thn Exp $
+ * $Id: JavaRecognizer.java,v 1.15 2003/02/14 14:20:21 lepekhine Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
@@ -563,11 +563,19 @@ public JavaRecognizer(ParserSharedInputState state) {
 		superClassName=superClassClause();
 		ic=implementsClause();
 		if ( inputState.guessing==0 ) {
-			getModeller().addClass(className.getText(), modifiers, superClassName, ic, javadoc);
+			
+					if (!isInCompoundStatement()) {
+						getModeller().addClass(className.getText(), modifiers, superClassName, ic, javadoc);
+					}
+					
 		}
 		classBlock();
 		if ( inputState.guessing==0 ) {
-			getModeller().popClassifier();
+			
+					if (!isInCompoundStatement()) {
+					 	getModeller().popClassifier();
+					}
+					
 		}
 	}
 	
