@@ -44,7 +44,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */                            
 public class JDBCCMRFieldBridge implements CMRFieldBridge {
    // ------ Invocation messages ------
@@ -560,6 +560,12 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     * any foreign key fields.
     */
    public void addRelation(EntityEnterpriseContext myCtx, Object fk) {
+      if(!entity.isCreated(myCtx)) {
+         throw new IllegalStateException("A CMR field cannot be set or added " +
+               "to a relationship in ejbCreate; this should be done in the " +
+               "ejbPostCreate method instead.");
+      }
+
       load(myCtx);
       
       FieldState fieldState = getFieldState(myCtx);
