@@ -28,8 +28,10 @@
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
  <tr>
- <th>$l10n.Name</th>
- <td><input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" /></td>
+ <th>* $l10n.Name</th>
+ <td>
+  #fieldErrorMsg($agGroup.Name "")
+  <input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" /></td>
  </tr>
  <tr>
  <th>$l10n.Description</th>

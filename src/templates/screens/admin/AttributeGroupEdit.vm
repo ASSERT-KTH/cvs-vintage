@@ -31,13 +31,13 @@
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
  <tr>
- <th>$l10n.Name</th>
+ <th>* $l10n.Name</th>
  <td>
-      #fieldErrorMsg($agGroup.Name "")
+    #fieldErrorMsg($agGroup.Name "")
     #if ($issueType.Locked)
         $group.Name
     #else
-           * <input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" />
+       <input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" />
     #end
  </td>
  </tr>
