@@ -1473,10 +1473,9 @@ diff -u -r1.5 project.xml
     
     <!-- ================================================================== -->
     <!-- Cleans up the build directory                                      -->
-
     <!-- ================================================================== -->
     <target name="clean" depends="prepare-build-dir">
-        <delete dir="${build.project}" quiet="true"/>
+        <delete dir="${build.dir}" quiet="true"/>
     </target>
     <target name="clean-all" depends="prepare-build-dir">
         <delete file="${scarab.log.file.scarab}" quiet="true"/>
