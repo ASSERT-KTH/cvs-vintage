@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.27 2002/01/31 04:29:13 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.28 2002/02/02 15:59:04 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -128,6 +128,10 @@ Bug No.  Description
          Fixed problem with JSP page names that match a Windows DOS device
          name, such as aux.jsp.  Instead of potentially hanging the thread
          that services the request, these requests now return "404 Not Found".
+
+         DecodeInterceptor was updated to not convert '+' to space in the
+         path portion of the request URL.  RFC2396 allows '+' in the path
+         of a URL.
 
 1657     JSPs with tag names that contain '-' or '.' will now compile without
          an "Invalid expression" error
