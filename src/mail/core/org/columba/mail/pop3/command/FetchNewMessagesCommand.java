@@ -126,7 +126,14 @@ public class FetchNewMessagesCommand extends Command {
 
 			// clear statusbar message
 			server.getObservable().clearMessage();
-		} /*
+		}
+		catch(Exception e)
+		{
+			// clear statusbar message
+			server.getObservable().clearMessage();
+			throw e;
+		}
+		/*
 		   * catch (IOException e) { String name = e.getClass().getName();
 		   * JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
 		   * name.substring(name.lastIndexOf(".")), JOptionPane.ERROR_MESSAGE);
