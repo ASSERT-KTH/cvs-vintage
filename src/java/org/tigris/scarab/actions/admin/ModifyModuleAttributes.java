@@ -55,11 +55,10 @@ import org.apache.velocity.*;
 import org.apache.velocity.context.*; 
 // Turbine Stuff 
 import org.apache.turbine.util.*;
-import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
-import org.apache.turbine.om.StringKey;
-import org.apache.turbine.om.ObjectKey;
-import org.apache.turbine.om.NumberKey;
+import org.apache.turbine.services.db.om.StringKey;
+import org.apache.turbine.services.db.om.ObjectKey;
+import org.apache.turbine.services.db.om.NumberKey;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.intake.model.Field;
@@ -77,7 +76,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.2 2001/05/09 01:51:34 jmcnally Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.3 2001/06/29 02:45:33 jon Exp $
  */
 public class ModifyModuleAttributes extends VelocityAction
 {

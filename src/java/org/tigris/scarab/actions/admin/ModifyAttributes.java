@@ -56,9 +56,9 @@ import org.apache.velocity.context.*;
 import org.apache.turbine.util.*;
 import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
-import org.apache.turbine.om.StringKey;
-import org.apache.turbine.om.ObjectKey;
-import org.apache.turbine.om.NumberKey;
+import org.apache.turbine.services.db.om.StringKey;
+import org.apache.turbine.services.db.om.ObjectKey;
+import org.apache.turbine.services.db.om.NumberKey;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.intake.model.Field;
@@ -76,7 +76,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyAttributes.java,v 1.9 2001/04/19 06:28:51 jmcnally Exp $
+    @version $Id: ModifyAttributes.java,v 1.10 2001/06/29 02:45:33 jon Exp $
 */
 public class ModifyAttributes extends VelocityAction
 {

@@ -65,7 +65,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.21 2001/06/29 01:57:26 jmcnally Exp $
+    @version $Id: ScarabUser.java,v 1.22 2001/06/29 02:45:33 jon Exp $
 */
 public class ScarabUser extends BaseScarabUser
 {    
@@ -151,7 +151,7 @@ public class ScarabUser extends BaseScarabUser
     public static boolean checkConfirmationCode (String username, String confirm)
     {
         // security check. :-)
-        if (confirm.equalsIgnoreCase(ScarabUserPeer.CONFIRM_DATA))
+        if (confirm.equalsIgnoreCase(User.CONFIRM_DATA))
         {
             return false;
         }

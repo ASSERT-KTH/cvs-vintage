@@ -52,7 +52,6 @@ import org.apache.velocity.*;
 import org.apache.velocity.context.*; 
 // Turbine Stuff 
 import org.apache.turbine.util.*;
-import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
@@ -68,7 +67,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyModule.java,v 1.1 2001/05/24 02:39:20 jmcnally Exp $
+    @version $Id: ModifyModule.java,v 1.2 2001/06/29 02:45:33 jon Exp $
 */
 public class ModifyModule extends RequireLoginFirstAction
 {
