@@ -112,6 +112,9 @@ public class TableController
 
 		//setLayout(new BorderLayout());
 
+		oldUidList = null;
+		newUidList = null;
+		
 		headerTableItem =
 			(TableItem) MailConfig
 				.getMainFrameOptionsConfig()
@@ -443,7 +446,8 @@ public class TableController
 
 		oldUidList = newUidList;
 		newUidList = MessageNode.toUidArray(nodes);
-		
+
+		if ( oldUidList == null ) oldUidList = newUidList;		
 
 		getTableSelectionManager().fireMessageSelectionEvent(oldUidList, newUidList);
 
@@ -531,12 +535,7 @@ public class TableController
 			case TableChangedEvent.UPDATE :
 				{
 					getHeaderTableModel().update();
-					/*
-					HeaderInterface[] headerList = event.getHeaderList();
-					
-					getHeaderTableModel()
-								.setHeaderList(headerList);
-					*/			
+						
 					break;
 				}
 			case TableChangedEvent.ADD :

@@ -77,6 +77,7 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 		int row,
 		boolean hasFocus) {
 
+		
 		super.getTreeCellRendererComponent(
 			tree,
 			value,
@@ -85,7 +86,8 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 			leaf,
 			row,
 			hasFocus);
-
+		
+		
 		/*
 		TreePath path = tree1.getPathForRow(row);
 		if (path == null)

@@ -113,6 +113,7 @@ public class TableView extends JTreeTable {
 		}
 
 		addMouseListenerToHeaderInTable();
+		
 
 	}
 

@@ -61,37 +61,33 @@ public class HeaderTableDnd
 		int mod = event.getModifiers();
 
 		if ((mod & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+
 			//System.out.println("middle button pressed");
 
-			if (table.getView().getSelectedRowCount() > 0) {
-				//mainInterface.treeViewer.saveTreePath();
-				
-				Object[] uids = table.getTableSelectionManager().getOldUids();
-				for ( int i=0; i<uids.length; i++ )
-				{
-					ColumbaLogger.log.debug("uid["+i+"]="+uids[i]);
-				}
-				//messageNodes = getSelectedNodes();
-				if ((mod & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {
+			Object[] uids = table.getTableSelectionManager().getOldUids();
+			if ( uids == null ) uids = table.getTableSelectionManager().getUids();
+			
+			for (int i = 0; i < uids.length; i++) {
+				ColumbaLogger.log.debug("uid[" + i + "]=" + uids[i]);
+			}
+			//messageNodes = getSelectedNodes();
+			if ((mod & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {
 
-					//setSelection( getUidList() );
-					e.startDrag(DragSource.DefaultCopyDrop, // cursor
-					new StringSelection("message"), // transferable
-					this); // drag source listener
+				//setSelection( getUidList() );
+				e.startDrag(DragSource.DefaultCopyDrop, // cursor
+				new StringSelection("message"), // transferable
+				this); // drag source listener
 
-				} else {
+			} else {
 
-					e.startDrag(DragSource.DefaultMoveDrop, // cursor
-					new StringSelection("message"), // transferable
-					this); // drag source listener
-
-				}
-				
-				
-				table.setSelection(uids);
-				//setSelection( oldMessageNodes );
+				e.startDrag(DragSource.DefaultMoveDrop, // cursor
+				new StringSelection("message"), // transferable
+				this); // drag source listener
 
 			}
+
+			table.setSelection(uids);
+			//setSelection( oldMessageNodes );
 
 		}
 
