@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------
-$Id: README.txt,v 1.6 2002/06/26 23:59:28 jon Exp $
+$Id: README.txt,v 1.7 2002/07/11 22:07:02 jon Exp $
 --------------------------------------------------------------------------
 
 The files in this directory are here for your convenience in building
@@ -92,6 +92,14 @@ considered 'standard' and well supported in our community circles.
   Framework and with full support for DOM, SAX and JAXP.
 
   http://www.dom4j.org/
+
+* dnsjava.jar
+
+  This is a great DNS package implemented in Java. We optionally
+  use it in the registration area to check to see if an email address
+  has a valid A record for the domain.
+  
+  http://www.xbill.org/dnsjava/
 
 * flux*.jar
 
