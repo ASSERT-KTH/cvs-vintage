@@ -1,6 +1,4 @@
-
-
-// $Id: PropPanel.java,v 1.68 2003/08/26 17:13:33 bobtarling Exp $
+// $Id: PropPanel.java,v 1.69 2003/08/30 18:59:43 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +25,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.68 2003/08/26 17:13:33 bobtarling Exp $
+// $Id: PropPanel.java,v 1.69 2003/08/30 18:59:43 bobtarling Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -334,7 +332,7 @@ abstract public class PropPanel
                 _listenerList = registrateTargetListeners(this); 
             }
 
-            if (org.argouml.model.ModelFacade.isAModelElement(_target)) {
+            if (ModelFacade.isAModelElement(_target)) {
                 _modelElement = (MModelElement) _target;
             }
 
@@ -443,26 +441,26 @@ abstract public class PropPanel
      *   appropriate namespace for display may not be the same as
      *   the namespace of the target
      */
-    protected MNamespace getDisplayNamespace() {
-        MNamespace ns = null;
+    protected Object getDisplayNamespace() {
+        Object ns = null;
         Object target = getTarget();
-        if (org.argouml.model.ModelFacade.isAModelElement(target)) {
-            ns = ((MModelElement) target).getNamespace();
+        if (ModelFacade.isAModelElement(target)) {
+            ns = ModelFacade.getNamespace(target);
         }
         return ns;
     }
 
     public String formatElement(MModelElement element) {
-        return getProfile().formatElement(element, getDisplayNamespace());
+        return getProfile().formatElement(element, (MNamespace)getDisplayNamespace());
     }
 
-    public String formatNamespace(MNamespace ns) {
-        return getProfile().formatElement(ns, null);
+    public String formatNamespace(MNamespace namespace) {
+        return getProfile().formatElement(namespace, null);
     }
 
     public String formatCollection(Iterator iter) {
-        MNamespace ns = getDisplayNamespace();
-        return getProfile().formatCollection(iter, ns);
+        Object namespace = getDisplayNamespace();
+        return getProfile().formatCollection(iter, namespace);
     }
 
     /**
@@ -592,7 +590,7 @@ abstract public class PropPanel
 
     public void removeElement() {
         Object target = getTarget();
-        if (org.argouml.model.ModelFacade.isABase(target)) {
+        if (ModelFacade.isABase(target)) {
             MModelElement newTarget = ((MModelElement) target).getModelElementContainer();
             MBase base = (MBase) target;
             TargetManager.getInstance().setTarget(base);

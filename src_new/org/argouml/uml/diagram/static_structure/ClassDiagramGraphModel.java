@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.41 2003/08/30 13:23:42 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.42 2003/08/30 18:59:43 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.41 2003/08/30 13:23:42 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.42 2003/08/30 18:59:43 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -304,7 +304,7 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 	if (!canAddNode(node)) return;
 	_nodes.addElement(node);
 	if (org.argouml.model.ModelFacade.isAModelElement(node) &&
-	    ((MModelElement) node).getNamespace() == null) {
+	    ModelFacade.getNamespace(node) == null) {
 	    _model.addOwnedElement((MModelElement) node);
 	}
 
@@ -319,7 +319,7 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
         _edges.addElement(edge);
         // TODO: assumes public
         if (org.argouml.model.ModelFacade.isAModelElement(edge)
-	    && ((MModelElement) edge).getNamespace() == null)
+	    && ModelFacade.getNamespace(edge) == null)
 	{
 	    _model.addOwnedElement((MModelElement) edge);
         }

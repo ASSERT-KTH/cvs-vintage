@@ -1,6 +1,6 @@
 
 
-// $Id: PropPanelOperation.java,v 1.38 2003/08/27 12:26:56 bobtarling Exp $
+// $Id: PropPanelOperation.java,v 1.39 2003/08/30 18:59:42 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.swingext.GridLayout2;
@@ -463,17 +464,15 @@ public class PropPanelOperation extends PropPanelModelElement {
      *   Appropriate namespace is the namespace of our class,
      *      not the class itself
      */
-    protected MNamespace getDisplayNamespace() {
-        MNamespace ns = null;
+    protected Object getDisplayNamespace() {
+        Object namespace = null;
         Object target = getTarget();
-        if (org.argouml.model.ModelFacade.isAAttribute(target)) {
-            MAttribute attr = ((MAttribute) target);
-            MClassifier owner = attr.getOwner();
-            if (owner != null) {
-                ns = owner.getNamespace();
+        if (ModelFacade.isAAttribute(target)) {
+            if (ModelFacade.getOwner(target) != null) {
+                namespace = ModelFacade.getNamespace(ModelFacade.getOwner(target));
             }
         }
-        return ns;
+        return namespace;
     }
 
 } /* end class PropPanelOperation */

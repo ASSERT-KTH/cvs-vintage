@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.24 2003/08/30 13:23:41 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.25 2003/08/30 18:59:42 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.24 2003/08/30 13:23:41 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.25 2003/08/30 18:59:42 bobtarling Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the Extend and Include relationships. JavaDoc added for clarity. Adding edge
@@ -494,7 +494,7 @@ public class UseCaseDiagramGraphModel
          * NEW CODE:
          */
 	if (((org.argouml.model.ModelFacade.isAActor(node)) || (org.argouml.model.ModelFacade.isAUseCase(node))) && 
-	    (((MModelElement) node).getNamespace() == null)) {
+	    (ModelFacade.getNamespace(node) == null)) {
 	    // end NEW CODE
             cat.debug("setting namespace " + _model +
 		      " to element " + node);
@@ -528,7 +528,7 @@ public class UseCaseDiagramGraphModel
         // Add the element and place it in the namespace of the model
         _edges.addElement(edge);
 
-        if (((MModelElement) edge).getNamespace() == null) {
+        if (ModelFacade.getNamespace(edge) == null) {
             _model.addOwnedElement((MModelElement) edge);
         }
 

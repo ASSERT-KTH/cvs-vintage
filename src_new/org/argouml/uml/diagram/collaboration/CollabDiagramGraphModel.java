@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.25 2003/08/30 13:23:41 bobtarling Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.26 2003/08/30 18:59:43 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: CollabDiagramGraphModel.java
 // Classes: CollabDiagramGraphModel
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramGraphModel.java,v 1.25 2003/08/30 13:23:41 bobtarling Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.26 2003/08/30 18:59:43 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.collaboration;
@@ -200,7 +200,7 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
         _edges.addElement(edge);
         // TODO: assumes public
         if (ModelFacade.isAModelElement(edge)
-	    && ((MModelElement) edge).getNamespace() == null)
+	    && ModelFacade.getNamespace(edge) == null)
 	{
             _collab.addOwnedElement((MModelElement) edge);
         }

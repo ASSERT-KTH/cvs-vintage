@@ -1,4 +1,4 @@
-// $Id: Profile.java,v 1.6 2003/06/30 21:59:32 linus Exp $
+// $Id: Profile.java,v 1.7 2003/08/30 18:59:43 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ abstract public class Profile {
      *    @return a string representing the model element
      */
     abstract public String formatElement(MModelElement element,
-					 MNamespace namespace);
+					 Object namespace);
     /**
      *   This method produces a string the represents the collection
      *   of model elements in the context of the specified namespace.
@@ -53,6 +53,6 @@ abstract public class Profile {
      *   @return a string representing the collection
      */
     abstract public String formatCollection(Iterator iter,
-					    MNamespace namespace);
+					    Object namespace);
     abstract public MModel getProfileModel();
 }
