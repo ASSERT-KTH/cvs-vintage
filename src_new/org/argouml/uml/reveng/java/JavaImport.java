@@ -36,8 +36,8 @@ import org.tigris.gef.base.*;
  * This is the main class for Java reverse engineering. It's based
  * on the Antlr Java example.
  *
- * $Revision: 1.2 $
- * $Date: 2001/03/10 10:49:51 $
+ * $Revision: 1.3 $
+ * $Date: 2001/03/12 13:52:36 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
