@@ -36,28 +36,27 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
-
-/*
-        Comments: this is the core class to handle i18n in columba, loading, handling and returning localized strings.
-        It should not be used directly, use MailResourceLoader or AddressbookResourceLoader (or *ResourceLoader) instead.
-
-        Behaviour:
-        When a resource is needed, getString() or getMnemonics() are called. They look for a resource with that name (in the current locale bundles).
-        If it is not found, they look for the resource in the global resource bundle (for the current locale). If this is not found, "FIXME" is returned.
-
-        Example of usage: We need to get the text for "my_cool_button" located into "org/columba/modules/mail/i18n/action/something_else_than_action"
-        sPath: org/columba/modules/mail/i18n/action/ => The complete package path.
-        sName: something_else_than_action => the name of the _it_IT.properties file.
-        sID: my_cool_button => the name to be looked for inside sName file.
-        We can call:
-        a) MailResourceLoader.getString("action", "something_else_than_action", "my_cool_button");
-        b) ResourceLoader.getString("org/columba/modules/mail/i18n/action", "something_else_than_action", "my_cool_button");
-        They'll both work.
-
-        We need to gets its mnemonic:
-        a) MailResourceLoader.getMnemonic("action", "something_else_than_action", "my_cool_button");
-        b) ResourceLoader.getMnemonic("org/columba/modules/mail/i18n/action", "something_else_than_action", "my_cool_button");
-*/
+/**
+ * This is the core class to handle i18n in columba, loading, handling and returning localized strings.
+ * It should not be used directly, use MailResourceLoader or AddressbookResourceLoader (or *ResourceLoader) instead.
+ * 
+ * Behaviour:
+ * When a resource is needed, getString() or getMnemonics() are called. They look for a resource with that name (in the current locale bundles).
+ * If it is not found, they look for the resource in the global resource bundle (for the current locale). If this is not found, "FIXME" is returned.
+ * 
+ * Example of usage: We need to get the text for "my_cool_button" located into "org/columba/modules/mail/i18n/action/something_else_than_action"
+ * sPath: org/columba/modules/mail/i18n/action/ => The complete package path.
+ * sName: something_else_than_action => the name of the _it_IT.properties file.
+ * sID: my_cool_button => the name to be looked for inside sName file.
+ * We can call:
+ * a) MailResourceLoader.getString("action", "something_else_than_action", "my_cool_button");
+ * b) ResourceLoader.getString("org/columba/modules/mail/i18n/action", "something_else_than_action", "my_cool_button");
+ * They'll both work.
+ * 
+ * We need to gets its mnemonic:
+ * a) MailResourceLoader.getMnemonic("action", "something_else_than_action", "my_cool_button");
+ * b) ResourceLoader.getMnemonic("org/columba/modules/mail/i18n/action", "something_else_than_action", "my_cool_button");
+ */
 public class GlobalResourceLoader {
 
     private static final Logger LOG = Logger.getLogger("org.columba.core.util");
@@ -66,16 +65,9 @@ public class GlobalResourceLoader {
     protected static Hashtable htBundles = new Hashtable(80);
     protected static ResourceBundle globalBundle;
     private static final String GLOBAL_BUNDLE_PATH = "org.columba.core.i18n.global.global";
-
+    
     static {
-        //use english as default
-        XmlElement locale = new XmlElement("locale");
-        locale.addAttribute("language", "en");
-
-        String language = locale.getAttribute("language");
-        String country = locale.getAttribute("country", "");
-        String variant = locale.getAttribute("variant", "");
-        Locale.setDefault(new Locale(language, country, variant));
+        initClassLoader();
     }
 
     /**
@@ -98,22 +90,8 @@ public class GlobalResourceLoader {
         String variant = locale.getAttribute("variant", "");
         Locale.setDefault(new Locale(language, country, variant));
         initClassLoader();
-
-        try {
-            // use ResourceBundle's internal classloader
-            if (classLoader == null) {
-                globalBundle = ResourceBundle.getBundle(GLOBAL_BUNDLE_PATH,
-                        Locale.getDefault());
-            } else {
-                globalBundle = ResourceBundle.getBundle(GLOBAL_BUNDLE_PATH,
-                        Locale.getDefault(), classLoader);
-            }
-        } catch (MissingResourceException mre) {
-            throw new RuntimeException(
-                "Global resource bundle not found, Columba cannot start.");
-        }
     }
-
+    
     public static Locale[] getAvailableLocales() {
         Set locales = new HashSet();
         locales.add(new Locale("en", ""));
@@ -158,14 +136,17 @@ public class GlobalResourceLoader {
     }
 
     protected static void initClassLoader() {
-        String name = "langpack_" + Locale.getDefault().toString() + ".jar";
-        File langpack = new File(MainInterface.config.getConfigDirectory(), name);
-
-        if (!langpack.exists() || !langpack.isFile()) {
-            langpack = new File(".", name);
+        File langpack = null;
+        if (MainInterface.config != null) {
+            langpack = lookupLanguagePackFile(Locale.getDefault(), 
+                MainInterface.config.getConfigDirectory());
         }
 
-        if (langpack.exists() && langpack.isFile()) {
+        if (langpack == null) {
+            langpack = lookupLanguagePackFile(Locale.getDefault(), new File("."));
+        }
+
+        if (langpack != null) {
             LOG.fine("Creating new i18n class loader for " + langpack.getPath());
 
             try {
@@ -186,6 +167,32 @@ public class GlobalResourceLoader {
             */
             classLoader = null;
         }
+        
+        try {
+            // use ResourceBundle's internal classloader
+            if (classLoader == null) {
+                globalBundle = ResourceBundle.getBundle(GLOBAL_BUNDLE_PATH,
+                        Locale.getDefault());
+            } else {
+                globalBundle = ResourceBundle.getBundle(GLOBAL_BUNDLE_PATH,
+                        Locale.getDefault(), classLoader);
+            }
+        } catch (MissingResourceException mre) {
+            throw new RuntimeException(
+                "Global resource bundle not found, Columba cannot start.");
+        }
+    }
+    
+    /**
+     * Checks whether there is a language pack file corresponding to the given
+     * locale in the specified directory.
+     */
+    private static File lookupLanguagePackFile(Locale locale, File directory) {
+        File langpack = new File(directory, "langpack_" + locale.toString() + ".jar");
+        if (!langpack.exists() || !langpack.isFile()) {
+            langpack = new File(directory, "langpack_" + locale.getLanguage() + ".jar");
+        }
+        return langpack.exists() && langpack.isFile() ? langpack : null;
     }
 
     protected static String generateBundlePath(String sPath, String sName) {
