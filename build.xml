@@ -158,7 +158,7 @@
     <mkdir dir="${tomcat.build}/bin"/>
     <mkdir dir="${tomcat.build}/doc"/>
     <mkdir dir="${tomcat.build}/webapps"/>
-    <mkdir dir="${tomcat.build}/internal"/>
+    <mkdir dir="${tomcat.build}/modules"/>
     <mkdir dir="${tomcat.build}/native"/>
 
     <copy todir="${tomcat.build}/bin">
