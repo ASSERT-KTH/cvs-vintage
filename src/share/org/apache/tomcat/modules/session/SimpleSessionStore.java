@@ -147,14 +147,15 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	while( e.hasMoreElements() )   {
 	    String key = (String) e.nextElement();
 	    Object value = session.getAttribute(key);
-	    if( value.getClass().getClassLoader() != oldCL ) {
-		// it's loaded by the parent loader, no need to reload
-		newSession.put( key, value );
-	    } else if ( value instanceof Serializable ) {
+	    if ( value instanceof Serializable ) {
 		Object newValue =
 		    ObjectSerializer.doSerialization( newCL,
 						      value);
 		newSession.put( key, newValue );
+	    } 
+	    else if( value.getClass().getClassLoader() != oldCL ) {
+		// it's loaded by the parent loader, no need to reload
+		newSession.put( key, value );
 	    } 
 	}
 	// If saving back to the same session.
