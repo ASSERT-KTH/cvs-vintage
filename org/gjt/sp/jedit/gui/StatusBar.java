@@ -46,7 +46,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.10 2001/11/07 06:31:50 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.11 2001/11/09 07:43:22 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -156,6 +156,10 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		dim.width += fm.stringWidth("99Mb/999Mb");
 		dim.height = multiSelect.getPreferredSize().height;
 		memory.setPreferredSize(dim);
+
+		// Leave some room for OS X grow box
+		if(System.getProperty("os.name").indexOf("Mac") != -1)
+			box.add(Box.createHorizontalStrut(18));
 
 		add(BorderLayout.EAST,box);
 	} //}}}

@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
  * number to another.
  *
  * @author Slava Pestov
- * @version $Id: FoldVisibilityManager.java,v 1.10 2001/11/08 22:24:56 spestov Exp $
+ * @version $Id: FoldVisibilityManager.java,v 1.11 2001/11/09 07:43:22 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FoldVisibilityManager
@@ -146,8 +146,13 @@ public class FoldVisibilityManager
 		{
 			buffer.readLock();
 
-			if(line < 0 || line >= buffer.getLineCount())
-				throw new ArrayIndexOutOfBoundsException(String.valueOf(line));
+			if(line < 0)
+				throw new ArrayIndexOutOfBoundsException(line + " < 0");
+			else if(line >= buffer.getLineCount())
+			{
+				throw new ArrayIndexOutOfBoundsException(line + " > "
+					+ buffer.getLineCount());
+			}
 
 			while(!buffer._isLineVisible(line,index) && line > 0)
 				line--;
@@ -248,8 +253,13 @@ public class FoldVisibilityManager
 		{
 			buffer.readLock();
 
-			if(line < 0 || line >= buffer._getVirtualLineCount(index))
-				throw new ArrayIndexOutOfBoundsException(String.valueOf(line));
+			if(line < 0)
+				throw new ArrayIndexOutOfBoundsException(line + " < 0");
+			else if(line >= buffer._getVirtualLineCount(index))
+			{
+				throw new ArrayIndexOutOfBoundsException(line + " > "
+					+ buffer._getVirtualLineCount(index));
+			}
 
 			if(lastVirtual == line)
 			{

@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.26 2001/11/08 22:24:56 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.27 2001/11/09 07:43:22 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -545,7 +545,8 @@ public class JEditTextArea extends JComponent
 		// this hack...
 		if(visibleLines == 0)
 		{
-			setFirstLine(caretLine - electricScroll);
+			setFirstLine(physicalToVirtual(
+				Math.max(0,caretLine - electricScroll)));
 			return;
 		}
 
