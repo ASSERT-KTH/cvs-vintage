@@ -1,4 +1,4 @@
-// $Id: Generator.java,v 1.27 2003/08/30 13:58:02 bobtarling Exp $
+// $Id: Generator.java,v 1.28 2003/09/06 02:18:38 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -138,7 +138,7 @@ public abstract class Generator
              * generateTaggedValue(sometag)
              */
             if (_testModus
-                && ((MTaggedValue) o).getTag().equals(
+                && ModelFacade.getTag(o).equals(
                     getNotation().getName() + TEST_SUFFIX)) {
                 return "";
             }
