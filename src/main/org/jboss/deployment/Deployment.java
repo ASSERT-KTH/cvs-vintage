@@ -16,7 +16,7 @@ import java.util.Date;
 /** Represents a J2EE application or module (EJB.jar, Web.war or App.ear). <br>
 *
 *  @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*  @version $Revision: 1.6 $
+*  @version $Revision: 1.7 $
 */
 public class Deployment
    implements java.io.Serializable
@@ -43,7 +43,7 @@ public class Deployment
    /** the WEB Modules */
    protected Vector webModules;
 
-   /** Creates a new Deployment object.  */
+   /** Creates a new Deployment object. */
    Deployment ()
    {
 	   date = new Date();
@@ -59,8 +59,51 @@ public class Deployment
    {
    	return new Module ();
    }
+      
+   /** returns the name of this deployment
+    */
+   public String getName() {
+    return name;
+   }
+   
+   /** returns the source url that points to from where this deployment has been
+    *  downloaded 
+    *  @author cgjung
+    */
+   public URL getSourceUrl() {
+    return sourceUrl;
+   }
 
-	/** returns all files (URLs) that are needed to run this deployment properly */
+   /** returns the local url that points to the place where this deployment
+    *  has been downloaded 
+    *  @author cgjung
+    */
+   public URL getLocalUrl() {
+    return localUrl;
+   }
+
+   /** returns the common urls 
+    *  @author cgjung
+    */
+   public Vector getCommonUrls() {
+    return commonUrls;
+   }
+
+   /** returns the ejbModules 
+    *  @author cgjung
+    */
+   public Vector getEjbModules() {
+    return ejbModules;
+   }
+
+   /** returns the webModules 
+    *  @author cgjung
+    */
+   public Vector getWebModules() {
+    return webModules;
+   }
+
+   /** returns all files (URLs) that are needed to run this deployment properly */
 	public Vector getAllFiles()
 	{
 		// the common libs
@@ -102,7 +145,7 @@ public class Deployment
 
 
    /** Represents a J2ee module. */
-   class Module
+   public class Module
       implements java.io.Serializable
    {
    	/** a short name for the module */
@@ -123,5 +166,30 @@ public class Deployment
       {
          localUrls = new Vector ();
       }
+      
+     /** 
+       * returns the local urls
+       * @author cgjung
+       */
+      public Vector getLocalUrls() {
+        return localUrls;
+      }
+     
+      /** 
+       * returns the name
+       * @author cgjung
+       */
+      public String getName() {
+        return name;
+      }
+     
+       /** 
+       * returns the web context
+       * @author cgjung
+       */
+      public String getWebContext() {
+        return webContext;
+      }
+     
    }
 }

@@ -58,7 +58,7 @@ import org.w3c.dom.Element;
  *
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public class Installer
 {
@@ -128,6 +128,10 @@ public class Installer
 		d = new Deployment();
 		Deployment.Module m = null;
 		d.name = getName (src.toString());
+
+                // <code author="cgjung"> is needed for redeployment purposes
+                d.sourceUrl=src;
+                // </code>
 
 	    baseDir = new File (factory.baseDir, d.name);
 

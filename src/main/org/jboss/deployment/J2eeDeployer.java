@@ -70,7 +70,7 @@ import org.w3c.dom.Element;
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 *   @author Toby Allsopp (toby.allsopp@peace.com)
-*   @version $Revision: 1.23 $
+*   @version $Revision: 1.24 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -85,20 +85,24 @@ implements J2eeDeployerMBean
 
    // Attributes ----------------------------------------------------
    // my server to lookup for the special deployers
-   MBeanServer server;
+   // <comment author="cgjung">better be protected for subclassing </comment>
+   protected MBeanServer server;
 
-	String name;
+   // <comment author="cgjung">better be protected for subclassing </comment>
+   protected String name;
    
    // names of the specials deployers
-   ObjectName jarDeployer;
-   ObjectName warDeployer;
+   // <comment author="cgjung">better be protected for subclassing </comment>
+   protected ObjectName jarDeployer;
+   protected ObjectName warDeployer;
    
    String jarDeployerName;
    String warDeployerName;
    
 	int classpathPolicy = EASY;
 
-	InstallerFactory installer;
+        // <comment author="cgjung"> better be protected for subclassing </comment>
+        protected InstallerFactory installer;
    
    // Static --------------------------------------------------------
    /** only for testing...*/
@@ -401,21 +405,23 @@ implements J2eeDeployerMBean
    *   by the given deployment of the given deployment. <br>
    *   This means download the needed packages do some validation...
    *   <i> Validation and do some other things is not yet implemented </i>
+   *   <comment author="cgjung"> better be protected for subclassing </comment>
    *   @param _downloadUrl the url that points to the app to install
    *   @throws IOException if the download fails
    *   @throws J2eeDeploymentException if the given package is somehow inconsistent
    */
-   Deployment installApplication (URL _downloadUrl) throws IOException, J2eeDeploymentException
+   protected Deployment installApplication (URL _downloadUrl) throws IOException, J2eeDeploymentException
    {
 	   return installer.install(_downloadUrl);
    }
    
    
    /** Deletes the file tree of  the specified application. <br>
-   *   @param _name the directory (DEPLOYMENT_DIR/<_name> to remove recursivly
+    *  <comment author="cgjung">better be protected for subclassing</comment>
+    *   @param _name the directory (DEPLOYMENT_DIR/<_name> to remove recursivly
    *   @throws IOException if something goes wrong
    */
-   void uninstallApplication (String _pattern) throws IOException
+   protected void uninstallApplication (String _pattern) throws IOException
    {
 	   Deployment d = installer.findDeployment (_pattern);
 
@@ -423,7 +429,7 @@ implements J2eeDeployerMBean
 		   uninstallApplication (d);
    }
    
-	void uninstallApplication (Deployment _d) throws IOException
+	protected void uninstallApplication (Deployment _d) throws IOException
 	{
 		log.log ("Destroying application " + _d.name);
 		installer.uninstall(_d);
@@ -433,11 +439,12 @@ implements J2eeDeployerMBean
 
    /** Starts the successful downloaded deployment. <br>
    *   Means the modules are deployed by the responsible container deployer
+   *   <comment author="cgjung">better be protected for subclassing </comment>
    *   @param _d the deployment to start
    *   @throws J2eeDeploymentException if an error occures for one of these
    *           modules
    */
-   private void startApplication (Deployment _d) throws J2eeDeploymentException
+   protected void startApplication (Deployment _d) throws J2eeDeploymentException
    {
       // save the old classloader 
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader ();
@@ -519,11 +526,12 @@ implements J2eeDeployerMBean
    
    /** Stops a running deployment. <br>
    *   Means the modules are undeployed by the responsible container deployer
+   *   <comment author="cgjung">better protected for subclassing</comment>
    *   @param _d the deployment to stop
    *   @throws J2eeDeploymentException if an error occures for one of these
-   *           modules
+   *           modules 
    */
-   private void stopApplication (Deployment _d) throws J2eeDeploymentException
+   protected void stopApplication (Deployment _d) throws J2eeDeploymentException
    {
       // save the old classloader, tomcat replaces my classloader somehow?!
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader ();
@@ -660,8 +668,10 @@ implements J2eeDeployerMBean
 
 
 
-   /** tests if the web container deployer is available */
-   private boolean warDeployerAvailable ()
+   /** tests if the web container deployer is available 
+    *  <comment author="cgjung"> better be protected for subclassing </comment>
+    */
+   protected boolean warDeployerAvailable ()
    {
       return server.isRegistered (warDeployer);
    }
@@ -669,9 +679,13 @@ implements J2eeDeployerMBean
 
    /**
    * creates an application class loader for this deployment
-   * this class loader will be shared between jboss and tomcat via the contextclassloader
+   * this class loader will be shared between jboss and tomcat via the contextclassloader. May throw
+   * a J2eeDeploymentException to indicate problems stting up the classloader.
+   * <comment author="cgjung"> should be protected in order to allow reasonable subclassing. Needs an
+   * exception in case that you do more sophisticated meta-data installations.
+   * </comment>
    */
-   private void createContextClassLoader(Deployment deployment) {
+   protected void createContextClassLoader(Deployment deployment) throws J2eeDeploymentException {
 
       // get urls we want all classloaders of this application to share
       URL[] urls = new URL[deployment.commonUrls.size ()];
