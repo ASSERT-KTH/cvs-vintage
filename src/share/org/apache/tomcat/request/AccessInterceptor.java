@@ -220,6 +220,7 @@ public class AccessInterceptor extends  BaseInterceptor  {
     {
 	Context ctx=ct.getContext();
 	Container ctxCt=ctx.getContainer();
+	// XXX add the note only if we have a security constraint
 	SecurityConstraints ctxSecurityC=(SecurityConstraints)ctxCt.
 	    getNote( secMapNote );
 	if( ctxSecurityC==null) {
@@ -245,7 +246,7 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	Context ctx=req.getContext();
 	SecurityConstraints ctxSec=(SecurityConstraints)ctx.getContainer().
 	    getNote( secMapNote );
-	if( ctxSec.patterns==0 ) return 0; // fast exit
+	if( ctxSec==null || ctxSec.patterns==0 ) return 0; // fast exit
 	
 	String reqURI = RequestUtil.URLDecode(req.requestURI().toString());
 	String ctxPath= ctx.getPath();

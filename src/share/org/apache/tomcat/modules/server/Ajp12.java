@@ -140,8 +140,7 @@ class Ajp12 {
 
 		    //Apache document root
 		    dummy = readString(ajpin, null);               
-		    req.setPathInfo( readString(ajpin, null));               
-		    //Apache parsed path-translated XXX Bug in mod_jserv !!!!!
+		    req.pathInfo().setString( readString(ajpin, null));               		    //Apache parsed path-translated XXX Bug in mod_jserv !!!!!
 		    dummy = readString(ajpin, null);
 		    req.queryString().setString( readString(ajpin, null));  
 		    req.setRemoteAddr(readString(ajpin, ""));

@@ -87,13 +87,17 @@ public final class Parameters extends MultiMap {
 	isSet=false;
 	isFormBased=false;
     }
-    // XXX need better name
+
+    /**
+     */
     public boolean isEvaluated() {
 	return isSet;
     }
+    
     public void setEvaluated( boolean b ) {
 	isSet=b;
     }
+    
     // XXX need better name
     public boolean hasFormData() {
 	return isFormBased;
@@ -102,38 +106,18 @@ public final class Parameters extends MultiMap {
 	isFormBased=b;
     }
     
-    // duplicated
-    public static int indexOf( byte bytes[], int off, int end, char qq )
-    {
-	while( off < end ) {
-	    byte b=bytes[off];
-	    if( b==qq )
-		return off;
-	    off++;
-	}
-	return off;
-    }
-
-    public static int indexOf( char chars[], int off, int end, char qq )
-    {
-	while( off < end ) {
-	    char b=chars[off];
-	    if( b==qq )
-		return off;
-	    off++;
-	}
-	return off;
-    }
-
     public void processParameters( byte bytes[], int start, int len ) {
 	int end=start+len;
 	int pos=start;
 	
         do {
 	    int nameStart=pos;
-	    int nameEnd=indexOf(bytes, nameStart, end, '=' );
+	    int nameEnd=ByteChunk.indexOf(bytes, nameStart, end, '=' );
+	    if( nameEnd== -1 ) nameEnd=end;
+	    
 	    int valStart=nameEnd+1;
-	    int valEnd=indexOf(bytes, valStart, end, '&');
+	    int valEnd=ByteChunk.indexOf(bytes, valStart, end, '&');
+	    if( valEnd== -1 ) valEnd=end;
 	    
 	    pos=valEnd+1;
 	    
@@ -157,15 +141,17 @@ public final class Parameters extends MultiMap {
 	
         do {
 	    int nameStart=pos;
-	    int nameEnd=indexOf(chars, nameStart, end, '=' );
+	    int nameEnd=CharChunk.indexOf(chars, nameStart, end, '=' );
+	    if( nameEnd== -1 ) nameEnd=end;
+
 	    int valStart=nameEnd+1;
-	    int valEnd=indexOf(chars, valStart, end, '&');
-	    
+	    int valEnd=CharChunk.indexOf(chars, valStart, end, '&');
+	    if( valEnd== -1 ) valEnd=end;
 	    pos=valEnd+1;
 	    
 	    if( nameEnd<=nameStart ) {
 		continue;
-		// invalid chunk - it's better to ignore
+		// invalid chunk - no name, it's better to ignore
 		// XXX log it ?
 	    }
 	    

@@ -249,7 +249,7 @@ public class Ajp13
         byte methodCode = msg.getByte();
         req.method().setString( methodTransArray[(int)methodCode - 1] );
 
-        req.setProtocol(            msg.getString());
+        req.protocol().setString( msg.getString());
         req.requestURI().setString( msg.getString());
 
         req.setRemoteAddr(          msg.getString());

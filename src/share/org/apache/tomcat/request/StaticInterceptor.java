@@ -126,7 +126,7 @@ public class StaticInterceptor extends BaseInterceptor {
 
 	// will call getRealPath(), all path normalization
 	// and a number of checks
-	String pathInfo=req.getServletPath();
+	String pathInfo=req.servletPath().toString();
 	if( pathInfo==null ) pathInfo="";
 
 	String absPath=FileUtil.safePath( ctx.getAbsolutePath(),
@@ -244,7 +244,7 @@ final class FileHandler extends Handler  {
 	    subReq=req.getChild();
 
 	Context ctx=subReq.getContext();
-	String pathInfo=subReq.getServletPath();
+	String pathInfo=subReq.servletPath().toString();
 	String absPath = (String)subReq.getNote( realFileNote );
 	if( absPath==null )
 	    absPath=FileUtil.safePath( context.getAbsolutePath(),
@@ -365,7 +365,7 @@ final class DirHandler extends Handler  {
 	Request subReq=req;
 	if( inInclude ) subReq = req.getChild();
 	Context ctx=req.getContext();
-	String pathInfo=subReq.getServletPath();
+	String pathInfo=subReq.servletPath().toString();
 	if( pathInfo == null ) pathInfo="";
 	String absPath=FileUtil.safePath( context.getAbsolutePath(),
 					  pathInfo);

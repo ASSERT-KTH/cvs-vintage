@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIConnectionHandler.java,v 1.4 2000/11/30 04:58:45 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/11/30 04:58:45 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIConnectionHandler.java,v 1.5 2000/12/26 23:35:34 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/12/26 23:35:34 $
  *
  * ====================================================================
  *
@@ -381,7 +381,7 @@ class JNIResponseAdapter extends Response {
 
     public void endHeaders() throws IOException {
 
-    	if(request.getProtocol()==null) // HTTP/0.9 
+    	if(request.protocol().isNull()) // HTTP/0.9 
 	        return;
 
         super.endHeaders();

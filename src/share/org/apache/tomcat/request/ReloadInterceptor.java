@@ -154,7 +154,7 @@ public class ReloadInterceptor extends  BaseInterceptor
 
 		cm.addContext( ctx1 );
 
-		cm.initContext( ctx1 );
+		ctx1.init();
 
 		// XXX Make sure ctx is destroyed - we may have
 		// undetected leaks 

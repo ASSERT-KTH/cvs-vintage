@@ -71,7 +71,9 @@ public class EmbededTomcat { // extends WebService
      *  For tomcat, it will be a BaseInterceptor.
      * 	See the top level documentation
      */
-    public void addApplicationAdapter( Object adapter ) {
+    public void addApplicationAdapter( Object adapter )
+	throws TomcatException
+    {
 	if(requestInt==null)  initDefaultInterceptors();
 
 	// In our case the adapter must be BaseInterceptor.
@@ -99,7 +101,9 @@ public class EmbededTomcat { // extends WebService
     /** Add a web service on the specified address. You must add all the
      *  endpoints before calling start().
      */
-    public void addEndpoint( int port, InetAddress addr , String hostname) {
+    public void addEndpoint( int port, InetAddress addr , String hostname)
+	throws TomcatException
+    {
 	if(debug>0) log( "addConnector " + port + " " + addr +
 			 " " + hostname );
 
@@ -119,6 +123,7 @@ public class EmbededTomcat { // extends WebService
      */
     public void addSecureEndpoint( int port, InetAddress addr, String hostname,
 				    String keyFile, String keyPass )
+	throws TomcatException
     {
 	if(debug>0) log( "addSecureConnector " + port + " " + addr + " " +
 			 hostname );
@@ -143,7 +148,9 @@ public class EmbededTomcat { // extends WebService
     
     /** Add and init a context
      */
-    public Object addContext( String ctxPath, URL docRoot ) {
+    public Object addContext( String ctxPath, URL docRoot )
+	throws TomcatException
+    {
 	if(debug>0) log( "add context \"" + ctxPath + "\" " + docRoot );
 	if( contextM == null )
 	    initContextManager();
@@ -245,7 +252,7 @@ public class EmbededTomcat { // extends WebService
 // 	    }
 	    Context ctx=(Context)sctx;
 	    //contextM.getRealContext( sctx );
-	    contextM.initContext( ctx );
+	    ctx.init();
 
 	    //	    Object pd=ctx.getProtectionDomain();
 	    //	    log("Ctx.pd " + pd);
@@ -303,7 +310,9 @@ public class EmbededTomcat { // extends WebService
 	    ((BaseInterceptor)ri).setDebug( debug );
     }
 
-    private void initContextManager() {
+    private void initContextManager()
+	throws TomcatException 
+    {
 	if(requestInt==null)  initDefaultInterceptors();
 	contextM=new ContextManager();
 	contextM.setDebug( debug );

@@ -360,11 +360,17 @@ public final class ByteChunk implements Cloneable, Serializable {
      * @param s the string
      */
     public int indexOf(char c, int starting) {
+	return indexOf( bytes, bytesOff+starting, bytesOff+bytesLen, c);
+    }
+
+    public static int  indexOf( byte bytes[], int off, int end, char qq )
+    {
 	// Works only for UTF 
-	int max=bytesOff+bytesLen;
-	byte bb[]=bytes;
-	for (int i = bytesOff+starting; i < max ; i++) {
-	    if( (byte)c == bb[i]) return i;
+	while( off < end ) {
+	    byte b=bytes[off];
+	    if( b==qq )
+		return off;
+	    off++;
 	}
 	return -1;
     }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.4 2000/11/30 07:36:03 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/11/30 07:36:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.5 2000/12/26 23:35:34 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/12/26 23:35:34 $
  *
  * ====================================================================
  *
@@ -254,7 +254,7 @@ class Ajp13Response extends Response
     {
         super.endHeaders();
     
-        if (request.getProtocol() == null) {
+        if (request.protocol().isNull()) {
             return;
         }
 

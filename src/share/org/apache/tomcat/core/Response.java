@@ -339,13 +339,14 @@ public class Response {
 	notifyEndHeaders();
     }
 
+    // XXX XXX 
     /** Signal that we're done with the headers, and body will follow.
      *  Any implementation needs to notify ContextManager, to allow
      *  interceptors to fix headers.
      */
     public void notifyEndHeaders() throws IOException {
 	commited=true;
-	if(request.getProtocol()==null) // HTTP/0.9 
+	if(request.protocol().isNull()) // HTTP/0.9 
 	    return;
 
 	// let CM notify interceptors and give a chance to fix

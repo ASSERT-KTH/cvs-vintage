@@ -274,11 +274,20 @@ public final class CharChunk implements Cloneable, Serializable {
      * @param s the string
      */
     public int indexOf(char c, int starting) {
-	for (int i = charsOff+starting; i < charsOff + charsLen; i++) {
-	    if( c == chars[i] ) return i;
+	return indexOf( chars, charsOff+starting, charsOff+charsLen, c );
+    }
+
+    public static int indexOf( char chars[], int off, int end, char qq )
+    {
+	while( off < end ) {
+	    char b=chars[off];
+	    if( b==qq )
+		return off;
+	    off++;
 	}
 	return -1;
     }
+
 
 
 }

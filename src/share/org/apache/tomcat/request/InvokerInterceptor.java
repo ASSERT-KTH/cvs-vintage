@@ -91,8 +91,8 @@ public class InvokerInterceptor extends BaseInterceptor {
 	// default servlet / container
 	
 	// if doesn't starts with /servlet - return
-	String pathInfo = req.getPathInfo();
-	String servletPath=req.getServletPath();
+	String pathInfo = req.pathInfo().toString();
+	String servletPath=req.servletPath().toString();
 	
 	// Now we need to fix path info and servlet path
 	if( servletPath == null ||
@@ -126,8 +126,8 @@ public class InvokerInterceptor extends BaseInterceptor {
 		 " SP=" + newServletPath +
 		 " PI=" + newPathInfo);
 	
- 	req.setServletPath(newServletPath);
-	req.setPathInfo(newPathInfo);
+ 	req.servletPath().setString(newServletPath);
+	req.pathInfo().setString(newPathInfo);
 	
 	Handler wrapper = ctx.getServletByName(servletName);
 	if (wrapper != null) {
