@@ -1,0 +1,66 @@
+#set ( $action = $link.setPage("MoveIssue.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "MoveIssue2.vm") )
+#set ($user = $scarabR.User)
+#set ( $issueId = $data.Parameters.getString("id") )
+#set ( $issue = $scarabR.getIssue($issueId) )
+
+
+
+<div class="app" id="div2-6-1">
+<h2>copy / move issue (2.7.0) step 2</h2>
+
+<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
+                        
+<form method="post" action="$action" >
+<input type="hidden" name="id" value="$issueId">
+
+          <h3>issue to be copied / moved</h3>
+
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th><a href="#" title="sort">issue summary:</a></th>
+
+         <th><a href="#" title="sort">date committed:</a></th>
+
+         <th><a href="#" title="sort">committed by:</a></th>
+        </tr>
+        <tr class="a">
+         <td>
+             #set ($AttrValues = $issue.AllAttributeValuesMap)
+             #set( $attVal =  $AttrValues.get("SUMMARY"))
+             #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
+           $attVal.Value</a>
+         </td>  
+
+         <td>$issue.FormattedCreatedDate</td>
+
+         <td>
+             #set ($createdUser = $scarabR.getUser($issue.CreatedBy.toString()) )
+             <a href="mailTo:$createdUser.Email">$createdUser.UserName</a>
+         </td>
+        </tr>
+        </table>
+
+          
+          <h3>destination project</h3>
+          <p>
+          <select name="module_id">
+             <option>select project</option>
+          #foreach( $module in $user.Modules )
+                  <option value="$module.ModuleId">$module.Name</option>
+          #end
+                 </select>
+          </p>
+          
+          <h3>Action</h3>
+          <p><input type="radio" name="select_action" value="copy" />&nbsp;copy
+          </p>
+          <p><input type="radio" name="select_action" value="move" />&nbsp;move
+          </p>  
+          
+                        
+<p class="functnbar"><input type="submit" value="map issue attributes" name="eventSubmit_doMapattributes" /></p>
+
+     </div></td>
+    </tr>
+   </table>
+</form>
