@@ -81,6 +81,8 @@ public class CloneStreamMaster {
             buffer = tempOut.toByteArray();
             usesFile = false;
         }
+        
+        master.close();
     }
 
     /**
@@ -133,5 +135,12 @@ public class CloneStreamMaster {
             // Delete the tempfile immedietly
             tempFile.delete();
         }
+    }
+
+    /**
+     * @param id
+     */
+    public void close(int id) throws IOException {
+        ((InputStream) streamList.get(id)).close();
     }
 }

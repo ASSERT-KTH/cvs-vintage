@@ -82,6 +82,6 @@ public class SaveMessageCommand extends FolderCommand {
 
         folder = (Folder) r[0].getFolder();
 
-        folder.addMessage(message.getSourceStream(), message.getHeader().getAttributes());
+        folder.addMessage(message.getSourceStream(), message.getHeader().getAttributes());        
     }
 }

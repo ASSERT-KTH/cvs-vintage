@@ -66,7 +66,9 @@ public class CloneInputStream extends InputStream {
      * @see java.io.InputStream#close()
      */
     public void close() throws IOException {
-        super.close();
-        model = null;
+        if( model != null ) {
+            model.close(id);
+            model = null;
+        }
     }
 }

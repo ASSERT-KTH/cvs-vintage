@@ -537,6 +537,8 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 
         getDataStorageInstance().saveInputStream(newUid, in);
 
+        in.close();
+        
         // increase total count of messages
         getMessageFolderInfo().incExists();
 
