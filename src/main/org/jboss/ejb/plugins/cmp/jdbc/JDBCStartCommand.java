@@ -28,6 +28,7 @@ import javax.transaction.TransactionManager;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
@@ -43,7 +44,8 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.29 $
+ * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
+ * @version $Revision: 1.30 $
  */
 public class JDBCStartCommand {
 
@@ -224,8 +226,33 @@ public class JDBCStartCommand {
       
       sql.append(" (");
          // add fields
-         sql.append(SQLUtil.getCreateTableColumnsClause(entity.getFields()));
-         
+         //sql.append(SQLUtil.getCreateTableColumnsClause(entity.getFields()));
+         for(Iterator iter = entity.getFields().iterator(); iter.hasNext();) {
+            JDBCFieldBridge fieldBridge = (JDBCFieldBridge)iter.next();
+
+            // apply auto-increment template
+            if( fieldBridge.isKeyDbGenerated() ) {
+               String columnClause = 
+                  SQLUtil.getCreateTableColumnsClause(fieldBridge);
+
+               JDBCFunctionMappingMetaData autoIncrement = 
+                  manager.getMetaData().getTypeMapping().
+                  getAutoIncrementTemplate();
+               if(autoIncrement == null) {
+                  throw new IllegalStateException(
+                     "The field must be auto-increment " );
+               }
+
+               String[] args = new String[] { columnClause };
+               sql.append(autoIncrement.getFunctionSql(args));
+            } else {
+               sql.append(SQLUtil.getCreateTableColumnsClause(fieldBridge));
+            }
+            if(iter.hasNext()) {
+               sql.append(", ");
+            }
+         }
+
          // add a pk constraint
          if(entityMetaData.hasPrimaryKeyConstraint())  {
             JDBCFunctionMappingMetaData pkConstraint = 
