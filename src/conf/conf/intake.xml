@@ -424,6 +424,10 @@
     <field name="Confirm" key="c" type="String" mapToProperty="">
         <rule name="required" value="true">intake_EnterValidConfirmationCode</rule>
     </field>
+
+    <field name="NPassword"        key="np"  type="String"/>
+    <field name="NPasswordConfirm" key="npc" type="String"/>
+
 </group>
 
 <group name="Attachment" key="atch" mapToObject="om.Attachment">

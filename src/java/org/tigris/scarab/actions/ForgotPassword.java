@@ -129,37 +129,7 @@ public class ForgotPassword extends ScarabTemplateAction
             // expire now, forcing the user to change their password after login.
             TurbineSecurity.forcePassword(user, tempPassword);
 
-            // place the password
-            // in the context for use in the email template.
-            context.put("password", tempPassword);
-
-            Email te = new Email();
-            
-            // Retrieve the charset to be used for the Email.
-            ScarabLocalizationTool l10n = getLocalizationTool(context);
-            Locale locale = l10n.getPrimaryLocale();
-            String charset = Email.getCharset(locale);
-            te.setCharset(charset);
-            
-            
-            te.setContext(new ContextAdapter(context));
-            te.setTo(user.getFirstName() + " " + user.getLastName(), user.getEmail());
-            te.setFrom(
-                Turbine.getConfiguration()
-                    .getString("scarab.email.forgotpassword.fromName",
-                               "Scarab System"),
-                Turbine.getConfiguration()
-                    .getString("scarab.email.forgotpassword.fromAddress",
-                               "help@localhost"));
-            te.setSubject(
-                Turbine.getConfiguration()
-                    .getString("scarab.email.forgotpassword.subject",
-                               "Account Password"));
-            te.setTemplate(
-                Turbine.getConfiguration()
-                    .getString("scarab.email.forgotpassword.template",
-                               "email/ForgotPassword.vm"));
-            te.send();
+            sendNotificatoinEmail(context, user, tempPassword);
             
             // create confirmation message
             Localizable msg = new L10NMessage(L10NKeySet.PasswordResetMessage,
@@ -175,5 +145,46 @@ public class ForgotPassword extends ScarabTemplateAction
             return false;
         }
         return true;
+    }
+
+    /**
+     * @param context
+     * @param user
+     * @param tempPassword
+     * @throws Exception
+     */
+    private void sendNotificatoinEmail(TemplateContext context, ScarabUser user, String tempPassword) throws Exception
+    {
+        // place the password
+        // in the context for use in the email template.
+        context.put("password", tempPassword);
+
+        Email te = new Email();
+        
+        // Retrieve the charset to be used for the Email.
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        Locale locale = l10n.getPrimaryLocale();
+        String charset = Email.getCharset(locale);
+        te.setCharset(charset);
+        
+        
+        te.setContext(new ContextAdapter(context));
+        te.setTo(user.getFirstName() + " " + user.getLastName(), user.getEmail());
+        te.setFrom(
+            Turbine.getConfiguration()
+                .getString("scarab.email.forgotpassword.fromName",
+                           "Scarab System"),
+            Turbine.getConfiguration()
+                .getString("scarab.email.forgotpassword.fromAddress",
+                           "help@localhost"));
+        te.setSubject(
+            Turbine.getConfiguration()
+                .getString("scarab.email.forgotpassword.subject",
+                           "Account Password"));
+        te.setTemplate(
+            Turbine.getConfiguration()
+                .getString("scarab.email.forgotpassword.template",
+                           "email/ForgotPassword.vm"));
+        te.send();
     }    
 }

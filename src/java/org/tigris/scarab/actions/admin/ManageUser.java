@@ -49,15 +49,20 @@ package org.tigris.scarab.actions.admin;
 
 // JDK classes
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.util.AccessControlList;
+import org.apache.fulcrum.security.util.PasswordMismatchException;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
+import org.apache.turbine.Turbine;
+import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.tool.IntakeTool;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
@@ -67,6 +72,9 @@ import org.tigris.scarab.tools.ScarabGlobalTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.L10NMessage;
+import org.tigris.scarab.tools.localization.Localizable;
+import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 
@@ -76,7 +84,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
  * @author <a href="mailto:mpoeschl@martmot.at">Martin Poeschl</a>
- * @version $Id: ManageUser.java,v 1.30 2004/10/14 11:33:16 dep4b Exp $
+ * @version $Id: ManageUser.java,v 1.31 2004/12/06 02:16:35 dabbous Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
@@ -184,10 +192,11 @@ public class ManageUser extends RequireLoginFirstAction
             
             
             // if we got here, then all must be good...
+
+            String username = data.getParameters().getString("username");
+            su = (ScarabUser) TurbineSecurity.getUser(username);
             try
             {
-                String username = data.getParameters().getString("username");
-                su = (ScarabUser) TurbineSecurity.getUser(username);
                 if ((su != null) && (register != null))
                 {
                     // update the first name, last name, email
@@ -223,6 +232,36 @@ public class ManageUser extends RequireLoginFirstAction
                         userInSession.setEmail(su.getEmail());
                         userInSession.setConfirmed(su.getConfirmed());
                     }
+
+
+                    String password = register.get("NPassword").toString();
+                    String passwordConfirm = register.get("NPasswordConfirm").toString();
+                    if (!password.equals(""))
+                    {
+                        if (password.equals(passwordConfirm))
+                        {
+                            TurbineSecurity.forcePassword(su, password);
+                            su.setPasswordExpire(Calendar.getInstance());
+                            TurbineSecurity.saveUser(su);
+                            try
+                            {
+                                sendNotificationEmail(context, su, password);
+                            }
+                            catch(Exception e)
+                            {
+                                Localizable msg = new L10NMessage(L10NKeySet.ExceptionEmailFailure,e);
+                                scarabR.setAlertMessage(msg);
+                            }
+                        }
+                        else
+                        /* !password.equals(passwordConfirm) */
+                        {
+                            scarabR.setAlertMessage(L10NKeySet.PasswordsDoNotMatch);
+                            return;
+                        }
+                    }
+                    
+                    
                     
                     String msg = l10n.format("userChangesSaved", username);
                     scarabR.setConfirmMessage(msg);
@@ -247,7 +286,7 @@ public class ManageUser extends RequireLoginFirstAction
                 Log.get().error(e);
                 data.getParameters().setString("state","showedituser");
                 return;
-            }
+            }   
         }
         else
         {
@@ -255,6 +294,51 @@ public class ManageUser extends RequireLoginFirstAction
             data.getParameters().setString("lastAction","");
         }
     }
+
+    /**
+     * Send the a password reset notification to the given user.
+     */
+    /**
+     * @param context
+     * @param user
+     * @param tempPassword
+     * @throws Exception
+     */
+    private void sendNotificationEmail(TemplateContext context, ScarabUser user, String tempPassword) throws Exception
+    {
+        // place the password
+        // in the context for use in the email template.
+        context.put("password", tempPassword);
+
+        Email te = new Email();
+        
+        // Retrieve the charset to be used for the Email.
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        Locale locale = l10n.getPrimaryLocale();
+        String charset = Email.getCharset(locale);
+        te.setCharset(charset);
+        
+        
+        te.setContext(new ContextAdapter(context));
+        te.setTo(user.getFirstName() + " " + user.getLastName(), user.getEmail());
+        te.setFrom(
+            Turbine.getConfiguration()
+                .getString("scarab.email.forgotpassword.fromName",
+                           "Scarab System"),
+            Turbine.getConfiguration()
+                .getString("scarab.email.forgotpassword.fromAddress",
+                           "help@localhost"));
+        te.setSubject(
+            Turbine.getConfiguration()
+                .getString("scarab.email.forgotpassword.subject",
+                           "Account Password"));
+        te.setTemplate(
+            Turbine.getConfiguration()
+                .getString("scarab.email.forgotpassword.template",
+                           "email/ForgotPassword.vm"));
+        te.send();
+    }    
+
     
     public void doDeleteuser(RunData data, TemplateContext context)
         throws Exception

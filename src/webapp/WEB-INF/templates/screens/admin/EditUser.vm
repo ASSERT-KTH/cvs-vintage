@@ -82,6 +82,25 @@
   </select>  
  </td>
 </tr>
+
+#set ($pwdResetAllowed= $scarabG.getTurbineConfiguration().getString("scarab.admin.password.reset.allowed").toLowerCase().equals("true"))
+#if($pwdResetAllowed)
+<tr>
+ <th>$l10n.NewPassword</th>
+ <td>
+  <input type="password" size="25" name="$regGroup.NPassword.Key" value="$!regGroup.NPassword.value" />
+  #fieldErrorMsg($regGroup.Password "")
+ </td>
+</tr>
+<tr>
+ <th>$l10n.ConfirmPassword</th>
+ <td>
+  <input type="password" size="25" name="$regGroup.NPasswordConfirm.Key" value="$!regGroup.NPasswordConfirm.value" />
+  #fieldErrorMsg($regGroup.PasswordConfirm "")
+ </td>
+</tr>
+#end
+
 </table>
 </div>
 
