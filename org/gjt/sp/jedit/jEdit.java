@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.36 2002/01/06 09:32:25 spestov Exp $
+ * @version $Id: jEdit.java,v 1.37 2002/01/08 08:11:05 spestov Exp $
  */
 public class jEdit
 {
@@ -186,6 +186,10 @@ public class jEdit
 			try
 			{
 				BufferedReader in = new BufferedReader(new FileReader(portFile));
+				String check = in.readLine();
+				if(!check.equals("b"))
+					throw new Exception("Wrong port file format");
+
 				port = Integer.parseInt(in.readLine());
 				key = Integer.parseInt(in.readLine());
 				in.close();

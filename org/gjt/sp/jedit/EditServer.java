@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.4 2002/01/06 09:32:25 spestov Exp $
+ * @version $Id: EditServer.java,v 1.5 2002/01/08 08:11:05 spestov Exp $
  */
 public class EditServer extends Thread
 {
@@ -83,6 +83,7 @@ public class EditServer extends Thread
 			int port = socket.getLocalPort();
 
 			FileWriter out = new FileWriter(portFile);
+			out.write("b\n");
 			out.write(String.valueOf(port));
 			out.write("\n");
 			out.write(String.valueOf(authKey));
