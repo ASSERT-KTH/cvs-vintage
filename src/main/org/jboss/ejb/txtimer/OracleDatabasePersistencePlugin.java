@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: OracleDatabasePersistencePlugin.java,v 1.1 2004/09/22 09:33:42 tdiesler Exp $
+// $Id: OracleDatabasePersistencePlugin.java,v 1.2 2004/09/22 09:52:24 tdiesler Exp $
 
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 import org.jboss.logging.Logger;
@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This DatabasePersistencePlugin uses getBytes/setBytes to persist the
+ * This DatabasePersistencePlugin uses getBinaryStream/setBinaryStream to persist the
  * serializable objects associated with the timer.
  *
  * @author Thomas.Diesler@jboss.org
