@@ -23,7 +23,7 @@
 
 // File: FigSeqObject.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigSeqObject.java,v 1.11 2003/04/29 19:25:07 kataka Exp $
+// $Id: FigSeqObject.java,v 1.12 2003/06/17 20:09:08 kataka Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -651,8 +651,8 @@ public class FigSeqObject extends FigNodeModelElement
   public void setForDestroy(FigSeqLink linkFig, String connectTo, boolean isTerminate) {
     Vector contents = getContents();
     int portNumber = linkFig.getPortNumber(contents);   
-    FigDynPort fsp = (FigDynPort) linkFig.getSourcePortFig();
-    if (connectTo == "Dest") fsp = (FigDynPort) linkFig.getDestPortFig();
+    FigRect fsp = (FigRect) linkFig.getSourcePortFig();
+    if (connectTo == "Dest") fsp = (FigRect) linkFig.getDestPortFig();
     int lastPos = 0;
     Vector edges = getFigEdges();
 
