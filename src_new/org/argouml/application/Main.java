@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.96 2004/03/20 07:40:54 linus Exp $
+// $Id: Main.java,v 1.97 2004/05/18 10:11:12 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -669,7 +669,7 @@ class PreloadClasses implements Runnable {
         c = org.argouml.kernel.DelayedChangeNotify.class;
         c = org.argouml.kernel.Wizard.class;
         c = org.argouml.ui.Clarifier.class;
-        c = org.argouml.ui.StylePanelFig.class;
+        c = org.argouml.ui.StylePanelFigNodeModelElement.class;
         c = org.argouml.uml.GenCompositeClasses.class;
         c = org.argouml.uml.cognitive.critics.ClAttributeCompartment.class;
         c = org.argouml.uml.cognitive.critics.ClClassName.class;
