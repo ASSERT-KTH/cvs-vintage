@@ -31,7 +31,7 @@ import org.apache.log4j.NDC;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.Interceptor;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 import org.jboss.metadata.BeanMetaData;
 
 /** An interceptor used to log call invocations. It also handles any
@@ -39,7 +39,7 @@ import org.jboss.metadata.BeanMetaData;
  *
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.20 $
+ *   @version $Revision: 1.21 $
  */
 public class LogInterceptor
    extends AbstractInterceptor
@@ -65,7 +65,7 @@ public class LogInterceptor
    }
    
    // Container implementation --------------------------------------
-   public void init()
+   public void create()
       throws Exception
    {
       super.start();
@@ -76,7 +76,7 @@ public class LogInterceptor
       callLogging = md.getContainerConfiguration().getCallLogging();
    }
    
-   public Object invokeHome(MethodInvocation mi)
+   public Object invokeHome(Invocation mi)
       throws Exception
    {
       NDC.push(ejbName);
@@ -132,7 +132,7 @@ public class LogInterceptor
     * @return
     * @exception   Exception
     */
-   public Object invoke(MethodInvocation mi)
+   public Object invoke(Invocation mi)
       throws Exception
    {
       NDC.push(ejbName);

@@ -24,7 +24,7 @@ import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstanceCache;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 import org.jboss.metadata.ConfigurationMetaData;
 
 /**
@@ -43,7 +43,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.56 $
+ * @version $Revision: 1.57 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -132,7 +132,7 @@ public class EntitySynchronizationInterceptor
       this.container = (EntityContainer)container;
    }
  
-   public void init()
+   public void create()
       throws Exception
    {
   
@@ -211,7 +211,7 @@ public class EntitySynchronizationInterceptor
   
    // Interceptor implementation --------------------------------------
  
-   public Object invokeHome(MethodInvocation mi)
+   public Object invokeHome(Invocation mi)
       throws Exception
    {
   
@@ -245,7 +245,7 @@ public class EntitySynchronizationInterceptor
       return rtn;
    }
  
-   public Object invoke(MethodInvocation mi)
+   public Object invoke(Invocation mi)
       throws Exception
    {
       // We are going to work with the context a lot

@@ -11,7 +11,8 @@ import java.util.Map;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.MessageDrivenContainer;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
+import org.jboss.ejb.EnterpriseContext;
 
 /**
  * This container acquires the given instance. This must be used after
@@ -21,7 +22,7 @@ import org.jboss.ejb.MethodInvocation;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class MessageDrivenInstanceInterceptor
    extends AbstractInterceptor
@@ -56,7 +57,7 @@ public class MessageDrivenInstanceInterceptor
     *
     * @throws Error    Not valid for MessageDriven beans.
     */
-   public Object invokeHome(final MethodInvocation mi)
+   public Object invokeHome(final Invocation mi)
       throws Exception
    {
       throw new Error("Not valid for MessageDriven beans");
@@ -64,7 +65,7 @@ public class MessageDrivenInstanceInterceptor
    
    // Interceptor implementation --------------------------------------
 
-   public Object invoke(final MethodInvocation mi)
+   public Object invoke(final Invocation mi)
       throws Exception
    {
       // Get context
@@ -92,8 +93,8 @@ public class MessageDrivenInstanceInterceptor
       } finally
       {
          // Return context
-         if (mi.getEnterpriseContext() != null)
-            container.getInstancePool().free(mi.getEnterpriseContext());
+         if ( mi.getEnterpriseContext() != null)
+            container.getInstancePool().free((EnterpriseContext) mi.getEnterpriseContext());
       }
    }
   // Monitorable implementation ------------------------------------
