@@ -53,13 +53,23 @@ public class Dependency implements java.io.Serializable
 {
     private final static Log log = LogFactory.getLog(Dependency.class);
 
+    private String id = null;
     private String type = null;
     private String child = null;
     private String parent = null;
-//    private Issue issue = null;
 
     public Dependency()
     {
+    }
+
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
+    public String getId()
+    {
+        return this.id;
     }
 
     public void setType(String type)
@@ -92,19 +102,8 @@ public class Dependency implements java.io.Serializable
         return this.parent;
     }
 
-/*    
-    public void setIssue(Issue issue)
-    {
-        this.issue = issue;
-    }
-
-    public Issue getIssue()
-    {
-        return this.issue;
-    }
-*/
     public String toString()
     {
-        return ("Type: " + type + " Parent: " + parent + " Child: " + child);
+        return ("Id: " + id + " Type: " + type + " Parent: " + parent + " Child: " + child);
     }
 }
