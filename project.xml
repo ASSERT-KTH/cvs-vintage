@@ -414,7 +414,7 @@
       <version>3.1</version>
       <type>jar</type>
       <properties>
-        <war.bundle>true</war.bundle>
+        <war.bundle>false</war.bundle>
       </properties>
     </dependency>
     <dependency>
@@ -507,7 +507,7 @@
     <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>1.7.1</version>
+      <version>1.7.2-rc1</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
