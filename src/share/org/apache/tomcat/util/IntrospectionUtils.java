@@ -197,8 +197,7 @@ public final class IntrospectionUtils {
 	If found, call the method ( if param is int or boolean we'll convert
 	value to the right type before) - that means you can have setDebug(1).
     */
-    public static void setProperty( Object o, String name, String value )
-    {
+    public static void setProperty( Object o, String name, String value ) {
 	if( dbg > 1 ) d("setProperty(" +
 			o.getClass() + " " +  name + "="  +
 			value  +")" );
@@ -281,6 +280,52 @@ public final class IntrospectionUtils {
 	}
     }
 
+    /** Replace ${NAME} with the property value
+     */
+    public static String replaceProperties(String value,
+					   Object getter )
+    {
+        StringBuffer sb=new StringBuffer();
+        int i=0;
+        int prev=0;
+        // assert value!=nil
+        int pos;
+        while( (pos=value.indexOf( "$", prev )) >= 0 ) {
+            if(pos>0) {
+                sb.append( value.substring( prev, pos ) );
+            }
+            if( pos == (value.length() - 1)) {
+                sb.append('$');
+                prev = pos + 1;
+            }
+            else if (value.charAt( pos + 1 ) != '{' ) {
+                sb.append( value.charAt( pos + 1 ) );
+                prev=pos+2; // XXX
+            } else {
+                int endName=value.indexOf( '}', pos );
+                if( endName < 0 ) {
+		    sb.append( value.substring( pos ));
+		    prev=value.length();
+		    continue;
+                }
+                String n=value.substring( pos+2, endName );
+		String v= null;
+		if( getter instanceof Hashtable ) {
+		    v=(String)((Hashtable)getter).get(n);
+		} else if ( getter instanceof PropertySource ) {
+		    v=((PropertySource)getter).getProperty( n );
+		}
+		if( v== null )
+		    v = "${"+n+"}"; 
+                
+                sb.append( v );
+                prev=endName+1;
+            }
+        }
+        if( prev < value.length() ) sb.append( value.substring( prev ) );
+        return sb.toString();
+    }
+    
     /** Reverse of Introspector.decapitalize
      */
     public static String capitalize(String name) {
@@ -292,6 +337,16 @@ public final class IntrospectionUtils {
 	return new String(chars);
     }
 
+    // -------------------- Get property --------------------
+    // This provides a layer of abstraction
+
+    public static interface PropertySource {
+
+	public String getProperty( String key );
+	
+    }
+
+    
     // debug --------------------
     static final int dbg=0;
     static void d(String s ) {
