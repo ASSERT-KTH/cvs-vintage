@@ -6,7 +6,7 @@
   #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
   #if ($issueType.equals($scarabR.CurrentIssueType))
     <div><small><strong>$rmit.DisplayText</strong></small>
-    <div><small>#if ($scarabR.CurrentModule.Dedupe)<a href="$link.setPage("entry,Wizard1.vm")">#else$link.setPage("entry,Wizard3.vm").setLabel("#end Enter new")</small></div>
+    <div><small>#if ($scarabR.CurrentModule.Dedupe)$link.setPage("entry,Wizard1.vm").setLabel("Enter new") #else$link.setPage("entry,Wizard3.vm").setLabel("Enter new")#end </small></div>
 ##    <div><small>$link.setPage("AdvancedQuery.vm").setLabel("Advanced Query")</small></div>
 ##    <div><small>$link.setPage("Search.vm").setLabel("Custom Query")</small></div>
     <div><small>$link.setPage("QueryList.vm").setLabel("Saved queries")</small></div>
