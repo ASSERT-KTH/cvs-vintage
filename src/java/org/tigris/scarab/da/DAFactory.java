@@ -84,20 +84,18 @@ public class DAFactory
         Object da = instances.get(identifier);
         if (da == null)
         {
-            Map map = new HashMap(instances);
             // There is an implicit race condition here.  Worst case
-            // we create more than one instance of our DA impl.  No
-            // sweat.
+            // we create extra instances of our DA impl, and/or more
+            // than one HashMap.  In either case, the cost of the
+            // waste is minimal.
+            Map map = new HashMap(instances);
             String className = Turbine.getConfiguration()
                 .getString("dataaccess." + identifier + ".classname");
             try
             {
                 da = Class.forName(className).newInstance();
                 map.put(identifier, da);
-                synchronized (instances)
-                {
-                    instances = map;
-                }
+                instances = map;
             }
             catch (Exception e)
             {
