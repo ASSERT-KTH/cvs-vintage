@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCCreateEntityCommand implements CreateEntityCommand {
    private JDBCStoreManager manager;
@@ -89,8 +89,8 @@ public class JDBCCreateEntityCommand implements CreateEntityCommand {
 
    private String createEntityExistsSQL() {
       StringBuffer sql = new StringBuffer();
-      sql.append("SELECT COUNT(*) ");
-      sql.append("FROM ").append(entity.getTableName());
+      sql.append("SELECT COUNT(*)");
+      sql.append(" FROM ").append(entity.getTableName());
       sql.append(" WHERE ");
       sql.append(SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields()));
       

@@ -36,6 +36,7 @@ public class QueryParameter {
          for(int i=0; i<props.length; i++) {
             QueryParameter param = new QueryParameter(
                      argNum,
+                     false,
                      null,
                      props[i],
                      props[i].getJDBCType());
@@ -46,6 +47,7 @@ public class QueryParameter {
 
          QueryParameter param = new QueryParameter(
                   argNum,
+                  false,
                   null,
                   null,
                   type.getJDBCTypes()[0]);
@@ -69,6 +71,7 @@ public class QueryParameter {
             for(int j=0; j<props.length; j++) {
                QueryParameter param = new QueryParameter(
                         argNum,
+                        false,
                         pkFields[i],
                         props[j],
                         props[j].getJDBCType());
@@ -77,6 +80,7 @@ public class QueryParameter {
          } else {
             QueryParameter param = new QueryParameter(
                      argNum,
+                     false,
                      pkFields[i],
                      null,
                      type.getJDBCTypes()[0]);
@@ -86,7 +90,42 @@ public class QueryParameter {
       return parameters;
    } 
    
+   public static List createPrimaryKeyParameters(
+         int argNum, 
+         JDBCEntityBridge entity) {
+
+      List parameters = new ArrayList();
+
+      JDBCCMPFieldBridge[] pkFields = entity.getJDBCPrimaryKeyFields();
+      for(int i=0; i<pkFields.length; i++) {
+         JDBCType type = pkFields[i].getJDBCType();
+         if(type instanceof JDBCTypeComplex) {
+            JDBCTypeComplexProperty[] props = 
+                  ((JDBCTypeComplex)type).getProperties();
+            for(int j=0; j<props.length; j++) {
+               QueryParameter param = new QueryParameter(
+                        argNum,
+                        true,
+                        pkFields[i],
+                        props[j],
+                        props[j].getJDBCType());
+               parameters.add(param);
+            }
+         } else {
+            QueryParameter param = new QueryParameter(
+                     argNum,
+                     true,
+                     pkFields[i],
+                     null,
+                     type.getJDBCTypes()[0]);
+            parameters.add(param);
+         }
+      }
+      return parameters;
+   }
+
    private int argNum;
+   private boolean isPrimaryKeyParameter;
    private JDBCCMPFieldBridge field;
    private JDBCTypeComplexProperty property;
    private String parameterString;
@@ -98,6 +137,10 @@ public class QueryParameter {
          Method method, 
          String parameterString) {
 
+      // Method parameter will never be a primary key object, but always
+      // a complete entity.
+      this.isPrimaryKeyParameter = false;
+      
       this.parameterString = parameterString;
 
       if(parameterString == null || parameterString.length() == 0) {
@@ -179,11 +222,13 @@ public class QueryParameter {
 
    public QueryParameter(
          int argNum, 
+         boolean isPrimaryKeyParameter,
          JDBCCMPFieldBridge field,
          JDBCTypeComplexProperty property,
          int jdbcType) {
 
       this.argNum = argNum;
+      this.isPrimaryKeyParameter = isPrimaryKeyParameter;
       this.field = field;
       this.property = property;
       this.jdbcType = jdbcType;
@@ -211,14 +256,16 @@ public class QueryParameter {
 
       Object arg = args[argNum];
       if(field != null) {
-         if (arg instanceof EJBObject) {
-            arg = ((EJBObject)arg).getPrimaryKey();
-         } else if (arg instanceof EJBLocalObject) {
-            arg = ((EJBLocalObject)arg).getPrimaryKey();
-         } else {
-            throw new IllegalArgumentException("Expected an instanc of " +
-                  "EJBObject or EJBLocalObject, but got an instance of " + 
-                  arg.getClass().getName());
+         if(!isPrimaryKeyParameter) {
+            if(arg instanceof EJBObject) {
+               arg = ((EJBObject)arg).getPrimaryKey();
+            } else if(arg instanceof EJBLocalObject) {
+               arg = ((EJBLocalObject)arg).getPrimaryKey();
+            } else {
+               throw new IllegalArgumentException("Expected an instanc of " +
+                     "EJBObject or EJBLocalObject, but got an instance of " + 
+                     arg.getClass().getName());
+            }
          }
          arg = field.getPrimaryKeyValue(arg);
       }

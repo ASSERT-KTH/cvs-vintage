@@ -213,6 +213,7 @@ public class SQLTarget implements DeepCloneable {
       Class type = getParameterType(parameter.getNumber());
       QueryParameter param = new QueryParameter(
                parameter.getNumber() - 1,
+               false, // isPrimaryKeyParameter
                null, // field
                null, // parameter
                typeFactory.getJDBCTypeForJavaType(type));
@@ -473,6 +474,7 @@ public class SQLTarget implements DeepCloneable {
             for(int j=0; j<props.length; j++) {
                QueryParameter param = new QueryParameter(
                         compareToParameter.getNumber() - 1,
+                        false, // isPrimaryKeyParameter
                         pkFields[i],
                         props[j],
                         props[j].getJDBCType());
@@ -481,6 +483,7 @@ public class SQLTarget implements DeepCloneable {
          } else {
             QueryParameter param = new QueryParameter(
                      compareToParameter.getNumber() - 1,
+                     false, // isPrimaryKeyParameter
                      pkFields[i],
                      null,
                      type.getJDBCTypes()[0]);
@@ -562,6 +565,7 @@ public class SQLTarget implements DeepCloneable {
          for(int i=0; i<props.length; i++) {
             QueryParameter param = new QueryParameter(
                      compareToParameter.getNumber() - 1,
+                     false, // isPrimaryKeyParameter
                      null,
                      props[i],
                      props[i].getJDBCType());
@@ -570,6 +574,7 @@ public class SQLTarget implements DeepCloneable {
       } else {
          QueryParameter param = new QueryParameter(
                   compareToParameter.getNumber() - 1,
+                  false, // isPrimaryKeyParameter
                   null,
                   null,
                   type.getJDBCTypes()[0]);

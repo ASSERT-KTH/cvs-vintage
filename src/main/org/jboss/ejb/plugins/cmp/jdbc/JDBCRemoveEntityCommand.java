@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCRemoveEntityCommand implements RemoveEntityCommand {
    
@@ -50,8 +50,8 @@ public class JDBCRemoveEntityCommand implements RemoveEntityCommand {
             manager.getMetaData().getName());
 
       StringBuffer sql = new StringBuffer();
-      sql.append("DELETE ");
-      sql.append("FROM ").append(entity.getTableName());
+      sql.append("DELETE");
+      sql.append(" FROM ").append(entity.getTableName());
       sql.append(" WHERE ").append(SQLUtil.getWhereClause(
                entity.getJDBCPrimaryKeyFields()));
       

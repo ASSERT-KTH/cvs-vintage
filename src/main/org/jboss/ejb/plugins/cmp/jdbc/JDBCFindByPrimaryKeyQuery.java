@@ -18,7 +18,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCFindByPrimaryKeyQuery extends JDBCAbstractQueryCommand {
 
@@ -32,11 +32,11 @@ public class JDBCFindByPrimaryKeyQuery extends JDBCAbstractQueryCommand {
       StringBuffer sql = new StringBuffer();
       sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(
                entity.getJDBCPrimaryKeyFields()));
-      sql.append("FROM ").append(entity.getTableName());
+      sql.append(" FROM ").append(entity.getTableName());
       sql.append(" WHERE ").append(SQLUtil.getWhereClause(
                entity.getJDBCPrimaryKeyFields()));
       
       setSQL(sql.toString());
-      setParameterList(QueryParameter.createParameters(0, entity));
+      setParameterList(QueryParameter.createPrimaryKeyParameters(0, entity));
    }
 }
