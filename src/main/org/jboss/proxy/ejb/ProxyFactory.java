@@ -31,7 +31,6 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EJBProxyFactory;
 import org.jboss.ejb.EJBProxyFactoryContainer;
-import org.jboss.ejb.FinderResults;
 import org.jboss.ejb.ListCacheKey;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.jrmp.server.JRMPInvoker;
@@ -68,7 +67,7 @@ import org.w3c.dom.NodeList;
  *
  *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  *  @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
- *  @version $Revision: 1.16 $
+ *  @version $Revision: 1.17 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/12/30: billb</b>
@@ -473,68 +472,37 @@ public class ProxyFactory
       ArrayList list = new ArrayList(ids.size());
       Iterator idEnum = ids.iterator();
       EJBProxyFactoryContainer pfc = (EJBProxyFactoryContainer) container;
-      
-      if ((ids instanceof FinderResults) && ((FinderResults) ids).isReadAheadOnLoadUsed())
-      {
-         long listId = ((FinderResults) ids).getListId();
-         
-         for (int i = 0; idEnum.hasNext(); i++)
-         {      
-            // Create a stack from the description (in the future) for now we hardcode it
-            InvocationContext context = new InvocationContext();
-      
-            Object id = idEnum.next();
 
-            context.setObjectName(new Integer(objectName));
-            context.setCacheId(new ListCacheKey(id, listId, i));
-            context.setValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, jndiBinding);
-            context.setInvoker(beanInvoker);
-            context.setInvokerProxyBinding(invokerMetaData.getName());
-      
-            ClientContainer client = new ClientContainer(context);
-      
-            try
-            {
-               loadInterceptorChain(listEntityInterceptorClasses, client);
-            }
-            catch(Exception e)
-            {
-               throw new NestedRuntimeException("Failed to load interceptor chain", e);
-            }
-            
-            list.add(Proxy.newProxyInstance(pfc.getRemoteClass().getClassLoader(),
-                                            new Class[] { pfc.getRemoteClass(), ReadAheadBuffer.class },
-                                            client));
-         }
-      }
-      else
+      while(idEnum.hasNext())
       {
-         while(idEnum.hasNext())
+         // Create a stack from the description (in the future) 
+         // for now we hardcode it
+         InvocationContext context = new InvocationContext();
+      
+         context.setObjectName(new Integer(objectName));
+         context.setCacheId(idEnum.next());
+         context.setValue(
+               org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, 
+               jndiBinding);
+         context.setInvoker(beanInvoker);
+         context.setInvokerProxyBinding(invokerMetaData.getName());
+      
+         ClientContainer client = new ClientContainer(context);
+      
+         try
          {
-            // Create a stack from the description (in the future) for now we hardcode it
-            InvocationContext context = new InvocationContext();
-      
-            context.setObjectName(new Integer(objectName));
-            context.setCacheId(idEnum.next());
-            context.setValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, jndiBinding);
-            context.setInvoker(beanInvoker);
-            context.setInvokerProxyBinding(invokerMetaData.getName());
-      
-            ClientContainer client = new ClientContainer(context);
-      
-            try
-            {
-               loadInterceptorChain(beanInterceptorClasses, client);
-            }
-            catch(Exception e)
-            {
-               throw new NestedRuntimeException("Failed to load interceptor chain", e);
-            }
-            
-            list.add(Proxy.newProxyInstance(pfc.getRemoteClass().getClassLoader(),
-                                            new Class[] { pfc.getRemoteClass() },
-                                            client));
+            loadInterceptorChain(beanInterceptorClasses, client);
          }
+         catch(Exception e)
+         {
+            throw new NestedRuntimeException(
+                  "Failed to load interceptor chain", e);
+         }
+         
+         list.add(Proxy.newProxyInstance(
+                  pfc.getRemoteClass().getClassLoader(),
+                  new Class[] { pfc.getRemoteClass() },
+                  client));
       }
       return list;
    }
