@@ -84,30 +84,22 @@ public class ArtifactTypeRule extends BaseRule
     protected void doInsertionAtBody(String artifactTypeName)
         throws Exception
     {
-        String xmlIssueId = (String)getDigester().pop();
-        // FIXME: no pop tart!
-        Module module = (Module)getDigester().pop();
-        module = getImportBean().getModule();
+        Module module = getImportBean().getModule();
         IssueType issueType = IssueType.getInstance(artifactTypeName);
         issueType.setName(artifactTypeName);
         Issue issue = Issue.getNewInstance(module, issueType);
         issue.save();
-        
+
         // note the xmlIssueId here doesn't contain the module 
         // prefix,but we need the prefix for 
         // the key of dependency tree
+        String xmlIssueId = getImportBean().getIssueId();
         String xmlId = module.getCode() + xmlIssueId;
         getImportBean().getDependencyTree().addIssueId(xmlId, issue.getIssueId());
-        getDigester().push(module);
-        getDigester().push(issue);
+        getImportBean().setIssue(issue);
     }
     
     protected void doValidationAtBody(String artifactTypeName)
     {
-        String xmlIssueId = (String)getDigester().pop();
-        String moduleCode = (String)getDigester().pop();
-        String xmlId = moduleCode + xmlIssueId;
-        getDigester().push(moduleCode);
-        getDigester().push(xmlId);
     }
 }

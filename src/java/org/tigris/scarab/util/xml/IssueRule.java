@@ -52,7 +52,10 @@ import org.tigris.scarab.om.Issue;
 
 /**
  * Handler for the xpath "scarab/module/issue"
- *
+ * Note, the creation of the actual Issue object happens in ArtifactTypeRule
+ * because one needs to know the type of Artifact that the Issue should be
+ * created under first.
+ * 
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
  */
@@ -72,7 +75,7 @@ public class IssueRule extends BaseRule
     public void begin(Attributes attributes) throws Exception
     {
         log().debug("(" + getImportBean().getState() + ") issue begin");
-        getDigester().push(attributes.getValue("id"));
+        getImportBean().setIssueId(attributes.getValue("id"));
     }
     
     /**
@@ -81,17 +84,6 @@ public class IssueRule extends BaseRule
      */
     public void end() throws Exception
     {
-        super.doInsertionOrValidationAtEnd();
         log().debug("(" + getImportBean().getState() + ") issue end");
-    }
-    
-    protected void doInsertionAtEnd()
-    {
-        Issue issue = (Issue)getDigester().pop();
-    }
-    
-    protected void doValidationAtEnd()
-    {
-        String xmlId = (String)getDigester().pop();
     }
 }

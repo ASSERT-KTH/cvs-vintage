@@ -60,7 +60,7 @@ import org.apache.commons.digester.Digester;
 /**
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportBean.java,v 1.3 2002/05/01 01:18:07 jon Exp $
+ * @version $Id: ImportBean.java,v 1.4 2002/05/03 01:48:38 jon Exp $
  */
 public class ImportBean
 {
@@ -73,6 +73,7 @@ public class ImportBean
     private ScarabUser user = null;
     private ActivityInfo activityInfo = null;
     private Issue issue = null;
+    private String issueId = null;
     private Transaction transaction = null;
     private TransactionType transactionType = null;
     private Attachment attachment = null;
@@ -205,6 +206,16 @@ public class ImportBean
     public void setIssue(Issue value)
     {
         this.issue = value;
+    }
+
+    public String getIssueId()
+    {
+        return this.issueId;
+    }
+    
+    public void setIssueId(String value)
+    {
+        this.issueId = value;
     }
 
     public ScarabUser getScarabUser()

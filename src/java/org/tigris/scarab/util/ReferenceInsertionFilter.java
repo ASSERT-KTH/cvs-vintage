@@ -47,6 +47,7 @@ package org.tigris.scarab.util;
  */ 
 
 import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
+import org.apache.velocity.app.event.NullSetEventHandler;
 
 /**
  * This is a Velocity EventCartridge Filter which is responsible
@@ -58,12 +59,23 @@ import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
  * it looks like this class only adds about 0-2ms of processing time to
  * each request.
  *
+ * <p>
+ * This class also implements the NullSetEventHandler and returns
+ * false from the shouldLogOnNullSet because we don't need that stuff
+ * showing up in the log files.
+ *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ReferenceInsertionFilter.java,v 1.10 2002/03/30 01:46:58 jon Exp $
+ * @version $Id: ReferenceInsertionFilter.java,v 1.11 2002/05/03 01:48:38 jon Exp $
  */
 public class ReferenceInsertionFilter
-    implements ReferenceInsertionEventHandler
+    implements ReferenceInsertionEventHandler, NullSetEventHandler
 {
+
+
+    public boolean shouldLogOnNullSet( String lhs, String rhs )
+    {
+        return false;
+    }
 
     public Object referenceInsert(String reference, Object value)
     {

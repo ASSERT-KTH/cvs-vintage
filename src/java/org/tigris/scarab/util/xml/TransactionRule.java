@@ -49,7 +49,10 @@ package org.tigris.scarab.util.xml;
 import org.xml.sax.Attributes;
 
 import org.tigris.scarab.om.Transaction;
+import org.tigris.scarab.om.TransactionManager;
 import org.tigris.scarab.om.Issue;
+
+import org.apache.torque.om.NumberKey;
 
 /**
  * Handler for the xpath "scarab/module/issue/transaction"
@@ -74,18 +77,10 @@ public class TransactionRule extends BaseRule
     {
         log().debug("(" + getImportBean().getState() + 
             ") transaction begin");
-        super.doInsertionOrValidationAtBegin(attributes);
-    }
-    
-    protected void doInsertionAtBegin(Attributes attributes)
-    {
-        Transaction transaction = new Transaction();
-        log().debug("transaction id: " + attributes.getValue("id"));
-        getDigester().push(transaction);
-    }
-    
-    protected void doValidationAtBegin(Attributes attributes)
-    {
+        String id = attributes.getValue("id");
+        log().debug("transaction id: " + id);
+        Transaction transaction = TransactionManager.getInstance(new NumberKey(id));
+        getImportBean().setTransaction(transaction);
     }
     
     /**
@@ -94,18 +89,6 @@ public class TransactionRule extends BaseRule
      */
     public void end() throws Exception
     {
-        super.doInsertionOrValidationAtEnd();
         log().debug("(" + getImportBean().getState() + ") transaction end");
-    }
-    
-    protected void doInsertionAtEnd() throws Exception
-    {
-        Transaction transaction = (Transaction)getDigester().pop();
-        Issue issue = (Issue)getDigester().pop();
-        getDigester().push(issue);
-    }
-    
-    protected void doValidationAtEnd() throws Exception
-    {
     }
 }
