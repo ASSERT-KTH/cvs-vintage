@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.5 2004/09/06 16:46:23 mvw Exp $
+// $Id: XmiFilePersister.java,v 1.6 2004/09/06 20:20:31 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,15 +28,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.ArgoVersion;
 import org.argouml.cognitive.ProjectMemberTodoList;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.xml.xmi.XMIParser;
-import org.tigris.gef.ocl.OCLExpander;
-import org.tigris.gef.ocl.TemplateReader;
 
 /**
  * To persist to and from XMI file storage.
@@ -50,10 +47,8 @@ public class XmiFilePersister extends AbstractFilePersister {
     
     /**
      * The constructor.
-     * Sets the extensionname and the description. 
      */
     public XmiFilePersister() {
-        desc = "XML Metadata Interchange";
     }
 
     /**
@@ -61,6 +56,13 @@ public class XmiFilePersister extends AbstractFilePersister {
      */
     public String getExtension() {
         return "xmi";
+    }
+    
+    /**
+     * @see org.argouml.kernel.AbstractFilePersister#getDesc()
+     */
+    protected String getDesc() {
+        return "XML Metadata Interchange";
     }
     
     /**
@@ -76,10 +78,7 @@ public class XmiFilePersister extends AbstractFilePersister {
         project.setFile(file);
         project.setVersion(ArgoVersion.getVersion());
 
-        if (expander == null) {
-            Hashtable templates = TemplateReader.readFile(ARGO_TEE);
-            expander = new OCLExpander(templates);
-        }
+        getExpander(getArgoTee2Template()); // do we need this?
 
         // frank: first backup the existing file to name+"#"
         File tempFile = new File( file.getAbsolutePath() + "#");
