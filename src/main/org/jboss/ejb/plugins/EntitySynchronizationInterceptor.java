@@ -37,6 +37,7 @@ import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.MethodInvocation;
 import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.logging.Logger;
+import org.jboss.util.Sync;
 
 /**
 *   This container filter takes care of EntityBean persistance.
@@ -49,7 +50,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.34 $
+*   @version $Revision: 1.35 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -411,22 +412,39 @@ extends AbstractInterceptor
           // If rolled back -> invalidate instance
           // If removed -> send back to the pool
           if (status == Status.STATUS_ROLLEDBACK || ctx.getId() == null) {
-
+	      EntityContainer container = (EntityContainer)ctx.getContainer();
+	      AbstractInstanceCache cache = (AbstractInstanceCache)container.getInstanceCache();
+	      Object id = ctx.getCacheKey();
+	      // Hopefully this transaction has an exclusive lock
+	      // on this id so that cache.getLock returns a mutex that is being
+	      // used by every other thread on this id.
+	      Sync mutex = (Sync)cache.getLock(id);
               try {
-
+		 // We really should be acquiring a mutex before
+		 // mucking with the InstanceCache or InstancePool
+		 mutex.acquire();
                  // finish the transaction association
                  ctx.setTransaction(null);
 
                  // remove from the cache
+		 // removing from the cache should also invalidate the mutex thus waking up
+		 // other threads.
                  container.getInstanceCache().remove(ctx.getCacheKey());
 
                  // return to pool
-                 container.getInstancePool().free(ctx);
+      		 // REVISIT: FIXME:
+		 // We really should only let passivation free an instance because it is
+		 // quite possible that another thread is working with
+		 // the same context, but let's do it anyways.
+		 container.getInstancePool().free(ctx);
 
               } catch (Exception e) {
                  // Ignore
               }
-
+	      finally
+	      {
+		  mutex.release();
+	      }
           } else {
 
               // We are afterCompletion so the invoked can be set to false (db sync is done)

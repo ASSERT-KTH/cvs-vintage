@@ -20,7 +20,7 @@ import org.jboss.util.Sync;
  * Cache subclass for entity beans.
  * 
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class EntityInstanceCache
 	extends AbstractInstanceCache 
@@ -51,11 +51,24 @@ public class EntityInstanceCache
 	public EnterpriseContext get(Object id) 
 		throws RemoteException, NoSuchObjectException 
 	{
-		if (!(id instanceof CacheKey)) 
-		{
-			throw new IllegalArgumentException("cache.get for entity beans must have a CacheKey object as argument instead of " + id);
-		}
-		return super.get(id);
+	    if (!(id instanceof CacheKey)) 
+	    {
+		throw new IllegalArgumentException("cache.get for entity beans must have a CacheKey object as argument instead of " + id);
+	    }
+	    EnterpriseContext rtn = null;
+	    rtn = super.get(id);
+	    //
+	    // FIXME: (Bill Burke) We were running into problems where CMP EntityBeans 
+	    // were out of sync with the database
+	    // The problem went away after a few minutes of inactivity leading us to 
+	    // believe that the bean in cache was passivated and the CacheKey was out 
+	    // of sync with the Context's key.  So I put this defensive check in to 
+	    // flag the problem.
+	    if (rtn != null && !rtn.getId().equals(((CacheKey)id).id))
+	    {
+		throw new IllegalStateException("somehow the cache is out of synch with the context ctx.id != lookup.id");
+	    }
+	    return rtn;
 	}
 	public void remove(Object id)
 	{

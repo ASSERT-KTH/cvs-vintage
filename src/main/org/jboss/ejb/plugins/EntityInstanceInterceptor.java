@@ -45,7 +45,7 @@ import org.jboss.util.Sync;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.28 $
+*   @version $Revision: 1.29 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
@@ -106,22 +106,44 @@ extends AbstractInterceptor
 
         // Get cache
         AbstractInstanceCache cache = (AbstractInstanceCache)container.getInstanceCache();
-        Sync mutex = (Sync)cache.getLock(key);
+        BeanSemaphore mutex = (BeanSemaphore)cache.getLock(key);
 
         EnterpriseContext ctx = null;
+	boolean exceptionThrown = false;
 
         try
         {
+	    boolean waitingOnTransaction = false; // So we don't output LOCKING-WAITING all the time
+	    boolean waitingOnContext = false; // So we don't output LOCKING-WAITING all the time
             do
             {
                 if (mi.getTransaction() != null && mi.getTransaction().getStatus() == Status.STATUS_MARKED_ROLLBACK)
                     throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
 
-				try
-				{
+		try
+		{
+		    
+		    mutex.acquire();
 
-					mutex.acquire();
-
+		    // This loop guarantees a mutex lock for the specified object id 
+		    // When a cache.remove happens, it disassociates the mutex from the bean's id,
+		    // Thus, the mutex in this code could be invalid.  We avoid this problem with the following loop.
+		    //
+		    // Also we should have a while loop so we don't mess up the finally clause that does
+		    // mutex.release()
+		    //
+		    while (!mutex.isValid())
+		    {
+			BeanSemaphore newmutex = (BeanSemaphore)cache.getLock(key);
+			mutex.release();
+			mutex = newmutex;
+			
+			// Avoid infinite loop.
+			if (mi.getTransaction() != null && mi.getTransaction().getStatus() == Status.STATUS_MARKED_ROLLBACK)
+			    throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
+			
+			mutex.acquire();
+		    }
                     // Get context
                     ctx = cache.get(key);
 
@@ -133,50 +155,95 @@ extends AbstractInterceptor
                     {
                         // Let's put the thread to sleep a lock release will wake the thread
                         // Possible deadlock
-                        Logger.debug("LOCKING-WAITING (TRANSACTION) for id "+ctx.getId()+" ctx.hash "+ctx.hashCode()+" tx:"+((tx == null) ? "null" : tx.toString()));
+			if (!waitingOnTransaction)
+			{
+			    Logger.debug("LOCKING-WAITING (TRANSACTION) in Thread " 
+					 + Thread.currentThread().getName() 
+					 + " for id "+ctx.getId()+" ctx.hash "+ctx.hashCode()
+					 +" tx:"+((tx == null) ? "null" : tx.toString()));
+			    waitingOnTransaction = true;
+			}
 
                         // Try your luck again
                         ctx = null;
+			Thread.yield(); // Give the OS some help.
                         continue;
                     }
-                    else
-                    {
-                        // If we get here it's the right tx, or no tx
-                        if (!ctx.isLocked())
-                        {
-                            //take it!
-                            ctx.lock();
-                        }
-                        else
-                        {
-                            if (!isCallAllowed(mi)) {
-
-                                // Go to sleep and wait for the lock to be released
-                                // This is not one of the "home calls" so we need to wait for the lock
-
-                                // Possible deadlock
-                                Logger.debug("LOCKING-WAITING (CTX) for id "+ctx.getId()+" ctx.hash "+ctx.hashCode());
-
-                                // Try your luck again
-                                ctx = null;
-                                continue;
-                                // Not allowed reentrant call
-                                //throw new RemoteException("Reentrant call");
-                            }
-                            else
-                            {
+		    if (waitingOnTransaction) 
+		    {
+			Logger.debug("FINISHED-LOCKING-WAITING (TRANSACTION) in Thread " 
+				     + Thread.currentThread().getName() 
+				     + " for id "+ctx.getId()
+				     +" ctx.hash "+ctx.hashCode()
+				     +" tx:"+((tx == null) ? "null" : tx.toString()));
+			waitingOnTransaction = false;
+		    }
+		    // OK so we now know that for this PrimaryKey, no other
+		    // thread has a transactional lock on the bean.
+		    // So, let's setTransaction of the ctx here instead of in later code.
+		    // I really don't understand why it wasn't  done here anyways before.
+		    // Later on, in the finally clause, I'll check to see if the ctx was
+		    // invoked upon and if not, dissassociate the transaction with the ctx.
+		    // If there is no transactional assocation here, there is a race condition
+		    // for re-entrant entity beans, so don't remove the code below.
+		    //
+		    // If this "waitingOnTransaction" loop is ever removed in favor of
+		    // something like using db locks instead, this transactional assocation
+		    // must be removed.
+		    if (mi.getTransaction() != null && tx != null && !tx.equals(mi.getTransaction()))
+		    {
+			// Do transactional "lock" on ctx right now!
+			ctx.setTransaction(mi.getTransaction());
+		    }
+		    // If we get here it's the right tx, or no tx
+		    if (!ctx.isLocked())
+		    {
+			//take it!
+			ctx.lock();
+		    }
+		    else
+		    {
+			if (!isCallAllowed(mi)) 
+			{
+			    // Go to sleep and wait for the lock to be released
+                            // This is not one of the "home calls" so we need to wait for the lock
+			    
+                            // Possible deadlock
+			    if (!waitingOnContext) 
+			    {
+				Logger.debug("LOCKING-WAITING (CTX) in Thread " 
+					     + Thread.currentThread().getName() 
+					     + " for id "+ctx.getId()
+					     +" ctx.hash "+ctx.hashCode());
+				waitingOnContext = true;
+			    }
+			    
+                            // Try your luck again
+			    ctx = null;
+			    Thread.yield(); // Help out the OS.
+			    continue;
+			}
+			else
+			{
                                 //We are in a home call so take the lock, take it!
-                                ctx.lock();
-                            }
-                        }
-                    }
+			    ctx.lock();
+			}
+		    }
+		    if (waitingOnContext) 
+		    {
+			Logger.debug("FINISHED-LOCKING-WAITING (CTX) in Thread " 
+				     + Thread.currentThread().getName() 
+				     + " for id "
+				     + ctx.getId()
+				     + " ctx.hash " + ctx.hashCode());
+			waitingOnContext = false;
+		    }
                 }
-				catch (InterruptedException ignored) {}
-				finally
-				{
-					mutex.release();
-				}
-
+		catch (InterruptedException ignored) {}
+		finally
+		{
+		    mutex.release();
+		}
             } while (ctx == null);
 
             // Set context on the method invocation
@@ -188,79 +255,103 @@ extends AbstractInterceptor
         }
         catch (RemoteException e)
         {
-            // Discard instance
-            // EJB 1.1 spec 12.3.1
-            cache.remove(key);
-
+	    exceptionThrown = true;
             throw e;
         } catch (RuntimeException e)
         {
-            // Discard instance
-            // EJB 1.1 spec 12.3.1
-            cache.remove(key);
-
+	    exceptionThrown = true;
             throw e;
         } catch (Error e)
         {
-            // Discard instance
-            // EJB 1.1 spec 12.3.1
-            cache.remove(key);
-
+	    exceptionThrown = true;
             throw e;
-        } finally
+        } 
+	finally
         {
-            // Logger.debug("Release instance for "+id);
-
-			// ctx can be null if cache.get throws an Exception, for
-			// example when activating a bean.
-			if (ctx != null)
+	    try
+	    {
+		mutex.acquire();
+		// Logger.debug("Release instance for "+id);
+		// ctx can be null if cache.get throws an Exception, for
+		// example when activating a bean.
+		if (ctx != null)
+		{
+		    // unlock the context
+		    ctx.unlock();
+		    
+		    Transaction tx = ctx.getTransaction();
+		    if (tx != null 
+			&& mi.getTransaction() != null
+			&& tx.equals(mi.getTransaction()) 
+			&& !((EntityEnterpriseContext)ctx).isInvoked())
+		    {
+			// The context has been associated with this method's transaction
+			// but the entity has not been invoked upon yet, so let's
+			// disassociate the transaction from the ctx.
+			// I'm doing this because I'm assuming that the bean hasn't been registered with
+			// the TxManager.
+			ctx.setTransaction(null);
+		    }
+		    
+		    if (exceptionThrown)
+		    {
+			// Discard instance
+			// EJB 1.1 spec 12.3.1
+			//
+			cache.remove(key);
+		    }
+		    else if (ctx.getId() == null)
+		    {
+			// Work only if no transaction was encapsulating this remove()
+			if (ctx.getTransaction() == null)
 			{
-				try
-				{
-					mutex.acquire();
-
-					// unlock the context
-					ctx.unlock();
-
-					if (ctx.getId() == null)
-					{
-
-						// Work only if no transaction was encapsulating this remove()
-						if (ctx.getTransaction() == null)
-						{
-							// Here we arrive if the bean has been removed and no
-							// transaction was associated with the remove, or if
-							// the bean has been passivated
-
-							// Remove from cache
-							cache.remove(key);
-
-							// It has been removed -> send to the pool
-							container.getInstancePool().free(ctx);
-						}
-						else 
-						{
-							// We want to remove the bean, but it has a Tx associated with 
-							// the remove() method. We remove it from the cache, to avoid
-							// that a successive insertion with same pk will break the
-							// cache. Anyway we don't free the context, since the tx must
-							// finish. The EnterpriseContext instance will be GC and not
-							// recycled.
-							cache.remove(key);
-						}
-					}
-					else
-					{
-						// Yeah, do nothing
-					}
-				}
-				catch (InterruptedException ignored) {}
-				finally
-				{
-					mutex.release();
-				}
+			    // Here we arrive if the bean has been removed and no
+			    // transaction was associated with the remove, or if
+			    // the bean has been passivated
+				    
+			    // Remove from cache
+			    cache.remove(key);
+			    
+			    // It has been removed -> send to the pool
+			    // REVISIT: FIXME:
+			    // We really should only let passivation free an instance because it is
+			    // quite possible that another thread is working with
+			    // the same context, but let's do it anyways.
+			    //
+			    container.getInstancePool().free(ctx);
 			}
-        }
+			else 
+			{
+			    // We want to remove the bean, but it has a Tx associated with 
+			    // the remove() method. We remove it from the cache, to avoid
+			    // that a successive insertion with same pk will break the
+			    // cache. Anyway we don't free the context, since the tx must
+			    // finish. The EnterpriseContext instance will be GC and not
+			    // recycled.
+			    cache.remove(key);
+			}
+		    }
+		}
+		else
+		{
+		    /*
+		     * This used to happen in the old code.
+		     * Why?  If the ctx is null, why should we remove it? Another thread could
+		     * be screwed up by this.
+		      if (exceptionThrown)
+		      {
+		      // Discard instance
+		      // EJB 1.1 spec 12.3.1
+		      cache.remove(key);
+		      }
+		    */
+		}
+	    }
+	    finally
+	    {
+		mutex.release();
+	    }
+	}
     }
 
 	// Private --------------------------------------------------------

@@ -56,7 +56,7 @@ import org.jboss.monitor.MetricsConstants;
  * </ul>
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public abstract class AbstractInstanceCache
 	implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
@@ -263,7 +263,7 @@ public abstract class AbstractInstanceCache
 		Sync mutex = (Sync)m_lockMap.get(id);
 		if (mutex == null)
 		{
-			mutex = new Semaphore(1);
+			mutex = new BeanSemaphore(1);
 			m_lockMap.put(id, mutex);
 		}
 		return mutex;
@@ -277,7 +277,11 @@ public abstract class AbstractInstanceCache
 		Object mutex = m_lockMap.get(id);
 		if (mutex != null)
 		{
-			m_lockMap.remove(id);
+		    if (mutex instanceof BeanSemaphore)
+		    {
+			((BeanSemaphore)mutex).invalidate();
+		    }
+		    m_lockMap.remove(id);
 		}
 	}
 
