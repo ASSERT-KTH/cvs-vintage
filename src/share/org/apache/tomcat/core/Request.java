@@ -135,9 +135,9 @@ public class Request {
     protected MimeHeaders headers;
 
     // Processed information ( redundant ! )
-    protected Hashtable parameters = new Hashtable();
+    protected Parameters params=new Parameters();
+    //    protected Hashtable parametersH = new Hashtable();
     protected boolean didReadFormData;
-    protected boolean didParameters;
 
     protected int contentLength = -1;
     protected String contentType = null;
@@ -192,6 +192,8 @@ public class Request {
     public Request() {
  	headers = new MimeHeaders();
 	scookies = new Cookies( headers );
+	params.setQuery( queryMB );
+	params.setHeaders( headers );
 	initRequest(); 	
     }
 
@@ -319,26 +321,31 @@ public class Request {
 
 
     // -------------------- Parameters --------------------
+
+    /** Read the body, if POST, and add the post parameters.
+     *  Before this method is called, only query-line parameters
+     *  are available.
+     */
+    public void handlePostParameters() {
+	int needData=params.needContent();
+
+	if( needData > 0 ) {
+	    try {
+		byte[] formData = new byte[needData];
+		readBody( formData, needData );
+		params.processData( formData );
+	    } catch(IOException ex ) {
+		// XXX should we throw exception or log ?
+		return;
+	    }
+	}
+    }
+
+    public Parameters parameters() {
+	return params;
+    }
     
-    // XXX optimize for common case ( single params )
-    public String getParameter(String name ) {
-	String[] values = getParameterValues(name);
-        if (values != null) {
-            return values[0];
-        } else {
-	    return null;
-        }
-    }
 
-    public String[] getParameterValues(String name) {
-	handleParameters();
-        return (String[])parameters.get(name);
-    }
-
-    public Enumeration getParameterNames() {
-	handleParameters();
-        return parameters.keys();
-    }
 
     // -------------------- encoding/type --------------------
 
@@ -598,15 +605,6 @@ public class Request {
 	this.container=container;
     }
 
-    public void setParameters( Hashtable h ) {
-	if(h!=null)
-	    this.parameters=h;
-    }
-
-    public Hashtable getParameters() {
-	return parameters;
-    }
-
     // -------------------- Attributes
     
     public Object getAttribute(String name) {
@@ -693,35 +691,10 @@ public class Request {
     }
 
     // -------------------- Utils - facade for RequestUtil
-    private void handleParameters() {
-   	if(!didParameters) {
-	    String qString=queryString().toString();
-	    if(qString!=null) {
-		didParameters=true;
-		Parameters.processFormData( qString, parameters );
-	    }
-	}
-	if (!didReadFormData) {
-	    didReadFormData = true;
-	    int len=Parameters.formContentLength( getContentType(),
-						  getContentLength());
-	    if( len > 0 ) {
-		// based on HttpUtils, very ,very slow and bad
-		byte[] formData = new byte [contentLength];
-		try {
-		    readBody( formData, contentLength );
-		} catch(IOException ex ) {
-		    return;
-		}
 
-		Hashtable postParameters=Parameters.processFormData(formData);
-		parameters = Parameters.mergeParameters(parameters,
-							postParameters);
-	    }
-	}
-    }
-
-    private int readBody(byte body[], int len)
+    /** Read request data, filling a byte[]
+     */
+    public int readBody(byte body[], int len)
 	throws IOException
     {
 	int offset = 0;
@@ -810,7 +783,8 @@ public class Request {
     public void initRequest() {
         context = null;
         attributes.clear();
-        parameters.clear();
+	//        parametersH.clear();
+	params.recycle();
 	contentLength = -1;
         contentType = null;
         charEncoding = null;
@@ -819,7 +793,6 @@ public class Request {
 	principal = null;
         reqSessionId = null;
         serverSession = null;
-        didParameters = false;
         didReadFormData = false;
         container=null;
         handler=null;
