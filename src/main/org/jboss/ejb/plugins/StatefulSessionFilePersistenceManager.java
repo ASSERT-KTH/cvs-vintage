@@ -63,7 +63,7 @@ import org.jboss.logging.Logger;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *  @version $Revision: 1.16 $
+ *  @version $Revision: 1.17 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -71,15 +71,15 @@ public class StatefulSessionFilePersistenceManager
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
-   StatefulSessionContainer con;
+   private StatefulSessionContainer con;
 
-   Method ejbActivate;
-   Method ejbPassivate;
-   Method ejbRemove;
+   private Method ejbActivate;
+   private Method ejbPassivate;
+   private Method ejbRemove;
 
-   File dir;
+   private File dir;
 
-   ArrayList fields;
+   private ArrayList fields;
 
    // Static --------------------------------------------------------
    private static long id = System.currentTimeMillis();
@@ -221,14 +221,17 @@ public class StatefulSessionFilePersistenceManager
 
 
          // Load state
-         in = new SessionObjectInputStream(ctx, new FileInputStream(new File(dir, ctx.getId()+".ser")));
+         in = new SessionObjectInputStream(ctx, new FileInputStream(getFile(ctx.getId())));
          
          ctx.setInstance(in.readObject());
          
          in.close();
+		 
+		 removePassivated(ctx.getId());
          
          // Call bean
          ejbActivate.invoke(ctx.getInstance(), new Object[0]);
+		 
       } catch (ClassNotFoundException e)
       {
          throw new ServerException("Could not activate", e); 
@@ -273,7 +276,7 @@ public class StatefulSessionFilePersistenceManager
          ejbPassivate.invoke(ctx.getInstance(), new Object[0]);
 
          // Store state
-         ObjectOutputStream out = new SessionObjectOutputStream(new FileOutputStream(new File(dir, ctx.getId()+".ser")));
+         ObjectOutputStream out = new SessionObjectOutputStream(new FileOutputStream(getFile(ctx.getId())));
 
          out.writeObject(ctx.getInstance());
 
@@ -318,6 +321,7 @@ public class StatefulSessionFilePersistenceManager
       try
       {
          ejbRemove.invoke(ctx.getInstance(), new Object[0]);
+		 
       } catch (IllegalAccessException e)
       {
          // Throw this as a bean exception...(?)
@@ -349,6 +353,12 @@ public class StatefulSessionFilePersistenceManager
          }
       }
    }
+   
+   public void removePassivated(Object key) 
+   {
+	   // OK also if the file does not exists
+	   getFile(key).delete();
+   }
 
    // Z implementation ----------------------------------------------
 
@@ -358,6 +368,11 @@ public class StatefulSessionFilePersistenceManager
    protected Long nextId()
    {
       return new Long(id++);
+   }
+   
+   protected File getFile(Object key) 
+   {
+	   return new File(dir, key + ".ser");
    }
 
    // Private -------------------------------------------------------
