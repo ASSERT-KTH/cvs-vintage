@@ -151,7 +151,8 @@ public class ServletClassLoaderImpl extends NetworkClassLoader implements Servle
 
         for(Enumeration e = getURLs(); e.hasMoreElements(); ) {
             URL url = (URL) e.nextElement();
-            cpath = cpath + separator + url.getFile();
+            if (cpath.length()>0) cpath += separator;
+            cpath += FileUtil.patch(url.getFile());
         }
 
         return cpath;
