@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------
-$Id: README.txt,v 1.5 2002/03/08 00:14:06 jmcnally Exp $
+$Id: README.txt,v 1.6 2002/06/26 23:59:28 jon Exp $
 --------------------------------------------------------------------------
 
 The files in this directory are here for your convenience in building
@@ -32,6 +32,12 @@ considered 'standard' and well supported in our community circles.
   Dynamic access to Java object properties.
 
   http://jakarta.apache.org/commons/beanutils.html 
+
+* commons-betwixt.jar
+
+  Utility that makes Digester useful
+
+  http://jakarta.apache.org/commons/betwixt/ 
 
 * commons-collections.jar
 
