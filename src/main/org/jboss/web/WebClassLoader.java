@@ -4,7 +4,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import javax.management.ObjectName;
 
-import org.jboss.mx.loading.UnifiedClassLoader;
+import org.jboss.mx.loading.RepositoryClassLoader;
 import org.jboss.mx.loading.LoaderRepositoryClassLoader;
 
 /** A simple subclass of URLClassLoader that is used in conjunction with the
@@ -29,7 +29,7 @@ as the WebClassLoader constructor.
 @author Sacha Labourey <sacha.labourey@cogito-info.ch>
 @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
 @author  <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
-@version $Revision: 1.9 $
+@version $Revision: 1.10 $
 */
 public class WebClassLoader extends LoaderRepositoryClassLoader
 {
@@ -43,7 +43,7 @@ public class WebClassLoader extends LoaderRepositoryClassLoader
 
    /** Creates new WebClassLoader.
        Subclasses must have a constructor with the same signature. */
-   public WebClassLoader(ObjectName containerName, UnifiedClassLoader parent)
+   public WebClassLoader(ObjectName containerName, RepositoryClassLoader parent)
    {
       super(parent, parent.getLoaderRepository());
       this.containerName = containerName;
@@ -69,7 +69,7 @@ public class WebClassLoader extends LoaderRepositoryClassLoader
     /** Returns the single URL for my parent, an UnifiedClassLoader. */
     public URL getURL()
     {
-        return ((UnifiedClassLoader)getParent()).getURL();
+        return ((RepositoryClassLoader) getParent()).getURL();
     }
 
     /** Get the list of URLs that should be used as the RMI annotated codebase.
