@@ -53,7 +53,6 @@
 #end
 
 #set ($mitList = $user.CurrentMITList)
-$user $mitList $mitList.size()
 #if (!$mitList || $mitList.isEmpty())
 <p class="alert">
 $l10n.NoIssueTypeSelected
