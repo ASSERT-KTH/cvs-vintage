@@ -35,7 +35,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.9 2001/10/04 07:41:15 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.10 2001/10/05 08:55:14 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -108,6 +108,16 @@ public class DockableWindowManager extends JPanel
 	{
 		dockableWindowFactories.addElement(new Factory(name,code,
 			actions,actionSet));
+	}
+
+	public static String[] getRegisteredDockableWindows()
+	{
+		String[] retVal = new String[dockableWindowFactories.size()];
+		for(int i = 0; i < dockableWindowFactories.size(); i++)
+		{
+			retVal[i] = ((Factory)dockableWindowFactories.elementAt(i)).name;
+		}
+		return retVal;
 	}
 
 	static class DockableListHandler extends HandlerBase
@@ -335,6 +345,17 @@ public class DockableWindowManager extends JPanel
 			{
 				view.getDockableWindowManager()
 					.toggleDockableWindow(name);
+			}
+
+			public boolean isToggle()
+			{
+				return true;
+			}
+
+			public boolean isSelected(View view)
+			{
+				return view.getDockableWindowManager()
+					.isDockableWindowVisible(name);
 			}
 		}
 	}

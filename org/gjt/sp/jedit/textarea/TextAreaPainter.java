@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * The text area repaint manager. It performs double buffering and paints
  * lines of text.
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.2 2001/10/04 07:41:15 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.3 2001/10/05 08:55:14 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -469,14 +469,12 @@ public class TextAreaPainter extends JComponent implements TabExpander
 		// of the font height, we subtract 1 from it, otherwise one
 		// too many lines will always be painted.
 		int lastInvalid = firstLine + (clipRect.y + clipRect.height - 1) / height;
-		int lineCount = textArea.getVirtualLineCount();
+		int lineCount = buffer.getVirtualLineCount();
 
 		int y = (clipRect.y - clipRect.y % height);
 
 		try
 		{
-			int maxWidth = textArea.maxHorizontalScrollWidth;
-
 			boolean updateMaxHorizontalScrollWidth = false;
 			for(int line = firstInvalid; line <= lastInvalid; line++)
 			{
@@ -500,8 +498,8 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
 				if(valid)
 				{
-					buffer.setLineWidth(physicalLine,width);
-					if(width > maxWidth)
+					textArea.lineWidths[line - textArea.getFirstLine()] = width;
+					if(width > textArea.maxHorizontalScrollWidth)
 						updateMaxHorizontalScrollWidth = true;
 				}
 

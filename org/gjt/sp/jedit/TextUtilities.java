@@ -25,7 +25,7 @@ import org.gjt.sp.jedit.syntax.*;
 /**
  * Class with several text utility functions.
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.3 2001/09/30 09:25:52 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.4 2001/10/05 08:55:14 spestov Exp $
  */
 public class TextUtilities
 {
@@ -99,8 +99,8 @@ public class TextUtilities
 		// the corresponding bracket
 		byte idOfBracket = Token.NULL;
 
-		Buffer.LineInfo lineInfo = buffer.markTokens(line);
-		Token lineTokens = lineInfo.getFirstToken();
+		Buffer.TokenList tokenList = buffer.markTokens(line);
+		Token lineTokens = tokenList.getFirstToken();
 
 		int tokenListOffset = 0;
 		for(;;)
@@ -146,9 +146,8 @@ public class TextUtilities
 				{
  					if(tokenListOffset != lineLength)
  						tokenListOffset += lineTokens.length;
-					//lineTokens = lineInfo.lastToken;
 					scanStartOffset = offset;
-					System.err.println("sso=" + scanStartOffset + ",tlo=" + tokenListOffset);
+					//System.err.println("sso=" + scanStartOffset + ",tlo=" + tokenListOffset);
 				}
 
 				// only check tokens with id 'idOfBracket'
@@ -185,7 +184,7 @@ public class TextUtilities
 									return lineStart + j;
 							}
 						}
-						System.err.println("[" + sb.reverse() + "]");
+						//System.err.println("[" + sb.reverse() + "]");
 					}
 
 					scanStartOffset = tokenListOffset = tokenListOffset - len;

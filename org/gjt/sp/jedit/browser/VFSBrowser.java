@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.4 2001/10/04 07:41:15 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.5 2001/10/05 08:55:14 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -855,7 +855,8 @@ public class VFSBrowser extends JPanel implements EBComponent
 				if(popup == null || !popup.isVisible())
 				{
 					createPopup();
-					popup.show(upButton,0,upButton.getHeight());
+					GUIUtilities.showPopupMenu(popup,
+						upButton,0,upButton.getHeight());
 				}
 				else
 				{

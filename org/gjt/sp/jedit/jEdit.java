@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.11 2001/10/04 07:41:15 spestov Exp $
+ * @version $Id: jEdit.java,v 1.12 2001/10/05 08:55:14 spestov Exp $
  */
 public class jEdit
 {
@@ -1806,6 +1806,9 @@ public class jEdit
 		addViewToList(newView);
 		EditBus.send(new ViewUpdate(newView,ViewUpdate.CREATED));
 
+		GUIUtilities.requestFocus(newView,newView.getTextArea());
+		newView.show();
+
 		// show tip of the day
 		if(newView == viewsFirst)
 		{
@@ -1816,9 +1819,6 @@ public class jEdit
 
 			setBooleanProperty("firstTime",false);
 		}
-
-		GUIUtilities.requestFocus(newView,newView.getTextArea());
-		newView.show();
 
 		return newView;
 	}
@@ -1867,6 +1867,9 @@ public class jEdit
 		addViewToList(newView);
 		EditBus.send(new ViewUpdate(newView,ViewUpdate.CREATED));
 
+		GUIUtilities.requestFocus(newView,newView.getTextArea());
+		newView.show();
+
 		// show tip of the day
 		if(newView == viewsFirst)
 		{
@@ -1877,9 +1880,6 @@ public class jEdit
 
 			setBooleanProperty("firstTime",false);
 		}
-
-		GUIUtilities.requestFocus(newView,newView.getTextArea());
-		newView.show();
 
 		return newView;
 	}
@@ -2114,6 +2114,12 @@ public class jEdit
 
 		// Save settings
 		saveSettings();
+
+		System.err.println("Allocator statistics:");
+		System.err.println("LineContext: " + TokenMarker.LineContext.COUNT_GC
+			+ " / " + TokenMarker.LineContext.COUNT);
+		System.err.println("Token: " + Token.COUNT_GC
+			+ " / " + Token.COUNT);
 
 		// Close activity log stream
 		Log.closeStream();

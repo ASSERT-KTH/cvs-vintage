@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Key binding editor.
  * @author Slava Pestov
- * @version $Id: ShortcutsOptionPane.java,v 1.3 2001/09/21 08:09:51 spestov Exp $
+ * @version $Id: ShortcutsOptionPane.java,v 1.4 2001/10/05 08:55:14 spestov Exp $
  */
 public class ShortcutsOptionPane extends AbstractOptionPane
 {
@@ -55,7 +55,7 @@ public class ShortcutsOptionPane extends AbstractOptionPane
 		Box north = Box.createHorizontalBox();
 		north.add(new JLabel(jEdit.getProperty(
 			"options.shortcuts.select.label")));
-		north.add(Box.createHorizontalStrut(12));
+		north.add(Box.createHorizontalStrut(6));
 		north.add(selectModel);
 
 		keyTable = new JTable(currentModel);
