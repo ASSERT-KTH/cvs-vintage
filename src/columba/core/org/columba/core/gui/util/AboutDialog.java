@@ -148,7 +148,7 @@ public class AboutDialog extends JDialog implements ActionListener {
                     "Jari Vuoksenranta", "Nicolas B\u00E9theuil", "Romain Guy",
                     "Thomas Singer", "David Jeske", "Christopher Burkey",
                     "Paul A. Golder", "David Brusowanking", "Paul Nicholls",
-                    "Paul E. Baclace"
+                    "Paul E. Baclace", "Mark Livingstone"
                 });
         contributorLabel.setLabelFor(contributorList);
         contributorPanel.add(new JScrollPane(contributorList));
