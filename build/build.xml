@@ -278,8 +278,7 @@
     <!-- ================================================================== -->
     <!-- Copy all of the xml schema files into the torque directory         -->
     <!-- ================================================================== -->
-    <target name="torque-copy-all-schema"
-            unless="schema.uptodate">
+    <target name="torque-copy-all-schema">
         <!-- copy the schema's to the torque directory -->
         <copy file="${src.sql.dir}/${project}-schema.xml" 
               todir="${torque.dir.scarab}/schema"
@@ -338,7 +337,10 @@
     <!-- generatesql.database.type property when calling this target to     -->
     <!-- specify the required database type.                                -->
     <!-- ================================================================== -->
-    <target name="sql-specific-db" depends="torque-copy-all-schema">
+    <target name="sql-specific-db">
+
+        <antcall target="torque-copy-all-schema" />
+
         <filter token="DATABASE_TYPE" value="${generatesql.database.type}"/>
         <filter token="DATABASE_DRIVER" value="${scarab.database.jdbc.driver}"/>
         <filter token="DATABASE_URL" value="${scarab.database.url}"/>
@@ -381,6 +383,7 @@
     <!-- ================================================================== -->
     <target name="sql-current-db" depends="prepare">
         <!-- Generate the Torque files for the specified database type -->
+        <antcall target="torque-copy-all-schema" />
         <antcall target="sql-specific-db">
             <param name="generatesql.database.type"
                    value="${scarab.database.type}"/>
@@ -881,8 +884,11 @@
     <!-- ================================================================== -->
     <!-- Creates the Torque documentation                                   -->
     <!-- ================================================================== -->
-    <target name="datadoc" depends="torque-copy-all-schema,sql-current-db">
+    <target name="datadoc" depends="sql-current-db">
         <mkdir dir="${torquedoc.destdir}"/>
+
+        <antcall target="torque-copy-all-schema" />
+
         <ant antfile="build-torque.xml"
            target="doc">
             <property name="torque.home" value="${torque.dir.scarab}"/>
