@@ -27,7 +27,6 @@ import org.columba.core.gui.themes.ThemeSwitcher;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.help.HelpManager;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.ConfigPluginHandler;
 import org.columba.core.plugin.ExternalToolsPluginHandler;
@@ -49,9 +48,6 @@ public class Main {
 
         MainInterface.DEBUG = cmdLineParser.isDebugOption();
 
-        // initialize logger has to happen here, because we need the MainInterface.DEBUG
-        new ColumbaLogger();
-        
         // the configPath settings are made in the commandlineParser @see ColumbaCmdLineParser
         ColumbaClient.loadInVMInstance(args);
 

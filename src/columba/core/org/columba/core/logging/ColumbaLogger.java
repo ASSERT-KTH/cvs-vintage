@@ -13,45 +13,53 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.logging;
 
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import java.io.File;
+import java.io.IOException;
+
+import java.util.logging.*;
 
 import org.columba.core.main.MainInterface;
+import org.columba.core.config.ConfigPath;
 import org.columba.ristretto.log.RistrettoLogger;
 
 /**
- * Depending on the debug flag (--debug command line
- * option reflected in MainInterface.DEBUG) the logger will either
- * show all debug messages or just severe errors.
- * <p>
- * Changed this from a completely static class, to something
- * which has to be instanciated explicitly from org.columba.core.main.Main.
- * This is necessary to have a proper initialization of MainInterface.DEBUG.
- * <p>
- * Switched to ConsoleHandler, instead of FileHandler. Nevertheless, would be
- * useful to add a commandline switch to optionally enable a file handler.
- * 
+ * Depending on the debug flag (--debug command line option reflected
+ * in MainInterface.DEBUG) the logger will either show all debug messages
+ * or just severe errors. Logging information is passed to a log file and
+ * to the console.
  */
 public class ColumbaLogger {
-    public static Logger log;
+    
+    /**
+     * A static reference to the actual logger. This reference is final so
+     * that it cannot be reassigned. However, you are free to add further
+     * handlers to the logger.
+     */
+    public static final Logger log;
 
-    public ColumbaLogger() {
+    static {
         log = Logger.getLogger("org.columba");
         log.setUseParentHandlers(false);
 
-        /*
         // create logging file in users config-folder
         File loggingFile = new File(ConfigPath.getConfigDirectory(), "columba.log");
-        FileHandler handler = new FileHandler(loggingFile.getPath(), false);
-        */
+        Handler handler;
+        try {
+            handler = new FileHandler(loggingFile.getPath(), false);
+            
+            // don't use standard XML formatting
+            handler.setFormatter(new SimpleFormatter());
+            log.addHandler(handler);
+        } catch (IOException ioe) {
+            // TODO: how to handle this?
+        }
 
+        // TODO: only add console handler if command line option is given
         // init console handler
-        ConsoleHandler handler = new ConsoleHandler();
-        handler.setFormatter(new SimpleFormatter());
+        handler = new ConsoleHandler();
         log.addHandler(handler);
 
         if (MainInterface.DEBUG) {
@@ -65,7 +73,15 @@ public class ColumbaLogger {
             log.setLevel(Level.SEVERE);
         }
 
+        /*
+         Ristretto is a singleton library and doesn't know about Columba.
+         We need to connect ristretto's logger with Columba's logger therefore.
+         */
         RistrettoLogger.setParentLogger(log);
-
     }
+    
+    /**
+     * Don't instanciate this class.
+     */
+    private ColumbaLogger() {}
 }
