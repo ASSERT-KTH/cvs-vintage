@@ -76,33 +76,33 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.37 $
+*   @version $Revision: 1.38 $
 */
 public class ContainerFactory
-	extends org.jboss.util.ServiceMBeanSupport
-	implements ContainerFactoryMBean
+    extends org.jboss.util.ServiceMBeanSupport
+    implements ContainerFactoryMBean
 {
-	// Constants -----------------------------------------------------
-	public static String DEFAULT_STATELESS_CONFIGURATION = "Default Stateless SessionBean";
-	public static String DEFAULT_STATEFUL_CONFIGURATION = "Default Stateful SessionBean";
-	public static String DEFAULT_ENTITY_BMP_CONFIGURATION = "Default BMP EntityBean";
-	public static String DEFAULT_ENTITY_CMP_CONFIGURATION = "Default CMP EntityBean";
+    // Constants -----------------------------------------------------
+    public static String DEFAULT_STATELESS_CONFIGURATION = "Default Stateless SessionBean";
+    public static String DEFAULT_STATEFUL_CONFIGURATION = "Default Stateful SessionBean";
+    public static String DEFAULT_ENTITY_BMP_CONFIGURATION = "Default BMP EntityBean";
+    public static String DEFAULT_ENTITY_CMP_CONFIGURATION = "Default CMP EntityBean";
 
-	// Attributes ----------------------------------------------------
+    // Attributes ----------------------------------------------------
    // Temp directory where deployed jars are stored
-	File tmpDir;
+    File tmpDir;
    
-	// The logger of this service
-	Log log = new Log(getName());
+    // The logger of this service
+    Log log = new Log(getName());
 
-	// A map of current deployments. If a deployment is made and it is already in this map,
-	// then undeploy it first (i.e. make it a re-deploy).
-	HashMap deployments = new HashMap();
+    // A map of current deployments. If a deployment is made and it is already in this map,
+    // then undeploy it first (i.e. make it a re-deploy).
+    HashMap deployments = new HashMap();
 
-	// Verify EJB-jar contents on deployments
-	boolean verifyDeployments = false;
+    // Verify EJB-jar contents on deployments
+    boolean verifyDeployments = false;
 
-	// Public --------------------------------------------------------
+    // Public --------------------------------------------------------
     
     /**
      * Implements the abstract <code>getObjectName()</code> method in superclass
@@ -114,11 +114,11 @@ public class ContainerFactory
      * @exception MalformedObjectNameException
      * @return
      */
-	public ObjectName getObjectName(MBeanServer server, ObjectName name)
-	   throws javax.management.MalformedObjectNameException
-	{
-	   return new ObjectName(OBJECT_NAME);
-	}
+    public ObjectName getObjectName(MBeanServer server, ObjectName name)
+       throws javax.management.MalformedObjectNameException
+    {
+       return new ObjectName(OBJECT_NAME);
+    }
 
     /**
      * Implements the abstract <code>getName()</code> method in superclass to
@@ -126,10 +126,10 @@ public class ContainerFactory
      *
      * @return <tt>'Container factory'</code>
      */
-	public String getName()
-	{
-	   return "Container factory";
-	}
+    public String getName()
+    {
+       return "Container factory";
+    }
 
     /**
      * Implements the template method in superclass. This method inits the factory
@@ -166,125 +166,125 @@ public class ContainerFactory
      * Implements the template method in superclass. This method stops all the
      * applications in this server.
      */
-	public void stopService()
-	{
-		Iterator apps = deployments.values().iterator();
-		while (apps.hasNext())
-		{
-			Application app = (Application)apps.next();
-			app.stop();
-		}
-	}
+    public void stopService()
+    {
+       Iterator apps = deployments.values().iterator();
+       while (apps.hasNext())
+       {
+         Application app = (Application)apps.next();
+         app.stop();
+       }
+    }
 
     /**
      * Implements the template method in superclass. This method destroys all
      * the applications in this server and clears the deployments list.
      */
-	public void destroyService()
-	{
-		Iterator apps = deployments.values().iterator();
-		while (apps.hasNext())
-		{
-			Application app = (Application)apps.next();
-			app.destroy();
-		}
+    public void destroyService()
+    {
+       Iterator apps = deployments.values().iterator();
+       while (apps.hasNext())
+       {
+         Application app = (Application)apps.next();
+         app.destroy();
+       }
 
-		deployments.clear();
-	}
+       deployments.clear();
+    }
 
     /**
      * Enables/disables the application bean verification upon deployment.
      *
      * @param   verify  true to enable; false to disable
      */
-	public void setVerifyDeployments(boolean verify)
-	{
-		verifyDeployments = verify;
-	}
+    public void setVerifyDeployments(boolean verify)
+    {
+       verifyDeployments = verify;
+    }
 
     /**
      * Returns the state of bean verifier (on/off)
      *
      * @param   true if enabled; false otherwise
      */
-	public boolean getVerifyDeployments()
-	{
-		return verifyDeployments;
-	}
+    public boolean getVerifyDeployments()
+    {
+       return verifyDeployments;
+    }
 
-	/**
-	*	Deploy the file at this URL. This method is typically called from remote administration
-	*	tools that cannot handle java.net.URL's as parameters to methods
-	*
-	* @param   url
-	* @exception   MalformedURLException
-	* @exception   DeploymentException
-	*/
-	public void deploy(String url)
-		throws MalformedURLException, DeploymentException
-	{
-		// Delegate to "real" deployment
-		deploy(new URL(url));
-	}
-
-
-	/**
-	*	Undeploy the file at this URL. This method is typically called from remote administration
-	*	tools that cannot handle java.net.URL's as parameters to methods
-	*
-	* @param   url
-	* @exception   MalformedURLException
-	* @exception   DeploymentException
-	*/
-	public void undeploy(String url)
-		throws MalformedURLException, DeploymentException
-	{
-		// Delegate to "real" undeployment
-		undeploy(new URL(url));
-	}
-
-	/**
-	*   Deploy EJBs pointed to by an URL.
-	*   The URL may point to an EJB-JAR, an EAR-JAR, or an codebase
-	*   whose structure resembles that of an EJB-JAR. <p>
-	*
-	*   The latter is useful for development since no packaging is required.
-	*
-	* @param       url  URL where EJB deployment information is contained
+    /**
+    *	Deploy the file at this URL. This method is typically called from remote administration
+    *	tools that cannot handle java.net.URL's as parameters to methods
     *
-	* @exception   DeploymentException
-	*/
-	public synchronized void deploy(URL url)
-		throws DeploymentException
-	{
-		// Create application
-		Application app = new Application();
+    * @param   url
+    * @exception   MalformedURLException
+    * @exception   DeploymentException
+    */
+    public void deploy(String url)
+       throws MalformedURLException, DeploymentException
+    {
+       // Delegate to "real" deployment
+       deploy(new URL(url));
+    }
 
-		try
-		{
-			Log.setLog(log);
 
-			// Check if already deployed -> undeploy first, this is re-deploy
-			if (deployments.containsKey(url))
-				undeploy(url);
+    /**
+    *	Undeploy the file at this URL. This method is typically called from remote administration
+    *	tools that cannot handle java.net.URL's as parameters to methods
+    *
+    * @param   url
+    * @exception   MalformedURLException
+    * @exception   DeploymentException
+    */
+    public void undeploy(String url)
+       throws MalformedURLException, DeploymentException
+    {
+       // Delegate to "real" undeployment
+       undeploy(new URL(url));
+    }
+
+    /**
+    *   Deploy EJBs pointed to by an URL.
+    *   The URL may point to an EJB-JAR, an EAR-JAR, or an codebase
+    *   whose structure resembles that of an EJB-JAR. <p>
+    *
+    *   The latter is useful for development since no packaging is required.
+    *
+    * @param       url  URL where EJB deployment information is contained
+    *
+    * @exception   DeploymentException
+    */
+    public synchronized void deploy(URL url)
+       throws DeploymentException
+    {
+       // Create application
+       Application app = new Application();
+
+       try
+       {
+         Log.setLog(log);
+
+         // Check if already deployed -> undeploy first, this is re-deploy
+         if (deployments.containsKey(url))
+          undeploy(url);
 
             
-			app.setURL(url);
+         app.setURL(url);
 
-			log.log("Deploying:"+url);
+         log.log("Deploying:"+url);
             
          // URL's to put in classloader   
          URL[] urls;
          
-			// save the name of the jar before copying -> undeploy with the same name
-			URL origUrl = url;
-			
-			// copy the jar file to prevent locking - redeploy failure
-			if (url.getProtocol().startsWith("file") && !url.getFile().endsWith("/")) 
+         // save the name of the jar before copying -> undeploy with the same name
+         URL origUrl = url;
+         
+         // copy the jar file to prevent locking - redeploy failure
+         if (url.getProtocol().startsWith("file") && !url.getFile().endsWith("/")) 
          {
             System.out.println(tmpDir);
          
-				File jarFile = new File(url.getFile());
+          File jarFile = new File(url.getFile());
             File tmp;
             if (tmpDir == null)
             {
@@ -293,16 +293,16 @@ public class ContainerFactory
             {
                tmp = File.createTempFile("tmpejbjar",".jar", tmpDir);
             }
-         	tmp.deleteOnExit();
-         	FileInputStream fin = new FileInputStream(jarFile);
-         	byte[] bytes = new byte[(int)jarFile.length()];
-         	fin.read(bytes);
-         	FileOutputStream fout = new FileOutputStream(tmp);
-         	fout.write(bytes);
-         	fin.close();
-         	fout.close();
+            tmp.deleteOnExit();
+            FileInputStream fin = new FileInputStream(jarFile);
+            byte[] bytes = new byte[(int)jarFile.length()];
+            fin.read(bytes);
+            FileOutputStream fout = new FileOutputStream(tmp);
+            fout.write(bytes);
+            fin.close();
+            fout.close();
             
-         	// Get the URL's from the deployments Class-Path: manifest file.
+            // Get the URL's from the deployments Class-Path: manifest file.
             // These should be added to the classloader
             JarFile jar = new JarFile(tmp);
             Manifest mf = jar.getManifest();
@@ -335,27 +335,27 @@ public class ContainerFactory
             
             urls = new URL[urlList.size()];
             urls = (URL[])urlList.toArray(urls);
-			} else
-			{
-			   urls = new URL[] { url };
-			}
-			
-			// Create the ClassLoader for this application
-			// TODO : the ClassLoader should come from the JMX manager if we want to be able to share it (tomcat)
-			ClassLoader cl = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
+         } else
+         {
+            urls = new URL[] { url };
+         }
+         
+         // Create the ClassLoader for this application
+         // TODO : the ClassLoader should come from the JMX manager if we want to be able to share it (tomcat)
+         ClassLoader cl = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
 
-			// Create a file loader with which to load the files
-			XmlFileLoader efm = new XmlFileLoader();
+         // Create a file loader with which to load the files
+         XmlFileLoader efm = new XmlFileLoader();
 
-			// the file manager gets its file from the classloader
-		    efm.setClassLoader(cl);
+         // the file manager gets its file from the classloader
+           efm.setClassLoader(cl);
 
-			// Load XML
-			ApplicationMetaData metaData = efm.load();
+         // Load XML
+         ApplicationMetaData metaData = efm.load();
 
             
 
-			// Check validity
+         // Check validity
             Log.setLog(new Log("Verifier"));
             
             // wrapping this into a try - catch block to prevent errors in
@@ -392,220 +392,220 @@ public class ContainerFactory
             // unset verifier log
             Log.unsetLog();			
 
-			// Get list of beans for which we will create containers
-			Iterator beans = metaData.getEnterpriseBeans();
+         // Get list of beans for which we will create containers
+         Iterator beans = metaData.getEnterpriseBeans();
 
-			// Deploy beans
-			Context ctx = new InitialContext();
-			while(beans.hasNext())
-			{
-				BeanMetaData bean = (BeanMetaData)beans.next();
+         // Deploy beans
+         Context ctx = new InitialContext();
+         while(beans.hasNext())
+         {
+          BeanMetaData bean = (BeanMetaData)beans.next();
 
-				log.log("Deploying "+bean.getEjbName());
+          log.log("Deploying "+bean.getEjbName());
 
-				if (bean.isSession()) // Is session?
-				{
-					if (((SessionMetaData)bean).isStateless()) // Is stateless?
-					{
-						// Create container
-						StatelessSessionContainer container = new StatelessSessionContainer();
+          if (bean.isSession()) // Is session?
+          {
+              if (((SessionMetaData)bean).isStateless()) // Is stateless?
+              {
+                 // Create container
+                 StatelessSessionContainer container = new StatelessSessionContainer();
 
-						// Create classloader for this container
-						container.setClassLoader(new BeanClassLoader(cl));
+                 // Create classloader for this container
+                 container.setClassLoader(new BeanClassLoader(cl));
 
-						// Set metadata
-						container.setBeanMetaData(bean);
+                 // Set metadata
+                 container.setBeanMetaData(bean);
 
-						// get the container configuration for this bean
-						// a default configuration is now always provided
-						ConfigurationMetaData conf = bean.getContainerConfiguration();
-						
-						// Set transaction manager
-						container.setTransactionManager((TransactionManager)cl.loadClass(conf.getTransactionManager()).newInstance());
+                 // get the container configuration for this bean
+                 // a default configuration is now always provided
+                 ConfigurationMetaData conf = bean.getContainerConfiguration();
+                 
+                 // Set transaction manager
+                 container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
                         
-						// Set security manager (should be chosen based on container config)
-						container.setSecurityManager((EJBSecurityManager)new InitialContext().lookup("EJBSecurityManager"));
+                 // Set security manager (should be chosen based on container config)
+                 container.setSecurityManager((EJBSecurityManager)new InitialContext().lookup("EJBSecurityManager"));
 
-			            // Set realm mapping (should be chosen based on container config)
-            			container.setRealmMapping( (RealmMapping)new InitialContext().lookup("SimpleRealmMapping"));
+                     // Set realm mapping (should be chosen based on container config)
+                     container.setRealmMapping( (RealmMapping)new InitialContext().lookup("SimpleRealmMapping"));
 
-						// Set container invoker
-						ContainerInvoker ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
-						if (ci instanceof XmlLoadable) {
-							// the container invoker can load its configuration from the jboss.xml element
-							((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
-						}
-						container.setContainerInvoker(ci);
+                 // Set container invoker
+                 ContainerInvoker ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
+                 if (ci instanceof XmlLoadable) {
+                   // the container invoker can load its configuration from the jboss.xml element
+                   ((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
+                 }
+                 container.setContainerInvoker(ci);
 
-						// Set instance pool
-						InstancePool ip = (InstancePool)cl.loadClass(conf.getInstancePool()).newInstance();
-					    if (ip instanceof XmlLoadable) {
-							((XmlLoadable)ip).importXml(conf.getContainerPoolConf());
-						}
-						container.setInstancePool(ip);
+                 // Set instance pool
+                 InstancePool ip = (InstancePool)cl.loadClass(conf.getInstancePool()).newInstance();
+                  if (ip instanceof XmlLoadable) {
+                   ((XmlLoadable)ip).importXml(conf.getContainerPoolConf());
+                 }
+                 container.setInstancePool(ip);
 
-						// Create interceptors
+                 // Create interceptors
 
-						container.addInterceptor(new LogInterceptor());
-						container.addInterceptor(new SecurityInterceptor());
-						container.addInterceptor(new TxInterceptor());
-						container.addInterceptor(new StatelessSessionInstanceInterceptor());
+                 container.addInterceptor(new LogInterceptor());
+                 container.addInterceptor(new SecurityInterceptor());
+                 container.addInterceptor(new TxInterceptor());
+                 container.addInterceptor(new StatelessSessionInstanceInterceptor());
 
-						// Finally we add the last interceptor from the container
-						container.addInterceptor(container.createContainerInterceptor());
+                 // Finally we add the last interceptor from the container
+                 container.addInterceptor(container.createContainerInterceptor());
 
-						// Add container to application
-						app.addContainer(container);
-					} else // Stateful
-					{
-						// Create container
-						StatefulSessionContainer container = new StatefulSessionContainer();
+                 // Add container to application
+                 app.addContainer(container);
+              } else // Stateful
+              {
+                 // Create container
+                 StatefulSessionContainer container = new StatefulSessionContainer();
 
-						// Create classloader for this container
-						container.setClassLoader(new BeanClassLoader(cl));
+                 // Create classloader for this container
+                 container.setClassLoader(new BeanClassLoader(cl));
 
-						// Set metadata
-						container.setBeanMetaData(bean);
+                 // Set metadata
+                 container.setBeanMetaData(bean);
 
-						// Set transaction manager
-						container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
+                 // Set transaction manager
+                 container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
 
-						// Set security manager (should be chosen based on container config)
-						container.setSecurityManager((EJBSecurityManager)new InitialContext().lookup("EJBSecurityManager"));
+                 // Set security manager (should be chosen based on container config)
+                 container.setSecurityManager((EJBSecurityManager)new InitialContext().lookup("EJBSecurityManager"));
 
-			            // Set realm mapping (should be chosen based on container config)
-            			container.setRealmMapping( (RealmMapping)new InitialContext().lookup("SimpleRealmMapping"));
+                     // Set realm mapping (should be chosen based on container config)
+                     container.setRealmMapping( (RealmMapping)new InitialContext().lookup("SimpleRealmMapping"));
 
-						// Get container configuration
-						ConfigurationMetaData conf = bean.getContainerConfiguration();
+                 // Get container configuration
+                 ConfigurationMetaData conf = bean.getContainerConfiguration();
 
-						// Set container invoker
-						ContainerInvoker ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
-						if (ci instanceof XmlLoadable) {
-							// the container invoker can load its configuration from the jboss.xml element
-							((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
-						}
-						container.setContainerInvoker(ci);
+                 // Set container invoker
+                 ContainerInvoker ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
+                 if (ci instanceof XmlLoadable) {
+                   // the container invoker can load its configuration from the jboss.xml element
+                   ((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
+                 }
+                 container.setContainerInvoker(ci);
 
-						// Set instance cache
-						InstanceCache ic = (InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance(); 
-						if (ic instanceof XmlLoadable) {
-							((XmlLoadable)ic).importXml(conf.getContainerCacheConf());
-						}
-						container.setInstanceCache(ic);
+                 // Set instance cache
+                 InstanceCache ic = (InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance(); 
+                 if (ic instanceof XmlLoadable) {
+                   ((XmlLoadable)ic).importXml(conf.getContainerCacheConf());
+                 }
+                 container.setInstanceCache(ic);
 
-						// No real instance pool, use the shadow class 
-						container.setInstancePool(new StatefulSessionInstancePool());
+                 // No real instance pool, use the shadow class 
+                 container.setInstancePool(new StatefulSessionInstancePool());
 
-						// Set persistence manager
-						container.setPersistenceManager((StatefulSessionPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
+                 // Set persistence manager
+                 container.setPersistenceManager((StatefulSessionPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
 
-						// Create interceptors
-						container.addInterceptor(new LogInterceptor());
-						container.addInterceptor(new TxInterceptor());
-						container.addInterceptor(new StatefulSessionInstanceInterceptor());
-						container.addInterceptor(new SecurityInterceptor());
+                 // Create interceptors
+                 container.addInterceptor(new LogInterceptor());
+                 container.addInterceptor(new TxInterceptor());
+                 container.addInterceptor(new StatefulSessionInstanceInterceptor());
+                 container.addInterceptor(new SecurityInterceptor());
 
-						container.addInterceptor(container.createContainerInterceptor());
+                 container.addInterceptor(container.createContainerInterceptor());
 
-						// Add container to application
-						app.addContainer(container);
-					}
-				} else // Entity
-				{
-					// Create container
-					EntityContainer container = new EntityContainer();
+                 // Add container to application
+                 app.addContainer(container);
+              }
+          } else // Entity
+          {
+              // Create container
+              EntityContainer container = new EntityContainer();
 
-					// Create classloader for this container
-					container.setClassLoader(new BeanClassLoader(cl));
+              // Create classloader for this container
+              container.setClassLoader(new BeanClassLoader(cl));
 
-					// Set metadata
-					container.setBeanMetaData(bean);
+              // Set metadata
+              container.setBeanMetaData(bean);
 
-					// Set transaction manager
-					container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
+              // Set transaction manager
+              container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
 
-					// Set security manager (should be chosen based on container config)
-					container.setSecurityManager((EJBSecurityManager)new InitialContext().lookup("EJBSecurityManager"));
+              // Set security manager (should be chosen based on container config)
+              container.setSecurityManager((EJBSecurityManager)new InitialContext().lookup("EJBSecurityManager"));
 
-					// Set realm mapping (should be chosen based on container config)
-					container.setRealmMapping( (RealmMapping)new InitialContext().lookup("SimpleRealmMapping"));
+              // Set realm mapping (should be chosen based on container config)
+              container.setRealmMapping( (RealmMapping)new InitialContext().lookup("SimpleRealmMapping"));
 
-					// Get container configuration
-					ConfigurationMetaData conf = bean.getContainerConfiguration();
+              // Get container configuration
+              ConfigurationMetaData conf = bean.getContainerConfiguration();
 
-					// Set container invoker
-					ContainerInvoker ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
-					if (ci instanceof XmlLoadable) {
-						// the container invoker can load its configuration from the jboss.xml element
-						((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
-					}
-					container.setContainerInvoker(ci);
+              // Set container invoker
+              ContainerInvoker ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
+              if (ci instanceof XmlLoadable) {
+                 // the container invoker can load its configuration from the jboss.xml element
+                 ((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
+              }
+              container.setContainerInvoker(ci);
 
-					// Set instance cache
-					InstanceCache ic = (InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance(); 
-					if (ic instanceof XmlLoadable) {
-						((XmlLoadable)ic).importXml(conf.getContainerCacheConf());
-					}
-					container.setInstanceCache(ic);
+              // Set instance cache
+              InstanceCache ic = (InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance(); 
+              if (ic instanceof XmlLoadable) {
+                 ((XmlLoadable)ic).importXml(conf.getContainerCacheConf());
+              }
+              container.setInstanceCache(ic);
 
-					// Set instance pool
-					InstancePool ip = (InstancePool)cl.loadClass(conf.getInstancePool()).newInstance();
-					if (ip instanceof XmlLoadable) {
-						((XmlLoadable)ip).importXml(conf.getContainerPoolConf());
-					}
-					container.setInstancePool(ip);
+              // Set instance pool
+              InstancePool ip = (InstancePool)cl.loadClass(conf.getInstancePool()).newInstance();
+              if (ip instanceof XmlLoadable) {
+                 ((XmlLoadable)ip).importXml(conf.getContainerPoolConf());
+              }
+              container.setInstancePool(ip);
 
-					// Set persistence manager 
-					if (((EntityMetaData) bean).isBMP()) {
-						
-						//Should be BMPPersistenceManager
-						container.setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
-				 	}
-					else {
-						
-						// CMP takes a manager and a store
-						org.jboss.ejb.plugins.CMPPersistenceManager persistenceManager = new org.jboss.ejb.plugins.CMPPersistenceManager();
-					    
-						//Load the store from configuration
-						persistenceManager.setPersistenceStore((EntityPersistenceStore)cl.loadClass(conf.getPersistenceManager()).newInstance());
-				
-						// Set the manager on the container
-						container.setPersistenceManager(persistenceManager);
-					}
-					
-					// Create interceptors
-					container.addInterceptor(new LogInterceptor());
-					container.addInterceptor(new SecurityInterceptor());
-					container.addInterceptor(new TxInterceptor());
-					container.addInterceptor(new EntityInstanceInterceptor());
-					container.addInterceptor(new EntitySynchronizationInterceptor());
+              // Set persistence manager 
+              if (((EntityMetaData) bean).isBMP()) {
+                 
+                 //Should be BMPPersistenceManager
+                 container.setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
+              }
+              else {
+                 
+                 // CMP takes a manager and a store
+                 org.jboss.ejb.plugins.CMPPersistenceManager persistenceManager = new org.jboss.ejb.plugins.CMPPersistenceManager();
+                  
+                 //Load the store from configuration
+                 persistenceManager.setPersistenceStore((EntityPersistenceStore)cl.loadClass(conf.getPersistenceManager()).newInstance());
+          
+                 // Set the manager on the container
+                 container.setPersistenceManager(persistenceManager);
+              }
+              
+              // Create interceptors
+              container.addInterceptor(new LogInterceptor());
+              container.addInterceptor(new SecurityInterceptor());
+              container.addInterceptor(new TxInterceptor());
+              container.addInterceptor(new EntityInstanceInterceptor());
+              container.addInterceptor(new EntitySynchronizationInterceptor());
 
-					container.addInterceptor(container.createContainerInterceptor());
+              container.addInterceptor(container.createContainerInterceptor());
 
-					// Add container to application
-					app.addContainer(container);
-				}
-			}
+              // Add container to application
+              app.addContainer(container);
+          }
+         }
 
-			// Init application
-			app.init();
+         // Init application
+         app.init();
 
-			// Start application
-			app.start();
+         // Start application
+         app.start();
 
-			// Add to webserver so client can access classes through dynamic class downloading
-			WebServiceMBean webServer = (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, WebServiceMBean.OBJECT_NAME);
-			webServer.addClassLoader(cl);
+         // Add to webserver so client can access classes through dynamic class downloading
+         WebServiceMBean webServer = (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, WebServiceMBean.OBJECT_NAME);
+         webServer.addClassLoader(cl);
 
-			// Done
-			log.log("Deployed application: "+app.getName());
+         // Done
+         log.log("Deployed application: "+app.getName());
 
-			// Register deployment. Use the original name in the hashtable
-			deployments.put(origUrl, app);
-		}
+         // Register deployment. Use the original name in the hashtable
+         deployments.put(origUrl, app);
+       }
         catch (Throwable e)
-		{
+       {
             if (e instanceof NullPointerException) {
                 // Avoids useless 'null' messages on a server trace.
                 // Let's be honest and spam them with a stack trace.
@@ -613,51 +613,51 @@ public class ContainerFactory
                 //Logger.exception(e);
             }
             
-			Logger.debug(e.getMessage());
+         Logger.debug(e.getMessage());
 
-			app.stop();
-			app.destroy();
+         app.stop();
+         app.destroy();
 
-			throw new DeploymentException("Could not deploy "+url.toString());
-		} finally
-		{
-			Log.unsetLog();
-		}
-	}
+         throw new DeploymentException("Could not deploy "+url.toString());
+       } finally
+       {
+         Log.unsetLog();
+       }
+    }
 
 
-	/**
-	*   Remove previously deployed EJBs.
-	*
-	* @param   url
-	* @exception   DeploymentException
-	*/
-	public void undeploy(URL url)
-	throws DeploymentException
-	{
-		// Get application from table
-		Application app = (Application)deployments.get(url);
+    /**
+    *   Remove previously deployed EJBs.
+    *
+    * @param   url
+    * @exception   DeploymentException
+    */
+    public void undeploy(URL url)
+    throws DeploymentException
+    {
+       // Get application from table
+       Application app = (Application)deployments.get(url);
 
-		// Check if deployed
-		if (app == null)
-		{
-			throw new DeploymentException("URL not deployed");
-		}
+       // Check if deployed
+       if (app == null)
+       {
+         throw new DeploymentException("URL not deployed");
+       }
 
-		// Undeploy application
-		Log.setLog(log);
-		log.log("Undeploying:"+url);
-		app.stop();
-		app.destroy();
+       // Undeploy application
+       Log.setLog(log);
+       log.log("Undeploying:"+url);
+       app.stop();
+       app.destroy();
 
-		// Remove deployment
-		deployments.remove(url);
+       // Remove deployment
+       deployments.remove(url);
 
-		// Done
-		log.log("Undeployed application: "+app.getName());
+       // Done
+       log.log("Undeployed application: "+app.getName());
 
-		Log.unsetLog();
-	}
+       Log.unsetLog();
+    }
 
-	// Protected -----------------------------------------------------
+    // Protected -----------------------------------------------------
 }
