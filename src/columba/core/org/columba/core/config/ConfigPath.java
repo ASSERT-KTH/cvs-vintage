@@ -20,40 +20,15 @@ import org.columba.core.util.OSInfo;
 import java.io.File;
 import java.io.IOException;
 
-
 /**
  * ConfigPath keeps the path to the user configuration directory.
  *
  * @author fdietz
  */
 public class ConfigPath {
-    public static String userName;
-    public static String userHome;
     public static File configDirectory;
 
     public ConfigPath() {
-        getSystemProperties();
-
-        configDirectory.mkdir();
-    }
-
-    public ConfigPath(String configPath) {
-        configDirectory = new File(configPath);
-
-        configDirectory.mkdir();
-    }
-
-    public static File getConfigDirectory() {
-        return configDirectory;
-    }
-
-    protected void getSystemProperties() {
-        String hstr;
-
-        userName = new String(System.getProperty("user.name"));
-        userHome = new String(System.getProperty("user.home"));
-
-        //userDir = new String(System.getProperty("user.dir"));
         if (OSInfo.isWindowsPlatform()) {
             // this os has no home directory
             // for example windows9x
@@ -61,20 +36,20 @@ public class ConfigPath {
                 configDirectory = new File("config");
             }
         } else {
+            String userHome = new String(System.getProperty("user.home"));
             if (configDirectory == null) {
                 configDirectory = new File(userHome, ".columba");
             }
         }
+        configDirectory.mkdir();
+    }
 
-        try {
-            hstr = configDirectory.getCanonicalPath();
-        } catch (IOException e) {
-            hstr = userHome;
-        }
+    public ConfigPath(String configPath) {
+        configDirectory = new File(configPath);
+        configDirectory.mkdir();
+    }
 
-        configDirectory = new File(hstr);
-
-        //DiskIO.ensureDirectory(hstr);
-        //createDefaultConfigFiles();
+    public static File getConfigDirectory() {
+        return configDirectory;
     }
 }
