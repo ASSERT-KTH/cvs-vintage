@@ -359,7 +359,12 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	    // in core
 	    if( path.length() < ctPathL - 2  )
 		return false;
-	    for( int i=0; i< ctPathL - 2 ; i++ ) {
+	    // determine how much to match
+	    int matchLen = ctPathL - 2;	// match up to, but not including the '/'
+	    // if more can be matched in the path, include matching the '/'
+	    if( path.length() > matchLen )
+		matchLen++;
+	    for( int i=0; i< matchLen ; i++ ) {
 		if( path.charAt( i ) != ctPath.charAt( i ))
 		    return false;
 	    }
