@@ -2,46 +2,29 @@ $page.setTitle("Scarab Links")
 
 <h3>Site Pages</h3>
 <ul>
-<li><a href="$link.setPage("Assign.vm")">Assign.vm</a>
-<li><a href="$link.setPage("Confirm.vm")">Confirm.vm</a>
-<li><a href="$link.setPage("IssueAdmin.vm")">IssueAdmin.vm</a>
-<li><a href="$link.setPage("IssueCompare.vm")">IssueCompare.vm</a>
-<li><a href="$link.setPage("IssueView.vm")">IssueView.vm</a>
-<li><a href="$link.setPage("Login.vm")">Login.vm</a>
-<li><a href="$link.setPage("Query.vm")">Query.vm</a>
-<li><a href="$link.setPage("QueryResults.vm")">QueryResults.vm</a>
-<li><a href="$link.setPage("Register.vm")">Register.vm</a>
-<li><a href="$link.setPage("RegisterConfirm.vm")">RegisterConfirm.vm</a>
-
-<li><a href="$link.setPage("entry,Wizard1.vm")">Enter Issue</a>
-<li><a href="$link.setPage("entry,Wizard3.vm")">EnterIssue (no dedupe).vm</a>
-<li><a href="$link.setPage("Search.vm")">Search.vm</a>
-<li><a href="$link.setPage("Start.vm")">Start.vm</a>
-<li><a href="$link.setPage("Start2.vm")">Start2.vm</a>
-<li><a href="$link.setPage("error.vm")">error.vm</a>
-<li><a href="$link.setPage("index.vm")">index.vm</a>
+<li><a href="$link.setPage("Index.vm")">Index.vm</a></li>
+<li><a href="$link.setPage("Register.vm")">Register.vm</a></li>
+<li><a href="$link.setPage("Login.vm")">Login.vm</a></li>
+<li><a href="$link.setPage("IssueView.vm?id=1")">IssueView.vm?id=1</a> (Added ?id=1 at the end of the URL)</li>
+<li><a href="$link.setPage("Search.vm")">Search.vm</a></li>
+<li><a href="$link.setPage("entry,Wizard1.vm")">Enter Issue.vm</a></li>
+<li><a href="$link.setPage("entry,Wizard3.vm")">Enter Issue.vm (no deduplicate)</a></li>
 </ul>
 
 <h3>Admin Pages</h3>
-
-<p>
-Working:
-</p>
-
 <ul>
 <li>
-    <a href="$link.setPage("admin,AttributeShow.vm")">
-        admin,AttributeShow.vm</a>
+    <a href="$link.setPage("admin,AttributeShow.vm")">admin,AttributeShow.vm</a>
 </li>
 <li>
-    <a href="$link.setPage("admin,ModuleAttributeEditor.vm")">
-        admin,ModuleAttributeEditor.vm</a>
+    <a href="$link.setPage("admin,ModuleAttributeEditor.vm")">admin,ModuleAttributeEditor.vm</a>
 </li>
 <li>
     <a href="$link.setPage("FluxIndex.vm")">Flux</a>
 </li>
 </ul>
 
+<!--
 <p>
 Not working:
 </p>
@@ -65,3 +48,4 @@ Not working:
 <li><a href="$link.setPage("admin,ModifyRoles.vm")">admin,ModifyRoles.vm</a>
 <li><a href="$link.setPage("admin,ModifyUser.vm")">admin,ModifyUser.vm</a>
 </ul>
+-->
