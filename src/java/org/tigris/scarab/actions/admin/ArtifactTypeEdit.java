@@ -78,7 +78,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.56 2003/08/25 19:54:49 venkatesh Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.57 2003/08/26 15:11:09 venkatesh Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -277,8 +277,6 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
-        Module module = null;
-        List rmas = null;
         boolean success = true;
 
         if (issueType.isSystemDefined())
@@ -293,8 +291,8 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         }
         else
         {
-            module = scarabR.getCurrentModule();
-            rmas = module.getRModuleAttributes(issueType, false, "user");
+            Module module = scarabR.getCurrentModule();
+            List rmas = module.getRModuleAttributes(issueType, false, "user");
             if (areThereDupeSequences(rmas, intake, "RModuleAttribute",
                                                              "Order", 0))
             {
