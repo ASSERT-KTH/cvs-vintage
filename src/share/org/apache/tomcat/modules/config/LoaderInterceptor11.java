@@ -213,6 +213,13 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	context.getContainer().setNote( "oldLoader", oldLoader);
 	
 	ClassLoader loader=constructLoader( context );
+	if( debug>5 ) {
+	    URL classP=context.getClassPath();
+	    log("  Context classpath URLs:");
+	    for (int i = 0; i < classP.length; i++)
+                log("    " + classP[i].toString() );
+        }
+
 	context.setClassLoader( loader );
 	context.setAttribute( "org.apache.tomcat.classloader", loader);
     }
@@ -227,11 +234,19 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	    if( ! hasJaxp ) {
 		Enumeration en=jaxpJars.elements();
 		while( en.hasMoreElements() ) {
-		    context.addClassPath( (URL)en.nextElement());
+		    URL url=(URL)en.nextElement();
+		    if( debug > 0 ) log(context + " adding jaxp: " + url);
+		    context.addClassPath( url );
 		}
 		loader=constructLoader( context );
 	    }
 	}
+	if( debug>5 ) {
+	    URL classP=context.getClassPath();
+	    log("  Context classpath URLs:");
+	    for (int i = 0; i < classP.length; i++)
+                log("    " + classP[i].toString() );
+        }
 	
 	context.setClassLoader( loader );
 
@@ -246,11 +261,6 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	throws TomcatException
     {
 	URL classP[]=context.getClassPath();
-	if( debug>5 ) {
-	    log("  Context classpath URLs:");
-	    for (int i = 0; i < classP.length; i++)
-                log("    " + classP[i].toString() );
-        }
 
 	ClassLoader parent=null;
 	if( useNoParent ) {
@@ -283,7 +293,7 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	    if( ! f.exists()) continue;
 	    try {
 		URL url=new URL( "file", null,
-				 f.getAbsolutePath().replace('\\','/') + "/" );
+				 f.getAbsolutePath().replace('\\','/'));
 		jaxpJars.addElement( url );
 		if( debug > 0 ) log( "Adding " + url );
 	    } catch( MalformedURLException ex ) {
