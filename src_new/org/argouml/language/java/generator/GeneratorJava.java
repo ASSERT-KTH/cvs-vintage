@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.44 2002/10/20 21:11:13 linus Exp $
+// $Id: GeneratorJava.java,v 1.45 2002/10/25 04:46:43 mkl Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -220,13 +220,13 @@ implements PluggableNotation, FileGenerator {
     	nameStr = generateName (op.getName());
     }
 
-    if (documented)
-	sb.append('\n');
-    String s = generateConstraintEnrichedDocComment(op,documented,INDENT);
-    if (s != null && s.trim().length() > 0)
-      sb.append(INDENT).append(s);
-
-    sb.append(INDENT);
+    if (documented) {
+		sb.append('\n');
+    	String s = generateConstraintEnrichedDocComment(op,documented,INDENT);
+    	if (s != null && s.trim().length() > 0)
+      		sb.append(INDENT).append(s);
+    	sb.append('\n').append(INDENT);
+    }
     // 2002-07-14
     // Jaap Branderhorst
     // missing concurrency generation
@@ -975,7 +975,7 @@ implements PluggableNotation, FileGenerator {
       StringBuffer sDocComment = new StringBuffer(80);
 
       // Prepare doccomment
-      if (s != null) {
+      if (!(s == null || "".equals(s))) {
         // Just remove closing "*/"
         sDocComment.append(s.substring(0,s.indexOf("*/")+1));
       }
@@ -994,7 +994,6 @@ implements PluggableNotation, FileGenerator {
           //sDocComment += " @element-type unknown";
       }
       sDocComment.append('\n').append(INDENT).append(" */\n");
-
       return sDocComment.toString();
     }
     else {
