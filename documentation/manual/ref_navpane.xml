@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_navpane.xml,v 1.14 2003/11/09 09:16:47 mvw Exp $ -->
+<!-- $Id: ref_navpane.xml,v 1.15 2004/01/30 20:49:42 mvw Exp $ -->
 
 <!--
 
@@ -161,6 +161,21 @@ This chapter covers the Explorer.
       <para>This has no effect other than that of &button2; single
         click.</para>
     </sect2>
+  </sect1>
+
+  <!-- Keyboard behaviour -->
+
+  <sect1 id="s1.ref.explorer_keyboard">
+    <title>Keyboard Behavior in the Explorer</title>
+    <para>All keys active in a tree widget have their normal behaviour.
+      <!-- TODO: List them -->
+    </para>
+    <para>
+      When a diagram is selected, pressing Ctrl-C will copy the diagram in GIF
+      format to the system clipboard.
+      <!-- TODO: This function might only work with Java 1.4. Is that true? See
+      issue 923. -->
+    </para>
   </sect1>
 
   <!-- Selecting different perspectives with the drop down menu -->
