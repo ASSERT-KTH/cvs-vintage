@@ -31,7 +31,7 @@ import org.jboss.metadata.BeanMetaData;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.17 $
+ *  @version $Revision: 1.18 $
  */
 public class TxInterceptorCMT
     extends AbstractTxInterceptor
@@ -220,7 +220,8 @@ public class TxInterceptorCMT
                             newTransaction.commit();
                         }
 
-                        // set the old transaction back on the method invocation                        mi.setTransaction(oldTransaction);
+                        // set the old transaction back on the method invocation
+                        mi.setTransaction(oldTransaction);
                     }
                 }
             case MetaData.TX_MANDATORY:
