@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpointConnector.java,v 1.1 1999/10/09 00:20:48 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpointConnector.java,v 1.2 2000/01/27 01:24:50 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/01/27 01:24:50 $
  *
  * ====================================================================
  *
@@ -130,11 +130,30 @@ public class TcpEndpointConnector  implements ServerConnector {
     public void setContextManager( ContextManager ctx ) {
 	this.cm=ctx;
     }
+
+    public void setTcpConnectionHandler( TcpConnectionHandler handler) {
+	this.con=handler;
+    }
+
+    public TcpConnectionHandler getTcpConnectionHandler() {
+	return con;
+    }
+
+    public void setPort( int port ) {
+	this.port=port;
+    }
+
+    public void setPort(  String portS ) {
+	this.port=string2Int( portS );
+    }
+
+    public int getPort() {
+	return port;
+    }
     
     public void setProperty( String prop, String value) {
 	if("port".equals(prop) ) {
-	    //	    System.out.println("XXX");
-	    port=string2Int(value);
+	    setPort( value );
 	}
 	if("handler".equals(prop)) {
 	    try {

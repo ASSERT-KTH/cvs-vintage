@@ -96,7 +96,6 @@
     <mkdir dir="${tomcat.home}/webapps"/>
     <mkdir dir="${tomcat.home}/webapps/ROOT"/>
 
-    <copydir src="${tomcat.build}/webapps/ROOT" dest="${tomcat.home}/webapps/ROOT"/>
     <copydir src="${tomcat.build}/bin" dest="${tomcat.home}/bin" />
     <copydir src="${tomcat.build}/conf" dest="${tomcat.home}/conf"/>
     <copydir src="${tomcat.build}/doc" dest="${tomcat.home}/doc"/>
@@ -104,11 +103,15 @@
     <copydir src="${tomcat.build}/lib" dest="${tomcat.home}/lib"/>
     <copyfile src="${tomcat.build}/LICENSE" dest="${tomcat.home}/LICENSE"/>
 
-    <!-- Copy only war format for examples and test -->
+    <copydir src="${tomcat.build}/webapps/ROOT" dest="${tomcat.home}/webapps/ROOT"/>
+    <copydir src="${tomcat.build}/webapps/examples" dest="${tomcat.home}/webapps/examples"/>
+    <copydir src="${tomcat.build}/webapps/test" dest="${tomcat.home}/webapps/test"/>
+    <!-- Copy only war format for examples and test  -->
     <copyfile src="${tomcat.build}/webapps/examples.war" 
               dest="${tomcat.home}/webapps/examples.war"/>
     <copyfile src="${tomcat.build}/webapps/test.war" 
               dest="${tomcat.home}/webapps/test.war"/>
+
 
     <!-- create tomcat jar files -->
     <jar jarfile="${tomcat.home}/lib/webserver.jar"

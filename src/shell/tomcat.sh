@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.8 2000/01/26 22:59:59 costin Exp $
+# $Id: tomcat.sh,v 1.9 2000/01/27 01:24:51 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -99,17 +99,20 @@ fi
 if [ "$1" = "start" ] ; then 
   shift 
   echo Using classpath: ${CLASSPATH}
-  $JAVACMD org.apache.tomcat.shell.Startup "$@" &
+  $JAVACMD org.apache.tomcat.startup.Tomcat "$@" &
+#   $JAVACMD org.apache.tomcat.shell.Startup "$@" &
 
 elif [ "$1" = "stop" ] ; then 
   shift 
   echo Using classpath: ${CLASSPATH}
-  $JAVACMD org.apache.tomcat.shell.Shutdown "$@"
+  $JAVACMD org.apache.tomcat.startup.Tomcat -stop "$@"
+#   $JAVACMD org.apache.tomcat.shell.Shutdown "$@"
 
 elif [ "$1" = "run" ] ; then 
   shift 
   echo Using classpath: ${CLASSPATH}
-  $JAVACMD org.apache.tomcat.shell.Startup "$@" 
+  $JAVACMD org.apache.tomcat.startup.Tomcat "$@" 
+#  $JAVACMD org.apache.tomcat.shell.Startup "$@" 
   # no &
 
 ## Call it with source tomcat.sh to set the env for tomcat

@@ -262,6 +262,10 @@ public class ContextManager {
 	connectors.addElement( con );
     }
 
+    public Enumeration getConnectors() {
+	return connectors.elements();
+    }
+    
     public void addRequestInterceptor( RequestInterceptor ri ) {
 	if(debug>0) log(" adding request intereptor " + ri.getClass().getName());
 	requestInterceptors.addElement( ri );

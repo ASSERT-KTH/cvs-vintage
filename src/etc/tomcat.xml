@@ -20,11 +20,14 @@
    <requestInterceptor type="simpleMapper" debug="0" /> 
 
    <!-- ==================== adapter modules ==================== -->
-   <adapter type="httpAdapter" port="8080" />
+   <adapter className="org.apache.tomcat.service.TcpEndpointConnector" port="8080" 
+            handler="org.apache.tomcat.service.http.HttpConnectionHandler "/>
    <adapter className="org.apache.tomcat.service.TcpEndpointConnector" port="8007" 
-   handler="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>                                               
+            handler="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>                                               
+
    <!-- ==================== Contexts ==================== -->
-   <context path="/" docBase="webpages" />
-   <context path="/examples" docBase="examples" />
+   <context path="/" docBase="webapps/ROOT" />
+   <context path="/examples" docBase="webapps/examples" />
+   <context path="/test" docBase="webapps/test" />
 
 </contextManager>

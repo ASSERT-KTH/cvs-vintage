@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<Server adminPort="-1" workDir="work">
+    <ContextManager port="8080" hostName="" inet="">
+
+<!--
+   Defaults: 
+            defaultSessionTimeOut="30" 
+            isWARExpanded="true"
+            isWARValidated="false" 
+            isInvokerEnabled="true"
+            isWorkDirPersistent="false"
+-->
+        <Context path="/" docBase="webapps/ROOT" />
+        <Context path="/examples" docBase="webapps/examples"  />
+        <Context path="/test" docBase="webapps/test" />
+        
+        <Connector className="org.apache.tomcat.service.http.HttpAdapter">
+        </Connector>
+
+        <!-- AJP12 - current JServ module -->
+        <Connector className="org.apache.tomcat.service.TcpEndpointConnector">
+            <Parameter name="handler" value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
+            <Parameter name="port" value="8007"/>
+        </Connector>
+
+    </ContextManager>
+</Server>
