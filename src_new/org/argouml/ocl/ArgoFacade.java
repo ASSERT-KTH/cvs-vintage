@@ -8,7 +8,10 @@ import tudresden.ocl.check.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.MParameterDirectionKind;
 
-import org.apache.log4j.Category;import org.argouml.kernel.*;import org.argouml.model.uml.UmlFactory;import org.argouml.model.uml.UmlHelper;
+import org.apache.log4j.Category;
+import org.argouml.kernel.*;
+import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.uml.UmlHelper;
 import org.argouml.ui.*;
 import org.argouml.uml.MMUtil;
 
@@ -55,7 +58,8 @@ public class ArgoFacade implements ModelFacade {
     }
 }
 
-class ArgoAny implements Any, Type2 {    protected static Category cat = Category.getInstance(ArgoAny.class);
+class ArgoAny implements Any, Type2 {
+    protected static Category cat = Category.getInstance(ArgoAny.class);
 
     MClassifier classifier;
 
