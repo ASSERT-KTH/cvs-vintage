@@ -78,7 +78,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.17 2001/10/09 05:53:33 dlr Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.18 2001/10/09 05:54:11 dlr Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -229,7 +229,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         // Check for duplicate sequence numbers
         for (int i=0; i<attributeGroups.size(); i++) 
         {
-            AttributeGroup ag1 = (AttributeGroup)attributeGroups.get(i);                
+            AttributeGroup ag1 = (AttributeGroup)attributeGroups.get(i);
             Group agGroup1 = intake.get("AttributeGroup", 
                              ag1.getQueryKey(), false);
             order1 = agGroup1.get("Order");
@@ -241,7 +241,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
 
             for (int j=i-1; j>=0; j--) 
             {
-                AttributeGroup ag2 = (AttributeGroup)attributeGroups.get(j);                
+                AttributeGroup ag2 = (AttributeGroup)attributeGroups.get(j);
                 Group agGroup2 = intake.get("AttributeGroup", 
                              ag2.getQueryKey(), false);
                 order2 = agGroup2.get("Order");
