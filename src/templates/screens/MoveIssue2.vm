@@ -52,25 +52,12 @@
 #set ($attrValues = $issue.AllAttributeValuesMap)
 #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
 
-
-<h3>$l10n.CopyOptions</h3>
-
-
-<div class="axial"> <table border="1" cellspacing="2" cellpadding="3">
+<h3>$l10n.Destination</h3>
+<div class="axial">
+<table border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th>$l10n.DestinationModule</th>
 <td> $newModule.Name / $newIssueType.Name </td>
-</tr>
-
-<tr>
-<th>$l10n.Action</th>
-<td>
- #if ($booleanAction)
- $l10n.MoveIssue
- #else
- $l10n.CopyIssue
- #end
-</td>
 </tr>
 </table>
 </div>

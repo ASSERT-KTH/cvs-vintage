@@ -5,8 +5,8 @@
 #set ($issue = $scarabR.getIssue($issueId))
 #set ($moveIssueGroup = $intake.MoveIssue.Default)
 #set ($selectAction = $moveIssueGroup.Action.Value)
-#set ($module= $issue.Module)
-#set ($moduleList = $user.getCopyToModules($module))
+#set ($issueModule= $issue.Module)
+#set ($moduleList = $user.getCopyToModules($issueModule))
 
 #if (!$issueId || $issueId.length() == 0 || !$issue)
 
@@ -17,8 +17,6 @@
 
 #else
 
-##set ($attrValues = $issue.AllAttributeValuesMap)
-##set ($attrInput = $intake.AttributeValue.mapTo($attVal))
 <form method="post" action="$link.setPage("MoveIssue.vm").setAction("MoveIssue")">
 <input type="hidden" name="$moveIssueGroup.IssueId.key" value="$issue.UniqueId" />
 ## need to also pass id so that if we re-display this page, the right value is kept around
@@ -26,37 +24,46 @@
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="MoveIssue2.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="ViewIssue.vm" />
 
-
-<h3>$l10n.CopyOptions</h3>
-<div class="axial"> <table border="1" cellspacing="2" cellpadding="3">
+<input type="hidden" name="$moveIssueGroup.Action.Key" 
+ value="$selectAction" />
+<h3>$l10n.ChooseCopyMoveDestination</h3>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>$l10n.DestinationModule</th>
-<td>
-<select name="mod_issuetype">
-<option>$l10n.SelectModuleIssueType</option>
- #foreach ($module in $moduleList)
-    <option>$l10n.Module $module.Name</option>
-    #foreach ($issueType in $module.IssueTypes)
-       <option value="${module.ModuleId}_${issueType.IssueTypeId}">--$l10n.IssueType $issueType.Name</option>
+ <th>$l10n.CapModule</th><th>$l10n.IssueType</th>
+</tr>
+<tr class="a">
+  <td>$l10n.format("SameModule", $issueModule.Name)</td>
+  <td>
+  <select name="mod_issuetype">
+   <option value="">$l10n.Choose</option>
+    #foreach ($issueType in $issueModule.IssueTypes)
+       <option value="${issueModule.ModuleId}_${issueType.IssueTypeId}">$issueType.Name</option>
     #end
- #end
-</td>
+ </select>
+ </td>
 </tr>
+<tr class="b"><td>&nbsp;</td><td>&nbsp;</td></tr>
 
-<tr>
-<th>Action</th>
-<td> <select name="$moveIssueGroup.Action.Key" >
-<option value="copy"
-     #if ($selectAction.equals("copy")) selected="selected" #end >Copy</option>
-#if ($scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module))
-<option value="move" 
-     #if ($selectAction.equals("move")) selected="selected" #end >Move</option>
+#set ($index = 0)
+#foreach ($module in $moduleList)
+#if ($module.ModuleId != $issueModule.ModuleId)
+ #set ($index = $index + 1)
+ #indexedRows($index)
+ <td>$module.Name</td>
+ <td>
+ <select name="mod_issuetype">
+  <option value="">$l10n.Choose</option>
+    #foreach ($issueType in $module.IssueTypes)
+       <option value="${module.ModuleId}_${issueType.IssueTypeId}">$issueType.Name</option>
+    #end
+ </select>
+ </td>
+ </tr>
 #end
-</select>
-</td>
-</tr>
+#end
 </table>
-</div>
+
+
 <div class="functnbar2">
   <input type="submit" value="$l10n.MapIssueAttributes" name="eventSubmit_doValidate" />
   <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
