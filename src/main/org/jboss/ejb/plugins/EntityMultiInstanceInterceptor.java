@@ -13,17 +13,18 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstancePool;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 
 /**
  * The instance interceptors role is to acquire a context representing
  * the target object from the cache.
  *    
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class EntityMultiInstanceInterceptor extends AbstractInterceptor
 {
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       EntityContainer container = (EntityContainer)getContainer();
       Transaction transaction = invocation.getTransaction();

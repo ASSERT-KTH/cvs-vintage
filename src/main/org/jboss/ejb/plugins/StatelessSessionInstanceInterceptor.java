@@ -10,6 +10,7 @@ import java.rmi.RemoteException;
 
 import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.ejb.EnterpriseContext;
 
 /**
@@ -18,11 +19,11 @@ import org.jboss.ejb.EnterpriseContext;
  * JNDI environment to be set.
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class StatelessSessionInstanceInterceptor extends AbstractInterceptor
 {
-   public Object invoke(final Invocation invocation) throws Exception
+   public InvocationResponse invoke(final Invocation invocation) throws Exception
    {
       if(invocation.getType().isHome()) 
       {

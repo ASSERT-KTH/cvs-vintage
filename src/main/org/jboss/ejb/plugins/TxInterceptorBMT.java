@@ -28,6 +28,7 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationType;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SessionMetaData;
@@ -41,7 +42,7 @@ import org.jboss.metadata.SessionMetaData;
  * @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public final class TxInterceptorBMT extends AbstractTxInterceptor
 {
@@ -159,7 +160,7 @@ public final class TxInterceptorBMT extends AbstractTxInterceptor
     * @return the results of this invocation
     * @throws Exception if a problem occures during the invocation
     */
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       if(invocation.getType().isHome() && stateless)
       {

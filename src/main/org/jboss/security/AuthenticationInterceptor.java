@@ -11,6 +11,7 @@ import javax.ejb.EJBException;
 
 import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 
 /** 
  * The AuthenticationInterceptor authenticates the caller.
@@ -18,7 +19,7 @@ import org.jboss.invocation.Invocation;
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class AuthenticationInterceptor extends AbstractInterceptor
 {
@@ -38,7 +39,7 @@ public final class AuthenticationInterceptor extends AbstractInterceptor
     * Authenticates the caller using the principal and credentials in the 
     * Infocation if thre is a security manager and an invcocation method.
     */
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       Principal principal = invocation.getPrincipal();
       Object credential = invocation.getCredential();

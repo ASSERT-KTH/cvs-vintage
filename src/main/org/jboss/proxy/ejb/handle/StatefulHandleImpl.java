@@ -20,6 +20,7 @@ import javax.naming.InitialContext;
 
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.InvocationType;
@@ -34,7 +35,7 @@ import org.jboss.security.SecurityAssociation;
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class StatefulHandleImpl
    implements Handle
@@ -126,7 +127,8 @@ public class StatefulHandleImpl
          // Get the invoker to the target server (cluster or node)
         
          // Ship it
-         return (EJBObject) invoker.invoke(invocation);
+         InvocationResponse response = invoker.invoke(invocation);
+         return (EJBObject)response.getResponse();
       }
       catch (Exception e) {
          throw new ServerException("Could not get EJBObject", e);

@@ -18,6 +18,7 @@ import javax.ejb.HomeHandle;
 
 import org.jboss.proxy.ejb.handle.HomeHandleImpl;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.InvocationType;
@@ -26,7 +27,7 @@ import org.jboss.invocation.InvocationType;
  * The client-side proxy for an EJB Home object.
  *      
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class HomeInterceptor
    extends GenericEJBInterceptor
@@ -100,7 +101,7 @@ public class HomeInterceptor
    *
    * @throws Throwable    Any exception or error thrown while processing.
    */
-   public Object invoke(Invocation invocation)
+   public InvocationResponse invoke(Invocation invocation)
       throws Throwable
    {
       InvocationContext ctx = invocation.getInvocationContext();
@@ -110,7 +111,7 @@ public class HomeInterceptor
       // Implement local methods
       if (m.equals(TO_STRING))
       {
-         return ctx.getValue(InvocationKey.JNDI_NAME).toString() + "Home";
+         return new InvocationResponse(ctx.getValue(InvocationKey.JNDI_NAME).toString() + "Home");
       }
       else if (m.equals(EQUALS))
       {
@@ -118,22 +119,22 @@ public class HomeInterceptor
          Object[] args = invocation.getArguments();
          String argsString = args[0] != null ? args[0].toString() : "";
          String thisString = ctx.getValue(InvocationKey.JNDI_NAME).toString() + "Home";
-         return new Boolean(thisString.equals(argsString));
+         return new InvocationResponse(new Boolean(thisString.equals(argsString)));
       }
       else if (m.equals(HASH_CODE))
       {
-         return new Integer(this.hashCode());
+         return new InvocationResponse(new Integer(this.hashCode()));
       }
       
       // Implement local EJB calls
       else if (m.equals(GET_HOME_HANDLE))
       {
-         return new HomeHandleImpl(
-         (String)ctx.getValue(InvocationKey.JNDI_NAME));
+         return new InvocationResponse(new HomeHandleImpl(
+         (String)ctx.getValue(InvocationKey.JNDI_NAME)));
       }
       else if (m.equals(GET_EJB_META_DATA))
       {
-         return ctx.getValue(InvocationKey.EJB_METADATA);
+         return new InvocationResponse(ctx.getValue(InvocationKey.EJB_METADATA));
       }
       else if (m.equals(REMOVE_BY_HANDLE))
       {
@@ -145,7 +146,7 @@ public class HomeInterceptor
          object.remove();
          
          // Return Void
-         return Void.TYPE;
+         return new InvocationResponse(Void.TYPE);
       }
       else if (m.equals(REMOVE_BY_PRIMARY_KEY))
       {

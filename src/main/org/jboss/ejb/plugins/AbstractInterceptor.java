@@ -11,6 +11,7 @@ import java.util.List;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.Interceptor;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.logging.Logger;
 import org.w3c.dom.Element;
 
@@ -19,7 +20,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public abstract class AbstractInterceptor implements Interceptor
 {
@@ -68,7 +69,7 @@ public abstract class AbstractInterceptor implements Interceptor
    public void stop() {}
    public void destroy() {}
 
-   public Object invoke(final Invocation invocation) throws Exception {
+   public InvocationResponse invoke(final Invocation invocation) throws Exception {
       return getNext().invoke(invocation);
    }
 

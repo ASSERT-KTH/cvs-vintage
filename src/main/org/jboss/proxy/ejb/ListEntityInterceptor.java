@@ -24,13 +24,14 @@ import javax.ejb.EJBHome;
 import org.jboss.invocation.Invoker;
 import org.jboss.ejb.ListCacheKey;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 
 /**
 * An EJB CMP entity bean proxy class holds info about the List that the entity belongs to,
 * is used for reading ahead.
 *
 * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *
 * @todo: (marcf) methinks that this behavior should be moved to a REAL interceptor (i.e not as extends)
 */
@@ -114,10 +115,9 @@ extends EntityInterceptor
    *
    * @throws Throwable    Any exception or error thrown while processing.
    */
-   public Object invoke(Invocation invocation)
+   public InvocationResponse invoke(Invocation invocation)
    throws Throwable
    {
-      Object result;
       ReadAheadResult raResult;
       Object[] aheadResult;
       int from;
@@ -127,22 +127,25 @@ extends EntityInterceptor
       Method m = invocation.getMethod();
       
       if (m.equals(GET_READ_AHEAD_VALUES)) {
-         return getReadAheadValues();
+         return new InvocationResponse(getReadAheadValues());
       }
       
       // have we read ahead the result?
       if (readAheadValues != null) {
-         result = readAheadValues.get(m);
+         Object result = readAheadValues.get(m);
          if (readAheadValues.containsKey(m)) {
-            return readAheadValues.remove(m);
+            return new InvocationResponse(readAheadValues.remove(m));
          }
       }
       
-      result = super.invoke(invocation);
+      InvocationResponse response = super.invoke(invocation);
+      Object result = response.getResponse();
+      
       
       // marcf : I think all these will map nicely to the in/out of real interceptor, i.e. do not "extend"
       
-      if (result instanceof ReadAheadResult) {
+      if (result instanceof ReadAheadResult) 
+      {
          raResult = (ReadAheadResult) result;
          aheadResult = raResult.getAheadResult();
          from = ((ListCacheKey) invocation.getInvocationContext().getCacheId()).getIndex() + 1;
@@ -151,9 +154,10 @@ extends EntityInterceptor
             buf = (ReadAheadBuffer) list.get(i);
             buf.getReadAheadValues().put(m, aheadResult[i - from]);
          }
-         return raResult.getMainResult();
+         response.setResponse(raResult.getMainResult());
+         return response;
       } else {
-         return result;
+         return response;
       }
    }
    

@@ -25,6 +25,7 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.plugins.AbstractInterceptor;
 
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.PayloadKey;
@@ -33,7 +34,7 @@ import org.jboss.invocation.PayloadKey;
  * This interceptor sets up the invocation in an entity bean context.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class EntityInterceptor extends AbstractInterceptor
 {
@@ -233,7 +234,7 @@ public final class EntityInterceptor extends AbstractInterceptor
       }
    }
 
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       Method interfaceMethod = invocation.getMethod();
 
@@ -264,7 +265,7 @@ public final class EntityInterceptor extends AbstractInterceptor
       }
 
       // invoke the next
-      Object returnValue = getNext().invoke(invocation);
+      InvocationResponse returnValue = getNext().invoke(invocation);
  
       // if this is a CREATE invocation, we now need to invoke post create
       if(entityInvocationType == EntityInvocationType.CREATE)

@@ -10,6 +10,7 @@ import java.security.Principal;
 
 import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.metadata.SecurityIdentityMetaData;
 
 /** 
@@ -17,7 +18,7 @@ import org.jboss.metadata.SecurityIdentityMetaData;
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class RunAsSecurityInterceptor extends AbstractInterceptor
 {
@@ -45,7 +46,7 @@ public final class RunAsSecurityInterceptor extends AbstractInterceptor
       runAsRole = null;
    }
 
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       // If a run-as role was specified, push it so that any calls made
       // by this bean will have the runAsRole available for declarative

@@ -11,6 +11,7 @@ import org.jboss.ejb.BeanLock;
 import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 
 /**
  * The lock interceptors role is to schedule thread wanting to invoke method 
@@ -29,11 +30,11 @@ import org.jboss.invocation.Invocation;
  *    
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class EntityLockInterceptor extends AbstractInterceptor
 {
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       if(invocation.getType().isHome()) 
       {

@@ -21,6 +21,7 @@ import javax.transaction.TransactionRolledbackException;
 import javax.transaction.SystemException;
 
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.local.LocalInvoker;
@@ -315,7 +316,7 @@ public class PooledInvokerProxy
     * The invocation on the delegate, calls the right invoker.  Remote if we are remote, 
     * local if we are local. 
     */
-   public Object invoke(Invocation invocation)
+   public InvocationResponse invoke(Invocation invocation)
       throws Exception
    {
       // We are going to go through a Remote invocation, switch to a Marshalled Invocation
@@ -338,7 +339,7 @@ public class PooledInvokerProxy
          end = System.currentTimeMillis() - start;
          writeTime += end;
          start = System.currentTimeMillis();
-         response = socket.in.readObject();
+         response = (InvocationResponse)socket.in.readObject();
          end = System.currentTimeMillis() - start;
          readTime += end;
       }
@@ -382,9 +383,9 @@ public class PooledInvokerProxy
          }
          if (response instanceof MarshalledObject)
          {
-            return ((MarshalledObject)response).get();
+            return (InvocationResponse)((MarshalledObject)response).get();
          }
-         return response; 
+         return (InvocationResponse)response; 
       }
       catch (ServerException ex)
       {

@@ -19,6 +19,7 @@ import org.jboss.ejb.EJBProxyFactory;
 import org.jboss.ejb.LocalProxyFactory;
 
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.PayloadKey;
 
@@ -29,7 +30,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * to the entity implementation class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
 {
@@ -59,10 +60,11 @@ public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
       ejbRemove = EntityBean.class.getMethod("ejbRemove", null);
    }
 
-   protected Object createEntity(Invocation invocation) throws Exception
+   protected InvocationResponse createEntity(Invocation invocation) throws Exception
    {
       // Call the create method
-      Object id = getNext().invoke(invocation);
+      InvocationResponse response = getNext().invoke(invocation);
+      Object id = response.getResponse();
 
       // Get the context
       EntityEnterpriseContext ctx = 
@@ -97,15 +99,15 @@ public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
       // return the actual entity 
       if(invocation.getType().isLocal())
       {
-         return ctx.getEJBLocalObject();
+         return new InvocationResponse(ctx.getEJBLocalObject());
       } 
       else
       {
-         return ctx.getEJBObject();
+         return new InvocationResponse(ctx.getEJBObject());
       }
    }
 
-   protected Object removeEntity(Invocation invocation) throws Exception
+   protected InvocationResponse removeEntity(Invocation invocation) throws Exception
    {
       // synchronize entities with the datastore before the bean is removed
       // this will write queued updates so datastore will be consistent 
@@ -118,7 +120,7 @@ public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
             ejbRemove,
             PayloadKey.TRANSIENT);
 
-      Object returnValue = getNext().invoke(invocation);
+      InvocationResponse returnValue = getNext().invoke(invocation);
 
       // We signify "removed" with a null id.
       // There is no need to synchronize on the context since all the threads
@@ -132,7 +134,7 @@ public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
       return returnValue;
    }
 
-   protected Object query(Invocation invocation) throws Exception
+   protected InvocationResponse query(Invocation invocation) throws Exception
    {
       // As per the spec 9.6.4, entities must be synchronized with the 
       // datastore when an ejbFind<METHOD> is called.
@@ -164,12 +166,12 @@ public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
             // Object is active, and it exists, so no need to call query
             if(EJBHome.class.isAssignableFrom(queryMethod.getDeclaringClass()))
             {
-               return container.getProxyFactory().getEntityEJBObject(key);
+               return new InvocationResponse(container.getProxyFactory().getEntityEJBObject(key));
             }
             else
             {
                LocalProxyFactory lpf = container.getLocalProxyFactory();
-               return lpf.getEntityEJBLocalObject(key);
+               return new InvocationResponse(lpf.getEntityEJBLocalObject(key));
             }
          }
       }
@@ -177,7 +179,7 @@ public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
       return getNext().invoke(invocation);
    }
 
-   protected Object loadEntity(Invocation invocation) throws Exception
+   protected InvocationResponse loadEntity(Invocation invocation) throws Exception
    {
       invocation.setValue(
             InvocationKey.CALLBACK_METHOD, 
@@ -190,14 +192,14 @@ public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
       return getNext().invoke(invocation);
    }
 
-   protected Object storeEntity(Invocation invocation) throws Exception
+   protected InvocationResponse storeEntity(Invocation invocation) throws Exception
    {
       EntityEnterpriseContext ctx = 
             (EntityEnterpriseContext) invocation.getEnterpriseContext();
       
       if(ctx.getId() == null)
       {
-         return null;
+         return new InvocationResponse(null);
       }
 
       // check if the entity has been modified
@@ -205,8 +207,9 @@ public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
             EntityInvocationKey.TYPE, 
             EntityInvocationType.IS_MODIFIED,
             PayloadKey.TRANSIENT);
+      InvocationResponse response = getNext().invoke(invocation);
       boolean isModified = 
-            ((Boolean)getNext().invoke(invocation)).booleanValue();
+         ((Boolean)response.getResponse()).booleanValue();
       
       // set the entity invocation type back to STORE 
       invocation.setValue(
@@ -216,7 +219,7 @@ public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
 
       if(!isModified) 
       {
-         return null;
+         return new InvocationResponse(null);
       }
 
       // ok it was modified return
@@ -227,7 +230,7 @@ public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
       return getNext().invoke(invocation);
    }
 
-   protected Object activateEntity(Invocation invocation) throws Exception
+   protected InvocationResponse activateEntity(Invocation invocation) throws Exception
    {
       invocation.setValue(
             InvocationKey.CALLBACK_METHOD, 
@@ -236,7 +239,7 @@ public final class BaseEntityInterceptor extends AbstractEntityTypeInterceptor
       return getNext().invoke(invocation);
    }
 
-   protected Object passivateEntity(Invocation invocation) throws Exception
+   protected InvocationResponse passivateEntity(Invocation invocation) throws Exception
    {
       invocation.setValue(
             InvocationKey.CALLBACK_METHOD, 

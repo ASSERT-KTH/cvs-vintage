@@ -12,6 +12,7 @@ package org.jboss.ejb.plugins.local;
 import org.jboss.ejb.Container;
 import org.jboss.proxy.Interceptor;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 /**
  * ContainerInterceptor.java is an adapter between the client interceptor stack and the Container.
  *
@@ -31,7 +32,7 @@ public class ContainerInterceptor extends Interceptor {
       this.container = container;   
    }
 
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       return container.invoke(invocation);
    }

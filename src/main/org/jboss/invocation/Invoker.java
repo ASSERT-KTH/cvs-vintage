@@ -22,7 +22,7 @@ import org.jboss.util.id.GUID;
  * of the JMX nodes for the client proxies. 
  *
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * 
  * <p><b>Revisions:</b>
  *
@@ -63,5 +63,5 @@ public interface Invoker
     * 
     * @throws Exception    Failed to invoke method.
     */
-   Object invoke(Invocation invocation) throws Exception;
+   InvocationResponse invoke(Invocation invocation) throws Exception;
 }

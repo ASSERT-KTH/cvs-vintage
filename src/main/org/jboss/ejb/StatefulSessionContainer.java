@@ -26,6 +26,7 @@ import javax.ejb.HomeHandle;
 import javax.ejb.RemoveException;
 import org.jboss.ejb.plugins.StatefulSessionInstancePool;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.util.MethodHashing;
@@ -33,7 +34,7 @@ import org.jboss.util.MethodHashing;
 /**
  * The container for <em>stateful</em> session beans.
  *
- * @version <tt>$Revision: 1.54 $</tt>
+ * @version <tt>$Revision: 1.55 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
@@ -684,7 +685,7 @@ public class StatefulSessionContainer extends Container
     */
    class ContainerInterceptor extends AbstractContainerInterceptor
    {
-      public Object invoke(Invocation mi) throws Exception
+      public InvocationResponse invoke(Invocation mi) throws Exception
       {
          if(mi.getType().isHome())
          {
@@ -722,7 +723,7 @@ public class StatefulSessionContainer extends Container
 
             try
             {
-               return m.invoke(StatefulSessionContainer.this, new Object[] { mi });
+               return new InvocationResponse(m.invoke(StatefulSessionContainer.this, new Object[] { mi }));
             }
             catch (Exception e)
             {
@@ -752,7 +753,7 @@ public class StatefulSessionContainer extends Container
                // Invoke and handle exceptions
                try
                {
-                  return m.invoke(StatefulSessionContainer.this, new Object[] { mi });
+                  return new InvocationResponse(m.invoke(StatefulSessionContainer.this, new Object[] { mi }));
                }
                catch (Exception e)
                {
@@ -764,7 +765,7 @@ public class StatefulSessionContainer extends Container
                // Invoke and handle exceptions
                try
                {
-                  return m.invoke(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), mi.getArguments());
+                  return new InvocationResponse(m.invoke(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), mi.getArguments()));
                }
                catch (Exception e)
                {

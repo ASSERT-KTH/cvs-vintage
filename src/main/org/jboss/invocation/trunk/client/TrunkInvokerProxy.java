@@ -18,6 +18,7 @@ import javax.management.Attribute;
 import javax.management.ObjectName;
 import javax.transaction.Transaction;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.ServerID;
 import org.jboss.logging.Logger;
@@ -166,7 +167,7 @@ public final class TrunkInvokerProxy
     * @return an <code>Object</code> value
     * @exception Exception if an error occurs
     */
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       boolean trace = log.isTraceEnabled();
       if (trace) {
@@ -177,7 +178,7 @@ public final class TrunkInvokerProxy
       if (trace) {
 	 log.trace("No tx, request: " + request);
       }
-      return issue(request);
+      return (InvocationResponse)issue(request);
    }
 
    public Object issue(TrunkRequest request) throws Exception

@@ -12,6 +12,7 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMRMessage;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
@@ -25,11 +26,11 @@ import org.jboss.logging.Logger;
  * relationship.  This interceptor also manages the relation table data.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public final class JDBCRelationInterceptor extends AbstractInterceptor
 {
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       // We are going to work with the context a lot
       EntityEnterpriseContext ctx =
@@ -53,7 +54,7 @@ public final class JDBCRelationInterceptor extends AbstractInterceptor
             log.trace("Getting related id: field=" + cmrField.getFieldName() +
                   " id=" + ctx.getId());
          }
-         return cmrField.getRelatedId(ctx);
+         return new InvocationResponse(cmrField.getRelatedId(ctx));
          
       }
       else if(CMRMessage.ADD_RELATION == relationshipMessage)
@@ -79,7 +80,7 @@ public final class JDBCRelationInterceptor extends AbstractInterceptor
                cmrField.getRelatedCMRField(),
                relatedId);
 
-         return null;
+         return new InvocationResponse(null);
          
       }
       else if(CMRMessage.REMOVE_RELATION == relationshipMessage)
@@ -105,7 +106,7 @@ public final class JDBCRelationInterceptor extends AbstractInterceptor
                cmrField.getRelatedCMRField(),
                relatedId);
 
-         return null;
+         return new InvocationResponse(null);
          
       }
       else

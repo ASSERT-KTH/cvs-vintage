@@ -29,6 +29,7 @@ import javax.naming.Name;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.pooled.interfaces.PooledInvokerProxy;
 import org.jboss.invocation.ServerID;
@@ -286,7 +287,7 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
     * The ServerProtocol will use this method to service an invocation 
     * request.
     */
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       try
@@ -306,7 +307,7 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
          // The cl on the thread should be set in another interceptor
          Object obj = getServer().invoke(mbean, "", new Object[] { invocation }, Invocation.INVOKE_SIGNATURE);
 
-         return obj;
+         return (InvocationResponse)obj;
       }
       catch (Exception e)
       {

@@ -19,6 +19,7 @@ import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 
 /**
  * The instance interceptors role is to acquire a context representing
@@ -42,11 +43,11 @@ import org.jboss.invocation.Invocation;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.58 $
+ * @version $Revision: 1.59 $
  */
 public class EntityInstanceInterceptor extends AbstractInterceptor
 {
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       EntityContainer container = (EntityContainer)getContainer();
       Object key = null;

@@ -27,6 +27,7 @@ import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EJBProxyFactory;
 import org.jboss.ejb.LocalProxyFactory;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 
 import org.jboss.metadata.ConfigurationMetaData;
 
@@ -34,7 +35,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * This interceptor delegates calls to an EntiyPersistenceStore.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public final class CMPInterceptor extends AbstractEntityTypeInterceptor
 {
@@ -74,12 +75,12 @@ public final class CMPInterceptor extends AbstractEntityTypeInterceptor
       }
    }
 
-   public Object createInstance(Invocation invocation) throws Exception
+   public InvocationResponse createInstance(Invocation invocation) throws Exception
    {
-      return store.createBeanClassInstance();
+      return new InvocationResponse(store.createBeanClassInstance());
    }
 
-   public Object createEntity(Invocation invocation) throws Exception
+   public InvocationResponse createEntity(Invocation invocation) throws Exception
    {
       EntityEnterpriseContext ctx = 
             (EntityEnterpriseContext) invocation.getEnterpriseContext();
@@ -88,13 +89,13 @@ public final class CMPInterceptor extends AbstractEntityTypeInterceptor
 
       getNext().invoke(invocation);
 
-      return store.createEntity(
+      return new InvocationResponse(store.createEntity(
             invocation.getMethod(), 
             invocation.getArguments(), 
-            ctx);
+            ctx));
    }
 
-   public Object postCreateEntity(Invocation invocation) throws Exception
+   public InvocationResponse postCreateEntity(Invocation invocation) throws Exception
    {
       store.postCreateEntity(
          invocation.getMethod(),
@@ -104,7 +105,7 @@ public final class CMPInterceptor extends AbstractEntityTypeInterceptor
       return super.getNext().invoke(invocation);
    }
 
-   public Object removeEntity(Invocation invocation) throws Exception
+   public InvocationResponse removeEntity(Invocation invocation) throws Exception
    {
       getNext().invoke(invocation);
       
@@ -112,10 +113,10 @@ public final class CMPInterceptor extends AbstractEntityTypeInterceptor
             (EntityEnterpriseContext) invocation.getEnterpriseContext();
       store.removeEntity(ctx);
      
-      return null;
+      return new InvocationResponse(null);
    }
 
-   public Object query(Invocation invocation) throws Exception
+   public InvocationResponse query(Invocation invocation) throws Exception
    {
       EntityEnterpriseContext ctx = 
             (EntityEnterpriseContext) invocation.getEnterpriseContext();
@@ -144,7 +145,7 @@ public final class CMPInterceptor extends AbstractEntityTypeInterceptor
       {
          if(finderResult == null)
          {
-            return null;
+            return new InvocationResponse(null);
          }
 
          // convert primary keys to cache keys
@@ -154,19 +155,19 @@ public final class CMPInterceptor extends AbstractEntityTypeInterceptor
          if(invocation.getType().isLocal())
          {
             LocalProxyFactory factory = container.getLocalProxyFactory();
-            return factory.getEntityEJBLocalObject(cacheKey);
+            return new InvocationResponse(factory.getEntityEJBLocalObject(cacheKey));
          }
          else
          {
             EJBProxyFactory factory = container.getProxyFactory();
-            return factory.getEntityEJBObject(cacheKey);
+            return new InvocationResponse(factory.getEntityEJBObject(cacheKey));
          }
       }
    
       // Multi object finder
       if(finderResult == null)
       {
-         return Collections.EMPTY_LIST;
+         return new InvocationResponse(Collections.EMPTY_LIST);
       }
 
       // convert primary keys to cache keys
@@ -181,23 +182,23 @@ public final class CMPInterceptor extends AbstractEntityTypeInterceptor
       if(invocation.getType().isLocal())
       {
          LocalProxyFactory factory = container.getLocalProxyFactory();
-         return factory.getEntityLocalCollection(cacheKeys);
+         return new InvocationResponse(factory.getEntityLocalCollection(cacheKeys));
       }
       else
       {
          EJBProxyFactory factory = container.getProxyFactory();
-         return factory.getEntityCollection(cacheKeys);
+         return new InvocationResponse(factory.getEntityCollection(cacheKeys));
       }
    }
 
-   public Object isModified(Invocation invocation) throws Exception
+   public InvocationResponse isModified(Invocation invocation) throws Exception
    {
       EntityEnterpriseContext ctx = 
             (EntityEnterpriseContext) invocation.getEnterpriseContext();
-      return new Boolean(store.isModified(ctx));
+      return new InvocationResponse(new Boolean(store.isModified(ctx)));
    }
 
-   public Object loadEntity(Invocation invocation) throws Exception
+   public InvocationResponse loadEntity(Invocation invocation) throws Exception
    {
       EntityEnterpriseContext ctx = 
             (EntityEnterpriseContext) invocation.getEnterpriseContext();
@@ -205,10 +206,10 @@ public final class CMPInterceptor extends AbstractEntityTypeInterceptor
       
       getNext().invoke(invocation);
 
-      return null;
+      return new InvocationResponse(null);
    }
    
-   public Object storeEntity(Invocation invocation) throws Exception
+   public InvocationResponse storeEntity(Invocation invocation) throws Exception
    {
       getNext().invoke(invocation);
       
@@ -216,10 +217,10 @@ public final class CMPInterceptor extends AbstractEntityTypeInterceptor
             (EntityEnterpriseContext) invocation.getEnterpriseContext();
       store.storeEntity(ctx);
       
-      return null;
+      return new InvocationResponse(null);
    }
 
-   public Object activateEntity(Invocation invocation) throws Exception
+   public InvocationResponse activateEntity(Invocation invocation) throws Exception
    {
       getNext().invoke(invocation);
       
@@ -227,10 +228,10 @@ public final class CMPInterceptor extends AbstractEntityTypeInterceptor
             (EntityEnterpriseContext) invocation.getEnterpriseContext();
       store.activateEntity(ctx);
 
-      return null;
+      return new InvocationResponse(null);
    }
 
-   public Object passivateEntity(Invocation invocation) throws Exception
+   public InvocationResponse passivateEntity(Invocation invocation) throws Exception
    {
       getNext().invoke(invocation);
 
@@ -238,6 +239,6 @@ public final class CMPInterceptor extends AbstractEntityTypeInterceptor
             (EntityEnterpriseContext) invocation.getEnterpriseContext();
       store.passivateEntity(ctx);
 
-      return null;
+      return new InvocationResponse(null);
    }
 }

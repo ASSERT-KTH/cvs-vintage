@@ -17,6 +17,7 @@ import javax.transaction.TransactionManager;
 import javax.naming.InitialContext;
 
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.InvokerInterceptor;
@@ -32,7 +33,7 @@ import org.jboss.invocation.ServerID;
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  * 
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class LocalInvoker
    extends ServiceMBeanSupport
@@ -75,7 +76,7 @@ public class LocalInvoker
    /**
     * Invoke a method.
     */
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {     
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       
@@ -84,7 +85,7 @@ public class LocalInvoker
          ObjectName mbean = (ObjectName)
             Registry.lookup((Integer)invocation.getObjectName());
          
-         return server.invoke(mbean,
+         return (InvocationResponse)server.invoke(mbean,
                               "",
                               new Object[] { invocation },
                               Invocation.INVOKE_SIGNATURE);

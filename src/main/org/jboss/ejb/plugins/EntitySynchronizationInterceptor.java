@@ -29,6 +29,7 @@ import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.entity.EntityInvocationKey;
 import org.jboss.ejb.entity.EntityInvocationType;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.PayloadKey;
 import org.jboss.metadata.ConfigurationMetaData;
 
@@ -48,7 +49,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.73 $
+ * @version $Revision: 1.74 $
  */
 public class EntitySynchronizationInterceptor extends AbstractInterceptor
 {
@@ -195,7 +196,7 @@ public class EntitySynchronizationInterceptor extends AbstractInterceptor
       }
    }
 
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       EntityContainer container = (EntityContainer)getContainer();
       EntityEnterpriseContext ctx = 
@@ -210,7 +211,7 @@ public class EntitySynchronizationInterceptor extends AbstractInterceptor
       // home invocation uses special sync rules....
       if(invocation.getType().isHome())
       {
-         Object returnValue = getNext().invoke(invocation);  
+         InvocationResponse returnValue = getNext().invoke(invocation);  
 
          // An anonymous context was sent in, so if it has an id it is a real 
          // instance now
@@ -295,7 +296,7 @@ public class EntitySynchronizationInterceptor extends AbstractInterceptor
          }
 
          //Invoke down the chain
-         Object returnValue = getNext().invoke(invocation);  
+         InvocationResponse returnValue = getNext().invoke(invocation);  
 
          // Register again as a finder in the middle of a method
          // will de-register this entity, and then the rest of the method can
@@ -319,7 +320,7 @@ public class EntitySynchronizationInterceptor extends AbstractInterceptor
          // No tx
          try
          {
-            Object returnValue = getNext().invoke(invocation);
+            InvocationResponse returnValue = getNext().invoke(invocation);
 
             // Store after each invocation -- not on exception though, or 
             // removal and skip reads too ("get" methods)

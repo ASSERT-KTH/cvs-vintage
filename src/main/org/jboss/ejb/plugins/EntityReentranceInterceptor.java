@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationType;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
@@ -29,7 +30,7 @@ import org.jboss.ejb.plugins.lock.Entrancy;
  * before changing.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class EntityReentranceInterceptor extends AbstractInterceptor
 {
@@ -41,7 +42,7 @@ public final class EntityReentranceInterceptor extends AbstractInterceptor
       reentrant = meta.isReentrant();
    }
 
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       if(invocation.getType().isHome()) 
       {

@@ -26,6 +26,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.metadata.ConfigurationMetaData;
 
 import javax.jms.DeliveryMode;
@@ -53,7 +54,7 @@ import org.w3c.dom.Element;
  * FIXME: make this an MBean instead.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class EntitySeppukuInvalidatorInterceptor extends AbstractInterceptor
       implements MessageListener

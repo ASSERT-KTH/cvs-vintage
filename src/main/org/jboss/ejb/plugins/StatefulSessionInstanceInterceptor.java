@@ -25,6 +25,7 @@ import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.SessionMetaData;
 
@@ -37,7 +38,7 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  */
 public class StatefulSessionInstanceInterceptor extends AbstractInterceptor
 {
@@ -66,7 +67,7 @@ public class StatefulSessionInstanceInterceptor extends AbstractInterceptor
       }
    }
 
-   public Object invoke(Invocation mi) throws Exception
+   public InvocationResponse invoke(Invocation mi) throws Exception
    {
       // FIXME:  There is a lot of duplicate code here
       if(mi.getType().isHome()) 

@@ -42,6 +42,7 @@ import javax.management.MalformedObjectNameException;
 
 import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.MarshalledInvocation;
@@ -62,7 +63,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class JRMPInvoker
    extends RemoteServer
@@ -334,7 +335,7 @@ public class JRMPInvoker
    /**
     * Invoke a Remote interface method.
     */
-   public Object invoke(Invocation invocation)
+   public InvocationResponse invoke(Invocation invocation)
       throws Exception
    {     
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -357,7 +358,7 @@ public class JRMPInvoker
                                                  new Object[] {invocation},
                                                  Invocation.INVOKE_SIGNATURE);
          
-         return new MarshalledObject(obj);
+         return (InvocationResponse)obj;
       }
       catch (Exception e)
       {

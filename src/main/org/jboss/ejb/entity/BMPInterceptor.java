@@ -26,6 +26,7 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EJBProxyFactory;
 import org.jboss.ejb.LocalProxyFactory;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.PayloadKey;
 import org.jboss.util.collection.SerializableEnumeration;
@@ -35,7 +36,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * to the entity implementation class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class BMPInterceptor extends AbstractEntityTypeInterceptor
 {
@@ -60,30 +61,31 @@ public final class BMPInterceptor extends AbstractEntityTypeInterceptor
       catch (NoSuchMethodException ignored) {}
    }
 
-   protected Object getValue(Invocation invocation) throws Exception
+   protected InvocationResponse getValue(Invocation invocation) throws Exception
    {
       throw new UnsupportedOperationException("BMP entities do support " +
             "the getValue opperation");
    }
 
-   protected Object setValue(Invocation invocation) throws Exception
+   protected InvocationResponse setValue(Invocation invocation) throws Exception
    {
       throw new UnsupportedOperationException("BMP entities do support " +
             "the setValue opperation");
    }
  
-   protected Object createInstance(Invocation invocation) throws Exception
+   protected InvocationResponse createInstance(Invocation invocation) throws Exception
    {
       EntityContainer container = (EntityContainer)getContainer();
-      return container.getBeanClass().newInstance();
+      return new InvocationResponse(container.getBeanClass().newInstance());
    }
 
-   protected Object query(Invocation invocation) throws Exception
+   protected InvocationResponse query(Invocation invocation) throws Exception
    {
       EntityContainer container = (EntityContainer)getContainer();
 
       // invoke the finder method
-      Object finderResult = getNext().invoke(invocation);
+      InvocationResponse response = getNext().invoke(invocation);
+      Object finderResult = response.getResponse();
  
       EntityCache cache = (EntityCache)container.getInstanceCache();
 
@@ -96,7 +98,7 @@ public final class BMPInterceptor extends AbstractEntityTypeInterceptor
       {
          if(finderResult == null)
          {
-            return null;
+            return new InvocationResponse(null);
          }
 
          // convert primary keys to cache keys
@@ -106,19 +108,19 @@ public final class BMPInterceptor extends AbstractEntityTypeInterceptor
          if(invocation.getType().isLocal())
          {
             LocalProxyFactory factory = container.getLocalProxyFactory();
-            return factory.getEntityEJBLocalObject(cacheKey);
+            return new InvocationResponse(factory.getEntityEJBLocalObject(cacheKey));
          }
          else
          {
             EJBProxyFactory factory = container.getProxyFactory();
-            return factory.getEntityEJBObject(cacheKey);
+            return new InvocationResponse(factory.getEntityEJBObject(cacheKey));
          }
       }
    
       // Multi object finder
       if(finderResult == null)
       {
-         return Collections.EMPTY_LIST;
+         return new InvocationResponse(Collections.EMPTY_LIST);
       }
 
       // convert primary keys to cache keys
@@ -158,25 +160,25 @@ public final class BMPInterceptor extends AbstractEntityTypeInterceptor
       {
          if(invocation.getType().isLocal())
          {
-            return Collections.enumeration(results);
+            return new InvocationResponse(Collections.enumeration(results));
          }
          else
          {
             // This is on a remote interface, so we need a serializable 
             // Enumeration, and Collections.enumeration() is not.
-            return new SerializableEnumeration(results);
+            return new InvocationResponse(new SerializableEnumeration(results));
          }
       }
       
       // return a normal collection
-      return results;
+      return new InvocationResponse(results);
    }
 
-   protected Object isModified(Invocation invocation) throws Exception 
+   protected InvocationResponse isModified(Invocation invocation) throws Exception 
    {
       if(isModified == null)
       {
-         return Boolean.TRUE;
+         return new InvocationResponse(Boolean.TRUE);
       }
             
       invocation.setValue(

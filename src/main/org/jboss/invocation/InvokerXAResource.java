@@ -246,7 +246,7 @@ public class InvokerXAResource
       return invoker.getServerID();
    }
    
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       Transaction tx = invocation.getTransaction();
       if (tx == null) 
@@ -398,7 +398,8 @@ public class InvokerXAResource
       invocation.setArguments(new Object[] {xid});
       try
       {
-	 Integer result = (Integer)invoker.invoke(invocation);
+         InvocationResponse response = invoker.invoke(invocation);
+	 Integer result = (Integer)response.getResponse();
 	 return result.intValue();
       }
       catch (Exception e)
@@ -508,7 +509,8 @@ public class InvokerXAResource
       invocation.setArguments(new Object[] {new Integer(flag)});
       try
       {
-	 return (Xid[])invoker.invoke(invocation);
+         InvocationResponse response = invoker.invoke(invocation);
+	 return (Xid[])response.getResponse();
       }
       catch (Exception e)
       {

@@ -25,6 +25,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.metadata.ConfigurationMetaData;
 
 import javax.jms.DeliveryMode;
@@ -48,7 +49,7 @@ import org.w3c.dom.Element;
  * commits
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class EntitySeppukuInterceptor extends AbstractInterceptor
 {
@@ -172,7 +173,7 @@ public class EntitySeppukuInterceptor extends AbstractInterceptor
       }
    }
  
-   public Object invoke(Invocation mi) throws Exception
+   public InvocationResponse invoke(Invocation mi) throws Exception
    {
       if(mi.getType().isHome())
       {
@@ -195,7 +196,7 @@ public class EntitySeppukuInterceptor extends AbstractInterceptor
       // Invocation with a running Transaction
       if(tx != null && tx.getStatus() != Status.STATUS_NO_TRANSACTION)
       {
-         Object returnValue = getNext().invoke(mi);  
+         InvocationResponse returnValue = getNext().invoke(mi);  
 
          // readonly does not synchronize, lock or belong with transaction.
          // nor does it modify data.
@@ -214,7 +215,7 @@ public class EntitySeppukuInterceptor extends AbstractInterceptor
       else
       {
          // No tx
-         Object returnValue = getNext().invoke(mi);
+         InvocationResponse returnValue = getNext().invoke(mi);
          
          if(ctx.getId() != null)
          {

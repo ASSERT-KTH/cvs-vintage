@@ -30,6 +30,7 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import org.jboss.ejb.plugins.TxSupport;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.Invoker;
 import org.jboss.proxy.Interceptor;
@@ -44,7 +45,7 @@ import org.jboss.logging.Logger;
  *      
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
  */
 public class TransactionInterceptor
@@ -79,7 +80,7 @@ public class TransactionInterceptor
    // Public --------------------------------------------------------
 
   
-   public Object invoke(Invocation invocation) 
+   public InvocationResponse invoke(Invocation invocation) 
       throws Throwable
    {
       if (tm == null && !noTransactionManager)

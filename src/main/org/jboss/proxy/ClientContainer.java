@@ -17,6 +17,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.InvocationHandler;
 
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.PayloadKey;
@@ -27,7 +28,7 @@ import org.jboss.invocation.PayloadKey;
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class ClientContainer
    implements Externalizable, InvocationHandler
@@ -80,7 +81,9 @@ public class ClientContainer
                           PayloadKey.AS_IS);
       
       // send the invocation down the client interceptor chain
-      return next.invoke(invocation);
+      InvocationResponse response = next.invoke(invocation);
+      Object rtn = response.getResponse();
+      return rtn;
    }
    
    public Interceptor setNext(Interceptor interceptor) 

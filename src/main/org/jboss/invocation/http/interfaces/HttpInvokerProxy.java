@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.MarshalledValue;
@@ -25,7 +26,7 @@ import org.jboss.invocation.ServerID;
  externalURL.
 
 * @author Scott.Stark@jboss.org
-* @version $Revision: 1.3 $
+* @version $Revision: 1.4 $
 */
 public class HttpInvokerProxy
    implements Invoker, Externalizable
@@ -77,7 +78,7 @@ public class HttpInvokerProxy
    /** This method builds a MarshalledInvocation from the invocation passed
        in and then does a post to the target URL.
    */
-   public Object invoke(Invocation invocation)
+   public InvocationResponse invoke(Invocation invocation)
       throws Exception
    {
       // We are going to go through a Remote invocation, switch to a Marshalled Invocation
@@ -86,7 +87,7 @@ public class HttpInvokerProxy
       if( externalURL == null )
          externalURL = Util.resolveURL(externalURLValue);
       Object value = Util.invoke(externalURL, mi);
-      return value;
+      return (InvocationResponse)value;
    }
 
    /** Externalize this instance.

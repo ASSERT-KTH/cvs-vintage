@@ -49,6 +49,7 @@ import org.jboss.ejb.entity.EntityInvocationKey;
 import org.jboss.ejb.entity.EntityInvocationType;
 import org.jboss.ejb.plugins.lock.Entrancy;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
@@ -75,7 +76,7 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.88 $
+ * @version $Revision: 1.89 $
  */
 public class EntityContainer
    extends Container implements EJBProxyFactoryContainer, 
@@ -360,7 +361,8 @@ public class EntityContainer
       invocation.setValue(Entrancy.ENTRANCY_KEY,
             Entrancy.NON_ENTRANT, PayloadKey.AS_IS);
       invocation.setType(InvocationType.LOCALHOME);
-      return invokeEntityInterceptor(invocation);
+      InvocationResponse response = invokeEntityInterceptor(invocation);
+      return response.getResponse();
       //return invokeHome(invocation);
    }
  
@@ -407,7 +409,9 @@ public class EntityContainer
       invocation.setTransaction(ctx.getTransaction());
       invocation.setPrincipal(SecurityAssociation.getPrincipal());
       invocation.setCredential(SecurityAssociation.getCredential());
-      return ((Boolean)invokeEntityInterceptor(invocation)).booleanValue();
+      InvocationResponse response = invokeEntityInterceptor(invocation);
+      
+      return ((Boolean)response.getResponse()).booleanValue();
    }
 
    public void activateEntity(EntityEnterpriseContext ctx) throws Exception
@@ -511,7 +515,7 @@ public class EntityContainer
       }
    }
    
-   private Object invokeEntityInterceptor(Invocation invocation) 
+   private InvocationResponse invokeEntityInterceptor(Invocation invocation) 
          throws Exception
    {
       // Associate thread with classloader

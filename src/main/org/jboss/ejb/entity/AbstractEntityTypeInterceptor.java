@@ -31,6 +31,7 @@ import org.jboss.ejb.LocalProxyFactory;
 import org.jboss.ejb.plugins.AbstractInterceptor;
 
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 
 import org.jboss.metadata.ConfigurationMetaData;
 
@@ -43,11 +44,11 @@ import org.jboss.metadata.ConfigurationMetaData;
  * invocation object.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
 {
-   public final Object invoke(Invocation invocation) throws Exception
+   public final InvocationResponse invoke(Invocation invocation) throws Exception
    {
       EntityInvocationType type = (EntityInvocationType)
             invocation.getValue(EntityInvocationKey.TYPE);
@@ -113,7 +114,7 @@ public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
     * @return the field value
     * @throws Exception if some problem occures
     */
-   protected Object getValue(Invocation invocation) throws Exception
+   protected InvocationResponse getValue(Invocation invocation) throws Exception
    {
       return getNext().invoke(invocation);
    }
@@ -125,7 +126,7 @@ public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
     * @return not used and should be null, but could be anything
     * @throws Exception if some problem occures
     */
-   protected Object setValue(Invocation invocation) throws Exception
+   protected InvocationResponse setValue(Invocation invocation) throws Exception
    {
       return getNext().invoke(invocation);
    }
@@ -137,7 +138,7 @@ public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
     * @return the new instance
     * @throws Exception if some problem occures
     */
-   protected Object createInstance(Invocation invocation) throws Exception
+   protected InvocationResponse createInstance(Invocation invocation) throws Exception
    {
       return getNext().invoke(invocation);
    }
@@ -149,7 +150,7 @@ public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
     * @return not used and should be null, but could be anything
     * @throws Exception if some problem occures; usually a CreateException
     */
-   protected Object createEntity(Invocation invocation) throws Exception
+   protected InvocationResponse createEntity(Invocation invocation) throws Exception
    {
       return getNext().invoke(invocation);
    }
@@ -161,7 +162,7 @@ public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
     * @return not used and should be null, but could be anything
     * @throws Exception if some problem occures; usually a CreateException
     */
-   protected Object postCreateEntity(Invocation invocation) throws Exception
+   protected InvocationResponse postCreateEntity(Invocation invocation) throws Exception
    {
       return getNext().invoke(invocation);
    }
@@ -174,7 +175,7 @@ public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
     * @return not used and should be null, but could be anything
     * @throws Exception if some problem occures; usually a RemoveException
     */
-   protected Object removeEntity(Invocation invocation) throws Exception
+   protected InvocationResponse removeEntity(Invocation invocation) throws Exception
    {
       return getNext().invoke(invocation);
    }
@@ -187,7 +188,7 @@ public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
     * @throws Exception if some problem occures; usually a FinderException or
     * an EJBException
     */
-   protected Object query(Invocation invocation) throws Exception
+   protected InvocationResponse query(Invocation invocation) throws Exception
    {
       return getNext().invoke(invocation);
    }
@@ -200,7 +201,7 @@ public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
     * @return true, if the entity has been modified
     * @throws Exception if some problem occures
     */
-   protected Object isModified(Invocation invocation) throws Exception
+   protected InvocationResponse isModified(Invocation invocation) throws Exception
    {
       return getNext().invoke(invocation);
    }
@@ -213,7 +214,7 @@ public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
     * @return not used and should be null, but could be anything
     * @throws Exception if some problem occures
     */
-   protected Object loadEntity(Invocation invocation) throws Exception
+   protected InvocationResponse loadEntity(Invocation invocation) throws Exception
    {
       return getNext().invoke(invocation);
    }
@@ -227,7 +228,7 @@ public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
     * @return not used and should be null, but could be anything
     * @throws Exception if some problem occures
     */
-   protected Object storeEntity(Invocation invocation) throws Exception
+   protected InvocationResponse storeEntity(Invocation invocation) throws Exception
    {
       return getNext().invoke(invocation);
    }
@@ -239,7 +240,7 @@ public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
     * @return not used and should be null, but could be anything
     * @throws Exception if some problem occures
     */
-   protected Object activateEntity(Invocation invocation) throws Exception
+   protected InvocationResponse activateEntity(Invocation invocation) throws Exception
    {
       return getNext().invoke(invocation);
    }
@@ -251,7 +252,7 @@ public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
     * @return not used and should be null, but could be anything
     * @throws Exception if some problem occures
     */
-   protected Object passivateEntity(Invocation invocation) throws Exception
+   protected InvocationResponse passivateEntity(Invocation invocation) throws Exception
    {
       return getNext().invoke(invocation);
    }
@@ -264,7 +265,7 @@ public abstract class AbstractEntityTypeInterceptor extends AbstractInterceptor
     * @return the results of this invocation
     * @throws Exception if a problem occures during the invocation
     */
-   protected Object invokeOther(Invocation invocation) throws Exception
+   protected InvocationResponse invokeOther(Invocation invocation) throws Exception
    {
       return getNext().invoke(invocation);
    }

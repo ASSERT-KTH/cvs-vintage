@@ -30,6 +30,7 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.Interceptor;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.system.Registry;
@@ -41,7 +42,7 @@ import org.jboss.naming.ENCThreadLocalKey;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class ProxyFactoryFinderInterceptor extends AbstractInterceptor
 {
@@ -80,7 +81,7 @@ public class ProxyFactoryFinderInterceptor extends AbstractInterceptor
       getContainer().setProxyFactory(proxyFactory);
    }
 
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       String invokerBinding = 
             (String)invocation.getValue(InvocationKey.INVOKER_PROXY_BINDING);

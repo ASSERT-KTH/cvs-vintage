@@ -13,6 +13,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.Invoker;
 
 import org.jboss.proxy.Interceptor;
@@ -23,7 +24,7 @@ import org.jboss.util.id.GUID;
  * A very simple implementation of it that branches to the local stuff.
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>2001/02/28: marcf</b>
  * <ol>
@@ -79,7 +80,7 @@ public class InvokerInterceptor
     * The invocation on the delegate, calls the right invoker.  
     * Remote if we are remote, local if we are local. 
     */
-   public Object invoke(Invocation invocation)
+   public InvocationResponse invoke(Invocation invocation)
       throws Exception
    {
       // optimize if calling another bean in same EJB-application

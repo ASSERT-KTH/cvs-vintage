@@ -15,6 +15,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.util.NestedError;
 
@@ -24,11 +25,11 @@ import org.jboss.util.NestedError;
  * object.  This should be the last interceptro in the chain.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class CallbackInterceptor extends AbstractInterceptor
 {
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       Method callback = (Method)
             invocation.getValue(InvocationKey.CALLBACK_METHOD);
@@ -51,7 +52,8 @@ public final class CallbackInterceptor extends AbstractInterceptor
 
       try
       {
-         return callback.invoke(ctx.getInstance(), callbackArgs);
+         Object obj = callback.invoke(ctx.getInstance(), callbackArgs);
+         return new InvocationResponse(obj);
       }
       catch (IllegalAccessException e)
       {

@@ -26,6 +26,7 @@ import org.apache.log4j.NDC;
 
 import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationType;
 import org.jboss.metadata.BeanMetaData;
 
@@ -37,7 +38,7 @@ import org.jboss.metadata.BeanMetaData;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public final class LogInterceptor extends AbstractInterceptor
 {
@@ -62,7 +63,7 @@ public final class LogInterceptor extends AbstractInterceptor
     * @return the return value of the invocation
     * @exception Exception if an exception during the invocation
     */
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       NDC.push(ejbName);
 

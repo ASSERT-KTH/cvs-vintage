@@ -12,12 +12,13 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 
 /**
  * The base class for all interceptors.
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>2002/2/27: marcf</b>
  * <ol>
@@ -48,7 +49,7 @@ public abstract class Interceptor
       return nextInterceptor;
    }
 
-   public abstract Object invoke(Invocation mi) throws Throwable;
+   public abstract InvocationResponse invoke(Invocation mi) throws Throwable;
    
    /**
     * Writes the next interceptor.

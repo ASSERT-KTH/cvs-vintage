@@ -6,6 +6,7 @@
 */
 
 package org.jboss.cache.invalidation.triggers;
+import org.jboss.invocation.InvocationResponse;
 
 /**
  * The role of this interceptor is to detect that an entity has been modified
@@ -15,7 +16,7 @@ package org.jboss.cache.invalidation.triggers;
  *
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class EntityBeanCacheBatchInvalidatorInterceptor 
       extends org.jboss.ejb.plugins.AbstractInterceptor
@@ -70,7 +71,7 @@ public class EntityBeanCacheBatchInvalidatorInterceptor
       return false;
    }
 
-   public Object invoke(org.jboss.invocation.Invocation mi) throws Exception
+   public InvocationResponse invoke(org.jboss.invocation.Invocation mi) throws Exception
    {
       if(mi.getType().isHome()) {
          return getNext().invoke(mi);
@@ -89,7 +90,7 @@ public class EntityBeanCacheBatchInvalidatorInterceptor
          if (tx != null && tx.getStatus() != javax.transaction.Status.STATUS_NO_TRANSACTION)
          {
             //Invoke down the chain
-            Object retVal = getNext().invoke(mi);  
+            InvocationResponse retVal = getNext().invoke(mi);  
             //Object retVal = getNext().invoke(mi);  
 
             if (changed(mi, ctx))
@@ -103,7 +104,7 @@ public class EntityBeanCacheBatchInvalidatorInterceptor
          //
          else
          { // No tx
-            Object result = getNext().invoke(mi);
+            InvocationResponse result = getNext().invoke(mi);
 //            Object result = getNext().invoke(mi);
 
             if (changed(mi, ctx))

@@ -9,6 +9,7 @@ package org.jboss.ejb;
 import java.util.Set;
 
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.monitor.StatisticsProvider;
 
 import org.w3c.dom.Element;
@@ -18,7 +19,7 @@ import org.w3c.dom.Element;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public interface Interceptor extends ContainerPlugin, StatisticsProvider
 {
@@ -47,6 +48,6 @@ public interface Interceptor extends ContainerPlugin, StatisticsProvider
     * @return the results of this invocation
     * @throws Exception if a problem occures during the invocation
     */
-   Object invoke(Invocation invocation) throws Exception;
+   InvocationResponse invoke(Invocation invocation) throws Exception;
 }
 

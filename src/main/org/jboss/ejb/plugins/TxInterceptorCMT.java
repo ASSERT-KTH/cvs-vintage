@@ -25,6 +25,7 @@ import javax.transaction.TransactionRequiredException;
 import javax.transaction.TransactionRolledbackException;
 import org.jboss.ejb.plugins.lock.ApplicationDeadlockException;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.InvocationType;
 import org.jboss.metadata.BeanMetaData;
@@ -39,7 +40,7 @@ import org.jboss.metadata.MetaData;
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *  @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- *  @version $Revision: 1.33 $
+ *  @version $Revision: 1.34 $
  */
 public final class TxInterceptorCMT extends AbstractTxInterceptor
 {
@@ -55,7 +56,7 @@ public final class TxInterceptorCMT extends AbstractTxInterceptor
     * rollback to the beginning of tx, then retry the whole tx with
     * the new copies of the original arguments.
     */
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       Transaction oldTransaction = invocation.getTransaction();
       for (int i = 0; i < MAX_RETRIES; i++)
@@ -97,7 +98,7 @@ public final class TxInterceptorCMT extends AbstractTxInterceptor
     * @return an <code>Object</code> value
     * @exception Exception if an error occurs
     */
-   protected Object internalInvoke(Invocation invocation) throws Exception
+   protected InvocationResponse internalInvoke(Invocation invocation) throws Exception
    {
       Map methodToTxSupportMap = getContainer().getMethodToTxSupportMap();
       Method m = invocation.getMethod();

@@ -28,6 +28,7 @@ import javax.management.MalformedObjectNameException;
 
 import org.jboss.invocation.http.interfaces.HttpInvokerProxy;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.MarshalledInvocation;
@@ -42,7 +43,7 @@ import org.jboss.util.Strings;
  * The HttpInvoker ... into the JMX base.
  *
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class HttpInvoker extends ServiceMBeanSupport
    implements HttpInvokerMBean
@@ -111,7 +112,7 @@ public class HttpInvoker extends ServiceMBeanSupport
    /**
     * Invoke a Remote interface method.
     */
-   public Object invoke(Invocation invocation)
+   public InvocationResponse invoke(Invocation invocation)
       throws Exception
    {
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -133,7 +134,7 @@ public class HttpInvoker extends ServiceMBeanSupport
             "invoke", args, sig);
 
          // Return the raw object and let the http layer marshall it
-         return obj;
+         return (InvocationResponse)obj;
       }
       catch (Exception e)
       {

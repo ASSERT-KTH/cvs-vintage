@@ -318,8 +318,7 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
                getCredential());
          invocation.setType(type);
          invocation.setInvocationContext(invocationContext);
-         
-         return next.invoke(invocation);
+         return next.invoke(invocation).getResponse();
       }
       catch (AccessException ae)
       {

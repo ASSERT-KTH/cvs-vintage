@@ -12,6 +12,7 @@ import javax.ejb.EJBException;
 
 import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 
 /** 
  * The RoleBasedAuthorizationInterceptor checks that the caller principal is
@@ -21,7 +22,7 @@ import org.jboss.invocation.Invocation;
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class RoleBasedAuthorizationInterceptor extends AbstractInterceptor
 {
@@ -44,7 +45,7 @@ public final class RoleBasedAuthorizationInterceptor extends AbstractInterceptor
     * Check if the principal is authorized to call the method by verifying that
     * the it containes at least one of the required roles.
     */
-   public Object invoke(Invocation invocation) throws Exception
+   public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       // If there is not a security manager then there is no authorization
       // required

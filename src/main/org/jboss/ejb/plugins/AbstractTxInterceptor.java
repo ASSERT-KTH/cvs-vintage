@@ -25,6 +25,7 @@ import javax.ejb.TransactionRolledbackLocalException;
 
 import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationType;
 import org.jboss.logging.Logger;
 
@@ -39,7 +40,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public abstract class AbstractTxInterceptor extends AbstractInterceptor
 {
@@ -62,7 +63,7 @@ public abstract class AbstractTxInterceptor extends AbstractInterceptor
     * actual exception throw is governed by the rules in the EJB 2.0 
     * specification section 18.3
     */
-   protected Object invokeNext(Invocation invocation, boolean inheritedTx)
+   protected InvocationResponse invokeNext(Invocation invocation, boolean inheritedTx)
       throws Exception
    {
       InvocationType type = invocation.getType();

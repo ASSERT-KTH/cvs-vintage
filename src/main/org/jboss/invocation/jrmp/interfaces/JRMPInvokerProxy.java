@@ -21,6 +21,7 @@ import java.rmi.server.RemoteStub;
 import javax.transaction.TransactionRolledbackException;
 import javax.transaction.SystemException;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.local.LocalInvoker;
@@ -34,7 +35,7 @@ import org.jboss.invocation.ServerID;
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class JRMPInvokerProxy
    implements Invoker, Externalizable
@@ -128,7 +129,7 @@ public class JRMPInvokerProxy
     * The invocation on the delegate, calls the right invoker.  Remote if we are remote, 
     * local if we are local. 
     */
-   public Object invoke(Invocation invocation)
+   public InvocationResponse invoke(Invocation invocation)
       throws Exception
    {
       // We are going to go through a Remote invocation, switch to a Marshalled Invocation
@@ -145,8 +146,8 @@ public class JRMPInvokerProxy
       {
          try
          { 
-            MarshalledObject result = (MarshalledObject) remoteInvoker.invoke(mi);
-            return result.get();
+            InvocationResponse result = remoteInvoker.invoke(mi);
+            return result;
          }
          catch (ConnectException ce)
          {

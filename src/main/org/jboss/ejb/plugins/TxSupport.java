@@ -24,6 +24,7 @@ import javax.transaction.TransactionManager;
 import javax.transaction.TransactionRolledbackException;
 import org.jboss.logging.Logger;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 
 
 
@@ -114,9 +115,9 @@ public abstract class TxSupport
       return values[ordinal];
    }
 
-   public abstract Object clientInvoke(Invocation invocation, TransactionManager tm, org.jboss.proxy.Interceptor next) throws Throwable;
+   public abstract InvocationResponse clientInvoke(Invocation invocation, TransactionManager tm, org.jboss.proxy.Interceptor next) throws Throwable;
 
-   public abstract Object serverInvoke(Invocation invocation, TransactionManager tm, org.jboss.ejb.Interceptor next) throws Exception;
+   public abstract InvocationResponse serverInvoke(Invocation invocation, TransactionManager tm, org.jboss.ejb.Interceptor next) throws Exception;
 
 
    protected void endTransaction(TransactionManager tm, Transaction tx) 
@@ -167,7 +168,7 @@ public abstract class TxSupport
 	 super(name);
       }
 
-      public Object clientInvoke(Invocation invocation,
+      public InvocationResponse clientInvoke(Invocation invocation,
 				 TransactionManager tm,
 				 org.jboss.proxy.Interceptor next)
 	 throws Throwable
@@ -179,7 +180,7 @@ public abstract class TxSupport
 	 return next.invoke(invocation);
       }
 
-      public Object serverInvoke(Invocation invocation,
+      public InvocationResponse serverInvoke(Invocation invocation,
 				 TransactionManager tm,
 				 org.jboss.ejb.Interceptor next)
 	 throws Exception
@@ -202,7 +203,7 @@ public abstract class TxSupport
       }
 
 
-      public Object clientInvoke(Invocation invocation,
+      public InvocationResponse clientInvoke(Invocation invocation,
 				 TransactionManager tm,
 				 org.jboss.proxy.Interceptor next)
 	 throws Throwable
@@ -227,7 +228,7 @@ public abstract class TxSupport
 	 } // end of else
       }
 
-      public Object serverInvoke(Invocation invocation,
+      public InvocationResponse serverInvoke(Invocation invocation,
 				 TransactionManager tm,
 				 org.jboss.ejb.Interceptor next)
 	 throws Exception
@@ -249,7 +250,7 @@ public abstract class TxSupport
       }
 
 
-      public Object clientInvoke(Invocation invocation,
+      public InvocationResponse clientInvoke(Invocation invocation,
 				 TransactionManager tm,
 				 org.jboss.proxy.Interceptor next)
 	 throws Throwable
@@ -263,7 +264,7 @@ public abstract class TxSupport
 	 return next.invoke(invocation);
       }
 
-      public Object serverInvoke(Invocation invocation,
+      public InvocationResponse serverInvoke(Invocation invocation,
 				 TransactionManager tm,
 				 org.jboss.ejb.Interceptor next)
 	 throws Exception
@@ -280,7 +281,7 @@ public abstract class TxSupport
 	 super(name);
       }
 
-      public Object clientInvoke(Invocation invocation,
+      public InvocationResponse clientInvoke(Invocation invocation,
 				 TransactionManager tm,
 				 org.jboss.proxy.Interceptor next)
 	 throws Throwable
@@ -294,7 +295,7 @@ public abstract class TxSupport
 	 return next.invoke(invocation);
       }
 
-      public Object serverInvoke(Invocation invocation,
+      public InvocationResponse serverInvoke(Invocation invocation,
 				 TransactionManager tm,
 				 org.jboss.ejb.Interceptor next)
 	 throws Exception
@@ -330,7 +331,7 @@ public abstract class TxSupport
 	 super(name);
       }
 
-      public Object clientInvoke(Invocation invocation,
+      public InvocationResponse clientInvoke(Invocation invocation,
 				 TransactionManager tm,
 				 org.jboss.proxy.Interceptor next)
 	 throws Throwable
@@ -354,7 +355,7 @@ public abstract class TxSupport
 	 } // end of else
       }
 
-      public Object serverInvoke(Invocation invocation,
+      public InvocationResponse serverInvoke(Invocation invocation,
 				 TransactionManager tm,
 				 org.jboss.ejb.Interceptor next)
 	 throws Exception
@@ -380,7 +381,7 @@ public abstract class TxSupport
 	 super(name);
       }
 
-      public Object clientInvoke(Invocation invocation,
+      public InvocationResponse clientInvoke(Invocation invocation,
 				 TransactionManager tm,
 				 org.jboss.proxy.Interceptor next)
 	 throws Throwable
@@ -394,7 +395,7 @@ public abstract class TxSupport
 	 return next.invoke(invocation);
       }
 
-      public Object serverInvoke(Invocation invocation,
+      public InvocationResponse serverInvoke(Invocation invocation,
 				 TransactionManager tm,
 				 org.jboss.ejb.Interceptor next)
 	 throws Exception

@@ -29,6 +29,7 @@ import javax.jms.JMSException;
 
 import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.logging.Logger;
 import org.jboss.monitor.MetricsConstants;
 
@@ -89,7 +90,7 @@ public class MetricsInterceptor extends AbstractInterceptor
       publisher.interrupt();    
    }
 
-   public Object invoke(Invocation invocation) throws Exception 
+   public InvocationResponse invoke(Invocation invocation) throws Exception 
    {
       long begin = System.currentTimeMillis();
       try 

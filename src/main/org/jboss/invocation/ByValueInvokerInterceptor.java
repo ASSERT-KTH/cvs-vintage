@@ -20,7 +20,7 @@ import java.io.ObjectOutput;
 *       for "local" remote, rather than going straight for the invoker
 * 
 * @author <a href="mailto:adrian.brock@happeningtimes.com">Adrian Brock</a>
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 */
 public class ByValueInvokerInterceptor
    extends InvokerInterceptor
@@ -53,7 +53,7 @@ public class ByValueInvokerInterceptor
    /**
     * Invoke using the invoker for remote invocations
     */
-   public Object invoke(Invocation invocation)
+   public InvocationResponse invoke(Invocation invocation)
       throws Exception
    {
       // local interface

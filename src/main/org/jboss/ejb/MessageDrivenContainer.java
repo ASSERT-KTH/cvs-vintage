@@ -27,6 +27,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationResponse;
 import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.util.NullArgumentException;
 
@@ -40,7 +41,7 @@ import org.jboss.util.NullArgumentException;
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public class MessageDrivenContainer extends Container
    implements EJBProxyFactoryContainer
@@ -333,7 +334,7 @@ public class MessageDrivenContainer extends Container
        * beans with bean managed transaction?? Probably best done in the
        * listener "proxys"
        */
-      public Object invoke(Invocation mi) throws Exception
+      public InvocationResponse invoke(Invocation mi) throws Exception
       {
          EnterpriseContext ctx = (EnterpriseContext)mi.getEnterpriseContext();
          
@@ -348,7 +349,7 @@ public class MessageDrivenContainer extends Container
 
          // we have a method that needs to be done by a bean instance
          try {
-            return m.invoke(ctx.getInstance(), mi.getArguments());
+            return new InvocationResponse(m.invoke(ctx.getInstance(), mi.getArguments()));
          }
          catch (Exception e) {
             rethrow(e);
