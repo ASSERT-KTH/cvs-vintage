@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.5 2001/10/05 08:55:14 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.6 2001/10/07 10:42:45 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -549,15 +549,8 @@ public class VFSBrowser extends JPanel implements EBComponent
 					return file2.type - file1.type;
 			}
 
-			if(sortIgnoreCase)
-			{
-				return file1.name.toLowerCase().compareTo(
-					file2.name.toLowerCase());
-			}
-			else
-			{
-				return file1.name.compareTo(file2.name);
-			}
+			return MiscUtilities.compareStrings(file1.name,
+				file2.name,sortIgnoreCase);
 		}
 	}
 

@@ -31,7 +31,7 @@ import org.gjt.sp.util.Log;
  * actions.xml file.
  *
  * @author Slava Pestov
- * @version $Id: EditAction.java,v 1.5 2001/10/02 13:54:13 spestov Exp $
+ * @version $Id: EditAction.java,v 1.6 2001/10/07 10:42:45 spestov Exp $
  */
 public abstract class EditAction
 {
@@ -133,11 +133,7 @@ public abstract class EditAction
 	 * Returns the BeanShell code that will replay this action.
 	 * @since jEdit 2.7pre2
 	 */
-	public String getCode()
-	{
-		return "view.getInputHandler().invokeAction("
-			+ "jEdit.getAction(\"" + name + "\"))";
-	}
+	public abstract String getCode();
 
 	public String toString()
 	{
@@ -146,7 +142,6 @@ public abstract class EditAction
 
 	// private members
 	private String name;
-	private String cachedCode;
 
 	/**
 	 * 'Wrap' EditActions in this class to turn them into AWT

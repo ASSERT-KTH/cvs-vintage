@@ -43,7 +43,7 @@ import org.gjt.sp.util.Log;
  * from jEdit's global properties.
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.7 2001/10/05 08:55:14 spestov Exp $
+ * @version $Id: Buffer.java,v 1.8 2001/10/07 10:42:45 spestov Exp $
  */
 public class Buffer extends PlainDocument implements EBComponent
 {
@@ -928,10 +928,6 @@ public class Buffer extends PlainDocument implements EBComponent
 	public final void setReadOnly(boolean readOnly)
 	{
 		setFlag(READ_ONLY,readOnly);
-
-		// XXX: need a new message type?
-		EditBus.send(new BufferUpdate(this,null,
-			BufferUpdate.DIRTY_CHANGED));
 	}
 
 	/**
@@ -1967,11 +1963,14 @@ public class Buffer extends PlainDocument implements EBComponent
 
 			// Could incorrectly be set to 'false' with
 			// recursive delegates, where the chaning might
-			// have changed but not the rule set in question.
+			// have changed but not the rule set in question (?)
 			if(oldRule != newRule)
 				nextLineRequested = true;
-			else if(oldParent != null && newParent != null
-				&& oldParent.rules != newParent.rules)
+			else if(oldParent == null && newParent == null)
+				nextLineRequested = false;
+			else if(oldParent != null && newParent != null)
+				nextLineRequested = (oldParent.rules != newParent.rules);
+			else /*if(oldParent != null ^ newParent != null)*/
 				nextLineRequested = true;
 
 			tokenList.addToken(0,Token.END);

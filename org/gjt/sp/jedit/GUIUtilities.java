@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.10 2001/10/05 08:55:14 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.11 2001/10/07 10:42:45 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -737,7 +737,9 @@ public class GUIUtilities
 		win.setBounds(required);
 
 		if(File.separatorChar == '/'
-			&& System.getProperty("java.version").compareTo("1.2") < 0)
+			&& MiscUtilities.compareStrings(
+			System.getProperty("java.version"),
+			"1.2",false) < 0)
 		{
 			win.setBounds(required);
 			new UnixWorkaround(win,name,desired,required);

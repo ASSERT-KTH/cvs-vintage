@@ -22,7 +22,7 @@ package org.gjt.sp.util;
 /**
  * Services work requests in the background.
  * @author Slava Pestov
- * @version $Id: WorkThread.java,v 1.2 2001/09/10 08:46:23 spestov Exp $
+ * @version $Id: WorkThread.java,v 1.3 2001/10/07 10:42:45 spestov Exp $
  */
 public class WorkThread extends Thread
 {
@@ -162,6 +162,7 @@ public class WorkThread extends Thread
 			}
 		}
 
+		pool.fireStatusChanged(this);
 
 		synchronized(pool.waitForAllLock)
 		{

@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * This class records and runs macros.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.3 2001/10/04 07:41:15 spestov Exp $
+ * @version $Id: Macros.java,v 1.4 2001/10/07 10:42:45 spestov Exp $
  */
 public class Macros
 {
@@ -139,7 +139,7 @@ public class Macros
 
 		dockableWindowManager.addDockableWindow(VFSBrowser.NAME);
 		final VFSBrowser browser = (VFSBrowser)dockableWindowManager
-			.getDockable(VFSBrowser.NAME);
+			.getDockableWindow(VFSBrowser.NAME);
 
 		VFSManager.runInAWTThread(new Runnable()
 		{
@@ -168,7 +168,7 @@ public class Macros
 
 		dockableWindowManager.addDockableWindow(VFSBrowser.NAME);
 		final VFSBrowser browser = (VFSBrowser)dockableWindowManager
-			.getDockable(VFSBrowser.NAME);
+			.getDockableWindow(VFSBrowser.NAME);
 
 		VFSManager.runInAWTThread(new Runnable()
 		{
@@ -279,6 +279,13 @@ public class Macros
 			{
 				buffer.endCompoundEdit();
 			}
+		}
+
+		public String getCode()
+		{
+			return "Macros.getMacro(\""
+				+ getName().substring("play-macro@".length())
+				+ "\").invoke(view);";
 		}
 
 		// private members

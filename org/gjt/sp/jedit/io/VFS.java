@@ -32,7 +32,7 @@ import org.gjt.sp.util.Log;
  * A virtual filesystem implementation. Note tha methods whose names are
  * prefixed with "_" are called from the I/O thread.
  * @param author Slava Pestov
- * @author $Id: VFS.java,v 1.4 2001/10/05 08:55:14 spestov Exp $
+ * @author $Id: VFS.java,v 1.5 2001/10/07 10:42:45 spestov Exp $
  */
 public abstract class VFS
 {
@@ -469,17 +469,20 @@ public abstract class VFS
 	 */
 	public static Color getDefaultColorFor(String name)
 	{
-		if(colors == null)
-			loadColors();
-
-		for(int i = 0; i < colors.size(); i++)
+		synchronized(lock)
 		{
-			ColorEntry entry = (ColorEntry)colors.elementAt(i);
-			if(entry.re.isMatch(name))
-				return entry.color;
-		}
+			if(colors == null)
+				loadColors();
 
-		return null;
+			for(int i = 0; i < colors.size(); i++)
+			{
+				ColorEntry entry = (ColorEntry)colors.elementAt(i);
+				if(entry.re.isMatch(name))
+					return entry.color;
+			}
+
+			return null;
+		}
 	}
 
 	// private members

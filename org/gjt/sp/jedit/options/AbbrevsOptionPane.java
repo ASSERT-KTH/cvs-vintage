@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Abbrev editor.
  * @author Slava Pestov
- * @version $Id: AbbrevsOptionPane.java,v 1.3 2001/10/05 08:55:14 spestov Exp $
+ * @version $Id: AbbrevsOptionPane.java,v 1.4 2001/10/07 10:42:45 spestov Exp $
  */
 public class AbbrevsOptionPane extends AbstractOptionPane
 {
@@ -395,14 +395,16 @@ class AbbrevsModel extends AbstractTableModel
 				String abbrev1 = a1.abbrev.toLowerCase();
 				String abbrev2 = a2.abbrev.toLowerCase();
 
-				return abbrev1.compareTo(abbrev2);
+				return MiscUtilities.compareStrings(
+					abbrev1,abbrev2,true);
 			}
 			else
 			{
 				String expand1 = a1.expand.toLowerCase();
 				String expand2 = a2.expand.toLowerCase();
 
-				return expand1.compareTo(expand2);
+				return MiscUtilities.compareStrings(
+					expand1,expand2,true);
 			}
 		}
 	}

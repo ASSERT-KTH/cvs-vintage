@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * The text area repaint manager. It performs double buffering and paints
  * lines of text.
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.3 2001/10/05 08:55:14 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.4 2001/10/07 10:42:45 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -498,7 +498,13 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
 				if(valid)
 				{
-					textArea.lineWidths[line - textArea.getFirstLine()] = width;
+					// it seems we are repainted before a
+					// component event is received
+					// (read: recalculateVisibleLines()
+					// called)
+					int screenLine = line - textArea.getFirstLine();
+					if(screenLine < textArea.lineWidths.length)
+						textArea.lineWidths[line - textArea.getFirstLine()] = width;
 					if(width > textArea.maxHorizontalScrollWidth)
 						updateMaxHorizontalScrollWidth = true;
 				}

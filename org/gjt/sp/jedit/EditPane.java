@@ -33,7 +33,7 @@ import org.gjt.sp.util.Log;
  * A panel containing a text area. Each edit pane can edit one buffer at
  * a time.
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.5 2001/10/04 07:41:15 spestov Exp $
+ * @version $Id: EditPane.java,v 1.6 2001/10/07 10:42:45 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -342,6 +342,10 @@ public class EditPane extends JPanel implements EBComponent
 		gutter.setHighlightInterval(interval);
 		gutter.setCurrentLineHighlightEnabled(jEdit.getBooleanProperty(
 			"view.gutter.highlightCurrentLine"));
+		gutter.setBracketHighlightEnabled(jEdit.getBooleanProperty(
+			"view.gutter.bracketHighlight"));
+		gutter.setBracketHighlightColor(
+			jEdit.getColorProperty("view.gutter.bracketHighlightColor"));
 		gutter.setBackground(
 			jEdit.getColorProperty("view.gutter.bgColor"));
 		gutter.setForeground(

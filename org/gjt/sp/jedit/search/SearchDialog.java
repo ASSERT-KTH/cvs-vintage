@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.3 2001/10/05 08:55:14 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.4 2001/10/07 10:42:45 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog
 {
@@ -91,6 +91,7 @@ public class SearchDialog extends EnhancedDialog
 			else if(searchIn == CURRENT_BUFFER)
 			{
 				searchSelection.setSelected(true);
+				hyperSearch.setSelected(true);
 			}
 		}
 
@@ -114,12 +115,24 @@ public class SearchDialog extends EnhancedDialog
 			{
 				// might be already selected, see above.
 				searchCurrentBuffer.setSelected(true);
+
+				/* this property is only loaded and saved if
+				 * the 'current buffer' file set is selected.
+				 * otherwise, it defaults to on. */
+				hyperSearch.setSelected(jEdit.getBooleanProperty(
+					"search.hypersearch.toggle"));
 			}
 		}
 		else if(searchIn == ALL_BUFFERS)
+		{
 			searchAllBuffers.setSelected(true);
+			hyperSearch.setSelected(true);
+		}
 		else if(searchIn == DIRECTORY)
+		{
+			hyperSearch.setSelected(true);
 			searchDirectory.setSelected(true);
+		}
 
 		SearchFileSet fileset = SearchAndReplace.getSearchFileSet();
 
@@ -161,9 +174,6 @@ public class SearchDialog extends EnhancedDialog
 
 		keepDialog.setSelected(jEdit.getBooleanProperty(
 			"search.keepDialog.toggle"));
-
-		hyperSearch.setSelected(jEdit.getBooleanProperty(
-			"search.hypersearch.toggle"));
 
 		updateEnabled();
 
@@ -545,8 +555,15 @@ public class SearchDialog extends EnhancedDialog
 
 		SearchFileSet fileset = SearchAndReplace.getSearchFileSet();
 
-		if(searchSelection.isSelected() || searchCurrentBuffer.isSelected())
+		if(searchSelection.isSelected())
 			fileset = new CurrentBufferSet();
+		if(searchCurrentBuffer.isSelected())
+		{
+			fileset = new CurrentBufferSet();
+
+			jEdit.setBooleanProperty("search.hypersearch.toggle",
+				hyperSearch.isSelected());
+		}
 		else if(searchAllBuffers.isSelected())
 			fileset = new AllBufferSet(filter);
 		else if(searchDirectory.isSelected())
@@ -574,9 +591,6 @@ public class SearchDialog extends EnhancedDialog
 
 		jEdit.setBooleanProperty("search.keepDialog.toggle",
 			keepDialog.isSelected());
-
-		jEdit.setBooleanProperty("search.hypersearch.toggle",
-			hyperSearch.isSelected());
 
 		boolean ok = true;
 
@@ -656,7 +670,11 @@ public class SearchDialog extends EnhancedDialog
 				SearchAndReplace.setReverseSearch(searchBack.isSelected());
 			else if(source == wrap)
 				SearchAndReplace.setAutoWrapAround(wrap.isSelected());
-			else if(source == searchSelection)
+			else if(source == searchCurrentBuffer)
+				hyperSearch.setSelected(false);
+			else if(source == searchSelection
+				|| source == searchAllBuffers
+				|| source == searchDirectory)
 				hyperSearch.setSelected(true);
 
 			updateEnabled();
