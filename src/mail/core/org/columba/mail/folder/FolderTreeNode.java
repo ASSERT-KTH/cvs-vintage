@@ -55,8 +55,8 @@ public abstract class FolderTreeNode
 
 	private static int nextUid = 0;
 
-	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
-	private final Class[] STRING_ARG = new Class[] { String.class };
+	//private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
+	//private final Class[] STRING_ARG = new Class[] { String.class };
 
 	public FolderTreeNode(FolderItem node) {
 		super();
