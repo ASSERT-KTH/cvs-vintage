@@ -282,7 +282,7 @@
         <copy file="${src.sql.dir}/${project}-schema.xml" 
               todir="${torque.dir.scarab}/schema"/>
         <copy file="${src.conf.dir}/torque.props" 
-              overwrite="true" todir="${torque.dir.scarab}/config"/>
+              overwrite="true" tofile="${torque.dir.scarab}/build.properties"/>
         <ant antfile="build.xml"
                 dir="${torque.dir.scarab}" target="project-sql">
             <property name="torque.home" value="${torque.dir.scarab}"/>
@@ -308,7 +308,7 @@
         <copy file="${src.sql.dir}/${project}-schema.xml"
               todir="${torque.dir.scarab}/schema"/>
         <copy file="${src.conf.dir}/torque.props"
-              overwrite="true" todir="${torque.dir.scarab}/config"/>
+              overwrite="true" tofile="${torque.dir.scarab}/build.properties"/>
         <ant antfile="build.xml"
                 dir="${torque.dir.scarab}" target="project-datadtd">
             <property name="torque.home" value="${torque.dir.scarab}"/>
@@ -327,7 +327,7 @@
         <copy file="${src.sql.dir}/${project}-schema.xml"
             todir="${torque.dir.scarab}/schema"/>
         <copy file="${src.conf.dir}/torque.props" overwrite="true"
-            todir="${torque.dir.scarab}/config"/>
+            tofile="${torque.dir.scarab}/build.properties"/>
         <ant antfile="build.xml" dir="${torque.dir.scarab}"
             target="project-datadump">
             <property name="torque.home" value="${torque.dir.scarab}"/>
@@ -348,7 +348,7 @@
         <copy file="${src.sql.dir}/${project}-data.dtd"
             todir="${torque.dir.scarab}/schema"/>
         <copy file="${src.conf.dir}/torque.props" overwrite="true"
-            todir="${torque.dir.scarab}/config"/>
+            tofile="${torque.dir.scarab}/build.properties"/>
         <ant antfile="build.xml" dir="${torque.dir.scarab}"
             target="project-datasql">
             <property name="torque.home" value="${torque.dir.scarab}"/>
@@ -380,7 +380,7 @@
         <copy file="${src.sql.dir}/${project}-schema.xml" 
               todir="${torque.dir.scarab}/schema"/>
         <copy file="${src.conf.dir}/torque.props" 
-              overwrite="true" todir="${torque.dir.scarab}/config"/>
+              overwrite="true" tofile="${torque.dir.scarab}/build.properties"/>
         <ant antfile="build.xml" dir="${torque.dir.scarab}" 
                 target="project-om">
             <property name="torque.home" value="${torque.dir.scarab}"/>
