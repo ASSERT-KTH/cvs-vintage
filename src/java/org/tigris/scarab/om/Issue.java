@@ -1056,23 +1056,14 @@ public class Issue
         Date result = null;
         if ( !isNew() ) 
         {
-            Object obj = ScarabCache.get(this, GET_MODIFIED_DATE); 
-            if ( obj == null ) 
-            {        
-                Transaction t = getLastTransaction();
-                if ( t == null)
-                {
-                    result = getCreatedDate();
-                }
-                else 
-                {
-                    result = t.getCreatedDate();
-                }
-                ScarabCache.put(result, this, GET_MODIFIED_DATE);
+            Transaction t = getLastTransaction();
+            if ( t == null)
+            {
+                result = getCreatedDate();
             }
             else 
             {
-                result = (Date)obj;
+                result = t.getCreatedDate();
             }
         }
         return result;
@@ -1089,23 +1080,14 @@ public class Issue
         ScarabUser result = null;
         if ( !isNew() ) 
         {
-            Object obj = ScarabCache.get(this, GET_MODIFIED_BY); 
-            if ( obj == null ) 
-            {        
-                Transaction t = getLastTransaction();
-                if ( t == null)
-                {
-                    result = getCreatedBy();
-                }
-                else 
-                {
-                    result = ScarabUserManager.getInstance(t.getCreatedBy());
-                }
-                ScarabCache.put(result, this, GET_MODIFIED_BY);
+            Transaction t = getLastTransaction();
+            if ( t == null)
+            {
+                result = getCreatedBy();
             }
             else 
             {
-                result = (ScarabUser)obj;
+                result = ScarabUserManager.getInstance(t.getCreatedBy());
             }
         }
         return result;
