@@ -16,8 +16,8 @@
 
 package org.columba.mail.pop3.command;
 
+import java.awt.Toolkit;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -27,11 +27,7 @@ import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.util.PlaySound;
 import org.columba.mail.command.POP3CommandReference;
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.PopItem;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -109,6 +105,19 @@ public class CheckForNewMessagesCommand extends Command {
 	}
 
 	protected void playSound() {
+		// re-enable this feature later, make it a general option
+		// not a per-account based one
+		// -> playing wav-files should be only optional
+		
+		// just play a system beep 
+		// -> this works better for most people
+		// -> java doesn't support sound servers like 
+		// -> alsa or esound anyway
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		kit.beep(); //system beep
+		
+		
+		/*
 		AccountItem item = server.getAccountItem();
 		PopItem popItem = item.getPopItem();
 		String file = popItem.get("sound_file");
@@ -124,5 +133,6 @@ public class CheckForNewMessagesCommand extends Command {
 				ex.printStackTrace();
 			}
 		}
+		*/
 	}
 }
