@@ -543,8 +543,7 @@ public class ScarabLocalizationTool extends LocalizationTool
      * Return the locale, which will be used to resolve
      * keys of the given browserLocale. This method returns
      * null, when Scarab does not directly support the 
-     * browserLocale. Which means: The browser Locale leads
-     * to a Resource Bundle of another language.
+     * browserLocale. 
      * @param browserLocale
      * @return 
      */
@@ -555,8 +554,22 @@ public class ScarabLocalizationTool extends LocalizationTool
         {
             if (unsupportedLocaleMap.get(browserLocale) == null)
             {
-                ResourceBundle bundle = ResourceBundle.getBundle(
-                        getBundleName(), browserLocale);
+                ResourceBundle bundle;
+                try {
+                    bundle = ResourceBundle.getBundle(
+                             getBundleName(), browserLocale);
+                }
+                catch (Exception e)
+                {
+                  // [HD] This should not happen, but it does happen;
+                  // The problem raises when the system locale is not
+                  // supported by Scarab. This was reported on Windows 
+                  // systems. This needs to be further investigated.
+                  // setting bundle to null here enforces usage of the
+                  // default ResourceBundle (en-US)
+                  bundle = null;
+                }
+
                 if (bundle != null)
                 {
                     Locale finalLocale = bundle.getLocale();
@@ -577,7 +590,7 @@ public class ScarabLocalizationTool extends LocalizationTool
                     Log.get().error("ScarabLocalizationTool: ResourceBundle '" + getBundleName()
                             + "' -> not resolved for Locale '"
                             + browserLocale
-                            + "'. This should never happen.");
+                            + "'.");
                 }
             }
         }
