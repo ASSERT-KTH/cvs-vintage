@@ -24,18 +24,20 @@ import org.columba.core.loader.DefaultClassLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
-/**
- * @author freddy
+/*
+ * 
+ * @author fdietz
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Every entrypoint is represented by this abstract handler class
+ * 
+ * 
  */
 public abstract class AbstractPluginHandler {
+	protected String id;
+
+	protected XmlElement parentNode;
 
 	protected PluginListConfig pluginListConfig;
-	protected String id;
 	protected PluginManager pluginManager;
 
 	//	translate plugin-id to user-visible name
@@ -43,7 +45,8 @@ public abstract class AbstractPluginHandler {
 	protected Hashtable transformationTable;
 
 	/**
-	 * Constructor for PluginHandler.
+	 * @param id
+	 * @param config
 	 */
 	public AbstractPluginHandler(String id, String config) {
 		super();
@@ -51,32 +54,41 @@ public abstract class AbstractPluginHandler {
 		transformationTable = new Hashtable();
 		if (config != null)
 			pluginListConfig = new PluginListConfig(config);
-		ColumbaLogger.log.debug("initialising plugin-handler: "+id);
+		ColumbaLogger.log.debug("initialising plugin-handler: " + id);
 	}
 
 	/**
-	 * @return Hashtable
+	 * @return
 	 */
-	public Hashtable getTransformationTable() {
-		return transformationTable;
-	}
-
 	protected PluginListConfig getConfig() {
 		return pluginListConfig;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getId() {
 		return id;
 	}
 
-	public abstract String[] getPluginIdList();
-
-	public Object loadPlugin(String className, Object[] args)
-		throws Exception {
-
-		return new DefaultClassLoader().instanciate(className, args);
+	/**
+	 * @param name
+	 * @param args
+	 * @return
+	 * @throws Exception
+	 */
+	public Object getPlugin(String name, Object[] args) throws Exception {
+		String className = getPluginClassName(name, "class");
+		return getPlugin(name, className, args);
 	}
 
+	/**
+	 * @param name
+	 * @param className
+	 * @param args
+	 * @return
+	 * @throws Exception
+	 */
 	public Object getPlugin(String name, String className, Object[] args)
 		throws Exception {
 
@@ -85,39 +97,118 @@ public abstract class AbstractPluginHandler {
 		ColumbaLogger.log.debug("classname="+className);
 		ColumbaLogger.log.debug("args="+args);
 		*/
-		
+
 		try {
 			return loadPlugin(className, args);
 		} catch (ClassNotFoundException ex) {
-                int dollarLoc = name.indexOf('$');
-                String pluginId = (dollarLoc > 0 ? name.substring(0, dollarLoc)
-                             : name);
+			int dollarLoc = name.indexOf('$');
+			String pluginId =
+				(dollarLoc > 0 ? name.substring(0, dollarLoc) : name);
 
-                String type = pluginManager.getPluginType(pluginId);
-                File pluginDir = pluginManager.getPluginDir(pluginId);
+			String type = pluginManager.getPluginType(pluginId);
+			File pluginDir = pluginManager.getPluginDir(pluginId);
 
-                return PluginLoader.loadExternalPlugin(className,
-                                                 type,
-                                                 pluginDir,
-                                                 args);
-		} catch ( InvocationTargetException ex ) {
+			return PluginLoader.loadExternalPlugin(
+				className,
+				type,
+				pluginDir,
+				args);
+		} catch (InvocationTargetException ex) {
 			ex.getTargetException().printStackTrace();
 			throw ex;
 		}
 	}
 
-	public abstract void addExtension(String id, XmlElement extension);
-
 	/**
-	 * @return PluginManager
+	 * @param name
+	 * @return
+	 */
+	public Class getPluginClass(String name) {
+		String className = getPluginClassName(name, "class");
+
+		try {
+
+			Class clazz = Class.forName(className);
+			return clazz;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	
+	/**
+	 * @param name
+	 * @param id
+	 * @return
+	 */
+	protected String getPluginClassName(String name, String id) {
+
+		int count = parentNode.count();
+
+		for (int i = 0; i < count; i++) {
+
+			XmlElement action = parentNode.getElement(i);
+			String s = action.getAttribute("name");
+
+			if (name.equals(s))
+				return action.getAttribute(id);
+
+		}
+
+		return null;
+	}
+
+	
+	/**
+	 * @return
+	 */
+	public String[] getPluginIdList() {
+		int count = parentNode.count();
+
+		String[] list = new String[count];
+
+		for (int i = 0; i < count; i++) {
+			XmlElement action = parentNode.getElement(i);
+			String s = action.getAttribute("name");
+
+			list[i] = s;
+
+		}
+
+		return list;
+	}
+
+	
+	/**
+	 * @return
 	 */
 	public PluginManager getPluginManager() {
 		return pluginManager;
 	}
 
 	/**
-	 * Sets the pluginManager.
-	 * @param pluginManager The pluginManager to set
+	 * @return
+	 */
+	public Hashtable getTransformationTable() {
+		return transformationTable;
+	}
+
+	/**
+	 * @param className
+	 * @param args
+	 * @return
+	 * @throws Exception
+	 */
+	public Object loadPlugin(String className, Object[] args)
+		throws Exception {
+
+		return new DefaultClassLoader().instanciate(className, args);
+	}
+
+	
+	/**
+	 * @param pluginManager
 	 */
 	public void setPluginManager(PluginManager pluginManager) {
 		this.pluginManager = pluginManager;

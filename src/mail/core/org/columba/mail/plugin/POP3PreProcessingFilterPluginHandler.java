@@ -20,7 +20,6 @@ import org.columba.core.xml.XmlElement;
 public class POP3PreProcessingFilterPluginHandler
 	extends AbstractPluginHandler {
 
-	protected XmlElement parentNode;
 
 	/**
 	 * @param id
@@ -36,62 +35,7 @@ public class POP3PreProcessingFilterPluginHandler
 
 	}
 
-	/**
-	 * @see org.columba.core.plugin.AbstractPluginHandler#getNames()
-	 */
-	public String[] getPluginIdList() {
-		int count = parentNode.count();
-
-		String[] list = new String[count];
-
-		for (int i = 0; i < count; i++) {
-			XmlElement action = parentNode.getElement(i);
-			String s = action.getAttribute("name");
-
-			list[i] = s;
-
-		}
-
-		return list;
-	}
-
-	/**
-		 * @see org.columba.core.plugin.AbstractPluginHandler#getPluginClassName(java.lang.String, java.lang.String)
-		 */
-	protected String getPluginClassName(String name, String id) {
-
-		int count = parentNode.count();
-
-		for (int i = 0; i < count; i++) {
-
-			XmlElement action = parentNode.getElement(i);
-			String s = action.getAttribute("name");
-
-			if (name.equalsIgnoreCase(s))
-				return action.getAttribute(id);
-
-		}
-
-		return null;
-	}
-
-	public Object getPlugin(String name, Object[] args) throws Exception {
-		String className = getPluginClassName(name, "class");
-		return getPlugin(name, className, args);
-	}
-
-	public Class getPluginClass(String name) {
-		String className = getPluginClassName(name, "class");
-
-		try {
-
-			Class clazz = Class.forName(className);
-			return clazz;
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return null;
-	}
+	
 	/* (non-Javadoc)
 	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
 	 */
