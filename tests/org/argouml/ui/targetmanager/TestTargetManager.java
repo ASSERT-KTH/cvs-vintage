@@ -1,4 +1,4 @@
-// $Id: TestTargetManager.java,v 1.3 2003/05/04 07:35:11 kataka Exp $
+// $Id: TestTargetManager.java,v 1.4 2003/05/31 09:14:58 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -174,7 +174,7 @@ public class TestTargetManager extends TestCase {
 		assertTrue(
 			TargetManager.getInstance().getTargets().contains(testObject));
 		TargetManager.getInstance().removeTarget(testObject);
-		assertNull(TargetManager.getInstance().getTargets());
+		assertTrue(TargetManager.getInstance().getTargets().isEmpty());
 		testList.add(testObject);
 		TargetManager.getInstance().setTargets(testList);
 		assertTrue(
