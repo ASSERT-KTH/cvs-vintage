@@ -1,8 +1,7 @@
 $page.setTitle("Attribute Editor")
 
+#set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
-
-#set ($attOptions = $attribute.getAttributeOptions(true))
 
 #set ($attType = $attribute.AttributeType)
 #set ($attgroup = $intake.Attribute.Default )
@@ -10,11 +9,17 @@ $page.setTitle("Attribute Editor")
 
 <div class="app" id="div3-0-2-0">
 
-<h2>Add / Edit Attribute</h2>
+<h2>Add / Edit - Attribute / Option : Module - $module.Name</h2>
 
 <p>
 Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
 </p>
+
+#if (!$module)
+
+<div class="alert">Sorry, could not locate the requested module.</div>
+
+#else
 
   <form action="$link.setPage("admin,AttributeEdit.vm")" method="get">
     <input type="hidden" name="action" value="admin.ModifyAttributes"/>
@@ -70,13 +75,16 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
 </table>
 </div>
 
+<p class="functnbar">
   <input type="submit" name="eventSubmit_doModifyattributedata" 
-        value="Save"/>
+        value="Save"/> General Info
+</p>
 
 #if ( $attType.AttributeClass.Name.equals("select-one") )
 
 #datatitle ( "List options" )
 
+#set ($attOptions = $module.getAttributeOptions($attribute))
 #set ( $maxNum = $attOptions.size() )
 
 <div class="grouper">
@@ -134,8 +142,10 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
 
 </table>
 
+<p class="functnbar">
   <input type="submit" name="eventSubmit_doAddormodifyattributeoptions" 
-        value="Save"/>
+        value="Save"/> List options
+</p>
 
 #end #* if select-one *#
 
@@ -149,7 +159,7 @@ $intake.declareGroups()
 
 
 
-
+#end #* check for valid option *#
 
 
 

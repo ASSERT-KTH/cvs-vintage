@@ -94,6 +94,10 @@ public class ScarabModule
     private List allRModuleAttributes;
     private List activeRModuleAttributes;
 
+    private Map allRModuleOptionsMap = new HashMap();
+    private Map activeRModuleOptionsMap = new HashMap();
+
+
     /**
      * Wrapper method to perform the proper cast to the BaseModule method
      * of the same name.
@@ -367,11 +371,7 @@ public class ScarabModule
         return getRModuleOptions(attribute, true);
     }
 
-    private Map allRModuleOptionsMap = new HashMap();
-    private Map activeRModuleOptionsMap = new HashMap();
-
-    public List
-        getRModuleOptions(Attribute attribute, boolean activeOnly)
+    public List getRModuleOptions(Attribute attribute, boolean activeOnly)
         throws Exception
     {
         List allRModuleOptions = (List)allRModuleOptionsMap.get(attribute);
@@ -446,6 +446,31 @@ public class ScarabModule
         while ( rModOpts.size() == 0 &&
                !ROOT_ID.equals((NumberKey)prevModule.getPrimaryKey()));
         return rModOpts;
+    }
+
+    /**
+     * Gets the modules list of attribute options. Uses the
+     * RModuleOption table to do the join. returns null if there
+     * is any error.
+     */
+    public List getAttributeOptions (Attribute attribute)
+        throws Exception
+    {
+        List attributeOptions = null;
+        try
+        {
+            List rModuleOptions = getOptionTree(attribute, false);
+            attributeOptions = new ArrayList(rModuleOptions.size());
+            for ( int i=0; i<rModuleOptions.size(); i++ )
+            {
+                attributeOptions.add(
+                    ((RModuleOption)rModuleOptions.get(i)).getAttributeOption());
+            }
+        }
+        catch (Exception e)
+        {
+        }
+        return attributeOptions;
     }
 
     public List getLeafRModuleOptions(Attribute attribute)
@@ -605,11 +630,11 @@ try{
         return getUsers(partialUserName, perms);
     }
 
-/**
+    /**
      * Determines whether this module allows users to vote many times for
      * the same issue.  This feature needs schema change to allow a
      * configuration screen.  Currently only one vote per issue is supported
- *
+     *
      * @return false
      */
     public boolean allowsMultipleVoting()
@@ -621,9 +646,9 @@ try{
      * How many votes does the user have left to cast.  Currently always
      * returns 1, so a user has unlimited voting rights.  Should look to
      * UserVote for the answer when implemented properly.
- */
+     */
     public int getUnusedVoteCount(ScarabUser user)
-{
+    {
         return 1;
     }
 
@@ -635,7 +660,7 @@ try{
      * @param permissions a <code>String[]</code> permissions
      * @return a <code>List</code> of ScarabUsers
      * @exception Exception if an error occurs
-    public abstract List getUsers(String partialUserName, String[] permissions)
+     public abstract List getUsers(String partialUserName, String[] permissions)
         throws Exception;
      */
 
