@@ -70,6 +70,7 @@ import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRole;
 
 // Scarab classes
 import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.services.user.UserManager;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.security.ScarabSecurity;
 import org.tigris.scarab.security.SecurityFactory;
@@ -87,7 +88,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.37 2001/10/12 17:30:08 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.38 2001/10/14 01:21:28 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -114,7 +115,7 @@ public class ScarabModule
 
     /**
      * This method is an implementation of the Group.getName() method
-     * and returns a module along with its parents
+     * and returns a module along with its ancestors
      */
     public String getName()
     {
@@ -124,7 +125,7 @@ public class ScarabModule
             List parents = null;
             try
             {
-                parents = getParents();
+                parents = getAncestors();
             }
             catch (Exception e)
             {
@@ -161,10 +162,10 @@ public class ScarabModule
     }
 
     /**
-     * Returns this ModuleEntities parents in ascending order. 
+     * Returns this ModuleEntities ancestors in ascending order. 
      * It does not return the 0 parent though.
      */
-    public List getParents()
+    public List getAncestors()
         throws Exception
     {
         if (parentModules == null)
@@ -172,22 +173,32 @@ public class ScarabModule
             parentModules = new ArrayList();
             ModuleEntity me = (ModuleEntity) 
                 this.getModuleRelatedByParentIdCast();
-            addParents(me);
+            addAncestors(me);
         }
         return parentModules;
     }
 
     /**
-     * recursive helper method for getParents()
+     * recursive helper method for getAncestors()
      */
-    private void addParents(ModuleEntity module)
+    private void addAncestors(ModuleEntity module)
         throws Exception
     {
         if (!module.getParentId().equals(ROOT_ID))
         {
-            addParents(module.getModuleRelatedByParentIdCast());
+            addAncestors(module.getModuleRelatedByParentIdCast());
         }
         parentModules.add(module);
+    }
+
+    /**
+     * Get this modules direct parent
+     */
+    public ModuleEntity getParent()
+        throws Exception
+    {
+        return (ModuleEntity) 
+                this.getModuleRelatedByParentIdCast();
     }
 
     public ScarabUser[] getEligibleIssueReporters()
@@ -237,7 +248,6 @@ public class ScarabModule
                 users = security.getUsers(permission, this);
             }
         }
-        
         return users;
     }
 
@@ -250,6 +260,9 @@ public class ScarabModule
         super.setScarabModuleRelatedByParentId((ScarabModule)v);
     }
 
+    /**
+     * Cast the getScarabModuleRelatedByParentId() to a ModuleEntity
+     */
     public ModuleEntity getModuleRelatedByParentIdCast() throws Exception
     {
         return (ModuleEntity) super.getScarabModuleRelatedByParentId();
@@ -961,20 +974,13 @@ try{
                 // in order to set the moduleid for the new module.
                 super.save();
 
-                // FIXME! should use fulcrum security's grant methods
-                // instead of directly accessing TurbineUserGroupRole.
-                // relate the Module to the user who created it.
-                TurbineUserGroupRole relation = new TurbineUserGroupRole();
                 if ( getOwnerId() == null ) 
                 {
                     throw new ScarabException(
                      "Can't save a project without first assigning an owner.");
                 }
-                relation.setUserId(getOwnerId());
-                // !FIXME! this needs to be set to the Module Owner Role
-                relation.setRoleId(new NumberKey("1"));
-                relation.setGroupId(getModuleId());
-                relation.save();
+                grant (UserManager.getInstance(getOwnerId()), 
+                    TurbineSecurity.getRole("Project Owner"));
             }
             else
             {

@@ -1,0 +1,109 @@
+#set ($createNew = $data.Parameters.New)
+
+#if ($createNew)
+$page.setTitle("New Module") 
+#else
+$page.setTitle("Modify Module") 
+#end
+
+  <div id="module" class="app">
+
+<h3>$page.Title</h3>
+
+#set ($currentModule = $scarabR.CurrentModule)
+#set ($canEdit = $security.hasPermission("Module | Edit", $currentModule))
+#if (!$canEdit)
+
+<p class="alert">Sorry, you do not have enough permissions to modify the
+module you have <a href="$link.setPage("SelectModule.vm")">currently selected</a>.</p>
+
+#else
+  
+<form action="$link.setPage("ModifyModule.vm")" method="post">
+<input type="hidden" name="action" value="ModifyModule" /> 
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="SelectModule.vm" /> 
+
+#if ($createNew)
+#set ($moduleGroup = $intake.Module.Default)
+<input type="hidden" name="new" value="true" /> 
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="SelectModule.vm" /> 
+#else
+#set ($moduleGroup = $intake.Module.mapTo($currentModule))
+<input type="hidden" name="new" value="false" /> 
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ModifyModule.vm" /> 
+#end
+
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="1">
+  <tr>
+   <th>* Module Name:</th>
+   <td>
+    <input name="$moduleGroup.RealName.Key" value="$moduleGroup.RealName" type="text" size="25" />
+    #fieldErrorMsg($moduleGroup.RealName "")
+   </td>
+  </tr>
+  <tr>
+   <th>* Description:</th>
+   <td>
+    <textarea name="$moduleGroup.Description.Key"  type="text" rows="5" cols="60">$moduleGroup.Description</textarea>
+    #fieldErrorMsg($moduleGroup.Description "")
+   </td>
+  </tr>
+  <tr>
+   <th>* Code:</th>
+   <td>
+    <input name="$moduleGroup.Code.Key" value="$moduleGroup.Code" type="text" size="10" maxsize="4" />
+    #fieldErrorMsg($moduleGroup.Code "")
+   </td>
+  </tr>
+  <tr>
+   <th>* URL:</th>
+   <td>
+    <input name="$moduleGroup.Url.Key" value="$moduleGroup.Url" type="text" size="25" />
+    #fieldErrorMsg($moduleGroup.Url "")
+   </td>
+  </tr>
+  <tr>
+   <th>* Parent Module:</th>
+   <td>
+    <select name="$moduleGroup.ParentId.Key">
+     #set ($userModules = $data.User.Modules)
+     #foreach ($userModule in $userModules)
+        #foreach ($ancestor in $userModule.Ancestors)
+         #set ($canEdit = $security.hasPermission("Module | Edit", $userModule))
+         #if ($canEdit)
+           #if ($ancestor.RealName.equals($currentModule.Parent.RealName))
+            <option selected="selected" value="$ancestor.ModuleId" />$ancestor.RealName
+           #else
+            <option value="$ancestor.ModuleId" />$ancestor.RealName
+           #end
+         #end
+        #end
+     #end
+    </select>
+    #fieldErrorMsg($moduleGroup.ParentId "")
+   </td>
+  </tr>
+ </table>
+</div>
+
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+   <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
+#if ($createNew)
+   <input type="submit" name="eventSubmit_doCreate" value="Create" />
+#else
+   <input type="submit" name="eventSubmit_doUpdate" value="Update" />
+#end
+  </td>
+ </tr>
+</table>
+</div>
+
+$intake.declareGroups()
+</form>
+
+#end
+</div>

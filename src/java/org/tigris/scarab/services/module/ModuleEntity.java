@@ -63,15 +63,16 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.21 2001/10/11 17:34:09 jmcnally Exp $
+ * @version $Id: ModuleEntity.java,v 1.22 2001/10/14 01:21:29 jon Exp $
  */
 public interface ModuleEntity
 {
     /**
      * The deliminator between parent/child Modules
      * This is used to build up the getName() results.
+     * FIXME: define this in a properties file
      */
-    public static final String NAME_DELIMINATOR = " -> ";
+    public static String NAME_DELIMINATOR = " -> ";
 
     /**
      * This method is only used by the Turbine Group interface.
@@ -126,11 +127,6 @@ public interface ModuleEntity
 
     public void save() throws Exception;
 
-    public void setModuleRelatedByParentId(ModuleEntity module) 
-        throws Exception;
-
-    public ModuleEntity getModuleRelatedByParentIdCast() throws Exception;
-
     public List getRModuleAttributes(boolean activeOnly)
         throws Exception;
 
@@ -148,8 +144,25 @@ public interface ModuleEntity
     public NumberKey getParentId();
     public void setParentId(String v ) throws Exception;
     public void setParentId(NumberKey v ) throws Exception;
-    
-    public List getParents() throws Exception;
+
+    public void setModuleRelatedByParentId(ModuleEntity module) 
+        throws Exception;
+
+    /**
+     * Get this modules direct parent
+     */
+    public ModuleEntity getModuleRelatedByParentIdCast() throws Exception;
+
+    /**
+     * Same as the getModuleRelatedByParentIdCast(), just a better name.
+     */
+    public ModuleEntity getParent() throws Exception;
+
+    /**
+     * Returns this ModuleEntities ancestors in ascending order. 
+     * It does not return the 0 parent though.
+     */
+    public List getAncestors() throws Exception;
     
     public Issue getNewIssue()
         throws Exception;
@@ -173,46 +186,4 @@ public interface ModuleEntity
         throws Exception;
 
     public ScarabUser[] getEligibleIssueReporters();
-
-
-/*    
-    
-    public String getAbbreviation();
-    public void setAbbreviation();
-    
-    public void setParentModuleId(NumberKey key);
-
-    public Issue getNewIssue(User user)
-        throws Exception;
-
-    public Attribute[] getAttributes(Criteria criteria)
-        throws Exception;
-
-    public Attribute[] getDedupeAttributes()
-        throws Exception;
-
-    public Attribute[] getQuickSearchAttributes()
-        throws Exception;
-
-    public Attribute[] getAllAttributes()
-        throws Exception;
-
-    public List getOptionTree(Attribute attribute)
-        throws Exception;
-
-    public List getOptionTree(Attribute attribute, boolean activeOnly)
-        throws Exception;
-
-    public List getUsers(String partialUserName, 
-                         Role[] includeRoles, Role[] excludeRoles) 
-        throws Exception;
-
-    public void save() throws Exception;
-
-    public ModuleEntity doPopulate(RunData data)
-        throws Exception;
-
-    public ModuleEntity doPopulate(RunData data, boolean validate)
-        throws Exception;
-*/
 }

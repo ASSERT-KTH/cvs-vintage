@@ -66,12 +66,14 @@ import org.tigris.scarab.util.ScarabException;
  * Scarab.properties file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleServiceImpl.java,v 1.8 2001/08/02 07:11:42 jon Exp $
+ * @version $Id: ModuleServiceImpl.java,v 1.9 2001/10/14 01:21:29 jon Exp $
  */
 public class ModuleServiceImpl extends BaseService 
                             implements ModuleService
 {
     public static Class moduleEntityClass = null;
+
+    private static final String className = "Module";
 
     /**
      * Initializes the BaseModuleService, locating the apropriate ModuleEntity
@@ -90,6 +92,13 @@ public class ModuleServiceImpl extends BaseService
         {
         }
         setInit(true);
+    }
+
+    private String getCacheKey(ObjectKey key)
+    {
+         String keyString = key.getValue().toString();
+         return new StringBuffer(className.length() + keyString.length())
+             .append(className).append(keyString).toString();
     }
     
     /**
@@ -138,13 +147,4 @@ public class ModuleServiceImpl extends BaseService
         
         return module;
     }
-
-    private static final String className = "Module";
-    private String getCacheKey(ObjectKey key)
-    {
-         String keyString = key.getValue().toString();
-         return new StringBuffer(className.length() + keyString.length())
-             .append(className).append(keyString).toString();
-    }
-
 }

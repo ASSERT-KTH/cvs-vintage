@@ -50,7 +50,6 @@ import java.util.Vector;
 import org.tigris.scarab.om.ScarabModulePeer;
 
 import org.apache.torque.om.ObjectKey;
-import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.commons.util.StringUtils;
@@ -61,7 +60,7 @@ import org.apache.torque.util.Criteria;
  * This class has static methods for working with a Module object
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleManager.java,v 1.13 2001/09/29 01:24:14 jon Exp $
+ * @version $Id: ModuleManager.java,v 1.14 2001/10/14 01:21:29 jon Exp $
  */
 public abstract class ModuleManager
 {
