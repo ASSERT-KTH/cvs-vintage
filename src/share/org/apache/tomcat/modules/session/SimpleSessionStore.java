@@ -204,7 +204,7 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	// avoid accessing object's internals
 	// XXX PipeStream !?!
 	Hashtable orig= sM.getSessions();
-	Object newS = SessionSerializer.doSerialization( newLoader, orig);
+	Object newS = ObjectSerializer.doSerialization( newLoader, orig);
 	sM.setSessions( (Hashtable)newS );
 	
 	// Update the request session id

@@ -57,26 +57,34 @@
  *
  */
 
-package org.apache.tomcat.session;
+package org.apache.tomcat.util;
 
 import java.io.*;
 import java.util.*;
 
-/**
-	This class manages the serialization of HttpSession object across
-	classloader reloads. It does this by first getting a copy of the 
-	HttpSessions hashtable from the SessionManager and then using a
-	special internal class ObjectInputStream that uses the newly created
-	classloader to de-serialize the sessions. This class is called from
-	within the Handler.handleReload() method. Much of this code
-	is essentially the same as what I put into the Apache JServ release
-	so it is pretty well tested. It also depends on having HttpSession
-	implement the read/writeObject methods properly to only accept 
-	objects that are serializable.
+// from tomcat.session.SessionSerializer
 
-	@author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
-*/
-public final class SessionSerializer
+/**
+ * Helper for object reloading. Will change the classloader of a
+ * serializable object.
+ * 
+ * Old comment: ( code works now for any object, not only HttpSession )
+ *
+ * This class manages the serialization of HttpSession object across
+ * classloader reloads. It does this by first getting a copy of the 
+ * HttpSessions hashtable from the SessionManager and then using a
+ * special internal class ObjectInputStream that uses the newly created
+ * classloader to de-serialize the sessions. This class is called from
+ * within the Handler.handleReload() method. Much of this code
+ * is essentially the same as what I put into the Apache JServ release
+ * so it is pretty well tested. It also depends on having HttpSession
+ * implement the read/writeObject methods properly to only accept 
+ * objects that are serializable.
+ * 
+ * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
+ * @author cmanolache@yahoo.com
+ */
+public final class ObjectSerializer
 {
     /**
        This is the method that does the serialization.
