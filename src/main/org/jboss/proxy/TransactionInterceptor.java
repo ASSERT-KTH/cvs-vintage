@@ -46,7 +46,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
  */
 public class TransactionInterceptor
@@ -94,26 +94,7 @@ public class TransactionInterceptor
          }
          else
          {
-            InvocationContext context = invocation.getInvocationContext();
-            Invoker invoker = context.getInvoker();
-            try
-            {
-               transactionManagerServiceName =
-                  new ObjectName(DEFAULT_CLIENT_TM_NAME_STUB
-                                 + invoker.getServerID().toObjectNameClause());
-            }
-            catch (MalformedObjectNameException mone)
-            {
-               log.info("Could not construct object name for tm for invoker: " + invoker);
-            }
-            if (server.isRegistered(transactionManagerServiceName))
-            {
-               tm = (TransactionManager)server.getAttribute(transactionManagerServiceName, "TransactionManager");
-            }
-            else
-            {
-               noTransactionManager = true;
-            }
+            noTransactionManager = true;
          }
       }
       if (tm != null)

@@ -16,7 +16,10 @@ import java.io.StringWriter;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJBException;
 import javax.ejb.NoSuchEntityException;
 import javax.ejb.NoSuchObjectLocalException;
@@ -31,12 +34,14 @@ import org.jboss.ejb.EnterpriseContext;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationType;
+import org.jboss.invocation.PayloadKey;
+import org.jboss.invocation.remoting.RemotingAdapter;
 import org.jboss.logging.Logger;
+import org.jboss.tm.DTXAResourceInterceptor;
 import org.jboss.tm.JBossRollbackException;
 import org.jboss.tm.JBossTransactionRolledbackException;
 import org.jboss.tm.JBossTransactionRolledbackLocalException;
 import org.jboss.util.UnreachableStatementException;
-import java.util.ArrayList;
 
 
 
@@ -137,6 +142,25 @@ public abstract class TxSupport
 
    public abstract InvocationResponse serverInvoke(Invocation invocation, TransactionManager tm, org.jboss.ejb.Interceptor next) throws Exception;
 
+
+   //Client side tx transport support.
+   /**
+    * The <code>setTransaction</code> method adds the transaction to
+    * the remoting send params map, creating it if necessary.
+    *
+    * @param invocation an <code>Invocation</code> value
+    * @param tx a <code>Transaction</code> value
+    */
+   protected void setTransaction(Invocation invocation, Transaction tx)
+   {
+      Map sendParams = (Map)invocation.getValue(RemotingAdapter.REMOTING_CONTEXT);
+      if (sendParams == null)
+      {
+         sendParams = new HashMap(1);
+         invocation.setValue(RemotingAdapter.REMOTING_CONTEXT, sendParams, PayloadKey.TRANSIENT);
+      } // end of if ()
+      sendParams.put(DTXAResourceInterceptor.TX_KEY, tx);
+   }
 
    /**
     * The <code>invokeInNoTx</code> method implements the behavior in
@@ -567,7 +591,11 @@ public abstract class TxSupport
                                              org.jboss.proxy.Interceptor next)
          throws Throwable
       {
-         invocation.setTransaction(tm.getTransaction());
+         Transaction tx = tm.getTransaction();
+         if (tx != null && tx.getStatus() != Status.STATUS_NO_TRANSACTION)
+         {
+            setTransaction(invocation, tx);
+         } // end of if ()
          return next.invoke(invocation);
       }
 
@@ -605,7 +633,11 @@ public abstract class TxSupport
                                              org.jboss.proxy.Interceptor next)
          throws Throwable
       {
-         invocation.setTransaction(tm.getTransaction());
+         Transaction tx = tm.getTransaction();
+         if (tx != null && tx.getStatus() != Status.STATUS_NO_TRANSACTION)
+         {
+            setTransaction(invocation, tx);
+         } // end of if ()
          return next.invoke(invocation);
       }
 
@@ -692,11 +724,11 @@ public abstract class TxSupport
          throws Throwable
       {
          Transaction tx = tm.getTransaction();
-         if (tx == null)
+         if (tx == null || tx.getStatus() != Status.STATUS_NO_TRANSACTION)
          {
             throw new EJBException("Transaction required");
          } // end of if ()
-         invocation.setTransaction(tx);
+         setTransaction(invocation, tx);
          return next.invoke(invocation);
       }
 

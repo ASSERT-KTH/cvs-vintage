@@ -54,6 +54,7 @@ public class RemotingAdapter
    implements Invoker, RemotingAdapterMBean, Serializable
 {
 
+   public static final String REMOTING_CONTEXT = "REMOTING_CONTEXT";
 
    private ObjectName nextInterceptorName;
 
@@ -108,8 +109,9 @@ public class RemotingAdapter
 
    /**
     * The <code>invoke</code> method translates the ejb invocation
-    * object into a remoting framework invocation.  I suggest these
-    * could become better aligned to eliminate any translation.
+    * object into a remoting framework invocation.  The remoting
+    * context is extracted from the invocation and used in the
+    * remoting framework invocation.
     *
     * @param invocation an <code>Invocation</code> value
     * @return an <code>InvocationResponse</code> value
@@ -117,10 +119,8 @@ public class RemotingAdapter
     */
    public InvocationResponse invoke(Invocation invocation) throws Throwable
    {
-      Map sendParams = new HashMap();
       InvokerLocator locator = (InvokerLocator)invocation.getInvocationContext().getValue(InvocationKey.LOCATOR);
-      Transaction tx = invocation.getTransaction();
-      sendParams.put(DTXAResourceInterceptor.TX_KEY, tx);
+      Map sendParams = (Map)invocation.getValue(REMOTING_CONTEXT);
       Object result = next.invoke(locator, "EJB", "",
                                   new MarshalledInvocation(invocation),
                                   sendParams);
