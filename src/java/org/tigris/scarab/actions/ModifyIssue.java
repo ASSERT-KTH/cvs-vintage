@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.107 2002/07/19 01:28:36 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.108 2002/07/30 02:36:25 elicia Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -156,6 +156,8 @@ public class ModifyIssue extends BaseModifyIssue
         List requiredAttributes = issue.getModule()
                                               .getRequiredAttributes(issueType);
         AttributeValue aval = null;
+        AttributeValue aval2 = null;
+        HashMap newAttVals = new HashMap();
         Group group = null;
 
         SequencedHashMap modMap = issue.getModuleAttributeValuesMap();
@@ -208,52 +210,35 @@ public class ModifyIssue extends BaseModifyIssue
             while (iter2.hasNext())
             {
                 aval = (AttributeValue)avMap.get(iter2.next());
+                aval2 = AttributeValue.getNewInstance(aval.getAttributeId(), 
+                                                      aval.getIssue());
+                aval2.setProperties(aval);
+ 
                 group = intake.get("AttributeValue", aval.getQueryKey(), false);
+                String oldValue = "";
+                String newValue = "";
 
                 if (group != null) 
                 {            
-                    NumberKey newOptionId = null;
-                    NumberKey oldOptionId = null;
-                    String newValue = "";
-                    String oldValue = "";
                     if (aval instanceof OptionAttribute) 
                     {
                         newValue = group.get("OptionId").toString();
                         oldValue = aval.getOptionIdAsString();
-                    
-                        if (!newValue.equals(""))
-                        {
-                            newOptionId = new NumberKey(newValue);
-                            AttributeOption newAttributeOption = 
-                              AttributeOptionManager
-                              .getInstance(new NumberKey(newValue));
-                            newValue = newAttributeOption.getName();
-                        }
-                        if (!oldValue.equals(""))
-                        {
-                            oldOptionId = aval.getOptionId();
-                            AttributeOption oldAttributeOption = 
-                              AttributeOptionManager
-                              .getInstance(oldOptionId);
-                            oldValue = oldAttributeOption.getName();
-                        }
-                        
                     }
                     else 
                     {
                         newValue = group.get("Value").toString();
                         oldValue = aval.getValue();
                     }
-
                     if (!newValue.equals("") && 
                         (oldValue == null  || !oldValue.equals(newValue)))
                     {
-                        aval.startTransaction(transaction);
-                        group.setProperties(aval);
-                        aval.save();
+                        group.setProperties(aval2);
+                        newAttVals.put(aval.getAttributeId(), aval2);
                     }
-                } 
-            }
+                }
+            } 
+            issue.setProperties(newAttVals, transaction);
             intake.removeAll();
             sendEmail(transaction, issue, DEFAULT_MSG, context, data);
             scarabR.setConfirmMessage("Your changes have been saved.");

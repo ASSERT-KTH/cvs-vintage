@@ -76,7 +76,7 @@ import org.tigris.scarab.om.ModuleManager;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.68 2002/07/25 18:15:06 jmcnally Exp $
+ * @version $Id: AttributeValue.java,v 1.69 2002/07/30 02:36:25 elicia Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -789,15 +789,6 @@ public abstract class AttributeValue
         String id = getIssue().getFederatedId();
         String name = getAttribute().getName();
         String newValue = getValue();
-        /*
-       int length = 40 + id.length() + name.length() + newValue.length();
-        if ( oldValue != null ) 
-        {
-            length += oldValue.length();
-        }
-        
-        StringBuffer sb = new StringBuffer(length)
-        */
         StringBuffer sb = new StringBuffer()
             .append(name);
         if ( oldValue == null ) 
@@ -828,6 +819,21 @@ public abstract class AttributeValue
         }
         sb.append('\'');
         return sb.toString();
+    }
+
+
+    /**
+     * Sets the properties of one attribute value based on another 
+     */
+    public void setProperties(AttributeValue attVal1)
+        throws Exception
+    {
+        setAttribute(attVal1.getAttribute());
+        setIssue(attVal1.getIssue());
+        setNumericValue(attVal1.getNumericValue());
+        setOptionId(attVal1.getOptionId());
+        setUserId(attVal1.getUserId());
+        setValue(attVal1.getValue());
     }
 }
 

@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.171 2002/07/25 18:51:35 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.172 2002/07/30 02:36:25 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2487,4 +2487,28 @@ public class Issue
         results[1] = othersAction;
         return results;
     }
+
+    /*
+    *  Sets AttributeValues for an issue based on a hashmap of attribute values
+    */
+    public void setProperties(HashMap newAttVals, Transaction transaction)
+        throws Exception
+    {
+        SequencedHashMap avMap = getModuleAttributeValuesMap(); 
+        AttributeValue oldAttVal = null;
+        AttributeValue newAttVal = null;
+        Iterator iter = avMap.iterator();
+        while (iter.hasNext())
+        {
+            oldAttVal = (AttributeValue)avMap.get(iter.next());
+            newAttVal = (AttributeValue)newAttVals.get(oldAttVal.getAttributeId());
+            if (newAttVal != null)
+            {
+                oldAttVal.startTransaction(transaction);
+                oldAttVal.setProperties(newAttVal);
+                oldAttVal.save();
+            }
+        }
+    }
+
 }
