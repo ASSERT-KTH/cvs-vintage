@@ -90,7 +90,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.80 2002/08/01 18:16:31 elicia Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.81 2002/08/03 19:33:16 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -854,10 +854,12 @@ public class ScarabUserImpl
     /**
      * @see ScarabUser#getSearchableRMITs()
      */
-    public List getSearchableRMITs()
+    public List getSearchableRMITs(String searchField, String searchString, 
+                                   String sortColumn, String sortPolarity)
         throws Exception    
     {
-        return internalUser.getSearchableRMITs();
+        return internalUser.getSearchableRMITs(searchField, searchString, 
+                                               sortColumn, sortPolarity);
     }
 
     /**

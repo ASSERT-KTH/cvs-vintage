@@ -63,7 +63,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.74 2002/08/01 18:16:31 elicia Exp $
+ * @version $Id: ScarabUser.java,v 1.75 2002/08/03 19:33:16 jmcnally Exp $
  */
 public interface ScarabUser extends User
 {
@@ -350,7 +350,8 @@ public interface ScarabUser extends User
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    public List getSearchableRMITs()
+    public List getSearchableRMITs(String searchField, String searchString, 
+                                   String sortColumn, String sortPolarity)
         throws Exception;
 
     public void addRMITsToCurrentMITList(List rmits)

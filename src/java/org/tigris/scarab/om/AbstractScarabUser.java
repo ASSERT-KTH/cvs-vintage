@@ -52,6 +52,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Comparator;
 
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Role;
@@ -72,6 +73,7 @@ import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
+import org.tigris.scarab.util.Log;
 
 /**
  * This class contains common code for the use in ScarabUser implementations.
@@ -79,7 +81,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.50 2002/08/02 01:48:51 jon Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.51 2002/08/03 19:33:16 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -847,11 +849,14 @@ public abstract class AbstractScarabUser
         return result;
     }
 
+
     /**
-     * @see ScarabUser#getSearchableRMITs().  This list does not include
+     * @see ScarabUser#getSearchableRMITs(String, String, String, String).
+     * This list does not include
      * RModuleIssueTypes that are part of the current MITList.
      */
-    public List getSearchableRMITs()
+    public List getSearchableRMITs(String searchField, String searchString, 
+                                   String sortColumn, String sortPolarity)
         throws Exception    
     {
         List result = null;
@@ -861,15 +866,17 @@ public abstract class AbstractScarabUser
             List moduleIds = new ArrayList(userModules.length);
             for (int i=0; i<userModules.length; i++) 
             {
-                moduleIds.add(userModules[i].getModuleId());
+                Module module = userModules[i];
+                if (!module.isGlobalModule()) 
+                {
+                    moduleIds.add(module.getModuleId()); 
+                }                
             }
             Criteria crit = new Criteria();
             crit.addIn(RModuleIssueTypePeer.MODULE_ID, moduleIds);
             crit.addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID,
                          IssueTypePeer.ISSUE_TYPE_ID);
             crit.add(IssueTypePeer.PARENT_ID, 0);
-            crit.add(RModuleIssueTypePeer.MODULE_ID, Module.ROOT_ID, Criteria.NOT_EQUAL);
-            crit.addAscendingOrderByColumn(RModuleIssueTypePeer.MODULE_ID);
 
             // do not include RMIT's related to current MITListItems.
             MITList mitList = getCurrentMITList(getGenThreadKey());            
@@ -908,8 +915,16 @@ public abstract class AbstractScarabUser
                 crit.add(IssueTypePeer.ISSUE_TYPE_ID, 
                          (Object)sb.toString(), Criteria.CUSTOM);
             }
+            // we could add the filter criteria here, but this might
+            // result in full table scans.  Even if the table scan turns out
+            // to be more efficient, I think it is better to move this
+            // into the middle/front tier.
+            //addFilterCriteria(crit, searchField, searchString);
+            //addSortCriteria(crit, sortColumn, sortPolarity);
             
             result = RModuleIssueTypePeer.doSelect(crit);
+            filterRMITList(result, searchField, searchString);
+            sortRMITList(result, sortColumn, sortPolarity);
         }
         else 
         {
@@ -918,6 +933,89 @@ public abstract class AbstractScarabUser
         
         return result;
     }
+
+    /**
+     * Filter on module or issue type name.
+     */
+    protected void filterRMITList(List rmits, 
+                                  String searchField, String searchString)
+        throws Exception
+    {
+        String moduleName = null;
+        String issueTypeName = null;
+        if ("issuetype".equals(searchField)) 
+        {
+            issueTypeName = searchString;
+        }
+        else 
+        {
+            moduleName = searchString;
+        }
+        
+        if ( moduleName != null && moduleName.length() > 0 )
+        {
+            for ( int i=rmits.size()-1; i>=0; i-- )
+            {
+                String name = ((RModuleIssueType)rmits.get(i))
+                    .getModule().getRealName();
+                if (name == null || name.indexOf(moduleName) == -1)
+                {
+                    rmits.remove(i);
+                }
+            }
+        }
+        if ( issueTypeName != null && issueTypeName.length() > 0 )
+        {
+            for ( int i=rmits.size()-1; i>=0; i-- )
+            {
+                String name = ((RModuleIssueType)rmits.get(i))
+                    .getDisplayName();
+                if (name == null || name.indexOf(issueTypeName) == -1)
+                {
+                    rmits.remove(i);
+                }
+            }
+        }
+    }
+
+    /**
+     * Sort module or issue type name.
+     */
+    protected void sortRMITList(List rmits, 
+                                final String sortColumn, String sortPolarity)
+        throws Exception
+    {
+        final int polarity = ("desc".equals(sortPolarity)) ? -1 : 1;   
+        Comparator c = new Comparator() 
+        {
+            public int compare(Object o1, Object o2) 
+            {
+                int i = 0;
+                if (sortColumn != null && sortColumn.equals("issuetype"))
+                {
+                    i =  polarity * ((RModuleIssueType)o1).getDisplayName()
+                         .compareTo(((RModuleIssueType)o2).getDisplayName());
+                }
+                else
+                {
+                    try
+                    {
+                        i =  polarity * 
+                            ((RModuleIssueType)o1).getModule().getRealName()
+                            .compareTo(((RModuleIssueType)o2).getModule()
+                                       .getRealName());
+                    }
+                    catch (TorqueException e)
+                    {
+                        Log.get().error("Unable to sort on module names", e);
+                    }
+                }
+                return i;
+             }
+        };
+        Collections.sort(rmits, c);
+    }
+
 
     public void addRMITsToCurrentMITList(List rmits)
         throws TorqueException
