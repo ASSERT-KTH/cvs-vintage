@@ -24,7 +24,7 @@
 
 #set ($allTemplates = $scarabR.IssueTemplates)
 #if ($allTemplates.size() > 0 )
-<h3>Apply $scarabR.CurrentIssueType.Name template</h3>
+<h3>Apply a $scarabR.CurrentIssueType.Name.toLowerCase() template</h3>
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
  <tr>
