@@ -18,15 +18,20 @@ package org.columba.mail.folder;
 
 /**
  * Root folders like {@link LocalRootFolder} and {@link IMAPRootFolder} should
- * implement this interface.
- * <p>
- * It provides an easy way to determine the inbox- and trash-folder for
- * root folders.
+ * implement this interface. It provides an easy way to determine the inbox and
+ * trash folders for root folders. Root folders don't contain messages.
  *
  * @author fdietz
  */
 public interface RootFolder {
+    
+    /**
+     * Returns the child folder responsible for managing deleted messages.
+     */
     public AbstractFolder getTrashFolder();
 
+    /**
+     * Returns the child folder responsible for managing received messages.
+     */
     public AbstractFolder getInboxFolder();
 }

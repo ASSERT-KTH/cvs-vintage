@@ -32,9 +32,7 @@ import javax.swing.tree.TreePath;
  * Represents a treenode and is the abstract class every folder
  * extends.
  * <p>
- * In comparison to {@link Folder} it doesn't contain messages.
- * <p>
- * see tree.xml configuration file
+ * See tree.xml configuration file.
  *
  * @author fdietz
  */
@@ -176,8 +174,8 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
     }
 
     /**
-         * @see org.columba.modules.mail.folder.FolderTreeNode#getName()
-         */
+     * Returns the folder's name.
+     */
     public String getName() {
         String name = null;
 
@@ -188,8 +186,8 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
     }
 
     /**
- * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
- */
+     * Sets the folder's name. This method notifies registered FolderListeners.
+     */
     public void setName(String newName) {
         FolderItem item = getFolderItem();
         item.set("property", "name", newName);
@@ -255,6 +253,10 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
         }
     }
 
+    /**
+     * Removes this folder from its parent. This method will notify registered
+     * FolderListeners.
+     */
     public void removeFolder() throws Exception {
         // remove XmlElement
         getFolderItem().getRoot().getParent().removeElement(getFolderItem()
@@ -265,6 +267,10 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
         fireFolderRemoved();
     }
 
+    /**
+     * Adds a child folder to this folder. This method will notify registered
+     * FolderListeners.
+     */
     public void addSubfolder(AbstractFolder child) throws Exception {
         add(child);
         getNode().addElement(child.getNode());
