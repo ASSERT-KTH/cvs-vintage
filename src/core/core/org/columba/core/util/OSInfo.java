@@ -24,49 +24,61 @@
 package org.columba.core.util;
 
 public class OSInfo {
+
+	private static final String UNKNOWN = new String();
+
 	//Public methods
 	//Platform identifiers: Windows, Linux, Mac OS, ...
 	public static boolean isWin32Platform() {
 		return (isWindowsPlatform() || isWinNTPlatform());
 	}
+	
 	public static boolean isWinNTPlatform() {
 		return (isWinNT() || isWin2K() || isWinXP());
 	}
+	
 	public static boolean isWindowsPlatform() {
 		return (isWin95() || isWin98() || isWinME());
 	}
+	
 	//Single OS identifiers: Window 95, Window 98, ...
 	public static boolean isWin95() {
-		String sOSName = System.getProperty("os.name", "not_found");
+		String sOSName = System.getProperty("os.name", UNKNOWN);
 		return (sOSName.equalsIgnoreCase("Windows 95"));
 	}
+	
 	public static boolean isWin98() {
-		String sOSName = System.getProperty("os.name", "not_found");
+		String sOSName = System.getProperty("os.name", UNKNOWN);
 		return (sOSName.equalsIgnoreCase("Windows 98"));
 	}
+	
 	public static boolean isWinME() {
-		String sOSName = System.getProperty("os.name", "not_found");
+		String sOSName = System.getProperty("os.name", UNKNOWN);
 		return (sOSName.equalsIgnoreCase("Windows ME"));
 	}
+	
 	public static boolean isWinNT() {
-		String sOSName = System.getProperty("os.name", "not_found");
+		String sOSName = System.getProperty("os.name", UNKNOWN);
 		return (sOSName.equalsIgnoreCase("Windows NT"));
 	}
+	
 	public static boolean isWin2K() {
-		String sOSName = System.getProperty("os.name", "not_found");
+		String sOSName = System.getProperty("os.name", UNKNOWN);
 		return (sOSName.equalsIgnoreCase("Windows 2000"));
 	}
+	
 	public static boolean isWinXP() {
-		String sOSName = System.getProperty("os.name", "not_found");
+		String sOSName = System.getProperty("os.name", UNKNOWN);
 		return (sOSName.equalsIgnoreCase("Windows XP")); //Not tested.
 	}
 
 	public static boolean isLinux() {
-		String sOSName = System.getProperty("os.name", "not_found");
+		String sOSName = System.getProperty("os.name", UNKNOWN);
 		return (sOSName.equalsIgnoreCase("Linux"));
 	}
+	
 	public static boolean isSolaris() {
-		String sOSName = System.getProperty("os.name", "not_found");
+		String sOSName = System.getProperty("os.name", UNKNOWN);
 		return (sOSName.equalsIgnoreCase("Solaris"));
 	}
 
@@ -77,4 +89,4 @@ public class OSInfo {
 	}
 */
 
-};
+}
