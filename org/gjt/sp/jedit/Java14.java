@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.12 2002/12/25 20:44:55 spestov Exp $
+ * @version $Id: Java14.java,v 1.13 2002/12/29 19:01:24 spestov Exp $
  */
 public class Java14
 {
@@ -138,7 +138,6 @@ public class Java14
 	//{{{ WheelScrollListener class
 	static class MouseWheelHandler implements MouseWheelListener
 	{
-		int dbg;
 		public void mouseWheelMoved(MouseWheelEvent e)
 		{
 			JEditTextArea textArea = (JEditTextArea)e.getSource();
