@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
 <!DOCTYPE input-data SYSTEM
-          "http://java.apache.org/turbine/dtd/constraints.dtd">
+          "http://jakarta.apache.org/turbine/dtd/constraints.dtd">
 
 <!-- PUBLIC "-//Apache//Apache-Turbine-Intake Application Data//EN" --> 
 
