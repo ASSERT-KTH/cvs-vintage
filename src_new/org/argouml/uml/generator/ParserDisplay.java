@@ -1,5 +1,4 @@
-
-// $Id: ParserDisplay.java,v 1.69 2003/08/25 19:15:58 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.70 2003/09/01 00:59:52 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.69 2003/08/25 19:15:58 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.70 2003/09/01 00:59:52 bobtarling Exp $
 
 
 
@@ -1529,7 +1528,7 @@ public class ParserDisplay extends Parser {
 		return root;
 	    else
 		_cat.debug("Missed stereotype "
-			   + ((MStereotype) root).getBaseClass());
+			   + ModelFacade.getBaseClass(root));
 
 	}
 
@@ -2996,7 +2995,7 @@ public class ParserDisplay extends Parser {
     private boolean hasMsgWithActivator(MClassifierRole r, MMessage m) {
 	Iterator it = r.getMessages2().iterator();
 	while (it.hasNext())
-	    if (((MMessage) it.next()).getActivator() == m)
+	    if (ModelFacade.getActivator(it.next()) == m)
 		return true;
 	return false;
     }

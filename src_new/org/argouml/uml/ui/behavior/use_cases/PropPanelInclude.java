@@ -1,4 +1,4 @@
-// $Id: PropPanelInclude.java,v 1.16 2003/08/30 23:11:49 bobtarling Exp $
+// $Id: PropPanelInclude.java,v 1.17 2003/09/01 00:59:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -119,17 +119,16 @@ public class PropPanelInclude extends PropPanelModelElement {
      *          type {@link MUseCase} to fit in with the type specified for
      *          the {@link UMLComboBoxModel}.
      */
-    public MUseCase getBase() {
-        MUseCase base   = null;
+    public Object getBase() {
+        Object base   = null;
         Object      target = getTarget();
 
         // Note that because of the NSUML bug, we must use getAddition() rather
         // than getBase() to get the base use case.
 
-        if (org.argouml.model.ModelFacade.isAInclude(target)) {
-            base = ((MInclude) target).getAddition();
+        if (ModelFacade.isAInclude(target)) {
+            base = ModelFacade.getAddition(target);
         }
-
         return base;
     }
 

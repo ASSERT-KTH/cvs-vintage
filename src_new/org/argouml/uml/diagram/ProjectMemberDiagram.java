@@ -1,5 +1,4 @@
-
-// $Id: ProjectMemberDiagram.java,v 1.16 2003/08/31 16:11:06 alexb Exp $
+// $Id: ProjectMemberDiagram.java,v 1.17 2003/09/01 00:59:52 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +31,6 @@ import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.ui.ArgoDiagram;
-import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.xml.pgml.PGMLParser;
 import org.tigris.gef.ocl.OCLExpander;
 import org.tigris.gef.ocl.TemplateReader;

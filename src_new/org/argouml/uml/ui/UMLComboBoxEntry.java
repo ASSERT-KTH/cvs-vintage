@@ -1,5 +1,4 @@
-
-// $Id: UMLComboBoxEntry.java,v 1.8 2003/08/30 13:23:41 bobtarling Exp $
+// $Id: UMLComboBoxEntry.java,v 1.9 2003/09/01 00:59:51 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -167,7 +166,7 @@ public class UMLComboBoxEntry implements Comparable {
                 clone.setName(_element.getName());
                 clone.setStereotype(_element.getStereotype());
                 if (ModelFacade.isAStereotype(clone)) {
-                    ((MStereotype) clone).setBaseClass(((MStereotype) _element).getBaseClass());
+                    ModelFacade.setBaseClass(clone, ModelFacade.getBaseClass(_element));
                 }
                 targetNS.addOwnedElement(clone);
                 _element = clone;
@@ -236,4 +235,3 @@ public class UMLComboBoxEntry implements Comparable {
         return _isPhantom;
     }
 }
-

@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.35 2003/08/31 19:56:06 alexb Exp $
+// $Id: UMLStateDiagram.java,v 1.36 2003/09/01 00:59:51 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.35 2003/08/31 19:56:06 alexb Exp $
+// $Id: UMLStateDiagram.java,v 1.36 2003/09/01 00:59:51 bobtarling Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -136,9 +136,9 @@ public class UMLStateDiagram extends UMLDiagram {
         if (namespace != null && ModelFacade.getName(namespace) != null) {
             String name = null, diag_name = ModelFacade.getName(namespace);
             Object[] args = {name};
-            int number = (((MNamespace)namespace).getBehaviors()) == null
+            int number = (ModelFacade.getBehaviors(namespace)) == null
                 ? 0 
-                : ((MNamespace)namespace).getBehaviors().size();
+                : ModelFacade.getBehaviors(namespace).size();
             name = diag_name + " " + (number++);
             Argo.log.info("UMLStateDiagram constructor: String name = " + name);
             try {

@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.96 2003/09/01 00:23:42 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.97 2003/09/01 00:59:52 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2911,6 +2911,18 @@ public class ModelFacade {
             && p instanceof MParameter) {
             ((MOperation) o).removeParameter((MParameter) p);
         }
+    }
+
+    /**
+     * Set the baseclass of some stereotype
+     * @param handle the stereotype
+     * @param baseClass the baseclass
+     */
+    public static void setBaseClass(Object handle, Object baseClass) {
+        if (isAStereotype(handle) && baseClass instanceof String) {
+            ((MStereotype) handle).setBaseClass((String)baseClass);
+        }
+        throw new IllegalArgumentException("Unrecognized object " + handle);
     }
 
     /**

@@ -1,5 +1,4 @@
-
-// $Id: GoClassifierToStateMachine.java,v 1.6 2003/08/25 19:15:55 bobtarling Exp $
+// $Id: GoClassifierToStateMachine.java,v 1.7 2003/09/01 00:59:52 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,10 +25,9 @@
 package org.argouml.uml.diagram.ui;
 
 import java.util.Collection;
+import org.argouml.model.ModelFacade;
 
 import org.argouml.ui.AbstractGoRule;
-import ru.novosoft.uml.foundation.core.MClassifier;
-
 /**
  * Navigation rule for navperspective to navigate from behavioral
  * feature to statemachine.  Causes statemachine to be shown as child
@@ -45,8 +43,8 @@ public class GoClassifierToStateMachine extends AbstractGoRule {
      * @see org.argouml.ui.AbstractGoRule#getChildren(Object)
      */
     public Collection getChildren(Object parent) {
-	if (org.argouml.model.ModelFacade.isAClassifier(parent)) 
-	    return ((MClassifier) parent).getBehaviors();
+	if (ModelFacade.isAClassifier(parent)) 
+	    return ModelFacade.getBehaviors(parent);
 	return null;
     }
 

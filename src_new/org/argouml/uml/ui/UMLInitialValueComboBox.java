@@ -1,4 +1,4 @@
-// $Id: UMLInitialValueComboBox.java,v 1.23 2003/08/30 23:11:49 bobtarling Exp $
+// $Id: UMLInitialValueComboBox.java,v 1.24 2003/09/01 00:59:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -200,13 +200,13 @@ public class UMLInitialValueComboBox extends JComboBox
             if (ModelFacade.isACallEvent(target)) {
                 return;
             }
-            MBehavioralFeature feature = ((MParameter) target).getBehavioralFeature();
+            Object feature = ModelFacade.getBehavioralFeature(target);
             if (feature != null) {
-                MClassifier classifier = (MClassifier) feature.getOwner();
+                Object classifier = ModelFacade.getOwner(feature);
                 if (classifier == null) {
                     return;
                 }
-                classifier.setFeatures(classifier.getFeatures());
+                ModelFacade.setFeatures(classifier, ModelFacade.getFeatures(classifier));
             }
         }
     }   // ...end of update() method...

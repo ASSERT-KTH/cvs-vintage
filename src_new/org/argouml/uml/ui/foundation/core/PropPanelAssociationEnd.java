@@ -1,5 +1,4 @@
-
-// $Id: PropPanelAssociationEnd.java,v 1.35 2003/08/25 19:15:52 bobtarling Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.36 2003/09/01 00:59:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +46,6 @@ import org.argouml.uml.ui.UMLMultiplicityComboBox;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.util.ConfigLoader;
 
-import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MAssociationEnd;
 
 /**
@@ -206,7 +204,7 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
     public void navigateUp() {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAAssociationEnd(target)) {
-            MAssociation assoc = ((MAssociationEnd) target).getAssociation();
+            Object assoc = ModelFacade.getAssociation(target);
             if (assoc != null) {
                 TargetManager.getInstance().setTarget(assoc);
             }

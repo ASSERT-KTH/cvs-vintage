@@ -1,6 +1,4 @@
-
-
-// $Id: UMLAssociationEndAssociationListModel.java,v 1.4 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: UMLAssociationEndAssociationListModel.java,v 1.5 2003/09/01 00:59:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,14 +22,13 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLAssociationEndAssociationListModel.java,v 1.4 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: UMLAssociationEndAssociationListModel.java,v 1.5 2003/09/01 00:59:51 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
-
-import ru.novosoft.uml.foundation.core.MAssociationEnd;
 
 /**
  * 
@@ -53,7 +50,7 @@ public class UMLAssociationEndAssociationListModel extends UMLModelElementListMo
     protected void buildModelList() {
         removeAllElements();
         if (_target != null) {
-            addElement(((MAssociationEnd) _target).getAssociation());
+            addElement(ModelFacade.getAssociation(_target));
         }
     }
 
@@ -61,7 +58,7 @@ public class UMLAssociationEndAssociationListModel extends UMLModelElementListMo
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
      */
     protected boolean isValidElement(MBase element) {
-        return org.argouml.model.ModelFacade.isAAssociation(element) && ((MAssociationEnd) _target).getAssociation().equals(element);
+        return org.argouml.model.ModelFacade.isAAssociation(element) && ModelFacade.getAssociation(_target).equals(element);
     }
 
 }

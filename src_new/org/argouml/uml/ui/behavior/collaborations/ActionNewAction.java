@@ -1,4 +1,4 @@
-// $Id: ActionNewAction.java,v 1.6 2003/06/30 21:59:35 linus Exp $
+// $Id: ActionNewAction.java,v 1.7 2003/09/01 00:59:51 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@
 package org.argouml.uml.ui.behavior.collaborations;
 
 import java.awt.event.ActionEvent;
+import org.argouml.model.ModelFacade;
 
 import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorFactory;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
@@ -61,7 +62,7 @@ public class ActionNewAction extends AbstractActionNewModelElement {
      */
     public boolean isEnabled() {
         if (getTarget() != null) {
-            return ((MMessage) getTarget()).getAction() == null;
+            return ModelFacade.getAction(getTarget()) == null;
         }
         return false;
     }

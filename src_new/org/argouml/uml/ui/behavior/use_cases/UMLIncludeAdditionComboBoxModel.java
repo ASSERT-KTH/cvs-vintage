@@ -1,4 +1,4 @@
-// $Id: UMLIncludeAdditionComboBoxModel.java,v 1.10 2003/08/30 18:59:43 bobtarling Exp $
+// $Id: UMLIncludeAdditionComboBoxModel.java,v 1.11 2003/09/01 00:59:51 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,7 @@ public class UMLIncludeAdditionComboBoxModel extends UMLComboBoxModel2 {
      */
     protected Object getSelectedModelElement() {
         if (getTarget() != null) {
-            return ((MInclude) getTarget()).getAddition();
+            return ModelFacade.getAddition(getTarget());
         }
         return null;
     }

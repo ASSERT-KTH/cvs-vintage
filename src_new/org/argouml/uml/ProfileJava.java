@@ -1,5 +1,4 @@
-
-// $Id: ProfileJava.java,v 1.19 2003/08/30 18:59:43 bobtarling Exp $
+// $Id: ProfileJava.java,v 1.20 2003/09/01 00:59:52 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,16 +71,15 @@ public class ProfileJava extends Profile {
 	if (element == null) {
 	    value = "";
 	} else {
-	    MNamespace elementNs = element.getNamespace();
+	    Object elementNs = ModelFacade.getNamespace(element);
 	    //
 	    //   if element is an AssociationEnd use
 	    //      the namespace of containing association
 	    //
 	    if (ModelFacade.isAAssociationEnd(element)) {
-		MAssociation assoc =
-		    ((MAssociationEnd) element).getAssociation();
+		Object assoc = ModelFacade.getAssociation(element);
 		if (assoc != null) {
-		    elementNs = assoc.getNamespace();
+		    elementNs = ModelFacade.getNamespace(assoc);
 		}
 	    }
 	    if (elementNs == namespace) {

@@ -1,5 +1,4 @@
-
-// $Id: PropPanelMessage.java,v 1.35 2003/08/25 19:15:54 bobtarling Exp $
+// $Id: PropPanelMessage.java,v 1.36 2003/09/01 00:59:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +27,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.35 2003/08/25 19:15:54 bobtarling Exp $
+// $Id: PropPanelMessage.java,v 1.36 2003/09/01 00:59:51 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -145,7 +144,7 @@ public class PropPanelMessage extends PropPanelModelElement {
     }
 
     public boolean isAddActionEnabled() {
-    	return (org.argouml.model.ModelFacade.isAMessage(getTarget())) && (((MMessage) getTarget()).getAction() == null);
+    	return (org.argouml.model.ModelFacade.isAMessage(getTarget())) && (ModelFacade.getAction(getTarget()) == null);
     }
 
     public void navigateInteraction() {

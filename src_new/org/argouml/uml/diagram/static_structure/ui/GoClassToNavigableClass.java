@@ -1,5 +1,4 @@
-
-// $Id: GoClassToNavigableClass.java,v 1.11 2003/08/25 19:15:56 bobtarling Exp $
+// $Id: GoClassToNavigableClass.java,v 1.12 2003/09/01 00:59:52 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,14 +28,13 @@ import java.util.Collection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
+import org.argouml.model.ModelFacade;
 
 
 import org.argouml.ui.AbstractGoRule;
 
 import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MAssociationEnd;
-import ru.novosoft.uml.foundation.core.MClass;
-
 public class GoClassToNavigableClass extends AbstractGoRule {
 
     public String getRuleName() {
@@ -49,7 +47,7 @@ public class GoClassToNavigableClass extends AbstractGoRule {
         
         List childClasses = new ArrayList();
         
-        Collection ends = ((MClass) parent).getAssociationEnds();
+        Collection ends = ModelFacade.getAssociationEnds(parent);
         if (ends == null)
             return null;
         

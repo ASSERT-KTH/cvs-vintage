@@ -1,6 +1,4 @@
-
-
-// $Id: UMLAssociationAssociationRoleListModel.java,v 1.4 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: UMLAssociationAssociationRoleListModel.java,v 1.5 2003/09/01 00:59:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,14 +22,13 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLAssociationAssociationRoleListModel.java,v 1.4 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: UMLAssociationAssociationRoleListModel.java,v 1.5 2003/09/01 00:59:51 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
-
-import ru.novosoft.uml.foundation.core.MAssociation;
 
 /**
  * 
@@ -53,13 +50,13 @@ public class UMLAssociationAssociationRoleListModel extends UMLModelElementListM
      */
     protected void buildModelList() {
         if (_target != null) 
-            setAllElements(((MAssociation) getTarget()).getAssociationRoles());
+            setAllElements(ModelFacade.getAssociationRoles(getTarget()));
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
     protected boolean isValidElement(MBase o) {  
-        return org.argouml.model.ModelFacade.isAAssociationRole(o) && ((MAssociation) getTarget()).getAssociationRoles().contains(o);
+        return org.argouml.model.ModelFacade.isAAssociationRole(o) && ModelFacade.getAssociationRoles(getTarget()).contains(o);
     }
 }

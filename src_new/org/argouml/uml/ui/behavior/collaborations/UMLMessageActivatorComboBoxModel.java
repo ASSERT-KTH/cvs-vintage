@@ -1,5 +1,4 @@
-
-// $Id: UMLMessageActivatorComboBoxModel.java,v 1.11 2003/08/25 19:15:54 bobtarling Exp $
+// $Id: UMLMessageActivatorComboBoxModel.java,v 1.12 2003/09/01 00:59:51 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +24,7 @@
 
 package org.argouml.uml.ui.behavior.collaborations;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
 import org.argouml.uml.ui.UMLComboBoxModel2;
@@ -78,7 +78,7 @@ public class UMLMessageActivatorComboBoxModel extends UMLComboBoxModel2 {
      */
     protected Object getSelectedModelElement() {
         if (getTarget() != null) {
-            return ((MMessage) getTarget()).getActivator();
+            return ModelFacade.getActivator(getTarget());
         }
         return null;
     }

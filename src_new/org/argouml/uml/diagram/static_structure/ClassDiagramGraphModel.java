@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.43 2003/08/31 00:17:58 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.44 2003/09/01 00:59:53 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.43 2003/08/31 00:17:58 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.44 2003/09/01 00:59:53 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -333,7 +333,7 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
      */
     public void addNodeRelatedEdges(Object node) {
 	if ( org.argouml.model.ModelFacade.isAClassifier(node) ) {
-	    Collection ends = ((MClassifier) node).getAssociationEnds();
+	    Collection ends = ModelFacade.getAssociationEnds(node);
 	    Iterator iter = ends.iterator();
 	    while (iter.hasNext()) {
 		MAssociationEnd ae = (MAssociationEnd) iter.next();

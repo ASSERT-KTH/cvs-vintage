@@ -1,5 +1,4 @@
-
-// $Id: GoBehavioralFeatureToStateMachine.java,v 1.6 2003/08/25 19:15:55 bobtarling Exp $
+// $Id: GoBehavioralFeatureToStateMachine.java,v 1.7 2003/09/01 00:59:52 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,10 +25,9 @@
 package org.argouml.uml.diagram.ui;
 
 import java.util.Collection;
+import org.argouml.model.ModelFacade;
 
 import org.argouml.ui.AbstractGoRule;
-import ru.novosoft.uml.foundation.core.MBehavioralFeature;
-
 /**
  * Navigation rule for navperspective to navigate from behavioral
  * feature to statemachine.  Causes statemachine to be shown as child
@@ -45,8 +43,8 @@ public class GoBehavioralFeatureToStateMachine extends AbstractGoRule {
      * @see org.argouml.ui.AbstractGoRule#getChildren(Object)
      */
     public Collection getChildren(Object parent) {
-	if (org.argouml.model.ModelFacade.isABehavioralFeature(parent)) 
-	    return ((MBehavioralFeature) parent).getBehaviors();
+	if (ModelFacade.isABehavioralFeature(parent)) 
+	    return ModelFacade.getBehaviors(parent);
 	return null;
     }
 
