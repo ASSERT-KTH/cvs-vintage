@@ -39,7 +39,7 @@ import java.rmi.RemoteException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  *
  */
 public class StatefulSessionInstanceInterceptor
@@ -394,6 +394,7 @@ public class StatefulSessionInstanceInterceptor
       private Method beforeCompletion;
       private Method afterCompletion;
       private BeanLock lock;
+      private boolean beforeCompletionInvoked = false;
       
       /**
        *  Create a new instance synchronization instance.
@@ -456,6 +457,7 @@ public class StatefulSessionInstanceInterceptor
 
          // lock the context the transaction is being commited (no need for sync)
          ctx.lock();
+         beforeCompletionInvoked = true;
          
          if (notifySession)
          {
@@ -485,9 +487,7 @@ public class StatefulSessionInstanceInterceptor
             // finish the transaction association
             ctx.setTransaction(null);
             
-            // the context is locked in beforeCompletion()
-            // which is only called in case of commit() and not rollback() 
-            if (ctx.isLocked())
+            if (beforeCompletionInvoked)
                ctx.unlock();
             
             if (notifySession)
