@@ -65,7 +65,6 @@ import java.net.*;
 import java.util.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.helper.*;
-import org.apache.tomcat.logging.*;
 
 /**
  *

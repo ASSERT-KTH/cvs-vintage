@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/TcpConnector.java,v 1.4 2000/09/25 07:21:02 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/09/25 07:21:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/TcpConnector.java,v 1.5 2000/09/29 21:10:11 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/09/29 21:10:11 $
  *
  * ====================================================================
  *
@@ -70,7 +70,6 @@ import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.logging.*;
 
 class TcpConnector implements MsgConnector 
 {

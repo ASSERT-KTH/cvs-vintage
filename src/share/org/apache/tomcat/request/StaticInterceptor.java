@@ -68,9 +68,6 @@ import java.text.*;
 import java.util.*;
 import java.security.*;
 
-import org.apache.tomcat.logging.*;
-
-
 /**
  * Handler for static files.
  *
