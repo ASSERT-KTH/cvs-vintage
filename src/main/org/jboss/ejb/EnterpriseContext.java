@@ -47,7 +47,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -434,13 +434,31 @@ public abstract class EnterpriseContext
          java.lang.IllegalStateException,
          SystemException
       {
-         con.getTransactionManager().commit();
+         try {
+           con.getTransactionManager().commit();
+         } finally {
+           // According to the spec, after commit and rollback was called on
+           // UserTransaction, the thread is associated with no transaction.
+           // Since the BMT Tx interceptor will associate the thread from the context
+           // with the thread that comes in on an invocation, we must set the
+           // context transaction to null
+           setTransaction(null);
+         }  
       }
        
       public void rollback()
          throws IllegalStateException, SecurityException, SystemException
       {
-         con.getTransactionManager().rollback();
+         try {
+           con.getTransactionManager().rollback();
+         } finally {
+           // According to the spec, after commit and rollback was called on
+           // UserTransaction, the thread is associated with no transaction.
+           // Since the BMT Tx interceptor will associate the thread from the context
+           // with the thread that comes in on an invocation, we must set the
+           // context transaction to null
+           setTransaction(null);
+         }  
       }
       
       public void setRollbackOnly()
