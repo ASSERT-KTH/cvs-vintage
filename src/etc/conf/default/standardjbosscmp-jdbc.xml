@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.73 2004/02/06 15:06:00 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.74 2004/03/23 16:58:07 triathlon98 Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -40,6 +40,7 @@
       </unknown-pk>
 
       <entity-command name="default"/>
+
    </defaults>
 
    <type-mappings>
@@ -173,7 +174,7 @@
 
       <type-mapping>
          <name>Ingres</name>
-         <row-locking-template>SELECT ?1 FROM ?2 WHERE ?3 ORDER BY ?4 FOR UPDATE</row-locking-template>    
+         <row-locking-template>SELECT ?1 FROM ?2 WHERE ?3 ORDER BY ?4 FOR UPDATE</row-locking-template>
          <pk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 PRIMARY KEY (?3)</pk-constraint-template>
          <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
          <alias-header-prefix>t</alias-header-prefix>
@@ -186,35 +187,35 @@
          <function-mapping>
             <function-name>concat</function-name>
             <function-sql>concat(?1,?2)</function-sql>
-         </function-mapping>    
+         </function-mapping>
          <function-mapping>
             <function-name>substring</function-name>
             <function-sql>left(?1,?2)</function-sql>
-         </function-mapping>    
+         </function-mapping>
          <function-mapping>
             <function-name>lcase</function-name>
             <function-sql>lower(?1)</function-sql>
-         </function-mapping>    
+         </function-mapping>
          <function-mapping>
             <function-name>length</function-name>
             <function-sql>length(?1)</function-sql>
-         </function-mapping>    
+         </function-mapping>
          <function-mapping>
             <function-name>locate</function-name>
             <function-sql>locate(?1,?2)</function-sql>
-         </function-mapping>    
+         </function-mapping>
          <function-mapping>
             <function-name>abs</function-name>
             <function-sql>abs(?1)</function-sql>
-         </function-mapping>    
+         </function-mapping>
          <function-mapping>
             <function-name>sqrt</function-name>
             <function-sql>sqrt(?1)</function-sql>
-         </function-mapping>    
+         </function-mapping>
          <function-mapping>
             <function-name>ucase</function-name>
             <function-sql>upper(?1)</function-sql>
-         </function-mapping>    
+         </function-mapping>
          <function-mapping>
             <function-name>count</function-name>
             <function-sql>count(?1)</function-sql>
@@ -392,15 +393,12 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
 
       <type-mapping>
          <name>Firebird</name>
-         <!-- For use with the Firebirdsql jca-jdbc driver.
-              A version after Beta 1 is strongly recommended,
-              this may involve building from cvs -->
          <row-locking-template>SELECT ?1 FROM ?2 WHERE ?3 ORDER BY ?4 FOR UPDATE</row-locking-template>
          <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
          <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
          <alias-header-prefix>t</alias-header-prefix>
          <alias-header-suffix>_</alias-header-suffix>
-         <alias-max-length>32</alias-max-length>
+         <alias-max-length>31</alias-max-length>
          <subquery-supported>true</subquery-supported>
          <true-mapping>1</true-mapping>
          <false-mapping>0</false-mapping>
@@ -413,37 +411,37 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
          <mapping>
             <java-type>java.lang.Boolean</java-type>
             <jdbc-type>BIT</jdbc-type>
-            <sql-type>SMALLINT</sql-type>
+            <sql-type>SMALLINT default 0</sql-type>
          </mapping>
          <mapping>
             <java-type>java.lang.Byte</java-type>
             <jdbc-type>TINYINT</jdbc-type>
-            <sql-type>SMALLINT</sql-type>
+            <sql-type>SMALLINT default 0</sql-type>
          </mapping>
          <mapping>
             <java-type>java.lang.Short</java-type>
             <jdbc-type>SMALLINT</jdbc-type>
-            <sql-type>SMALLINT</sql-type>
+            <sql-type>SMALLINT default 0</sql-type>
          </mapping>
          <mapping>
             <java-type>java.lang.Integer</java-type>
             <jdbc-type>INTEGER</jdbc-type>
-            <sql-type>INTEGER</sql-type>
+            <sql-type>INTEGER default 0</sql-type>
          </mapping>
          <mapping>
             <java-type>java.lang.Long</java-type>
             <jdbc-type>BIGINT</jdbc-type>
-            <sql-type>NUMERIC(18,0)</sql-type>
+            <sql-type>NUMERIC(18,0) default 0</sql-type>
          </mapping>
          <mapping>
             <java-type>java.lang.Float</java-type>
             <jdbc-type>REAL</jdbc-type>
-            <sql-type>FLOAT</sql-type>
+            <sql-type>FLOAT default 0</sql-type>
          </mapping>
          <mapping>
             <java-type>java.lang.Double</java-type>
             <jdbc-type>DOUBLE</jdbc-type>
-            <sql-type>DOUBLE PRECISION</sql-type>
+            <sql-type>DOUBLE PRECISION default 0</sql-type>
          </mapping>
          <mapping>
             <java-type>java.lang.Character</java-type>
@@ -485,7 +483,7 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
          <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
          <alias-header-prefix>t</alias-header-prefix>
          <alias-header-suffix>_</alias-header-suffix>
-         <alias-max-length>32</alias-max-length>
+         <alias-max-length>31</alias-max-length>
          <subquery-supported>true</subquery-supported>
          <true-mapping>1</true-mapping>
          <false-mapping>0</false-mapping>
@@ -498,37 +496,37 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
          <mapping>
             <java-type>java.lang.Boolean</java-type>
             <jdbc-type>BIT</jdbc-type>
-            <sql-type>SMALLINT</sql-type>
+            <sql-type>SMALLINT default 0</sql-type>
          </mapping>
          <mapping>
             <java-type>java.lang.Byte</java-type>
             <jdbc-type>TINYINT</jdbc-type>
-            <sql-type>SMALLINT</sql-type>
+            <sql-type>SMALLINT default 0</sql-type>
          </mapping>
          <mapping>
             <java-type>java.lang.Short</java-type>
             <jdbc-type>SMALLINT</jdbc-type>
-            <sql-type>SMALLINT</sql-type>
+            <sql-type>SMALLINT default 0</sql-type>
          </mapping>
          <mapping>
             <java-type>java.lang.Integer</java-type>
             <jdbc-type>INTEGER</jdbc-type>
-            <sql-type>INTEGER</sql-type>
+            <sql-type>INTEGER default 0</sql-type>
          </mapping>
          <mapping>
             <java-type>java.lang.Long</java-type>
             <jdbc-type>BIGINT</jdbc-type>
-            <sql-type>NUMERIC(18,0)</sql-type>
+            <sql-type>NUMERIC(18,0) default 0</sql-type>
          </mapping>
          <mapping>
             <java-type>java.lang.Float</java-type>
             <jdbc-type>REAL</jdbc-type>
-            <sql-type>FLOAT</sql-type>
+            <sql-type>FLOAT default 0</sql-type>
          </mapping>
          <mapping>
             <java-type>java.lang.Double</java-type>
             <jdbc-type>DOUBLE</jdbc-type>
-            <sql-type>DOUBLE PRECISION</sql-type>
+            <sql-type>DOUBLE PRECISION default 0</sql-type>
          </mapping>
          <mapping>
             <java-type>java.lang.Character</java-type>
@@ -578,7 +576,6 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
             <function-name>count</function-name>
             <function-sql>count(?1)</function-sql>
          </function-mapping>
-         
 		 <function-mapping>
 			 <function-name>locate</function-name>
 			 <function-sql>locate(CAST(?1 as VARCHAR(254)),
@@ -660,7 +657,7 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
             <java-type>java.lang.Object</java-type>
             <jdbc-type>VARBINARY</jdbc-type>
             <sql-type>BLOB(2000)</sql-type>
-         </mapping>         
+         </mapping>
       </type-mapping>
 
       <type-mapping>
@@ -1084,7 +1081,7 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
          <function-mapping>
             <function-name>count</function-name>
             <function-sql>count(?1)</function-sql>
-         </function-mapping>         
+         </function-mapping>
          <function-mapping>
          	<function-name>length</function-name>
          	<function-sql>char_length(?1)</function-sql>
@@ -2386,6 +2383,7 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
          </mapping>
       </type-mapping>
 
+
       <type-mapping>
          <name>InformixDB</name>
          <row-locking-template>select ?1 from ?2 where ?3 order by ?4 for update</row-locking-template>
@@ -2690,7 +2688,7 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
       	<word>number</word>
       	<word>integer</word>
       	<word>varchar</word>
-      	<word>char</word>      	
+      	<word>char</word>
       	<word>user</word>
     </reserved-words>
 </jbosscmp-jdbc>
