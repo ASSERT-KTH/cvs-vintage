@@ -2,7 +2,7 @@
 
 <p>$l10n.NewUsers,
   <strong>$link.setPage("Register.vm").setLabel("register here")</strong>.</p>
-<p>Forgot your password,
+<p>$l10n.ForgotYourPassword
   <strong>$link.setPage("ForgotPassword.vm").setLabel("click here")</strong>.</p>
 
 <h3>$title</h3>
@@ -24,14 +24,14 @@
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
  <tr>
-  <th>User name</th>
+  <th>$l10n.Username</th>
   <td>
   <input name="$loginGroup.Username.Key" value="$!loginGroup.Username.Value" size="25" type="text" />
   #fieldErrorMsg ($loginGroup.Username "")
   </td>
  </tr>
  <tr>
-  <th>Password</th>
+  <th>$l10n.Password</th>
   <td>
   <input name="$loginGroup.Password.Key" value="" size="25" type="password" />
   #fieldErrorMsg ($loginGroup.Password "")
