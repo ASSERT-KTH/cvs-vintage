@@ -48,7 +48,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.25 $
+ *  @version $Revision: 1.26 $
  */
 class TxCapsule implements TimeoutTarget
 {
@@ -66,29 +66,10 @@ class TxCapsule implements TimeoutTarget
 
    /**
     *  Constructor for Xid instances of specified class, or null.
+    *  This is set from the <code>TransactionManagerService</code>
+    *  MBean.
     */
-   private static Constructor xidConstructor = null;
-
-   /**
-    *  Initialize the Xid constructor.
-    */
-   static {
-      String name = System.getProperty("jboss.xa.xidclass",
-                                       "org.jboss.tm.XidImpl");
-
-      if (!name.equals("org.jboss.tm.XidImpl")) {
-         try {
-            Class cls = Class.forName(name);
-
-            xidConstructor = cls.getConstructor(new Class[]{ Integer.TYPE,
-                                                             byte[].class,
-                                                             byte[].class });
-         } catch (Exception e) {
-            System.out.println("Unable to load Xid class '"+name+"': " + e);
-         }
-      }
-   }
-
+   static Constructor xidConstructor = null;
 
    /**
     *  This collection contains the inactive txCapsules.

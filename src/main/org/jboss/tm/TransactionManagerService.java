@@ -37,7 +37,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *  @see TxManager
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 public class TransactionManagerService
    extends ServiceMBeanSupport
@@ -50,9 +50,10 @@ public class TransactionManagerService
     
    // Attributes ----------------------------------------------------
 
-   MBeanServer server;
+   private MBeanServer server;
 
-   int timeout = 300; // default tx timeout, dupl. in TM when it exists.
+   private int timeout = 300; // default tx timeout, dupl. in TM when it exists.
+   private String xidClassName = null;
     
    // Static --------------------------------------------------------
 
@@ -75,6 +76,15 @@ public class TransactionManagerService
    protected void startService()
       throws Exception
    {
+      // Initialize the Xid constructor.
+      if (xidClassName != null) {
+         log.log("Using Xid class '" + xidClassName + "'");
+         Class cls = Class.forName(xidClassName);
+
+         TxCapsule.xidConstructor = cls.getConstructor(
+            new Class[] { Integer.TYPE, byte[].class, byte[].class });
+      }
+
       // Get a reference to the TxManager singleton.
       tm = TxManager.getInstance();
       // Set its default timeout.
@@ -115,6 +125,9 @@ public class TransactionManagerService
       if (tm != null) // Update TM default timeout
          tm.setDefaultTransactionTimeout(timeout);
    }
+
+   public String getXidClassName() { return xidClassName; }
+   public void setXidClassName(String name) { xidClassName = name; }
 
 
    // ObjectFactory implementation ----------------------------------

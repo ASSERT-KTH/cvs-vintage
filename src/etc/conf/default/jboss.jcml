@@ -28,6 +28,11 @@
   <!-- ==================================================================== -->
   <mbean code="org.jboss.tm.TransactionManagerService" name="DefaultDomain:service=TransactionManager">
     <attribute name="TransactionTimeout">300</attribute>
+
+    <!-- Use this attribute if you need to use a specific Xid
+         implementation
+    <attribute name="XidClassName">oracle.jdbc.xa.OracleXid</attribute>
+    -->
   </mbean>
 
   <mbean code="org.jboss.tm.usertx.server.ClientUserTransactionService" name="DefaultDomain:service=ClientUserTransaction">
