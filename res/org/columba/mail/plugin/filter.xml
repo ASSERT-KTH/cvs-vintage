@@ -58,4 +58,8 @@
  	name="Match all" 
  	main_class="org.columba.mail.filter.plugins.MatchAllFilter" 
  	gui_class="org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow" />
+ <filter 
+ 	name="Sender is in Addressbook" 
+ 	main_class="org.columba.mail.filter.plugins.AddressbookFilter" 
+ 	gui_class="org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow" />
 </filterlist>

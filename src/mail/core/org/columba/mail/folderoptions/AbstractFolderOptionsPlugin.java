@@ -137,6 +137,7 @@ public abstract class AbstractFolderOptionsPlugin implements PluginInterface {
 
         XmlElement child = parent.getElement(getName());
 
+        // create element if not available
         if (child == null) {
             child = createDefaultElement(false);
             parent.addElement(child);

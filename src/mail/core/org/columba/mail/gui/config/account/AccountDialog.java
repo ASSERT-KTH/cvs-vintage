@@ -50,6 +50,7 @@ public class AccountDialog implements ActionListener {
     private OutgoingServerPanel outgoingServerPanel;
     private SecurityPanel securityPanel;
     private ReceiveOptionsPanel receiveOptionsPanel;
+    private SpamPanel spamPanel;
     private JPanel selected = null;
     private JTabbedPane tp;
 
@@ -78,6 +79,8 @@ public class AccountDialog implements ActionListener {
         outgoingServerPanel = new OutgoingServerPanel(accountItem);
 
         securityPanel = new SecurityPanel(accountItem.getPGPItem());
+        
+        spamPanel = new SpamPanel(dialog, accountItem);
     }
 
     protected void initComponents() {
@@ -117,6 +120,8 @@ public class AccountDialog implements ActionListener {
         //$NON-NLS-1$
         tp.add(MailResourceLoader.getString("dialog", "account", "security"),
             securityPanel);
+        
+        tp.add("Spam Filter", spamPanel);
 
         //$NON-NLS-1$
         mainPanel.add(tp, BorderLayout.CENTER);
@@ -222,6 +227,7 @@ public class AccountDialog implements ActionListener {
             receiveOptionsPanel.updateComponents(false);
             outgoingServerPanel.updateComponents(false);
             securityPanel.updateComponents(false);
+            spamPanel.updateComponents(false);
 
             if (accountItem.isPopAccount()) {
                 int uid = accountItem.getUid();

@@ -169,7 +169,7 @@ public class SearchRequestBuilder {
             args.add(new Atom("DRAFT"));
         } else if (headerField.equalsIgnoreCase("Seen")) {
             args.add(new Atom("SEEN"));
-        }
+        } 
 
         return args;
     }

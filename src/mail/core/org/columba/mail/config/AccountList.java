@@ -100,6 +100,27 @@ public class AccountList extends DefaultItem {
 
         return null;
     }
+    
+    /**
+     * Get account using the email address to identify it.
+     * 
+     * @param address		email address
+     * @return				account item
+     */
+    public AccountItem getAccount(String address) {
+        
+        for ( int i=0; i<count(); i++) {
+            AccountItem item = get(i);
+            IdentityItem identity = item.getIdentityItem();
+            String str = (String) identity.get("address");
+            if ( address.indexOf(str) != -1 )
+            {
+                // found match
+                return item;
+            }
+        }
+        return null;
+    }
 
     public AccountItem hostGetAccount(String host, String address) {
         XmlElement account;

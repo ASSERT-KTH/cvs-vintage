@@ -1,16 +1,17 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.table;
@@ -44,17 +45,19 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.TreePath;
 
-
 /**
- * This widget is a mix between a JTable and a JTree
- * ( we need the JTree for the Threaded viewing of mailing lists )
- *
+ * This widget is a mix between a JTable and a JTree ( we need the JTree for
+ * the Threaded viewing of mailing lists )
+ * 
  * @version 0.9.1
  * @author fdietz
  */
 public class TableView extends TreeTable implements OptionsSerializer {
+
     private HeaderTableModel headerTableModel;
+
     private TableRendererPluginHandler handler;
+
     private TableModelSorter sorter;
 
     public TableView(HeaderTableModel headerTableModel, TableModelSorter sorter) {
@@ -67,8 +70,8 @@ public class TableView extends TreeTable implements OptionsSerializer {
 
         // load plugin handler used for the columns
         try {
-            handler = (TableRendererPluginHandler) MainInterface.pluginManager.getHandler(
-                    "org.columba.mail.tablerenderer");
+            handler = (TableRendererPluginHandler) MainInterface.pluginManager
+                    .getHandler("org.columba.mail.tablerenderer");
         } catch (PluginHandlerNotFoundException ex) {
             ex.printStackTrace();
         }
@@ -77,48 +80,54 @@ public class TableView extends TreeTable implements OptionsSerializer {
     }
 
     /**
- * Enable/Disable tree renderer for the subject column.
- * <p>
- * Note, that this works because {@link TreeTable} sets its
- * {@link CustomTreeTableCellRenderer} as default renderer
- * for this class.<br>
- * When calling TableModel.getColumnClass(column), the model
- * returns CustomTreeTableCellRenderer.class, if the threaded-
- * view is enabled.
- * <p>
- * JTable automatically falls back to the default renderers, if
- * no custom renderer is applied.<br>
- * For this reason, we just remove the custom cell renderer for
- * the "Subject" column.
- *
- * @param b     if true, enable tree renderer. False, otherwise
- */
+     * Enable/Disable tree renderer for the subject column.
+     * <p>
+     * Note, that this works because {@link TreeTable}sets its
+     * {@link CustomTreeTableCellRenderer}as default renderer for this class.
+     * <br>
+     * When calling TableModel.getColumnClass(column), the model returns
+     * CustomTreeTableCellRenderer.class, if the threaded- view is enabled.
+     * <p>
+     * JTable automatically falls back to the default renderers, if no custom
+     * renderer is applied. <br>
+     * For this reason, we just remove the custom cell renderer for the
+     * "Subject" column.
+     * 
+     * @param b
+     *            if true, enable tree renderer. False, otherwise
+     */
     public void enableThreadedView(boolean b) {
         if (b) {
             TableColumn tc = null;
             tc = getColumn("Subject");
 
-            // disable subject column renderer, use tree-cellrenderer instead          
+            // disable subject column renderer, use tree-cellrenderer instead
             tc.setCellRenderer(null);
 
             //tc.setCellEditor(new CustomTreeTableCellEditor());
         } else {
             TableColumn tc = null;
-            tc = getColumn("Subject");
+            try {
+                tc = getColumn("Subject");
+                //          change subject column renderer back to default
+                tc.setCellRenderer(new BasicRenderer("columba.subject"));
+            } catch (IllegalArgumentException e) {
 
-            // change subject column renderer back to default
-            tc.setCellRenderer(new BasicRenderer("columba.subject"));
+            }
+
         }
     }
 
     /**
- * Create table column using plugin extension point
- * <b>org.columba.mail.tablerenderer</b>.
- *
- * @param name      name of plugin ID
- * @param size      size of table column
- * @return          table column object
- */
+     * Create table column using plugin extension point
+     * <b>org.columba.mail.tablerenderer </b>.
+     * 
+     * @param name
+     *            name of plugin ID
+     * @param size
+     *            size of table column
+     * @return table column object
+     */
     public TableColumn createTableColumn(String name, int size) {
         TableColumn c = new TableColumn();
 
@@ -138,8 +147,8 @@ public class TableView extends TreeTable implements OptionsSerializer {
                 }
 
                 JOptionPane.showMessageDialog(null,
-                    "Error while loading column: " + name + "\n" +
-                    e.getMessage());
+                        "Error while loading column: " + name + "\n"
+                                + e.getMessage());
             }
         }
 
@@ -149,7 +158,7 @@ public class TableView extends TreeTable implements OptionsSerializer {
             r = new BasicRenderer(name);
 
             registerRenderer(c, name, r, new BasicHeaderRenderer(name, sorter),
-                size, false);
+                    size, false);
         } else {
             String image = handler.getAttribute(name, "icon");
             String fixed = handler.getAttribute(name, "size");
@@ -163,12 +172,11 @@ public class TableView extends TreeTable implements OptionsSerializer {
             }
 
             if (lockSize) {
-                registerRenderer(c, name, r,
-                    new BooleanHeaderRenderer(ImageLoader.getSmallImageIcon(
-                            image)), size, lockSize);
+                registerRenderer(c, name, r, new BooleanHeaderRenderer(
+                        ImageLoader.getSmallImageIcon(image)), size, lockSize);
             } else {
-                registerRenderer(c, name, r,
-                    new BasicHeaderRenderer(name, sorter), size, lockSize);
+                registerRenderer(c, name, r, new BasicHeaderRenderer(name,
+                        sorter), size, lockSize);
             }
         }
 
@@ -176,21 +184,25 @@ public class TableView extends TreeTable implements OptionsSerializer {
     }
 
     /**
- * Set properties of this column.
- *
- * @param tc        table column
- * @param name      name of table column
- * @param cell      cell renderer
- * @param header    header renderer
- * @param size      width of column
- * @param lockSize  is this a fixed size column?
- */
+     * Set properties of this column.
+     * 
+     * @param tc
+     *            table column
+     * @param name
+     *            name of table column
+     * @param cell
+     *            cell renderer
+     * @param header
+     *            header renderer
+     * @param size
+     *            width of column
+     * @param lockSize
+     *            is this a fixed size column?
+     */
     protected void registerRenderer(TableColumn tc, String name,
-        DefaultLabelRenderer cell, TableCellRenderer header, int size,
-        boolean lockSize) {
-        if (tc == null) {
-            return;
-        }
+            DefaultLabelRenderer cell, TableCellRenderer header, int size,
+            boolean lockSize) {
+        if (tc == null) { return; }
 
         if (cell != null) {
             tc.setCellRenderer(cell);
@@ -210,21 +222,22 @@ public class TableView extends TreeTable implements OptionsSerializer {
     }
 
     /**
- * Get selected message node.
- *
- * @return      selected message node
- */
+     * Get selected message node.
+     * 
+     * @return selected message node
+     */
     public MessageNode getSelectedNode() {
-        MessageNode node = (MessageNode) getTree().getLastSelectedPathComponent();
+        MessageNode node = (MessageNode) getTree()
+                .getLastSelectedPathComponent();
 
         return node;
     }
 
     /**
- * Get array of selected message nodes.
- *
- * @return      arrary of selected message nodes
- */
+     * Get array of selected message nodes.
+     * 
+     * @return arrary of selected message nodes
+     */
     public MessageNode[] getSelectedNodes() {
         int[] rows = null;
         MessageNode[] nodes = null;
@@ -246,21 +259,22 @@ public class TableView extends TreeTable implements OptionsSerializer {
     }
 
     /**
- * Get message node with UID
- *
- * @param uid       UID of message node
- *
- * @return          message node
- */
+     * Get message node with UID
+     * 
+     * @param uid
+     *            UID of message node
+     * 
+     * @return message node
+     */
     public MessageNode getMessagNode(Object uid) {
         return headerTableModel.getMessageNode(uid);
     }
 
     /**
- * Select first row and make it visible.
- *
- * @return         uid of selected row
- */
+     * Select first row and make it visible.
+     * 
+     * @return uid of selected row
+     */
     public Object selectFirstRow() {
         Object uid = null;
 
@@ -286,10 +300,10 @@ public class TableView extends TreeTable implements OptionsSerializer {
     }
 
     /**
- * Select last row and make it visible
- *
- * @return         uid of selected row
- */
+     * Select last row and make it visible
+     * 
+     * @return uid of selected row
+     */
     public Object selectLastRow() {
         Object uid = null;
 
@@ -299,8 +313,8 @@ public class TableView extends TreeTable implements OptionsSerializer {
             changeSelection(getRowCount() - 1, 0, true, false);
 
             // getting the node
-            MessageNode selectedNode = (MessageNode) getValueAt(getRowCount() -
-                    1, 0);
+            MessageNode selectedNode = (MessageNode) getValueAt(
+                    getRowCount() - 1, 0);
 
             // and getting the uid for this node
             uid = selectedNode.getUid();
@@ -316,30 +330,30 @@ public class TableView extends TreeTable implements OptionsSerializer {
     }
 
     /**
-     * Overwritten, because selectAll doesn't also select the 
-     * nodes of the underlying JTree, which aren't expanded and
-     * therefore not visible. 
+     * Overwritten, because selectAll doesn't also select the nodes of the
+     * underlying JTree, which aren't expanded and therefore not visible.
      * <p>
-     * Go through all nodes and expand them. Afterwards select all
-     * rows in the JTable.
+     * Go through all nodes and expand them. Afterwards select all rows in the
+     * JTable.
      * 
      * @see javax.swing.JTable#selectAll()
      */
     public void selectAll() {
         // expand all rows
-        for ( int i=0; i<getRowCount(); i++) {
+        for (int i = 0; i < getRowCount(); i++) {
             TreePath path = getTree().getPathForRow(i);
             getTree().expandPath(path);
         }
         // select all rows
         super.selectAll();
     }
+
     /**
- * Change the selection to the specified row
- *
- *
- * @param row                row to selected
- */
+     * Change the selection to the specified row
+     * 
+     * @param row
+     *            row to selected
+     */
     public void selectRow(int row) {
         if (getRowCount() > 0) {
             if (row < 0) {
@@ -365,10 +379,10 @@ public class TableView extends TreeTable implements OptionsSerializer {
         }
     }
 
-    /*************************** OptionsSerializer ****************************/
+    /** ************************* OptionsSerializer *************************** */
     /**
- * @see org.columba.core.config.OptionsSerializer#loadOptionsFromXml(org.columba.core.xml.XmlElement)
- */
+     * @see org.columba.core.config.OptionsSerializer#loadOptionsFromXml(org.columba.core.xml.XmlElement)
+     */
     public void loadOptionsFromXml(XmlElement element) {
         XmlElement columns = element;
 
@@ -411,8 +425,8 @@ public class TableView extends TreeTable implements OptionsSerializer {
     }
 
     /**
- * @see org.columba.core.config.OptionsSerializer#saveOptionsToXml()
- */
+     * @see org.columba.core.config.OptionsSerializer#saveOptionsToXml()
+     */
     public XmlElement saveOptionsToXml() {
         XmlElement columns = new XmlElement("columns");
 
@@ -436,10 +450,9 @@ public class TableView extends TreeTable implements OptionsSerializer {
             column.addAttribute("width", Integer.toString(size));
 
             /*
-int position = tc.getModelIndex();
-// save position
-column.addAttribute("position", Integer.toString(position));
-*/
+             * int position = tc.getModelIndex(); // save position
+             * column.addAttribute("position", Integer.toString(position));
+             */
             // add to columns list
             columns.addElement(column);
         }

@@ -1,16 +1,17 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.spam;
@@ -34,63 +35,62 @@ import java.io.InputStream;
 
 import java.util.List;
 
-
 /**
  * High-level wrapper for the spam filter.
  * <p>
- * Class should be used by Columba, to add ham or spam messages
- * to the training database. And to score messages using this
- * training set.
+ * Class should be used by Columba, to add ham or spam messages to the training
+ * database. And to score messages using this training set.
  * <p>
- * Note, that its necessary for this filter to train a few hundred
- * messages, before its starting to work. I'm usually starting with
- * around 1000 messages while keeping it up-to-date with messages 
- * which are scored wrong. 
+ * Note, that its necessary for this filter to train a few hundred messages,
+ * before its starting to work. I'm usually starting with around 1000 messages
+ * while keeping it up-to-date with messages which are scored wrong.
  * <p>
- * If training mode is enabled, the spam filter automatically adds
- * messages to its frequency database.
+ * If training mode is enabled, the spam filter automatically adds messages to
+ * its frequency database.
  * 
  * @author fdietz
  */
 public class SpamController {
+
     /**
- * singleton pattern instance of this class
- */
+     * singleton pattern instance of this class
+     */
     private static SpamController instance;
 
     /**
- * spam filter in macchiator library doing the actual work
- */
+     * spam filter in macchiator library doing the actual work
+     */
     private SpamFilter filter;
 
     /**
- * database of tokens, storing occurences of tokens, etc.
- */
+     * database of tokens, storing occurences of tokens, etc.
+     */
     private FrequencyDB db;
 
     /**
- * file to store the token database
- */
+     * file to store the token database
+     */
     private File file;
+
     private boolean trainingMode;
 
     /**
- * private constructor 
- *
- */
+     * private constructor
+     *  
+     */
     private SpamController() {
         db = new DBWrapper(new FrequencyDBImpl());
 
         filter = new SpamFilterImpl(db);
 
-        trainingMode = false;
+        trainingMode = true;
     }
 
     /**
- * Get instance of class.
- * 
- * @return                spam controller
- */
+     * Get instance of class.
+     * 
+     * @return spam controller
+     */
     public static SpamController getInstance() {
         if (instance == null) {
             instance = new SpamController();
@@ -109,10 +109,10 @@ public class SpamController {
     }
 
     /**
- * Add this message to the token database as spam.
- * 
- * @param istream                
- */
+     * Add this message to the token database as spam.
+     * 
+     * @param istream
+     */
     public void trainMessageAsSpam(InputStream istream, List list) {
         try {
             CloneStreamMaster master = new CloneStreamMaster(istream);
@@ -122,7 +122,8 @@ public class SpamController {
 
             if (isTrainingModeEnabled()) {
                 // we are in training mode
-                // -> even if message was already learned, it can be re-learned again
+                // -> even if message was already learned, it can be re-learned
+                // again
                 filter.trainMessageAsSpam(new Message(master.getClone(), list,
                         md5sum));
             } else {
@@ -140,11 +141,11 @@ public class SpamController {
     }
 
     /**
- * Add this message to the token database as ham.
- * 
- * @param istream
- * @param list
- */
+     * Add this message to the token database as ham.
+     * 
+     * @param istream
+     * @param list
+     */
     public void trainMessageAsHam(InputStream istream, List list) {
         try {
             CloneStreamMaster master = new CloneStreamMaster(istream);
@@ -154,7 +155,8 @@ public class SpamController {
 
             if (isTrainingModeEnabled()) {
                 // we are in training mode
-                // -> even if message was already learned, it can be re-learned again
+                // -> even if message was already learned, it can be re-learned
+                // again
                 filter.trainMessageAsHam(new Message(master.getClone(), list,
                         md5sum));
             } else {
@@ -172,27 +174,25 @@ public class SpamController {
     }
 
     /**
- * Score message.
- * 
- * @param istream
- * @return                        probability this message is spam (0.0-1.0 float values)
- */
+     * Score message.
+     * 
+     * @param istream
+     * @return probability this message is spam (0.0-1.0 float values)
+     */
     private float score(InputStream istream) {
         return filter.scoreMessage(new Message(istream));
     }
 
     /**
- * Score message. Using a threshold of 90% here. Every message
- * with at least 90% is spam. 
- * 
- * @param istream
- * 
- * @return                true, if message is spam. False, otherwise.
- */
+     * Score message. Using a threshold of 90% here. Every message with at
+     * least 90% is spam.
+     * 
+     * @param istream
+     * 
+     * @return true, if message is spam. False, otherwise.
+     */
     public boolean scoreMessage(InputStream istream) {
-        if (score(istream) > 0.9) {
-            return true;
-        }
+        if (score(istream) > 0.9) { return true; }
 
         return false;
     }
@@ -202,9 +202,9 @@ public class SpamController {
     }
 
     /**
- * Load frequency DB from file.
- *
- */
+     * Load frequency DB from file.
+     *  
+     */
     private void load() {
         try {
             if (file.exists()) {
@@ -218,15 +218,15 @@ public class SpamController {
                 e.printStackTrace();
             }
 
-            // fail-case 
+            // fail-case
             db = new FrequencyDBImpl();
         }
     }
 
     /**
- * Save frequency DB to file.
- *
- */
+     * Save frequency DB to file.
+     *  
+     */
     public void save() {
         try {
             FrequencyIO.save(db, file);
@@ -241,10 +241,10 @@ public class SpamController {
     }
 
     /**
- * Checks if training mode is enabled.
- * 
- * @return                true, if enabled. False,otherwise.
- */
+     * Checks if training mode is enabled.
+     * 
+     * @return true, if enabled. False,otherwise.
+     */
     public boolean isTrainingModeEnabled() {
         return trainingMode;
     }

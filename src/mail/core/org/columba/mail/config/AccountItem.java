@@ -30,6 +30,7 @@ public class AccountItem extends DefaultItem {
     private SmtpItem smtp;
     private PGPItem pgp;
     private SpecialFoldersItem folder;
+    private SpamItem spam;
 
     public AccountItem(XmlElement e) {
         super(e);
@@ -94,6 +95,23 @@ public class AccountItem extends DefaultItem {
         }
 
         return smtp;
+    }
+    
+    public SpamItem getSpamItem() {
+        if ( spam == null) {
+            XmlElement parent = getRoot().getElement("spam");
+            // create if not available
+            if ( parent == null) parent = getRoot().addSubElement("spam");
+            
+            spam = new SpamItem(parent);
+        }
+        
+        if (spam.getBoolean("use_default_account")) {
+            // return default-account SpamItem instead 
+            return getDefaultAccount().getSpamItem();
+        }
+        
+        return spam;
     }
 
     public PGPItem getPGPItem() {

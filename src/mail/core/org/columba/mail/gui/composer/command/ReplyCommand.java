@@ -9,19 +9,25 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 
 package org.columba.mail.gui.composer.command;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.util.logging.Logger;
+
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
@@ -33,7 +39,6 @@ import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
-
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.AddressListRenderer;
 import org.columba.ristretto.message.BasicHeader;
@@ -42,36 +47,29 @@ import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.nio.charset.Charset;
-
-import java.text.DateFormat;
-import java.util.logging.Logger;
-
 /**
  * Reply to message.
  * <p>
  * Bodytext is quoted.
- *
+ * 
  * @author fdietz
  */
 public class ReplyCommand extends FolderCommand {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.composer.command");
+    private static final Logger LOG = Logger
+            .getLogger("org.columba.mail.gui.composer.command");
 
-    protected final String[] headerfields = new String[] {
-            "Subject", "Date", "From", "To", "Reply-To", "Message-ID",
-            "In-Reply-To", "References"
-        };
+    protected final String[] headerfields = new String[] { "Subject", "Date",
+            "From", "To", "Reply-To", "Message-ID", "In-Reply-To", "References"};
+
     protected ComposerController controller;
+
     protected ComposerModel model;
 
     /**
      * Constructor for ReplyCommand.
-     *
+     * 
      * @param frameMediator
      * @param references
      */
@@ -81,8 +79,8 @@ public class ReplyCommand extends FolderCommand {
 
     public void updateGUI() throws Exception {
         // open composer frame
-        controller = (ComposerController)
-                MainInterface.frameModel.openView("Composer");
+        controller = (ComposerController) MainInterface.frameModel
+                .openView("Composer");
 
         // apply model
         controller.setComposerModel(model);
@@ -91,13 +89,13 @@ public class ReplyCommand extends FolderCommand {
         controller.updateComponents(true);
     }
 
-    public void execute(WorkerStatusController worker)
-        throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         // create composer model
         model = new ComposerModel();
 
         // get selected folder
-        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0])
+                .getFolder();
 
         // get first selected message
         Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
@@ -109,7 +107,7 @@ public class ReplyCommand extends FolderCommand {
         MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
 
         XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
-                                              .getRoot().getElement("/options/html");
+                .getRoot().getElement("/options/html");
 
         // Which Bodypart shall be shown? (html/plain)
         MimePart bodyPart = null;
@@ -153,22 +151,21 @@ public class ReplyCommand extends FolderCommand {
         }
     }
 
-    protected void initHeader(Folder folder, Object[] uids)
-        throws Exception {
+    protected void initHeader(Folder folder, Object[] uids) throws Exception {
         // get headerfields
         Header header = folder.getHeaderFields(uids[0], headerfields);
 
         BasicHeader rfcHeader = new BasicHeader(header);
 
         // set subject
-        model.setSubject(MessageBuilderHelper.createReplySubject(
-                rfcHeader.getSubject()));
+        model.setSubject(MessageBuilderHelper.createReplySubject(rfcHeader
+                .getSubject()));
 
         // Use reply-to field if given, else use from
         Address[] to = rfcHeader.getReplyTo();
 
         if (to.length == 0) {
-            to = new Address[] {rfcHeader.getFrom()};
+            to = new Address[] { rfcHeader.getFrom()};
         }
 
         // Add addresses to the addressbook
@@ -181,12 +178,13 @@ public class ReplyCommand extends FolderCommand {
         // select the account this mail was received from
         Integer accountUid = (Integer) folder.getAttribute(uids[0],
                 "columba.accountuid");
-        AccountItem accountItem = MessageBuilderHelper.getAccountItem(accountUid);
+        AccountItem accountItem = MessageBuilderHelper
+                .getAccountItem(accountUid);
         model.setAccountItem(accountItem);
     }
 
     protected String createQuotedBody(Folder folder, Object[] uids,
-        Integer[] address) throws IOException, Exception {
+            Integer[] address) throws IOException, Exception {
         InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
 
         // Quote original message - different methods for text and html
@@ -194,15 +192,14 @@ public class ReplyCommand extends FolderCommand {
             // Html: Insertion of text before and after original message
             // get necessary headerfields
             BasicHeader rfcHeader = new BasicHeader(folder.getHeaderFields(
-                        uids[0], headerfields));
+                    uids[0], headerfields));
             String subject = rfcHeader.getSubject();
             String date = DateFormat.getDateTimeInstance(DateFormat.LONG,
                     DateFormat.MEDIUM).format(rfcHeader.getDate());
-            String from = AddressListRenderer.renderToHTMLWithLinks(new Address[] {
-                        rfcHeader.getFrom()
-                    }).toString();
-            String to = AddressListRenderer.renderToHTMLWithLinks(rfcHeader.getTo())
-                                           .toString();
+            String from = AddressListRenderer.renderToHTMLWithLinks(
+                    new Address[] { rfcHeader.getFrom()}).toString();
+            String to = AddressListRenderer.renderToHTMLWithLinks(
+                    rfcHeader.getTo()).toString();
 
             // build "quoted" message
             StringBuffer buf = new StringBuffer();
@@ -210,7 +207,8 @@ public class ReplyCommand extends FolderCommand {
             buf.append(MailResourceLoader.getString("dialog", "composer",
                     "original_message_start"));
             buf.append("<br>"
-                    + MailResourceLoader.getString("header", "header", "subject") + ": " + subject);
+                    + MailResourceLoader.getString("header", "header",
+                            "subject") + ": " + subject);
             buf.append("<br>"
                     + MailResourceLoader.getString("header", "header", "date")
                     + ": " + date);
@@ -218,12 +216,13 @@ public class ReplyCommand extends FolderCommand {
                     + MailResourceLoader.getString("header", "header", "from")
                     + ": " + from);
             buf.append("<br>"
-                    + MailResourceLoader.getString("header", "header", "to") + ": "
-                    + to);
+                    + MailResourceLoader.getString("header", "header", "to")
+                    + ": " + to);
             buf.append("</p>");
-            buf.append(HtmlParser.removeComments(// comments are not displayed correctly in composer
+            buf.append(HtmlParser.removeComments(// comments are not displayed
+                                                 // correctly in composer
                     HtmlParser.getHtmlBody(StreamUtils.readInString(bodyStream)
-                                                      .toString())));
+                            .toString())));
             buf.append("<p>");
             buf.append(MailResourceLoader.getString("dialog", "composer",
                     "original_message_end"));
@@ -232,8 +231,19 @@ public class ReplyCommand extends FolderCommand {
             return buf.toString();
         } else {
             // Text: Addition of > before each line
-            return StreamUtils.readInString(new QuoteFilterInputStream(
-                    bodyStream)).toString();
+            return StreamUtils.readInString(
+                    new QuoteFilterInputStream(bodyStream)).toString();
         }
+    }
+
+    /**
+     * Get composer model.
+     * <p>
+     * Needed for testcases.
+     * 
+     * @return Returns the model.
+     */
+    public ComposerModel getModel() {
+        return model;
     }
 }

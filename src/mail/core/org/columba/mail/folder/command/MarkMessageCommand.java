@@ -17,47 +17,63 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.RootFolder;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
-
+import org.columba.mail.spam.command.CommandHelper;
+import org.columba.mail.spam.command.LearnMessageAsHamCommand;
+import org.columba.mail.spam.command.LearnMessageAsSpamCommand;
 
 /**
  * Mark selected messages with specific variant.
  * <p>
- *
+ * 
  * Variant can be: - read/unread - flagged/unflagged - expunged/unexpunged -
  * answered
- *
+ * 
  * @author fdietz
  */
 public class MarkMessageCommand extends FolderCommand {
+
     public final static int MARK_AS_READ = 0;
+
     public final static int MARK_AS_FLAGGED = 1;
+
     public final static int MARK_AS_EXPUNGED = 2;
+
     public final static int MARK_AS_ANSWERED = 3;
+
     public final static int MARK_AS_SPAM = 4;
+
     public final static int MARK_AS_UNREAD = -1;
+
     public final static int MARK_AS_UNFLAGGED = -2;
+
     public final static int MARK_AS_UNEXPUNGED = -3;
+
     public final static int MARK_AS_NOTSPAM = -4;
+
     protected FolderCommandAdapter adapter;
 
     /**
- * Constructor for MarkMessageCommand.
- *
- * @param frameMediator
- * @param references
- */
+     * Constructor for MarkMessageCommand.
+     * 
+     * @param frameMediator
+     * @param references
+     */
     public MarkMessageCommand(DefaultCommandReference[] references) {
         super(references);
     }
@@ -71,8 +87,8 @@ public class MarkMessageCommand extends FolderCommand {
 
         for (int i = 0; i < r.length; i++) {
             // update table
-            ev = new TableModelChangedEvent(TableModelChangedEvent.MARK,
-                    r[i].getFolder(), r[i].getUids(), r[i].getMarkVariant());
+            ev = new TableModelChangedEvent(TableModelChangedEvent.MARK, r[i]
+                    .getFolder(), r[i].getUids(), r[i].getMarkVariant());
 
             TableUpdater.tableChanged(ev);
 
@@ -85,8 +101,8 @@ public class MarkMessageCommand extends FolderCommand {
         FolderCommandReference u = adapter.getUpdateReferences();
 
         if (u != null) {
-            ev = new TableModelChangedEvent(TableModelChangedEvent.MARK,
-                    u.getFolder(), u.getUids(), u.getMarkVariant());
+            ev = new TableModelChangedEvent(TableModelChangedEvent.MARK, u
+                    .getFolder(), u.getUids(), u.getMarkVariant());
 
             TableUpdater.tableChanged(ev);
             MailInterface.treeModel.nodeChanged(u.getFolder());
@@ -94,12 +110,12 @@ public class MarkMessageCommand extends FolderCommand {
     }
 
     /**
- * @see org.columba.core.command.Command#execute(Worker)
- */
-    public void execute(WorkerStatusController worker)
-        throws Exception {
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(WorkerStatusController worker) throws Exception {
         // use wrapper class for easier handling of references array
-        adapter = new FolderCommandAdapter((FolderCommandReference[]) getReferences());
+        adapter = new FolderCommandAdapter(
+                (FolderCommandReference[]) getReferences());
 
         // get array of source references
         FolderCommandReference[] r = adapter.getSourceFolderReferences();
@@ -113,16 +129,108 @@ public class MarkMessageCommand extends FolderCommand {
             Folder srcFolder = (Folder) r[i].getFolder();
 
             // register for status events
-            ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
+            ((StatusObservableImpl) srcFolder.getObservable())
+                    .setWorker(worker);
 
             // which kind of mark?
             int markVariant = r[i].getMarkVariant();
 
-            // saving last selected Massage to the folder
+            // saving last selected message to the folder
             srcFolder.setLastSelection(uids[0]);
 
             // mark message
             srcFolder.markMessage(uids, markVariant);
+
+            if ((markVariant == MARK_AS_SPAM)
+                    || (markVariant == MARK_AS_NOTSPAM)) {
+                processSpamFilter(worker, uids, srcFolder, markVariant);
+            }
+
+        }
+    }
+
+    /**
+     * Train spam filter.
+     * <p>
+     * Move message to specified folder or delete message immediately based on
+     * account configuration.
+     * 
+     * @param worker
+     *            status update observer
+     * @param uids
+     *            message uid
+     * @param srcFolder
+     *            source folder
+     * @param markVariant
+     *            mark variant (spam/not spam)
+     * @throws Exception
+     */
+    private void processSpamFilter(WorkerStatusController worker,
+            Object[] uids, Folder srcFolder, int markVariant) throws Exception {
+        // mark as/as not spam
+        // for each message
+        for (int j = 0; j < uids.length; j++) {
+            // message belongs to which account?
+            AccountItem item = CommandHelper.retrieveAccountItem(srcFolder,
+                    uids[j]);
+            // skip if account information is not available
+            if (item == null) continue;
+
+            // if spam filter is not enabled -> return
+            if (item.getSpamItem().isEnabled() == false) continue;
+
+            System.out.println("learning uid=" + uids[j]);
+
+            // create reference
+            FolderCommandReference[] ref = new FolderCommandReference[1];
+            ref[0] = new FolderCommandReference(srcFolder,
+                    new Object[] { uids[j]});
+
+            // create command
+            Command c = null;
+            if (markVariant == MARK_AS_SPAM)
+                c = new LearnMessageAsSpamCommand(ref);
+            else
+                c = new LearnMessageAsHamCommand(ref);
+
+            // execute command
+            c.execute(worker);
+
+            // skip if message is *not* marked as spam
+            if (markVariant == MARK_AS_NOTSPAM) return;
+            
+            // skip if user didn't enable this option
+            if (item.getSpamItem().isMoveMessageWhenMarkingEnabled() == false)
+                    return;
+
+            if (item.getSpamItem().isMoveTrashSelected() == false) {
+                // move message to user-configured folder (generally "Junk"
+                // folder)
+                FolderTreeNode destFolder = MailInterface.treeModel.getFolder(item
+                        .getSpamItem().getMoveCustomFolder());
+
+                // create reference
+                FolderCommandReference[] ref2 = new FolderCommandReference[2];
+                ref2[0] = new FolderCommandReference(srcFolder,
+                        new Object[] { uids[j]});
+                ref2[1] = new FolderCommandReference(destFolder);
+                MainInterface.processor.addOp(new MoveMessageCommand(ref2));
+
+            } else {
+                // move message to trash
+                Folder trash = (Folder) ((RootFolder) srcFolder.getRootFolder())
+                        .getTrashFolder();
+
+                // create reference
+                FolderCommandReference[] ref2 = new FolderCommandReference[2];
+                ref2[0] = new FolderCommandReference(srcFolder,
+                        new Object[] { uids[j]});
+                ref2[1] = new FolderCommandReference(trash);
+
+                MainInterface.processor.addOp(new MoveMessageCommand(ref2));
+
+            }
+
         }
     }
 }
