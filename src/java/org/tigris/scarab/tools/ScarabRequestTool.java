@@ -665,7 +665,7 @@ try{
     /**
      * Return the number of paginated pages.
      *
-    */
+     */
     public int getNbrPages()
     {
         return nbrPages;
@@ -674,7 +674,7 @@ try{
     /**
      * Return the next page in the paginated list.
      *
-    */
+     */
     public int getNextPage()
     {
         if (nextPage <= nbrPages)
@@ -690,7 +690,7 @@ try{
     /**
      * Return the previous page in the paginated list.
      *
-    */
+     */
     public int getPrevPage()
     {
         return prevPage;
@@ -740,6 +740,3 @@ try{
         return disposed;
     }
 }
-
-
-
