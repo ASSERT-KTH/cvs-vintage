@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.3 2003/03/23 01:31:14 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.4 2003/03/23 17:56:07 spestov Exp $
  */
 public class DisplayManager
 {
@@ -700,10 +700,10 @@ public class DisplayManager
 				}
 				else
 				{
-					int prevLine = getPrevVisibleLine(physicalLine);
-					if(prevLine == -1)
+					int nextLine = getNextVisibleLine(physicalLine);
+					if(nextLine == -1)
 						return;
-					physicalLine = prevLine;
+					physicalLine = nextLine;
 					amount -= screenLines;
 					scrollLine += screenLines;
 				}
@@ -718,19 +718,19 @@ public class DisplayManager
 		{
 			while(amount > 0)
 			{
-				int screenLines = getScreenLineCount(physicalLine);
+				int prevLine = getPrevVisibleLine(physicalLine);
+				if(prevLine == -1)
+					return;
+				int screenLines = getScreenLineCount(prevLine);
 				if(amount < screenLines)
 				{
 					return;
 				}
 				else
 				{
-					int nextLine = getNextVisibleLine(physicalLine);
-					if(nextLine == -1)
-						return;
-					physicalLine = nextLine;
+					physicalLine = prevLine;
 					amount -= screenLines;
-					scrollLine += screenLines;
+					scrollLine -= screenLines;
 				}
 			}
 

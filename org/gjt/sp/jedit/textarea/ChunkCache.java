@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.syntax.*;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.62 2003/03/23 01:31:14 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.63 2003/03/23 17:56:07 spestov Exp $
  */
 class ChunkCache
 {
@@ -162,7 +162,7 @@ class ChunkCache
 	 */
 	void setFirstLine(int firstLine, int physFirstLine)
 	{
-		/* if(DEBUG)
+		if(DEBUG)
 		{
 			System.err.println("old: " + this.firstLine + ",new: " +
 				firstLine + ",phys: " + physFirstLine);
@@ -170,7 +170,7 @@ class ChunkCache
 
 		int visibleLines = lineInfo.length;
 		// rely on the fact that when we're called physLastLine not updated yet
-		if(physFirstLine > textArea.getLastPhysicalLine())
+		/* if(physFirstLine > textArea.getLastPhysicalLine()) */
 		{
 			if(DEBUG)
 				System.err.println("too far");
@@ -179,7 +179,7 @@ class ChunkCache
 				lineInfo[i].chunksValid = false;
 			}
 		}
-		else if(firstLine > this.firstLine)
+		/* else if(firstLine > this.firstLine)
 		{
 			boolean invalidateAll = false;
 
@@ -284,10 +284,10 @@ class ChunkCache
 				System.err.println("t.f > f: only " + firstScreenLine
 					+ " need updates");
 			}
-		}
+		} */
 
 		lastScreenLine = lastScreenLineP = -1;
-		this.firstLine = firstLine; */
+		this.firstLine = firstLine;
 	} //}}}
 
 	//{{{ invalidateAll() method
