@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BeanGenerator.java,v 1.5 2000/04/05 21:09:58 mandar Exp $
- * $Revision: 1.5 $
- * $Date: 2000/04/05 21:09:58 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BeanGenerator.java,v 1.6 2000/04/25 00:07:54 mandar Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/04/25 00:07:54 $
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -343,11 +343,11 @@ public class BeanGenerator extends GeneratorBase implements ServiceMethodPhase,
 	writer.pushIndent ();
 	if (beanRT == false)
 	    writer.println(varname+" = ("+ convert + 
-			   ") Beans.instantiate(getClassLoader(), "+
+			   ") Beans.instantiate(this.getClass().getClassLoader(), "+
 			   writer.quoteString(clsname) +");");
 	else
 	    writer.println(varname+" = ("+ convert + 
-			   ") Beans.instantiate(getClassLoader(), "+
+			   ") Beans.instantiate(this.getClass().getClassLoader(), "+
 			   clsname +");");
 	writer.popIndent ();
 	writer.println ("} catch (Exception exc) {");
