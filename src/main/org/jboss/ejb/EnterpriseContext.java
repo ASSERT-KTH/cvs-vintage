@@ -52,7 +52,7 @@ import org.jboss.tm.usertx.interfaces.UserTransactionStartedListener;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.53 $
+ * @version $Revision: 1.54 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -435,7 +435,7 @@ public abstract class EnterpriseContext
       public TimerService getTimerService()
          throws IllegalStateException
       {
-         return getContainer().createTimerService( null );
+         return getContainer().getTimerService( null );
       }
    }
    

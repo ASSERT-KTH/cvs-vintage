@@ -27,7 +27,7 @@ import javax.ejb.TimerService;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  *
  * <p><b>Revisions</b>
  * <p>20010703 marcf
@@ -215,7 +215,7 @@ public class EntityEnterpriseContext
       public TimerService getTimerService()
          throws IllegalStateException
       {
-         return getContainer().createTimerService( id );
+         return getContainer().getTimerService( id );
       }
    }
 }

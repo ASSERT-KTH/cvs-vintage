@@ -107,7 +107,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.108 $
+ * @version $Revision: 1.109 $
  *
  * @todo convert all the deployment/service lifecycle stuff to an 
  * aspect/interceptor.  Make this whole stack into a model mbean.
@@ -720,8 +720,10 @@ public abstract class Container extends ServiceMBeanSupport
     * @throws IllegalStateException If the type of EJB is not allowed to use the timer service
     *
     * @see javax.ejb.EJBContext#getTimerService
+    *
+    * @jmx:managed-operation
     **/
-   public TimerService createTimerService( Object pKey )
+   public TimerService getTimerService( Object pKey )
       throws IllegalStateException
    {
       if( this instanceof StatefulSessionContainer ) {
@@ -844,7 +846,7 @@ public abstract class Container extends ServiceMBeanSupport
       log.debug("Bound jmxName="+jmxName+", hash="+jmxHash+"into Registry");
       if( !( this instanceof StatefulSessionContainer ) ) {
          // Restore Timers
-         ContainerTimerService temp = (ContainerTimerService) createTimerService( null );
+         ContainerTimerService temp = (ContainerTimerService) getTimerService( null );
          // Start Recovery
          temp.startRecovery();
       }

@@ -11,10 +11,8 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-//AS import javax.ejb.EJBContext;
 import javax.ejb.EJBException;
 import javax.ejb.Timer;
 import javax.ejb.TimerService;
@@ -26,6 +24,9 @@ import org.jboss.mx.util.SerializationHelper;
 /**
  * Timer Service of a Container acting also as bridge between
  * the Container and the Timer Source.
+ *
+ * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+ * @version $Revision: 1.3 $
  **/
 public class ContainerTimerService
     implements TimerService
@@ -34,17 +35,19 @@ public class ContainerTimerService
    private AbstractTimerSource mTimerSource;
    private String mContainerName;
    private Container mContainer;
-//AS   private EJBContext mContext;
    private Object mKey;
    
    private Map mTimerList = new HashMap();
    private Logger mLog = Logger.getLogger( this.getClass().getName() );
    
-   /**
-    * Create a Container Timer Service
-    *
-    * @param ??
-    **/
+    /**
+     * Create a Container Timer Service
+     *
+     * @param pSource Timer Source Instance
+     * @param pName Name of the EJB Container
+     * @param pContainer Container this Service is assigned to
+     * @param pKey Key of the Entity or null otherwise
+     **/
 //AS   public ContainerTimerService( AbstractTimerSourceMBean pSource, String pName, Container pContainer ) {
    public ContainerTimerService( AbstractTimerSource pSource, String pName, Container pContainer, Object pKey ) {
        mTimerSource = pSource;
@@ -54,6 +57,9 @@ public class ContainerTimerService
        mKey = pKey;
    }
    
+    /**
+     * Start the recovery of the timers
+     */
    public void startRecovery() {
       // Start Recover Process 
       mTimerSource.recover( mContainerName, this );
@@ -127,7 +133,9 @@ public class ContainerTimerService
          IllegalStateException,
          EJBException
    {
-       return mTimerList.values();
+      synchronized( mTimerList ) {
+         return mTimerList.values();
+      }
    }
    
    //--------------- Timer Callback Methods -----------------------------------------
@@ -139,41 +147,28 @@ public class ContainerTimerService
     *
     * @see javax.ejb.TimerService#cancel
     **/
-   protected void cancel( String pId ) {
+   protected void cancel( Integer pId ) {
       mLog.debug( "cancel(), cancel timer: " + pId );
       mTimerSource.removeTimer( pId );
       mTimerList.remove( pId );
    }
    
-   /**
-    * Retrieves the time remaining until the next timed event
-    *
-    * @param pId Id of the Timer
-    *
-    * @see javax.ejb.TimerService#getTimeRemaining
-    **/
-   protected long getTimeRemaining( String pId ) {
-      //AS TODO: Finish the implemenation
-      throw new RuntimeException( "Not implemented yet" );
-   }
-   
-   /**
-    * Retrieves the date of the next timed event
-    *
-    * @param pId Id of the Timer
-    *
-    * @see javax.ejb.TimerService#getNextTimeout
-    **/
-   protected Date getNextTimeout( String pId ) {
-      //AS TODO: Finish the implemenation
-      throw new RuntimeException( "Not implemented yet" );
-   }
-   
    //--------------- Timed Notification Methods -------------------------------------
    
-   public void handleTimedEvent( String pId ) {
-       Timer lTimer = (Timer) mTimerList.get( pId );
+    /**
+     * Handles a Timer Event by looking up the appropriate timer and
+     * invoking the appropriate method on the container
+     *
+     * @param pId Timer Id
+     * @param pNextEvent Date of the Next event or null if a single time timer
+     */
+   public void handleTimedEvent( Integer pId, Date pNextEvent ) {
+       ContainerTimer lTimer = (ContainerTimer) mTimerList.get( pId );
+       lTimer.setNextTimeout( pNextEvent );
        if( lTimer != null ) {
+           mLog.info( "handleTimedEvent(), this: " + this
+              + ", call timer: " + lTimer
+              + ", container: " + mContainer );
            mContainer.handleEjbTimeout( lTimer );
        }
    }
@@ -193,16 +188,40 @@ public class ContainerTimerService
    //--------------- Protected Methods ---------------------------------------------
    
    /**
-    * Restore a Timer. If the given key is not null this method will also create a
-    * new Timer Service with the given key and inform the Entity Container about it.
+    * Looks up for a timer with the given Id
     *
-    * @param pKey Primary Key if it is a Entity Timer otherwise null
-    * @param pStartDate Date when the timer is the first time invoked.
-    * @param pInterval Time between interval calls. A negative value indicates
-    *                  a single time timer
-    * @param pInfo User defined object passed back by the timer
+    * @param pId Id of the Timer managed by this Timer Service
+    *
+    * @return Timer if found otherwise null
     **/
-   protected Timer restoreTimer( Object pKey, Date pStartDate, long pInterval, Object pInfo )
+   protected Timer getTimer( Integer pId ) {
+      return (Timer) mTimerList.get( pId );
+   }
+   
+    /**
+     * @return Container Id of the Container this Timer Service is assigned to
+     */
+   protected String getContainerId() {
+      return mContainerName;
+   }
+   
+    /**
+     * Restore a Timer. If the given key is not null this method will also create a
+     * new Timer Service with the given key and inform the Entity Container about it.
+     *
+     * @param pId Timer Id that has to be kept
+     * @param pKey Primary Key if it is a Entity Timer otherwise null
+     * @param pStartDate Date when the timer is the first time invoked.
+     * @param pInterval Time between interval calls. A negative value indicates
+     *                        a single time timer
+     * @param pInfo User defined object passed back by the timer
+     * @return Restored Timer
+     *
+     * @throws IllegalArgumentException If timer could not be created
+     * @throws IllegalStateException If the creation of the timer is not allowed
+     * @throws EJBException If the system could not recreate the timer
+     **/
+   protected Timer restoreTimer( Integer pId, Object pKey, Date pStartDate, long pInterval, Object pInfo )
       throws
          IllegalArgumentException,
          IllegalStateException,
@@ -210,38 +229,28 @@ public class ContainerTimerService
    {
        Timer lTimer = null;
        Serializable lInfo = (Serializable) recreateObject( pInfo );
-       if( pKey != null ) {
-          // First we have to try to restore the key if a byte arrray
-          pKey = recreateObject( pKey );
-          if( pKey instanceof byte[] ) {
-             try {
-                pKey = SerializationHelper.deserialize( (byte[]) pKey, mContainer.getClassLoader() );
-             }
-             catch( IOException ioe ) {
-                ioe.printStackTrace();
-                // Ingore it
-             }
-             catch( ClassNotFoundException cnfe ) {
-                cnfe.printStackTrace();
-                // Ingore it
-             }
-          }
+       // Only recreate Timer Service if not already done
+       Object lKey = recreateObject( pKey );
+       if( lKey != null && mKey == null ) {
           // If a Key is given then let the Container to create a new Timer Service and
           // then let this timer service create the timer
-          TimerService lTimerService = mContainer.createTimerService(
-             pKey
+          ContainerTimerService lTimerService = (ContainerTimerService) mContainer.getTimerService(
+             lKey
           );
-          if( pInterval < 0 ) {
-             lTimer = lTimerService.createTimer( pStartDate, lInfo );
-             mLog.debug( "restoreTimer(), created entity timer: " + lTimer
-                + ", timer source: " + lTimerService );
-          } else {
-             lTimer = lTimerService.createTimer( pStartDate, pInterval, lInfo );
-          }
+           mLog.info( "restoreTimer(), AFTER CTS is created, container: " + mContainerName
+              + ", id: " + pId + ", key: " + lKey
+              + ", start date: " + pStartDate
+              + ", interval: " + pInterval + ", info: " + lInfo );
+          lTimer = lTimerService.restoreTimer( pId, lKey, pStartDate, pInterval, (Object) lInfo );
        } else {
-           String lId = mTimerSource.createTimer( mContainerName, mKey, pStartDate, pInterval, lInfo );
-           lTimer = new ContainerTimer( this, lId, mKey, lInfo );
-           mTimerList.put( lId, lTimer );
+           mLog.info( "restoreTimer(), container: " + mContainerName + ", id: " + pId
+              + ", key: " + lKey + ", start date: " + pStartDate
+              + ", interval: " + pInterval + ", info: " + lInfo );
+           mTimerSource.createTimer( mContainerName, pId, mKey, pStartDate, pInterval, lInfo );
+           //AS TODO: The next timeout (last parameter) does not have to be true here when the
+           //AS       timer was already called (then the start date is in the past)
+           lTimer = new ContainerTimer( this, pId, mKey, lInfo, pStartDate );
+           mTimerList.put( pId, lTimer );
        }
        
        return lTimer;
@@ -263,11 +272,12 @@ public class ContainerTimerService
          IllegalStateException,
          EJBException
    {
-       String lId = mTimerSource.createTimer( mContainerName, mKey, pStartDate, pInterval, pInfo );
-       Timer lTimer = new ContainerTimer( this, lId, mKey, pInfo );
-       mTimerList.put( lId, lTimer );
-       
-       return lTimer;
+       synchronized( mTimerList ) {
+          Integer lId = mTimerSource.createTimer( mContainerName, mKey, pStartDate, pInterval, pInfo );
+          Timer lTimer = new ContainerTimer( this, lId, mKey, pInfo, pStartDate );
+          mTimerList.put( lId, lTimer );
+          return lTimer;
+       }
    }
    
    /**

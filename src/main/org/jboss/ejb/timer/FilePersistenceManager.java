@@ -49,7 +49,6 @@ public class FilePersistenceManager
    extends ServiceMBeanSupport
    implements FilePersistenceManagerMBean
 {
-   private AbstractTimerSource mTimerSource;
    private String mFileDirectory = "data";
    private File mDirectory;
    private HashMap mContainers = new HashMap();
@@ -57,23 +56,34 @@ public class FilePersistenceManager
    
    private int mFileCounter = 0;
    
-   public void setTimerSource( AbstractTimerSource pTimerSource ) {
-       mTimerSource = pTimerSource;
-   }
-   
    /**
     * Adds a new timer to the persistence store
     *
     * @param pContainerId Id of the container the timer belongs to
-    * @param pTimer Timer to added
+    * @param pId Timer Id
+    * @param pKey Key of the EJB instance the Timer belongs to
+    * @param pStartDate Date when the timer send an event initially
+    * @param pInterval Interval of the next event in milliseconds or -1 if a
+    *                  single time timer
+    * @param pInfo User Info assigned with the Timer
+    *
+    * @throws IOException when making the timer persistent fails
     *
     * @jmx.managed-operation
     **/
-   public void add( String pContainerId, String pId, Object pKey, Date pStartDate, long pInterval, Serializable pInfo )
+   public void add(
+      String pContainerId,
+      Integer pId,
+      Object pKey,
+      Date pStartDate,
+      long pInterval,
+      Serializable pInfo
+   )
       throws IOException
    {
-      try {
-      TimerItem lItem = new TimerItem( pId, pKey, pStartDate, pInterval, pInfo );
+      TimerItem lItem = new TimerItem(
+         new ContainerTimerRepresentative( pId, pKey, pStartDate, pInterval, pInfo )
+      );
       TreeMap lTimers = (TreeMap) mContainers.get( pContainerId );
       Object lTemp = mFiles.get( pContainerId );
       if( lTimers == null ) {
@@ -106,7 +116,6 @@ public class FilePersistenceManager
             log.info( "Create Output file: " + mFileCounter + ", for container: " + pContainerId );
             lOutput = new MyObjectOutputStream(
                new MyOutputStream(
-//AS               new FileOutputStream( new File( mDirectory, "timers." + ( mFileCounter++ ) + ".save" ) )
                   new RandomAccessFile( lNewFile, "rw" )
                )
             );
@@ -128,21 +137,19 @@ public class FilePersistenceManager
       lItem.writeItem( lOutput );
       // Flush to write everything into the file
       lOutput.flush();
-      }
-      catch( RuntimeException re ) {
-         log.error( "Caught runtime exception", re );
-      }
    }
    
    /**
     * Removes an inactive timer from the persistence store
     *
     * @param pContainerId Id of the container the timer belongs to
-    * @param pTimer Timer to be removed
+    * @param pId Timer Id
+    *
+    * @throws IOException when making the timer persistent fails
     *
     * @jmx.managed-operation
     **/
-   public void remove( String pContainerId, String pId )
+   public void remove( String pContainerId, Integer pId )
       throws IOException
    {
       TimerItem lItem = new TimerItem( pId );
@@ -161,18 +168,17 @@ public class FilePersistenceManager
    }
    
    /**
-    * Returns a list of restored Timers for the given container
+    * Returns a list of Timer Representatives to be recreated by the called
     *
     * @param pContainerId Id of the container of which its timers has
     *                     to be restored and returned. If this Id is
     *                     null then all timers are restored and returned
     *
-    * @return List of restored Timer or null if Container Id is null
+    * @return List of Timer Representatives to be restored or null if Container Id is null
     *
     * @jmx.managed-operation
     **/
    public List restore( String pContainerId, ContainerTimerService pTimerService ) {
-      try {
       if( pContainerId != null ) {
          TreeMap lTimerMap = (TreeMap) mContainers.get( pContainerId );
          if( lTimerMap == null ) {
@@ -188,22 +194,12 @@ public class FilePersistenceManager
             TimerItem lItem = lTimers[ i ];
             log.debug( "Restore timer: " + lItem );
             lReturn.add(
-               pTimerService.restoreTimer(
-                  lItem.getKey(),
-                  lItem.getStartDate(),
-                  lItem.getInterval(),
-                  lItem.getInfo()
-               )
+               lItem.getTimerRep()
             );
          }
          return lReturn;
       }
       return null;
-      }
-      catch( RuntimeException e ) {
-         log.error( "Could not restore all timers", e );
-         throw e;
-      }
    }
    
    protected void createService()
@@ -211,7 +207,7 @@ public class FilePersistenceManager
    {
       mDirectory = null;
       // First check if the given Data Directory is a valid URL pointing to
-      // a read and writable directory
+      // a readable and writable directory
       try {
          URL lFileURL = new URL( mFileDirectory );
          File lFile = new File( lFileURL.getFile() );
@@ -225,6 +221,8 @@ public class FilePersistenceManager
       catch( Exception e ) {
          // Ignore message and try it as relative path
       }
+      // If directory is not defined use the a default directory and create it if
+      // necessary
       if( mDirectory == null ) {
          // Get the system home directory
          File lSystemHome = ServerConfigLocator.locate().getServerHomeDir();
@@ -245,7 +243,8 @@ public class FilePersistenceManager
    protected void startService()
       throws Exception
    {
-      // Open the files and load the content
+      // Open the files and load the content and keep it
+      // available until the timers are restored
       File[] lContainerFiles = mDirectory.listFiles();
       for( int i = 0; i < lContainerFiles.length; i++ ) {
          String lFileName = lContainerFiles[ i ].getName();
@@ -254,7 +253,6 @@ public class FilePersistenceManager
             int lFileCounter = new Integer( lFileName.substring( 7, lFileName.length() - 5 ) ).intValue();
             mFileCounter = lFileCounter > mFileCounter ? lFileCounter : mFileCounter;
             log.info( "Open backup file: " + lContainerFiles[ i ] );
-//AS            ObjectInputStream lInput = new ObjectInputStream( new FileInputStream( lContainerFiles[ i ] ) );
             RandomAccessFile lFileAccess = new RandomAccessFile( lContainerFiles[ i ], "rw" );
             ObjectInputStream lInput = new MyObjectInputStream(
                new MyInputStream( lFileAccess )
@@ -285,22 +283,16 @@ public class FilePersistenceManager
       public static final int REMOVE = 1;
       
       private int mType;
-      private String mId;
-      private Object mKey;
-      private Date mStartDate;
-      private long mInterval;
-      private Object mInfo;
+      private Integer mId;
+      private ContainerTimerRepresentative mTimerRep;
       
-      public TimerItem( String pId, Object pKey, Date pStartDate, long pInterval, Serializable pInfo ) {
-         mId = pId;
-         mKey = pKey;
-         mStartDate = pStartDate;
-         mInterval = pInterval;
-         mInfo = pInfo;
+      public TimerItem( ContainerTimerRepresentative pTimerRep ) {
          mType = ADD;
+         mId = pTimerRep.getId();
+         mTimerRep = pTimerRep;
       }
       
-      public TimerItem( String pId ) {
+      public TimerItem( Integer pId ) {
          mId = pId;
          mType = REMOVE;
       }
@@ -309,41 +301,19 @@ public class FilePersistenceManager
          return mType;
       }
       
-      public boolean isSingle() {
-         return mInterval < 0;
-      }
-      
-      public String getId() {
+      public Integer getId() {
          return mId;
       }
       
-      public void setId( String pId ) {
-         mId = pId;
+      public ContainerTimerRepresentative getTimerRep() {
+         return mTimerRep;
       }
       
-      public Object getKey() {
-         return mKey;
-      }
-      
-      public Date getStartDate() {
-         return mStartDate;
-      }
-      
-      public long getInterval() {
-         return mInterval;
-      }
-      
-      public Object getInfo() {
-         return mInfo;
-      }
       
       public String toString() {
-         return "FilePersistenceManager.TimerItem [ Id: " + mId
+         return "FilePersistenceManager.TimerItem [ "
             + ", type: " + ( mType == ADD ? "ADD" : "REMOVE" )
-            + ", key: " + mKey
-            + ", start date: " + mStartDate
-            + ", interval: " + ( mInterval < 0 ? "single timer" : mInterval + "" )
-            + ", info: " + mInfo
+            + ", timer rep: " + mTimerRep
             + " ]";
       }
       
@@ -352,13 +322,17 @@ public class FilePersistenceManager
       {
          try {
             int lType = pInput.readInt();
-            String lId = (String) pInput.readObject();
+            Integer lId = (Integer) pInput.readObject();
             if( lType == ADD ) {
                byte[] lKey = (byte[]) pInput.readObject();
                Date lDate = new Date( pInput.readLong() );
                long lInterval = pInput.readLong();
                byte[] lInfo = (byte[]) pInput.readObject();
-               return new TimerItem( lId, lKey, lDate, lInterval, lInfo );
+               return new TimerItem(
+                  new ContainerTimerRepresentative(
+                     lId, lKey, lDate, lInterval, lInfo
+                  )
+               );
             } else {
                return new TimerItem( lId );
             }
@@ -379,11 +353,11 @@ public class FilePersistenceManager
          pOutput.writeInt( mType );
          pOutput.writeObject( mId );
          if( mType == ADD ) {
-             byte[] lKeyBytes = SerializationHelper.serialize( mKey );
+             byte[] lKeyBytes = SerializationHelper.serialize( mTimerRep.getKey() );
              pOutput.writeObject( lKeyBytes );
-             pOutput.writeLong( mStartDate.getTime() );
-             pOutput.writeLong( mInterval );
-             byte[] lInfoBytes = SerializationHelper.serialize( mInfo );
+             pOutput.writeLong( mTimerRep.getStartDate().getTime() );
+             pOutput.writeLong( mTimerRep.getInterval() );
+             byte[] lInfoBytes = SerializationHelper.serialize( mTimerRep.getInfo() );
              pOutput.writeObject( lInfoBytes);
          }
       }
@@ -414,12 +388,14 @@ public class FilePersistenceManager
       }
 
       public void write( int b )
-         throws IOException {
+         throws IOException
+      {
          mFile.write( ( byte )b );
       }
 
       public void write( byte bytes[], int off, int len )
-         throws IOException {
+         throws IOException
+      {
          mFile.write( bytes, off, len );
       }
    }
@@ -429,27 +405,29 @@ public class FilePersistenceManager
     */
    class MyObjectOutputStream extends ObjectOutputStream {
       MyObjectOutputStream( OutputStream os )
-         throws IOException {
+         throws IOException
+      {
          super( os );
       }
-
+      
       protected void writeStreamHeader() {
       }
    }
-
+   
    /**
     * @created    August 16, 2001
     */
    class MyObjectInputStream extends ObjectInputStream {
       MyObjectInputStream( InputStream is )
-         throws IOException {
+         throws IOException
+      {
          super( is );
       }
-
+      
       protected void readStreamHeader() {
       }
    }
-
+   
    /**
     * @created    August 16, 2001
     */
@@ -473,7 +451,8 @@ public class FilePersistenceManager
       }
       
       public int read( byte bytes[], int off, int len )
-         throws IOException {
+         throws IOException
+      {
          return mFile.read( bytes, off, len );
       }
    }

@@ -10,6 +10,7 @@ import java.io.EOFException;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.EJBContext;
@@ -27,7 +28,10 @@ import org.jboss.system.ServiceMBeanSupport;
 /**
  * This class is the bridge between an (external) Timer Source
  * used to manage Timers and to provide the Container with the
- * timed event to invoke the Bean's ejbTimeout() method
+ * timed event to invoke the Bean's ejbTimeout() method.
+ *
+ * The Timer Source implementation is reponsible to support that persistence
+ * timers maintain their Id.
  *
  * @jmx:mbean name="jboss:service=EJBTimerSource"
  *            extends="org.jboss.system.ServiceMBean"
@@ -37,9 +41,18 @@ import org.jboss.system.ServiceMBeanSupport;
 public abstract class AbstractTimerSource
    extends ServiceMBeanSupport
    implements AbstractTimerSourceMBean
-{   
+{
+   private static int sCounter;
+   
    private HashMap mContainerTimerServices = new HashMap();
    protected ObjectName mPersistenceManager;
+   
+   /**
+    * @return The next available persistent Id for a timer.
+    **/
+   protected static int getTimerId() {
+      return sCounter++;
+   }
    
    /**
     * Indicates if the Timer Source supports transaction. If it does then
@@ -106,7 +119,7 @@ public abstract class AbstractTimerSource
                  MBeanParameterInfo[] lParameters = lOperations[ i ].getSignature();
                  if( lParameters.length == 6 &&
                     "java.lang.String".equals( lParameters[ 0 ].getType() ) &&
-                    "java.lang.String".equals( lParameters[ 1 ].getType() ) &&
+                    "java.lang.Integer".equals( lParameters[ 1 ].getType() ) &&
                     "java.lang.Object".equals( lParameters[ 2 ].getType() ) &&
                     "java.util.Date".equals( lParameters[ 3 ].getType() ) &&
                     Long.TYPE.getName().equals( lParameters[ 4 ].getType() ) &&
@@ -119,7 +132,7 @@ public abstract class AbstractTimerSource
                  MBeanParameterInfo[] lParameters = lOperations[ i ].getSignature();
                  if( lParameters.length == 2 &&
                     "java.lang.String".equals( lParameters[ 0 ].getType() ) &&
-                    "java.lang.String".equals( lParameters[ 1 ].getType() )
+                    "java.lang.Integer".equals( lParameters[ 1 ].getType() )
                  ) {
                      lRemoveFound = true;
                  }
@@ -165,29 +178,83 @@ public abstract class AbstractTimerSource
     *
     * @return Id of the Timer
     **/
-   public abstract String createTimer( String pContainerId, Object pKey, Date pStartDate, long pInterval, Serializable pInfo );
+   public abstract Integer createTimer(
+      String pContainerId,
+      Object pKey,
+      Date pStartDate,
+      long pInterval,
+      Serializable pInfo
+   );
+   
+   /**
+    * Creates a timer but uses the given Id so that a recreation of a timer can keep its id
+    **/
+   public abstract Integer createTimer(
+      String pContainerId,
+      Integer pId,
+      Object pKey,
+      Date pStartDate,
+      long pInterval,
+      Serializable pInfo
+   );
    
    /**
     * Removes the given Timer if still active or not
     *
     * @param pId Id returned from {@link #createTimer createTimer()}
     **/
-   public abstract void removeTimer( String pId );
+   public abstract void removeTimer( Integer pId );
    
    /**
     * Recover all the timers for the given Container.
     *
-    * When the server goes down and comes back no timer are recovered
-    * initially. Every container hosting a EJB implementing the Timed-
-    * Object interface will call this method to recover its timers.
-    * The implementation can choose to recover the timers immediately
-    * but has to make sure that no timed events are sent to the Container
-    * until it this method is called.
-    *
     * @param pContainerId Id of the container to be recovered
     * @param pTimerService Timer Service handling the timer creation 
     **/
-   public abstract void recover( String pContainerId, ContainerTimerService pTimerService );
+   public void recover(
+      String pContainerId,
+      ContainerTimerService pTimerService
+   ) {
+      log.debug( "recover(), id: " + pContainerId
+         + ", timer service: " + pTimerService
+      );
+      try {
+         List lReps = restoreTimers( pContainerId, pTimerService );
+         if( lReps != null && !lReps.isEmpty() ) {
+            // Restore the Timers
+            Iterator i = lReps.iterator();
+            while( i.hasNext() ) {
+                ContainerTimerRepresentative lRep = (ContainerTimerRepresentative) i.next();
+                Integer lId = lRep.getId();
+                pTimerService.restoreTimer(
+                   lRep.getId(),
+                   lRep.getKey(),
+                   lRep.getStartDate(),
+                   lRep.getInterval(),
+                   lRep.getInfo()
+                );
+                // Make sure that this Id is not used later
+                sCounter = ( sCounter >= lId.intValue() ? sCounter : lId.intValue() );
+            }
+         }
+      }
+      catch( Exception e ) {
+         log.error( "recover(), could not recover all timers", e );
+         //AS ToDo: Ignore Exception for now 
+      }
+   }
+   
+   /**
+    * Restore all the timer representatives from the persistence service
+    * in order to recreate the timers afterwards.
+    *
+    * @param pContainerId Id of the container to be recovered
+    * @param pTimerService Timer Service handling the timer creation
+    *
+    * @return A list of {@link ContainerTimerRepresentative Container Timer Representative}
+    *         instances.
+    **/
+   public abstract List restoreTimers( String pContainerId, ContainerTimerService pTimerService );
     
    /**
     * Create a Timer Service for a Container
@@ -198,12 +265,12 @@ public abstract class AbstractTimerSource
     **/
    public TimerService createTimerService( String pContainerId, Container pContainer, Object pKey ) {
       TimerService lService = null;
-      Item lItem = new Item( pContainerId, pKey );
-      if( mContainerTimerServices.containsKey( lItem ) ) {
-         lService = getTimerService( lItem );
+      ContainerKey lContainerKey = new ContainerKey( pContainerId, pKey );
+      if( mContainerTimerServices.containsKey( lContainerKey ) ) {
+         lService = getTimerService( lContainerKey );
       } else {
          lService = new ContainerTimerService( this, pContainerId, pContainer, pKey );
-         mContainerTimerServices.put( lItem, lService );
+         mContainerTimerServices.put( lContainerKey, lService );
       }
       return lService;
    }
@@ -214,7 +281,7 @@ public abstract class AbstractTimerSource
     * @param pContainerId Id of the Container to be removed
     **/
    public void removeTimerService( String pContainerId, Object pKey ) {
-      mContainerTimerServices.remove( new Item( pContainerId, pKey ) );
+      mContainerTimerServices.remove( new ContainerKey( pContainerId, pKey ) );
    }
    
    /**
@@ -224,8 +291,8 @@ public abstract class AbstractTimerSource
     *
     * @return Timer Service if found otherwise null
     **/
-   protected TimerService getTimerService( Item pItem ) {
-      return (TimerService) mContainerTimerServices.get( pItem );
+   protected TimerService getTimerService( ContainerKey pContainerKey ) {
+      return (TimerService) mContainerTimerServices.get( pContainerKey );
    }
    
    /**
@@ -267,17 +334,29 @@ public abstract class AbstractTimerSource
       }
    }
    
-   protected static class Item {
+   /**
+    * This class contains a Container Id and a Key object to be
+    * used as key for a Map to be looked up together
+    **/
+   protected static class ContainerKey {
       
       private String mId;
       private Object mKey;
       
-      public Item( String pId, Object pKey ) {
-         mId = pId;
+      /**
+       * Create an Instance to lookup a Timer Service
+       * by the Container Id and Key (if available)
+       *
+       * @param pContainerId Id of the Container
+       * @param pKey Key of the EJB instance the Timer belongs to
+       *             or null if not applicable
+       **/
+      public ContainerKey( String pContainerId, Object pKey ) {
+         mId = pContainerId;
          mKey = pKey;
       }
       
-      public String getId() {
+      public String getContainerId() {
          return mId;
       }
       
@@ -286,18 +365,18 @@ public abstract class AbstractTimerSource
       }
       
       public String toString() {
-         return "AbstractTimerSource.Item [ "
-            + ", id: " + mId
+         return "AbstractTimerSource.ContainerKey [ "
+            + ", container id: " + mId
             + ", key: " + mKey
             + " ]";
       }
       
       public boolean equals( Object pTest ) {
-         if( pTest instanceof Item ) {
-            Item lItem = (Item) pTest;
-            return mId.equals( lItem.mId )
-               && ( ( mKey == null && lItem.mKey == null )
-                      || ( mKey.equals( lItem.mKey ) ) );
+         if( pTest instanceof ContainerKey ) {
+            ContainerKey lContainerKey = (ContainerKey) pTest;
+            return mId.equals( lContainerKey.mId )
+               && ( ( mKey == null && lContainerKey.mKey == null )
+                      || ( mKey.equals( lContainerKey.mKey ) ) );
          } else {
             return false;
          }

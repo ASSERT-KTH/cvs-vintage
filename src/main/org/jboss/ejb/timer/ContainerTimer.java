@@ -20,26 +20,40 @@ import javax.ejb.TimerHandle;
  * through the EJB Timer Service
  *
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+ * @version $Revision: 1.3 $
  **/
 public class ContainerTimer
     implements Timer
 {
    private ContainerTimerService mTimerService;
-   private String mId;
+   private Integer mId;
 //AS   private EJBContext mContext;
    private Object mKey;
    private Serializable mInfo;
+   private boolean mIsActive = true;
+   private Date mNextTimeout;
    
+   /**
+    * Creates a Timer
+    *
+    * @param pTimerService Timer Service this Timer belongs to
+    * @param pId Timer Id
+    * @param pKey Primary Key if it belongs to an Entity otherwise null
+    * @param pInfo User Object
+    * @param pNextTimeout Date of the next timeout or null if a single time timer
+    **/
    public ContainerTimer(
       ContainerTimerService pTimerService,
-      String pId,
+      Integer pId,
       Object pKey,
-      Serializable pInfo
+      Serializable pInfo,
+      Date pNextTimeout
    ) {
       mTimerService = pTimerService;
       mId = pId;
       mKey = pKey;
       mInfo = pInfo;
+      mNextTimeout = pNextTimeout;
    }
    
    public void cancel()
@@ -49,6 +63,7 @@ public class ContainerTimer
          EJBException
    {
        mTimerService.cancel( mId );
+       mIsActive = false;
    }
    
    public long getTimeRemaining()
@@ -57,7 +72,15 @@ public class ContainerTimer
          NoSuchObjectLocalException,
          EJBException
    {
-      return mTimerService.getTimeRemaining( mId );
+      if( mNextTimeout == null ) {
+         if( isValid() ) {
+            throw new NoSuchObjectLocalException( "Timer expired or is cancelled" );
+         } else {
+            throw new EJBException( "Could not retrieve next timeout" );
+         }
+      } else {
+         return new Date().getTime() - mNextTimeout.getTime();
+      }
    }
    
    public Date getNextTimeout()
@@ -66,7 +89,7 @@ public class ContainerTimer
          NoSuchObjectLocalException,
          EJBException
    {
-      return mTimerService.getNextTimeout( mId );
+      return mNextTimeout;
    }
    
    public Serializable getInfo()
@@ -84,9 +107,7 @@ public class ContainerTimer
          NoSuchObjectLocalException,
          EJBException
    {
-      throw new RuntimeException( "Not implemented yet" );
-      //AS TODO: The handle needs parameters
-//AS      return new ContainerTimerHandle();
+      return new ContainerTimerHandle( this );
    }
    
    /**
@@ -96,7 +117,35 @@ public class ContainerTimer
       return mKey;
    }
    
-   public String getId() {
+   /**
+    * @return Timer Id
+    */
+   public Integer getId() {
       return mId;
+   }
+   
+   /**
+    * @return Container Id this Timer belongs to
+    * @deprecated
+    **/
+   protected String getContainerId() {
+      return mTimerService.getContainerId();
+   }
+   
+   /**
+    * @return True if this Timer did not expire or was cancelled
+    **/
+   protected boolean isValid() {
+      //AS TODO: Make it work so that it return false when cancelled
+      return mIsActive;
+   }
+   
+   /**
+    * Set the date of the next timeout
+    *
+    * @param pNextTimeout Date of the next timeout
+    **/
+   public void setNextTimeout( Date pNextTimeout ) {
+      mNextTimeout = pNextTimeout;
    }
 }
