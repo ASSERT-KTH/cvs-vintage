@@ -19,12 +19,13 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.29 2002/04/09 04:06:37 jwalters Exp $
+ * $Id: AbstractVerifier.java,v 1.30 2002/04/09 20:03:29 luke_t Exp $
  */
 
 // standard imports
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -82,9 +83,14 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * <li>Added new helper methods for Local home and interface matching
  * pre-existing methods for Remote home and interface.</li>
  * </ul>
+ * <p><b>20020404: luke</b>
+ * <ul>
+ * <li>Changed hasDefaultConstructor to use reflection rather than calling
+ * newInstance. The latter won't work with abstract classes.</li>
+ * </ul>
  * </p>
  *
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -432,9 +438,9 @@ public abstract class AbstractVerifier implements VerificationStrategy {
      */
     public boolean hasDefaultConstructor(Class c) {
         try {
-            c.newInstance();
+         	Constructor ctr = c.getConstructor(new Class[0]);
         }
-        catch(Exception e) {
+        catch(NoSuchMethodException e) {
             return false;
         }
 
