@@ -19,7 +19,7 @@
 // File: ArrowHeadNone.java
 // Classes: ArrowHeadNone
 // Original Author: Adam Bonner
-// $Id: ArrowHeadNone.java,v 1.1 1998/01/29 09:45:39 abonner Exp $
+// $Id: ArrowHeadNone.java,v 1.2 1998/03/09 22:13:32 abonner Exp $
 
 package uci.gef;
 
@@ -28,7 +28,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.*;
 
-class ArrowHeadNone extends ArrowHead
+public class ArrowHeadNone extends ArrowHead
 {
 	public void paint(Graphics g, Point start, Point end) {
 	}

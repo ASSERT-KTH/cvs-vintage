@@ -19,7 +19,7 @@
 // File: ArrowHead.java
 // Classes: ArrowHead
 // Original Author: Adam Bonner
-// $Id: ArrowHeadTriangle.java,v 1.1 1998/01/29 09:45:39 abonner Exp $
+// $Id: ArrowHeadTriangle.java,v 1.2 1998/03/09 22:13:33 abonner Exp $
 
 package uci.gef;
 
@@ -28,7 +28,7 @@ import java.awt.*;
 import java.io.*;
 import java.util.*;
 
-class ArrowHeadTriangle extends ArrowHead
+public class ArrowHeadTriangle extends ArrowHead
 {
 	public void paint(Graphics g, Point start, Point end) {
 		int    xFrom, xTo, yFrom, yTo;
@@ -60,7 +60,7 @@ class ArrowHeadTriangle extends ArrowHead
 
    		g.setColor(arrowFillColor);
 		g.fillPolygon(triangle);	   
-   		g.setColor(arrowOutlineColor);
+   		g.setColor(arrowLineColor);
 		g.drawPolygon(triangle);	    
 	}
 

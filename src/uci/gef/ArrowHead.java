@@ -19,7 +19,7 @@
 // File: ArrowHead.java
 // Classes: ArrowHead
 // Original Author: Adam Bonner
-// $Id: ArrowHead.java,v 1.1 1998/01/29 09:45:38 abonner Exp $
+// $Id: ArrowHead.java,v 1.2 1998/03/09 22:13:32 abonner Exp $
 
 package uci.gef;
 
@@ -28,20 +28,20 @@ import java.awt.*;
 import java.io.*;
 import java.util.*;
 
-abstract class ArrowHead
+public abstract class ArrowHead
 {
 	protected final int			arrow_width = 5, arrow_height = 16;
-	protected Color arrowOutlineColor = Color.black;
+	protected Color arrowLineColor = Color.black;
 	protected Color arrowFillColor = Color.black;
 
-	Color getOutlineColor()
+	Color getLineColor()
 	{
-		return arrowOutlineColor;
+		return arrowLineColor;
 	}
 
-	void setOutlineColor(Color newColor)
+	void setLineColor(Color newColor)
 	{
-		arrowOutlineColor = newColor;
+		arrowLineColor = newColor;
 	}
 
 	Color getFillColor()
