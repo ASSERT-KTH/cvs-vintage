@@ -100,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.128 2003/04/05 05:59:13 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.129 2003/04/16 01:03:53 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -567,6 +567,8 @@ public class ScarabModule
             try
             {
                 User user = ScarabUserManager.getInstance(getOwnerId());
+                // FIXME: get this Project Owner string out of here and into
+                //        a constant (JSS)
                 Role role = TurbineSecurity.getRole("Project Owner");
                 grant (user, role);
                 setInitialAttributesAndIssueTypes();
