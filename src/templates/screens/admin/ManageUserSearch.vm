@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.19 2002/03/15 18:35:36 jon Exp $
+@version $Id: ManageUserSearch.vm,v 1.20 2002/04/05 01:22:58 jon Exp $
 *#
 
 #set ($newSearch = $data.Parameters.getString("newSearch",""))
@@ -130,7 +130,7 @@ Results per page:
    <input type="radio" name="username" value="$!user.UserName" />
    </td>
    <td>$!user.UserName</td>
-   <td><a href="mailto:$!user.Email">$!user.FirstName $!user.LastName</a></td>
+   <td><a href="mailto:$!user.Email">$!user.Name</a></td>
  </tr>
 #end
 

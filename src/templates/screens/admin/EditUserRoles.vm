@@ -13,7 +13,7 @@
 <h3>User roles</h3>
 
 <p>
-Modifying roles for <b>$!user.FirstName $!user.LastName</b> [$user.UserName]
+Modifying roles for <b><a href="mailto:$user.Email">$!user.Name</a></b>
 </p>
 
 <table>
