@@ -20,7 +20,7 @@ import org.jboss.util.Sync;
  * 
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  *
  * <p><b>Revisions:</b>
  * <p><b>2001/01/29: billb</b>
@@ -103,13 +103,13 @@ public class EntityInstanceCache
       return m_container;
    }
 
-	protected void passivate(EnterpriseContext ctx) throws RemoteException
+	protected void passivate(EnterpriseContext ctx) throws Exception
 	{
-		m_container.getPersistenceManager().passivateEntity((EntityEnterpriseContext)ctx);
+		m_container.passivateEntity((EntityEnterpriseContext)ctx);
 	}
-	protected void activate(EnterpriseContext ctx) throws RemoteException
+	protected void activate(EnterpriseContext ctx) throws Exception
 	{
-		m_container.getPersistenceManager().activateEntity((EntityEnterpriseContext)ctx);
+		m_container.activateEntity((EntityEnterpriseContext)ctx);
 	}
 	protected EnterpriseContext acquireContext() throws Exception
 	{
