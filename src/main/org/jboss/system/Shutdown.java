@@ -25,7 +25,7 @@ import org.apache.log4j.Category;
  * provides the ability to handle user shutdown requests.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class Shutdown implements MBeanRegistration, ShutdownMBean {
     // Constants -----------------------------------------------------
@@ -101,16 +101,16 @@ public class Shutdown implements MBeanRegistration, ShutdownMBean {
             // set to true for detailed name printouts
             boolean verbose = false;
             // get the deployed objects from ServiceController
-            ObjectName[] deployed = (ObjectName[]) server.invoke(new ObjectName("JBOSS-SYSTEM:spine=ServiceController"), "getDeployed",
+            ObjectName[] deployed = (ObjectName[]) server.invoke(new ObjectName(
+                "JBOSS-SYSTEM:spine=ServiceController"), "getDeployed",
                 new Object[0], new String[0]);
             List servicesCopy = Arrays.asList(deployed);
             ListIterator enum = servicesCopy.listIterator();
             ListIterator beanEnum = servicesCopy.listIterator();
             ObjectName name = null;
             String[] sig = { "javax.management.ObjectName" };
-            // filo ( first in last out )
 
-			/*
+            // filo ( first in last out )
 	        while (enum.hasNext())
 	      	{
 				enum.next();
@@ -118,17 +118,17 @@ public class Shutdown implements MBeanRegistration, ShutdownMBean {
 	            // filter out some services here ?
 	
 			}
-			*/
+
 
             // Stop / Destroy / Unload all MBeans from ServiceController
             // Stop
             log.info("********************** Stop MBeans ************************************");
             log.info("***********************************************************************");
-            while (enum.hasNext())
-            //while (enum.hasPrevious())
+            //while (enum.hasNext())
+            while (enum.hasPrevious())
             {
-                name = (ObjectName)enum.next();
-                //name = (ObjectName)enum.previous();
+                //name = (ObjectName)enum.next();
+                name = (ObjectName)enum.previous();
                 Object[] args = { name };
                 if (verbose)
                     log.info("********************** Looking at MBean : " + name.getCanonicalName());
@@ -138,7 +138,8 @@ public class Shutdown implements MBeanRegistration, ShutdownMBean {
                     !name.getCanonicalName().equals("JBOSS-SYSTEM:service=Naming")) {
                         if (verbose)
                             log.info("********************** Stopping   MBean : " + name.getCanonicalName());
-                        server.invoke(new ObjectName("JBOSS-SYSTEM:spine=ServiceController"), "stop", args, sig);
+                        server.invoke(new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+                            "stop", args, sig);
                         // Destroy services
                         // Unload services
                 }
@@ -146,11 +147,11 @@ public class Shutdown implements MBeanRegistration, ShutdownMBean {
             // Destroy
             log.info("********************** Destroy MBeans ************************************");
             log.info("**************************************************************************");
-            while (enum.hasPrevious())
-            //while (enum.hasNext())
+            //while (enum.hasPrevious())
+            while (enum.hasNext())
             {
-                name = (ObjectName)enum.previous();
-                //name = (ObjectName)enum.next();
+                //name = (ObjectName)enum.previous();
+                name = (ObjectName)enum.next();
                 Object[] args = { name };
                 if (verbose)
                     log.info("********************** Looking at MBean : " + name.getCanonicalName());
@@ -160,7 +161,8 @@ public class Shutdown implements MBeanRegistration, ShutdownMBean {
                     !name.getCanonicalName().equals("JBOSS-SYSTEM:service=Naming")) {
                         if (verbose)
                             log.info("********************** Destroying MBean : " + name.getCanonicalName());
-                        server.invoke(new ObjectName("JBOSS-SYSTEM:spine=ServiceController"), "destroy", args, sig);
+                        server.invoke(new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+                            "destroy", args, sig);
                 }
             }
             // Unload all MBeans from MBean Server
