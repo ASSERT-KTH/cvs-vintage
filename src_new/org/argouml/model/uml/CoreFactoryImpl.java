@@ -1,4 +1,4 @@
-// $Id: CoreFactoryImpl.java,v 1.2 2005/01/02 11:31:26 mvw Exp $
+// $Id: CoreFactoryImpl.java,v 1.3 2005/01/05 23:09:58 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -666,7 +666,7 @@ public class CoreFactoryImpl
      * @param visibility the visibilitykind
      * @return MAssociationEnd
      */
-    private MAssociationEnd buildAssociationEnd(
+    public MAssociationEnd buildAssociationEnd(
 					       MAssociation assoc,
 					       String name,
 					       MClassifier type,
@@ -753,6 +753,31 @@ public class CoreFactoryImpl
         }
         return end;
     }
+
+    /**
+     * Builds a simply configured association end
+     * @param type the given classifier
+     * @param assoc the given association
+     * @return the newly build associationend
+     */
+    public MAssociationEnd buildAssociationEnd(
+            MClassifier type,
+            MAssociation assoc) {
+        if (type == null || assoc == null)
+            throw new IllegalArgumentException("one of the arguments is null");
+        return buildAssociationEnd(
+                assoc,
+                "",
+                type,
+                null,
+                null,
+                true,
+                null,
+                null,
+                null,
+                null,
+                MVisibilityKind.PUBLIC);
+    } 
 
     /**
      * Builds an association class from a class and two classifiers

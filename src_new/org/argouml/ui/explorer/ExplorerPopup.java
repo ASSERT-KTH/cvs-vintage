@@ -1,4 +1,4 @@
-// $Id: ExplorerPopup.java,v 1.13 2005/01/02 16:43:52 linus Exp $
+// $Id: ExplorerPopup.java,v 1.14 2005/01/05 23:10:01 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,6 +102,8 @@ public class ExplorerPopup extends JPopupMenu {
                 ModelFacade.isAModelElement(selectedItem);
 
             if (modelElementSelected) {
+                final boolean nAryAssociationSelected =
+                        ModelFacade.isANaryAssociation(selectedItem);
                 final boolean classifierAndRelationShipSelected =
                     ModelFacade.isAClassifierAndARelationship(selectedItem);
                 final boolean classifierSelected = 
@@ -149,7 +151,8 @@ public class ExplorerPopup extends JPopupMenu {
                         || (stateVertexSelected && stateDiagramActive
                             && diagramStateMachine == selectedStateMachine)
                         || (instanceSelected && !dataValueSelected 
-                            && !sequenceDiagramActive)) {
+                            && !sequenceDiagramActive)
+                        || nAryAssociationSelected) {
                     UMLAction action =
                         new ActionAddExistingNode(
                             menuLocalize("menu.popup.add-to-diagram"),
@@ -158,7 +161,7 @@ public class ExplorerPopup extends JPopupMenu {
                     this.add(action);
                 }
     
-                if ((relationshipSelected && !flowSelected)
+                if ((relationshipSelected && !flowSelected && !nAryAssociationSelected)
                         || (linkSelected && !sequenceDiagramActive)
                         || transitionSelected) {
                     UMLAction action = new ActionAddExistingEdge(

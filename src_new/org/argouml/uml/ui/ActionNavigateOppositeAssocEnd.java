@@ -1,4 +1,4 @@
-// $Id: ActionNavigateOppositeAssocEnd.java,v 1.2 2004/12/18 19:21:46 mvw Exp $
+// $Id: ActionNavigateOppositeAssocEnd.java,v 1.3 2005/01/05 23:10:03 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,6 +46,10 @@ public class ActionNavigateOppositeAssocEnd extends AbstractActionNavigate {
      */
     protected Object navigateTo(Object source) {
         return ModelFacade.getOppositeEnd(source);
+    }
+    
+    public boolean isEnabled() {
+        return false;
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: UmlHelperImpl.java,v 1.1 2005/01/02 10:08:13 linus Exp $
+// $Id: UmlHelperImpl.java,v 1.2 2005/01/05 23:09:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -280,6 +280,9 @@ class UmlHelperImpl implements UmlHelper {
         if (ModelFacade.isATransition(relationShip)) {
             return Model.getStateMachinesHelper().getSource(relationShip);
         }
+        if (ModelFacade.isAAssociationEnd(relationShip)) {
+            return Model.getCoreHelper().getSource(relationShip);
+        }
         return null;
     }
 
@@ -309,6 +312,9 @@ class UmlHelperImpl implements UmlHelper {
         }
         if (ModelFacade.isATransition(relationShip)) {
             return Model.getStateMachinesHelper().getDestination(relationShip);
+        }
+        if (ModelFacade.isAAssociationEnd(relationShip)) {
+            return Model.getCoreHelper().getDestination(relationShip);
         }
         return null;
     }
