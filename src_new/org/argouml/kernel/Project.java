@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.138 2005/01/02 10:37:55 mvw Exp $
+// $Id: Project.java,v 1.139 2005/01/03 18:15:55 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -151,7 +151,7 @@ public class Project implements java.io.Serializable, TargetListener {
      */
     public Project(URL theProjectUrl) {
         this();
-        url = (new PersistenceManager()).fixUrlExtension(theProjectUrl);
+        url = PersistenceManager.getInstance().fixUrlExtension(theProjectUrl);
     }
 
     /**
@@ -216,7 +216,7 @@ public class Project implements java.io.Serializable, TargetListener {
      */
     public String getBaseName() {
         String n = getName();
-        n = (new PersistenceManager()).getBaseName(n);
+        n = PersistenceManager.getInstance().getBaseName(n);
         return n;
     }
 
@@ -264,7 +264,7 @@ public class Project implements java.io.Serializable, TargetListener {
      */
     public void setURL(URL theUrl) {
         if (theUrl != null) {
-            theUrl = (new PersistenceManager()).fixUrlExtension(theUrl);
+            theUrl = PersistenceManager.getInstance().fixUrlExtension(theUrl);
         }
 
         if (LOG.isDebugEnabled()) {

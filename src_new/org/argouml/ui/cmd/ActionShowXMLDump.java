@@ -1,4 +1,4 @@
-// $Id: ActionShowXMLDump.java,v 1.1 2005/01/02 23:11:02 mvw Exp $
+// $Id: ActionShowXMLDump.java,v 1.2 2005/01/03 18:15:56 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,9 +60,9 @@ class ActionShowXMLDump extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 	Project project = ProjectManager.getManager().getCurrentProject();
-	PersistenceManager pm = new PersistenceManager();
-
-	String data = pm.getQuickViewDump(project);
+	
+	String data = 
+	    PersistenceManager.getInstance().getQuickViewDump(project);
 
 	JDialog pw = new JDialog(pb, Translator.localize("action.show-saved"), 
             false);

@@ -1,4 +1,4 @@
-// $Id: ActionFileOperations.java,v 1.14 2005/01/02 16:43:46 linus Exp $
+// $Id: ActionFileOperations.java,v 1.15 2005/01/03 18:15:55 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -124,7 +124,7 @@ public abstract class ActionFileOperations extends AbstractAction {
      */
     public boolean loadProject(URL url) {
         LOG.info("Loading project");
-        PersistenceManager pm = new PersistenceManager();
+        PersistenceManager pm = PersistenceManager.getInstance();
         Project oldProject = ProjectManager.getManager().getCurrentProject();
         boolean success = true;
         

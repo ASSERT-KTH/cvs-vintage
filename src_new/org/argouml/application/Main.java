@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.108 2004/12/28 13:59:04 bobtarling Exp $
+// $Id: Main.java,v 1.109 2005/01/03 18:15:56 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -235,7 +235,8 @@ public class Main {
         URL urlToOpen = null;
 
         if (projectName != null) {
-            projectName = (new PersistenceManager()).fixExtension(projectName);
+            projectName = 
+                PersistenceManager.getInstance().fixExtension(projectName);
             urlToOpen = projectUrl(projectName, urlToOpen);
         }
 

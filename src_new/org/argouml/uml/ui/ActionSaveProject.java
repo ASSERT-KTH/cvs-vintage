@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.45 2005/01/02 16:43:46 linus Exp $
+// $Id: ActionSaveProject.java,v 1.46 2005/01/03 18:15:55 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -130,7 +130,7 @@ public class ActionSaveProject extends ActionFileOperations {
         LOG.info("Saving the project");
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 	Project project = ProjectManager.getManager().getCurrentProject();
-	PersistenceManager pm = new PersistenceManager();
+	PersistenceManager pm = PersistenceManager.getInstance();
 
 	try {
 	    if (file.exists() && !overwrite) {

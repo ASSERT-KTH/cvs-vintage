@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.49 2004/12/29 02:31:50 bobtarling Exp $
+// $Id: ActionOpenProject.java,v 1.50 2005/01/03 18:15:55 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,7 +83,7 @@ public class ActionOpenProject extends ActionFileOperations
     public void actionPerformed(ActionEvent e) {
         ProjectBrowser pb = ProjectBrowser.getInstance();
         Project p = ProjectManager.getManager().getCurrentProject();
-        PersistenceManager pm = new PersistenceManager();
+        PersistenceManager pm = PersistenceManager.getInstance();
         
         if (!askConfirmationAndSave()) return;
         
