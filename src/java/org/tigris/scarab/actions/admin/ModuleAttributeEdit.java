@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.18 2002/09/11 21:47:07 elicia Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.19 2002/09/11 23:44:44 elicia Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -118,7 +118,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                         rmo.save();
                     }
                     ScarabCache.clear();
-                    data.setMessage(DEFAULT_MSG);  
+                    scarabR.setConfirmMesssage(DEFAULT_MSG);  
                 }
             }
         } 
@@ -169,7 +169,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                {
                    rmo2.delete(user);
                    //rmos.remove(rmo);
-                   data.setMessage(DEFAULT_MSG);  
+                   scarabR.setConfirmMesssage(DEFAULT_MSG);  
                }
                catch (Exception e)
                {
@@ -220,7 +220,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                 }
             }
             doCancel(data, context);
-            data.setMessage(DEFAULT_MSG);  
+            scarabR.setConfirmMesssage(DEFAULT_MSG);  
         }
     }
 }

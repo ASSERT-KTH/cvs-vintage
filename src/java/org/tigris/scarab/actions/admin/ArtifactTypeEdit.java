@@ -85,7 +85,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.31 2002/09/11 23:33:44 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.32 2002/09/11 23:44:44 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -109,7 +109,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             rmitGroup.setProperties(rmit);
             rmit.save();
          }
-         data.setMessage(DEFAULT_MSG);  
+         scarabR.setConfirmMessage(DEFAULT_MSG);  
     }
 
     /**
@@ -229,7 +229,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             scarabR.setAlertMessage(ERROR_MESSAGE);
         }
         ScarabCache.clear();
-        data.setMessage(DEFAULT_MSG);  
+        scarabR.setConfirmMessage(DEFAULT_MSG);  
     }
 
     /**
@@ -265,7 +265,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 rmaGroup.setProperties(rma);
                 rma.save();
             }
-            data.setMessage(DEFAULT_MSG);  
+            scarabR.setConfirmMessage(DEFAULT_MSG);  
         }
     }
 
@@ -279,7 +279,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
-        data.setMessage(DEFAULT_MSG);  
+        scarabR.setConfirmMessage(DEFAULT_MSG);  
         return module.createNewGroup(issueType);
     }
 
@@ -322,7 +322,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                     RModuleIssueType rmit =  module.getRModuleIssueType(issueType);
                     rmit.setDedupe(false);
                     rmit.save();
-                    data.setMessage(DEFAULT_MSG);  
+                    scarabR.setConfirmMessage(DEFAULT_MSG);  
                     ScarabCache.clear();
                 }
             }
@@ -377,7 +377,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                {
                    scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                }
-               data.setMessage(DEFAULT_MSG);  
+               scarabR.setConfirmMessage(DEFAULT_MSG);  
                ScarabCache.clear();
            }
         }        

@@ -86,7 +86,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.29 2002/09/11 21:47:07 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.30 2002/09/11 23:44:44 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -105,7 +105,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                                     ag.getQueryKey(), false);
         agGroup.setProperties(ag);
         ag.save();
-        data.setMessage(DEFAULT_MSG);  
+        scarabR.setConfirmMessage(DEFAULT_MSG);  
     }
 
     /**
@@ -168,7 +168,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 raagGroup.setProperties(raag);
                 raag.save();
             }
-            data.setMessage(msg);
+            scarabR.setConfirmMessage(msg);
             ScarabCache.clear();
         } 
 
@@ -224,7 +224,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 raagGroup.setProperties(raag);
                 raag.save();
             }
-            data.setMessage(msg);
+            scarabR.setConfirmMessage(msg);
             ScarabCache.clear();
         } 
         else
@@ -300,7 +300,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
             }
        }
        ScarabCache.clear();
-       data.setMessage(DEFAULT_MSG);  
+       scarabR.setConfirmMessage(DEFAULT_MSG);  
     }
 
     /**
@@ -344,7 +344,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 attGroup.addAttribute(attribute);
             }
             doCancel(data, context);
-            data.setMessage(DEFAULT_MSG);
+            scarabR.setConfirmMessage(DEFAULT_MSG);
         }
     }
 
