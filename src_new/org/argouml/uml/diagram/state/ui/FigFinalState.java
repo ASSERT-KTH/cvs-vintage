@@ -24,7 +24,7 @@
 // File: FigFinalState.java
 // Classes: FigFinalState
 // Original Author: ics125b spring 98
-// $Id: FigFinalState.java,v 1.6 2002/12/24 23:05:39 kataka Exp $
+// $Id: FigFinalState.java,v 1.7 2002/12/24 23:07:39 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -133,7 +133,7 @@ public class FigFinalState extends FigStateVertex {
 				sel = new SelectionActionState(this);
 				((SelectionActionState) sel).setOutgoingButtonEnabled(false);
 			} else {
-				sel = new SelectionState(this);
+				sel = new SelectionFinalState(this);
 				((SelectionState) sel).setOutgoingButtonEnabled(false);
 			}
 		}
