@@ -305,10 +305,6 @@ public class Request {
 	return remoteHostMB;
     }
 
-    public void setRemoteHost(String remoteHost) {
-	this.remoteHost=remoteHost;
-    }
-
     public String getLocalHost() {
 	return localHost;
     }

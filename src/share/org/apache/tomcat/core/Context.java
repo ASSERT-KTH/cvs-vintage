@@ -60,7 +60,6 @@
 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.util.depend.*;
 import org.apache.tomcat.util.http.MimeMap;
 import org.apache.tomcat.util.log.Log;
 
@@ -250,8 +249,6 @@ public final class Context {
     // true if a change was detected and this context
     // needs reload
     private boolean reload;
-    // Tool used to control reloading
-    private DependManager dependM=new DependManager();
 
     // -------------------- from web.xml --------------------
     // Those properties are not directly used in context
@@ -976,17 +973,6 @@ public final class Context {
 	classLoader=cl;
     }
 
-    // temp. properties until reloading is separated.
-    public final  boolean shouldReload() {
-	if( !reload && dependM != null )
-	    return dependM.shouldReload();
-	return reload;
-    }
-
-    public final  void setReload( boolean b ) {
-	reload=b;
-    }
-
     // -------------------- ClassPath --------------------
     
     public final  void addClassPath( URL url ) {
@@ -1011,16 +997,6 @@ public final class Context {
 	return urls;
     }
 
-    // -------------------- Depend manager ( used for reloading ) -----------
-    
-    public final  void setDependManager(DependManager dm ) {
-	dependM=dm;
-    }
-
-    public final  DependManager getDependManager( ) {
-	return dependM;
-    }
-    
     /* -------------------- Utils  -------------------- */
     public final  void setDebug( int level ) {
 	if (level!=debug)
