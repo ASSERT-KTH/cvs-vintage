@@ -107,7 +107,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.99 2002/06/08 01:54:33 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.100 2002/06/10 21:43:55 jon Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -180,10 +180,6 @@ public class ModifyIssue extends BaseModifyIssue
 
         if (intake.isAllValid()) 
         {
-            // there is nothing to save directly in the issue, it is not 
-            // modified. so commenting out to test.
-            // issue.save();
-
             // Save explanatory comment
             commentGroup.setProperties(attachment);
             attachment.setTextFields(user, issue, 
@@ -393,7 +389,7 @@ public class ModifyIssue extends BaseModifyIssue
                             .append("added URL '").append(name).append('\'')
                             .toString();
                         registerActivity(desc, "Your url was saved", 
-                            issue, user, null, context, data, "", name);
+                            issue, user, attachment, context, data, "", name);
                     }
                     else 
                     {
@@ -412,7 +408,7 @@ public class ModifyIssue extends BaseModifyIssue
                         descBuf.append('\'').toString();
                         registerActivity(descBuf.toString(),
                             "Your comment was saved", 
-                            issue, user, null, context, data, "", comment); 
+                            issue, user, attachment, context, data, "", comment); 
                         scarabR.setConfirmMessage("Your comment was added.");
                     }
                     intake.remove(group);    
@@ -428,7 +424,7 @@ public class ModifyIssue extends BaseModifyIssue
                     String path = attachment.getRelativePath();
                     String desc = 
                         new StringBuffer(path.length() + name.length() + 17)
-                   .append("added File '").append(name)
+                   .append("added file '").append(name)
                    .append("' at ").append(path).toString();
                     registerActivity(desc, "Your file was added", issue, user, 
                                      attachment, context, data);
@@ -529,27 +525,27 @@ public class ModifyIssue extends BaseModifyIssue
             key = keys[i].toString();
             if (key.startsWith("edit_comment"))
             {
-               attachmentId = key.substring(13);
-               newComment = params.getString(key, "");
-               Attachment attachment = AttachmentManager
-                   .getInstance(new NumberKey(attachmentId), false);
-               String oldComment = attachment.getDataAsString();
-               if (!newComment.equals(oldComment)) 
-               {
-                   attachment.setDataAsString(newComment);
-                   attachment.save();
+                attachmentId = key.substring(13);
+                newComment = params.getString(key, "");
+                Attachment attachment = AttachmentManager
+                    .getInstance(new NumberKey(attachmentId), false);
+                String oldComment = attachment.getDataAsString();
+                if (!newComment.equals(oldComment)) 
+                {
+                    attachment.setDataAsString(newComment);
+                    attachment.save();
                    
-                   // Generate description of modification
-                   String from = "changed comment from '";
-                   String to = "' to '";
-                   int capacity = from.length() + oldComment.length() +
-                       to.length() + newComment.length();
-                   String desc = new StringBuffer(capacity)
-                       .append(from).append(oldComment).append(to)
-                       .append(newComment).append('\'').toString();
-                   registerActivity(desc, DEFAULT_MSG, issue, user, 
-                       null, context, data, oldComment, newComment);
-               }               
+                    // Generate description of modification
+                    String from = "changed comment from '";
+                    String to = "' to '";
+                    int capacity = from.length() + oldComment.length() +
+                        to.length() + newComment.length();
+                    String desc = new StringBuffer(capacity)
+                        .append(from).append(oldComment).append(to)
+                        .append(newComment).append('\'').toString();
+                    registerActivity(desc, DEFAULT_MSG, issue, user, 
+                        attachment, context, data, oldComment, newComment);
+                }
             }
         }
     }
@@ -590,7 +586,7 @@ public class ModifyIssue extends BaseModifyIssue
                    .append("deleted URL '").append(name).append("'")
                    .toString();
                registerActivity(desc, "Your link was deleted", 
-                                issue, user, null, context, data);
+                                issue, user, attachment, context, data);
                data.setMessage(DEFAULT_MSG);  
             } 
         }
@@ -656,7 +652,7 @@ public class ModifyIssue extends BaseModifyIssue
         Transaction transaction = new Transaction();
         transaction
             .create(TransactionTypePeer.EDIT_ISSUE__PK, user, attachment);
-        
+
         // Save activity record
         Activity activity = new Activity();
         activity.create(issue, null, description, transaction, oldVal, newVal);
