@@ -787,7 +787,8 @@ public class Parser {
                 throw new ParseException(start, "Nothing after the :");
 
             
-            TagLibraryInfoImpl tli = libraries.getTagLibInfo(prefix);
+            TagLibraryInfoImpl tli = (TagLibraryInfoImpl)
+		libraries.getTagLibInfo(prefix);
             TagInfo ti = tli.getTag(shortTagName);
             
             if (ti == null)

@@ -80,7 +80,7 @@ public class TagLibraries {
         this.cl = cl;
     }
     
-    public void addTagLibrary(String prefix, TagLibraryInfoImpl tli) {
+    public void addTagLibrary(String prefix, TagLibraryInfo tli) {
         tagLibInfos.put(prefix, tli);
     }
     
@@ -100,8 +100,8 @@ public class TagLibraries {
                                                       ));
     }
     
-    public TagLibraryInfoImpl getTagLibInfo(String prefix) {
-        return (TagLibraryInfoImpl) tagLibInfos.get(prefix);
+    public TagLibraryInfo getTagLibInfo(String prefix) {
+        return (TagLibraryInfo) tagLibInfos.get(prefix);
     }
 
     private Hashtable tagLibInfos;
