@@ -56,14 +56,7 @@ public class ExpungeFolderCommand extends FolderCommand {
 		TableModelChangedEvent ev;
 		for (int i = 0; i < r.length; i++) {
 
-			ev = new TableModelChangedEvent( TableModelChangedEvent.UPDATE );
-			/*
-			ev =
-				new TableChangedEvent(
-					TableChangedEvent.REMOVE,
-					r[i].getFolder(),
-					r[i].getUids());
-			*/
+			ev = new TableModelChangedEvent( TableModelChangedEvent.UPDATE, r[i].getFolder() );
 			
 			TableUpdater.tableChanged(ev);
 
@@ -72,14 +65,8 @@ public class ExpungeFolderCommand extends FolderCommand {
 
 		FolderCommandReference u = adapter.getUpdateReferences();
 		if (u != null) {
-			ev = new TableModelChangedEvent( TableModelChangedEvent.UPDATE );
-			/*
-			ev =
-				new TableChangedEvent(
-					TableChangedEvent.REMOVE,
-					u.getFolder(),
-					u.getUids());
-			*/
+			ev = new TableModelChangedEvent( TableModelChangedEvent.UPDATE, u.getFolder() );
+			
 			TableUpdater.tableChanged(ev);
 
 			MainInterface.treeModel.nodeChanged(u.getFolder());

@@ -94,10 +94,14 @@ public class ExpungeFolderAction
 			if (folder != null) {
 
 				FolderItem item = folder.getFolderItem();
+				/*
 				if (item.get("property", "accessrights").equals("user"))
 					setEnabled(true);
 				else
 					setEnabled(false);
+				*/
+				
+				setEnabled(true);
 			}
 		} else
 			setEnabled(false);

@@ -263,6 +263,8 @@ public class TableController implements FocusOwner, ListSelectionListener {
 		// folder in which the update occurs
 		FolderTreeNode folder = event.getSrcFolder();
 
+		ColumbaLogger.log.debug("source folder="+folder.getName());
+		
 		// get current selection
 		FolderCommandReference[] r =
 			(FolderCommandReference[]) mailFrameController
@@ -270,6 +272,8 @@ public class TableController implements FocusOwner, ListSelectionListener {
 				.getSelection("mail.table");
 		Folder srcFolder = (Folder) r[0].getFolder();
 
+		ColumbaLogger.log.debug("selected folder="+srcFolder.getName());
+		
 		// make tree visible
 		if (getMailFrameController() instanceof ThreePaneMailFrameController) {
 			if (srcFolder != null)

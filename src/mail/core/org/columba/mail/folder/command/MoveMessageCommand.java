@@ -87,6 +87,7 @@ public class MoveMessageCommand extends CopyMessageCommand {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
+		// calling CopyMessageCommand.execute() here!
 		super.execute(worker);
 
 		adapter =
