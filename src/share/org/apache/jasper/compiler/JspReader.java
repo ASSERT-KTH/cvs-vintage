@@ -152,13 +152,8 @@ public class JspReader {
                 reader = new InputStreamReader(new FileInputStream(file),
                                                encoding);
             else {
-	    	// Need to do this as the getResourceAsStream is relative
-		// to docBase and if we use it on Win32 then File uses \
-		// and not / which causes a problem.
-	        String fileName = file.toString();
-		if (File.separatorChar == '\\')
-		    fileName = fileName.replace (File.separatorChar, '/');
-                InputStream in = context.getResourceAsStream(fileName);
+	        String fileName = context.getRealPath(file.toString());
+                InputStream in = new FileInputStream(fileName);
                 if (in == null)
                     throw new FileNotFoundException(fileName);
                 
