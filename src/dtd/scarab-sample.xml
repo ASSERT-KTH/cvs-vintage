@@ -1,3 +1,6 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE scarab SYSTEM "scarab.dtd">
+
 <!--
 Here is what I was thinking the direction of the XML data format should
 look like. Of course it is far from 100% complete, but it does show a
