@@ -64,7 +64,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.348 2005/03/09 23:56:15 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.349 2005/03/10 01:21:30 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5376,6 +5376,8 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		if(!buffer.isTransactionInProgress())
 			_finishCaretUpdate();
 		/* otherwise DisplayManager.BufferChangeHandler calls */
+		
+		repaintMgr.setFastScroll(false);
 	} //}}}
 
 	//{{{ fireCaretEvent() method
