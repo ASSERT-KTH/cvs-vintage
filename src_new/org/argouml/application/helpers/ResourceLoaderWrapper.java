@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.15 2004/07/18 07:01:25 mvw Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.16 2004/07/18 10:52:24 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -98,12 +98,8 @@ public final class ResourceLoaderWrapper {
 
     /**
      * Constructor for ResourceLoaderWrapper.
-     * 
-     * @deprecated by Linus Tolke as of 0.15.5. Will be private. Use
-     *             {@link #getResourceLoaderWrapper()}to get hold of the
-     *             singleton.
      */
-    public ResourceLoaderWrapper() {
+    private ResourceLoaderWrapper() {
 	super();
 	initResourceLoader();
     }
@@ -323,7 +319,7 @@ public final class ResourceLoaderWrapper {
 		    if (cName.endsWith("Impl")) {
 			cName = cName.substring(0, cName.length() - 4);
 		    }
-		    icon = getResourceLoaderWrapper().lookupIconResource(cName);
+		    icon = lookupIconResource(cName);
 		    if (icon != null) {
 			iconCache.put(value.getClass(), icon);
 		    }
