@@ -19,20 +19,32 @@ import javax.management.MBeanRegistration;
 import org.jboss.logging.Logger;
 
 /**
- * A simple mbean that dumps out info like the system properties, etc.
- *      
+ * An MBean that provides a rich view of system information for the JBoss 
+ * server in which it is deployed.
+ *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class Info
    implements InfoMBean, MBeanRegistration
 {
    /** Class logger. */
    private static final Logger log = Logger.getLogger(Info.class);
+
+   /** The cached host name for the server. */
+   private String hostName;
+
+   /** The cached host address for the server. */
+   private String hostAddress;
+
+
+   ///////////////////////////////////////////////////////////////////////////
+   //                               JMX Hooks                               //
+   ///////////////////////////////////////////////////////////////////////////
 
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws Exception
@@ -78,6 +90,39 @@ public class Info
       // empty
    }
 	
+
+   ///////////////////////////////////////////////////////////////////////////
+   //                            Server Information                         //
+   ///////////////////////////////////////////////////////////////////////////
+
+   public String getHostName() {
+      if (hostName == null) {
+	 try {
+	    hostName = java.net.InetAddress.getLocalHost().getHostName();
+	 }
+	 catch (java.net.UnknownHostException e) {
+	    log.error("Error looking up local hostname", e);
+	    hostName = "<unknown>";
+	 }
+      }
+
+      return hostName;
+   }
+
+   public String getHostAddress() {
+      if (hostAddress == null) {
+	 try {
+	    hostAddress = java.net.InetAddress.getLocalHost().getHostAddress();
+	 }
+	 catch (java.net.UnknownHostException e) {
+	    log.error("Error looking up local address", e);
+	    hostAddress = "<unknown>";
+	 }
+      }
+
+      return hostAddress;
+   }
+
    private String getThreadGroupInfo(ThreadGroup group) {
       StringBuffer rc = new StringBuffer();
 		
@@ -119,6 +164,7 @@ public class Info
       // I'm not sure why what gets reported is off by +1, 
       // but I'm adjusting so that it is consistent with the display
       int activeThreads = root.activeCount()-1;
+
       // I'm not sure why what gets reported is off by -1
       // but I'm adjusting so that it is consistent with the display
       int activeGroups = root.activeGroupCount()+1;
