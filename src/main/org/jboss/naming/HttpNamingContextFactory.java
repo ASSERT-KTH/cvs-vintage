@@ -21,6 +21,7 @@ import javax.naming.RefAddr;
 import javax.naming.spi.InitialContextFactory;
 import javax.naming.spi.ObjectFactory;
 
+import org.jboss.invocation.InvocationException;
 import org.jboss.invocation.MarshalledValue;
 import org.jboss.invocation.http.interfaces.Util;
 import org.jboss.logging.Logger;
@@ -33,7 +34,7 @@ import org.jnp.interfaces.NamingContext;
  @see javax.naming.spi.InitialContextFactory
 
  @author Scott.Stark@jboss.org
- @version $Revision: 1.6 $
+ @version $Revision: 1.7 $
  */
 public class HttpNamingContextFactory
    implements InitialContextFactory, ObjectFactory
