@@ -30,6 +30,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.ParseException;
+import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.config.Config;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.themes.ThemeSwitcher;
@@ -42,6 +43,8 @@ import org.columba.core.pluginhandler.ComponentPluginHandler;
 import org.columba.core.profiles.Profile;
 import org.columba.core.profiles.ProfileManager;
 import org.columba.core.session.SessionController;
+import org.columba.core.shutdown.SaveConfig;
+import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.trayicon.ColumbaTrayIcon;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.util.OSInfo;
@@ -215,6 +218,10 @@ public class Main {
 		// load user-customized language pack
 		GlobalResourceLoader.loadLanguage();
 
+		SaveConfig task = new SaveConfig();
+		BackgroundTaskManager.getInstance().register(task);
+		ShutdownManager.getShutdownManager().register(task);
+		
 		ComponentPluginHandler handler = null;
 		try {
 			handler = (ComponentPluginHandler) PluginManager.getInstance()
