@@ -73,7 +73,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.58 2002/11/25 23:38:11 elicia Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.59 2002/11/26 18:59:08 elicia Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -328,6 +328,9 @@ public abstract class AbstractScarabUser
         for (int i=0; i<userModules.length; i++)
         {
              Module module = userModules[i];
+             // Can move issue to this module if it is not the current module,
+             // Or if it has more issue types than the current one (can
+             // Move to a different issue type within this module)
              if ((!module.isGlobalModule())
                 && ((!module.getModuleId().equals(currentModule.getModuleId())
                  || module.getIssueTypes(true).size() > 1)))

@@ -84,7 +84,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.40 2002/11/25 23:38:33 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.41 2002/11/26 18:59:07 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -140,11 +140,13 @@ public class MoveIssue extends RequireLoginFirstAction
             data.setMessage(l10n.get(NO_PERMISSION_MESSAGE));
             return;
         }
+        // Do not allow user to move issue if source and destination
+        // Module and issue type are the same
         if (moveIssue.get("Action").toString().equals("move")
-            && (newModuleId.equals(oldModule.getModuleId())
-                || newIssueTypeId.equals(issue.getIssueType().getIssueTypeId())))
+            && newModuleId.equals(oldModule.getModuleId())
+            && newIssueTypeId.equals(issue.getIssueType().getIssueTypeId()))
         {
-            scarabR.setAlert("You cannot move an issue to the same module/issue type.");
+            scarabR.setAlertMessage("You cannot move an issue to the same module/issue type.");
             return;
         }
        
