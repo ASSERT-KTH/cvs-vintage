@@ -15,12 +15,13 @@ import org.w3c.dom.Node;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
+import org.jboss.util.Strings;
 
 /**
  * An abstract base class for metadata containers.
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public abstract class MetaData
    implements Cloneable, XmlLoadable
@@ -187,7 +188,7 @@ public abstract class MetaData
             result += children.item(i).getFirstChild();
          }
       }
-      return result.trim();
+      return Strings.replaceProperties(result.trim());
    }
 
    public static String getFirstElementContent(Element element, String defaultStr)
@@ -217,7 +218,7 @@ public abstract class MetaData
          }
          */
       }
-      return result.trim();
+      return Strings.replaceProperties(result.trim());
    }
 
    /**
@@ -258,21 +259,6 @@ public abstract class MetaData
       }
 
       return false;
-   }
-
-   public static boolean isSystemProperty(String value)
-   {
-      return (value == null || value.trim().length() == 0) ? false : value.startsWith("${") && value.endsWith("}");
-   }
-
-   public static String resolveSystemProperty(String param)
-      throws DeploymentException
-   {
-      if(!isSystemProperty(param))
-         throw new DeploymentException("A system property should follow the syntax ${property_name}: " + param);
-
-      String propName = param.substring(2).substring(0, param.length() - 3);
-      return System.getProperty(propName);
    }
 
    // Constructors --------------------------------------------------

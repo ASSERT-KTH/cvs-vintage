@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public final class JDBCRelationMetaData
 {
@@ -237,13 +237,7 @@ public final class JDBCRelationMetaData
       String dataSourceNameString = MetaData.getOptionalChildContent(
             mappingElement, "datasource");
       if(dataSourceNameString != null) {
-         if(MetaData.isSystemProperty(dataSourceNameString)) {
-            dataSourceName = MetaData.resolveSystemProperty(dataSourceNameString);
-            if(dataSourceName == null)
-               throw new DeploymentException("System property is not set: " + dataSourceNameString);
-         } else {
-            dataSourceName = dataSourceNameString;
-         }
+         dataSourceName = dataSourceNameString;
       } else {
          dataSourceName = defaultValues.getDataSourceName();
       }
@@ -253,12 +247,6 @@ public final class JDBCRelationMetaData
       String datasourceMappingString = MetaData.getOptionalChildContent(
             mappingElement, "datasource-mapping");
       if(datasourceMappingString != null) {
-         if(MetaData.isSystemProperty(datasourceMappingString)) {
-            datasourceMappingString = MetaData.resolveSystemProperty(datasourceMappingString);
-            if(datasourceMappingString == null) {
-               throw new DeploymentException("Property is not set: " + datasourceMappingString);
-            }
-         }
 
          datasourceMapping = jdbcApplication.getTypeMappingByName(
             datasourceMappingString);

@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
  *
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  */
 public final class JDBCEntityMetaData
 {
@@ -422,18 +422,7 @@ public final class JDBCEntityMetaData
       String dataSourceNameString = MetaData.getOptionalChildContent(element, "datasource");
       if(dataSourceNameString != null)
       {
-         if(MetaData.isSystemProperty(dataSourceNameString))
-         {
-            dataSourceName = MetaData.resolveSystemProperty(dataSourceNameString);
-            if(dataSourceName == null)
-            {
-               throw new DeploymentException("Property is not set: " + dataSourceNameString);
-            }
-         }
-         else
-         {
-            dataSourceName = dataSourceNameString;
-         }
+         dataSourceName = dataSourceNameString;
       }
       else
       {
@@ -445,15 +434,6 @@ public final class JDBCEntityMetaData
       String datasourceMappingString = MetaData.getOptionalChildContent(element, "datasource-mapping");
       if(datasourceMappingString != null)
       {
-         if(MetaData.isSystemProperty(datasourceMappingString))
-         {
-            datasourceMappingString = MetaData.resolveSystemProperty(datasourceMappingString);
-            if(datasourceMappingString == null)
-            {
-               throw new DeploymentException("Property is not set: " + datasourceMappingString);
-            }
-         }
-
          datasourceMapping = jdbcApplication.getTypeMappingByName(datasourceMappingString);
          if(datasourceMapping == null)
          {
