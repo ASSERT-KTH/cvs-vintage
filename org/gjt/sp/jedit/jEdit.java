@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.172 2003/06/04 01:44:17 spestov Exp $
+ * @version $Id: jEdit.java,v 1.173 2003/06/04 04:31:03 spestov Exp $
  */
 public class jEdit
 {
@@ -1719,6 +1719,7 @@ public class jEdit
 
 		// zero it here so that BufferTabs doesn't have any problems
 		buffersFirst = buffersLast = null;
+		bufferHash.clear();
 		bufferCount = 0;
 
 		while(buffer != null)
