@@ -94,29 +94,8 @@ public class StartTomcat {
     }
 
     public void execute() throws Exception {
-	if( doHelp ) {
-	    printUsage();
-	    return;
-	}
-	if( doStop ) {
-	    org.apache.tomcat.task.StopTomcat task=
-		new  org.apache.tomcat.task.StopTomcat();
-
-	    task.setConfig( configFile );
-	    task.execute();     
-	    return;
-	}
-
 	ContextManager cm=prepareContextManager();
 	
-	// XXX Make this optional, and make sure it doesn't require
-	// a full start. It is called after init to make sure
-	// auto-configured contexts are initialized.
-	if( doGenerateConfigs ) {
-	    generateServerConfig( cm );
-	    return;
-	}
-
 	try {
 	    cm.start(); // start serving
 	}
@@ -188,33 +167,6 @@ public class StartTomcat {
 
     public void setServerClassPath( URL urls[] ) {
 	serverClassPath=urls;
-    }
-    
-    /** This method will generate Server config files that
-	reflect the existing cm settings. It is called
-	at startup, and may be called when a new context is
-	added ( at runtime for example ).
-    */
-    public static void generateServerConfig( ContextManager cm )
-	throws TomcatException
-    {
-	// Generate Apache configs
-	//
-	org.apache.tomcat.task.ApacheConfig apacheConfig=
-	    new  org.apache.tomcat.task.ApacheConfig();
-	apacheConfig.execute( cm );     
-
-	// Generate IIS configs
-	//
-	org.apache.tomcat.task.IISConfig iisConfig=
-	    new  org.apache.tomcat.task.IISConfig();
-	iisConfig.execute( cm );     
-
-	// Generate Netscape configs
-	//
-	org.apache.tomcat.task.NSConfig nsConfig=
-	    new  org.apache.tomcat.task.NSConfig();
-	nsConfig.execute( cm );     
     }
     
     public static void printUsage() {

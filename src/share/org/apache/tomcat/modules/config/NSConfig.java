@@ -56,7 +56,7 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */
-package org.apache.tomcat.task;
+package org.apache.tomcat.modules.config;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
@@ -71,7 +71,7 @@ import java.util.*;
  *
  * @author Gal Shachor shachor@il.ibm.com
  */
-public class NSConfig  { // implements XXX
+public class NSConfig  extends BaseInterceptor { 
 
     public static final String WORKERS_CONFIG = "/conf/jk/workers.properties";
     public static final String NS_CONFIG = "/conf/jk/obj.conf";
@@ -83,6 +83,11 @@ public class NSConfig  { // implements XXX
     {
     }
 
+    public void engineInit(ContextManager cm) throws TomcatException
+    {
+	execute( cm );
+    }
+    
     public void execute(ContextManager cm) throws TomcatException 
     {
 	    try {

@@ -56,7 +56,7 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */
-package org.apache.tomcat.task;
+package org.apache.tomcat.modules.config;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
@@ -66,16 +66,14 @@ import java.net.*;
 import java.util.*;
 
 // Used to find Ajp12 connector port
-//import org.apache.tomcat.service.PoolTcpConnector;
-//import org.apache.tomcat.service.connector.Ajp12ConnectionHandler;
 import org.apache.tomcat.modules.server.Ajp12Interceptor;
 
 /**
  * Used by ContextManager to generate automatic apache configurations
  *
- * @author costin@dnt.ro
+ * @author Costin Manolache
  */
-public class ApacheConfig  { // implements XXX
+public class ApacheConfig  extends BaseInterceptor { 
     // XXX maybe conf/
     public static final String APACHE_CONFIG  = "/conf/jserv/tomcat-apache.conf";
     public static final String MOD_JK_CONFIG  = "/conf/jk/mod_jk.conf";
@@ -90,6 +88,7 @@ public class ApacheConfig  { // implements XXX
     }
 
     Log loghelper = new Log("tc_log", this);
+
     
     public void execute(ContextManager cm) throws TomcatException {
 	try {

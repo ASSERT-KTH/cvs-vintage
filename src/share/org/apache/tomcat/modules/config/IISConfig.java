@@ -56,7 +56,7 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */
-package org.apache.tomcat.task;
+package org.apache.tomcat.modules.config;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
@@ -71,7 +71,7 @@ import java.util.*;
  *
  * @author Gal Shachor shachor@il.ibm.com
  */
-public class IISConfig  { // implements XXX
+public class IISConfig extends BaseInterceptor  { 
 
     public static final String WORKERS_CONFIG = "/conf/jk/workers.properties";
     public static final String URL_WORKERS_MAP_CONFIG = "/conf/jk/uriworkermap.properties";
