@@ -19,31 +19,25 @@
   </div>
   <h3><a name="top" id="top">Frequently asked questions</a></h3>
   <dl> 
-    <dt> <em>How do I figure out what issue type to use?</em> </dt>
+    <dt>How do I figure out what issue type to use?</dt>
     <dd>The issue types available to you in your project have been determined 
       by your project administrator. By accessing the <strong>Issue Type selection</strong> 
       screen you can see a description of each issue type and select the one that 
       best describes your issue. For more information see the <a href="$link.setPage("help,UserIssues.vm")#types")">issue 
       types</a> discussion.</dd>
-    <p></p>
-    <dt> <em>Can I move an issue to a different issue type? how about to a different 
-      project?</em> </dt>
+    <dt>Can I move an issue to a different issue type? how about to a different 
+      project?</dt>
     <dd>Issues can be moved between issue types through the issue detail page. 
       For more information see the <a href="$link.setPage("help,UserIssueModify.vm")#move")">moving issues 
       </a>discussion. For a discussion on circumstances in which you may wish 
       to move issues, see the <a href="$link.setPage("help,ScarabBestPractices.vm")">Best practices 
       </a>document.</dd>
-    <p></p>
-    <dt><em>How can stop the duplication checking?</em></dt>
+    <dt>How can stop the duplication checking?</dt>
     <dd> The duplication checking process is set by the project leader. If you 
       feel it is affecting the processing of issues, contact your project administrator.</dd>
-    <p><em>How do I add or remove attributes from my screen?</em></p>
-    <dl> 
-      <dt>Many pages in Scarab are customizable. For more information see the 
-        discussion on <a href="$link.setPage("help,Navigation.vm")#customize")">customizing</a> the screen.</dt>
+    <dt>How do I add or remove attributes from my screen?</dt>
+    <dd>Many pages in Scarab are customizable. For more information see the 
+        discussion on <a href="$link.setPage("help,Navigation.vm")#customize")">customizing</a> the screen.</dd>
     </dl>
-    <p></p>
-    <dt><a href="#top">Top</a> </dt>
-  </dl>
-  <div class="courtesylinks"></div>
+<div class="courtesylinks"><p><a href="#toc">Top</a></div>
 </div>

@@ -39,7 +39,7 @@
   </ul>
   <p>For ease of use, frequently used queries can be saved. Use the left navigation 
     link or the query bar to access saved queries. </p>
-  <p><strong><a name="bar" id="bar">The Query bar</a></strong></p>
+  <h4><a name="bar" id="bar">The Query bar</a></h4>
   <p>The query bar contains links to frequently used search functionality.</p>
   <ul>
     <li>If you have any saved queries, a drop down box will appear first on this 
@@ -52,7 +52,7 @@
     <li>The <em>Issue List</em> link will run the last query or any saved query 
       you've set as a default</li>
   </ul>
-  <p><strong><a name="issueid" id="issueid">Searching by Issue ID</a></strong></p>
+  <h4><a name="issueid" id="issueid">Searching by Issue ID</a></h4>
   <p>To access a specific issue enter the issue number <bo>in</bo> the search 
     form and click the <strong>Artifact Id</strong> button. If the id you requested is not 
     found an error message will appear and you can enter a different id.</p>
@@ -68,5 +68,5 @@
   <p>If you do not have permission to view issues in the target project you will 
     receive an error message. Likewise, if you enter an invalid project id or 
     issue number an error message will be generated.</p>
-  <p><a href="#Top">Top</a></p>
-  </div>
+<div class="courtesylinks"><p><a href="#toc">Top</a></div>
+</div>
