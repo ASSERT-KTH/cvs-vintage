@@ -195,8 +195,17 @@ public abstract class PoolTcpConnector extends BaseInterceptor
  		// provide a wide enough interface
  		sslImplementation=SSLImplementation.getInstance
  		    (sslImplementationName);
- 		ep.setServerSocketFactory(sslImplementation.
- 					  getServerSocketFactory());
+                ServerSocketFactory socketFactory = 
+                        sslImplementation.getServerSocketFactory();
+                if( socketFactory!=null ) {
+                    Enumeration attE=attributes.keys();
+                    while( attE.hasMoreElements() ) {
+                        String key=(String)attE.nextElement();
+                        Object v=attributes.get( key );
+                        socketFactory.setAttribute( key, v );
+                    }
+                }
+		ep.setServerSocketFactory(socketFactory);
  	    } catch (ClassNotFoundException e){
  		throw new TomcatException("Error loading SSLImplementation ",
  					  e);
@@ -278,6 +287,10 @@ public abstract class PoolTcpConnector extends BaseInterceptor
 
     public boolean isClientauthSet() {
         return (attributes.get("clientauth") != null);
+    }
+
+    public boolean isAttributeSet( String attr ) {
+        return (attributes.get(attr) != null);
     }
 
     public void setSecure( boolean b ) {
