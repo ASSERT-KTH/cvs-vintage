@@ -15,7 +15,7 @@ import org.jboss.ejb.DeploymentException;
  *
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class SessionMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------
@@ -40,7 +40,11 @@ public class SessionMetaData extends BeanMetaData {
         if (isStateful()) {
             return jdk13Enabled() ? ConfigurationMetaData.STATEFUL_13 : ConfigurationMetaData.STATEFUL_12;
         } else {
-            return jdk13Enabled() ? ConfigurationMetaData.STATELESS_13 : ConfigurationMetaData.STATELESS_12;
+           if (this.isClustered())
+              return jdk13Enabled() ? ConfigurationMetaData.CLUSTERED_STATELESS_13 : ConfigurationMetaData.STATELESS_12; // not JDK 1.2 cluster support
+           else
+              return jdk13Enabled() ? ConfigurationMetaData.STATELESS_13 : ConfigurationMetaData.STATELESS_12;
+              
         }
     }
 	
@@ -67,7 +71,7 @@ public class SessionMetaData extends BeanMetaData {
             throw new DeploymentException("transaction type should be 'Bean' or 'Container'");
         }
     }
-			
+
     // Package protected ---------------------------------------------
     
     // Protected -----------------------------------------------------
