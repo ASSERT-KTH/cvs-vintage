@@ -35,6 +35,10 @@
     <depends>jboss.jca:service=RARDeployer</depends>
 
     <attribute name="JndiName">JmsXA</attribute>
+
+    <!-- JBossMQ requires sessions tracked by transaction. Commit from suspended is not supported -->
+    <attribute name="TrackConnectionByTx">true</attribute>
+
     <depends optional-attribute-name="ManagedConnectionFactoryName">
       <mbean code="org.jboss.resource.connectionmanager.RARDeployment" name="jboss.jca:service=XaTxDS,name=jmsra">
         <!--hack till better deployment system-->
