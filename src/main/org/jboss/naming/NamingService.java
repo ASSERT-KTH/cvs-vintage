@@ -25,6 +25,7 @@ import javax.naming.StringRefAddr;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
+import org.jboss.invocation.jrmp.server.JRMPProxyFactoryMBean;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.threadpool.ThreadPool;
 import org.jboss.util.threadpool.BasicThreadPoolMBean;
@@ -38,17 +39,21 @@ import org.jnp.server.Main;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.45 $
+ * @version $Revision: 1.46 $
  *
  * @jmx:mbean name="jboss:service=Naming"
- *            extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
- **/
+ *  extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
+ */
 public class NamingService
    extends ServiceMBeanSupport
    implements NamingServiceMBean
 {
+   /** The actual naming service impl from the legacy jndi service */
    private Main naming;
+   /** The hash mappings of the Naming interface methods */
    private Map marshalledInvocationMapping = new HashMap();
+   /** An optional proxy factory for externalizing the Naming proxy transport */
+   private JRMPProxyFactoryMBean proxyFactory;
 
    public NamingService()
    {
@@ -176,6 +181,11 @@ public class NamingService
       naming.setJNPServerSocketFactory(factoryClassName);
    }
 
+   public void setInvokerProxyFactory(JRMPProxyFactoryMBean proxyFactory)
+   {
+      this.proxyFactory = proxyFactory;
+   }
+
    protected void startService()
       throws Exception
    {
@@ -206,6 +216,8 @@ public class NamingService
          }
          System.setProperty(key, value);
       }
+      if( proxyFactory != null )
+         naming.setNamingProxy(proxyFactory.getProxy());
       naming.start();
 
       /* Create a default InitialContext and dump out its env to show what properties
