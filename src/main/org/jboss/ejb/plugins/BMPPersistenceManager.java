@@ -37,7 +37,7 @@ import java.util.Iterator;
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *  @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
-*  @version $Revision: 1.50 $
+*  @version $Revision: 1.51 $
 */
 public class BMPPersistenceManager
    implements EntityPersistenceManager
@@ -476,6 +476,18 @@ public class BMPPersistenceManager
    public void storeEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {
+      try
+      {
+         if(!isModified(ctx))
+         {
+            return;
+         }
+      }
+      catch(Exception e)
+      {
+         throw new EJBException("Failed to invoke isModified().", e);
+      }
+
       try
       {
          AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_STORE);
