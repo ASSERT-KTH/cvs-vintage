@@ -31,9 +31,13 @@ import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
 
-import org.columba.core.main.Main;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.ParseException;
+import org.columba.addressbook.main.AddressbookMain;
+import org.columba.core.main.ColumbaCmdLineParser;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.GlobalResourceLoader;
+import org.columba.mail.main.MailMain;
 
 /**
  * Opens a server socket to manage multiple sessions of Columba
@@ -214,7 +218,15 @@ public class ColumbaServer {
                 String tok = (String) st.nextToken();
                 list.add(tok);
             }
-            Main.handleCommandLineParameters((String[]) list.toArray(new String[0]));
+            
+            try {
+				CommandLine commandLine = ColumbaCmdLineParser.getInstance().parse((String[]) list.toArray(new String[0]));
+				
+				MailMain.getInstance().handleCommandLineParameters(commandLine);
+				AddressbookMain.getInstance().handleCommandLineParameters(commandLine);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
         } catch (IOException ioe) {
             ioe.printStackTrace();
         } finally {

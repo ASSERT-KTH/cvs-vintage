@@ -24,6 +24,7 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.GlobalResourceLoader;
 
 
@@ -60,11 +61,18 @@ public class ExitAction extends AbstractColumbaAction {
     	// also starts a second shutdown thread
     	// -> This leads into two parallel shutdown thread which
     	// -> is why sometimes config-files, etc. get messed up
-    	//
-        /*
-         * ShutdownManager.getShutdownManager().shutdown(0);
-         */
-    	FrameModel.getInstance().storeViews();
+    	//        
+    	
+    	//FrameModel.getInstance().storeViews();
+        
+    	// @author: tstich
+    	// Its better to call the Shutdownmanager
+    	// since the above is called automatically from it.
+    	// ShutdownManager is modified to allow one shutdown
+    	// call only, so we never should have multi-shutdown
+    	// problems again.
+    	
+    	ShutdownManager.getShutdownManager().shutdown(0);
     	
     }
 }

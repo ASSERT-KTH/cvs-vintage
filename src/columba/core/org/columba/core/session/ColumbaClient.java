@@ -23,6 +23,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.Socket;
 
+import org.apache.commons.cli.CommandLine;
 import org.columba.core.main.VersionInfo;
 
 /**
@@ -70,7 +71,7 @@ public class ColumbaClient {
  */
     public void sendCommandLine(String[] args) throws IOException {
         StringBuffer buf = new StringBuffer();
-
+        
         for (int i = 0; i < args.length; i++) {
             buf.append(args[i]);
             buf.append('%');

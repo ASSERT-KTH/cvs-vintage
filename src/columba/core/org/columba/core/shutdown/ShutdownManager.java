@@ -96,6 +96,8 @@ public class ShutdownManager {
      */
     protected List list = new LinkedList();
 
+	private boolean shuttingDown;
+
     /**
      * This constructor is only to be accessed by getShutdownManager() and by
      * subclasses.
@@ -167,6 +169,8 @@ public class ShutdownManager {
             }
         }, "ShutdownManager");
         setShutdownHook(true);
+        
+        shuttingDown = false;
     }
 
     /**
@@ -204,7 +208,8 @@ public class ShutdownManager {
      * Starts the shutdown procedure.
      */
     public synchronized void shutdown(final int status) {
-        setShutdownHook(false);
+    	if( !shuttingDown ) {
+    	setShutdownHook(false);
         new Thread(new Runnable() {
 
             public void run() {
@@ -212,6 +217,9 @@ public class ShutdownManager {
                 System.exit(status);
             }
         }, "ShutdownManager").start();
+
+        shuttingDown = true;
+    	}
     }
 
     /**

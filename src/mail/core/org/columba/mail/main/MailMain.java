@@ -15,26 +15,39 @@
 //All Rights Reserved.
 package org.columba.mail.main;
 import java.awt.BorderLayout;
+import java.util.logging.Logger;
 
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.OptionGroup;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.config.DefaultItem;
+import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.main.DefaultMain;
+import org.columba.core.main.ColumbaCmdLineParser;
+import org.columba.core.main.IModuleMain;
+import org.columba.core.main.Main;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionPluginHandler;
 import org.columba.core.services.ServiceManager;
 import org.columba.core.shutdown.ShutdownManager;
+import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.nativ.defaultmailclient.SystemDefaultMailClientHandler;
+import org.columba.mail.parser.MailUrlParser;
 import org.columba.mail.pgp.MultipartEncryptedRenderer;
 import org.columba.mail.pgp.MultipartSignedRenderer;
 import org.columba.mail.shutdown.SaveAllFoldersPlugin;
@@ -42,17 +55,28 @@ import org.columba.mail.shutdown.SavePOP3CachePlugin;
 import org.columba.mail.spam.SaveSpamDBPlugin;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.composer.MimeTreeRenderer;
+import org.columba.ristretto.parser.ParserException;
 /**
  * Main entrypoint for mail component.
  * 
  * @author fdietz
  */
-public class MailMain extends DefaultMain {
+public class MailMain implements IModuleMain {
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.main");
+
+	private static final String RESOURCE_PATH = "org.columba.mail.i18n.global";
 	
     private static MailMain instance = new MailMain();
 	
-	public MailMain() {
-		 // Init PGP
+	private MailMain() {
+	}
+	
+	/**
+	 * 
+	 */
+	public void init() {
+		// Init PGP
         MimeTreeRenderer renderer = MimeTreeRenderer.getInstance();
         renderer.addMimePartRenderer(new MultipartSignedRenderer());
         renderer.addMimePartRenderer(new MultipartEncryptedRenderer());
@@ -89,26 +113,87 @@ public class MailMain extends DefaultMain {
         ServiceManager.getInstance().register("org.columba.mail.facade.IFolderFactory", "org.columba.mail.facade.FolderFactory");
         ServiceManager.getInstance().register("org.columba.mail.facade.ISelectionFactory", "org.columba.mail.facade.SelectionFactory");
 	}
-	
+
 	public static MailMain getInstance() {
 		return instance;
 	}
 	
+	
+	public void registerCommandLineArguments() {
+		ColumbaCmdLineParser parser = ColumbaCmdLineParser.getInstance();
+		
+		parser.addOption(OptionBuilder.withArgName("options").hasArg()
+				.withDescription(GlobalResourceLoader.getString(
+						RESOURCE_PATH, "global", "cmdline_composer")).create("compose"));
+
+		Option mailOption = OptionBuilder.withArgName("mailurl").hasArg()
+				.withDescription(GlobalResourceLoader.getString(
+						RESOURCE_PATH, "global", "cmdline_mail_withurl")).create("mail");
+		
+		mailOption.setOptionalArg(true);
+		
+		parser.addOption(mailOption);
+	}
+	
 	/**
-	 * @see org.columba.core.main.DefaultMain#handleCommandLineParameters(java.lang.String[])
+	 * @see org.columba.core.main.IModuleMain#handleCommandLineParameters(java.lang.String[])
 	 */
-	public void handleCommandLineParameters(String[] args) {
-		if (MailConfig.getInstance().getAccountList().count() == 0) {
-			new AccountWizardLauncher().launchWizard(true);
+	public void handleCommandLineParameters(CommandLine commandLine) {
+		
+		if (commandLine.hasOption("mail")) {
+			
+			if( commandLine.getOptionValue("mail") != null ) {
+			try {
+				ComposerModel model = new ComposerModel(MailUrlParser.parse(commandLine.getOptionValue("mail")));
+
+				//new NewMessageAction().actionPerformed(null);
+				ComposerController controller = new ComposerController();
+				new DefaultContainer(controller);
+				
+				controller.setComposerModel(model);
+				
+				Main.getInstance().setRestoreLastSession(false);
+			} catch (ParserException e1) {
+				LOG.warning(e1.getLocalizedMessage());
+			}
+			} else {				
+				try {
+					FrameModel.getInstance().openView("ThreePaneMail");
+					
+					Main.getInstance().setRestoreLastSession(false);
+				} catch (PluginLoadingFailedException e) {
+					LOG.severe(e.getLocalizedMessage());
+				}
+			}
 		}
-		ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
-		try {
-			cmdLineParser.parseCmdLine(args);
-		} catch (IllegalArgumentException e) {
+
+		if (commandLine.hasOption("compose")) {
+			ComposerModel model = new ComposerModel(MessageOptionParser.parse(commandLine.getOptionValue("compose")));
+
+			//new NewMessageAction().actionPerformed(null);
+			ComposerController controller = new ComposerController();
+			new DefaultContainer(controller);
+			
+			controller.setComposerModel(model);
+			
+			Main.getInstance().setRestoreLastSession(false);
 		}
+	}
+	
+	
+	/**
+	 * 
+	 */
+	public void postStartup() {
 		// Check default mail client
 		checkDefaultClient();
+
+		// Show first time Account Wizard
+		if (MailConfig.getInstance().getAccountList().count() == 0) {
+			new AccountWizardLauncher().launchWizard(true);
+		}		
 	}
+
 	private void checkDefaultClient() {
 		// Check if Columba is the default mail client
 		SystemDefaultMailClientHandler defaultClientHandler = new SystemDefaultMailClientHandler();

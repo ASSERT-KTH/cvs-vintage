@@ -108,7 +108,10 @@ public class ProfileManager {
 	 * @return return profile if available. Otherwise, return null
 	 */
 	public Profile getProfileForName(String name) {
-
+		if( name.equalsIgnoreCase("default")) {
+			return new Profile("Default", location);
+		}
+		
 		XmlElement profile = getXmlElementForName(name);
 		if ( profile == null ) return null;
 		
@@ -135,7 +138,7 @@ public class ProfileManager {
 
 			XmlElement profile = profiles.getElement(i);
 			String n = profile.getAttribute("name");
-			if (name.equals(n)) {
+			if (name.equalsIgnoreCase(n)) {
 
 				return profile;
 			}
@@ -180,7 +183,15 @@ public class ProfileManager {
 			currentProfile = promptForProfile();
 		} else {
 			// use commandline-specified location
-			currentProfile = getProfileForLocation(location);
+
+			// try name first
+			currentProfile = getProfileForName(location);
+			
+			if( currentProfile == null ) {
+				// try directory
+				currentProfile = getProfileForLocation(location);
+			}
+			
 			if (currentProfile == null) {
 				// create profile
 				XmlElement profileElement = new XmlElement("profile");

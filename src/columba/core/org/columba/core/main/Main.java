@@ -16,8 +16,14 @@
 
 package org.columba.core.main;
 
+import java.text.MessageFormat;
+
 import javax.swing.RepaintManager;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.ParseException;
 import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.config.Config;
 import org.columba.core.gui.frame.FrameModel;
@@ -30,6 +36,7 @@ import org.columba.core.plugin.PluginManager;
 import org.columba.core.profiles.Profile;
 import org.columba.core.profiles.ProfileManager;
 import org.columba.core.session.SessionController;
+import org.columba.core.trayicon.ColumbaTrayIcon;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.main.MailMain;
 
@@ -37,24 +44,41 @@ import org.columba.mail.main.MailMain;
  * Columba's main class used to start the application.
  */
 public class Main {
-	private static boolean showStartUpFrame = true;
 	/** If true, enables debugging output from org.columba.core.logging */
 	public static boolean DEBUG = false;
 
+	private static final String RESOURCE_PATH = "org.columba.core.i18n.global";
+
+	private static Main instance;
+
+	private String path;
+
+	private boolean showSplashScreen = true;
+
+	private boolean restoreLastSession = true;
+	
 	private Main() {
 	}
 
-	public static void main(String[] args) {
-		ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
-		try {
-			cmdLineParser.parseCmdLine(args);
-		} catch (IllegalArgumentException e) {
-			ColumbaCmdLineParser.printUsage();
-			System.exit(2);
+	public static Main getInstance() {
+		if (instance == null) {
+			instance = new Main();
 		}
 
-		// initialize configuration backend
-		String path = cmdLineParser.getPathOption();
+		return instance;
+	}
+
+	public static void main(String[] args) {
+		Main.getInstance().run(args);
+	}
+
+	public void run(String args[]) {
+		registerCommandLineArguments();
+
+		// handle commandline parameters
+		if( handleCommandLineParameters(args) ) {
+			System.exit(0);
+		}
 
 		// prompt user for profile
 		Profile profile = ProfileManager.getInstance().getProfile(path);
@@ -76,7 +100,7 @@ public class Main {
 
 		// show splash screen
 		StartUpFrame frame = null;
-		if (showStartUpFrame) {
+		if (showSplashScreen) {
 			frame = new StartUpFrame();
 			frame.setVisible(true);
 		}
@@ -88,12 +112,12 @@ public class Main {
 
 		// load user-customized language pack
 		GlobalResourceLoader.loadLanguage();
-	
+
 		// init addressbook component
-		AddressbookMain.getInstance();
+		AddressbookMain.getInstance().init();
 
 		// init mail component
-		MailMain.getInstance();
+		MailMain.getInstance().init();
 
 		// now load all available plugins
 		PluginManager.getInstance().initPlugins();
@@ -112,34 +136,102 @@ public class Main {
 			frame.setVisible(false);
 		}
 
+		// show Trayicon
+		ColumbaTrayIcon.getInstance().addToSystemTray();
+
+		// handle the commandline arguments of the modules
+		MailMain.getInstance().handleCommandLineParameters(ColumbaCmdLineParser.getInstance().getParsedCommandLine());		
+		AddressbookMain.getInstance().handleCommandLineParameters(ColumbaCmdLineParser.getInstance().getParsedCommandLine());		
+
 		// restore frames of last session
-		if (FrameModel.getInstance().getOpenFrames().length == 0) {
+		if (restoreLastSession) {
 			FrameModel.getInstance().openStoredViews();
 		}
 
-		// handle commandline parameters
-		handleCommandLineParameters(args);
-
-	}
-
-	public static void setShowStartUpFrame(boolean show) {
-		showStartUpFrame = show;
+		// call the postStartups of the modules
+		// e.g. check for default mailclient
+		MailMain.getInstance().postStartup();
+		AddressbookMain.getInstance().postStartup();
 	}
 
 	/**
-     * Uses the command line parser to validate the passed arguments
-     * and invokes handlers to process the detected options.
-     */
-	public static void handleCommandLineParameters(String[] args) {
+	 *  
+	 */
+	public void registerCommandLineArguments() {
+		ColumbaCmdLineParser parser = ColumbaCmdLineParser.getInstance();
 
-		// handle core framework arguments
-		ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
+		parser.addOption(new Option("version", GlobalResourceLoader.getString(
+				RESOURCE_PATH, "global", "cmdline_version")));
+
+		parser.addOption(new Option("help", GlobalResourceLoader.getString(
+				RESOURCE_PATH, "global", "cmdline_help")));
+
+		parser.addOption(OptionBuilder.withArgName("name_or_path").hasArg()
+				.withDescription(GlobalResourceLoader.getString(
+						RESOURCE_PATH, "global", "cmdline_profile")).create("profile"));
+
+		parser.addOption(new Option("debug", GlobalResourceLoader.getString(
+				RESOURCE_PATH, "global", "cmdline_debug")));
+		
+		parser.addOption(new Option("nosplash", GlobalResourceLoader.getString(
+				RESOURCE_PATH, "global", "cmdline_nosplash")));
+		
+		
+		MailMain.getInstance().registerCommandLineArguments();
+		AddressbookMain.getInstance().registerCommandLineArguments();
+	}
+
+	/**
+	 * Uses the command line parser to validate the passed arguments and invokes
+	 * handlers to process the detected options.
+	 */
+	public boolean handleCommandLineParameters(String[] args) {
+		ColumbaCmdLineParser parser = ColumbaCmdLineParser.getInstance();
+		CommandLine commandLine;
+
 		try {
-			cmdLineParser.parseCmdLine(args);
-		} catch (IllegalArgumentException e) {
+			commandLine = parser.parse(args);
+		} catch (ParseException e) {
+			// oops, something went wrong
+			System.err.println("Parsing failed.  Reason: " + e.getMessage());
+			parser.printUsage();		
+
+			return true;
 		}
 
-		AddressbookMain.getInstance().handleCommandLineParameters(args);
-		MailMain.getInstance().handleCommandLineParameters(args);
+		if (commandLine.hasOption("help")) {
+			parser.printUsage();
+
+			return true;
+		}
+
+		if (commandLine.hasOption("version")) {
+			System.out.println(
+					MessageFormat.format( GlobalResourceLoader.getString(RESOURCE_PATH,
+					"global", "info_version"), new Object[] { VersionInfo.getVersion(), VersionInfo.getBuildDate()}));
+
+			return true;
+		}
+
+		if (commandLine.hasOption("profile")) {
+			path = commandLine.getOptionValue("profile");
+		}
+
+		if (commandLine.hasOption("debug")) {
+			DEBUG = true;
+		}
+		
+		if (commandLine.hasOption("nosplash")) {
+			showSplashScreen = false;
+		}
+
+		// Do not exit
+		return false;
+	}
+	/**
+	 * @param restoreLastSession The restoreLastSession to set.
+	 */
+	public void setRestoreLastSession(boolean restoreLastSession) {
+		this.restoreLastSession = restoreLastSession;
 	}
 }

@@ -123,16 +123,28 @@ public class ComposerController extends DefaultFrameController implements
 	private HtmlToolbar htmlToolbar;
 
 	public ComposerController() {
-		this(new ViewItem(MailConfig.getInstance()
+		this(new ComposerModel(), new ViewItem(MailConfig.getInstance()
 				.get("composer_options").getElement("/options/gui/view")));
 	}
 	
+
 	public ComposerController(
+			ComposerModel model) {
+		this( model, new ViewItem(MailConfig.getInstance()
+				.get("composer_options").getElement("/options/gui/view")));
+	}
+	
+	public ComposerController(ViewItem viewItem) {
+		this(new ComposerModel(), viewItem);
+		
+	}
+	
+	public ComposerController(ComposerModel model,
 			ViewItem viewItem) {
 		super( viewItem);
 
 		// init model (defaults to empty plain text message)
-		composerModel = new ComposerModel();
+		composerModel = model;
 
 		// init controllers for different parts of the composer
 		identityInfoPanel = new IdentityInfoPanel();
@@ -235,7 +247,9 @@ public class ComposerController extends DefaultFrameController implements
 
 			containerListenerBuffer = null; // done, the buffer has been emptied
 		}
+
 		
+
 		
 	}
 

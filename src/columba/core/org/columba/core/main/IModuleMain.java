@@ -6,6 +6,8 @@
  */
 package org.columba.core.main;
 
+import org.apache.commons.cli.CommandLine;
+
 
 /**
  * Mail/addressbook components subclass DefaultMain, which
@@ -13,10 +15,16 @@ package org.columba.core.main;
  * <p>
  * @author fdietz
  */
-public abstract class DefaultMain {
+public interface IModuleMain {
+	
+	public void init();
+	
+	public void postStartup();
+	
+	public void registerCommandLineArguments();
 	
     // commandline arguments which can't be handled by the core
     // are passed along to other subcomponents
-    public abstract void handleCommandLineParameters(String[] args);
+    public void handleCommandLineParameters(CommandLine commandLine);
    
 }

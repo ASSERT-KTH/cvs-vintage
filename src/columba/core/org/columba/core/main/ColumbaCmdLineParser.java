@@ -17,8 +17,14 @@
 //All Rights Reserved.
 package org.columba.core.main;
 
-import jargs.gnu.CmdLineParser;
-
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.columba.core.util.GlobalResourceLoader;
 
 /**
@@ -30,186 +36,93 @@ import org.columba.core.util.GlobalResourceLoader;
 public class ColumbaCmdLineParser {
 
 	private static final String RESOURCE_PATH = "org.columba.core.i18n.global";
+
+	private CommandLineParser parser;
+	private Options options;
 	
-	private static CmdLineParser parser;
+	private String[] args;
 
-	private static CmdLineParser.Option help;
+	private static ColumbaCmdLineParser instance;
 
-	private static CmdLineParser.Option version;
+	private CommandLine commandLine;
 
-	private static CmdLineParser.Option debug;
-
-	private static CmdLineParser.Option path;
-
-	static {
-		parser = new CmdLineParser();
-
-		// setting any options
-		// the short option '+' is an hack until jargs supports also "only long
-		// commands"
-		// TODO (@author waffel): make options i18n compatible
-		help = parser.addBooleanOption('+', "help");
-		version = parser.addBooleanOption('+', "version");
-		debug = parser.addBooleanOption('d', "debug");
-
-		path = parser.addStringOption('p', "path");
-
+	
+	private ColumbaCmdLineParser() {
+		parser = new BasicParser();
+		options = new Options();
 	}
-
-	protected String pathOption;
-
-	public ColumbaCmdLineParser() {
-	}
-
+	
 	/**
-	 * Parsing the commandline arguments and set the given values to the
-	 * commandline arguments.
+	 * Gets the instance of the ColumbaCmdLineParser.
 	 * 
-	 * @param args
-	 *            commandline arguments to be parsed
+	 * @return the singleton instance
 	 */
-	public void parseCmdLine(String[] args) throws IllegalArgumentException {
-		try {
-			parser.parse(args);
-		} catch (CmdLineParser.OptionException e) {
-			throw new IllegalArgumentException(e.getMessage());
+	public static ColumbaCmdLineParser getInstance() {
+		if( instance == null) {
+			instance = new ColumbaCmdLineParser();
 		}
-
-		checkHelp();
-		checkVersion();
-		checkDebug();
-		checkPath();
-
+		
+		return instance;
 	}
-
+	
 	/**
-	 * Check the commandLineArgument help. If the argument help is given, then a
-	 * help text is printed to standard out and the program exists.
+	 * Adds an option to the CommandlineParser
 	 * 
-	 * @param helpOpt
-	 *            help Option
-	 * @see CmdLineParser.Option
-	 * @param parser
-	 *            parser which parsed the option
-	 */
-	private void checkHelp() {
-		Boolean helpValue = (Boolean) parser.getOptionValue(help);
-
-		if (helpValue != null) {
-			if (helpValue.booleanValue()) {
-				printUsage();
-			}
-		}
+	 * @param option a new command line argument.
+	 */	
+	public void addOption( Option option ) {
+		options.addOption(option);
 	}
-
+	
 	/**
-	 * Check if the commandline argument --version is given. If this is true the
-	 * version text is printed out to stdandard out and the program exit.
+	 * Adds an OptionGroup to the CommandlineParser.
 	 * 
-	 * @param versionOpt
-	 *            Verion Option
-	 * @see CmdLineParser.Option
-	 * @param parser
-	 *            parser which parsed the option
+	 * @param optionGroup
 	 */
-	private void checkVersion() {
-		Boolean versionValue = (Boolean) parser.getOptionValue(version);
-
-		if (versionValue != null) {
-			if (versionValue.booleanValue()) {
-				printVersionInfo();
-			}
-		}
+	public void addOptionGroup( OptionGroup option) {
+		options.addOptionGroup( option );
 	}
-
+	
 	/**
-	 * Checks if the commandline argument -d,--debug is given, if this is true
-	 * the intern debugValue is set to true
+	 * Parses the commandline.
 	 * 
-	 * @see ColumbaCmdLineParser#setDebugOption(boolean) else the option is set
-	 *      to false. You can get the option via
-	 * @see ColumbaCmdLineParser#isDebugOption()
-	 * @param debugOpt
-	 *            Option for debug
-	 * @see CmdLineParser.Option
-	 * @param parser
-	 *            parser which parsed the option
+	 * @param args the arguments 
+	 * @return the parsed CommandLine
+	 * @throws ParseException
 	 */
-	private void checkDebug() {
-		Boolean debugValue = (Boolean) parser.getOptionValue(debug);
-
-		if (debugValue != null) {
-			Main.DEBUG = debugValue.booleanValue();
-		}
+	public CommandLine parse(String[] args) throws ParseException {
+		commandLine = parser.parse(options, args);
+		
+		return commandLine;
 	}
-
+	
 	/**
-	 * Checks if the commandline option -p,--path is given, if this is true a
-	 * new ConfigPath with the path to the configs is generated, else a empty
-	 * (default) ConfigPath Object is created
+	 * Gets the previously parsed Commandline. 
 	 * 
-	 * @param pathOpt
-	 *            the path option
-	 * @see CmdLineParser.Option
-	 * @param parser
-	 *            parser which parsed the Option
+	 * @see #parse(String[])
+	 * 
+	 * @return the last parsed commandline
 	 */
-	private void checkPath() {
-		String pathValue = (String) parser.getOptionValue(path);
-		setPathOption(pathValue);
-	}
-
-	/**
-	 * Returns the path to the configuration Columba should use.
-	 */
-	public String getPathOption() {
-		return pathOption;
-	}
-
-	/**
-	 * Sets the path to the configuration Columba should use.
-	 */
-	public void setPathOption(String string) {
-		pathOption = string;
+	public CommandLine getParsedCommandLine() {		
+		return commandLine;
 	}
 	
 	/**
 	 * prints the usage of the program with commandline arguments.
-	 * 
-	 * TODO (@author waffel): all options should be printed
 	 */
-	public static void printUsage() {
-		System.out.println(GlobalResourceLoader.getString(RESOURCE_PATH,
-				"global", "cmdline_usage"));
-		System.out.println();
-		System.out.println(GlobalResourceLoader.getString(RESOURCE_PATH,
-				"global", "cmdline_shortinfo"));
-		System.out.println(GlobalResourceLoader.getString(RESOURCE_PATH,
-				"global", "cmdline_debugopt"));
-		System.out.println(GlobalResourceLoader.getString(RESOURCE_PATH,
-				"global", "cmdline_pathopt"));
+	public void printUsage() {
+		// automatically generate the help statement
+	     HelpFormatter formatter = new HelpFormatter();
+	     formatter.printHelp( GlobalResourceLoader.getString(RESOURCE_PATH,
+				"global", "cmdline_usage"), options );
 
-		System.out.println();
-		
-		org.columba.mail.main.ColumbaCmdLineParser.printUsage();
-		
-		System.out.println();
-
-		System.out.println(GlobalResourceLoader.getString(RESOURCE_PATH,
-				"global", "cmdline_helpopt"));
-		
-		System.out.println();
-		
-		System.exit(1);
 	}
 
 	/**
-	 * Prints the current version of columba
+	 * @return Returns the args.
 	 */
-	public static void printVersionInfo() {
-		System.out.println("Columba " + VersionInfo.getVersion());
-		
-		System.exit(1);
+	public String[] getArgs() {
+		return args;
 	}
 
 }

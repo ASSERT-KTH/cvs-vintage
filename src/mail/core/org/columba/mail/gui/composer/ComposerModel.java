@@ -15,12 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import org.columba.core.nativ.mimetype.LookupMimetypeHandler;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
@@ -28,8 +32,11 @@ import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.parser.AddressParser;
 import org.columba.mail.parser.ListBuilder;
 import org.columba.mail.parser.ListParser;
+import org.columba.ristretto.io.FileSource;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.StreamableMimePart;
 
 /**
@@ -74,9 +81,9 @@ public class ComposerModel {
 	 * TODO: see if we can replace the matching code with Ristretto stuff
 	 *  
 	 */
-	private static final String emailRegExp = "[a-zA-Z0-9]+([_\\.-][a-zA-Z0-9]+)*@([a-zA-Z0-9]+([\\.-][a-zA-Z0-9]+)*)+\\.[a-zA-Z]{2,}"; 
+	private static final String emailRegExp = "[a-zA-Z0-9]+([_\\.-][a-zA-Z0-9]+)*@([a-zA-Z0-9]+([\\.-][a-zA-Z0-9]+)*)+\\.[a-zA-Z]{2,}";
 
-         //original:  "^[a-zA-Z0-9]+@[a-zA-Z0-9\\.\\-]+\\.[a-zA-Z]{2,4}+$";
+	//original: "^[a-zA-Z0-9]+@[a-zA-Z0-9\\.\\-]+\\.[a-zA-Z]{2,4}+$";
 
 	private static final Pattern emailPattern = Pattern.compile(emailRegExp);
 
@@ -119,6 +126,17 @@ public class ComposerModel {
 	 */
 	public ComposerModel(boolean html) {
 		this(null, html);
+	}
+	
+	/**
+	 * Constructs a new ComposerModel. The parameters
+	 * are read from the messageOptions.
+	 * 
+	 * @param messageOptions
+	 */
+	public ComposerModel(Map messageOptions) {
+		this();
+		setMessageOptions(messageOptions);
 	}
 
 	/**
@@ -182,7 +200,7 @@ public class ComposerModel {
 			getToList().add(a[i].toString());
 		}
 	}
-	
+
 	/**
 	 * Set Cc: header
 	 * 
@@ -195,7 +213,7 @@ public class ComposerModel {
 			getCcList().add(a[i].toString());
 		}
 	}
-	
+
 	/**
 	 * Set Bcc: header
 	 * 
@@ -288,6 +306,31 @@ public class ComposerModel {
 		attachments.add(mp);
 
 		//notifyListeners();
+	}
+	
+	public void addFileAttachment(File file) {
+   	 if (file.isFile()) {
+
+        String mimetype = new LookupMimetypeHandler().lookup(file);
+         // fall-back to application
+         if(mimetype == null)
+             mimetype = "application/octet-stream";
+
+         MimeHeader header = new MimeHeader(mimetype.substring(0, mimetype.indexOf('/')), mimetype.substring(mimetype.indexOf('/') + 1));
+         header.putContentParameter("name", file.getName());
+         header.setContentDisposition("attachment");
+         header.putDispositionParameter("filename", file.getName());
+         header.setContentTransferEncoding("base64");
+
+         try {
+             LocalMimePart mimePart = new LocalMimePart(header, new FileSource(file));
+             
+             attachments.add(mimePart);
+         } catch (IOException e) {
+             LOG.warning("Could not add the file '" + file + "' to the attachment list, due to:" + e);
+         }
+     }
+		
 	}
 
 	public void setBodyText(String str) {
@@ -486,5 +529,79 @@ public class ComposerModel {
 
 		return null;
 
+	}
+
+	public void setMessageOptions(Map options) {
+
+		addAddresses(options, "to");
+		addAddresses(options, "cc");
+		addAddresses(options, "bcc");
+		
+		if( options.get("subject") != null) {
+			setSubject((String)options.get("subject"));
+		}
+
+		if (options.get("body") != null) {
+			String body = (String) options.get("body");
+			/*
+			 * *20030917, karlpeder* Set the model to html or text based on the
+			 * body specified on the command line. This is done using a simple
+			 * check: Does the body contain <html> and </html>
+			 */
+			boolean html = false;
+			String lcase = body.toLowerCase();
+
+			if ((lcase.indexOf("<html>") != -1)
+					&& (lcase.indexOf("</html>") != -1)) {
+				html = true;
+			}
+
+			setHtml(html);
+
+			// set the body text
+			setBodyText(body);
+		}
+
+		if( options.get("attachment") != null) {
+			if( options.get("attachment") instanceof String ) {
+				addFileAttachment(new File((String) options.get("attachment")));
+			} else {
+				String[] attachments = (String[]) options.get("attachment");
+				for( int i=0; i<attachments.length; i++) {
+					addFileAttachment(new File(attachments[i]));
+				}
+			}
+			
+		}
+		
+	}
+
+	/**
+	 * @param options
+	 */
+	private void addAddresses(Map options, String type) {
+		List list;
+		
+		if( type.equals("to")) {
+			list = getToList();
+		} else if( type.equals("cc")) {
+			list = getCcList();
+		} else {
+			list = getBccList();
+		}
+		
+		if (options.get(type) != null) {
+			if (options.get(type) instanceof String) {
+					list.add((String) options.get(type));
+			} else {
+				String[] addresses = (String[]) options.get(type);
+
+				for (int i = 0; i < addresses.length; i++) {
+						list.add(
+								addresses[i]);
+				}
+			}
+
+		}
 	}
 }
