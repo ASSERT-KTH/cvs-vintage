@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: frontis.xml,v 1.18 2003/08/16 10:41:10 linus Exp $ -->
+<!-- $Id: frontis.xml,v 1.19 2003/12/07 11:44:47 mvw Exp $ -->
 
 <!--
 
@@ -15,8 +15,8 @@ The frontispiece information about the book.
 
   <abstract>
     <para>
-This version the manual is intended to describe 
-is the version &argoversion; of &argouml;.
+This version of the manual is intended to describe 
+the version &argoversion; of &argouml;.
 </para>
   </abstract>
   <authorgroup>
