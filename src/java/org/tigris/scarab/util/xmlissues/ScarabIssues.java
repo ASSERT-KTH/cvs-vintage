@@ -82,7 +82,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * inValidationMode set to false will do actual insert of the xml issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.33 2003/04/28 16:54:58 jmcnally Exp $
+ * @version $Id: ScarabIssues.java,v 1.34 2003/04/28 19:11:25 dlr Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -775,7 +775,7 @@ public class ScarabIssues implements java.io.Serializable
                     activitySetOM = @OM@.ActivitySetManager.getInstance(
                         (String)activitySetIdMap.get(activitySet.getId()));
                     alreadyCreated = true;
-                    log.debug("Found ActivitySet: " + activitySet.getId() + 
+                    LOG.debug("Found ActivitySet: " + activitySet.getId() + 
                               " in map: " + activitySetOM.getActivitySetId());
                 }
                 else // it hasn't been encountered previously
@@ -899,7 +899,7 @@ public class ScarabIssues implements java.io.Serializable
                     {
                         activityAttachmentOM = @OM@.AttachmentManager
                             .getInstance(previousId);
-                        log.debug("Found existing Activity Attachment");
+                        LOG.debug("Found existing Activity Attachment");
                     }
                 }
                 else
