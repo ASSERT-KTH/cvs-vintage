@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.64 2003/11/12 12:27:17 pilhuhn Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.65 2003/11/12 18:23:07 pilhuhn Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -1074,6 +1074,11 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
             <function-name>count</function-name>
             <function-sql>count(?1)</function-sql>
          </function-mapping>
+         <function-mapping>
+         	<function-name>length</function-name>
+         	<function-sql>char_length(?1)</function-sql>
+         </function-mapping>
+
 
          <mapping>
             <java-type>java.lang.Boolean</java-type>
