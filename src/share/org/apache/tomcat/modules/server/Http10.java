@@ -142,20 +142,20 @@ public class Http10 {
 		if (len == -1) {
 		    return 400;
 		}
-	    }
 	    
-	    line.end += len;
+		line.end += len;
 	    
-	    if (len == 0 || buf[line.end-1] == '\n') {
-		// strip \n
-		if( line.end> line.off && buf[line.end-1]=='\n' )
-		    --line.end;
+		if (len == 0 || buf[line.end-1] == '\n') {
+		    // strip \n
+		    if( line.end> line.off && buf[line.end-1]=='\n' )
+			--line.end;
 		
-		// strip off trailing "\r\n"
-		if (line.end > line.off && buf[line.end-1] == '\r') {
-		    --line.end;
+		    // strip off trailing "\r\n"
+		    if (line.end > line.off && buf[line.end-1] == '\r') {
+			--line.end;
+		    }
+		    return 0; // Empty line || end of line
 		}
-		return 0; // Empty line || end of line
 	    }
 	    
 	    // overflowed buffer, so temporarily expand and continue
