@@ -74,7 +74,7 @@ public class RoleRule extends BaseRule
         {
             getImportBean().getRoleList().add(text);
             log().debug("(" + getImportBean().getState() + 
-                ") added role: " + text);
+                ") found role: " + text);
         }
     }
 }

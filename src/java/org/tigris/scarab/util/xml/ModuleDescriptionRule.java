@@ -83,7 +83,6 @@ public class ModuleDescriptionRule extends BaseRule
             throw new Exception ("Could not find <module>");
         }
         module.setDescription(moduleDescription);
-        module.save();
     }
     
     protected void doValidationAtBody(String moduleDescription)

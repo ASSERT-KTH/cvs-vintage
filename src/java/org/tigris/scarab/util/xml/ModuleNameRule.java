@@ -87,7 +87,6 @@ public class ModuleNameRule extends BaseRule
             throw new Exception ("Could not find <module>");
         }
         module.setRealName(moduleName);
-        module.save();
     }
     
     protected void doValidationAtBody(String moduleName)

@@ -96,7 +96,12 @@ public class ModuleRule extends BaseRule
             module = (Module)ModuleManager.getInstance();
         }
         module.setParentId(new NumberKey(attributes.getValue("parent")));
-        module.setOwnerId("0");
+        String ownerId = attributes.getValue("owner-id");
+        if (ownerId == null || ownerId.length() == 0)
+        {
+            ownerId = "0";
+        }
+        module.setOwnerId(ownerId);
         getImportBean().setModule(module);
         log().debug("(" + getImportBean().getState() + 
             ") digested module: " + module.getName());
