@@ -1,7 +1,20 @@
-$page.setTitle("Custom query")
+$page.setTitle("Simple query")
 
 #set ($module = $scarabR.CurrentModule)
 <div class="app" id="search">
+
+#set ($search = $scarabR.Search)
+#set ($searchGroup = $intake.SearchIssue.mapTo($search))
+#set ($issueType = $scarabR.CurrentIssueType)
+#set ($searchTextAttributes = $search.QuickSearchTextAttributeValues)
+#set ($searchValues = $search.QuickSearchOptionAttributeValues)
+#set ($attrValues = $search.ModuleAttributeValuesMap)
+
+#if ($searchTextAttributes.isEmpty() && $searchValues.isEmpty())
+    <p class="alert">The project owner has not defined simple search 
+        attributes, so the Advanced Query form is being shown.</p> 
+    $renderer.render("screens", "AdvancedQuery.vm")
+#else
 
 <h2>$page.Title</h2>
 
@@ -15,14 +28,7 @@ $page.setTitle("Custom query")
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </p>
 
-#set ($search = $scarabR.Search)
-#set ($searchGroup = $intake.SearchIssue.mapTo($search))
-#set ($issueType = $scarabR.CurrentIssueType)
-#set ($searchTextAttributes = $search.QuickSearchTextAttributeValues)
-#set ($searchValues = $search.QuickSearchOptionAttributeValues)
-#set ($attrValues = $search.ModuleAttributeValuesMap)
-
-#if ($searchTextAttributes.size() != 0)
+#if (!$searchTextAttributes.isEmpty())
 <h3>Text search</h3>
 
 <div class="axial">
@@ -51,7 +57,7 @@ $page.setTitle("Custom query")
       #end
     #end
   #end
-  <option value="$att.QueryKey"#selected($selected)>$att.Name</option>
+  <option value="$att.Attribute.QueryKey"#selected($selected)>$att.RModuleAttribute.DisplayValue</option>
   #set ($selected = false)
 #end
    </select>
@@ -132,4 +138,5 @@ $page.setTitle("Custom query")
 $intake.declareGroups()
 
 </form>
+#end ## end if (any options exist to search on)
 </div>

@@ -262,7 +262,7 @@ public class IssueSearch
             textScope = new NumberKey[textAttributes.size()];
             for ( int j=textAttributes.size()-1; j>=0; j-- ) 
             {
-                textScope[j] = ((Attribute)
+                textScope[j] = ((AttributeValue)
                                 textAttributes.get(j)).getAttributeId();
             }
         }
