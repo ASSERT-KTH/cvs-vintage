@@ -22,11 +22,11 @@ everyone and for which Principals have any role requested. It can be used
 as a pass-through security manager when you want noop security.
 
 @see #isValid(Principal, Object)
-@see #Principal getPrincipal(Principal)
+@see #getPrincipal(Principal)
 @see #doesUserHaveRole(Principal, Set)
 
-@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.6 $
+@author Scott.Stark@jboss.org
+@version $Revision: 1.7 $
 */
 public class NullSecurityManager
     implements SubjectSecurityManager, RealmMapping, Serializable
@@ -85,8 +85,8 @@ public class NullSecurityManager
 
     /** Does the current Subject have a role(a Principal) that equates to one
         of the role names. This method always returns true.
-    @param principal, ignored.
-    @param roleNames, ignored.
+    @param principal - ignored.
+    @param roleNames - ignored.
     @return Always returns true.
     */
     public boolean doesUserHaveRole(Principal principal, Set roleNames)
@@ -106,8 +106,8 @@ public class NullSecurityManager
     }
 
     /** Authenticate principal against credential
-     * @param principal, the user id to authenticate
-     * @param credential, an opaque credential.
+     * @param principal - the user id to authenticate
+     * @param credential - an opaque credential.
      * @return Always returns true.
      */
     private boolean authenticate(Principal principal, Object credential)
