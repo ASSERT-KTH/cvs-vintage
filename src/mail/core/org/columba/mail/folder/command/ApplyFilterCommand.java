@@ -60,7 +60,6 @@ public class ApplyFilterCommand extends Command{
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
 		Folder srcFolder = (Folder) r[0].getFolder();
-		Object[] uids = r[0].getUids();
 
 		FilterList list = srcFolder.getFilterList();
 		
