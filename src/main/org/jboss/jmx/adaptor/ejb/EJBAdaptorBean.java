@@ -50,14 +50,12 @@ import org.jboss.jmx.ObjectHandler;
 * MBean Server.
 *
 * @author Andreas Schaefer
-* @version $Revision: 1.3 $
+* @version $Revision: 1.4 $
 *
-* @ejb:ejb-name jmx/ejb/Adaptor
-* @ejb:stateless-session
-* @ejb:env-entry Agent-Id null
-* @ejb:env-entry Server-Number -1
+* @ejb:bean type="Stateless" name="jmx/ejb/Adaptor" jndi-name="ejb/jmx/ejb/Adaptor"
+* @ejb:env-entry name="Agent-Id" value="null"
+* @ejb:env-entry name="Server-Number" value="-1"
 *
-* @ejb:jndi-name ejb/jmx/ejb/Adaptor
 **/
 public class EJBAdaptorBean
    implements SessionBean
@@ -100,7 +98,7 @@ public class EJBAdaptorBean
    *         server-side connector will look up for an object handler parameter
    *         and then replace the object handler by the effective object.
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public ObjectHandler instantiate(
       String pClassName
@@ -129,7 +127,7 @@ public class EJBAdaptorBean
    *         server-side connector will look up for an object handler parameter
    *         and then replace the object handler by the effective object.
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public ObjectHandler instantiate(
       String pClassName,
@@ -172,7 +170,7 @@ public class EJBAdaptorBean
    *                              replace the object handler by the
    *                              effective object.
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public ObjectHandler instantiate(
       String pClassName,
@@ -229,7 +227,7 @@ public class EJBAdaptorBean
    *         replace the object handler by the
    *         effective object.
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public ObjectHandler instantiate(
       String pClassName,
@@ -269,7 +267,7 @@ public class EJBAdaptorBean
    *
    * @return Object Instance of the new MBean
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public ObjectInstance createMBean(
       String pClassName,
@@ -298,7 +296,7 @@ public class EJBAdaptorBean
    *
    * @return Object Instance of the new MBean
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public ObjectInstance createMBean(
       String pClassName,
@@ -338,7 +336,7 @@ public class EJBAdaptorBean
    *
    * @return                        Object Instance of the new MBean
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public ObjectInstance createMBean(
       String pClassName,
@@ -386,7 +384,7 @@ public class EJBAdaptorBean
    *
    * @return                        Object Instance of the new MBean
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public ObjectInstance createMBean(
       String pClassName,
@@ -422,7 +420,7 @@ public class EJBAdaptorBean
    *
    * @return                        Object Instance of the new MBean
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public ObjectInstance registerMBean(
       ObjectHandler pObjectHandler,
@@ -445,7 +443,7 @@ public class EJBAdaptorBean
    *
    * @param pName Object Name of the MBean to be unregistered
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public void unregisterMBean(
       ObjectName pName
@@ -463,7 +461,7 @@ public class EJBAdaptorBean
    * @param pName Object Name of the MBean of which the Object
    *              Instance is requested
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public ObjectInstance getObjectInstance(
       ObjectName pName
@@ -483,7 +481,7 @@ public class EJBAdaptorBean
    *
    * @return Set of Object Instance which is never null but maybe empty
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public Set queryMBeans(
       ObjectName pName,
@@ -503,7 +501,7 @@ public class EJBAdaptorBean
    *
    * @return Set of Object Names which is never null but maybe empty
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public Set queryNames(
       ObjectName pName,
@@ -521,7 +519,7 @@ public class EJBAdaptorBean
    *
    * @return Treu if the given MBean is already registered
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public boolean isRegistered(
       ObjectName pName
@@ -539,7 +537,7 @@ public class EJBAdaptorBean
    *
    * @return Treu if the given MBean is an instance of this class
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public boolean isInstanceOf(
       ObjectName pName,
@@ -554,7 +552,7 @@ public class EJBAdaptorBean
    /**
    * @return Number of registered MBeans on the server
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public Integer getMBeanCount(
    ) throws
@@ -571,7 +569,7 @@ public class EJBAdaptorBean
    *
    * @param Value of the attribute
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public Object getAttribute(
       ObjectName pName,
@@ -594,7 +592,7 @@ public class EJBAdaptorBean
    *
    * @param Attribute List containing the Attribute Values
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public AttributeList getAttributes(
       ObjectName pName,
@@ -614,7 +612,7 @@ public class EJBAdaptorBean
    * @param pAttribute Attribute instance containg the name and value
    *                   of the attribute to be set
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public void setAttribute(
       ObjectName pName,
@@ -639,7 +637,7 @@ public class EJBAdaptorBean
    *
    * @return Attribute List with the new and current values of the Attributes
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public AttributeList setAttributes(
       ObjectName pName,
@@ -663,7 +661,7 @@ public class EJBAdaptorBean
    *
    * @return Return value (if available) of the method invocation
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public Object invoke(
       ObjectName pName,
@@ -688,7 +686,7 @@ public class EJBAdaptorBean
    /**
    * @return Default Domain of the Server
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public String getDefaultDomain(
    ) throws
@@ -727,7 +725,7 @@ public class EJBAdaptorBean
    *                  be looked up and send to the client. Therefore
    *                  it must not be serializable.
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public void addNotificationListener(
       ObjectName pName,
@@ -753,7 +751,7 @@ public class EJBAdaptorBean
    *                  the remote side
    * @param pListener         Local notification listener
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public void removeNotificationListener(
       ObjectName pName,
@@ -773,7 +771,7 @@ public class EJBAdaptorBean
    *
    * @return Information of the MBean
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public MBeanInfo getMBeanInfo(
       ObjectName pName
@@ -812,7 +810,7 @@ public class EJBAdaptorBean
    *                  LocalNotificationListener.
    * @param pHandback         Object to be send back to the listener
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public void addNotificationListener(
       ObjectName pName,
@@ -839,7 +837,7 @@ public class EJBAdaptorBean
    * @param pListener Object Name of the Listener MBean acting as
    *                  Notification Listener
    *
-   * @ejb:remote-method
+   * @ejb:interface-method type="remote"
    **/
    public void removeNotificationListener(
       ObjectName pName,
@@ -856,13 +854,13 @@ public class EJBAdaptorBean
    * Create the Session Bean which takes the first available
    * MBeanServer as target server
    *
-   * @throws RemoteException 
+   * @throws CreateException 
    *
    * @ejb:create-method
    **/
    public void ejbCreate()
       throws
-         RemoteException
+         CreateException
    {
       if( mServer == null ) {
          try {

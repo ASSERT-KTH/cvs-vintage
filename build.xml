@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.32 2001/09/27 02:30:39 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.33 2001/09/28 22:02:10 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -366,13 +366,14 @@ os.version:      ${os.version}
     <property name="junit.batchtest.todir" value="${build.reports}"/>
     <property name="junit.jvm.options" value="-Ddummy"/>
 
-    <!-- ejbdoclet -->
-    <path id="dreambean.ejbdoclet.task.classpath">
+    <!-- xdoclet -->
+    <path id="xdoclet.task.classpath">
       <path refid="javac.classpath"/>
-      <pathelement location="${project.tools}/lib/ejbdoclet.jar"/>
+      <pathelement location="${project.tools}/lib/xdoclet.jar"/>
+      <pathelement location="${project.tools}/lib/ant.jar"/>
     </path>
-    <property name="dreambean.ejbdoclet.task.classpath" 
-	      refid="dreambean.ejbdoclet.task.classpath"/>
+    <property name="xdoclet.task.classpath" 
+	      refid="xdoclet.task.classpath"/>
   </target>
 
 
@@ -391,17 +392,17 @@ os.version:      ${os.version}
 	  depends="compile-bean-sources, compile-classes, compile-rmi, compile-etc, compile-resources, compile-bin"
 	  description="Compile all source files."/>
 
-  <!-- Compile EJB beans with EJBDoclet -->
+  <!-- Compile EJB beans with XDoclet -->
   <target name="compile-bean-sources" depends="init">
-    <taskdef name="ejbdoclet" classname="ejbdoclet.EJBDocletTask"/>
+    <taskdef name="xdoclet" classname="xdoclet.ejb.EjbDocletTask"/>
 
     <mkdir dir="${build.beans}"/>
     <mkdir dir="${build.metadata}/META-INF"/>
-    <ejbdoclet sourcepath="${source.java}"
-	       destdir="${build.beans}"
-	       classpath="${dreambean.ejbdoclet.task.classpath}"
-	       ejbspec="1.1"
-	       excludedtags="@version,@author">
+    <xdoclet sourcepath="${source.java}"
+	     destdir="${build.beans}"
+	     classpath="${xdoclet.task.classpath}"
+	     ejbspec="1.1"
+	     excludedtags="@version,@author">
       <fileset dir="${source.java}">
         <include name="org/jboss/jmx/adaptor/ejb/*Bean.java" />
       </fileset>
@@ -412,7 +413,7 @@ os.version:      ${os.version}
 			    destdir="${build.metadata}/META-INF"/>
       <jboss xmlencoding="UTF-8" 
 	     destdir="${build.metadata}/META-INF"/>
-    </ejbdoclet>
+    </xdoclet>
   </target>
 
   <!-- Compile all class files -->
@@ -1078,7 +1079,7 @@ os.version:      ${os.version}
   <!-- 
      |  Pretty print everything.
      |
-     |  This uses the jedit JavaStyle plugin via the ejbdoclet pretty ant task.
+     |  This uses the jedit JavaStyle plugin via the xdoclet pretty ant task.
      |
      |  cvs="true" only pretties files you have already modified.
      |  cvs="false" pretties all files.
