@@ -31,7 +31,61 @@
   <li><a href="./contextAdmin/moduleList.jsp">Modules</a>
   <li><a href="./contextAdmin/contextAdmin.html">Context Admin</a>
   <li><a href="/examples/jsp/snp/snoop.jsp">Snoop</a>
+  <li><a href="./test">Test applications</a>
 </ul>
+
+<b>IMPORTANT: </b> In order to run the /admin applications you need to 
+"trust it"  and set a password. The /admin may be dangerous
+if left unprotected, and is disabled by default.
+<br>
+To enable the /admin you'll need to edit the file 
+TOMCAT_HOME/conf/apps-admin.xml and change the "trusted" attribute
+to true. It should look like: 
+<pre>
+    &lt;Context path="/admin" 
+             docBase="webapps/admin" 
+             trusted="true" &gt;
+            &lt;SimpleRealm filename="conf/users/admin-users.xml" /&gt;
+    &lt;/Context&gt;
+</pre>
+
+<p>
+You can also do that by running the command:
+<pre>
+Unix:
+$TOMCAT_HOME/bin/tomcat.sh -enableAdmin
+
+DOS:
+%TOMCAT_HOME%\bin\tomcat.bat -enableAdmin
+
+Java2:
+java -jar lib/tomcat.jar -enableAdmin
+
+Mac,Netware: 
+???
+</pre>
+
+<p>
+To change the admin password you'll have to edit 
+TOMCAT_HOME/conf/users/admin-users.xml and change the "password" attribute.
+
+<!--
+<p>
+You can do both by running the command:
+<pre>
+Unix:
+$TOMCAT_HOME/bin/tomcat.sh -enableAdmin password
+
+DOS:
+%TOMCAT_HOME%\bin\tomcat.bat -enableAdmin password
+
+Mac,Netware: 
+???
+</pre>
+
+-->
+
+
 
 </body>
 </html>

@@ -23,8 +23,11 @@ Port: <input type="input" name="port" value="<%= request.getServerPort() %>">
 <br>
 Host: <input type="input" name="host" value="<%= request.getServerName() %>">
 <br>
-Expected protocol: <input type="input" name="server.proto" 
-			  value="<%= request.getProtocol() %>">
- ( use when testing Apache - tomcat3.x returns HTTP/1.0 ) <br>
+Expected protocol: 
+<select name="server.proto" > 
+  <option selected>HTTP/1.0</option>
+  <option>HTTP/1.1</option>
+</select>
+ ( use HTTP/1.1 when testing with Apache or a 1.1 server connector ) <br>
 <input type="submit">
 </form>
