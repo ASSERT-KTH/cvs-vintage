@@ -104,13 +104,22 @@ public abstract class Command {
 		}		
 	}
 	
+	public void updateGUI() throws Exception
+	{
+	}
+	
 	/**
 	 * Commands must implement this method.
 	 * Updates the GUI in a thread-safe way after the Command finished
 	 * 
 	 * @throws Exception
 	 */
-	public abstract void updateGUI() throws Exception;
+	public void updateSelectedGUI() throws Exception
+	{
+	}
+	
+		
+	
 	
 	/**
 	 * Command must implement this method

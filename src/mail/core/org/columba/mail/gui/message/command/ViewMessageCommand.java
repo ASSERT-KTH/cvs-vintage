@@ -81,7 +81,7 @@ public class ViewMessageCommand extends FolderCommand {
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
-	public void updateGUI() throws Exception {
+	public void updateSelectedGUI() throws Exception {
 		((MailFrameController) frameController).messageController.showMessage(
 			bodyPart);
 

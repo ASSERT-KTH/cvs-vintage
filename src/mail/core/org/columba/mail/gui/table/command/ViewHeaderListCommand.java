@@ -43,7 +43,7 @@ public class ViewHeaderListCommand extends Command {
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
-	public void updateGUI() throws Exception {
+	public void updateSelectedGUI() throws Exception {
 		((MailFrameController)frameController).tableController.getHeaderTableModel().setHeaderList(headerList);
 		
 		((MailFrameController)frameController).tableController.getView().clearSelection();

@@ -125,7 +125,7 @@ public class PrintMessageCommand extends FolderCommand {
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
-	public void updateGUI() throws Exception {
+	public void updatedGUI() throws Exception {
 	}
 
 	/**

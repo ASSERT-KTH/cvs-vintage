@@ -153,7 +153,7 @@ class TestUndoCommand extends Command {
 		commandType = Command.UNDOABLE_OPERATION;
 	}
 
-	public void updateGUI()
+	public void updateSelectedGUI()
 	{}
 
 	public void execute( Worker worker ) throws Exception {
@@ -175,7 +175,7 @@ class TestNoChangeCommand extends Command {
 		super( controller, arguments );		
 	}
 
-	public void updateGUI()
+	public void updateSelectedGUI()
 	{}
 
 	public void execute( Worker worker ) throws Exception {

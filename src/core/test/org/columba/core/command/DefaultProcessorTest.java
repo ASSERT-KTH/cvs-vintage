@@ -113,7 +113,7 @@ class TestCommand extends Command {
 		super( controller, arguments );		
 	}
 
-	public void updateGUI()
+	public void updateSelectedGUI()
 	{}
 
 	public void execute( Worker worker ) throws Exception {

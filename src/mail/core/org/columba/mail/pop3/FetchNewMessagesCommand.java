@@ -49,7 +49,7 @@ public class FetchNewMessagesCommand extends Command {
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
-	public void updateGUI() throws Exception {
+	public void updateSelectedGUI() throws Exception {
 	}
 
 	/**

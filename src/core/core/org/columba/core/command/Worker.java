@@ -30,7 +30,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 	protected String displayText;
 	protected int progressBarMax;
 	protected int progressBarValue;
-	
+
 	protected boolean cancelled;
 
 	protected Vector workerStatusChangeListeners;
@@ -85,17 +85,17 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 
 		try {
 			op.process(this, operationMode);
-			if( !cancelled() && (operationMode == Command.FIRST_EXECUTION)) boss.getUndoManager().addToUndo(op);
-		} 
-		catch( CommandCancelledException e ) {
-			ColumbaLogger.log.debug( "Command cancelled" );
+			if (!cancelled() && (operationMode == Command.FIRST_EXECUTION))
+				boss.getUndoManager().addToUndo(op);
+		} catch (CommandCancelledException e) {
+			ColumbaLogger.log.debug("Command cancelled");
 		} catch (Exception e) {
 			// Must create a ExceptionProcessor
 			e.printStackTrace();
-			
+
 			ExceptionDialog dialog = new ExceptionDialog();
 			dialog.showDialog(e);
-			
+
 		}
 
 		returnLocks(operationMode);
@@ -104,16 +104,19 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 	}
 
 	public void finished() {
-		if (guiUpdater.amIGuiUpdater(this) && !cancelled()) {
 
-			try {
-				op.updateGUI();
-				setDisplayText(displayText + " done");
-			} catch (Exception e) {
-				// Must create a ExceptionProcessor
-				e.printStackTrace();
-			}
+		try {
+			op.updateGUI();
+
+			if (guiUpdater.amIGuiUpdater(this) && !cancelled())
+				op.updateSelectedGUI();
+
+			//setDisplayText(displayText + " done");
+		} catch (Exception e) {
+			// Must create a ExceptionProcessor
+			e.printStackTrace();
 		}
+
 		unregister();
 		boss.operationFinished(op, this);
 	}
@@ -212,13 +215,13 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 				e);
 		}
 	}
-	
+
 	public void cancel() {
-		cancelled = true;	
+		cancelled = true;
 	}
-	
+
 	public boolean cancelled() {
-		return cancelled;	
+		return cancelled;
 	}
 
 	/**
@@ -230,7 +233,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 	}
 
 	public FrameController getFrameController() {
-		return op.getFrameController();	
+		return op.getFrameController();
 	}
 
 }
