@@ -64,7 +64,7 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 	//    private ImapOperator operator;
 
 	private IMAPStore store;
-	
+
 	public IMAPRootFolder(FolderItem folderItem) {
 		//super(node, folderItem);
 		super(folderItem);
@@ -74,18 +74,12 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 				folderItem.getInteger("account_uid"));
 
 		store = new IMAPStore(accountItem.getImapItem(), this);
-		
-	}
-	
-	
 
-	
+	}
+
 	public IMAPRootFolder(AccountItem accountItem) {
 		//super(node, folderItem);
-		super(
-			getDefaultItem(
-				"IMAPRootFolder",
-				getDefaultProperties()));
+		super(getDefaultItem("IMAPRootFolder", getDefaultProperties()));
 
 		getFolderItem().set("account_uid", accountItem.getInteger("uid"));
 		getFolderItem().set("property", "name", accountItem.get("name"));
@@ -95,8 +89,7 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 		store = new IMAPStore(accountItem.getImapItem(), this);
 
 	}
-	
-	
+
 	public ImageIcon getCollapsedIcon() {
 		return imapRootIcon;
 	}
@@ -108,23 +101,23 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 	/*
 	public String getName() {
 		String name = null;
-
+	
 		FolderItem item = getFolderItem();
 		name = item.get("property", "name");
-
+	
 		return name;
 	}
 	*/
 
 	/*
 	public void setName(String newName) {
-
+	
 		FolderItem item = getFolderItem();
 		item.set("property", "name", newName);
-
+	
 	}
 	*/
-	
+
 	public String getDefaultChild() {
 		return "IMAPFolder";
 	}
@@ -143,19 +136,16 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 			if (subFolder == null) {
 				ColumbaLogger.log.debug("creating folder=" + subchild);
 
-				/*
-				// folder does not exist, create new folder
-				subFolder = new IMAPFolder(imapItem, this); 
-				
-				//(IMAPFolder) folder.addFolder(child);
-				
-				FolderItem child = subFolder.getFolderItem();
-				child.set("property", "name", subchild);
-				child.set("property", "messagefolder","false");
-				
-				folder.add(subFolder);
-				*/
-				folder.addFolder(subchild);
+
+				// we can't use 
+				// folder.addFolder(subchild) 
+				// here
+				//
+				// -> this would tell the IMAP server to create a new
+				//    folder, too
+				//
+				//    but we only want Columba to create it
+				folder.addFolder(subchild, "IMAPFolder");
 			}
 
 			addIMAPSubFolder(
@@ -165,38 +155,44 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 		} else {
 			ColumbaLogger.log.debug("no delimiters in mailbox-name found");
 
-			if (folder.getChild(name) == null) {
-				/*
-				FolderTreeNode subFolder = new IMAPFolder(imapItem, this);
-				FolderItem child = new FolderItem(subFolder.getNode());
-				child.set("property", "name", name);
-				folder.add(subFolder);
-				*/
-				folder.addFolder(name);
+			if (folder != null) {
+				if (folder.getChild(name) == null) {
+					
+
+					// we can't use 
+					// folder.addFolder(name) 
+					// here
+					//
+					// -> this would tell the IMAP server to create a new
+					//    folder, too
+					//
+					//    but we only want Columba to create it
+					folder.addFolder(name, "IMAPFolder");
+				}
 			}
 		}
 	}
 
 	public void createChildren(WorkerStatusController worker) {
 		try {
-//			getLock().tryToGetLock();
-			
+			//			getLock().tryToGetLock();
+
 			ListInfo[] listInfo = getStore().lsub("", "*", worker);
 
 			for (int i = 0; i < listInfo.length; i++) {
 				ListInfo info = listInfo[i];
 				getStore().setDelimiter(info.getDelimiter());
+				ColumbaLogger.log.debug(
+					"delimiter=" + getStore().getDelimiter());
 
 				addIMAPSubFolder(this, info.getName().trim());
 
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
-//			getLock().release();
-		}
-		finally 
-		{
-//			getLock().release();
+			//			getLock().release();
+		} finally {
+			//			getLock().release();
 		}
 	}
 

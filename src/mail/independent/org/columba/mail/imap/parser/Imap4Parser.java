@@ -19,6 +19,7 @@ package org.columba.mail.imap.parser;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.MessageFolderInfo;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.Flags;
@@ -401,12 +402,14 @@ public class Imap4Parser {
 			str = (String) tok.nextElement();
 			
 			if (str.indexOf("EXISTS") != -1) {
-
+				ColumbaLogger.log.debug("exists_string="+str);
 				str2 =
 					str.substring(
 						str.indexOf("*") + 2,
 						str.indexOf("EXISTS") - 1);
 
+				ColumbaLogger.log.debug("exists_substring="+str2);
+				
 				i = new Integer(str2);
 
 				info.setExists(i.intValue());

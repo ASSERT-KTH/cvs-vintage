@@ -37,7 +37,6 @@ import org.columba.mail.folder.MessageFolderInfo;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.imap.parser.FlagsParser;
-import org.columba.mail.imap.parser.HeaderParser;
 import org.columba.mail.imap.parser.IMAPFlags;
 import org.columba.mail.imap.parser.Imap4Parser;
 import org.columba.mail.imap.parser.ListInfo;
@@ -285,7 +284,7 @@ public class IMAPStore {
 			StringBuffer buf = new StringBuffer();
 			for ( int i=0; i<responses.length; i++)
 			{
-				buf.append(responses[i].getSource());
+				buf.append(responses[i].getSource()+"\n");
 			}
 			
 			messageFolderInfo = Imap4Parser.parseMessageFolderInfo(buf.toString());
@@ -787,6 +786,7 @@ public class IMAPStore {
 		return h;
 	}
 
+	/*
 	private ColumbaHeader fetchHeader(
 		Object uid,
 		WorkerStatusController worker,
@@ -848,6 +848,7 @@ public class IMAPStore {
 		return null;
 
 	}
+	*/
 
 	public void fetchHeaderList(
 		HeaderList headerList,
@@ -886,11 +887,14 @@ public class IMAPStore {
 		String clientTag = null;
 		IMAPResponse imapResponse = null;
 
+		ColumbaLogger.log.debug("messageSet="+set.getString());
+		ColumbaLogger.log.debug("headerFields="+headerFields.toString().trim());
+				
 		try {
 			clientTag =
 				getProtocol().sendString(
 					"UID FETCH "
-						+ set.getString()
+						+ set.getString().trim()
 						+ " BODY[HEADER.FIELDS ("
 						+ headerFields.toString().trim()
 						+ ")] ",

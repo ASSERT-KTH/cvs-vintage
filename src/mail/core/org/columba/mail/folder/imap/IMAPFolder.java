@@ -244,6 +244,7 @@ public class IMAPFolder extends RemoteFolder {
 
 		// if available -> fetch new headers
 		if (result.size() > 0) {
+			
 			getStore().fetchHeaderList(
 				headerList,
 				result,

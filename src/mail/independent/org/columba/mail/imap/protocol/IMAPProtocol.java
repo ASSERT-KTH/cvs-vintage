@@ -69,7 +69,7 @@ public class IMAPProtocol {
 	 * client operation socket
 	 */
 	private Socket socket;
-	
+
 	/**
 	 * inputstream
 	 */
@@ -141,15 +141,18 @@ public class IMAPProtocol {
 
 		socket = new Socket(host, port);
 
-		in = new IMAPInputStream(socket.getInputStream());
-		out =
-			new DataOutputStream(
-				new BufferedOutputStream(socket.getOutputStream()));
+		DebugInputStream debugInputStream =
+			new DebugInputStream(socket.getInputStream(), System.out);
+		in = new IMAPInputStream(debugInputStream);
+
+		DebugOutputStream debugOutputStream =
+			new DebugOutputStream(socket.getOutputStream(), System.out);
+
+		out = new DataOutputStream(new BufferedOutputStream(debugOutputStream));
 
 		argumentWriter = new ArgumentWriter(this);
 
 		answer = in.readResponse(null);
-		ColumbaLogger.log.debug("SERVER:" + answer);
 
 		if (answer.startsWith("*"))
 			return true;
@@ -187,7 +190,6 @@ public class IMAPProtocol {
 	 * @throws Exception
 	 */
 	public String sendString(String s, Arguments args) throws Exception {
-		StringBuffer buf = new StringBuffer();
 
 		String id = generateIdentifier();
 
@@ -201,8 +203,6 @@ public class IMAPProtocol {
 		out.write(CRLF);
 		out.flush();
 
-		//ColumbaLogger.log.debug("CLIENT:" + buf.toString());
-
 		return id;
 	}
 
@@ -212,10 +212,9 @@ public class IMAPProtocol {
 	 * @return IMAPResponse
 	 * @throws Exception
 	 */
-	public IMAPResponse getResponse(WorkerStatusController worker) throws Exception {
+	public IMAPResponse getResponse(WorkerStatusController worker)
+		throws Exception {
 		String answer = in.readResponse(worker);
-
-		ColumbaLogger.log.debug("SERVER:" + answer);
 
 		return new IMAPResponse(answer);
 	}
@@ -327,7 +326,7 @@ public class IMAPProtocol {
 		return r;
 
 	}
-	
+
 	/**
 	 * Method sendCommand.
 	 * @param command
@@ -338,58 +337,58 @@ public class IMAPProtocol {
 	 * @throws Exception
 	 */
 	protected synchronized IMAPResponse[] sendCommand(
-			String command,
-			Arguments args,
-			int count,
-			WorkerStatusController worker)
-			throws Exception {
-			Vector v = new Vector();
-			boolean finished = false;
-			String clientTag = null;
-			IMAPResponse imapResponse = null;
+		String command,
+		Arguments args,
+		int count,
+		WorkerStatusController worker)
+		throws Exception {
+		Vector v = new Vector();
+		boolean finished = false;
+		String clientTag = null;
+		IMAPResponse imapResponse = null;
 
+		try {
+			clientTag = sendString(command, args);
+		} catch (IOException ex) {
+			// disconnect exception
+			ex.printStackTrace();
+
+			v.add(IMAPResponse.BYEResponse);
+		}
+
+		worker.setProgressBarMaximum(count);
+
+		int counter = 0;
+		worker.setProgressBarValue(counter);
+
+		while (!finished) {
 			try {
-				clientTag = sendString(command, args);
+				imapResponse = getResponse(worker);
+
+				worker.setProgressBarValue(++counter);
 			} catch (IOException ex) {
-				// disconnect exception
+				// disconnect exception	
 				ex.printStackTrace();
 
-				v.add(IMAPResponse.BYEResponse);
+				imapResponse = IMAPResponse.BYEResponse;
 			}
 
-			worker.setProgressBarMaximum(count);
-			
-			int counter = 0;
-			worker.setProgressBarValue(counter);
-			
-			while (!finished) {
-				try {
-					imapResponse = getResponse(worker);
-					
-					worker.setProgressBarValue(++counter);
-				} catch (IOException ex) {
-					// disconnect exception	
-					ex.printStackTrace();
+			v.add(imapResponse);
 
-					imapResponse = IMAPResponse.BYEResponse;
-				}
+			if (imapResponse.getStatus() == IMAPResponse.STATUS_BYE)
+				finished = true;
 
-				v.add(imapResponse);
-
-				if (imapResponse.getStatus() == IMAPResponse.STATUS_BYE)
-					finished = true;
-
-				if (imapResponse.isTagged()
-					&& imapResponse.getTag().equals(clientTag))
-					finished = true;
-			}
-
-			IMAPResponse[] r = new IMAPResponse[v.size()];
-			v.copyInto(r);
-
-			return r;
-
+			if (imapResponse.isTagged()
+				&& imapResponse.getTag().equals(clientTag))
+				finished = true;
 		}
+
+		IMAPResponse[] r = new IMAPResponse[v.size()];
+		v.copyInto(r);
+
+		return r;
+
+	}
 
 	/**
 	 * Method sendSimpleCommand.
@@ -669,7 +668,7 @@ public class IMAPProtocol {
 		else
 			return sendCommand("FETCH " + messageSet + " (" + item + ")", null);
 	}
-	
+
 	/**
 	 * Method fetch.
 	 * @param item
@@ -679,15 +678,23 @@ public class IMAPProtocol {
 	 * @return IMAPResponse[]
 	 * @throws Exception
 	 */
-	public IMAPResponse[] fetch(String item, String messageSet, boolean uid, WorkerStatusController worker)
-			throws Exception {
-			if (uid)
-				return sendCommand(
-					"UID FETCH " + messageSet + " (" + item + ")",
-					null, worker);
-			else
-				return sendCommand("FETCH " + messageSet + " (" + item + ")", null, worker);
-		}
+	public IMAPResponse[] fetch(
+		String item,
+		String messageSet,
+		boolean uid,
+		WorkerStatusController worker)
+		throws Exception {
+		if (uid)
+			return sendCommand(
+				"UID FETCH " + messageSet + " (" + item + ")",
+				null,
+				worker);
+		else
+			return sendCommand(
+				"FETCH " + messageSet + " (" + item + ")",
+				null,
+				worker);
+	}
 	/**
 	 * Method fetch.
 	 * @param item
@@ -698,15 +705,26 @@ public class IMAPProtocol {
 	 * @return IMAPResponse[]
 	 * @throws Exception
 	 */
-	public IMAPResponse[] fetch(String item, String messageSet, boolean uid, int count, WorkerStatusController worker)
-				throws Exception {
-				if (uid)
-					return sendCommand(
-						"UID FETCH " + messageSet + " (" + item + ")",
-						null, count, worker);
-				else
-					return sendCommand("FETCH " + messageSet + " (" + item + ")", null, count, worker);
-			}
+	public IMAPResponse[] fetch(
+		String item,
+		String messageSet,
+		boolean uid,
+		int count,
+		WorkerStatusController worker)
+		throws Exception {
+		if (uid)
+			return sendCommand(
+				"UID FETCH " + messageSet + " (" + item + ")",
+				null,
+				count,
+				worker);
+		else
+			return sendCommand(
+				"FETCH " + messageSet + " (" + item + ")",
+				null,
+				count,
+				worker);
+	}
 
 	/**
 	 * Method fetchUIDList.
@@ -716,9 +734,14 @@ public class IMAPProtocol {
 	 * @return IMAPResponse[]
 	 * @throws Exception
 	 */
-	public IMAPResponse[] fetchUIDList(String messageSet, int count, WorkerStatusController worker) throws Exception {
+	public IMAPResponse[] fetchUIDList(
+		String messageSet,
+		int count,
+		WorkerStatusController worker)
+		throws Exception {
 
-		IMAPResponse[] responses = fetch("UID", messageSet, false, count, worker);
+		IMAPResponse[] responses =
+			fetch("UID", messageSet, false, count, worker);
 
 		notifyResponseHandler(responses);
 
@@ -737,9 +760,14 @@ public class IMAPProtocol {
 	 * @return IMAPResponse[]
 	 * @throws Exception
 	 */
-	public IMAPResponse[] fetchFlagsList(String messageSet, int count, WorkerStatusController worker) throws Exception {
+	public IMAPResponse[] fetchFlagsList(
+		String messageSet,
+		int count,
+		WorkerStatusController worker)
+		throws Exception {
 
-		IMAPResponse[] responses = fetch("FLAGS", messageSet, true, count, worker);
+		IMAPResponse[] responses =
+			fetch("FLAGS", messageSet, true, count, worker);
 
 		notifyResponseHandler(responses);
 
@@ -761,6 +789,9 @@ public class IMAPProtocol {
 		String messageSet,
 		String headerFields)
 		throws Exception {
+
+		ColumbaLogger.log.debug("messageSet=" + messageSet);
+		ColumbaLogger.log.debug("headerFields=" + headerFields);
 
 		IMAPResponse[] responses =
 			fetch(
@@ -806,7 +837,10 @@ public class IMAPProtocol {
 	 * @return IMAPResponse[]
 	 * @throws Exception
 	 */
-	public IMAPResponse[] fetchMimePart(String messageSet, Integer[] address, WorkerStatusController worker)
+	public IMAPResponse[] fetchMimePart(
+		String messageSet,
+		Integer[] address,
+		WorkerStatusController worker)
 		throws Exception {
 
 		StringBuffer addressString =
@@ -835,7 +869,9 @@ public class IMAPProtocol {
 	 * @return IMAPResponse[]
 	 * @throws Exception
 	 */
-	public IMAPResponse[] fetchMessageSource(String messageSet, WorkerStatusController worker)
+	public IMAPResponse[] fetchMessageSource(
+		String messageSet,
+		WorkerStatusController worker)
 		throws Exception {
 
 		IMAPResponse[] responses = fetch("BODY[]", messageSet, true, worker);
