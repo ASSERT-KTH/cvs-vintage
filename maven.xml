@@ -304,4 +304,92 @@
     </postGoal>
     
 
+    <!-- ===================================================== -->
+    <!-- R E P O S I T O R Y  -  M A I N T E N A N C E         -->
+    <!-- ===================================================== -->
+    <!-- This goal checks for all dependencies of this project -->
+    <!-- and copies them to our local repository in            -->
+    <!--                                                       -->
+    <!--     www/repository                                    -->
+    <!--                                                       -->
+    <!-- This goal should be run everytime when the            -->
+    <!-- dependencies have changed                             -->
+    <!--                                                       -->
+    <!-- Manual run command:                                   -->
+    <!--                                                       -->
+    <!--     Maven scarab:update-repo                          -->
+    <!-- ===================================================== -->
+        
+    <goal
+        name="scarab:update-repo"
+        description="update the Scarab www/repository">
+  
+        <!-- ============================ -->
+        <!-- get the project dependencies -->
+        <!-- ============================ -->
+        <j:useList var="deplist" class="java.util.Vector"/>
+        <j:forEach var="dep" items="${pom.dependencies}">
+          <j:set var="rc" value="${deplist.add(dep)}"/>
+        </j:forEach>
+    
+        <!-- ============================================ -->
+        <!-- Add missing resource to local www/repository -->
+        <!-- ============================================ -->
+        <j:forEach var="dep" items="${deplist}">
+          <j:set var="item">
+            ${repo}/${dep.artifactDirectory}/${dep.type}s/${dep.artifact}
+          </j:set> 
+
+          <util:file var="file" name="www/repository/${item}"/>
+          <j:if test="${!file.exists()}">
+               <echo>create ${file.getPath()}</echo>
+               <j:set var="from" value="${pom.getDependencyPath(dep.getId())}"/>
+               <ant:copy file="${from}" tofile="${file.getPath()}"/>
+          </j:if>
+        </j:forEach>
+    
+        <!-- =============================================== -->
+        <!-- determine existing resources in www/repository -->
+        <!-- ============================================== -->    
+        <j:useList var="replist" class="java.util.Vector"/>
+        <util:file var="repo" name="www/repository"/>
+        <j:forEach var="package" items="${repo.listFiles()}">
+          <j:if test="${package.isDirectory()}">
+            <j:forEach var="jars" items="${package.listFiles()}">
+              <j:if test='${jars.getName().equals("jars")}'>
+                <j:forEach var="resource" items="${jars.listFiles()}">
+                  <j:if test="${resource.isFile()}">
+                    <j:set var="rc" value="${replist.add(resource)}"/>
+                  </j:if>
+                </j:forEach>
+              </j:if>
+            </j:forEach>    
+          </j:if>      
+        </j:forEach>
+
+        <!-- ============================================= -->
+        <!-- remove obsolete resources from www/repository -->
+        <!-- ============================================ -->
+        <j:forEach var="resource" items="${replist}">
+          <j:set var="found" value="false"/>
+          <j:forEach var="dep" items="${deplist}">
+            <j:set var="item">
+              ${repo}/${dep.artifactDirectory}/${dep.type}s/${dep.artifact}
+            </j:set> 
+            <util:file var="file" name="${item}"/>
+            <j:if test="${file.getPath().equals(resource.getPath())}">
+             <j:set var="found" value="true"/>
+             <j:break/>
+            </j:if>
+          </j:forEach>
+          <j:if test="${found==false}">
+            <ant:delete file="${resource.getPath()}"/>
+          </j:if>
+        </j:forEach>
+    
+    </goal>
+    <!-- ===================================================== -->
+    <!-- END R E P O S I T O R Y  -  M A I N T E N A N C E     -->    
+    <!-- ===================================================== -->
+
 </project>
