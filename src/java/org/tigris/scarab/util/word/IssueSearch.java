@@ -847,7 +847,7 @@ public class IssueSearch
                 }
                 catch (Exception ee)
                 {
-                     throw new Exception("sdf");
+                     throw new Exception();
                 }
             }
             else
@@ -858,7 +858,7 @@ public class IssueSearch
                 }
                 catch (Exception ee)
                 {
-                     throw new Exception("sdf");
+                     throw new Exception();
                 }
             }
         }
