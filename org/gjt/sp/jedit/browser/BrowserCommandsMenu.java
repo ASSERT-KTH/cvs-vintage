@@ -33,7 +33,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.19 2003/04/29 03:21:50 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.20 2003/05/25 21:58:28 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -106,6 +106,7 @@ public class BrowserCommandsMenu extends JPopupMenu
 			if(delete)
 				add(createMenuItem("delete"));
 
+			add(createMenuItem("copy-path"));
 			addSeparator();
 		}
 
