@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.178 2004/10/26 15:23:25 loubyansky Exp $ -->
+<!-- $Id: build.xml,v 1.179 2004/11/08 13:05:37 tdiesler Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -173,8 +173,8 @@
         <include name="**/*.jar"/>
       </fileset>
     </path>
-    <property name="xdoclet.task.classpath" 
-	      refid="xdoclet.task.classpath"/>
+    <property name="xdoclet.task.classpath"
+      refid="xdoclet.task.classpath"/>
 
     <!-- default.type.mapping is used in standardjaws.xml and standardjbosscmp-jdbc.xml-->
     <property name="default.type.mapping" value="Hypersonic SQL"/>
@@ -206,15 +206,15 @@
      |  different type of compile that needs to be performed, short of
      |  documentation compiles.
     -->
-  <target name="compile" 
-	  depends="generate-parsers,
-                   compile-mbean-sources,
-                   compile-classes, 
-                   compile-rmi, 
-                   compile-etc, 
-                   compile-resources, 
-                   compile-bin"
-	  description="Compile all source files."/>
+  <target name="compile"
+    depends="generate-parsers,
+compile-mbean-sources,
+compile-classes,
+compile-rmi,
+compile-etc,
+compile-resources,
+compile-bin"
+    description="Compile all source files."/>
 
   <!-- Generate parsers -->
   <target name="generate-parsers" depends="init">
@@ -227,23 +227,23 @@
 
     <!-- JBoss-QL parser -->
     <jjtree
-      target="${source.java}/org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jjt" 
-	   outputdirectory="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql"
-	   javacchome="${sun.javacc.lib}"/>
+      target="${source.java}/org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jjt"
+      outputdirectory="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql"
+      javacchome="${sun.javacc.lib}"/>
 
     <javacc
       target="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jj"
-	   javacchome="${sun.javacc.lib}"/>
+      javacchome="${sun.javacc.lib}"/>
 
     <!-- EJB-QL parser -->
     <jjtree
-      target="${source.java}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jjt" 
-	   outputdirectory="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql"
-	   javacchome="${sun.javacc.lib}"/>
+      target="${source.java}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jjt"
+      outputdirectory="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql"
+      javacchome="${sun.javacc.lib}"/>
 
     <javacc
-      target="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jj" 
-	   javacchome="${sun.javacc.lib}"/>
+      target="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jj"
+      javacchome="${sun.javacc.lib}"/>
 
   </target>
 
@@ -254,8 +254,8 @@
 
     <mkdir dir="${build.gen-src}"/>
     <jmxdoclet
-	     destdir="${build.gen-src}"
-	     excludedtags="@version,@author">
+      destdir="${build.gen-src}"
+      excludedtags="@version,@author">
       <fileset dir="${source.java}">
         <include name="org/jboss/deployment/EARDeployer.java"/>
         <include name="org/jboss/deployment/EARDeployment.java"/>
@@ -299,40 +299,39 @@
   <target name="compile-classes" depends="init">
     <mkdir dir="${build.classes}"/>
     <javac destdir="${build.classes}"
-           optimize="${javac.optimize}"
-	   target="${javac.target}"
-           source="${javac.source}"
-           debug="${javac.debug}"
-	   depend="${javac.depend}"
-	   verbose="${javac.verbose}"
-	   deprecation="${javac.deprecation}"
-	   includeAntRuntime="${javac.include.ant.runtime}"
-	   includeJavaRuntime="${javac.include.java.runtime}"
-	   failonerror="${javac.fail.onerror}">
-       <classpath refid="javac.classpath"/>
+      optimize="${javac.optimize}"
+      target="${javac.target}"
+      source="${javac.source}"
+      debug="${javac.debug}"
+      depend="${javac.depend}"
+      verbose="${javac.verbose}"
+      deprecation="${javac.deprecation}"
+      includeAntRuntime="${javac.include.ant.runtime}"
+      includeJavaRuntime="${javac.include.java.runtime}"
+      includes="${javac.includes}"
+      excludes="${javac.excludes}"
+      failonerror="${javac.fail.onerror}">
+      <classpath refid="javac.classpath"/>
 
-       <src path="${source.java}"/>
-       <src path="${build.parsers}"/>
-       <src path="${build.gen-src}"/>
+      <src path="${source.java}"/>
+      <src path="${build.parsers}"/>
+      <src path="${build.gen-src}"/>
 
-       <include name="${javac.includes}"/>
-       <exclude name="${javac.excludes}"/>
-
-       <exclude name="org/jboss/ejb/plugins/cmp/jdbc/jdbc3/*.java" unless="HAVE_JDK_1.4"/>
+      <exclude name="org/jboss/ejb/plugins/cmp/jdbc/jdbc3/*.java" unless="HAVE_JDK_1.4"/>
     </javac>
   </target>
 
   <!-- Compile RMI stubs -->
   <target name="compile-rmi" depends="compile-classes">
     <rmic base="${build.classes}"
-     sourcebase="${build.classes}"
-	  verify="${rmic.verify}"
-	  iiop="${rmic.iiop}"
-	  iiopopts="${rmic.iiopops}"
-	  idl="${rmic.idl}"
-	  idlopts="${rmic.idlops}"
-	  debug="${rmic.debug}"
-          stubVersion="${rmic.stubVersion}">
+      sourcebase="${build.classes}"
+      verify="${rmic.verify}"
+      iiop="${rmic.iiop}"
+      iiopopts="${rmic.iiopops}"
+      idl="${rmic.idl}"
+      idlopts="${rmic.idlops}"
+      debug="${rmic.debug}"
+      stubVersion="${rmic.stubVersion}">
       <classpath refid="javac.classpath"/>
       <include name="${rmic.includes}"/>
       <exclude name="${rmic.excludes}"/>
@@ -350,7 +349,7 @@
     <mkdir dir="${build.resources}"/>
     <copy todir="${build.resources}" filtering="yes">
       <fileset dir="${source.resources}">
-         <include name="**/*"/>
+        <include name="**/*"/>
       </fileset>
     </copy>
   </target>
@@ -360,12 +359,12 @@
     <mkdir dir="${build.etc}"/>
     <copy todir="${build.etc}" filtering="yes" overwrite="yes">
       <fileset dir="${source.etc}">
-         <include name="**/*"/>
+        <include name="**/*"/>
       </fileset>
     </copy>
     <copy todir="${build.etc}/manifest" filtering="yes">
       <fileset dir="${project.root}/build/etc">
-         <include name="version.mf"/>
+        <include name="version.mf"/>
       </fileset>
     </copy>
   </target>
@@ -375,21 +374,21 @@
     <mkdir dir="${build.bin}"/>
     <copy todir="${build.bin}" filtering="yes">
       <fileset dir="${source.bin}">
-         <include name="**/*"/>
+        <include name="**/*"/>
       </fileset>
     </copy>
 
     <fixcrlf srcdir="${build.bin}"
-	     eol="lf" eof="remove"
-	     includes="**/*.sh"/>
+      eol="lf" eof="remove"
+      includes="**/*.sh"/>
 
-    <fixcrlf srcdir="${build.bin}" 
-	     eol="crlf" eof="remove"
-	     includes="**/*.bat, **/*.cmd"/>
+    <fixcrlf srcdir="${build.bin}"
+      eol="crlf" eof="remove"
+      includes="**/*.bat, **/*.cmd"/>
 
     <chmod perm="+x">
       <fileset dir="${build.bin}">
-         <include name="**/*.sh"/>
+        <include name="**/*.sh"/>
       </fileset>
     </chmod>
   </target>
@@ -403,8 +402,8 @@
      |  Build all jar files.
     -->
   <target name="jars" description="Builds all jar files."
-     depends="_buildmagic:build-bypass-check"
-	  unless="build-bypass.on">
+    depends="_buildmagic:build-bypass-check"
+    unless="build-bypass.on">
 
     <call target="compile"/>
 
@@ -442,7 +441,7 @@
 
     <!-- jboss-minimal.jar -->
     <jar jarfile="${build.lib}/jboss-minimal.jar"
-         manifest="${build.etc}/default.mf">
+      manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/invocation/**"/>
         <include name="org/jboss/logging/**"/>
@@ -452,7 +451,7 @@
 
     <!-- jboss-client.jar -->
     <jar jarfile="${build.lib}/jboss-client.jar"
-         manifest="${build.etc}/default.mf">
+      manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/corba/**"/>
         <include name="org/jboss/ejb/CacheKey.class"/>
@@ -496,7 +495,7 @@
 
     <!-- verifier.jar -->
     <jar jarfile="${build.lib}/verifier.jar"
-         manifest="${build.etc}/manifest/verifier.mf">
+      manifest="${build.etc}/manifest/verifier.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/verifier/**"/>
       </fileset>
@@ -510,9 +509,9 @@
       </fileset>
     </jar>
 
-    <!-- jmx-invoker-adaptor-client.jar --> 
+    <!-- jmx-invoker-adaptor-client.jar -->
     <jar jarfile="${build.lib}/jmx-invoker-adaptor-client.jar"
-         manifest="${build.etc}/default.mf">
+      manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptor*"/>
         <include name="org/jboss/jmx/adaptor/rmi/RMINotificationListener*"/>
@@ -549,7 +548,7 @@
 
     <!-- uuid-key-generator.sar -->
     <jar jarfile="${build.lib}/uuid-key-generator.sar"
-         manifest="${build.etc}/default.mf">
+      manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/ejb/plugins/keygenerator/uuid/**"/>
       </fileset>
@@ -563,11 +562,11 @@
 
     <!-- SQLException Processor -->
     <copy todir="${build.lib}"
-       file="${build.resources}/exception-processor/sqlexception-service.xml"/>
+      file="${build.resources}/exception-processor/sqlexception-service.xml"/>
 
     <!-- The J2EE client deployer -->
     <copy todir="${build.lib}"
-      file="${build.resources}/client-deployer/client-deployer-service.xml" />
+      file="${build.resources}/client-deployer/client-deployer-service.xml"/>
 
     <!--
        | JBoss/Testsuite Support
@@ -575,17 +574,17 @@
 
     <!-- testsuite-support.jar -->
     <jar jarfile="${build.lib}/testsuite-support.jar"
-         manifest="${build.etc}/manifest/testsuite-support.mf">
+      manifest="${build.etc}/manifest/testsuite-support.mf">
       <fileset dir="${build.classes}">
-         <include name="org/jboss/jmx/service/RemoteDeployer*.class"/>
-         <include name="org/jboss/jmx/connector/RemoteMBeanServer**"/>
-         <include name="org/jboss/jmx/connector/notification/RMI**"/>
-         <include name="org/jboss/jmx/connector/rmi/RMIConnector.class"/>
-         <include name="org/jboss/jmx/connector/rmi/RMINotificationListener.class"/>
-         <include name="org/jboss/jmx/connector/rmi/RMIClientConnectorImpl*.class"/>
-         <include name="org/jboss/jmx/connector/rmi/RMIConnectorImpl_Stub.class"/>
-         <include name="org/jboss/jmx/connector/ConnectorFactory*.class"/>
-         <include name="org/jboss/ejb/CacheKey.class"/>
+        <include name="org/jboss/jmx/service/RemoteDeployer*.class"/>
+        <include name="org/jboss/jmx/connector/RemoteMBeanServer**"/>
+        <include name="org/jboss/jmx/connector/notification/RMI**"/>
+        <include name="org/jboss/jmx/connector/rmi/RMIConnector.class"/>
+        <include name="org/jboss/jmx/connector/rmi/RMINotificationListener.class"/>
+        <include name="org/jboss/jmx/connector/rmi/RMIClientConnectorImpl*.class"/>
+        <include name="org/jboss/jmx/connector/rmi/RMIConnectorImpl_Stub.class"/>
+        <include name="org/jboss/jmx/connector/ConnectorFactory*.class"/>
+        <include name="org/jboss/ejb/CacheKey.class"/>
       </fileset>
     </jar>
 
@@ -598,27 +597,27 @@
   <!-- Install & Release                                                  -->
   <!-- ================================================================== -->
 
-  <target name="install" 
-	  description="Install the structure for a release."
-	  depends="all, _buildmagic:install:default"/>
+  <target name="install"
+    description="Install the structure for a release."
+    depends="all, _buildmagic:install:default"/>
 
   <target name="release" depends="install"/>
 
-  <target name="release-zip" 
-	  description="Builds a ZIP distribution."
-	  depends="release, _buildmagic:release:zip"/>
+  <target name="release-zip"
+    description="Builds a ZIP distribution."
+    depends="release, _buildmagic:release:zip"/>
 
-  <target name="release-tar" 
-	  description="Builds a TAR distribution."
-	  depends="release, _buildmagic:release:tar"/>
+  <target name="release-tar"
+    description="Builds a TAR distribution."
+    depends="release, _buildmagic:release:tar"/>
 
-  <target name="release-tgz" 
-	  description="Builds a TAR-GZ distribution."
-	  depends="release, _buildmagic:release:tgz"/>
+  <target name="release-tgz"
+    description="Builds a TAR-GZ distribution."
+    depends="release, _buildmagic:release:tgz"/>
 
   <target name="release-all"
-	  description="Builds a distribution for each archive type."
-	  depends="release-zip, release-tgz"/>
+    description="Builds a distribution for each archive type."
+    depends="release-zip, release-tgz"/>
 
 
   <!-- ================================================================== -->
@@ -626,15 +625,15 @@
   <!-- ================================================================== -->
 
   <!-- Clean up all build output -->
-  <target name="clean" 
-	  description="Cleans up most generated files."
-	  depends="_buildmagic:clean">
+  <target name="clean"
+    description="Cleans up most generated files."
+    depends="_buildmagic:clean">
   </target>
 
   <!-- Clean up all generated files -->
-  <target name="clobber" 
-	  description="Cleans up all generated files."
-	  depends="_buildmagic:clobber, clean">
+  <target name="clobber"
+    description="Cleans up all generated files."
+    depends="_buildmagic:clobber, clean">
   </target>
 
 
@@ -643,19 +642,19 @@
   <!-- ================================================================== -->
 
   <target name="main"
-	  description="Executes the default target (most)."
-	  depends="most"/>
-    
+    description="Executes the default target (most)."
+    depends="most"/>
+
   <target name="all"
-	  description="Builds everything."
-	  depends="jars, docs"/>
+    description="Builds everything."
+    depends="jars, docs"/>
 
-  <target name="most" 
-	  description="Builds almost everything."
-	  depends="jars"/>
+  <target name="most"
+    description="Builds almost everything."
+    depends="jars"/>
 
-  <target name="help" 
-          description="Show this help message."
-	  depends="_buildmagic:help:standard"/>
+  <target name="help"
+    description="Show this help message."
+    depends="_buildmagic:help:standard"/>
 
 </project>
