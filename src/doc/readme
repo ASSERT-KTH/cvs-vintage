@@ -1,9 +1,9 @@
-$Id: readme,v 1.19 2001/09/03 02:13:44 larryi Exp $
+$Id: readme,v 1.20 2001/09/20 04:39:03 larryi Exp $
         
                            Release Notes for:
-                           ====================
-                           TOMCAT Version 3.3b2
-                           ====================
+                           =====================
+                           TOMCAT Version 3.3rc1
+                           =====================
 
 
 0.  TABLE OF CONTENTS:
@@ -95,23 +95,33 @@ include the following:
      external web server continues to serve its root context as they would
      normally.
 
+- Enhanced mod_jk Connector
+
+  The mod_jk connector for Apache 1.3 now supports chunked input.
+
+  Important Note: The chunked input enhancement required a protocol change
+                  that makes Tomcat 3.3 incompatible with mod_jk base
+                  connectors from Tomcat 3.2.3 and earlier.  Only use
+                  connectors supplied with the Tomcat 3.3 release or the
+                  jakarta-tomcat-connectors project with Tomcat 3.3.
+
 - Tomcat Testing:
 
   The "test" web application along with the test-tomcat.xml and associated
   support files are not part of the binary Tomcat 3.3 distribution.  The
   "test" web application is supplied separately as "test.war".  This file
-  may be downloaded from the "v3.3-b2/apps" directory of the Tomcat 3.3b2
+  may be downloaded from the "v3.3-rc1/apps" directory of the Tomcat 3.3rc1
   release and placed in the "webapps" directory of your installation.  Running
   the test has been integrated into the Admin web application that is part of
-  the Tomcat 3.3b2 distribution.  A preliminary step to running the test is to
+  the Tomcat 3.3rc1 distribution.  A preliminary step to running the test is to
   "trust" the Admin web application.  It is set to "untrusted" by default. This
   change can be accomplished by executing the command from the TOMCAT_HOME
   directory with JAVA_HOME set:
 
-	./bin/tomcat.sh run -enableAdmin    <-- Unix
-	bin\tomcat run -enableAdmin         <-- Windows
+	./bin/tomcat.sh enableAdmin    <-- Unix
+	bin\tomcat enableAdmin         <-- Windows
 
-  Start or restart Tomcat 3.3b2 and invoke the following URL in your browser:
+  Start or restart Tomcat 3.3rc1 and invoke the following URL in your browser:
 
 	http://localhost:8080/admin/test/test.jsp
 
@@ -119,6 +129,12 @@ include the following:
   script are then listed and the tests executed.  After the tests are
   completed, the results will appear with "FAILED Tests" listed first,
   followed the "PASSED Tests".
+
+  If you use Jikes as the Java compiler for JSP, you will need version
+  1.14-1 or later to run all the tests without error.  Some tests will fail
+  due to Java compilation errors if an earlier Jikes compiler is used.
+  See <http://oss.software.ibm.com/developerworks/opensource/jikes/> for
+  the latest version.
 	
   For security reasons, after you are done with the test, you should either
   restore the Admin web application to the default "untrusted" state, or change
@@ -169,7 +185,7 @@ new features (see next section).
 
 - Tomcat 4.x is separate development from Tomcat 3.x.  It is based on the
 Catalina architecture, which is very different from the architecture of
-Tomcat 3.x.  In addition, Tomcat 4.x is to be the reference implementation
+Tomcat 3.x.  In addition, Tomcat 4.x is the reference implementation
 for the Servlet 2.3 and JSP 1.2 specifications.
 
 
@@ -181,6 +197,11 @@ most important are:
 
 - The code has undergone a refactoring effort resulting in (we hope) improved
   readability, ease of use, and performance.
+
+- Auto-generated connector configuration files for mod_jk based connectors
+  defaults to being generated on demand only.  This avoids the possibility
+  of Tomcat rewritting the config file while a web server, such as Apache,
+  tries to read it.
 
 - Tag handler pooling has been added (but disabled by default).  If your JSPs
   use a lot of custom tags then you might want to enable tag pooling to
@@ -205,6 +226,11 @@ primary changes are:
 
 - The Tomcat Users Guide (i.e. tomcat-ug.html) is now in the TOMCAT_HOME/doc
   directory instead of the TOMCAT_HOME/doc/uguide directory as it Tomcat 3.2.x.
+
+- A change in the Ajp13 protocol for chunked input makes mod_jk based connectors
+  Tomcat 3.2.3 and earlier to be incompatible with Tomcat 3.3.  Only use
+  connectors from the Tomcat 3.3 release or the jakarta-tomcat-connectors project
+  with Tomcat 3.3.
 
 - (more to be added)
 
