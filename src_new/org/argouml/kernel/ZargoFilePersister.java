@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.11 2004/09/20 20:44:16 bobtarling Exp $
+// $Id: ZargoFilePersister.java,v 1.12 2004/09/22 18:46:20 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -225,18 +225,17 @@ public class ZargoFilePersister extends AbstractFilePersister {
     public Project loadProject(URL url) throws OpenException {
         try {
             Project p = null;
-            // read the argo 
+            // read the argo
             try {
                 // first read the .argo file from Zip
-                ZipInputStream zis = 
+                ZipInputStream zis =
                     openZipStreamAt(url, FileConstants.PROJECT_FILE_EXT);
 
                 // the "false" means that members should not be added,
                 // we want to do this by hand from the zipped stream.
-                ArgoParser.SINGLETON.readProject(url, false);
+                ArgoParser.SINGLETON.readProject(url, zis, false);
                 p = ArgoParser.SINGLETON.getProject();
                 ArgoParser.SINGLETON.setProject(null); // clear up project refs
-
                 zis.close();
             } catch (IOException e) {
                 // exception can occur both due to argouml code as to J2SE
