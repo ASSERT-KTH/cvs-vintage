@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice;
 
-// $Id: WSDLDefinitionFactory.java,v 1.13 2004/08/10 13:56:45 tdiesler Exp $
+// $Id: WSDLDefinitionFactory.java,v 1.14 2004/09/11 10:55:22 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.xml.sax.InputSource;
@@ -89,17 +89,18 @@ public class WSDLDefinitionFactory
 
       public InputSource getBaseInputSource()
       {
+         log.debug("getBaseInputSource [wsdlUrl=" + wsdlURL + "]");
          try
          {
             InputStream is = wsdlURL.openStream();
             if (is == null)
-               throw new IllegalArgumentException("Cannot obtain wsdl from: " + wsdlURL);
+               throw new IllegalArgumentException("Cannot obtain wsdl from [" + wsdlURL + "]");
 
             return new InputSource(is);
          }
          catch (IOException e)
          {
-            throw new RuntimeException("Cannot access wsdl: " + e.getMessage());
+            throw new RuntimeException("Cannot access wsdl from [" + wsdlURL + "], " + e.getMessage());
          }
       }
 
@@ -163,14 +164,14 @@ public class WSDLDefinitionFactory
             log.debug("Resolved to: " + wsdlImport);
             InputStream is = new URL(wsdlImport).openStream();
             if (is == null)
-               throw new IllegalArgumentException("Cannot import wsdl from: " + wsdlImport);
+               throw new IllegalArgumentException("Cannot import wsdl from [" + wsdlImport + "]");
 
             latestImportURI = wsdlImport;
             return new InputSource(is);
          }
          catch (IOException e)
          {
-            throw new RuntimeException("Cannot access imported wsdl: " + e.getMessage());
+            throw new RuntimeException("Cannot access imported wsdl [" + wsdlImport + "], " + e.getMessage());
          }
       }
 
