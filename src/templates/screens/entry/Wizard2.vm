@@ -27,8 +27,8 @@
  #end
 #end
 </tr>
-<tr>
 #foreach ($group in $module.getDedupeAttributeGroups($issueType))
+#indexedRows($velocityCount)
   #foreach ($att in $group.Attributes)
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
     #if ($rma.Active)
