@@ -120,6 +120,7 @@ public class ServerXmlReader extends BaseInterceptor {
 			       BaseInterceptor module)
 	throws TomcatException
     {
+	//	checkHooks(cm, ctx, module);
 	if( this != module ) return;
 	setupHookFinder();
 	XmlMapper xh=new XmlMapper();
@@ -159,6 +160,42 @@ public class ServerXmlReader extends BaseInterceptor {
         }
     }
 
+    // -------------------- trusted apps --------------------
+
+    public void contextInit(  Context ctx )
+	throws TomcatException
+    {
+	if( ! ctx.isTrusted() ) return;
+
+	// PathSetter is the first module in the chain, we shuld have
+	// a valid path by now 
+	String dir=ctx.getAbsolutePath();
+
+	File f=new File(dir);
+	File modules=new File( f, "WEB-INF" + File.separator +
+			       "interceptors.xml" );
+	if( modules.exists() ) {
+	    ctx.log( "Loading modules from webapp " + modules );
+	} else {
+	    if( debug > 0 )
+		ctx.log( "Can't find " + modules );
+	    return;
+	}
+
+	XmlMapper xh=new XmlMapper();
+	xh.setClassLoader( ctx.getClassLoader());
+	xh.setDebug( debug );
+	xh.addRule( "ContextManager", xh.setProperties() );
+	setPropertiesRules( cm, xh );
+	setTagRules( xh );
+	addDefaultTags(cm, xh);
+	addTagRules( cm, xh );
+	setBackward( xh );
+
+	cm.setNote( "configFile", modules.getAbsolutePath());
+	loadConfigFile(xh,modules,cm);
+    }
+    
     // -------------------- Xml reading details --------------------
 
     public static void loadConfigFile(XmlMapper xh, File f, ContextManager cm)
@@ -304,7 +341,7 @@ public class ServerXmlReader extends BaseInterceptor {
 	    FileOutputStream pos=new FileOutputStream( f );
 	    mods.save( pos, "Auto-generated cache file");
 	} catch(IOException ex ) {
-	    log("Error saving modules ", ex );
+	    //log("Error saving modules ", ex );
 	}
     }
 
