@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.60 2003/01/07 04:34:01 mkl Exp $
+// $Id: Main.java,v 1.61 2003/02/01 15:09:27 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,21 +45,17 @@ import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.security.ArgoAwtExceptionHandler;
 import org.argouml.application.security.ArgoSecurityManager;
-import org.argouml.cognitive.Designer;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.SplashScreen;
-import org.argouml.uml.cognitive.critics.ChildGenUML;
 import org.argouml.util.Trash;
 import org.argouml.util.logging.SimpleTimer;
 import org.tigris.gef.util.Util;
 
 import ru.novosoft.uml.MFactoryImpl;
-import ru.novosoft.uml.model_management.MModel;
 
 public class Main {
     ////////////////////////////////////////////////////////////////
