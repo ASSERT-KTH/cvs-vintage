@@ -1,4 +1,4 @@
-// $Id: Init.java,v 1.28 2003/12/04 12:02:28 mkl Exp $
+// $Id: Init.java,v 1.29 2003/12/04 18:38:17 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -268,6 +268,7 @@ public class Init {
 	Agency.register(crNoAssociations, actorCls);
 	Agency.register(crNoAssociations, useCaseCls);
 	Agency.register(crNoOperations, classCls);
+        Agency.register(crNoOperations, interfaceCls);
 	Agency.register(crCompoundConstructorNeeded, classCls);
 	Agency.register(crEmptyPackage, packageCls);
 	Agency.register(crNonAggDataType, datatypeCls);
