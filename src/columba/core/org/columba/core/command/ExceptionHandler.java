@@ -34,6 +34,7 @@ import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPDisconnectedException;
 import org.columba.ristretto.imap.IMAPException;
+import org.columba.ristretto.io.ConnectionDroppedException;
 
 /**
  * Handles all exceptions catched by Worker.construct(). Opens error dialogs.
@@ -123,7 +124,7 @@ public class ExceptionHandler {
      *            io exception to process
      */
     private void processIOException(IOException e) {
-        String errorMessage = "";
+        String errorMessage = e.getMessage();
 
         if (e instanceof ProtocolException) {
             errorMessage = MailResourceLoader.getString("dialog", "error",
@@ -141,6 +142,9 @@ public class ExceptionHandler {
         } else if (e instanceof UnknownServiceException) {
             errorMessage = MailResourceLoader.getString("dialog", "error",
                     "unknown_service_error");
+        } else if (e instanceof ConnectionDroppedException) {
+            errorMessage = MailResourceLoader.getString("dialog", "error",
+            "connection_dropped_error");
         }
         
         showErrorDialog(errorMessage, e);
