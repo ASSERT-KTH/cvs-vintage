@@ -11,13 +11,13 @@
     <dependency service="Configuration" required="true"/>
   </service>
   <service name="Naming">
-    <dependency service="Logging" required="true"/>
+    <dependency service="Logging" required="false"/>
     <dependency service="Configuration" required="true"/>
   </service>
   <service name="XADataSource">
     <dependency service="Naming" required="true"/>
     <dependency service="TransactionManager" required="true"/>
-    <dependency service="Logging" required="true"/>
+    <dependency service="Logging" required="false"/>
     <dependency service="JdbcProvider" required="true"/>
     <dependency service="ClassPathExtension" required="true"/>
     <dependency service="Configuration" required="true"/>
@@ -25,7 +25,7 @@
   </service>
   <service name="JDBCDataSource">
     <dependency service="Naming" required="true"/>
-    <dependency service="Logging" required="true"/>
+    <dependency service="Logging" required="false"/>
     <dependency service="JdbcProvider" required="true"/>
     <dependency service="ClassPathExtension" required="true"/>
     <dependency service="Configuration" required="true"/>
@@ -33,14 +33,14 @@
   </service>
   <service name="DataSource">
     <dependency service="Naming" required="true"/>
-    <dependency service="Logging" required="true"/>
+    <dependency service="Logging" required="false"/>
     <dependency service="JdbcProvider" required="true"/>
     <dependency service="ClassPathExtension" required="true"/>
     <dependency service="Configuration" required="true"/>
     <dependency service="Hypersonic" required="false"/>
   </service>
   <service name="AutoDeployer">
-    <dependency service="Logging" required="true"/>
+    <dependency service="Logging" required="false"/>
     <dependency service="ClassPathExtension" required="true"/>
     <dependency service="ContainerFactory" required="true"/>
     <dependency service="Configuration" required="true"/>
@@ -50,7 +50,7 @@
     <dependency service="XADataSource" required="false"/>
     <dependency service="JDBCDataSource" required="false"/>
     <dependency service="DataSource" required="false"/>
-    <dependency service="Logging" required="true"/>
+    <dependency service="Logging" required="false"/>
     <dependency service="ClassPathExtension" required="true"/>
     <dependency service="TransactionManager" required="true"/>
     <dependency service="Configuration" required="true"/>
@@ -75,7 +75,7 @@
     <dependency service="XADataSource" required="false"/>
     <dependency service="JDBCDataSource" required="false"/>
     <dependency service="DataSource" required="false"/>
-    <dependency service="Logging" required="true"/>
+    <dependency service="Logging" required="false"/>
     <dependency service="ClassPathExtension" required="true"/>
     <dependency service="Configuration" required="true"/>
   </service>
