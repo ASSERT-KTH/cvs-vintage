@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.9 2001/03/14 07:29:45 larryi Exp $
+/* $Id: ApacheConfig.java,v 1.10 2001/05/27 23:11:07 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -112,7 +112,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     <p>
     @author Costin Manolache
     @author Mel Martinez
-	@version $Revision: 1.9 $ $Date: 2001/03/14 07:29:45 $
+	@version $Revision: 1.10 $ $Date: 2001/05/27 23:11:07 $
  */
 public class ApacheConfig  extends BaseInterceptor { 
     
@@ -772,6 +772,14 @@ public class ApacheConfig  extends BaseInterceptor {
                     mod_jk.println("#");                        
                     mod_jk.println("JkMount " + path +"/servlet/* " + JkMount[jkConnector]);
                     mod_jk.println("JkMount " + path +"/*.jsp " + JkMount[jkConnector]);
+		    mod_jk.println("# The following line mounts the " +
+				   "form-based authenticator for the "+
+				   path+" context");
+		    mod_jk.println("#");
+		    mod_jk.println("JkMount " + path +
+				   "/*j_security_check" +
+				   JkMount[jkConnector]);
+
 
 
                     // Deny serving any files from WEB-INF
