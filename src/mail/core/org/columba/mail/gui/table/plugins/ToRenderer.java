@@ -46,8 +46,13 @@ public class ToRenderer extends DefaultLabelRenderer {
 
         ColumbaHeader header = (ColumbaHeader) ((MessageNode) value).getHeader();
 
-        setText(((Address) header.get("columba.to")).getShortAddress());
-
+        Object adr = header.get("columba.to");
+        if ( adr instanceof Address)
+        	setText( ((Address)adr).getShortAddress());
+        else
+        	setText(adr.toString());
+        	
+        
         return super.getTableCellRendererComponent(table, value, isSelected,
             hasFocus, row, column);
     }
