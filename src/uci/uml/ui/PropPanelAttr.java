@@ -27,7 +27,7 @@
 // File: PropPanelAttr.java
 // Classes: PropPanelAttr
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelAttr.java,v 1.4 1998/06/03 00:29:05 jrobbins Exp $
+// $Id: PropPanelAttr.java,v 1.5 1998/06/04 20:04:12 jrobbins Exp $
 
 package uci.uml.ui;
 

@@ -27,7 +27,7 @@
 // File: Editor.java
 // Classes: Editor
 // Original Author: ics125 spring 1996
-// $Id: Editor.java,v 1.10 1998/06/03 00:27:23 jrobbins Exp $
+// $Id: Editor.java,v 1.11 1998/06/04 20:03:33 jrobbins Exp $
 
 package uci.gef;
 
@@ -135,6 +135,9 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
   /** Each Editor has a RedrawManager that executes in a separate
    *  thread of control to update damaged regions of the display. */
   protected transient RedrawManager _redrawer = new RedrawManager(this);
+
+
+  protected transient FigTextEditor _activeTextEditor = null;
 
 
   ////////////////////////////////////////////////////////////////
@@ -383,6 +386,7 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
     getLayerManager().paint(g);
     _selectionManager.paint(g);
     _modeManager.paint(g);
+    if (_activeTextEditor != null) _activeTextEditor.repaint();
   }
 
   public synchronized void print(Graphics g) {
@@ -415,6 +419,12 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
   public Component getAwtComponent() { return _awt_component; }
   public void setAwtComponent(Component c) { _awt_component = c; }
 
+  public void setActiveTextEditor(FigTextEditor fte) {
+    if (_activeTextEditor != null)
+      _activeTextEditor.endEditing();
+    _activeTextEditor = fte;
+  }
+  
   public void setCursor(Cursor c) {
     if (getAwtComponent() != null) {
       getAwtComponent().setCursor(c);
@@ -493,7 +503,8 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
 
   /** Invoked when a mouse button has been pressed. */
   public void mousePressed(MouseEvent me) {
-    if (getAwtComponent() != null) getAwtComponent().requestFocus();
+    setActiveTextEditor(null);
+    //if (getAwtComponent() != null) getAwtComponent().requestFocus();
     RedrawManager.lock();
     Globals.curEditor(this);
     //setUnderMouse(me);

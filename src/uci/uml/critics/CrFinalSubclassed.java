@@ -19,7 +19,7 @@
 // File: CrFinalSubclassed.java.java
 // Classes: CrFinalSubclassed.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrFinalSubclassed.java,v 1.6 1998/06/03 00:28:33 jrobbins Exp $
+// $Id: CrFinalSubclassed.java,v 1.7 1998/06/04 20:03:56 jrobbins Exp $
 
 package uci.uml.critics;
 

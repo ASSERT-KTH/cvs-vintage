@@ -19,7 +19,7 @@
 // File: CrClassMustBeAbstract.java.java
 // Classes: CrClassMustBeAbstract.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrClassMustBeAbstract.java,v 1.6 1998/06/03 00:28:27 jrobbins Exp $
+// $Id: CrClassMustBeAbstract.java,v 1.7 1998/06/04 20:03:52 jrobbins Exp $
 
 package uci.uml.critics;
 

@@ -19,7 +19,7 @@
 // File: PathConv.java
 // Classes: PathConv
 // Original Author: abonner@ics.uci.edu
-// $Id: PathConv.java,v 1.7 1998/04/23 23:50:29 jrobbins Exp $
+// $Id: PathConv.java,v 1.8 1998/06/04 20:03:45 jrobbins Exp $
 
 package uci.gef;
 
@@ -31,7 +31,7 @@ import java.util.*;
 /** Abstract class that defines a common interface to all of
  *  path-to-coord mapping objects.  These objects store some
  *  information about a point that is defined relative to a path
- *  (e.g., along a FigEdige) and provide methods to get the
+ *  (e.g., along a FigEdge) and provide methods to get the
  *  coordinates (x, y) for that point.  This allows us to place labels
  *  along a FigEdge and have the label stay in the right place, even
  *  if the FigEdge moves. */

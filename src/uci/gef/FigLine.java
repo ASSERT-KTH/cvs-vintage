@@ -27,7 +27,7 @@
 // File: FigLine.java
 // Classes: FigLine
 // Original Author: ics125 spring 1996
-// $Id: FigLine.java,v 1.7 1998/04/18 01:26:17 jrobbins Exp $
+// $Id: FigLine.java,v 1.8 1998/06/04 20:03:35 jrobbins Exp $
 
 package uci.gef;
 
@@ -84,6 +84,11 @@ public class FigLine extends Fig {
     calcBounds();
     firePropChange("bounds", null, null);
   }
+
+  public int getX1() { return _x1; }
+  public int getY1() { return _y1; }
+  public int getX2() { return _x2; }
+  public int getY2() { return _y2; }
 
   /** Set one of the end point coordinates. Each of these methods
    *  fires PropertyChange with "bounds". */

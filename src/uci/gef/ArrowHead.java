@@ -28,7 +28,7 @@
 // File: ArrowHead.java
 // Classes: ArrowHead
 // Original Author: abonner@ics.uci.edu
-// $Id: ArrowHead.java,v 1.6 1998/04/18 22:50:45 jrobbins Exp $
+// $Id: ArrowHead.java,v 1.7 1998/06/04 20:03:31 jrobbins Exp $
 
 package uci.gef;
 
@@ -41,9 +41,15 @@ import java.util.*;
 /** Abstract class to draw arrow heads on the ends of FigEdges. */
 
 public abstract class ArrowHead {
-  protected final int arrow_width = 7, arrow_height = 12;
+  protected int arrow_width = 7, arrow_height = 12;
   protected Color arrowLineColor = Color.black;
   protected Color arrowFillColor = Color.black;
+
+  public ArrowHead() { }
+  public ArrowHead(Color line, Color fill) {
+    setLineColor(line);
+    setFillColor(fill);
+  }
   
   public Color getLineColor() {
     return arrowLineColor;

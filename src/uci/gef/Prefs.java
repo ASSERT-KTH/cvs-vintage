@@ -28,7 +28,7 @@
 // File: Prefs.java
 // Classes: Prefs
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Prefs.java,v 1.6 1998/06/03 00:27:39 jrobbins Exp $
+// $Id: Prefs.java,v 1.7 1998/06/04 20:03:46 jrobbins Exp $
 
 package uci.gef;
 

@@ -19,7 +19,7 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.6 1998/06/03 00:28:47 jrobbins Exp $
+// $Id: CrUML.java,v 1.7 1998/06/04 20:04:05 jrobbins Exp $
 
 package uci.uml.critics;
 

@@ -28,7 +28,7 @@
 // File: ModeCreate.java
 // Classes: ModeCreate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeCreate.java,v 1.9 1998/06/03 00:27:31 jrobbins Exp $
+// $Id: ModeCreate.java,v 1.10 1998/06/04 20:03:40 jrobbins Exp $
 
 package uci.gef;
 

@@ -19,7 +19,7 @@
 // File: CrReservedName.java.java
 // Classes: CrReservedName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrReservedName.java,v 1.1 1998/06/03 00:28:45 jrobbins Exp $
+// $Id: CrReservedName.java,v 1.2 1998/06/04 20:04:04 jrobbins Exp $
 
 package uci.uml.critics;
 

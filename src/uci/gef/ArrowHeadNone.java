@@ -27,7 +27,7 @@
 // File: ArrowHeadNone.java
 // Classes: ArrowHeadNone
 // Original Author: abonner@ics.uci.ed
-// $Id: ArrowHeadNone.java,v 1.4 1998/04/18 01:25:48 jrobbins Exp $
+// $Id: ArrowHeadNone.java,v 1.5 1998/06/04 20:03:32 jrobbins Exp $
 
 package uci.gef;
 
@@ -38,6 +38,8 @@ import java.util.*;
 
 /** Draws no arrow head at the end of a FigEdge. */
 public class ArrowHeadNone extends ArrowHead {
-  public void paint(Graphics g, Point start, Point end) {
-  }
+
+  public static ArrowHeadNone TheInstance = new ArrowHeadNone();
+  
+  public void paint(Graphics g, Point start, Point end) { }
 }
