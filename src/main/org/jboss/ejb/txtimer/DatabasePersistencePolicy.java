@@ -6,11 +6,10 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: DatabasePersistencePolicy.java,v 1.5 2004/09/21 12:15:59 tdiesler Exp $
+// $Id: DatabasePersistencePolicy.java,v 1.6 2004/09/21 12:18:44 tdiesler Exp $
 
 import org.jboss.ejb.ContainerMBean;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.MBeanProxy;
@@ -31,12 +30,12 @@ import javax.sql.DataSource;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
-import java.io.Serializable;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.IOException;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -61,15 +60,17 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    // logging support
    private static Logger log = Logger.getLogger(DatabasePersistencePolicy.class);
 
+   // Column names
+   private static final String TIMERID = "TIMERID";
+   private static final String TARGETID = "TARGETID";
+   private static final String INITIALDATE = "INITIALDATE";
+   private static final String INTERVAL = "INTERVAL";
+   private static final String INSTANCEPK = "INSTANCEPK";
+   private static final String INFO = "INFO";
+
    // The service attributes
    private ObjectName dataSource;
    private String tableName;
-   private static final String timerIdColumn = "TIMERID";
-   private static final String targetIdColumn = "TARGETID";
-   private static final String initialDateColumn = "INITIALDATE";
-   private static final String intervalColumn = "INTERVAL";
-   private static final String instancePkColumn = "INSTANCEPK";
-   private static final String infoColumn = "INFO";
 
    private TransactionManager tm;
    // The data source the timers will be persisted to
@@ -306,13 +307,13 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
                String longType = typeMapping.getTypeMappingMetaData(Long.class).getSqlType();
 
                String createTableDDL = "create table " + tableName + " (" +
-                       "  " + timerIdColumn + " varchar(80) not null," +
-                       "  " + targetIdColumn + " varchar(80) not null," +
-                       "  " + initialDateColumn + " " + dateType + " not null," +
-                       "  " + intervalColumn + " " + longType + "," +
-                       "  " + instancePkColumn + " " + objectType + "," +
-                       "  " + infoColumn + " " + objectType + "," +
-                       "  constraint " + tableName + "_PK primary key (" + timerIdColumn + "," + targetIdColumn + ")" +
+                       "  " + TIMERID + " varchar(80) not null," +
+                       "  " + TARGETID + " varchar(80) not null," +
+                       "  " + INITIALDATE + " " + dateType + " not null," +
+                       "  " + INTERVAL + " " + longType + "," +
+                       "  " + INSTANCEPK + " " + objectType + "," +
+                       "  " + INFO + " " + objectType + "," +
+                       "  constraint " + tableName + "_PK primary key (" + TIMERID + "," + TARGETID + ")" +
                        ")";
 
                log.debug("Executing DDL: " + createTableDDL);
@@ -351,7 +352,7 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
          con = ds.getConnection();
 
          String sql = "insert into " + tableName + " " +
-                 "(" + timerIdColumn + "," + targetIdColumn + "," + initialDateColumn + "," + intervalColumn + "," + instancePkColumn + "," + infoColumn + ") " +
+                 "(" + TIMERID + "," + TARGETID + "," + INITIALDATE + "," + INTERVAL + "," + INSTANCEPK + "," + INFO + ") " +
                  "values (?,?,?,?,?,?)";
          st = con.prepareStatement(sql);
 
@@ -389,12 +390,12 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
          rs = st.executeQuery("select * from " + tableName);
          while (rs.next())
          {
-            String timerId = rs.getString(timerIdColumn);
-            TimedObjectId targetId = TimedObjectId.parse(rs.getString(targetIdColumn));
-            Date initialDate = rs.getTimestamp(initialDateColumn);
-            long interval = rs.getLong(intervalColumn);
-            Serializable pKey = (Serializable)deserialize(rs.getBytes(instancePkColumn));
-            Serializable info = (Serializable)deserialize(rs.getBytes(infoColumn));
+            String timerId = rs.getString(TIMERID);
+            TimedObjectId targetId = TimedObjectId.parse(rs.getString(TARGETID));
+            Date initialDate = rs.getTimestamp(INITIALDATE);
+            long interval = rs.getLong(INTERVAL);
+            Serializable pKey = (Serializable)deserialize(rs.getBytes(INSTANCEPK));
+            Serializable info = (Serializable)deserialize(rs.getBytes(INFO));
 
             targetId = new TimedObjectId(targetId.getContainerId(), pKey);
             TimerHandleImpl handle = new TimerHandleImpl(timerId, targetId, initialDate, interval, info);
@@ -425,7 +426,7 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       {
          con = ds.getConnection();
 
-         String sql = "delete from " + tableName + " where " + timerIdColumn + "=? and " + targetIdColumn + "=?";
+         String sql = "delete from " + tableName + " where " + TIMERID + "=? and " + TARGETID + "=?";
          st = con.prepareStatement(sql);
 
          st.setString(1, timerId);
