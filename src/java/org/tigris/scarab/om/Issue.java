@@ -97,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.312 2003/07/15 16:44:59 dlr Exp $
+ * @version $Id: Issue.java,v 1.313 2003/07/16 19:20:32 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -3703,10 +3703,16 @@ public class Issue
 
             if (newAttVal.getValue() != null)
             {
-                if (oldAttVal.getOptionId() != null 
-                    && newAttVal.getAttribute().isOptionAttribute())
+                if (newAttVal.getAttribute().isOptionAttribute())
                 {
-                    fromOption = oldAttVal.getAttributeOption();
+                    if (oldAttVal.getOptionId() == null)
+                    {
+                        fromOption = AttributeOptionManager.getInstance(ScarabConstants.INTEGER_0);
+                    }
+                    else
+                    {
+                        fromOption = oldAttVal.getAttributeOption();
+                    }
                     toOption = newAttVal.getAttributeOption();
                     msg = WorkflowFactory.getInstance().checkTransition(
                                                         fromOption, 
