@@ -273,13 +273,7 @@ public class HeaderTableModel extends AbstractTableModel {
 
 		uidList.clear();
 
-		if (headerList == null) {
-			tree.setRootNode(root);
-			fireTableDataChanged();
-			return;
-		}
-
-		if (headerList.count() == 0) {
+		if (headerList == null || headerList.count() == 0) {
 			tree.setRootNode(root);
 			fireTableDataChanged();
 			return;
