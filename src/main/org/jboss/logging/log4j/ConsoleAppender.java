@@ -1,4 +1,10 @@
-package org.jboss.logging;
+/*
+ * JBoss, the OpenSource EJB server
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+package org.jboss.logging.log4j;
 
 import java.io.PrintStream;
 
@@ -26,14 +32,14 @@ public class ConsoleAppender extends AppenderSkeleton
     {
         out = System.out;
         err = System.err;
-        System.setOut(new Log4jStream(Priority.INFO, out));
-        System.setErr(new Log4jStream(Priority.ERROR, err));
     }
 
     public void activateOptions()
     {
         super.activateOptions();
         category = Category.getInstance("Default");
+        System.setOut(new CategoryStream(category, Priority.INFO, out));
+        System.setErr(new CategoryStream(category, Priority.ERROR, err));
     }
 
     public boolean requiresLayout()
@@ -58,23 +64,5 @@ public class ConsoleAppender extends AppenderSkeleton
             out.print(msg);
         else
             err.print(msg);
-    }
-
-    class Log4jStream extends PrintStream
-    {
-        Priority priority;
-        Log4jStream(Priority priority, PrintStream ps)
-        {
-            super(ps);
-            this.priority = priority;
-        }
-        public void println(String msg)
-        {
-            category.log(priority, msg);
-        }
-        public void println(Object msg)
-        {
-            category.log(priority, msg);
-        }
     }
 }
