@@ -256,11 +256,23 @@
       <sect2>
 	<title>Implicit context propagation with RMI JRMP</title>
 	<para>
-	  One of the non standard features (API) provided by CAROL is the possibility to instantiate, for a Java server, an implicit context propagation. This API is very useful for security and transaction behavior. This API is a simplification of CORBA portable interceptor concept. Therefore, this tool use a server and client interceptor with an initializer registering mechanism. This mechanism is pure Java without any CORBA classes connection (only the <filename>rt.jar</filename> classes are needed for this features). This mechanism works with the version 1.1 and 1.2 of RMI. This section explain the way to build, register and use server and client interceptor through RMI JRMP. 
+	  One of the non standard features (API) provided by CAROL is the possibility to instantiate, for a Java server, an implicit context propagation. This API is very useful for security and transaction behavior. This API is a simplification of CORBA portable interceptor concept. Therefore, this feature use a server and client interceptor with an initializer registering mechanism. This mechanism is pure Java without any CORBA classes connection (only the <filename>rt.jar</filename> classes is needed). This mechanism works with 1.1 and 1.2 RMI version. This section explain the way to build, register and use server and client interceptor through RMI JRMP. 
 	</para>
 	<sect3>
 	  <title>CAROL RMI JRMP interceptors API</title>
-	  <para>Implementing JRMP interceptors is very easy. A server interceptor only need to implements the <classname>JServerRequestInterceptor</classname> interface and use the  <classname>JServerRequestInfo</classname> interface to propagate a <classname>JServiceContext</classname>. On the client side this is the same concept with  <classname>JClientRequestInterceptor</classname> interface and <classname>JClientRequestInfo</classname> interface. For propagation, a CAROL propagation context need only to be a Serializable object and to extends the class <classname>JServiceContext</classname>.</para>
+	  <para>Implementing JRMP interceptors is very easy. A server interceptor only need to implements the <classname>JServerRequestInterceptor</classname> interface and use the  <classname>JServerRequestInfo</classname> interface to propagate a <classname>JServiceContext</classname>. On the client side this is the same concept with  <classname>JClientRequestInterceptor</classname> interface and <classname>JClientRequestInfo</classname> interface. For propagation, a CAROL propagation context need only to be a Serializable (or Externalizable) object and to implements the interface <classname>JServiceContext</classname>.<para>
+	</sect3>
+	<sect3>
+	  <title>CAROL RMI JRMP Client interceptor</title>
+	  <para>A JRMP client interceptor is a class implements the <classname>JClientRequestInterceptor</classname>. All the methods in this class are executed in the same Thread than the client remote call. All JServiceContext registered in the JClientRequestInfo (in the send_* methods) are send to the Server. All JServiceContext send by the server can be found in the JClientRequestInfo (in the receive_* methods).</para>
+	</sect3>
+	<sect3>
+	  <title>CAROL RMI JRMP Server interceptor</title>
+	  <para>A JRMP server interceptor is a class implements the <classname>JServerRequestInterceptor</classname>. All the methods in this class are executed in the same Thread than the server remote call. All JServiceContext registered in the JServerRequestInfo (in the send_* methods) are send to the Client. All JServiceContext send by the client can be found in the JServerRequestInfo (in the receive_* methods).</para>
+	</sect3>
+	<sect3>
+	  <title>CAROL RMI JRMP JServiceContext</title>
+	  <para>For each call,A CAROL JServiceContext can be find with is context_id. A JServiceContext is just a Serializable Object. For performance reason, it can be interesting to decrease the Context size by using a Externalizable mechanism. Carol provide a tool (org.objectweb.carol .util.perfs .CarolJRMPPerfomanceHelper) with static methods to calculate the Serializable size of a Serializable object.</para>
 	</sect3>
 	<sect3>
 	  <title>CAROL RMI JRMP interceptor registering</title>
@@ -268,9 +280,9 @@
 	</sect3>
       </sect2>
       <sect2>
-	<title>Referenceable binding through a RMI IIOP CosNaming</title>
+	<title>Referenceable an Reference binding through a RMI IIOP CosNaming</title>
 	<para>
-	  The second non standard CAROL features is a way to register Referenceable and Serializable objects in a CosNaming through JNDI. The IIOP InitialContext delivered for IIOP wrap the  Referenceable or Serializable object into a standard remote object. This remote object is exported into the JNDI context bind(or rebind) method and unexported into the JNDI context unbind method. CAROL use automatically, on the server side, this mechanism with a standard CAROL IIOP configuration (you need to call the IIOP protocol 'iiop' in the <filename>carol.properties</filename> file see the <link linkend="configuration">CAROL configuration</link> chapter).  
+	  The second non standard CAROL features is a way to register Referenceable/Reference and Serializable objects in a CosNaming through JNDI. The IIOP InitialContext delivered for IIOP wrap the  Referenceable/Reference or Serializable object into a standard remote object. This remote object is exported into the JNDI context bind(or rebind) method and unexported into the JNDI context unbind method. CAROL use automatically, on the server side, this mechanism with a standard CAROL IIOP configuration (you need to call the IIOP protocol 'iiop' in the <filename>carol.properties</filename> file see the <link linkend="configuration">CAROL configuration</link> chapter).  
 	</para>
 	<para>For a JNDI java RMI IIOP client you can use the <classname>IIOPContextWrapperFactory</classname> by setting the <property>-Djava.naming.factory.initial</property> jvm properties (with the full name of the factory). This factory builds a JNDI Context based on you <filename>jndi.properties</filename> uses the wrapping mechanism. For other client (Non JNDI), you can re-build manually the Referenceable or Serializable object for the CosNaming wrapper remote object (see inside the <classname>IIOPContextWrapper</classname> class for a detailed mechanism. A CAROL server can be also an IIOP CAROL client without any extra configuration than in a classical IIOP CAROL server.</para>
       </sect2>      

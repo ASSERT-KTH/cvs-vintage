@@ -12,7 +12,7 @@
 	  <para>Sun <ulink url="http://java.sun.com/j2se/1.4/docs/guide/rmi/index.html">RMI JRMP</ulink> (version 1.1 and 1.2)</para>
 	</listitem>
 	<listitem>
-	  <para>Sun <ulink url="http://java.sun.com/j2se/1.4/docs/guide/idl/index.html">jdk 1.4 RMI IIOP</ulink></para>
+	  <para>Sun <ulink url="http://java.sun.com/j2se/1.4/docs/guide/idl/index.html">RMI IIOP (>JDK 1.4)</ulink></para>
 	</listitem>
 	<listitem>
 	  <para>Local Method Invocation (LMI) for embedded server</para>
@@ -25,15 +25,15 @@
     <title>CAROL configuration</title>
     <sect2>
       <title>General configuration files</title>
-      <para>CAROL configuration is based on three properties files. The <filename>carol-defaults.properties</filename> file, the <filename>carol.properties</filename> file and the <filename>jndi.properties</filename> file. The <filename>carol-defaults.properties</filename> file is mandatory to configure CAROL (Note that this file is embedded in the carol jar file). Carol load first the default file properties and erase all configuration property with the property find in the jndi file configuration and after with the property find in the carol file configuration.</para>
+      <para>CAROL configuration is based on three properties files. The <filename>carol-defaults.properties</filename> file, the <filename>carol.properties</filename> file and the <filename>jndi.properties</filename> file. The <filename>carol-defaults.properties</filename> file is mandatory to configure CAROL. This file is embedded in the carol jar file and the CAROL user is not suppose to modify those defaults properties. Carol load first this default file properties and erase all configuration property with the property find in the jndi file configuration and (after) with the property find in the carol file configuration. So, the only important file for the CAROL user is the <filename>carol-defaults.properties</filename>. We are going to describe, in the next section, only the content of this file.</para>
       <note>
-	<para>If there is an url property in the <filename>jndi.properties</filename>, the rmi name of the url is use instead of the <filename>carol-defaults.properties</filename> configured one. By defaults, in the <filename>carol.properties</filename>, the only configuration needed is the activated rmi configuration.</para>
+	<para>If there is an (rpc-)URL property in the <filename>jndi.properties</filename>, the RMI name of the url is use instead of the <filename>carol-defaults.properties</filename> configured one (jrmp). By default, in the <filename>carol.properties</filename>, no configuration is needed.</para>
       </note>
-      <para>The configuration described below only use the <filename>carol.properties</filename> file. One of the JNDI configuration can be set inside the <filename>jndi.properties</filename> file, this will work with CAROL.</para>
+      <para>The configuration described below only use the <filename>carol.properties</filename> file. Do not forget that the JNDI configuration (of one of the activated protocols) can be set inside the <filename>jndi.properties</filename> file.</para>
     </sect2>
     <sect2>
       <title>General configuration rules for all RMI and JNDI architectures</title>
-      <para>The <filename>carol.properties</filename> file is a standard Java properties file. All properties, in this file, follow the rules below (we suppose that XXX is the rmi name like 'jrmp', 'iiop','jeremie','cmi' or 'lmi'. For all those defaults provided rmi protocol, please use those names.
+      <para>The <filename>carol.properties</filename> file is a standard Java properties file. All properties, in this file, follow the rules below (we suppose that XXX is the RMI name like 'jrmp', 'iiop','jeremie','cmi' or 'lmi'. For all those defaults provided RMI protocol, please use those names.
       </para>
       <para>
 	<table>
@@ -51,37 +51,37 @@
 	      <row>
 		<entry>carol.protocols</entry>
 		<entry>'XXX protocol-name', 'YYY protocol-name'</entry>
-		<entry>All rmi activated architecture name. The first (XXX) is the default rmi protocol for CAROL. This default protocol is used by the server when there is no entrant protocol.</entry>
+		<entry>Activated protocols names. The first (XXX) is the default protocol for CAROL. This default protocol is used by the server when there is no entrant protocol</entry>
 		<entry>No, default: jrmp</entry>
 	      </row>
 	      <row>
 		<entry>carol.start.ns</entry>
 		<entry>'true', 'false'</entry>
-		<entry>If this property is set to 'true', CAROL will automatically start all non started and configured Name Services.</entry>
+		<entry>CAROL will automatically start all non started and configured Name Services if this property is set to 'true'</entry>
 		<entry>No, default: false</entry>
 	      </row>
 	      <row>
 		<entry>carol.start.rmi</entry>
 		<entry>'true', 'false'</entry>
-		<entry>If this property is false, the jvm PortableRemoteObjectDelegate will be used instead of the carol one (Embedded server for example).</entry>
+		<entry>The CAROL PortableRemoteObjectDelegate mechanism will be deactivated if this property is set to 'false'</entry>
 		<entry>No, default: true</entry>
 	      </row>
 	      <row>
 		<entry>carol.start.jndi</entry>
 		<entry>'true', 'false'</entry>
-		<entry>If this property is false, the jvm JNDI naming will be used instead of the carol one (Embedded server for example).</entry>
+		<entry>The CAROL InitialContextFactory mechanism will be deactivated if this property is set to 'false'</entry>
 		<entry>No, default: true</entry>
 	      </row>
 	      <row>
 		<entry>carol.jvm.'property-name'</entry>
 		<entry>'property-value'</entry>
-		<entry>All extra JVM properties for all RMI (directly pass to the JVM with 'name' name and 'value' value without any verifications). This is equivalent to put -D'property-name'='property-value' in the Java JVM option.</entry>
+		<entry>All extra JVM properties for RMI (directly pass to the JVM with 'name' name and 'value' value without any verifications). This is equivalent to put -D'property-name'='property-value' in the Java JVM option</entry>
 		<entry>No</entry>
 	      </row>
 	      <row>
 		<entry>carol.jndi.'property-name'</entry>
 		<entry>'property-value'</entry>
-		<entry>All JNDI properties for all RMI (directly pass to JNDI with 'name' name and 'value' value without any verifications). This is equivalent to put 'property-name'='property-value' in the JNDI properties file.</entry>
+		<entry>All JNDI properties for all RMI (directly pass to JNDI with 'name' name and 'value' value without any verifications). This is equivalent to put 'property-name'='property-value' in the JNDI properties file</entry>
 		<entry>No</entry>
 	      </row>
 	    </tbody>
@@ -104,26 +104,26 @@
 	      <row>
 		<entry>carol.XXX .PortableRemoteObjectClass</entry>
 		<entry>'XXX portable remote object class name'</entry>
-		<entry>The portable remote object delegate class name for this RMI (CAROL provide implementation of those classes for RMI JRMP,JEREMIE LMI and CMI, see below).</entry>
-		<entry>No, There is a default for each rmi provided by carol.</entry>
+		<entry>The portable remote object delegate class name for this RMI (CAROL provide implementation of those classes for RMI JRMP,JEREMIE, LMI and CMI, see below)</entry>
+		<entry>No, There is a default for each RMI provided by carol</entry>
 	      </row>
 	      <row>
 		<entry>carol.XXX .NameServiceClass</entry>
 		<entry>'XXX carol Name Service class name'</entry>
-		<entry>The Name Service class name for this RMI (CAROL provide implementation of those classes for RMI JRMP, RMI IIOP and JEREMIE, see below).</entry>
-		<entry>No, this property is only necessary for automatically start a Name Service for this protocol and there is a default for each rmi provided by carol.</entry>
+		<entry>The Name Service class name for this RMI (CAROL provide implementation of those classes for RMI JRMP, RMI IIOP and JEREMIE, see below)</entry>
+		<entry>No, this property is only necessary for automatically start a Name Service for this protocol and there is a default for each RMI provided by carol</entry>
 	      </row>
 	      <row>
 		<entry>carol.XXX.url 'property-name'</entry>
 		<entry>'property-value'</entry>
-		<entry>JNDI url value. This property is equivalent to the jndi java.naming. provider.url one</entry>
-		<entry>No, there is defaults for each rmi provided by carol.</entry>
+		<entry>JNDI url value. This property is equivalent to the jndi java.naming. provider.url property</entry>
+		<entry>No, there is defaults for each RMI provided by carol</entry>
 	      </row>
 	      <row>
 		<entry>carol.XXX.context. factory 'property-name'</entry>
 		<entry>'property-value'</entry>
-		<entry>JNDI intial context factory class name. This property is equivalent to the jndi java.naming. factory.initial one</entry>
-		<entry>No, there is defaults for each rmi provided by carol.</entry>
+		<entry>JNDI initial context factory class name. This property is equivalent to the jndi java.naming. factory.initial property</entry>
+		<entry>No, there is defaults for each RMI provided by carol.</entry>
 	      </row>
 	      <row>
 		<entry>carol.XXX. interceptors</entry>
@@ -289,6 +289,9 @@
       <title>LMI personality configuration</title>
       <para>One of the SPI personality available/provided by CAROL is the CAROL LMI personality. This personality is for, an only for, local methods call. With this personality, jndi register (and return) local java references. The Referenceable mechanism is also provide in LMI context. For the moment, LMI is only tested in a non multi protocol environment.
 </para>
+      <note>
+	<para>This implementation is not conform to RMI specifications: There is no serialization and the server "remote" call is executed is the client thread. This is a fake implementation, faster than standard RMI but not conform.</para>
+      </note>
       <example>
 	<title>LMI <filename>carol.properties</filename> file</title>
 	<screen>

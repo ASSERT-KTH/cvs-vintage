@@ -12,18 +12,17 @@
     <note>
       <para>
 	Please note that this manual is designed to be used along with, not
-	instead of, the <ulink url="http://java.sun.com/j2se/1.4/docs/guide/rmi-iiop/tutorial.html">RMI IIOP Tutorial</ulink> and the <ulink url="http://java.sun.com/products/jndi/tutorial">JNDI tutorial</ulink>. There are a number of cases where it is much
-	easier to refer to the rather RMI IIOP and JNDI tutorials 
-	than trying to rehash what it already covers.
+	instead of, the <ulink url="http://java.sun.com/j2se/1.4/docs/guide/rmi-iiop/tutorial.html">RMI IIOP Tutorial</ulink> and the <ulink url="http://java.sun.com/products/jndi/tutorial">JNDI tutorial</ulink>. There are a number of cases where it is much easier to refer to the rather RMI IIOP and JNDI tutorials than trying to rehash what it already covers.
       </para>
     </note>
     
     <para>
       This manual will teach you the general way to use the CAROL abstraction in order to manipulate remote object on multi-RMI architecture. You will learn in particulars:
       <itemizedlist>
-	<listitem><para>the CAROL configuration rules for each RMI architecture,</para></listitem>
+	<listitem><para>The CAROL configuration rules for each RMI architecture,</para></listitem>
 	<listitem><para>the RMI IIOP general mechanism and programming rules,</para></listitem>
-	<listitem><para>the JNDI general mechanism and programming rules.</para></listitem>
+	<listitem><para>the JNDI general mechanism and programming rules,</para></listitem>
+	<listitem><para>the Extended RMI JRMP mechanisms for implicit context propagation.</para></listitem>
       </itemizedlist>
     </para>
   </sect1>
@@ -59,7 +58,7 @@
 	  <para>a set of mechanisms for implicit context propagation in RMI JRMP,</para>
 	</listitem>
 	<listitem>
-	  <para>a set of mechanisms for Referenceable object binding via a CosNaming.</para>
+	  <para>a set of mechanisms for Referenceable and Reference objects binding in a CosNaming.</para>
 	</listitem>
 	<listitem>
 	  <para>a set of mechanisms for RMI Registry, Jeremie Registry and CosNaming management.</para>
