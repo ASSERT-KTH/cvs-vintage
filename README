@@ -10,10 +10,9 @@ and the JavaServer Pages Specificaton (version 1.1).
 Installing and Building Tomcat
 ==============================
 
-In order to successfully build Tomcat, you will need to do the following.  In
-the instructions below, $JAKARTA_HOME is assumed to be the directory into which
-you are installing all of the required distributions.  If you are using Win9x,
-the $JAKARA_HOME path should not contain spaces.
+In order to successfully build Tomcat, you will need to do the following.
+In the instructions below, $JAKARTA_HOME is assumed to be the directory into
+which you are installing all of the required distributions.
 
 * Download and install a version 1.1 or later Java Development Kit
   implementation for your operating system platform.  Set a "JAVA_HOME"
@@ -21,62 +20,20 @@ the $JAKARA_HOME path should not contain spaces.
   and add "$JAVA_HOME/bin" to your PATH.  Configure the CLASSPATH environment
   variable as well, if required.
 
-* Download and install an XML parser that is compliant with the Java API for
-  XML Parsing specification.  You will need to add the appropriate JAR files
-  for your parser to your system classpath.  Parsers known to successfully
-  build and work with Tomcat include:
+* Download the Ant version 1.3 binary distribution from
+  <http://jakarta.apache.org/builds/jakarta-ant/release/v1.3/bin> and install
+  it in the $JAKARTA_HOME directory.
 
-  * The JAXP reference implementation (version 1.0 or later), which can be
-    downloaded from <http://java.sun.com/xml>.  Make sure that the "jaxp.jar"
-    and "parser.jar" files are on your class path.
+  Note: Ant v1.3 includes a copy of the JAXP 1.0 reference implementation XML
+  parser for use during building.
 
-  * The Xerces parser (version 1.1.2 or later), which can be downloaded
-    from <http://xml.apache.org>.  Make sure that the "xerces.jar" is
-    on your class path.
+* If you plan to build the Tomcat binary distribution, download JAXP
+  version 1.0.1 from <http://java.sun.com/xml> and install it in the
+  $JAKARTA_HOME directory.
 
-  If you plan to build the binary distribution, you will need to download
-  JAXP version 1.0.1.  Extract it to your $JAKARTA_HOME directory and
-  rename its directory to jaxp-1.0.1.  The binary distribution includes
-  jaxp.jar and parser.jar as the built-in XML parser.
-
-* Download and install the Ant version 1.2 distribution (subproject
-  "jakarta-ant") into a directory named "$JAKARTA_HOME/jakarta-ant".
-  You will need to create the "jakarta-ant" directory and extract the files
-  into it. Downloading and installing the binary distribution will avoid
-  the need to build the executable version. If you have downloaded the source
-  distribution, you will need to build the executable version by executing
-  the following commands:
-
-	cd $JAKARTA_HOME/jakarta-ant
-	./bootstrap.sh		<-- Unix
-	bootstrap		<-- Windows
-
-  This should result in the creation of a file "ant.jar" in the "lib"
-  subdirectory, which will be used when building Tomcat.
-
-  Note: If you building from source on Win9x, edit the LPC.BAT file in
-  jakarta-ant\src\bin to remove the trailing LF characters.
-
-* Download and install the Servletapi distribution (subproject
-  "jakarta-servletapi") into a subdirectory named
-  "$JAKARTA_HOME/jakarta-servletapi".  The Servletapi distribution can be found
-  at the same location as the Tomcat distribution. Since the
-  "jakarta-servletapi" directory is included in the archive, expand the
-  distribution to $JAKARTA_HOME. If you have downloaded the source distribution,
-  you will need to build the executable version by executing the following
-  commands:
-
-	cd $JAKARTA_HOME/jakarta-servletapi
-	./build.sh dist		<-- Unix
-	build dist		<-- Windows
-
-  This should result in the creation of a file "servlet.jar" in the "lib"
-  subdirectory, which will be used when building Tomcat.
-
-* If you want to include SSL support, download and install the Java Secure
-  Sockets Extension (JSSE) implementation (current version number is 1.0.2)
-  from <http://java.sun.com/products/jsse>.  Include the jars found in its
-  "lib" directory in your classpath.
+* If you want to include SSL support, download the Java Secure Sockets
+  Extension (JSSE) implementation (current version number is 1.0.2) from
+  <http://java.sun.com/products/jsse> and install it into $JAKARTA_HOME.
 
 * Download the source distribution of Tomcat (subpackage "jakarta-tomcat"),
   or check it out via anonymous CVS, into a subdirectory named
@@ -91,13 +48,13 @@ the $JAKARA_HOME path should not contain spaces.
 
   This version can be executed as follows:
 
-	cd $JAKARTA_HOME/build/tomcat
+	cd $JAKARTA_HOME/jakarta-tomcat/build/tomcat
 	./bin/startup.sh	<-- Unix
 	bin\startup		<-- Windows
 
   and it can be shut down as follows:
 
-	cd $JAKARTA_HOME/build/tomcat
+	cd $JAKARTA_HOME/jakarta-tomcat/build/tomcat
 	./bin/shutdown.sh	<-- Unix
 	bin\shutdown		<-- Windows
 
@@ -127,7 +84,7 @@ You can run the "unpacked" version of Tomcat as follows:
 
 * To start Tomcat, execute the following commands:
 
-	cd $JAKARTA_HOME/build/tomcat
+	cd $JAKARTA_HOME/jakarta-tomcat/build/tomcat
 	./bin/startup.sh	<-- Unix
 	bin\startup		<-- Windows
 
@@ -137,7 +94,7 @@ You can run the "unpacked" version of Tomcat as follows:
 
 * To stop Tomcat, execute the following commands:
 
-	cd $JAKARTA_HOME/build/tomcat
+	cd $JAKARTA_HOME/jakarta-tomcat/build/tomcat
 	./bin/shutdown.sh	<-- Unix
 	bin\shutdown		<-- Windows
 
@@ -145,7 +102,7 @@ You can run the "distribution" version of Tomcat as follows:
 
 * To start Tomcat, execute the following commands:
 
-	cd $JAKARTA_HOME/dist/tomcat
+	cd $JAKARTA_HOME/jakarta-tomcat/dist/tomcat
 	./bin/startup.sh	<-- Unix
 	bin\startup		<-- Windows
 
@@ -155,15 +112,16 @@ You can run the "distribution" version of Tomcat as follows:
 
 * To stop Tomcat, execute the following commands:
 
-	cd $JAKARTA_HOME/dist/tomcat
+	cd $JAKARTA_HOME/jakarta-tomcat/dist/tomcat
 	./bin/shutdown.sh	<-- Unix
 	bin\shutdown		<-- Windows
 
 Alternatively, you can run Tomcat without changing your current working
 directory, by setting the TOMCAT_HOME environment variable to point at the
 Tomcat files you have built (for example, at directory
-"$JAKARTA_HOME/build/tomcat" or "$JAKARTA_HOME/dist/tomcat").  Now, you
-can start Tomcat as follows:
+"$JAKARTA_HOME/jakarta-tomcat/build/tomcat" or
+"$JAKARTA_HOME/jakarta-tomcat/dist/tomcat").  Now, you can start Tomcat
+as follows:
 
 	$TOMCAT_HOME/bin/startup.sh	<-- Unix
 	%TOMCAT_HOME%\bin\startup	<-- Windows
@@ -172,6 +130,17 @@ and shut it down likewise:
 
 	$TOMCAT_HOME/bin/shutdown.sh	<-- Unix
 	%TOMCAT_HOME%\bin\shutdown	<-- Windows
+
+Tomcat may be run with any XML parser that is compliant with the Java API for
+XML Parsing specification.  Parsers known to successfully run Tomcat include:
+
+  * The JAXP reference implementation (version 1.0 or later), which can be
+    downloaded from <http://java.sun.com/xml>.  JAXP version 1.0.1 is
+    included in the Tomcat binary distribution.
+
+  * The Xerces parser (version 1.1.2 or later), which can be downloaded
+    from <http://xml.apache.org>.  Make sure that the "xerces.jar" replaces
+    jaxp.jar and parser.jar in Tomcat's lib/container directory.
 
 
 Testing the Build
@@ -189,10 +158,10 @@ execute:
 Before you can run the test, you must set the Admin web application to
 "trusted". This can be accomplished by executing the following:
 
-	cd $JAKARTA_HOME/build/tomcat	<-- Unix
+	cd $JAKARTA_HOME/jakarta-tomcat/build/tomcat	<-- Unix
 	./bin/tomcat.sh run -enableAdmin
 
-	cd %JAKARTA_HOME%\build\tomcat	<-- Windows
+	cd %JAKARTA_HOME%\jakarta-tomcat\build\tomcat	<-- Windows
 	bin\tomcat run -enableAdmin
 
 Next, start Tomcat with: 

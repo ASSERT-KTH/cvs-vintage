@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# $Id: build.sh,v 1.11 2000/05/01 15:46:47 craigmcc Exp $
+# $Id: build.sh,v 1.12 2001/03/14 03:38:40 larryi Exp $
 
 if [ -z "$JAVA_HOME" ]
 then
@@ -14,13 +14,8 @@ JAVA_BINDIR=`dirname $JAVACMD`
 JAVA_HOME=$JAVA_BINDIR/..
 fi
 
-if [ "$ANT_OPTS" = "" ] ; then
-  ANT_OPTS=""
+if [ "$ANT_HOME" = "" ] ; then
+  ANT_HOME=../jakarta-ant-1.3
 fi
 
-JAVACMD=$JAVA_HOME/bin/java $ANT_OPTS
-
-cp=../jakarta-ant/lib/ant.jar:../jakarta-servletapi/lib/servlet.jar:../jakarta-tools/moo.jar:../build/tomcat/classes:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/dev.jar
-
-$JAVACMD -classpath $cp:$CLASSPATH org.apache.tools.ant.Main "$@"
-
+$ANT_HOME/bin/ant "$@" 
