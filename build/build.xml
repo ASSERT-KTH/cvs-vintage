@@ -337,9 +337,10 @@
             </fileset>
         </copy>
 
-        <echo>Copying ${scarab.database.type} JDBC driver from:
+        <echo>Using ${scarab.database.type} JDBC driver from:
     ${lib.dir}/${scarab.jdbc.driver.jar}</echo>
-        <copy todir="${build.project.webinf}/lib" filtering="no">
+        <copy todir="${build.project.webinf}/lib" filtering="no"
+              preservelastmodified="yes">
             <fileset dir="${lib.dir}/">
                 <include name="**/${scarab.jdbc.driver.jar}"/>
             </fileset>
