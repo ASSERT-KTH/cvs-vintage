@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.39 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: Import.java,v 1.40 2003/11/26 22:57:53 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,7 +72,7 @@ import org.tigris.gef.base.Globals;
  *
  * <p>Supports recursive search in folder for all .java classes.
  *
- * <p>$Id: Import.java,v 1.39 2003/11/10 12:35:00 jhraigniac Exp $
+ * <p>$Id: Import.java,v 1.40 2003/11/26 22:57:53 mkl Exp $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -142,6 +142,12 @@ public class Import {
 	    throw new RuntimeException("Internal error. Default import module not found");
         JComponent chooser = module.getChooser(this);
         dialog = new JDialog(pb, "Import sources");
+        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                disposeDialog();
+            }
+        });
+            
         dialog.setModal(true);
         dialog.getParent().setEnabled(false);
         
@@ -174,6 +180,8 @@ public class Import {
      *
      */
     public void disposeDialog() {
+        dialog.getParent().setEnabled(true);
+        dialog.setVisible(false);
         dialog.dispose();
     }
     

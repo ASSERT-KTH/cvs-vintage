@@ -1,4 +1,4 @@
-// $Id: FileImportSupport.java,v 1.4 2003/09/15 21:56:51 alexb Exp $
+// $Id: FileImportSupport.java,v 1.5 2003/11/26 22:57:53 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ import java.util.Vector;
  * for other input sources.
  * 
  * @author Alexander Lepekhine
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public abstract class FileImportSupport implements PluggableImport {
 
@@ -196,7 +196,6 @@ public abstract class FileImportSupport implements PluggableImport {
 			}
 		    } else if (e.getActionCommand().equals(JFileChooser.CANCEL_SELECTION)) {
 			_import.disposeDialog();
-                        ProjectBrowser.getInstance().setEnabled(true);
 		    }
 		}
 	    });
