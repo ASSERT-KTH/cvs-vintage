@@ -909,7 +909,6 @@
                 <include name="**/catalina.jar"/>
                 <include name="**/commons-beanutils.jar"/>
                 <include name="**/commons-digester.jar"/>
-                <include name="**/commons-digester.jar"/>
                 <include name="**/servlets-common.jar"/>
                 <include name="**/servlets-default.jar"/>
                 <include name="**/servlets-invoker.jar"/>
@@ -1615,15 +1614,11 @@ diff -u -r1.5 project.xml
         </echo>
         <taskdef name="checkstyle"
             classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
-            <classpath refid="classpath"/>
             <classpath>
                 <pathelement location="${checkstyle.all.jar}"/>
-                <fileset dir="${build.project.webinf.lib}">
-                    <include name="**/torque*.jar"/>
-                </fileset>
             </classpath>
         </taskdef>
-        <checkstyle properties="${basedir}/checkstyle.properties"
+        <checkstyle config="${basedir}/checkstyle-config.xml"
                     failOnViolation="false"
                     failureProperty="checkstyle.failure">
             <classpath refid="classpath"/>
@@ -1640,6 +1635,10 @@ diff -u -r1.5 project.xml
             </fileset>
             <formatter type="xml" toFile="${build.dir}/checkstyle.xml"/>
         </checkstyle>
+        <antcall target="checkstyle-style" />
+    </target>
+
+    <target name="checkstyle-style">
         <style in="${build.dir}/checkstyle.xml" 
               out="${build.dir}/checkstyle.txt"
             style="${basedir}/checkstyle2txt.xsl"/>
