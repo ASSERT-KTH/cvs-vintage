@@ -4,13 +4,13 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-package org.jboss.aspect;
+package org.jboss.aspect.spi;
 
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.jboss.aspect.proxy.AspectInitizationException;
-import org.jboss.aspect.proxy.AspectInvocation;
+import org.dom4j.Element;
+import org.jboss.aspect.AspectInitizationException;
 
 /**
  * Implement the AspectInterceptor interface to add custom
@@ -31,7 +31,7 @@ import org.jboss.aspect.proxy.AspectInvocation;
  *
  * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  */
-public interface IAspectInterceptor {
+public interface AspectInterceptor {
 
    public static final Class NO_INTERFACES[] = new Class[]{};
 
@@ -47,7 +47,7 @@ public interface IAspectInterceptor {
 	 * @throws AspectInitizationException if the configuration 
 	 *          object could due to any error.
 	 */	
-	public void init(Map properties) throws AspectInitizationException;
+	public void init(Element xml) throws AspectInitizationException;
 
 	/**
 	 * Lists the interfaces this interceptor will be adding 

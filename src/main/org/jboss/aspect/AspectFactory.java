@@ -6,20 +6,15 @@
  */
 package org.jboss.aspect;
 
-import java.io.IOException;
+import java.lang.reflect.Proxy;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.jboss.aspect.proxy.AspectInitizationException;
-import org.jboss.aspect.proxy.AspectInvocationHandler;
-import org.jboss.aspect.util.AspectSupport;
-import org.jboss.aspect.util.IAspectEditor;
-import org.jboss.aspect.util.XMLConfiguration;
-import org.jboss.proxy.compiler.InvocationHandler;
-import org.jboss.proxy.compiler.Proxy;
+import org.jboss.aspect.internal.AspectSupport;
+import org.jboss.aspect.spi.AspectDefinition;
+import org.jboss.aspect.spi.AspectInvocationHandler;
 import org.jboss.util.Classes;
 
 /**
@@ -131,7 +126,7 @@ public class AspectFactory {
 		if( source == null )
 			throw new NullPointerException("configuration source was null.");
 			
-		Map map = XMLConfiguration.loadAspects(source);
+		Map map = AspectSupport.loadAspects(source);
     	Iterator i = map.keySet().iterator();
     	while( i.hasNext() ) {
     		Object aspectName = i.next();
@@ -143,38 +138,18 @@ public class AspectFactory {
 		return this;
 	}	
 
-	/**
-	 * Creates an aspect object from a given aspect name.
-	 * 
-	 * @throws AspectNotFoundException if the aspectName was not configured with the AspectFactory
-	 */
-	public Object createAspect(String aspectName) throws AspectNotFoundException {
-		AspectDefinition composition = getDefinition(aspectName);
-		if( composition == null )
-			throw new AspectNotFoundException(aspectName);
-		return createAspect(composition);
-	}
 
 	/**
-	 * Creates an aspect object from a given aspect name.
-	 * 
-	 * This form of createAspect forces the targetObject of the aspect to 
-	 * be of type targetClass.  The targetObeject of the aspect will be a lazy 
-	 * loaded instance of targetClass.  Therefore, the targetClass must have
-	 * a public default constructor.
-	 * <p>
-	 * All interfaces of the targetClass will also be exposed by the aspect 
-	 * object.
-	 * 
 	 * @throws AspectNotFoundException if the aspectName was not configured with the AspectFactory
 	 */
-	public Object createAspect(String aspectName, Class targetClass) throws AspectNotFoundException {
+	public Object createAspect(Object targetObject) throws AspectNotFoundException {
+		String aspectName = targetObject.getClass().getName();
 		AspectDefinition composition = getDefinition(aspectName);
 		if( composition == null )
 			throw new AspectNotFoundException(aspectName);
-		return createAspect(composition,targetClass);
+		return createAspect(composition,targetObject);
 	}
-		
+
 	/**
 	 * Creates an aspect object from a given aspect name.
 	 * 
@@ -201,43 +176,11 @@ public class AspectFactory {
 	 * of aspects.
 	 * 
 	 */
-	static public Object createAspect(AspectDefinition composition) {
-		return createAspect(composition, (Class)null);
-	}
-
-	/**
-	 * Creates an aspect object from a given AspectDefinition.
-	 * 
-	 * Instead of using XML files to define the aspects, you can 
-	 * create new AspectDefinition objects to create new types
-	 * of aspects.
-	 * 
-	 */
 	static public Object createAspect(AspectDefinition composition, Object targetObject) {
-		InvocationHandler h = new AspectInvocationHandler(composition, targetObject);
+		AspectInvocationHandler h = new AspectInvocationHandler(composition, targetObject);
 		Class interfaces[] = composition.interfaces;
-		interfaces = AspectSupport.appendInterfaces(interfaces, targetObject.getClass());
-		return Proxy.newProxyInstance(Classes.getContextClassLoader(), interfaces, h);
-	}
-
-	/**
-	 * Creates an aspect object from a given AspectDefinition.
-	 * 
-	 * Instead of using XML files to define the aspects, you can 
-	 * create new AspectDefinition objects to create new types
-	 * of aspects.
-	 * 
-	 */
-	static public Object createAspect(AspectDefinition composition, Class targetClass) {
-									
-		InvocationHandler h = new AspectInvocationHandler(composition, targetClass);
-		Class interfaces[] = composition.interfaces;
-		
-      if (targetClass==null) 
-         targetClass = composition.targetClass;
-		if (targetClass!=null) 
-			interfaces = AspectSupport.appendInterfaces(interfaces, targetClass);
-			
+		if( targetObject != null )
+			interfaces = AspectSupport.appendInterfaces(interfaces, targetObject.getClass());
 		return Proxy.newProxyInstance(Classes.getContextClassLoader(), interfaces, h);
 	}
 			

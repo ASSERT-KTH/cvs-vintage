@@ -7,23 +7,20 @@
 package org.jboss.aspect.interceptors;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
-import org.jboss.aspect.IAspectInterceptor;
-import org.jboss.aspect.proxy.AspectInitizationException;
-import org.jboss.aspect.proxy.AspectInvocation;
-import org.jboss.aspect.util.*;
+import org.dom4j.Element;
+import org.dom4j.Namespace;
+import org.dom4j.QName;
+import org.jboss.aspect.AspectInitizationException;
+import org.jboss.aspect.internal.AspectSupport;
+import org.jboss.aspect.spi.AspectInterceptor;
+import org.jboss.aspect.spi.AspectInvocation;
 import org.jboss.util.Classes;
 
 /**
  * The AdaptorInterceptor allows you proivde add an adaptor
- * via the IAdaptor interface.  
+ * via the Adaptor interface.  
  * 
  * The problem with the Delegating interceptor is that as you add more
  * interfaces to an object you run a higher chance of having method name 
@@ -56,7 +53,7 @@ import org.jboss.util.Classes;
  * <code>
  * 
  * AspectFactory af = new AspectFactory().configure();
- * IAdaptor adaptor = (IAdaptor)af.createAspect("MyAspect", someObject);
+ * Adaptor adaptor = (Adaptor)af.createAspect("MyAspect", someObject);
  * 
  * Runnable r = (Runnable)adaptor.getAdapter(Runnable.class); 
  * r.run();
@@ -81,79 +78,100 @@ import org.jboss.util.Classes;
  * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  * 
  */
-public class AdaptorInterceptor implements IAspectInterceptor {
+public class AdaptorInterceptor implements AspectInterceptor
+{
 
-	public Object singeltonObject;
-	public Class implementingClass;
-   public Class adaptorClass;
+    public static final Namespace NAMESPACE 	= Namespace.get(AdaptorInterceptor.class.getName());
+    public static final QName ATTR_ADAPTOR 	= new QName("adaptor", NAMESPACE);
+    public static final QName ATTR_IMPLEMENTATION = new QName("implementation", NAMESPACE);
+    public static final QName ATTR_SIGLETON 	= new QName("singleton", NAMESPACE);
 
-   static final Method GET_ADAPTER_METHOD;
-   static {
-      Method m=null;
-      try  {
-         m = IAdaptor.class.getMethod("getAdapter", new Class[] { Class.class });
-      } catch (NoSuchMethodException e) {
-      }
-      GET_ADAPTER_METHOD = m;
-   }
-   
-	/**
-	 * @see com.chirino.aspect.AspectInterceptor#invoke(AspectInvocation)
-	 */
-	public Object invoke(AspectInvocation invocation) throws Throwable {
-      
-      if( !adaptorClass.equals(invocation.args[0]) ) {
-         if( invocation.isNextIntrestedInMethodCall() )
-            return invocation.invokeNext();
-         return null;
-      }
-      
-      
-		Object o = null;		
-		if( singeltonObject != null) {
-			o = singeltonObject;
-		} else {
-			o = invocation.getInterceptorAttachment();
-			if( o == null ) {
-				o = AspectSupport.createAwareInstance( implementingClass, invocation.handler );
-				invocation.setInterceptorAttachment(o);
-			}
-		}
-		return o;
-	}
+    public Object singeltonObject;
+    public Class implementingClass;
+    public Class adaptorClass;
 
-	/**
-	 * Builds a Config object for the interceptor.
-	 * 
-	 * @see com.chirino.aspect.AspectInterceptor#translateConfiguration(Element)
-	 */
-	public void init(Map properties) throws AspectInitizationException {
-		try {
-			String adaptorName = (String)properties.get("adaptor");
-         String className = (String)properties.get("implementation");
-         
-         adaptorClass = Classes.loadClass(adaptorName);
-			implementingClass = Classes.loadClass(className);
-			
-			String singlton = (String)properties.get("singleton");
-			if( "true".equals(singlton) )
-				singeltonObject = implementingClass.newInstance();
-				
-		} catch (Exception e) {
-			throw new AspectInitizationException("Aspect Interceptor missconfigured: "+e);
-		}
-	}
+    static final Method GET_ADAPTER_METHOD;
+    static {
+        Method m = null;
+        try
+        {
+            m = Adaptor.class.getMethod("getAdapter", new Class[] { Class.class });
+        }
+        catch (NoSuchMethodException e)
+        {
+        }
+        GET_ADAPTER_METHOD = m;
+    }
 
-	
-	/**
-	 * @see AspectInterceptor#getInterfaces(Object)
-	 */
-	public Class[] getInterfaces() {
-		return new Class[] {IAdaptor.class};
-	}
-   
-   public boolean isIntrestedInMethodCall(Method method)
-   {
-      return GET_ADAPTER_METHOD.equals(method);
-   }
+    /**
+     * @see com.chirino.aspect.AspectInterceptor#invoke(AspectInvocation)
+     */
+    public Object invoke(AspectInvocation invocation) throws Throwable
+    {
+
+        if (!adaptorClass.equals(invocation.args[0]))
+        {
+            if (invocation.isNextIntrestedInMethodCall())
+                return invocation.invokeNext();
+            return null;
+        }
+
+        Object o = null;
+        if (singeltonObject != null)
+        {
+            o = singeltonObject;
+        }
+        else
+        {
+        	Map attachments = invocation.getAttachments();
+            o = attachments.get(this);
+            if (o == null)
+            {
+                o = implementingClass.newInstance();
+                attachments.put(this, o);
+            }
+        }
+        return o;
+    }
+
+    /**
+     * Builds a Config object for the interceptor.
+     * 
+     * @see com.chirino.aspect.AspectInterceptor#translateConfiguration(Element)
+     */
+    public void init(Element xml) throws AspectInitizationException
+    {
+        try
+        {
+            String adaptorName = xml.attribute(ATTR_ADAPTOR).getValue();
+            String className = xml.attribute(ATTR_IMPLEMENTATION).getValue();
+
+            adaptorClass = Classes.loadClass(adaptorName);
+            implementingClass = Classes.loadClass(className);
+
+            String singlton = xml.attribute(ATTR_SIGLETON) == null 
+            	? null
+            	: xml.attribute(ATTR_SIGLETON).getValue();
+            if ("true".equals(singlton))
+                singeltonObject = implementingClass.newInstance();
+
+        }
+        catch (Exception e)
+        {
+            throw new AspectInitizationException("Aspect Interceptor missconfigured: ", e);
+        }
+    }
+
+    /**
+     * @see AspectInterceptor#getInterfaces(Object)
+     */
+    public Class[] getInterfaces()
+    {
+        return new Class[] { Adaptor.class };
+    }
+
+    public boolean isIntrestedInMethodCall(Method method)
+    {
+        return GET_ADAPTER_METHOD.equals(method);
+    }
 }

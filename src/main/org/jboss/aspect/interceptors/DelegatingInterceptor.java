@@ -7,18 +7,16 @@
 package org.jboss.aspect.interceptors;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
-import org.jboss.aspect.IAspectInterceptor;
-import org.jboss.aspect.proxy.AspectInitizationException;
-import org.jboss.aspect.proxy.AspectInvocation;
-import org.jboss.aspect.util.*;
+import org.dom4j.Element;
+import org.dom4j.Namespace;
+import org.dom4j.QName;
+import org.jboss.aspect.AspectInitizationException;
+import org.jboss.aspect.internal.AspectSupport;
+import org.jboss.aspect.spi.AspectInterceptor;
+import org.jboss.aspect.spi.AspectInvocation;
 import org.jboss.util.Classes;
 
 /**
@@ -41,62 +39,81 @@ import org.jboss.util.Classes;
  * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  * 
  */
-public class DelegatingInterceptor implements IAspectInterceptor {
+public class DelegatingInterceptor implements AspectInterceptor
+{
 
-	public Object singeltonObject;
-	public Class  []interfaces;
-	public Class  implementingClass;
-	public Set    exposedMethods;
+    public static final Namespace NAMESPACE = Namespace.get(DelegatingInterceptor.class.getName());
+    public static final QName ATTR_DELEGATE = new QName("delegate", NAMESPACE);
+    public static final QName ATTR_SIGLETON = new QName("singleton", NAMESPACE);
 
-	/**
-	 * @see com.chirino.aspect.AspectInterceptor#invoke(AspectInvocation)
-	 */
-	public Object invoke(AspectInvocation invocation) throws Throwable {
-            
-		Object delegate = null;		
-		if( singeltonObject != null) {
-			delegate = singeltonObject;
-		} else {
-			delegate = invocation.getInterceptorAttachment();
-			if( delegate == null ) {
-				delegate = AspectSupport.createAwareInstance(implementingClass, invocation.handler);
-				invocation.setInterceptorAttachment(delegate);
-			}
-		}
-		return invocation.method.invoke(delegate, invocation.args);
-	
-	}
+    public Object singeltonObject;
+    public Class[] interfaces;
+    public Class implementingClass;
+    public Set exposedMethods;
 
-	/**
-	 * @see com.chirino.aspect.AspectInterceptor#init(Map)
-	 */
-	public void init(Map properties) throws AspectInitizationException {
-		try {
-			
-			String className = (String)properties.get("delegate");
-			implementingClass = Classes.loadClass(className);
-			interfaces = implementingClass.getInterfaces();
-			exposedMethods = AspectSupport.getExposedMethods(interfaces);				
-			
-			String singlton = (String)properties.get("singleton");
-			if( "true".equals(singlton) )
-				singeltonObject = implementingClass.newInstance();
-				
-		} catch (Exception e) {
-			throw new AspectInitizationException("Aspect Interceptor missconfigured: "+e);
-		}
-	}
-	
-	/**
-	 * @see AspectInterceptor#getInterfaces()
-	 */
-	public Class[] getInterfaces() {
-		return interfaces;
-	}
-   
-   public boolean isIntrestedInMethodCall(Method method)
-   {
-      return exposedMethods.contains(method);
-   }
+    /**
+     * @see com.chirino.aspect.AspectInterceptor#invoke(AspectInvocation)
+     */
+    public Object invoke(AspectInvocation invocation) throws Throwable
+    {
+
+        Object delegate = null;
+        if (singeltonObject != null)
+        {
+            delegate = singeltonObject;
+        }
+        else
+        {
+            Map attachments = invocation.getAttachments();
+            delegate = attachments.get(this);
+            if (delegate == null)
+            {
+                delegate = implementingClass.newInstance();
+                attachments.put(this, delegate);
+            }
+        }
+        return invocation.method.invoke(delegate, invocation.args);
+
+    }
+
+    /**
+     * @see com.chirino.aspect.AspectInterceptor#init(Map)
+     */
+    public void init(Element xml) throws AspectInitizationException
+    {
+        try
+        {
+
+            String className = xml.attribute(ATTR_DELEGATE).getValue();
+            implementingClass = Classes.loadClass(className);
+            interfaces = implementingClass.getInterfaces();
+            exposedMethods = AspectSupport.getExposedMethods(interfaces);
+
+            String singlton = xml.attribute(ATTR_SIGLETON)==null 
+            	? null 
+            	: xml.attribute(ATTR_SIGLETON).getValue();
+            	
+            if ("true".equals(singlton))
+                singeltonObject = implementingClass.newInstance();
+
+        }
+        catch (Exception e)
+        {
+            throw new AspectInitizationException("Aspect Interceptor missconfigured.", e);
+        }
+    }
+
+    /**
+     * @see AspectInterceptor#getInterfaces()
+     */
+    public Class[] getInterfaces()
+    {
+        return interfaces;
+    }
+
+    public boolean isIntrestedInMethodCall(Method method)
+    {
+        return exposedMethods.contains(method);
+    }
 
 }
