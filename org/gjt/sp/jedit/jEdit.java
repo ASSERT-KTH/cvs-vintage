@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.157 2003/05/06 05:44:19 spestov Exp $
+ * @version $Id: jEdit.java,v 1.158 2003/05/06 20:24:34 spestov Exp $
  */
 public class jEdit
 {
@@ -1005,6 +1005,9 @@ public class jEdit
 		jars.addElement(jar);
 		jar.init();
 
+		EditBus.send(new PluginUpdate(jar,PluginUpdate.LOADED));
+		EditBus.send(new DynamicMenuChanged("plugins"));
+
 		return jar;
 	} //}}}
 
@@ -1070,6 +1073,9 @@ public class jEdit
 			jar.uninit(false);
 			jars.removeElement(jar);
 		}
+
+		EditBus.send(new PluginUpdate(jar,PluginUpdate.UNLOADED));
+		EditBus.send(new DynamicMenuChanged("plugins"));
 	} //}}}
 
 	//}}}
