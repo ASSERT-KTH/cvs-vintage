@@ -5,7 +5,7 @@
 #set ($module = $scarabR.CurrentModule)
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE scarab SYSTEM "$staticLink.setPath("/dtd/scarab-issues.dtd")">
-<scarab>
+<scarab-issues>
   <module>
     <id>$module.ModuleId</id>
     <parent-id>$module.ParentId</parent-id>
@@ -140,5 +140,5 @@
 #end
 
   </module>
-</scarab>
+</scarab-issues>
 #end
