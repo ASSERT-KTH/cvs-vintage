@@ -111,7 +111,7 @@ $l10n.NoIssueTypeSelected
 <div class="axial">
 <table border="0" cellspacing="2" cellpadding="3">
   <tr>
-   <th>$l10n.FilterString</th>
+   <th>$l10n.FilterThisList</th>
    <td><input type="text" name="searchString" value="$searchString" />&nbsp;
      <select name="searchField" size="">
        <option value="module" #if($searchField.equals("module")) selected="selected"#end>$l10n.Module</option>
