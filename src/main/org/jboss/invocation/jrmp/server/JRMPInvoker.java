@@ -61,7 +61,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class JRMPInvoker
    extends RemoteServer
@@ -400,7 +400,11 @@ public class JRMPInvoker
       ctx.rebind(n.get(0), val);
    }
    
-   private void loadCustomSocketFactories()
+   /** Load and instantiate the clientSocketFactory, serverSocketFactory using
+    the TCL and set the bind address and SSL domain if the serverSocketFactory
+    supports it.
+   */
+   protected void loadCustomSocketFactories()
    {
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
       
