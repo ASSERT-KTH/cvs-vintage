@@ -33,8 +33,9 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 <div class="axial">
     <table border="0" cellspacing="2" cellpadding="3">
     <tr>
-    <th>$l10n.Name</th>
+    <th> * $l10n.Name</th>
     <td>
+      #fieldErrorMsg($rmitGroup.DisplayName "")
       #if ($rmitGroup.DisplayName.Value)
           #set ($value ="$rmitGroup.DisplayName.Value")
       #else
@@ -165,10 +166,10 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 
 #if (!$issueTypeLock)
 <div class="functnbar3">
-<input type="submit" value="$l10n.Save"  name="eventSubmit_doSave" />&#160;
+<input type="submit" value="$l10n.Save"  name="eventSubmit_doSavegroups" />&#160;
 <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doCreatenewgroup" />&#160;
 <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletegroup" />&#160;
-<input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
+<input type="submit" value="$l10n.Resort" name="eventSubmit_doSavegroups" />
 </div>
 #end
 

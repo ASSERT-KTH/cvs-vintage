@@ -77,45 +77,55 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.40 2002/10/25 20:11:17 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.41 2003/02/04 03:09:11 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
     /**
      * Adds or modifies an issue type's properties.
      */
-    public void doSaveinfo ( RunData data, TemplateContext context )
+    public boolean doSaveinfo ( RunData data, TemplateContext context )
         throws Exception
     {
+        boolean success = true;
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
         if (issueType.getLocked())
         {
             scarabR.setAlertMessage(l10n.get("LockedIssueType"));
-            return;
+            return false;
         }
         IntakeTool intake = getIntakeTool(context);
-        if (intake.isAllValid())
-        {
-            Module module = scarabR.getCurrentModule();
-            RModuleIssueType rmit = module.getRModuleIssueType(issueType);
-            // Set properties for module-issue type info
-            Group rmitGroup = intake.get("RModuleIssueType", 
+        Module module = scarabR.getCurrentModule();
+        RModuleIssueType rmit = module.getRModuleIssueType(issueType);
+        // Set properties for module-issue type info
+        Group rmitGroup = intake.get("RModuleIssueType", 
                                         rmit.getQueryKey(), false);
-
+        Field displayName = rmitGroup.get("DisplayName");
+        displayName.setRequired(true);
+        if (displayName.isValid())
+        {
             rmitGroup.setProperties(rmit);
             rmit.save();
             scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
-         }
+        }
+        else
+        {
+            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+            displayName.setMessage("intake_FieldRequired");
+            success = false;
+        }
+        return success;
     }
 
     /**
      * Adds or modifies an issue type's attribute groups.
      */
-    public void doSave ( RunData data, TemplateContext context )
+    public boolean doSavegroups ( RunData data, TemplateContext context )
         throws Exception
     {
+        boolean success = true;
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
@@ -125,7 +135,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         if (issueType.getLocked())
         {
             scarabR.setAlertMessage(l10n.get("LockedIssueType"));
-            return;
+            return false;
         }
 
         Module module = scarabR.getCurrentModule();
@@ -186,7 +196,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 isValid = false;
             }
         }
-        if (intake.isAllValid() && isValid) 
+        if (isValid) 
         {
             // Set properties for attribute groups
             for (int i=attGroups.size()-1; i>=0; i--) 
@@ -236,7 +246,9 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         else
         {
             scarabR.setAlertMessage(l10n.get(msg));
+            success = false;
         }
+        return success;
     }
 
     /**
@@ -257,8 +269,6 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         }
 
         Module module = scarabR.getCurrentModule();
-        if (intake.isAllValid())
-        {
             List userAttributes = module.getUserAttributes(issueType, false);
             for (int i=0; i < userAttributes.size(); i++)
             {
@@ -280,7 +290,6 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 rma.save();
             }
             scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
-        }
     }
 
     /**
@@ -476,9 +485,12 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     public void doDone( RunData data, TemplateContext context )
         throws Exception
     {
-        doSaveinfo(data, context);
-        doSave(data, context);
+        boolean infoSuccess = doSaveinfo(data, context);
+        boolean groupSuccess = doSavegroups(data, context);
         doSaveuserattributes(data, context);
-        doCancel(data, context);
+        if (infoSuccess && groupSuccess)
+        {
+            doCancel(data, context);
+        }
     }
 }
