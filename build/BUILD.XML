@@ -23,9 +23,9 @@
   <property name="build.jar" value="${dest.dir}/${build.jar.name}"/>
 
   <property name="src.dir" value="${dest.dir}/src"/>
-  <property name="images.dir" value="CH/ifa/draw/images"/>
-  <property name="javadraw.images.dir" value="CH/ifa/draw/samples/javadraw/sampleimages"/>
-  <property name="pert.images.dir" value="CH/ifa/draw/samples/pert/images"/>
+  <property name="images.dir" value="org/jhotdraw/images"/>
+  <property name="javadraw.images.dir" value="org/jhotdraw/samples/javadraw/sampleimages"/>
+  <property name="pert.images.dir" value="org/jhotdraw/samples/pert/images"/>
 
   <property name="javadoc.dir" value="${dest.dir}/javadoc"/>
   <property name="mk.dir" value="${dest.dir}/build"/>
@@ -38,12 +38,12 @@
   <property name="manifest.name" value="jhotdraw.mf"/>
 
   <!-- Dependencies on optional packages                                   -->  
-  <!--<property name="needs.batik.src" value="CH/ifa/draw/contrib/SVG*.java"/>
-  <property name="needs.jdo.src" value="CH/ifa/draw/util/JDOStorageFormat.java"/>
+  <!--<property name="needs.batik.src" value="org/jhotdraw/contrib/SVG*.java"/>
+  <property name="needs.jdo.src" value="org/jhotdraw/util/JDOStorageFormat.java"/>
   -->
   <property name="needs.batik.src" value="**/SVG*.java"/>
   <property name="needs.jdo.src" value="**/JDOStorageFormat.java"/>
-  <property name="needs.junit.src" value="CH/ifa/draw/test/**"/>
+  <property name="needs.junit.src" value="org/jhotdraw/test/**"/>
 
   <property name="needs.batik.class" value="org.jhotdraw.contrib.SVG*"/>
   <property name="needs.jdo.class" value="org.jhotdraw.util.JDOStorageFormat"/>
@@ -63,10 +63,10 @@
   <target name="check_for_optional_packages">
 	<available property="batik.available" file="${batik.class.path}"/>
 	<available property="jdo.available" file="{jdo.class.path}"/>
-    <available property="versiondoclet.available" file="${versiondoclet.class.path}"/>
-    <available property="junit.available" file="${junit.class.path}"/>
+	<available property="versiondoclet.available" file="${versiondoclet.class.path}"/>
+	<available property="junit.available" file="${junit.class.path}"/>
 	<available property="junitdoclet.available" file="${junitdoclet.class.path}"/>
-    <available property="namingstrategy.available" file="${namingstrategy.class.path}"/>
+	<available property="namingstrategy.available" file="${namingstrategy.class.path}"/>
   </target>
 
   <!-- =================================================================== -->
@@ -77,7 +77,7 @@
 
   <!-- =================================================================== -->
   <!-- Builds a package with all essential files                           -->
-  <!-- =================================================================== -->
+  <!-- ================================================================== -->
   <target name="main" depends="init, compile, copy_resources, jar">
   </target>
 
@@ -93,7 +93,7 @@
            deprecation="${javac.deprecation}"
            optimize="${javac.optimize}"
            fork="${javac.fork}">
-      <include name="CH/ifa/draw/framework/**"/>
+      <include name="org/jhotdraw/framework/**"/>
     </javac>
     <javac srcdir="${src.dir}"
            destdir="${build.classes}"
@@ -102,7 +102,7 @@
            optimize="${javac.optimize}"
            fork="${javac.fork}">
       <include name="${javac.includes}"/>
-      <exclude name="CH/ifa/draw/framework/**"/>
+      <exclude name="org/jhotdraw/framework/**"/>
       <exclude name="${needs.batik.src}" unless="batik.available"/>
       <exclude name="${needs.jdo.src}" unless="jdo.available"/>
       <exclude name="${needs.junit.src}"/>
@@ -136,7 +136,7 @@
     <echo>using standard doclet...</echo>
     <mkdir dir="${javadoc.dir}"/>
     <javadoc
-      packagenames = "CH.*"
+      packagenames = "org.*"
       sourcepath   = "${src.dir}"
       destdir      = "${javadoc.dir}"
       classpath    = "${dest.dir}"
@@ -149,7 +149,7 @@
     <echo>using version doclet...</echo>
     <mkdir dir="${javadoc.dir}"/>
     <javadoc
-      packagenames = "CH.*"
+      packagenames = "org.*"
       sourcepath   = "${src.dir}"
       destdir      = "${javadoc.dir}"
       classpath    = "${dest.dir}"
@@ -207,14 +207,14 @@
     </javadoc>
   </target>
 
-  <target name="junit_compile" depends="junit_doclet">
+  <target name="junit_compile" depends="compile, junit_doclet">
  	<javac srcdir="${src.dir}"
            destdir="${dest.dir}"
            debug="${javac.debug}"
            deprecation="${javac.deprecation}"
            optimize="${javac.optimize}">
       <!-- <include name="${needs.junit.src}"/> -->
-      <include name="CH/ifa/draw/test/**/*.java"/>
+      <include name="${javac.includes}"/>
       <exclude name="${needs.batik.src}" unless="batik.available"/>
       <exclude name="${needs.jdo.src}" unless="jdo.available"/>
       <classpath>
@@ -271,7 +271,7 @@
   <!-- Cleans up generated stuff                                           -->
   <!-- =================================================================== -->
   <target name="clean" description="Cleans up generated stuff.">
-    <delete dir="${dest.dir}/CH"/>
+    <delete dir="${dest.dir}/org"/>
     <delete dir="${javadoc.dir}"/>
     <delete file="${build.jar}"/>
   </target>
@@ -284,8 +284,8 @@
          manifest="${mk.dir}/${manifest.name}"
         >
       <fileset dir="${build.classes}">
-        <include name="CH/**"/>
-        <exclude name="CH/ifa/draw/test/**"/>
+        <include name="org/jhotdraw/**"/>
+        <exclude name="org/jhotdraw/test/**"/>
       </fileset>
 	</jar>
   </target>
