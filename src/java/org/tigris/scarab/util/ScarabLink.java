@@ -64,7 +64,7 @@ import org.tigris.scarab.pages.ScarabPage;
     into the context to replace the $link that Turbine adds.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabLink.java,v 1.19 2001/12/12 02:09:33 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.20 2001/12/12 18:48:01 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -193,7 +193,16 @@ public class ScarabLink extends TemplateLink
         setAbsolute(false);
         return s;
     }
-    
+
+    /**
+     * Give subclasses access to the RunData, so they do not have to 
+     * reimplement the pooling code, just to get at it.
+     */
+    protected RunData getRunData()
+    {
+        return data;
+    }
+
     // ****************************************************************
     // ****************************************************************
     // Implementation of Recyclable
