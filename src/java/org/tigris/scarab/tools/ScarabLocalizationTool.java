@@ -355,12 +355,6 @@ public class ScarabLocalizationTool
         {
             data = (RunData) runData;
             properties = Turbine.getConfiguration();
-            String templateName = data.getTarget();
-            if (templateName == null)
-            {
-                templateName = DEFAULT_SCOPE;
-            }
-            setPrefix(templateName + '.');
         }
     }
 
