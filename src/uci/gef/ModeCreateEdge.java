@@ -27,7 +27,7 @@
 // File: ModeCreateEdge.java
 // Classes: ModeCreateEdge
 // Original Author: ics125 spring 1996
-// $Id: ModeCreateEdge.java,v 1.12 1998/10/20 00:23:11 jrobbins Exp $
+// $Id: ModeCreateEdge.java,v 1.13 1998/12/14 17:53:23 jrobbins Exp $
 
 package uci.gef;
 
@@ -152,8 +152,12 @@ public class ModeCreateEdge extends ModeCreate {
 	  destFigNode.damage();
 	  _newItem = null;
 
-	  Fig pers = ce.getLayerManager().getActiveLayer().
+	  FigEdge pers = (FigEdge) ce.getLayerManager().getActiveLayer().
 	    presentationFor(_newEdge);
+	  pers.setSourcePortFig(_startPortFig);
+	  pers.setSourceFigNode(_sourceFigNode);
+	  pers.setDestPortFig(destPortFig);
+	  pers.setDestFigNode(destFigNode);
 	  if (pers != null) ce.getSelectionManager().select(pers);
 	  done();
 	  me.consume();

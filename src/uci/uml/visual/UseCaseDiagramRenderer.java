@@ -27,7 +27,7 @@
 // File: UseCaseDiagramRenderer.java
 // Classes: UseCaseDiagramRenderer
 // Original Author: abonner@ics.uci.edu
-// $Id: UseCaseDiagramRenderer.java,v 1.6 1998/10/20 00:31:25 jrobbins Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.7 1998/12/14 17:53:42 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -78,10 +78,10 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
       Classifier toCls = (Classifier) toEnd.getType();
       FigNode fromFN = (FigNode) lay.presentationFor(fromCls);
       FigNode toFN = (FigNode) lay.presentationFor(toCls);
-      ascFig.sourcePortFig(fromFN);
-      ascFig.sourceFigNode(fromFN);
-      ascFig.destPortFig(toFN);
-      ascFig.destFigNode(toFN);
+      ascFig.setSourcePortFig(fromFN);
+      ascFig.setSourceFigNode(fromFN);
+      ascFig.setDestPortFig(toFN);
+      ascFig.setDestFigNode(toFN);
       return ascFig;
     }
     if (edge instanceof Generalization) {
@@ -91,10 +91,10 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
       GeneralizableElement superType = gen.getSupertype();
       FigNode subTypeFN = (FigNode) lay.presentationFor(subType);
       FigNode superTypeFN = (FigNode) lay.presentationFor(superType);
-      genFig.sourcePortFig(subTypeFN);
-      genFig.sourceFigNode(subTypeFN);
-      genFig.destPortFig(superTypeFN);
-      genFig.destFigNode(superTypeFN);
+      genFig.setSourcePortFig(subTypeFN);
+      genFig.setSourceFigNode(subTypeFN);
+      genFig.setDestPortFig(superTypeFN);
+      genFig.setDestFigNode(superTypeFN);
       return genFig;
     }
    

@@ -27,7 +27,7 @@
 // File: ModeCreatePolyEdge.java
 // Classes: ModeCreateEdge
 // Original Author: agauthie@ics.uci.edu
-// $Id: ModeCreatePolyEdge.java,v 1.2 1998/10/20 00:23:16 jrobbins Exp $
+// $Id: ModeCreatePolyEdge.java,v 1.3 1998/12/14 17:53:24 jrobbins Exp $
 
 package uci.gef;
 
@@ -187,6 +187,11 @@ public class ModeCreatePolyEdge extends ModeCreate {
 	  FigEdge fe = (FigEdge) lay.presentationFor(_newEdge);
 	  _newItem.setLineColor(Color.black);
 	  fe.setFig(_newItem);
+	  fe.setSourcePortFig(_startPortFig);
+	  fe.setSourceFigNode(_sourceFigNode);
+	  fe.setDestPortFig(destPortFig);
+	  fe.setDestFigNode(destFigNode);
+
 	  if (fe != null) _editor.getSelectionManager().select(fe);
 	  _editor.damaged(fe);
 	}

@@ -25,7 +25,7 @@
 // File: Fig.java
 // Classes: Fig
 // Original Author: ics125 spring 1996
-// $Id: Fig.java,v 1.19 1998/11/20 19:54:26 jrobbins Exp $
+// $Id: Fig.java,v 1.20 1998/12/14 17:53:15 jrobbins Exp $
 
 package uci.gef;
 
@@ -44,7 +44,7 @@ import uci.graph.*;
  *  be placed in any LayerDiagram. Fig's are also used to define the
  *  look of FigNodes on NetNodes. */
 
-public class Fig implements java.io.Serializable, PropertyChangeListener  {
+public class Fig implements Cloneable, java.io.Serializable, PropertyChangeListener  {
 
   ////////////////////////////////////////////////////////////////
   // constants
@@ -143,6 +143,12 @@ public class Fig implements java.io.Serializable, PropertyChangeListener  {
    *  for subclasses that redefine most of the infrastructure provided
    *  by class Fig. */
   public Fig() { }
+
+
+  public Object clone() {
+    try { return super.clone(); }
+    catch (CloneNotSupportedException e) { return null; }
+  }
 
   ////////////////////////////////////////////////////////////////
   // invariant

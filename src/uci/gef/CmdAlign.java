@@ -27,7 +27,7 @@
 // File: CmdAlign.java
 // Classes: CmdAlign
 // Original Author: ics125 spring 1996
-// $Id: CmdAlign.java,v 1.7 1998/10/20 00:22:33 jrobbins Exp $
+// $Id: CmdAlign.java,v 1.8 1998/12/14 17:53:14 jrobbins Exp $
 
 package uci.gef;
 
@@ -75,7 +75,7 @@ public class CmdAlign extends Cmd {
     switch (d) {
     case ALIGN_TOPS: return "Tops";
     case ALIGN_BOTTOMS: return "Bottoms";
-    case ALIGN_LEFTS: return "Left";
+    case ALIGN_LEFTS: return "Lefts";
     case ALIGN_RIGHTS: return "Rights";
 
     case ALIGN_CENTERS: return "Centers";

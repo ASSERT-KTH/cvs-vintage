@@ -27,7 +27,7 @@
 // File: FigForkState.java
 // Classes: FigForkState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigForkState.java,v 1.1 1998/11/03 22:09:54 jrobbins Exp $
+// $Id: FigForkState.java,v 1.2 1998/12/14 17:53:36 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -90,6 +90,14 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
     bindPort(onlyPort, _bigPort);
     setBlinkPorts(false); //make port invisble unless mouse enters
     Rectangle r = getBounds();
+  }
+
+  public Object clone() {
+    FigForkState figClone = (FigForkState) super.clone();
+    Vector v = figClone.getFigs();
+    figClone._bigPort = (FigRect) v.elementAt(0);
+    figClone._head = (FigRect) v.elementAt(1);
+    return figClone;
   }
 
   /** Initial states are fixed size. */

@@ -27,7 +27,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.9 1998/10/20 00:31:20 jrobbins Exp $
+// $Id: FigUseCase.java,v 1.10 1998/12/14 17:53:40 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -90,6 +90,14 @@ public class FigUseCase extends FigNodeModelElement {
     setBounds(r.x, r.y, r.width, r.height);
   }
 
+  public Object clone() {
+    FigUseCase figClone = (FigUseCase) super.clone();
+    Vector v = figClone.getFigs();
+    figClone._bigPort = (FigCircle) v.elementAt(0);
+    figClone._cover = (FigCircle) v.elementAt(1);
+    figClone._name = (FigText) v.elementAt(2);
+    return figClone;
+  }
 
 
 

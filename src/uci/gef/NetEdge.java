@@ -28,7 +28,7 @@
 // File: NetEdge.java
 // Classes: NetEdge
 // Original Author: ics125 spring 1996
-// $Id: NetEdge.java,v 1.11 1998/10/20 00:23:20 jrobbins Exp $
+// $Id: NetEdge.java,v 1.12 1998/12/14 17:53:24 jrobbins Exp $
 
 package uci.gef;
 
@@ -146,10 +146,10 @@ implements GraphEdgeHooks, java.io.Serializable {
     Fig sourcePortFig = sourceFigNode.getPortFig(_sourcePort);
     Fig destPortFig = destFigNode.getPortFig(_destPort);
     fe = makePresentation(lay);
-    fe.sourcePortFig(sourcePortFig);
-    fe.destPortFig(destPortFig);
-    fe.sourceFigNode(sourceFigNode);
-    fe.destFigNode(destFigNode);
+    fe.setSourcePortFig(sourcePortFig);
+    fe.setDestPortFig(destPortFig);
+    fe.setSourceFigNode(sourceFigNode);
+    fe.setDestFigNode(destFigNode);
     fe.setOwner(this);
     return fe;
   }

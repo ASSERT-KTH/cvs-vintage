@@ -27,7 +27,7 @@
 // File: FigPoly.java
 // Classes: FigPoly
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigPoly.java,v 1.12 1998/10/20 00:22:58 jrobbins Exp $
+// $Id: FigPoly.java,v 1.13 1998/12/14 17:53:19 jrobbins Exp $
 
 package uci.gef;
 
@@ -107,6 +107,13 @@ public class FigPoly extends Fig {
   public FigPoly(int x, int y) {
     this();
     addPoint(x, y);
+  }
+
+  public Object clone() {
+    FigPoly figClone = (FigPoly) super.clone();
+    figClone._xpoints = (int[]) _xpoints.clone();
+    figClone._ypoints = (int[]) _ypoints.clone();
+    return figClone;
   }
 
   ////////////////////////////////////////////////////////////////

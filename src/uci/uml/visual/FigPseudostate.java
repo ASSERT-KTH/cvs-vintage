@@ -27,7 +27,7 @@
 // File: FigPseudostate.java
 // Classes: FigPseudostate
 // Original Author: your email address here
-// $Id: FigPseudostate.java,v 1.5 1998/10/20 00:31:17 jrobbins Exp $
+// $Id: FigPseudostate.java,v 1.6 1998/12/14 17:53:39 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -94,7 +94,17 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
     Rectangle r = getBounds();
   }
 
+  public Object clone() {
+    FigClass figClone = (FigClass) super.clone();
+    // error: cloning twice!
+    Vector v = figClone.getFigs();
+    figClone._bigPort = (FigRect) v.elementAt(0);
+    figClone._name = (FigText) v.elementAt(1);
+    return figClone;
+  }
 
+
+  
   /** If the UML meta-model object changes state. Update the Fig.  But
    *  we need to do it as a "DelayedVetoableChangeListener", so that
    *  model changes complete before we update the screen. */

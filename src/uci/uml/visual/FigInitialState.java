@@ -27,7 +27,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigInitialState.java,v 1.4 1998/10/20 00:31:13 jrobbins Exp $
+// $Id: FigInitialState.java,v 1.5 1998/12/14 17:53:36 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -70,7 +70,7 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
 
   // add other Figs here aes needed
 
- FigCircle _head;
+  FigCircle _head;
   ////////////////////////////////////////////////////////////////
   // constructors
 
@@ -90,6 +90,14 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
     bindPort(onlyPort, _bigPort);
     setBlinkPorts(false); //make port invisble unless mouse enters
     Rectangle r = getBounds();
+  }
+
+  public Object clone() {
+    FigInitialState figClone = (FigInitialState) super.clone();
+    Vector v = figClone.getFigs();
+    figClone._bigPort = (FigCircle) v.elementAt(0);
+    figClone._head = (FigCircle) v.elementAt(1);
+    return figClone;
   }
 
   /** Initial states are fixed size. */

@@ -27,7 +27,7 @@
 // File: FigActionState.java
 // Classes: FigActionState
 // Original Author: ics 125b silverbullet team
-// $Id: FigActionState.java,v 1.1 1998/11/03 22:09:52 jrobbins Exp $
+// $Id: FigActionState.java,v 1.2 1998/12/14 17:53:33 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -85,6 +85,15 @@ public class FigActionState extends FigNodeModelElement {
     //setBlinkPorts(false); //make port invisble unless mouse enters
     Rectangle r = getBounds();
     setBounds(r.x, r.y, r.width, r.height);
+  }
+
+  public Object clone() {
+    FigActionState figClone = (FigActionState) super.clone();
+    Vector v = figClone.getFigs();
+    figClone._bigPort = (FigRRect) v.elementAt(0);
+    figClone._cover = (FigRRect) v.elementAt(1);
+    figClone._name = (FigText) v.elementAt(2);
+    return figClone;
   }
 
   public Dimension getMinimumSize() {

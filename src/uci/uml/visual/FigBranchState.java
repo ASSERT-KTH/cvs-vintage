@@ -27,7 +27,7 @@
 // File: FigBranchState.java
 // Classes: FigBranchState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigBranchState.java,v 1.1 1998/11/03 22:09:53 jrobbins Exp $
+// $Id: FigBranchState.java,v 1.2 1998/12/14 17:53:34 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -101,6 +101,14 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
     bindPort(onlyPort, _bigPort);
     setBlinkPorts(false); //make port invisble unless mouse enters
     Rectangle r = getBounds();
+  }
+
+  public Object clone() {
+    FigBranchState figClone = (FigBranchState) super.clone();
+    Vector v = figClone.getFigs();
+    figClone._bigPort = (FigPoly) v.elementAt(0);
+    figClone._head = (FigPoly) v.elementAt(1);
+    return figClone;
   }
 
   /** Initial states are fixed size. */

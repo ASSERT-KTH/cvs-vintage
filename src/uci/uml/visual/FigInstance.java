@@ -27,7 +27,7 @@
 // File: FigInstance.java
 // Classes: FigInstance
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigInstance.java,v 1.6 1998/10/20 00:31:14 jrobbins Exp $
+// $Id: FigInstance.java,v 1.7 1998/12/14 17:53:37 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -92,6 +92,15 @@ public class FigInstance extends FigNodeModelElement {
     setBlinkPorts(true); //make port invisble unless mouse enters
     Rectangle r = getBounds();
     setBounds(r.x, r.y, r.width, r.height);
+  }
+
+  public Object clone() {
+    FigInstance figClone = (FigInstance) super.clone();
+    Vector v = figClone.getFigs();
+    figClone._bigPort = (FigRect) v.elementAt(0);
+    figClone._name = (FigText) v.elementAt(1);
+    figClone._attr = (FigText) v.elementAt(2);
+    return figClone;
   }
 
   public Dimension getMinimumSize() {

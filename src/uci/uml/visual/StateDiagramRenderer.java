@@ -27,7 +27,7 @@
 // File: StateDiagramRenderer.java
 // Classes: StateDiagramRenderer
 // Original Author: your email address here
-// $Id: StateDiagramRenderer.java,v 1.7 1998/11/03 21:32:29 jrobbins Exp $
+// $Id: StateDiagramRenderer.java,v 1.8 1998/12/14 17:53:41 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -105,10 +105,10 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
       StateVertex destSV = tr.getTarget();
       FigNode sourceFN = (FigNode) lay.presentationFor(sourceSV);
       FigNode destFN = (FigNode) lay.presentationFor(destSV);
-      trFig.sourcePortFig(sourceFN);
-      trFig.sourceFigNode(sourceFN);
-      trFig.destPortFig(destFN);
-      trFig.destFigNode(destFN);
+      trFig.setSourcePortFig(sourceFN);
+      trFig.setSourceFigNode(sourceFN);
+      trFig.setDestPortFig(destFN);
+      trFig.setDestFigNode(destFN);
       return trFig;
     }
 

@@ -27,7 +27,7 @@
 // File: FigFinalState.java
 // Classes: FigFinalState
 // Original Author: your email address here
-// $Id: FigFinalState.java,v 1.4 1998/10/20 00:31:12 jrobbins Exp $
+// $Id: FigFinalState.java,v 1.5 1998/12/14 17:53:35 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -56,8 +56,6 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
   public int y = 0;
   public int width = 20;
   public int height = 20;
-  public Point pos;
-  public Dimension dim;
 
   ////////////////////////////////////////////////////////////////
   // instance variables
@@ -99,6 +97,16 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
     Rectangle r = getBounds();
   }
 
+  public Object clone() {
+    FigFinalState figClone = (FigFinalState) super.clone();
+    Vector v = figClone.getFigs();
+    figClone._bigPort = (FigCircle) v.elementAt(0);
+    figClone._outCircle = (FigCircle) v.elementAt(1);
+    figClone._inCircle = (FigCircle) v.elementAt(2);
+    return figClone;
+  }
+
+  
   /** Final states are fixed size. */
   public boolean isResizable() { return false; }
 

@@ -28,7 +28,7 @@
 // File: Globals.java
 // Classes: Globals
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Globals.java,v 1.11 1998/11/20 19:54:27 jrobbins Exp $
+// $Id: Globals.java,v 1.12 1998/12/14 17:53:20 jrobbins Exp $
 
 package uci.gef;
 
@@ -79,6 +79,10 @@ public class Globals {
 
   public static AppletContext getAppletContext() { return _appletContext; }
   public static Applet getApplet() { return _applet; }
+
+  /** Until jdk 1.2, this will be our clipboard */
+  public static Vector clipBoard;
+
 
   /** The place where status messages will be written. */
   public static IStatusBar _StatusBar = null;

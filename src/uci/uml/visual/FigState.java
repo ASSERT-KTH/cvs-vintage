@@ -27,7 +27,7 @@
 // File: FigState.java
 // Classes: FigState
 // Original Author: ics 125b silverbullet team
-// $Id: FigState.java,v 1.9 1998/10/20 00:31:18 jrobbins Exp $
+// $Id: FigState.java,v 1.10 1998/12/14 17:53:40 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -108,8 +108,17 @@ public class FigState extends FigNodeModelElement {
     //setBlinkPorts(false); //make port invisble unless mouse enters
     Rectangle r = getBounds();
     setBounds(r.x, r.y, r.width, r.height);
+  }
 
-
+  public Object clone() {
+    FigState figClone = (FigState) super.clone();
+    Vector v = figClone.getFigs();
+    figClone._bigPort = (FigRect) v.elementAt(0);
+    figClone._cover = (FigRect) v.elementAt(1);
+    figClone._name = (FigText) v.elementAt(2);
+    figClone._divider = (FigLine) v.elementAt(3);
+    figClone._internal = (FigText) v.elementAt(4);
+    return figClone;
   }
 
   public Dimension getMinimumSize() {

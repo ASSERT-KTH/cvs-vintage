@@ -28,7 +28,7 @@
 // File: SampleNode.java
 // Classes: SampleNode
 // Original Author: ics125b spring 1996
-// $Id: SampleNode.java,v 1.9 1998/10/20 00:26:11 jrobbins Exp $
+// $Id: SampleNode.java,v 1.10 1998/12/14 17:53:26 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -64,6 +64,7 @@ public class SampleNode extends NetNode implements Serializable {
    }
 
   public FigNode makePresentation(Layer lay) {
+    System.out.println("asdwdasd");
     Fig obj1 = new FigRect(-25, -25, 50, 50, Color.black, Color.white);
     Fig obj2 = new FigCircle(-20, -20, 40, 40, Color.red, null);
     Fig obj3 = new FigCircle( -5, -30, 10, 10, Color.black, Color.blue);
