@@ -32,7 +32,7 @@ import org.jboss.minerva.pools.PoolEvent;
  * returned to the pool) until the transactional details are taken care of.
  * This instance only lives as long as one client is using it - though we
  * probably want to consider reusing it to save object allocations.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAClientConnection implements ConnectionWrapper {
@@ -98,20 +98,21 @@ public class XAClientConnection implements ConnectionWrapper {
      */
     public void statementClosed(Statement st) {
         statements.remove(st);
-        if (st instanceof PreparedStatementInPool) {
+        if ((con != null) && (st instanceof PreparedStatementInPool)) {
             // Now return the "real" statement to the pool
             PreparedStatementInPool ps = (PreparedStatementInPool) st;
+            PreparedStatement ups = ps.getUnderlyingPreparedStatement();
             int rsType = ResultSet.TYPE_FORWARD_ONLY;
             int rsConcur = ResultSet.CONCUR_READ_ONLY;
+
             // We may have JDBC 1.0 driver
             try {
-                rsType = ps.getResultSetType();
-                rsConcur = ps.getResultSetConcurrency();
+                rsType = ups.getResultSetType();
+                rsConcur = ups.getResultSetConcurrency();
             } catch (Throwable th) {
             }
             PreparedStatementInPool.preparedStatementCache.put(
-                    new PSCacheKey(con, ps.getSql(), rsType, rsConcur),
-                    ps.getUnderlyingPreparedStatement());
+                    new PSCacheKey(con, ps.getSql(), rsType, rsConcur), ups);
         }
     }
 
