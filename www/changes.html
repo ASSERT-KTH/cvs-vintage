@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.185 2002/07/11 22:30:27 elicia Exp $ -->
+<!-- $Id: changes.html,v 1.186 2002/07/12 00:00:06 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -21,7 +21,14 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Changes since 1.0b8</h3>
             <ul>
-                <li></li>
+                <li>Added a feature to allow you to define email addresses
+                    which are not accepted during the register process. (JSS)</li>
+                <li>Added a feature to allow Scarab to check to see if the 
+                    domain portion of the email address has a valid A record
+                    during the registration process. This will help prevent
+                    invalid emails from being used. (JSS)</li>
+                <li>Upgraded activation.jar and mm.mysql.jar. (JSS)</li>
+                <li>Upgraded to Tomcat 4.0.4. (JSS)</li>
             </ul>
         </td>
     </tr>
@@ -29,6 +36,9 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Fixes since 1.0b8</h3>
             <ul>
+                <li>When items are approved, display a confirmation message. (JSS)</li>
+                <li>When a template is created/modified/deleted, display 
+                    confirmation messages. (JSS)</li>
                 <li>Show the key for a missing resource instead of a 
                     stacktrace.  This had been fixed earlier for simple
                     text, but those using MessageFormat syntax were still
