@@ -34,7 +34,7 @@
 </div>
 
 <div class="functnbar2">
-  <input type="submit" value="Continue" name="eventSubmit_doStep3_2a" />&nbsp;
+  <input type="submit" value="Continue" name="eventSubmit_doStep3_2a" />
   <!-- <input type="submit" value="back" /> -->
 </div>
 

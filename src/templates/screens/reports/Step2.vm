@@ -31,10 +31,8 @@ options within that attribute.</p>
 </div>
 
 <div class="functnbar2">
-  <input type="submit" value="Continue"  name="eventSubmit_doStep2agoto3" />&#160;
-  <input type="submit" value="Next"
-         name="eventSubmit_doStep2agoto2b" />&#160;
-  <input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
+# <input type="submit" value="Continue"  name="eventSubmit_doStep2agoto3" />&#160;
+  <input type="submit" value="Next" name="eventSubmit_doStep2agoto2b" />
 </div>
 
 $intake.declareGroups()

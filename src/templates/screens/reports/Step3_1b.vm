@@ -53,9 +53,7 @@
 </div>
 
 <div class="functnbar2">
-  <input type="submit" value="Generate report"
-         name="eventSubmit_doStep3_1b" />&#160;
-  <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+  <input type="submit" value="Generate report" name="eventSubmit_doStep3_1b" />
 </div>
 
 $intake.declareGroups()
