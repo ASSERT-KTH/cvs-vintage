@@ -7,6 +7,11 @@
 
   <body>
     <release version="b20" date="in dev">
+      <action dev="jorgeuriarte" type="add">
+        The property scarab.dataexport.encoding will now be used for the XML
+        generated when exporting setting or issues. If not defined, UTF-8 will
+        be explicitly used. 
+      </action>         
       <action dev="epugh" type="fix">
         Maven can now be used to perform ALL build steps.
       </action>         
