@@ -60,7 +60,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -69,9 +69,6 @@ public class JDBCStoreManager implements EntityPersistenceStore
     * The key used to store the tx data map.
     */
    private static final Object TX_DATA_KEY = "TX_DATA_KEY";
-   
-//   private static final Map applicationData =
-//   Collections.synchronizedMap(new HashMap());
    
    private EjbModule ejbModule;
    private EntityContainer container;
@@ -306,10 +303,11 @@ public class JDBCStoreManager implements EntityPersistenceStore
       }
    }
    
-   /** Store Manager Life Cycle Commands. Only a minimal
-     amount of work can be done in create since services such
-     as JDBC data sources may not have been started.
-   */
+   /** 
+    * Store Manager Life Cycle Commands. Only a minimal
+    * amount of work can be done in create since services such
+    * as JDBC data sources may not have been started.
+    */
    public void create() throws Exception
    {
       log.debug("Initializing CMP plugin for " +
@@ -328,15 +326,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
       
       // create the bridge between java land and this engine (sql land)
       entityBridge = new JDBCEntityBridge(metaData, this);
-   }
 
-   /** Bring the store to a fully initialized state
-   */
-   public void start() throws Exception
-   {
-      // get the transaction manager
-      tm = container.getTransactionManager();
-      
       // add the entity bridge to the catalog
       Catalog catalog = (Catalog)getApplicationData("CATALOG");
       if(catalog == null)
@@ -376,13 +366,23 @@ public class JDBCStoreManager implements EntityPersistenceStore
       loadRelationCommand = commandFactory.createLoadRelationCommand();
       deleteRelationsCommand = commandFactory.createDeleteRelationsCommand();
       insertRelationsCommand = commandFactory.createInsertRelationsCommand();
+
+      // Execute the init command
+      initCommand.execute();
+   }
+
+   /** Bring the store to a fully initialized state
+   */
+   public void start() throws Exception
+   {
+      // get the transaction manager
+      tm = container.getTransactionManager();
       
+     
       // Create the query manager
       queryManager = new JDBCQueryManager(this);
       
-      // Execute the init Command
-      initCommand.execute();
-
+      // Execute the start command
       startCommand.execute();
       
       // Start the query manager. At this point is creates all of the
