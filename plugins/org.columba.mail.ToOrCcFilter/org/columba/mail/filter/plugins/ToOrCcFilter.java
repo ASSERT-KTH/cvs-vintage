@@ -7,24 +7,25 @@ import org.columba.ristretto.message.Header;
 
 
 /**
- * @author freddy
+ *
  *
  * This FilterPlugin searches every To and Cc headerfield
  * of an occurence of a search string and combines the result
  * with an logical OR operation
  *
+ * @author fdietz
  */
 public class ToOrCcFilter extends HeaderfieldFilter {
     /**
      * Constructor for ToOrCcFilter.
      */
-    public ToOrCcFilter() {
-        super();
+    public ToOrCcFilter(FilterCriteria filter) {
+        super(filter);
     }
 
     /**
      *
-     * we need the criteria attribute, which can be "contains" or "contains not"
+     * We need the criteria attribute, which can be "contains" or "contains not"
      *
      * "pattern" is our search string
      *
@@ -41,6 +42,12 @@ public class ToOrCcFilter extends HeaderfieldFilter {
      */
     public boolean process(Object[] args, Folder folder, Object uid)
         throws Exception {
+        //          before/after
+        String criteria = getFilterCriteria().get("criteria");
+
+        // string to search
+        String pattern = getFilterCriteria().get("pattern");
+
         // get the header of the message
         Header header = folder.getHeaderFields(uid, new String[] { "To", "Cc" });
 
@@ -49,10 +56,7 @@ public class ToOrCcFilter extends HeaderfieldFilter {
         }
 
         // convert the condition string to an int which is easier to handle
-        int condition = FilterCriteria.getCriteria((String) args[0]);
-
-        // the search pattern
-        String pattern = (String) args[1];
+        int condition = FilterCriteria.getCriteria(criteria);
 
         // get the "To" headerfield from the header
         String to = (String) header.get("To");

@@ -20,57 +20,54 @@ import org.columba.mail.folder.Folder;
 
 
 /**
- * @author freddy
+ * Search for a certain string in the message body.
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz
  */
 public class BodyFilter extends AbstractFilter {
     /**
      * Constructor for BodyFilter.
      */
-    public BodyFilter() {
-        super();
-    }
-
-    /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#getAttributes()
-     */
-    public Object[] getAttributes() {
-        Object[] args = { "criteria", "pattern" };
-
-        return args;
+    public BodyFilter(FilterCriteria filter) {
+        super(filter);
     }
 
     /**
      * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object, org.columba.mail.folder.Folder, java.lang.Object, org.columba.core.command.WorkerStatusController)
      */
-    public boolean process(Object[] args, Folder folder, Object uid)
-        throws Exception {
+    public boolean process(Folder folder, Object uid) throws Exception {
+        // contains/contains not
+        String criteria = getFilterCriteria().get("criteria");
+
+        // string to search
+        String pattern = getFilterCriteria().get("pattern");
+
+        // get message body
         String body = folder.getMessageSource(uid);
-        int condition = FilterCriteria.getCriteria((String) args[0]);
-        String bodyText = (String) args[1];
+
+        // convert criteria into int-value
+        int condition = FilterCriteria.getCriteria(criteria);
+
+        String bodyText = pattern;
 
         boolean result = false;
 
         switch (condition) {
-        case FilterCriteria.CONTAINS: {
+        case FilterCriteria.CONTAINS:
+
             if (body.indexOf(bodyText) != -1) {
                 result = true;
             }
 
             break;
-        }
 
-        case FilterCriteria.CONTAINS_NOT: {
+        case FilterCriteria.CONTAINS_NOT:
+
             if (body.indexOf(bodyText) == -1) {
                 result = true;
             }
 
             break;
-        }
         }
 
         return result;

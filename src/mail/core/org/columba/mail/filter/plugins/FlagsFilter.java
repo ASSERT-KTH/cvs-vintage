@@ -19,31 +19,23 @@ package org.columba.mail.filter.plugins;
 
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
+
 import org.columba.ristretto.message.Flags;
 
 
 /**
- * @author freddy
+ * Search for a certain flag state.
+ * <p>
+ * Example: Message is read/unread, Marked as Spam/Not Spam
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates. To enable and disable the creation of
- * type comments go to Window>Preferences>Java>Code Generation.
+ * @author fdietz
  */
 public class FlagsFilter extends AbstractFilter {
     /**
      * Constructor for FlagsFilter.
      */
-    public FlagsFilter() {
-        super();
-    }
-
-    /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#getAttributes()
-     */
-    public Object[] getAttributes() {
-        Object[] args = { "criteria", "pattern" };
-
-        return args;
+    public FlagsFilter(FilterCriteria filter) {
+        super(filter);
     }
 
     /**
@@ -51,37 +43,41 @@ public class FlagsFilter extends AbstractFilter {
      *      org.columba.mail.folder.Folder, java.lang.Object,
      *      org.columba.core.command.WorkerStatusController)
      */
-    public boolean process(Object[] args, Folder folder, Object uid)
-        throws Exception {
+    public boolean process(Folder folder, Object uid) throws Exception {
         boolean result = false;
 
-        String headerField = (String) args[1];
-        int condition = FilterCriteria.getCriteria((String) args[0]);
+        //  is/is not
+        String criteria = getFilterCriteria().get("criteria");
+
+        // string to search
+        String pattern = getFilterCriteria().get("pattern");
+        String headerField = pattern;
+        int condition = FilterCriteria.getCriteria(criteria);
 
         String searchHeaderField = null;
-		
-		Flags flags = folder.getFlags(uid);
-		
+
+        Flags flags = folder.getFlags(uid);
+
         if (headerField.equalsIgnoreCase("Answered")) {
             result = flags.get(Flags.ANSWERED);
         } else if (headerField.equalsIgnoreCase("Deleted")) {
-			result = flags.get(Flags.EXPUNGED);
+            result = flags.get(Flags.EXPUNGED);
         } else if (headerField.equalsIgnoreCase("Flagged")) {
-			result = flags.get(Flags.FLAGGED);
+            result = flags.get(Flags.FLAGGED);
         } else if (headerField.equalsIgnoreCase("Recent")) {
-			result = flags.get(Flags.RECENT);
+            result = flags.get(Flags.RECENT);
         } else if (headerField.equalsIgnoreCase("Draft")) {
-			result = flags.get(Flags.DRAFT);
+            result = flags.get(Flags.DRAFT);
         } else if (headerField.equalsIgnoreCase("Seen")) {
-			result = flags.get(Flags.SEEN);
+            result = flags.get(Flags.SEEN);
         } else if (headerField.equalsIgnoreCase("Spam")) {
-            result = ((Boolean)folder.getAttribute(uid, "columba.spam")).booleanValue();
+            result = ((Boolean) folder.getAttribute(uid, "columba.spam")).booleanValue();
         }
 
         if (condition == FilterCriteria.IS) {
-        	return result;
+            return result;
         } else {
-        	return !result;
+            return !result;
         }
     }
 }

@@ -22,29 +22,26 @@ import org.columba.mail.folder.Folder;
 
 
 /**
- * @author freddy
+ * Search for a certain priority.
+ * <p>
+ * This can be for example "high", "log", "highest", "lowest"
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates. To enable and disable the creation of
- * type comments go to Window>Preferences>Java>Code Generation.
+ * @author fdietz
  */
 public class PriorityFilter extends AbstractFilter {
     /**
      * Constructor for PriorityFilter.
      */
-    public PriorityFilter() {
-        super();
+    public PriorityFilter(FilterCriteria filter) {
+        super(filter);
     }
 
     /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#getAttributes()
+     * Transform priority to integer value.
+     *
+     * @param pattern       priority string
+     * @return              integer representation of string
      */
-    public Object[] getAttributes() {
-        Object[] args = { "criteria", "pattern" };
-
-        return args;
-    }
-
     protected Integer transformPriority(String pattern) {
         Integer searchPattern = new Integer(3);
 
@@ -70,12 +67,16 @@ public class PriorityFilter extends AbstractFilter {
      *      org.columba.mail.folder.Folder, java.lang.Object,
      *      org.columba.core.command.WorkerStatusController)
      */
-    public boolean process(Object[] args, Folder folder, Object uid)
-        throws Exception {
+    public boolean process(Folder folder, Object uid) throws Exception {
         boolean result = false;
 
-        int condition = FilterCriteria.getCriteria((String) args[0]);
-        String s = (String) args[1];
+        // is/is not
+        String criteria = getFilterCriteria().get("criteria");
+
+        // string to search
+        String pattern = getFilterCriteria().get("pattern");
+        int condition = FilterCriteria.getCriteria(criteria);
+        String s = (String) pattern;
         Integer searchPattern = transformPriority(s);
 
         Integer priority = (Integer) folder.getAttribute(uid, "columba.priority");
@@ -85,21 +86,21 @@ public class PriorityFilter extends AbstractFilter {
         }
 
         switch (condition) {
-        case FilterCriteria.IS: {
+        case FilterCriteria.IS:
+
             if (priority.compareTo(searchPattern) == 0) {
                 result = true;
             }
 
             break;
-        }
 
-        case FilterCriteria.IS_NOT: {
+        case FilterCriteria.IS_NOT:
+
             if (priority.compareTo(searchPattern) != 0) {
                 result = true;
             }
 
             break;
-        }
         }
 
         return result;

@@ -22,29 +22,25 @@ import org.columba.mail.folder.Folder;
 
 
 /**
- * @author freddy
+ * Find messages with certain size.
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates. To enable and disable the creation of
- * type comments go to Window>Preferences>Java>Code Generation.
+ * @author fdietz
  */
 public class SizeFilter extends AbstractFilter {
     /**
      * Constructor for SizeFilter.
      */
-    public SizeFilter() {
-        super();
+    public SizeFilter(FilterCriteria filter) {
+        super(filter);
     }
 
     /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#getAttributes()
+     * Transform string to integer representation
+     *
+     * @param pattern       string containing priority
+     *
+     * @return              integer representation of string
      */
-    public Object[] getAttributes() {
-        Object[] args = { "criteria", "pattern" };
-
-        return args;
-    }
-
     protected Integer transformSize(String pattern) {
         Integer searchPattern = Integer.valueOf(pattern);
 
@@ -56,12 +52,17 @@ public class SizeFilter extends AbstractFilter {
      *      org.columba.mail.folder.Folder, java.lang.Object,
      *      org.columba.core.command.WorkerStatusController)
      */
-    public boolean process(Object[] args, Folder folder, Object uid)
-        throws Exception {
+    public boolean process(Folder folder, Object uid) throws Exception {
         boolean result = false;
 
-        int condition = FilterCriteria.getCriteria((String) args[0]);
-        Integer size = transformSize((String) args[1]);
+        //      is/is not
+        String criteria = getFilterCriteria().get("criteria");
+
+        // string to search
+        String pattern = getFilterCriteria().get("pattern");
+
+        int condition = FilterCriteria.getCriteria(criteria);
+        Integer size = transformSize((String) pattern);
 
         Integer s = (Integer) folder.getAttribute(uid, "columba.size");
 
@@ -70,21 +71,21 @@ public class SizeFilter extends AbstractFilter {
         }
 
         switch (condition) {
-        case FilterCriteria.SIZE_SMALLER: {
+        case FilterCriteria.SIZE_SMALLER:
+
             if (size.compareTo(s) > 0) {
                 result = true;
             }
 
             break;
-        }
 
-        case FilterCriteria.SIZE_BIGGER: {
+        case FilterCriteria.SIZE_BIGGER:
+
             if (size.compareTo(s) < 0) {
                 result = true;
             }
 
             break;
-        }
         }
 
         return result;

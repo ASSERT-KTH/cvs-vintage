@@ -23,14 +23,29 @@ import org.columba.mail.folder.Folder;
 
 
 /**
- * @author freddy
+ * Action which is executed if a filter found a matching
+ * set of messages.
+ * <p>
+ * If you need to run time consuming tasks which should be running 
+ * in the background you need to create your own Command-Object. 
+ * You should take a closer look to the Columba sourcetree. You will 
+ * find dozens examples of Command- Objects which implement things 
+ * like "Reply to Message", "Open Message in Composer", etc.
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz
  */
 public abstract class AbstractFilterAction implements PluginInterface {
+    
+    /**
+     * 
+     * @param filterAction      filterAction containing the filter actoin configuration
+     * @param srcFolder         selected folder
+     * @param uids              message UIDs
+     * @return                  return null for simple tasks, all other tasks have to implement
+     *                          their own {@link Command}
+     * 
+     * @throws Exception        exception is just passed to the upper-level
+     */
     public abstract Command getCommand(FilterAction filterAction,
         Folder srcFolder, Object[] uids) throws Exception;
 }

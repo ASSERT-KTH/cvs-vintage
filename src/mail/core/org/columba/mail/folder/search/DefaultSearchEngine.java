@@ -49,19 +49,32 @@ import javax.swing.JOptionPane;
  * @author tstich, fdietz
  */
 public class DefaultSearchEngine {
-    public static final int INIT = 0;
-    public static final int RANDOM = 1;
-    protected static Hashtable filterCache;
-    private int mode;
-    protected Folder folder;
+   
+    /**
+     * Filter plugins are cached and reused, instead of re-instanciated
+     * all the time
+     */
+    private static Hashtable filterCache;
+   
+    /**
+     * Folder on which the search is applied
+     */
+    private Folder folder;
+    
+    /**
+     * The default query engine used by the search-engine
+     */
     private QueryEngine nonDefaultEngine;
 
+    /**
+     * Constructor 
+     * 
+     * @param folder        folder on which the search is applied
+     */
     public DefaultSearchEngine(Folder folder) {
         this.folder = folder;
 
         filterCache = new Hashtable();
-
-        mode = RANDOM;
 
         nonDefaultEngine = new DummyQueryEngine();
     }
@@ -70,7 +83,7 @@ public class DefaultSearchEngine {
         return folder.getObservable();
     }
 
-    protected synchronized AbstractFilter getFilter(String type) {
+    protected synchronized AbstractFilter getFilter(FilterCriteria filterCriteria, String type) {
         // try to re-use already instanciated class
         if (filterCache.containsKey(type) == true) {
             return (AbstractFilter) filterCache.get(type);
@@ -83,7 +96,7 @@ public class DefaultSearchEngine {
         try {
             AbstractFilterPluginHandler handler = (AbstractFilterPluginHandler) MainInterface.pluginManager.getHandler(
                     "org.columba.mail.filter");
-            instance = (AbstractFilter) handler.getActionPlugin(type, null);
+            instance = (AbstractFilter) handler.getActionPlugin(type, new Object[]{filterCriteria});
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null,
                 "Error while trying to load filter plugin =" + type);
@@ -107,21 +120,13 @@ public class DefaultSearchEngine {
             return false;
         }
 
-        AbstractFilter instance = getFilter(type);
+        AbstractFilter instance = getFilter(criteria, type);
 
         if (instance == null) {
             return false;
         }
 
-        Object[] args = instance.getAttributes();
-
-        Object[] attributes = new Object[args.length];
-
-        for (int j = 0; j < args.length; j++) {
-            attributes[j] = criteria.get((String) args[j]);
-        }
-
-        return instance.process(attributes, folder, uid);
+        return instance.process(folder, uid);
     }
 
     protected List processCriteria(FilterRule rule, List uids)

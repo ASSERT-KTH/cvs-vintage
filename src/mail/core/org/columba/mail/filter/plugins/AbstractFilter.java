@@ -16,41 +16,59 @@
 package org.columba.mail.filter.plugins;
 
 import org.columba.core.plugin.PluginInterface;
-
+import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 
-
 /**
- * @author freddy
+ * A filter is used to find a set of messages, which
+ * matches a certain search criteria.
+ * <p>
+ * The search criteria are specified in {@link Filter}.
+ * <p>
+ * Every FilterPlugin needs to subclass this class.
  *
- * Every FilterPlugin needs to subclass this class
- *
- *
+ * @author fdietz
  */
 public abstract class AbstractFilter implements PluginInterface {
+
     /**
-     *
-     * specify the properties the plugin needs
-     *
-     * @return Object[] array of String
+     * filter containing the configuration
      */
-    public abstract Object[] getAttributes();
+    private FilterCriteria filterCriteria;
+    
+    
+    /**
+     * Constructor for AbstractFilter
+     * 
+     * @param f    filter containing the configuration
+     */
+    public AbstractFilter(FilterCriteria f) {
+        this.filterCriteria = f;
+    }
 
     /**
       *
-      * execute the plugin
+      * Execute the plugin
       *
       *
-      * @param args                         attributes, requested by getAttributes()-methos
-      * @param folder                Folder on which the filter gets applied
-      * @param uid                        uid of Message object
-      * @param worker                WorkerStatusController is used to print information
-      *                                                 on the Statusbar
+      * @param folder        Folder on which the filter gets applied
+      * @param uid           uid of Message object
+      *                      on the Statusbar
       * @return boolean      true if match, otherwise false
       *
       * @throws Exception    pass exception one level higher to handle it in the
       *                      correct  place
       */
-    public abstract boolean process(Object[] args, Folder folder, Object uid)
+    public abstract boolean process(Folder folder, Object uid)
         throws Exception;
+        
+    /**
+     * Get filter criteria containing this filters configuration.
+     * 
+     * @return      filter criteria
+     */
+    public FilterCriteria getFilterCriteria() {
+        return filterCriteria;
+    }
+
 }

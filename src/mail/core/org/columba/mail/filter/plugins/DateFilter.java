@@ -26,27 +26,17 @@ import java.util.Date;
 
 
 /**
- * @author freddy
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates. To enable and disable the creation of
- * type comments go to Window>Preferences>Java>Code Generation.
+ * Search for a certain absolute Date
+ *
+ * @author fdietz
  */
 public class DateFilter extends AbstractFilter {
     /**
      * Constructor for DateFilter.
      */
-    public DateFilter() {
-        super();
-    }
-
-    /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#getAttributes()
-     */
-    public Object[] getAttributes() {
-        Object[] args = { "criteria", "pattern" };
-
-        return args;
+    public DateFilter(FilterCriteria filter) {
+        super(filter);
     }
 
     protected Date transformDate(String pattern) {
@@ -70,14 +60,22 @@ public class DateFilter extends AbstractFilter {
      *      org.columba.mail.folder.Folder, java.lang.Object,
      *      org.columba.core.command.WorkerStatusController)
      */
-    public boolean process(Object[] args, Folder folder, Object uid)
-        throws Exception {
-        int condition = FilterCriteria.getCriteria((String) args[0]);
-        Date date = transformDate((String) args[1]);
+    public boolean process(Folder folder, Object uid) throws Exception {
+        // before/after
+        String criteria = getFilterCriteria().get("criteria");
+
+        // string to search
+        String pattern = getFilterCriteria().get("pattern");
+
+        // convert criteria into int-value
+        int condition = FilterCriteria.getCriteria(criteria);
+
+        // transform string to Date representation
+        Date date = transformDate(pattern);
 
         boolean result = false;
 
-        //((Rfc822Header) header).printDebug();
+        // get date
         Date d = (Date) folder.getAttribute(uid, "columba.date");
 
         if (d == null) {
@@ -87,21 +85,21 @@ public class DateFilter extends AbstractFilter {
         }
 
         switch (condition) {
-        case FilterCriteria.DATE_BEFORE: {
+        case FilterCriteria.DATE_BEFORE:
+
             if (d.before(date)) {
                 result = true;
             }
 
             break;
-        }
 
-        case FilterCriteria.DATE_AFTER: {
+        case FilterCriteria.DATE_AFTER:
+
             if (d.after(date)) {
                 result = true;
             }
 
             break;
-        }
         }
 
         return result;

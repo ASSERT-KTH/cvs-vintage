@@ -24,12 +24,13 @@ import org.columba.ristretto.message.Header;
 
 
 /**
- * @author freddy
+ * Search for a string in a certain headerfield.
+ * <p>
+ * "headerfield" is for example Subject <br>
+ * "criteria" can be "contains" or "contains not" <br>
+ * "pattern" specifies the search string <br>
  *
- * Little Helper class which nearly all Filters use when searching in message
- * headerfields
- *
- *
+ * @author fdietz
  */
 public class HeaderfieldFilter extends AbstractFilter {
     /**
@@ -37,49 +38,40 @@ public class HeaderfieldFilter extends AbstractFilter {
      *
      * @param filter
      */
-    public HeaderfieldFilter() {
+    public HeaderfieldFilter(FilterCriteria filter) {
+        super(filter);
     }
 
     /**
      *
-     * "headerfield" is for example Subject "criteria" can be "contains" or
-     * "contains not" "pattern" specifies the search string
-     *
-     * @see org.columba.mail.filter.plugins.AbstractFilter#getAttributes()
-     */
-    public Object[] getAttributes() {
-        Object[] args = { "headerfield", "criteria", "pattern" };
-
-        return args;
-    }
-
-    /**
-     *
-     * check if the requested headerfield contains the search string and return
+     * Check if the requested headerfield contains the search string and return
      * true if match was found, otherwise return false
      *
      * @see org.columba.mail.filter.plugins.AbstractFilter#process(org.columba.mail.folder.Folder,
      *      java.lang.Object, org.columba.mail.filter.Filter)
      */
-    public boolean process(Object[] args, Folder folder, Object uid)
-        throws Exception {
+    public boolean process(Folder folder, Object uid) throws Exception {
+        // contains/contains not
+        String criteria = getFilterCriteria().get("criteria");
+
+        // get headerfield to search in (for example: Subject)
+        String headeritem = getFilterCriteria().get("headerfield");
+
+        // string to search
+        String pattern = getFilterCriteria().get("pattern");
+
         // get message header
-        Header header = folder.getHeaderFields(uid,
-                new String[] { (String) args[0] });
+        Header header = folder.getHeaderFields(uid, new String[] { headeritem });
 
         if (header == null) {
             return false;
         }
 
-        // get headerfield to search in (for example: Subject)
-        String headerItem = (String) header.get((String) args[0]);
+        String headerItem = (String) header.get(headeritem);
 
         // get condition and convert it to constant as defined in
         // FilterCriteria
-        int condition = FilterCriteria.getCriteria((String) args[1]);
-
-        // get search string
-        String pattern = (String) args[2];
+        int condition = FilterCriteria.getCriteria(criteria);
 
         // see if theirs a match
         boolean result = match(headerItem, condition, pattern);
@@ -109,53 +101,53 @@ public class HeaderfieldFilter extends AbstractFilter {
         }
 
         switch (condition) {
-        case FilterCriteria.CONTAINS: {
+        case FilterCriteria.CONTAINS:
+
             if (headerItem.toLowerCase().indexOf(pattern.toLowerCase()) != -1) {
                 result = true;
             }
 
             break;
-        }
 
-        case FilterCriteria.CONTAINS_NOT: {
+        case FilterCriteria.CONTAINS_NOT:
+
             if (headerItem.toLowerCase().indexOf(pattern.toLowerCase()) == -1) {
                 result = true;
             }
 
             break;
-        }
 
-        case FilterCriteria.IS: {
+        case FilterCriteria.IS:
+
             if (headerItem.equalsIgnoreCase(pattern)) {
                 result = true;
             }
 
             break;
-        }
 
-        case FilterCriteria.IS_NOT: {
+        case FilterCriteria.IS_NOT:
+
             if (!headerItem.equalsIgnoreCase(pattern)) {
                 result = true;
             }
 
             break;
-        }
 
-        case FilterCriteria.BEGINS_WITH: {
+        case FilterCriteria.BEGINS_WITH:
+
             if (headerItem.toLowerCase().startsWith(pattern.toLowerCase())) {
                 result = true;
             }
 
             break;
-        }
 
-        case FilterCriteria.ENDS_WITH: {
+        case FilterCriteria.ENDS_WITH:
+
             if (headerItem.toLowerCase().endsWith(pattern.toLowerCase())) {
                 result = true;
             }
 
             break;
-        }
         }
 
         return result;
