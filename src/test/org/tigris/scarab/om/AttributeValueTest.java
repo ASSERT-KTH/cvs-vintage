@@ -54,89 +54,100 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: AttributeValueTest.java,v 1.13 2004/02/01 18:05:13 dep4b Exp $
+ * @version $Id: AttributeValueTest.java,v 1.14 2004/02/09 08:55:28 dep4b Exp $
  */
 public class AttributeValueTest extends BaseTestCase
 {
-    private AttributeValue attValSeverity = null;
-    private AttributeValue attValDescription = null;
-    private AttributeValue attValSeverityCopy = null;
+    private AttributeValue attVal = null;
+    private AttributeValue attVal2 = null;
+    private AttributeValue newAttVal = null;
     private Issue issue = null;
 
-   
-    public void setUp() throws Exception
+
+    public void testSomething() throws Exception
     {
-    	super.setUp();
         issue = getIssue0();
         // severity
-        attValSeverity = issue.getAttributeValue(AttributeManager.getInstance(new NumberKey("9")));
+        attVal = issue.getAttributeValue(AttributeManager.getInstance(new NumberKey("9")));
         // description
-        attValDescription = issue.getAttributeValue(AttributeManager.getInstance(new NumberKey("1")));
-        attValSeverityCopy = attValSeverity.copy();
+        attVal2 = issue.getAttributeValue(AttributeManager.getInstance(new NumberKey("1")));
+
+        testCopy();
+        testSave();
+        testGetQueryKey();
+        testIsRequired();
+        testIsSet();
+        testIsSet2();
+        testGetRModuleAttribute();
+        testGetAttributeOption();
     }
-    
 
 
-    /**
-     * May be screwing up data
-     * @throws Exception
-     */
-    public void OFFtestSaveAndDelete() throws Exception
+    private void testCopy() throws Exception
     {
-        System.out.println("\ntestSave()");
+        System.out.println("\ntestCopy()");
+        newAttVal = attVal.copy();
         Attachment attachment = AttachmentManager.getInstance();
         attachment.setName("activitySet test");
         attachment.setData("Test comment");
         attachment.setTextFields(getUser1(), issue, Attachment.COMMENT__PK);
         attachment.save();
         ActivitySet trans = 
-        	ActivitySetManager.getInstance(new Integer(1), getUser1(), attachment);
+            ActivitySetManager.getInstance(new Integer(1), getUser1(), attachment);
         trans.save();
-        attValSeverityCopy.startActivitySet(trans);
-        attValSeverityCopy.setOptionId(new Integer(70));
-        attValSeverityCopy.setUserId(new Integer(1));
-        attValSeverityCopy.save();
-        assertEquals(attValSeverityCopy.getValueId().toString(), attValSeverityCopy.getQueryKey());
-        
-        AttributeValuePeer.doDelete(attValSeverityCopy);
+        newAttVal.startActivitySet(trans);
+        newAttVal.setOptionId(new Integer(70));
+        newAttVal.setUserId(new Integer(1));
     }
 
-    public void testGetOptionIdAsString() throws Exception
+    private void testSave() throws Exception
+    {
+        System.out.println("\ntestSave()");
+        newAttVal.save();
+    }
+
+    private void testGetOptionIdAsString() throws Exception
     {
         System.out.println("\ntestGetOptionIdAsString()");
-        //assertEquals("70", attValSeverityCopy.getOptionIdAsString());
-        assertEquals("66", attValSeverityCopy.getOptionIdAsString());
+        assertEquals("70", newAttVal.getOptionIdAsString());
     }
 
+    private void testGetQueryKey() throws Exception
+    {
+        System.out.println("\ntestGetQueryKey()");
+        assertEquals(newAttVal.getValueId().toString(), newAttVal.getQueryKey());
+        System.out.println("query key= " + newAttVal.getQueryKey());
+    }
 
-    public void testIsRequired() throws Exception
+    private void testIsRequired() throws Exception
     {
         System.out.println("\ntestIsRequired()");
-        assertEquals(false, attValSeverityCopy.isRequired());
+//        assertEquals(false, attVal.isRequired());
+        assertEquals(false, newAttVal.isRequired());
     }
 
-    public void testIsSet() throws Exception
+    private void testIsSet() throws Exception
     {
         System.out.println("\ntestIsSet()");
-        assertEquals(true, attValSeverityCopy.isSet());
+        assertEquals(true, newAttVal.isSet());
     }
 
-    public void testIsSet2() throws Exception
+    private void testIsSet2() throws Exception
     {
         System.out.println("\ntestIsSet2()");
-        attValDescription.setValue("description");
-        assertEquals(true, attValDescription.isSet());
+        attVal2.setValue("description");
+        assertEquals(true, attVal2.isSet());
     }
 
-    public void testGetRModuleAttribute() throws Exception
+    private void testGetRModuleAttribute() throws Exception
     {
         System.out.println("\ntestGetRModuleAttribute()");
-        assertEquals(attValSeverity.getAttributeId(), attValSeverityCopy.getRModuleAttribute().getAttributeId());
+        assertEquals(attVal.getAttributeId(), newAttVal.getRModuleAttribute().getAttributeId());
     }
 
-    public void testGetAttributeOption() throws Exception
+    private void testGetAttributeOption() throws Exception
     {
         System.out.println("\ntestGetAttributeOption()");
-        System.out.println("get att opt = " + attValSeverityCopy.getAttributeOption());
+        System.out.println("get att opt = " + newAttVal.getAttributeOption());
     }
 }

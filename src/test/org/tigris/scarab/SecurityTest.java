@@ -60,11 +60,11 @@ import org.tigris.scarab.test.BaseTestCase;
  * Test to understand better how security works..
  *
  * @author <a href="mailto:epugh@opensourceconnections.com">Eric Pugh</a>
- * @version $Id: SecurityTest.java,v 1.2 2004/02/03 13:15:32 dep4b Exp $
+ * @version $Id: SecurityTest.java,v 1.3 2004/02/09 08:55:28 dep4b Exp $
  */
 public class SecurityTest extends BaseTestCase
 {
-    public void testCreateAssignDeleteUser() throws Exception
+    public void OFFtestCreateAssignDeleteUser() throws Exception
     {
         ScarabModule sm = (ScarabModule)getModule();
         User user = ScarabUserManager.getInstance();//ScarabUserManager.getInstance(sm.getOwnerId());

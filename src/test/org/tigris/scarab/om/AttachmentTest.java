@@ -58,7 +58,7 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.Attachment class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttachmentTest.java,v 1.13 2004/01/31 18:15:38 dep4b Exp $
+ * @version $Id: AttachmentTest.java,v 1.14 2004/02/09 08:55:28 dep4b Exp $
  */
 public class AttachmentTest extends BaseTestCase
 {
@@ -115,9 +115,9 @@ public class AttachmentTest extends BaseTestCase
         assertTrue("testpath was:" + testPath.getPath(),testPath.getPath().endsWith(control));
     }
 
-    public void OFFtestGetRelativePath() throws Exception
+    public void testGetRelativePath() throws Exception
     {
-        System.out.println("\ngetRelativePath()");
+        testSaveFile();
         File control = new File("mod" + issue.getModuleId().toString() 
                       + "/" + issue.getIdCount()/1000 + "/" 
                       + issue.getUniqueId() + "_" 
@@ -127,9 +127,9 @@ public class AttachmentTest extends BaseTestCase
         assertEquals(control.getPath(), testPath.getPath());
     }
 
-    public void OFFtestGetFullPath() throws Exception
+    public void testGetFullPath() throws Exception
     {
-        System.out.println("\ngetFullPath()");
+        testSaveFile();
         File control = new File(fileAttachment.getFullPath());
         File testPath = new File(Attachment.getRepositoryDirectory(),
                                  fileAttachment.getRelativePath());

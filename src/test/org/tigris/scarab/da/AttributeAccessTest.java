@@ -78,7 +78,7 @@ public class AttributeAccessTest
         String artifactTypeID = "1";
         List ids = aa.retrieveQueryColumnIDs(userID, listID,
                                              moduleID, artifactTypeID);
-       // assertTrue(ids.size()>0);
+        System.out.println("ids are " + ids);
         // TODO: finish
     }
 

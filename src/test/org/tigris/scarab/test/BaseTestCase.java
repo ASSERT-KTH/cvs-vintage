@@ -23,11 +23,8 @@ import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserManager;
 /**
- * This test case is to verify whether exceptions in Velocity actions are
- * properly bubbled up when action.event.bubbleexception=true.  Or, if
- * action.event.bubbleexception=false, then the exceptions should be
- * logged and sunk.
- *
+ * Test case that provides scaffolding for other Scarab test cases.
+ * 
  * @author     <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  */
 public class BaseTestCase extends TestCase {
