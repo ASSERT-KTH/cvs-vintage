@@ -191,7 +191,10 @@ public class ServerXmlReader extends BaseInterceptor {
 		return cm.getHome();
 	    }
 	    // XXX add other "predefined" properties
-	    return cm.getProperty( key );
+	    String s=cm.getProperty( key );
+	    if( s==null )
+		s=System.getProperty(key);
+	    return s;
 	}
     }
 
