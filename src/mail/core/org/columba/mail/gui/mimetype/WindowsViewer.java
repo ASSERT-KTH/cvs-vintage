@@ -51,9 +51,10 @@ public class WindowsViewer extends AbstractViewer {
 				String[] cmd = new String[]{"cmd",
 									"/C",
 									"start",
-								 url.toString() };
+									"\"Launching URL\"",
+								 "\""+url.toString()+"\""  };
 				Runtime rt = Runtime.getRuntime();
-				LOG.fine("Executing " + cmd[0] + " " + cmd[1]+ " " + cmd[2]+ " " + cmd[3]);
+				LOG.fine("Executing " + cmd[0] + " " + cmd[1]+ " " + cmd[2]+ " " + cmd[3]+ " " + cmd[4]);
 				proc = rt.exec(cmd);
 
 				return proc;
