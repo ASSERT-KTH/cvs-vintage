@@ -155,6 +155,7 @@ public  class AttributeGroup
                          AttributePeer.ATTRIBUTE_ID)
                 .add(AttributePeer.ATTRIBUTE_TYPE_ID, 
                      AttributeTypePeer.USER_TYPE_KEY, Criteria.NOT_EQUAL)
+                .add(AttributePeer.DELETED, false)
                 .addAscendingOrderByColumn(RAttributeAttributeGroupPeer
                                            .PREFERRED_ORDER);
             List raags = RAttributeAttributeGroupPeer.doSelect(crit);
