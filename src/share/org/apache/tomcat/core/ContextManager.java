@@ -221,7 +221,7 @@ public final class ContextManager implements LogAware{
      */
     public void setWorkDir( String wd ) {
 	if(debug>0) log("set work dir " + wd);
-	this.workDir=FileUtil.getCanonicalPath( wd );
+	this.workDir=FileUtil.getCanonicalPath( getHome() + File.separator + wd );
     }
 
     /**
@@ -229,7 +229,7 @@ public final class ContextManager implements LogAware{
      */
     public String getWorkDir() {
 	if( workDir==null)
-	    workDir=getHome() + File.separator + DEFAULT_WORK_DIR;
+	    workDir=FileUtil.getCanonicalPath(getHome() + File.separator + DEFAULT_WORK_DIR);
 	return workDir;
     }
 
