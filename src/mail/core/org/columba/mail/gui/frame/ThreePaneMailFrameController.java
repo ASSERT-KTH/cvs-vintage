@@ -59,6 +59,7 @@ public class ThreePaneMailFrameController
 	}
 
 	protected void initActions() {
+		/*
 		tableController.getView().getInputMap().put(
 			KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK),
 			"COPY");
@@ -93,7 +94,8 @@ public class ThreePaneMailFrameController
 		treeController.getView().getActionMap().put(
 			"PASTE",
 			new PasteAction(this));
-
+		*/
+		
 		tableController.getView().getInputMap().put(
 			KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0),
 			"UP");
