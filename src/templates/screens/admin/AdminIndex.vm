@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: AdminIndex.vm,v 1.7 2001/12/06 20:43:03 elicia Exp $
+@version $Id: AdminIndex.vm,v 1.8 2001/12/06 20:49:49 elicia Exp $
 *#
 
 $page.setTitle("Scarab Administration")
@@ -60,6 +60,9 @@ The following are some other things to do (in no particular order):
 <ul>
  <li><a href="$link.setPage("admin,ManageArtifactTypes.vm")">Manage Artifact Types</a></li>
  <li><a href="$link.setPage("admin,ManageModules.vm")">Manage Modules</a></li>
+#if ($scarabR.hasPermission($scarabG.Permission.ITEM__APPROVE, $scarabR.CurrentModule))
+ <li><a href="$link.setPage("admin,Approval.vm")">Approve</a></li>
+#end
 </ul>
 
 </div>
