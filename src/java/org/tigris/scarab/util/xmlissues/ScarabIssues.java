@@ -54,6 +54,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Locale;
 import java.io.File;
+import java.text.ParseException;
 
 import org.apache.fulcrum.localization.Localization;
 import org.apache.commons.collections.SequencedHashMap;
@@ -87,8 +88,9 @@ import org.tigris.scarab.util.ScarabConstants;
  * #inValidationMode} set to false will do actual insert of the XML
  * issues.</p>
  *
- * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.44 2003/07/27 00:41:39 dlr Exp $
+ * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
+ * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
+ * @version $Id: ScarabIssues.java,v 1.45 2003/07/29 23:29:09 dlr Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -544,7 +546,10 @@ public class ScarabIssues implements java.io.Serializable
                     "CouldNotFindActivitySetType", activitySet.getType());
                 addImportError(error);
             }
-    
+
+            // Validate the activity set's date.
+            validateDate(activitySet.getCreatedDate(), true);
+
             List activities = activitySet.getActivities();
             for (Iterator itrb = activities.iterator(); itrb.hasNext();)
             {
@@ -572,6 +577,7 @@ public class ScarabIssues implements java.io.Serializable
                                   XmlActivitySet activitySet,
                                   XmlActivity activity)
     {
+        validateDate(activity.getEndDate(), false);
         if (activity.getOldUser() != null)
         {
             importUsers.add(activity.getOldUser());
@@ -593,6 +599,9 @@ public class ScarabIssues implements java.io.Serializable
                      activityAttachment.getFilename());
                 addImportError(error);
             }
+
+            validateDate(activityAttachment.getCreatedDate(), true);
+            validateDate(activityAttachment.getModifiedDate(), false);
 
             String attachCreatedBy = activityAttachment.getCreatedBy();
             if (attachCreatedBy != null)
@@ -739,6 +748,38 @@ public class ScarabIssues implements java.io.Serializable
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Records any validation errors encountered.
+     *
+     * @param xmlDate The XML bean for the date.
+     * @param required Whether a valid date is required (parse errors
+     * are reported regardless of this setting).
+     */
+    private void validateDate(BaseDate xmlDate, boolean required)
+    {
+        try
+        {
+            // Report parse error failures even for optional dates.
+            if ((xmlDate != null && xmlDate.getDate() == null) && required)
+            {
+                // Trigger error handling.
+                throw new ParseException(null, -1);
+            }
+        }
+        catch (ParseException e)
+        {
+            String[] args = { xmlDate.getTimestamp(), xmlDate.getFormat() };
+            String error = Localization.format
+                (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
+                 "InvalidDate", args);
+            if (e.getErrorOffset() != -1)
+            {
+                error += ": " + e.getMessage();
+            }
+            addImportError(error);
         }
     }
 
