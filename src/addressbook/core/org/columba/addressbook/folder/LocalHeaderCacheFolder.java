@@ -355,9 +355,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 
 	public void load(WorkerStatusController worker) throws Exception {
 
-		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("loading header-cache=" + headerFile);
-                }
+                ColumbaLogger.log.info("loading header-cache=" + headerFile);
 		
 		FileInputStream istream = new FileInputStream(headerFile.getPath());
 		ObjectInputStream p = new ObjectInputStream(istream);
@@ -368,9 +366,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 
 		if (capacity != getMessageFileCount()) {
 			// messagebox headercache-file is corrupted
-			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.info("Messagebox headercache-file is corrupted!");
-                        }
+                        ColumbaLogger.log.info("Messagebox headercache-file is corrupted!");
 
 			recreateIndex();
 			return;
@@ -425,10 +421,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 	}
 
 	public void save(WorkerStatusController worker) throws Exception {
-
-		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("saving header-cache=" + headerFile);
-                }
+                ColumbaLogger.log.info("saving header-cache=" + headerFile);
 		
 		FileOutputStream istream = new FileOutputStream(headerFile.getPath());
 		ObjectOutputStream p = new ObjectOutputStream(istream);
@@ -474,9 +467,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 	}
 
 	public void recreateIndex() {
-		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("recreating index");
-                }
+                ColumbaLogger.log.info("recreating index");
 
 		File[] list = directoryFile.listFiles();
 		List v = new Vector();

@@ -150,20 +150,16 @@ public class GlobalResourceLoader {
 			langpack = new File(".", name);
 		}
 		if (langpack.exists() && langpack.isFile()) {
-			if (MainInterface.DEBUG) {
-				ColumbaLogger.log.info(
+			ColumbaLogger.log.info(
 					"Creating new i18n class loader for " + langpack.getPath());
-			}
 			try {
 				classLoader = new URLClassLoader(new URL[] { langpack.toURL()});
 			} catch (MalformedURLException mue) {
 			} //does not occur
 		} else {
-			if (MainInterface.DEBUG) {
-				ColumbaLogger.log.error(
+			ColumbaLogger.log.error(
 					"No language pack found for "
 						+ Locale.getDefault().toString());
-			}
 
 			// we can't use SystemClassLoader here, because that
 			// wouldn't work with java webstart,
@@ -236,14 +232,12 @@ public class GlobalResourceLoader {
 		try {
 			return globalBundle.getString(sID);
 		} catch (MissingResourceException mre) {
-			if (MainInterface.DEBUG) {
-				ColumbaLogger.log.error(
+			ColumbaLogger.log.error(
 					"'"
 						+ sID
 						+ "' in '"
 						+ sBundlePath
 						+ "' could not be found.");
-			}
 			
 			/*
 			 * Replaced FIX_ME string with resource ID here, this makes it
@@ -277,11 +271,9 @@ public class GlobalResourceLoader {
 
 	public static void reload() {
 		initClassLoader();
-		if (MainInterface.DEBUG) {
-			ColumbaLogger.log.info(
+		ColumbaLogger.log.info(
 				"Reloading cached resource bundles for locale "
 					+ Locale.getDefault().toString());
-		}
 		try {
 			// use ResourceBundle's internal classloader
 			if (classLoader == null)

@@ -132,14 +132,10 @@ public abstract class AbstractFrameController {
 	}
 
 	public void close() {
-		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("closing FrameController");
-                }
+                ColumbaLogger.log.info("closing FrameController");
 
 		view.saveWindowPosition();
-
 		view.setVisible(false);
-
 		FrameModel.close(this);
 
 		//FrameModel.close(this);
@@ -152,7 +148,6 @@ public abstract class AbstractFrameController {
 
 	public void openView() {
 		view.loadWindowPosition();
-
 		view.setVisible(true);
 	}
 
@@ -206,7 +201,4 @@ public abstract class AbstractFrameController {
 	public void setSelectionManager(SelectionManager selectionManager) {
 		this.selectionManager = selectionManager;
 	}
-
-	
-
 }

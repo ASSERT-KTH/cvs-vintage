@@ -86,9 +86,7 @@ public class ThreadedViewAction
 	}
 
 	public void tableChanged(TableChangedEvent e) {
-		if (MainInterface.DEBUG) {
-			ColumbaLogger.log.info("event=" + e);
-		}
+		ColumbaLogger.log.info("event=" + e);
 
 		if (e.getEventType() == TableChangedEvent.UPDATE) {
 			FolderCommandReference[] r =

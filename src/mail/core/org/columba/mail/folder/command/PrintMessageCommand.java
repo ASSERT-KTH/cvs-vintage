@@ -175,9 +175,7 @@ public class PrintMessageCommand extends FolderCommand {
 		// Print each message
 		for (int j = 0; j < uids.length; j++) {
 			Object uid = uids[j];
-			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.debug("Printing UID=" + uid);
-                        }
+                        ColumbaLogger.log.debug("Printing UID=" + uid);
 
 			Message message = new Message();
 			ColumbaHeader header = srcFolder.getMessageHeader(uid, worker);
@@ -327,17 +325,13 @@ public class PrintMessageCommand extends FolderCommand {
 		// no configuration available, create default config
 		if (printer == null) {
 			// create new local xml treenode
-			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.debug("printer config node not found - creating new");
-                        }
+                        ColumbaLogger.log.debug("printer config node not found - creating new");
 			printer = new XmlElement("printer");
 			printer.addAttribute("allow_scaling", "true");
 
 			// add to options if possible (so it will be saved)
 			if (options != null) {
-				if (MainInterface.DEBUG) {
-                                        ColumbaLogger.log.debug("storing new printer config node");
-                                }
+                                ColumbaLogger.log.debug("storing new printer config node");
 				options.addElement(printer);
 			}
 		}
@@ -409,10 +403,8 @@ public class PrintMessageCommand extends FolderCommand {
 			// decode using specified charset
 			decodedBody = decoder.decode(bodyPart.getBody(), charsetToUse);
 		} catch (UnsupportedEncodingException ex) {
-			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.info("charset " + charsetToUse
+                        ColumbaLogger.log.info("charset " + charsetToUse
 					+ " isn't supported, falling back to default...");
-                        }
 			try {
 				// decode using default charset
 				decodedBody = decoder.decode(bodyPart.getBody(), null);

@@ -355,9 +355,7 @@ public class ComposerController
 	 * @see org.columba.core.gui.frame.AbstractFrameController#close()
 	 */
 	public void close() {
-                if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("closing ComposerController");
-                }
+                ColumbaLogger.log.info("closing ComposerController");
 		view.saveWindowPosition();
 		view.setVisible(false);
 	}

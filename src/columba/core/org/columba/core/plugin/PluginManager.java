@@ -61,10 +61,7 @@ public class PluginManager {
 				continue;
 			}
 			
-
-			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.info("registering plugin: " + folder);
-                        }
+                        ColumbaLogger.log.info("registering plugin: " + folder);
 
 			File xmlFile = new File(folder, "plugin.xml");
 			if (xmlFile == null) continue;
@@ -91,12 +88,10 @@ public class PluginManager {
 			if (jar != null)
 				pluginFolders[i] = new File(pluginFolders[i], jar);
 
-			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.debug("id: " + id);
-                                //ColumbaLogger.log.debug("extension point: " + extensionPoint);
-                                ColumbaLogger.log.debug("type: " + type);
-                                ColumbaLogger.log.debug("jar: " + jar);
-                        }
+                        ColumbaLogger.log.debug("id: " + id);
+                        //ColumbaLogger.log.debug("extension point: " + extensionPoint);
+                        ColumbaLogger.log.debug("type: " + type);
+                        ColumbaLogger.log.debug("jar: " + jar);
 
 			XmlElement extension;
 			String extensionPoint;
@@ -123,9 +118,7 @@ public class PluginManager {
 
 							file = folder;
 
-							if (MainInterface.DEBUG) {
-                                                                ColumbaLogger.log.info("debug: " + file.toString());
-                                                        }
+                                                        ColumbaLogger.log.info("debug: " + file.toString());
 
 							handler.addExtension(id, extension);
 						} catch (Exception ex) {
@@ -147,9 +140,7 @@ public class PluginManager {
 		if (plugins.containsKey(id)) {
 			return (AbstractPluginHandler) plugins.get(id);
                 } else {
-			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.error("PluginHandler not found: "+id);
-                        }
+                        ColumbaLogger.log.error("PluginHandler not found: "+id);
 
 			throw new PluginHandlerNotFoundException(id);
 		}

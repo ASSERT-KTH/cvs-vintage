@@ -57,9 +57,7 @@ public class MarkMessageCommand extends FolderCommand {
 	}
 
 	public void updateGUI() throws Exception {
-		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("update Gui");
-                }
+                ColumbaLogger.log.info("update Gui");
 
 		FolderCommandReference[] r = adapter.getSourceFolderReferences();
 

@@ -63,14 +63,12 @@ public class DiskIO {
 
 		if (!dir.isDirectory()) {
 			success = !dir.isFile() && dir.mkdirs();
-                        if (MainInterface.DEBUG) {
-                                if (success) {
-                                        ColumbaLogger.log.debug("created directory: " + dir.toString());
-                                } else {
-                                        ColumbaLogger.log.error("failed while trying to create directory: "
-						+ dir.toString());
-                                }
-			}
+                        if (success) {
+                                ColumbaLogger.log.debug("created directory: " + dir.toString());
+                        } else {
+                                ColumbaLogger.log.error("failed while trying to create directory: "
+				+ dir.toString());
+                        }
 		}
 
 		return success;
@@ -161,20 +159,16 @@ public class DiskIO {
 			if ((f = files[i]).isDirectory()) {
 				deleteDirectory(f);
 			} else if (!f.delete()) {
-				if (MainInterface.DEBUG) {
-                                        ColumbaLogger.log.error("*** failed to delete file "
+                                ColumbaLogger.log.error("*** failed to delete file "
                                                 + f.getAbsolutePath());
-                                }
 			}
 		}
 
 		success = dir.delete();
 
 		if (!success) {
-			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.error("*** failed to delete directory "
+                        ColumbaLogger.log.error("*** failed to delete directory "
                                         + dir.getAbsolutePath());
-                        }
 		}
 
 		return success;
@@ -203,9 +197,7 @@ public class DiskIO {
 		boolean success;
 
 		if (!(success = f.delete())) {
-			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.error("*** failed to delete file " + path);
-                        }
+                        ColumbaLogger.log.error("*** failed to delete file " + path);
 		}
 
 		return success;
@@ -249,10 +241,8 @@ public class DiskIO {
 		//url = ClassLoader.getSystemResource(path);
 		url = DiskIO.class.getResource("/" + path);
 		if (url == null) {
-			if (MainInterface.DEBUG) {
-				ColumbaLogger.log.error(
+                        ColumbaLogger.log.error(
 					"*** failed locating resource: " + path);
-			}
 			return null;
 		}
 
@@ -302,10 +292,8 @@ public class DiskIO {
 			in.close();
 			out.close();
 		} catch (IOException e) {
-			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.debug("*** error during file copy: "
+                        ColumbaLogger.log.debug("*** error during file copy: "
                                         + outputFile.getAbsolutePath(), e);
-                        }
 			throw e;
 		}
 
@@ -342,15 +330,11 @@ public class DiskIO {
 			out.close();
 			in.close();
 
-			if (MainInterface.DEBUG) {
-				ColumbaLogger.log.info(
+			ColumbaLogger.log.info(
 					"created : " + outputFile.getAbsolutePath());
-			}
 		} catch (IOException e) {
-			if (MainInterface.DEBUG) {
-				ColumbaLogger.log.error("*** error during res. file copy: "
+                        ColumbaLogger.log.error("*** error during res. file copy: "
 						+ outputFile.getAbsolutePath(), e);
-			}
 			throw e;
 		}
 

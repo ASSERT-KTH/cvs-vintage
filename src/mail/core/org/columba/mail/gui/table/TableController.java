@@ -216,9 +216,7 @@ public class TableController {
 		tableItem.set("ascending", ascending);
 		tableItem.set("selected", sortingColumn);
 
-		if (MainInterface.DEBUG) {
-			ColumbaLogger.log.info("save table column config");
-		}
+                ColumbaLogger.log.info("save table column config");
 
 		//.clone();
 		//v.removeEnabledItem();
@@ -235,9 +233,7 @@ public class TableController {
 			TableColumn tc = getView().getColumn(c);
 
 			v.set("size", tc.getWidth());
-			if (MainInterface.DEBUG) {
-				ColumbaLogger.log.debug("size" + tc.getWidth());
-			}
+			ColumbaLogger.log.debug("size" + tc.getWidth());
 			try {
 				int index = getView().getColumnModel().getColumnIndex(c);
 				v.set("position", index);
@@ -341,9 +337,7 @@ public class TableController {
 	// the method updates the model
 
 	public void tableChanged(TableChangedEvent event) throws Exception {
-		if (MainInterface.DEBUG) {
-			ColumbaLogger.log.info("event=" + event);
-		}
+		ColumbaLogger.log.info("event=" + event);
 
 		FolderTreeNode folder = event.getSrcFolder();
 

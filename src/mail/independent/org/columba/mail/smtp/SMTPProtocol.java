@@ -67,8 +67,6 @@ public class SMTPProtocol {
 
 	private void checkAnswer(String answer, String start)
 		throws SMTPException {
-		if (MainInterface.DEBUG)
-			System.out.println("SERVER:" + answer);
 
 		if (!answer.startsWith(start)) {
 			throw (new SMTPException(answer));
@@ -76,8 +74,6 @@ public class SMTPProtocol {
 	}
 
 	private void sendString(String str) throws Exception {
-		if (MainInterface.DEBUG)
-			System.out.println("CLIENT:" + str);
 
 		out.writeBytes(str + "\r\n");
 		out.flush();

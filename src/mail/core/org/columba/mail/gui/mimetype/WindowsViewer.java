@@ -48,10 +48,8 @@ public class WindowsViewer extends AbstractViewer {
 				String[] cmd =
 					new String[] { "cmd.exe", "/C", "start", url.toString()};
 				Runtime rt = Runtime.getRuntime();
-				if (MainInterface.DEBUG) {
-					ColumbaLogger.log.info("Executing " + cmd[0]
+				ColumbaLogger.log.info("Executing " + cmd[0]
 						+ " " + cmd[1] + " " + cmd[2] + " " + cmd[3]);
-				}
 				proc = rt.exec(cmd);
 				// any error message?
 				StreamGobbler errorGobbler =
@@ -64,9 +62,7 @@ public class WindowsViewer extends AbstractViewer {
 
 				// any error?
 				int exitVal = proc.waitFor();
-				if (MainInterface.DEBUG) {
-					ColumbaLogger.log.info("ExitValue: " + exitVal);
-				}
+				ColumbaLogger.log.info("ExitValue: " + exitVal);
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}
@@ -88,17 +84,13 @@ public class WindowsViewer extends AbstractViewer {
 			if (OSInfo.isWinNT()) {
 				String[] cmd = new String[] { "cmd.exe", "/C", filename };
 				Runtime rt = Runtime.getRuntime();
-				if (MainInterface.DEBUG) {
-					ColumbaLogger.log.info("Executing " + cmd[0]
+				ColumbaLogger.log.info("Executing " + cmd[0]
 						 + " " + cmd[1] + " " + cmd[2]);
-				}
 				proc = rt.exec(cmd);
 			} else if (OSInfo.isWin95() || OSInfo.isWin98() || OSInfo.isWinME()) {
 				String[] cmd = new String[] { "start", filename };
 				Runtime rt = Runtime.getRuntime();
-				if (MainInterface.DEBUG) {
-					ColumbaLogger.log.info("Executing " + cmd[0] + " " + cmd[1]);
-				}
+				ColumbaLogger.log.info("Executing " + cmd[0] + " " + cmd[1]);
 				proc = rt.exec(cmd);
 			} else if (OSInfo.isWin2K() || OSInfo.isWinXP()){
 
@@ -118,19 +110,15 @@ public class WindowsViewer extends AbstractViewer {
 						};
 
 				Runtime rt = Runtime.getRuntime();
-				if (MainInterface.DEBUG) {
 					ColumbaLogger.log.info("Executing " +
 						cmd[0] + " " + cmd[1] + " " + cmd[2] + " " +
 						cmd[3] + " " + cmd[4]);
-				}
 				proc = rt.exec(cmd);
 			}
 
             if (proc == null) {
-				if (MainInterface.DEBUG) {
-					ColumbaLogger.log.debug("The underlying Windows version is unknown.");
-				}
-				return;
+			ColumbaLogger.log.debug("The underlying Windows version is unknown.");
+			return;
             }
 
 			// any error message?
@@ -144,9 +132,7 @@ public class WindowsViewer extends AbstractViewer {
 
 			// any error?
 			int exitVal = proc.waitFor();
-			if (MainInterface.DEBUG) {
-				ColumbaLogger.log.info("ExitValue: " + exitVal);
-			}
+			ColumbaLogger.log.info("ExitValue: " + exitVal);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -175,18 +161,14 @@ public class WindowsViewer extends AbstractViewer {
 						};
 				
 				Runtime rt = Runtime.getRuntime();
-				if (MainInterface.DEBUG) {
-					ColumbaLogger.log.info("Executing " + cmd[0]
+				ColumbaLogger.log.info("Executing " + cmd[0]
 						 + " " + cmd[1] + " " + cmd[2]);
-				}
 				proc = rt.exec(cmd);
 			}
 
 			if (proc == null) {
-				if (MainInterface.DEBUG) {
-					ColumbaLogger.log.debug(
+				ColumbaLogger.log.debug(
 							"The underlying Windows version is unknown.");
-				}
 				return;
 			}
 
@@ -201,9 +183,7 @@ public class WindowsViewer extends AbstractViewer {
 
 			// any error?
 			int exitVal = proc.waitFor();
-			if (MainInterface.DEBUG) {
-				ColumbaLogger.log.info("ExitValue: " + exitVal);
-			}
+			ColumbaLogger.log.info("ExitValue: " + exitVal);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}

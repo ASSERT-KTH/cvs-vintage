@@ -89,9 +89,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 			if (!cancelled() && (operationMode == Command.FIRST_EXECUTION))
 				boss.getUndoManager().addToUndo(op);
 		} catch (CommandCancelledException e) {
-			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.debug("Command cancelled");
-                        }
+                        ColumbaLogger.log.debug("Command cancelled");
 		} catch (Exception e) {
 			// Must create a ExceptionProcessor
 			e.printStackTrace();

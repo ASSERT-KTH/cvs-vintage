@@ -259,9 +259,7 @@ public class IMAPStore {
 
 	public boolean select(WorkerStatusController worker, String path)
 		throws Exception {
-		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("selecting path=" + path);
-                }
+                ColumbaLogger.log.info("selecting path=" + path);
 		try {
 
 			printStatusMessage(MessageFormat.format(
@@ -280,9 +278,7 @@ public class IMAPStore {
 			messageFolderInfo =
 				MessageFolderInfoParser.parseMessageFolderInfo(buf.toString());
 
-			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.info("exists:" + messageFolderInfo.getExists());
-                        }
+                        ColumbaLogger.log.info("exists:" + messageFolderInfo.getExists());
 
 			state = STATE_SELECTED;
 			selectedFolderPath = path;
@@ -757,9 +753,7 @@ public class IMAPStore {
 		String path)
 		throws Exception {
 
-		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.debug("list-count=" + list.size());
-                }
+                ColumbaLogger.log.debug("list-count=" + list.size());
 
 		isLogin(worker);
 		isSelected(worker, path);
@@ -782,11 +776,9 @@ public class IMAPStore {
 		String clientTag = null;
 		IMAPResponse imapResponse = null;
 
-		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.debug("messageSet=" + set.getString());
-                        ColumbaLogger.log.debug(
+                ColumbaLogger.log.debug("messageSet=" + set.getString());
+                ColumbaLogger.log.debug(
                             "headerFields=" + headerFields.toString().trim());
-                }
 
 		try {
 			clientTag =
@@ -970,9 +962,7 @@ public class IMAPStore {
 			MessageSet set = new MessageSet(uids);
 
 			String flagsString = FlagsParser.parseVariant(variant);
-			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.debug("flags=" + flagsString);
-                        }
+                        ColumbaLogger.log.debug("flags=" + flagsString);
 
 			// unset flags command
 			if (variant >= 4) {

@@ -76,9 +76,7 @@ public class POP3Protocol {
 	}
 
 	public void sendString(String s) throws IOException {
-		if (MainInterface.DEBUG) {
-			ColumbaLogger.log.debug("CLIENT:" + s);
-		}
+                ColumbaLogger.log.debug("CLIENT:" + s);
 
 		out.print(s + "\r\n");
 		out.flush();
@@ -92,9 +90,7 @@ public class POP3Protocol {
 
 		answer = in.readLine();
 
-		if (MainInterface.DEBUG) {
-			ColumbaLogger.log.debug("SERVER:" + answer);
-		}
+		ColumbaLogger.log.debug("SERVER:" + answer);
 		// bug fixed for bug id 619290 
 		if (answer != null) {
 			return (answer.startsWith("+OK"));
@@ -106,8 +102,7 @@ public class POP3Protocol {
 	public void getNextLine() throws IOException {
 		answer = in.readLine();
 
-		if (MainInterface.DEBUG)
-			System.out.println("SERVER:" + answer);
+		ColumbaLogger.log.debug("SERVER:" + answer);
 	}
 
 	/*

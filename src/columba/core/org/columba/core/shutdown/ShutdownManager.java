@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.shutdown;
 
 import java.awt.BorderLayout;
@@ -69,8 +70,7 @@ public class ShutdownManager {
 		//		increase "waiting time" (when should we open the dialog the next time)
 		currentDelay = currentDelay * 2;
 
-		if (MainInterface.DEBUG)
-			ColumbaLogger.log.debug("current delay=" + currentDelay);
+		ColumbaLogger.log.debug("current delay=" + currentDelay);
 			
 		//		start delayed timer
 		delayedTimer = new Timer(currentDelay, new ActionListener() {
@@ -138,9 +138,7 @@ public class ShutdownManager {
 
 		// exit if no task is running anymore
 		if (MainInterface.processor.getTaskManager().count() == 0) {
-			if (MainInterface.DEBUG)
-				ColumbaLogger.log.debug("one second timer exited Columba");
-
+			ColumbaLogger.log.debug("one second timer exited Columba");
 			System.exit(1);
 		}
 	}
@@ -188,6 +186,5 @@ public class ShutdownManager {
 				System.exit(1);
 			}
 		}
-
 	}
 }

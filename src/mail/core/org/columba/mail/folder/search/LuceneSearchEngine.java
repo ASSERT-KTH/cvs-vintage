@@ -413,9 +413,7 @@ public class LuceneSearchEngine
 		IndexReader ramReader = getRAMReader();
 		IndexReader fileReader = getFileReader();
 
-		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.debug("Lucene: Merging RAMIndex to FileIndex");
-                }
+                ColumbaLogger.log.debug("Lucene: Merging RAMIndex to FileIndex");
 
 		/*
 		Document doc;
@@ -556,10 +554,8 @@ public class LuceneSearchEngine
 			writer.close();
 
 		} catch (Exception e) {
-			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.error(
+                        ColumbaLogger.log.error(
                                     "Creation of Lucene Index failed :" + e.getLocalizedMessage());
-                        }
                         //show neat error dialog here
 		}
 	}

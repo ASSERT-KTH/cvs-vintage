@@ -75,16 +75,14 @@ public abstract class AbstractSearchEngine {
 
 	protected synchronized AbstractFilter getFilter(String type) {
 
-		if (MainInterface.DEBUG)
-			ColumbaLogger.log.debug(
+		ColumbaLogger.log.debug(
 				"trying to re-use cached instanciation =" + type);
 
 		// try to re-use already instanciated class
 		if (filterCache.containsKey(type) == true)
 			return (AbstractFilter) filterCache.get(type);
 
-		if (MainInterface.DEBUG)
-			ColumbaLogger.log.debug("loading new instance =" + type);
+		ColumbaLogger.log.debug("loading new instance =" + type);
 
 		AbstractFilter instance = null;
 		try {

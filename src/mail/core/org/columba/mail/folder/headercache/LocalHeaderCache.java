@@ -86,23 +86,17 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		 */
 	public void load(WorkerStatusController worker) throws Exception {
 
-		if (MainInterface.DEBUG) {
-			ColumbaLogger.log.info("loading header-cache=" + headerFile);
-		}
+                ColumbaLogger.log.info("loading header-cache=" + headerFile);
 
 		ObjectInputStream ois = openInputStream();
 
 		int capacity = ois.readInt();
-		if (MainInterface.DEBUG) {
-			ColumbaLogger.log.info("capacity=" + capacity);
-		}
+		ColumbaLogger.log.info("capacity=" + capacity);
 		boolean needToRelease = false;
 
 		if (needToSync(capacity)) {
-			if (MainInterface.DEBUG) {
-				ColumbaLogger.log.info(
+			ColumbaLogger.log.info(
 					"need to recreateHeaderList() because capacity is not matching");
-			}
 
 			throw new FolderInconsistentException();
 		}
@@ -156,9 +150,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		}
 
 		nextUid++;
-		if (MainInterface.DEBUG) {
-			ColumbaLogger.log.debug("next UID for new messages =" + nextUid);
-		}
+		ColumbaLogger.log.debug("next UID for new messages =" + nextUid);
 		((LocalFolder) folder).setNextMessageUid(nextUid);
 		//worker.setDisplayText(null);
 
@@ -178,9 +170,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		if (!isHeaderCacheLoaded())
 			return;
 
-		if (MainInterface.DEBUG) {
-			ColumbaLogger.log.info("saveing header-cache=" + headerFile);
-		}
+		ColumbaLogger.log.info("saving header-cache=" + headerFile);
 		// this has to called only if the uid becomes higher than Integer allows
 		//cleanUpIndex();
 
@@ -190,9 +180,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 		//int count = getMessageFileCount();
 		int count = headerList.count();
-		if (MainInterface.DEBUG) {
-			ColumbaLogger.log.info("capacity=" + count);
-		}
+		ColumbaLogger.log.info("capacity=" + count);
 		p.writeInt(count);
 
 		ColumbaHeader h;

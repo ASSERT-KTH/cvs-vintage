@@ -48,17 +48,13 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 	}
 
 	public void load(WorkerStatusController worker) throws Exception {
-		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("loading header-cache=" + headerFile);
-                }
+                ColumbaLogger.log.info("loading header-cache=" + headerFile);
 		headerList = new HeaderList();
 
 		ObjectInputStream p = openInputStream();
 
 		int capacity = p.readInt();
-		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("capacity=" + capacity);
-                }
+                ColumbaLogger.log.info("capacity=" + capacity);
 
 		if ( worker != null)
 		worker.setDisplayText(MailResourceLoader.getString(
@@ -90,9 +86,7 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 		if (!isHeaderCacheLoaded())
 			return;
 
-		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("saveing header-cache=" + headerFile);
-                }
+                ColumbaLogger.log.info("saving header-cache=" + headerFile);
 
 		ObjectOutputStream p = openOutputStream();
 
