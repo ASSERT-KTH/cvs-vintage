@@ -21,6 +21,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -39,7 +40,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -88,7 +88,7 @@ public class ProfileChooserDialog extends JDialog
 	 * @throws java.awt.HeadlessException
 	 */
 	public ProfileChooserDialog() throws HeadlessException {
-		super(new JFrame(), true);
+		super(new Frame(), true);
 
 		// TODO: i18n
 		setTitle("Choose Profile");
