@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.250 2002/12/25 00:10:31 elicia Exp $
+ * @version $Id: Issue.java,v 1.251 2002/12/29 01:19:02 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -158,6 +158,10 @@ public class Issue
         "getDefaultTextAttributeValue";
     protected static final String GET_DEFAULT_TEXT = 
         "getDefaultText";
+    protected static final String GET_NULL_END_DATE =
+        "getActivitiesWithNullEndDate";
+    protected static final String GET_INITIAL_ACTIVITYSET = 
+        "getInitialActivitySet";
 
     /** storage for any attachments which have not been saved yet */
     private List unSavedAttachments = null;
@@ -998,7 +1002,7 @@ public class Issue
         HashMap result = null;
         Object obj = ScarabCache.get(this, GET_ATTRIBUTE_VALUES_MAP); 
         if ( obj == null ) 
-        {        
+        {
             Criteria crit = new Criteria(2)
                 .add(AttributeValuePeer.DELETED, false);        
             List siaValues = getAttributeValues(crit);
@@ -1012,7 +1016,7 @@ public class Issue
 
             ScarabCache.put(result, this, GET_ATTRIBUTE_VALUES_MAP);
         }
-        else 
+        else
         {
             result = (HashMap)obj;
         }
@@ -1255,17 +1259,26 @@ public class Issue
         ActivitySet activitySet = null;
         if ( !isNew() ) 
         {
-            NumberKey[] types = {ActivitySetTypePeer.CREATE_ISSUE__PK,
-                          ActivitySetTypePeer.MOVE_ISSUE__PK};
-            Criteria crit = new Criteria();
-            crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
-                         ActivityPeer.TRANSACTION_ID);
-            crit.add(ActivityPeer.ISSUE_ID, getIssueId());
-            crit.addIn(ActivitySetPeer.TYPE_ID, types);
-            List activitySets = ActivitySetPeer.doSelect(crit);
-            if (activitySets != null && activitySets.size() > 0)
+            Object obj = ScarabCache.get(this, GET_INITIAL_ACTIVITYSET);
+            if (obj == null)
             {
-                activitySet = (ActivitySet)activitySets.get(0);
+                NumberKey[] types = {ActivitySetTypePeer.CREATE_ISSUE__PK,
+                              ActivitySetTypePeer.MOVE_ISSUE__PK};
+                Criteria crit = new Criteria();
+                crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
+                             ActivityPeer.TRANSACTION_ID);
+                crit.add(ActivityPeer.ISSUE_ID, getIssueId());
+                crit.addIn(ActivitySetPeer.TYPE_ID, types);
+                List activitySets = ActivitySetPeer.doSelect(crit);
+                if (activitySets != null && activitySets.size() > 0)
+                {
+                    activitySet = (ActivitySet)activitySets.get(0);
+                    ScarabCache.put(activitySet, this, GET_INITIAL_ACTIVITYSET);
+                }
+            }
+            else
+            {
+                activitySet = (ActivitySet)obj;
             }
         }
         return activitySet;
@@ -1549,6 +1562,27 @@ public class Issue
         return result;        
     }
 
+    public List getActivitiesWithNullEndDate(Attribute attribute)
+        throws TorqueException
+    {
+        List result = null;
+        Object obj = ScarabCache.get(this, GET_NULL_END_DATE, attribute);
+        if (obj == null)
+        {
+            Criteria crit = new Criteria();
+            crit.add(ActivityPeer.ISSUE_ID, this.getIssueId());
+            crit.add(ActivityPeer.ATTRIBUTE_ID, attribute.getAttributeId());
+            crit.add(ActivityPeer.END_DATE, null);
+            result = ActivityPeer.doSelect(crit);
+            ScarabCache.put(result, this, GET_NULL_END_DATE, attribute);
+        }
+        else
+        {
+            result = (List)obj;
+        }
+        return result;
+    }
+
     /**
      * Gets default history limit for this module-issue type.
      */
@@ -1611,7 +1645,6 @@ public class Issue
     {
         return getActivity(fullHistory, getHistoryLimit());
     }
-
 
     /**
      * Returns full list of Activity objects associated with this Issue.
@@ -1735,13 +1768,25 @@ public class Issue
      */
     public List getChildren() throws Exception  
     {
+        return getChildren(true);
+    }
+
+    /**
+     * Returns list of child dependencies
+     * i.e., related to this issue through the DEPEND table.
+     */
+    public List getChildren(boolean hideDeleted) throws Exception  
+    {
         List result = null;
         Object obj = getMethodResult().get(this, GET_CHILDREN); 
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria()
-                .add(DependPeer.OBSERVED_ID, getIssueId())
-                .add(DependPeer.DELETED, false);
+                .add(DependPeer.OBSERVED_ID, getIssueId());
+            if (hideDeleted)
+            {
+                crit.add(DependPeer.DELETED, false);
+            }
             result = DependPeer.doSelect(crit);
             getMethodResult().put(result, this, GET_CHILDREN);
         }
@@ -1752,20 +1797,31 @@ public class Issue
         return result;
     }
 
-
     /**
      * Returns list of parent dependencies
      * i.e., related to this issue through the DEPEND table.
      */
     public List getParents() throws Exception  
     {
+        return getParents(true);
+    }
+
+    /**
+     * Returns list of parent dependencies
+     * i.e., related to this issue through the DEPEND table.
+     */
+    public List getParents(boolean hideDeleted) throws Exception  
+    {
         List result = null;
         Object obj = getMethodResult().get(this, GET_PARENTS); 
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria()
-                .add(DependPeer.OBSERVER_ID, getIssueId())
-                .add(DependPeer.DELETED, false);
+                .add(DependPeer.OBSERVER_ID, getIssueId());
+            if (hideDeleted)
+            {
+                crit.add(DependPeer.DELETED, false);
+            }
             result = DependPeer.doSelect(crit);
             getMethodResult().put(result, this, GET_PARENTS);
         }
@@ -2770,7 +2826,7 @@ public class Issue
      * And that is saved in the activity description,
      * When a user is assigned.
      */
-    public String getAssignUserChangeString(ScarabUser assigner,
+    private String getAssignUserChangeString(ScarabUser assigner,
                                             ScarabUser assignee,
                                             Attribute attr)
         throws Exception
@@ -2805,7 +2861,7 @@ public class Issue
         Attribute oldAttr = oldAttVal.getAttribute();
 
         // Save activitySet if it has not been already
-        if (activitySet.getActivitySetId() == null)
+        if (activitySet == null)
         { 
             activitySet = ActivitySetManager
                 .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, assigner, attachment);
@@ -2819,7 +2875,7 @@ public class Issue
         ActivityManager
             .createUserActivity(this, oldAttVal.getAttribute(), 
                                 activitySet,
-                                actionString, new Attachment(),
+                                actionString, null,
                                 assignee.getUserId(), null);
 
 
@@ -2828,7 +2884,7 @@ public class Issue
                                                  newAttr);
         ActivityManager
             .createUserActivity(this, newAttr, activitySet,
-                                actionString, new Attachment(),
+                                actionString, null,
                                 null, assignee.getUserId());
 
         // Save assignee value
@@ -2843,7 +2899,7 @@ public class Issue
      * And that is saved in the activity description,
      * When a user is changed from one user attribute to another.
      */
-    public String getUserAttributeChangeString(ScarabUser assigner,
+    private String getUserAttributeChangeString(ScarabUser assigner,
                                                ScarabUser assignee, 
                                                Attribute oldAttr,
                                                Attribute newAttr)
@@ -2889,7 +2945,7 @@ public class Issue
         ActivityManager
             .createUserActivity(this, attVal.getAttribute(), 
                                 activitySet,
-                                actionString, new Attachment(),
+                                actionString, null,
                                 assignee.getUserId(), null);
 
         // Save assignee value
@@ -2904,7 +2960,7 @@ public class Issue
      * And that is saved in the activity description,
      * When a user is removed from a user attribute.
      */
-    public String getUserDeleteString(ScarabUser assigner,
+    private String getUserDeleteString(ScarabUser assigner,
                                       ScarabUser assignee, 
                                       Attribute attr)
         throws Exception
@@ -2923,27 +2979,25 @@ public class Issue
         return actionString;
     }
 
-
     /**
      * Deletes a specific dependency on this issue.
      */
     public ActivitySet doDeleteDependency(ActivitySet activitySet, 
-                                          Depend depend, ScarabUser user)
+                                          Depend oldDepend, ScarabUser user)
         throws Exception
     {
         Issue otherIssue = IssueManager
-                        .getInstance(depend.getObserverId(), false);
+                        .getInstance(oldDepend.getObserverId(), false);
         if (otherIssue.equals(this))
         {
-            throw new Exception(
+            throw new ScarabException(
                 "Cannot delete a parent issue dependency from a child issue.");
         }
         Issue thisIssue = IssueManager
-                        .getInstance(depend.getObservedId(), false);
-
+                        .getInstance(oldDepend.getObservedId(), false);
 
         Object[] args = {
-            depend.getDependType().getName(),
+            oldDepend.getDependType().getName(),
             thisIssue.getUniqueId(),
             otherIssue.getUniqueId() 
         };
@@ -2952,13 +3006,13 @@ public class Issue
             Locale.getDefault(),
             "DependencyDeletedDesc", args);
 
-        depend.setDeleted(true);
-        depend.save();
+        oldDepend.setDeleted(true);
+        oldDepend.save();
 
         if (activitySet == null)
         {
             // deal with user comments
-            Attachment comment = depend.getDescriptionAsAttachment(user, thisIssue);
+            Attachment comment = oldDepend.getDescriptionAsAttachment(user, thisIssue);
 
             activitySet = getActivitySet(user, comment,
                               ActivitySetTypePeer.EDIT_ISSUE__PK);
@@ -2967,10 +3021,10 @@ public class Issue
         }
 
         ActivityManager
-            .createDeleteDependencyActivity(thisIssue, activitySet, depend,
+            .createDeleteDependencyActivity(thisIssue, activitySet, oldDepend,
                                 desc);
         ActivityManager
-            .createDeleteDependencyActivity(otherIssue, activitySet, depend,
+            .createDeleteDependencyActivity(otherIssue, activitySet, oldDepend,
                                 desc);
         return activitySet;
     }
@@ -3060,21 +3114,29 @@ public class Issue
      * changes the dependency type as well as. will not change deptype
      * for deleted deps
      */
-    public ActivitySet doChangeDependencyType(ActivitySet activitySet, Depend depend, 
+    public ActivitySet doChangeDependencyType(ActivitySet activitySet,
+                                              Depend oldDepend,
+                                              Depend newDepend, 
                                               DependType newDependType,
-                                              DependType oldDependType, ScarabUser user)
+                                              DependType oldDependType,
+                                              ScarabUser user)
         throws Exception
     {
         String oldName = oldDependType.getName();
         String newName = newDependType.getName();
         // check to see if something changed
         // only change dependency type for non-deleted deps
-        if (!newName.equals(oldName) && depend.getDeleted() == false)
+        if (!newName.equals(oldName) && newDepend.getDeleted() == false)
         {
             Issue otherIssue = IssueManager
-                            .getInstance(depend.getObserverId(), false);
+                            .getInstance(newDepend.getObserverId(), false);
 
-            depend.save();
+            // always delete an old dependency
+            oldDepend.setDeleted(true);
+            oldDepend.save();
+            // always create a new dependency
+            newDepend.setNew(true);
+            newDepend.save();
 
             Object[] args = {
                 this.getUniqueId(),
@@ -3090,7 +3152,7 @@ public class Issue
             if (activitySet == null)
             {
                 // deal with user comments
-                Attachment comment = depend.getDescriptionAsAttachment(user, this);
+                Attachment comment = newDepend.getDescriptionAsAttachment(user, this);
     
                 activitySet = getActivitySet(user, comment,
                                   ActivitySetTypePeer.EDIT_ISSUE__PK);
@@ -3099,10 +3161,10 @@ public class Issue
             }
             
             ActivityManager
-                .createChangeDependencyActivity(this, activitySet, depend,
+                .createChangeDependencyActivity(this, activitySet, newDepend,
                                     desc, oldName, newName);
             ActivityManager
-                .createChangeDependencyActivity(otherIssue, activitySet, depend,
+                .createChangeDependencyActivity(otherIssue, activitySet, newDepend,
                                     desc, oldName, newName);
         }
         return activitySet;
@@ -3153,8 +3215,14 @@ public class Issue
         this.save();
 
         // this needs to be done after the issue is created.
-        attachment = AttachmentManager.getReason(attachment, this, user);
-        activitySet.setAttachment(attachment);
+        // check to make sure the attachment has data before submitting it.
+        String attachmentData = attachment.getData();
+        if (attachmentData != null &&
+            attachmentData.length() > 0)
+        {
+            attachment = AttachmentManager.getReason(attachment, this, user);
+            activitySet.setAttachment(attachment);
+        }
         activitySet.save();
         // need to clear the cache since this is after the 
         // issue is saved. for some reason, things don't
@@ -3176,20 +3244,24 @@ public class Issue
                                           ScarabUser user)
         throws Exception
     {
-        String msg = doCheckAttributeValueWorkflow(newAttVals, attachment, user);
+        String msg = doCheckAttributeValueWorkflow(newAttVals, user);
         if (msg != null)
         {
             throw new Exception(msg);
         }
 
-        // Save explanatory reason
-        attachment.setTextFields(user, this, 
-                                 Attachment.MODIFICATION__PK);
-        attachment.save();
+        // save the attachment if it exists.
+        if (attachment != null)
+        {
+            attachment.setTextFields(user, this, 
+                                     Attachment.MODIFICATION__PK);
+            attachment.save();
+        }
 
         // Create the ActivitySet
         if (activitySet == null)
         {
+        
             activitySet = getActivitySet(user, attachment,
                                       ActivitySetTypePeer.EDIT_ISSUE__PK);
             activitySet.save();
@@ -3258,7 +3330,6 @@ public class Issue
      * which is the workflow error message otherwise it will return null.
      */
     public String doCheckAttributeValueWorkflow(HashMap newAttVals, 
-                                                Attachment attachment, 
                                                 ScarabUser user)
         throws Exception
     {
@@ -3295,6 +3366,21 @@ public class Issue
             }
         }
         return msg;
+    }
+    
+    /**
+     * This method is used with the setAttributeValues() method to 
+     * Make sure that workflow is valid. It will return a non-null String
+     * which is the workflow error message otherwise it will return null.
+     *
+     * @deprecated The attachment doesn't need to be passed into this method.
+     */
+    public String doCheckAttributeValueWorkflow(HashMap newAttVals, 
+                                                Attachment attachment, 
+                                                ScarabUser user)
+        throws Exception
+    {
+        return doCheckAttributeValueWorkflow(newAttVals, user);
     }
 
 
