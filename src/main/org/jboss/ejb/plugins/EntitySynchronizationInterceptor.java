@@ -48,7 +48,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.22 $
+*   @version $Revision: 1.23 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -336,13 +336,16 @@ extends AbstractInterceptor
 		public void beforeCompletion()
 		{
 			// DEBUG Logger.debug("beforeCompletion called for ctx "+ctx.hashCode());
-			
-			// This is an independent point of entry. We need to make sure the 
-			// thread is associated with the right context class loader
-			Thread.currentThread().setContextClassLoader(container.getClassLoader());
-			
+		
 			if (ctx.getId() != null) {
+				
+				// This is an independent point of entry. We need to make sure the 
+			    // thread is associated with the right context class loader
+				ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      			Thread.currentThread().setContextClassLoader(container.getClassLoader());
+
 				try {
+					
 					try {
 						
 						// MF FIXME: should we throw an exception if lock is present (app error)
@@ -352,8 +355,6 @@ extends AbstractInterceptor
 						if (ctx.isInvoked())  {
 							
 							//DEBUG Logger.debug("EntitySynchronization sync calling store on ctx "+ctx.hashCode());
-							
-//DEBUG							Logger.debug("EntitySynchronization sync calling store on ctx "+ctx.hashCode());
 							
 							// Check isModified bean flag
 							boolean dirty = true;
@@ -375,7 +376,8 @@ extends AbstractInterceptor
 					} catch (NoSuchEntityException e) {
 						// Object has been removed -- ignore
 					}
-				} catch (RemoteException e) {
+				}
+				catch (RemoteException e) {
 					Logger.exception(e);
 					
 					// Store failed -> rollback!
@@ -386,30 +388,38 @@ extends AbstractInterceptor
 					} catch (IllegalStateException ex) {
 						// DEBUG ex.printStackTrace();
 					}
+				} 
+				finally {
+				    
+					Thread.currentThread().setContextClassLoader(oldCl));
 				}
 			}
 		}
+	
+	public void afterCompletion(int status)
+	{
 		
-		public void afterCompletion(int status)
-		{
+		// This is an independent point of entry. We need to make sure the 
+		// thread is associated with the right context class loader
+		ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+		Thread.currentThread().setContextClassLoader(container.getClassLoader());
+		
+		if (ctx.getId() != null) {
 			
-			// This is an independent point of entry. We need to make sure the 
-			// thread is associated with the right context class loader
-			Thread.currentThread().setContextClassLoader(container.getClassLoader());
-			
-			if (ctx.getId() != null) {
+			try {
 				
 				//DEBUG Logger.debug("afterCompletion called for ctx "+ctx.hashCode());
 				
 				// If rolled back -> invalidate instance
 				if (status == Status.STATUS_ROLLEDBACK) {
+					
 					try {
 						
 						// finish the transaction association
 						ctx.setTransaction(null);
 						
 						ctx.setValid(false); 
-							
+						
 						// remove from the cache
 						container.getInstanceCache().remove(ctx.getId());
 						
@@ -422,8 +432,6 @@ extends AbstractInterceptor
 					} catch (Exception e) {
 						// Ignore
 					}
-				
-				
 				
 				} else {
 					// The transaction is done
@@ -462,10 +470,17 @@ extends AbstractInterceptor
 							}
 						break;
 					}
+				
 				}
 			}
-			// Notify all who are waiting for this tx to end, they are waiting since the locking logic
-			synchronized (ctx) {ctx.notifyAll();}
+			
+			finally {
+				
+				Thread.currentThread().setContextClassLoader(oldCl);
+				
+				// Notify all who are waiting for this tx to end, they are waiting since the locking logic
+				synchronized (ctx) {ctx.notifyAll();}
+			}
 		}
 	}
 }
