@@ -8,7 +8,6 @@
 package org.jboss.deployment.scope;
 
 import org.jboss.deployment.Deployment;
-import org.jboss.mgt.Application;
 import org.jboss.deployment.J2eeDeploymentException;
 import java.net.URL;
 import java.net.MalformedURLException;
