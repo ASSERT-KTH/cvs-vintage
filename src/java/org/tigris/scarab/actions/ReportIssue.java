@@ -74,7 +74,7 @@ import org.tigris.scarab.util.*;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.6 2001/04/06 23:34:01 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.7 2001/04/12 00:21:19 jmcnally Exp $
 */
 public class ReportIssue extends VelocityAction
 {
@@ -132,17 +132,23 @@ public class ReportIssue extends VelocityAction
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
         
+        // Summary is always required.
+        ScarabUser user = (ScarabUser)data.getUser();
+        Issue issue = user.getReportingIssue();
+        AttributeValue aval = (AttributeValue)issue
+            .getModuleAttributeValuesMap().get("SUMMARY");
+        Group group = intake.get("AttributeValue", aval.getQueryKey());
+        Field summary = group.get("Value");
+        summary.setRequired(true);
+
         if ( intake.isAllValid() ) 
         {
-            ScarabUser user = (ScarabUser)data.getUser();
-            Issue issue = user.getReportingIssue();
-
             Iterator i = issue.getModuleAttributeValuesMap()
                 .values().iterator();
             while (i.hasNext()) 
             {
-                AttributeValue aval = (AttributeValue)i.next();
-                Group group = intake.get("AttributeValue", aval.getQueryKey());
+                aval = (AttributeValue)i.next();
+                group = intake.get("AttributeValue", aval.getQueryKey());
                 if ( group != null ) 
                 {
                     group.setProperties(aval);

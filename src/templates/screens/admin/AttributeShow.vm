@@ -8,16 +8,37 @@ Please select an attribute from the list below, then click the "Modify
 Attribute" button:
 </p>
 
+<p>
+#pageErrorMsg()
+</p>
+
 <form action="$link.setPage("admin,AttributeShow.vm")" method="GET">
     <input type="hidden" name="action" value="admin.ModifyAttributes">
     <input type="hidden" name="nextTemplate" value="admin,AttributeEdit.vm">
-
+   
 #set ( $attgroup = $intake.Attribute.Default )
     <input type="hidden" name="$attgroup.CID" value="$attgroup.OID">
 
+## default to first attribute if none was selected previously
+#if ( $attgroup.Id.isSet() )
+    #set ($selectedId = $attgroup.Id.Value.Value)
+    #set ($selected = "")
+#else
+    #set ($selected = " selected")
+#end
+
     <select name="$attgroup.Id.Key" size="5">
 #foreach( $attribute in $module.AllAttributes )
-    <option value="$attribute.AttributeId">$attribute.Name</option>
+
+    <option value="$attribute.AttributeId"$selected>$attribute.Name</option>
+
+    ## this moves forward in the list, in case of editting multiple attributes
+    #if ($selectedId == $attribute.AttributeId)
+        #set ($selected = " selected")
+    #else
+        #set ($selected = "")
+    #end
+
 #end
     </select>
 

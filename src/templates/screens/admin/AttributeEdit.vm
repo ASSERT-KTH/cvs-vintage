@@ -75,6 +75,8 @@ In order to modify this attribute, please choose from the options below:
   <form action="$link.setPage("admin,AttributeEdit.vm")" method="POST">
     <input type="hidden" name="action" value="admin.ModifyAttributes">
     <input type="hidden" name="nextTemplate" value="admin,AttributeShow.vm">
+    <input type="hidden" name="$intake.Attribute.Default.Id.Key" 
+            value="$intake.Attribute.Default.Id">
     <input type="submit" name="eventSubmit_doAlldone" value="All Done">
   </form>
 </p>

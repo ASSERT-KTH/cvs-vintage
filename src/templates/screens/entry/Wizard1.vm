@@ -30,15 +30,25 @@
 
 
 
-Platform:<BR>
 #set ( $attrValue = $issue.ModuleAttributeValuesMap.get("PLATFORM") )
+#set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+#if ( $attrValue.isRequired() )
+    $attrInput.get("OptionId").setRequired(true)
+        <b>*</b>
+#end
+Platform:<br>
 #attrValueErrorMsg ($attrValue "OptionId") <br>
 #attrValueSelect ($attrValue "OptionId" "")
 
 <p>
 
-OS:<br>
 #set ( $attrValue = $issue.ModuleAttributeValuesMap.get("OPERATING SYSTEM") )
+#set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+#if ( $attrValue.isRequired() )
+    $attrInput.get("OptionId").setRequired(true)
+        <b>*</b>
+#end
+OS:<br>
 #attrValueErrorMsg ($attrValue "OptionId") <br>
 #attrValueSelect ($attrValue "OptionId" "")
 

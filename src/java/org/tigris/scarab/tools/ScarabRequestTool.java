@@ -52,6 +52,7 @@ import org.apache.turbine.om.*;
 import org.apache.turbine.util.RunData;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.velocity.TurbineVelocity;
+import org.apache.turbine.util.pool.Recyclable;
 
 
 // Scarab
@@ -61,7 +62,8 @@ import org.tigris.scarab.util.*;
 /**
  * This class is used by the Scarab API
  */
-public class ScarabRequestTool implements ScarabRequestScope
+public class ScarabRequestTool implements ScarabRequestScope,
+                                          Recyclable
 {
     /** the object containing request specific data */
     private RunData data;
@@ -240,6 +242,52 @@ try{
     {
         return ModulePeer.retrieveByPK(new NumberKey(key));
     }
+
+
+    // ****************** Recyclable implementation ************************
+
+    private boolean disposed;
+
+    /**
+     * Recycles the object for a new client. Recycle methods with
+     * parameters must be added to implementing object and they will be
+     * automatically called by pool implementations when the object is
+     * taken from the pool for a new client. The parameters must
+     * correspond to the parameters of the constructors of the object.
+     * For new objects, constructors can call their corresponding recycle
+     * methods whenever applicable.
+     * The recycle methods must call their super.
+     */
+    public void recycle()
+    {
+        disposed = false;
+    }
+
+    /**
+     * Disposes the object after use. The method is called
+     * when the object is returned to its pool.
+     * The dispose method must call its super.
+     */
+    public void dispose()
+    {
+        data = null;
+        user = null;
+        issue = null;
+        attribute = null;
+
+        disposed = true;
+    }
+
+    /**
+     * Checks whether the recyclable has been disposed.
+     * @return true, if the recyclable is disposed.
+     */
+    public boolean isDisposed()
+    {
+        return disposed;
+    }
+
+
 }
 
 

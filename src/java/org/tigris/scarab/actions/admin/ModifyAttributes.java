@@ -75,7 +75,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyAttributes.java,v 1.6 2001/04/11 19:19:50 jon Exp $
+    @version $Id: ModifyAttributes.java,v 1.7 2001/04/12 00:21:19 jmcnally Exp $
 */
 public class ModifyAttributes extends VelocityAction
 {
@@ -91,35 +91,19 @@ public class ModifyAttributes extends VelocityAction
         String nextTemplate = data.getParameters().getString(
             ScarabConstants.NEXT_TEMPLATE, template );
 
-        try
+        IntakeTool intake = (IntakeTool)context
+            .get(ScarabConstants.INTAKE_TOOL);
+
+        Group attribute = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
+        if ( attribute != null && attribute.get("Id").isSet() ) 
         {
-            IntakeTool intake = (IntakeTool)context
-                .get(ScarabConstants.INTAKE_TOOL);
-
-            if ( intake.isAllValid() )
-            {
-                Group attribute = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
-                String attributeID = attribute.get("Id").toString();
-
-                ApplicationTool srt = TurbinePull.getTool(context, 
-                                        ScarabConstants.SCARAB_REQUEST_TOOL);
-                if (srt != null)
-                {
-                    StringKey sk = new StringKey();
-                    sk.setValue(attributeID);
-                    Attribute attr = Attribute.getInstance(sk);
-                    ((ScarabRequestTool)srt).setAttribute(attr);
-                }
-
-                setTemplate(data, nextTemplate);
-            }
+            setTemplate(data, nextTemplate);                
         }
-        catch (Exception e)
+        else 
         {
-            setTemplate(data, template);
-            // display the error message
-            data.setMessage(e.getMessage());
+            data.setMessage("No attribute was selected.");
         }
+        
     }
 
     /**

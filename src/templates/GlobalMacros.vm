@@ -25,6 +25,12 @@
     #end
 #end
 
+#macro ( pageErrorMsg )
+    #if ($data.Message)
+        <font color="red">$data.Message</font>
+    #end
+#end
+
 
 #macro ( numericSelect $name $first $last $selected $size )
 
