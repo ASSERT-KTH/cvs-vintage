@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.135 2003/04/24 01:32:28 spestov Exp $
+ * @version $Id: jEdit.java,v 1.136 2003/04/24 01:39:10 spestov Exp $
  */
 public class jEdit
 {
@@ -2331,8 +2331,8 @@ public class jEdit
 	 */
 	public static void addMode(Mode mode)
 	{
-		Log.log(Log.DEBUG,jEdit.class,"Adding edit mode "
-			+ mode.getName());
+		//Log.log(Log.DEBUG,jEdit.class,"Adding edit mode "
+		//	+ mode.getName());
 
 		modes.addElement(mode);
 	} //}}}

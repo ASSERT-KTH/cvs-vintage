@@ -90,7 +90,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: EditPlugin.java,v 1.17 2003/04/24 01:32:28 spestov Exp $
+ * @version $Id: EditPlugin.java,v 1.18 2003/04/24 01:39:09 spestov Exp $
  * @since jEdit 2.1pre1
  */
 public abstract class EditPlugin
@@ -435,6 +435,12 @@ public abstract class EditPlugin
 					cache.dockablesURI = dockablesURI;
 					//cache.cachedDockableNames = 
 					//cache.cachedDockableActionFlags =
+				}
+				else if(lname.equals("services.xml"))
+				{
+					URL servicesURI = classLoader.getResource(name);
+					ServiceManager.loadServices(this,servicesURI);
+					//XXX: cache
 				}
 				else if(lname.endsWith(".props"))
 					properties.add(classLoader.getResource(name));
