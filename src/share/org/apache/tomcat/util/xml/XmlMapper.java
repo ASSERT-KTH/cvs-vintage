@@ -870,6 +870,6 @@ class PopStack extends XmlAction {
     public void end( SaxContext ctx) {
 	Stack st=ctx.getObjectStack();
 	Object top = st.pop();
-	if( ctx.getDebug() > 0 ) cts.log("Pop " + top.getClass().getName());
+	if( ctx.getDebug() > 0 ) ctx.log("Pop " + top.getClass().getName());
     }
 }
