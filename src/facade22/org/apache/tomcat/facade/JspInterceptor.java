@@ -298,6 +298,9 @@ public class JspInterceptor extends BaseInterceptor {
     public void contextInit(Context ctx)
 	throws TomcatException
     {
+	if(ctx.getContainer("*.jsp") == null)
+	    ctx.addServletMapping( "*.jsp", "jsp");
+
 	if( useJspServlet ) {
 	    // prepare jsp servlet. 
 	    Handler jasper=ctx.getServletByName( "jsp" );

@@ -64,7 +64,6 @@ public class WebXmlReader extends BaseInterceptor {
 	
 	try {
 	    // Defaults 
-	    ctx.addServletMapping( "*.jsp", "jsp");
 	    ctx.setSessionTimeOut( 30 );
 
 	    // We may read a "default" web.xml from INSTALL/conf/web.xml -
