@@ -1,4 +1,4 @@
-$Id: KNOWN_ISSUES.txt,v 1.5 2002/10/28 21:37:40 jon Exp $
+$Id: KNOWN_ISSUES.txt,v 1.6 2003/02/05 17:09:13 jon Exp $
 
 It is best to always consult the issue tracking system at
 
@@ -10,15 +10,13 @@ things to not work or be difficult...
 #1. Oracle database creation to a fresh schema fails when ant tries
     to delete non-existent tables prior to creating them.
 
-#2. You may still have some problems working with Oracle. Please let
-    us know if you encounter anything, however, we don't promise to
-    fix it right away unless you send real patches that conform to
-    our desire to have transparent cross database support (ie: don't
-    send us Oracle specific changes).
+#2. Oracle 8i support is broken. Oracle 9i should work fine.
 
-#3. XML import/export is completely unstable and not fully
-    implemented. Don't count on it working 100% until 1.0.
+#3. You may still have some problems working with Oracle. Please let
+    us know if you encounter anything, however, we don't promise to fix
+    it right away unless you send real patches that conform to our
+    desire to have transparent cross database support (ie: don't send us
+    Oracle specific changes).
 
-#4. There is the possibility that the code surrounding the activity
-    and transactions (ie: issue history) is not completely fleshed
-    out and debugged.
+#4. The user administration screens are buggy, badly coded and need to
+    be completely redone.
