@@ -418,6 +418,12 @@ public final class MessageBytes implements Cloneable, Serializable {
 	return strValue.indexOf( s, starting );
     }
     
+    // Inefficient initial implementation. Will be replaced on the next
+    // round of tune-up
+    public int indexOf(String s) {
+	return indexOf( s, 0 );
+    }
+    
     public int indexOfIgnoreCase(String s, int starting) {
 	toString();
 	String upper=strValue.toUpperCase();
