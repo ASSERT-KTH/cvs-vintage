@@ -57,10 +57,15 @@ import org.tigris.scarab.util.ScarabLink;
 
 /**
  * This class is a velocity Context used in email templates
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: EmailContext.java,v 1.3 2003/04/15 23:31:57 jon Exp $
  */
 public class EmailContext
     extends DefaultTemplateContext
 {
+    private String subjectTemplate;
+
     public EmailContext()
     {
         put("scarabG", new ScarabGlobalTool());
@@ -96,11 +101,11 @@ public class EmailContext
         put("defaultTextKey", defaultTextKey);
     }
 
-    private String subjectTemplate;
     public void setSubjectTemplate(String subjectTemplate)
     {
         this.subjectTemplate = subjectTemplate;
     }
+
     public String getSubjectTemplate()
     {
         return subjectTemplate;
