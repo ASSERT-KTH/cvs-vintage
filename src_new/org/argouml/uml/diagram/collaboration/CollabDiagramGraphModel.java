@@ -25,7 +25,7 @@
 // File: CollabDiagramGraphModel.java
 // Classes: CollabDiagramGraphModel
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramGraphModel.java,v 1.20 2003/04/01 14:09:57 bobtarling Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.21 2003/05/29 10:37:06 mkl Exp $
 
 
 package org.argouml.uml.diagram.collaboration;
@@ -161,6 +161,13 @@ implements VetoableChangeListener {
         MGeneralization gen = (MGeneralization)edge;
         end0 = gen.getParent();
         end1 = gen.getChild();
+    }
+    if (edge instanceof MDependency) {
+        Collection clients = ((MDependency)edge).getClients();
+        Collection suppliers = ((MDependency)edge).getSuppliers();
+        if (clients == null || suppliers == null) return false;
+        end0 = ((Object[])clients.toArray())[0];
+        end1 = ((Object[])suppliers.toArray())[0];
     }
     if (end0 == null || end1 == null) return false;
     if (!_nodes.contains(end0)) return false;

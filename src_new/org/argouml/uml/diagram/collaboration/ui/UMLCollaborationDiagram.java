@@ -24,7 +24,7 @@
 // File: UMLCollaborationDiagram.java
 // Classes: UMLCollaborationDiagram
 // Original Author: agauthie@ics.uci.edu
-// $Id: UMLCollaborationDiagram.java,v 1.25 2003/05/19 16:01:46 bobtarling Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.26 2003/05/29 10:37:06 mkl Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -60,6 +60,7 @@ import ru.novosoft.uml.behavior.collaborations.MMessage;
 import ru.novosoft.uml.foundation.core.MGeneralization;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
+import ru.novosoft.uml.foundation.core.MDependency;
 import ru.novosoft.uml.foundation.data_types.MAggregationKind;
 
 public class UMLCollaborationDiagram extends UMLDiagram {
@@ -119,6 +120,10 @@ public class UMLCollaborationDiagram extends UMLDiagram {
             MAggregationKind.COMPOSITE,
             true,
             "UniComposition");
+
+    protected static Action _actionDepend = 
+        new CmdSetMode(ModeCreatePolyEdge.class, "edgeClass", 
+                       MDependency.class, "Dependency");
 
     ////////////////////////////////////////////////////////////////
     // contructors
@@ -191,6 +196,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
             getAssociationActions(),
             ActionAddMessage.SINGLETON,
             _actionGeneralize,
+            _actionDepend,
             null,
             ActionAddNote.SINGLETON
         };

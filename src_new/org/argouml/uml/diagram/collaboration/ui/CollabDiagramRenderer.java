@@ -24,7 +24,7 @@
 // File: CollabDiagramRenderer.java
 // Classes: CollabDiagramRenderer
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramRenderer.java,v 1.6 2002/10/20 21:11:15 linus Exp $
+// $Id: CollabDiagramRenderer.java,v 1.7 2003/05/29 10:37:06 mkl Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -64,6 +64,11 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
     	MGeneralization   gen    = (MGeneralization) edge;
         FigGeneralization genFig = new FigGeneralization(gen, lay);
         return genFig;
+    }
+    if (edge instanceof MDependency) {
+        MDependency dep = (MDependency) edge;
+        FigDependency depFig = new FigDependency(dep ,lay);
+        return depFig;
     }
 
     cat.debug("TODO CollabDiagramRenderer getFigEdgeFor");
