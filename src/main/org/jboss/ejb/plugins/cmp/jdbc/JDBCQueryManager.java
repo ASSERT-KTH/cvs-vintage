@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCQueryManager
 {
@@ -106,7 +106,7 @@ public class JDBCQueryManager
          try
          {
             // try to get the finder method on the local home interface
-            localHomeClass.getMethod(
+            method = localHomeClass.getMethod(
                   "findByPrimaryKey",
                   new Class[] { entity.getPrimaryKeyClass() });
          } catch(NoSuchMethodException e)
