@@ -7,24 +7,37 @@
 
 package org.jboss.ejb;
 
+import java.rmi.RemoteException;
+import java.security.Identity;
+import java.security.Principal;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.Stack;
+import javax.ejb.EJBContext;
+import javax.ejb.EJBException;
+import javax.ejb.EJBHome;
+import javax.ejb.EJBLocalHome;
+import javax.ejb.TimerService;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.Status;
+import javax.transaction.Synchronization;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
+import javax.transaction.UserTransaction;
+
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SecurityRoleRefMetaData;
 import org.jboss.security.RealmMapping;
-import org.jboss.security.SimplePrincipal;
 import org.jboss.security.RunAsIdentity;
-import org.jboss.security.SecurityAssociation;
+import org.jboss.security.SimplePrincipal;
 import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
-
-import javax.ejb.*;
-import javax.ejb.Timer;
-import javax.transaction.*;
-import java.rmi.RemoteException;
-import java.security.Identity;
-import java.security.Principal;
-import java.util.*;
-import java.io.Serializable;
 
 /**
  * The EnterpriseContext is used to associate EJB instances with
@@ -40,12 +53,7 @@ import java.io.Serializable;
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler</a>
- * @version $Revision: 1.74 $
- *
- * Revisions:
- * 2001/06/29: marcf
- *	- Added txLock to permit locking and most of all notifying on tx
- *	  demarcation only
+ * @version $Revision: 1.75 $
  */
 public abstract class EnterpriseContext
         implements AllowedOperationsFlags
@@ -221,13 +229,13 @@ public abstract class EnterpriseContext
 
    protected boolean isContainerManagedTx()
    {
-      BeanMetaData md = (BeanMetaData)con.getBeanMetaData();
+      BeanMetaData md = con.getBeanMetaData();
       return md.isContainerManagedTx();
    }
 
    protected boolean isUserManagedTx()
    {
-      BeanMetaData md = (BeanMetaData)con.getBeanMetaData();
+      BeanMetaData md = con.getBeanMetaData();
       return md.isContainerManagedTx() == false;
    }
 
@@ -386,7 +394,8 @@ public abstract class EnterpriseContext
        */ 
       public boolean isCallerInRole(String roleName)
       {
-         RunAsIdentity runAsIdentity = SecurityAssociation.peekRunAsIdentity();
+         // Check the caller of this beans run-as identity
+         RunAsIdentity runAsIdentity = SecurityActions.peekRunAsIdentity(1);
          if (principal == null && runAsIdentity == null)
             return false;
 
@@ -437,7 +446,8 @@ public abstract class EnterpriseContext
       { 
          if (userTransaction == null)
          {
-            if (isContainerManagedTx()) {
+            if (isContainerManagedTx())
+            {
                throw new IllegalStateException
                   ("CMT beans are not allowed to get a UserTransaction");
             }
