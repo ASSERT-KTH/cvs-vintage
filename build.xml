@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.181 2004/12/20 03:27:37 starksm Exp $ -->
+<!-- $Id: build.xml,v 1.182 2005/01/13 17:46:41 ejort Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -204,13 +204,8 @@
      |  documentation compiles.
     -->
   <target name="compile"
-    depends="generate-parsers,
-compile-mbean-sources,
-compile-classes,
-compile-rmi,
-compile-etc,
-compile-resources,
-compile-bin"
+    depends="generate-parsers, compile-classes,
+             compile-rmi, compile-etc, compile-resources, compile-bin"
     description="Compile all source files."/>
 
   <!-- Generate parsers -->
@@ -244,51 +239,6 @@ compile-bin"
 
   </target>
 
-  <!-- Compile mbeans with XDoclet -->
-  <target name="compile-mbean-sources" depends="init">
-    <taskdef name="jmxdoclet" classname="xdoclet.modules.jmx.JMXDocletTask"
-      classpathref="xdoclet.task.classpath"/>
-
-    <mkdir dir="${build.gen-src}"/>
-    <jmxdoclet
-      destdir="${build.gen-src}"
-      excludedtags="@version,@author">
-      <fileset dir="${source.java}">
-        <include name="org/jboss/deployment/EARDeployer.java"/>
-        <include name="org/jboss/deployment/EARDeployment.java"/>
-        <include name="org/jboss/ejb/Container.java"/>
-        <include name="org/jboss/ejb/EjbModule.java"/>
-        <include name="org/jboss/ejb/EJBDeployer.java"/>
-        <include name="org/jboss/ejb/EntityContainer.java"/>
-        <include name="org/jboss/ejb/MessageDrivenContainer.java"/>
-        <include name="org/jboss/ejb/plugins/AbstractInstanceCache.java"/>
-        <include name="org/jboss/ejb/plugins/AbstractInstancePool.java"/>
-        <include name="org/jboss/ejb/plugins/EntityInstanceCache.java"/>
-        <include name="org/jboss/ejb/plugins/PerTxEntityInstanceCache.java"/>
-        <include name="org/jboss/ejb/plugins/StatefulSessionFilePersistenceManager.java"/>
-        <include name="org/jboss/ejb/plugins/keygenerator/hilo/HiLoKeyGeneratorFactory.java"/>
-        <include name="org/jboss/ejb/plugins/cmp/jdbc/SQLExceptionProcessor.java"/>
-        <include name="org/jboss/ejb/plugins/cmp/jdbc/metadata/DataSourceMetaData.java"/>
-        <include name="org/jboss/ejb/plugins/cmp/jdbc/metadata/MetaDataLibrary.java"/>
-        <include name="org/jboss/ejb/plugins/cmp/jdbc2/schema/TableCache.java"/>
-        <include name="org/jboss/ejb/plugins/cmp/jdbc2/schema/PartitionedTableCache.java"/>
-        <include name="org/jboss/ejb/plugins/inflow/JBossMessageEndpointFactory.java"/>
-        <include name="org/jboss/ejb/plugins/jms/JMSContainerInvoker.java"/>
-        <include name="org/jboss/ejb/txtimer/EJBTimerServiceImpl.java"/>
-        <include name="org/jboss/ejb/txtimer/FixedDelayRetryPolicy.java"/>
-        <include name="org/jboss/ejb/txtimer/DatabasePersistencePolicy.java"/>
-        <include name="org/jboss/ejb/txtimer/NoopPersistencePolicy.java"/>
-        <include name="org/jboss/invocation/**/*.java"/>
-        <include name="org/jboss/jms/**/*.java"/>
-        <include name="org/jboss/jmx/**/*.java"/>
-        <include name="org/jboss/logging/**/*.java"/>
-        <include name="org/jboss/naming/**/*.java"/>
-        <include name="org/jboss/web/**/*.java"/>
-      </fileset>
-      <mbeaninterface mergedir="${project.tools}/etc/xdoclet/templates"/>
-    </jmxdoclet>
-  </target>
-
   <!-- Compile all class files -->
   <target name="compile-classes" depends="init">
     <mkdir dir="${build.classes}"/>
@@ -309,7 +259,6 @@ compile-bin"
 
       <src path="${source.java}"/>
       <src path="${build.parsers}"/>
-      <src path="${build.gen-src}"/>
 
       <exclude name="org/jboss/ejb/plugins/cmp/jdbc/jdbc3/*.java" unless="HAVE_JDK_1.4"/>
     </javac>
