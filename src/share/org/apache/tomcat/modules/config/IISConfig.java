@@ -128,7 +128,7 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Gal Shachor
-	@version $Revision: 1.7 $
+	@version $Revision: 1.8 $
  */
 public class IISConfig extends BaseJkConfig  { 
 
@@ -333,7 +333,7 @@ public class IISConfig extends BaseJkConfig  {
     {
         if( debug > 0 )
             log( "Adding extension map for " + ctxPath + "/*." + ext );
-	uri_worker.println(ctxPath + "/*." + ext + " " + jkProto);
+	uri_worker.println(ctxPath + "/*." + ext + "=$(default.worker)");
         return true;
     }
 
