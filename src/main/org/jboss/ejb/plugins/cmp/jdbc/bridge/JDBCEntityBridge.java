@@ -51,7 +51,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    protected JDBCEntityMetaData metadata;
@@ -242,6 +242,10 @@ public class JDBCEntityBridge implements EntityBridge {
 
    public JDBCEntityMetaData getMetaData() {
       return metadata;
+   }
+
+   public JDBCStoreManager getManager() {
+      return manager;
    }
 
    /**
