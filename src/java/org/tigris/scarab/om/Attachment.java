@@ -57,11 +57,10 @@ import org.apache.torque.pool.DBConnection;
 import org.apache.turbine.Log;
 import org.apache.turbine.Turbine;
 
-import org.apache.fulcrum.upload.FileItem;
+import org.apache.commons.fileupload.FileItem;
 import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.upload.UploadService;
 
-//import org.apache.commons.collections.ExtendedProperties;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 
