@@ -39,7 +39,7 @@ import antlr.collections.impl.BitSet;
  * 
  * <p>Version tracking now done with following cvs ID:
  *
- * <p>$Id: JavaRecognizer.java,v 1.25 2003/12/13 21:48:44 alexb Exp $
+ * <p>$Id: JavaRecognizer.java,v 1.26 2003/12/20 19:37:01 alexb Exp $
  * 
  * --------- old notes: -------------------------------------------
  * <pre>
@@ -128,8 +128,8 @@ public class JavaRecognizer extends antlr.LLkParser
         public static final short ACC_INTERFACE = 0x0200;
         public static final short ACC_ABSTRACT  = 0x0400;                     
 
-        int level = 1;
-	
+	/** Import details level */
+	private int level = 2;
 	
 	// This one is not(!) in the JVM specs, but required
 	public static final short ACC_SYNCHRONIZED  = 0x0800;
@@ -164,10 +164,10 @@ public class JavaRecognizer extends antlr.LLkParser
 
 	void setModeller(Modeller modeller) {
 	    _modeller = modeller;
-            Object levelObj = _modeller.getAttribute("level");
-            if(levelObj instanceof Integer){
-                this.level = ((Integer)levelObj).intValue();
-            }
+	    Object lvl = modeller.getAttribute("level");
+	    if (lvl != null) {
+	      level = ((Integer)lvl).intValue();
+	    }
         }
 	
         // A reference to the last added MOperation (here: method)
