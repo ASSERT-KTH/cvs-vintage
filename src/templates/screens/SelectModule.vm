@@ -1,4 +1,3 @@
-#set ($userModules = $data.User.Modules)
 #if ($scarabR.CurrentModule)
   #set ($currentModule = $scarabR.CurrentModule)
 #end
@@ -33,6 +32,7 @@
 #end
 
 <h3>Select module</h3>
+#set ($userModules = $data.User.Modules)
 #if ($userModules.size() > 0)
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
