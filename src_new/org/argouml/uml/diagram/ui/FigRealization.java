@@ -1,16 +1,16 @@
-// $Id: FigRealization.java,v 1.4 2003/06/29 23:52:20 linus Exp $
+// $Id: FigRealization.java,v 1.5 2004/05/27 07:54:31 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
-// and this paragraph appear in all copies.  This software program and
+// and this paragraph appear in all copies. This software program and
 // documentation are copyrighted by The Regents of the University of
 // California. The software program and documentation are supplied "AS
 // IS", without any accompanying services from The Regents. The Regents
 // does not warrant that the operation of the program will be
 // uninterrupted or error-free. The end-user understands that the program
 // was developed for research purposes and is advised not to rely
-// exclusively on the program for any reason.  IN NO EVENT SHALL THE
+// exclusively on the program for any reason. IN NO EVENT SHALL THE
 // UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
 // SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
 // ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -25,7 +25,7 @@
 // File: FigRealization.java
 // Classes: FigRealization
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigRealization.java,v 1.4 2003/06/29 23:52:20 linus Exp $
+// $Id: FigRealization.java,v 1.5 2004/05/27 07:54:31 mkl Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -46,36 +46,40 @@ public class FigRealization extends FigEdgeModelElement {
     ArrowHeadTriangle endArrow;
 
     public FigRealization() {
-	addPathItem(_stereo, new PathConvPercent(this, 50, 10));
-	endArrow = new ArrowHeadTriangle();
-	endArrow.setFillColor(Color.white);
-	setDestArrowHead(endArrow);
-	setBetweenNearestPoints(true);
-	_stereo.setText("");
+        addPathItem(_stereo, new PathConvPercent(this, 50, 10));
+        endArrow = new ArrowHeadTriangle();
+        endArrow.setFillColor(Color.white);
+        setDestArrowHead(endArrow);
+        setBetweenNearestPoints(true);
+        _stereo.setText("");
+        getFig().setDashed(true);
     }
 
     public FigRealization(Object edge) {
-	this();
-	setOwner(edge);
+        this();
+        setOwner(edge);
     }
 
     ////////////////////////////////////////////////////////////////
     // accessors
 
     public void setFig(Fig f) {
-	super.setFig(f);
-	_fig.setDashed(true);
+        super.setFig(f);
+        _fig.setDashed(true);
     }
 
+    protected boolean canEdit(Fig f) {
+        return false;
+    }
 
-    protected boolean canEdit(Fig f) { return false; }
-
-    /** This is called aftern any part of the UML MModelElement has
-     *  changed. This method automatically updates the name FigText.
-     *  Subclasses should override and update other parts. */
+    /**
+     * This is called after any part of the UML MModelElement has changed. This
+     * method automatically updates the name FigText. Subclasses should override
+     * and update other parts.
+     */
     protected void modelChanged(MElementEvent e) {
-	// do not set _name
-	//updateStereotypeText();
+        // do not set _name
+        //updateStereotypeText();
     }
 
     public void paint(Graphics g) {
