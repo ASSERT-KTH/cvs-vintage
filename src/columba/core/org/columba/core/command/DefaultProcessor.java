@@ -39,7 +39,7 @@ public class DefaultProcessor extends Thread {
 	private int timeStamp;
 
 	public DefaultProcessor() {
-		operationQueue = new Vector();
+		operationQueue = new Vector(10);
 
 		worker = new Vector();
 

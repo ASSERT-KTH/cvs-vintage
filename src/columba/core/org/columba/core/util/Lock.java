@@ -34,7 +34,7 @@ public class Lock {
 
 	public synchronized boolean tryToGetLock(Object locker) {
 		// Is it already locked from locker ?
-		if( this.locker == locker) return true;
+		if( this.locker == locker && locker!=null) return true;
 
 		// Check if locked
 		if( locked ) {
