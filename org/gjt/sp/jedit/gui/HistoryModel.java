@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * fields. Note that the list model implementation is incomplete; no events
  * are fired when the history model changes.
  * @author Slava Pestov
- * @version $Id: HistoryModel.java,v 1.13 2003/07/28 21:08:04 spestov Exp $
+ * @version $Id: HistoryModel.java,v 1.14 2003/10/12 22:17:35 spestov Exp $
  */
 public class HistoryModel extends AbstractListModel
 {
@@ -105,6 +105,7 @@ public class HistoryModel extends AbstractListModel
 	 */
 	public void clear()
 	{
+		modified = true;
 		data.removeAllElements();
 	} //}}}
 
