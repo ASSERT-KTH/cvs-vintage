@@ -412,6 +412,7 @@ public  class AttributeGroup
                 rmo2.save();
             }
         }
+        getMethodResult().remove(this, AttributeGroup.GET_ATTRIBUTES);
     }
 
     public void deleteAttribute( Attribute attribute, ScarabUser user,
@@ -522,6 +523,7 @@ public  class AttributeGroup
          {
              throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
          }            
+        getMethodResult().remove(this, AttributeGroup.GET_ATTRIBUTES);
     }
 
     private RAttributeAttributeGroup addRAttributeAttributeGroup( Attribute attribute )

@@ -55,7 +55,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupTest.java,v 1.4 2002/10/28 22:00:33 jon Exp $
+ * @version $Id: AttributeGroupTest.java,v 1.5 2003/01/28 18:44:41 jmcnally Exp $
  */
 public class AttributeGroupTest extends BaseTestCase
 {
@@ -84,9 +84,9 @@ public class AttributeGroupTest extends BaseTestCase
         desc = AttributeManager.getInstance(new NumberKey("1"));
         group = AttributeGroupManager.getInstance(new NumberKey("131"));
 
+        testGetAttributes();
         testDeleteAttribute();
         testAddAttribute();
-        testGetAttributes();
         testGetRAttributeAttributeGroup();
         testDelete();
     }
@@ -96,13 +96,16 @@ public class AttributeGroupTest extends BaseTestCase
         System.out.println("\ntestDeleteAttribute()");
         group.deleteAttribute(severity, getUser1(), getModule());
         group.deleteAttribute(desc, getUser1(), getModule());
+        assertEquals(5, group.getAttributes().size());
     }
 
     private void testAddAttribute() throws Exception
     {
         System.out.println("\ntestAddAttribute()");
         group.addAttribute(severity);
+        assertEquals(6, group.getAttributes().size());
         group.addAttribute(desc);
+        assertEquals(7, group.getAttributes().size());
     }
 
     private void testGetAttributes() throws Exception
