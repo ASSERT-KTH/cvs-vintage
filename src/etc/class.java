@@ -1,41 +1,115 @@
 /*
- * JBoss, the OpenSource EJB server
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
+* JBoss, the OpenSource EJB server
+*
+* Distributable under LGPL license.
+* See terms of license at gnu.org.
+*/
 package x;
 
+//EXPLICIT IMPORTS
+import a.b.C1; // GOOD
+import a.b.C2;
+import a.b.C3;
+
+// DO NOT WRITE
+import a.b.*;  // BAD
+
 /**
- *   <description> 
- *
- *   @see <related>
- *   @author <firstname> <lastname> (<email>)
- *   @version $Revision: 1.3 $
- */
+*   <description> 
+*
+*   @see <related>
+*   @author  <a href="mailto:{email}">{full name}</a>.
+*   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
+*   @version $Revision: 1.4 $
+*   
+*   Revisions:
+*
+*   yyyymmdd author: explicit fix description (no line numbers but methods) go beyond the cvs commit message
+*   eg: 
+*   20010516 marc fleury: Ask all developers to clearly document the Revision, changed the header.  
+* 
+*/
+
+
+// DO NOT USE "TAB" TO INDENT CODE USE *2* SPACES FOR PORTABILITY AMONG EDITORS
+
 public class X
-   extends Y
-   implements Z
+extends Y
+implements Z
 {
-   // Constants -----------------------------------------------------
-
-   // Attributes ----------------------------------------------------
-
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
-
-   // Public --------------------------------------------------------
-
-   // Z implementation ----------------------------------------------
-
-   // Y overrides ---------------------------------------------------
-
-   // Package protected ---------------------------------------------
-
-   // Protected -----------------------------------------------------
-
-   // Private -------------------------------------------------------
-
-   // Inner classes -------------------------------------------------
+  // Constants -----------------------------------------------------
+  
+  // Attributes ----------------------------------------------------
+  
+  // Static --------------------------------------------------------
+  
+  // Constructors --------------------------------------------------
+  
+  // Public --------------------------------------------------------
+  
+  public void startService() throws Exception
+  { // Use the newline for the opening bracket so we can match top and bottom bracket visually
+    
+    Class cls = Class.forName(dataSourceClass);
+    vendorSource = (XADataSource)cls.newInstance();
+    
+    // JUMP A LINE BETWEEN LOGICALLY DISCTINT **STEPS** AND ADD A LINE OF COMMENT TO IT
+    cls = vendorSource.getClass();
+    
+    if(properties != null && properties.length() > 0)
+    {
+      
+      try
+      {
+      }
+      catch (IOException ioe)
+      {
+      }
+      for (Iterator i = props.entrySet().iterator(); i.hasNext();)
+      {
+        
+        // Get the name and value for the attributes
+        Map.Entry entry = (Map.Entry) i.next();
+        String attributeName = (String) entry.getKey();
+        String attributeValue = (String) entry.getValue();
+        
+        // Print the debug message
+        log.debug("Setting attribute '" + attributeName + "' to '" +
+          attributeValue + "'");
+        
+        // get the attribute 
+        Method setAttribute =
+        cls.getMethod("set" + attributeName,
+          new Class[] { String.class });
+        
+        // And set the value  
+        setAttribute.invoke(vendorSource,
+          new Object[] { attributeValue });
+      }
+    }
+    
+    
+    // Test database
+    vendorSource.getXAConnection().close();
+    
+    // Bind in JNDI
+    bind(new InitialContext(), "java:/"+getPoolName(),
+      new Reference(vendorSource.getClass().getName(),
+        getClass().getName(), null));
+    
+    // We are done
+    log.log("XA Data source "+getPoolName()+" bound to java:/"+getPoolName());
+  }
+  // Z implementation ----------------------------------------------
+  
+  // Y overrides ---------------------------------------------------
+  
+  // Package protected ---------------------------------------------
+  
+  // Protected -----------------------------------------------------
+  
+  // Private -------------------------------------------------------
+  
+  // Inner classes -------------------------------------------------
 }
+
