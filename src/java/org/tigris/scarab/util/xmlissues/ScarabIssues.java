@@ -83,7 +83,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * inValidationMode set to false will do actual insert of the xml issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.38 2003/06/26 17:58:14 jmcnally Exp $
+ * @version $Id: ScarabIssues.java,v 1.39 2003/07/25 19:11:26 dlr Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -239,7 +239,7 @@ public class ScarabIssues implements java.io.Serializable
     void doValidateUsers()
         throws Exception
     {
-        if (importUsers != null && importUsers.size() > 0)
+        if (importUsers != null && !importUsers.isEmpty())
         {
             for (Iterator itr = importUsers.iterator(); itr.hasNext();)
             {
@@ -268,7 +268,7 @@ public class ScarabIssues implements java.io.Serializable
     void doValidateDependencies()
         throws Exception
     {
-        if (allDependencies != null && allDependencies.size() > 0)
+        if (allDependencies != null && !allDependencies.isEmpty())
         {
             for (Iterator itr = allDependencies.iterator(); itr.hasNext();)
             {
@@ -430,24 +430,37 @@ public class ScarabIssues implements java.io.Serializable
         }
     }
 
+    /**
+     * Validates the data from a XML representation of an issue.
+     * Examines as much of the data as possible, even if errors are
+     * encountered in parent data.
+     *
+     * @param module The module containing <code>issue</code>.
+     * @param issue The issue to validate.
+     */
     private void doIssueValidateEvent(XmlModule module, XmlIssue issue)
         throws Exception
     {
-        // check for existing module
+        // Check for the existance of the module.
         Module moduleOM = null;
         try
         {
-            moduleOM = ModuleManager.getInstance(module.getDomain(), module.getName(), module.getCode());
+            moduleOM = ModuleManager.getInstance(module.getDomain(),
+                                                 module.getName(),
+                                                 module.getCode());
             if (moduleOM == null)
             {
                 throw new Exception();
             }
-// commented out for now cause this isn't really necessary/required data            
-//            importUsers.add(module.getOwner());
+
+            // TODO: Handle user import.  Until then, ignore the
+            // module's owner.
+            //importUsers.add(module.getOwner());
         }
         catch (Exception e)
         {
-            Object[] args = {module.getName(), module.getCode(), module.getDomain()};
+            Object[] args = { module.getName(), module.getCode(),
+                              module.getDomain() };
             String error = Localization.format(
                 ScarabConstants.DEFAULT_BUNDLE_NAME,
                 getLocale(),
@@ -455,7 +468,7 @@ public class ScarabIssues implements java.io.Serializable
             importErrors.add(error);
         }
 
-        // get the instance of the issue type
+        // Check for the existance of the issue type.
         IssueType issueTypeOM = null;
         try
         {
@@ -497,10 +510,11 @@ public class ScarabIssues implements java.io.Serializable
                 }
             }
             
-            // validate the activity set types
+            // Validate the activity set's type.
             try
             {
-                ActivitySetType ttOM = ActivitySetTypeManager.getInstance(activitySet.getType());
+                ActivitySetType ttOM =
+                    ActivitySetTypeManager.getInstance(activitySet.getType());
                 if (ttOM == null)
                 {
                     throw new Exception();
@@ -518,82 +532,108 @@ public class ScarabIssues implements java.io.Serializable
             List activities = activitySet.getActivities();
             for (Iterator itrb = activities.iterator(); itrb.hasNext();)
             {
-                XmlActivity activity = (XmlActivity) itrb.next();
-                if (activity.getOldUser() != null)
+                validateActivity(moduleOM, issueTypeOM, moduleAttributeList,
+                                 activitySet, (XmlActivity) itrb.next());
+            }
+        }
+    }
+
+    /**
+     * Validates an individual activity.  A helper method for {@link
+     * #doIssueValidateEvent(XmlModule, XmlIssue)}.
+     *
+     * @param moduleOM
+     * @param issueTypeOM
+     * @param moduleAttributeList The attributes for
+     * <code>moduleOM</code> and <code>issueTypeOM</code>.
+     * @param activitySet The transaction which <code>activity</code>
+     * was a part of.
+     * @param activity The activity to validate.
+     * @see #doIssueValidateEvent(XmlModule, XmlIssue)
+     */
+    private void validateActivity(Module moduleOM, IssueType issueTypeOM,
+                                  List moduleAttributeList,
+                                  XmlActivitySet activitySet,
+                                  XmlActivity activity)
+    {
+        if (activity.getOldUser() != null)
+        {
+            importUsers.add(activity.getOldUser());
+        }
+        if (activity.getNewUser() != null)
+        {
+            importUsers.add(activity.getNewUser());
+        }
+        XmlAttachment activityAttachment = activity.getAttachment();
+        if (activityAttachment != null)
+        {
+            if (allowFileAttachments &&
+                activityAttachment.getReconcilePath() &&
+                !new File(activityAttachment.getFilename()).exists())
+            {
+                String error = Localization.format
+                    (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
+                     "CouldNotFindFileAttachment",
+                     activityAttachment.getFilename());
+                importErrors.add(error);
+            }
+
+            String attachCreatedBy = activityAttachment.getCreatedBy();
+            if (attachCreatedBy != null)
+            {
+                importUsers.add(attachCreatedBy);
+            }
+        }
+
+        // Get the Attribute associated with the Activity
+        Attribute attributeOM = null;
+        String activityAttribute = activity.getAttribute();
+        try
+        {
+            attributeOM = Attribute.getInstance(activityAttribute);
+            if (attributeOM == null)
+            {
+                throw new Exception();
+            }
+        }
+        catch (Exception e)
+        {
+            String error = Localization.format
+                (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
+                 "CouldNotFindGlobalAttribute", activityAttribute);
+            importErrors.add(error);
+        }
+
+        if (attributeOM != null)
+        {
+            if (attributeOM.equals(nullAttribute))
+            {
+                // Add any dependency activities to a list for later
+                // processing.
+                if (isDependencyActivity(activity))
                 {
-                    importUsers.add(activity.getOldUser());
-                }
-                if (activity.getNewUser() != null)
-                {
-                    importUsers.add(activity.getNewUser());
-                }
-                XmlAttachment activityAttachment = activity.getAttachment();
-                if (activityAttachment != null)
-                {
-                    if (allowFileAttachments && activityAttachment.getReconcilePath() &&
-                       ! new File(activityAttachment.getFilename()).exists())
+                    if (!isDuplicateDependency(activitySet))
                     {
-                        String error = Localization.format(
-                            ScarabConstants.DEFAULT_BUNDLE_NAME,
-                            getLocale(),
-                            "CouldNotFindFileAttachment", activityAttachment.getFilename());
-                        importErrors.add(error);
+                        allDependencies.add(activity);
+                        LOG.debug("-------------Stored Dependency # " +
+                                  allDependencies.size() + "-------------");
                     }
 
-                    String attachCreatedBy = activityAttachment.getCreatedBy();
-                    if (attachCreatedBy != null)
-                    {
-                        importUsers.add(attachCreatedBy);
-                    }
+                    // Dependency activities don't require further
+                    // validation.
+                    return;
                 }
-
-                // Get the Attribute associated with the Activity
-                Attribute attributeOM = null;
-                String activityAttribute = activity.getAttribute();
-                try
+            }
+            else
+            {
+                // The null attribute will never be in this list.
+                if (moduleAttributeList != null &&
+                    !moduleAttributeList.contains(attributeOM))
                 {
-                    attributeOM = Attribute.getInstance(activityAttribute);
-                    if (attributeOM == null)
-                    {
-                        throw new Exception();
-                    }
-                }
-                catch (Exception e)
-                {
-                    String error = Localization.format(
-                        ScarabConstants.DEFAULT_BUNDLE_NAME,
-                        getLocale(),
-                        "CouldNotFindGlobalAttribute", activityAttribute);
+                    String error = Localization.format
+                        (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
+                         "CouldNotFindRModuleAttribute", activityAttribute);
                     importErrors.add(error);
-                }
-
-                if (attributeOM != null)
-                {
-                    if (attributeOM.equals(nullAttribute))
-                    {
-                        // add any dependency activities to a list for later processing
-                        if (isDependencyActivity(activity))
-                        {
-                            if (!isDuplicateDependency(activitySet))
-                            {
-                                allDependencies.add(activity);
-                                LOG.debug("-------------Stored Dependency # " + allDependencies.size() + "-------------");
-                            }
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        // the null attribute will never be in this list, so don't check for it.
-                        if (moduleAttributeList != null && !moduleAttributeList.contains(attributeOM))
-                        {
-                            String error = Localization.format(
-                                ScarabConstants.DEFAULT_BUNDLE_NAME,
-                                getLocale(),
-                                "CouldNotFindRModuleAttribute", activityAttribute);
-                            importErrors.add(error);
-                        }
-                    }
                 }
                 else if (activity.getNewOption() != null)
                 {
@@ -602,7 +642,8 @@ public class ScarabIssues implements java.io.Serializable
                     try
                     {
                         attributeOptionOM = AttributeOption
-                            .getInstance(attributeOM, activity.getNewOption());
+                            .getInstance(attributeOM, activity.getNewOption(),
+                                         moduleOM, issueTypeOM);
                         if (attributeOptionOM == null)
                         {
                             throw new Exception();
@@ -610,19 +651,19 @@ public class ScarabIssues implements java.io.Serializable
                     }
                     catch (Exception e)
                     {
-                        Object[] args = {activity.getNewOption(), ((attributeOM != null)?
-                                attributeOM.getName(): "null")};
-                        String error = Localization.format(
-                            ScarabConstants.DEFAULT_BUNDLE_NAME,
-                            getLocale(),
-                            "CouldNotFindAttributeOption", args);
+                        Object[] args = { activity.getNewOption(),
+                                          attributeOM.getName() };
+                        String error = Localization.format
+                            (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
+                             "CouldNotFindAttributeOption", args);
                         importErrors.add(error);
                     }
                     // check for module options
                     try
                     {
                         RModuleOption rmo = RModuleOptionManager
-                            .getInstance(moduleOM, issueTypeOM, attributeOptionOM);
+                            .getInstance(moduleOM, issueTypeOM,
+                                         attributeOptionOM);
                         if (rmo == null)
                         {
                             throw new Exception();
@@ -630,12 +671,13 @@ public class ScarabIssues implements java.io.Serializable
                     }
                     catch (Exception e)
                     {
-                        Object[] args = {activity.getNewOption(), ((attributeOM != null)?
-                                attributeOM.getName(): "null")};
-                        String error = Localization.format(
-                            ScarabConstants.DEFAULT_BUNDLE_NAME,
-                            getLocale(),
-                            "CouldNotFindModuleAttributeOption", args);
+                        Object[] args = { activity.getNewOption(), 
+                                          attributeOM.getName() };
+                        String error = Localization.format
+                            (ScarabConstants.DEFAULT_BUNDLE_NAME,
+                             getLocale(),
+                             "CouldNotFindModuleAttributeOption",
+                             args);
                         importErrors.add(error);
                     }
                 }
@@ -653,17 +695,18 @@ public class ScarabIssues implements java.io.Serializable
                     }
                     catch (Exception e)
                     {
-                        String error = Localization.format(
-                            ScarabConstants.DEFAULT_BUNDLE_NAME,
-                            getLocale(),
-                            "CouldNotFindAttributeOption", activity.getOldOption());
+                        String error = Localization.format
+                            (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
+                             "CouldNotFindAttributeOption",
+                             activity.getOldOption());
                         importErrors.add(error);
                     }
                     // check for module options
                     try
                     {
                         RModuleOption rmo = RModuleOptionManager
-                            .getInstance(moduleOM, issueTypeOM, attributeOptionOM);
+                            .getInstance(moduleOM, issueTypeOM,
+                                         attributeOptionOM);
                         if (rmo == null)
                         {
                             throw new Exception();
@@ -671,11 +714,11 @@ public class ScarabIssues implements java.io.Serializable
                     }
                     catch (Exception e)
                     {
-                        Object[] args = {activity.getOldOption(), attributeOM.getName()};
-                        String error = Localization.format(
-                            ScarabConstants.DEFAULT_BUNDLE_NAME,
-                            getLocale(),
-                            "CouldNotFindModuleAttributeOption", args);
+                        Object[] args = { activity.getOldOption(),
+                                          attributeOM.getName() };
+                        String error = Localization.format
+                            (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
+                             "CouldNotFindModuleAttributeOption", args);
                         importErrors.add(error);
                     }
                 }
@@ -1019,10 +1062,12 @@ public class ScarabIssues implements java.io.Serializable
                         LOG.debug("We have an Option Attribute: " + 
                                   avalAttributeOM.getName());
                         AttributeOption newAttributeOptionOM = AttributeOption
-                            .getInstance(attributeOM, activity.getNewOption());
+                            .getInstance(attributeOM, activity.getNewOption(),
+                                         issueOM.getModule(),
+                                         issueOM.getIssueType());
                         if (activity.isNewActivity())
                         {
-                            if(newAttributeOptionOM != null)
+                            if (newAttributeOptionOM != null)
                             {
                                 avalOM.setOptionId(newAttributeOptionOM.getOptionId());
                                 avalOM.startActivitySet(activitySetOM);
@@ -1085,7 +1130,7 @@ public class ScarabIssues implements java.io.Serializable
                                 if (oldUserOM.getUserId().equals(av.getUserId())) 
                                 {
                                     avalOM = av;
-                                }                                
+                                }
                             }
 
                             if (avalOM == null) 
@@ -1106,7 +1151,7 @@ public class ScarabIssues implements java.io.Serializable
                                 issueOM.deleteUser(activitySetOM, oldUserOM, 
                                     activitySetCreatedByOM, avalOM, null);
                                 LOG.debug("-------------Saved User Remove-------------");
-                            }                            
+                            }
                         }
                     }
                     else if (avalAttributeOM.isTextAttribute())

@@ -75,7 +75,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * TurbineGlobalCache service.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AttributeOption.java,v 1.35 2003/07/17 20:07:36 jmcnally Exp $
+ * @version $Id: AttributeOption.java,v 1.36 2003/07/25 19:11:26 dlr Exp $
  */
 public class AttributeOption 
     extends BaseAttributeOption
@@ -194,22 +194,69 @@ public class AttributeOption
         return new AttributeOption();
     }
 
-
     /**
-     * Get an instance of a particular AttributeOption by
-     * Attribute and Name.
+     * @see #getInstance(Attribute, String, Issue)
      */
     public static AttributeOption getInstance(Attribute attribute, String name)
         throws Exception
     {
+        return getInstance(attribute, name, (Module) null, (IssueType) null);
+    }
+
+    /**
+     * Using some contextual information, get an instance of a
+     * particular <code>AttributeOption</code>.
+     *
+     * <p>TODO: Move <code>getInstance()</code> methods into
+     * AttributeOptionManager class.</p>
+     *
+     * @param attribute The attribute to which the named option
+     * belongs.
+     * @param name The module-specific alias or canonical value of the
+     * option.
+     * @param module May be <code>null</code>.
+     * @param issueType May be <code>null</code>.
+     */
+    public static AttributeOption getInstance(Attribute attribute, String name,
+                                              Module module,
+                                              IssueType issueType)
+        throws Exception
+    {
         AttributeOption ao = null;
-        Criteria crit = new Criteria();
-        crit.add (AttributeOptionPeer.OPTION_NAME, name);
-        crit.add (AttributeOptionPeer.ATTRIBUTE_ID, attribute.getAttributeId());
-        List options = AttributeOptionPeer.doSelect(crit);
-        if (options.size() == 1)
+        Criteria crit;
+        // FIXME: Optimize this implementation!  It is grossly
+        // inefficient, which is problematic given how often it may be
+        // used.
+        if (module != null && issueType != null)
         {
-            ao =  (AttributeOption) options.get(0);
+            // Look for a module-scoped alias.
+            crit = new Criteria(3);
+            crit.add(RModuleOptionPeer.MODULE_ID, module.getModuleId());
+            crit.add(RModuleOptionPeer.ISSUE_TYPE_ID,
+                     issueType.getIssueTypeId());
+            crit.add(RModuleOptionPeer.DISPLAY_VALUE, name);
+            List rmos = RModuleOptionPeer.doSelect(crit);
+            // HELP: There doesn't seem to be a schema constraint on
+            // the uniqueness of DISPLAY_VALUE for a specific module
+            // alias -- UNIQUE(MODULE_ID, ISSUE_TYPE_ID, NAME).
+            if (rmos.size() == 1)
+            {
+                RModuleOption rmo = (RModuleOption) rmos.get(0);
+                ao = rmo.getAttributeOption();
+            }
+        }
+
+        if (ao == null)
+        {
+            crit = new Criteria(2);
+            crit.add(AttributeOptionPeer.OPTION_NAME, name);
+            crit.add(AttributeOptionPeer.ATTRIBUTE_ID,
+                     attribute.getAttributeId());
+            List options = AttributeOptionPeer.doSelect(crit);
+            if (options.size() == 1)
+            {
+                ao =  (AttributeOption) options.get(0);
+            }
         }
         return ao;
     }
