@@ -53,8 +53,9 @@
 <th>#sort ("desc" "Description")</th>
 </tr>
 #foreach ($issueType in $allIssueTypes)
+   #set ($group = $intake.IssueType.mapTo($issueType))
 #indexedRows($velocityCount)
-<td><input type="checkbox" name="action_$issueType.IssueTypeId"></td>
+<td>#booleanCheckbox ($group.Deleted)</td>
 <td><a href="$link.setPage("admin,GlobalArtifactTypeEdit.vm").setPathInfo("issuetypeid", "$issueType.IssueTypeId")">$issueType.Name</a>
 </td>
 <td>$issueType.Description</td>
