@@ -20,8 +20,7 @@ import org.columba.core.xml.XmlElement;
 
 public class DefaultItem implements Cloneable, IDefaultItem {
     XmlElement root;
-
-    //private Document document;
+    
     public DefaultItem(XmlElement root) {
         this.root = root;
     }

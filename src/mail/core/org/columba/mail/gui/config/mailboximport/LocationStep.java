@@ -36,14 +36,14 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.WizardTextField;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.util.MailResourceLoader;
 
 
 class LocationStep extends AbstractStep implements ActionListener {
     protected File[] sourceFiles;
-    protected IFolder destinationFolder;
+    protected IMailFolder destinationFolder;
     protected JButton sourceButton;
     protected JButton destinationButton;
     protected FrameMediator mediator;

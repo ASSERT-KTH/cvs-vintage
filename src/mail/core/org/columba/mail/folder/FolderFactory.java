@@ -76,7 +76,7 @@ public class FolderFactory {
      * @param parent
      * @return a list that contains Strings of foldertypes
      */
-    public List getPossibleChilds(IFolder parent) {
+    public List getPossibleChilds(IMailFolder parent) {
         List list = new LinkedList();
 
         // which parents are possible ?
@@ -114,7 +114,7 @@ public class FolderFactory {
      * @return the childfolder
      * @throws Exception
      */
-    public IFolder createDefaultChild(IFolder parent, String name)
+    public IMailFolder createDefaultChild(IMailFolder parent, String name)
         throws FolderCreationException {
         List possibleChilds = getPossibleChilds(parent);
 
@@ -134,11 +134,11 @@ public class FolderFactory {
      * @return the childfolder
      * @throws Exception
      */
-    public IFolder createChild(IFolder parent, String name,
+    public IMailFolder createChild(IMailFolder parent, String name,
         String childType) throws FolderCreationException {
-    	IFolder child;
+    	IMailFolder child;
 		try {
-			child = (IFolder) handler.getPlugin(childType,
+			child = (IMailFolder) handler.getPlugin(childType,
 			        new Object[] { name, childType, path });
 
 			// Add child to parent

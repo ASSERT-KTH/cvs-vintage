@@ -17,7 +17,8 @@ package org.columba.mail.filter.plugins;
 
 import java.awt.Color;
 
-import org.columba.mail.filter.FilterCriteria;
+import org.columba.core.filter.AbstractFilter;
+import org.columba.core.filter.FilterCriteria;
 import org.columba.mail.folder.AbstractMessageFolder;
 
 
@@ -62,10 +63,10 @@ public class ColorFilter extends AbstractFilter {
     }
 
     /**
- * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+ * @see org.columba.core.filter.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
  */
     public void setUp(FilterCriteria f) {
         criteriaRGB = f.getInteger("rgb");
-        criteriaCondition = FilterCriteria.getCriteria(f.getCriteriaString());
+        criteriaCondition = f.getCriteria();
     }
 }

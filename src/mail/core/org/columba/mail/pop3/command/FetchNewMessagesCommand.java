@@ -30,7 +30,7 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.Main;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.message.ColumbaMessage;
@@ -170,7 +170,7 @@ public class FetchNewMessagesCommand extends Command {
 
 		// start command which adds message to folder
 		// and calls apply-filter on this specific message
-		FolderCommandReference r = new FolderCommandReference(inboxFolder, message);
+		MailFolderCommandReference r = new MailFolderCommandReference(inboxFolder, message);
 
 		CommandProcessor.getInstance().addOp(new AddPOP3MessageCommand(r));
 	}

@@ -23,22 +23,21 @@ import javax.swing.JTree;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Command;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.FolderFactory;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 
 /**
  * @author fdietz
  *  
  */
-public class CreateAndSelectSubFolderCommand extends FolderCommand {
+public class CreateAndSelectSubFolderCommand extends Command {
 
-    private IFolder parentFolder;
+    private IMailFolder parentFolder;
 
     private boolean success;
 
@@ -46,10 +45,10 @@ public class CreateAndSelectSubFolderCommand extends FolderCommand {
 
     private JTree tree;
     
-    private IFolder childFolder;
+    private IMailFolder childFolder;
 
     public CreateAndSelectSubFolderCommand(JTree tree,
-            DefaultCommandReference reference) {
+            ICommandReference reference) {
         super(reference);
 
         success = true;
@@ -75,10 +74,10 @@ public class CreateAndSelectSubFolderCommand extends FolderCommand {
      * @see org.columba.core.command.Command#execute(Worker)
      */
     public void execute(WorkerStatusController worker) throws Exception {
-        parentFolder = ((FolderCommandReference) getReference())
-                .getFolder();
+        parentFolder = (IMailFolder) ((MailFolderCommandReference) getReference())
+                .getSourceFolder();
 
-        String name = ((FolderCommandReference) getReference())
+        String name = ((MailFolderCommandReference) getReference())
                 .getFolderName();
 
         try {

@@ -23,7 +23,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.gui.attachment.command.OpenAttachmentCommand;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionChangedEvent;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -62,7 +62,7 @@ public class OpenAction extends AbstractColumbaAction implements
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		// bug #999990 (fdietz) check if attachment is really selected
-		FolderCommandReference ref = (FolderCommandReference) getFrameMediator()
+		MailFolderCommandReference ref = (MailFolderCommandReference) getFrameMediator()
 				.getSelectionManager().getHandler("mail.attachment")
 				.getSelection();
 		if (ref.getAddress() != null)

@@ -15,11 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Command;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 
@@ -29,11 +29,11 @@ import org.columba.mail.folder.AbstractMessageFolder;
  * 
  * @author fdietz
  */
-public class SaveFolderConfigurationCommand extends FolderCommand {
+public class SaveFolderConfigurationCommand extends Command {
 	/**
 	 * @param references
 	 */
-	public SaveFolderConfigurationCommand(DefaultCommandReference reference) {
+	public SaveFolderConfigurationCommand(ICommandReference reference) {
 		super(reference);
 	}
 
@@ -48,8 +48,8 @@ public class SaveFolderConfigurationCommand extends FolderCommand {
 			return;
 		}
 
-		AbstractFolder folderTreeNode = (AbstractFolder) ((FolderCommandReference) getReference())
-				.getFolder();
+		AbstractFolder folderTreeNode = (AbstractFolder) ((MailFolderCommandReference) getReference())
+				.getSourceFolder();
 
 		// if folder is message folder
 		// ->TODO: there should be an interface, instead of the AbstractMessageFolder

@@ -23,14 +23,14 @@ import java.util.logging.Logger;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.mimetype.MimeTypeViewer;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
@@ -64,7 +64,7 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 	 * @param references
 	 *            command parameters
 	 */
-	public OpenAttachmentCommand(DefaultCommandReference reference) {
+	public OpenAttachmentCommand(ICommandReference reference) {
 		super(reference);
 
 		priority = Command.REALTIME_PRIORITY;
@@ -83,7 +83,7 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 			Object[] uidList = new Object[1];
 			uidList[0] = tempMessageUid;
 
-			FolderCommandReference r = new FolderCommandReference(tempFolder,
+			MailFolderCommandReference r = new MailFolderCommandReference(tempFolder,
 					uidList);
 
 			c.setTreeSelection(r);
@@ -104,8 +104,8 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
-		FolderCommandReference r = (FolderCommandReference) getReference();
-		AbstractMessageFolder folder = (AbstractMessageFolder) r.getFolder();
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		AbstractMessageFolder folder = (AbstractMessageFolder) r.getSourceFolder();
 		Object[] uids = r.getUids();
 
 		Integer[] address = r.getAddress();

@@ -53,6 +53,7 @@ public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
 
         TableController tableController = ((TableController)((TableViewOwner) getMediator()).getTableController());
 
+        /*
         TableModelFilter model = tableController.getTableModelFilteredView();
 
         item.set("new_state", model.getNewFlag());
@@ -63,6 +64,7 @@ public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
         item.set("expunged_state", model.getExpungedFlag());
 
         item.set("pattern", model.getPatternString());
+        */
     }
 
     /**
@@ -76,6 +78,7 @@ public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
         TableModelFilter model = tableController.getTableModelFilteredView();
         FilterToolbar toolbar = ((ThreePaneMailFrameController) getMediator()).getFilterToolbar();
 
+        /*
         model.setNewFlag(item.getBoolean("new_state"));
         toolbar.enableNew(item.getBoolean("new_state"));
 
@@ -90,7 +93,9 @@ public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
 
         model.setExpungedFlag(item.getBoolean("expunged_state"));
         toolbar.enableExpunged(item.getBoolean("expunged_state"));
-
+        */
+        
+        /*
         String t = item.get("pattern");
 
         if (t == null) {
@@ -102,6 +107,7 @@ public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
 
         // enable filtering
         model.setDataFiltering(true);
+        */
     }
 
     /**

@@ -26,7 +26,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
@@ -84,10 +84,10 @@ public class DeleteMessageAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-    	IFolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+    	IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
         r.setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 
-        AbstractMessageFolder folder = (AbstractMessageFolder) r.getFolder();
+        AbstractMessageFolder folder = (AbstractMessageFolder) r.getSourceFolder();
         int uid = folder.getConfiguration().getInteger("uid");
         AbstractMessageFolder trash = (AbstractMessageFolder) ((RootFolder) folder.getRootFolder()).getTrashFolder();
 
@@ -103,7 +103,7 @@ public class DeleteMessageAction extends AbstractColumbaAction
             // -> move messages to trash
             AbstractMessageFolder destFolder = trash;
 
-            IFolderCommandReference result = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+            IMailFolderCommandReference result = ((MailFrameMediator) getFrameMediator()).getTableSelection();
             result.setDestinationFolder(destFolder);
 
             MoveMessageCommand c = new MoveMessageCommand(result);

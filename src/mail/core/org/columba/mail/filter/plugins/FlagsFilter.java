@@ -17,75 +17,78 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.mail.filter.FilterCriteria;
+import org.columba.core.filter.AbstractFilter;
+import org.columba.core.filter.FilterCriteria;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.message.Flags;
-
 
 /**
  * Search for a certain flag state.
  * <p>
  * Example: Message is read/unread, Marked as Spam/Not Spam
- *
+ * 
  * @author fdietz
  */
 public class FlagsFilter extends AbstractFilter {
-    private String criteria;
-    private String pattern;
+	
+	private String pattern;
 
-    /**
- * Constructor for FlagsFilter.
- */
-    public FlagsFilter() {
-        super();
-    }
+	private int condition;
 
-    /**
- * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
- *      org.columba.mail.folder.Folder, java.lang.Object,
- *      org.columba.core.command.WorkerStatusController)
- */
-    public boolean process(AbstractMessageFolder folder, Object uid) throws Exception {
-        boolean result = false;
+	/**
+	 * Constructor for FlagsFilter.
+	 */
+	public FlagsFilter() {
+		super();
+	}
 
-        String headerField = pattern;
-        int condition = FilterCriteria.getCriteria(criteria);
+	/**
+	 * @see org.columba.core.filter.AbstractFilter#process(java.lang.Object,
+	 *      org.columba.mail.folder.Folder, java.lang.Object,
+	 *      org.columba.core.command.WorkerStatusController)
+	 */
+	public boolean process(AbstractMessageFolder folder, Object uid)
+			throws Exception {
+		boolean result = false;
 
-        String searchHeaderField = null;
+		String headerField = pattern;
 
-        Flags flags = folder.getFlags(uid);
+		String searchHeaderField = null;
 
-        if (headerField.equalsIgnoreCase("Answered")) {
-            result = flags.get(Flags.ANSWERED);
-        } else if (headerField.equalsIgnoreCase("Deleted")) {
-            result = flags.get(Flags.DELETED);
-        } else if (headerField.equalsIgnoreCase("Flagged")) {
-            result = flags.get(Flags.FLAGGED);
-        } else if (headerField.equalsIgnoreCase("Recent")) {
-            result = flags.get(Flags.RECENT);
-        } else if (headerField.equalsIgnoreCase("Draft")) {
-            result = flags.get(Flags.DRAFT);
-        } else if (headerField.equalsIgnoreCase("Seen")) {
-            result = flags.get(Flags.SEEN);
-        } else if (headerField.equalsIgnoreCase("Spam")) {
-            result = ((Boolean) folder.getAttribute(uid, "columba.spam")).booleanValue();
-        }
+		Flags flags = folder.getFlags(uid);
 
-        if (condition == FilterCriteria.IS) {
-            return result;
-        } else {
-            return !result;
-        }
-    }
+		if (headerField.equalsIgnoreCase("Answered")) {
+			result = flags.get(Flags.ANSWERED);
+		} else if (headerField.equalsIgnoreCase("Deleted")) {
+			result = flags.get(Flags.DELETED);
+		} else if (headerField.equalsIgnoreCase("Flagged")) {
+			result = flags.get(Flags.FLAGGED);
+		} else if (headerField.equalsIgnoreCase("Recent")) {
+			result = flags.get(Flags.RECENT);
+		} else if (headerField.equalsIgnoreCase("Draft")) {
+			result = flags.get(Flags.DRAFT);
+		} else if (headerField.equalsIgnoreCase("Seen")) {
+			result = flags.get(Flags.SEEN);
+		} else if (headerField.equalsIgnoreCase("Spam")) {
+			result = ((Boolean) folder.getAttribute(uid, "columba.spam"))
+					.booleanValue();
+		}
 
-    /**
- * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
- */
-    public void setUp(FilterCriteria f) {
-        //  is/is not
-        criteria = f.get("criteria");
+		if (condition == FilterCriteria.IS) {
+			return result;
+		} else {
+			return !result;
+		}
+	}
 
-        // string to search
-        pattern = f.get("pattern");
-    }
+	/**
+	 * @see org.columba.core.filter.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+	 */
+	public void setUp(FilterCriteria f) {
+		
+		// string to search
+		pattern = f.getPatternString();
+
+		condition = f.getCriteria();
+	}
 }

@@ -21,9 +21,10 @@ import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterList;
+import org.columba.core.filter.Filter;
+import org.columba.core.filter.FilterList;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.filter.FilterCompoundCommand;
 import org.columba.mail.folder.AbstractMessageFolder;
 
 /**
@@ -49,10 +50,10 @@ public class ApplyFilterCommand extends Command {
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
 		// get references
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		// get source folder
-		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getFolder();
+		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
@@ -90,7 +91,7 @@ public class ApplyFilterCommand extends Command {
 			if (result.length != 0) {
 				// create a Command for every action of this filter
 				// -> create a compound object which encapsulates all commands
-				CompoundCommand command = filter.getCommand(srcFolder, result);
+				CompoundCommand command = new FilterCompoundCommand(filter, srcFolder, result);
 
 				// add command to scheduler
 				//MainInterface.processor.addOp(command);

@@ -23,9 +23,9 @@ import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
+import org.columba.core.filter.FilterCriteria;
 import org.columba.core.gui.util.DateChooserDialog;
 import org.columba.core.plugin.AbstractPluginHandler;
-import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
 
 
@@ -46,12 +46,12 @@ public class DateCriteriaRow extends DefaultCriteriaRow
             matchComboBox.setSelectedItem(criteria.getCriteriaString());
 
             //textField.setText(criteria.getPattern());
-            dateButton.setText(criteria.getPattern());
+            dateButton.setText(criteria.getPatternString());
         } else {
-            criteria.setCriteria((String) matchComboBox.getSelectedItem());
+            criteria.setCriteriaString((String) matchComboBox.getSelectedItem());
 
             //criteria.setPattern((String) textField.getText());
-            criteria.setPattern((String) dateButton.getText());
+            criteria.setPatternString((String) dateButton.getText());
         }
     }
 

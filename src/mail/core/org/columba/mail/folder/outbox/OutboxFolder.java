@@ -21,7 +21,7 @@ import java.io.InputStream;
 
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IHeaderListStorage;
 import org.columba.mail.folder.mh.CachedMHFolder;
 import org.columba.mail.message.ColumbaMessage;
@@ -80,7 +80,7 @@ public class OutboxFolder extends CachedMHFolder {
      *            folder to check..
      * @return false always.
      */
-    public boolean supportsAddFolder(IFolder newFolder) {
+    public boolean supportsAddFolder(IMailFolder newFolder) {
         return false;
     }
 

@@ -18,7 +18,7 @@ package org.columba.mail.folder.event;
 
 import java.util.EventObject;
 
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 
 /**
  * Passed to listeners to notify them of changes.
@@ -29,7 +29,7 @@ public class FolderEvent extends EventObject implements IFolderEvent {
     /**
      * Creates a new event for the given folder.
      */
-    public FolderEvent(IFolder source, Object changes) {
+    public FolderEvent(IMailFolder source, Object changes) {
         super(source);
         this.changes = changes;
     }
@@ -37,7 +37,7 @@ public class FolderEvent extends EventObject implements IFolderEvent {
     /**
 	 * @param folder
 	 */
-	public FolderEvent(IFolder folder) {
+	public FolderEvent(IMailFolder folder) {
 		super(folder);
 	}
 

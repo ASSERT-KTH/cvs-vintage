@@ -16,13 +16,13 @@
 
 package org.columba.mail.folder.imap;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Command;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.ristretto.imap.IMAPFlags;
 
-public class UpdateFlagCommand extends FolderCommand {
+public class UpdateFlagCommand extends Command {
 
 	IMAPFlags flag;
 	
@@ -31,7 +31,7 @@ public class UpdateFlagCommand extends FolderCommand {
 	 * 
 	 * @param reference
 	 */
-	public UpdateFlagCommand(DefaultCommandReference reference, IMAPFlags flag) {
+	public UpdateFlagCommand(ICommandReference reference, IMAPFlags flag) {
 		super(reference);
 		this.flag = flag;
 	}
@@ -40,10 +40,10 @@ public class UpdateFlagCommand extends FolderCommand {
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
 		// get references
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		// get IMAP rootfolder
-		IMAPFolder srcFolder = (IMAPFolder) r.getFolder();
+		IMAPFolder srcFolder = (IMAPFolder) r.getSourceFolder();
 		
 		srcFolder.updateFlag(flag);		
 	}

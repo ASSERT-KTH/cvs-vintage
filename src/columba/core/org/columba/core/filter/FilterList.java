@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-package org.columba.mail.filter;
+package org.columba.core.filter;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;

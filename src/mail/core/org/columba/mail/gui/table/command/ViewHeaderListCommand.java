@@ -21,7 +21,7 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.message.IHeaderList;
@@ -57,9 +57,9 @@ public class ViewHeaderListCommand extends Command {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
-		folder = (AbstractMessageFolder) r.getFolder();
+		folder = (AbstractMessageFolder) r.getSourceFolder();
 
 		//		register for status events
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);

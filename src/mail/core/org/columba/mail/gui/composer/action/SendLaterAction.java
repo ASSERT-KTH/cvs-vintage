@@ -22,7 +22,7 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.ComposerCommandReference;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.command.MarkMessageCommand;
@@ -78,7 +78,7 @@ public class SendLaterAction extends AbstractColumbaAction {
 		//      -> get source reference of message
 		// when replying this is the original sender's message
 		// you selected and replied to
-		FolderCommandReference ref2 = composerController.getModel()
+		MailFolderCommandReference ref2 = composerController.getModel()
 				.getSourceReference();
 		if (ref2 != null) {
 			// mark message as answered

@@ -21,9 +21,9 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.util.MailResourceLoader;
@@ -56,9 +56,9 @@ public class MoveUpAction extends AbstractMoveFolderAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent arg0) {
-        FolderCommandReference r = (FolderCommandReference) ((MailFrameMediator) frameMediator).getTreeSelection();
+        MailFolderCommandReference r = (MailFolderCommandReference) ((MailFrameMediator) frameMediator).getTreeSelection();
 
-        IFolder folder = r.getFolder();
+        IMailFolder folder = (IMailFolder) r.getSourceFolder();
 
         int newIndex = folder.getParent().getIndex(folder);
         newIndex = newIndex - 1;

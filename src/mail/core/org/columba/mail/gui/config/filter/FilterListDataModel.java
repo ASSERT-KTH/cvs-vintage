@@ -17,8 +17,8 @@ package org.columba.mail.gui.config.filter;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterList;
+import org.columba.core.filter.Filter;
+import org.columba.core.filter.FilterList;
 import org.columba.mail.util.MailResourceLoader;
 
 

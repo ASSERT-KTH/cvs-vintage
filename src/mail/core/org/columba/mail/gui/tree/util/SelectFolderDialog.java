@@ -42,10 +42,10 @@ import javax.swing.tree.TreePath;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.tree.ISelectFolderDialog;
 import org.columba.mail.gui.tree.FolderTreeModel;
@@ -210,7 +210,7 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 		return bool;
 	}
 
-	public IFolder getSelectedFolder() {
+	public IMailFolder getSelectedFolder() {
 		return (AbstractMessageFolder) selectedFolder;
 	}
 
@@ -240,7 +240,7 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 				return;
 			}
 
-			FolderCommandReference r = new FolderCommandReference(dialog
+			MailFolderCommandReference r = new MailFolderCommandReference(dialog
 					.getSelected());
 			r.setFolderName(name);
 

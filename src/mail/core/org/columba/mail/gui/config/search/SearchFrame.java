@@ -46,15 +46,15 @@ import javax.swing.border.CompoundBorder;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.filter.FilterRule;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.filter.FilterRule;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.CriteriaList;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -363,7 +363,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 			SelectFolderDialog dialog = new SelectFolderDialog(frameController);
 
 			if (dialog.success()) {
-				IFolder folder = dialog.getSelectedFolder();
+				IMailFolder folder = dialog.getSelectedFolder();
 				String path = folder.getTreePath();
 
 				selectButton.setText(path);
@@ -378,7 +378,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 				ex.printStackTrace();
 			}
 
-			FolderCommandReference r = new FolderCommandReference(destFolder);
+			MailFolderCommandReference r = new MailFolderCommandReference(destFolder);
 			((MailFrameMediator) frameController).setTreeSelection(r);
 
 		}

@@ -21,14 +21,14 @@ import java.util.logging.Logger;
 
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.filter.Filter;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SpecialFoldersItem;
-import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.imap.IMAPServer;
@@ -404,7 +404,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 	/**
 	 * @see org.columba.mail.folder.AbstractFolder#supportsAddFolder()
 	 */
-	public boolean supportsAddFolder(IFolder folder) {
+	public boolean supportsAddFolder(IMailFolder folder) {
 		return true;
 	}
 }

@@ -24,6 +24,7 @@ import javax.swing.ImageIcon;
 
 
 public class AscendingIcon extends ImageIcon {
+	
     public AscendingIcon() {
         super();
     }
@@ -39,10 +40,13 @@ public class AscendingIcon extends ImageIcon {
         xp[1] = x + 9;
         xp[2] = x + 4;
 
-        yp[0] = y - 3;
-        yp[1] = y - 3;
-        yp[2] = y + 2;
+        //yp[0] = y - 3;
+        //yp[1] = y - 3;
+        //yp[2] = y + 2;
 
+        yp[0] = y;
+        yp[1] = y;
+        yp[2] = y + 5;
 
         g2.setColor(Color.black);
         g2.fillPolygon(xp, yp, 3);
@@ -64,4 +68,17 @@ public class AscendingIcon extends ImageIcon {
         g2.drawLine(xp[2], yp[2], xp[0], yp[0]);
         */
     }
+    /**
+	 * @see javax.swing.Icon#getIconHeight()
+	 */
+	public int getIconHeight() {
+		return 6;
+	}
+	/**
+	 * @see javax.swing.Icon#getIconWidth()
+	 */
+	public int getIconWidth() {
+		return 10;
+	}
+	
 }

@@ -19,67 +19,68 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
+import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
-
 /**
  * Opens AbstractMessageFolder Options Dialog.
- *
+ * 
  * @author fdietz
  */
-public class FolderOptionsAction extends AbstractColumbaAction
-    implements ISelectionListener {
-    /**
- * @param frameMediator
- * @param name
- */
-    public FolderOptionsAction(FrameMediator frameMediator) {
-        super(frameMediator,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_folder_folderoptions"));
+public class FolderOptionsAction extends AbstractColumbaAction implements
+		ISelectionListener {
+	/**
+	 * @param frameMediator
+	 * @param name
+	 */
+	public FolderOptionsAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
+				"menu_folder_folderoptions"));
 
-        // icon for menu
-        putValue(SMALL_ICON,
-            ImageLoader.getSmallImageIcon("16_configure_folder.png"));
+		// icon for menu
+		putValue(SMALL_ICON, ImageLoader
+				.getSmallImageIcon("16_configure_folder.png"));
 
-        setEnabled(false);
+		setEnabled(false);
 
-        ((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
-    }
+		((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
+	}
 
-    /* (non-Javadoc)
- * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
- */
-    public void actionPerformed(ActionEvent evt) {
-        // it is safe here to cast to AbstractMailFrameControlller
-        FolderCommandReference r = (FolderCommandReference) ((AbstractMailFrameController) frameMediator).getTreeSelection();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		// it is safe here to cast to AbstractMailFrameControlller
+		MailFolderCommandReference r = (MailFolderCommandReference) ((AbstractMailFrameController) frameMediator)
+				.getTreeSelection();
 
-        // only use the first selected folder		
-        IFolder folder = r.getFolder();
+		// only use the first selected folder
+		IMailFolder folder = (IMailFolder) r.getSourceFolder();
 
-        // cast to Folder
-        new FolderOptionsDialog((AbstractMessageFolder) folder,true,
-            (AbstractMailFrameController) frameMediator);
-    }
+		// cast to Folder
+		new FolderOptionsDialog((AbstractMessageFolder) folder, true,
+				(AbstractMailFrameController) frameMediator);
+	}
 
-    public void selectionChanged(SelectionChangedEvent e) {
-        AbstractFolder[] r = ((TreeSelectionChangedEvent) e).getSelected();
+	public void selectionChanged(SelectionChangedEvent e) {
+		AbstractFolder[] r = ((TreeSelectionChangedEvent) e).getSelected();
 
-        if ((r.length > 0) && r[0] instanceof AbstractMessageFolder) {
-            setEnabled(true);
-        } else {
-            setEnabled(false);
-        }
-    }
+		if ((r.length > 0) && r[0] instanceof AbstractMessageFolder) {
+			setEnabled(true);
+		} else {
+			setEnabled(false);
+		}
+	}
 }

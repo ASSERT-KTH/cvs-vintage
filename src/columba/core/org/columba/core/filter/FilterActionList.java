@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.filter;
+package org.columba.core.filter;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;

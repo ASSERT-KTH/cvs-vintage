@@ -30,7 +30,7 @@ import org.columba.core.config.DefaultItem;
 import org.columba.core.config.IDefaultItem;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.action.ViewMessageAction;
@@ -90,7 +90,7 @@ public class HeadersMenu extends IMenu implements ActionListener, Observer {
 		String action = e.getActionCommand();
 
 		// get current message list selection
-		IFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
+		IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
 				.getTableSelection();
 
 		if (action.equals("DEFAULT")) {

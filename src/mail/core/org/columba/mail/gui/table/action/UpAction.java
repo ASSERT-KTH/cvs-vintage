@@ -23,8 +23,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
@@ -64,9 +64,9 @@ public class UpAction extends AbstractColumbaAction {
 		LOG.info("action up performed");
 
 		// getting last selection
-		IFolderCommandReference r = ((MailFrameMediator) frameController)
+		IMailFolderCommandReference r = ((MailFrameMediator) frameController)
 				.getTableSelection();
-		IFolderCommandReference ref = r;
+		IMailFolderCommandReference ref = r;
 		LOG.info("folderCommandRef: " + ref);
 
 		// getting current uid
@@ -115,13 +115,13 @@ public class UpAction extends AbstractColumbaAction {
 			tableController.setSelected(prevUids);
 
 			// saving the last selection for the current folder
-			((AbstractMessageFolder) ref.getFolder())
+			((AbstractMessageFolder) ref.getSourceFolder())
 					.setLastSelection(prevUids[0]);
 
 			tableController.makeSelectedRowVisible();
 			
-			FolderCommandReference refNew = new FolderCommandReference(ref
-					.getFolder(), prevUids);
+			MailFolderCommandReference refNew = new MailFolderCommandReference(ref
+					.getSourceFolder(), prevUids);
 
 			// view the message under the new node
 			CommandProcessor.getInstance().addOp(

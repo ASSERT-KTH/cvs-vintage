@@ -20,7 +20,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 
 
 /**
@@ -40,13 +40,13 @@ public class MessageReferencesTransfer implements Transferable {
         }
     }
 
-    private IFolderCommandReference reference;
+    private IMailFolderCommandReference reference;
 
     /**
  * Creates a message transferable
  * @param ref message references.
  */
-    public MessageReferencesTransfer(IFolderCommandReference ref) {
+    public MessageReferencesTransfer(IMailFolderCommandReference ref) {
         super();
         reference = ref;
     }
@@ -55,7 +55,7 @@ public class MessageReferencesTransfer implements Transferable {
  * Returns the message references for this transfer.
  * @return the message references for this transfer.
  */
-    public IFolderCommandReference getFolderReferences() {
+    public IMailFolderCommandReference getFolderReferences() {
         return reference;
     }
 

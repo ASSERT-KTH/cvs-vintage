@@ -28,7 +28,7 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.command.ColorMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
@@ -89,7 +89,7 @@ public class ColorMessageMenu extends IMenu implements ActionListener,
 		String action = e.getActionCommand();
 
 		// get current message list selection
-		IFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
+		IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
 				.getTableSelection();
 
 		if (action.equals("NONE")) {

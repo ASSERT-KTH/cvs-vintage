@@ -50,7 +50,7 @@ import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.config.filter.FilterTransferHandler;
 import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
@@ -256,7 +256,7 @@ public class SubscribeDialog extends JDialog implements ActionListener,
 	private void syncAndExit() {
 		setEnabled(false);
 
-		Command c = new FetchSubFolderListCommand(new FolderCommandReference(
+		Command c = new FetchSubFolderListCommand(new MailFolderCommandReference(
 				root));
 		CommandProcessor.getInstance().addOp(c);
 

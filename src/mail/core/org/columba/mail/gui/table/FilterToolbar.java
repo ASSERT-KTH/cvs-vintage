@@ -17,28 +17,32 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.columba.core.filter.FilterCriteria;
+import org.columba.core.folder.IFolder;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CTextField;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.gui.util.ToolbarToggleButton;
+import org.columba.core.gui.util.ComboMenu;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.filter.MailFilterFactory;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.table.model.TableModelFilter;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -46,26 +50,19 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class FilterToolbar extends JPanel implements ActionListener {
-	public JToggleButton newButton;
-
-	public JToggleButton oldButton;
-
-	private JToggleButton answeredButton;
-
-	private JToggleButton flaggedButton;
-
-	private JToggleButton expungedButton;
-
-	private JToggleButton draftButton;
-
-	private JToggleButton attachmentButton;
-
-	private JToggleButton secureButton;
+/**
+ * Filter toolbar lets you do quick searches on folder contents.
+ * 
+ * @author fdietz
+ */
+public class FilterToolbar extends JPanel implements ActionListener,
+		ItemListener {
 
 	public JButton clearButton;
 
-	public JButton advancedButton;
+	private JButton searchButton;
+
+	private ComboMenu criteriaComboMenu;
 
 	private JLabel label;
 
@@ -73,219 +70,267 @@ public class FilterToolbar extends JPanel implements ActionListener {
 
 	private TableController tableController;
 
+	private IFolder sourceFolder;
+
+	private String selectedItem;
+
+	String[] strs = new String[] { "subject_contains", "from_contains",
+			"to_contains", "cc_contains", "bcc_contains", "body_contains",
+			"separator", "unread_messages", "flagged_messages",
+			"high_priority", "spam_message", "separator", "custom_search" };
+
 	public FilterToolbar(TableController headerTableViewer) {
 		super();
 		this.tableController = headerTableViewer;
 
+		selectedItem = strs[0];
+
 		initComponents();
 		layoutComponents();
-		
-		textField.getDocument().addDocumentListener(new MyDocumentListener());
+
+		//textField.getDocument().addDocumentListener(new
+		// MyDocumentListener());
+	}
+
+	private ComboMenu createComboMenu() {
+		ComboMenu c = new ComboMenu();
+		for (int i = 0; i < strs.length; i++) {
+			if (strs[i].equals("separator"))
+				c.addSeparator();
+			else {
+				c.addMenuItem(strs[i], MailResourceLoader.getString("filter",
+						"filter", strs[i]));
+			}
+		}
+
+		return c;
 	}
 
 	public void initComponents() {
-		//addSeparator();
-		newButton = new ToolbarToggleButton(ImageLoader
-				.getSmallImageIcon("mail-new.png"));
-		newButton.setToolTipText(MailResourceLoader.getString("menu",
-				"mainframe", "filtertoolbar_unread"));
-		newButton.addActionListener(this);
-		newButton.setActionCommand("NEW");
-		newButton.setSelected(false);
-		newButton.setMargin(new Insets(0, 0, 0, 0));
 
-		answeredButton = new ToolbarToggleButton(ImageLoader
-				.getSmallImageIcon("reply_small.png"));
-		answeredButton.addActionListener(this);
-		answeredButton.setToolTipText(MailResourceLoader.getString("menu",
-				"mainframe", "filtertoolbar_answered"));
-		answeredButton.setActionCommand("ANSWERED");
-		answeredButton.setMargin(new Insets(0, 0, 0, 0));
-		answeredButton.setSelected(false);
-
-		flaggedButton = new ToolbarToggleButton(ImageLoader
-				.getSmallImageIcon("mark-as-important-16.png"));
-		flaggedButton.setToolTipText(MailResourceLoader.getString("menu",
-				"mainframe", "filtertoolbar_flagged"));
-		flaggedButton.setMargin(new Insets(0, 0, 0, 0));
-		flaggedButton.addActionListener(this);
-		flaggedButton.setActionCommand("FLAGGED");
-		flaggedButton.setSelected(false);
-
-		expungedButton = new ToolbarToggleButton(ImageLoader
-				.getSmallImageIcon("stock_delete-16.png"));
-		expungedButton.setToolTipText(MailResourceLoader.getString("menu",
-				"mainframe", "filtertoolbar_expunged"));
-		expungedButton.setMargin(new Insets(0, 0, 0, 0));
-		expungedButton.addActionListener(this);
-		expungedButton.setActionCommand("EXPUNGED");
-		expungedButton.setSelected(false);
-
-		attachmentButton = new ToolbarToggleButton(ImageLoader
-				.getSmallImageIcon("attachment.png"));
-		attachmentButton.setToolTipText(MailResourceLoader.getString("menu",
-				"mainframe", "filtertoolbar_attachment"));
-		attachmentButton.setMargin(new Insets(0, 0, 0, 0));
-		attachmentButton.addActionListener(this);
-		attachmentButton.setActionCommand("ATTACHMENT");
-		attachmentButton.setSelected(false);
-
-		label = new LabelWithMnemonic(MailResourceLoader.getString("menu",
-				"mainframe", "filtertoolbar_header"));
+		criteriaComboMenu = createComboMenu();
+		criteriaComboMenu.addItemListener(this);
 
 		textField = new CTextField();
-		label.setLabelFor(textField);
+
 		textField.addActionListener(this);
 		textField.setActionCommand("TEXTFIELD");
-		
+		textField.addKeyListener(new MyKeyListener());
+
 		clearButton = new ButtonWithMnemonic(MailResourceLoader.getString(
 				"menu", "mainframe", "filtertoolbar_clear"));
 		clearButton.setToolTipText(MailResourceLoader.getString("menu",
 				"mainframe", "filtertoolbar_clear_tooltip"));
-
-		attachmentButton.setSelected(false);
 		clearButton.setActionCommand("CLEAR");
 		clearButton.addActionListener(this);
 
-		advancedButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-				"menu", "mainframe", "filtertoolbar_advanced"));
-		advancedButton.setToolTipText(MailResourceLoader.getString("menu",
-				"mainframe", "filtertoolbar_advanced_tooltip"));
-
-		attachmentButton.setSelected(false);
-		advancedButton.setActionCommand("ADVANCED");
-		advancedButton.addActionListener(this);
+		searchButton = new JButton("Search");
+		searchButton.setActionCommand("SEARCH");
+		searchButton.addActionListener(this);
+		searchButton.setDefaultCapable(true);
 	}
 
 	public void layoutComponents() {
-		setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		setBorder(BorderFactory.createEmptyBorder(1, 0, 1, 0));
 
 		FormLayout l = new FormLayout(
-				"default, default, default, default, default, 3dlu, default, 3dlu, fill:default:grow, 3dlu, default, 3dlu, default",
+				"default, 1dlu, fill:default:grow, 3dlu, default, 3dlu, default",
 				"fill:default:grow");
 		PanelBuilder b = new PanelBuilder(this, l);
 
 		CellConstraints c = new CellConstraints();
 
-		b.add(newButton, c.xy(1, 1));
-		b.add(answeredButton, c.xy(2, 1));
-		b.add(flaggedButton, c.xy(3, 1));
-		b.add(expungedButton, c.xy(4, 1));
-		b.add(attachmentButton, c.xy(5, 1));
+		b.add(criteriaComboMenu, c.xy(1, 1));
 
-		b.add(label, c.xy(7, 1));
-		b.add(textField, c.xy(9, 1));
+		b.add(textField, c.xy(3, 1));
 
-		b.add(clearButton, c.xy(11, 1));
-		b.add(advancedButton, c.xy(13, 1));
+		b.add(searchButton, c.xy(5, 1));
+
+		b.add(clearButton, c.xy(7, 1));
+
 	}
 
-	public void update() throws Exception {
-		tableController.getTableModelFilteredView().setDataFiltering(true);
+	private void update() throws Exception {
 
-		tableController.getUpdateManager().update();
+	}
+
+	private int getIndex(String name) {
+		for (int i = 0; i < strs.length; i++) {
+			if (name.equals(strs[i]))
+				return i;
+		}
+
+		return -1;
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
-		try {
-			//TableModelFilteredView model =
-			// MainInterface.tableController.getHeaderTable().getTableModelFilteredView();
-			TableModelFilter model = tableController
-					.getTableModelFilteredView();
+		if (action.equals("SEARCH")) {
 
-			if (action.equals("ADVANCED")) {
-				AbstractMessageFolder searchFolder = (AbstractMessageFolder) FolderTreeModel.getInstance()
-						.getFolder(106);
+			clearButton.setEnabled(true);
 
-				AbstractMessageFolder folder = (AbstractMessageFolder) ((MailFrameMediator) tableController
-						.getFrameController()).getTableSelection().getFolder();
+			executeSearch();
 
-				if (folder == null) {
-					return;
-				}
+		} else if (action.equals("CLEAR")) {
 
-				SearchFrame frame = new SearchFrame(tableController
-						.getFrameController(), searchFolder, folder);
+			clearButton.setEnabled(false);
 
-				//frame.setSourceFolder(folder);
-				//frame.setVisible(true);
-			} else if (action.equals("NEW")) {
-				model.setNewFlag(!model.getNewFlag());
-				update();
-			} else if (action.equals("ANSWERED")) {
-				model.setAnsweredFlag(!model.getAnsweredFlag());
-				update();
-			} else if (action.equals("FLAGGED")) {
-				model.setFlaggedFlag(!model.getFlaggedFlag());
-				update();
-			} else if (action.equals("EXPUNGED")) {
-				model.setExpungedFlag(!model.getExpungedFlag());
-				update();
-			} else if (action.equals("ATTACHMENT")) {
-				model.setAttachmentFlag(!model.getAttachmentFlag());
-				update();
-			} else if (action.equals("TEXTFIELD")) {
-				model.setPatternString(textField.getText());
-				update();
-			} else if (action.equals("CLEAR")) {
-				if (model == null) {
-					return;
-				}
+			// select search folder
+			MailFolderCommandReference r = new MailFolderCommandReference(
+					sourceFolder);
+			((MailFrameMediator) tableController.getFrameController())
+					.setTreeSelection(r);
 
-				model.setNewFlag(false);
-
-				//model.setOldFlag(true);
-				model.setAnsweredFlag(false);
-				model.setFlaggedFlag(false);
-				model.setExpungedFlag(false);
-				model.setAttachmentFlag(false);
-				model.setPatternString("");
-
-				textField.setText("");
-
-				newButton.setSelected(false);
-
-				//oldButton.setSelected(true);
-				answeredButton.setSelected(false);
-				flaggedButton.setSelected(false);
-				expungedButton.setSelected(false);
-				attachmentButton.setSelected(false);
-
-				tableController.getTableModelFilteredView().setDataFiltering(
-						true);
-				update();
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
 		}
+
 	}
 
-	public void enableNew(boolean b) {
-		newButton.setSelected(b);
+	/**
+	 * Execute search.
+	 */
+	private void executeSearch() {
+
+		// get selected search criteria
+		int index = getIndex(selectedItem);
+
+		// create filter criteria based on selected type
+		FilterCriteria c = createFilterCriteria(index);
+
+		// get currently selected folder
+		IFolder h = ((MailFrameMediator) tableController.getFrameController())
+				.getTreeSelection().getSourceFolder();
+
+		if (h.getUid() != 106)
+			sourceFolder = h;
+
+		// set criteria for search folder
+		VirtualFolder searchFolder = prepareSearchFolder(c, sourceFolder);
+
+		try {
+			// add search to history
+			searchFolder.addSearchToHistory();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// select search folder
+		MailFolderCommandReference r = new MailFolderCommandReference(null);
+		((MailFrameMediator) tableController.getFrameController())
+				.setTreeSelection(r);
+		r = new MailFolderCommandReference(searchFolder);
+		((MailFrameMediator) tableController.getFrameController())
+				.setTreeSelection(r);
 	}
 
-	public void enableAnswered(boolean b) {
-		answeredButton.setSelected(b);
+	/**
+	 * Create new virtual folder with filter criteria settings and selected it.
+	 * 
+	 * @param c
+	 *            filter criteria settings
+	 * @return source folder
+	 */
+	private VirtualFolder prepareSearchFolder(FilterCriteria c, IFolder folder) {
+		// get search folder
+		VirtualFolder searchFolder = (VirtualFolder) FolderTreeModel
+				.getInstance().getFolder(106);
+
+		// remove old filters
+		searchFolder.getFilter().getFilterRule().removeAll();
+
+		// add filter criteria
+		searchFolder.getFilter().getFilterRule().add(c);
+
+		// don't search in subfolders recursively
+		searchFolder.getConfiguration().set("property", "include_subfolders",
+				"false");
+
+		int uid = folder.getUid();
+
+		// set source folder UID
+		searchFolder.getConfiguration().set("property", "source_uid", uid);
+
+		return searchFolder;
 	}
 
-	public void enableFlagged(boolean b) {
-		flaggedButton.setSelected(b);
-	}
+	/**
+	 * Create filter criteria, based on current selection.
+	 * 
+	 * @param index
+	 *            selected criteria
+	 * @return newly created filter criteria
+	 */
+	private FilterCriteria createFilterCriteria(int index) {
+		String pattern = textField.getText();
+		FilterCriteria c = null;
+		switch (index) {
 
-	public void enableAttachment(boolean b) {
-		attachmentButton.setSelected(b);
-	}
+		case 0:
+			c = MailFilterFactory.createSubjectContains(pattern);
+			break;
+		case 1:
+			c = MailFilterFactory.createFromContains(pattern);
+			break;
+		case 2:
+			c = MailFilterFactory.createToContains(pattern);
+			break;
+		case 3:
+			c = MailFilterFactory.createCcContains(pattern);
+			break;
+		case 4:
+			c = MailFilterFactory.createBccContains(pattern);
+			break;
+		case 5:
+			c = MailFilterFactory.createBodyContains(pattern);
+			break;
+		case 7:
+			c = MailFilterFactory.createUnreadMessages();
+			break;
+		case 8:
+			c = MailFilterFactory.createFlaggedMessages();
+			break;
+		case 9:
+			c = MailFilterFactory.createHighPriority();
+			break;
+		case 10:
+			c = MailFilterFactory.createSpamMessages();
+			break;
 
-	public void enableExpunged(boolean b) {
-		expungedButton.setSelected(b);
+		}
+
+		return c;
 	}
 
 	public void setPattern(String pattern) {
 		textField.setText(pattern);
 	}
 
+	/**
+	 * Execute search when pressing RETURN in the textfield.
+	 * 
+	 * @author fdietz
+	 */
+	class MyKeyListener implements KeyListener {
+		public void keyTyped(KeyEvent e) {
+		}
+
+		public void keyPressed(KeyEvent e) {
+		}
+
+		public void keyReleased(KeyEvent e) {
+			char ch = e.getKeyChar();
+
+			if (ch == KeyEvent.VK_ENTER) {
+				executeSearch();
+			}
+		}
+	}
+
+	/**
+	 * Execute search while user is typing pattern in textfield.
+	 * 
+	 * @author fdietz
+	 */
 	class MyDocumentListener implements DocumentListener {
 
 		public void insertUpdate(DocumentEvent e) {
@@ -301,14 +346,60 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		}
 
 		public void update() {
-			TableModelFilter model = tableController
-					.getTableModelFilteredView();
-			model.setPatternString(textField.getText());
-			try {
-				FilterToolbar.this.update();
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
+			if (sourceFolder == null)
+				return;
+
+			/*
+			 * // get selected search criteria int index =
+			 * criteriaComboBox.getSelectedIndex(); // create filter criteria
+			 * based on selected type FilterCriteria c =
+			 * createFilterCriteria(index); // set criteria for search folder
+			 * VirtualFolder searchFolder = prepareSearchFolder(c,
+			 * sourceFolder); // select search folder MailFolderCommandReference
+			 * r = new MailFolderCommandReference( searchFolder);
+			 * ((MailFrameMediator) tableController.getFrameController())
+			 * .setTreeSelection(r);
+			 */
 		}
+	}
+
+	/**
+	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
+	 */
+	public void itemStateChanged(ItemEvent event) {
+		selectedItem = (String) event.getItem();
+
+		// enable/disable textfield in-dependency of selected criteria
+		int selectedIndex = getIndex(selectedItem);
+		if (selectedIndex >= 0 && selectedIndex <= 5) {
+			textField.setEnabled(true);
+			textField.requestFocus();
+		} else {
+			textField.setEnabled(false);
+		}
+
+		// execute custom search
+		if (selectedItem.equals("custom_search")) {
+			executeCustomSearch();
+		}
+	}
+
+	/**
+	 * Open the search dialog, with pre-filled settings.
+	 *  
+	 */
+	private void executeCustomSearch() {
+		AbstractMessageFolder searchFolder = (AbstractMessageFolder) FolderTreeModel
+				.getInstance().getFolder(106);
+
+		AbstractMessageFolder folder = (AbstractMessageFolder) ((MailFrameMediator) tableController
+				.getFrameController()).getTableSelection().getSourceFolder();
+
+		if (folder == null) {
+			return;
+		}
+
+		SearchFrame frame = new SearchFrame(tableController
+				.getFrameController(), searchFolder, folder);
 	}
 }

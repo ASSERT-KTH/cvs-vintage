@@ -21,9 +21,9 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.config.columns.ColumnConfigDialog;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.util.MailResourceLoader;
@@ -40,10 +40,10 @@ public class ColumnDialogAction extends AbstractColumbaAction {
     }
 
     public void actionPerformed(ActionEvent arg0) {
-        IFolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTreeSelection();
+        IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTreeSelection();
 
         if (r != null) {
-            IFolder folder = r.getFolder();
+            IMailFolder folder = (IMailFolder) r.getSourceFolder();
 
             if (folder == null) {
                 return;

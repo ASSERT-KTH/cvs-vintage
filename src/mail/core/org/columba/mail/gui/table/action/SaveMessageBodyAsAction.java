@@ -25,7 +25,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.command.SaveMessageBodyAsCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
@@ -63,7 +63,7 @@ public class SaveMessageBodyAsAction extends AbstractColumbaAction
      */
     public void actionPerformed(ActionEvent evt) {
         // get selected stuff
-    	IFolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+    	IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
 
         // get active charset - necessary to decode msg for saving
         Charset charset = ((CharsetOwnerInterface) getFrameMediator()).getCharset();

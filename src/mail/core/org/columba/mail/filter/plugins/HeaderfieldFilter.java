@@ -17,11 +17,12 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.mail.filter.FilterCriteria;
+import org.columba.core.filter.AbstractFilter;
+import org.columba.core.filter.FilterCriteria;
+import org.columba.mail.filter.MailFilterCriteria;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.coder.EncodedWord;
 import org.columba.ristretto.message.Header;
-
 
 /**
  * Search for a string in a certain headerfield.
@@ -29,146 +30,149 @@ import org.columba.ristretto.message.Header;
  * "headerfield" is for example Subject <br>
  * "criteria" can be "contains" or "contains not" <br>
  * "pattern" specifies the search string <br>
- *
+ * 
  * @author fdietz
  */
 public class HeaderfieldFilter extends AbstractFilter {
-    //  contains/contains not
-    private String criteria;
+	
 
-    // get headerfield to search in (for example: Subject)
-    private String headerfield;
+	// get headerfield to search in (for example: Subject)
+	private String headerfield;
 
-    // string to search
-    private String pattern;
+	// string to search
+	private String pattern;
 
-    /**
- * Constructor for HeaderfieldFilter.
- *
- * @param filter
- */
-    public HeaderfieldFilter() {
-        super();
-    }
+	private int condition;
 
-    /**
- *
- * Check if the requested headerfield contains the search string and return
- * true if match was found, otherwise return false
- *
- * @see org.columba.mail.filter.plugins.AbstractFilter#process(org.columba.mail.folder.Folder,
- *      java.lang.Object, org.columba.mail.filter.Filter)
- */
-    public boolean process(AbstractMessageFolder folder, Object uid) throws Exception {
-        // get message header
-        Header header = folder.getHeaderFields(uid, new String[] { headerfield });
+	/**
+	 * Constructor for HeaderfieldFilter.
+	 * 
+	 * @param filter
+	 */
+	public HeaderfieldFilter() {
+		super();
+	}
 
-        if (header == null) {
-            return false;
-        }
+	/**
+	 * 
+	 * Check if the requested headerfield contains the search string and return
+	 * true if match was found, otherwise return false
+	 * 
+	 * @see org.columba.core.filter.AbstractFilter#process(org.columba.mail.folder.Folder,
+	 *      java.lang.Object, org.columba.mail.filter.Filter)
+	 */
+	public boolean process(AbstractMessageFolder folder, Object uid)
+			throws Exception {
+		// get message header
+		Header header = folder.getHeaderFields(uid,
+				new String[] { headerfield });
 
-        String headerItem = (String) header.get(headerfield);
-        // cancel if headerfield doesn't exist
-        if ( headerItem == null) return false;
-        
-        // decode headerfield
-        headerItem = EncodedWord.decode( headerItem ).toString();
-        
-        // get condition and convert it to constant as defined in
-        // FilterCriteria
-        int condition = FilterCriteria.getCriteria(criteria);
+		if (header == null) {
+			return false;
+		}
 
-        // see if theirs a match
-        boolean result = match(headerItem, condition, pattern);
+		String headerItem = (String) header.get(headerfield);
+		// cancel if headerfield doesn't exist
+		if (headerItem == null)
+			return false;
 
-        return result;
-    }
+		// decode headerfield
+		headerItem = EncodedWord.decode(headerItem).toString();
 
-    /**
- *
- * check if a match exists in the requested headerfield
- *
- * @param headerItem
- *            String to specify headerfield (example:Subject)
- * @param condition
- *            contains, contains not
- * @param pattern
- *            search string
- *
- * @return boolean return true if match was found, otherwise return false
- */
-    protected boolean match(String headerItem, int condition, String pattern) {
-        boolean result = false;
+		// see if theirs a match
+		boolean result = match(headerItem, condition, pattern);
 
-        // skip if message doesn't contain the requested headerfield
-        if (headerItem == null) {
-            return false;
-        }
+		return result;
+	}
 
-        switch (condition) {
-        case FilterCriteria.CONTAINS:
+	/**
+	 * 
+	 * check if a match exists in the requested headerfield
+	 * 
+	 * @param headerItem
+	 *            String to specify headerfield (example:Subject)
+	 * @param condition
+	 *            contains, contains not
+	 * @param pattern
+	 *            search string
+	 * 
+	 * @return boolean return true if match was found, otherwise return false
+	 */
+	protected boolean match(String headerItem, int condition, String pattern) {
+		boolean result = false;
 
-            if (headerItem.toLowerCase().indexOf(pattern.toLowerCase()) != -1) {
-                result = true;
-            }
+		// skip if message doesn't contain the requested headerfield
+		if (headerItem == null) {
+			return false;
+		}
 
-            break;
+		switch (condition) {
+		case FilterCriteria.CONTAINS:
 
-        case FilterCriteria.CONTAINS_NOT:
+			if (headerItem.toLowerCase().indexOf(pattern.toLowerCase()) != -1) {
+				result = true;
+			}
 
-            if (headerItem.toLowerCase().indexOf(pattern.toLowerCase()) == -1) {
-                result = true;
-            }
+			break;
 
-            break;
+		case FilterCriteria.CONTAINS_NOT:
 
-        case FilterCriteria.IS:
+			if (headerItem.toLowerCase().indexOf(pattern.toLowerCase()) == -1) {
+				result = true;
+			}
 
-            if (headerItem.equalsIgnoreCase(pattern)) {
-                result = true;
-            }
+			break;
 
-            break;
+		case FilterCriteria.IS:
 
-        case FilterCriteria.IS_NOT:
+			if (headerItem.equalsIgnoreCase(pattern)) {
+				result = true;
+			}
 
-            if (!headerItem.equalsIgnoreCase(pattern)) {
-                result = true;
-            }
+			break;
 
-            break;
+		case FilterCriteria.IS_NOT:
 
-        case FilterCriteria.BEGINS_WITH:
+			if (!headerItem.equalsIgnoreCase(pattern)) {
+				result = true;
+			}
 
-            if (headerItem.toLowerCase().startsWith(pattern.toLowerCase())) {
-                result = true;
-            }
+			break;
 
-            break;
+		case FilterCriteria.BEGINS_WITH:
 
-        case FilterCriteria.ENDS_WITH:
+			if (headerItem.toLowerCase().startsWith(pattern.toLowerCase())) {
+				result = true;
+			}
 
-            if (headerItem.toLowerCase().endsWith(pattern.toLowerCase())) {
-                result = true;
-            }
+			break;
 
-            break;
-        }
+		case FilterCriteria.ENDS_WITH:
 
-        return result;
-    }
+			if (headerItem.toLowerCase().endsWith(pattern.toLowerCase())) {
+				result = true;
+			}
 
-    /**
- * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
- */
-    public void setUp(FilterCriteria f) {
-        // contains/contains not
-        criteria = f.get("criteria");
+			break;
+		}
 
-        // get headerfield to search in (for example: Subject)
-        headerfield = f.get("headerfield");
+		return result;
+	}
 
-        // string to search
-        pattern = f.get("pattern");
-    }
+	/**
+	 * @see org.columba.core.filter.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+	 */
+	public void setUp(FilterCriteria f) {
+		
+
+		// get headerfield to search in (for example: Subject)
+		headerfield = new MailFilterCriteria(f).getHeaderfieldString();
+
+		// string to search
+		pattern = f.getPatternString();
+
+		// get condition and convert it to constant as defined in
+		// FilterCriteria
+		condition = f.getCriteria();
+	}
 }

@@ -17,17 +17,17 @@ package org.columba.mail.gui.tree.command;
 
 import java.util.logging.Logger;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Command;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 
 /**
  * @author freddy
  */
-public class FetchSubFolderListCommand extends FolderCommand {
+public class FetchSubFolderListCommand extends Command {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -40,7 +40,7 @@ public class FetchSubFolderListCommand extends FolderCommand {
 	 * 
 	 * @param references
 	 */
-	public FetchSubFolderListCommand(DefaultCommandReference reference) {
+	public FetchSubFolderListCommand(ICommandReference reference) {
 		super(reference);
 	}
 
@@ -60,14 +60,14 @@ public class FetchSubFolderListCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		if (r == null) {
 			return;
 		}
 
-		if (r.getFolder() instanceof IMAPRootFolder) {
-			imapRoot = (IMAPRootFolder) r.getFolder();
+		if (r.getSourceFolder() instanceof IMAPRootFolder) {
+			imapRoot = (IMAPRootFolder) r.getSourceFolder();
 			
 			imapRoot.syncSubscribedFolders();
 			

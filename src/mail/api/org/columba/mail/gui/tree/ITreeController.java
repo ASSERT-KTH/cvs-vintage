@@ -19,7 +19,7 @@ package org.columba.mail.gui.tree;
 
 import javax.swing.tree.TreeModel;
 
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 
 /**
  * @author fdietz
@@ -39,7 +39,7 @@ public interface ITreeController {
 	 * @param folder
 	 *            the new selected folder.
 	 */
-	void setSelected(IFolder folder);
+	void setSelected(IMailFolder folder);
 	
 	TreeModel getModel();
 }

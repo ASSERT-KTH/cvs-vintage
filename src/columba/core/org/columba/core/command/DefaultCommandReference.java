@@ -18,7 +18,7 @@ package org.columba.core.command;
 import org.columba.core.util.Lock;
 
 /**
- * Encapsulates the reference for a {@link Command}-
+ * Encapsulates the reference for a {@link Command}.
  * 
  * @author fdietz, tstich
  */
@@ -37,12 +37,13 @@ public class DefaultCommandReference implements ICommandReference {
 	 * @return true, if locker has got the lock, false otherwise
 	 */
 	public boolean tryToGetLock(Object locker) {
-		return true;
+		return lock.tryToGetLock(locker);
 	}
 
 	/**
 	 * Release lock.
 	 */
 	public void releaseLock(Object locker) {
+		lock.release(locker);
 	}
 }

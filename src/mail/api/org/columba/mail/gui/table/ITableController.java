@@ -19,7 +19,7 @@ package org.columba.mail.gui.table;
 
 import java.util.Observable;
 
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.message.IHeaderList;
 
@@ -71,6 +71,6 @@ public interface ITableController {
 	void setSortingOrder(boolean order);
 	void setSortingColumn(String column);
 	
-	void restartMarkAsReadTimer(IFolderCommandReference reference);
+	void restartMarkAsReadTimer(IMailFolderCommandReference reference);
 	
 }

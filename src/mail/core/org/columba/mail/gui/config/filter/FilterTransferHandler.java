@@ -12,7 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.TransferHandler;
 
 import org.columba.core.facade.DialogFacade;
-import org.columba.mail.filter.Filter;
+import org.columba.core.filter.Filter;
 
 
 /**

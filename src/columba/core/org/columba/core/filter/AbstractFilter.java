@@ -13,11 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.filter.plugins;
+package org.columba.core.filter;
 
 import org.columba.core.plugin.Plugin;
 
-import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.AbstractMessageFolder;
 
 

@@ -27,8 +27,8 @@ import org.columba.core.command.ICommandReference;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionHandler;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.table.model.MessageNode;
@@ -48,7 +48,7 @@ import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
  * it), or if it is just a temporary message ( example: pgp-decrypted message ).
  * <p>
  * For this reason it uses a temporary folder to save such a message and provide
- * actions with the correctly mapped FolderCommandReference[] object.
+ * actions with the correctly mapped MailFolderCommandReference[] object.
  * 
  * 
  * 
@@ -64,13 +64,13 @@ public class TableSelectionHandler extends SelectionHandler implements
 
 	private LinkedList messages;
 
-	private IFolder folder;
+	private IMailFolder folder;
 
 	// if this is set to true, we use the local selection, instead
 	// of using the table selection
 	private boolean useLocalSelection;
 
-	private FolderCommandReference local;
+	private MailFolderCommandReference local;
 
 	/**
 	 * @param id
@@ -98,7 +98,7 @@ public class TableSelectionHandler extends SelectionHandler implements
 			return local;
 		}
 
-		FolderCommandReference reference = new FolderCommandReference(folder,
+		MailFolderCommandReference reference = new MailFolderCommandReference(folder,
 				getUidArray());
 
 		return reference;
@@ -109,9 +109,9 @@ public class TableSelectionHandler extends SelectionHandler implements
 	 * @see org.columba.core.gui.util.SelectionHandler#setSelection(ICommandReference)
 	 */
 	public void setSelection(ICommandReference selection) {
-		FolderCommandReference ref = (FolderCommandReference) selection;
+		MailFolderCommandReference ref = (MailFolderCommandReference) selection;
 
-		folder = ref.getFolder();
+		folder = (IMailFolder) ref.getSourceFolder();
 
 		useLocalSelection = false;
 
@@ -164,7 +164,7 @@ public class TableSelectionHandler extends SelectionHandler implements
 				getUidArray()));
 	}
 
-	public void setLocalReference(FolderCommandReference r) {
+	public void setLocalReference(MailFolderCommandReference r) {
 		this.local = r;
 
 		useLocalSelection = true;

@@ -25,11 +25,11 @@ import java.text.MessageFormat;
 
 import javax.swing.JOptionPane;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Command;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -40,14 +40,14 @@ import org.columba.mail.util.MailResourceLoader;
  * 
  * @author fdietz
  */
-public class ExportFolderCommand extends FolderCommand {
+public class ExportFolderCommand extends Command {
 
 	protected Object[] destUids;
 
 	/**
 	 * @param references
 	 */
-	public ExportFolderCommand(DefaultCommandReference reference) {
+	public ExportFolderCommand(ICommandReference reference) {
 		super(reference);
 	}
 
@@ -56,7 +56,7 @@ public class ExportFolderCommand extends FolderCommand {
 	 * @param references
 	 */
 	public ExportFolderCommand(FrameMediator frame,
-			DefaultCommandReference reference) {
+			ICommandReference reference) {
 		super(frame, reference);
 	}
 
@@ -67,7 +67,7 @@ public class ExportFolderCommand extends FolderCommand {
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
 		// get references
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		OutputStream os = null;
 
@@ -83,7 +83,7 @@ public class ExportFolderCommand extends FolderCommand {
 			byte[] buffer = new byte[1024];
 
 			// get source folder
-			srcFolder = (AbstractMessageFolder) r.getFolder();
+			srcFolder = (AbstractMessageFolder) r.getSourceFolder();
 
 			// get array of message UIDs
 			uids = srcFolder.getUids();

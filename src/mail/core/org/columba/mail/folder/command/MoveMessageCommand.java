@@ -21,7 +21,7 @@ import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 
 /**
@@ -53,10 +53,10 @@ public class MoveMessageCommand extends CopyMessageCommand {
 	public void execute(WorkerStatusController worker) throws Exception {
 
 		// get references
-		r = (FolderCommandReference) getReference();
+		r = (MailFolderCommandReference) getReference();
 
 		// get source folder
-		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getFolder();
+		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
 
 		// get destination foldedr
 		destFolder = (AbstractMessageFolder) r.getDestinationFolder();

@@ -25,12 +25,12 @@ import java.util.ListIterator;
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.StatusObservable;
+import org.columba.core.filter.AbstractFilter;
+import org.columba.core.filter.Filter;
+import org.columba.core.filter.FilterCriteria;
+import org.columba.core.filter.FilterRule;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.util.ListTools;
-import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.filter.FilterRule;
-import org.columba.mail.filter.plugins.AbstractFilter;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.event.FolderListener;
 import org.columba.mail.folder.event.IFolderEvent;
@@ -174,7 +174,7 @@ public class DefaultSearchEngine {
                 for (int i = 0; (i < rule.count()) && b; i++) {
                     FilterCriteria criteria = rule.get(i);
 
-                    String type = criteria.getType();
+                    String type = criteria.getTypeString();
 
                     b &= processRule(uid, criteria, type);
                 }
@@ -192,7 +192,7 @@ public class DefaultSearchEngine {
                 for (int i = 0; (i < rule.count()) && !b; i++) {
                     FilterCriteria criteria = rule.get(i);
 
-                    String type = criteria.getType();
+                    String type = criteria.getTypeString();
 
                     b = processRule(uid, criteria, type);
                 }
@@ -223,7 +223,7 @@ public class DefaultSearchEngine {
         for (int i = 0; i < filterRule.count(); i++) {
             actCriteria = filterRule.get(i);
 
-            if (capList.contains(actCriteria.getType())) {
+            if (capList.contains(actCriteria.getTypeString())) {
                 // search request isn't covered by query engine
                 // -> fall back to default search engine
                 defaultEngine.add(actCriteria);

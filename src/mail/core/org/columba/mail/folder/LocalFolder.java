@@ -22,11 +22,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.columba.core.filter.FilterList;
 import org.columba.core.io.DiskIO;
 import org.columba.core.util.ListTools;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.folder.virtual.VirtualFolder;
@@ -330,7 +330,7 @@ public abstract class LocalFolder extends AbstractMessageFolder {
 	}
 
 	/** {@inheritDoc} */
-	public boolean supportsAddFolder(IFolder newFolder) {
+	public boolean supportsAddFolder(IMailFolder newFolder) {
 		return ((newFolder instanceof LocalFolder) || (newFolder instanceof VirtualFolder));
 	}
 

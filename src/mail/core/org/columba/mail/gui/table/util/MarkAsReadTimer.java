@@ -27,7 +27,7 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.table.TableController;
@@ -60,7 +60,7 @@ public class MarkAsReadTimer implements ActionListener, ISelectionListener,
     private int maxValue;
 
     // reference to the message that should be marked
-    private IFolderCommandReference message;
+    private IMailFolderCommandReference message;
 
     // the tableController is not used
     private TableController tableController;
@@ -120,7 +120,7 @@ public class MarkAsReadTimer implements ActionListener, ISelectionListener,
     * This method is for example used by the ViewMessageCommand to restart the timer if a
     * message is shown
     */
-    public synchronized void restart(IFolderCommandReference reference) {
+    public synchronized void restart(IMailFolderCommandReference reference) {
         LOG.info("MarkAsRead-timer started");
 
         message = reference;
@@ -139,7 +139,7 @@ public class MarkAsReadTimer implements ActionListener, ISelectionListener,
         LOG.info("action perfomed");
         timer.stop();
 
-        IFolderCommandReference r =message;
+        IMailFolderCommandReference r =message;
 
         if (r == null) {
             return;

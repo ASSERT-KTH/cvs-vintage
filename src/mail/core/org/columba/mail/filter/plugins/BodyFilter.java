@@ -17,68 +17,66 @@ package org.columba.mail.filter.plugins;
 
 import java.io.InputStream;
 
+import org.columba.core.filter.AbstractFilter;
+import org.columba.core.filter.FilterCriteria;
 import org.columba.core.io.StreamUtils;
-import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.AbstractMessageFolder;
-
 
 /**
  * Search for a certain string in the message body.
- *
+ * 
  * @author fdietz
  */
 public class BodyFilter extends AbstractFilter {
-    private String pattern;
-    private String criteria;
+	private String pattern;
 
-    /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
-     *          org.columba.mail.folder.Folder, java.lang.Object,
-     *          org.columba.core.command.WorkerStatusController)
-     */
-    public boolean process(AbstractMessageFolder folder, Object uid) throws Exception {
-        // get message body
+	private int condition;
 
-        InputStream messageSourceStream = folder.getMessageSourceStream(uid);
-        StringBuffer body = StreamUtils.readInString(messageSourceStream);
-        messageSourceStream.close();
+	/**
+	 * @see org.columba.core.filter.AbstractFilter#process(java.lang.Object,
+	 *      org.columba.mail.folder.Folder, java.lang.Object,
+	 *      org.columba.core.command.WorkerStatusController)
+	 */
+	public boolean process(AbstractMessageFolder folder, Object uid)
+			throws Exception {
+		// get message body
 
-        // convert criteria into int-value
-        int condition = FilterCriteria.getCriteria(criteria);
+		InputStream messageSourceStream = folder.getMessageSourceStream(uid);
+		StringBuffer body = StreamUtils.readInString(messageSourceStream);
+		messageSourceStream.close();
+		String bodyText = pattern;
 
-        String bodyText = pattern;
+		boolean result = false;
 
-        boolean result = false;
+		switch (condition) {
+		case FilterCriteria.CONTAINS:
 
-        switch (condition) {
-        case FilterCriteria.CONTAINS:
+			if (body.indexOf(bodyText) != -1) {
+				result = true;
+			}
 
-            if (body.indexOf(bodyText) != -1) {
-                result = true;
-            }
+			break;
 
-            break;
+		case FilterCriteria.CONTAINS_NOT:
 
-        case FilterCriteria.CONTAINS_NOT:
+			if (body.indexOf(bodyText) == -1) {
+				result = true;
+			}
 
-            if (body.indexOf(bodyText) == -1) {
-                result = true;
-            }
+			break;
+		}
 
-            break;
-        }
+		return result;
+	}
 
-        return result;
-    }
+	/**
+	 * @see org.columba.core.filter.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+	 */
+	public void setUp(FilterCriteria f) {
 
-    /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
-     */
-    public void setUp(FilterCriteria f) {
-        // contains/contains not
-        criteria = f.get("criteria");
+		// string to search
+		pattern = f.getPatternString();
 
-        // string to search
-        pattern = f.get("pattern");
-    }
+		condition = f.getCriteria();
+	}
 }

@@ -48,7 +48,7 @@ import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.core.gui.mimetype.MimeTypeViewer;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.attachment.IAttachmentController;
@@ -635,7 +635,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
 	/**
 	 * @see org.columba.mail.gui.message.IMessageController#filterMessage(org.columba.mail.folder.IMailbox, java.lang.Object)
 	 */
-	public IFolderCommandReference filterMessage(IMailbox folder, Object uid) throws Exception{
+	public IMailFolderCommandReference filterMessage(IMailbox folder, Object uid) throws Exception{
 		return getPgpFilter().filter(folder, uid);
 	}
 

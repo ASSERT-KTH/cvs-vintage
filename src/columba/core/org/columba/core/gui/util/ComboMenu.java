@@ -25,33 +25,35 @@ import java.awt.event.ItemListener;
 import java.util.Iterator;
 import java.util.Vector;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.SwingConstants;
 
 /**
- * Resembles a JComboBox, using a JButton and a JMenu. This has the
- * advantage that the user immediately sees all available items.
+ * Resembles a JComboBox, using a JButton and a JMenu. This has the advantage
+ * that the user immediately sees all available items.
  * <p>
  * Use ItemListener to get notified of selection changes.
  * <p>
- * TODO (@author fdietz): use JComboBox button layout/ui 
+ * TODO (@author fdietz): use JComboBox button layout/ui
  * 
  * @author fdietz
  */
 public class ComboMenu extends JButton implements ActionListener {
 
 	protected JPopupMenu popupMenu;
+
 	protected Vector listeners;
 
-	/**
-	 *  
-	 */
-	public ComboMenu(String[] list) {
+	private ButtonGroup group;
+
+	public ComboMenu() {
 		super();
 
-		setIcon(ImageLoader.getImageIcon("stock_down-16.png"));
+		//setIcon(ImageLoader.getImageIcon("stock_down-16.png"));
+		setIcon(new AscendingIcon());
 		setMargin(new Insets(1, 3, 1, 3));
 		setIconTextGap(12);
 
@@ -59,21 +61,58 @@ public class ComboMenu extends JButton implements ActionListener {
 
 		listeners = new Vector();
 
+		group = new ButtonGroup();
+
 		popupMenu = new JPopupMenu();
-
-		for (int i = 0; i < list.length; i++) {
-
-			JMenuItem m = new JMenuItem(list[i]);
-			m.setActionCommand(list[i]);
-			m.addActionListener(this);
-			popupMenu.add(m);
-		}
 
 		addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				popupMenu.show(ComboMenu.this, 0, 0);
+				popupMenu.show(ComboMenu.this, 0, getHeight() - 2);
 			}
 		});
+	}
+
+	/**
+	 * @deprecated use default constructor instead and <code>addMenuItem</code>.
+	 *             this way the menu entries can be localized correctly
+	 */
+	public ComboMenu(String[] list) {
+		this();
+
+		for (int i = 0; i < list.length; i++) {
+
+			if (i == 0)
+				setText(list[i]);
+
+			if (list[i].equalsIgnoreCase("separator")) {
+				popupMenu.addSeparator();
+			} else {
+				addMenuItem(list[i], list[i]);
+			}
+		}
+
+	}
+
+	public void addMenuItem(String name, String localizedName) {
+
+		JRadioButtonMenuItem m = new JRadioButtonMenuItem(localizedName);
+
+		m.setActionCommand(name);
+
+		m.addActionListener(this);
+
+		group.add(m);
+
+		popupMenu.add(m);
+
+		if (popupMenu.getComponentCount() == 1) {
+			setText(localizedName);
+			m.setSelected(true);
+		}
+	}
+
+	public void addSeparator() {
+		popupMenu.addSeparator();
 	}
 
 	/**
@@ -81,8 +120,9 @@ public class ComboMenu extends JButton implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 		String action = arg0.getActionCommand();
+		JRadioButtonMenuItem m = (JRadioButtonMenuItem) arg0.getSource();
 
-		setText(action);
+		setText(m.getText());
 
 		fireItemStateChanged(new ItemEvent(this, 0, action, ItemEvent.SELECTED));
 

@@ -16,56 +16,57 @@
 package org.columba.mail.filter.plugins;
 
 import org.columba.core.command.Command;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.filter.FilterAction;
+import org.columba.core.filter.AbstractFilterAction;
+import org.columba.core.filter.FilterAction;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.filter.MailFilterAction;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 
-
 /**
  * @author freddy
- *
+ * 
  * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Window>Preferences>Java>Templates. To enable and disable the creation of type
+ * comments go to Window>Preferences>Java>Code Generation.
  */
 public class MarkMessageAsReadAction extends AbstractFilterAction {
-    /**
- * @see org.columba.modules.mail.filter.action.AbstractFilterAction#execute()
- */
-    public Command getCommand(FilterAction filterAction, AbstractMessageFolder srcFolder,
-        Object[] uids) throws Exception {
-        FolderCommandReference r = new FolderCommandReference(srcFolder, uids);
+	/**
+	 * @see org.columba.modules.mail.filter.action.AbstractFilterAction#execute()
+	 */
+	public Command getCommand(FilterAction filterAction,
+			AbstractMessageFolder srcFolder, Object[] uids) throws Exception {
+		MailFolderCommandReference r = new MailFolderCommandReference(
+				srcFolder, uids);
 
-        String variant = filterAction.getMarkVariant();
+		String variant = ((MailFilterAction) filterAction).getMarkVariant();
 
-        if (variant.equals("read")) {
-            r.setMarkVariant(MarkMessageCommand.MARK_AS_READ);
-        } else if (variant.equals("unread")) {
-            r.setMarkVariant(MarkMessageCommand.MARK_AS_UNREAD);
-        } else if (variant.equals("flagged")) {
-            r.setMarkVariant(MarkMessageCommand.MARK_AS_FLAGGED);
-        } else if (variant.equals("not_flagged")) {
-            r.setMarkVariant(MarkMessageCommand.MARK_AS_UNFLAGGED);
-        } else if (variant.equals("expunged")) {
-            r.setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
-        } else if (variant.equals("not_expunged")) {
-            r.setMarkVariant(MarkMessageCommand.MARK_AS_UNEXPUNGED);
-        } else if (variant.equals("answered")) {
-            r.setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
-        } else if (variant.equals("spam")) {
-            r.setMarkVariant(MarkMessageCommand.MARK_AS_SPAM);
-        } else if (variant.equals("no_spam")) {
-            r.setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
-        }
-        // if something goes wrong here, fall back to "mark as read" 
-        else {
-            r.setMarkVariant(MarkMessageCommand.MARK_AS_READ);
-        }
+		if (variant.equals("read")) {
+			r.setMarkVariant(MarkMessageCommand.MARK_AS_READ);
+		} else if (variant.equals("unread")) {
+			r.setMarkVariant(MarkMessageCommand.MARK_AS_UNREAD);
+		} else if (variant.equals("flagged")) {
+			r.setMarkVariant(MarkMessageCommand.MARK_AS_FLAGGED);
+		} else if (variant.equals("not_flagged")) {
+			r.setMarkVariant(MarkMessageCommand.MARK_AS_UNFLAGGED);
+		} else if (variant.equals("expunged")) {
+			r.setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
+		} else if (variant.equals("not_expunged")) {
+			r.setMarkVariant(MarkMessageCommand.MARK_AS_UNEXPUNGED);
+		} else if (variant.equals("answered")) {
+			r.setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
+		} else if (variant.equals("spam")) {
+			r.setMarkVariant(MarkMessageCommand.MARK_AS_SPAM);
+		} else if (variant.equals("no_spam")) {
+			r.setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
+		}
+		// if something goes wrong here, fall back to "mark as read"
+		else {
+			r.setMarkVariant(MarkMessageCommand.MARK_AS_READ);
+		}
 
-        MarkMessageCommand c = new MarkMessageCommand(r);
+		MarkMessageCommand c = new MarkMessageCommand(r);
 
-        return c;
-    }
+		return c;
+	}
 }

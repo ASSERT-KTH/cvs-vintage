@@ -29,7 +29,7 @@ import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.command.ForwardCommand;
 import org.columba.mail.gui.composer.command.ForwardInlineCommand;
@@ -96,7 +96,7 @@ public class ForwardAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-    	IFolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+    	IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
 
         if (forwardStyle.equals("attachment")) {
         	CommandProcessor.getInstance().addOp(new ForwardCommand(r));

@@ -19,7 +19,7 @@ package org.columba.mail.gui.table.model;
 
 import java.util.EventListener;
 
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 
 
 /**
@@ -30,5 +30,5 @@ public interface TableModelChangedListener extends EventListener {
 
 	public void tableChanged(TableModelChangedEvent event);
 
-	public boolean isInterestedIn(IFolder folder);
+	public boolean isInterestedIn(IMailFolder folder);
 }

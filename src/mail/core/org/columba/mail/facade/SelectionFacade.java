@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.facade;
 
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.MessageController;
@@ -35,7 +35,7 @@ public class SelectionFacade implements ISelectionFacade {
 	 * @param mediator		top-level frame mediator		
 	 * @return				selected folder
 	 */
-	public IFolderCommandReference getTreeSelection(
+	public IMailFolderCommandReference getTreeSelection(
 			MailFrameMediator mediator) {
 		return mediator.getTreeSelection();
 	}
@@ -46,7 +46,7 @@ public class SelectionFacade implements ISelectionFacade {
 	 * @param mediator		top-level frame mediator
 	 * @return				selected messages
 	 */
-	public IFolderCommandReference getTableSelection(
+	public IMailFolderCommandReference getTableSelection(
 			MailFrameMediator mediator) {
 		return mediator.getTableSelection();
 	}
@@ -57,7 +57,7 @@ public class SelectionFacade implements ISelectionFacade {
 	 * @param mediator		top-level frame mediator
 	 * @return				selected attachments
 	 */
-	public IFolderCommandReference getAttachmentSelection(
+	public IMailFolderCommandReference getAttachmentSelection(
 			MailFrameMediator mediator) {
 		return mediator.getAttachmentSelection();
 	}

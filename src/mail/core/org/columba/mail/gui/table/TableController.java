@@ -33,9 +33,9 @@ import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.command.IFolderCommandReference;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.event.FolderEventDelegator;
 import org.columba.mail.folderoptions.FolderOptionsController;
@@ -322,7 +322,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		previouslySelectedRows = view.getSelectedRows();
 
 		// folder in which the update occurs
-		IFolder folder = event.getSrcFolder();
+		IMailFolder folder = event.getSrcFolder();
 
 		if (folder == null) {
 			return;
@@ -331,9 +331,9 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		LOG.info("source folder=" + folder.getName());
 
 		// get current selection
-		FolderCommandReference r = (FolderCommandReference) ((MailFrameMediator) frameController)
+		MailFolderCommandReference r = (MailFolderCommandReference) ((MailFrameMediator) frameController)
 				.getTableSelection();
-		IFolder srcFolder = r.getFolder();
+		IMailFolder srcFolder = (IMailFolder) r.getSourceFolder();
 
 		// its always possible that no folder is currenlty selected
 		if (srcFolder != null) {
@@ -717,9 +717,9 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	}
 
 	/**
-	 * @see org.columba.mail.gui.table.model.TableModelChangedListener#isInterestedIn(IFolder)
+	 * @see org.columba.mail.gui.table.model.TableModelChangedListener#isInterestedIn(IMailFolder)
 	 */
-	public boolean isInterestedIn(IFolder folder) {
+	public boolean isInterestedIn(IMailFolder folder) {
 
 		return folder == previouslySelectedFolder;
 	}
@@ -810,9 +810,9 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	}
 
 	/**
-	 * @see org.columba.mail.gui.table.ITableController#restartMarkAsReadTimer(org.columba.mail.command.IFolderCommandReference)
+	 * @see org.columba.mail.gui.table.ITableController#restartMarkAsReadTimer(org.columba.mail.command.IMailFolderCommandReference)
 	 */
-	public void restartMarkAsReadTimer(IFolderCommandReference reference) {
+	public void restartMarkAsReadTimer(IMailFolderCommandReference reference) {
 		getMarkAsReadTimer().restart(reference);
 	}
 }

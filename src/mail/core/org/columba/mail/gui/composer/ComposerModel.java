@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import org.columba.core.nativ.mimetype.LookupMimetypeHandler;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.message.ColumbaMessage;
@@ -96,7 +96,7 @@ public class ComposerModel {
 	 * When replying/forwarding this is the original message you selected in the
 	 * message-list and replied to
 	 */
-	private FolderCommandReference ref;
+	private MailFolderCommandReference ref;
 
 	/**
 	 * Flag indicating whether this model holds a html message (true) or plain
@@ -176,7 +176,7 @@ public class ComposerModel {
 	 * @param ref
 	 *            source reference
 	 */
-	public void setSourceReference(FolderCommandReference ref) {
+	public void setSourceReference(MailFolderCommandReference ref) {
 		this.ref = ref;
 	}
 
@@ -187,7 +187,7 @@ public class ComposerModel {
 	 * 
 	 * @return source reference
 	 */
-	public FolderCommandReference getSourceReference() {
+	public MailFolderCommandReference getSourceReference() {
 		return ref;
 	}
 

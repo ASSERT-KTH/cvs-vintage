@@ -15,7 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.mail.filter.FilterCriteria;
+import org.columba.core.filter.AbstractFilter;
+import org.columba.core.filter.FilterCriteria;
 import org.columba.mail.folder.AbstractMessageFolder;
 
 
@@ -58,10 +59,10 @@ public class AccountFilter extends AbstractFilter {
     }
 
     /**
- * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+ * @see org.columba.core.filter.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
  */
     public void setUp(FilterCriteria f) {
-        criteriaCondition = FilterCriteria.getCriteria(f.getCriteriaString());
+        criteriaCondition = f.getCriteria();
         criteriaAccountUid = f.getInteger("account.uid", -1);
     }
 }

@@ -15,11 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.subscribe;
 
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 
 
-public class SubscribeCommandReference extends FolderCommandReference {
+public class SubscribeCommandReference extends MailFolderCommandReference {
     private SubscribeDialog dialog;
     private String mailbox;
 

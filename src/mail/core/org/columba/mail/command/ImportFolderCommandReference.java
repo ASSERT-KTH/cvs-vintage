@@ -18,7 +18,7 @@ import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ImportFolderCommandReference extends FolderCommandReference {
+public class ImportFolderCommandReference extends MailFolderCommandReference {
     File[] sourceFiles;
     AbstractMailboxImporter importer;
 

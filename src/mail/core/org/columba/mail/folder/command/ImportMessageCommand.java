@@ -6,10 +6,10 @@
  */
 package org.columba.mail.folder.command;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Command;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.ImportFolderCommandReference;
 import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 
@@ -24,11 +24,11 @@ import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
  * 
  * @author fdietz
  */
-public class ImportMessageCommand extends FolderCommand {
+public class ImportMessageCommand extends Command {
 	/**
 	 * @param references
 	 */
-	public ImportMessageCommand(DefaultCommandReference reference) {
+	public ImportMessageCommand(ICommandReference reference) {
 		super(reference);
 	}
 
@@ -37,7 +37,7 @@ public class ImportMessageCommand extends FolderCommand {
 	 * @param references
 	 */
 	public ImportMessageCommand(FrameMediator frame,
-			DefaultCommandReference reference) {
+			ICommandReference reference) {
 		super(frame, reference);
 	}
 

@@ -32,7 +32,7 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 import org.columba.ristretto.message.MailboxInfo;
@@ -130,7 +130,7 @@ public class FolderInfoPanel extends ContainerInfoPanel implements ISelectionLis
         initComponents();
     }
 
-    public void setFolder(IFolder newFolder) {
+    public void setFolder(IMailFolder newFolder) {
         item = newFolder.getConfiguration();
 
         if (item == null) {

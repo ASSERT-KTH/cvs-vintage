@@ -35,7 +35,7 @@ import org.columba.core.gui.util.RadioButtonWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpamItem;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
@@ -258,7 +258,7 @@ FolderTreeModel.getInstance().getFolder(list);
         } else if (action.equals("MARK_BUTTON")) {
             SelectFolderDialog dialog = new SelectFolderDialog(mediator);
             if (dialog.success()) {
-                IFolder folder = dialog.getSelectedFolder();
+                IMailFolder folder = dialog.getSelectedFolder();
                 
                 String treePath = folder.getTreePath();
                 markChooseFolderButton.setText(treePath);
@@ -266,7 +266,7 @@ FolderTreeModel.getInstance().getFolder(list);
         } else if (action.equals("INCOMING_BUTTON")) {
             SelectFolderDialog dialog = new SelectFolderDialog(mediator);
             if (dialog.success()) {
-               IFolder folder = dialog.getSelectedFolder();
+               IMailFolder folder = dialog.getSelectedFolder();
                 
                 String treePath = folder.getTreePath();
                 incomingChooseFolderButton.setText(treePath);

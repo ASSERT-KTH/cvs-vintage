@@ -25,10 +25,10 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.columba.core.filter.FilterCriteria;
 import org.columba.core.gui.util.ComboMenu;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.plugin.Plugin;
-import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
 
 public class DefaultCriteriaRow implements Plugin {
@@ -63,14 +63,14 @@ public class DefaultCriteriaRow implements Plugin {
 
 	public void updateComponents(boolean b) {
 		if (b) {
-			String conditionString = criteria.getType();
+			String conditionString = criteria.getTypeString();
 
 			comboMenu.setText(conditionString);
 
 		} else {
 
 			String conditionString = comboMenu.getText();
-			criteria.setType(conditionString);
+			criteria.setTypeString(conditionString);
 
 		}
 	}
@@ -80,7 +80,7 @@ public class DefaultCriteriaRow implements Plugin {
 
 		String[] list = pluginHandler.getPluginIdList();
 		comboMenu = new ComboMenu(list);
-		comboMenu.setText(criteria.getType());
+		comboMenu.setText(criteria.getTypeString());
 		comboMenu.addItemListener(criteriaList);
 
 		c.fill = GridBagConstraints.VERTICAL;

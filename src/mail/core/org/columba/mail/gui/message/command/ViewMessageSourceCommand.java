@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
@@ -30,8 +31,7 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.mimetype.MimeTypeViewer;
 import org.columba.core.io.TempFileStore;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.ristretto.message.MimeHeader;
@@ -45,7 +45,7 @@ import org.columba.ristretto.message.MimeHeader;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class ViewMessageSourceCommand extends FolderCommand {
+public class ViewMessageSourceCommand extends Command {
     protected File tempFile;
 
     /**
@@ -74,11 +74,11 @@ public class ViewMessageSourceCommand extends FolderCommand {
         throws Exception {
         AbstractMailFrameController mailFrameController = (AbstractMailFrameController) frameMediator;
 
-        FolderCommandReference r = (FolderCommandReference) getReference();
+        MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
         Object[] uids = r.getUids();
 
-        AbstractMessageFolder folder = (AbstractMessageFolder) r.getFolder();
+        AbstractMessageFolder folder = (AbstractMessageFolder) r.getSourceFolder();
 
         //		register for status events
         ((StatusObservableImpl) folder.getObservable()).setWorker(worker);

@@ -27,7 +27,7 @@ import org.columba.mail.message.ColumbaMessage;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class SMTPCommandReference extends FolderCommandReference {
+public class SMTPCommandReference extends MailFolderCommandReference {
     /**
  * Constructor for SMTPCommandReference.
  * @param folder

@@ -17,8 +17,8 @@
 package org.columba.mail.gui.message.filter;
 
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
@@ -47,7 +47,7 @@ public abstract class AbstractFilter implements Filter {
      * @return 
      * @see org.columba.mail.gui.message.filter.Filter#filter(IMailbox, java.lang.Object)
      */
-    public IFolderCommandReference filter(IMailbox folder, Object uid, IColumbaMessage message) throws Exception {
+    public IMailFolderCommandReference filter(IMailbox folder, Object uid, IColumbaMessage message) throws Exception {
 //      map selection to this temporary message
         TempFolder tempFolder = FolderTreeModel.getInstance().getTempFolder();
 
@@ -56,7 +56,7 @@ public abstract class AbstractFilter implements Filter {
 
         
         // create reference to this message
-        FolderCommandReference local = new FolderCommandReference(tempFolder,
+        MailFolderCommandReference local = new MailFolderCommandReference(tempFolder,
                 new Object[] {uid});
 
         // if we don't use this here - actions like reply would only work

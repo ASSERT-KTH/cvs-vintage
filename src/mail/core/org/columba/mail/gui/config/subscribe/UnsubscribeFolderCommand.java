@@ -41,7 +41,7 @@ public class UnsubscribeFolderCommand extends Command {
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
 		SubscribeCommandReference subscribeReference = (SubscribeCommandReference) getReference();
-		root = (IMAPRootFolder) subscribeReference.getFolder();
+		root = (IMAPRootFolder) subscribeReference.getSourceFolder();
 
 		store = root.getServer();
 

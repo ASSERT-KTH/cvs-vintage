@@ -19,11 +19,11 @@ import java.awt.Toolkit;
 
 import javax.swing.Action;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Command;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
@@ -34,13 +34,13 @@ import org.columba.mail.folder.imap.IMAPRootFolder;
  * 
  * @author fdietz
  */
-public class CheckForNewMessagesCommand extends FolderCommand {
+public class CheckForNewMessagesCommand extends Command {
 
 	IMAPFolder inboxFolder;
 
 	private Action action;
 
-	public CheckForNewMessagesCommand(Action action, DefaultCommandReference reference) {
+	public CheckForNewMessagesCommand(Action action, ICommandReference reference) {
 		super(reference);
 		this.action = action;
 	}
@@ -51,10 +51,10 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
 		// get references
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		// get IMAP rootfolder
-		IMAPRootFolder srcFolder = (IMAPRootFolder) r.getFolder();
+		IMAPRootFolder srcFolder = (IMAPRootFolder) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

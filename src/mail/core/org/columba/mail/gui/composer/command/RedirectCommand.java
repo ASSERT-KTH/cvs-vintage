@@ -28,7 +28,7 @@ import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.composer.ComposerModel;
@@ -72,16 +72,16 @@ public class RedirectCommand extends ForwardCommand {
 		model = new ComposerModel();
 
 		// get selected folder
-		AbstractMessageFolder folder = (AbstractMessageFolder) ((FolderCommandReference) getReference())
-				.getFolder();
+		AbstractMessageFolder folder = (AbstractMessageFolder) ((MailFolderCommandReference) getReference())
+				.getSourceFolder();
 
 		// get first selected message
-		Object[] uids = ((FolderCommandReference) getReference()).getUids();
+		Object[] uids = ((MailFolderCommandReference) getReference()).getUids();
 
 //		 ->set source reference in composermodel
         // when replying this is the original sender's message
 		// you selected and replied to
-        FolderCommandReference ref = new FolderCommandReference(folder, uids);
+        MailFolderCommandReference ref = new MailFolderCommandReference(folder, uids);
         model.setSourceReference(ref);
 
 		// setup to, references and account

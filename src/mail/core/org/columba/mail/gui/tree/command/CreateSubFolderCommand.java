@@ -23,13 +23,13 @@ import java.util.Hashtable;
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.Command;
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.FolderCreationException;
 import org.columba.mail.folder.FolderFactory;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -40,7 +40,7 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class CreateSubFolderCommand extends Command {
 
-	private IFolder parentFolder;
+	private IMailFolder parentFolder;
 
 	private Hashtable attributes;
 
@@ -49,7 +49,7 @@ public class CreateSubFolderCommand extends Command {
 	 * 
 	 * @param references
 	 */
-	public CreateSubFolderCommand(DefaultCommandReference reference) {
+	public CreateSubFolderCommand(ICommandReference reference) {
 		super(reference);
 	}
 
@@ -57,12 +57,12 @@ public class CreateSubFolderCommand extends Command {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
-		parentFolder = ((FolderCommandReference) getReference()).getFolder();
+		parentFolder = (IMailFolder) ((MailFolderCommandReference) getReference()).getSourceFolder();
 
-		String name = ((FolderCommandReference) getReference()).getFolderName();
+		String name = ((MailFolderCommandReference) getReference()).getFolderName();
 
 		try {
-			IFolder subFolder = FolderFactory.getInstance()
+			IMailFolder subFolder = FolderFactory.getInstance()
 					.createDefaultChild(parentFolder, name);
 		} catch (FolderCreationException ex) {
 			// show error message 

@@ -38,13 +38,14 @@ import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.NullWorkerStatusController;
 import org.columba.core.command.StatusObservable;
+import org.columba.core.filter.FilterCriteria;
+import org.columba.core.filter.FilterRule;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.util.ListTools;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.ImapItem;
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.filter.FilterRule;
+import org.columba.mail.filter.MailFilterCriteria;
 import org.columba.mail.folder.command.CheckForNewMessagesCommand;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
@@ -123,11 +124,10 @@ public class IMAPServer implements IMAPListener {
 	private IMAPFolder selectedFolder;
 
 	/**
-	 * Holds the actual MailboxStatus. Updated by
-	 * the IMAPListener.
+	 * Holds the actual MailboxStatus. Updated by the IMAPListener.
 	 */
 	private MailboxStatus selectedStatus;
-	
+
 	/**
 	 * mailbox name delimiter
 	 * <p>
@@ -167,7 +167,7 @@ public class IMAPServer implements IMAPListener {
 	// Used to control the state in which
 	// the automatic updated mechanism is
 	private boolean updatesEnabled;
-	
+
 	public IMAPServer(ImapItem item, IMAPRootFolder root) {
 		this.item = item;
 		this.imapRoot = root;
@@ -446,7 +446,7 @@ public class IMAPServer implements IMAPListener {
 	/**
 	 * Login to IMAP server.
 	 * <p>
-	 * Ask user for password. 
+	 * Ask user for password.
 	 * 
 	 * TODO (@author tstich): cleanup if all these ugly if, else cases
 	 * 
@@ -572,7 +572,7 @@ public class IMAPServer implements IMAPListener {
 		// in this session
 		if (firstLogin) {
 			Command c = new FetchSubFolderListCommand(
-					new FolderCommandReference(imapRoot));
+					new MailFolderCommandReference(imapRoot));
 			try {
 				//MainInterface.processor.addOp(c);
 				c.execute(NullWorkerStatusController.getInstance());
@@ -604,20 +604,21 @@ public class IMAPServer implements IMAPListener {
 		if (protocol.getState() != IMAPProtocol.SELECTED
 				|| !protocol.getSelectedMailbox().equals(path)) {
 
-			printStatusMessage(MessageFormat.format(MailResourceLoader.getString("statusbar", "message",
-			"select"),new Object[] {folder.getName()}));
-			
+			printStatusMessage(MessageFormat.format(MailResourceLoader
+					.getString("statusbar", "message", "select"),
+					new Object[] { folder.getName() }));
+
 			// Here we get the new mailboxinfo for the folder
 			messageFolderInfo = protocol.select(path);
-			
+
 			// Set the readOnly flag
 			folder.setReadOnly(!messageFolderInfo.isWriteAccess());
-			
+
 			// Convert to a MailboxStatus
 			selectedStatus = new MailboxStatus(messageFolderInfo);
-			
+
 			selectedFolder = folder;
-			
+
 			// delete any cached information
 			aktMimeTree = null;
 			aktMessageUid = null;
@@ -626,28 +627,30 @@ public class IMAPServer implements IMAPListener {
 
 	public MailboxStatus getStatus(IMAPFolder folder) throws IOException,
 			IMAPException, CommandCancelledException {
-		
-		if( selectedFolder != null && selectedFolder.equals(folder)) {
+
+		if (selectedFolder != null && selectedFolder.equals(folder)) {
 			try {
 				// This noop is necessary to check
 				// if the mailbox has changed
 				protocol.noop();
 
 				return selectedStatus;
-			}  catch (IMAPDisconnectedException e1) {
+			} catch (IMAPDisconnectedException e1) {
 				//Do nothing special here
-			}			
-			
+			}
+
 		}
-		
+
 		try {
 			ensureLoginState();
-			
-			printStatusMessage(MessageFormat.format(MailResourceLoader.getString("statusbar", "message",
-			"status"),new Object[] {folder.getName()}));
-			
-			return protocol.status(folder.getImapPath(), new String[] {"MESSAGES","UIDNEXT","RECENT","UNSEEN", "UIDVALIDITY"});
-		}catch ( IMAPDisconnectedException e ) {
+
+			printStatusMessage(MessageFormat.format(MailResourceLoader
+					.getString("statusbar", "message", "status"),
+					new Object[] { folder.getName() }));
+
+			return protocol.status(folder.getImapPath(), new String[] {
+					"MESSAGES", "UIDNEXT", "RECENT", "UNSEEN", "UIDVALIDITY" });
+		} catch (IMAPDisconnectedException e) {
 			return getStatus(folder);
 		}
 	}
@@ -683,6 +686,7 @@ public class IMAPServer implements IMAPListener {
 
 	/**
 	 * Append message to mailbox.
+	 * 
 	 * @param messageSource
 	 *            message source
 	 * @param folder
@@ -716,6 +720,7 @@ public class IMAPServer implements IMAPListener {
 
 	/**
 	 * Append message to mailbox.
+	 * 
 	 * @param messageSource
 	 *            message source
 	 * @param folder
@@ -738,7 +743,8 @@ public class IMAPServer implements IMAPListener {
 			MailboxStatus status = protocol.status(folder.getImapPath(),
 					new String[] { "UIDNEXT" });
 
-			protocol.append(folder.getImapPath(), messageSource, new Object[] { flags });
+			protocol.append(folder.getImapPath(), messageSource,
+					new Object[] { flags });
 
 			return new Integer((int) status.getUidNext());
 		} catch (IMAPDisconnectedException e) {
@@ -748,6 +754,7 @@ public class IMAPServer implements IMAPListener {
 
 	/**
 	 * Create new mailbox.
+	 * 
 	 * @param mailboxName
 	 *            name of new mailbox
 	 * 
@@ -763,19 +770,18 @@ public class IMAPServer implements IMAPListener {
 			//concate the full name of the new mailbox
 			String fullName;
 			String path = (folder == null ? "" : folder.getImapPath());
-			
+
 			if (path.length() > 0)
 				fullName = path + getDelimiter() + mailboxName;
 			else
 				fullName = mailboxName;
 
-			
 			// check if the mailbox already exists -> subscribe only
-			if( protocol.list("", fullName).length == 0 ) {
+			if (protocol.list("", fullName).length == 0) {
 				// 	create the mailbox on the server
 				protocol.create(fullName);
 			}
-			
+
 			// subscribe to the new mailbox
 			protocol.subscribe(fullName);
 		} catch (IMAPDisconnectedException e) {
@@ -881,8 +887,8 @@ public class IMAPServer implements IMAPListener {
 	 * @return list of UIDs
 	 * @throws Exception
 	 */
-	public List fetchUIDList(IMAPFolder folder) throws IOException, IMAPException,
-			CommandCancelledException {
+	public List fetchUIDList(IMAPFolder folder) throws IOException,
+			IMAPException, CommandCancelledException {
 		try {
 			ensureSelectedState(folder);
 
@@ -917,7 +923,7 @@ public class IMAPServer implements IMAPListener {
 			CommandCancelledException {
 		try {
 			ensureSelectedState(folder);
-			
+
 			updatesEnabled = false;
 			protocol.expunge();
 			updatesEnabled = true;
@@ -942,8 +948,8 @@ public class IMAPServer implements IMAPListener {
 	 *            source mailbox
 	 * @throws Exception
 	 */
-	public Integer[] copy(IMAPFolder destFolder, Object[] uids, IMAPFolder folder)
-			throws Exception {
+	public Integer[] copy(IMAPFolder destFolder, Object[] uids,
+			IMAPFolder folder) throws Exception {
 		try {
 			ensureSelectedState(folder);
 
@@ -953,22 +959,22 @@ public class IMAPServer implements IMAPListener {
 			List sortedUids = Arrays.asList(uids);
 			Collections.sort(sortedUids);
 
-			MailboxStatus statusBefore = protocol.status(destFolder.getImapPath(),
-					new String[] { "UIDNEXT" });
+			MailboxStatus statusBefore = protocol.status(destFolder
+					.getImapPath(), new String[] { "UIDNEXT" });
 
-			protocol.uidCopy(new SequenceSet(Arrays.asList(uids)), destFolder.getImapPath());
+			protocol.uidCopy(new SequenceSet(Arrays.asList(uids)), destFolder
+					.getImapPath());
 
-			MailboxStatus statusAfter = protocol.status(destFolder.getImapPath(),
-					new String[] { "UIDNEXT" });
+			MailboxStatus statusAfter = protocol.status(destFolder
+					.getImapPath(), new String[] { "UIDNEXT" });
 
 			// the UIDS start UIDNext till UIDNext + uids.length
-			int copied = (int)(statusAfter.getUidNext() - statusBefore.getUidNext());
+			int copied = (int) (statusAfter.getUidNext() - statusBefore
+					.getUidNext());
 			Integer[] destUids = new Integer[copied];
 			for (int i = 0; i < copied; i++) {
-				destUids[i] = new Integer(
-						(int) (statusBefore.getUidNext() + i));
+				destUids[i] = new Integer((int) (statusBefore.getUidNext() + i));
 			}
-
 
 			return destUids;
 		} catch (IMAPDisconnectedException e) {
@@ -1000,14 +1006,15 @@ public class IMAPServer implements IMAPListener {
 
 	/**
 	 * Fetch list of UIDs.
+	 * 
 	 * @param folder
 	 *            mailbox name
 	 * 
 	 * @return list of flags
 	 * @throws Exception
 	 */
-	public Integer[] fetchUids(SequenceSet set, IMAPFolder folder) throws IOException,
-			IMAPException, CommandCancelledException {
+	public Integer[] fetchUids(SequenceSet set, IMAPFolder folder)
+			throws IOException, IMAPException, CommandCancelledException {
 		try {
 			ensureSelectedState(folder);
 			if (messageFolderInfo.getExists() > 0) {
@@ -1019,18 +1026,18 @@ public class IMAPServer implements IMAPListener {
 			return fetchUids(set, folder);
 		}
 	}
-	
-	
+
 	/**
 	 * Fetch list of flags and parse it.
+	 * 
 	 * @param folder
 	 *            mailbox name
 	 * 
 	 * @return list of flags
 	 * @throws Exception
 	 */
-	public IMAPFlags[] fetchFlagsListStartFrom(int startIdx, IMAPFolder folder) throws IOException,
-			IMAPException, CommandCancelledException {
+	public IMAPFlags[] fetchFlagsListStartFrom(int startIdx, IMAPFolder folder)
+			throws IOException, IMAPException, CommandCancelledException {
 		try {
 			ensureSelectedState(folder);
 			if (messageFolderInfo.getExists() > 0) {
@@ -1045,16 +1052,17 @@ public class IMAPServer implements IMAPListener {
 		}
 	}
 
-	public NamespaceCollection fetchNamespaces() throws IOException, IMAPException, CommandCancelledException {
+	public NamespaceCollection fetchNamespaces() throws IOException,
+			IMAPException, CommandCancelledException {
 		try {
 			ensureLoginState();
 			return protocol.namespace();
-			
+
 		} catch (IMAPDisconnectedException e) {
 			return fetchNamespaces();
-		}		
+		}
 	}
-	
+
 	/**
 	 * @param headerString
 	 * @return
@@ -1085,8 +1093,8 @@ public class IMAPServer implements IMAPListener {
 	 *            mailbox name
 	 * @throws Exception
 	 */
-	public void fetchHeaderList(IHeaderList headerList, List list, IMAPFolder folder)
-			throws Exception {
+	public void fetchHeaderList(IHeaderList headerList, List list,
+			IMAPFolder folder) throws Exception {
 		try {
 			// make sure this mailbox is selected
 			ensureSelectedState(folder);
@@ -1146,9 +1154,9 @@ public class IMAPServer implements IMAPListener {
 		int actState;
 
 		ensureConnectedState();
-		
+
 		if (protocol.getState() < IMAPProtocol.AUTHENTICATED) {
-				login();
+			login();
 		}
 	}
 
@@ -1162,8 +1170,8 @@ public class IMAPServer implements IMAPListener {
 	 * @return mimetree
 	 * @throws Exception
 	 */
-	public MimeTree getMimeTree(Object uid, IMAPFolder folder) throws IOException,
-			IMAPException, CommandCancelledException {
+	public MimeTree getMimeTree(Object uid, IMAPFolder folder)
+			throws IOException, IMAPException, CommandCancelledException {
 		try {
 			ensureSelectedState(folder);
 
@@ -1196,7 +1204,8 @@ public class IMAPServer implements IMAPListener {
 	 * @throws Exception
 	 */
 	public InputStream getMimePartBodyStream(Object uid, Integer[] address,
-			IMAPFolder folder) throws IOException, IMAPException, CommandCancelledException  {
+			IMAPFolder folder) throws IOException, IMAPException,
+			CommandCancelledException {
 		try {
 			ensureSelectedState(folder);
 
@@ -1221,8 +1230,8 @@ public class IMAPServer implements IMAPListener {
 	 * @throws IOException
 	 * @throws Exception
 	 */
-	public Header getHeaders(Object uid, String[] keys, IMAPFolder folder) throws IOException, IMAPException, CommandCancelledException
-			 {
+	public Header getHeaders(Object uid, String[] keys, IMAPFolder folder)
+			throws IOException, IMAPException, CommandCancelledException {
 		try {
 			ensureSelectedState(folder);
 
@@ -1248,7 +1257,8 @@ public class IMAPServer implements IMAPListener {
 	 * @throws IMAPException
 	 * @throws IOException
 	 */
-	public Header getAllHeaders(Object uid, IMAPFolder folder) throws IOException, IMAPException, CommandCancelledException  {
+	public Header getAllHeaders(Object uid, IMAPFolder folder)
+			throws IOException, IMAPException, CommandCancelledException {
 		try {
 			ensureSelectedState(folder);
 
@@ -1277,7 +1287,8 @@ public class IMAPServer implements IMAPListener {
 	 * @throws Exception
 	 */
 	public InputStream getMimePartSourceStream(Object uid, Integer[] address,
-			IMAPFolder folder) throws IOException, IMAPException, CommandCancelledException  {
+			IMAPFolder folder) throws IOException, IMAPException,
+			CommandCancelledException {
 		try {
 			ensureSelectedState(folder);
 
@@ -1305,8 +1316,8 @@ public class IMAPServer implements IMAPListener {
 	 * @throws IOException
 	 * @throws Exception
 	 */
-	public InputStream getMessageSourceStream(Object uid, IMAPFolder folder) throws IOException, IMAPException, CommandCancelledException
-			 {
+	public InputStream getMessageSourceStream(Object uid, IMAPFolder folder)
+			throws IOException, IMAPException, CommandCancelledException {
 		try {
 			ensureSelectedState(folder);
 
@@ -1379,34 +1390,36 @@ public class IMAPServer implements IMAPListener {
 		return result;
 	}
 
-	public int getIndex(Integer uid, IMAPFolder folder) throws IOException, IMAPException, CommandCancelledException {
-		
+	public int getIndex(Integer uid, IMAPFolder folder) throws IOException,
+			IMAPException, CommandCancelledException {
+
 		try {
-		ensureSelectedState(folder);
-		
-		SearchKey key = new SearchKey(SearchKey.UID, uid);
-		
-		Integer[] index = protocol.search(new SearchKey[] { key });
-		if( index.length > 0) {
-			return index[0].intValue();
-		} else {
-			return -1;
-		}
-		} catch( IMAPDisconnectedException e ) {
+			ensureSelectedState(folder);
+
+			SearchKey key = new SearchKey(SearchKey.UID, uid);
+
+			Integer[] index = protocol.search(new SearchKey[] { key });
+			if (index.length > 0) {
+				return index[0].intValue();
+			} else {
+				return -1;
+			}
+		} catch (IMAPDisconnectedException e) {
 			return getIndex(uid, folder);
 		}
 	}
-	
-	public Integer[] search(SearchKey key, IMAPFolder folder ) throws IOException, IMAPException, CommandCancelledException {
+
+	public Integer[] search(SearchKey key, IMAPFolder folder)
+			throws IOException, IMAPException, CommandCancelledException {
 		try {
 			ensureSelectedState(folder);
-		
-			return protocol.uidSearch(new SearchKey[] {key});
+
+			return protocol.uidSearch(new SearchKey[] { key });
 		} catch (IMAPDisconnectedException e) {
 			return search(key, folder);
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param filterRule
@@ -1417,7 +1430,8 @@ public class IMAPServer implements IMAPListener {
 	 * @throws IMAPException
 	 * @throws IOException
 	 */
-	public List search(FilterRule filterRule, IMAPFolder folder) throws IOException, IMAPException, CommandCancelledException  {
+	public List search(FilterRule filterRule, IMAPFolder folder)
+			throws IOException, IMAPException, CommandCancelledException {
 
 		try {
 			ensureSelectedState(folder);
@@ -1503,88 +1517,88 @@ public class IMAPServer implements IMAPListener {
 	 */
 	private SearchKey getSearchKey(FilterCriteria criteria) {
 		int operator = criteria.getCriteria();
-		int type = criteria.getTypeItem();
+		int type = new MailFilterCriteria(criteria).getType();
 
 		switch (type) {
-		case FilterCriteria.FROM: {
+		case MailFilterCriteria.FROM: {
 			if (operator == FilterCriteria.CONTAINS) {
-				return new SearchKey(SearchKey.FROM, criteria.getPattern());
+				return new SearchKey(SearchKey.FROM, criteria.getPatternString());
 			} else {
 				// contains not
 				return new SearchKey(SearchKey.NOT, new SearchKey(
-						SearchKey.FROM, criteria.getPattern()));
+						SearchKey.FROM, criteria.getPatternString()));
 			}
 		}
 
-		case FilterCriteria.CC: {
+		case MailFilterCriteria.CC: {
 			if (operator == FilterCriteria.CONTAINS) {
-				return new SearchKey(SearchKey.CC, criteria.getPattern());
+				return new SearchKey(SearchKey.CC, criteria.getPatternString());
 			} else {
 				// contains not
 				return new SearchKey(SearchKey.NOT, new SearchKey(SearchKey.CC,
-						criteria.getPattern()));
+						criteria.getPatternString()));
 			}
 		}
 
-		case FilterCriteria.BCC: {
+		case MailFilterCriteria.BCC: {
 			if (operator == FilterCriteria.CONTAINS) {
-				return new SearchKey(SearchKey.BCC, criteria.getPattern());
+				return new SearchKey(SearchKey.BCC, criteria.getPatternString());
 			} else {
 				// contains not
 				return new SearchKey(SearchKey.NOT, new SearchKey(
-						SearchKey.BCC, criteria.getPattern()));
+						SearchKey.BCC, criteria.getPatternString()));
 			}
 		}
 
-		case FilterCriteria.TO: {
+		case MailFilterCriteria.TO: {
 			if (operator == FilterCriteria.CONTAINS) {
-				return new SearchKey(SearchKey.TO, criteria.getPattern());
+				return new SearchKey(SearchKey.TO, criteria.getPatternString());
 			} else {
 				// contains not
 				return new SearchKey(SearchKey.NOT, new SearchKey(SearchKey.TO,
-						criteria.getPattern()));
+						criteria.getPatternString()));
 			}
 		}
 
-		case FilterCriteria.SUBJECT: {
+		case MailFilterCriteria.SUBJECT: {
 			if (operator == FilterCriteria.CONTAINS) {
-				return new SearchKey(SearchKey.SUBJECT, criteria.getPattern());
+				return new SearchKey(SearchKey.SUBJECT, criteria.getPatternString());
 			} else {
 				// contains not
 				return new SearchKey(SearchKey.NOT, new SearchKey(
-						SearchKey.SUBJECT, criteria.getPattern()));
+						SearchKey.SUBJECT, criteria.getPatternString()));
 			}
 		}
 
-		case FilterCriteria.BODY: {
+		case MailFilterCriteria.BODY: {
 			if (operator == FilterCriteria.CONTAINS) {
-				return new SearchKey(SearchKey.BODY, criteria.getPattern());
+				return new SearchKey(SearchKey.BODY, criteria.getPatternString());
 			} else {
 				// contains not
 				return new SearchKey(SearchKey.NOT, new SearchKey(
-						SearchKey.BODY, criteria.getPattern()));
+						SearchKey.BODY, criteria.getPatternString()));
 			}
 		}
 
-		case FilterCriteria.CUSTOM_HEADERFIELD: {
+		case MailFilterCriteria.CUSTOM_HEADERFIELD: {
 			if (operator == FilterCriteria.CONTAINS) {
-				return new SearchKey(SearchKey.HEADER, criteria
-						.getHeaderItemString(), criteria.getPattern());
+				return new SearchKey(SearchKey.HEADER, new MailFilterCriteria(criteria)
+						.getHeaderfieldString(), criteria.getPatternString());
 			} else {
 				// contains not
 				return new SearchKey(SearchKey.NOT, new SearchKey(
-						SearchKey.HEADER, criteria.getHeaderItemString(),
-						criteria.getPattern()));
+						SearchKey.HEADER, new MailFilterCriteria(criteria).getHeaderfieldString(),
+						criteria.getPatternString()));
 			}
 		}
 
-		case FilterCriteria.DATE: {
+		case MailFilterCriteria.DATE: {
 			DateFormat df = DateFormat.getDateInstance();
 
 			IMAPDate searchPattern = null;
 
 			try {
-				searchPattern = new IMAPDate(df.parse(criteria.getPattern()));
+				searchPattern = new IMAPDate(df.parse(criteria.getPatternString()));
 			} catch (java.text.ParseException ex) {
 				// should never happen
 				ex.printStackTrace();
@@ -1599,13 +1613,13 @@ public class IMAPServer implements IMAPListener {
 			}
 		}
 
-		case FilterCriteria.SIZE: {
+		case MailFilterCriteria.SIZE: {
 			if (operator == FilterCriteria.SIZE_SMALLER) {
-				return new SearchKey(SearchKey.SMALLER, criteria.getPattern());
+				return new SearchKey(SearchKey.SMALLER, criteria.getPatternString());
 			} else {
 				// contains not
 				return new SearchKey(SearchKey.NOT, new SearchKey(
-						SearchKey.SMALLER, criteria.getPattern()));
+						SearchKey.SMALLER, criteria.getPatternString()));
 			}
 		}
 		}
@@ -1686,15 +1700,17 @@ public class IMAPServer implements IMAPListener {
 	}
 
 	/**
-	 * @param folder TODO
-	 * @return
-	 * @throws CommandCancelledException
+	 * @param folder
+	 *            TODO
+	 * @return @throws
+	 *         CommandCancelledException
 	 * @throws IMAPException
 	 * @throws IOException
 	 */
-	public MailboxInfo getMessageFolderInfo(IMAPFolder folder) throws IOException, IMAPException, CommandCancelledException {
+	public MailboxInfo getMessageFolderInfo(IMAPFolder folder)
+			throws IOException, IMAPException, CommandCancelledException {
 		ensureSelectedState(folder);
-		
+
 		return messageFolderInfo;
 	}
 
@@ -1720,12 +1736,13 @@ public class IMAPServer implements IMAPListener {
 
 	/**
 	 * @param imapPath
-	 * @return
-	 * @throws IOException
+	 * @return @throws
+	 *         IOException
 	 * @throws CommandCancelledException
 	 * @throws IMAPException
 	 */
-	public boolean isSelected(IMAPFolder folder) throws IOException, IMAPException, CommandCancelledException {
+	public boolean isSelected(IMAPFolder folder) throws IOException,
+			IMAPException, CommandCancelledException {
 		return (protocol.getState() == IMAPProtocol.SELECTED && protocol
 				.getSelectedMailbox().equals(folder.getImapPath()));
 	}
@@ -1746,7 +1763,7 @@ public class IMAPServer implements IMAPListener {
 				options, options[0]);
 		return result;
 	}
-	
+
 	/**
 	 * @see org.columba.ristretto.imap.IMAPListener#alertMessage(java.lang.String)
 	 */
@@ -1754,59 +1771,70 @@ public class IMAPServer implements IMAPListener {
 		//TODO: Show dialog
 		LOG.warning(arg0);
 	}
+
 	/**
-	 * @see org.columba.ristretto.imap.IMAPListener#connectionClosed(java.lang.String, java.lang.String)
+	 * @see org.columba.ristretto.imap.IMAPListener#connectionClosed(java.lang.String,
+	 *      java.lang.String)
 	 */
 	public void connectionClosed(String arg0, String arg1) {
 		LOG.info(arg0);
 		selectedFolder = null;
 	}
+
 	/**
-	 * @see org.columba.ristretto.imap.IMAPListener#existsChanged(java.lang.String, int)
+	 * @see org.columba.ristretto.imap.IMAPListener#existsChanged(java.lang.String,
+	 *      int)
 	 */
 	public void existsChanged(String arg0, int arg1) {
-		selectedStatus.setMessages( arg1 );
-		
-		if( updatesEnabled ) {
+		selectedStatus.setMessages(arg1);
+
+		if (updatesEnabled) {
 			LOG.fine("Exists changed -> triggering update");
-		
+
 			// Trigger synchronization of the IMAPFolder
-			Command updateFolderCommand = new CheckForNewMessagesCommand(null, new FolderCommandReference(imapRoot));
+			Command updateFolderCommand = new CheckForNewMessagesCommand(null,
+					new MailFolderCommandReference(imapRoot));
 			CommandProcessor.getInstance().addOp(updateFolderCommand);
 		}
 	}
+
 	/**
-	 * @see org.columba.ristretto.imap.IMAPListener#flagsChanged(java.lang.String, org.columba.ristretto.imap.IMAPFlags)
+	 * @see org.columba.ristretto.imap.IMAPListener#flagsChanged(java.lang.String,
+	 *      org.columba.ristretto.imap.IMAPFlags)
 	 */
 	public void flagsChanged(String arg0, IMAPFlags arg1) {
 		LOG.fine("Flag changed -> triggering update");
 
 		// Trigger synchronization of the IMAPFolder
-		Command updateFlagCommand = new UpdateFlagCommand(new FolderCommandReference(selectedFolder), arg1);
+		Command updateFlagCommand = new UpdateFlagCommand(
+				new MailFolderCommandReference(selectedFolder), arg1);
 		CommandProcessor.getInstance().addOp(updateFlagCommand);
 	}
+
 	/**
 	 * @see org.columba.ristretto.imap.IMAPListener#parseError(java.lang.String)
 	 */
 	public void parseError(String arg0) {
 		LOG.warning(arg0);
 	}
+
 	/**
-	 * @see org.columba.ristretto.imap.IMAPListener#recentChanged(java.lang.String, int)
+	 * @see org.columba.ristretto.imap.IMAPListener#recentChanged(java.lang.String,
+	 *      int)
 	 */
 	public void recentChanged(String arg0, int arg1) {
 		//selectedStatus.setRecent(arg1);
-		
+
 		// We trigger an update only when the exists changed
 		// which should be equal with a Recent change.
 	}
+
 	/**
 	 * @see org.columba.ristretto.imap.IMAPListener#warningMessage(java.lang.String)
 	 */
 	public void warningMessage(String arg0) {
 		LOG.warning(arg0);
 	}
-	
 
 	/**
 	 * @return Returns the item.

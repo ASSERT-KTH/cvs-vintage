@@ -20,7 +20,7 @@ package org.columba.mail.facade;
 import java.util.Enumeration;
 
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.tree.FolderTreeModel;
 
@@ -38,8 +38,8 @@ public class FolderFacade implements IFolderFacade {
 	 *            folder uid
 	 * @return folder
 	 */
-	public IFolder getFolder(int uid) {
-		return (IFolder) FolderTreeModel.getInstance().getFolder(uid);
+	public IMailFolder getFolder(int uid) {
+		return (IMailFolder) FolderTreeModel.getInstance().getFolder(uid);
 	}
 
 	/**
@@ -49,8 +49,8 @@ public class FolderFacade implements IFolderFacade {
 	 *            folder name
 	 * @return folder
 	 */
-	public IFolder getFolder(String name) {
-		return (IFolder) FolderTreeModel.getInstance().findFolder(
+	public IMailFolder getFolder(String name) {
+		return (IMailFolder) FolderTreeModel.getInstance().findFolder(
 				(AbstractFolder) FolderTreeModel.getInstance().getRoot(), name);
 	}
 

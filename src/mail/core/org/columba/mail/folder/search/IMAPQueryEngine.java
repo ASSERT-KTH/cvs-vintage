@@ -18,7 +18,7 @@ package org.columba.mail.folder.search;
 
 import java.util.List;
 
-import org.columba.mail.filter.FilterRule;
+import org.columba.core.filter.FilterRule;
 import org.columba.mail.folder.imap.IMAPFolder;
 
 /**

@@ -17,12 +17,12 @@ package org.columba.mail.gui.composer.command;
 
 import java.io.InputStream;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Command;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.ProgressObservedInputStream;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.ComposerCommandReference;
-import org.columba.mail.command.FolderCommand;
 import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
@@ -38,7 +38,7 @@ import org.columba.mail.util.MailResourceLoader;
 /**
  * @author freddy
  */
-public class SaveMessageCommand extends FolderCommand {
+public class SaveMessageCommand extends Command {
     private AbstractMessageFolder folder;
 
     /**
@@ -47,7 +47,7 @@ public class SaveMessageCommand extends FolderCommand {
      * @param frameMediator
      * @param references
      */
-    public SaveMessageCommand(DefaultCommandReference reference) {
+    public SaveMessageCommand(ICommandReference reference) {
         super(reference);
     }
 
@@ -77,7 +77,7 @@ public class SaveMessageCommand extends FolderCommand {
         if (message == null) {
             message = new MessageComposer(((ComposerModel) composerController.getModel())).compose(worker);
         }
-        folder = (AbstractMessageFolder) r.getFolder();
+        folder = (AbstractMessageFolder) r.getSourceFolder();
         
         worker.setDisplayText(MailResourceLoader.getString("statusbar",
 				"message", "save_message"));

@@ -26,8 +26,8 @@ import java.util.List;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.main.Main;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PGPItem;
@@ -107,7 +107,7 @@ public class PGPMessageFilter extends AbstractFilter {
 	 * @see org.columba.mail.gui.message.filter.Filter#filter(org.columba.mail.folder.Folder,
 	 *      java.lang.Object)
 	 */
-	public IFolderCommandReference filter(IMailbox folder, Object uid)
+	public IMailFolderCommandReference filter(IMailbox folder, Object uid)
 			throws Exception {
 
 		mimePartTree = folder.getMimePartTree(uid);
@@ -139,7 +139,7 @@ public class PGPMessageFilter extends AbstractFilter {
 			pgpActive = new Boolean((pgpItem.get("enabled"))).booleanValue();
 		}
 
-		IFolderCommandReference result = null;
+		IMailFolderCommandReference result = null;
 		LOG.fine("pgp is true");
 		if (firstPartMimeType.getSubtype().equals("signed")) {
 			result = verify(folder, uid, pgpActive);
@@ -169,7 +169,7 @@ public class PGPMessageFilter extends AbstractFilter {
 	 * @throws Exception
 	 * @throws IOException
 	 */
-	private IFolderCommandReference decrypt(IMailbox folder, Object uid,
+	private IMailFolderCommandReference decrypt(IMailbox folder, Object uid,
 			boolean pgpActive) throws Exception, IOException {
 		InputStream decryptedStream = null;
 		LOG.fine("start decrypting");
@@ -307,7 +307,7 @@ public class PGPMessageFilter extends AbstractFilter {
 	 * @throws Exception
 	 * @throws IOException
 	 */
-	private FolderCommandReference verify(IMailbox folder, Object uid,
+	private MailFolderCommandReference verify(IMailbox folder, Object uid,
 			boolean pgpActive) throws Exception, IOException {
 		if (!pgpActive) {
 			pgpMessage = "";

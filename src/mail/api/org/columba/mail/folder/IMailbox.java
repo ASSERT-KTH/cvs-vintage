@@ -35,7 +35,7 @@ import org.columba.ristretto.message.MimeTree;
  * 
  * @author fdietz
  */
-public interface IMailbox extends IFolder{
+public interface IMailbox extends IMailFolder{
 
     /**
      * Get the {@link MailboxInfo} of this mailbox

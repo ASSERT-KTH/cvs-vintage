@@ -19,10 +19,10 @@ import java.awt.Color;
 
 import javax.swing.JComboBox;
 
+import org.columba.core.filter.FilterCriteria;
 import org.columba.core.gui.util.ColorComboBox;
 import org.columba.core.gui.util.ColorItem;
 import org.columba.core.plugin.AbstractPluginHandler;
-import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
 
 
@@ -69,14 +69,14 @@ public class ColorCriteriaRow extends DefaultCriteriaRow {
         if (b) {
             matchComboBox.setSelectedItem(criteria.getCriteriaString());
 
-            colorComboBox.setSelectedColor(criteria.getPattern());
+            colorComboBox.setSelectedColor(criteria.getPatternString());
             colorComboBox.setCustomColor(criteria.getInteger("rgb",
                     Color.black.getRGB()));
         } else {
-            criteria.setCriteria((String) matchComboBox.getSelectedItem());
+            criteria.setCriteriaString((String) matchComboBox.getSelectedItem());
 
             ColorItem item = colorComboBox.getSelectedColorItem();
-            criteria.setPattern(item.getName());
+            criteria.setPatternString(item.getName());
             criteria.set("rgb", item.getColor().getRGB());
         }
     }

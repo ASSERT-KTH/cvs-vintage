@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 
 
@@ -46,6 +46,6 @@ public class CopyAction extends AbstractColumbaAction {
         // copy action
     	ClipboardManager.getInstance().setOperation(ClipboardManager.COPY_ACTION);
 
-    	ClipboardManager.getInstance().setSelection((FolderCommandReference) ((MailFrameMediator)frameController).getTableSelection());
+    	ClipboardManager.getInstance().setSelection((MailFolderCommandReference) ((MailFrameMediator)frameController).getTableSelection());
     }
 }

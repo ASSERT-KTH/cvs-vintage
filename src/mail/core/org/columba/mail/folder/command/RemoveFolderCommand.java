@@ -18,10 +18,10 @@ package org.columba.mail.folder.command;
 import javax.swing.tree.TreeNode;
 
 import org.columba.core.command.Command;
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 
 /**
@@ -45,7 +45,7 @@ public class RemoveFolderCommand extends Command {
 	 * @param references
 	 *            command arguments.
 	 */
-	public RemoveFolderCommand(DefaultCommandReference reference) {
+	public RemoveFolderCommand(ICommandReference reference) {
 		super(reference);
 
 		success = false;
@@ -65,8 +65,8 @@ public class RemoveFolderCommand extends Command {
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
 		// get source folder
-		AbstractMessageFolder childFolder = (AbstractMessageFolder) ((FolderCommandReference) getReference())
-				.getFolder();
+		AbstractMessageFolder childFolder = (AbstractMessageFolder) ((MailFolderCommandReference) getReference())
+				.getSourceFolder();
 
 		// need to store the data for the proper event generation.
 		parentFolder = childFolder.getParent();

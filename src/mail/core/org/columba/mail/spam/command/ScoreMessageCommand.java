@@ -23,14 +23,14 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.CloneStreamMaster;
 import org.columba.core.main.Main;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.filter.plugins.AddressbookFilter;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -47,7 +47,7 @@ import org.macchiato.maps.ProbabilityMap;
  * 
  * @author fdietz
  */
-public class ScoreMessageCommand extends FolderCommand {
+public class ScoreMessageCommand extends Command {
 
 	private Object[] uids;
 
@@ -93,13 +93,13 @@ public class ScoreMessageCommand extends FolderCommand {
 		this.worker = worker;
 
 		// get source reference
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		// get array of message UIDs
 		uids = r.getUids();
 
 		// get source folder
-		srcFolder = (AbstractMessageFolder) r.getFolder();
+		srcFolder = (AbstractMessageFolder) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
@@ -150,7 +150,7 @@ public class ScoreMessageCommand extends FolderCommand {
 
 		// mark spam messages
 		if (spamList.size() != 0) {
-			FolderCommandReference ref = new FolderCommandReference(srcFolder,
+			MailFolderCommandReference ref = new MailFolderCommandReference(srcFolder,
 					spamList.toArray());
 			ref.setMarkVariant(MarkMessageCommand.MARK_AS_SPAM);
 			markAsSpamCommand = new MarkMessageCommand(ref);
@@ -159,7 +159,7 @@ public class ScoreMessageCommand extends FolderCommand {
 
 		// mark non spam messages
 		if (nonspamList.size() != 0) {
-			FolderCommandReference ref = new FolderCommandReference(srcFolder,
+			MailFolderCommandReference ref = new MailFolderCommandReference(srcFolder,
 					nonspamList.toArray());
 			ref.setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
 			markAsNotSpamCommand = new MarkMessageCommand(ref);

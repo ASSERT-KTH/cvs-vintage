@@ -22,7 +22,7 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.frame.TableViewOwner;
@@ -44,12 +44,12 @@ public class ViewHeaderListAction extends AbstractColumbaAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference references = (FolderCommandReference) getFrameMediator()
+		MailFolderCommandReference references = (MailFolderCommandReference) getFrameMediator()
 				.getSelectionManager().getSelection("mail.tree");
 
 		if ( references == null ) return;
 		
-		if ((references.getFolder() instanceof AbstractMessageFolder)) {
+		if ((references.getSourceFolder() instanceof AbstractMessageFolder)) {
 			// view message list
 			CommandProcessor.getInstance().addOp(new ViewHeaderListCommand(
 					getFrameMediator(), references));

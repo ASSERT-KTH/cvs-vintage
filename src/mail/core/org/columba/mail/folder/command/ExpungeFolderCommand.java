@@ -17,12 +17,12 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 
 /**
@@ -33,7 +33,7 @@ import org.columba.mail.folder.AbstractMessageFolder;
  * @author fdietz
  *  
  */
-public class ExpungeFolderCommand extends FolderCommand {
+public class ExpungeFolderCommand extends Command {
 
 	/**
 	 * Constructor for ExpungeFolderCommand.
@@ -51,9 +51,9 @@ public class ExpungeFolderCommand extends FolderCommand {
 	public void execute(WorkerStatusController worker) throws Exception {
 
 		// get source references
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
-		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getFolder();
+		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

@@ -38,7 +38,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
@@ -335,7 +335,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 
             if (dialog.success()) {
-            	IFolder selectedFolder = dialog.getSelectedFolder();
+            	IMailFolder selectedFolder = dialog.getSelectedFolder();
                 String path = selectedFolder.getTreePath();
 
                 trashButton.setText(path);
@@ -349,7 +349,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 
             if (dialog.success()) {
-            	IFolder selectedFolder = dialog.getSelectedFolder();
+            	IMailFolder selectedFolder = dialog.getSelectedFolder();
                 String path = selectedFolder.getTreePath();
 
                 inboxButton.setText(path);
@@ -363,7 +363,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 
             if (dialog.success()) {
-            	IFolder selectedFolder = dialog.getSelectedFolder();
+            	IMailFolder selectedFolder = dialog.getSelectedFolder();
                 String path = selectedFolder.getTreePath();
 
                 draftsButton.setText(path);
@@ -377,7 +377,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 
             if (dialog.success()) {
-            	IFolder selectedFolder = dialog.getSelectedFolder();
+            	IMailFolder selectedFolder = dialog.getSelectedFolder();
                 String path = selectedFolder.getTreePath();
 
                 templatesButton.setText(path);
@@ -391,7 +391,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
 
             if (dialog.success()) {
-            	IFolder selectedFolder = dialog.getSelectedFolder();
+            	IMailFolder selectedFolder = dialog.getSelectedFolder();
                 String path = selectedFolder.getTreePath();
 
                 sentButton.setText(path);

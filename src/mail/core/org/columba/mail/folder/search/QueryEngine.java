@@ -18,8 +18,8 @@ package org.columba.mail.folder.search;
 
 import java.util.List;
 
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.filter.FilterRule;
+import org.columba.core.filter.FilterCriteria;
+import org.columba.core.filter.FilterRule;
 
 /**
  * Custom implementation for performing optimized search requests.

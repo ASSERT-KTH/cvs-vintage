@@ -141,7 +141,7 @@
 	
 	<menu name="menu_utilities" extensionpoint="bottom">
 	 
-	 <!--
+	
 	  fdietz: disabled for stable release.
 	   these actions are only available for macchiato developers
 	   TODO: add debug flag instead
@@ -149,7 +149,7 @@
 	 <menuitem action="TrainMessageAsHam"/>
 	 <menuitem action="ScoreMessage"/>
 	 <separator/>
-	 -->
+	 
 	 <extensionpoint name="mail_bottom" />	
 	 <menu name="menu_message_filteronmessage">
 	      <menuitem action="CreateFilterOnSubject"/>

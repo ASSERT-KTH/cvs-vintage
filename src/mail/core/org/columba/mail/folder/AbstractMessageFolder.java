@@ -26,12 +26,12 @@ import java.util.logging.Logger;
 
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.filter.Filter;
+import org.columba.core.filter.FilterList;
 import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.IFolderItem;
-import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.event.FolderEvent;
 import org.columba.mail.folder.event.FolderListener;

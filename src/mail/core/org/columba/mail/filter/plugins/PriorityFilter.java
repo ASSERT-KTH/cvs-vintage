@@ -17,102 +17,106 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.mail.filter.FilterCriteria;
+import org.columba.core.filter.AbstractFilter;
+import org.columba.core.filter.FilterCriteria;
 import org.columba.mail.folder.AbstractMessageFolder;
-
 
 /**
  * Search for a certain priority.
  * <p>
  * This can be for example "high", "log", "highest", "lowest"
- *
+ * 
  * @author fdietz
  */
 public class PriorityFilter extends AbstractFilter {
-    private String criteria;
-    private String searchPattern;
+	
+	private String searchPattern;
 
-    /**
- * Constructor for PriorityFilter.
- */
-    public PriorityFilter() {
-        super();
-    }
+	private int condition;
 
-    /**
- * Transform priority to integer value.
- *
- * @param pattern       priority string
- * @return              integer representation of string
- */
-    protected Integer transformPriority(String pattern) {
-        Integer searchPatternInt = new Integer(3);
+	/**
+	 * Constructor for PriorityFilter.
+	 */
+	public PriorityFilter() {
+		super();
+	}
 
-        if (pattern.equalsIgnoreCase("Highest")) {
-            searchPatternInt = new Integer(1);
-        } else if (pattern.equalsIgnoreCase("High")) {
-            searchPatternInt = new Integer(2);
-        } else if (pattern.equalsIgnoreCase("Normal")) {
-            searchPatternInt = new Integer(3);
-        } else if (pattern.equalsIgnoreCase("Low")) {
-            searchPatternInt = new Integer(4);
-        } else if (pattern.equalsIgnoreCase("Lowest")) {
-            searchPatternInt = new Integer(5);
-        }
+	/**
+	 * Transform priority to integer value.
+	 * 
+	 * @param pattern
+	 *            priority string
+	 * @return integer representation of string
+	 */
+	protected Integer transformPriority(String pattern) {
+		Integer searchPatternInt = new Integer(3);
 
-        //Integer priority = Integer.valueOf(pattern);
-        //return priority;
-        return searchPatternInt;
-    }
+		if (pattern.equalsIgnoreCase("Highest")) {
+			searchPatternInt = new Integer(1);
+		} else if (pattern.equalsIgnoreCase("High")) {
+			searchPatternInt = new Integer(2);
+		} else if (pattern.equalsIgnoreCase("Normal")) {
+			searchPatternInt = new Integer(3);
+		} else if (pattern.equalsIgnoreCase("Low")) {
+			searchPatternInt = new Integer(4);
+		} else if (pattern.equalsIgnoreCase("Lowest")) {
+			searchPatternInt = new Integer(5);
+		}
 
-    /**
- * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
- *      org.columba.mail.folder.Folder, java.lang.Object,
- *      org.columba.core.command.WorkerStatusController)
- */
-    public boolean process(AbstractMessageFolder folder, Object uid) throws Exception {
-        boolean result = false;
+		//Integer priority = Integer.valueOf(pattern);
+		//return priority;
+		return searchPatternInt;
+	}
 
-        int condition = FilterCriteria.getCriteria(criteria);
-        String s = (String) searchPattern;
-        Integer searchPatternInt = transformPriority(s);
+	/**
+	 * @see org.columba.core.filter.AbstractFilter#process(java.lang.Object,
+	 *      org.columba.mail.folder.Folder, java.lang.Object,
+	 *      org.columba.core.command.WorkerStatusController)
+	 */
+	public boolean process(AbstractMessageFolder folder, Object uid)
+			throws Exception {
+		boolean result = false;
 
-        Integer priority = (Integer) folder.getAttribute(uid, "columba.priority");
+		String s = (String) searchPattern;
+		Integer searchPatternInt = transformPriority(s);
 
-        if (priority == null) {
-            return false;
-        }
+		Integer priority = (Integer) folder.getAttribute(uid,
+				"columba.priority");
 
-        switch (condition) {
-        case FilterCriteria.IS:
+		if (priority == null) {
+			return false;
+		}
 
-            if (priority.compareTo(searchPatternInt) == 0) {
-                result = true;
-            }
+		switch (condition) {
+		case FilterCriteria.IS:
 
-            break;
+			if (priority.compareTo(searchPatternInt) == 0) {
+				result = true;
+			}
 
-        case FilterCriteria.IS_NOT:
+			break;
 
-            if (priority.compareTo(searchPatternInt) != 0) {
-                result = true;
-            }
+		case FilterCriteria.IS_NOT:
 
-            break;
-        }
+			if (priority.compareTo(searchPatternInt) != 0) {
+				result = true;
+			}
 
-        return result;
-    }
+			break;
+		}
 
-    /**
- *
- * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
- */
-    public void setUp(FilterCriteria f) {
-        // is/is not
-        criteria = f.get("criteria");
+		return result;
+	}
 
-        // string to search
-        searchPattern = f.get("pattern");
-    }
+	/**
+	 * 
+	 * @see org.columba.core.filter.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+	 */
+	public void setUp(FilterCriteria f) {
+
+		// string to search
+		searchPattern = f.getPatternString();
+
+		condition = f.getCriteria();
+	}
 }

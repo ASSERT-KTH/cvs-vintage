@@ -26,8 +26,8 @@ import javax.swing.JTree;
 import javax.swing.TransferHandler;
 
 import org.columba.core.command.CommandProcessor;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -47,7 +47,7 @@ public class MessageTransferHandler extends TransferHandler {
 	DataFlavor serialFolderCommandReferenceFlavor;
 
 	String localFolderCommandReferenceType = DataFlavor.javaJVMLocalObjectMimeType
-			+ ";class=org.columba.mail.command.FolderCommandReference";
+			+ ";class=org.columba.mail.command.MailFolderCommandReference";
 
 	int[] indices = null;
 
@@ -65,13 +65,13 @@ public class MessageTransferHandler extends TransferHandler {
 		}
 
 		serialFolderCommandReferenceFlavor = new DataFlavor(
-				FolderCommandReference[].class, "FolderCommandReference");
+				MailFolderCommandReference[].class, "MailFolderCommandReference");
 	}
 
 	public boolean importData(JComponent c, Transferable t) {
 		JTree target = null;
 
-		FolderCommandReference reference = null;
+		MailFolderCommandReference reference = null;
 
 		if (!canImport(c, t.getTransferDataFlavors())) {
 			return false;
@@ -81,10 +81,10 @@ public class MessageTransferHandler extends TransferHandler {
 			target = (JTree) c;
 
 			if (hasLocalArrayListFlavor(t.getTransferDataFlavors())) {
-				reference = (FolderCommandReference) t
+				reference = (MailFolderCommandReference) t
 						.getTransferData(localFolderCommandReferenceFlavor);
 			} else if (hasSerialArrayListFlavor(t.getTransferDataFlavors())) {
-				reference = (FolderCommandReference) t
+				reference = (MailFolderCommandReference) t
 						.getTransferData(serialFolderCommandReferenceFlavor);
 			} else {
 				return false;
@@ -159,7 +159,7 @@ public class MessageTransferHandler extends TransferHandler {
 		if (c instanceof JTable) {
 			source = (JTable) c;
 
-			IFolderCommandReference r = ((MailFrameMediator) tableController
+			IMailFolderCommandReference r = ((MailFrameMediator) tableController
 					.getFrameController()).getTableSelection();
 
 			return new FolderCommandReferenceTransferable(r);
@@ -173,9 +173,9 @@ public class MessageTransferHandler extends TransferHandler {
 	}
 
 	public class FolderCommandReferenceTransferable implements Transferable {
-		IFolderCommandReference data;
+		IMailFolderCommandReference data;
 
-		public FolderCommandReferenceTransferable(IFolderCommandReference c) {
+		public FolderCommandReferenceTransferable(IMailFolderCommandReference c) {
 			data = c;
 		}
 

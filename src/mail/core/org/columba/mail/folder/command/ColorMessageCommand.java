@@ -19,13 +19,13 @@ package org.columba.mail.folder.command;
 
 import java.awt.Color;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ColorFactory;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 
 /**
@@ -37,7 +37,7 @@ import org.columba.mail.folder.AbstractMessageFolder;
  * 
  * @author fdietz
  */
-public class ColorMessageCommand extends FolderCommand {
+public class ColorMessageCommand extends Command {
 
 	/**
 	 * Constructor for MarkMessageCommand.
@@ -55,13 +55,13 @@ public class ColorMessageCommand extends FolderCommand {
 	public void execute(WorkerStatusController worker) throws Exception {
 
 		// get array of source references
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		// get array of message UIDs
 		Object[] uids = r.getUids();
 
 		// get source folder
-		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getFolder();
+		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

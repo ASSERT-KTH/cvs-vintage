@@ -18,9 +18,10 @@
 package org.columba.mail.filter.plugins;
 
 import org.columba.addressbook.facade.IFolderFacade;
+import org.columba.core.filter.AbstractFilter;
+import org.columba.core.filter.FilterCriteria;
 import org.columba.core.services.ServiceNotFoundException;
 import org.columba.mail.connector.ServiceConnector;
-import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Header;
@@ -39,7 +40,7 @@ public class AddressbookFilter extends AbstractFilter {
 	}
 
 	/**
-	 * @see org.columba.mail.filter.plugins.AbstractFilter#process(org.columba.mail.folder.Folder,
+	 * @see org.columba.core.filter.AbstractFilter#process(org.columba.mail.folder.Folder,
 	 *      java.lang.Object)
 	 */
 	public boolean process(AbstractMessageFolder folder, Object uid)
@@ -81,7 +82,7 @@ public class AddressbookFilter extends AbstractFilter {
 	}
 
 	/**
-	 * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+	 * @see org.columba.core.filter.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
 	 */
 	public void setUp(FilterCriteria f) {
 

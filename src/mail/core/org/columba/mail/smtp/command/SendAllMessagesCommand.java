@@ -20,13 +20,13 @@ import java.util.Vector;
 
 import javax.swing.Action;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
@@ -44,7 +44,7 @@ import org.columba.mail.util.MailResourceLoader;
  * Send all messages in folder Outbox
  *  
  */
-public class SendAllMessagesCommand extends FolderCommand {
+public class SendAllMessagesCommand extends Command {
 	protected SendListManager sendListManager = new SendListManager();
 
 	protected OutboxFolder outboxFolder;
@@ -59,7 +59,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 	 * @param references
 	 */
 	public SendAllMessagesCommand(Action action, FrameMediator frameMediator,
-			DefaultCommandReference reference) {
+			ICommandReference reference) {
 		super(frameMediator, reference);
 
 		this.action = action;
@@ -69,14 +69,14 @@ public class SendAllMessagesCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		// display status message
 		worker.setDisplayText(MailResourceLoader.getString("statusbar",
 				"message", "send_message"));
 
 		// get Outbox folder from reference
-		outboxFolder = (OutboxFolder) r.getFolder();
+		outboxFolder = (OutboxFolder) r.getSourceFolder();
 
 		// get UID list of messages
 		Object[] uids = outboxFolder.getUids();
@@ -154,7 +154,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 	 *            Sent folder
 	 */
 	protected void moveToSentFolder(List v, AbstractMessageFolder sentFolder) {
-		FolderCommandReference r = new FolderCommandReference(outboxFolder,
+		MailFolderCommandReference r = new MailFolderCommandReference(outboxFolder,
 				sentFolder, v.toArray());
 
 		// start move command

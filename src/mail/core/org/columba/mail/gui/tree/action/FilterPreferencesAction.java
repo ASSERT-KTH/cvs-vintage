@@ -22,7 +22,7 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
@@ -61,9 +61,9 @@ public class FilterPreferencesAction extends AbstractColumbaAction implements
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference r = (FolderCommandReference) frameMediator
+        MailFolderCommandReference r = (MailFolderCommandReference) frameMediator
                 .getSelectionManager().getSelection("mail.tree");
-        AbstractMessageFolder folder = (AbstractMessageFolder) r.getFolder();
+        AbstractMessageFolder folder = (AbstractMessageFolder) r.getSourceFolder();
 
         if (folder == null) { return; }
 

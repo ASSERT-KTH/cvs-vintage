@@ -25,9 +25,8 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.IMailbox;
@@ -43,7 +42,7 @@ import org.columba.ristretto.message.MimeTree;
  * @author Timo Stich (tstich@users.sourceforge.net)
  *  
  */
-public class ViewMessageCommand extends FolderCommand {
+public class ViewMessageCommand extends Command {
 
 	private MimeTree mimePartTree;
 
@@ -85,7 +84,7 @@ public class ViewMessageCommand extends FolderCommand {
 			// after a user configurable time interval
 			((TableViewOwner) frameMediator).getTableController()
 					.restartMarkAsReadTimer(
-							(FolderCommandReference) getReference());
+							(MailFolderCommandReference) getReference());
 		}
 
 	}
@@ -95,10 +94,10 @@ public class ViewMessageCommand extends FolderCommand {
 	 */
 	public void execute(WorkerStatusController wsc) throws Exception {
 		// get command reference
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		// get selected folder
-		srcFolder = (IMailbox) r.getFolder();
+		srcFolder = (IMailbox) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(wsc);
@@ -134,12 +133,12 @@ public class ViewMessageCommand extends FolderCommand {
 				.getMessageController();
 
 		// if necessary decrypt/verify message
-		IFolderCommandReference newRefs = messageController.filterMessage(
+		IMailFolderCommandReference newRefs = messageController.filterMessage(
 				srcFolder, uid);
 
 		// pass work along to MessageController
 		if (newRefs != null) {
-			srcFolder = (AbstractMessageFolder) newRefs.getFolder();
+			srcFolder = (AbstractMessageFolder) newRefs.getSourceFolder();
 			uid = newRefs.getUids()[0];
 			mimePartTree = srcFolder.getMimePartTree(uid);
 		}

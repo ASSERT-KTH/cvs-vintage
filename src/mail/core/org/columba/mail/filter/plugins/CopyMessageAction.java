@@ -18,8 +18,9 @@ package org.columba.mail.filter.plugins;
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.Command;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.filter.FilterAction;
+import org.columba.core.filter.AbstractFilterAction;
+import org.columba.core.filter.FilterAction;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.gui.tree.FolderTreeModel;
@@ -47,7 +48,7 @@ public class CopyMessageAction extends AbstractFilterAction {
 			throw new Exception("File not found");
 		}
 
-		FolderCommandReference r = new FolderCommandReference(srcFolder,
+		MailFolderCommandReference r = new MailFolderCommandReference(srcFolder,
 				destFolder, uids);
 
 		CopyMessageCommand c = new CopyMessageCommand(r);

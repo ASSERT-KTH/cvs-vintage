@@ -21,7 +21,8 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import org.columba.mail.filter.FilterCriteria;
+import org.columba.core.filter.AbstractFilter;
+import org.columba.core.filter.FilterCriteria;
 import org.columba.mail.folder.AbstractMessageFolder;
 
 /**
@@ -32,82 +33,83 @@ import org.columba.mail.folder.AbstractMessageFolder;
  */
 public class DateFilter extends AbstractFilter {
 
-    /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger
-            .getLogger("org.columba.mail.filter.plugins");
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.filter.plugins");
 
-    private String criteria;
+	private String pattern;
 
-    private String pattern;
+	private int condition;
 
-    protected Date transformDate(String pattern) {
-        DateFormat df = DateFormat.getDateInstance();
+	protected Date transformDate(String pattern) {
+		DateFormat df = DateFormat.getDateInstance();
 
-        Date searchPattern = null;
+		Date searchPattern = null;
 
-        try {
-            searchPattern = df.parse(pattern);
-        } catch (java.text.ParseException ex) {
-            // should never happen
-            ex.printStackTrace();
-        }
+		try {
+			searchPattern = df.parse(pattern);
+		} catch (java.text.ParseException ex) {
+			// should never happen
+			ex.printStackTrace();
+		}
 
-        return searchPattern;
-    }
+		return searchPattern;
+	}
 
-    /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
-     *      org.columba.mail.folder.Folder, java.lang.Object,
-     *      org.columba.core.command.WorkerStatusController)
-     */
-    public boolean process(AbstractMessageFolder folder, Object uid) throws Exception {
-        // convert criteria into int-value
-        int condition = FilterCriteria.getCriteria(criteria);
+	/**
+	 * @see org.columba.core.filter.AbstractFilter#process(java.lang.Object,
+	 *      org.columba.mail.folder.Folder, java.lang.Object,
+	 *      org.columba.core.command.WorkerStatusController)
+	 */
+	public boolean process(AbstractMessageFolder folder, Object uid)
+			throws Exception {
 
-        // transform string to Date representation
-        Date date = transformDate(pattern);
-        if (date == null) return false;
+		// transform string to Date representation
+		Date date = transformDate(pattern);
+		if (date == null)
+			return false;
 
-        boolean result = false;
+		boolean result = false;
 
-        // get date
-        Date d = (Date) folder.getAttribute(uid, "columba.date");
+		// get date
+		Date d = (Date) folder.getAttribute(uid, "columba.date");
 
-        if (d == null) {
-            LOG.fine("field date not found");
+		if (d == null) {
+			LOG.fine("field date not found");
 
-            return false;
-        }
+			return false;
+		}
 
-        switch (condition) {
-        case FilterCriteria.DATE_BEFORE:
+		switch (condition) {
+		case FilterCriteria.DATE_BEFORE:
 
-            if (d.before(date)) {
-                result = true;
-            }
+			if (d.before(date)) {
+				result = true;
+			}
 
-            break;
+			break;
 
-        case FilterCriteria.DATE_AFTER:
+		case FilterCriteria.DATE_AFTER:
 
-            if (d.after(date)) {
-                result = true;
-            }
+			if (d.after(date)) {
+				result = true;
+			}
 
-            break;
-        }
+			break;
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
-     */
-    public void setUp(FilterCriteria f) {
-        // before/after
-        criteria = f.get("criteria");
+	/**
+	 * @see org.columba.core.filter.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+	 */
+	public void setUp(FilterCriteria f) {
 
-        // string to search
-        pattern = f.get("pattern");
-    }
+		// string to search
+		pattern = f.getPatternString();
+
+		//      convert criteria into int-value
+		condition = f.getCriteria();
+	}
 }

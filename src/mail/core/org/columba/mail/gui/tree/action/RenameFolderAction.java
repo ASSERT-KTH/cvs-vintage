@@ -24,7 +24,7 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -61,9 +61,9 @@ public class RenameFolderAction extends AbstractColumbaAction
     }
 
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference r = (FolderCommandReference) ((AbstractMailFrameController) frameMediator).getTreeSelection();
+        MailFolderCommandReference r = (MailFolderCommandReference) ((AbstractMailFrameController) frameMediator).getTreeSelection();
 
-        new FolderOptionsDialog((AbstractMessageFolder) r.getFolder(), true,
+        new FolderOptionsDialog((AbstractMessageFolder) r.getSourceFolder(), true,
             (AbstractMailFrameController) frameMediator);
     }
 

@@ -19,7 +19,7 @@ package org.columba.mail.facade;
 
 import java.util.Enumeration;
 
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IMailbox;
 
 /**
@@ -34,7 +34,7 @@ public interface IFolderFacade {
 	 *            folder uid
 	 * @return folder
 	 */
-	IFolder getFolder(int uid);
+	IMailFolder getFolder(int uid);
 
 	/**
 	 * Get folder with name.
@@ -43,7 +43,7 @@ public interface IFolderFacade {
 	 *            folder name
 	 * @return folder
 	 */
-	IFolder getFolder(String name);
+	IMailFolder getFolder(String name);
 
 	/**
 	 * Get breadth-first enumeration of all mailbox folders.

@@ -6,6 +6,7 @@
  */
 package org.columba.mail.command;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.folder.imap.IMAPRootFolder;
@@ -16,7 +17,7 @@ import org.columba.mail.folder.imap.IMAPRootFolder;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public abstract class IMAPFolderCommand extends FolderCommand {
+public abstract class IMAPFolderCommand extends Command {
 	protected IMAPRootFolder rootFolder;
 
 	/**

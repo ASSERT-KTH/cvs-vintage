@@ -39,7 +39,7 @@ import org.columba.mail.folder.event.IFolderListener;
  * 
  * @author fdietz
  */
-public abstract class AbstractFolder extends DefaultMutableTreeNode implements IFolder {
+public abstract class AbstractFolder extends DefaultMutableTreeNode implements IMailFolder {
 
 	
 	/** JDK 1.4+ logging framework logger, used for logging. */
@@ -56,7 +56,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	protected Lock myLock = new Lock();
 
 	// Root folder cache
-	private IFolder rootFolder;
+	private IMailFolder rootFolder;
 
 	protected EventListenerList listenerList = new EventListenerList();
 
@@ -130,7 +130,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 * Propagates an event to all registered listeners notifying them that a
 	 * subfolder has been added to this folder.
 	 */
-	public void fireFolderAdded(IFolder folder) {
+	public void fireFolderAdded(IMailFolder folder) {
 		FolderEvent e = new FolderEvent(this, folder);
 		// Guaranteed to return a non-null array
 		Object[] listeners = listenerList.getListenerList();
@@ -268,7 +268,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	}
 	
 	/*
-	public FolderCommandReference getCommandReference(FolderCommandReference r) {
+	public MailFolderCommandReference getCommandReference(MailFolderCommandReference r) {
 		return r;
 	}
 	*/
@@ -289,8 +289,8 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 * ************************** treenode management
 	 * ******************************
 	 */
-	public void insert(IFolder newFolder, int newIndex) {
-		IFolder oldParent = (IFolder) newFolder.getParent();
+	public void insert(IMailFolder newFolder, int newIndex) {
+		IMailFolder oldParent = (IMailFolder) newFolder.getParent();
 		int oldIndex = oldParent.getIndex(newFolder);
 		oldParent.remove(oldIndex);
 
@@ -345,7 +345,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 * Adds a child folder to this folder. This method will notify registered
 	 * FolderListeners.
 	 */
-	public void addSubfolder(IFolder child) throws Exception {
+	public void addSubfolder(IMailFolder child) throws Exception {
 		getConfiguration().getRoot().addElement(
 				child.getConfiguration().getRoot());
 		fireFolderAdded(child);
@@ -395,7 +395,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 * 
 	 * all treenode manipulation is passed to the corresponding XmlElement
 	 */
-	public void moveTo(IFolder newParent) {
+	public void moveTo(IMailFolder newParent) {
 		// do the same for the XmlElement node
 		getConfiguration().getRoot().removeFromParent();	
 		
@@ -425,7 +425,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 *            the folder that is going to be inserted as a child.
 	 * @return true if this folder can have sub folders; false otherwise.
 	 */
-	public boolean supportsAddFolder(IFolder newFolder) {
+	public boolean supportsAddFolder(IMailFolder newFolder) {
 		return false;
 	}
 
@@ -446,10 +446,10 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 * 
 	 * @return root parent folder of this folder
 	 */
-	public IFolder getRootFolder() {
+	public IMailFolder getRootFolder() {
 		// If rootFolder is not cached traverse the tree
 		if (rootFolder == null) {
-			IFolder parent = (IFolder) getParent();
+			IMailFolder parent = (IMailFolder) getParent();
 
 			// There is no parent
 			if (parent == null) {

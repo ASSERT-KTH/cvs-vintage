@@ -22,13 +22,13 @@ import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.util.logging.Logger;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
@@ -56,7 +56,7 @@ import org.columba.ristretto.message.MimeTree;
  *
  * @author fdietz
  */
-public class ReplyCommand extends FolderCommand {
+public class ReplyCommand extends Command {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger
@@ -96,16 +96,16 @@ public class ReplyCommand extends FolderCommand {
         model = new ComposerModel();
 
         // get selected folder
-        AbstractMessageFolder folder = (AbstractMessageFolder) ((FolderCommandReference) getReference())
-                .getFolder();
+        AbstractMessageFolder folder = (AbstractMessageFolder) ((MailFolderCommandReference) getReference())
+                .getSourceFolder();
 
         // get first selected message
-        Object[] uids = ((FolderCommandReference) getReference()).getUids();
+        Object[] uids = ((MailFolderCommandReference) getReference()).getUids();
         
         // ->set source reference in composermodel
         // when replying this is the original sender's message
 		// you selected and replied to
-        FolderCommandReference ref = new FolderCommandReference(folder, uids);
+        MailFolderCommandReference ref = new MailFolderCommandReference(folder, uids);
         model.setSourceReference(ref);
         
         // setup to, references and account

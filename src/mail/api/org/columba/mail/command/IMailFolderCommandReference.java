@@ -20,18 +20,15 @@ package org.columba.mail.command;
 import java.io.File;
 
 import org.columba.core.command.ICommandReference;
-import org.columba.mail.folder.IFolder;
+import org.columba.core.folder.IFolderCommandReference;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.message.IColumbaMessage;
 
 /**
  * @author fdietz
  *
  */
-public interface IFolderCommandReference  extends ICommandReference{
-	IFolder getFolder();
-
-	void setFolder(IFolder folder);
-
+public interface IMailFolderCommandReference  extends ICommandReference, IFolderCommandReference{
 	Object[] getUids();
 
 	Integer[] getAddress();
@@ -87,14 +84,4 @@ public interface IFolderCommandReference  extends ICommandReference{
 	 * @param colorValue The colorValue to set.
 	 */
 	void setColorValue(int colorValue);
-
-	/**
-	 * @return Returns the destinationFolder.
-	 */
-	IFolder getDestinationFolder();
-
-	/**
-	 * @param destinationFolder The destinationFolder to set.
-	 */
-	void setDestinationFolder(IFolder destinationFolder);
 }

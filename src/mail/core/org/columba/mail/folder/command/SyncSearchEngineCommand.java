@@ -16,10 +16,10 @@
 
 package org.columba.mail.folder.command;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Command;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 
@@ -29,17 +29,17 @@ import org.columba.mail.folder.search.DefaultSearchEngine;
  *
  * @author fdietz
  */
-public class SyncSearchEngineCommand extends FolderCommand {
+public class SyncSearchEngineCommand extends Command {
     private LocalFolder parentFolder;
 
-    public SyncSearchEngineCommand(DefaultCommandReference reference) {
+    public SyncSearchEngineCommand(ICommandReference reference) {
         super(reference);
     }
 
     public void execute(WorkerStatusController worker)
         throws Exception {
         // get source folder
-        parentFolder = (LocalFolder) ((FolderCommandReference) getReference()).getFolder();
+        parentFolder = (LocalFolder) ((MailFolderCommandReference) getReference()).getSourceFolder();
 
         // resync search engine
         // -> this is only needed for Lucene right now

@@ -27,8 +27,8 @@ import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.gui.selection.ISelectionListener;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.folderoptions.IFolderOptionsController;
 import org.columba.mail.gui.attachment.AttachmentController;
@@ -83,36 +83,36 @@ public class AbstractMailFrameController extends DefaultFrameController
 	 * return child; }
 	 */
 
-	public IFolderCommandReference getTableSelection() {
-		FolderCommandReference r = (FolderCommandReference) getSelectionManager()
+	public IMailFolderCommandReference getTableSelection() {
+		MailFolderCommandReference r = (MailFolderCommandReference) getSelectionManager()
 				.getSelection("mail.table");
 
 		return r;
 	}
 
-	public void setTableSelection(IFolderCommandReference r) {
+	public void setTableSelection(IMailFolderCommandReference r) {
 		getSelectionManager().setSelection("mail.table", r);
 	}
 
-	public IFolderCommandReference getTreeSelection() {
-		FolderCommandReference r = (FolderCommandReference) getSelectionManager()
+	public IMailFolderCommandReference getTreeSelection() {
+		MailFolderCommandReference r = (MailFolderCommandReference) getSelectionManager()
 				.getSelection("mail.tree");
 
 		return r;
 	}
 
-	public void setTreeSelection(IFolderCommandReference r) {
+	public void setTreeSelection(IMailFolderCommandReference r) {
 		getSelectionManager().setSelection("mail.tree", r);
 	}
 
-	public IFolderCommandReference getAttachmentSelection() {
-		FolderCommandReference r = (FolderCommandReference) getSelectionManager()
+	public IMailFolderCommandReference getAttachmentSelection() {
+		MailFolderCommandReference r = (MailFolderCommandReference) getSelectionManager()
 				.getSelection("mail.attachment");
 
 		return r;
 	}
 
-	public void setAttachmentSelection(IFolderCommandReference r) {
+	public void setAttachmentSelection(IMailFolderCommandReference r) {
 		getSelectionManager().setSelection("mail.attachment", r);
 	}
 

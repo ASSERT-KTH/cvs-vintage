@@ -19,7 +19,7 @@ package org.columba.mail.gui.message;
 
 import java.util.Observer;
 
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.message.MimeTree;
 
@@ -60,7 +60,7 @@ public interface IMessageController {
 	
 	void clear();
 	
-	IFolderCommandReference filterMessage(IMailbox folder, Object uid) throws Exception;
+	IMailFolderCommandReference filterMessage(IMailbox folder, Object uid) throws Exception;
 	
 	void setMimePartTree(MimeTree mimeTree);
 	

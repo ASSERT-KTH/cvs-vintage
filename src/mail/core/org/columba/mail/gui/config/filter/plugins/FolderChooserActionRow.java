@@ -22,10 +22,10 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
+import org.columba.core.filter.FilterAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.filter.FilterAction;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.config.filter.ActionList;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
@@ -99,7 +99,7 @@ public class FolderChooserActionRow extends DefaultActionRow implements
 		SelectFolderDialog dialog = new SelectFolderDialog(getMediator());
 
 		if (dialog.success()) {
-			IFolder folder = dialog.getSelectedFolder();
+			IMailFolder folder = dialog.getSelectedFolder();
 
 			String treePath = folder.getTreePath();
 

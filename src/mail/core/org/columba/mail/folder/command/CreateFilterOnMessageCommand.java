@@ -17,15 +17,15 @@ package org.columba.mail.folder.command;
 
 import java.util.logging.Logger;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.filter.Filter;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.filter.Filter;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.config.filter.FilterDialog;
 import org.columba.ristretto.message.Header;
@@ -38,7 +38,7 @@ import org.columba.ristretto.message.Header;
  *
  * @author Karl Peder Olesen (karlpeder), 20030620
  */
-public class CreateFilterOnMessageCommand extends FolderCommand {
+public class CreateFilterOnMessageCommand extends Command {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.command");
@@ -102,7 +102,7 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
     public void execute(WorkerStatusController worker)
         throws Exception {
         // get references to selected folder and message
-        FolderCommandReference r = (FolderCommandReference) getReference();
+        MailFolderCommandReference r = (MailFolderCommandReference) getReference();
         Object[] uids = r.getUids(); // uid for messages to save
 
         if (uids.length == 0) {
@@ -113,7 +113,7 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
         }
 
         Object uid = uids[0];
-        srcFolder = (AbstractMessageFolder) r.getFolder();
+        srcFolder = (AbstractMessageFolder) r.getSourceFolder();
 
         // register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

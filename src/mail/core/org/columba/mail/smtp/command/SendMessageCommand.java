@@ -21,13 +21,13 @@ import java.text.MessageFormat;
 
 import javax.swing.JOptionPane;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.ComposerCommandReference;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
@@ -56,7 +56,7 @@ import org.waffel.jscf.JSCFException;
  * 
  * @author fdietz
  */
-public class SendMessageCommand extends FolderCommand {
+public class SendMessageCommand extends Command {
 	private SendMessageDialog sendMessageDialog;
 
 	private boolean showComposer = false;
@@ -69,7 +69,7 @@ public class SendMessageCommand extends FolderCommand {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public SendMessageCommand(DefaultCommandReference reference) {
+	public SendMessageCommand(ICommandReference reference) {
 		super(reference);
 	}
 
@@ -244,7 +244,7 @@ public class SendMessageCommand extends FolderCommand {
 			// -> get source reference of message
 			// when replying this is the original sender's message
 			// you selected and replied to
-			FolderCommandReference ref2 = model.getSourceReference();
+			MailFolderCommandReference ref2 = model.getSourceReference();
 			if (ref2 != null) {
 				// mark message as answered
 				ref2.setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);

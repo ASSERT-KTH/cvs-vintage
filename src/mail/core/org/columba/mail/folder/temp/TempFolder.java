@@ -22,9 +22,9 @@ import java.util.Hashtable;
 import java.util.logging.Logger;
 
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.filter.Filter;
 import org.columba.core.io.DiskIO;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IHeaderListStorage;
 import org.columba.mail.folder.IMailbox;

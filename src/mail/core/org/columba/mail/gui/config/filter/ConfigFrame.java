@@ -56,13 +56,13 @@ import javax.swing.filechooser.FileFilter;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.facade.DialogFacade;
+import org.columba.core.filter.Filter;
+import org.columba.core.filter.FilterList;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
-import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.util.MailResourceLoader;
 

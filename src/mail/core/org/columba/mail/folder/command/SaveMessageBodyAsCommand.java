@@ -31,6 +31,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
@@ -39,8 +40,7 @@ import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.attachment.AttachmentModel;
@@ -64,7 +64,7 @@ import org.columba.ristretto.message.StreamableMimePart;
  *
  * @author Karl Peder Olesen (karlpeder), 20030611
  */
-public class SaveMessageBodyAsCommand extends FolderCommand {
+public class SaveMessageBodyAsCommand extends Command {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.command");
@@ -109,9 +109,9 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
      */
     public void execute(WorkerStatusController worker)
         throws Exception {
-        FolderCommandReference r = (FolderCommandReference) getReference();
+        MailFolderCommandReference r = (MailFolderCommandReference) getReference();
         Object[] uids = r.getUids(); // uid for messages to save
-        AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getFolder();
+        AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
 
         //	register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

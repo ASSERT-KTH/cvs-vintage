@@ -26,9 +26,9 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.ISelectionListener;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.command.IFolderCommandReference;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
@@ -81,12 +81,12 @@ public class CopyMessageAction extends AbstractColumbaAction implements
 		SelectFolderDialog dialog = new SelectFolderDialog(getFrameMediator());
 
 		if (dialog.success()) {
-			IFolder destFolder = dialog.getSelectedFolder();
+			IMailFolder destFolder = dialog.getSelectedFolder();
 
-			IFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
+			IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
 					.getTableSelection();
-			IFolderCommandReference result = new FolderCommandReference(r
-					.getFolder(), destFolder);
+			IMailFolderCommandReference result = new MailFolderCommandReference(r
+					.getSourceFolder(), destFolder);
 			result.setUids(r.getUids());
 
 			CopyMessageCommand c = new CopyMessageCommand(result);

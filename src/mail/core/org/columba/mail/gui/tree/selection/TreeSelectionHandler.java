@@ -24,17 +24,18 @@ import javax.swing.tree.TreePath;
 
 import org.columba.core.command.ICommandReference;
 import org.columba.core.gui.selection.SelectionHandler;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.tree.TreeView;
 
 /**
  * Handles the tree selection.
  * <p>
  * Listens for swing tree selection events and translates TreePath selection to
- * FolderCommandReference.
+ * MailFolderCommandReference.
  * <p>
- * Actions creating Commands and passing FolderCommandReference directly ask
+ * Actions creating Commands and passing MailFolderCommandReference directly ask
  * {@link TreeSelectionManager}for the selection. They don't talk with the
  * swing JTree.
  * 
@@ -68,7 +69,7 @@ public class TreeSelectionHandler extends SelectionHandler implements
 	public ICommandReference getSelection() {
 		if ( selectedFolders.size() == 0) return null;
 		
-		FolderCommandReference reference = new FolderCommandReference(
+		MailFolderCommandReference reference = new MailFolderCommandReference(
 				(AbstractFolder) selectedFolders.get(0));
 
 		return reference;
@@ -113,10 +114,14 @@ public class TreeSelectionHandler extends SelectionHandler implements
 
 	public void setSelection(ICommandReference selection) {
 		
-		TreePath path = ((FolderCommandReference) selection).getFolder()
+		if ( ((MailFolderCommandReference) selection).getSourceFolder()  == null ) {
+			view.clearSelection();
+		} else {
+		
+		TreePath path = ((IMailFolder) ((MailFolderCommandReference) selection).getSourceFolder())
 				.getSelectionTreePath();
 		view.setSelectionPath(path);
 		view.expandPath(path);
-
+		}
 	}
 }

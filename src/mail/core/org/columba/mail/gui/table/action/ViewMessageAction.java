@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.IMessageController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
@@ -45,7 +45,7 @@ public class ViewMessageAction extends AbstractColumbaAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference references = (FolderCommandReference) getFrameMediator()
+        MailFolderCommandReference references = (MailFolderCommandReference) getFrameMediator()
                                                                              .getSelectionManager()
                                                                              .getSelection("mail.table");
         Object[] uids = references.getUids();

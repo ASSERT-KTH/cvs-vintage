@@ -21,12 +21,12 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.EncodedWord;
@@ -36,7 +36,7 @@ import org.columba.ristretto.message.MimeHeader;
 /**
  * @author freddy
  */
-public abstract class SaveAttachmentCommand extends FolderCommand {
+public abstract class SaveAttachmentCommand extends Command {
 
     private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.attachment.command");
 
@@ -53,8 +53,8 @@ public abstract class SaveAttachmentCommand extends FolderCommand {
      * @see org.columba.core.command.Command#execute(Worker)
      */
     public void execute(WorkerStatusController worker) throws Exception {
-        FolderCommandReference r = (FolderCommandReference) getReference();
-        AbstractMessageFolder folder = (AbstractMessageFolder) r.getFolder();
+        MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+        AbstractMessageFolder folder = (AbstractMessageFolder) r.getSourceFolder();
         Object[] uids = r.getUids();
 
         Integer[] address = r.getAddress();

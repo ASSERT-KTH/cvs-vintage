@@ -22,7 +22,7 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.command.MarkFolderAsReadCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
@@ -64,7 +64,7 @@ public class MarkFolderAsReadAction extends AbstractColumbaAction implements ISe
 
     /** {@inheritDoc} */
     public void actionPerformed(ActionEvent e) {
-        FolderCommandReference r = (FolderCommandReference) frameMediator.getSelectionManager()
+        MailFolderCommandReference r = (MailFolderCommandReference) frameMediator.getSelectionManager()
                                                                              .getSelection("mail.tree");
         CommandProcessor.getInstance().addOp(new MarkFolderAsReadCommand(r));
     }

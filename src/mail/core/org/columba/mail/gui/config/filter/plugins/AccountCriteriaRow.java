@@ -18,11 +18,11 @@ package org.columba.mail.gui.config.filter.plugins;
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 
+import org.columba.core.filter.FilterCriteria;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
 
 
@@ -87,7 +87,7 @@ public class AccountCriteriaRow extends DefaultCriteriaRow {
                 }
             }
         } else {
-            criteria.setCriteria((String) matchComboBox.getSelectedItem());
+            criteria.setCriteriaString((String) matchComboBox.getSelectedItem());
 
             AccountComboBoxItem item = (AccountComboBoxItem) accountComboBox.getSelectedItem();
             criteria.set("account.uid", item.getAccountID());

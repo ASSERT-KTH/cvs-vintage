@@ -49,7 +49,7 @@ import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.LocalFolder;
@@ -475,7 +475,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 			if (renameFolder) {
 				if (!oldFolderName.equals(nameTextField.getText())) {
 					// user changed folder name
-					FolderCommandReference r = new FolderCommandReference(
+					MailFolderCommandReference r = new MailFolderCommandReference(
 							folder);
 					r.setFolderName(nameTextField.getText());
 					CommandProcessor.getInstance().addOp(new RenameFolderCommand(r));
@@ -515,7 +515,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 					localFolder.setSearchEngine(null);
 
 					// execute resyncing command
-					FolderCommandReference r = new FolderCommandReference(
+					MailFolderCommandReference r = new MailFolderCommandReference(
 							folder);
 					CommandProcessor.getInstance()
 							.addOp(new SyncSearchEngineCommand(r));
@@ -530,7 +530,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 					FolderOptionsController.STATE_BEFORE);
 
 			// re-select folder to make changes visible to the user
-			FolderCommandReference r = new FolderCommandReference(folder);
+			MailFolderCommandReference r = new MailFolderCommandReference(folder);
 			CommandProcessor.getInstance().addOp(new ViewHeaderListCommand(
 					getMediator(), r));
 		}
@@ -565,7 +565,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 
 			setVisible(false);
 
-			FolderCommandReference r = new FolderCommandReference(folder);
+			MailFolderCommandReference r = new MailFolderCommandReference(folder);
 			r.setDestFile(destFile);
 			CommandProcessor.getInstance().addOp(new ExportFolderCommand(r));
 		} else if (action.equals("RESET")) { //$NON-NLS-1$

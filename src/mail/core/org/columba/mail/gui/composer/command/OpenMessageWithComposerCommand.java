@@ -21,13 +21,13 @@ import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
@@ -54,7 +54,7 @@ import org.columba.ristretto.parser.MessageParser;
  * 
  * @author fdietz
  */
-public class OpenMessageWithComposerCommand extends FolderCommand {
+public class OpenMessageWithComposerCommand extends Command {
 	protected ComposerController controller;
 	protected ComposerModel model;
 	protected AbstractMessageFolder folder;
@@ -86,11 +86,11 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 		model = new ComposerModel();
 
 		// get selected folder
-		folder = (AbstractMessageFolder) ((FolderCommandReference) getReference())
-				.getFolder();
+		folder = (AbstractMessageFolder) ((MailFolderCommandReference) getReference())
+				.getSourceFolder();
 
 		// get selected messages
-		Object[] uids = ((FolderCommandReference) getReference()).getUids();
+		Object[] uids = ((MailFolderCommandReference) getReference()).getUids();
 
 		// we only need the first message
 		uid = uids[0];

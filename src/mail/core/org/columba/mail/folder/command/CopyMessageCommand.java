@@ -22,13 +22,13 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Attributes;
@@ -42,7 +42,7 @@ import org.columba.ristretto.message.Flags;
  * @author fdietz
  *  
  */
-public class CopyMessageCommand extends FolderCommand {
+public class CopyMessageCommand extends Command {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -50,7 +50,7 @@ public class CopyMessageCommand extends FolderCommand {
 
 	protected AbstractMessageFolder destFolder;
 
-	protected IFolderCommandReference r;
+	protected IMailFolderCommandReference r;
 	
 	/**
 	 * Constructor for CopyMessageCommand.
@@ -67,7 +67,7 @@ public class CopyMessageCommand extends FolderCommand {
 			String errorIgnoreMessage, String errorCopyMessage,
 			String errorTitle, String canceledMessage) throws Exception {
 		// get references
-		 r = (FolderCommandReference) getReference();
+		 r = (MailFolderCommandReference) getReference();
 
 		// get destination foldedr
 		destFolder = (AbstractMessageFolder) r.getDestinationFolder();
@@ -75,7 +75,7 @@ public class CopyMessageCommand extends FolderCommand {
 		Object[] uids = r.getUids();
 
 		// get source folder
-		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getFolder();
+		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

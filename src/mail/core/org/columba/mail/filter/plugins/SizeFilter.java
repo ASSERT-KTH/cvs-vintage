@@ -17,85 +17,88 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.mail.filter.FilterCriteria;
+import org.columba.core.filter.AbstractFilter;
+import org.columba.core.filter.FilterCriteria;
 import org.columba.mail.folder.AbstractMessageFolder;
-
 
 /**
  * Find messages with certain size.
- *
+ * 
  * @author fdietz
  */
 public class SizeFilter extends AbstractFilter {
-    private String criteria;
-    private String pattern;
 
-    /**
- * Constructor for SizeFilter.
- */
-    public SizeFilter() {
-        super();
-    }
+	private String pattern;
 
-    /**
- * Transform string to integer representation
- *
- * @param p             string containing priority
- *
- * @return              integer representation of string
- */
-    protected Integer transformSize(String p) {
-        Integer searchPattern = Integer.valueOf(p);
+	private int condition;
 
-        return searchPattern;
-    }
+	/**
+	 * Constructor for SizeFilter.
+	 */
+	public SizeFilter() {
+		super();
+	}
 
-    /**
- * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
- *      org.columba.mail.folder.Folder, java.lang.Object,
- *      org.columba.core.command.WorkerStatusController)
- */
-    public boolean process(AbstractMessageFolder folder, Object uid) throws Exception {
-        boolean result = false;
+	/**
+	 * Transform string to integer representation
+	 * 
+	 * @param p
+	 *            string containing priority
+	 * 
+	 * @return integer representation of string
+	 */
+	protected Integer transformSize(String p) {
+		Integer searchPattern = Integer.valueOf(p);
 
-        int condition = FilterCriteria.getCriteria(criteria);
-        Integer size = transformSize((String) pattern);
+		return searchPattern;
+	}
 
-        Integer s = (Integer) folder.getAttribute(uid, "columba.size");
+	/**
+	 * @see org.columba.core.filter.AbstractFilter#process(java.lang.Object,
+	 *      org.columba.mail.folder.Folder, java.lang.Object,
+	 *      org.columba.core.command.WorkerStatusController)
+	 */
+	public boolean process(AbstractMessageFolder folder, Object uid)
+			throws Exception {
+		boolean result = false;
 
-        if (s == null) {
-            return false;
-        }
+		Integer size = transformSize((String) pattern);
 
-        switch (condition) {
-        case FilterCriteria.SIZE_SMALLER:
+		Integer s = (Integer) folder.getAttribute(uid, "columba.size");
 
-            if (size.compareTo(s) > 0) {
-                result = true;
-            }
+		if (s == null) {
+			return false;
+		}
 
-            break;
+		switch (condition) {
+		case FilterCriteria.SIZE_SMALLER:
 
-        case FilterCriteria.SIZE_BIGGER:
+			if (size.compareTo(s) > 0) {
+				result = true;
+			}
 
-            if (size.compareTo(s) < 0) {
-                result = true;
-            }
+			break;
 
-            break;
-        }
+		case FilterCriteria.SIZE_BIGGER:
 
-        return result;
-    }
+			if (size.compareTo(s) < 0) {
+				result = true;
+			}
 
-    /**
- * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
- */
-    public void setUp(FilterCriteria f) {
-        //      bigger/smaller
-        criteria = f.get("criteria");
+			break;
+		}
 
-        // string to search
-        pattern = f.get("pattern");
-    }
+		return result;
+	}
+
+	/**
+	 * @see org.columba.core.filter.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+	 */
+	public void setUp(FilterCriteria f) {
+
+		// string to search
+		pattern = f.getPatternString();
+
+		condition = f.getCriteria();
+	}
 }

@@ -22,12 +22,12 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.Main;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.spam.SpamController;
 import org.columba.ristretto.message.Header;
@@ -38,7 +38,7 @@ import org.macchiato.Message;
  * 
  * @author fdietz
  */
-public class LearnMessageAsHamCommand extends FolderCommand {
+public class LearnMessageAsHamCommand extends Command {
 
 	/**
 	 * @param references
@@ -53,13 +53,13 @@ public class LearnMessageAsHamCommand extends FolderCommand {
 	public void execute(WorkerStatusController worker) throws Exception {
 
 		// get array of source references
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		// get array of message UIDs
 		Object[] uids = r.getUids();
 
 		// get source folder
-		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getFolder();
+		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
 
 		//	update status message
 		if (uids.length > 1) {

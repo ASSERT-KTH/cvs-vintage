@@ -38,14 +38,14 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.columba.core.filter.Filter;
+import org.columba.core.filter.FilterCriteria;
+import org.columba.core.filter.FilterRule;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
-import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.filter.FilterRule;
 import org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
 
@@ -123,7 +123,7 @@ public class CriteriaList extends JPanel implements ActionListener, ItemListener
 
 		for (int i = 0; i < rule.count(); i++) {
 			FilterCriteria criteria = rule.get(i);
-			String type = criteria.getType();
+			String type = criteria.getTypeString();
 			DefaultCriteriaRow column = null;
 
 			c.fill = GridBagConstraints.NONE;
@@ -153,7 +153,7 @@ public class CriteriaList extends JPanel implements ActionListener, ItemListener
 					ex.printStackTrace();
 				}
 
-				criteria.setType("Subject");
+				criteria.setTypeString("Subject");
 			}
 
 			gridbag.setConstraints(column.getContentPane(), c);

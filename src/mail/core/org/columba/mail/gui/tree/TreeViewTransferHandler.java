@@ -24,8 +24,8 @@ import javax.swing.tree.TreePath;
 
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.facade.DialogFacade;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;
@@ -128,7 +128,7 @@ public class TreeViewTransferHandler extends TransferHandler {
 		AbstractMessageFolder destFolder = (AbstractMessageFolder) treeView
 				.getDropTargetFolder();
 
-		IFolderCommandReference result = transferable.getFolderReferences();
+		IMailFolderCommandReference result = transferable.getFolderReferences();
 		result.setDestinationFolder(destFolder);
 
 		CopyMessageCommand command = new MoveMessageCommand(result);
@@ -161,7 +161,7 @@ public class TreeViewTransferHandler extends TransferHandler {
 	 *            the folder to move.
 	 */
 	private void exportFolder(TreeView treeView, AbstractMessageFolder folder) {
-		FolderCommandReference commandRef = new FolderCommandReference(folder);
+		MailFolderCommandReference commandRef = new MailFolderCommandReference(folder);
 		commandRef.setDestinationFolder(treeView.getDropTargetFolder());
 		treeView.resetDropTargetFolder();
 

@@ -15,9 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
+import org.columba.core.filter.FilterList;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.filter.FilterList;
 
 
 /**

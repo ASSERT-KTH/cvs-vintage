@@ -28,7 +28,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.LocalRootFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
@@ -208,7 +208,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
 	/**
 	 * Returns an icon suitable for the given folder.
 	 */
-	public static Icon getFolderIcon(IFolder node, boolean expanded) {
+	public static Icon getFolderIcon(IMailFolder node, boolean expanded) {
 		if (node instanceof LocalRootFolder) {
 			return localRootFolderIcon;
 		} else if (node instanceof IMAPRootFolder) {

@@ -18,11 +18,11 @@ package org.columba.mail.gui.table.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -53,18 +53,18 @@ public class PasteAction extends AbstractColumbaAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		FolderCommandReference ref = (FolderCommandReference) ClipboardManager.getInstance()
+		MailFolderCommandReference ref = (MailFolderCommandReference) ClipboardManager.getInstance()
 				.getSelection();
 
 		if (ref == null) {
 			return;
 		}
 
-		FolderCommandReference dest = (FolderCommandReference) ((MailFrameMediator) frameController)
+		MailFolderCommandReference dest = (MailFolderCommandReference) ((MailFrameMediator) frameController)
 				.getTableSelection();
-		ref.setDestinationFolder(dest.getFolder());
+		ref.setDestinationFolder(dest.getSourceFolder());
 
-		FolderCommand c = null;
+		Command c = null;
 
 		if (ClipboardManager.getInstance().isCutAction()) {
 			c = new MoveMessageCommand(ref);

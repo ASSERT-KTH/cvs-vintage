@@ -27,12 +27,12 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -43,7 +43,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @author Karl Peder Olesen (karlpeder), 20030615
  *
  */
-public class SaveMessageSourceAsCommand extends FolderCommand {
+public class SaveMessageSourceAsCommand extends Command {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.command");
@@ -65,9 +65,9 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
      */
     public void execute(WorkerStatusController worker)
         throws Exception {
-        FolderCommandReference r = (FolderCommandReference) getReference();
+        MailFolderCommandReference r = (MailFolderCommandReference) getReference();
         Object[] uids = r.getUids(); // uid for messages to save
-        AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getFolder();
+        AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
 
         //	register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

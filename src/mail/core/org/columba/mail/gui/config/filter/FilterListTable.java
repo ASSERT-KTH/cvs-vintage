@@ -20,7 +20,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import org.columba.mail.filter.FilterList;
+import org.columba.core.filter.FilterList;
 
 
 class FilterListTable extends JTable {

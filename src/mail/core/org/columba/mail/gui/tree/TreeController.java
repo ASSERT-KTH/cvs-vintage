@@ -32,7 +32,7 @@ import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.action.ViewHeaderListAction;
@@ -50,7 +50,7 @@ public class TreeController implements TreeWillExpandListener,
 
 	private FolderTreeMouseListener mouseListener;
 
-	private IFolder selectedFolder;
+	private IMailFolder selectedFolder;
 
 	private TreeView view;
 
@@ -110,7 +110,7 @@ public class TreeController implements TreeWillExpandListener,
 	 * @param folder
 	 *            the new selected folder.
 	 */
-	public void setSelected(IFolder folder) {
+	public void setSelected(IMailFolder folder) {
 		view.clearSelection();
 
 		TreePath path = folder.getSelectionTreePath();
@@ -149,7 +149,7 @@ public class TreeController implements TreeWillExpandListener,
 	 * 
 	 * @return the selected folder.
 	 */
-	public IFolder getSelected() {
+	public IMailFolder getSelected() {
 		return selectedFolder;
 	}
 
@@ -181,9 +181,9 @@ public class TreeController implements TreeWillExpandListener,
 		/*
 		 * // fetch new sub folder list // -> this is a hack for imap folder: // ->
 		 * when expanding the IMAPRootFolder the // -> list of folders gets
-		 * synchronized FolderCommandReference[] cr = new
-		 * FolderCommandReference[1]; cr[0] = new
-		 * FolderCommandReference(treeNode);
+		 * synchronized MailFolderCommandReference[] cr = new
+		 * MailFolderCommandReference[1]; cr[0] = new
+		 * MailFolderCommandReference(treeNode);
 		 * 
 		 * MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
 		 */

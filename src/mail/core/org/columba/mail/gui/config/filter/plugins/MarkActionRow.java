@@ -21,67 +21,67 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 
+import org.columba.core.filter.FilterAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.filter.FilterAction;
+import org.columba.mail.filter.MailFilterAction;
 import org.columba.mail.gui.config.filter.ActionList;
 import org.columba.mail.util.MailResourceLoader;
 
-
 /**
  * Mark message filter action.
- *
- *
+ * 
+ * 
  * @author fdietz
  */
 public class MarkActionRow extends DefaultActionRow {
-    JComboBox variantComboBox;
+	JComboBox variantComboBox;
 
-    public MarkActionRow(FrameMediator mediator,ActionList list, FilterAction action) {
-        super(mediator, list, action);
-    }
+	public MarkActionRow(FrameMediator mediator, ActionList list,
+			FilterAction action) {
+		super(mediator, list, action);
+	}
 
-    public void updateComponents(boolean b) {
-        super.updateComponents(b);
+	public void updateComponents(boolean b) {
+		super.updateComponents(b);
 
-        if (b) {
-            String variant = filterAction.getMarkVariant();
+		if (b) {
+			String variant = ((MailFilterAction) filterAction).getMarkVariant();
 
-            // use "mark as read" as default fallback mechanism
-            if (variant == null) {
-                variant = "read";
-            }
+			// use "mark as read" as default fallback mechanism
+			if (variant == null) {
+				variant = "read";
+			}
 
-            variantComboBox.setSelectedItem(variant);
-        } else {
-            filterAction.setMarkVariant((String) variantComboBox.getSelectedItem());
-        }
-    }
+			variantComboBox.setSelectedItem(variant);
+		} else {
+			((MailFilterAction) filterAction)
+					.setMarkVariant((String) variantComboBox.getSelectedItem());
+		}
+	}
 
-    public void initComponents() {
-        super.initComponents();
+	public void initComponents() {
+		super.initComponents();
 
-        String[] items = {
-            "read", "unread", "expunged", "not_expunged", "flagged",
-            "not_flagged", "answered", "spam", "no_spam"
-        };
+		String[] items = { "read", "unread", "expunged", "not_expunged",
+				"flagged", "not_flagged", "answered", "spam", "no_spam" };
 
-        variantComboBox = new JComboBox(items);
-        variantComboBox.setRenderer(new ComboBoxRenderer());
-        variantComboBox.setSelectedItem("read");
-        addComponent(variantComboBox);
-    }
+		variantComboBox = new JComboBox(items);
+		variantComboBox.setRenderer(new ComboBoxRenderer());
+		variantComboBox.setSelectedItem("read");
+		addComponent(variantComboBox);
+	}
 
-    class ComboBoxRenderer extends DefaultListCellRenderer {
-        public ComboBoxRenderer() {
-            super();
-        }
+	class ComboBoxRenderer extends DefaultListCellRenderer {
+		public ComboBoxRenderer() {
+			super();
+		}
 
-        public Component getListCellRendererComponent(JList arg0, Object arg1,
-            int arg2, boolean arg3, boolean arg4) {
-            setText(MailResourceLoader.getString("dialog", "filter",
-                    (String) arg1));
+		public Component getListCellRendererComponent(JList arg0, Object arg1,
+				int arg2, boolean arg3, boolean arg4) {
+			setText(MailResourceLoader.getString("dialog", "filter",
+					(String) arg1));
 
-            return this;
-        }
-    }
+			return this;
+		}
+	}
 }

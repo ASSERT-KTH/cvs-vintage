@@ -18,10 +18,10 @@ package org.columba.mail.folder.command;
 
 import java.text.MessageFormat;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Command;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -38,7 +38,7 @@ import org.columba.mail.util.MailResourceLoader;
  * <p>
  * @author redsolo
  */
-public class MarkFolderAsReadCommand extends FolderCommand {
+public class MarkFolderAsReadCommand extends Command {
 
     /** The folder that is supposed to be marked as read. */
     private AbstractMessageFolder folderToBeRead;
@@ -51,14 +51,14 @@ public class MarkFolderAsReadCommand extends FolderCommand {
     /**
      * @param reference folder reference
      */
-    public MarkFolderAsReadCommand(DefaultCommandReference reference) {
+    public MarkFolderAsReadCommand(ICommandReference reference) {
         super(reference);
     }
 
     /** {@inheritDoc} */
     public void execute(WorkerStatusController worker) throws Exception {
         // get folder that is going to be moved
-        folderToBeRead = (AbstractMessageFolder) ((FolderCommandReference) getReference()).getFolder();
+        folderToBeRead = (AbstractMessageFolder) ((MailFolderCommandReference) getReference()).getSourceFolder();
 
         worker.setDisplayText(MessageFormat.format(
                 MailResourceLoader.getString("statusbar", "message",
@@ -66,7 +66,7 @@ public class MarkFolderAsReadCommand extends FolderCommand {
 
         worker.clearDisplayTextWithDelay();
 
-        FolderCommandReference markCommandRefs = new FolderCommandReference(folderToBeRead);
+        MailFolderCommandReference markCommandRefs = new MailFolderCommandReference(folderToBeRead);
         Object[] uids = folderToBeRead.getUids();
         if ((uids != null) && (uids.length > 0)) {
             markCommandRefs.setUids(uids);

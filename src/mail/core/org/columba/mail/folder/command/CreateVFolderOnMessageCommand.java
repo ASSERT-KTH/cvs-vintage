@@ -17,15 +17,15 @@ package org.columba.mail.folder.command;
 
 import java.util.logging.Logger;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.filter.FilterRule;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.filter.FilterRule;
+import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.filter.MailFilterCriteria;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.virtual.VirtualFolder;
@@ -41,7 +41,7 @@ import org.columba.ristretto.message.Header;
  *
  * @author Karl Peder Olesen (karlpeder), 20030621
  */
-public class CreateVFolderOnMessageCommand extends FolderCommand {
+public class CreateVFolderOnMessageCommand extends Command {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.command");
@@ -106,7 +106,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
     public void execute(WorkerStatusController worker)
         throws Exception {
         // get references to selected folder and message
-        FolderCommandReference r = (FolderCommandReference) getReference();
+        MailFolderCommandReference r = (MailFolderCommandReference) getReference();
         Object[] uids = r.getUids(); // uid for messages to save
 
         if (uids.length == 0) {
@@ -117,7 +117,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
         }
 
         Object uid = uids[0];
-        parentFolder = (AbstractMessageFolder) r.getFolder();
+        parentFolder = (AbstractMessageFolder) r.getSourceFolder();
 
         //register for status events
         ((StatusObservableImpl) parentFolder.getObservable()).setWorker(worker);
@@ -186,11 +186,11 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
         rule.addEmptyCriteria();
 
         // define criteria
-        FilterCriteria c = rule.get(0);
-        c.setCriteria("contains");
-        c.setHeaderItem(headerField);
-        c.setType(headerField);
-        c.setPattern(pattern);
+        MailFilterCriteria c = new MailFilterCriteria(rule.get(0));
+        c.setCriteriaString("contains");
+        c.setHeaderfieldString(headerField);
+        c.setTypeString(headerField);
+        c.setPatternString(pattern);
 
         return vfolder;
     }

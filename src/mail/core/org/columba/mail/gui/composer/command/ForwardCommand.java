@@ -20,11 +20,11 @@ package org.columba.mail.gui.composer.command;
 
 import java.io.InputStream;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.DefaultContainer;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.composer.ComposerController;
@@ -40,7 +40,7 @@ import org.columba.ristretto.message.MimeType;
  * 
  * @author fdietz, tstich, karlpeder
  */
-public class ForwardCommand extends FolderCommand {
+public class ForwardCommand extends Command {
 
 	protected ComposerController controller;
 
@@ -70,11 +70,11 @@ public class ForwardCommand extends FolderCommand {
 
 	public void execute(WorkerStatusController worker) throws Exception {
 		// get selected folder
-		AbstractMessageFolder folder = (AbstractMessageFolder) ((FolderCommandReference) getReference())
-				.getFolder();
+		AbstractMessageFolder folder = (AbstractMessageFolder) ((MailFolderCommandReference) getReference())
+				.getSourceFolder();
 
 		// get first selected message
-		Object[] uids = ((FolderCommandReference) getReference()).getUids();
+		Object[] uids = ((MailFolderCommandReference) getReference()).getUids();
 
 		// get headerfields
 		Header header = folder.getHeaderFields(uids[0],
@@ -86,7 +86,7 @@ public class ForwardCommand extends FolderCommand {
 		//      ->set source reference in composermodel
 		// when replying this is the original sender's message
 		// you selected and replied to
-		FolderCommandReference ref = new FolderCommandReference(folder, uids);
+		MailFolderCommandReference ref = new MailFolderCommandReference(folder, uids);
 		model.setSourceReference(ref);
 
 		// set subject

@@ -18,16 +18,16 @@
 package org.columba.mail.folder.command;
 
 import org.columba.addressbook.facade.IContactFacade;
+import org.columba.addressbook.facade.IDialogFacade;
 import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
+import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.services.ServiceNotFoundException;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.connector.ServiceConnector;
-import org.columba.addressbook.facade.IDialogFacade;
 import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.message.Header;
 
@@ -39,7 +39,7 @@ import org.columba.ristretto.message.Header;
  *
  * @author fdietz
  */
-public class AddSenderToAddressbookCommand extends FolderCommand {
+public class AddSenderToAddressbookCommand extends Command {
     org.columba.addressbook.folder.IFolder selectedFolder;
 
     /**
@@ -68,13 +68,13 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
     public void execute(WorkerStatusController worker)
         throws Exception {
         // get reference
-        FolderCommandReference r = (FolderCommandReference) getReference();
+        MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
         // get array of message UIDs
         Object[] uids = r.getUids();
 
         // get source folder
-        IMailbox folder = (IMailbox) r.getFolder();
+        IMailbox folder = (IMailbox) r.getSourceFolder();
 
         // register for status events
         ((StatusObservableImpl) folder.getObservable()).setWorker(worker);

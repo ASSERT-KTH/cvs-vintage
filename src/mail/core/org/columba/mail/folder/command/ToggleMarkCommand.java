@@ -26,8 +26,7 @@ import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
@@ -50,7 +49,7 @@ import org.columba.ristretto.message.Flags;
  * @see MarkMessageCommand
  * @author fdietz
  */
-public class ToggleMarkCommand extends FolderCommand {
+public class ToggleMarkCommand extends Command {
 
 	private WorkerStatusController worker;
 
@@ -76,18 +75,18 @@ public class ToggleMarkCommand extends FolderCommand {
 
 		/*
 		 * // use wrapper class for easier handling of references array adapter =
-		 * new FolderCommandAdapter( (FolderCommandReference[])
+		 * new FolderCommandAdapter( (MailFolderCommandReference[])
 		 * getReferences());
-		 *  // get array of source references FolderCommandReference[] r =
+		 *  // get array of source references MailFolderCommandReference[] r =
 		 * adapter.getSourceFolderReferences();
 		 */
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		// get array of message UIDs
 		Object[] uids = r.getUids();
 
 		// get source folder
-		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getFolder();
+		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
@@ -130,10 +129,10 @@ public class ToggleMarkCommand extends FolderCommand {
 				list2.add(uids[j]);
 		}
 
-		FolderCommandReference ref = null;
+		MailFolderCommandReference ref = null;
 
 		if (list1.size() > 0) {
-			ref = new FolderCommandReference(srcFolder, list1.toArray());
+			ref = new MailFolderCommandReference(srcFolder, list1.toArray());
 			ref.setMarkVariant(-markVariant);
 			MarkMessageCommand c = new MarkMessageCommand(ref);
 			commandList.add(c);
@@ -147,7 +146,7 @@ public class ToggleMarkCommand extends FolderCommand {
 		}
 
 		if (list2.size() > 0) {
-			ref = new FolderCommandReference(srcFolder, list2.toArray());
+			ref = new MailFolderCommandReference(srcFolder, list2.toArray());
 			ref.setMarkVariant(markVariant);
 			MarkMessageCommand c = new MarkMessageCommand(ref);
 			commandList.add(c);
@@ -211,7 +210,7 @@ public class ToggleMarkCommand extends FolderCommand {
 			System.out.println("learning uid=" + uids[j]);
 
 			// create reference
-			FolderCommandReference ref = new FolderCommandReference(srcFolder,
+			MailFolderCommandReference ref = new MailFolderCommandReference(srcFolder,
 					new Object[] { uids[j] });
 
 			// create command
@@ -239,7 +238,7 @@ public class ToggleMarkCommand extends FolderCommand {
 						.getFolder(item.getSpamItem().getMoveCustomFolder());
 
 				// create reference
-				FolderCommandReference ref2 = new FolderCommandReference(
+				MailFolderCommandReference ref2 = new MailFolderCommandReference(
 						srcFolder, destFolder, new Object[] { uids[j] });
 				CommandProcessor.getInstance().addOp(new MoveMessageCommand(ref2));
 
@@ -249,7 +248,7 @@ public class ToggleMarkCommand extends FolderCommand {
 						.getRootFolder()).getTrashFolder();
 
 				// create reference
-				FolderCommandReference ref2 = new FolderCommandReference(
+				MailFolderCommandReference ref2 = new MailFolderCommandReference(
 						srcFolder, trash, new Object[] { uids[j] });
 
 				CommandProcessor.getInstance().addOp(new MoveMessageCommand(ref2));

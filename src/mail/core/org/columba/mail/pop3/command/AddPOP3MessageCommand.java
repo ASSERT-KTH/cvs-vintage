@@ -15,22 +15,22 @@
 //All Rights Reserved.
 package org.columba.mail.pop3.command;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.CompoundCommand;
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.core.filter.Filter;
+import org.columba.core.filter.FilterList;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterList;
+import org.columba.mail.filter.FilterCompoundCommand;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.tree.FolderTreeModel;
-import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.IColumbaMessage;
 import org.columba.mail.spam.command.CommandHelper;
 import org.columba.mail.spam.command.ScoreMessageCommand;
@@ -46,7 +46,7 @@ import org.columba.ristretto.io.SourceInputStream;
  * 
  * @author fdietz
  */
-public class AddPOP3MessageCommand extends FolderCommand {
+public class AddPOP3MessageCommand extends Command {
 
 	private AbstractMessageFolder inboxFolder;
 
@@ -54,15 +54,15 @@ public class AddPOP3MessageCommand extends FolderCommand {
 	 * @param references
 	 *            command arguments
 	 */
-	public AddPOP3MessageCommand(DefaultCommandReference reference) {
+	public AddPOP3MessageCommand(ICommandReference reference) {
 		super(reference);
 	}
 
 	/** {@inheritDoc} */
 	public void execute(WorkerStatusController worker) throws Exception {
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
-		inboxFolder = (AbstractMessageFolder) r.getFolder();
+		inboxFolder = (AbstractMessageFolder) r.getSourceFolder();
 
 		IColumbaMessage message = (IColumbaMessage) r.getMessage();
 
@@ -74,7 +74,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 		messageStream.close();
 		
 		// mark message as recent
-		r.setFolder(inboxFolder);
+		r.setSourceFolder(inboxFolder);
 		r.setUids(new Object[]{uid});
 		r.setMarkVariant(MarkMessageCommand.MARK_AS_RECENT);
 		new MarkMessageCommand( r).execute(worker);
@@ -108,7 +108,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 		}
 
 		// create reference
-		FolderCommandReference r = new FolderCommandReference(inboxFolder,
+		MailFolderCommandReference r = new MailFolderCommandReference(inboxFolder,
 				new Object[] { uid });
 
 		// score message and mark as "spam" or "not spam"
@@ -127,7 +127,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 						.getRootFolder()).getTrashFolder();
 
 				// create reference
-				FolderCommandReference ref2 = new FolderCommandReference(
+				MailFolderCommandReference ref2 = new MailFolderCommandReference(
 						inboxFolder, trash, new Object[] { uid });
 
 				CommandProcessor.getInstance().addOp(new MoveMessageCommand(ref2));
@@ -138,7 +138,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 						.getFolder(item.getSpamItem().getIncomingCustomFolder());
 
 				// create reference
-				FolderCommandReference ref2 = new FolderCommandReference(
+				MailFolderCommandReference ref2 = new MailFolderCommandReference(
 						inboxFolder, destFolder, new Object[] { uid });
 
 				CommandProcessor.getInstance().addOp(new MoveMessageCommand(ref2));
@@ -167,8 +167,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 					new Object[] { uid });
 
 			if (result.length != 0) {
-				CompoundCommand command = filter
-						.getCommand(inboxFolder, result);
+				CompoundCommand command = new FilterCompoundCommand(filter, inboxFolder, result);
 
 				CommandProcessor.getInstance().addOp(command);
 			}

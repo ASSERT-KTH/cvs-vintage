@@ -24,11 +24,12 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.ISelectionListener;
+import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.FolderFactory;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -85,18 +86,18 @@ public class CreateVirtualFolderAction extends AbstractColumbaAction implements
 			name = dialog.getName();
 
 			try {
-				FolderCommandReference r = (FolderCommandReference) ((AbstractMailFrameController) getFrameMediator())
+				MailFolderCommandReference r = (MailFolderCommandReference) ((AbstractMailFrameController) getFrameMediator())
 						.getTreeSelection();
 
 				VirtualFolder vfolder = (VirtualFolder) FolderFactory
-						.getInstance().createChild(r.getFolder(), name,
+						.getInstance().createChild((IMailFolder) r.getSourceFolder(), name,
 								"VirtualFolder");
 
-				FolderTreeModel.getInstance().nodeStructureChanged(r.getFolder());
+				FolderTreeModel.getInstance().nodeStructureChanged(r.getSourceFolder());
 
 				// set parent folder uid
 				vfolder.getConfiguration().set("property", "source_uid",
-						r.getFolder().getUid());
+						r.getSourceFolder().getUid());
 
 				// open search dialog
 				new SearchFrame((AbstractMailFrameController) frameMediator,

@@ -56,7 +56,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.command.ExportFolderCommand;
 import org.columba.mail.gui.tree.FolderTreeModel;
@@ -272,13 +272,13 @@ public class ExportDialog extends JDialog implements ActionListener {
 			}
 
 			// create command reference array for the command
-			FolderCommandReference r = null;
+			MailFolderCommandReference r = null;
 
 			for (int i = 0; i < v.size(); i++) {
 				AbstractFolder node = (AbstractFolder) ((CheckableTreeNode) v
 						.get(i)).getNode();
 
-				r = new FolderCommandReference(node);
+				r = new MailFolderCommandReference(node);
 				r.setDestFile(destFile);
 
 				//              execute the command

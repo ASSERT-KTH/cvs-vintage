@@ -63,7 +63,7 @@ public class SynchronizeFolderListCommand extends Command {
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
 		root = (IMAPRootFolder) ((SubscribeCommandReference) getReference())
-				.getFolder();
+				.getSourceFolder();
 
 		store = root.getServer();
 

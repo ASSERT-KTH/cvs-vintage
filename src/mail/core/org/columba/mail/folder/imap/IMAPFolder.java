@@ -33,13 +33,13 @@ import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.IFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.IHeaderListStorage;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.RemoteFolder;
@@ -350,7 +350,7 @@ public class IMAPFolder extends RemoteFolder {
 
 				// if "automatically apply filter" is selected & there are new messages
 				if (applyFilter) {
-					CommandProcessor.getInstance().addOp(new ApplyFilterCommand(new FolderCommandReference(this, newUids.toArray())));
+					CommandProcessor.getInstance().addOp(new ApplyFilterCommand(new MailFolderCommandReference(this, newUids.toArray())));
 				}
 
 			}
@@ -739,7 +739,7 @@ public class IMAPFolder extends RemoteFolder {
 	public boolean tryToGetLock(Object locker) {
 		// IMAP Folders have no own lock ,but share the lock from the Root
 		// to ensure that only one operation can be processed simultanous
-		IFolder root = getRootFolder();
+		IMailFolder root = getRootFolder();
 
 		if (root != null) {
 			return root.tryToGetLock(locker);
@@ -752,7 +752,7 @@ public class IMAPFolder extends RemoteFolder {
 	 * @see org.columba.mail.folder.FolderTreeNode#releaseLock()
 	 */
 	public void releaseLock(Object locker) {
-		IFolder root = getRootFolder();
+		IMailFolder root = getRootFolder();
 
 		if (root != null) {
 			root.releaseLock(locker);
@@ -764,7 +764,7 @@ public class IMAPFolder extends RemoteFolder {
 	 * 
 	 * @see org.columba.mail.folder.FolderTreeNode#addSubfolder(org.columba.mail.folder.FolderTreeNode)
 	 */
-	public void addSubfolder(IFolder child) throws Exception {
+	public void addSubfolder(IMailFolder child) throws Exception {
 		if (child instanceof IMAPFolder) {
 
 			getServer().createMailbox(child.getName(), this);
@@ -974,7 +974,7 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 * @see org.columba.mail.folder.AbstractFolder#supportsAddFolder()
 	 */
-	public boolean supportsAddFolder(IFolder folder) {
+	public boolean supportsAddFolder(IMailFolder folder) {
 		return true;
 	}
 

@@ -17,12 +17,12 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 
 /**
@@ -34,7 +34,7 @@ import org.columba.mail.folder.AbstractMessageFolder;
  * 
  * @author fdietz
  */
-public class MarkMessageCommand extends FolderCommand {
+public class MarkMessageCommand extends Command {
 
 	public final static int MARK_AS_READ = 1;
 
@@ -84,17 +84,17 @@ public class MarkMessageCommand extends FolderCommand {
 
 		/*
 		 * // use wrapper class for easier handling of references array adapter =
-		 * new FolderCommandAdapter( (FolderCommandReference[])
+		 * new FolderCommandAdapter( (MailFolderCommandReference[])
 		 * getReferences()); // get array of source references
-		 * FolderCommandReference[] r = adapter.getSourceFolderReferences();
+		 * MailFolderCommandReference[] r = adapter.getSourceFolderReferences();
 		 */
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
 		// get array of message UIDs
 		Object[] uids = r.getUids();
 
 		// get source folder
-		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getFolder();
+		AbstractMessageFolder srcFolder = (AbstractMessageFolder) r.getSourceFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

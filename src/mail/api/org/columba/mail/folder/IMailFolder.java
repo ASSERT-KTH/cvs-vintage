@@ -21,6 +21,7 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import org.columba.core.folder.IFolder;
 import org.columba.mail.config.IFolderItem;
 import org.columba.mail.folder.event.IFolderListener;
 
@@ -28,7 +29,7 @@ import org.columba.mail.folder.event.IFolderListener;
  * @author fdietz
  *
  */
-public interface IFolder extends MutableTreeNode{
+public interface IMailFolder extends MutableTreeNode, IFolder{
 	/**
 	 * Adds a listener.
 	 */
@@ -47,11 +48,6 @@ public interface IFolder extends MutableTreeNode{
 	TreePath getSelectionTreePath();
 
 	/**
-	 * Returns the folder's UID.
-	 */
-	int getUid();
-
-	/**
 	 * Returns the folder's configuration.
 	 */
 	IFolderItem getConfiguration();
@@ -62,28 +58,15 @@ public interface IFolder extends MutableTreeNode{
 	void setConfiguration(IFolderItem node);
 
 	/**
-	 * Returns the folder's name.
-	 */
-	String getName();
-
-	/**
 	 * Sets the folder's name. This method notifies registered FolderListeners.
 	 */
 	void setName(String newName) throws Exception;
-
-	/*
-	 public FolderCommandReference getCommandReference(FolderCommandReference r) {
-	 return r;
-	 }
-	 */boolean tryToGetLock(Object locker);
-
-	void releaseLock(Object locker);
 
 	/**
 	 * ************************** treenode management
 	 * ******************************
 	 */
-	void insert(IFolder newFolder, int newIndex);
+	void insert(IMailFolder newFolder, int newIndex);
 
 	/**
 	 * Removes this folder from its parent. This method will notify registered
@@ -95,7 +78,7 @@ public interface IFolder extends MutableTreeNode{
 	 * Adds a child folder to this folder. This method will notify registered
 	 * FolderListeners.
 	 */
-	void addSubfolder(IFolder child) throws Exception;
+	void addSubfolder(IMailFolder child) throws Exception;
 
 	/**
 	 * 
@@ -103,7 +86,7 @@ public interface IFolder extends MutableTreeNode{
 	 * 
 	 * all treenode manipulation is passed to the corresponding XmlElement
 	 */
-	void moveTo(IFolder child);
+	void moveTo(IMailFolder child);
 
 	/** ******************* capabilities ************************************* */
 	boolean supportsAddMessage();
@@ -116,7 +99,7 @@ public interface IFolder extends MutableTreeNode{
 	 *            the folder that is going to be inserted as a child.
 	 * @return true if this folder can have sub folders; false otherwise.
 	 */
-	boolean supportsAddFolder(IFolder newFolder);
+	boolean supportsAddFolder(IMailFolder newFolder);
 
 	/**
 	 * Returns true if this folder type can be moved around in the folder tree.
@@ -133,10 +116,10 @@ public interface IFolder extends MutableTreeNode{
 	 * 
 	 * @return root parent folder of this folder
 	 */
-	IFolder getRootFolder();
+	IMailFolder getRootFolder();
 	
 	void fireFolderPropertyChanged();
-	void fireFolderAdded(IFolder folder);
+	void fireFolderAdded(IMailFolder folder);
 	void fireFolderRemoved();
 	
 	TreeNode[] getPath();

@@ -44,11 +44,12 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.columba.core.command.StatusObservable;
+import org.columba.core.filter.FilterCriteria;
+import org.columba.core.filter.FilterRule;
 import org.columba.core.io.DiskIO;
 import org.columba.core.util.ListTools;
 import org.columba.core.util.Mutex;
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.filter.FilterRule;
+import org.columba.mail.filter.MailFilterCriteria;
 import org.columba.mail.folder.IDataStorage;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.event.IFolderEvent;
@@ -225,10 +226,10 @@ public class LuceneQueryEngine implements QueryEngine {
 
             // FIXME (@author fdietz): is it necessary to make this lower case?
             //field = criteria.getHeaderItemString().toLowerCase();
-            field = criteria.getHeaderItemString();
+            field = new MailFilterCriteria(criteria).getHeaderfieldString();
 
             TokenStream tokenStream = analyzer.tokenStream(field,
-                    new StringReader(criteria.getPattern()));
+                    new StringReader(criteria.getPatternString()));
 
             termQuery = new BooleanQuery();
 

@@ -39,13 +39,13 @@ import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.filter.Filter;
+import org.columba.core.filter.FilterRule;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.help.HelpManager;
-import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterRule;
 import org.columba.mail.util.MailResourceLoader;
 
 public class FilterDialog extends JDialog implements ActionListener {

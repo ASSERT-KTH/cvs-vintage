@@ -26,7 +26,7 @@ import javax.swing.JPanel;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.ContentPane;
-import org.columba.mail.command.IFolderCommandReference;
+import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
@@ -57,9 +57,9 @@ public class MessageFrameController extends AbstractMailFrameController
 	
 	private static final int MAX_SUBJECT_LENGTH = 50;
 	
-	IFolderCommandReference treeReference;
+	IMailFolderCommandReference treeReference;
 
-	IFolderCommandReference tableReference;
+	IMailFolderCommandReference tableReference;
 
 	FixedTableSelectionHandler tableSelectionHandler;
 
@@ -99,7 +99,7 @@ public class MessageFrameController extends AbstractMailFrameController
 	 * 
 	 * @see org.columba.mail.gui.frame.MailFrameInterface#getTableSelection()
 	 */
-	public IFolderCommandReference getTableSelection() {
+	public IMailFolderCommandReference getTableSelection() {
 		return tableReference;
 	}
 
@@ -107,27 +107,27 @@ public class MessageFrameController extends AbstractMailFrameController
 	 * 
 	 * @see org.columba.mail.gui.frame.MailFrameInterface#getTreeSelection()
 	 */
-	public IFolderCommandReference getTreeSelection() {
+	public IMailFolderCommandReference getTreeSelection() {
 		return treeReference;
 	}
 
 	/**
 	 * @param references
 	 */
-	public void setTreeSelection(IFolderCommandReference references) {
+	public void setTreeSelection(IMailFolderCommandReference references) {
 		treeReference = references;
 	}
 
 	/**
 	 * @param references
 	 */
-	public void setTableSelection(IFolderCommandReference references) {
+	public void setTableSelection(IMailFolderCommandReference references) {
 		tableReference = references;
 		
 		try {
 			
 			// Get the subject from the cached Header
-			AbstractMessageFolder folder = (AbstractMessageFolder) references.getFolder();
+			AbstractMessageFolder folder = (AbstractMessageFolder) references.getSourceFolder();
 			IColumbaHeader header = folder.getHeaderList().get(references.getUids()[0]);
 			String subject = (String)header.get("columba.subject");
 			

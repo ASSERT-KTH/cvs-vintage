@@ -21,7 +21,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.IColumbaMessage;
@@ -53,10 +53,10 @@ public class AddMessageCommand extends Command {
     public void execute(WorkerStatusController worker)
         throws Exception {
         // get reference
-        FolderCommandReference r = (FolderCommandReference) getReference();
+        MailFolderCommandReference r = (MailFolderCommandReference) getReference();
 
         // get source folder
-        folder = (AbstractMessageFolder) r.getFolder();
+        folder = (AbstractMessageFolder) r.getSourceFolder();
 
         // register for status events
         ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
