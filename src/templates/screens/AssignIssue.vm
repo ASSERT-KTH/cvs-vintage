@@ -5,10 +5,8 @@
 #set ($assoUsers =  $data.User.AssociatedUsersMap)
 #set ($issueList = $scarabR.AssignIssuesList)
 #set ($issueListSize = $issueList.size())
-#set ($modules = $scarabG.getModulesFromIssueList($issueList)) 
 #set ($userAttrs = $scarabR.getUserAttributes($issueList)) 
 #set ($reason = $data.Parameters.getString("reason" , ""))
-
 #if ($userAttrs.isEmpty())
  <p class="alert">$l10n.NoAssignableUserAttributes</p>
 #elseif ($issueListSize == 0)
@@ -34,7 +32,8 @@
 ## Determine if there are any users to show up in the added/assigned list
 #foreach ($issue in $issueList)
  #if ($issue)
-
+    #set ($module = $issue.Module)
+    #set ($issueType = $issue.IssueType)
 <h3>$l10n.format("PersonnelAssociatedWithIssue", "$issue.UniqueId")</h3>
 
 
@@ -70,7 +69,7 @@
     <td>$!user.Name</td>
     <td><select name="asso_user_{$userId}_issue_{$issue.IssueId}">
      #foreach ($selectUserAttr in $userAttrs)
-      #if ($user.hasPermission($selectUserAttr.Permission, $modules))
+      #if ($user.hasPermission($selectUserAttr.Permission, $module))
         #set ($selected = false)
         #if ($attr.AttributeId.toString().equals($selectUserAttr.AttributeId.toString())) 
             #set ($selected = true)
@@ -112,7 +111,7 @@
  <input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />
 </div>
 
-#userList($modules $userAttrs)
+#userList($module $issueType $userAttrs)
 
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doAdd" value="$l10n.AddAssignee" />
