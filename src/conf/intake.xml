@@ -546,4 +546,6 @@
         </field>
 </group>
 
+@INTAKE_OPTIONAL_GROUPS@
+
 </input-data>
