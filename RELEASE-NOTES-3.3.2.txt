@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.2.txt,v 1.10 2002/08/06 05:29:07 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.2.txt,v 1.11 2002/08/21 04:56:14 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -47,6 +47,11 @@ Bug No.  Description
 7654	 Make certain that the Context Classloader is set before a servlet 
 	 class is loaded.  This allows JAXP and log4j classes to be created
 	 in the constructor of the servlet, instead of in init.
+
+	 Fix problem with multiple Context adds on Context reload under
+	 high traffic.
+
+	 Preserve sessions across session reloadings.
 
 Jasper:
 
