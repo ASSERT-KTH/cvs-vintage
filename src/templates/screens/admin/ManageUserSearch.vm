@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.18 2002/03/13 21:34:44 jon Exp $
+@version $Id: ManageUserSearch.vm,v 1.19 2002/03/15 18:35:36 jon Exp $
 *#
 
 #set ($newSearch = $data.Parameters.getString("newSearch",""))
@@ -83,10 +83,9 @@ Results per page:
 
 </form>
 
-
 #if (!$newSearch.equals("true"))
 
-<h3>Search results</h3>
+<h3>Search results - $userList.size()</h3>
 
  #if ($userList.size() == 0)
    <p class="warn">There are no users matching the specified criteria.</p>
