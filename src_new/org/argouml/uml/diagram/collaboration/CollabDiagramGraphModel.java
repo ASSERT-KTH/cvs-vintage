@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.52 2005/02/06 21:30:53 mvw Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.53 2005/02/23 16:56:43 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,6 +61,8 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
     // accessors
 
     /**
+     * This is not the collaboration itself, but its namespace!
+     * 
      * @see org.argouml.uml.diagram.UMLMutableGraphSupport#getNamespace()
      */
     public Object getNamespace() { 
