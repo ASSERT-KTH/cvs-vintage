@@ -142,7 +142,9 @@ public class Attachment
                 start = name.lastIndexOf('\\')+1;                
             }
             // don't allow spaces
-            super.setFileName(name.substring(start).replace(' ', '_'));    
+            String tmpName = name.substring(start).replace(' ', '_');
+            tmpName = tmpName.replace('%', '_');
+            super.setFileName(tmpName);
         }
     }
     
