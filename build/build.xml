@@ -719,7 +719,7 @@
     <target name="upgrade-tomcat-coyote">
         <property name="coyote.base.url" 
                  value="http://jakarta.apache.org/builds/jakarta-tomcat-connectors/coyote/release"/>
-        <property name="coyote.version" value="v1.0-b5"/>
+        <property name="coyote.version" value="v1.0-b8"/>
         <property name="coyote.url" value="${coyote.base.url}/${coyote.version}"/>
         <get src="${coyote.url}/tomcat-coyote.jar" 
             dest="${tomcat.dist.dir}/server/lib/tomcat-coyote.jar"/>
