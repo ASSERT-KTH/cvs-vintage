@@ -1,0 +1,69 @@
+<chapter id="build-process">
+  <title>CAROL Build Process</title>
+
+  <para>The following diagrams illustrate the structure of some of the Ant build
+    files used in CAROL.
+  </para>
+
+  <para>Here's the top-level <filename>build.xml</filename> file.
+  </para>
+
+  <figure >
+    <title><filename>build.xml</filename></title>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="img/build.png" format="PNG" align="center">
+      </imageobject>
+      <textobject>
+        <phrase>build.xml file</phrase>
+      </textobject> 
+    </mediaobject>
+  </figure>
+
+  <para>The following files drive CAROL's tests.</para>
+
+  <figure >
+    <title><filename>test/build.xml</filename></title>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="img/test-build.png" format="PNG" align="center">
+      </imageobject>
+      <textobject>
+        <phrase>test/build.xml file</phrase>
+      </textobject> 
+    </mediaobject>
+  </figure>
+
+  <para>The following file defines all the different configurations to test for.
+    To save space, only a few are shown in the diagram.
+  </para>
+
+  <figure >
+    <title>test/conform/carol_all_tests.xml</title>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="img/carol_all_tests.png" format="PNG" align="center">
+      </imageobject>
+      <textobject>
+        <phrase>test/conform/carol_all_tests.xml</phrase>
+      </textobject> 
+    </mediaobject>
+  </figure>
+
+  <para>This build file is responsible for setting and tearing down a proper
+    test environment, running JUnit tests, and generating reports.
+  </para>
+
+  <figure >
+    <title>test/conform/generic/carol_double.xml</title>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="img/carol_double.png" format="PNG" align="center">
+      </imageobject>
+      <textobject>
+        <phrase>test/conform/generic/carol_double.xml</phrase>
+      </textobject> 
+    </mediaobject>
+  </figure>
+  
+</chapter>

@@ -8,6 +8,7 @@
   <!ENTITY links SYSTEM "links.docbook">
   <!ENTITY licence SYSTEM "licence.docbook">
   <!ENTITY glossary SYSTEM "glossary.docbook">
+  <!ENTITY build-process SYSTEM "build.docbook">
   <!ENTITY fdl-licence SYSTEM "fdl-licence">
   <!ENTITY Foo.java SYSTEM "example/Foo.java">
   <!ENTITY FooRemoteInterface.java SYSTEM "example/FooRemoteInterface.java">
@@ -35,6 +36,7 @@
   &configuration;
   &requirements;
 
+<!-- &build-process; -->
   
   &links;
   &licence;
