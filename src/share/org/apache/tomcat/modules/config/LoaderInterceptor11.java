@@ -89,8 +89,12 @@ public class LoaderInterceptor11 extends BaseInterceptor {
     private int attributeInfo;
     String loader=null;
     Vector jaxpJars=new Vector();
-    String jaxpJarsS="jaxp.jar:crimson.jar:xalan.jar:xerces.jar";
+    String jaxpJarsSDefault="jaxp.jar:crimson.jar:xalan.jar:xerces.jar";
+    String jaxpJarsS=null;
     String jaxpDir=null;
+    Vector additionalJars=new Vector();
+    String additionalJarsS=null;
+    String jarSeparator=":";
     
     public LoaderInterceptor11() {
     }
@@ -125,6 +129,31 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	jaxpJarsS=jars;
     }
 
+    /** List of additional jars to add to each web application.
+     */
+    public void setAdditionalJars(String jars ) {
+	additionalJarsS=jars;
+    }
+
+    /** Character to use to separate jars in the jaxpJars list.
+        It also applies to the additionalJars context property
+        list.
+     */
+    public void setJarSeparator(String sep) {
+        if( sep != null && sep.length() > 0 ) {
+            if( sep.length() > 1 )
+                sep = sep.substring(0,1);
+
+            char oldSep[]=new char[1];
+            char newSep[]=new char[1];
+            jarSeparator.getChars(0,1,oldSep,0 );
+            sep.getChars(0,1,newSep,0);
+            jaxpJarsSDefault=jaxpJarsSDefault.replace(oldSep[0],newSep[0]);
+
+            jarSeparator=sep;
+        }
+    }
+
     /** Check if the webapp contains jaxp , and add one if not.
 	This allow apps to include their own parser if they want,
 	while using the normal delegation model.
@@ -146,6 +175,7 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	attributeInfo=cm.getNoteId(ContextManager.REQUEST_NOTE,
 				   "req.attribute");
 	initJaxpJars();
+        initAdditionalJars();
     }
 
     
@@ -228,11 +258,30 @@ public class LoaderInterceptor11 extends BaseInterceptor {
      *  
      */
     public void prepareClassLoader(Context context) throws TomcatException {
+        String list = context.getProperty("additionalJars");
+        if( list != null ) {
+            Vector urls=new Vector();
+            getUrls( null, list, urls );
+            Enumeration en=urls.elements();
+            while( en.hasMoreElements() ) {
+                URL url=(URL)en.nextElement();
+                if( debug > 0 ) log(context + " adding: " + url);
+                context.addClassPath( url );
+            }
+        }
+
+        Enumeration en=additionalJars.elements();
+        while( en.hasMoreElements() ) {
+            URL url=(URL)en.nextElement();
+            if( debug > 0 ) log(context + " adding: " + url);
+            context.addClassPath( url );
+        }
+
 	ClassLoader loader=constructLoader( context );
 	if( addJaxp ) {
 	    boolean hasJaxp=checkJaxp( loader, context );
 	    if( ! hasJaxp ) {
-		Enumeration en=jaxpJars.elements();
+		en=jaxpJars.elements();
 		while( en.hasMoreElements() ) {
 		    URL url=(URL)en.nextElement();
 		    if( debug > 0 ) log(context + " adding jaxp: " + url);
@@ -241,6 +290,7 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 		loader=constructLoader( context );
 	    }
 	}
+
 	if( debug>5 ) {
 	    URL classP[]=context.getClassPath();
 	    log("  Context classpath URLs:");
@@ -267,7 +317,7 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	    if( debug > 0 ) log( "Using no parent loader ");
 	    parent=null;
 	} else if( useAppsL && !context.isTrusted() ) {
-	    if( debug > 0 ) log( "Using webapp loader " + context.isTrusted());
+	    if( debug > 0 ) log( "Using webapp loader ");
 	    parent=cm.getAppsLoader();
 	} else {
 	    if( debug > 0 ) log( "Using container loader ");
@@ -284,22 +334,37 @@ public class LoaderInterceptor11 extends BaseInterceptor {
     }
     
     private void initJaxpJars() {
-	if( jaxpDir==null ) jaxpDir=cm.getInstallDir() + "/lib/container";
-	File base=new File( jaxpDir );
-	StringTokenizer st=new StringTokenizer( jaxpJarsS, ":" );
+        if( jaxpJarsS == null )
+            jaxpJarsS=jaxpJarsSDefault;
+        getUrls( jaxpDir, jaxpJarsS, jaxpJars );
+    }
+
+    private void initAdditionalJars() {
+        if( additionalJarsS != null )
+            getUrls( null, additionalJarsS, additionalJars );
+    }
+
+    private void getUrls( String dir, String jarList, Vector jars ) {
+	if( dir == null ) dir=cm.getInstallDir() + "/lib/container";
+	File base=new File( dir );
+	if( debug > 5 ) log( "Scanning \"" + jarList + "\" with base directory " + base);
+	StringTokenizer st=new StringTokenizer( jarList, jarSeparator );
 	while( st.hasMoreElements() ) {
 	    String s=(String)st.nextElement();
-	    File f=new File( base,s);
-	    if( ! f.exists()) continue;
+            File f=new File( s );
+            if( ! f.isAbsolute() )
+                f=new File( base, s);
+	    if( ! f.exists() ) continue;
 	    try {
 		URL url=new URL( "file", null,
 				 f.getAbsolutePath().replace('\\','/'));
-		jaxpJars.addElement( url );
-		if( debug > 0 ) log( "Adding " + url );
+		jars.addElement( url );
+		if( debug > 5 ) log( "Adding " + url );
 	    } catch( MalformedURLException ex ) {
 	    }
 	}
     }
+
     private boolean checkJaxp(  ClassLoader loader, Context context ) {
 	try {
 	    loader.loadClass("javax.xml.parsers.SAXParserFactory");
