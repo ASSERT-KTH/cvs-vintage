@@ -58,7 +58,7 @@ import org.apache.fulcrum.TurbineServices;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.23 2004/10/06 14:46:59 dep4b Exp $
+ * @version $Id: ScarabSecurity.java,v 1.24 2004/11/23 08:32:05 dep4b Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -73,7 +73,7 @@ public class ScarabSecurity
     private static final String SCREEN_PREFIX = "screen.";
     private static final String ACTION_PREFIX = "action.";
 
-    private static final String MAP_PREFIX = "map.";
+    protected static final String MAP_PREFIX = "map.";
 
     /**
      * String used to indicate that an Action module does not require
