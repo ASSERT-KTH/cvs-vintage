@@ -14,7 +14,7 @@
 #   JAVA_OPTS     (Optional) Java runtime options used when the "start",
 #                 "stop", or "run" command is executed.
 #
-# $Id: jasper.sh,v 1.13 2002/02/11 18:41:56 jon Exp $
+# $Id: jasper.sh,v 1.14 2002/03/02 06:44:23 jon Exp $
 # -----------------------------------------------------------------------------
 
 # OS specific support.  $var _must_ be set to either true or false.

@@ -1,7 +1,7 @@
 rem ---------------------------------------------------------------------------
 rem Append a path onto the CLASSPATH
 rem
-rem $Id: cpappend.bat,v 1.5 2002/02/11 18:41:56 jon Exp $
+rem $Id: cpappend.bat,v 1.6 2002/03/02 06:44:23 jon Exp $
 rem ---------------------------------------------------------------------------
 
 rem Get remaining unshifted command line arguments and save them in the

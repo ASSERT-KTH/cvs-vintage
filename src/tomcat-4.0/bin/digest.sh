@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------------
 # Script to digest password using the algorithm specificied
 #
-# $Id: digest.sh,v 1.8 2002/02/11 18:41:56 jon Exp $
+# $Id: digest.sh,v 1.9 2002/03/02 06:44:23 jon Exp $
 # -----------------------------------------------------------------------------
 
 # resolve links - $0 may be a softlink
