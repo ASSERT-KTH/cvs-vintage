@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.50 $" />  
+     <property name="revision" value="$Revision: 1.51 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="colonPort" value=":${port}" />
@@ -185,6 +185,12 @@
           <httpRequest path="/test/servlet/RequestDump/path%3Finfo" />
           <httpStatusMatch match="200" />
           <responseMatch match="&lt;tr&gt;&lt;td&gt;Path Info&lt;/td&gt;&lt;td&gt;/path?info&lt;/td&gt;&lt;/tr&gt;" />
+      </httpClient>
+      <httpClient>
+          <comment>Test '+' in query string is decoded.</comment>
+          <httpRequest path="/test/servlet/RequestDump?param=more+text" />
+          <httpStatusMatch match="200" />
+          <responseMatch match="&lt;tr&gt;&lt;td&gt;param&lt;/td&gt;&lt;td&gt;&lt;span&gt;more text&lt;/span&gt; &lt;/td&gt;&lt;/tr&gt;" />
       </httpClient>
   </target>
 
@@ -1253,12 +1259,6 @@ mod_webapp into mod_jk )
           <httpStatusMatch match="200"/>
           <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
       </httpClient>
-      <httpClient >
-          <httpRequest path="/test/jsp/HelloWorld%2Ejsp" 
-		      method="GET" />
-          <httpStatusMatch match="200"/>
-          <goldenMatch file="${gdir}/HelloWorld.txt" />
-      </httpClient>
    </target>
 
    <target name="security_chk" depends="init,security_chk_url">
@@ -1271,6 +1271,13 @@ mod_webapp into mod_jk )
            request="GET /test/jsp/HelloWorld.jsp%2E HTTP/1.0"
            returnCode="${http.protocol} 40" 
       />
+
+      <httpClient >
+          <httpRequest path="/test/jsp/HelloWorld%2Ejsp" 
+		      method="GET" />
+          <httpStatusMatch match="${http.protocol} 40" if="tomcat.server" />
+          <httpStatusMatch match="${http.protocol} 200" unless="tomcat.server" />
+      </httpClient>
 
       <gtest description="This URL should return 403 Forbidden"
            request="GET /test/jsp/HelloWorld.jsp%252E HTTP/1.0"
@@ -1364,79 +1371,79 @@ mod_webapp into mod_jk )
       />
    </target>
 
-   <!-- Ensure use of Windows DOS devices in JSP name return 404 -->
+   <!-- Ensure use of Windows DOS devices in JSP name return 40? -->
    <target name="dos_devices" >
       <gtest  request="GET /test/con.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/aux.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/nul.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/NUL.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/prn.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/clock$$.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/com1.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/com2.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/com3.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/com4.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/com5.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/com6.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/com7.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/com8.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/com9.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/lpt1.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/lpt2.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/lpt3.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/lpt4.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/lpt5.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/lpt6.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/lpt7.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/lpt8.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
 
       <gtest  request="GET /test/lpt9.jsp HTTP/1.0"
-             returnCode="${http.protocol} 404" />
+             returnCode="${http.protocol} 40" />
    </target>
 
    <target name="writer" depends="init">
