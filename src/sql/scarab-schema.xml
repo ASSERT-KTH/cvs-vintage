@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.85 2002/02/26 04:20:26 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.86 2002/02/28 00:15:05 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -53,11 +53,11 @@
     <!--
         Value of attribute before modification.
     -->
-    <column name="OLD_VALUE" required="false" type="VARCHAR" size="255"></column>
+    <column name="OLD_VALUE" required="false" type="LONGVARCHAR"></column>
     <!--
         Value of attribute after modification.
     -->
-    <column name="NEW_VALUE" required="false" type="VARCHAR" size="255"></column>
+    <column name="NEW_VALUE" required="false" type="LONGVARCHAR"></column>
     <!--
         System-generated description of modification.
     -->
