@@ -11,7 +11,7 @@ package org.jboss.util;
  *
  * @see Semaphore
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public interface Sync 
 {
@@ -25,12 +25,6 @@ public interface Sync
 	 * @see #release
 	 */
 	public void acquire() throws InterruptedException;
-	/**
-	 * Attempts to acquire this sync in <code>msecs</code> milliseconds; if succeeds
-	 * in acquiring it, returns true, otherwise returns false.
-	 * @see #acquire
-	 */
-	public boolean attempt(long msecs) throws InterruptedException;
 	/**
 	 * Releases this sync
 	 * @see #acquire
