@@ -9,6 +9,8 @@ package org.jboss.metadata;
 import org.w3c.dom.Element;
 
 import org.jboss.deployment.DeploymentException;
+import org.jboss.system.server.ServerConfig;
+import org.jboss.system.server.ServerConfigUtil;
 
 /**
  * The meta data object for the cluster-config element.
@@ -16,15 +18,14 @@ import org.jboss.deployment.DeploymentException;
  * expanded to include other cluster configuration parameters later on.
 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>.
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class ClusterConfigMetaData extends MetaData
 {
-   public final static String DEFAULT_PARTITION = "DefaultPartition";
    public final static String JNDI_PREFIX_FOR_SESSION_STATE = "/HASessionState/";
    public final static String DEFAULT_SESSION_STATE_NAME = JNDI_PREFIX_FOR_SESSION_STATE + "Default";
 
-   private String partitionName = DEFAULT_PARTITION;
+   private String partitionName = ServerConfigUtil.getDefaultPartitionName();
    private String homeLoadBalancePolicy = null;
    private String beanLoadBalancePolicy = null;
 
@@ -81,7 +82,9 @@ public class ClusterConfigMetaData extends MetaData
 
    public void importJbossXml(Element element) throws DeploymentException
    {
-      partitionName = getElementContent(getOptionalChild(element, "partition-name"), DEFAULT_PARTITION);
+      partitionName = getElementContent(getOptionalChild(element, "partition-name"), null);
+      if (partitionName == null)
+         partitionName = ServerConfigUtil.getDefaultPartitionName();
       homeLoadBalancePolicy = getElementContent(getOptionalChild(element, "home-load-balance-policy"), homeLoadBalancePolicy);
       beanLoadBalancePolicy = getElementContent(getOptionalChild(element, "bean-load-balance-policy"), beanLoadBalancePolicy);
 
