@@ -1,4 +1,4 @@
-// $Id: Actions.java,v 1.70 2004/08/21 06:48:19 mvw Exp $
+// $Id: Actions.java,v 1.71 2004/09/01 18:48:04 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -744,7 +744,7 @@ class ActionSnooze extends ToDoItemAction {
 	ToDoItem item = (ToDoItem) getRememberedTarget();
 	Poster p = item.getPoster();
 	p.snooze();
-	TabToDo._numHushes++;
+	TabToDo.incrementNumHushes();
     }
 } /* end class ActionSnooze */
 

@@ -1,4 +1,4 @@
-// $Id: TabSpawnable.java,v 1.20 2004/09/01 16:48:22 mvw Exp $
+// $Id: TabSpawnable.java,v 1.21 2004/09/01 18:48:04 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,6 +69,12 @@ public class TabSpawnable extends JPanel implements Cloneable, Orientable {
 
     private Orientation orientation;
 
+    /**
+     * @return Returns the orientation.
+     */
+    public Orientation getOrientation() {
+        return orientation;
+    }
     ////////////////////////////////////////////////////////////////
     // constructor
 
@@ -120,13 +126,12 @@ public class TabSpawnable extends JPanel implements Cloneable, Orientable {
     }
 
     /**
-     * Set the orientation of the property panel @param orientation the new
-     * orientation for this preoprty panel
+     * Set the orientation of the property panel.
      *
      * @see org.argouml.swingext.Orientable#setOrientation(org.argouml.swingext.Orientation)
      */
-    public void setOrientation(Orientation orientation) {
-        this.orientation = orientation;
+    public void setOrientation(Orientation o) {
+        this.orientation = o;
     }
 
     ////////////////////////////////////////////////////////////////
@@ -163,7 +168,7 @@ public class TabSpawnable extends JPanel implements Cloneable, Orientable {
     public TabSpawnable spawn() {
 
         // TODO: this disables spawning
-        if (true == true) return null;
+        if (true) return null;
         
         JDialog f = new JDialog(ProjectBrowser.getInstance());
         f.getContentPane().setLayout(new BorderLayout());

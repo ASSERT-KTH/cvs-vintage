@@ -1,4 +1,4 @@
-// $Id: StylePanel.java,v 1.17 2004/07/31 22:30:22 kataka Exp $
+// $Id: StylePanel.java,v 1.18 2004/09/01 18:48:04 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,6 +45,10 @@ import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.tigris.gef.presentation.Fig;
 
+/**
+ * The style panel.
+ *
+ */
 public class StylePanel extends TabSpawnable implements TabFigTarget,
                 ItemListener, DocumentListener, ListSelectionListener,
                 ActionListener {

@@ -1,4 +1,4 @@
-// $Id: TabHash.java,v 1.4 2003/06/30 18:00:24 linus Exp $
+// $Id: TabHash.java,v 1.5 2004/09/01 18:48:04 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,19 +27,19 @@ package org.argouml.ui;
 
 public class TabHash extends TabText {
 
-    ////////////////////////////////////////////////////////////////
-    // constructor
+    /**
+     * The constructor.
+     * 
+     */
     public TabHash() {
 	super("Hashcode");
     }
 
-    ////////////////////////////////////////////////////////////////
-    // accessors
-
+    /**
+     * @see org.argouml.ui.TabText#genText(java.lang.Object)
+     */
     public String genText(Object target) {  
 	return target == null ? "Nothing selected" : "" + target.hashCode();
     }
-  
-
   
 } /* end class TabHash */
