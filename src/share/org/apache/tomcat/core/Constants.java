@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/Constants.java,v 1.3 1999/11/03 20:38:49 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/11/03 20:38:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/Constants.java,v 1.4 1999/11/03 20:54:59 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/11/03 20:54:59 $
  *
  * ====================================================================
  *
@@ -172,6 +172,7 @@ public class Constants {
 
     public static class JSP {
 	public static final String NAME = "jsp";
+	public static final String CLASSNAME = "org.apache.jasper.runtime.JspServlet";
 	
         public static class Directive {
             public static class Compile {

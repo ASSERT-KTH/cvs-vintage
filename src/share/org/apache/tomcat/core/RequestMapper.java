@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestMapper.java,v 1.3 1999/11/03 20:38:53 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/11/03 20:38:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestMapper.java,v 1.4 1999/11/03 20:55:00 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/11/03 20:55:00 $
  *
  * ====================================================================
  *
@@ -286,7 +286,7 @@ public class RequestMapper {
             this.resourceName != null) {
             // XXX
             // hack to differentiate amongst a mapped servlet and a jsp
-            if (! wrapper.getServletName().equals(Constants.JSP.NAME)) {
+            if (! wrapper.getServletClass().equals(Constants.JSP.CLASSNAME)) {
                 mapPath = "/" + wrapper.getServletClass();
             } else {
                 mapPath = this.resourceName;
