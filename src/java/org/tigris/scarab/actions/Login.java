@@ -74,7 +74,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.33 2002/05/06 17:56:50 jon Exp $
+ * @version $Id: Login.java,v 1.34 2002/05/07 21:42:57 jmcnally Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -95,7 +95,11 @@ public class Login extends ScarabTemplateAction
             if (userModules != null && userModules.size() == 1)
             {
                 ScarabRequestTool scarabR = getScarabRequestTool(context);
-                scarabR.setCurrentModule((Module)(userModules).get(0));
+                Module module = (Module)userModules.get(0);
+                scarabR.setCurrentModule(module);
+                data.getParameters().remove(ScarabConstants.CURRENT_MODULE);
+                data.getParameters().add(ScarabConstants.CURRENT_MODULE,
+                                         module.getQueryKey());
                 setTarget(data, "SelectArtifactType.vm");
             }
             else
