@@ -55,8 +55,8 @@ database=mysql
 # -------------------------------------------------------------------
 # addSaveMethod=true, adds tracking code to determine how to save an
 # object
-# set objectModelType=complex to generate an om with collection
-# support, (not tested - please help to debug)
+# set complexObjectModel=true to generate an om with collection
+# support
 # -------------------------------------------------------------------
 
 extend=TurbineMapBuilder
