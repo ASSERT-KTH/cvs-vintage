@@ -48,15 +48,17 @@ package org.tigris.scarab.om;
 
 // JDK classes
 import java.io.Serializable;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Iterator;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
-import java.sql.Connection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import com.workingdogs.village.Record;
 
@@ -96,7 +98,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.273 2003/02/20 23:06:04 dlr Exp $
+ * @version $Id: Issue.java,v 1.274 2003/02/26 01:20:40 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -113,8 +115,8 @@ public class Issue
         "getAttributeValue";
     protected static final String GET_ATTRVALUES = 
         "getAttributeValues";
-    protected static final String GET_USERS_TO_EMAIL = 
-        "getUsersToEmail";
+    protected static final String GET_ALL_USERS_TO_EMAIL = 
+        "getAllUsersToEmail";
     protected static final String GET_USER_ATTRIBUTEVALUE = 
         "getUserAttributeValue";
     protected static final String GET_USER_ATTRIBUTEVALUES = 
@@ -1122,7 +1124,7 @@ public class Issue
      * Returns users assigned to user attributes that get emailed 
      * When issue is modified. Plus creating user.
      */
-    public List getUsersToEmailThisIssueOnly(String action, Issue issue, List users) 
+    public Set getUsersToEmail(String action, Issue issue, Set users)
         throws Exception
     {
         ScarabUser createdBy = issue.getCreatedBy();
@@ -1156,44 +1158,42 @@ public class Issue
         return users;
     }
 
-
     /**
      * Returns users assigned to user attributes that get emailed 
      * When issue is modified. Plus creating user.
      * Adds users to email for dependant issues as well.
      */
-    public List getUsersToEmail(String action) throws Exception
+    public Set getAllUsersToEmail(String action) throws Exception
     {
-        List result = null;
-        Object obj = ScarabCache.get(this, GET_USERS_TO_EMAIL, action); 
+        Set result = null;
+        Object obj = ScarabCache.get(this, GET_ALL_USERS_TO_EMAIL, action); 
         if (obj == null) 
         {        
-            List users = new ArrayList();
+            Set users = new HashSet();
             try
             {
-                users = getUsersToEmailThisIssueOnly(action, this, users);
+                users = getUsersToEmail(action, this, users);
                 List children = getChildren();
                 for (int i=0;i<children.size();i++)
                 {
                     Issue depIssue = IssueManager.getInstance(((Depend)children.get(i)).getObserverId());
-                    users = getUsersToEmailThisIssueOnly(action, depIssue, users);
+                    users = getUsersToEmail(action, depIssue, users);
                 }
+                result = users;
             }
             catch (Exception e)
             {
                 log().error("Issue.getUsersToEmail(String): ", e);
                 throw new Exception("Error in retrieving users.");
             }
-            result = users;
-            ScarabCache.put(result, this, GET_USERS_TO_EMAIL, action);
+            ScarabCache.put(result, this, GET_ALL_USERS_TO_EMAIL, action);
         }
         else 
         {
-            result = (List)obj;
+            result = (Set)obj;
         }
         return result;
     }
-
 
     /**
      * Returns the specific user's attribute value.

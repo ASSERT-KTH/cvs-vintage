@@ -46,8 +46,8 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.Collection;
 import java.util.List;
-import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.HashSet;
@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ActivitySet.java,v 1.8 2003/02/14 18:28:20 jon Exp $
+ * @version $Id: ActivitySet.java,v 1.9 2003/02/26 01:20:40 jon Exp $
  */
 public class ActivitySet 
     extends BaseActivitySet
@@ -103,9 +103,13 @@ public class ActivitySet
     public List getActivityList() throws Exception
     {
         List result = null;
-//        Object obj = ScarabCache.get(this, GET_ACTIVITY_LIST); 
-//        if (obj == null) 
-//        {        
+/* FIXME: caching is disabled here because new Activities can be
+          added to this activityset and the addition does not trigger 
+          a reset of this cache (JSS).
+        Object obj = ScarabCache.get(this, GET_ACTIVITY_LIST); 
+        if (obj == null) 
+        {
+*/
             Criteria crit = new Criteria()
                 .add(ActivityPeer.TRANSACTION_ID, getActivitySetId());
             result = ActivityPeer.doSelect(crit);
@@ -145,7 +149,7 @@ public class ActivitySet
      *   throws Exception
      */
     public boolean sendEmail(TemplateContext context, Issue issue, 
-                           List toUsers, List ccUsers,
+                           Collection toUsers, Collection ccUsers,
                            String subject, String template)
          throws Exception
     {
@@ -165,7 +169,6 @@ public class ActivitySet
         {
             Activity activity = (Activity) itr.next();
             String desc = activity.getDescription();
-            System.out.println("id: " + activity.getActivityId() + " desc: " + desc);
             set.add(desc);
         }
         context.put("uniqueActivityDescriptions", set);
@@ -189,13 +192,13 @@ public class ActivitySet
         if (toUsers == null)
         {
             // Then add users who are assigned to "email-to" attributes
-            toUsers = issue.getUsersToEmail(AttributePeer.EMAIL_TO);
+            toUsers = issue.getAllUsersToEmail(AttributePeer.EMAIL_TO);
         }
         
         if (ccUsers == null)
         {
             // add users to cc field of email
-            ccUsers = issue.getUsersToEmail(AttributePeer.CC_TO);
+            ccUsers = issue.getAllUsersToEmail(AttributePeer.CC_TO);
         }
         
         String[] replyToUser = issue.getModule().getSystemEmail();

@@ -84,7 +84,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.46 2003/02/04 11:25:59 jon Exp $
+ * @version $Id: MoveIssue.java,v 1.47 2003/02/26 01:20:40 jon Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -280,8 +280,8 @@ public class MoveIssue extends RequireLoginFirstAction
                      "email/MoveIssue.vm");
         if (!Email.sendEmail(new ContextAdapter(context), newModule,
                              user, replyToUser,
-                             issue.getUsersToEmail(AttributePeer.EMAIL_TO),
-                             issue.getUsersToEmail(AttributePeer.CC_TO),
+                             issue.getAllUsersToEmail(AttributePeer.EMAIL_TO),
+                             issue.getAllUsersToEmail(AttributePeer.CC_TO),
                              subject, template))
         {
              scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
