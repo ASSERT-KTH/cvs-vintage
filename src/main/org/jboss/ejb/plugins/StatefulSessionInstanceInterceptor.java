@@ -12,6 +12,7 @@ import java.rmi.RemoteException;
 
 import javax.ejb.EJBException;
 import javax.ejb.EJBObject;
+import javax.ejb.Handle;
 import javax.ejb.NoSuchObjectLocalException;
 import javax.ejb.TimedObject;
 import javax.ejb.Timer;
@@ -38,7 +39,7 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.44 $
+ * @version $Revision: 1.45 $
  *
  */
 public class StatefulSessionInstanceInterceptor
@@ -61,6 +62,7 @@ public class StatefulSessionInstanceInterceptor
    private static Method isIdentical;
    private static Method remove;
    private static Method ejbTimeout;
+   private static Method getEJBObject;
 
    static
    {
@@ -73,6 +75,7 @@ public class StatefulSessionInstanceInterceptor
          isIdentical = EJBObject.class.getMethod("isIdentical", new Class[]{EJBObject.class});
          remove = EJBObject.class.getMethod("remove", noArg);
          ejbTimeout = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
+         getEJBObject = Handle.class.getMethod("getEJBObject", noArg);
       }
       catch (Exception e)
       {
@@ -100,6 +103,10 @@ public class StatefulSessionInstanceInterceptor
    public Object invokeHome(Invocation mi)
       throws Exception
    {
+      // Invocation on the handle, we don't need a bean instance
+      if (getEJBObject.equals(mi.getMethod()))
+         return getNext().invokeHome(mi);
+      
       // get a new context from the pool (this is a home method call)
       InstancePool pool = container.getInstancePool();
       EnterpriseContext ctx = pool.get();
