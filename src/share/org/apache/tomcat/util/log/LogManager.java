@@ -72,11 +72,19 @@ import java.util.*;
  **/
 public class LogManager {
 
-    static LogHandler defaultChannel=null;
+    static LogHandler defaultChannel=new LogHandler();
     
     protected Hashtable loggers=new Hashtable();
     protected Hashtable channels=new Hashtable();
 
+    public  Hashtable getLoggers() {
+	return loggers;
+    }
+
+    public Hashtable getChannels() {
+	return channels;
+    }
+    
     public static void setDefault( LogHandler l ) {
 	if( defaultChannel==null)
 	    defaultChannel=l;
@@ -86,32 +94,36 @@ public class LogManager {
 	if(name==null) name="";
 
 	channels.put( name, logH );
+	Enumeration enum=loggers.keys();
+	while( enum.hasMoreElements() ) {
+	    String k=(String)enum.nextElement();
+	    Log l=(Log)loggers.get( k );
+	    if( name.equals( l.getChannel( this ) )) {
+		l.setProxy( this, logH );
+	    }
+	}
     }
     
     /** Default method to create a log facade.
      */
     public Log getLog( String channel, String prefix,
-			  Object owner ) {
+		       Object owner ) {
 	if( prefix==null && owner!=null ) {
 	    String cname = owner.getClass().getName();
 	    prefix = cname.substring( cname.lastIndexOf(".") +1);
 	}
 
-	// user-level loggers
-	Log log=new Log( channel, prefix, owner );
-	loggers.put( channel + ":" + prefix, log );
-
-	// channels 
 	LogHandler proxy=(LogHandler)channels.get(channel);
-	if( proxy!= null ) {
-	    log.setProxy( this, proxy );
-	} else {
-	    if( defaultChannel!=null )
-		log.setProxy( this, defaultChannel );
-	}
-
+	if( proxy==null ) proxy=defaultChannel;
+	
+	// user-level loggers
+	Log log=new Log( channel, prefix, proxy, owner );
+	loggers.put( channel + ":" + prefix, log );
+	if( dL > 0 )
+	    System.out.println("getLog facade " + channel + ":" + prefix);
 	return log;
     }
 
+    private static int dL=0;
 
 }    

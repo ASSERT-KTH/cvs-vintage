@@ -124,7 +124,7 @@ public class Log {
        sink/logger at runtime, and without requiring the log
        user to do any special action or be aware of the changes
     */
-    private LogHandler proxy=new LogHandler(); // the default
+    private LogHandler proxy; // the default
 
     // Used to get access to other logging channels.
     // Can be replaced with an application-specific impl.
@@ -133,9 +133,10 @@ public class Log {
 
     // -------------------- Various constructors --------------------
 
-    protected Log(String channel, String prefix, Object owner) {
+    protected Log(String channel, String prefix, LogHandler proxy, Object owner) {
 	this.logname=channel;
 	this.prefix=prefix;
+	this.proxy=proxy;
     }
 
     /**
@@ -227,17 +228,28 @@ public class Log {
      *  have been created from the default LogManager, and 
      *  provide a special manager implemetation.
      */
-    public static void setLogManager( LogManager lm ) {
+    public static LogManager setLogManager( LogManager lm ) {
 	// can be changed only once - so that user
 	// code can't change the log manager in running servers
 	if( logManager.getClass() == LogManager.class ) {
+	    LogManager oldLM=logManager;
 	    logManager=lm;
+	    return oldLM;
 	}
+	return null;
+    }
+
+    public String  getChannel( LogManager lm ) {
+	if( lm != logManager ) return null;
+	return logname;
     }
 
     public void setProxy( LogManager lm, LogHandler l ) {
 	// only the manager can change the proxy
-	if( lm!= logManager ) return;
+	if( lm!= logManager ) {
+	    System.out.println("Attempt to change proxy " + lm + " " + logManager);
+	    return;
+	}
 	proxy=l;
     }
 

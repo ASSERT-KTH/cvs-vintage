@@ -84,7 +84,7 @@ import java.util.*;
 public  class LogHandler {
 
     protected PrintWriter sink = defaultSink;
-    protected int level = Log.WARNING;
+    protected int level = Log.INFORMATION;
 
     
     /**
