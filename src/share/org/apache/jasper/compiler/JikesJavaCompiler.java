@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JikesJavaCompiler.java,v 1.1 2000/01/21 04:17:22 rubys Exp $
- * $Revision: 1.1 $
- * $Date: 2000/01/21 04:17:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JikesJavaCompiler.java,v 1.2 2000/01/21 14:54:54 rubys Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/01/21 14:54:54 $
  *
  * ====================================================================
  *
@@ -132,12 +132,6 @@ public class JikesJavaCompiler implements JavaCompiler {
           source
         };
 
-        System.out.println(
-	  compilerPath +
-          //XXX - add encoding once Jikes supports it
-          " -classpath " + classpath +
-          " -d " + outdir +
-          source);
 	try {
 	    p = Runtime.getRuntime().exec(compilerCmd);
 
