@@ -1,7 +1,7 @@
 // File: ChildGenUML.java
 // Classes: ChildGenUML
 // Original Author: jrobbins
-// $Id: ChildGenUML.java,v 1.1 1998/03/27 01:27:45 jrobbins Exp $
+// $Id: ChildGenUML.java,v 1.2 1998/04/14 00:40:42 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -19,7 +19,8 @@ public class ChildGenUML implements ChildGenerator {
     }
 
     if (o instanceof Package) {
-      return ((Package)o).getOwnedElement().elements();
+      Vector ownedElements = ((Package)o).getOwnedElement();
+      if (ownedElements != null) return ownedElements.elements();
     }
     
     if (o instanceof ElementOwnership) {

@@ -19,7 +19,7 @@
 // File: DesignMaterial.java
 // Classes: DesignMaterial
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DesignMaterial.java,v 1.3 1998/03/27 00:33:04 jrobbins Exp $
+// $Id: DesignMaterial.java,v 1.4 1998/04/14 00:40:00 jrobbins Exp $
 
 package uci.argo.kernel;
 

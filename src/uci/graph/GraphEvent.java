@@ -27,7 +27,7 @@
 // File: GraphEvent.java
 // Interfaces: GraphEvent
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GraphEvent.java,v 1.1 1998/02/12 02:34:32 jrobbins Exp $
+// $Id: GraphEvent.java,v 1.2 1998/04/14 00:40:17 jrobbins Exp $
 
 package uci.graph;
 
@@ -39,7 +39,7 @@ import java.util.EventListener;
  *  node or edge that was involved when a node or edge is added or
  *  removed. The argument is null if the entire graph changed. */
 
-public class GraphEvent extends EventObject {
+public class GraphEvent extends EventObject implements java.io.Serializable {
   ////////////////////////////////////////////////////////////////
   // instance variables
   /** The specific node, port, or arc that was modified. */

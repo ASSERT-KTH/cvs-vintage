@@ -27,7 +27,7 @@
 // File: GraphEdgeRenderer.java
 // Interfaces: GraphEdgeRenderer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GraphEdgeRenderer.java,v 1.4 1998/03/27 00:34:06 jrobbins Exp $
+// $Id: GraphEdgeRenderer.java,v 1.5 1998/04/14 00:40:16 jrobbins Exp $
 
 package uci.graph;
 

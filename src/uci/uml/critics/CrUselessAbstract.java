@@ -19,7 +19,7 @@
 // File: CrUselessAbstract.java
 // Classes: CrUselessAbstract
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUselessAbstract.java,v 1.1 1998/03/27 01:27:47 jrobbins Exp $
+// $Id: CrUselessAbstract.java,v 1.2 1998/04/14 00:41:19 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -44,8 +44,8 @@ public class CrUselessAbstract extends CrUML {
 		"To fix this problem: (1) define concrete subclasses that\n"+
 		"implement the interface of this class; or (2) make this\n"+
 		"class or one of its existing subclasses concrete");
-    setDecisionCategory(CrUML.decINHERITANCE); //needs-more-work: remove
-    addSupportedDecision(CrUML.decisionINHERITANCE);
+    addSupportedDecision(CrUML.decINHERITANCE);
+    addSupportedGoal(Goal.UNSPEC);
   }
 
   public boolean predicate(Object dm, Designer dsgr) {

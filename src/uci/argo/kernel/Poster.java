@@ -19,7 +19,7 @@
 // File: Poster.java
 // Classes: Poster
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Poster.java,v 1.3 1998/03/27 00:33:06 jrobbins Exp $
+// $Id: Poster.java,v 1.4 1998/04/14 00:40:05 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -54,6 +54,7 @@ public interface Poster {
   boolean supports(Decision d);
   Vector getSupportedDecisions();
   boolean supports(Goal g);
+  Vector getSupportedGoals();
   boolean includesKnowledgeType(int knowledgeType);
   
   ////////////////////////////////////////////////////////////////
