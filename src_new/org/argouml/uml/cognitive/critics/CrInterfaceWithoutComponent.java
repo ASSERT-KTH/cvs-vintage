@@ -1,4 +1,4 @@
-// $Id: CrInterfaceWithoutComponent.java,v 1.4 2003/06/29 23:52:58 linus Exp $
+// $Id: CrInterfaceWithoutComponent.java,v 1.5 2003/06/30 15:04:53 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrInterfaceWithoutComponent.java
 // Classes: CrInterfaceWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrInterfaceWithoutComponent.java,v 1.4 2003/06/29 23:52:58 linus Exp $
+// $Id: CrInterfaceWithoutComponent.java,v 1.5 2003/06/30 15:04:53 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 

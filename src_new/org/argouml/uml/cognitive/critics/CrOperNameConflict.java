@@ -1,4 +1,4 @@
-// $Id: CrOperNameConflict.java,v 1.8 2003/06/19 06:51:08 kataka Exp $
+// $Id: CrOperNameConflict.java,v 1.9 2003/06/30 15:09:39 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written

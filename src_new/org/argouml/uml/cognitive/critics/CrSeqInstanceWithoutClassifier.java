@@ -1,4 +1,4 @@
-// $Id: CrSeqInstanceWithoutClassifier.java,v 1.3 2003/06/29 23:52:58 linus Exp $
+// $Id: CrSeqInstanceWithoutClassifier.java,v 1.4 2003/06/30 15:12:42 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrSeqInstanceWithoutClassifier.java
 // Classes: CrSeqInstanceWithoutClassifier
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrSeqInstanceWithoutClassifier.java,v 1.3 2003/06/29 23:52:58 linus Exp $
+// $Id: CrSeqInstanceWithoutClassifier.java,v 1.4 2003/06/30 15:12:42 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -37,8 +37,6 @@ import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.behavior.common_behavior.*;
 
 import org.argouml.cognitive.*;
-import org.argouml.uml.diagram.sequence.ui.FigSeqLink;
-import org.argouml.uml.diagram.sequence.ui.FigSeqObject;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 

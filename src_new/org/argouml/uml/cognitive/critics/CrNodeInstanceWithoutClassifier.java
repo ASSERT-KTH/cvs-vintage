@@ -1,4 +1,4 @@
-// $Id: CrNodeInstanceWithoutClassifier.java,v 1.3 2003/06/29 23:52:58 linus Exp $
+// $Id: CrNodeInstanceWithoutClassifier.java,v 1.4 2003/06/30 15:06:29 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrNodeInstanceInsideElement.java
 // Classes: CrNodeInstanceWithoutClassifier
 // Original Author: jrobbins@5eichler@informatik.uni-hamburg.de
-// $Id: CrNodeInstanceWithoutClassifier.java,v 1.3 2003/06/29 23:52:58 linus Exp $
+// $Id: CrNodeInstanceWithoutClassifier.java,v 1.4 2003/06/30 15:06:29 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
