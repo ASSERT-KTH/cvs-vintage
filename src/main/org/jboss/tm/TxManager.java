@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.22 $
+ *  @version $Revision: 1.23 $
  */
 public class TxManager
 implements TransactionManager
@@ -51,7 +51,7 @@ implements TransactionManager
     *  Default timeout in milliseconds.
     *  Must be >= 1000!
     */
-   int timeOut = 60*1000; 
+   long timeOut = 5*60*1000; 
     
    // Static --------------------------------------------------------
     
@@ -207,7 +207,7 @@ implements TransactionManager
     
    public int getTransactionTimeout()
    {
-      return timeOut / 1000;
+      return (int)(timeOut / 1000);
    }
 
    /*

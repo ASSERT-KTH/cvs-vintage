@@ -43,7 +43,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  */
 class TxCapsule implements TimeoutTarget
 {
@@ -68,7 +68,7 @@ class TxCapsule implements TimeoutTarget
     *  @param timeout The timeout for this transaction in milliseconds
     *                 (timeouts are not yet implemented).
     */
-   TxCapsule(TxManager tm, int timeout)
+   TxCapsule(TxManager tm, long timeout)
    {
       this(tm);
 
@@ -106,7 +106,7 @@ class TxCapsule implements TimeoutTarget
    /**
     *  Prepare this instance for reuse.
     */
-   void reUse(int timeout)
+   void reUse(long timeout)
    {
       if (!done)
         throw new IllegalStateException();
@@ -170,11 +170,7 @@ class TxCapsule implements TimeoutTarget
             status = Status.STATUS_MARKED_ROLLBACK;
             // fall through..
          case Status.STATUS_MARKED_ROLLBACK:
-            endResources();
-            rollbackResources();
-            doAfterCompletion();
-            gotHeuristic(null, XAException.XA_HEURRB);
-            instanceDone();
+            // don't rollback for now, this messes up with the TxInterceptor.
             return;
 
          case Status.STATUS_PREPARING:
