@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.48 2004/12/20 23:15:10 mvw Exp $
+// $Id: PropPanelGeneralization.java,v 1.49 2004/12/21 14:02:42 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,10 +41,7 @@ import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.ConfigLoader;
 
 /**
- * The properties panel for a Generalization.<p>
- * 
- * TODO: this property panel needs refactoring to remove dependency on old gui
- * components.
+ * The properties panel for a Generalization.
  */
 public class PropPanelGeneralization extends PropPanelModelElement {
 

@@ -1,4 +1,4 @@
-// $Id: UMLDiscriminatorNameDocument.java,v 1.2 2004/09/20 15:28:44 mvw Exp $
+// $Id: UMLDiscriminatorNameDocument.java,v 1.3 2004/12/21 14:02:42 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,13 +22,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLPlainTextDocument;
 
 /**
+ * The document that is edited in the discriminator field of a generalization.
+ * 
  * @since Oct 10, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
