@@ -68,7 +68,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.4 2002/07/03 22:37:42 jon Exp $
+ * @version $Id: Email.java,v 1.5 2002/07/26 21:14:40 jmcnally Exp $
  */
 public class Email
 {
@@ -83,8 +83,8 @@ public class Email
         enableEmail = value;
     }
 
-    public static boolean sendEmail( TemplateContext context, 
-                                     Module module, Object fromUser,
+    public static boolean sendEmail( TemplateContext context, Module module, 
+                                     Object fromUser, Object replyToUser,
                                      List toUsers, List ccUsers,
                                      String subject, String template )
         throws Exception
@@ -129,6 +129,27 @@ public class Email
                            Turbine.getConfiguration().getString
                            (key + ".fromAddress",
                             "help@localhost"));
+            }
+
+            if (replyToUser instanceof ScarabUser)
+            {
+                ScarabUser u = (ScarabUser)replyToUser;
+                te.addReplyTo(u.getName(), u.getEmail());
+            }
+            else
+            {
+                // assume string
+                String key = (String)replyToUser;	    
+                if (fromUser == null)
+                {
+                    key = "scarab.email.default";
+                } 
+                
+                te.addReplyTo(Turbine.getConfiguration()
+                              .getString(key + ".fromName", "Scarab System"), 
+                              Turbine.getConfiguration()
+                              .getString(key + ".fromAddress",
+                                         "help@localhost"));
             }
             
             if (subject == null)
@@ -199,12 +220,13 @@ public class Email
      * Single user recipient.
      */ 
     public static boolean sendEmail( TemplateContext context, Module module,
-                                  Object fromUser, ScarabUser toUser, 
-                                  String subject, String template )
+                                     Object fromUser, Object replyToUser, 
+                                     ScarabUser toUser, 
+                                     String subject, String template )
         throws Exception
     {
         List toUsers = new LinkedList();
         toUsers.add(toUser);
-        return sendEmail( context, module, fromUser, toUsers, null, subject, template);
+        return sendEmail( context, module, fromUser, replyToUser, toUsers, null, subject, template);
     }
 }

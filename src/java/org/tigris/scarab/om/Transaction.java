@@ -71,7 +71,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Transaction.java,v 1.41 2002/07/17 22:06:28 jon Exp $
+ * @version $Id: Transaction.java,v 1.42 2002/07/26 21:14:40 jmcnally Exp $
  */
 public class Transaction 
     extends BaseTransaction
@@ -117,6 +117,12 @@ public class Transaction
         return result;
     }
 
+    public ScarabUser getCreator()
+        throws TorqueException
+    {
+        return getScarabUser();
+    }
+
     public boolean sendEmail(TemplateContext context, Issue issue)
          throws Exception
     {
@@ -143,7 +149,7 @@ public class Transaction
         context.put("attachment", getAttachment());
         context.put("activityList", getActivityList());
         
-        String fromUser = "scarab.email.modifyissue";
+        String replyToUser = "scarab.email.modifyissue";
         
         if (subject == null)
         {
@@ -181,7 +187,7 @@ public class Transaction
             }
         }
         
-        return Email.sendEmail( context, issue.getModule(), fromUser, toUsers,
-                                ccUsers, subject, template);
+        return Email.sendEmail( context, issue.getModule(), getCreator(), 
+            replyToUser, toUsers, ccUsers, subject, template);
     }
 }

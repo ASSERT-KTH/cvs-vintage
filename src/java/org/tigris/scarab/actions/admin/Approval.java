@@ -87,7 +87,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: Approval.java,v 1.19 2002/07/22 22:10:21 elicia Exp $
+    @version $Id: Approval.java,v 1.20 2002/07/26 21:14:40 jmcnally Exp $
 */
 public class Approval extends RequireLoginFirstAction
 {
@@ -220,7 +220,7 @@ public class Approval extends RequireLoginFirstAction
                     getString("scarab.email.approval.template",
                               "email/Approval.vm");
                 if (!Email.sendEmail(new ContextAdapter(context), 
-                                     module, user, toUser, subject,
+                                     module, user, null, toUser, subject,
                                      template))
                 {
                     scarabR.setAlertMessage(EMAIL_ERROR);

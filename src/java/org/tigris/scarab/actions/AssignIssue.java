@@ -103,7 +103,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.55 2002/07/15 18:52:36 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.56 2002/07/26 21:14:40 jmcnally Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -248,7 +248,7 @@ public class AssignIssue extends BaseModifyIssue
                                                             oldAttVal, newUserAttribute, 
                                                             reason);
 
-                            if (!notify(context, issue, assignee, 
+                            if (!notify(context, issue, assignee, assigner, 
                                         results[0], results[1]))
                             {
                                 getScarabRequestTool(context).setAlertMessage(EMAIL_ERROR);
@@ -272,7 +272,7 @@ public class AssignIssue extends BaseModifyIssue
                                      newUserAttribute, reason);
                     
                     // Notification email
-                    if (!notify(context, issue, assignee, 
+                    if (!notify(context, issue, assignee, assigner, 
                                 userAction, othersAction))
                     {
                          scarabR.setAlertMessage(EMAIL_ERROR);
@@ -310,7 +310,7 @@ public class AssignIssue extends BaseModifyIssue
                     userAction = ("You have been removed from " 
                                    + attrDisplayName + ".");
                     if (!notify(context, oldAttVal.getIssue(), assignee, 
-                                userAction, othersAction))
+                                assigner, userAction, othersAction))
                     {
                         getScarabRequestTool(context).setAlertMessage(EMAIL_ERROR);
                     }
@@ -362,7 +362,7 @@ public class AssignIssue extends BaseModifyIssue
      * @param othersAction <code>String</code> text to email to others.
      */
     private boolean notify(TemplateContext context, Issue issue, 
-                           ScarabUser assignee,
+                           ScarabUser assignee, ScarabUser assigner,
                            String userAction, String othersAction )     
         throws Exception
     {
@@ -375,7 +375,7 @@ public class AssignIssue extends BaseModifyIssue
         Module module = issue.getModule();
         context.put("issue", issue);
 
-        String fromUser = "scarab.email.modifyissue";
+        String replyToUser = "scarab.email.modifyissue";
         String template = Turbine.getConfiguration().
            getString("scarab.email.assignissue.template",
                      "email/AssignIssue.vm");
@@ -385,8 +385,8 @@ public class AssignIssue extends BaseModifyIssue
 
         // First notify user
         context.put("action", userAction);
-        if (!Email.sendEmail(new ContextAdapter(context), module, fromUser, 
-                            assignee, subject, template))
+        if (!Email.sendEmail(new ContextAdapter(context), module, assigner, 
+                             replyToUser, assignee, subject, template))
         {
             success = false;
         }
@@ -412,8 +412,8 @@ public class AssignIssue extends BaseModifyIssue
                 ccUsers.remove(su);  
             }
         }
-        if (!Email.sendEmail(new ContextAdapter(context), module, fromUser, 
-                            toUsers, ccUsers, subject, template))
+        if (!Email.sendEmail(new ContextAdapter(context), module, assigner, 
+                            replyToUser, toUsers, ccUsers, subject, template))
         {
             success = false;
         }

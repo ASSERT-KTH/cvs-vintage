@@ -97,7 +97,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.29 2002/04/25 18:05:31 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.30 2002/07/26 21:14:40 jmcnally Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -200,11 +200,12 @@ public class MoveIssue extends RequireLoginFirstAction
         context.put("newModule", newModule.getName());
 
         // Send notification email
-        String fromUser = "scarab.email.modifyissue";
+        String replyToUser = "scarab.email.modifyissue";
         String template = Turbine.getConfiguration().
            getString("scarab.email.moveissue.template",
                      "email/MoveIssue.vm");
-        if (!Email.sendEmail(new ContextAdapter(context), newModule, fromUser,
+        if (!Email.sendEmail(new ContextAdapter(context), newModule, 
+                             user, replyToUser,
                              issue.getUsersToEmail(AttributePeer.EMAIL_TO),
                              issue.getUsersToEmail(AttributePeer.CC_TO),
                               "Issue " +  newIssue.getUniqueId() 
