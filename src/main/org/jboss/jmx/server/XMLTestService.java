@@ -24,7 +24,7 @@ import org.w3c.dom.Document;
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
 * @created June 22, 2001
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 */
 public class XMLTestService
   extends ServiceMBeanSupport
@@ -75,8 +75,25 @@ public class XMLTestService
       // Create Test XML Document
       Document lTest = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
         new StringBufferInputStream(
-          "<jmx><invoke operation=\"stop\"><object-name name=\":service=Scheduler\"/>" +
-          "</invoke></jmx>"
+          "<jmx>" +
+          "<invoke operation=\"stop\"><object-name name=\":service=Scheduler\"/></invoke>" +
+          "<create-mbean code=\"org.jboss.util.Scheduler\">" +
+            "<object-name name=\":service=Scheduler\"/>" +
+            "<constructor>" +
+              "<argument type=\"java.lang.String\">:server=Scheduler</argument>" +
+              "<argument type=\"java.lang.String\">org.jboss.util.Scheduler$SchedulableExample</argument>" +
+              "<argument type=\"java.lang.String\">Schedulable Test,12345</argument>" +
+              "<argument type=\"java.lang.String\">java.lang.String,int</argument>" +
+              "<argument type=\"long\">0</argument>" +
+              "<argument type=\"long\">10000</argument>" +
+              "<argument type=\"long\">-1</argument>" +
+            "</constructor>" +
+          "</create-mbean>" +
+          "<set-attribute>" +
+            "<object-name name=\":service=Scheduler\"/>" +
+            "<attribute name=\"PeriodTime\">5000</attribute>" +
+          "</set-attribute>" +
+          "</jmx>"
         )
       );
       System.out.println( "Call invokeXML with: " + lTest );
