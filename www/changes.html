@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.255 2002/10/15 20:51:09 jmcnally Exp $ -->
+<!-- $Id: changes.html,v 1.256 2002/10/16 20:09:56 thierrylach Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -31,15 +31,15 @@
                     scarab.register.email.checkRFC2505 (JSS)</li>
                 <li>Added default text to change notification emails.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB125">SCB125</a>. (TL)</li>
+                    #<a href="http://issues.whichever.com/issues/id/SCB125">SCB125</a>. (TL)</li>
                 <li>Added site name to top of screen for easier site recognition.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB240">SCB240</a>. (TL)</li>
+                    #<a href="http://issues.whichever.com/issues/id/SCB240">SCB240</a>. (TL)</li>
                 <li>Modified the email process in (un)assigning users so that
                     it results in one email that includes the user in the 
                     subject. 
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB112">SCB112</a>. (TL)</li>
+                    #<a href="http://issues.whichever.com/issues/id/SCB112">SCB112</a>. (TL)</li>
             </ul>
         </td>
     </tr>
@@ -53,50 +53,50 @@
                 <li>Now, both A and MX records are checked during registration if
                     the checkRFC2505 property is defined to true.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB241">SCB241</a>. (JSS)</li>
+                    #<a href="http://issues.whichever.com/issues/id/SCB241">SCB241</a>. (JSS)</li>
                 <li>The password for the system adminstrator is now not hard-coded.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB247">SCB247</a>. (JSS)</li>
+                    #<a href="http://issues.whichever.com/issues/id/SCB247">SCB247</a>. (JSS)</li>
                 <li>Allow one to override properties in run-tests.xml.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB229">SCB229</a>. (JSS)</li>
+                    #<a href="http://issues.whichever.com/issues/id/SCB229">SCB229</a>. (JSS)</li>
                  <li>Use input value (not name) to store issue id. Prevents an 
                      npe when mass assigning users.
                      For more information, see Bug Report
-                     #<a href="http://scarab.whichever.com:8081/issues/id/SCB153">SCB153</a>. (JDM)</li>
+                     #<a href="http://issues.whichever.com/issues/id/SCB153">SCB153</a>. (JDM)</li>
                 <li>Fixed Issue list sorting problem due to sql error 
                     (for some db's, e.g. oracle) that require
                     sorted columns to also be selected in the query.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB163">SCB163</a>. (JDM)</li>
+                    #<a href="http://issues.whichever.com/issues/id/SCB163">SCB163</a>. (JDM)</li>
                 <li>Use of absolute pathname to lucene index was resulting in
                     a stacktrace on windows (non unix) platforms.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB206">SCB206</a>. (JDM)</li>
+                    #<a href="http://issues.whichever.com/issues/id/SCB206">SCB206</a>. (JDM)</li>
                 <li>Column for storing attachment data was changed from binary
                     to text.  One reason for this was to better support i18n,
                     but it also helps several issues related to Oracle.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB154">SCB154</a>. (JDM)</li>
+                    #<a href="http://issues.whichever.com/issues/id/SCB154">SCB154</a>. (JDM)</li>
                 <li>Link to the Approval template now shows up in the email
                     to notify project owners about items awaiting approval.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB182">SCB182</a>. (JDM)</li>
+                    #<a href="http://issues.whichever.com/issues/id/SCB182">SCB182</a>. (JDM)</li>
                 <li>Fixed ClassCastException when searching on attribute option
                     that involves an option hierarchy.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB272">SCB272</a>. (JDM)</li>
+                    #<a href="http://issues.whichever.com/issues/id/SCB272">SCB272</a>. (JDM)</li>
                 <li>Give alert message if deleting global issue types without
                     any issue types selected
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB42">SCB42</a>. (JDM)</li>
+                    #<a href="http://issues.whichever.com/issues/id/SCB42">SCB42</a>. (JDM)</li>
                 <li>Fixed NPE when deleting a global issue type
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB269">SCB269</a>. (JDM)</li>
+                    #<a href="http://issues.whichever.com/issues/id/SCB269">SCB269</a>. (JDM)</li>
                 <li>Attachments, including files, are copied to the new issue 
                     during a copy/move.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB271">SCB271</a>. (JDM)</li>
+                    #<a href="http://issues.whichever.com/issues/id/SCB271">SCB271</a>. (JDM)</li>
             </ul>
         </td>
     </tr>
@@ -114,10 +114,10 @@
                  <li>Database build tasks run database-specific configuration scripts
 		             before inserting data to allow for separate configuration of each database type.
                      For more information, see Bug Report
-                     #<a href="http://scarab.whichever.com:8081/issues/id/SCB129">SCB129</a>. (TL)</li>
+                     #<a href="http://issues.whichever.com/issues/id/SCB129">SCB129</a>. (TL)</li>
                  <li>Issue id and summary text is displayed as part of the "breadcrumb".
                      For more information, see Bug Report
-                     #<a href="http://scarab.whichever.com:8081/issues/id/SCB122">SCB122</a>. (TL)</li>
+                     #<a href="http://issues.whichever.com/issues/id/SCB122">SCB122</a>. (TL)</li>
                  <li>Upgraded to latest Tomcat 4.0.5. Fixes security hole in 4.0.4. (JSS)</li>
                  <li>Added Russian properties file for i18n. (JSS)</li>
                  <li>Updated French properties file for i18n. (JSS)</li>
@@ -130,29 +130,29 @@
             <ul>
                 <li>Fixed default HTML redirect to go to the configured context.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB220">
+                    #<a href="http://issues.whichever.com/issues/id/SCB220">
                     SCB220</a>. (JSS)</li>
                 <li>Building Tomcat is now optional.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB219">
+                    #<a href="http://issues.whichever.com/issues/id/SCB219">
                     SCB219</a>. (JSS)</li>
                 <li>Problem with Torque and Postgresql and boolean values
                     has now been resolved.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB189">
+                    #<a href="http://issues.whichever.com/issues/id/SCB189">
                     SCB189</a>. (JSS)</li>
                 <li>If module doesn't have any users assigned to it, then
                     add myself when creating a new template.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB179">
+                    #<a href="http://issues.whichever.com/issues/id/SCB179">
                     SCB179</a>. (JSS)</li>
                 <li>Some stored cross issuetype queries were not 
                     runnable/editable due an NPE determining the module.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB186">
+                    #<a href="http://issues.whichever.com/issues/id/SCB186">
                     SCB186</a>. (JDM)</li>
                 <li>Sorting the issue list on an attribute should work now. 
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB136">
+                    #<a href="http://issues.whichever.com/issues/id/SCB136">
                     SCB136</a>.(EWD)</li>
             </ul>
         </td>
@@ -177,58 +177,58 @@
                     to a booleanint. (JSS)</li>
                 <li>Enhanced the registration email checking.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB161">
+                    #<a href="http://issues.whichever.com/issues/id/SCB161">
                     SCB161</a>. (JSS)</li>
                 <li>Fixed bug where the name column on Attachment was not being set.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB160">
+                    #<a href="http://issues.whichever.com/issues/id/SCB160">
                     SCB160</a>. (JSS)</li>
                 <li>No longer show duplicated Assigned To column in IssueList.vm
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB134">
+                    #<a href="http://issues.whichever.com/issues/id/SCB134">
                     SCB134</a>. (JSS)</li>
                 <li>The fix for b10 for saving attributes never made it for some reason.
                     Now it is finally fixed.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB151">
+                    #<a href="http://issues.whichever.com/issues/id/SCB151">
                     SCB151</a>. (JSS)</li>
                 <li>Set created date for new comments.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB152">
+                    #<a href="http://issues.whichever.com/issues/id/SCB152">
                     SCB152</a>. (JSS)</li>
                 <li>Make the validation query customizable. Should fix
                     an Oracle usage issue. (JSS)</li>
                 <li>Don't copy CVS directories into target
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB113">
+                    #<a href="http://issues.whichever.com/issues/id/SCB113">
                     SCB113</a>. (JSS)</li>
                 <li>Fixed potential crash when editing module attributes.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB135">
+                    #<a href="http://issues.whichever.com/issues/id/SCB135">
                     SCB135</a>. (JSS)</li>
                 <li>Better formatting of comments which attempts to display
                     linebreaks as they were originally entered.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB128">
+                    #<a href="http://issues.whichever.com/issues/id/SCB128">
                     SCB128</a>. (JDM)</li>
                 <li>Fixed error in db upgrade script that required a 
                     SCARAB_MIT_LIST entry to have a non-null NAME.  Also 
                     provided another upgrade script for the next release to fix
                     the problem, if the previously buggy script was run.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB131">
+                    #<a href="http://issues.whichever.com/issues/id/SCB131">
                     SCB131</a>. (JDM)</li>
                 <li>Added quiet="true" attribute to delete's in clean-all 
                     build target, in case the dirs/files have not been created.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB171">
+                    #<a href="http://issues.whichever.com/issues/id/SCB171">
                     SCB171</a>. (JDM)</li>
                 <li>Unmatched quote in AttributeGroupEdit.vm. (JDM)</li>
                 <li>Fixed error in entry,Wizard2.vm that would generate 
                     stacktrace when an issue with unset attributes was found to
                     be a possible dupe.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB174">
+                    #<a href="http://issues.whichever.com/issues/id/SCB174">
                     SCB174</a>. (JDM)</li>
                 <li>When an attribute is added to an issue type, it should now 
                     inherit the preferred order of the options for the global attribute.
@@ -262,11 +262,11 @@
                 <li>Copy the upgrade SQL .sh scripts to the target directory. (JSS)</li>
                 <li>Empty database + cross module search = stack trace
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB4">
+                    #<a href="http://issues.whichever.com/issues/id/SCB4">
                     SCB4</a>. (JDM)</li>
                 <li>Fix crash when requesting a role.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB96">
+                    #<a href="http://issues.whichever.com/issues/id/SCB96">
                     SCB96</a>. (JDM)</li>
             </ul>
         </td>
@@ -291,7 +291,7 @@
                 <li>Upgraded to Tomcat 4.0.4. (JSS)</li>
                 <li>Can now add multiple user attributes to your project at 
                     one time.  For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB51">
+                    #<a href="http://issues.whichever.com/issues/id/SCB51">
                     SCB51</a>. (EWD)</li>
                 <li>emails now come from the user who performed that action 
                     that generated the email.  The email addresses specified 
@@ -306,39 +306,39 @@
             <ul>
                 <li>"*" key does not appear when editing an existing issue
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB99">
+                    #<a href="http://issues.whichever.com/issues/id/SCB99">
                     SCB99</a>. (JSS)</li>
                 <li>Added * by the reason for change.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB98">
+                    #<a href="http://issues.whichever.com/issues/id/SCB98">
                     SCB98</a>. (JSS)</li>
                 <li>Attributes were not being saved.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB97">
+                    #<a href="http://issues.whichever.com/issues/id/SCB97">
                     SCB97</a>. (JSS)</li>
                 <li>Applied patch for enhanced build configurability.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB89">
+                    #<a href="http://issues.whichever.com/issues/id/SCB89">
                     SCB89</a>. (JSS)</li>
                 <li>Fix problem where an if was used instead of a while loop.
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB40">
+                    #<a href="http://issues.whichever.com/issues/id/SCB40">
                     SCB40</a>. (JSS)</li>
                 <li>Fixed missing security info for ReportList.vm
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB78">
+                    #<a href="http://issues.whichever.com/issues/id/SCB78">
                     SCB78</a>. (JSS)</li>
                 <li>updated fulcrum jar to match the torque jar. 
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB64">
+                    #<a href="http://issues.whichever.com/issues/id/SCB64">
                     SCB64</a>. (JDM)</li>
                 <li>fixed misplaced table tag on ModuleQuery.vm. 
                     For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB26">
+                    #<a href="http://issues.whichever.com/issues/id/SCB26">
                     SCB26</a>. (JDM)</li>
                 <li>Applied patch to allow easy configuration of email sending
                     settings. For more information, see Bug Report
-                    #<a href="http://scarab.whichever.com:8081/issues/id/SCB25">
+                    #<a href="http://issues.whichever.com/issues/id/SCB25">
                     SCB25</a>. (JSS)</li>
                 <li>In the list of users awaiting final confirmation in order 
                     to be assigned, only show the attributes for which the 
@@ -415,7 +415,7 @@
                 <li>On ManageIssueTypes, pass all the issue type values even if it is paginated, to avoid NPE. PCN#10676 (EWD)</li>
                 <li>Fixed bug in rejecting templates. (EWD)</li>
                 <li>Fixed bug where templates were getting used even when not
-                    selected. #<a href="http://scarab.whichever.com:8081/issues/id/SCB16">SCB16</a> (EWD)</li>
+                    selected. #<a href="http://issues.whichever.com/issues/id/SCB16">SCB16</a> (EWD)</li>
                 <li>Fixed bug in re-creating issue dependency that has been deleted.# PCN#11049 (EWD)</li>
                 <li>Fixed bug in submitting project-wide enter issue templates. #PCN 11079. (EWD)</li>
                 <li>User attributes seemed to not be deleting from a module. Fixed. (EWD) </li>
