@@ -15,11 +15,6 @@ $page.setTitle("Save query")
 <form method="post" action="$action" >
 <input type="hidden" name="$queryGroup.Value.Key" value="$queryString" />
 
-<div class="functnbar">
-  <input type="submit" value="Save" name="eventSubmit_doSavequery" />&#160;
-  <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />
-</div>
-
 <p>
 Go to your <a href="$link.setPage("QueryList.vm")">Stored Query List</a>.
 </p>
