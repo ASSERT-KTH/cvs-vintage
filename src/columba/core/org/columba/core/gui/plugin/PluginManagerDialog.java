@@ -362,8 +362,8 @@ public class PluginManagerDialog
 			optionsButton.setEnabled(false);
 		} else {
 			removeButton.setEnabled(true);
-			infoButton.setEnabled(true);
-
+			infoButton.setEnabled(selectedNode.hasInfo());
+			
 			if (selectedNode == null)
 				return;
 

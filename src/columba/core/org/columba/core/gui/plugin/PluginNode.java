@@ -17,6 +17,8 @@ package org.columba.core.gui.plugin;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import org.columba.core.main.MainInterface;
+
 /**
  * @author frd
  *
@@ -32,6 +34,9 @@ public class PluginNode extends DefaultMutableTreeNode {
 	boolean category;
 	
 	boolean enabled;
+	
+	/** Lazily created Boolean stating if the plugin has info or not, can be null. */
+	Boolean hasInfo;
 
 	public PluginNode()
 	{
@@ -119,6 +124,21 @@ public class PluginNode extends DefaultMutableTreeNode {
 		category = b;
 	}
 	
+	/**
+	 * Returns true if the plugin has information about the plugin.
+	 * This attribute is created lazily, and may take a while since it
+	 * has to check for files on the file system. (Using the <code>PluginManager</code>.)
+	 * @return true if the plugin has info files; false if it doesnt have an info file.
+	 */
+	public boolean hasInfo()
+	{
+		if ( hasInfo == null )
+		{
+			hasInfo = Boolean.valueOf( MainInterface.pluginManager.getInfoURL(id) != null );
+		}
+		return hasInfo.booleanValue(); 
+	}
+	
 	public void debug()
 	{
 	 	System.out.println("id="+id);
@@ -126,6 +146,7 @@ public class PluginNode extends DefaultMutableTreeNode {
 		System.out.println("enabled="+enabled);
 		System.out.println("isCategory="+category);
 		System.out.println("description="+tooltip);
+		System.out.println("hasInfo="+hasInfo());
 		
 	}
 

@@ -238,7 +238,6 @@ public class PluginManager {
 		File pluginDirectory = getFolder(id);
 		if (pluginDirectory == null)
 			return null;
-
 		try {
 			// try all possible version of readme files...
 			File infoFile = new File(pluginDirectory, "readme.html");
@@ -248,13 +247,14 @@ public class PluginManager {
 				infoFile = new File(pluginDirectory, "Readme.html");
 			if (infoFile.exists() == false)
 				infoFile = new File(pluginDirectory, "Readme.txt");
-
-			ColumbaLogger.log.debug("infofile-URL=" + infoFile.toURL());
-			return infoFile.toURL();
+			if (infoFile.exists()){
+				ColumbaLogger.log.debug("infofile-URL=" + infoFile.toURL());
+				return infoFile.toURL(); 
+			}
 		} catch (MalformedURLException ex) {
 			NotifyDialog d = new NotifyDialog();
 			d.showDialog(ex);
-		}
+		} 
 
 		return null;
 	}
