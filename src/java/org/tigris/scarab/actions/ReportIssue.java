@@ -84,7 +84,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.31 2001/07/21 00:52:50 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.32 2001/07/28 03:33:10 elicia Exp $
 */
 public class ReportIssue extends TemplateAction
 {
@@ -299,6 +299,7 @@ public class ReportIssue extends TemplateAction
             
             if ( issue.containsMinimumAttributeValues() ) 
             {
+                issue.setCreatedBy(user.getUserId());
                 issue.save();
                 user.setReportingIssue(null);
 
