@@ -40,7 +40,7 @@ import org.jboss.minerva.jdbc.PSCacheKey;
  * also register a TransactionListener that will be notified when the
  * Transaction is finished, and release the XAConnection at that time.</P>
  * @see org.jboss.minerva.xa.TransactionListener
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionImpl implements XAConnection {
@@ -49,6 +49,7 @@ public class XAConnectionImpl implements XAConnection {
     private XAResourceImpl resource;
     private Vector listeners;
     private TransactionListener transListener;
+    private int clientConnectionCount = 0;
 
     /**
      * Creates a new transactional wrapper.
@@ -103,6 +104,8 @@ public class XAConnectionImpl implements XAConnection {
      * returned to a pool.  If not, it can be closed or returned immediately.
      */
     public void clientConnectionClosed() {
+        if(--clientConnectionCount > 0)
+            return;  // Only take action if the last connection referring to this is closed
         boolean trans = resource.isTransaction(); // could be committed directly on notification?  Seems unlikely, but let's not rule it out.
         Vector local = (Vector)listeners.clone();
         for(int i=local.size()-1; i>=0; i--)
@@ -169,6 +172,7 @@ public class XAConnectionImpl implements XAConnection {
     }
 
     public Connection getConnection() {
+        ++clientConnectionCount;
         return new XAClientConnection(this, con);
     }
 }

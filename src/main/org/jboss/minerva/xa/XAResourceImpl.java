@@ -22,7 +22,7 @@ import java.sql.*;
  * <P><FONT COLOR="RED"><B>Warning:</B></FONT></P> This implementation assumes
  * that forget will be called after a failed commit or rollback.  Otherwise,
  * the database connection will never be closed.</P>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAResourceImpl implements XAResource {
@@ -81,8 +81,8 @@ public class XAResourceImpl implements XAResource {
      *     differs depending on the exact situation.
      */
     public void commit(Xid id, boolean twoPhase) throws XAException {
-        if(active) // End was not called!
-            throw new XAException(XAException.XAER_PROTO);
+        if(active && !twoPhase) // End was not called!
+            System.err.println("WARNING: Connection not closed before transaction commit.\nConnection will not participate in any future transactions.\nAre you sure you want to be doing this?");
         if(current == null || !id.equals(current)) // wrong Xid
             throw new XAException(XAException.XAER_NOTA);
 
@@ -106,7 +106,10 @@ public class XAResourceImpl implements XAResource {
                     // Truly, neither committed nor rolled back.  Ouch!
         }
         current = null;
-        xaCon.transactionFinished();
+        if(active)
+            active = false; // No longer associated with the original transaction
+        else
+            xaCon.transactionFinished();  // No longer in use at all
     }
 
     /**
@@ -137,7 +140,7 @@ public class XAResourceImpl implements XAResource {
         current = null;
         xaCon.transactionFailed();
         if(active) // End was not called!
-            throw new XAException(XAException.XAER_PROTO);
+            System.err.println("WARNING: Connection not closed before transaction forget.\nConnection will not participate in any future transactions.\nAre you sure you want to be doing this?");
     }
 
     /**
@@ -166,7 +169,7 @@ public class XAResourceImpl implements XAResource {
      */
     public int prepare(Xid id) throws javax.transaction.xa.XAException {
         if(active) // End was not called!
-            throw new XAException(XAException.XAER_PROTO);
+            System.err.println("WARNING: Connection not closed before transaction commit.\nConnection will not participate in any future transactions.\nAre you sure you want to be doing this?");
         if(current == null || !id.equals(current)) // wrong Xid
             throw new XAException(XAException.XAER_NOTA);
 
@@ -201,7 +204,7 @@ public class XAResourceImpl implements XAResource {
      */
     public void rollback(Xid id) throws javax.transaction.xa.XAException {
         if(active) // End was not called!
-            throw new XAException(XAException.XAER_PROTO);
+            System.err.println("WARNING: Connection not closed before transaction rollback.\nConnection will not participate in any future transactions.\nAre you sure you want to be doing this?");
         if(current == null || !id.equals(current)) // wrong Xid
             throw new XAException(XAException.XAER_NOTA);
         try {
@@ -215,7 +218,10 @@ public class XAResourceImpl implements XAResource {
             throw new XAException("Rollback failed: "+e.getMessage());
         }
         current = null;
-        xaCon.transactionFinished();
+        if(active)
+            active = false; // No longer associated with the original transaction
+        else
+            xaCon.transactionFinished(); // No longer in use at all
     }
 
     /**
