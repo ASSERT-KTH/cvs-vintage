@@ -22,7 +22,7 @@ import org.jboss.logging.Log;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Hugo Pinto (mailto:hugo@hugopinto.com)
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class ServiceControl
 
@@ -107,7 +107,14 @@ public class ServiceControl
             {
                e = ((RuntimeErrorException)e).getTargetError();
             }
-            
+            else if( e instanceof RuntimeMBeanException )
+            {
+               e = ((RuntimeMBeanException)e).getTargetException();
+            }
+            else if( e instanceof MBeanException )
+            {
+               e = ((MBeanException)e).getTargetException();
+            }
             log.exception(e);
          }
       }
