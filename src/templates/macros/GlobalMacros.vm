@@ -302,7 +302,7 @@
   #set ($group = $intake.IssueTemplateInfo.mapTo($templateInfo))
   <select name="$group.ScopeId.Key">
   #foreach ($scope in $scarabR.getScopes())
-    <option value = "$scope.ScopeId" #if($scope.ScopeId.equals("$issue.ScopeId")) selected="selected" #end>
+    <option value = "$scope.ScopeId" #if($scope.ScopeId.equals("$templateInfo.ScopeId")) selected="selected" #end>
     $scope.Name
     </option>
   #end
