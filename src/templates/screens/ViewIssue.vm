@@ -85,7 +85,7 @@ $l10n.format("ViewIssueInDifferentModule", $currentIssue.Module.Name)
 
   #if ($currentIssueId && $currentIssueId.length() > 0)
     <p class="alert">
-    $l10n.IssueIdNotValid $l10n.PleaseEnterNewIssueId 
+$l10n.format("IssueIdNotValid", $currentIssueId) $l10n.PleaseEnterNewIssueId 
     </p>
   #else
     <p class="alert">
