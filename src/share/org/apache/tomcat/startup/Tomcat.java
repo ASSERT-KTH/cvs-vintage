@@ -11,7 +11,6 @@ import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.modules.config.*;
 import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.log.*;
 import org.xml.sax.*;
 import org.apache.tomcat.util.collections.*;
 import org.apache.tomcat.util.IntrospectionUtils;
@@ -26,8 +25,9 @@ import org.apache.tomcat.util.IntrospectionUtils;
  * 
  * It can be used in association with Main.java - in order to set the
  * CLASSPATH.
- * 
- * @author costin@dnt.ro
+ *
+ * @deprecated Use individual tasks instead: StopTomcat, EmbededTomcat, EnableConfig, etc.
+ * @author Costin Manolache
  */
 public class Tomcat {
 
@@ -40,7 +40,6 @@ public class Tomcat {
     static final String DEFAULT_CONFIG="conf/server.xml";
 
     Hashtable attributes=new Hashtable();
-    static Log log=Log.getLog( "tc_log", "Tomcat" );
     
     public Tomcat() {
     }
@@ -50,6 +49,7 @@ public class Tomcat {
 	if( dL > 0 ) debug( "setHome " + home );
 	attributes.put( "home", home );
     }
+
     public void setH(String home) {
 	setHome( home );
     }
@@ -110,6 +110,9 @@ public class Tomcat {
     // -------------------- execute --------------------
     
     public void execute() throws Exception {
+	if( attributes.get("home")==null )
+	    attributes.put("home", System.getProperty("tomcat.home"));
+
 	if( attributes.get("stop") != null ) {
 	    stopTomcat();
 	} else if( attributes.get("enableAdmin") != null ){
@@ -148,48 +151,15 @@ public class Tomcat {
     }
 
     public void startTomcat() throws TomcatException {
-	if( tomcat==null ) tomcat=new EmbededTomcat();
-	setTomcatProperties();
-	
-	if( ! tomcat.isInitialized() ) {
-	    long time1=System.currentTimeMillis();
-	    PathSetter pS=new PathSetter();
-	    tomcat.addInterceptor( pS );
-
-	    ServerXmlReader sxmlConf=new ServerXmlReader();
-	    if( null!=attributes.get( "config" ) )
-		sxmlConf.setConfig( (String)attributes.get("config") );
-	    tomcat.addInterceptor( sxmlConf );
-
-	    tomcat.initContextManager();
-
-	    long time2=System.currentTimeMillis();
-	    tomcat.log("Init time "  + (time2-time1));
+	try {
+	    EmbededTomcat task= new  EmbededTomcat();
+	    task.setHome( (String)attributes.get("home") );
+	    task.processArgs( (String[])attributes.get("args"));
+	    task.execute();     
+	} catch (Exception te) {
+	    throw new TomcatException( te );
 	}
-
-	long time3=System.currentTimeMillis();
-	tomcat.start();
-	long time4=System.currentTimeMillis();
-	tomcat.log("Startup " + ( time4-time3 ));
     }
-
-    private void setTomcatProperties() {
-	if( attributes.get("home") != null )
-	    tomcat.setHome( (String)attributes.get("home"));
-	if( attributes.get("install") != null )
-	    tomcat.setInstall( (String)attributes.get("install"));
-	if( attributes.get("parentClassLoader") != null )
-	    tomcat.setParentClassLoader((ClassLoader)attributes.get("parentClassLoader"));
-	if( attributes.get("commonClassLoader") != null )
-	    tomcat.setCommonClassLoader((ClassLoader)attributes.get("commonClassLoader"));
-	if( attributes.get("appsClassLoader") != null )
-	    tomcat.setAppsClassLoader( (ClassLoader)attributes.get("appsClassLoader"));
-	if( attributes.get("containerClassLoader") != null )
-	    tomcat.setContainerClassLoader( (ClassLoader)attributes.get("containerClassLoader"));
-	if( null!= attributes.get("sandbox"))
-	    tomcat.setSandbox( true );
-    }
-    
     
     // -------------------- Command-line args processing --------------------
 
@@ -210,34 +180,12 @@ public class Tomcat {
         System.out.println("In the absence of \"-enableAdmin\" and \"-stop\", Tomcat will be started");
     }
 
-
-    static String options1[]= { "help", "stop", "sandbox", "security",  "enableAdmin" };
-    static Hashtable optionAliases=new Hashtable();
-    static Hashtable optionDescription=new Hashtable();
-    static {
-	optionAliases.put("h", "home");
-	optionAliases.put("i", "install");
-	optionAliases.put("f", "config");
-	optionAliases.put("security", "sandbox");
-	optionAliases.put("?", "help");
-    }
-
-//     public String[] getOptions1() {
-// 	return options1;
-//     }
-//     public Hashtable getOptionAliases() {
-// 	return optionAliases;
-//     }
-	
-    
     /** Process arguments - set object properties from the list of args.
      */
     public  boolean processArgs(String[] args) {
 	setArgs(args);
 	try {
 	    return IntrospectionUtils.processArgs( this, args );
-	    //, args,getOptions1(),
-	    //			    null, getOptionAliases());
 	} catch( Exception ex ) {
 	    ex.printStackTrace();
 	    return false;
@@ -254,9 +202,6 @@ public class Tomcat {
     /** Called by Main to set non-string properties
      */
     public void setAttribute(String s,Object o) {
-	if( optionAliases.get( s ) !=null )
-	    s=(String)optionAliases.get( s );
-
 	if ( "args".equals(s) ) {
 	    String args[]=(String[])o;
 	    boolean ok=processArgs( args );
@@ -277,11 +222,11 @@ public class Tomcat {
 	    tomcat.processArgs( args );
             tomcat.execute();
 	} catch(Exception ex ) {
-	    log.log(sm.getString("tomcat.fatal"), ex);
+	    ex.printStackTrace();
 	    System.exit(1);
 	}
     }
-
+    
     private static int dL=0;
     private void debug( String s ) {
 	System.out.println("Tomcat: " + s );
