@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  @author  Scott.Stark@jboss.org
  @author  Christoph.Jung@infor.de
  @author  Thomas.Diesler@arcor.de
- @version $Revision: 1.88 $
+ @version $Revision: 1.89 $
  */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
@@ -101,6 +101,8 @@ public abstract class AbstractWebContainer
 
    /** The default security-domain name to use */
    protected String defaultSecurityDomain = "java:/jaas/other";
+   /** The request attribute name under which the JAAS Subject is store */
+   private String subjectAttributeName = null;
    /** The ServiceController used to control web app startup dependencies */
    private ServiceControllerMBean serviceController;
 
@@ -197,6 +199,22 @@ public abstract class AbstractWebContainer
    {
       this.defaultSecurityDomain = defaultSecurityDomain;
    }
+
+   /** Get the session attribute number under which the caller Subject is stored
+    * @jmx:managed-attribute
+    */ 
+   public String getSubjectAttributeName()
+   {
+      return subjectAttributeName;
+   }
+   /** Set the session attribute number under which the caller Subject is stored
+    * @jmx:managed-attribute
+    */ 
+   public void setSubjectAttributeName(String subjectAttributeName)
+   {
+      this.subjectAttributeName = subjectAttributeName;
+   }
+
 
    public abstract AbstractWebDeployer getDeployer(DeploymentInfo di) throws Exception;
 
