@@ -74,7 +74,7 @@ import org.tigris.scarab.util.Log;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.53 2002/10/08 05:38:32 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.54 2002/10/10 01:53:53 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -89,6 +89,7 @@ public class ScarabLink extends TemplateLink
     private ScarabRequestTool scarabR;
     private boolean isOmitModule;
     private boolean isOmitIssueType;
+    private boolean overrideSecurity;
 
     /**
      * Constructor.
@@ -130,6 +131,7 @@ public class ScarabLink extends TemplateLink
         super.removePathInfo(TEMPLATE_KEY);
         isOmitModule = false;
         isOmitIssueType = false;
+        overrideSecurity = false;
     }
 
     /**
@@ -160,11 +162,28 @@ public class ScarabLink extends TemplateLink
      * Causes the link to not include the issue type id.  Useful for templates
      * where a issue type is not required or desired.
      *
-     * @return a <code>ScarabLink</code> value
+     * @return this
      */
     public ScarabLink omitIssueType()
     {
         isOmitIssueType = true;
+        return this;
+    }
+
+    /**
+     * Shuts off permission checking.  Use case: a user saves a query with
+     * module scope, so an email is sent to the project owner to approve it.
+     * The email is sent from the user who does not have permission to
+     * use the Approval.vm template.  But it is known that the recipient(s) 
+     * does, because that is how they are chosen to receive the email.
+     * We probably need a different link tool for emails that is not
+     * request based. but for now use this sparingly and with forethought.
+     *
+     * @return this
+     */
+    public ScarabLink overrideSecurity()
+    {
+        overrideSecurity = true;
         return this;
     }
   
@@ -416,7 +435,7 @@ public class ScarabLink extends TemplateLink
      */
     public boolean isAllowed()
     {
-        boolean allowed = isAllowed(getPage());
+        boolean allowed = overrideSecurity || isAllowed(getPage());
 
         if ( !allowed ) 
         {
