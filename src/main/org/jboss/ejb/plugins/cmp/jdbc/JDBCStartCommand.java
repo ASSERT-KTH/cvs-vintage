@@ -12,7 +12,10 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import javax.sql.DataSource;
 import javax.ejb.EJBException;
 
@@ -32,17 +35,16 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JDBCStartCommand {
 
+   private final static Object CREATED_TABLES_KEY = new Object();
    private JDBCStoreManager manager;
    private JDBCEntityBridge entity;
    private JDBCEntityMetaData entityMetaData;
    private Logger log;
    
-   private HashSet createdTables = new HashSet();
-
    public JDBCStartCommand(JDBCStoreManager manager) {
       this.manager = manager;
       entity = manager.getEntityBridge();
@@ -53,6 +55,16 @@ public class JDBCStartCommand {
             this.getClass().getName() + 
             "." + 
             manager.getMetaData().getName());
+
+      // Create the created tables set
+      Map applicationData = manager.getApplicationDataMap();
+      synchronized(applicationData) {
+         if(!applicationData.containsKey(CREATED_TABLES_KEY)) {
+            applicationData.put(
+                  CREATED_TABLES_KEY,
+                  Collections.synchronizedSet(new HashSet()));
+         }
+      }
    }
 
    public void execute() throws Exception {
@@ -134,10 +146,6 @@ public class JDBCStartCommand {
 
          // commit the transaction
          manager.getContainer().getTransactionManager().commit ();
-
-         // success
-         log.info("Created table '" + tableName + "' successfully.");
-         createdTables.add(tableName);
       } catch (Exception e) {
          log.debug("Could not create table " + tableName, e);
          try {
@@ -149,6 +157,11 @@ public class JDBCStartCommand {
          JDBCUtil.safeClose(statement);
          JDBCUtil.safeClose(con);
       }
+
+      // success
+      log.info("Created table '" + tableName + "' successfully.");
+      Set createdTables = (Set)manager.getApplicationData(CREATED_TABLES_KEY);
+      createdTables.add(tableName);
    }
 
    private boolean tableExists(
@@ -279,6 +292,7 @@ public class JDBCStartCommand {
          JDBCCMPFieldBridge[] referencesFields) {
 
       // can only alter tables we created
+      Set createdTables = (Set)manager.getApplicationData(CREATED_TABLES_KEY);
       if(!createdTables.contains(tableName)) {
          return;
       }
