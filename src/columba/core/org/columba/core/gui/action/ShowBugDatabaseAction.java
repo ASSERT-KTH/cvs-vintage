@@ -65,7 +65,7 @@ public class ShowBugDatabaseAction extends FrameAction {
 	public void actionPerformed(ActionEvent evt) {
 		URLController c = new URLController();
 		try {
-			c.open(new URL("http://www.sourceforge.net/projects/columba/bugs"));
+			c.open(new URL("http://columba.sourceforge.net/phpBB2/viewforum.php?f=15"));
 		} catch (MalformedURLException mue) {
 		}
 	}

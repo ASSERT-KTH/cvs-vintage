@@ -65,7 +65,7 @@ public class ShowFAQAction extends FrameAction {
 		URLController c = new URLController();
 		try {
 			c.open(
-				new URL("http://columba.sourceforge.net/index.php?page=faq"));
+				new URL("http://columba.sourceforge.net/faq_user.php"));
 		} catch (MalformedURLException mue) {
 		}
 	}
