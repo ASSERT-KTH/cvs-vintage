@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLUtil.java,v 1.5 2000/01/12 06:35:21 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/01/12 06:35:21 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLUtil.java,v 1.6 2000/02/29 22:42:44 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/02/29 22:42:44 $
  *
  * ====================================================================
  *
@@ -79,14 +79,7 @@ public class URLUtil {
     public static URL resolve(String s)
 	throws MalformedURLException
     {
-        return resolve(s, null);
-    }
-
-    public static URL resolve(String s, URL url)
-	throws MalformedURLException
-    {
         URL resolve = null;
-
 	// construct a URL via the following heuristics:
 	//
 	//    if arg contains ":/" then
@@ -102,13 +95,13 @@ public class URLUtil {
 	if (s.indexOf("://") > -1 ||
             s.indexOf("file:") > -1 ) {
 	    resolve = new URL(s);
-	} else if (url != null) {
-	    resolve = new URL(url, s);
+	    // 	} else if (url != null) {
+	    // 	    resolve = new URL(url, s);
 	} else if (s.startsWith(File.separator) ||
             s.startsWith("/") ||
 	    (s.length() >= 2 &&
-	        Character.isLetter(s.charAt(0)) &&
-	        s.charAt(1) == ':')) {
+	     Character.isLetter(s.charAt(0)) &&
+	     s.charAt(1) == ':')) {
             String fName = s;
 
             try {
@@ -124,19 +117,19 @@ public class URLUtil {
 
 	    resolve = new URL("file", "", path);
 	}
-
+	
         if (! resolve.getProtocol().equalsIgnoreCase("war") &&
             resolve.getFile().toLowerCase().endsWith(
-                "." + "war")) {
+						     "." + "war")) {
             URL u = new URL("war" + ":" +
-                resolve.toString());
-
+			    resolve.toString());
+	    
             resolve = u;
         }
 
         resolve = new URL(trim(resolve.toString(), ".", ".."));
         resolve = new URL(trim(resolve.toString(), "./"));
-
+	
 	return resolve;
     }
 

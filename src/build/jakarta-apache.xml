@@ -91,14 +91,20 @@
   
     <!-- logs -->
     <target name="logs.get"  depends="init">
-        <get src="ftp://tokyo.javasoft.com/pub/jakarta/tomcat-test.log" 
-             dest="${nightly.dir}/log/tomcat-test-SunOS-${DSTAMP}.log" ignoreErrors="true" />
-        <get src="ftp://tokyo.javasoft.com/pub/jakarta/watchdog-test.log" 
-             dest="${nightly.dir}/log/watchdog-test-SunOS-${DSTAMP}.log" ignoreErrors="true" />
+        <get src="ftp://tokyo.javasoft.com/pub/jakarta/build.log" 
+             dest="${nightly.dir}/log/build-Solaris-${DSTAMP}.log" ignoreErrors="true" />
+
+        <get src="ftp://tokyo.javasoft.com/pub/jakarta/test-tomcat.log" 
+             dest="${nightly.dir}/log/test-tomcat-Solaris-${DSTAMP}.log" ignoreErrors="true" />
+
+        <get src="ftp://tokyo.javasoft.com/pub/jakarta/test-watchdog.log" 
+             dest="${nightly.dir}/log/test-watchdog-Solaris-${DSTAMP}.log" ignoreErrors="true" />
+
         <get src="ftp://osaka.javasoft.com/pub/jakarta/watchdog-test.log" 
-             dest="${nightly.dir}/log/watchdog-test-Linux-i386-${DSTAMP}.log" ignoreErrors="true" />
-        <get src="ftp://osaka.javasoft.com/pub/jakarta/tomcat-test.log" 
-             dest="${nightly.dir}/log/tomcat-test-Linux-i386-${DSTAMP}.log" ignoreErrors="true" />
+             dest="${nightly.dir}/log/test-watchdog-Linux-i386-${DSTAMP}.log" ignoreErrors="true" />
+
+        <get src="ftp://osaka.javasoft.com/pub/jakarta/test-tomcat.log" 
+             dest="${nightly.dir}/log/test-tomcat-Linux-i386-${DSTAMP}.log" ignoreErrors="true" />
     </target>
 
     <!-- native packages -->
@@ -182,7 +188,7 @@
   <target name="src.snap" depends="init,remove-old,cvsget" >
   </target>
 
-  <target name="bin.snap" depends="init,binaries.get,tar" >
+  <target name="bin.snap" depends="init,binaries.get,logs.get,tar" >
   </target>
   
 </project>

@@ -595,7 +595,6 @@ public class Context {
     
     public String toString() {
 	return "Ctx(" + path + "," + getDocBase() + ")";
-	// + " , " + getDocumentBase() + " ) ";
     }
 
     // -------------------- Facade methods --------------------
@@ -879,12 +878,33 @@ public class Context {
      */
     public URL getDocumentBase() {
 	if( documentBase == null ) {
-	    if( docBase != null)
-		try {
-		    documentBase=URLUtil.resolve( docBase );
-		} catch( MalformedURLException ex ) {
-		    ex.printStackTrace();
+	    if( docBase == null)
+		return null;
+	    try {
+		String absPath=docBase;
+		
+		// detect absolute path
+		if (docBase.startsWith(File.separator) ||
+		    docBase.startsWith("/") ||
+		    (  docBase.length() >= 2 &&
+		       Character.isLetter(docBase.charAt(0)) &&
+		       docBase.charAt(1) == ':')
+		    ) {
+		    absPath=docBase;
+		} else {
+		    absPath = contextM.getHome() + File.separator + docBase;
 		}
+		
+		try {
+		    absPath = new File(absPath).getCanonicalPath();
+		} catch (IOException npe) {
+		}
+		
+		documentBase = new URL("file", "", absPath);
+		
+	    } catch( MalformedURLException ex ) {
+		ex.printStackTrace();
+	    }
 	}
         return documentBase;
     }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/j2ee/org/apache/tomcat/shell/deployment/Attic/Config.java,v 1.1 2000/02/11 00:22:37 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/02/11 00:22:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/j2ee/org/apache/tomcat/shell/deployment/Attic/Config.java,v 1.2 2000/02/29 22:42:43 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/02/29 22:42:43 $
  *
  * ====================================================================
  *
@@ -142,7 +142,7 @@ public class Config {
 	    // 	    loadConfig(is, validate);
 	} else {
 	    try {
-	        configURL = URLUtil.resolve(configFile, null);
+	        configURL = URLUtil.resolve(configFile);
 	    } catch (MalformedURLException mue) {
 	        String msg = sm.getString("startup.loadconfig.mue",
 		    configFile);

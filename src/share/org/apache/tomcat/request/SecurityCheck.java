@@ -181,7 +181,8 @@ public class SecurityCheck extends  BaseInterceptor {
 		    session.setAttribute( "tomcat.credential", c );
 		} else {
 		    // wrong password
-		    errorPage( req, response );
+		    if( username!=null)
+			errorPage( req, response );
 		}
 	    } 
 	}

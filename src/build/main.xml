@@ -1,4 +1,4 @@
-<project name="source-snapshots" default="tomcat" basedir=".">
+<project name="source-snapshots" default="all" basedir=".">
    <!-- ******************** Initialization ******************** -->
   <target name="init">
     <tstamp />
@@ -23,8 +23,6 @@
   <target name="clean" depends="init">
      <deltree dir="${ws.dir}/build" />
      <deltree dir="${ws.dir}/dist" />
-     <deltree dir="${dist.dir}/ant" />
-     <deltree dir="${dist.dir}/tomcat" />
   </target>
 
    <target name="remove-old"  depends="init">
@@ -36,9 +34,9 @@
    <!-- Use "native" directory structure -->
  
   <target name="tomcat" depends="init">
-     <ant dir="${ws.dir}/jakarta-tomcat" antfile="${ws.dir}/jakarta-tomcat/build.xml" target="dist" />
-     <zip zipfile="${package.dir}/jakarta/tomcat-${os.name}-${DSTAMP}.zip" basedir="${ws.dir}/dist" 
-          items="tomcat" />
+     <ant dir="${ws.dir}/jakarta-tomcat" antfile="${ws.dir}/jakarta-tomcat/build.xml" target="dist" >
+        <property name="tomcat.home" value="${ws.dir}/dist/tomcat" />
+     </ant>
   </target>
 
   <target name="ant" depends="init">
@@ -46,20 +44,30 @@
      <ant dir="${ws.dir}/jakarta-ant" antfile="${ws.dir}/jakarta-ant/build.xml" target="dist" > 
         <property name="ant.dist.dir" value="${ws.dir}/dist/ant" />
      </ant>
-     <zip zipfile="${package.dir}/jakarta/ant-${os.name}-${DSTAMP}.zip" basedir="${ws.dir}/dist" items="ant"/>
   </target>
 
    <target name="watchdog" depends="init">
-     <ant dir="${ws.dir}/jakarta-watchdog" antfile="${ws.dir}/jakarta-watchdog/build.xml" target="dist" />
+     <ant dir="${ws.dir}/jakarta-watchdog" antfile="${ws.dir}/jakarta-watchdog/build.xml" target="install.dist" >
+        <property name="watchdog.dist" value="${ws.dir}/dist/watchdog" />
+        <property name="tomcat.home" value="${ws.dir}/dist/tomcat" />
+     </ant>
+   </target>
+
+   <target name="packages" depends="init">
+     <zip zipfile="${package.dir}/jakarta/tomcat-${os.name}-${DSTAMP}.zip" basedir="${ws.dir}/dist" 
+          items="tomcat" />
+     <zip zipfile="${package.dir}/jakarta/ant-${os.name}-${DSTAMP}.zip" basedir="${ws.dir}/dist" items="ant"/>
    </target>
 
    <!-- ******************** Testing  ******************** -->
    <target name="tomcat-test" depends="init">
-     <exec dir="${ws.dir}/build/tomcat/test" command="runtest" output="${package.dir}/tomcat/tomcat-test.log" />
+     <ant dir="${ws.dir}/dist/tomcat" antfile="${ws.dir}/dist/tomcat/conf/test-tomcat.xml" 
+          output="${package.dir}/jakarta/test-${os.name}-${DSTAMP}.log" />
    </target>
 
    <target name="watchdog-test" depends="init">
-     <exec dir="${ws.dir}/build/watchdog" command="runtest" output="${package.dir}/tomcat/watchdog-test.log" />
+     <ant dir="${ws.dir}/dist/tomcat" antfile="${ws.dir}/dist/tomcat/conf/test-tomcat.xml" 
+          output="${package.dir}/jakarta/watchdog-${os.name}-${DSTAMP}.log" />
    </target>
 
    <target name="test-apache" depends="init">
@@ -106,14 +114,11 @@
   </target>
 
    <!-- ******************** Agregate targets  ******************** -->
-  <target name="build" depends="init,ant,tomcat">
+  <target name="build" depends="init,">
   </target>
 
-  <target name="all" depends="init,clean,build,remove-old">
+  <target name="all" depends="init,clean,ant,tomcat,watchdog,packages,remove-old">
   </target>
 
-  <target name="test" depends="init,tomcat-test,watchdog-test">
-  </target>
-  
 </project>
 
