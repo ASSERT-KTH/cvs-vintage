@@ -1,5 +1,5 @@
 
-// $Id: TableModelStateByProps.java,v 1.5 2003/08/31 15:19:42 alexb Exp $
+// $Id: TableModelStateByProps.java,v 1.6 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import java.beans.*;
 
 import ru.novosoft.uml.behavior.state_machines.*;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.uml.*;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 
@@ -44,8 +44,8 @@ import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
  *             at the moment is to clean argouml of un maintained code.
  */
 public class TableModelStateByProps extends TableModelComposite {
-    protected static Category cat = 
-        Category.getInstance(TableModelStateByProps.class);
+    protected static Logger cat = 
+        Logger.getLogger(TableModelStateByProps.class);
     ////////////////
     // constructor
     public TableModelStateByProps() { }

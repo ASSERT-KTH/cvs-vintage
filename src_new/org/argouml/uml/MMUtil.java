@@ -1,4 +1,4 @@
-// $Id: MMUtil.java,v 1.25 2003/08/30 22:04:19 alexb Exp $
+// $Id: MMUtil.java,v 1.26 2003/09/04 20:11:43 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // Original Author: not known
 package org.argouml.uml;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import org.argouml.model.uml.UmlFactory;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
@@ -38,7 +38,7 @@ import ru.novosoft.uml.model_management.MModel;
  */
 public class MMUtil {
 
-    Category cat = Category.getInstance(org.argouml.uml.MMUtil.class);
+    Logger cat = Logger.getLogger(org.argouml.uml.MMUtil.class);
 
     public static MMUtil SINGLETON = new MMUtil();
 

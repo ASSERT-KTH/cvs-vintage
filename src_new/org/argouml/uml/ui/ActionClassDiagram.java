@@ -1,4 +1,4 @@
-// $Id: ActionClassDiagram.java,v 1.11 2003/05/02 12:12:50 kataka Exp $
+// $Id: ActionClassDiagram.java,v 1.12 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
@@ -33,7 +33,7 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
  *  @stereotype singleton
  */
 public class ActionClassDiagram extends ActionAddDiagram {
-    private Category cat = Category.getInstance(this.getClass());
+    private Logger cat = Logger.getLogger(this.getClass());
 
     ////////////////////////////////////////////////////////////////
     // static variables

@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.28 2003/08/22 17:37:30 bobtarling Exp $
+// $Id: UmlFactory.java,v 1.29 2003/09/04 20:11:48 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.behavioralelements.activitygraphs.ActivityGraphsFactory;
 import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsFactory;
@@ -146,8 +146,8 @@ public class UmlFactory extends AbstractUmlModelFactory {
 
     /** Log4j logging category.
      */
-    private Category logger =
-	Category.getInstance("org.argouml.model.uml.factory");
+    private Logger logger =
+	Logger.getLogger("org.argouml.model.uml.factory");
 
     /**
      * A map of valid connections keyed by the connection type.

@@ -1,4 +1,4 @@
-// $Id: ActionSaveGraphics.java,v 1.13 2003/06/30 21:59:34 linus Exp $
+// $Id: ActionSaveGraphics.java,v 1.14 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ProjectBrowser;
@@ -55,8 +55,8 @@ import org.tigris.gef.util.Util;
  */
 
 public class ActionSaveGraphics extends UMLAction {
-    protected static Category cat =
-	Category.getInstance(ActionSaveGraphics.class);
+    protected static Logger cat =
+	Logger.getLogger(ActionSaveGraphics.class);
 
     ////////////////////////////////////////////////////////////////
     // static variables

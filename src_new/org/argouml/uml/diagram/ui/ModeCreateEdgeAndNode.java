@@ -1,4 +1,4 @@
-// $Id: ModeCreateEdgeAndNode.java,v 1.18 2003/09/01 23:13:20 alexb Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.19 2003/09/04 20:11:47 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.18 2003/09/01 23:13:20 alexb Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.19 2003/09/04 20:11:47 thierrylach Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -40,7 +40,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.tigris.gef.base.Editor;
@@ -70,8 +70,8 @@ import org.tigris.gef.presentation.Handle;
  *  and connecting it to other model elements. */
 
 public class ModeCreateEdgeAndNode extends ModeCreate {
-    protected static Category cat =
-        Category.getInstance(ModeCreateEdgeAndNode.class);
+    protected static Logger cat =
+        Logger.getLogger(ModeCreateEdgeAndNode.class);
     ////////////////////////////////////////////////////////////////
     // static variables
     public static int Drags_To_Existing = 0;

@@ -1,4 +1,4 @@
-// $Id: TabHistory.java,v 1.8 2003/09/04 15:12:22 thierrylach Exp $
+// $Id: TabHistory.java,v 1.9 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.kernel.History;
 import org.argouml.kernel.HistoryEvent;
@@ -66,8 +66,8 @@ public class TabHistory extends TabSpawnable
 {
 	// TODO Replace deprecated History* with TargetManager
 	
-    protected static Category cat = 
-        Category.getInstance(TabHistory.class);
+    protected static Logger cat = 
+        Logger.getLogger(TabHistory.class);
 
     ////////////////////////////////////////////////////////////////
     // class variables

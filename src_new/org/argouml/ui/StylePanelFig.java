@@ -1,4 +1,4 @@
-// $Id: StylePanelFig.java,v 1.15 2003/08/22 13:59:07 jjones Exp $
+// $Id: StylePanelFig.java,v 1.16 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.Document;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.tigris.gef.ui.ColorRenderer;
@@ -52,8 +52,8 @@ import org.tigris.gef.ui.ColorRenderer;
 public class StylePanelFig extends StylePanel
     implements ItemListener, FocusListener, KeyListener 
 {
-    protected static Category cat = 
-        Category.getInstance(StylePanelFig.class);
+    protected static Logger cat = 
+        Logger.getLogger(StylePanelFig.class);
 
     ////////////////////////////////////////////////////////////////
     // constants

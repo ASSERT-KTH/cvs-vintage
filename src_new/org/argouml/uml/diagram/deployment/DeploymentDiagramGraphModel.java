@@ -1,4 +1,4 @@
-// $Id: DeploymentDiagramGraphModel.java,v 1.27 2003/09/01 17:56:36 bobtarling Exp $
+// $Id: DeploymentDiagramGraphModel.java,v 1.28 2003/09/04 20:11:48 thierrylach Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.diagram.deployment;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorHelper;
 import org.argouml.model.uml.foundation.core.CoreHelper;
@@ -42,8 +42,8 @@ import ru.novosoft.uml.model_management.*;
 public class DeploymentDiagramGraphModel extends UMLMutableGraphSupport
     implements VetoableChangeListener 
 {
-    protected static Category cat =
-	Category.getInstance(DeploymentDiagramGraphModel.class);
+    protected static Logger cat =
+	Logger.getLogger(DeploymentDiagramGraphModel.class);
 
     /** The "home" UML model of this diagram, not all ModelElements in this
      *  graph are in the home model, but if they are added and don't

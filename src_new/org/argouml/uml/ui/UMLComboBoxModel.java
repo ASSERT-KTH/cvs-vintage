@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel.java,v 1.23 2003/09/04 19:11:17 thierrylach Exp $
+// $Id: UMLComboBoxModel.java,v 1.24 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,14 +25,14 @@
 // File: UMLComboBoxModel.java
 // Classes: UMLComboBoxModel
 // Original Author: 
-// $Id: UMLComboBoxModel.java,v 1.23 2003/09/04 19:11:17 thierrylach Exp $
+// $Id: UMLComboBoxModel.java,v 1.24 2003/09/04 20:11:44 thierrylach Exp $
 
 package org.argouml.uml.ui;
 
 import org.argouml.ui.*;
 import org.argouml.uml.*;
 import org.argouml.kernel.*;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.*;
 
 import java.lang.reflect.*;
@@ -69,8 +69,8 @@ import ru.novosoft.uml.behavior.use_cases.*;
 
 public class UMLComboBoxModel extends AbstractListModel implements
     ComboBoxModel, UMLUserInterfaceComponent, ActionListener {
-    protected static Category cat = 
-        Category.getInstance(UMLComboBoxModel.class);
+    protected static Logger cat = 
+        Logger.getLogger(UMLComboBoxModel.class);
         
 
 

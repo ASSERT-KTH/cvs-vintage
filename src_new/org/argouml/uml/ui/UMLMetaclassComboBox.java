@@ -1,4 +1,4 @@
-// $Id: UMLMetaclassComboBox.java,v 1.5 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLMetaclassComboBox.java,v 1.6 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 package org.argouml.uml.ui;
 import javax.swing.*;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import java.awt.event.*;
 import java.lang.reflect.*;
@@ -42,7 +42,7 @@ public class UMLMetaclassComboBox
     extends JComboBox 
     implements UMLUserInterfaceComponent, ItemListener 
 {
-    protected static Category cat = Category.getInstance(UMLMetaclassComboBox.class);
+    protected static Logger cat = Logger.getLogger(UMLMetaclassComboBox.class);
 
     private String[] _metaclasses = {
 	"ModelElement",

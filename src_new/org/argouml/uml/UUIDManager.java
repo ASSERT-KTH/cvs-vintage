@@ -1,6 +1,6 @@
 
 
-// $Id: UUIDManager.java,v 1.8 2003/08/31 16:11:06 alexb Exp $
+// $Id: UUIDManager.java,v 1.9 2003/09/04 20:11:43 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,14 +32,14 @@ import java.util.Iterator;
 import java.net.UnknownHostException;
 import java.rmi.server.UID;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.security.ArgoSecurityManager;
 import org.argouml.model.ModelFacade;
 
 /** @stereotype singleton
  */
 public class UUIDManager {
-    protected static Category cat = Category.getInstance(UUIDManager.class);
+    protected static Logger cat = Logger.getLogger(UUIDManager.class);
 
     ////////////////////////////////////////////////////////////////
     // static variables

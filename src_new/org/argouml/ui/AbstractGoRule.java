@@ -1,4 +1,4 @@
-// $Id: AbstractGoRule.java,v 1.13 2003/06/30 18:00:23 linus Exp $
+// $Id: AbstractGoRule.java,v 1.14 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.util.Iterator;
 
 import javax.swing.tree.TreeModel;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 /**
  * Abstract class to be used as a convenience class for implementing
@@ -47,8 +47,8 @@ import org.apache.log4j.Category;
  */
 public abstract class AbstractGoRule implements TreeModel {
 
-    private static Category cat =
-        Category.getInstance(org.argouml.ui.AbstractGoRule.class);
+    private static Logger cat =
+        Logger.getLogger(org.argouml.ui.AbstractGoRule.class);
  
 
     // ----------- TreeModel helpers -----------

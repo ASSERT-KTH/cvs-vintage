@@ -1,5 +1,5 @@
 
-// $Id: UMLComboBoxModel2.java,v 1.30 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: UMLComboBoxModel2.java,v 1.31 2003/09/04 20:11:43 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ import java.util.List;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.targetmanager.TargetEvent;
@@ -55,8 +55,8 @@ public abstract class UMLComboBoxModel2
     extends AbstractListModel
     implements MElementListener, ComboBoxModel, TargetListener {
 
-    private static Category log =
-        Category.getInstance("org.argouml.uml.ui.UMLComboBoxModel2");
+    private static Logger log =
+        Logger.getLogger("org.argouml.uml.ui.UMLComboBoxModel2");
 
     /**
      * The taget of the comboboxmodel. This is some UML modelelement

@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.17 2003/08/26 18:56:04 linus Exp $
+// $Id: ProjectManager.java,v 1.18 2003/09/04 20:11:50 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import java.util.zip.ZipInputStream;
 import javax.swing.event.EventListenerList;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.cognitive.ProjectMemberTodoList;
 import org.argouml.model.uml.UmlHelper;
@@ -64,7 +64,7 @@ public final class ProjectManager {
 	"currentProject";
     public static final String SAVE_STATE_PROPERTY_NAME = "saveState";
 
-    private Category cat = Category.getInstance(this.getClass());
+    private Logger cat = Logger.getLogger(this.getClass());
 
     /**
      * The singleton instance of this class

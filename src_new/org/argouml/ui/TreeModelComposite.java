@@ -1,4 +1,4 @@
-// $Id: TreeModelComposite.java,v 1.16 2003/06/29 23:47:02 linus Exp $
+// $Id: TreeModelComposite.java,v 1.17 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.ui;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 /**
  * This class is the TreeModel for the navigator and todo list panels.
@@ -36,12 +36,12 @@ import org.apache.log4j.Category;
  * that determine how to link parents to children in the tree. Those
  * rules can now be found in PerspectiveSupport.
  *
- * <p>$Id: TreeModelComposite.java,v 1.16 2003/06/29 23:47:02 linus Exp $
+ * <p>$Id: TreeModelComposite.java,v 1.17 2003/09/04 20:11:45 thierrylach Exp $
  */
 public class TreeModelComposite extends TreeModelSupport implements TreeModel {
 
-    private static Category cat =
-        Category.getInstance(TreeModelComposite.class);
+    private static Logger cat =
+        Logger.getLogger(TreeModelComposite.class);
 
     /** root of the model */
     protected Object _root;

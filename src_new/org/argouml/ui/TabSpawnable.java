@@ -1,4 +1,4 @@
-// $Id: TabSpawnable.java,v 1.16 2003/08/30 18:59:43 bobtarling Exp $
+// $Id: TabSpawnable.java,v 1.17 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.cognitive.ui.TabToDoTarget;
 import org.argouml.swingext.Orientable;
@@ -48,7 +48,7 @@ import org.argouml.uml.ui.TabModelTarget;
  */
 public class TabSpawnable extends JPanel implements Cloneable, Orientable {
         
-    private Category cat = Category.getInstance(TabSpawnable.class);
+    private Logger cat = Logger.getLogger(TabSpawnable.class);
     
     public final int OVERLAPP = 30;
   

@@ -1,5 +1,5 @@
 
-// $Id: ToDoPane.java,v 1.26 2003/09/01 19:01:27 bobtarling Exp $
+// $Id: ToDoPane.java,v 1.27 2003/09/04 20:11:48 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.QuadrantPanel;
@@ -91,7 +91,7 @@ import org.tigris.gef.util.VectorSet;
  *  ToDoPerspective skill = new ToDoBySkill();
  *</pre>
 
- * $Id: ToDoPane.java,v 1.26 2003/09/01 19:01:27 bobtarling Exp $
+ * $Id: ToDoPane.java,v 1.27 2003/09/04 20:11:48 thierrylach Exp $
  */
 public class ToDoPane extends JPanel
     implements ItemListener,
@@ -100,7 +100,7 @@ public class ToDoPane extends JPanel
         ToDoListListener,
         QuadrantPanel {
     
-    protected static Category cat = Category.getInstance(ToDoPane.class);
+    protected static Logger cat = Logger.getLogger(ToDoPane.class);
     
     ////////////////////////////////////////////////////////////////
     // constants

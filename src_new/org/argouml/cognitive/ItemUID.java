@@ -1,4 +1,4 @@
-// $Id: ItemUID.java,v 1.8 2003/08/27 13:05:42 bobtarling Exp $
+// $Id: ItemUID.java,v 1.9 2003/09/04 20:11:47 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.cognitive;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 /**
  * Instances of this class is supposed to be attached to other instances
@@ -46,7 +46,7 @@ import org.apache.log4j.Category;
  */
 public class ItemUID
 {
-    protected static Category cat = Category.getInstance(ItemUID.class);
+    protected static Logger cat = Logger.getLogger(ItemUID.class);
 
     /** Keeps a reference to the Class object of this class */
     protected static final Class _myclass = (new ItemUID()).getClass();

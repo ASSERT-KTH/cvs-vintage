@@ -1,4 +1,4 @@
-// $Id: FigSimpleState.java,v 1.4 2003/06/30 18:00:33 linus Exp $
+// $Id: FigSimpleState.java,v 1.5 2003/09/04 20:11:49 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigSimpleState.java
 // Classes: FigSimpleState
 // Original Author: ics 125b silverbullet team
-// $Id: FigSimpleState.java,v 1.4 2003/06/30 18:00:33 linus Exp $
+// $Id: FigSimpleState.java,v 1.5 2003/09/04 20:11:49 thierrylach Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -35,7 +35,7 @@ import java.awt.Rectangle;
 import java.beans.PropertyVetoException;
 import java.util.Vector;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.uml.generator.ParserDisplay;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
@@ -49,7 +49,7 @@ import ru.novosoft.uml.behavior.state_machines.MState;
 /** Class to display graphics for a UML MState in a diagram. */
 
 public class FigSimpleState extends FigState {
-    protected static Category cat = Category.getInstance(FigSimpleState.class);
+    protected static Logger cat = Logger.getLogger(FigSimpleState.class);
 
     ////////////////////////////////////////////////////////////////
     // constants

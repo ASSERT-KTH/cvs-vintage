@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.27 2003/08/30 13:56:55 alexb Exp $
+// $Id: UmlModelEventPump.java,v 1.28 2003/09/04 20:11:48 thierrylach Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
@@ -68,7 +68,7 @@ import ru.novosoft.uml.MFactoryImpl;
  */
 public final class UmlModelEventPump implements MElementListener {
 
-    private Category _cat = Category.getInstance(UmlModelEventPump.class);
+    private Logger _cat = Logger.getLogger(UmlModelEventPump.class);
 
     public static final String REMOVE = "remove";
 

@@ -1,4 +1,4 @@
-// $Id: NavigatorConfigDialog.java,v 1.12 2003/09/01 20:30:12 bobtarling Exp $
+// $Id: NavigatorConfigDialog.java,v 1.13 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.TreeModel;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.tigris.gef.util.Converter;
 
 /**
@@ -61,8 +61,8 @@ public class NavigatorConfigDialog extends JDialog
 	       MouseListener 
 {
     
-    protected static Category cat =
-	Category.getInstance(NavigatorConfigDialog.class);
+    protected static Logger cat =
+	Logger.getLogger(NavigatorConfigDialog.class);
 
     public static int _numNavConfig = 0;
     ////////////////////////////////////////////////////////////////

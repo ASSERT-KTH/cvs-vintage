@@ -1,4 +1,4 @@
-// $Id: UMLReflectionListModel.java,v 1.15 2003/09/01 20:30:12 bobtarling Exp $
+// $Id: UMLReflectionListModel.java,v 1.16 2003/09/04 20:11:43 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import java.util.Iterator;
 
 import javax.swing.JPopupMenu;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.ui.NavigatorPane;
 import org.argouml.ui.targetmanager.TargetManager;
 
@@ -47,7 +47,7 @@ import ru.novosoft.uml.foundation.core.MModelElement;
  *             that used reflection a lot.
  */
 public class UMLReflectionListModel extends UMLModelElementListModel   {
-    protected static Category cat = Category.getInstance(UMLReflectionListModel.class);
+    protected static Logger cat = Logger.getLogger(UMLReflectionListModel.class);
 
     private Method _getMethod = null;
     private Method _setMethod = null;

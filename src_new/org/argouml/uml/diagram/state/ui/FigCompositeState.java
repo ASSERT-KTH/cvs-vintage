@@ -1,4 +1,4 @@
-// $Id: FigCompositeState.java,v 1.10 2003/06/30 18:00:33 linus Exp $
+// $Id: FigCompositeState.java,v 1.11 2003/09/04 20:11:49 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigCompositeState.java
 // Classes: FigCompositeState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigCompositeState.java,v 1.10 2003/06/30 18:00:33 linus Exp $
+// $Id: FigCompositeState.java,v 1.11 2003/09/04 20:11:49 thierrylach Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -35,7 +35,7 @@ import java.awt.Rectangle;
 import java.beans.PropertyVetoException;
 import java.util.Vector;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.uml.generator.ParserDisplay;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigLine;
@@ -49,8 +49,8 @@ import ru.novosoft.uml.behavior.state_machines.MState;
 /** Class to display graphics for a UML MCompositeState in a diagram. */
 
 public class FigCompositeState extends FigState {
-    protected static Category cat =
-	Category.getInstance(FigCompositeState.class);
+    protected static Logger cat =
+	Logger.getLogger(FigCompositeState.class);
 
     ////////////////////////////////////////////////////////////////
     // constants

@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.32 2003/06/30 18:00:23 linus Exp $
+// $Id: DetailsPane.java,v 1.33 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.QuadrantPanel;
 import org.argouml.cognitive.ui.TabToDo;
@@ -71,7 +71,7 @@ import org.argouml.util.ConfigLoader;
  * There are requests to have the cursor automatically
  * be set to the primary field.
  *
- * $Id: DetailsPane.java,v 1.32 2003/06/30 18:00:23 linus Exp $
+ * $Id: DetailsPane.java,v 1.33 2003/09/04 20:11:45 thierrylach Exp $
  */
 public class DetailsPane
     extends JPanel
@@ -81,7 +81,7 @@ public class DetailsPane
 	       TargetListener
 {
 
-    protected static Category cat = Category.getInstance(DetailsPane.class);
+    protected static Logger cat = Logger.getLogger(DetailsPane.class);
     ////////////////////////////////////////////////////////////////
     // constants
 

@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.52 2003/09/01 20:30:12 bobtarling Exp $
+// $Id: NavigatorPane.java,v 1.53 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.Notation;
@@ -108,7 +108,7 @@ import ru.novosoft.uml.MElementListener;
  *
  * <p>Perspectives are now built here.
  *
- * $Id: NavigatorPane.java,v 1.52 2003/09/01 20:30:12 bobtarling Exp $
+ * $Id: NavigatorPane.java,v 1.53 2003/09/04 20:11:45 thierrylach Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -117,7 +117,7 @@ public class NavigatorPane
 	       MElementListener
 {
 
-    protected transient Category cat = Category.getInstance(this.getClass());
+    protected transient Logger cat = Logger.getLogger(this.getClass());
 
     public static final int MAX_HISTORY = 10;
 

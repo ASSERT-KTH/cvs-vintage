@@ -1,4 +1,4 @@
-// $Id: GoModelToBaseElements.java,v 1.13 2003/06/30 21:59:33 linus Exp $
+// $Id: GoModelToBaseElements.java,v 1.14 2003/09/04 20:11:47 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.uml.diagram.ui;
 
 import java.util.Collection;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreHelper;
@@ -34,8 +34,8 @@ import org.argouml.ui.AbstractGoRule;
 
 
 public class GoModelToBaseElements extends AbstractGoRule {
-    protected static Category cat =
-	Category.getInstance(GoModelToBaseElements.class);
+    protected static Logger cat =
+	Logger.getLogger(GoModelToBaseElements.class);
 
     public String getRuleName() {
 	return Argo.localize ("Tree", "misc.package.base-class");

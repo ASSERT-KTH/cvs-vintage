@@ -1,5 +1,5 @@
 
-// $Id: UMLPlainTextDocument.java,v 1.17 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: UMLPlainTextDocument.java,v 1.18 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,14 +23,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLPlainTextDocument.java,v 1.17 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: UMLPlainTextDocument.java,v 1.18 2003/09/04 20:11:44 thierrylach Exp $
 package org.argouml.uml.ui;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.targetmanager.TargetEvent;
@@ -53,8 +53,8 @@ public abstract class UMLPlainTextDocument
     extends PlainDocument
     implements MElementListener, TargetListener {
 
-    public static Category cat =
-        Category.getInstance(UMLPlainTextDocument.class);
+    public static Logger cat =
+        Logger.getLogger(UMLPlainTextDocument.class);
 
     /**
      * True if an event should be fired when the text of the document is changed

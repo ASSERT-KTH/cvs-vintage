@@ -1,4 +1,4 @@
-// $Id: TreeModelSupport.java,v 1.4 2003/06/30 18:00:24 linus Exp $
+// $Id: TreeModelSupport.java,v 1.5 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,20 +29,20 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 /**
  * Helper class for tree models that provides tree event handling.
  *
- * <p>$Id: TreeModelSupport.java,v 1.4 2003/06/30 18:00:24 linus Exp $
+ * <p>$Id: TreeModelSupport.java,v 1.5 2003/09/04 20:11:45 thierrylach Exp $
  *
  * @author  alexb
  * @since 0.13.5, Created on 15 April 2003
  */
 public class TreeModelSupport extends PerspectiveSupport {
 
-    private static Category cat =
-        Category.getInstance(TreeModelSupport.class);
+    private static Logger cat =
+        Logger.getLogger(TreeModelSupport.class);
                 
     /** tree model listener list. */
     protected EventListenerList _listenerList = new EventListenerList();

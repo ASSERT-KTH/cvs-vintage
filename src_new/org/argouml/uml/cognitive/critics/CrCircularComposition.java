@@ -1,5 +1,5 @@
 
-// $Id: CrCircularComposition.java,v 1.9 2003/08/30 23:40:28 alexb Exp $
+// $Id: CrCircularComposition.java,v 1.10 2003/09/04 20:11:42 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,12 +28,12 @@
 // File: CrCircularComposition.java
 // Classes: CrCircularComposition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularComposition.java,v 1.9 2003/08/30 23:40:28 alexb Exp $
+// $Id: CrCircularComposition.java,v 1.10 2003/09/04 20:11:42 thierrylach Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Enumeration;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
@@ -44,8 +44,8 @@ import org.tigris.gef.util.VectorSet;
 
 /**  */
 public class CrCircularComposition extends CrUML {
-    protected static Category cat =
-	Category.getInstance(CrCircularComposition.class);
+    protected static Logger cat =
+	Logger.getLogger(CrCircularComposition.class);
 						      
     public CrCircularComposition() {
 	setHeadline("Remove Circular Composition");

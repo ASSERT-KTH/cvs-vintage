@@ -1,5 +1,5 @@
 
-// $Id: UMLMultiplicityComboBox.java,v 1.9 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: UMLMultiplicityComboBox.java,v 1.10 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 
 package org.argouml.uml.ui;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.uml.UmlFactory;
 
 import java.lang.reflect.*;
@@ -47,7 +47,7 @@ public class UMLMultiplicityComboBox
     extends JComboBox
     implements ItemListener, UMLUserInterfaceComponent 
 {
-    protected static Category cat = Category.getInstance(UMLMultiplicityComboBox.class);
+    protected static Logger cat = Logger.getLogger(UMLMultiplicityComboBox.class);
 
     private UMLUserInterfaceContainer _container;
     private Method _getMethod;

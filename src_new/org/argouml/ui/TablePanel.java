@@ -1,4 +1,4 @@
-// $Id: TablePanel.java,v 1.14 2003/08/31 15:19:41 alexb Exp $
+// $Id: TablePanel.java,v 1.15 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.text.Document;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetManager;
@@ -81,8 +81,8 @@ public class TablePanel extends TabSpawnable
 	       ItemListener, DocumentListener,
 	       ListSelectionListener, ActionListener 
 {
-    protected static Category cat = 
-        Category.getInstance(TablePanel.class);
+    protected static Logger cat = 
+        Logger.getLogger(TablePanel.class);
 
     ////////////////////////////////////////////////////////////////
     // instance vars

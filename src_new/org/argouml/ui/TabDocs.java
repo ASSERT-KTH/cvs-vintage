@@ -1,4 +1,4 @@
-// $Id: TabDocs.java,v 1.7 2003/06/30 18:00:24 linus Exp $
+// $Id: TabDocs.java,v 1.8 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,15 +24,15 @@
 
 package org.argouml.ui;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.DocumentationManager;
 import org.tigris.gef.presentation.Fig;
 
 public class TabDocs extends TabText {
-    protected static Category cat = 
-        Category.getInstance(TabDocs.class);
+    protected static Logger cat = 
+        Logger.getLogger(TabDocs.class);
     ////////////////////////////////////////////////////////////////
     // constructor
     public TabDocs() {

@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.74 2003/09/01 23:13:20 alexb Exp $
+// $Id: FigNodeModelElement.java,v 1.75 2003/09/04 20:11:47 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ import javax.swing.Icon;
 import javax.swing.JMenu;
 import javax.swing.SwingUtilities;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.ArgoEventListener;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.Notation;
@@ -113,7 +113,7 @@ public abstract class FigNodeModelElement
         NotationContext,
         ArgoNotationEventListener {            
 
-    private Category cat = Category.getInstance(this.getClass());
+    private Logger cat = Logger.getLogger(this.getClass());
     ////////////////////////////////////////////////////////////////
     // constants
 

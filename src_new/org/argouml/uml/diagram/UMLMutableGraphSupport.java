@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.5 2003/08/31 16:11:06 alexb Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.6 2003/09/04 20:11:51 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import org.argouml.model.uml.UmlFactory;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
@@ -51,8 +51,8 @@ import org.tigris.gef.graph.MutableGraphSupport;
  */
 public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
     
-    protected static Category cat =
-	Category.getInstance(UMLMutableGraphSupport.class);
+    protected static Logger cat =
+	Logger.getLogger(UMLMutableGraphSupport.class);
     
     /** contains all the nodes in the graphmodel/diagram. */    
     protected Vector _nodes = new Vector();

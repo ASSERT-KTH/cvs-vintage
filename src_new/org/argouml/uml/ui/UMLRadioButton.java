@@ -1,4 +1,4 @@
-// $Id: UMLRadioButton.java,v 1.13 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLRadioButton.java,v 1.14 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.ui.ProjectBrowser;
 
 import ru.novosoft.uml.MElementEvent;
@@ -47,7 +47,7 @@ public class UMLRadioButton
     extends JRadioButton
     implements ItemListener, UMLUserInterfaceComponent
 {
-    protected static Category cat = Category.getInstance(UMLRadioButton.class);
+    protected static Logger cat = Logger.getLogger(UMLRadioButton.class);
                                                                 
         
     private class BooleanSetter implements Runnable {

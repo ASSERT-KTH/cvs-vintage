@@ -1,4 +1,4 @@
-// $Id: CrUML.java,v 1.20 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrUML.java,v 1.21 2003/09/04 20:11:42 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,11 +25,11 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.20 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrUML.java,v 1.21 2003/09/04 20:11:42 thierrylach Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.cognitive.Decision;
 import org.argouml.cognitive.Designer;
@@ -49,7 +49,7 @@ import org.tigris.gef.util.VectorSet;
  */
 
 public class CrUML extends Critic {
-    protected static Category cat = Category.getInstance(CrUML.class);
+    protected static Logger cat = Logger.getLogger(CrUML.class);
     
     public static final Decision decINHERITANCE = new
 	Decision("decision.inheritance", 1);

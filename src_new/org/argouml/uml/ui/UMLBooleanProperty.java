@@ -1,4 +1,4 @@
-// $Id: UMLBooleanProperty.java,v 1.7 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLBooleanProperty.java,v 1.8 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.uml.ui;
 import java.beans.PropertyVetoException;
 import java.lang.reflect.*;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import ru.novosoft.uml.*;
 
@@ -41,8 +41,8 @@ import ru.novosoft.uml.*;
  *             that used reflection a lot.
  */
 abstract public class UMLBooleanProperty  {
-    protected static Category cat = 
-        Category.getInstance(UMLBooleanProperty.class);
+    protected static Logger cat = 
+        Logger.getLogger(UMLBooleanProperty.class);
 
     private String _propertyName;
     

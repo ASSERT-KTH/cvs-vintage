@@ -1,4 +1,4 @@
-// $Id: ClassdiagramModelElementFactory.java,v 1.6 2003/06/30 18:00:34 linus Exp $
+// $Id: ClassdiagramModelElementFactory.java,v 1.7 2003/09/04 20:11:50 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 package org.argouml.uml.diagram.static_structure.layout;
 
 import org.tigris.gef.presentation.*;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.uml.diagram.ui.*;
 
 /** a class to get the proper layouter for a Fig.
@@ -36,8 +36,8 @@ import org.argouml.uml.diagram.ui.*;
 */
 public class ClassdiagramModelElementFactory 
 {
-    protected static Category cat =
-	Category.getInstance(ClassdiagramModelElementFactory.class);
+    protected static Logger cat =
+	Logger.getLogger(ClassdiagramModelElementFactory.class);
 
     public static ClassdiagramModelElementFactory SINGLETON =
 	new ClassdiagramModelElementFactory();

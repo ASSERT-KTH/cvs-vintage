@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.18 2003/08/30 13:11:24 alexb Exp $
+// $Id: Designer.java,v 1.19 2003/09/04 20:11:47 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.18 2003/08/30 13:11:24 alexb Exp $
+// $Id: Designer.java,v 1.19 2003/09/04 20:11:47 thierrylach Exp $
 
 package org.argouml.cognitive;
 
@@ -38,7 +38,7 @@ import java.util.Vector;
 
 import javax.swing.Icon;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import org.argouml.cognitive.critics.Agency;
 import org.argouml.cognitive.critics.Critic;
@@ -76,7 +76,7 @@ public class Designer
          java.io.Serializable
 {
     
-    protected static Category cat = Category.getInstance(Designer.class);
+    protected static Logger cat = Logger.getLogger(Designer.class);
     
     /** the singleton of this class: TODO: needs to be made private.*/
     public static Designer TheDesigner = new Designer();

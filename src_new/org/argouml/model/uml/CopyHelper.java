@@ -1,4 +1,4 @@
-// $Id: CopyHelper.java,v 1.3 2003/06/29 23:46:41 linus Exp $
+// $Id: CopyHelper.java,v 1.4 2003/09/04 20:11:48 thierrylach Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CopyHelper.java,v 1.3 2003/06/29 23:46:41 linus Exp $
+// $Id: CopyHelper.java,v 1.4 2003/09/04 20:11:48 thierrylach Exp $
 
 package org.argouml.model.uml;
 
 import java.lang.reflect.*;
 import java.util.HashMap;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.foundation.core.MClassImpl;
@@ -72,7 +72,7 @@ class CopyFunction {
  * @since 0.13.2
  */
 public final class CopyHelper {
-    protected static Category cat = Category.getInstance(CopyHelper.class);
+    protected static Logger cat = Logger.getLogger(CopyHelper.class);
 
     private static CopyHelper theInstance;
 

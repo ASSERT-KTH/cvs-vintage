@@ -1,4 +1,4 @@
-// $Id: ActionActivityDiagram.java,v 1.23 2003/08/30 18:59:43 bobtarling Exp $
+// $Id: ActionActivityDiagram.java,v 1.24 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.behavioralelements.activitygraphs.ActivityGraphsFactory;
 import org.argouml.ui.targetmanager.TargetManager;
@@ -43,8 +43,8 @@ public class ActionActivityDiagram extends ActionStateDiagram {
 
     public static ActionActivityDiagram SINGLETON = new ActionActivityDiagram();
 
-    protected static Category cat =
-	Category.getInstance(org.argouml.uml.ui.ActionActivityDiagram.class);
+    protected static Logger cat =
+	Logger.getLogger(org.argouml.uml.ui.ActionActivityDiagram.class);
 
     private ActionActivityDiagram() {
         super("action.activity-diagram");

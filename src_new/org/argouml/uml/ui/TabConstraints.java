@@ -1,6 +1,6 @@
 
 
-// $Id: TabConstraints.java,v 1.27 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: TabConstraints.java,v 1.28 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import javax.swing.JToolBar;
 import javax.swing.JOptionPane;
 import javax.swing.event.EventListenerList;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
@@ -64,14 +64,14 @@ import tudresden.ocl.OclException;
 /**
   * Tab for OCL constraint editing.
   *
-  * <p>$Id: TabConstraints.java,v 1.27 2003/08/25 23:57:43 bobtarling Exp $
+  * <p>$Id: TabConstraints.java,v 1.28 2003/09/04 20:11:44 thierrylach Exp $
   *
   * @author v1.0: Falk Finger
   * @author v2.0: Steffen Zschaler
   */
 public class TabConstraints extends TabSpawnable implements TabModelTarget {
 
-    private static Category _cat = Category.getInstance(TabConstraints.class);
+    private static Logger _cat = Logger.getLogger(TabConstraints.class);
 
     /**
      * The actual editor pane.

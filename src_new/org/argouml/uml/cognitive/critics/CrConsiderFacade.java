@@ -1,4 +1,4 @@
-// $Id: CrConsiderFacade.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrConsiderFacade.java,v 1.7 2003/09/04 20:11:42 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.cognitive.critics;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
 
 /**
@@ -32,8 +32,8 @@ import org.argouml.cognitive.Designer;
  * TODO: at the moment only a dummy implementation
 */
 public class CrConsiderFacade extends CrUML {
-    protected static Category cat =
-	Category.getInstance(CrConsiderFacade.class);
+    protected static Logger cat =
+	Logger.getLogger(CrConsiderFacade.class);
 
     public CrConsiderFacade() {
 	setHeadline("Consider using facade stereotype for <ocl>self</ocl>");

@@ -1,5 +1,5 @@
 
-// $Id: FigUseCase.java,v 1.20 2003/08/25 19:15:50 bobtarling Exp $
+// $Id: FigUseCase.java,v 1.21 2003/09/04 20:11:43 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.20 2003/08/25 19:15:50 bobtarling Exp $
+// $Id: FigUseCase.java,v 1.21 2003/09/04 20:11:43 thierrylach Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extension points.
@@ -49,7 +49,7 @@ import java.util.Vector;
 
 import javax.swing.JMenu;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.ui.ArgoJMenu;
@@ -882,7 +882,7 @@ public class FigUseCase extends FigNodeModelElement {
      */
 
     public class FigMyCircle extends FigCircle {
-        protected Category cat = Category.getInstance(FigMyCircle.class);
+        protected Logger cat = Logger.getLogger(FigMyCircle.class);
 
         /**
          * <p>Constructor just invokes the parent constructor.</p>

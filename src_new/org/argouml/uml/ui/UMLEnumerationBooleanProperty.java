@@ -1,5 +1,5 @@
 
-// $Id: UMLEnumerationBooleanProperty.java,v 1.8 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: UMLEnumerationBooleanProperty.java,v 1.9 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.lang.reflect.*;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.uml.AbstractWellformednessRule;
 import org.argouml.model.uml.UmlHelper;
 
@@ -50,8 +50,8 @@ public class UMLEnumerationBooleanProperty extends UMLBooleanProperty {
     
     /** Log4j logging category.
      */
-    public static Category logger =
-	Category.getInstance("org.argouml.uml.ui.UMLEnumerationBooleanProperty");
+    public static Logger logger =
+	Logger.getLogger("org.argouml.uml.ui.UMLEnumerationBooleanProperty");
                   
     /**
      * wellformednessRules are rules that should be hold true if the property is set

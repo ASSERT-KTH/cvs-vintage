@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.32 2003/09/01 17:56:34 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.33 2003/09/04 20:11:46 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.32 2003/09/01 17:56:34 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.33 2003/09/04 20:11:46 thierrylach Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the Extend and Include relationships. JavaDoc added for clarity. Adding edge
@@ -42,7 +42,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
@@ -69,8 +69,8 @@ public class UseCaseDiagramGraphModel
     extends UMLMutableGraphSupport
     implements VetoableChangeListener
 {
-    protected static Category cat =
-	Category.getInstance(UseCaseDiagramGraphModel.class);
+    protected static Logger cat =
+	Logger.getLogger(UseCaseDiagramGraphModel.class);
 
     ///////////////////////////////////////////////////////////////////////////
     //

@@ -1,4 +1,4 @@
-// $Id: UMLDeploymentDiagram.java,v 1.21 2003/06/30 18:00:30 linus Exp $
+// $Id: UMLDeploymentDiagram.java,v 1.22 2003/09/04 20:11:46 thierrylach Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import java.beans.PropertyVetoException;
 
 import javax.swing.Action;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.CmdCreateNode;
@@ -60,8 +60,8 @@ import ru.novosoft.uml.foundation.core.MNode;
 import ru.novosoft.uml.foundation.data_types.MAggregationKind;
 
 public class UMLDeploymentDiagram extends UMLDiagram {
-    protected static Category cat =
-        Category.getInstance(UMLDeploymentDiagram.class);
+    protected static Logger cat =
+        Logger.getLogger(UMLDeploymentDiagram.class);
 
     ////////////////
     // actions for toolbar

@@ -1,5 +1,5 @@
 
-// $Id: TabDiagram.java,v 1.27 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: TabDiagram.java,v 1.28 2003/09/04 20:11:47 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TabDiagram.java,v 1.27 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: TabDiagram.java,v 1.28 2003/09/04 20:11:47 thierrylach Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -39,7 +39,7 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.border.EtchedBorder;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.TabSpawnable;
 import org.argouml.ui.targetmanager.TargetEvent;
@@ -74,7 +74,7 @@ public class TabDiagram
     extends TabSpawnable
     implements TabModelTarget, GraphSelectionListener, ModeChangeListener {
 
-    private Category cat = Category.getInstance(TabDiagram.class);
+    private Logger cat = Logger.getLogger(TabDiagram.class);
 
     ////////////////////////////////////////////////////////////////
     // instance variables

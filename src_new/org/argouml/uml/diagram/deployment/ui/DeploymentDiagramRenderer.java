@@ -1,5 +1,5 @@
 
-// $Id: DeploymentDiagramRenderer.java,v 1.9 2003/08/25 19:15:56 bobtarling Exp $
+// $Id: DeploymentDiagramRenderer.java,v 1.10 2003/09/04 20:11:46 thierrylach Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,14 +36,14 @@ import org.tigris.gef.presentation.*;
 import org.tigris.gef.graph.*;
 
 import org.argouml.uml.diagram.ui.*;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.uml.diagram.static_structure.ui.*;
 
 public class DeploymentDiagramRenderer
     implements GraphNodeRenderer, GraphEdgeRenderer 
 {
-    protected static Category cat =
-	Category.getInstance(DeploymentDiagramRenderer.class);
+    protected static Logger cat =
+	Logger.getLogger(DeploymentDiagramRenderer.class);
 
     /** Return a Fig that can be used to represent the given node */
 

@@ -1,4 +1,4 @@
-// $Id: ClAttributeCompartment.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: ClAttributeCompartment.java,v 1.7 2003/09/04 20:11:42 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.uml.cognitive.critics;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 
 import org.argouml.cognitive.ToDoItem;
@@ -37,8 +37,8 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigGroup;
 
 public class ClAttributeCompartment implements Clarifier {
-    protected static Category cat =
-	Category.getInstance(ClAttributeCompartment.class);
+    protected static Logger cat =
+	Logger.getLogger(ClAttributeCompartment.class);
     public static ClAttributeCompartment TheInstance =
 	new ClAttributeCompartment();
     public static int WAVE_LENGTH = 4;

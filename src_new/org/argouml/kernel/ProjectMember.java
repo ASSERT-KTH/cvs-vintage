@@ -1,4 +1,4 @@
-// $Id: ProjectMember.java,v 1.13 2003/08/17 22:34:50 linus Exp $
+// $Id: ProjectMember.java,v 1.14 2003/09/04 20:11:50 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,11 +28,11 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.URL;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 public abstract class ProjectMember {
-    protected static Category cat = 
-        Category.getInstance(ProjectMember.class);
+    protected static Logger cat = 
+        Logger.getLogger(ProjectMember.class);
 
     ////////////////////////////////////////////////////////////////
     // instance varables

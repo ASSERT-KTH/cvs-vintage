@@ -1,4 +1,4 @@
-// $Id: ArgoParser.java,v 1.14 2003/06/29 23:53:44 linus Exp $
+// $Id: ArgoParser.java,v 1.15 2003/09/04 20:11:51 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import java.net.URL;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.kernel.Project;
 import org.argouml.xml.SAXParserBase;
@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
 /** @stereotype singleton
  */
 public class ArgoParser extends SAXParserBase {
-    protected static Category cat = Category.getInstance(ArgoParser.class);
+    protected static Logger cat = Logger.getLogger(ArgoParser.class);
 
     ////////////////////////////////////////////////////////////////
     // static variables

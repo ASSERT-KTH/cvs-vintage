@@ -1,4 +1,4 @@
-// $Id: UMLTextField.java,v 1.23 2003/06/29 23:50:04 linus Exp $
+// $Id: UMLTextField.java,v 1.24 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 // File: UMLTextField.java
 // Classes: UMLTextField
 // Original Author: not known
-// $Id: UMLTextField.java,v 1.23 2003/06/29 23:50:04 linus Exp $
+// $Id: UMLTextField.java,v 1.24 2003/09/04 20:11:44 thierrylach Exp $
 // 25 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the FigUseCase.
 // 3 May 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to mark the
@@ -42,7 +42,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ProjectBrowser;
@@ -64,8 +64,8 @@ public class UMLTextField
     extends JTextField
     implements DocumentListener, UMLUserInterfaceComponent, FocusListener {
 
-    protected final static Category cat =
-        Category.getInstance("org.argouml.uml.ui.UMLTextField");
+    protected final static Logger cat =
+        Logger.getLogger("org.argouml.uml.ui.UMLTextField");
 
     private UMLUserInterfaceContainer _container;
     private UMLTextProperty _property;

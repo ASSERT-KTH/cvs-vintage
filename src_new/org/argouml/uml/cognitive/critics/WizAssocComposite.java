@@ -1,4 +1,4 @@
-// $Id: WizAssocComposite.java,v 1.9 2003/08/30 22:04:20 alexb Exp $
+// $Id: WizAssocComposite.java,v 1.10 2003/09/04 20:11:42 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: WizAssocComposite.java
 // Classes: WizAssocComposite
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizAssocComposite.java,v 1.9 2003/08/30 22:04:20 alexb Exp $
+// $Id: WizAssocComposite.java,v 1.10 2003/09/04 20:11:42 thierrylach Exp $
 
 // 12 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Code corrected and
 // tidied up as part of fix to issue 619.
@@ -35,7 +35,7 @@ package org.argouml.uml.cognitive.critics;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.JPanel;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import org.argouml.cognitive.ui.WizStepChoice;
 import org.argouml.kernel.Wizard;
@@ -62,8 +62,8 @@ import ru.novosoft.uml.foundation.data_types.MAggregationKind;
 
 
 public class WizAssocComposite extends Wizard {
-    protected static Category cat =
-	Category.getInstance(WizAssocComposite.class);
+    protected static Logger cat =
+	Logger.getLogger(WizAssocComposite.class);
     
 
     /**

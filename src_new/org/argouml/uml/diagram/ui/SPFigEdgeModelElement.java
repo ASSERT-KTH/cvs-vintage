@@ -1,4 +1,4 @@
-// $Id: SPFigEdgeModelElement.java,v 1.5 2003/06/30 21:59:33 linus Exp $
+// $Id: SPFigEdgeModelElement.java,v 1.6 2003/09/04 20:11:47 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.ui.SpacerPanel;
 import org.argouml.ui.StylePanel;
 import org.tigris.gef.ui.ColorRenderer;
@@ -45,8 +45,8 @@ import org.tigris.gef.ui.ColorRenderer;
 public class SPFigEdgeModelElement extends StylePanel
     implements ItemListener, DocumentListener 
 {
-    protected static Category cat = 
-        Category.getInstance(SPFigEdgeModelElement.class);
+    protected static Logger cat = 
+        Logger.getLogger(SPFigEdgeModelElement.class);
 
     ////////////////////////////////////////////////////////////////
     // constants

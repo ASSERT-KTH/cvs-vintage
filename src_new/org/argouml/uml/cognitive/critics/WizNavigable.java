@@ -1,4 +1,4 @@
-// $Id: WizNavigable.java,v 1.7 2003/08/30 22:04:20 alexb Exp $
+// $Id: WizNavigable.java,v 1.8 2003/09/04 20:11:42 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,13 +27,13 @@
 // File: WizNavigable.java
 // Classes: WizNavigable
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizNavigable.java,v 1.7 2003/08/30 22:04:20 alexb Exp $
+// $Id: WizNavigable.java,v 1.8 2003/09/04 20:11:42 thierrylach Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Vector;
 import javax.swing.JPanel;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import org.argouml.cognitive.ui.WizStepChoice;
 import org.argouml.kernel.Wizard;
@@ -49,7 +49,7 @@ import ru.novosoft.uml.foundation.core.MModelElement;
  *  of an association. */
 
 public class WizNavigable extends Wizard {
-    protected static Category cat = Category.getInstance(WizNavigable.class);
+    protected static Logger cat = Logger.getLogger(WizNavigable.class);
 					      
     protected String _instructions =
 	"Please select one of the following navigability options.";

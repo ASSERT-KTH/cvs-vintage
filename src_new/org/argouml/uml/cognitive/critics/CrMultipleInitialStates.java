@@ -1,4 +1,4 @@
-// $Id: CrMultipleInitialStates.java,v 1.7 2003/09/01 11:51:09 bobtarling Exp $
+// $Id: CrMultipleInitialStates.java,v 1.8 2003/09/04 20:11:42 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,13 @@
 // File: CrMultipleInitialStates.java
 // Classes: CrMultipleInitialStates
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleInitialStates.java,v 1.7 2003/09/01 11:51:09 bobtarling Exp $
+// $Id: CrMultipleInitialStates.java,v 1.8 2003/09/04 20:11:42 thierrylach Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
 import java.util.Iterator;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import org.tigris.gef.util.VectorSet;
 
@@ -43,8 +43,8 @@ import org.argouml.model.ModelFacade;
 
 public class CrMultipleInitialStates extends CrUML {    
 
-    protected static Category cat = 
-        Category.getInstance(CrMultipleInitialStates.class);
+    protected static Logger cat = 
+        Logger.getLogger(CrMultipleInitialStates.class);
 
     public CrMultipleInitialStates() {
         setHeadline("Remove Extra Initial States");

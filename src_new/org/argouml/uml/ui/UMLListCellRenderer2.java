@@ -1,7 +1,7 @@
 
 
 
-// $Id: UMLListCellRenderer2.java,v 1.11 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: UMLListCellRenderer2.java,v 1.12 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.11 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: UMLListCellRenderer2.java,v 1.12 2003/09/04 20:11:44 thierrylach Exp $
 package org.argouml.uml.ui;
 
 import java.awt.Component;
@@ -35,7 +35,7 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 
 import ru.novosoft.uml.MBase;
@@ -50,7 +50,7 @@ import ru.novosoft.uml.foundation.core.MModelElement;
  */
 public class UMLListCellRenderer2 extends DefaultListCellRenderer {
 
-    private Category cat = Category.getInstance(UMLListCellRenderer2.class);
+    private Logger cat = Logger.getLogger(UMLListCellRenderer2.class);
 
     /**
      * True if the icon for the modelelement should be shown. The icon is, for

@@ -1,4 +1,4 @@
-// $Id: ColumnDescriptor.java,v 1.31 2003/09/01 11:51:09 bobtarling Exp $
+// $Id: ColumnDescriptor.java,v 1.32 2003/09/04 20:11:43 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
@@ -1002,7 +1002,7 @@ class ColumnQuery extends ColumnDescriptor {
 
 
 class ColumnType extends ColumnDescriptor {
-    protected static Category cat = Category.getInstance(ColumnType.class);
+    protected static Logger cat = Logger.getLogger(ColumnType.class);
     ColumnType() {
 	super("Type", String.class, true);  //MClassifier.type?
     }

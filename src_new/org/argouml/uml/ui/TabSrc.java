@@ -1,4 +1,4 @@
-// $Id: TabSrc.java,v 1.17 2003/06/29 23:50:03 linus Exp $
+// $Id: TabSrc.java,v 1.18 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.uml.ui;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
 import org.argouml.application.api.NotationContext;
 import org.argouml.application.api.NotationName;
@@ -51,7 +51,7 @@ public class TabSrc
     implements ArgoNotationEventListener, NotationContext, ItemListener {
     ////////////////////////////////////////////////////////////////
     // constructor
-    private final Category cat = Category.getInstance(TabSrc.class);
+    private final Logger cat = Logger.getLogger(TabSrc.class);
 
     private NotationName _notationName = null;
 

@@ -1,4 +1,4 @@
-// $Id: CrCircularInheritance.java,v 1.9 2003/08/30 23:40:28 alexb Exp $
+// $Id: CrCircularInheritance.java,v 1.10 2003/09/04 20:11:42 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,11 +27,11 @@
 // File: CrCircularInheritance.java
 // Classes: CrCircularInheritance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularInheritance.java,v 1.9 2003/08/30 23:40:28 alexb Exp $
+// $Id: CrCircularInheritance.java,v 1.10 2003/09/04 20:11:42 thierrylach Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
@@ -45,8 +45,8 @@ import org.tigris.gef.util.VectorSet;
  *  Semantics. OMG document ad/97-08-04. */
 
 public class CrCircularInheritance extends CrUML {
-    protected static Category cat =
-	Category.getInstance(CrCircularInheritance.class);
+    protected static Logger cat =
+	Logger.getLogger(CrCircularInheritance.class);
 						      
     public CrCircularInheritance() {
 	setHeadline("Remove <ocl>self</ocl>'s Circular Inheritance");

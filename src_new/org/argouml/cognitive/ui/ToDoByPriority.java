@@ -1,4 +1,4 @@
-// $Id: ToDoByPriority.java,v 1.6 2003/08/30 20:09:52 alexb Exp $
+// $Id: ToDoByPriority.java,v 1.7 2003/09/04 20:11:47 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.cognitive.ui;
 
 import java.util.Enumeration;
 import java.util.Vector;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
@@ -37,8 +37,8 @@ import org.argouml.cognitive.ToDoListListener;
 public class ToDoByPriority extends ToDoPerspective
     implements ToDoListListener 
 {
-    protected static Category cat = 
-        Category.getInstance(ToDoByPriority.class);
+    protected static Logger cat = 
+        Logger.getLogger(ToDoByPriority.class);
 
     public ToDoByPriority() {
 	super("combobox.todo-perspective-priority");

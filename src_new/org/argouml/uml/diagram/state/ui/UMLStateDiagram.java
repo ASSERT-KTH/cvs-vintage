@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.36 2003/09/01 00:59:51 bobtarling Exp $
+// $Id: UMLStateDiagram.java,v 1.37 2003/09/04 20:11:49 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.36 2003/09/01 00:59:51 bobtarling Exp $
+// $Id: UMLStateDiagram.java,v 1.37 2003/09/04 20:11:49 thierrylach Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -33,7 +33,7 @@ import java.beans.PropertyVetoException;
 
 import javax.swing.Action;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
@@ -58,7 +58,7 @@ import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
 
 public class UMLStateDiagram extends UMLDiagram {
-    private Category _cat = Category.getInstance(UMLStateDiagram.class);
+    private Logger _cat = Logger.getLogger(UMLStateDiagram.class);
 
     /**
      * this diagram needs to be deleted when its statemachine is deleted.

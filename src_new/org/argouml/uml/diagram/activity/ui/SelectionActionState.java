@@ -1,4 +1,4 @@
-// $Id: SelectionActionState.java,v 1.14 2003/08/31 16:11:06 alexb Exp $
+// $Id: SelectionActionState.java,v 1.16 2003/09/04 20:11:50 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: SelectionActionState.java
 // Classes: SelectionState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionActionState.java,v 1.14 2003/08/31 16:11:06 alexb Exp $
+// $Id: SelectionActionState.java,v 1.16 2003/09/04 20:11:50 thierrylach Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -35,7 +35,7 @@ import java.awt.Rectangle;
 
 import javax.swing.Icon;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.ModelFacade;
@@ -52,12 +52,9 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.Handle;
 
-import ru.novosoft.uml.behavior.activity_graphs.MActionStateImpl;
-import ru.novosoft.uml.behavior.state_machines.MTransition;
-
 public class SelectionActionState extends SelectionWButtons {
-    protected static Category cat = 
-        Category.getInstance(SelectionActionState.class);
+    protected static Logger cat = 
+        Logger.getLogger(SelectionActionState.class);
     ////////////////////////////////////////////////////////////////
     // constants
     public static Icon trans = 

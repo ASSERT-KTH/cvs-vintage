@@ -1,4 +1,4 @@
-// $Id: StylePanel.java,v 1.10 2003/06/30 21:59:31 linus Exp $
+// $Id: StylePanel.java,v 1.11 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
@@ -53,7 +53,7 @@ public class StylePanel
         DocumentListener,
         ListSelectionListener,
         ActionListener {
-    protected static Category cat = Category.getInstance(StylePanel.class);
+    protected static Logger cat = Logger.getLogger(StylePanel.class);
     ////////////////////////////////////////////////////////////////
     // instance vars
     protected Fig _target;

@@ -1,4 +1,4 @@
-// $Id: ProfileJava.java,v 1.20 2003/09/01 00:59:52 bobtarling Exp $
+// $Id: ProfileJava.java,v 1.21 2003/09/04 20:11:43 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.xml.xmi.XMIReader;
 import org.xml.sax.InputSource;
@@ -52,7 +52,7 @@ import ru.novosoft.uml.model_management.MModel;
  *   @author Curt Arnold
  */
 public class ProfileJava extends Profile {
-    protected static Category cat = Category.getInstance(ProfileJava.class);
+    protected static Logger cat = Logger.getLogger(ProfileJava.class);
     private static ProfileJava _instance = null;
     public static ProfileJava getInstance() {
 	if (_instance == null)

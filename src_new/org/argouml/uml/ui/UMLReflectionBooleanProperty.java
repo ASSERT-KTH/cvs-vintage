@@ -1,4 +1,4 @@
-// $Id: UMLReflectionBooleanProperty.java,v 1.7 2003/06/30 19:23:20 linus Exp $
+// $Id: UMLReflectionBooleanProperty.java,v 1.8 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import java.lang.reflect.*;
 import ru.novosoft.uml.*;
 
 import org.argouml.ui.*;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.*;
 
 /**
@@ -43,7 +43,7 @@ import org.argouml.kernel.*;
  *             that used reflection a lot.
  */
 public class UMLReflectionBooleanProperty extends UMLBooleanProperty {
-    protected static Category cat = Category.getInstance(UMLReflectionBooleanProperty.class);
+    protected static Logger cat = Logger.getLogger(UMLReflectionBooleanProperty.class);
 
     private Method _getMethod;
     private Method _setMethod;

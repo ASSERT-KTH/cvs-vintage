@@ -1,4 +1,4 @@
-// $Id: TableModelComposite.java,v 1.7 2003/08/31 15:19:41 alexb Exp $
+// $Id: TableModelComposite.java,v 1.8 2003/09/04 20:11:43 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import javax.swing.table.*;
 
 import org.tigris.gef.util.*;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.*;
 
 /**
@@ -49,8 +49,8 @@ import org.argouml.kernel.*;
 public class TableModelComposite extends AbstractTableModel
     implements TableModelTarget 
 {
-    protected static Category cat = 
-        Category.getInstance(TableModelComposite.class);
+    protected static Logger cat = 
+        Logger.getLogger(TableModelComposite.class);
 
     ////////////////
     // instance varables

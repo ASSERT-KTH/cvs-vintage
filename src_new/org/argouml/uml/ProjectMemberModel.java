@@ -1,4 +1,4 @@
-// $Id: ProjectMemberModel.java,v 1.13 2003/08/20 22:27:32 alexb Exp $
+// $Id: ProjectMemberModel.java,v 1.14 2003/09/04 20:11:43 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.uml;
 import java.io.Writer;
 import java.util.Iterator;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.xml.xmi.XMIParser;
@@ -46,8 +46,8 @@ import ru.novosoft.uml.model_management.MModel;
 
 public class ProjectMemberModel extends ProjectMember {
 
-    private static Category cat =
-        Category.getInstance(org.argouml.uml.ProjectMemberModel.class);
+    private static Logger cat =
+        Logger.getLogger(org.argouml.uml.ProjectMemberModel.class);
 
     ////////////////////////////////////////////////////////////////
     // constants

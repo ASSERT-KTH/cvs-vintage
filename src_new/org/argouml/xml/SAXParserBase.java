@@ -1,4 +1,4 @@
-// $Id: SAXParserBase.java,v 1.14 2003/06/29 23:53:44 linus Exp $
+// $Id: SAXParserBase.java,v 1.15 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.xml.sax.AttributeList;
 import org.xml.sax.HandlerBase;
@@ -46,8 +46,8 @@ import org.xml.sax.SAXException;
 
 public abstract class SAXParserBase extends HandlerBase {
     
-    protected Category cat = 
-        Category.getInstance(SAXParserBase.class);
+    protected Logger cat = 
+        Logger.getLogger(SAXParserBase.class);
 
     ////////////////////////////////////////////////////////////////
     // constants

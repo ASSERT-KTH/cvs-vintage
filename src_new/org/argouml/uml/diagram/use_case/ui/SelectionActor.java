@@ -1,4 +1,4 @@
-// $Id: SelectionActor.java,v 1.13 2003/06/30 21:59:33 linus Exp $
+// $Id: SelectionActor.java,v 1.14 2003/09/04 20:11:43 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: SelectionActor.java
 // Classes: SelectionActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionActor.java,v 1.13 2003/06/30 21:59:33 linus Exp $
+// $Id: SelectionActor.java,v 1.14 2003/09/04 20:11:43 thierrylach Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -35,7 +35,7 @@ import java.awt.Rectangle;
 
 import javax.swing.Icon;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode;
@@ -53,8 +53,8 @@ import ru.novosoft.uml.behavior.use_cases.MUseCaseImpl;
 import ru.novosoft.uml.foundation.core.MAssociation;
 
 public class SelectionActor extends SelectionWButtons {
-    protected static Category cat = 
-        Category.getInstance(SelectionActor.class);
+    protected static Logger cat = 
+        Logger.getLogger(SelectionActor.class);
     ////////////////////////////////////////////////////////////////
     // constants
     public static Icon assoc =

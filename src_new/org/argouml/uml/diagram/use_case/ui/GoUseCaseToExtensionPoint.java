@@ -1,4 +1,4 @@
-// $Id: GoUseCaseToExtensionPoint.java,v 1.15 2003/09/01 14:02:50 bobtarling Exp $
+// $Id: GoUseCaseToExtensionPoint.java,v 1.16 2003/09/04 20:11:43 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: GoUseCaseToExtensionPoint.java
 // Classes: GoUseCaseToExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: GoUseCaseToExtensionPoint.java,v 1.15 2003/09/01 14:02:50 bobtarling Exp $
+// $Id: GoUseCaseToExtensionPoint.java,v 1.16 2003/09/04 20:11:43 thierrylach Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // display of extension points in the navigator pane.
@@ -35,7 +35,7 @@ package org.argouml.uml.diagram.use_case.ui;
 
 import java.util.Collection;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.AbstractGoRule;
@@ -48,8 +48,8 @@ import org.argouml.ui.AbstractGoRule;
 
 public class GoUseCaseToExtensionPoint extends AbstractGoRule {
     
-    protected static Category cat =
-	Category.getInstance(GoUseCaseToExtensionPoint.class);
+    protected static Logger cat =
+	Logger.getLogger(GoUseCaseToExtensionPoint.class);
 
     /**
      * <p>Give a name to this rule.</p>

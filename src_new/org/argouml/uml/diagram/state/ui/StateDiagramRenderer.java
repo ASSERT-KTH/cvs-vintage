@@ -1,7 +1,7 @@
 
 
 
-// $Id: StateDiagramRenderer.java,v 1.11 2003/08/25 23:57:44 bobtarling Exp $
+// $Id: StateDiagramRenderer.java,v 1.12 2003/09/04 20:11:49 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,11 +28,11 @@
 // File: StateDiagramRenderer.java
 // Classes: StateDiagramRenderer
 // Original Author: ics125b spring 1998
-// $Id: StateDiagramRenderer.java,v 1.11 2003/08/25 23:57:44 bobtarling Exp $
+// $Id: StateDiagramRenderer.java,v 1.12 2003/09/04 20:11:49 thierrylach Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.activity.ui.FigActionState;
 import org.tigris.gef.base.Layer;
@@ -76,8 +76,8 @@ import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
 public class StateDiagramRenderer
     implements GraphNodeRenderer, GraphEdgeRenderer
 {
-    protected static Category cat = 
-        Category.getInstance(StateDiagramRenderer.class);
+    protected static Logger cat = 
+        Logger.getLogger(StateDiagramRenderer.class);
 
     /** Return a Fig that can be used to represent the given node */
     public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node) {

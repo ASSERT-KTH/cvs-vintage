@@ -1,4 +1,4 @@
-// $Id: WizBreakCircularComp.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
+// $Id: WizBreakCircularComp.java,v 1.7 2003/09/04 20:11:42 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: WizBreakCircularComp.java
 // Classes: WizBreakCircularComp
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizBreakCircularComp.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
+// $Id: WizBreakCircularComp.java,v 1.7 2003/09/04 20:11:42 thierrylach Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -36,7 +36,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.JPanel;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import org.argouml.cognitive.ui.WizStepChoice;
 import org.argouml.cognitive.ui.WizStepConfirm;
@@ -53,8 +53,8 @@ import ru.novosoft.uml.foundation.data_types.MAggregationKind;
  *  to make non-aggregate. */
 
 public class WizBreakCircularComp extends Wizard {
-    protected static Category cat =
-	Category.getInstance(WizBreakCircularComp.class);
+    protected static Logger cat =
+	Logger.getLogger(WizBreakCircularComp.class);
 						      
     protected String _instructions1 =
 	"Please select one of the following classes. " +

@@ -1,4 +1,4 @@
-// $Id: PropPanelButton.java,v 1.10 2003/06/29 23:50:02 linus Exp $
+// $Id: PropPanelButton.java,v 1.11 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.ui.*;
 import org.argouml.uml.*;
 import java.util.*;
@@ -44,8 +44,8 @@ import ru.novosoft.uml.*;
  */
 
 public class PropPanelButton extends JButton implements ActionListener, UMLUserInterfaceComponent {
-    protected static Category cat = 
-        Category.getInstance(PropPanelButton.class);
+    protected static Logger cat = 
+        Logger.getLogger(PropPanelButton.class);
 
     private PropPanel _propPanel;
     private Method _actionMethod;

@@ -1,5 +1,5 @@
 
-// $Id: TabResults.java,v 1.12 2003/08/25 23:57:44 bobtarling Exp $
+// $Id: TabResults.java,v 1.13 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.PredicateFind;
 import org.argouml.uml.TMResults;
@@ -56,8 +56,8 @@ import org.tigris.gef.util.ChildGenerator;
 public class TabResults extends TabSpawnable
     implements Runnable, MouseListener, ActionListener, ListSelectionListener, KeyListener
 {
-    protected static Category cat = 
-        Category.getInstance(TabResults.class);
+    protected static Logger cat = 
+        Logger.getLogger(TabResults.class);
     
 
     public static int _numJumpToRelated = 0;

@@ -1,4 +1,4 @@
-// $Id: UMLExpressionBodyField.java,v 1.7 2003/06/30 19:23:19 linus Exp $
+// $Id: UMLExpressionBodyField.java,v 1.8 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ import java.text.*;
 import javax.swing.event.*;
 import javax.swing.*;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import java.lang.reflect.*;
 import ru.novosoft.uml.*;
 
@@ -40,8 +40,8 @@ import ru.novosoft.uml.*;
  *             that used reflection a lot.
  */
 public class UMLExpressionBodyField extends JTextArea implements DocumentListener, UMLUserInterfaceComponent {
-    protected static Category cat = 
-        Category.getInstance(UMLExpressionBodyField.class);
+    protected static Logger cat = 
+        Logger.getLogger(UMLExpressionBodyField.class);
 
     private UMLExpressionModel _model;
     private boolean _notifyModel;

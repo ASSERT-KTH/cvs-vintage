@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.70 2003/09/01 00:59:52 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.71 2003/09/04 20:11:51 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.70 2003/09/01 00:59:52 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.71 2003/09/04 20:11:51 thierrylach Exp $
 
 
 
@@ -45,7 +45,7 @@ import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
@@ -174,8 +174,8 @@ public class ParserDisplay extends Parser {
     /**
      * The standard error etc. logger
      */
-    protected static final Category _cat =
-	Category.getInstance(ParserDisplay.class);
+    protected static final Logger _cat =
+	Logger.getLogger(ParserDisplay.class);
 
     /** The array of special properties for attributes */
     private PropertySpecialString _attributeSpecialStrings[];

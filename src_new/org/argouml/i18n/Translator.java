@@ -1,4 +1,4 @@
-// $Id: Translator.java,v 1.13 2003/09/01 21:25:53 linus Exp $
+// $Id: Translator.java,v 1.14 2003/09/04 20:11:46 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Properties;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.tigris.gef.util.Localizer;
 
 /**
@@ -41,8 +41,8 @@ import org.tigris.gef.util.Localizer;
  */
 public class Translator {
     /** logger */
-    private static Category cat = 
-        Category.getInstance(Translator.class);
+    private static Logger cat = 
+        Logger.getLogger(Translator.class);
 
     /** Key for menu resource bundle. */
     //public static final String MENU_BUNDLE = "CoreMenu";

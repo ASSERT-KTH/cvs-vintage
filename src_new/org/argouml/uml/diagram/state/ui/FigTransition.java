@@ -1,5 +1,5 @@
 
-// $Id: FigTransition.java,v 1.18 2003/08/25 19:15:53 bobtarling Exp $
+// $Id: FigTransition.java,v 1.19 2003/09/04 20:11:49 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: FigTransition.java
 // Classes: FigTransition
 // Original Author: your email address here
-// $Id: FigTransition.java,v 1.18 2003/08/25 19:15:53 bobtarling Exp $
+// $Id: FigTransition.java,v 1.19 2003/09/04 20:11:49 thierrylach Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -36,7 +36,7 @@ import java.awt.Graphics;
 
 import java.beans.PropertyVetoException;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Notation;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelper;
@@ -54,7 +54,7 @@ import ru.novosoft.uml.behavior.state_machines.MTransition;
 import ru.novosoft.uml.foundation.core.MModelElement;
 
 public class FigTransition extends FigEdgeModelElement {
-    protected static Category cat = Category.getInstance(FigTransition.class);
+    protected static Logger cat = Logger.getLogger(FigTransition.class);
 
     private ArrowHeadGreater endArrow = new ArrowHeadGreater();
 

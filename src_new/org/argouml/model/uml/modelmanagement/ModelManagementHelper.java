@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.33 2003/09/01 11:51:08 bobtarling Exp $
+// $Id: ModelManagementHelper.java,v 1.34 2003/09/04 20:11:51 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
@@ -53,8 +53,8 @@ import ru.novosoft.uml.model_management.MSubsystem;
  * @stereotype singleton
  */
 public class ModelManagementHelper {
-    protected static Category cat =
-	Category.getInstance(ModelManagementHelper.class);
+    protected static Logger cat =
+	Logger.getLogger(ModelManagementHelper.class);
 
     /** Don't allow instantiation.
      */

@@ -1,6 +1,6 @@
 
 
-// $Id: UMLActivityDiagram.java,v 1.31 2003/08/31 19:56:06 alexb Exp $
+// $Id: UMLActivityDiagram.java,v 1.32 2003/09/04 20:11:50 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: UMLActivityDiagram.java
 // Classes: UMLActivityDiagram
 // Original Author: your email here
-// $Id: UMLActivityDiagram.java,v 1.31 2003/08/31 19:56:06 alexb Exp $
+// $Id: UMLActivityDiagram.java,v 1.32 2003/09/04 20:11:50 thierrylach Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -35,7 +35,7 @@ import java.beans.PropertyVetoException;
 
 import javax.swing.Action;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
@@ -58,8 +58,8 @@ import org.tigris.gef.base.ModeCreatePolyEdge;
  * diagram is considered valuable as well.
  */
 public class UMLActivityDiagram extends UMLDiagram {
-    protected static Category cat =
-        Category.getInstance(UMLActivityDiagram.class);
+    protected static Logger cat =
+        Logger.getLogger(UMLActivityDiagram.class);
 
     ////////////////
     // actions for toolbar

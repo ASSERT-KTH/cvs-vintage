@@ -1,4 +1,4 @@
-// $Id: DismissToDoItemDialog.java,v 1.9 2003/06/30 18:00:17 linus Exp $
+// $Id: DismissToDoItemDialog.java,v 1.10 2003/09/04 20:11:48 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ToDoList;
@@ -48,8 +48,8 @@ import org.argouml.cognitive.UnresolvableException;
 import org.argouml.ui.ProjectBrowser;
 
 public class DismissToDoItemDialog extends JDialog {
-    protected static Category cat =
-	Category.getInstance(DismissToDoItemDialog.class);
+    protected static Logger cat =
+	Logger.getLogger(DismissToDoItemDialog.class);
 
     ////////////////////////////////////////////////////////////////
     // constants

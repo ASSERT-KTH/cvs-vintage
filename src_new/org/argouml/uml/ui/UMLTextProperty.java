@@ -1,4 +1,4 @@
-// $Id: UMLTextProperty.java,v 1.12 2003/06/30 18:00:36 linus Exp $
+// $Id: UMLTextProperty.java,v 1.13 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.kernel.*;
 
@@ -41,7 +41,7 @@ import ru.novosoft.uml.*;
  *             that used reflection a lot.
  */
 public class UMLTextProperty  {
-    protected static Category cat = Category.getInstance(UMLTextProperty.class);
+    protected static Logger cat = Logger.getLogger(UMLTextProperty.class);
            
     private Method _getMethod;
     private Method _setMethod;

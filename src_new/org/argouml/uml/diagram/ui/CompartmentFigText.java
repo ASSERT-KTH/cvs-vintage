@@ -1,5 +1,5 @@
 
-// $Id: CompartmentFigText.java,v 1.14 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: CompartmentFigText.java,v 1.15 2003/09/04 20:11:47 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ package org.argouml.uml.diagram.ui;
 
 import java.awt.Color;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigText;
@@ -56,8 +56,8 @@ import ru.novosoft.uml.foundation.core.MModelElement;
 
 public class CompartmentFigText extends FigText
 {
-    protected static Category cat =
-	Category.getInstance(CompartmentFigText.class);
+    protected static Logger cat =
+	Logger.getLogger(CompartmentFigText.class);
 
     ///////////////////////////////////////////////////////////////////////////
     //

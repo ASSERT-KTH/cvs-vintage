@@ -1,4 +1,4 @@
-// $Id: UMLClassifierComboBoxModel.java,v 1.13 2003/08/30 13:23:41 bobtarling Exp $
+// $Id: UMLClassifierComboBoxModel.java,v 1.14 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLClassifierComboBoxModel.java
 // Classes: UMLClassifierComboBoxModel
 // Original Author: 
-// $Id: UMLClassifierComboBoxModel.java,v 1.13 2003/08/30 13:23:41 bobtarling Exp $
+// $Id: UMLClassifierComboBoxModel.java,v 1.14 2003/09/04 20:11:44 thierrylach Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Layout tidied up and
 // mods made following bug fixing in UMLComboBoxModel. getModel() and
@@ -39,7 +39,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.Profile;
 
@@ -56,8 +56,8 @@ import ru.novosoft.uml.model_management.MModel;
  *             that used reflection a lot.
  */
 public class UMLClassifierComboBoxModel extends UMLComboBoxModel  {
-    protected static Category cat = 
-        Category.getInstance(UMLClassifierComboBoxModel.class);
+    protected static Logger cat = 
+        Logger.getLogger(UMLClassifierComboBoxModel.class);
 
    
 

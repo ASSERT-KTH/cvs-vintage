@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.49 2003/09/04 00:03:29 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.50 2003/09/04 20:11:51 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.49 2003/09/04 00:03:29 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.50 2003/09/04 20:11:51 thierrylach Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -36,7 +36,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 
@@ -49,8 +49,8 @@ import org.argouml.uml.diagram.UMLMutableGraphSupport;
 public class ClassDiagramGraphModel extends UMLMutableGraphSupport
     implements VetoableChangeListener 
 {
-    protected static Category cat =
-	Category.getInstance(ClassDiagramGraphModel.class);
+    protected static Logger cat =
+	Logger.getLogger(ClassDiagramGraphModel.class);
     ////////////////////////////////////////////////////////////////
     // instance variables
 

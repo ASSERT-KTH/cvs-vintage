@@ -1,4 +1,4 @@
-// $Id: WizMEName.java,v 1.6 2003/06/30 18:00:28 linus Exp $
+// $Id: WizMEName.java,v 1.7 2003/09/04 20:11:42 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,13 +27,13 @@
 // File: WzMEName.java
 // Classes: WzMEName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizMEName.java,v 1.6 2003/06/30 18:00:28 linus Exp $
+// $Id: WizMEName.java,v 1.7 2003/09/04 20:11:42 thierrylach Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import javax.swing.JPanel;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.cognitive.ui.WizStepTextField;
 import org.argouml.kernel.Wizard;
@@ -45,7 +45,7 @@ import ru.novosoft.uml.foundation.core.MModelElement;
  *  MModelElement to a better name. */
 
 public class WizMEName extends Wizard {
-    protected static Category cat = Category.getInstance(WizMEName.class);
+    protected static Logger cat = Logger.getLogger(WizMEName.class);
 					   
     protected String _instructions =
 	"Please change the name of the offending model element.";

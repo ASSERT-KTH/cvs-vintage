@@ -1,4 +1,4 @@
-// $Id: CrEmptyPackage.java,v 1.10 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrEmptyPackage.java,v 1.11 2003/09/04 20:11:42 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Iterator;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import org.argouml.cognitive.Designer;
 // Use Model through ModelFacade
@@ -42,7 +42,7 @@ import org.argouml.model.ModelFacade;
 //of references to elements of other packages?
 
 public class CrEmptyPackage extends CrUML {
-    protected static Category cat = Category.getInstance(CrEmptyPackage.class);
+    protected static Logger cat = Logger.getLogger(CrEmptyPackage.class);
 
     public CrEmptyPackage() {
 	setHeadline("Add Elements to Package <ocl>self</ocl>");

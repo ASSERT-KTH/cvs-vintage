@@ -1,4 +1,4 @@
-// $Id: Trash.java,v 1.14 2003/08/30 20:43:35 alexb Exp $
+// $Id: Trash.java,v 1.15 2003/09/04 20:11:51 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.util;
 
 import java.util.Vector;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 
@@ -38,8 +38,8 @@ import org.argouml.model.ModelFacade;
  * the trash, you must fix this before you empty the trash. */
 
 public class Trash {
-    protected static Category cat = 
-        Category.getInstance(Trash.class);
+    protected static Logger cat = 
+        Logger.getLogger(Trash.class);
     
     public static Trash SINGLETON = new Trash();
 

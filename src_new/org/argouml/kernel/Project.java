@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.78 2003/09/01 20:30:12 bobtarling Exp $
+// $Id: Project.java,v 1.79 2003/09/04 20:11:50 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.ArgoVersion;
 import org.argouml.application.api.Argo;
 import org.argouml.cognitive.ProjectMemberTodoList;
@@ -160,8 +160,8 @@ public class Project implements java.io.Serializable, TargetListener {
      */
     private HashMap _defaultModelCache;
 
-    protected static Category cat =
-        Category.getInstance(org.argouml.kernel.Project.class);
+    protected static Logger cat =
+        Logger.getLogger(org.argouml.kernel.Project.class);
     
     ////////////////////////////////////////////////////////////////
     // constructor

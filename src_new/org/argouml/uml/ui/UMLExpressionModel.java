@@ -1,4 +1,4 @@
-// $Id: UMLExpressionModel.java,v 1.6 2003/06/30 19:23:19 linus Exp $
+// $Id: UMLExpressionModel.java,v 1.7 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 package org.argouml.uml.ui;
 import java.lang.reflect.*;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import ru.novosoft.uml.*;
 import ru.novosoft.uml.foundation.data_types.*;
 
@@ -36,8 +36,8 @@ import ru.novosoft.uml.foundation.data_types.*;
  *             that used reflection a lot.
  */
 public final class UMLExpressionModel  {
-    protected static Category cat = 
-            Category.getInstance(UMLExpressionModel.class);
+    protected static Logger cat = 
+            Logger.getLogger(UMLExpressionModel.class);
 
     private UMLUserInterfaceContainer _container;
     private Method _getMethod;

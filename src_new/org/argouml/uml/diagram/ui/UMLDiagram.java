@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.36 2003/08/31 19:56:07 alexb Exp $
+// $Id: UMLDiagram.java,v 1.37 2003/09/04 20:11:47 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import javax.swing.Action;
 import javax.swing.ButtonModel;
 import javax.swing.JToolBar;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
@@ -60,7 +60,7 @@ public abstract class UMLDiagram
     implements MElementListener {
     
 
-    protected static Category cat = Category.getInstance(UMLDiagram.class);
+    protected static Logger cat = Logger.getLogger(UMLDiagram.class);
   
     ////////////////////////////////////////////////////////////////
     // actions for toolbar

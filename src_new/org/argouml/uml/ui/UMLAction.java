@@ -1,4 +1,4 @@
-// $Id: UMLAction.java,v 1.15 2003/09/04 15:14:09 thierrylach Exp $
+// $Id: UMLAction.java,v 1.16 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.KeyStroke;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.History;
@@ -43,7 +43,7 @@ import org.argouml.ui.StatusBar;
 import org.tigris.gef.util.Localizer;
 
 public class UMLAction extends AbstractAction {
-    protected static Category cat = Category.getInstance(UMLAction.class);
+    protected static Logger cat = Logger.getLogger(UMLAction.class);
 
     public static boolean HAS_ICON = true;
     public static boolean NO_ICON = false;

@@ -1,5 +1,5 @@
 
-// $Id: UMLIncludeListModel.java,v 1.9 2003/09/04 19:11:17 thierrylach Exp $
+// $Id: UMLIncludeListModel.java,v 1.10 2003/09/04 20:11:47 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
@@ -102,7 +102,7 @@ import ru.novosoft.uml.foundation.core.MModelElement;
  */
 
 public class UMLIncludeListModel extends UMLModelElementListModel  {
-    protected static Category cat = Category.getInstance(UMLIncludeListModel.class);
+    protected static Logger cat = Logger.getLogger(UMLIncludeListModel.class);
 
     /**
      * <p>The default text when there is no addition class for the include

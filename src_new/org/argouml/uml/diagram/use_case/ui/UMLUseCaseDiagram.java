@@ -1,4 +1,4 @@
-// $Id: UMLUseCaseDiagram.java,v 1.29 2003/09/02 20:19:25 jjones Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.30 2003/09/04 20:11:43 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.29 2003/09/02 20:19:25 jjones Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.30 2003/09/04 20:11:43 thierrylach Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity. Default
@@ -43,7 +43,7 @@ import java.beans.PropertyVetoException;
 
 import javax.swing.Action;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.CmdCreateNode;
@@ -75,8 +75,8 @@ import ru.novosoft.uml.foundation.data_types.MAggregationKind;
  */
 
 public class UMLUseCaseDiagram extends UMLDiagram {
-    protected static Category cat =
-        Category.getInstance(UMLUseCaseDiagram.class);
+    protected static Logger cat =
+        Logger.getLogger(UMLUseCaseDiagram.class);
 
     // Actions specific to the use case diagram toolbar
 

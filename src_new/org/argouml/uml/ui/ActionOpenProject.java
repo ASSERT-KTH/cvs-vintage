@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.24 2003/06/30 21:59:34 linus Exp $
+// $Id: ActionOpenProject.java,v 1.25 2003/09/04 20:11:44 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.*;
@@ -55,8 +55,8 @@ import javax.swing.*;
  */
 public class ActionOpenProject extends UMLAction {
 
-    protected static Category cat =
-        Category.getInstance(org.argouml.uml.ui.ActionOpenProject.class);
+    protected static Logger cat =
+        Logger.getLogger(org.argouml.uml.ui.ActionOpenProject.class);
 
     ////////////////////////////////////////////////////////////////
     // static variables

@@ -1,4 +1,4 @@
-// $Id: Tools.java,v 1.9 2003/08/30 20:43:35 alexb Exp $
+// $Id: Tools.java,v 1.10 2003/09/04 20:11:51 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,7 @@ public class Tools {
             cls = Class.forName("org.tigris.gef.base.Editor");
             cls = Class.forName("ru.novosoft.uml.MBase");
             cls = Class.forName("org.xml.sax.AttributeList");
-            cls = Class.forName("org.apache.log4j.Category");
+            cls = Class.forName("org.apache.log4j.Logger");
 
             StringBuffer sb = new StringBuffer();
 

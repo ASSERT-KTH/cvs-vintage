@@ -1,4 +1,4 @@
-// $Id: UmlModelListener.java,v 1.16 2003/06/30 18:00:19 linus Exp $
+// $Id: UmlModelListener.java,v 1.17 2003/09/04 20:11:48 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.model.uml;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 
@@ -42,7 +42,7 @@ public class UmlModelListener implements MElementListener {
 
     /** Log4j logging category.
      */
-    Category logger = null;
+    Logger logger = null;
 
     /** Singleton instance.
      */
@@ -58,7 +58,7 @@ public class UmlModelListener implements MElementListener {
      * Create the logger.
      */
     private UmlModelListener() {
-        logger = Category.getInstance("org.argouml.model.uml.listener");
+        logger = Logger.getLogger("org.argouml.model.uml.listener");
     }
 
     /** Handle the event.

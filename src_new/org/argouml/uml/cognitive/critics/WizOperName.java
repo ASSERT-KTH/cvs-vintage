@@ -1,5 +1,5 @@
 
-// $Id: WizOperName.java,v 1.9 2003/08/30 22:04:20 alexb Exp $
+// $Id: WizOperName.java,v 1.10 2003/09/04 20:11:42 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@
 // File: WizOperName.java
 // Classes: WizOperName
 // Original Author: Linus Tolke <linus@epact.se>
-// $Id: WizOperName.java,v 1.9 2003/08/30 22:04:20 alexb Exp $
+// $Id: WizOperName.java,v 1.10 2003/09/04 20:11:42 thierrylach Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -36,7 +36,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.JPanel;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import org.argouml.cognitive.ui.WizStepChoice;
 import org.argouml.cognitive.ui.WizStepCue;
@@ -66,7 +66,7 @@ import ru.novosoft.uml.model_management.MPackage;
  */
 
 public class WizOperName extends WizMEName {
-    protected static Category cat = Category.getInstance(WizOperName.class);
+    protected static Logger cat = Logger.getLogger(WizOperName.class);
 
     boolean _possibleConstructor = false;
     boolean _stereotypePathChosen;

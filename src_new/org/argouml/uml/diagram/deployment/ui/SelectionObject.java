@@ -1,4 +1,4 @@
-// $Id: SelectionObject.java,v 1.13 2003/06/30 18:00:30 linus Exp $
+// $Id: SelectionObject.java,v 1.14 2003/09/04 20:11:46 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: SelectionObject.java
 // Classes: SelectionObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SelectionObject.java,v 1.13 2003/06/30 18:00:30 linus Exp $
+// $Id: SelectionObject.java,v 1.14 2003/09/04 20:11:46 thierrylach Exp $
 
 
 package org.argouml.uml.diagram.deployment.ui;
@@ -36,7 +36,7 @@ import java.awt.Rectangle;
 
 import javax.swing.Icon;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode;
@@ -54,8 +54,8 @@ import ru.novosoft.uml.behavior.common_behavior.MLink;
 import ru.novosoft.uml.behavior.common_behavior.MObjectImpl;
 
 public class SelectionObject extends SelectionWButtons {
-    protected static Category cat = 
-        Category.getInstance(SelectionObject.class);
+    protected static Logger cat = 
+        Logger.getLogger(SelectionObject.class);
     ////////////////////////////////////////////////////////////////
     // constants
     public static Icon dep =

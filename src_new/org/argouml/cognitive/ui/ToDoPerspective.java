@@ -1,4 +1,4 @@
-// $Id: ToDoPerspective.java,v 1.7 2003/08/30 20:09:52 alexb Exp $
+// $Id: ToDoPerspective.java,v 1.8 2003/09/04 20:11:48 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.cognitive.ui;
 
 import java.io.Serializable;
 import java.util.Vector;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 
 import org.argouml.cognitive.ToDoItem;
@@ -39,13 +39,13 @@ import org.argouml.ui.TreeModelComposite;
  *   - a todo tree model / perspective (which is a collection of GoRules)
  *</pre>
  *
- * $Id: ToDoPerspective.java,v 1.7 2003/08/30 20:09:52 alexb Exp $
+ * $Id: ToDoPerspective.java,v 1.8 2003/09/04 20:11:48 thierrylach Exp $
  */
 public abstract class ToDoPerspective extends TreeModelComposite
     implements Serializable 
 {
     
-    private static Category cat = Category.getInstance(ToDoPerspective.class);
+    private static Logger cat = Logger.getLogger(ToDoPerspective.class);
     
     ////////////////////////////////////////////////////////////////
     // instance variables

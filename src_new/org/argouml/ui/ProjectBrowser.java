@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.113 2003/09/01 20:30:12 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.114 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.PluggableMenu;
@@ -79,7 +79,7 @@ public class ProjectBrowser
     extends JFrame
     implements IStatusBar, PropertyChangeListener, TargetListener {
 
-    protected static Category cat = Category.getInstance(ProjectBrowser.class);
+    protected static Logger cat = Logger.getLogger(ProjectBrowser.class);
 
     ////////////////////////////////////////////////////////////////
     // constants

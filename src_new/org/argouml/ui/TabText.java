@@ -1,4 +1,4 @@
-// $Id: TabText.java,v 1.16 2003/08/26 17:13:33 bobtarling Exp $
+// $Id: TabText.java,v 1.17 2003/09/04 20:11:45 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import javax.swing.JToolBar;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.TabModelTarget;
@@ -54,7 +54,7 @@ public class TabText
      *  Contains null if no toolbar was requested.
      */
     protected JToolBar _toolbar = null;
-    protected Category cat = Category.getInstance(TabText.class);
+    protected Logger cat = Logger.getLogger(TabText.class);
 
     ////////////////////////////////////////////////////////////////
     // constructor
