@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.175 2003/06/05 21:54:16 spestov Exp $
+ * @version $Id: jEdit.java,v 1.176 2003/06/07 21:22:18 spestov Exp $
  */
 public class jEdit
 {
@@ -2038,15 +2038,15 @@ public class jEdit
 				if(config.top != null
 					&& config.top.length() != 0)
 					wm.showDockableWindow(config.top);
-	
+
 				if(config.left != null
 					&& config.left.length() != 0)
 					wm.showDockableWindow(config.left);
-	
+
 				if(config.bottom != null
 					&& config.bottom.length() != 0)
 					wm.showDockableWindow(config.bottom);
-	
+
 				if(config.right != null
 					&& config.right.length() != 0)
 					wm.showDockableWindow(config.right);
@@ -2060,7 +2060,7 @@ public class jEdit
 					config.width,config.height,config.extState);
 			}
 			else
-				newView.setLocationRelativeTo(view);
+				GUIUtilities.centerOnScreen(newView);
 
 			EditBus.send(new ViewUpdate(newView,ViewUpdate.CREATED));
 

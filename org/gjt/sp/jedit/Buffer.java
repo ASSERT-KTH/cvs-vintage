@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.182 2003/06/05 00:01:48 spestov Exp $
+ * @version $Id: Buffer.java,v 1.183 2003/06/07 21:22:17 spestov Exp $
  */
 public class Buffer
 {
@@ -3479,7 +3479,7 @@ loop:		for(int i = 0; i < seg.count; i++)
 			autosaveFile.delete();
 
 		// notify clients with -wait
-		if(waitSocket != null && !waitSocket.isClosed())
+		if(waitSocket != null)
 		{
 			try
 			{

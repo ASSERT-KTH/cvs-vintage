@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.72 2003/06/04 01:44:16 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.73 2003/06/07 21:22:17 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -1002,6 +1002,24 @@ public class GUIUtilities
 				Log.log(Log.ERROR,GUIUtilities.class,e);
 			}
 		}
+	} //}}}
+
+	//{{{ centerOnScreen() method
+	/**
+	 * Centers the given window on the screen. This method is needed because
+	 * JDK 1.3 does not have a <code>JWindow.setLocationRelativeTo()</code>
+	 * method.
+	 * @since jEdit 4.2pre3
+	 */
+	public static void centerOnScreen(Window win)
+	{
+		GraphicsDevice gd = GraphicsEnvironment
+			.getLocalGraphicsEnvironment()
+			.getDefaultScreenDevice();
+		Rectangle gcbounds = gd.getDefaultConfiguration().getBounds();
+		int x = gcbounds.x + (gcbounds.width - win.getWidth()) / 2;
+		int y = gcbounds.y + (gcbounds.height - win.getHeight()) / 2;
+		win.setLocation(x,y);
 	} //}}}
 
 	//}}}

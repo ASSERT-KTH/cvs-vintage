@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.94 2003/06/05 02:46:35 spestov Exp $
+ * @version $Id: View.java,v 1.95 2003/06/07 21:22:18 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1246,7 +1246,7 @@ public class View extends JFrame implements EBComponent
 		getContentPane().removeAll();
 
 		// notify clients with -wait
-		if(waitSocket != null && !waitSocket.isClosed())
+		if(waitSocket != null)
 		{
 			try
 			{
