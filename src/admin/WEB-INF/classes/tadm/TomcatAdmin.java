@@ -82,8 +82,7 @@ public class TomcatAdmin extends TagSupport {
 	    if("addContext".equals( action ) )
 		addContext( cm, ctxHost, ctxPath, docBase );
 	    if("restartContext".equals(action) && found) {
-		removeContext(cm, ctx);
-		addContext( cm, ctxHost, ctxPath, docBase);
+		restartContext(cm, ctx, req);
 	    }
 	} catch (Exception ex ) {
 	    ex.printStackTrace();
@@ -152,6 +151,62 @@ public class TomcatAdmin extends TagSupport {
     {
 	System.out.println("Removing " + ctx );
 	cm.removeContext( ctx );
+    }
+
+    private void restartContext( ContextManager cm, Context ctx,HttpServletRequest req ) 
+    throws TomcatException {
+	Request request = (Request)
+	    req.getAttribute( Request.ATTRIB_REAL_REQUEST);
+	if( request == null ) {
+	    throw new TomcatException("Untrusted Web-App");
+	}
+	synchronized(ctx) {
+	    if(ctx.getState() == Context.STATE_NEW)
+		return ; // Already reloaded.
+	    Vector sI=new Vector();  // saved local interceptors
+	    BaseInterceptor[] eI;    // all exisiting interceptors
+	    
+	    // save the ones with the same context, they are local
+	    eI=ctx.getContainer().getInterceptors();
+	    for(int i=0; i < eI.length ; i++)
+		if(ctx == eI[i].getContext()) sI.addElement(eI[i]);
+		    
+	    Enumeration e;
+	 
+	    Context ctx1=cm.createContext();
+	    ctx1.setContextManager( cm );
+	    ctx1.setPath(ctx.getPath());
+	    ctx1.setDocBase(ctx.getDocBase());
+	    ctx1.setReloadable( ctx.getReloadable());
+	    ctx1.setDebug( ctx.getDebug());
+	    ctx1.setHost( ctx.getHost());
+	    ctx1.setTrusted( ctx.isTrusted());
+	    e=ctx.getHostAliases();
+	    while( e.hasMoreElements())
+		ctx1.addHostAlias( (String)e.nextElement());
+	    
+	    BaseInterceptor ri[] = 
+		cm.getContainer().getInterceptors(Container.H_copyContext);
+	    int i;
+	    for( i=0; i < ri.length; i++) {
+		ri[i].copyContext(request, ctx, ctx1);
+	    }
+	    cm.removeContext( ctx );
+		    
+	    cm.addContext( ctx1 );
+	    
+	    // put back saved local interceptors
+	    e=sI.elements();
+	    while(e.hasMoreElements()){
+		BaseInterceptor savedI=(BaseInterceptor)e.nextElement();
+		
+		ctx1.addInterceptor(savedI);
+		savedI.setContext(ctx1);
+		savedI.reload(request,ctx1);
+	    }
+
+	    ctx1.init();
+	}
     }
 
     private void setLogFile( Context ctx, String dest )
