@@ -13,5 +13,5 @@ $issue.UniqueId Report
 
 #foreach ( $attKey in $attrValues.keySet().iterator() )
   #set ($attVal = $attrValues.get($attKey))
-  $attVal.Attribute.Name: $attVal.Value
+  $attVal.RModuleAttribute.DisplayValue: $attVal.Value
 #end

@@ -24,19 +24,22 @@
     </tr>
 #foreach ($attKey in $attrValues.sequence())
   #set ($attVal = $attrValues.get($attKey))
+ ## turning off user attributes here because we are showing "assigned to"
+ ## in another section.  We need to make this code more generic. !FIXME!
+ #if (!$attVal.Attribute.isUserAttribute())
   #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
   #if ($attVal.Attribute.AttributeType.ValidationKey)
         #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
-  #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
+  #elseif ($attVal.Attribute.isOptionAttribute())
         #set ($field = "OptionId")
   #else
         #set ($field = "Value")
   #end
   #if ($canEdit)
      <tr>
-      <th>$attVal.Attribute.Name</th>
+      <th>$attVal.RModuleAttribute.DisplayValue</th>
       <td>
-    #if ($attVal.Attribute.AttributeType.Name == "combo-box")
+    #if ($attVal.Attribute.isOptionAttribute())
         #attrValueLeafSelect ($attVal $field "")
         #attrValueErrorMsg ($attVal $field)
     #else
@@ -54,10 +57,10 @@
   #else
     #if ($attVal.isSet())
      <tr>
-      <th>$attVal.Attribute.Name</th>
+      <th>$attVal.RModuleAttribute.DisplayValue</th>
       <td>
        #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
-       #if ($attVal.Attribute.AttributeType.Name == "combo-box")
+       #if ($attVal.Attribute.isOptionAttribute())
           $!attVal.AttributeOption.Name
        #else
           $!attrInput.Value
@@ -66,6 +69,7 @@
       </td>
      </tr>
   #end
+ #end
 #end
 
 #if ($canEdit)

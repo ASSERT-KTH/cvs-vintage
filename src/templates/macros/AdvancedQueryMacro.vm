@@ -42,13 +42,13 @@ from:&#160;<input type="text" size="20"
   #else
         #set ( $field = "Value" )
   #end
-        <tr>
-         <th width="120">$attVal.Attribute.Name</th>
   ## showing user attributes in separate section
-  #if ($attVal.Attribute.AttributeType.AttributeClass.Name != "user")
+  #if (!$attVal.Attribute.isUserAttribute())
+        <tr>
+         <th width="120">$attVal.RModuleAttribute.DisplayValue</th>
             <td>
                 #attrValueErrorMsg ( $attVal $field )
-    #if ($attVal.Attribute.AttributeType.Name == "combo-box" )
+    #if ($attVal.Attribute.isOptionAttribute() )
           #attrValueLeafSelect ($attVal $field "")
     #else
         #if ($attVal.Attribute.AttributeType.Name == "long-string" )
@@ -92,7 +92,7 @@ from:&#160;<input type="text" size="20"
         #set ( $field = "UserId" )
     #end
 <tr>
-<th width="120">$attVal.Attribute.Name</th>
+<th width="120">$attVal.RModuleAttribute.DisplayValue</th>
    <td>
        #attrValueErrorMsg ( $attVal $field )
        #userSelectBox ($attVal "5" "multiple")
@@ -119,7 +119,7 @@ from:&#160;<input type="text" size="20"
             #set ( $selectedAttribute = $attVal.Attribute )
      #end
     <option$selected value="$attVal.AttributeId">
-        $attVal.Attribute.Name
+        $attVal.RModuleAttribute.DisplayValue
                 </option>
     #end
 #end

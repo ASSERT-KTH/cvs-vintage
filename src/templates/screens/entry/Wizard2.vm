@@ -29,7 +29,7 @@ $page.setTitle("Identified as duplicate")
   #set ($attVal = $attrValues.get($attKey))
   #if ($attVal.isDedupeAttribute())
   <th>
-  $attVal.Attribute.Name 
+  $attVal.RModuleAttribute.DisplayValue 
   </th>
   #end
 #end
@@ -62,7 +62,7 @@ $page.setTitle("Identified as duplicate")
 #foreach ($attKey in $keys)
   #set ($attVal = $attrValues.get($attKey))
   #if ($attVal.isDedupeAttribute())
-   <th>$attVal.Attribute.Name</th>
+   <th>$attVal.RModuleAttribute.DisplayValue</th>
   #end
 #end
 <th>Creation date</th>
@@ -165,7 +165,7 @@ $issue.ModuleAttributeValuesMap.get("SUMMARY").Value
 ## The issue details
 Issue ID#: $currentIssue.UniqueId
 #foreach ($attVal in $currentIssue.OrderedModuleAttributeValues)
-<b>$attVal.Attribute.Name:</b>
+<b>$attVal.RModuleAttribute.DisplayValue:</b>
 #if ($attVal.Attribute.AttributeType.Name == "email" && $attVal.Value && $attVal.Value.toString().length() != 0)
 <a href="mailto:$attVal.Value">$attVal.Value</a>
 #else

@@ -83,7 +83,7 @@ $page.setTitle("Custom Search")
     #set ($field = "OptionId")
   #end
   <tr>
-   <th width="120">$attVal.Attribute.Name</th>
+   <th width="120">$attVal.RModuleAttribute.DisplayValue</th>
    <td>
      #attrValueErrorMsg ($attVal $field)
      #attrValueHierarchySelect ($attVal $field "")

@@ -79,7 +79,7 @@ $page.setTitle("Issue template")
 #*
   #if ( $attVal.isRequired() ) * #end
 *#
-  $attVal.Attribute.Name
+  $attVal.RModuleAttribute.DisplayValue
  </th>
  <td>
  #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
