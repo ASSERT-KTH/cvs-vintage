@@ -26,7 +26,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * or the responsibilities of this class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */                            
 public class RelationSet implements Set {
    private JDBCCMRFieldBridge cmrField;
@@ -56,7 +56,7 @@ public class RelationSet implements Set {
    private List getIdList() {
       if(setHandle[0] == null) {
          throw new IllegalStateException("A CMR collection may only be used " +
-               "within the transction in which it was created");
+               "within the transaction in which it was created");
       }
       return setHandle[0];
    }
@@ -346,7 +346,7 @@ public class RelationSet implements Set {
          private void verifyIteratorIsValid() {
             if(setHandle[0] == null) {
                throw new IllegalStateException("The iterator of a CMR " +
-                     "collection may only be used within the transction in " +
+                     "collection may only be used within the transaction in " +
                      "which it was created");
             }
          }            
