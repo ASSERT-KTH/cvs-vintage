@@ -67,7 +67,7 @@ import org.jboss.util.XmlHelper;
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  * Revisions:
  *
  * 20010622 scott.stark: Clean up the unsafe downcast of Throwable to Exception
@@ -404,7 +404,7 @@ implements ConfigurationServiceMBean
       BufferedReader br = new BufferedReader(new InputStreamReader(input));
       
       String sTmp;
-      String eol = System.getProperty("line.seperator");
+      String eol = System.getProperty("line.separator");
       try
       {
          while((sTmp = br.readLine())!=null)
