@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.47 2003/02/20 07:40:40 lepekhine Exp $
+// $Id: Modeller.java,v 1.48 2003/02/20 10:19:32 lepekhine Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -128,8 +128,8 @@ public class Modeller
 	// since I need diagrams for all the packages.
 	String ownerPackageName, currentName = name;
 	while( ! "".equals(ownerPackageName = getPackageName(currentName))) {
-	    getDiagram().selectClassDiagram( getPackage(ownerPackageName), ownerPackageName);
-	    getDiagram().addPackage(getPackage(currentName));
+	    if(getDiagram() != null) getDiagram().selectClassDiagram( getPackage(ownerPackageName), ownerPackageName);
+	    if(getDiagram() != null) getDiagram().addPackage(getPackage(currentName));
 	    currentName = ownerPackageName;
 	}
 
@@ -142,7 +142,7 @@ public class Modeller
 
 	// Select the class diagram for the current package,
 	// so all succeeding objects are added to it.
-	getDiagram().selectClassDiagram(mPackage, name);
+	if(getDiagram() != null) getDiagram().selectClassDiagram(mPackage, name);
     }
 
     /**
@@ -334,10 +334,10 @@ public class Modeller
         // add the current classifier to the diagram.
         Object classifier = parseState.getClassifier();
         if(ModelFacade.isAInterface(classifier)) {
-            getDiagram().addInterface(classifier);
+            if (getDiagram() != null) getDiagram().addInterface(classifier);
         } else {
             if(ModelFacade.isAClass(classifier)) {
-                getDiagram().addClass(classifier);
+                if (getDiagram() != null) getDiagram().addClass(classifier);
             }
         }
 
