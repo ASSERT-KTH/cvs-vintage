@@ -12,10 +12,9 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.File;
 import java.net.URL;
+import java.lang.reflect.Method;
 
 import javax.management.*;
-
-import org.apache.tomcat.startup.Tomcat;
 
 import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
@@ -25,7 +24,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class TomcatService
    extends ServiceMBeanSupport
@@ -34,7 +33,7 @@ public class TomcatService
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-   Tomcat server;
+   //Tomcat server;
 //   Process proc;
    Thread runner;
    
@@ -67,28 +66,31 @@ public class TomcatService
          {
             try
             {
-               Tomcat.main(new String[0]);
-               log.log("Tomcat done");
+               Class tomcatClass;
                
-/*               proc = Runtime.getRuntime().exec("java -classpath ../lib/ext/hsql.jar org.hsql.Server");
-               
-               DataInputStream din = new DataInputStream(proc.getInputStream());
-               String line;
-               while((line = din.readLine()) != null)
+               System.out.println("Testing if Tomcat is present....");
+               try{
+                   tomcatClass = Class.forName("org.apache.tomcat.startup.Tomcat");
+                   System.out.println("OK");
+               }catch(Exception e)
                {
-                  // Notify that something happened
-                  synchronized(runner)
-                  {
-                     runner.notifyAll();
-                  }
-                  
-                  if (!line.equals("Press [Ctrl]+[C] to abort"))
-                     log.log(line);
-               }
-                  
-               runner = null;
-               proc = null;
-*/               
+                    System.out.println("failed");
+                    System.out.println("Tomcat wasn't found. Be sure to have your CLASSPATH correctly set");
+                    //e.printStackTrace();
+                    return;
+               } 
+               
+               Class tomcatArgsClasses[] = new Class[1];
+               String args[] = new String[0];
+               tomcatArgsClasses[0] = args.getClass();
+               Method mainMethod = tomcatClass.getMethod("main", tomcatArgsClasses);
+               
+               Object tomcatArgs[] = new Object[1];
+               tomcatArgs[0] = args;
+               
+               System.out.println("Starting Tomcat...");
+               mainMethod.invoke(null,tomcatArgs); 
+               
             } catch (Exception e)
             {
                log.error("Tomcat failed");
