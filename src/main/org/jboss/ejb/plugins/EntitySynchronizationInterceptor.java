@@ -56,7 +56,7 @@ import org.jboss.util.Sync;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.53 $
+ * @version $Revision: 1.54 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -97,6 +97,10 @@ import org.jboss.util.Sync;
  *   <li>invokeHome is now scheduled
  *   <li>made InstanceSynchronization protected so that I could inherit from it
  *   <li>made a protected method createSynchronization for inheritance purposes.
+ * </ol>
+ * <p><b>2001/10/11: billb</b>
+ * <ol>
+ *   <li>Do not cache.release a removed entity or removed entity can be put back into cache
  * </ol>
  */
 public class EntitySynchronizationInterceptor
@@ -473,7 +477,11 @@ public class EntitySynchronizationInterceptor
                   case ConfigurationMetaData.C_COMMIT_OPTION:
                      try
                      {
-                        container.getInstanceCache().release(ctx);
+                        // Do not call release if getId() is null.  This means that
+                        // the entity has been removed from cache.
+                        // release will schedule a passivation and this removed ctx
+                        // could be put back into the cache!
+                        if (ctx.getId() != null) container.getInstanceCache().release(ctx);
                      }
                      catch (Exception e)
                      {
