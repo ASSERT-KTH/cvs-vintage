@@ -12,7 +12,7 @@ $page.setTitle("Scarab Links")
 <li><a href="$link.setPage("Search.vm")">Search.vm</a></li>
 <li><a href="$link.setPage("entry,Wizard1.vm")">Enter Issue.vm</a></li>
 <li><a href="$link.setPage("entry,Wizard3.vm")">Enter Issue.vm (no deduplicate)</a></li>
-<li><a href="$link.setPage("ConfigureIssueList.vm").addPathInfo("nextTemplate", "Links.vm")">Configure Issue List<a></li>
+<li><a href="$link.setPage("ConfigureIssueList.vm").addPathInfo("nextTemplate", "Links.vm")">Configure Issue List</a></li>
 <li><a href="$link.setPage("AssignIssue.vm").addPathInfo("issue_0id","100").addPathInfo("intake-grp","issue").addPathInfo("issue","_0")">Assign Issue</a></li>
 </ul>
 
