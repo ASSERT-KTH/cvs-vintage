@@ -1,5 +1,5 @@
 
-// $Id: UMLMultiplicityComboBoxModel.java,v 1.4 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: UMLMultiplicityComboBoxModel.java,v 1.5 2003/09/28 19:10:53 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,13 +23,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLMultiplicityComboBoxModel.java,v 1.4 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: UMLMultiplicityComboBoxModel.java,v 1.5 2003/09/28 19:10:53 bobtarling Exp $
 package org.argouml.uml.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.argouml.model.ModelFacade;
 
-import ru.novosoft.uml.foundation.data_types.MMultiplicity;
+//import ru.novosoft.uml.foundation.data_types.MMultiplicity;
 
 /**
  * A model for multiplicities. This model is instantiated with a few default
@@ -42,11 +43,11 @@ public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
     private static List multiplicityList = new ArrayList();
     
     static {
-        multiplicityList.add(MMultiplicity.M0_N);
-        multiplicityList.add(MMultiplicity.M0_1);
-        multiplicityList.add(MMultiplicity.M1_1);
-        multiplicityList.add(MMultiplicity.M1_N);
-    }  
+        multiplicityList.add(ModelFacade.M0_N_MULTIPLICITY);
+        multiplicityList.add(ModelFacade.M0_1_MULTIPLICITY);
+        multiplicityList.add(ModelFacade.M1_1_MULTIPLICITY);
+        multiplicityList.add(ModelFacade.M1_N_MULTIPLICITY);
+    }
 
     /**
      * Constructor for UMLMultiplicityComboBoxModel.

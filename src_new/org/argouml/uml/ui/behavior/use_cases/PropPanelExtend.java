@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.26 2003/09/21 14:11:13 bobtarling Exp $
+// $Id: PropPanelExtend.java,v 1.27 2003/09/28 19:10:54 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
-import ru.novosoft.uml.foundation.data_types.MBooleanExpression;
+//import ru.novosoft.uml.foundation.data_types.MBooleanExpression;
 
 
 /**
@@ -96,8 +96,12 @@ public class PropPanelExtend extends PropPanelModelElement {
         addSeperator();
 
         UMLExpressionModel conditionModel =
-            new UMLExpressionModel(this, (Class)ModelFacade.EXTEND, "condition",
-				   MBooleanExpression.class, "getCondition", "setCondition");
+            new UMLExpressionModel(this, 
+                                   (Class)ModelFacade.EXTEND,
+                                   "condition",
+				   (Class)ModelFacade.BOOLEAN_EXPRESSION,
+                                   "getCondition", 
+                                   "setCondition");
 
         JTextArea conditionArea = new UMLExpressionBodyField(conditionModel,
 							     true);

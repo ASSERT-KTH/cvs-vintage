@@ -1,5 +1,5 @@
 
-// $Id: UMLRadioButtonPanel.java,v 1.7 2003/09/19 21:28:41 d00mst Exp $
+// $Id: UMLRadioButtonPanel.java,v 1.8 2003/09/28 19:10:53 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLRadioButtonPanel.java,v 1.7 2003/09/19 21:28:41 d00mst Exp $
+// $Id: UMLRadioButtonPanel.java,v 1.8 2003/09/28 19:10:53 bobtarling Exp $
 package org.argouml.uml.ui;
 
 import java.awt.GridLayout;
@@ -38,13 +38,14 @@ import javax.swing.ButtonModel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
+import org.argouml.model.ModelFacade;
 
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.tigris.gef.presentation.Fig;
 
-import ru.novosoft.uml.MBase;
+//import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
 
@@ -207,22 +208,18 @@ public abstract class UMLRadioButtonPanel
      */
     public void setTarget(Object target) {
         target = target instanceof Fig ? ((Fig) target).getOwner() : target;
-        if (org.argouml.model.ModelFacade.isABase(_target)) {
-            UmlModelEventPump.getPump().removeModelEventListener(
-								 this,
-								 (MBase) _target,
-								 _propertySetName);
+        UmlModelEventPump eventPump = UmlModelEventPump.getPump();
+        if (ModelFacade.isABase(_target)) {
+            eventPump.removeModelEventListener(this, _target, _propertySetName);
         }
         _target = target;
-        if (org.argouml.model.ModelFacade.isABase(_target)) {
+        if (ModelFacade.isABase(_target)) {
             // UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)_target, _propertySetName);
-            UmlModelEventPump.getPump().addModelEventListener(
-							      this,
-							      (MBase) _target,
-							      _propertySetName);
+            eventPump.addModelEventListener(this, _target, _propertySetName);
         }
-        if (_target != null)
+        if (_target != null) {
             buildModel();
+        }
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: UMLClassifierComboBoxModel.java,v 1.15 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLClassifierComboBoxModel.java,v 1.16 2003/09/28 19:10:53 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLClassifierComboBoxModel.java
 // Classes: UMLClassifierComboBoxModel
 // Original Author: 
-// $Id: UMLClassifierComboBoxModel.java,v 1.15 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLClassifierComboBoxModel.java,v 1.16 2003/09/28 19:10:53 bobtarling Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Layout tidied up and
 // mods made following bug fixing in UMLComboBoxModel. getModel() and
@@ -44,9 +44,9 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.Profile;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.behavior.common_behavior.MInstance;
-import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.model_management.MModel;
+//import ru.novosoft.uml.behavior.common_behavior.MInstance;
+//import ru.novosoft.uml.foundation.core.MClassifier;
+//import ru.novosoft.uml.model_management.MModel;
 
 /**
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
@@ -91,7 +91,7 @@ public class UMLClassifierComboBoxModel extends UMLComboBoxModel  {
 	    getSet().add(new UMLComboBoxEntry(null, profile, false));
 	}
 	if (model != null) {
-	    collectElements((MModel)model, profile, false);
+	    collectElements(model, profile, false);
 	}
                  
 	if (addElementsFromProfileModel()) {
@@ -154,7 +154,7 @@ public class UMLClassifierComboBoxModel extends UMLComboBoxModel  {
 	    Object model = ModelFacade.getModel(event.getSource());
 	    if (ModelFacade.isAInstance(event.getSource()) ) {
 		
-		Object/*MInstance*/ instance = (MInstance) event.getSource();	    	    
+		Object/*MInstance*/ instance = event.getSource();	    	    
 		Collection col = ModelFacade.getClassifiers(instance);
 		if (col != null && col.size() > 0) {
 		    it  = col.iterator();		  
@@ -179,7 +179,7 @@ public class UMLClassifierComboBoxModel extends UMLComboBoxModel  {
 	    try {		
                 Object[] _noArgs = {};
                 Object current = getGetMethod().invoke(getContainer(), _noArgs);
-		makeSelection( model , (MClassifier) current);
+		makeSelection( model , current);
 		
 	    }
 	    catch (InvocationTargetException ex) {

@@ -1,4 +1,4 @@
-// $Id: UMLSearchableComboBox.java,v 1.6 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLSearchableComboBox.java,v 1.7 2003/09/28 19:10:53 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLSearchableComboBox.java,v 1.6 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLSearchableComboBox.java,v 1.7 2003/09/28 19:10:53 bobtarling Exp $
 package org.argouml.uml.ui;
 
 import javax.swing.ComboBoxModel;
 import org.argouml.model.ModelFacade;
 
-import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.foundation.core.MModelElement;
+//import ru.novosoft.uml.MBase;
+//import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  * A searchable combobox. Searchable means that the user has only to type the
@@ -87,13 +87,13 @@ public class UMLSearchableComboBox extends UMLEditableComboBox {
             Object element = model.getElementAt(i);
             if (org.argouml.model.ModelFacade.isABase(element)) {
                 if (getRenderer() instanceof UMLListCellRenderer2) {
-                    String labelText = ((UMLListCellRenderer2) getRenderer()).makeText((MBase) element);
+                    String labelText = ((UMLListCellRenderer2) getRenderer()).makeText(element);
                     if (labelText != null && labelText.startsWith(text)) {                        
                         return element;
                     }
                 }
                 if (org.argouml.model.ModelFacade.isAModelElement(element)) {
-                    Object/*MModelElement*/ elem = (MModelElement) element;
+                    Object/*MModelElement*/ elem = element;
                     String name = ModelFacade.getName(elem);
                     if (name != null && name.startsWith(text)) {
                         return element;

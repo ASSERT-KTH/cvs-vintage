@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.145 2003/09/22 18:58:41 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.146 2003/09/28 19:10:54 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -284,6 +284,7 @@ public class ModelFacade {
     public static final Object SEQUENTIAL_CONCURRENCYKIND = 
         MCallConcurrencyKind.SEQUENTIAL;
     
+    public static final Object PSEUDOSTATEKIND = MPseudostateKind.class;
     public static final Object INITIAL_PSEUDOSTATEKIND =
         MPseudostateKind.INITIAL;
     public static final Object DEEPHISTORY_PSEUDOSTATEKIND =
@@ -294,6 +295,8 @@ public class ModelFacade {
         MPseudostateKind.FORK;
     public static final Object JOIN_PSEUDOSTATEKIND =
         MPseudostateKind.JOIN;
+    public static final Object JUNCTION_PSEUDOSTATEKIND =
+        MPseudostateKind.JUNCTION;
     public static final Object BRANCH_PSEUDOSTATEKIND =
         MPseudostateKind.BRANCH;
 
@@ -311,6 +314,13 @@ public class ModelFacade {
     public static final Object NONE_AGGREGATIONKIND =
         MAggregationKind.NONE;
 
+    public static final Object ORDERED_ORDERINGKIND =
+        MOrderingKind.ORDERED;
+    public static final Object UNORDERED_ORDERINGKIND =
+        MOrderingKind.UNORDERED;
+    public static final Object SORTED_ORDERINGKIND =
+        MOrderingKind.SORTED;
+    
     public static final Object M1_1_MULTIPLICITY =
         MMultiplicity.M1_1;
     
@@ -2823,11 +2833,18 @@ public class ModelFacade {
      * @return Iterator with operations.
      */
     public static Collection getParameters(Object handle) {
+        if (handle instanceof MObjectFlowState) {
+            return ((MObjectFlowState) handle).getParameters();
+        }
         if (handle instanceof MBehavioralFeature) {
             return ((MBehavioralFeature) handle).getParameters();
         }
-
-        // ...
+        if (handle instanceof MEvent) {
+            return ((MEvent) handle).getParameters();
+        }
+        if (handle instanceof MClassifier) {
+            return ((MClassifier)handle).getParameters();
+        }
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
 

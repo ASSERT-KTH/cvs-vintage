@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationEndAggregation.java,v 1.4 2003/09/17 23:26:45 bobtarling Exp $
+// $Id: ActionSetAssociationEndAggregation.java,v 1.5 2003/09/28 19:10:53 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetAssociationEndAggregation.java,v 1.4 2003/09/17 23:26:45 bobtarling Exp $
+// $Id: ActionSetAssociationEndAggregation.java,v 1.5 2003/09/28 19:10:53 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
@@ -34,7 +34,7 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
-import ru.novosoft.uml.foundation.data_types.MAggregationKind;
+//import ru.novosoft.uml.foundation.data_types.MAggregationKind;
 
 /**
  * 
@@ -68,13 +68,14 @@ public class ActionSetAssociationEndAggregation extends UMLChangeAction {
             Object target = ((UMLRadioButtonPanel) source.getParent()).getTarget();
             if (org.argouml.model.ModelFacade.isAAssociationEnd(target)) {
                 Object m = /*(MAssociationEnd)*/ target;
-                MAggregationKind kind = null;
+                Object/*MAggregationKind*/ kind = null;
                 if (actionCommand.equals(AGGREGATE_COMMAND)) {
-                    kind = MAggregationKind.AGGREGATE;
+                    kind = ModelFacade.AGGREGATE_AGGREGATIONKIND;
                 } else if (actionCommand.equals(COMPOSITE_COMMAND)) {
-                    kind = MAggregationKind.COMPOSITE;
-                } else
-                    kind = MAggregationKind.NONE;
+                    kind = ModelFacade.COMPOSITE_AGGREGATIONKIND;
+                } else {
+                    kind = ModelFacade.NONE_AGGREGATIONKIND;
+                }
                 ModelFacade.setAggregation(m, kind);
             }
         }

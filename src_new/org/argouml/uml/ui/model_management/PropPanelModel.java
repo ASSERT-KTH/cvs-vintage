@@ -1,4 +1,4 @@
-// $Id: PropPanelModel.java,v 1.11 2003/09/21 15:23:25 bobtarling Exp $
+// $Id: PropPanelModel.java,v 1.12 2003/09/28 19:10:54 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,9 +29,8 @@ import org.argouml.util.ConfigLoader;
 import org.argouml.application.ArgoVersion;
 import ru.novosoft.uml.model_management.MModelImpl;
 
-public class PropPanelModel extends PropPanelPackage
-    implements PluggablePropertyPanel 
-{
+public class PropPanelModel extends PropPanelPackage 
+        implements PluggablePropertyPanel {
     ////////////////////////////////////////////////////////////////
     // instance vars
 

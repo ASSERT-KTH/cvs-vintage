@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.3 2003/09/17 23:25:51 bobtarling Exp $
+// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.4 2003/09/28 19:10:53 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.3 2003/09/17 23:25:51 bobtarling Exp $
+// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.4 2003/09/28 19:10:53 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
@@ -32,7 +32,7 @@ import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
-import ru.novosoft.uml.foundation.data_types.MChangeableKind;
+//import ru.novosoft.uml.foundation.data_types.MChangeableKind;
 
 /**
  * @author jaap.branderhorst@xs4all.nl
@@ -68,16 +68,15 @@ public class UMLStructuralFeatureChangeabilityRadioButtonPanel
         if (getTarget() != null) {
             Object target = /*(MStructuralFeature)*/ getTarget();
             Object/*MChangeableKind*/ kind = ModelFacade.getChangeability(target);
-            if (kind == null || kind.equals(MChangeableKind.ADD_ONLY)) {
+            if (kind == null || kind.equals(ModelFacade.ADD_ONLY_CHANGEABLEKIND)) {
                 setSelected(ActionSetStructuralFeatureChangeability.ADDONLY_COMMAND);
-            } else
-		if (kind.equals(MChangeableKind.CHANGEABLE)) {
-		    setSelected(ActionSetStructuralFeatureChangeability.CHANGEABLE_COMMAND); 
-		} else
-		    if (kind.equals(MChangeableKind.FROZEN)) {
-			setSelected(ActionSetStructuralFeatureChangeability.FROZEN_COMMAND);
-		    } else
-			setSelected(ActionSetStructuralFeatureChangeability.CHANGEABLE_COMMAND);
+            } else if (kind.equals(ModelFacade.CHANGEABLE_CHANGEABLEKIND)) {
+                setSelected(ActionSetStructuralFeatureChangeability.CHANGEABLE_COMMAND); 
+            } else if (kind.equals(ModelFacade.FROZEN_CHANGEABLEKIND)) {
+                setSelected(ActionSetStructuralFeatureChangeability.FROZEN_COMMAND);
+            } else {
+                setSelected(ActionSetStructuralFeatureChangeability.CHANGEABLE_COMMAND);
+            }
         }
     }
 }

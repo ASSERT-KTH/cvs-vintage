@@ -1,4 +1,4 @@
-// $Id: UMLModelElementCachedListModel.java,v 1.14 2003/09/21 11:07:03 bobtarling Exp $
+// $Id: UMLModelElementCachedListModel.java,v 1.15 2003/09/28 19:10:53 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,7 @@ abstract public class UMLModelElementCachedListModel extends UMLModelElementList
         Object/*MModelElement*/ element = null;
         java.util.List cache = getCache();
         if (cache != null) {
-            element = (MModelElement) cache.get(index);
+            element = cache.get(index);
         }
         return (MModelElement)element;
     }

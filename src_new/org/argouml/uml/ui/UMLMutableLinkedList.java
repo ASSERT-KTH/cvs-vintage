@@ -1,4 +1,4 @@
-// $Id: UMLMutableLinkedList.java,v 1.9 2003/06/29 23:50:03 linus Exp $
+// $Id: UMLMutableLinkedList.java,v 1.10 2003/09/28 19:10:53 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPopupMenu;
 
-import ru.novosoft.uml.foundation.core.MModelElement;
+//import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  * <p>
@@ -69,11 +69,11 @@ public class UMLMutableLinkedList extends UMLLinkedList {
         public PopupMenu() {
             super();
             if (isAdd()) {
-		_addAction.setTarget((MModelElement) getTarget());
+		_addAction.setTarget(getTarget());
 		add(_addAction);
             }
             if (isNew()) {
-		_newAction.setTarget((MModelElement) getTarget());
+		_newAction.setTarget(getTarget());
 		add(_newAction);
             }
             if (isNew() || isAdd())

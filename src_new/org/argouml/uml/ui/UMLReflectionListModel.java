@@ -1,4 +1,4 @@
-// $Id: UMLReflectionListModel.java,v 1.17 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLReflectionListModel.java,v 1.18 2003/09/28 19:10:53 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.util.Iterator;
 import javax.swing.JPopupMenu;
 
 import org.apache.log4j.Logger;
+import org.argouml.model.ModelFacade;
 import org.argouml.ui.NavigatorPane;
 import org.argouml.ui.targetmanager.TargetManager;
 
@@ -147,15 +148,15 @@ public class UMLReflectionListModel extends UMLModelElementListModel   {
                         Iterator iter = ((Collection) collection).iterator();
                         for (int i = 0; iter.hasNext(); i++) {
                             obj = iter.next();
-                            if (i == index && org.argouml.model.ModelFacade.isAModelElement(obj)) {
-                                element = (MModelElement) obj;
+                            if (i == index && ModelFacade.isAModelElement(obj)) {
+                                element = obj;
                                 break;
                             }
                         }
                     }
                     else {
-                        if (index == 0 && org.argouml.model.ModelFacade.isAModelElement(collection)) {
-                            element = (MModelElement) collection;
+                        if (index == 0 && ModelFacade.isAModelElement(collection)) {
+                            element = collection;
                         }
                     }
                 }

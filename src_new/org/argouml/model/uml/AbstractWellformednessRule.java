@@ -1,4 +1,4 @@
-// $Id: AbstractWellformednessRule.java,v 1.3 2003/06/30 18:00:19 linus Exp $
+// $Id: AbstractWellformednessRule.java,v 1.4 2003/09/28 19:10:55 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,7 @@ public abstract class AbstractWellformednessRule {
      * Checks if the combination of the element and the newValue give
      * a wellformed result
      */
-    public abstract boolean isWellformed(MBase element, Object newValue);
+    public abstract boolean isWellformed(Object/*MBase*/ element, Object newValue);
 	
     /**
      * Returns the localized user message

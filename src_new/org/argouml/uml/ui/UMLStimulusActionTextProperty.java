@@ -1,4 +1,4 @@
-// $Id: UMLStimulusActionTextProperty.java,v 1.6 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLStimulusActionTextProperty.java,v 1.7 2003/09/28 19:10:53 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.uml.ui;
 import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.behavior.common_behavior.MStimulus;
+//import ru.novosoft.uml.behavior.common_behavior.MStimulus;
 
 /**
  * TODO: this class should be moved to package
@@ -43,7 +43,7 @@ public class UMLStimulusActionTextProperty  {
     
     
     public void setProperty(UMLUserInterfaceContainer container, String newValue) {
-	Object/*MStimulus*/  stimulus = (MStimulus) container.getTarget();
+	Object/*MStimulus*/  stimulus = container.getTarget();
 	if (stimulus != null) {
 
 	    String oldValue = getProperty(container);
@@ -70,7 +70,7 @@ public class UMLStimulusActionTextProperty  {
     
     public String getProperty(UMLUserInterfaceContainer container) {
         String value = null;       
-	Object/*MStimulus*/ stimulus = (MStimulus) container.getTarget();
+	Object/*MStimulus*/ stimulus = container.getTarget();
 	if (stimulus != null) {
 	    Object action = ModelFacade.getDispatchAction(stimulus);
 	    if (action != null) value = ModelFacade.getName(action);

@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxEntry.java,v 1.12 2003/09/21 11:07:03 bobtarling Exp $
+// $Id: UMLComboBoxEntry.java,v 1.13 2003/09/28 19:10:53 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,8 +30,10 @@ import java.lang.reflect.*;
 import java.awt.event.*;
 import java.util.*;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
+
+//import ru.novosoft.uml.foundation.core.MModelElement;
+//import ru.novosoft.uml.foundation.core.MNamespace;
 
 public class UMLComboBoxEntry implements Comparable {
     private Object/*MModelElement*/ _element;
@@ -53,7 +55,7 @@ public class UMLComboBoxEntry implements Comparable {
         _element = element;
         if (element != null) {
             Object/*MNamespace*/ ns = ModelFacade.getNamespace(element);
-            _shortName = profile.formatElement((MModelElement)element, ns);
+            _shortName = profile.formatElement(element, ns);
         }
         else {
             _shortName = "";
@@ -76,7 +78,7 @@ public class UMLComboBoxEntry implements Comparable {
     public void updateName() {
         if (_element != null) {
             Object/*MNamespace*/ ns = ModelFacade.getNamespace(_element);
-            _shortName = _profile.formatElement((MModelElement)_element, ns);
+            _shortName = _profile.formatElement(_element, ns);
         }
     }
 
@@ -98,7 +100,7 @@ public class UMLComboBoxEntry implements Comparable {
     public String getLongName() {
         if (_longName == null) {
             if (_element != null) {
-                _longName = _profile.formatElement((MModelElement)_element, null);
+                _longName = _profile.formatElement(_element, null);
             }
             else {
                 _longName = "void";
@@ -131,7 +133,7 @@ public class UMLComboBoxEntry implements Comparable {
                 Object/*MModelElement*/ ownedElement;
                 Iterator iter = ownedElements.iterator();
                 while (iter.hasNext()) {
-                    ownedElement = (MModelElement) iter.next();
+                    ownedElement = iter.next();
                     targetName = ModelFacade.getName(ownedElement);
                     if (targetName != null && phantomName.equals(targetName)) {
                         if (ModelFacade.isAPackage(ownedElement)) {
@@ -226,7 +228,7 @@ public class UMLComboBoxEntry implements Comparable {
     public void nameChanged(Object/*MModelElement*/ element) {
         if (element == _element && _element != null) {
             Object/*MNamespace*/ ns = ModelFacade.getNamespace(_element);
-            _shortName = _profile.formatElement((MModelElement)_element, ns);
+            _shortName = _profile.formatElement(_element, ns);
             _displayName = _shortName;
             _longName = null;
         }

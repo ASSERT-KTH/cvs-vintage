@@ -1,4 +1,4 @@
-// $Id: UMLIncludeListModel.java,v 1.13 2003/09/21 14:11:13 bobtarling Exp $
+// $Id: UMLIncludeListModel.java,v 1.14 2003/09/28 19:10:54 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -233,7 +233,7 @@ public class UMLIncludeListModel extends UMLModelElementListModel  {
             Object target  = ModelFacade.getBase(include);
 
             if (target != null) {
-                value = super.formatElement((MModelElement)target);
+                value = super.formatElement(target);
             }
         }
         else {

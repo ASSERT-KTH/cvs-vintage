@@ -1,4 +1,4 @@
-// $Id: UMLListCellRenderer2.java,v 1.14 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLListCellRenderer2.java,v 1.15 2003/09/28 19:10:53 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.14 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLListCellRenderer2.java,v 1.15 2003/09/28 19:10:53 bobtarling Exp $
 package org.argouml.uml.ui;
 
 import org.argouml.model.ModelFacade;
@@ -36,8 +36,8 @@ import javax.swing.JList;
 import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 
-import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.foundation.core.MModelElement;
+//import ru.novosoft.uml.MBase;
+//import ru.novosoft.uml.foundation.core.MModelElement;
 
 
 /**
@@ -71,7 +71,7 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
         JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
         if (org.argouml.model.ModelFacade.isABase(value)) {
-            String text = makeText((MBase) value);            
+            String text = makeText(value);            
             label.setText(text);
             if (_showIcon) {
                 Icon icon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIcon(value);
@@ -99,18 +99,17 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
      */
     public String makeText(Object value) {
         String name = null;
-        if (org.argouml.model.ModelFacade.isAModelElement(value)) {
-            Object/*MModelElement*/ elem = (MModelElement) value;
+        if (ModelFacade.isAModelElement(value)) {
+            Object/*MModelElement*/ elem = value;
             name = ModelFacade.getName(elem);
             if (name == null || name.equals("")) {
                 name = "(anon " + makeTypeName(elem) + ")";
             }
-        } else 
-	    if (org.argouml.model.ModelFacade.isAMultiplicity(value)) {
-		name = value.toString();
-	    } else {                    
-		name = makeTypeName(value);
-	    }
+        } else if (ModelFacade.isAMultiplicity(value)) {
+            name = value.toString();
+        } else {                    
+            name = makeTypeName(value);
+        }
         return name;
 
     }

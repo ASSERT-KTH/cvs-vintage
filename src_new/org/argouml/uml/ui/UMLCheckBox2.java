@@ -1,5 +1,4 @@
-
-// $Id: UMLCheckBox2.java,v 1.13 2003/09/19 21:28:41 d00mst Exp $
+// $Id: UMLCheckBox2.java,v 1.14 2003/09/28 19:10:53 bobtarling Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,13 +26,14 @@ package org.argouml.uml.ui;
 
 import javax.swing.Action;
 import javax.swing.JCheckBox;
+import org.argouml.model.ModelFacade;
 
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.tigris.gef.presentation.Fig;
 
-import ru.novosoft.uml.MBase;
+//import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
 
@@ -126,14 +126,14 @@ public abstract class UMLCheckBox2
      */
     public void setTarget(Object target) {
         target = target instanceof Fig ? ((Fig) target).getOwner() : target;
-        if (org.argouml.model.ModelFacade.isABase(_target)) {
-            UmlModelEventPump.getPump().removeModelEventListener(this, (MBase) _target, _propertySetName);
+        if (ModelFacade.isABase(_target)) {
+            UmlModelEventPump.getPump().removeModelEventListener(this, _target, _propertySetName);
         }
        
-        if (org.argouml.model.ModelFacade.isABase(target)) {
+        if (ModelFacade.isABase(target)) {
             _target = target;
 	    // UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)_target, _propertySetName);
-	    UmlModelEventPump.getPump().addModelEventListener(this, (MBase) _target, _propertySetName);
+	    UmlModelEventPump.getPump().addModelEventListener(this, _target, _propertySetName);
             buildModel();
         }
             

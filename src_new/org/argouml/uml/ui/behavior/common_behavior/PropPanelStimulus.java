@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.35 2003/09/21 14:11:13 bobtarling Exp $
+// $Id: PropPanelStimulus.java,v 1.36 2003/09/28 19:10:54 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.35 2003/09/21 14:11:13 bobtarling Exp $
+// $Id: PropPanelStimulus.java,v 1.36 2003/09/28 19:10:54 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -51,6 +51,7 @@ import org.argouml.util.ConfigLoader;
 
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.behavior.common_behavior.MStimulus;
+
 /**
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.

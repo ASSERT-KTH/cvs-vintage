@@ -1,4 +1,4 @@
-// $Id: AssociationEndAggregationWellformednessRule.java,v 1.3 2003/06/30 18:00:20 linus Exp $
+// $Id: AssociationEndAggregationWellformednessRule.java,v 1.4 2003/09/28 19:10:55 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,10 +61,8 @@ public class AssociationEndAggregationWellformednessRule
      * aggregation or composite.
      * @see org.argouml.model.uml.AbstractWellformednessRule#isWellformed(MBase,Object)
      */
-    public boolean isWellformed(MBase element, Object newValue) {
-	if (element instanceof MAssociationEnd
-	    && newValue instanceof MAggregationKind)
-	{
+    public boolean isWellformed(Object/*MBase*/ element, Object newValue) {
+	if (element instanceof MAssociationEnd && newValue instanceof MAggregationKind) {
 	    MAssociationEnd modelelement = (MAssociationEnd) element;
 	    MAggregationKind aggregation = (MAggregationKind) newValue;
 	    if (aggregation.equals(MAggregationKind.NONE)) return true;
