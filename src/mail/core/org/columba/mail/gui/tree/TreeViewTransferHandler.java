@@ -23,6 +23,7 @@ import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.folder.command.MoveFolderCommand;
+import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.table.MessageReferencesTransfer;
 
 import java.awt.datatransfer.DataFlavor;
@@ -124,7 +125,7 @@ public class TreeViewTransferHandler extends TransferHandler {
         result[0] = transferable.getFolderReferences()[0];
         result[1] = new FolderCommandReference(destFolder);
 
-        CopyMessageCommand command = new CopyMessageCommand(result);
+        CopyMessageCommand command = new MoveMessageCommand(result);
         MainInterface.processor.addOp(command);
         dataWasImported = true;
 

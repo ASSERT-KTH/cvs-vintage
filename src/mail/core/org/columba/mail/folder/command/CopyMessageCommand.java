@@ -77,119 +77,158 @@ public class CopyMessageCommand extends FolderCommand {
         MailInterface.treeModel.nodeChanged(destFolder);
     }
 
+    protected void doExecute(WorkerStatusController worker,String statusMessage,
+                             String errorRetryMessage,String errorIgnoreMessage,
+                             String errorCopyMessage,String errorTitle,
+                             String canceledMessage)
+    	throws Exception
+    {
+	     // get references
+	    FolderCommandReference[] references = (FolderCommandReference[]) getReferences();
+	
+	    // use wrapper class
+	    adapter = new FolderCommandAdapter(references);
+	
+	    // get source references
+	    FolderCommandReference[] r = adapter.getSourceFolderReferences();
+	
+	    // get destination foldedr
+	    destFolder = adapter.getDestinationFolder();
+	
+	    // for each message
+	    for (int i = 0; (i < r.length) && !worker.cancelled(); i++)
+	    {
+	      Object[] uids = r[i].getUids();
+	
+	      // get source folder
+	      MessageFolder srcFolder = (MessageFolder) r[i].getFolder();
+	
+	      // register for status events
+	      ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
+	
+	      // setting lastSelection for srcFolder to null
+	      srcFolder.setLastSelection(null);
+	
+	      LOG.fine("src=" + srcFolder + " dest=" + destFolder);
+	
+	      // update status message
+	      worker
+	            .setDisplayText(MessageFormat.format(
+	                           		MailResourceLoader.getString("statusbar",
+	                                                           "message",
+	                                                           statusMessage),
+	                             	new Object[]{destFolder.getName()}));
+	
+	      // initialize progress bar with total number of messages
+	      worker.setProgressBarMaximum(uids.length);
+	
+	      if (srcFolder.getRootFolder().equals(destFolder.getRootFolder()))
+	      {
+	        // folders have same root folder
+	        // -> for example: two IMAP folders on the same server
+	        // -----> this means we use server-side copying which
+	        // -----> is much faster than using inputstreams here
+	        //
+	        // also used for local folders, which saves some parsing work
+	        srcFolder.innerCopy(destFolder, uids);
+	      }
+	      else
+	      {
+	        // two different root folders
+	        // -> get inputstream from source-folder and add it to
+	        // -> destination-folder as inputstream
+	        // -----> moving of raw message source
+	        // (works also for copying from local to IMAP folders, etc.
+	        for (int j = 0; (j < uids.length) && !worker.cancelled(); j++)
+	        {
+	          if (!srcFolder.exists(uids[j]))
+	          {
+	            continue;
+	          }
+	
+	          try
+	          {
+	            // add source to destination folder
+	            Attributes attributes = srcFolder.getAttributes(uids[j]);
+	            Flags flags = srcFolder.getFlags(uids[j]);
+	            InputStream messageSourceStream = srcFolder
+	                                                       .getMessageSourceStream(uids[j]);
+	            destFolder.addMessage(messageSourceStream, attributes, flags);
+	            messageSourceStream.close();
+	          }
+	          catch (IOException ioe)
+	          {
+	            String[] options = new String[]{
+	                MailResourceLoader.getString("statusbar", "message",
+	                                             errorRetryMessage),
+	                MailResourceLoader.getString("statusbar", "message",
+	                                             errorIgnoreMessage),
+	                MailResourceLoader.getString("", "global", "cancel")};
+	
+	            int result = 
+	              JOptionPane.showOptionDialog(	null,
+	                                          	MailResourceLoader.getString("statusbar",
+	                                                                         "message",
+	                                                                         errorCopyMessage),
+	                                            MailResourceLoader.getString("statusbar",
+	                                                                         "message",
+	                                                                         errorTitle),
+	                                            JOptionPane.YES_NO_CANCEL_OPTION,
+	                                            JOptionPane.ERROR_MESSAGE,
+	                                            null, 
+	                                            options, 
+	                                            options[0]);
+	            switch (result)
+	            {
+	              case JOptionPane.YES_OPTION :
+	
+	                //retry copy
+	                j--;
+	
+	                break;
+	
+	              case JOptionPane.CANCEL_OPTION :
+	                worker.cancel();
+	
+	              default :
+	
+	                continue;
+	            }
+	          }
+	
+	          // update progress bar
+	          worker.setProgressBarValue(j);
+	        }
+	      }
+	
+	      //reset progress bar
+	      worker.setProgressBarValue(0);
+	    }
+	
+	    if (worker.cancelled())
+	    {
+	      worker.setDisplayText(MailResourceLoader.getString("statusbar",
+	                                                         "message",
+	                                                         canceledMessage));
+	    }
+	    else
+	    {
+	      // We are done - clear the status message with a delay
+	      worker.clearDisplayTextWithDelay();
+	    }
+        
+    }
+    
     /**
      * @see org.columba.core.command.Command#execute(Worker)
      */
     public void execute(WorkerStatusController worker) throws Exception {
-        // get references
-        FolderCommandReference[] references = (FolderCommandReference[]) getReferences();
-
-        // use wrapper class
-        adapter = new FolderCommandAdapter(references);
-
-        // get source references
-        FolderCommandReference[] r = adapter.getSourceFolderReferences();
-
-        // get destination foldedr
-        destFolder = adapter.getDestinationFolder();
-
-        // for each message
-        for (int i = 0; (i < r.length) && !worker.cancelled(); i++) {
-            Object[] uids = r[i].getUids();
-
-            // get source folder
-            MessageFolder srcFolder = (MessageFolder) r[i].getFolder();
-
-            // register for status events
-            ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
-
-            // setting lastSelection for srcFolder to null
-            srcFolder.setLastSelection(null);
-
-            LOG.fine("src=" + srcFolder + " dest=" + destFolder);
-
-            // update status message
-            worker.setDisplayText(MessageFormat.format(
-                    MailResourceLoader.getString("statusbar", "message",
-                        "copy_messages"), new Object[] {destFolder.getName()}));
-
-            // initialize progress bar with total number of messages
-            worker.setProgressBarMaximum(uids.length);
-
-            if (srcFolder.getRootFolder().equals(destFolder.getRootFolder())) {
-                // folders have same root folder
-                // -> for example: two IMAP folders on the same server
-                // -----> this means we use server-side copying which
-                // -----> is much faster than using inputstreams here
-                //
-                // also used for local folders, which saves some parsing work
-                srcFolder.innerCopy(destFolder, uids);
-            } else {
-                // two different root folders
-                // -> get inputstream from source-folder and add it to
-                // -> destination-folder as inputstream
-                // -----> moving of raw message source
-                // (works also for copying from local to IMAP folders, etc.
-                for (int j = 0; (j < uids.length) && !worker.cancelled(); j++) {
-                    if (!srcFolder.exists(uids[j])) {
-                        continue;
-                    }
-
-                    try {
-                        // add source to destination folder
-                    	Attributes attributes = srcFolder.getAttributes(uids[j]);
-                    	Flags flags = srcFolder.getFlags(uids[j]);
-                        InputStream messageSourceStream = srcFolder.getMessageSourceStream(uids[j]);
-                        destFolder.addMessage(messageSourceStream, attributes, flags);
-                        messageSourceStream.close();
-                    } catch (IOException ioe) {
-                        String[] options = new String[] {
-                                MailResourceLoader.getString("statusbar",
-                                    "message", "err_copy_messages_retry"),
-                                MailResourceLoader.getString("statusbar",
-                                    "message", "err_copy_messages_ignore"),
-                                MailResourceLoader.getString("", "global",
-                                    "cancel")
-                            };
-
-                        switch (JOptionPane.showOptionDialog(null,
-                            MailResourceLoader.getString("statusbar",
-                                "message", "err_copy_messages_msg"),
-                            MailResourceLoader.getString("statusbar",
-                                "message", "err_copy_messages_title"),
-                            JOptionPane.YES_NO_CANCEL_OPTION,
-                            JOptionPane.ERROR_MESSAGE, null, options, options[0])) {
-                        case JOptionPane.YES_OPTION:
-
-                            //retry copy
-                            j--;
-
-                            break;
-
-                        case JOptionPane.CANCEL_OPTION:
-                            worker.cancel();
-
-                        default:
-
-                            continue;
-                        }
-                    }
-
-                    // update progress bar
-                    worker.setProgressBarValue(j);
-                }
-            }
-
-            //reset progress bar
-            worker.setProgressBarValue(0);
-        }
-
-        if (worker.cancelled()) {
-            worker.setDisplayText(MailResourceLoader.getString("statusbar",
-                    "message", "copy_messages_cancelled"));
-        } else {
-            // We are done - clear the status message with a delay
-            worker.clearDisplayTextWithDelay();
-        }
+      doExecute(worker,
+                "copy_messages",
+                "err_copy_messages_retry",
+                "err_copy_messages_ignore",
+                "err_copy_messages_msg",
+                "err_copy_messages_title",
+                "copy_messages_cancelled");
     }
 }

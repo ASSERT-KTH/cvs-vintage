@@ -89,44 +89,53 @@ public class MoveMessageCommand extends CopyMessageCommand {
      * @see org.columba.core.command.Command#execute(Worker)
      */
     public void execute(WorkerStatusController worker)
-        throws Exception {
-        // calling CopyMessageCommand.execute() here!
-        super.execute(worker);
+    	throws Exception 
+    {
+      // calling CopyMessageCommand.execute() here!
+      //super.execute(worker);
+      doExecute(worker,
+                "move_messages",
+                "err_copy_messages_retry",
+                "err_copy_messages_ignore",
+                "err_move_messages_msg",
+                "err_move_messages_title",
+                "move_messages_cancelled");
+      
 
-        // get source reference array
-        FolderCommandReference[] r = adapter.getSourceFolderReferences();
+      // get source reference array
+      FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
-        // for every source reference
-        for (int i = 0; i < r.length; i++) {
-            // get messgae UIDs
-            Object[] uids = r[i].getUids();
+      // for every source reference
+      for (int i = 0; i < r.length; i++) {
+          // get messgae UIDs
+          Object[] uids = r[i].getUids();
 
-            // get source folder
-            MessageFolder srcFolder = (MessageFolder) r[i].getFolder();
+          // get source folder
+          MessageFolder srcFolder = (MessageFolder) r[i].getFolder();
 
-            // register for status events
-            ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
+          // register for status events
+          ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
-            // setting lastSelection to null
-            srcFolder.setLastSelection(null);
+          // setting lastSelection to null
+          srcFolder.setLastSelection(null);
 
-            uids = r[i].getUids();
+          uids = r[i].getUids();
 
-            LOG.info("src=" + srcFolder + " dest=" + destFolder);
+          LOG.info("src=" + srcFolder + " dest=" + destFolder);
 
-            // update status message
-            worker.setDisplayText("Moving messages to " + destFolder.getName()
-                    + "...");
-            worker.setProgressBarMaximum(uids.length);
+          // update status message
+          worker.setDisplayText("Moving messages to " + destFolder.getName()
+                  + "...");
+          worker.setProgressBarMaximum(uids.length);
 
-            // mark all messages as expunged
-            srcFolder.markMessage(uids, MarkMessageCommand.MARK_AS_EXPUNGED);
+          // mark all messages as expunged
+          srcFolder.markMessage(uids, MarkMessageCommand.MARK_AS_EXPUNGED);
 
-            // expunge folder
-            srcFolder.expungeFolder();
+          // expunge folder
+          srcFolder.expungeFolder();
 
-            // We are done - clear the status message after a delay
-            worker.clearDisplayTextWithDelay();
-        }
+          // We are done - clear the status message after a delay
+          worker.clearDisplayTextWithDelay();
+      }
     }
 }
