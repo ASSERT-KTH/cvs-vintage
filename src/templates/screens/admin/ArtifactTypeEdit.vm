@@ -84,7 +84,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <tr>
 <th nowrap="nowrap">Select</th>
 <th>Attribute group name</th>
-<th>Active/inactive</th>
+<th>Active</th>
 <th>Sequence #</th>
 </tr>
 
@@ -139,7 +139,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <th nowrap="nowrap">Select</th>
 <th>User Attribute name</th>
 <th>Per project name</th>
-<th>Active/inactive</th>
+<th>Active</th>
 <th>Sequence #</th>
 </tr>
 
