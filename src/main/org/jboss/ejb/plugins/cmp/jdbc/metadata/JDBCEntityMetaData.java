@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -45,7 +45,7 @@ public final class JDBCEntityMetaData {
    /**
     * type mapping used for this entity
     */
-   private final JDBCTypeMappingMetaData typeMapping;
+   private final JDBCTypeMappingMetaData datasourceMapping;
    
    /**
     * the name of this entity
@@ -300,7 +300,7 @@ public final class JDBCEntityMetaData {
 
       // other default values
       dataSourceName = null;
-      typeMapping = null;
+      datasourceMapping = null;
       createTable = false;
       removeTable = false;
       rowLocking = false;
@@ -353,19 +353,21 @@ public final class JDBCEntityMetaData {
          dataSourceName = defaultValues.getDataSourceName();
       }
       
-      // get the type mapping for this datasource (optional, but always 
+      // get the datasource mapping for this datasource (optional, but always 
       // set in standardjbosscmp-jdbc.xml)
-      String typeMappingString = 
-            MetaData.getOptionalChildContent(element, "type-mapping");      
-      if(typeMappingString != null) {
-         typeMapping = jdbcApplication.getTypeMappingByName(typeMappingString);
+      String datasourceMappingString = 
+            MetaData.getOptionalChildContent(element, "datasource-mapping");
+      if(datasourceMappingString != null) {
+         datasourceMapping = 
+               jdbcApplication.getTypeMappingByName(datasourceMappingString);
       
-         if(typeMapping == null) {
+         if(datasourceMapping == null) {
             throw new DeploymentException("Error in jbosscmp-jdbc.xml : " +
-                  "type-mapping " + typeMappingString + " not found");
+                  "datasource-mapping " + datasourceMappingString + 
+                  " not found");
          }
       } else {
-         typeMapping = defaultValues.getTypeMapping();
+         datasourceMapping = defaultValues.getTypeMapping();
       }
 
       // get table name
@@ -651,7 +653,7 @@ public final class JDBCEntityMetaData {
     * @return the jdbc type mapping for this entity
     */
    public JDBCTypeMappingMetaData getTypeMapping() {
-      return typeMapping;
+      return datasourceMapping;
    }
    
    /**
