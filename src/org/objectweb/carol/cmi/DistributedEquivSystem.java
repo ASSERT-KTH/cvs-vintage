@@ -423,27 +423,26 @@ class DistributedEquivSystem {
             bind_addr = "";
         }
 
-        chan_props =
-            "UDP(mcast_addr="
-                + mcast_addr
-                + ";mcast_port="
-                + mcast_port
-                + bind_addr
-                + ";ip_ttl=32;"
-                + "mcast_send_buf_size=150000;mcast_recv_buf_size=80000):"
-                + "PING(num_initial_members=2;timeout=3000):"
-            // + "MERGE2(min_interval=1000;max_interval=2000):"
-    +"FD(timeout=2000;max_tries=2):"
-        + "STABLE:"
-        + "NAKACK:"
-        + "VERIFY_SUSPECT(timeout=1500):"
-        + "UNICAST:"
-        + "FRAG(frag_size=4096;down_thread=false;up_thread=false):"
-        + "FLUSH:"
-        + "GMS:"
-        + "VIEW_ENFORCER:"
-        + "STATE_TRANSFER:"
-        + "QUEUE:";
+        // protocol stack allowing to multiple nodes to start simultaneously and
+        // merge their group.
+        chan_props = "UDP(mcast_addr="
+            + mcast_addr
+            + ";mcast_port="
+            + mcast_port
+            + bind_addr
+            + ";ip_ttl=32;"
+            + "mcast_send_buf_size=150000;mcast_recv_buf_size=80000):"
+            + "PING(timeout=2000;num_initial_members=3):"
+            + "MERGE2(min_interval=5000;max_interval=10000):"
+            + "FD(timeout=2000;max_tries=3;shun=true):"
+            + "VERIFY_SUSPECT(timeout=1500):"
+            + "pbcast.NAKACK(gc_lag=50;retransmit_timeout=300,600,1200,2400,4800):"
+            + "UNICAST(timeout=1200,2400,3600):"
+            + "pbcast.STABLE(stability_delay=1000;desired_avg_gossip=2000):"
+            + "FRAG(frag_size=4096;down_thread=false;up_thread=false):"
+            + "pbcast.GMS(join_timeout=3000;join_retry_timeout=2000;"
+            + "shun=false;print_local_addr=true)";
+
         //org.jgroups.log.Trace.init();
         groupname = Config.getMulticastGroupName();
         chan = new JChannel(chan_props);
