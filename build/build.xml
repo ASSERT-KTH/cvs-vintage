@@ -66,6 +66,18 @@
         <copy todir="${build.dir}" filtering="no">
             <fileset dir="${tomcat.dist.dir}/"/>
         </copy>
+        <!-- no need to have two copies of this checked into CVS -->
+        <copy todir="${build.dir}/common/lib" filtering="no">
+             <fileset dir="${lib.dir}">
+                 <include name="**/xerces*.jar"/>
+             </fileset>
+        </copy>
+        <!-- no need to have two copies of this checked into CVS -->
+        <copy todir="${build.dir}/server/lib" filtering="no">
+             <fileset dir="${lib.dir}">
+                <include name="**/jakarta-regexp*.jar"/>
+            </fileset>
+        </copy>
 
         <chmod dir="${build.dir}" perm="ug+rx" includes="**/*.sh" />
 
@@ -398,11 +410,9 @@
                 <include name="**/naming-common.jar"/>
                 <include name="**/naming-resources.jar"/>
                 <include name="**/servlet.jar"/>
-                <include name="**/crimson.jar"/>
-                <include name="**/jaxp.jar"/>
             </fileset>
-        </copy>
-        <copy todir="${tomcat.dist.dir}/lib" filtering="no">
+       </copy>
+       <copy todir="${tomcat.dist.dir}/lib" filtering="no">
             <fileset dir="${tomcat.cvs.dir}/build/lib">
                 <include name="**/naming-factory.jar"/>
             </fileset>
@@ -414,7 +424,6 @@
                 <include name="**/servlets-invoker.jar"/>
                 <include name="**/servlets-manager.jar"/>
                 <include name="**/catalina.jar"/>
-                <include name="**/jakarta-regexp*.jar"/>
             </fileset>
         </copy>
     </target>

@@ -11,7 +11,7 @@ rem       Java runtime options
 rem   JAVA_HOME     
 rem       Must point at your Java Development Kit installation.
 rem
-rem $Id: jasper.bat,v 1.12 2001/09/26 00:57:57 jon Exp $
+rem $Id: jasper.bat,v 1.13 2001/10/14 21:30:36 jon Exp $
 rem ---------------------------------------------------------------------------
 
 rem ----- Save Environment Variables That May Change --------------------------
@@ -21,19 +21,19 @@ set _CLASSPATH=%CLASSPATH%
 
 rem ----- Verify and Set Required Environment Variables -----------------------
 
-if not "%JAVA_HOME%" == "" goto gotJavaHome
+if not "%JAVA_HOME%" == "" goto gotJava
 echo You must set JAVA_HOME to point at your Java Development Kit installation
 goto cleanup
-:gotJavaHome
+:gotJava
 
-if not "%JASPER_HOME%" == "" goto gotJasperHome
+if not "%JASPER_HOME%" == "" goto gotHome
 set JASPER_HOME=.
-:gotJasperHome
-if exist %JASPER_HOME%\bin\jpappend.bat goto jasperHomeOk
+:gotHome
+if exist %JASPER_HOME%\bin\jpappend.bat goto okHome
 echo Using JASPER_HOME: %JASPER_HOME%
 echo JASPER_HOME/bin/jpappend.bat does not exist. Please specify JASPER_HOME properly.
 goto cleanup
-:jasperHomeOk
+:okHome
 
 rem ----- Set Up The Runtime Classpath ----------------------------------------
 

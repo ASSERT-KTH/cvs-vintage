@@ -20,7 +20,7 @@ rem   JSSE_HOME     (Optional) May point at your Java Secure Sockets Extension
 rem                 (JSSE) installation, whose JAR files will be added to the
 rem                 system class path used to start Tomcat.
 rem
-rem $Id: catalina.bat,v 1.13 2001/09/26 00:57:57 jon Exp $
+rem $Id: catalina.bat,v 1.14 2001/10/14 21:30:36 jon Exp $
 rem ---------------------------------------------------------------------------
 
 
@@ -34,25 +34,25 @@ set _CP=%CP%
 
 rem ----- Verify and Set Required Environment Variables -----------------------
 
-if not "%JAVA_HOME%" == "" goto gotJavaHome
+if not "%JAVA_HOME%" == "" goto gotJava
 echo You must set JAVA_HOME to point at your Java Development Kit installation
 goto cleanup
-:gotJavaHome
+:gotJava
 
-if not "%CATALINA_HOME%" == "" goto gotCatalinaHome
+if not "%CATALINA_HOME%" == "" goto gotHome
 set CATALINA_HOME=.
-if exist "%CATALINA_HOME%\bin\catalina.bat" goto okCatalinaHome
+if exist "%CATALINA_HOME%\bin\catalina.bat" goto okHome
 set CATALINA_HOME=..
-:gotCatalinaHome
-if exist "%CATALINA_HOME%\bin\catalina.bat" goto okCatalinaHome
+:gotHome
+if exist "%CATALINA_HOME%\bin\catalina.bat" goto okHome
 echo Cannot find catalina.bat in %CATALINA_HOME%\bin
 echo Please check your CATALINA_HOME setting
 goto cleanup
-:okCatalinaHome
+:okHome
 
-if not "%CATALINA_BASE%" == "" goto gotCatalinaBase
+if not "%CATALINA_BASE%" == "" goto gotBase
 set CATALINA_BASE=%CATALINA_HOME%
-:gotCatalinaBase
+:gotBase
 
 
 rem ----- Prepare Appropriate Java Execution Commands -------------------------
@@ -70,7 +70,7 @@ rem ----- Set Up The Runtime Classpath ----------------------------------------
 
 set CP=%CATALINA_HOME%\bin\bootstrap.jar;%JAVA_HOME%\lib\tools.jar
 if "%JSSE_HOME%" == "" goto noJsse
-set CP=%CP%;%JSSE_HOME%\lib\jcert.jar;%JSSE_HOME%\lib\jnet.jar;%JSSE_HOME%\jsse.jar
+set CP=%CP%;%JSSE_HOME%\lib\jcert.jar;%JSSE_HOME%\lib\jnet.jar;%JSSE_HOME%\lib\jsse.jar
 :noJsse
 set CLASSPATH=%CP%
 echo Using CATALINA_BASE: %CATALINA_BASE%

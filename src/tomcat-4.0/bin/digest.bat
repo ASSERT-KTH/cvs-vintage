@@ -10,7 +10,7 @@ rem
 rem   This script is assumed to run from the bin directory or have the
 rem   CATALINA_HOME env variable set.
 rem
-rem $Id: digest.bat,v 1.6 2001/09/26 00:57:57 jon Exp $
+rem $Id: digest.bat,v 1.7 2001/10/14 21:30:36 jon Exp $
 rem ---------------------------------------------------------------------------
 
 
@@ -27,16 +27,16 @@ echo You must set JAVA_HOME to point at your Java Development Kit installation
 goto cleanup
 :gotJavaHome
 
-if not "%CATALINA_HOME%" == "" goto gotCatalinaHome
+if not "%CATALINA_HOME%" == "" goto gotHome
 set CATALINA_HOME=.
-if exist "%CATALINA_HOME%\server\lib\catalina.jar" goto okCatalinaHome
+if exist "%CATALINA_HOME%\server\lib\catalina.jar" goto okHome
 set CATALINA_HOME=..
-:gotCatalinaHome
-if exist "%CATALINA_HOME%\server\lib\catalina.jar" goto okCatalinaHome
+:gotHome
+if exist "%CATALINA_HOME%\server\lib\catalina.jar" goto okHome
 echo Cannot find catalina.jar in %CATALINA_HOME%\server\lib
 echo Please check your CATALINA_HOME setting or run this script from the bin directory
 goto cleanup
-:okCatalinaHome
+:okHome
 
 
 rem ----- Prepare Appropriate Java Execution Commands -------------------------
