@@ -9,7 +9,7 @@
 #end
 
 <div class="app" id="div2-4-1-step1">
-<div id="apphead"><h2>Report builder</h2></div>
+<div id="apphead"><h2>$l10n.ReportBuilder</h2></div>
 
 <div class="tabs">
   <table cellpadding="3" cellspacing="0" border="0">
@@ -46,7 +46,7 @@
   <div>
     <table width="100%" cellpadding="3" cellspacing="2" border="1">		
       <tr>
-        <th>$l10n.Selected</th>
+        <th>$l10n.Select</th>
         <th>$l10n.HeadingSummary</th>
       </tr>
   #foreach ($heading in $headings)
@@ -54,26 +54,23 @@
     #indexedRows($velocityCount)
       <td>#if ($headingIndex == $index)*#end$velocityCount</td>
       <td>
-       $reportDefn.displayHeading($heading)
+       #set ($val = $reportDefn.displayHeading($heading))
+       #if ($val)
+       $val
+       #else
+       &#160;
+       #end
       </td>
     </tr>
   #end
   </table>
 #end
 
-
 <h3>$l10n.GroupRelatedData</h3>
 
+<div class="colbar">
 <p>$l10n.Grouping</p>
-
 <p>$l10n.GroupingEg</p>
-
-<div class="functnbar">
-  <input type="submit" name="eventSubmit_doAddgroup" value="$l10n.AddNew" />&#160;
- #if ($reportGroupsSize > 0)
-  <input type="submit" name="eventSubmit_doChangeGroupName" value="$l10n.ChangeGroupName" />&#160;
-  <input type="submit" name="eventSubmit_doDeleteGroup" value="$l10n.DeleteSelected" />
- #end
 </div>
 
 #set ($reportGroupsSize = 0)
@@ -82,7 +79,7 @@
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
  #if ($reportGroupsSize > 0)
-  <th nowrap="nowrap">&#160;</th>
+  <th nowrap="nowrap">$l10n.Select</th>
  #end
   <th>$l10n.GroupNumber</th>
   <th>$l10n.GroupName</th>
@@ -105,7 +102,7 @@
  #if ($reportGroupsSize > 0)
   <td>&#160;</td>
  #end  
-  <td>Group $finalCount (new)</td>
+  <td>$l10n.Group $finalCount ($l10n.New)</td>
   <td><input type="text" value="$!data.Parameters.getString("groupname_new")"
           name="groupname_new"" /></td>
  </tr>
@@ -115,8 +112,9 @@
   <input type="submit" name="eventSubmit_doAddGroup" value="$l10n.AddNew" />&#160;
  #if ($reportGroupsSize > 0)
   <input type="submit" name="eventSubmit_doEditGroupName" value="$l10n.ChangeGroupName" />&#160;
-  <input type="submit" name="eventSubmit_doDeleteGroup" value="$l10n.DeleteSelected" />
+  <input type="submit" name="eventSubmit_doDeleteGroup" value="$l10n.DeleteSelected" />&#160;
  #end
+  <input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" />
 </div>
 
 #if ($reportGroupsSize > 0)
@@ -183,7 +181,7 @@
  #end
 
 <div class="functnbar2">
-  <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveGroups" />&#160;
+  <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveGroups" />
 </div>
 #end
 

@@ -1,10 +1,10 @@
 #set ($mitList = $scarabR.Report.MITList)
 #set ($userAttrs = $mitList.CommonUserAttributes)
 <p>
-  <a href="#add">Click here</a> to add users to this reports row content
+  $l10n.ClickHereReportMessage
 </p>
 
-<h3>Selected users</h3>
+<h3>$l10n.SelectedUsers</h3>
 
 #if (!$selectedHeading)
     <p class="alert">$l10n.NoneAssigned.</p>

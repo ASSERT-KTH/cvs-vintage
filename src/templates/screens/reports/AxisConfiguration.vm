@@ -61,6 +61,10 @@
     #set ($headingIndex = 0)
   #end
   <h3>$l10n.get("${rowCol}Headings")</h3>
+  <div class="colbar">
+    $l10n.format("DefineHeaderInstructions", "$l10n.EditSelectedHeading")
+    "$l10n.format("SelectOptionsHeader", $axisIndex)" $l10n.ToSetThe $l10n.HeadingSummary.toLowerCase().
+  </div>
   <div>
     <table width="100%" cellpadding="3" cellspacing="2" border="1">		
       <tr>
@@ -142,7 +146,7 @@
   #if ($selectedHeading.ReportGroups)
     $renderer.render("reports", "EditGroups.vm")
   #end
-    $renderer.render("reports", "SelectOptions.vm")
+  $renderer.render("reports", "SelectOptions.vm")
 #elseif ($selectedType == 1)
   $renderer.render("reports", "SelectUsers.vm")
 #elseif ($selectedType == 2)
