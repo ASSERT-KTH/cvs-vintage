@@ -37,7 +37,7 @@ public class SubjectTest extends TestCase {
     public void testReply() {
         String s = "Subject";
 
-        String result = MessageBuilderHelper.createForwardSubject(s);
+        String result = MessageBuilderHelper.createReplySubject(s);
 
         assertEquals("Re: Subject", result);
     }
@@ -61,7 +61,7 @@ public class SubjectTest extends TestCase {
     public void testReply2() {
         String s = "Re: Subject";
 
-        String result = MessageBuilderHelper.createForwardSubject(s);
+        String result = MessageBuilderHelper.createReplySubject(s);
 
         assertEquals("Re: Subject", result);
     }
@@ -86,7 +86,7 @@ public class SubjectTest extends TestCase {
     public void testReply3() {
         String s = "Re:Subject";
 
-        String result = MessageBuilderHelper.createForwardSubject(s);
+        String result = MessageBuilderHelper.createReplySubject(s);
 
         assertEquals("Re:Subject", result);
     }
@@ -112,7 +112,7 @@ public class SubjectTest extends TestCase {
     public void testAlreadyInString() {
         String s = "Test: Hallo";
 
-        boolean result = MessageBuilderHelper.isAlreadyReply(s, "Test:");
+        boolean result = MessageBuilderHelper.isAlreadyReply(s, "test:");
 
         assertTrue(result);
     }

@@ -189,12 +189,12 @@ public class MessageBuilderHelper {
         buf.append(sender);
 
         if (to != null) {
-            buf.append(",");
+            buf.append(", ");
             buf.append(to);
         }
 
         if (cc != null) {
-            buf.append(",");
+            buf.append(", ");
             buf.append(cc);
         }
 
