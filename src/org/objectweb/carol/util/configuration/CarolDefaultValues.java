@@ -156,8 +156,12 @@ public class CarolDefaultValues {
      * @param protocol jndi url
      */
     public static String getRMIProtocol(String url) {
-	StringTokenizer st = new StringTokenizer(url, "://");
-	String pref = st.nextToken().trim();
-	return mapping.getProperty(pref,pref);
+	if (url != null) {
+	    StringTokenizer st = new StringTokenizer(url, "://");
+	    String pref = st.nextToken().trim();
+	    return mapping.getProperty(pref,pref);
+	} else {
+	    return null;
+	}
     }
 }

@@ -92,7 +92,7 @@ public class BasicServer {
     public static void start() {
 	try {
 	    
-	    org.objectweb.carol.util.configuration.CarolConfiguration.initCarol();
+	    org.objectweb.carol.util.configuration.CarolConfiguration.init();
 
 	    // create, export and bind TheBasicObject an the BasicMultiObject (wich call the BasicObject)
 	    ba = new BasicObject();

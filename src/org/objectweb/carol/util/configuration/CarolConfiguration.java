@@ -132,7 +132,7 @@ public class CarolConfiguration {
      * A server can call this static method
      * for instantiate the carol communication layer
      */
-    public static void initCarol() throws RMIConfigurationException {	
+    public static void init() throws RMIConfigurationException {	
 	// init Trace 
 	TraceCarol.configure();
 	new CarolConfiguration();
@@ -206,12 +206,13 @@ public class CarolConfiguration {
 	    
 	} catch(Exception e) { 
 	    TraceCarol.error("Exception occur when loading default/carol/jndi configuration file: ", e);
+	    throw new RMIConfigurationException("Exception occur when loading default/carol/jndi configuration file");
         }
 
 	boolean cc = checkCarolConfiguration();
 	// Check this properties and load the properties file 
 	if (!cc) throw new RMIConfigurationException("Can't start Carol, configuration check fail");
-	
+
 	// translate existing jndi properties
 	if (jndiProps != null) jndiProps = jndi2Carol(jndiProps);
 
