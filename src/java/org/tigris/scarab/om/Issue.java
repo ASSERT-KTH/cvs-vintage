@@ -1485,9 +1485,8 @@ public class Issue
 
         // FIXME: UGLY! IDBroker doesn't have a Peer yet.
         String sql = "insert into " + idTable 
-            + " set ID_TABLE_ID=" + id + ',' + 
-            IDBroker.TABLE_NAME + "='" + key + "'," +
-            IDBroker.NEXT_ID  + "=1," + IDBroker.QUANTITY  + "=1";
+         + " (ID_TABLE_ID,TABLE_NAME,NEXT_ID,QUANTITY) "
+         + " VALUES (" + id + ",'" + key + "',1,1)" ;
         BasePeer.executeStatement(sql, dbCon);
     }
 
