@@ -23,15 +23,13 @@ import java.util.logging.*;
 import org.columba.core.config.Config;
 import org.columba.core.main.MainInterface;
 
-import org.columba.ristretto.log.RistrettoLogger;
-
 /**
  * Depending on the debug flag (--debug command line
  * option reflected in MainInterface.DEBUG) the logger will either
  * show all debug messages or just severe errors.
  */
 public class ColumbaLogger {
-    public static Logger log;
+    public static final Logger log;
 
     static {
         log = Logger.getLogger("org.columba");
@@ -45,11 +43,12 @@ public class ColumbaLogger {
         }
         if (MainInterface.DEBUG) {
             log.setLevel(Level.ALL);
+            System.setProperty("org.columba.ristretto.debug",
+                    Boolean.TRUE.toString());
+            System.setProperty("javax.net.debug",
+                    "ssl,handshake,data,trustmanager");
         } else {
             log.setLevel(Level.SEVERE);
         }
-
-        RistrettoLogger.setDebugEnabled(MainInterface.DEBUG);
-        RistrettoLogger.setLogger(new ColumbaRistrettoLogger(log));
     }
 }

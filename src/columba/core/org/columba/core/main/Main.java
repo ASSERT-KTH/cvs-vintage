@@ -65,11 +65,9 @@ public class Main {
                 buf.append("%");
             }
 
-            if (MainInterface.DEBUG) {
-                ColumbaLogger.log.info(
-                    "trying to pass arguments to a running Columba session:\n" +
-                    buf.toString());
-            }
+            ColumbaLogger.log.info(
+                "Trying to pass command line arguments to a running Columba session:\n" +
+                buf.toString());
 
             writer.write(buf.toString());
             writer.flush();
@@ -84,12 +82,13 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        ColumbaLogger.log.info("Starting up Columba...");
         ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
         cmdLineParser.initCmdLine(args);
 
         MainInterface.DEBUG = cmdLineParser.isDebugOption();
 
-        // the configPath settings are made in the commandlineParser @see ColumbaCmdLineParser  
+        // the configPath settings are made in the commandlineParser @see ColumbaCmdLineParser
         loadInVMInstance(args);
 
         StartUpFrame frame = new StartUpFrame();
