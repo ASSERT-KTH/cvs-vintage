@@ -12,7 +12,7 @@ import java.util.HashMap;
  * Implementation of a Least Recently Used cache policy.
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class LRUCachePolicy 
 	implements CachePolicy
@@ -216,7 +216,7 @@ public class LRUCachePolicy
 	/**
 	 * Double queued list used to store cache entries.
 	 */
-	protected class LRUList 
+	public class LRUList 
 	{
 		/** The maximum capacity of the cache list */
 		public int m_maxCapacity;
@@ -265,6 +265,7 @@ public class LRUCachePolicy
 						m_head = entry;
 						m_tail = entry;
 						++m_count;
+						entryAdded(entry);
 					}
 					else if (m_count == 1 && m_head == entry) {} // there is only the head and I want to promote it, do nothing
 					else if (m_count < m_capacity) 
@@ -274,6 +275,7 @@ public class LRUCachePolicy
 						m_head.m_prev = entry;
 						m_head = entry;
 						++m_count;
+						entryAdded(entry);
 					}
 					else if (m_count < m_maxCapacity) 
 					{
@@ -282,7 +284,10 @@ public class LRUCachePolicy
 						m_head.m_prev = entry;
 						m_head = entry;
 						++m_count;
+						int oldCapacity = m_capacity;
 						++m_capacity;
+						entryAdded(entry);
+						capacityChanged(oldCapacity);
 					}
 					else {throw new IllegalStateException("Attempt to put a new cache entry on a full cache");}
 				}
@@ -366,7 +371,22 @@ public class LRUCachePolicy
 				}
 			}
 			--m_count;
+			entryRemoved(entry);
 		}
+		/**
+		 * Callback that signals that the given entry has been added to the cache.
+		 */
+		protected void entryAdded(LRUCacheEntry entry) {}
+		/**
+		 * Callback that signals that the given entry has been removed from the cache.
+		 */
+		protected void entryRemoved(LRUCacheEntry entry) {}
+		/**
+		 * Callback that signals that the capacity of the cache is changed.
+		 * @param oldCapacity the capacity before the change happened
+		 */
+		protected void capacityChanged(int oldCapacity) {}
+
 		public String toString() 
 		{
 			String s = Integer.toHexString(super.hashCode());
@@ -382,7 +402,7 @@ public class LRUCachePolicy
 	/**
 	 * Double linked cell used as entry in the cache list.
 	 */
-	protected class LRUCacheEntry 
+	public class LRUCacheEntry 
 	{
 		/** Reference to the next cell in the list */
 		public  LRUCacheEntry m_next;
