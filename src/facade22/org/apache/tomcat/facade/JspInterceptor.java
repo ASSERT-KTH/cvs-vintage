@@ -621,6 +621,8 @@ final class JasperLiaison {
 	    
 		if(debug>0)log.log( "Generated " +
 				    mangler.getClassFileName() );
+            } catch ( java.io.FileNotFoundException fnfex ){
+		return 404;
 	    } catch( Exception ex ) {
 		if( ctx!=null )
 		    ctx.log("compile error: req="+req, ex);
