@@ -35,7 +35,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public final class JDBCTypeFactory
 {
@@ -278,6 +278,7 @@ public final class JDBCTypeFactory
          isDefaultImmutable(clazz) ||
          clazz == java.util.Date.class ||
          clazz == java.sql.Date.class ||
+         clazz == java.sql.Time.class ||
          clazz == java.sql.Timestamp.class;
    }
 
