@@ -97,7 +97,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.72 2001/11/19 03:15:26 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.73 2001/11/19 22:17:07 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -159,6 +159,19 @@ public class ScarabModule
         throws Exception
     {
         return super.getRModuleAttributes(crit);
+    }
+
+    public Vector getRModuleIssueTypes()
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
+        .addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
+                     IssueTypePeer.ISSUE_TYPE_ID)
+        .add(IssueTypePeer.PARENT_ID, 0)
+        .add(IssueTypePeer.DELETED, 0)
+        .addAscendingOrderByColumn(RModuleIssueTypePeer.PREFERRED_ORDER);
+        return super.getRModuleIssueTypes(crit);
     }
 
     /**
