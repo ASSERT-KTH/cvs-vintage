@@ -122,8 +122,14 @@ public class Attachment
         }
         else 
         {
-            super.setFileName(name
-                .substring(name.lastIndexOf(File.separator)+1));    
+            // look for both '/' and '\' as path separators
+            int start = name.lastIndexOf('/')+1;
+            if ( start == 0 ) 
+            {
+                start = name.lastIndexOf('\\')+1;                
+            }
+            // don't allow spaces
+            super.setFileName(name.substring(start).replace(' ', '_'));    
         }
     }
     
