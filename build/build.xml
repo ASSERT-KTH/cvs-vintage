@@ -999,16 +999,12 @@
         <mkdir dir="${migration.dest.dir}"/>
         <javac srcdir="${src.dir}/migration"
                destdir="${migration.dest.dir}"
-               excludes="**/package.html,torque/**"
-               debug="${debug}"
-               deprecation="${deprecation}"
-               optimize="${optimize}">
+               excludes="**/package.html,torque/**">
             <classpath refid="classpath"/>
         </javac>
 
         <!-- Configure the migration task -->
         <path id="migration-cp">
-            <path refid="classpath"/>
             <pathelement location="${migration.dest.dir}"/>
         </path>
 

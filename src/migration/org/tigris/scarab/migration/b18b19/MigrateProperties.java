@@ -50,111 +50,124 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 public class MigrateProperties extends Task
 {
-    private static Map propertyMap = new LinkedHashMap(120);
+    //
+    // Need to initialise this so that we have an object to lock on.
+    //
+    private static String[] propertyMap = new String[0];
     
     static
     {
         synchronized(propertyMap)
         {
-            if (propertyMap.size() == 0)
-            {
-                // Scarab.properties
-                propertyMap.put("scarab.site.name", "scarab.site.name");
-                propertyMap.put("scarab.http.domain", "scarab.http.domain");
-                propertyMap.put("scarab.http.scheme", "scarab.http.scheme");
-                propertyMap.put("scarab.http.scriptname", "scarab.http.scriptname");
-                propertyMap.put("scarab.http.port", "scarab.http.port");
-                propertyMap.put("scarab.automatic.role.approval", "scarab.automatic.role.approval");
-                propertyMap.put("scarab.email.encoding", "scarab.email.encoding");
-                propertyMap.put("scarab.email.default.fromName", "scarab.email.default.fromName");
-                propertyMap.put("scarab.email.default.fromAddress", "scarab.email.default.fromAddress");
-                propertyMap.put("scarab.register.email.checkValidA", "scarab.register.email.checkValidA");
-                propertyMap.put("scarab.register.email.badEmails", "scarab.register.email.badEmails");
-                propertyMap.put("scarab.email.register.fromName", "scarab.email.register.fromName");
-                propertyMap.put("scarab.email.register.fromAddress", "scarab.email.register.fromAddress");
-                propertyMap.put("scarab.email.forgotpassword.fromName", "scarab.email.forgotpassword.fromName");
-                propertyMap.put("scarab.email.forgotpassword.fromAddress", "scarab.email.forgotpassword.fromAddress");
-                propertyMap.put("scarab.attachments.path", "scarab.attachments.repository");
-                propertyMap.put("searchindex.path", "scarab.lucene.index.path");
-                propertyMap.put("services.TorqueService.classname", "scarab.torque.service");
-                propertyMap.put("services.DatabaseInitializer.classname", "scarab.dbinit.service");
-                propertyMap.put("torque.managed_class.org.tigris.scarab.om.Module.manager", "scarab.module.service");
-                propertyMap.put("torque.managed_class.org.tigris.scarab.om.ScarabUser.manager", "scarab.user.service");
-                propertyMap.put("scarab.dataexport.encoding", "scarab.dataexport.encoding");
-                
-                // TurbineResources.properties
-                propertyMap.put("turbine.mode", "scarab.mode");
-                propertyMap.put("template.homepage", "scarab.homepage");
-                propertyMap.put("session.timeout", "scarab.session.timeout");
-                propertyMap.put("system.mail.host", "scarab.system.mail.host");
-                propertyMap.put("services.LocalizationService.locale.default.language", "scarab.locale.default.language");
-                propertyMap.put("services.LocalizationService.locale.default.country", "scarab.locale.default.country");
-                propertyMap.put("services.UploadService.repository", "scarab.file.upload.path");
-                propertyMap.put("services.UploadService.size.max", "scarab.file.max.size");
-                propertyMap.put("scarab.http.scheme", "scarab.template.cache");
-                propertyMap.put("resolver.cache.template", "scarab.template.cache");
-                propertyMap.put("resolver.cache.module", "scarab.template.cache");
-                propertyMap.put("services.VelocityService.file.resource.loader.cache", "scarab.template.cache");
-                propertyMap.put("services.EmailService.file.resource.loader.cache", "scarab.template.cache");
-                propertyMap.put("services.VelocityService.file.resource.loader.path", "template.path+/templates");
-                propertyMap.put("services.EmailService.file.resource.loader.path", "template.path+/templates");
-                propertyMap.put("module.packages", "scarab.module.packages");
-                
-                propertyMap.put("services.LocalizationService.classname", "scarab.localization.service");
-                propertyMap.put("torque.manager.useCache", "scarab.torque.manager.cache");
-                propertyMap.put("action.sessionvalidator", "scarab.sessionvalidator");
-                propertyMap.put("pipeline.default.descriptor", "scarab.default.pipeline.descriptor");
-                propertyMap.put("exceptionHandler.default", "scarab.request.error.handler");
-                propertyMap.put("services.PullService.tool.request.link", "scarab.pull.link");
-                propertyMap.put("services.PullService.tool.request.staticLink", "scarab.pull.staticlink");
-                propertyMap.put("services.SecurityService.user.manager", "scarab.security.user.manager");
-                propertyMap.put("services.IntakeService.serialize.path", "scarab.intake.serialize.file");
-                
-                propertyMap.put("log4j.category.default", "scarab.log.level.turbine+, turbine");
-                propertyMap.put("log4j.category.org.tigris.scarab", "scarab.log.level.scarab+, scarab");
-                propertyMap.put("log4j.appender.scarab.file", "scarab.log.file.scarab");
-                propertyMap.put("log4j.appender.scarab.layout.conversionPattern", "scarab.log.pattern");
-                propertyMap.put("log4j.appender.scarab.append", "scarab.log.append.scarab");
-                propertyMap.put("log4j.category.org.tigris.scarab.util.xmlissues", "scarab.log.level.scarabxmlimport+, scarabxmlimport");
-                propertyMap.put("log4j.appender.scarabxmlimport.file", "scarab.log.file.scarabxmlimport");
-                propertyMap.put("log4j.appender.scarabxmlimport.layout.conversionPattern", "scarab.log.pattern");
-                propertyMap.put("log4j.appender.scarabxmlimport.append", "scarab.log.append.scarabxmlimport");
-                propertyMap.put("log4j.category.org.apache.turbine", "scarab.log.level.turbine+, turbine");
-                propertyMap.put("log4j.appender.turbine.file", "scarab.log.file.turbine");
-                propertyMap.put("log4j.appender.turbine.layout.conversionPattern", "scarab.log.pattern");
-                propertyMap.put("log4j.appender.turbine.append", "scarab.log.append.turbine");
-                propertyMap.put("log4j.category.org.apache.torque", "scarab.log.level.torque+, torque");
-                propertyMap.put("log4j.appender.torque.file", "scarab.log.file.torque");
-                propertyMap.put("log4j.appender.torque.layout.conversionPattern", "scarab.log.pattern");
-                propertyMap.put("log4j.appender.torque.append", "scarab.log.append.torque");
-                propertyMap.put("log4j.category.org.apache.fulcrum", "scarab.log.level.fulcrum+, services");
-                propertyMap.put("log4j.appender.services.file", "scarab.log.file.fulcrum");
-                propertyMap.put("log4j.appender.services.layout.conversionPattern", "scarab.log.pattern");
-                propertyMap.put("log4j.appender.services.append", "scarab.log.append.fulcrum");
-                propertyMap.put("log4j.category.org.apache.stratum", "scarab.log.level.stratum+, stratum");
-                propertyMap.put("log4j.appender.stratum.file", "scarab.log.file.stratum");
-                propertyMap.put("log4j.appender.stratum.layout.conversionPattern", "scarab.log.pattern");
-                propertyMap.put("log4j.appender.stratum.append", "scarab.log.append.stratum");
-                propertyMap.put("log4j.category.org.apache.jcs", "scarab.log.level.jcs+, jcs");
-                propertyMap.put("log4j.appender.jcs.file", "scarab.log.file.jcs");
-                propertyMap.put("log4j.appender.jcs.layout.conversionPattern", "scarab.log.pattern");
-                propertyMap.put("log4j.appender.jcs.append", "scarab.log.append.jcs");
-                propertyMap.put("log4j.category.org.apache.fulcrum.db", "scarab.log.level.torque+, torque");
-                propertyMap.put("log4j.category.org.apache.commons", "scarab.log.level.turbine+, turbine");
-                propertyMap.put("log4j.category.org.apache.commons.beanutils", "scarab.log.level.beanutils+, turbine");
-                propertyMap.put("log4j.category.org.apache.velocity", "scarab.log.level.velocity+, velocity");
-                propertyMap.put("log4j.appender.velocity.file", "scarab.log.file.velocity");
-                propertyMap.put("log4j.appender.velocity.layout.conversionPattern", "scarab.log.pattern");
-                propertyMap.put("log4j.appender.velocity.append", "scarab.log.append.velocity");
+            if (propertyMap.length == 0) {
+                //
+                // This array maps the old properties (source) to the new
+                // ones (target), where the first of each pair is the target
+                // and the second is the source.
+                //
+                // Some of the source properties have a '+' character in them
+                // - this means that the text following the '+' should be
+                // appended to the property value before being assigned to the
+                // target property.
+                //
+                propertyMap = new String[] {
+                    // Target prop.          Source prop.
+                    
+                    // Scarab.properties
+                    "scarab.site.name", "scarab.site.name",
+                    "scarab.http.domain", "scarab.http.domain",
+                    "scarab.http.scheme", "scarab.http.scheme",
+                    "scarab.http.scriptname", "scarab.http.scriptname",
+                    "scarab.http.port", "scarab.http.port",
+                    "scarab.automatic.role.approval", "scarab.automatic.role.approval",
+                    "scarab.email.encoding", "scarab.email.encoding",
+                    "scarab.email.default.fromName", "scarab.email.default.fromName",
+                    "scarab.email.default.fromAddress", "scarab.email.default.fromAddress",
+                    "scarab.register.email.checkValidA", "scarab.register.email.checkValidA",
+                    "scarab.register.email.badEmails", "scarab.register.email.badEmails",
+                    "scarab.email.register.fromName", "scarab.email.register.fromName",
+                    "scarab.email.register.fromAddress", "scarab.email.register.fromAddress",
+                    "scarab.email.forgotpassword.fromName", "scarab.email.forgotpassword.fromName",
+                    "scarab.email.forgotpassword.fromAddress", "scarab.email.forgotpassword.fromAddress",
+                    "scarab.attachments.path", "scarab.attachments.repository",
+                    "searchindex.path", "scarab.lucene.index.path",
+                    "services.TorqueService.classname", "scarab.torque.service",
+                    "services.DatabaseInitializer.classname", "scarab.dbinit.service",
+                    "torque.managed_class.org.tigris.scarab.om.Module.manager", "scarab.module.service",
+                    "torque.managed_class.org.tigris.scarab.om.ScarabUser.manager", "scarab.user.service",
+                    "scarab.dataexport.encoding", "scarab.dataexport.encoding",
+                    
+                    // TurbineResources.properties
+                    "turbine.mode", "scarab.mode",
+                    "template.homepage", "scarab.homepage",
+                    "session.timeout", "scarab.session.timeout",
+                    "system.mail.host", "scarab.system.mail.host",
+                    "services.LocalizationService.locale.default.language", "scarab.locale.default.language",
+                    "services.LocalizationService.locale.default.country", "scarab.locale.default.country",
+                    "services.UploadService.repository", "scarab.file.upload.path",
+                    "services.UploadService.size.max", "scarab.file.max.size",
+                    "scarab.http.scheme", "scarab.template.cache",
+                    "resolver.cache.template", "scarab.template.cache",
+                    "resolver.cache.module", "scarab.template.cache",
+                    "services.VelocityService.file.resource.loader.cache", "scarab.template.cache",
+                    "services.EmailService.file.resource.loader.cache", "scarab.template.cache",
+                    "services.VelocityService.file.resource.loader.path", "template.path+/templates",
+                    "services.EmailService.file.resource.loader.path", "template.path+/templates",
+                    "module.packages", "scarab.module.packages",
+                    
+                    "services.LocalizationService.classname", "scarab.localization.service",
+                    "torque.manager.useCache", "scarab.torque.manager.cache",
+                    "action.sessionvalidator", "scarab.sessionvalidator",
+                    "pipeline.default.descriptor", "scarab.default.pipeline.descriptor",
+                    "exceptionHandler.default", "scarab.request.error.handler",
+                    "services.PullService.tool.request.link", "scarab.pull.link",
+                    "services.PullService.tool.request.staticLink", "scarab.pull.staticlink",
+                    "services.SecurityService.user.manager", "scarab.security.user.manager",
+                    "services.IntakeService.serialize.path", "scarab.intake.serialize.file",
+                    
+                    "log4j.category.default", "scarab.log.level.turbine+, turbine",
+                    "log4j.category.org.tigris.scarab", "scarab.log.level.scarab+, scarab",
+                    "log4j.appender.scarab.file", "scarab.log.file.scarab",
+                    "log4j.appender.scarab.layout.conversionPattern", "scarab.log.pattern",
+                    "log4j.appender.scarab.append", "scarab.log.append.scarab",
+                    "log4j.category.org.tigris.scarab.util.xmlissues", "scarab.log.level.scarabxmlimport+, scarabxmlimport",
+                    "log4j.appender.scarabxmlimport.file", "scarab.log.file.scarabxmlimport",
+                    "log4j.appender.scarabxmlimport.layout.conversionPattern", "scarab.log.pattern",
+                    "log4j.appender.scarabxmlimport.append", "scarab.log.append.scarabxmlimport",
+                    "log4j.category.org.apache.turbine", "scarab.log.level.turbine+, turbine",
+                    "log4j.appender.turbine.file", "scarab.log.file.turbine",
+                    "log4j.appender.turbine.layout.conversionPattern", "scarab.log.pattern",
+                    "log4j.appender.turbine.append", "scarab.log.append.turbine",
+                    "log4j.category.org.apache.torque", "scarab.log.level.torque+, torque",
+                    "log4j.appender.torque.file", "scarab.log.file.torque",
+                    "log4j.appender.torque.layout.conversionPattern", "scarab.log.pattern",
+                    "log4j.appender.torque.append", "scarab.log.append.torque",
+                    "log4j.category.org.apache.fulcrum", "scarab.log.level.fulcrum+, services",
+                    "log4j.appender.services.file", "scarab.log.file.fulcrum",
+                    "log4j.appender.services.layout.conversionPattern", "scarab.log.pattern",
+                    "log4j.appender.services.append", "scarab.log.append.fulcrum",
+                    "log4j.category.org.apache.stratum", "scarab.log.level.stratum+, stratum",
+                    "log4j.appender.stratum.file", "scarab.log.file.stratum",
+                    "log4j.appender.stratum.layout.conversionPattern", "scarab.log.pattern",
+                    "log4j.appender.stratum.append", "scarab.log.append.stratum",
+                    "log4j.category.org.apache.jcs", "scarab.log.level.jcs+, jcs",
+                    "log4j.appender.jcs.file", "scarab.log.file.jcs",
+                    "log4j.appender.jcs.layout.conversionPattern", "scarab.log.pattern",
+                    "log4j.appender.jcs.append", "scarab.log.append.jcs",
+                    "log4j.category.org.apache.fulcrum.db", "scarab.log.level.torque+, torque",
+                    "log4j.category.org.apache.commons", "scarab.log.level.turbine+, turbine",
+                    "log4j.category.org.apache.commons.beanutils", "scarab.log.level.beanutils+, turbine",
+                    "log4j.category.org.apache.velocity", "scarab.log.level.velocity+, velocity",
+                    "log4j.appender.velocity.file", "scarab.log.file.velocity",
+                    "log4j.appender.velocity.layout.conversionPattern", "scarab.log.pattern",
+                    "log4j.appender.velocity.append", "scarab.log.append.velocity"
+                };
             }
         }
     }
@@ -178,12 +191,8 @@ public class MigrateProperties extends Task
             // exists within the ant properties, and if so add it to the output
             // file.
             //
-            for (Iterator iter = propertyMap.entrySet().iterator();
-                          iter.hasNext();)
+            for (int i = 0; i < propertyMap.length; i += 2)
             {
-                Map.Entry entry = (Map.Entry) iter.next();
-                String outProperty = (String) entry.getKey();
-                
                 //
                 // Work out the name of the ant property associated with
                 // this output property. The value from the map may contain
@@ -191,7 +200,8 @@ public class MigrateProperties extends Task
                 // from the string that should be appended to its value
                 // when it is written to the output file.
                 //
-                String inProperty = (String) entry.getValue();
+                String outProperty = propertyMap[i];
+                String inProperty = propertyMap[i + 1];
                 String appendString = "";
                 int splitPos = inProperty.indexOf('+');
                 if (splitPos >= 0)
