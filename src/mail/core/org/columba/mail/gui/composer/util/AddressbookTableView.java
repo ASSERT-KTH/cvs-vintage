@@ -242,7 +242,7 @@ public class AddressbookTableView extends JTable {
 		if (emptyRowExists() == false) {
 
 			addEmptyRow();
-			editLastRow();
+			//editLastRow();
 		} else
 			editLastRow();
 
