@@ -287,6 +287,19 @@ public class Activity
         }
         super.save(dbCon);
     }
+
+    public String getDescription()
+    {
+        String desc = super.getDescription();
+        if (desc != null && desc.length() > 255) 
+        {
+            char[] chDesc = new char[255];
+            desc.getChars(0, 251, chDesc, 0);
+            chDesc[252] = chDesc[253] = chDesc[254] = '.';
+            desc = new String(chDesc);
+        }
+        return desc;
+    }
 }
 
 

@@ -748,11 +748,27 @@ public abstract class AttributeValue
         }
         else
         {
-            sb.append(" changed from ")
-              .append(oldValue);
+            sb.append(" changed from '");
+            if (oldValue.length() > 25) 
+            {
+                sb.append(oldValue.substring(0,25)).append("...");
+            }
+            else
+            {
+                sb.append(oldValue);
+            }
+            sb.append('\'');
         }
-        sb.append(" to ")
-          .append(newValue);
+        sb.append(" to '");
+        if (newValue.length() > 25) 
+        {
+            sb.append(newValue.substring(0,25)).append("...");
+        }
+        else
+        {
+            sb.append(newValue);
+        }
+        sb.append('\'');
         return sb.toString();
     }
 }
