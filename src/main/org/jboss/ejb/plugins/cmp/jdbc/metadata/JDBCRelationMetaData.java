@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * have set methods.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public final class JDBCRelationMetaData {
    private final static int TABLE = 1;
@@ -160,6 +160,25 @@ public final class JDBCRelationMetaData {
       relationName = defaultValues.getRelationName();
       mappingStyle = loadMappingStyle(element, defaultValues);
       
+      // read-only
+      String readOnlyString = MetaData.getOptionalChildContent(
+            element, "read-only");
+      if(readOnlyString != null) {
+         readOnly = Boolean.valueOf(readOnlyString).booleanValue();
+      } else {
+         readOnly = defaultValues.isReadOnly();
+      }
+
+      // read-time-out
+      String readTimeOutString = MetaData.getOptionalChildContent(
+            element, "read-time-out");
+      if(readTimeOutString != null) {
+         readTimeOut = Integer.parseInt(readTimeOutString);
+      } else {
+         readTimeOut = defaultValues.getReadTimeOut();
+      }      
+
+
       //
       // Load all of the table options. defaults and relation-table-mapping 
       // will have these elements, and foreign-key will get the default values.
@@ -243,24 +262,6 @@ public final class JDBCRelationMetaData {
          primaryKeyConstraint = defaultValues.hasPrimaryKeyConstraint();
       }
  
-      // read-only
-      String readOnlyString = MetaData.getOptionalChildContent(
-            mappingElement, "read-only");
-      if(readOnlyString != null) {
-         readOnly = Boolean.valueOf(readOnlyString).booleanValue();
-      } else {
-         readOnly = defaultValues.isReadOnly();
-      }
-
-      // read-time-out
-      String readTimeOutString = MetaData.getOptionalChildContent(
-            mappingElement, "read-time-out");
-      if(readTimeOutString != null) {
-         readTimeOut = Integer.parseInt(readTimeOutString);
-      } else {
-         readTimeOut = defaultValues.getReadTimeOut();
-      }      
-
       //
       // load metadata for each specified role
       //
