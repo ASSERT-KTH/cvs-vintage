@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.1 2001/11/09 03:37:53 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.2 2001/11/14 03:02:24 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -28,7 +28,7 @@ Bug No.  Description
          session.  This check is disabled by default.
 
          Added org.apache.tomcat.util.net.URL class from Tomcat 4.0 so
-         request.encodeURL() can work under SSL without JSSE.  This can occur
+         response.encodeURL() can work under SSL without JSSE.  This can occur
          if you have Apache forwarding SSL requests to a Tomcat that doesn't
          have JSSE installed.
 
@@ -70,6 +70,9 @@ Bug No.  Description
 4313     Bug in property substitution for server.xml and apps.xml files was
          fixed.
 
+4826     Fixed AutoWebApp so the dir attribute can be an absolute path on
+         Windows systems.
+
 
 Documentation:
 
@@ -81,7 +84,9 @@ Bug No.  Description
          tomcat-ug.html updated with additional classloader information.
      
          serverxml.html updated to document new checkSSLSessionId attribute on
-         SessionId module.
+         SessionId module.  A note was added to Ajp12Connector to document the
+         requirement for maxThreads to be 2 or more if it is to be used to
+         shutdown Tomcat.
 
          tomcat-iis-howto.html updated to make it clearer that the "Filter Dlls"
          key is used only on Win98.
