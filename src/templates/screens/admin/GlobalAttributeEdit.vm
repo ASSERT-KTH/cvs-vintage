@@ -54,16 +54,16 @@ On this screen, one can modify system wide Attribute information.
     </select>
   </td>
  <tr>
-  <th>Attribute name</th>
+  <th>* Attribute name</th>
   <td>
-    <input type="text" name="$attgroup.Name.Key" value="$!attribute.Name" />
+    <input type="text" name="$attgroup.Name.Key" value="$!attgroup.Name" />
     #fieldErrorMsg($attgroup.Name "")
   </td>
  </tr>
  <tr>
-  <th>Attribute description</th>
+  <th>* Attribute description</th>
   <td>
-    <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attribute.Description</textarea>
+    <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attgroup.Description</textarea>
     #fieldErrorMsg($attgroup.Description "")
   </td>
  </tr>
