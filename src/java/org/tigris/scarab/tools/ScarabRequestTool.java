@@ -1488,6 +1488,49 @@ try{
         return FrequencyPeer.getFrequencies();
     }
 
+    /**
+     * Generates link to Issue List page, re-running stored query.
+     */
+    public String getExecuteLink(String link, Query query)
+    {
+        // query.getValue() begins with a &
+        link = link 
+            + "/template/IssueList.vm?action=Search&eventSubmit_doSearch=Search" 
+            + "&resultsperpage=25&pagenum=1" + query.getValue();
+
+        NumberKey listId = query.getListId();
+        if (listId != null) 
+        {
+            link += '&' + ScarabConstants.CURRENT_MITLIST_ID + '=' + listId;
+        }
+        else 
+        {
+            link += '&' + ScarabConstants.REMOVE_CURRENT_MITLIST_QKEY + "=true";
+        }
+        return link;
+     }
+
+    /**
+     * Generates link to the Query Detail page.
+     */
+    public String getEditLink(String link, Query query)
+    {
+        // query.getValue() begins with a &
+        link = link + "/template/EditQuery.vm?queryId=" + query.getQueryId()
+                    + query.getValue();
+
+        NumberKey listId = query.getListId();
+        if (listId != null) 
+        {
+            link += '&' + ScarabConstants.CURRENT_MITLIST_ID + '=' + listId;
+        }
+        else 
+        {
+            link += '&' + ScarabConstants.REMOVE_CURRENT_MITLIST_QKEY + "=true";
+        }
+        return link;
+    }
+
     public Intake getConditionalIntake(String parameter)
         throws Exception
     {
