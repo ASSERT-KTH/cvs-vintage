@@ -18,6 +18,32 @@
 </select>
 #end
 
+#macro ( templateAttrValueLeafSelect $attrValue $templAttrValue $optionFieldNam
+e $size )
+    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) )
+    #set ( $templAttrInput = $intake.AttributeValue.mapTo($templAttrValue) )
+    #set ( $attr = $attrValue.Attribute )
+    #set ( $module = $attrValue.Issue.ScarabModule )
+
+         #if ($attrInput.get($optionFieldName).Value)
+            #set( $currentValue = $attrInput.get($optionFieldName).Value )
+         #elseif ( $templAttrInput.get($optionFieldName).Value )
+            #set( $currentValue = $templAttrInput.get($optionFieldName).Value )
+         #end
+<select name="$attrInput.get($optionFieldName).Key"
+           #if($size.length())size="$size"#end>
+           #if ($size.length() == 0)
+           <option value="">Choose...</option>
+           #end
+           #foreach ($option in $module.getLeafRModuleOptions($attr))
+                #set ( $selected = "" )
+                #if ( $currentValue && $option.OptionId == $currentValue )
+                   #set ( $selected = ' selected="selected"' )
+                #end
+                  <option$selected value="$option.OptionId">$option.DisplayValue</option>
+            #end               
+#end
+
 #macro ( dependTypeLeafSelect $childIssue $type)
 <select name="$type_depend_type_id_$childIssue.IssueId">
 				<option>Choose dependency type</option>
