@@ -1,4 +1,4 @@
-// $Id: Section.java,v 1.6 2004/03/24 06:58:28 linus Exp $
+// $Id: Section.java,v 1.7 2004/07/22 15:52:02 d00mst Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import org.argouml.uml.generator.AbstractSection;
 /**
  * Code section handling for PHP
  *
- * @author  Kai Schröder, k.schroeder@php.net
+ * @author  Kai Schr&ouml;der, k.schroeder@php.net
  * @since   ArgoUML 0.15.5
  */
 public class Section extends AbstractSection {

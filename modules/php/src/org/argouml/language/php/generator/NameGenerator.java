@@ -1,4 +1,4 @@
-// $Id: NameGenerator.java,v 1.1 2004/03/24 06:58:28 linus Exp $
+// $Id: NameGenerator.java,v 1.2 2004/07/22 15:52:02 d00mst Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import org.argouml.model.ModelFacade;
 /**
  * Helper class to generate names for model elements in PHP notation
  *
- * @author Kai Schröder
+ * @author Kai Schr&ouml;der
  * @since  ArgoUML 0.15.5
  */
 public final class NameGenerator {

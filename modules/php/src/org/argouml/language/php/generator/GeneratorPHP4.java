@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.8 2004/07/18 18:56:02 kataka Exp $
+// $Id: GeneratorPHP4.java,v 1.9 2004/07/22 15:52:02 d00mst Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,7 +80,7 @@ import ru.novosoft.uml.model_management.MPackage;
 /**
  * Generator class for PHP 4.x source code
  *
- * @author Kai Schröder
+ * @author Kai Schr&ouml;der
  * @since  ArgoUML 0.15.5
  */
 public class GeneratorPHP4
@@ -904,7 +904,7 @@ public class GeneratorPHP4
      * @return name of author(s) of this module
      */
     public final String getModuleAuthor() {
-        return "Kai Schröder";
+        return "Kai Schr\u00F6der";
     }
 
     /**
