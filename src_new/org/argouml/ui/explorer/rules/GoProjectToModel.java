@@ -1,4 +1,4 @@
-// $Id: GoProjectToModel.java,v 1.9 2004/09/04 06:59:49 mvw Exp $
+// $Id: GoProjectToModel.java,v 1.10 2004/10/22 18:31:13 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,8 +31,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 
 /**
- * Rule for Project->Package.
- * TODO: Or is it Project->Model ???
+ * Rule for Project->Model.
  *
  */
 public class GoProjectToModel extends AbstractPerspectiveRule {
@@ -41,7 +40,7 @@ public class GoProjectToModel extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
     public String getRuleName() {
-	return Translator.localize ("misc.project.package");
+	return Translator.localize ("misc.project.model");
     }
  
     /**
