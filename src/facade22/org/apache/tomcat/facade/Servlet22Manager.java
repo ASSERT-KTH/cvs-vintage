@@ -107,18 +107,18 @@ public final class Servlet22Manager implements FacadeManager {
 	return new ServletWrapper();
     }
 
-    public ServletContext createServletContextFacade(Context ctx) {
+    public Object createServletContextFacade(Context ctx) {
 	//if( ctx != this.ctx ) return null; // throw
 	return new ServletContextFacade(ctx.getContextManager() , ctx);
     }
 
-    public HttpServletRequest createHttpServletRequestFacade(Request req) {
+    public Object createHttpServletRequestFacade(Request req) {
 	Context reqCtx=req.getContext();
 	//	if( reqCtx != ctx && reqCtx != null ) return null; // throw
 	return new HttpServletRequestFacade(req);
     }
 
-    public HttpServletResponse createHttpServletResponseFacade(Response res) {
+    public Object createHttpServletResponseFacade(Response res) {
 	Context resCtx=res.getRequest().getContext();
 	//if( resCtx != ctx && resCtx != null ) return null; // throw
 	return new HttpServletResponseFacade(res);
@@ -127,7 +127,7 @@ public final class Servlet22Manager implements FacadeManager {
     public void recycle( Request rreq ) {
 	//if( rreq.getContext() != ctx ) return; // throw
 	
-	HttpServletRequest req=rreq.getFacade();
+	HttpServletRequest req=(HttpServletRequest)rreq.getFacade();
 	if( ! (req instanceof HttpServletRequestFacade))
 	    return;
 	
@@ -138,14 +138,14 @@ public final class Servlet22Manager implements FacadeManager {
 	if( rres== null )
 	    return;
 	
-	HttpServletResponse res=rres.getFacade();
+	HttpServletResponse res=(HttpServletResponse)rres.getFacade();
 	if( res!=null) ((HttpServletResponseFacade)res).recycle();
 	
 	// recycle output stream
 	// XXX XXX implement it
     }
 
-    public Request getRealRequest( HttpServletRequest req ) {
+    public Request getRealRequest( Object req ) {
 	Request rreq=((HttpServletRequestFacade)req).getRealRequest();
 	if( rreq==null ) {
 	    loghelper.log("XXX XXX null req " + ctx + " " + req , Logger.ERROR);
@@ -164,7 +164,7 @@ public final class Servlet22Manager implements FacadeManager {
 	return rreq;
     }
 
-    public Context getRealContext( ServletContext sctx ) {
+    public Context getRealContext( Object sctx ) {
 	Context realSctx=((ServletContextFacade)sctx).getRealContext();
 	//	if( realSctx != ctx ) return null;
 	return realSctx;

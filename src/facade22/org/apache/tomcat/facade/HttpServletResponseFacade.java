@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.3 2000/08/29 03:44:19 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/08/29 03:44:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.4 2000/09/24 18:10:55 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/09/24 18:10:55 $
  *
  * ====================================================================
  *
@@ -66,12 +66,14 @@ package org.apache.tomcat.facade;
 
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.helper.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.lang.IllegalArgumentException;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
 
 /**
  *
@@ -110,7 +112,20 @@ final class HttpServletResponseFacade  implements HttpServletResponse
     // -------------------- Public methods --------------------
 
     public void addCookie(Cookie cookie) {
-        response.addCookie(cookie);
+	
+	addHeader( CookieTools.getCookieHeaderName(cookie),
+			    CookieTools.getCookieHeaderValue(cookie));
+	if( cookie.getVersion() == 1 ) {
+	    // add a version 0 header too.
+	    // XXX what if the user set both headers??
+	    Cookie c0 = (Cookie)cookie.clone();
+	    c0.setVersion(0);
+	    addHeader( CookieTools.getCookieHeaderName(c0),
+		       CookieTools.getCookieHeaderValue(c0));
+	}
+	// Is it needed ? ( result of refactoring, that's how the code
+	// worked) 
+	//response.addUserCookie(cookie);
     }
 
     public boolean containsHeader(String name) {
@@ -333,9 +348,12 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 
 	// Are we in a valid session that is not using cookies?
 	Request request = response.getRequest();
-	if (!request.getFacade().isRequestedSessionIdValid() )
+	HttpServletRequestFacade reqF=(HttpServletRequestFacade)request.
+	    getFacade();
+	
+	if (!reqF.isRequestedSessionIdValid() )
 	    return (false);
-	if ( request.getFacade().isRequestedSessionIdFromCookie() )
+	if ( reqF.isRequestedSessionIdFromCookie() )
 	    return (false);
 
 	// Is this a valid absolute URL?
@@ -393,8 +411,10 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	    url = new URL(location);
 	} catch (MalformedURLException e1) {
 	    Request request = response.getRequest();
+	    HttpServletRequestFacade reqF=(HttpServletRequestFacade)request.
+		getFacade();
 	    String requrl =
-		HttpUtils.getRequestURL(request.getFacade()).toString();
+		HttpUtils.getRequestURL(reqF).toString();
 	    try {
 		url = new URL(new URL(requrl), location);
 	    } catch (MalformedURLException e2) {

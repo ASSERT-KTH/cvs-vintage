@@ -157,8 +157,13 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	int count=request.getCookieCount();
 	Cookie[] cookieArray = new Cookie[ count ];
 
+	// Convert from ServerCookie to Cookie.
+	// The price is payed _only_ by servlets that call getCookie().
+	// ( if you don't call it no allocation happens for cookies )
+	// ( well, it happens, the code to reuse have to be written )
 	for (int i = 0; i < count; i ++) {
-	    cookieArray[i] = request.getCookie( i );
+	    ServerCookie sC=request.getCookie(i);
+	    cookieArray[i] = new CookieFacade(sC);
 	}
 
 	return cookieArray;
@@ -326,7 +331,8 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	    if( path==null) return null;
 	}
 
-	return request.getContext().getFacade().getRequestDispatcher(path);
+	Context ctx=request.getContext();
+	return ((ServletContext)ctx.getFacade()).getRequestDispatcher(path);
     }
 
     /** Adapter: first elelment
@@ -338,7 +344,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     /** Delegate to RequestUtil
      */
     public Enumeration getLocales() {
-        return RequestUtil.getLocales(this);
+        return RequestUtil.getLocales(request);
     }
 
     /** Delegate to Context
@@ -378,13 +384,13 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     // -------------------- Session --------------------
 
     public HttpSession getSession() {
-        return request.getSession(true);
+        return (HttpSession)request.getSession(true);
     }
 
     /** Create the Facade for session.
      */
     public HttpSession getSession(boolean create) {
-	HttpSession realSession = request.getSession( create );
+	HttpSession realSession = (HttpSession)request.getSession( create );
 	// No real session, return null
 	if( realSession == null ) {
 	    if( sessionFacade!= null) sessionFacade.recycle();

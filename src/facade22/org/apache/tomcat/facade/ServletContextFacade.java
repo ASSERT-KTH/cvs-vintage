@@ -97,7 +97,7 @@ final class ServletContextFacade implements ServletContext {
     // -------------------- Public facade methods --------------------
     public ServletContext getContext(String path) {
         Context target=context.getContext(path);
-	return target.getFacade();
+	return (ServletContext)target.getFacade();
     }
 
     
