@@ -39,7 +39,7 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.command.CheckForNewMessagesCommand;
 import org.columba.mail.imap.IMAPStore;
-import org.columba.ristretto.imap.parser.ListInfo;
+import org.columba.ristretto.imap.ListInfo;
 import org.columba.ristretto.imap.protocol.IMAPProtocol;
 
 public class IMAPRootFolder extends FolderTreeNode implements ActionListener {

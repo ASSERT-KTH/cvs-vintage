@@ -18,9 +18,6 @@ package org.columba.mail.imap;
 
 import java.net.SocketException;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -39,10 +36,10 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPResponse;
+import org.columba.ristretto.imap.ListInfo;
 import org.columba.ristretto.imap.parser.FlagsParser;
 import org.columba.ristretto.imap.parser.IMAPHeader;
-import org.columba.ristretto.imap.parser.IMAPHeaderlistParser;
-import org.columba.ristretto.imap.parser.ListInfo;
+import org.columba.ristretto.imap.parser.IMAPHeaderParser;
 import org.columba.ristretto.imap.parser.ListInfoParser;
 import org.columba.ristretto.imap.parser.MessageFolderInfoParser;
 import org.columba.ristretto.imap.parser.MessageSet;
@@ -896,22 +893,20 @@ public class IMAPStore {
 				headerFields.trim());
 
 		// parse headers
-		List input = new ArrayList(Arrays.asList(r));
-		List result = IMAPHeaderlistParser.parse(input);
-
-		Iterator it = result.iterator();
-
-		// add all parsed headers to the headerlist
-		while (it.hasNext()) {
-			IMAPHeader imapHeader = (IMAPHeader) it.next();
-
-			ColumbaHeader header = new ColumbaHeader(imapHeader.getHeader());
-			Object uid = imapHeader.getUid();
-			header.set("columba.uid", uid);
-
-			if (header != null) {
+		for( int i=0; i<r.length; i++) {
+			if( r[i].getResponseSubType().equals("FETCH") ) {
+				// parse the reponse 
+				IMAPHeader imapHeader = IMAPHeaderParser.parse(r[i]);
+				// consume this line
+				r[i] = null;
+				
+				// add it to the headerlist
+				ColumbaHeader header = new ColumbaHeader(imapHeader.getHeader());
+				Object uid = imapHeader.getUid();
+				header.set("columba.uid", uid);
 				headerList.add(header, uid);
 			}
+			
 		}
 	}
 
