@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmConnector.java,v 1.3 1999/10/29 06:14:41 craigmcc Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/29 06:14:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmConnector.java,v 1.4 1999/11/10 04:23:44 craigmcc Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/11/10 04:23:44 $
  *
  * ====================================================================
  *
@@ -83,7 +83,7 @@ import org.xml.sax.SAXParseException;
  * XML-stored database of users and their associated roles.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.3 $ $Date: 1999/10/29 06:14:41 $
+ * @version $Revision: 1.4 $ $Date: 1999/11/10 04:23:44 $
  */
 
 public final class FileRealmConnector
@@ -230,34 +230,20 @@ public final class FileRealmConnector
 	try {
 	    this.database = new FileRealmDatabase(stream);
 	} catch (IOException e) {
-	    try {
-		stream.close();
-	    } catch (IOException f) {
-		;
-	    }
 	    throw new IllegalArgumentException(
 		sm.getString("file.start.read", filename) + ": " + e);
 	} catch (SAXParseException e) {
-	    try {
-		stream.close();
-	    } catch (IOException f) {
-		;
-	    }
 	    throw new IllegalArgumentException(
 		sm.getString("file.start.parse", filename) + ": " + e);
 	} catch (SAXException e) {
+	    throw new IllegalArgumentException(
+		sm.getString("file.start.process", filename) + ": " + e);
+	} finally {
 	    try {
 		stream.close();
 	    } catch (IOException f) {
 		;
 	    }
-	    throw new IllegalArgumentException(
-		sm.getString("file.start.process", filename) + ": " + e);
-	}
-	try {
-	    stream.close();
-	} catch (IOException e) {
-	    ;
 	}
 
 	// Store a local reference to our associated context
