@@ -58,7 +58,7 @@ import org.jboss.ejb.plugins.keygenerator.KeyGeneratorFactory;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    private JDBCEntityMetaData metadata;
@@ -104,7 +104,7 @@ public class JDBCEntityBridge implements EntityBridge {
             
       // find the datasource
       try {
-         InitialContext ic = new InitialContext();
+         ic = new InitialContext();
          dataSource = (DataSource)ic.lookup(
                metadata.getDataSourceName());
       } catch(NamingException e) {
