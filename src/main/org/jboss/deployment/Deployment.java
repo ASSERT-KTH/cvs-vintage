@@ -13,6 +13,9 @@ import java.util.Iterator;
 import java.util.Vector;
 
 /** Represents a J2EE application or module (EJB.jar, Web.war or App.ear). <br>
+*
+*  @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
+*  @version $Revision: 1.2 $
 */
 public class Deployment
    implements java.io.Serializable
@@ -20,7 +23,7 @@ public class Deployment
 	// the applications name
    protected String name;
    // the url from which this app is downloaded and under which it is deployed 
-   protected URL downloadUrl;
+   //protected URL downloadUrl;
    // the local position of the apps root directory
    protected URL localUrl;
    
@@ -43,32 +46,6 @@ public class Deployment
    	return new Module ();
    }
    
-   	
-
-
-   /** Returns the admin context of this url.
-   *   @param the download URL
-   *   @return the administrator context as path fragment
-   */      
-   public static String getAdminCtx (URL _url)
-   {
-      StringBuffer sb = new StringBuffer ();
-   	if (_url.getProtocol ().equals ("file"))
-   	{
-   		String s = _url.getFile ();
-   		sb.append (s.substring (1, Math.max (0, s.lastIndexOf ("/"))));
-   	}
-   	else
-      {
-        	sb.append (_url.getHost ());
-        	if (_url.getPort () != -1)
-        	{
-           	sb.append ("/");
-           	sb.append (_url.getPort ());
-         }
-      }
-      return sb.toString ();
-   }
 
    /** the name of the application.
    *   @param the download URL
@@ -131,7 +108,7 @@ public class Deployment
    	String name;
    	// the url from which it is downloaded
    	// (in case of ear module like: jar:<app.downloadUrl>!/<module>
-   	URL downloadUrl;
+   	//URL downloadUrl;
    	// the local url under which it is deployed by the special deployer
    	URL localUrl;
    	// the web root context in case of war file

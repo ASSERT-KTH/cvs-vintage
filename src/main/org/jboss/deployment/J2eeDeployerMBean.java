@@ -7,12 +7,14 @@
 package org.jboss.deployment;
 
 import java.net.MalformedURLException;
+import java.io.IOException;
+
 import org.jboss.util.ServiceMBean;
 
 /**
  *   @see 
  *   @author Daniel Schulze (daniel.schulze@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public interface J2eeDeployerMBean
 	extends ServiceMBean
@@ -21,9 +23,9 @@ public interface J2eeDeployerMBean
    public static final String OBJECT_NAME = "J2EE:service=J2eeDeployer";
     
    // Public --------------------------------------------------------
-   public void deploy (String url) throws MalformedURLException, J2eeDeploymentException;
+   public void deploy (String url) throws MalformedURLException, IOException, J2eeDeploymentException;
 
-   public void undeploy (String url) throws MalformedURLException, J2eeDeploymentException;
+   public void undeploy (String url) throws MalformedURLException, IOException, J2eeDeploymentException;
 
    public boolean isDeployed (String url) throws MalformedURLException, J2eeDeploymentException;
 }
