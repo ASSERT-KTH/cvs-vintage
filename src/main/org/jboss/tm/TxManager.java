@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.7 $
+ *	@version $Revision: 1.8 $
  */
 public class TxManager
    implements TransactionManager
@@ -170,7 +170,11 @@ public class TxManager
    }
 
    public void associateThread(Transaction transaction) {
-
+	
+	   // If the tx has traveled it needs the TxManager
+	   ((TransactionImpl) transaction).setTxManager(this);
+		
+		// Associate with the thread
 	   threadTx.set(transaction);
    }
 
