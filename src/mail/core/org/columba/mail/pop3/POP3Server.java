@@ -226,8 +226,10 @@ public class POP3Server {
 		InputStream messageStream = new ProgressObservedInputStream(getStore()
 				.fetchMessage(store.getIndex(uid)), worker, true);
 
+		
+		// Store the complete stream in a source so that we can parse it
 		Source source = TempSourceFactory.createTempSource(messageStream,
-				messageStream.available());
+				-1);
 
 		// pipe through preprocessing filter
 		//if (popItem.getBoolean("enable_pop3preprocessingfilter", false))
