@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.70 2001/11/13 21:09:54 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.71 2001/11/19 03:15:25 jmcnally Exp $ -->
 
 <database name="@DATABASE_NAME@">
 <!--
@@ -725,7 +725,9 @@
     Usually corresponds to the software project.
     Example: Scarab
 -->
-<table name="SCARAB_MODULE" idMethod="idbroker" javaName="ScarabModule" abstract="true">
+<table name="SCARAB_MODULE" idMethod="idbroker" javaName="ScarabModule" 
+    baseClass="org.tigris.scarab.services.module.AbstractScarabModule" 
+    abstract="true">
     <!--
         Unique identifier.
     -->
