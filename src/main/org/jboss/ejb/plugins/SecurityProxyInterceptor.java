@@ -6,7 +6,6 @@
  */
 package org.jboss.ejb.plugins;
 
-import java.rmi.RemoteException;
 import java.security.Principal;
 import javax.ejb.EJBContext;
 import javax.naming.InitialContext;
@@ -29,9 +28,10 @@ import org.jboss.security.SecurityProxyFactory;
  * interceptor has access to the EJB instance and context.
  * 
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
-public class SecurityProxyInterceptor extends AbstractInterceptor
+public class SecurityProxyInterceptor
+   extends AbstractInterceptor
 {
    /** 
     * The JNDI name of the SecurityProxyFactory used to wrap security
@@ -80,9 +80,21 @@ public class SecurityProxyInterceptor extends AbstractInterceptor
          // Initialize the securityProxy
          try
          {
-            Class beanHome = getContainer().getHomeClass();
-            Class beanRemote = getContainer().getRemoteClass();
-            securityProxy.init(beanHome, beanRemote, securityManager);
+            EJBProxyFactoryContainer  ic =
+               (EJBProxyFactoryContainer) getContainer();
+            Class beanHome = ic.getHomeClass();
+            Class beanRemote = ic.getRemoteClass();
+            Class beanLocalHome = ic.getLocalHomeClass();
+            Class beanLocal = ic.getLocalClass();
+            if( beanLocal == null )
+            {
+               securityProxy.init(beanHome, beanRemote, securityManager);
+            }
+            else
+            {
+               securityProxy.init(beanHome, beanRemote, beanLocalHome,
+                  beanLocal, securityManager);
+            }
          }
          catch(Exception e)
          {
