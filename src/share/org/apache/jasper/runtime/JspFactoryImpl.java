@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.13 2001/04/21 19:54:34 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2001/04/21 19:54:34 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.14 2001/10/20 02:53:39 larryi Exp $
+ * $Revision: 1.14 $
+ * $Date: 2001/10/20 02:53:39 $
  *
  * ====================================================================
  * 
@@ -120,7 +120,7 @@ public class JspFactoryImpl extends JspFactory {
         try {
 	    PageContext pc;
 	    if( usePool ) {
-		pc=(PageContextImpl)pool.get();
+		pc=(PageContext)pool.get();
 		if( pc == null ) pc= new PageContextImpl(this);
 	    } else {
 		pc =  new PageContextImpl(this);
