@@ -84,6 +84,10 @@
     <!-- ================================================================== -->
     <target name="prepare">
 
+		<echo> Scarab database user = ${scarab.database.admin.username}</echo>
+		<echo> Scarab database pwd  = ${scarab.database.admin.password}</echo>
+
+
         <!-- things to go into the project directory -->
         
         <copy todir="${build.project}" filtering="yes">
@@ -156,6 +160,7 @@
         <echo>Using ${scarab.database.type} JDBC driver from:
     ${lib.dir}/${scarab.jdbc.driver.jar}
         </echo>
+
         <copy todir="${build.project.webinf}/lib" filtering="no"
               preservelastmodified="yes">
             <fileset dir="${lib.dir}/">
@@ -190,6 +195,15 @@
                 <include name="**/*.*"/>
             </fileset>  
         </touch>
+        
+        <!-- copy config files to the classes directory -->
+        <copy todir="${build.project.webinf}/classes" 
+              filtering="no"
+              preservelastmodified="yes">
+            <fileset dir="${src.conf.dir}/classes"/>
+        </copy>
+
+      
 
     </target>
 
@@ -561,23 +575,20 @@
     <!-- ================================================================== -->
     <target name="compile" depends="om-peer,prepare">
         <mkdir dir="${build.dest.scarab}"/>
-
         <javac srcdir="${src.java.dir.scarab}"
             destdir="${build.dest.scarab}"
             debug="on"
             deprecation="off"
             optimize="off">
-      <classpath refid="classpath"/>
+            <classpath refid="classpath"/>
             <classpath>
                 <fileset dir="${build.project.webinf.lib}">
                     <include name="**/torque*.jar"/>
                 </fileset>
             </classpath>
-      <exclude name="**/package.html"/>
-      <exclude name="torque/**"/>
+            <exclude name="**/package.html"/>
+            <exclude name="torque/**"/>
         </javac>
-
-      
     </target>
 
     

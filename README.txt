@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.64 2004/02/04 09:20:48 dep4b Exp $
+$Id: README.txt,v 1.65 2004/02/05 10:13:54 dep4b Exp $
 
 Welcome to Scarab!
 
@@ -22,7 +22,7 @@ system running.
 | R E Q U I R E M E N T S                                               |
 '-----------------------------------------------------------------------'
 
-SDK 1.3.1 or higher available from 
+* SDK 1.3.1 or higher available from 
 
         http://java.sun.com/
 
@@ -33,14 +33,14 @@ SDK 1.3.1 or higher available from
         When compiling Scarab with Jikes, version 1.18 or higher is
         required.  Please do not try with Jikes 1.17, as it is buggy.
 
-Ant 1.5 or higher available from 
+* Ant 1.5 or higher available from 
 
-        http://jakarta.apache.org/ant/
+        http://ant.apache.org/
 
         The version of torque used with scarab must be compiled 
         with Ant 1.5.x
 
-Tomcat 4.0.4 or higher available from 
+* Tomcat 4.0.4 or higher available from 
 
         http://jakarta.apache.org/tomcat/
 
@@ -53,9 +53,9 @@ Tomcat 4.0.4 or higher available from
         in order to make things work properly after the move.
 
 
-An RDBMS preferably one out of the list below
+* An RDBMS preferably one out of the list below
 
-MySQL 3.23.x/4.x  available from 
+  - MySQL 3.23.x/4.x  available from 
 
         http://www.mysql.org/
 
@@ -75,21 +75,21 @@ MySQL 3.23.x/4.x  available from
         If getting started using MySQL, it's recommended that you 
         install version 4 or higher.
 
-Postgresql 7.3.x available from  
+  - Postgresql 7.3.x available from  
 
         http://www.postgresql.org/
 
-hypersonic 1.7.1 available from 
+  - hypersonic 1.7.1 available from 
 
         http://hsqldb.sourceforge.net
 
 
-NOTE: More detailed instructions for setting up the database on
-      different database vendors is available on our website.
+  NOTE: More detailed instructions for setting up the database on
+        different database vendors are available on our website.
 
-      **You should read it BEFORE building Scarab.**
+        !!! Please read the docs BEFORE building Scarab !!!
 
-      <http://scarab.tigris.org/project_docs.html>
+        http://scarab.tigris.org/project_docs.html
 
 
 ,-----------------------------------------------------------------------.
@@ -109,27 +109,22 @@ You must have Ant installed and ANT_HOME defined in your environment as
 well as ANT_HOME/bin in your PATH.
 
 
+ANT_OPTS
+
+You must enshure, that the ant process has enough free HEAP.
+One convenient way of setting the appropriate JVM option is to
+set the environment variable ANT_OPTS as follows:
+
+        ANT_OPTS=-Xmx256m
+
+This avoids build failures due to OutOfMemoryError Exceptions.
+
+
 Database settings (for MYSQL)
 
 The database is assumed to be installed and running with appropriately
 configured access control setup (see below for more detail). You must
 have the database binaries in your PATH (ie: $MYSQL_HOME/bin). 
-
-    With sh/zsh/bash:
-        export ANT_HOME=/path/to/ant-install
-        export MYSQL_HOME=/path/to/mysql-install
-        export JAVA_HOME=/path/to/jdk-install
-        export PATH=${PATH}:${ANT_HOME}/bin:${MYSQL_HOME}/bin:${JAVA_HOME}/bin
-
-    With csh/tcsh:
-        setenv ANT_HOME /path/to/ant-install
-        setenv MYSQL_HOME /path/to/mysql-install
-        setenv JAVA_HOME /path/to/jdk-install
-        setenv PATH ${PATH}:${ANT_HOME}/bin:${MYSQL_HOME}/bin:${JAVA_HOME}/bin
-
-    Note: To make these settings 'sticky', put them into the appropriate
-          .rc file for your shell. For example, if you use tcsh, put the
-          lines above into your ~/.tcshrc
 
 
 Database settings for other RDBM's
@@ -138,6 +133,41 @@ With the Scarab communities help, we will be supporting a wide range of
 databases in the released version of Scarab, however, the Scarab 
 developers are currently doing development primarily on MySQL and thus
 do not guarantee that Scarab will work on other databases.
+
+example scripts
+
+The following scripts can be used as templates for your own
+environmental setup. The templates have been created for 
+use wih MySQL. You must modify them according to your
+environment:
+
+    UNIX/LINUX sh/zsh/bash:
+        export ANT_HOME=/path/to/ant-install
+        export ANT_OPTS=-Xmx256m
+        export MYSQL_HOME=/path/to/mysql-install
+        export JAVA_HOME=/path/to/jdk-install
+        export PATH=${PATH}:${ANT_HOME}/bin:${MYSQL_HOME}/bin:${JAVA_HOME}/bin
+
+    	Put these settings into your ~/.bashrc or ~/.login file
+
+    UNIX/LINUX csh/tcsh:
+        setenv ANT_HOME /path/to/ant-install
+        setenv ANT_OPTS -Xmx256m
+        setenv MYSQL_HOME /path/to/mysql-install
+        setenv JAVA_HOME /path/to/jdk-install
+        setenv PATH ${PATH}:${ANT_HOME}/bin:${MYSQL_HOME}/bin:${JAVA_HOME}/bin
+        
+        Put these statements into your ~/.cshrc file
+        
+    WINDOWS:
+        set ANT_HOME=\path\to\ant-install
+        set ANT_OPTS=-Xmx256m
+        set MYSQL_HOME=\path\to\mysql-install
+        set JAVA_HOME=\path\to\jdk-install
+        set PATH=%PATH%;%ANT_HOME%\bin;%MYSQL_HOME\bin;%JAVA_HOME%\bin
+
+        Add these settings to your Environment ( start settings system )  
+
 
 .jar files
 
@@ -164,7 +194,7 @@ write into that directory.
 
 XML-environment
 
-NOTE: Make shure to use the copy of Xerces 1.x which is included 
+NOTE: Make sure to use the copy of Xerces 1.x which is included 
 with the Scarab distribution and make sure that no other copies 
 of Xerces (especially Xerces 2.x) are in your JAVA_HOME, 
 ANT_HOME or in your CLASSPATH. Otherwise, you will get build errors.
@@ -216,7 +246,7 @@ src
 
 
 ,-----------------------------------------------------------------------.
-| S E T T I N G S                                                       |
+| B U I L D  P R O P E R T I E S                                        |
 '-----------------------------------------------------------------------'
 
 The Scarab build process depends on having a few properties which are
@@ -243,16 +273,27 @@ Chances are that you are going to have to define your own database and
 mail server properties as well as a few other properties in the resulting
 Scarab WAR file.  There is no need to edit the WEB-INF/conf/TurbineResources.properties
 file in the WAR file.  Instead, put any properties you need to edit in 
-WEB-INF/conf/CustomSettings.properties.  Or, alternatively, you can define
-environment properties in your servlet's JNDI tree.  For more information
-read about Commons-Configuration:
+WEB-INF/conf/CustomSettings.properties.  
+
+Alternatively, you can define environment properties in your servlet's JNDI tree.  You 
+can do this either via the Tomcat Admin application or by editing the appropriate files.
+To add a property that won't be overriden by each new .WAR file you install, edit your
+/tomcat/webapps/scarab.xml file and add entries to your <context/> entry for Scarab.  For 
+example, to set the system.mail.host property you would add this line:
+
+<Environment description="Mail Host to Use" name="system/mail/host" override="true" type="java.lang.String" value="127.0.0.1"/>
+
+To set which database adapter to use you would add a line like this:
+
+<Environment description="Database Adapter" name="torque/database/scarab/adapter" override="true" type="java.lang.String" value="oracle"/>
+
+
+
+For more information about other sources of Configuration data, read about Commons-Configuration:
 
         http://jakarta.apache.org/commons/configuration/
 
 
-
-
-no changes below this line from me (HD)
 
 ,-----------------------------------------------------------------------.
 | S E T T I N G  T H E  M A I L S E R V E R                             |
@@ -265,7 +306,7 @@ user registers with the system. By default, the mail server is defined
 as "localhost". That means that you need to have an SMTP server running
 on the same box as Scarab. It is possible to modify this value by
 changing the property system.mail.host in CustomSettings.properties and
-uncommenting the property.
+uncommenting the property or using the JNDI tree as discussed above.
 
 You will need to stop and start Scarab
 
