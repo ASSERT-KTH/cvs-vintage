@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.151 2003/05/01 02:21:27 spestov Exp $
+ * @version $Id: jEdit.java,v 1.152 2003/05/01 04:17:13 spestov Exp $
  */
 public class jEdit
 {
@@ -3161,7 +3161,7 @@ public class jEdit
 	} //}}}
 
 	//{{{ showPluginErrorDialog() method
-	private void showPluginErrorDialog()
+	private static void showPluginErrorDialog()
 	{
 		String caption = jEdit.getProperty(
 			"plugin-error.caption" + (pluginErrors.size() == 1

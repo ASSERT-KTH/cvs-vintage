@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * @see ActionSet
  *
  * @author Slava Pestov
- * @version $Id: EditAction.java,v 1.22 2003/05/01 02:21:26 spestov Exp $
+ * @version $Id: EditAction.java,v 1.23 2003/05/01 04:17:13 spestov Exp $
  */
 public abstract class EditAction
 {
@@ -63,13 +63,24 @@ public abstract class EditAction
 
 	//{{{ getLabel() method
 	/**
-	 * Returns the action's label. The default implementation returns the
+	 * Returns the action's label. This returns the
 	 * value of the property named by {@link #getName()} suffixed
 	 * with <code>.label</code>.
 	 */
 	public final String getLabel()
 	{
 		return jEdit.getProperty(name + ".label");
+	} //}}}
+
+	//{{{ getMouseOverText() method
+	/**
+	 * Returns the action's mouse over message. This returns the
+	 * value of the property named by {@link #getName()} suffixed
+	 * with <code>.mouse-over</code>.
+	 */
+	public final String getMouseOverText()
+	{
+		return jEdit.getProperty(name + ".mouse-over");
 	} //}}}
 
 	//{{{ invoke() method
@@ -95,7 +106,10 @@ public abstract class EditAction
 	//{{{ isToggle() method
 	/**
 	 * Returns if this edit action should be displayed as a check box
-	 * in menus.
+	 * in menus. This returns the
+	 * value of the property named by {@link #getName()} suffixed
+	 * with <code>.toggle</code>.
+	 *
 	 * @since jEdit 2.2pre4
 	 */
 	public final boolean isToggle()
