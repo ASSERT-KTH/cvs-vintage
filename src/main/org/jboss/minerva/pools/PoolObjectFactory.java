@@ -6,10 +6,12 @@
  */
 package org.jboss.minerva.pools;
 
+import java.io.PrintWriter;
+
 /**
  * Creates objects to be used in an object pool.  This is a class instead of
  * an interface so you can ignore any of the methods you don't need.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public abstract class PoolObjectFactory {
@@ -29,8 +31,10 @@ public abstract class PoolObjectFactory {
      * @param pool The pool that is starting.  You may decide to allow
      *    multiple pools you use your factory, or to restrict it to a one-to-one
      *    relationship.
+     * @param log A writer you can use to log messages.  Use this in preference
+     *    to System.xxx.println.
      */
-    public void poolStarted(ObjectPool pool) {
+    public void poolStarted(ObjectPool pool, PrintWriter log) {
     }
 
     /**

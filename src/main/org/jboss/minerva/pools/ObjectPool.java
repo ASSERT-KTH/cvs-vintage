@@ -25,7 +25,7 @@ import java.util.*;
  *   <LI>Shut it down</LI>
  * </OL>
  * @see org.jboss.minerva.pools.PooledObject
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ObjectPool implements PoolEventListener {
@@ -440,7 +440,7 @@ public class ObjectPool implements PoolEventListener {
         if(objects != null)
             throw new IllegalStateException("Cannot initialize more than once!");
         objects = new HashMap();
-        factory.poolStarted(this);
+        factory.poolStarted(this, logWriter);
         lastGC = System.currentTimeMillis();
         collector.addPool(this);
     }
