@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: NameServiceManager.java,v 1.8 2005/02/17 16:48:44 benoitf Exp $
+ * $Id: NameServiceManager.java,v 1.9 2005/03/04 14:06:32 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -38,9 +38,13 @@ import org.objectweb.carol.util.configuration.TraceCarol;
  * Class <code> NameServicemanager </code> is the CAROL Name Service manager.
  * This is the carol API for Nme services management
  * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/01/2003
  */
 public class NameServiceManager {
+
+    /**
+     * Default sleep value
+     */
+    private static final int SLEEP_VALUE = 10000;
 
     /**
      * Name Service Hashtable
@@ -159,6 +163,10 @@ public class NameServiceManager {
      * @param args arguments
      */
     public static void main(String[] args) {
+
+        // configure logging
+        TraceCarol.configure();
+
         try {
             NameServiceManager.startNonStartedNS();
             // add a shudown hook for this process
@@ -172,6 +180,9 @@ public class NameServiceManager {
                     }
                 }
             });
+            while (true) {
+                Thread.sleep(SLEEP_VALUE);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
