@@ -123,7 +123,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.76 2003/02/04 11:26:00 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.77 2003/02/05 01:26:16 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -959,6 +959,27 @@ public abstract class AbstractScarabModule
         return result;
     }
 
+    /**
+     * This method is useful for getting an issue object
+     * by a String id. It has some logic in it for appending
+     * the Module Code as well as stripping spaces off the
+     * id value using the String.trim() method.
+     */
+    public Issue getIssueById(String id)
+        throws Exception
+    {
+        if (id == null)
+        {
+            return null;
+        }
+        id = id.trim();
+        char firstChar = id.charAt(0);
+        if ('0' <= firstChar && firstChar <= '9') 
+        {
+            id = getCode() + id;
+        }
+        return IssueManager.getIssueById(id);
+    }
 
     /**
      * gets a list of the Issue Types for this module. only shows

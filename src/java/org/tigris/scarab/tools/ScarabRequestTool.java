@@ -1348,17 +1348,10 @@ try{
         }
         else
         {
-            id = id.trim();
             try
             {
-                char firstChar = id.charAt(0);
-                if ('0' <= firstChar && firstChar <= '9') 
-                {
-                    id = getCurrentModule().getCode() + id;
-                }
-                issue = IssueManager.getIssueById(id);
-
-                if (issue.getDeleted())
+                issue = getCurrentModule().getIssueById(id);
+                if (issue == null || issue.getDeleted())
                 {
                     setAlertMessage(l10n.get("InvalidId"));
                     issue = null;

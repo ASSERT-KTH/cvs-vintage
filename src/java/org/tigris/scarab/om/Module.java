@@ -71,7 +71,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.59 2003/02/04 11:26:01 jon Exp $
+ * @version $Id: Module.java,v 1.60 2003/02/05 01:26:16 jon Exp $
  */
 public interface Module
     extends Serializable
@@ -519,6 +519,15 @@ public interface Module
      */
     public REProgram getIssueRegex()
         throws TorqueException;
+
+    /**
+     * This method is useful for getting an issue object
+     * by a String id. It has some logic in it for appending
+     * the Module Code as well as stripping spaces off the
+     * id value using the String.trim() method.
+     */
+    public Issue getIssueById(String id)
+        throws Exception;
 
     public String toString();
  
