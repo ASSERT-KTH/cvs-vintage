@@ -49,6 +49,7 @@ package org.tigris.scarab.util.xml;
 import org.apache.commons.digester.Digester;
 
 import org.tigris.scarab.om.TransactionType;
+import org.tigris.scarab.om.TransactionTypePeer;
 
 /**
  * Handler for the xpath "scarab/module/issue/transaction/type"
@@ -58,11 +59,14 @@ import org.tigris.scarab.om.TransactionType;
  */
 public class TransactionTypeRule extends BaseRule
 {
+    private boolean foundCreateTransactionType;
+    
     public TransactionTypeRule(Digester digester, String state)
     {
         super(digester, state);
+        foundCreateTransactionType = false;
     }
-
+    
     /**
      * This method is called when the body of a matching XML element
      * is encountered.  If the element has no body, this method is
@@ -79,15 +83,26 @@ public class TransactionTypeRule extends BaseRule
     protected void doInsertionAtBody(String transactionTypeName)
         throws Exception
     {
-        TransactionType transactionType;
-        transactionType = TransactionType.getInstance(transactionTypeName);
+        TransactionType transactionType = TransactionType.getInstance(transactionTypeName);
+        checkCreateTransaction(transactionType);
         digester.push(transactionType);
-        
     }
     
     protected void doValidationAtBody(String transactionTypeName)
         throws Exception
     {
-        TransactionType.getInstance(transactionTypeName);
+        TransactionType transactionType = TransactionType.getInstance(transactionTypeName);
+        checkCreateTransaction(transactionType);
+    }
+    
+    private void checkCreateTransaction(TransactionType transactionType)
+        throws Exception
+    {
+        if (transactionType.getTypeId().equals(TransactionTypePeer.CREATE_ISSUE__PK)) {
+            foundCreateTransactionType = true;
+        }
+        if (!foundCreateTransactionType) {
+            throw new Exception("Create transaction must be the first transaction");
+        }
     }
 }
