@@ -75,7 +75,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.32 2002/12/20 22:04:18 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.33 2003/01/10 21:21:16 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -288,6 +288,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         scarabR.setConfirmMessage(
                             l10n.get("AttributeOptionAdded") + 
                             l10n.get(DEFAULT_MSG));
+ScarabCache.clear();
                     }
 
                     // now remove the group to set the page stuff to null
