@@ -1,4 +1,4 @@
-// $Id: SuperclassGen.java,v 1.6 2003/09/22 18:58:41 bobtarling Exp $
+// $Id: SuperclassGen.java,v 1.7 2004/03/25 22:30:01 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.Vector;
 import org.argouml.model.ModelFacade;
 import org.tigris.gef.util.ChildGenerator;
-//import ru.novosoft.uml.foundation.core.MGeneralizableElement;
 /** Utility class to generate the children of a class.  In this case
  *  the "children" of a class are it's base classes. */
 

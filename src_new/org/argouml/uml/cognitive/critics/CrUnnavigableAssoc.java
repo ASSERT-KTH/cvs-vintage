@@ -1,4 +1,4 @@
-// $Id: CrUnnavigableAssoc.java,v 1.9 2003/12/14 17:14:07 mkl Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.10 2004/03/25 22:30:00 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnnavigableAssoc.java,v 1.9 2003/12/14 17:14:07 mkl Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.10 2004/03/25 22:30:00 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -33,7 +33,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
-import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.model.ModelFacade;
 /** A critic to detect when a class can never have instances (of
  *  itself of any subclasses). */

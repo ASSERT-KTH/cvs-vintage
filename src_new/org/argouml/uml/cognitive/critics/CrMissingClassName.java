@@ -1,4 +1,4 @@
-// $Id: CrMissingClassName.java,v 1.9 2003/12/14 17:14:06 mkl Exp $
+// $Id: CrMissingClassName.java,v 1.10 2004/03/25 22:30:00 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,14 +27,13 @@
 // File: CrMissingClassName.java
 // Classes: CrMissingClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingClassName.java,v 1.9 2003/12/14 17:14:06 mkl Exp $
+// $Id: CrMissingClassName.java,v 1.10 2004/03/25 22:30:00 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import javax.swing.Icon;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
-import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;

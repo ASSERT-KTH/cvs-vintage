@@ -1,4 +1,4 @@
-// $Id: FigInitialState.java,v 1.14 2004/01/03 00:20:33 bobtarling Exp $
+// $Id: FigInitialState.java,v 1.15 2004/03/25 22:30:02 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Vector;
 
 import org.argouml.uml.diagram.activity.ui.SelectionActionState;
 

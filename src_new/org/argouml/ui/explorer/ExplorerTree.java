@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.17 2004/03/24 20:04:42 mvw Exp $
+// $Id: ExplorerTree.java,v 1.18 2004/03/25 22:29:19 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,6 @@ package org.argouml.ui.explorer;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
-//import java.util.List;
-//import java.util.ArrayList;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.JPopupMenu;

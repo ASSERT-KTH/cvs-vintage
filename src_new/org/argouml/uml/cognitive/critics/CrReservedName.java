@@ -1,4 +1,4 @@
-// $Id: CrReservedName.java,v 1.14 2003/12/14 17:14:07 mkl Exp $
+// $Id: CrReservedName.java,v 1.15 2004/03/25 22:30:00 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import java.util.Vector;
 import javax.swing.Icon;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
-import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;

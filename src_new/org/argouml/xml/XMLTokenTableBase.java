@@ -1,4 +1,4 @@
-// $Id: XMLTokenTableBase.java,v 1.6 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: XMLTokenTableBase.java,v 1.7 2004/03/25 22:30:01 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.xml;
 import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
-//import java.util.Hashtable;
 
 /**
  * @author Jim Holy

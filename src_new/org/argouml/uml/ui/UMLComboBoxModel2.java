@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.36 2004/02/29 12:35:46 linus Exp $
+// $Id: UMLComboBoxModel2.java,v 1.37 2004/03/25 22:30:01 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,6 @@ import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.tigris.gef.presentation.Fig;
 
-//import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelButton.java,v 1.13 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: PropPanelButton.java,v 1.14 2004/03/25 22:30:01 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui;
 
 import org.apache.log4j.Logger;
-//import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.lang.reflect.*;

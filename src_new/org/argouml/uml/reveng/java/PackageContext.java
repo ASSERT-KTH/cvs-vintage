@@ -1,4 +1,4 @@
-// $Id: PackageContext.java,v 1.19 2004/02/28 12:29:43 linus Exp $
+// $Id: PackageContext.java,v 1.20 2004/03/25 22:30:02 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@
 
 package org.argouml.uml.reveng.java;
 
-import org.argouml.uml.*;
 import org.argouml.uml.reveng.ImportClassLoader;
 
 import org.argouml.model.ModelFacade;

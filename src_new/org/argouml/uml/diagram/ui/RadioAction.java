@@ -1,4 +1,4 @@
-// $Id: RadioAction.java,v 1.6 2004/02/22 00:33:08 d00mst Exp $
+// $Id: RadioAction.java,v 1.7 2004/03/25 22:30:02 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ package org.argouml.uml.diagram.ui;
 
 import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.JButton;
 import org.argouml.kernel.ProjectManager;
 
 import org.argouml.uml.diagram.ui.UMLDiagram;

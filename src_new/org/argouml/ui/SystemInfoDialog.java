@@ -1,4 +1,4 @@
-// $Id: SystemInfoDialog.java,v 1.6 2004/03/24 20:04:42 mvw Exp $
+// $Id: SystemInfoDialog.java,v 1.7 2004/03/25 22:29:19 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@
 
 package org.argouml.ui;
 
-//import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -39,10 +38,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JButton;
-//import javax.swing.JDialog;
-//import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-//import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
 import org.argouml.i18n.Translator;

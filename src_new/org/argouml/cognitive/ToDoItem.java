@@ -1,4 +1,4 @@
-// $Id: ToDoItem.java,v 1.12 2004/03/24 20:04:42 mvw Exp $
+// $Id: ToDoItem.java,v 1.13 2004/03/25 22:29:19 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,13 +27,12 @@
 // File: ToDoItem.java
 // Classes: ToDoItem
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoItem.java,v 1.12 2004/03/24 20:04:42 mvw Exp $
+// $Id: ToDoItem.java,v 1.13 2004/03/25 22:29:19 mvw Exp $
 
 package org.argouml.cognitive;
 
 import java.io.Serializable;
 import java.util.Enumeration;
-//import java.util.Collection;
 import javax.swing.Icon;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.kernel.Wizard;

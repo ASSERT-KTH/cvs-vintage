@@ -1,4 +1,4 @@
-// $Id: FigForkState.java,v 1.8 2004/01/03 00:20:33 bobtarling Exp $
+// $Id: FigForkState.java,v 1.9 2004/03/25 22:30:02 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigForkState.java
 // Classes: FigForkState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigForkState.java,v 1.8 2004/01/03 00:20:33 bobtarling Exp $
+// $Id: FigForkState.java,v 1.9 2004/03/25 22:30:02 mvw Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -34,7 +34,6 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Iterator;
-import java.util.Vector;
 
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigRect;

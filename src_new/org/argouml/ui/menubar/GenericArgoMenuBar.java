@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.49 2004/02/28 12:29:41 linus Exp $
+// $Id: GenericArgoMenuBar.java,v 1.50 2004/03/25 22:30:01 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,6 @@ import org.argouml.uml.ui.ActionCopy;
 import org.argouml.uml.ui.ActionCut;
 import org.argouml.uml.diagram.ui.ActionDeleteFromDiagram;
 import org.argouml.uml.ui.ActionDeploymentDiagram;
-//import org.argouml.uml.ui.ActionEmptyTrash;
 import org.argouml.uml.ui.ActionExit;
 import org.argouml.uml.ui.ActionGenerateAll;
 import org.argouml.uml.ui.ActionGenerateOne;

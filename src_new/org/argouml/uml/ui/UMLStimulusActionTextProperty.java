@@ -1,4 +1,4 @@
-// $Id: UMLStimulusActionTextProperty.java,v 1.7 2003/09/28 19:10:53 bobtarling Exp $
+// $Id: UMLStimulusActionTextProperty.java,v 1.8 2004/03/25 22:30:01 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.uml.ui;
 import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.MElementEvent;
-//import ru.novosoft.uml.behavior.common_behavior.MStimulus;
 
 /**
  * TODO: this class should be moved to package

@@ -1,4 +1,4 @@
-// $Id: NotationProvider.java,v 1.13 2004/03/06 11:25:21 mvw Exp $
+// $Id: NotationProvider.java,v 1.14 2004/03/25 22:29:19 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: NotationProvider.java
 // Interfaces: NotationProvider
 // Original Author: Thierry Lach
-// $Id: NotationProvider.java,v 1.13 2004/03/06 11:25:21 mvw Exp $
+// $Id: NotationProvider.java,v 1.14 2004/03/25 22:29:19 mvw Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -41,8 +41,6 @@ import ru.novosoft.uml.behavior.state_machines.MTransition;
 import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
 import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MAssociationEnd;
-// import org.argouml.application.events.*;
-//import org.argouml.language.*;
 import ru.novosoft.uml.foundation.core.MAttribute;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MOperation;

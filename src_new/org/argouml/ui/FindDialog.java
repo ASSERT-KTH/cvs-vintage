@@ -1,4 +1,4 @@
-// $Id: FindDialog.java,v 1.20 2004/03/24 20:04:42 mvw Exp $
+// $Id: FindDialog.java,v 1.21 2004/03/25 22:29:19 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-//import javax.swing.border.EtchedBorder;
 
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;

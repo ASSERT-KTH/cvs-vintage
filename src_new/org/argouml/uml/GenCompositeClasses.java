@@ -1,4 +1,4 @@
-// $Id: GenCompositeClasses.java,v 1.11 2003/10/11 11:17:41 alexb Exp $
+// $Id: GenCompositeClasses.java,v 1.12 2004/03/25 22:30:01 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.Vector;
 import org.argouml.model.ModelFacade;
 import org.tigris.gef.util.ChildGenerator;
-//import ru.novosoft.uml.foundation.data_types.MAggregationKind;
 
 /** Utility class to generate the children of a class.  In this case
  *  the "children" of a class are the other classes that are

@@ -1,4 +1,4 @@
-// $Id: CrNameConflict.java,v 1.8 2003/12/14 17:14:06 mkl Exp $
+// $Id: CrNameConflict.java,v 1.9 2004/03/25 22:30:01 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,12 +27,10 @@
 // File: CrNameConflict.java
 // Classes: CrNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConflict.java,v 1.8 2003/12/14 17:14:06 mkl Exp $
+// $Id: CrNameConflict.java,v 1.9 2004/03/25 22:30:01 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import org.argouml.cognitive.Designer;

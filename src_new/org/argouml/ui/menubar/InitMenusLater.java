@@ -1,4 +1,4 @@
-// $Id: InitMenusLater.java,v 1.17 2004/03/24 20:04:43 mvw Exp $
+// $Id: InitMenusLater.java,v 1.18 2004/03/25 22:30:01 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,8 +31,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
-//import org.argouml.ui.ActionGoToEdit;
-//import org.argouml.ui.Actions;
 import org.argouml.uml.ui.ActionLayout;
 import org.tigris.gef.base.CmdAlign;
 import org.tigris.gef.base.CmdDistribute;

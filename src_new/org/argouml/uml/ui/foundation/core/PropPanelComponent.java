@@ -1,4 +1,4 @@
-// $Id: PropPanelComponent.java,v 1.30 2003/12/12 19:43:35 mkl Exp $
+// $Id: PropPanelComponent.java,v 1.31 2004/03/25 22:30:02 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,6 @@ package org.argouml.uml.ui.foundation.core;
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.PropPanelButton;
-import org.argouml.uml.ui.UMLCheckBox;
-import org.argouml.uml.ui.UMLReflectionBooleanProperty;
 
 import org.argouml.util.ConfigLoader;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
@@ -36,7 +34,7 @@ import org.argouml.uml.ui.UMLComboBoxNavigator;
 /**
  * PropPanel for a UML component.
  *
- * <p>$Id: PropPanelComponent.java,v 1.30 2003/12/12 19:43:35 mkl Exp $
+ * <p>$Id: PropPanelComponent.java,v 1.31 2004/03/25 22:30:02 mvw Exp $
  *
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.

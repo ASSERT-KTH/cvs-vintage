@@ -1,5 +1,5 @@
 
-// $Id: UMLRadioButtonPanel.java,v 1.8 2003/09/28 19:10:53 bobtarling Exp $
+// $Id: UMLRadioButtonPanel.java,v 1.9 2004/03/25 22:30:01 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLRadioButtonPanel.java,v 1.8 2003/09/28 19:10:53 bobtarling Exp $
+// $Id: UMLRadioButtonPanel.java,v 1.9 2004/03/25 22:30:01 mvw Exp $
 package org.argouml.uml.ui;
 
 import java.awt.GridLayout;
@@ -45,7 +45,6 @@ import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.tigris.gef.presentation.Fig;
 
-//import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
 

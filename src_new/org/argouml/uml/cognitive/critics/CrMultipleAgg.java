@@ -1,4 +1,4 @@
-// $Id: CrMultipleAgg.java,v 1.11 2003/12/14 17:14:06 mkl Exp $
+// $Id: CrMultipleAgg.java,v 1.12 2004/03/25 22:30:01 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrMultipleAgg.java
 // Classes: CrMultipleAgg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleAgg.java,v 1.11 2003/12/14 17:14:06 mkl Exp $
+// $Id: CrMultipleAgg.java,v 1.12 2004/03/25 22:30:01 mvw Exp $
 
 // 12 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Code corrected as part
 // of fix to issue 619.
@@ -39,7 +39,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
-import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
 /**

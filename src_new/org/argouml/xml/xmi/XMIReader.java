@@ -1,4 +1,4 @@
-// $Id: XMIReader.java,v 1.8 2004/03/13 14:06:31 bobtarling Exp $
+// $Id: XMIReader.java,v 1.9 2004/03/25 22:30:02 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,9 +29,6 @@
 package org.argouml.xml.xmi;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
@@ -41,7 +38,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import ru.novosoft.uml.MFactory;
-import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.model_management.MModel;
 
 /**
