@@ -58,7 +58,7 @@ import org.xml.sax.SAXException;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version   $Revision: 1.1 $ <p>
+* @version   $Revision: 1.2 $ <p>
 *
 *      <b>20010830 marc fleury:</b>
 *      <ul>initial import
@@ -355,8 +355,9 @@ implements SARDeployerMBean
             {  
                try 
                {
+		  //XXXXXXXXXXXXXXXXXTEMP EXPERIMENT david j
                   // Add the codebase to the classpath
-                  classpath.add( new URL(codebase));
+                  //classpath.add( new URL(codebase));
                }
                catch (Exception e2) 
                {
