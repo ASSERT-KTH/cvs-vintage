@@ -59,13 +59,14 @@ import java.util.StringTokenizer;
 // Turbine classes
 import org.apache.turbine.Turbine;
 import org.apache.torque.om.NumberKey;
-
-// import org.apache.fulcrum.servlet.TurbineServlet;
-import org.apache.commons.collections.StringStack;
+import org.apache.torque.util.Criteria;
+import com.workingdogs.village.Record;
 
 // Scarab classes
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Attachment;
+import org.tigris.scarab.om.AttributeValuePeer;
+import org.tigris.scarab.om.AttachmentPeer;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.Log;
 
@@ -83,7 +84,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.16 2002/10/08 00:56:51 jmcnally Exp $
+ * @version $Id: LuceneAdapter.java,v 1.17 2002/10/17 00:16:13 jmcnally Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
@@ -500,6 +501,110 @@ public class LuceneAdapter
                 {
                     indexer.optimize();
                 }
+            }
+            finally
+            {
+                if (indexer != null) 
+                {
+                    indexer.close();                    
+                }
+            }
+        }
+    }
+    /**
+     * update the index for all entities that currently exist
+     */
+    public void updateIndex()
+        throws Exception
+    {
+        // find estimate of max id
+        Criteria crit = new Criteria();
+        crit.addSelectColumn("max(" + AttributeValuePeer.VALUE_ID + ")");
+        List records = AttributeValuePeer.doSelectVillageRecords(crit);
+        long max = ((Record)records.get(0)).getValue(1).asLong();
+        
+        long i = 0L;
+        List avs = null;
+        do
+        {
+            crit = new Criteria();
+            Criteria.Criterion low = crit.getNewCriterion(
+                 AttributeValuePeer.VALUE_ID, 
+                 new Long(i), Criteria.GREATER_THAN);
+            i += 100L;
+            Criteria.Criterion high = crit.getNewCriterion(
+                AttributeValuePeer.VALUE_ID, 
+                new Long(i), Criteria.LESS_EQUAL);
+            crit.add(low.and(high));
+            avs = AttributeValuePeer.doSelect(crit);
+            if (!avs.isEmpty()) 
+            {
+                Iterator avi = avs.iterator();
+                while (avi.hasNext()) 
+                {
+                    AttributeValue av = (AttributeValue)avi.next();
+                    index(av);
+                }
+                if (Log.get().isDebugEnabled()) 
+                {
+                    Log.get().debug("Updated index for attribute values (" + 
+                        (i-100L) + "-" + i + "]");                    
+                }                
+            }  
+        }
+        while (i<max || !avs.isEmpty());
+
+        // Attachments
+
+        crit = new Criteria();
+        crit.addSelectColumn("max(" + AttachmentPeer.ATTACHMENT_ID + ")");
+        records = AttachmentPeer.doSelectVillageRecords(crit);
+        max = ((Record)records.get(0)).getValue(1).asLong();
+        i = 0L;
+        List atts = null;
+        do
+        {
+            crit = new Criteria();
+            Criteria.Criterion low = crit.getNewCriterion(
+                 AttachmentPeer.ATTACHMENT_ID, 
+                 new Long(i), Criteria.GREATER_THAN);
+            i += 100L;
+            Criteria.Criterion high = crit.getNewCriterion(
+                AttachmentPeer.ATTACHMENT_ID, 
+                new Long(i), Criteria.LESS_EQUAL);
+            crit.add(low.and(high));
+            atts = AttachmentPeer.doSelect(crit);
+            if (!atts.isEmpty()) 
+            {
+                Iterator atti = atts.iterator();
+                while (atti.hasNext()) 
+                {
+                    Attachment att = (Attachment)atti.next();
+                    if (att.getData() != null && att.getData().length() > 0 &&
+                        att.getIssueId() != null && att.getTypeId() != null) 
+                    {
+                        index(att);
+                    }                    
+                }
+                
+                if (Log.get().isDebugEnabled()) 
+                {
+                    Log.get().debug("Updated index for attachments (" + 
+                        (i-100L) + "-" + i + "]");                    
+                }                
+            }  
+        }
+        while (i<max || !atts.isEmpty());
+
+        // finish off with an optimized index
+        synchronized (getClass())
+        {
+            IndexWriter indexer = null;
+            try
+            {
+                indexer = new IndexWriter(path, 
+                                          new PorterStemAnalyzer(), false);
+                indexer.optimize();
             }
             finally
             {

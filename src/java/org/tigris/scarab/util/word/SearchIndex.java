@@ -59,7 +59,7 @@ import org.tigris.scarab.om.Attachment;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SearchIndex.java,v 1.9 2002/09/13 00:08:24 jmcnally Exp $
+ * @version $Id: SearchIndex.java,v 1.10 2002/10/17 00:16:13 jmcnally Exp $
  */
 public interface SearchIndex
 {
@@ -105,6 +105,10 @@ public interface SearchIndex
      */
     public void index(Attachment attachment)
         throws Exception;
+
+    /**
+     * update the index for all entities that currently exist
+     */
+    public void updateIndex()
+        throws Exception;
 }
-
-
