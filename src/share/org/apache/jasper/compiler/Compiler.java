@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.14 2000/04/05 03:16:15 costin Exp $
- * $Revision: 1.14 $
- * $Date: 2000/04/05 03:16:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.15 2000/04/25 18:28:20 mandar Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/04/25 18:28:20 $
  *
  * ====================================================================
  * 
@@ -305,7 +305,8 @@ public abstract class Compiler {
     /**
      * Change the encoding for the reader if specified.
      */
-    public String changeEncodingIfNecessary(JspReader tmpReader) {
+    public String changeEncodingIfNecessary(JspReader tmpReader)
+    throws ParseException {
 
 	// A lot of code replicated from Parser.java
 	// Main aim is to "get-it-to-work".
