@@ -78,7 +78,7 @@ $renderer.render("navigations", $data, $template, "Default.vm")
   <tr>
    <td nowrap="nowrap">
   <div id="navsearch">
-$renderer.render("navigations", $data, $template, "SearchNav.vm")
+$renderer.render("navigations", $data, "SearchNav.vm")
   </div>
    </td>
   </tr>
