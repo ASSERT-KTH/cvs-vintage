@@ -73,7 +73,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * (please see this file for an example).
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ReportDefinition.java,v 1.12 2003/09/04 00:51:16 jmcnally Exp $
+ * @version $Id: ReportDefinition.java,v 1.13 2003/09/08 17:24:07 jmcnally Exp $
  * @see <a href="http://scarab.tigris.org/source/browse/scarab/src/dtd/report.dtd?rev=1&content-type=text/x-cvsweb-markup">report.dtd</a>
  */
 public class ReportDefinition
@@ -566,26 +566,50 @@ public class ReportDefinition
         return summary;
     }
 
+    /**
+     * The configured maximum from Scarab.properties: 
+     * scarab.report.max.criteria
+     */
     public int maximumHeadings()
     {
         return MAX_CRITERIA;
     }
 
+    /**
+     * Determines whether another heading level is allowed for the given axis.
+     *
+     * @param axis a non-null <code>ReportAxis</code> value
+     */
     public boolean allowMoreHeadings(ReportAxis axis)
     {
         return availableNumberOfHeadings(axis) > 0;
     }
 
+    /**
+     * Determines whether the report is going to be expensive.  This is based
+     * on a comparison of the number of heading levels on both axes with
+     * the configured maximum in Scarab.properties.
+     */
     public boolean reportQueryIsExpensive()
     {
         return totalNumberOfNonDateHeadings() > MAX_CRITERIA;
     }
 
+    /**
+     * The number of headings that could still be added to the report without
+     * exceeding the configured maximum.
+     */
     public int totalAvailableNumberOfHeadings()
     {
         return maximumHeadings() - totalNumberOfNonDateHeadings();
     }
 
+    /**
+     * The number of headings that could still be added to the given axis 
+     * without exceeding the configured maximum.
+     *
+     * @param axis a non-null <code>ReportAxis</code> value
+     */
     public int availableNumberOfHeadings(ReportAxis axis)
     {
         // the following assumes two axes
