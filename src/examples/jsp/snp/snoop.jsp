@@ -7,38 +7,37 @@
 <body bgcolor="white">
 <h1> Request Information </h1>
 <font size="4">
-JSP Request Method: <jsp:expr>  request.getMethod() </jsp:expr>
+JSP Request Method: <%= request.getMethod() %>
 <br>
-Request URI: <jsp:expr> request.getRequestURI()  </jsp:expr>
+Request URI: <%= request.getRequestURI() %>
 <br>
-Request Protocol: <jsp:expr> request.getProtocol() </jsp:expr>
+Request Protocol: <%= request.getProtocol() %>
 <br>
-
-Servlet path: <jsp:expr> request.getServletPath() </jsp:expr>
+Servlet path: <%= request.getServletPath() %>
 <br>
-Path info: <jsp:expr> request.getPathInfo() </jsp:expr>
+Path info: <%= request.getPathInfo() %>
 <br>
-Path translated: <jsp:expr> request.getPathTranslated() </jsp:expr>
+Path translated: <%= request.getPathTranslated() %>
 <br>
-Query string: <jsp:expr> request.getQueryString() </jsp:expr>
+Query string: <%= request.getQueryString() %>
 <br>
-Content length: <jsp:expr> request.getContentLength() </jsp:expr>
+Content length: <%= request.getContentLength() %>
 <br>
-Content type: <jsp:expr> request.getContentType() </jsp:expr>
+Content type: <%= request.getContentType() %>
 <br>
-Server name: <jsp:expr> request.getServerName() </jsp:expr>
+Server name: <%= request.getServerName() %>
 <br>
-Server port: <jsp:expr> request.getServerPort() </jsp:expr>
+Server port: <%= request.getServerPort() %>
 <br>
-Remote user: <jsp:expr> request.getRemoteUser() </jsp:expr>
+Remote user: <%= request.getRemoteUser() %>
 <br>
-Remote address: <jsp:expr> request.getRemoteAddr() </jsp:expr>
+Remote address: <%= request.getRemoteAddr() %>
 <br>
-Remote host: <jsp:expr> request.getRemoteHost() </jsp:expr>
+Remote host: <%= request.getRemoteHost() %>
 <br>
-Authorization scheme: <jsp:expr> request.getAuthType() </jsp:expr> 
+Authorization scheme: <%= request.getAuthType() %> 
 <hr>
-The browser you are using is <jsp:expr> request.getHeader("User-Agent") </jsp:expr>
+The browser you are using is <%= request.getHeader("User-Agent") %>
 <hr>
 </font>
 </body>
