@@ -18,8 +18,7 @@
 </select>
 #end
 
-#macro ( templateAttrValueLeafSelect $attrValue $templAttrValue $optionFieldNam
-e $size )
+#macro ( templateAttrValueLeafSelect $attrValue $templAttrValue $optionFieldName $size )
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) )
     #set ( $templAttrInput = $intake.AttributeValue.mapTo($templAttrValue) )
     #set ( $attr = $attrValue.Attribute )
