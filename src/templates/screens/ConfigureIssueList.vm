@@ -10,7 +10,7 @@
 <input type="hidden" name="user_id" value="$user.UserId" />
 <input type="hidden" name="module_id" value="$scarabR.CurrentModule.ModuleId" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="IssueList.vm" />
-<input type="hidden" name="searchType" value=$data.Parameters.getString("searchType", "") />
+<input type="hidden" name="searchType" value=$data.Parameters.getString("searchType", "custom") />
 
 <div class="functnbar">
   ##<input type="submit" value="$l10n.ResetToDefault"  name="eventSubmit_doUsedefaults" />&#160;
