@@ -160,9 +160,8 @@ import java.util.*;
 
      <h2>Stopping the server</h2>
 
-  1. stop(). The server will exit the START state and enter STOP,any request
-     will get a "Server unavailable" error. All contextShutdown() and
-     will be called. ( STOP==INIT ? )
+  1. stop(). The server will exit the START state and enter INIT.
+     All contextShutdown() and will be called. 
 
   2. shutdown(). All  removeContext() callbacks will be called and the server
       will enter PRE_INIT state. The contexts will not be removed from
@@ -188,30 +187,43 @@ public final class ContextManager implements LogAware{
     public static final String TOMCAT_VERSION = "3.3 dev";
     public static final String TOMCAT_NAME = "Tomcat Web Server";
     
-    /** System property used to set the base directory ( tomcat home )
+    /** System property used to set the base directory ( tomcat home ).
+     *  use -DTOMCAT_HOME= in java command line or System.setProperty.
+     *
+     *  XXX This is a particular implementation detail of the interceptor
+     *  that sets the "default" home - it shouldn't be required or
+     *  specified in the core
      */
-    public static final String TOMCAT_HOME=
-	"tomcat.home";
+    public static final String TOMCAT_HOME="tomcat.home";
 
     // State
 
-    /** Server is not initialized
+    /** Server is not initialized. You can add interceptors and contexts,
+     *  but no hook will be called, tomcat will just store the information.
+     *  The connectors are not activated.
+     *
+     *  Tomcat will be in this state when started and after shutdown()
+     *  is called. Shutdown will also call the engineShutdown() hooks.
      */
     public static final int STATE_PRE_INIT=0;
-    /** Server was initialized, engineInit() was called.
-	addContext() can be called.
+    
+    /** Server is initialized, engineInit() was called.
+     *
+     *  On this state, the addContext hook can be called on all contexts added.
+     *  ( but the context will be initialized only when tomcat starts )
+     *
+     *  The context will be in this state after init() is called or
+     *  after stop() is called ( after it was in START state )
+     *
      */
     public static final int STATE_INIT=1;
 
-    /** Engine is running. All configured contexts are
-	initialized ( contextInit()), and requests can be served.
+    /** Engine is running. 
+     *  The contextInit() hook can be called for all  added contexts,
+     *  and requests will be processed normally.
      */
     public static final int STATE_START=2;
 
-    /** Engine has stoped
-     */
-    public static final int STATE_STOP=3;
-    
     // -------------------- local variables --------------------
 
     private int state=STATE_PRE_INIT;
@@ -221,8 +233,6 @@ public final class ContextManager implements LogAware{
     private Vector contextsV=new Vector();
 
     private int debug=0;
-
-    // Global properties for this tomcat instance:
 
     /** Private workspace for this server
      */
@@ -244,7 +254,7 @@ public final class ContextManager implements LogAware{
     // the embedding application loader. @see getParentLoader
     private ClassLoader parentLoader;
 
-    // Store Loggers before initializing them
+    // Store Loggers that are used in this server
     private Hashtable loggers;
 
     /**
@@ -321,6 +331,8 @@ public final class ContextManager implements LogAware{
 
     // -------------------- Other properties --------------------
 
+    /** Return the current state of the tomcat server.
+     */
     public final int getState() {
 	return state;
     }
@@ -370,6 +382,9 @@ public final class ContextManager implements LogAware{
         defaultContainer = newDefaultContainer;
     }
 
+    /** Add a global interceptor. It's hooks will be called for
+     *  all requests.
+     */
     public final void addInterceptor( BaseInterceptor ri ) {
 	// The interceptors are handled per/container ( thanks to Nacho
 	// for this contribution ).
@@ -498,7 +513,12 @@ public final class ContextManager implements LogAware{
 
     // -------------------- Contexts --------------------
 
-    /** Return the list of contexts managed by this server
+    /** Return the list of contexts managed by this server.
+     *  Tomcat can handle multiple virtual hosts. 
+     *
+     *  All contexts are stored in ContextManager when added.
+     *  Modules can use the information in context ( when addContext
+     *  hook is called ) and prepare mapping tables.
      */
     public final Enumeration getContexts() {
 	return contextsV.elements();
