@@ -121,7 +121,7 @@ public class AutoSetup extends BaseInterceptor {
 		    // Expand war file
 		    try {
 			FileUtil.expand(home + "/webapps/" + name,
-			       home + "/webapps/" + fname);
+					home + "/webapps/" + fname);
                         expanded=true;
 		    } catch( IOException ex) {
 			log("expanding webapp " + name, ex);
@@ -131,12 +131,7 @@ public class AutoSetup extends BaseInterceptor {
 		// we will add the directory to the path
 		name=fname;
 	    }
-
-	    // XXX XXX Add a .xml case
-	    // If a "path.xml" file is found in webapps/, it will be loaded
-	    // as a <context> fragment ( what will allow setting options
-	    // for contexts or automatic config for contexts with different base)
-
+	    
 	    // Decode path
 
 	    // Path will be based on the War name
@@ -149,6 +144,9 @@ public class AutoSetup extends BaseInterceptor {
 
 	    Context ctx = (Context)definedContexts.get(path);
 	    // if context is defined and was expanded
+	    /* Not needed any more - the context are expanded and added
+	       during server configuration, init and context config is done later,
+	       after the server is stable
 	    if( ctx != null && expanded ) {
 		// we need to reload the context since it was initialized
 		// before its directories existed. At minimum, its classloader
@@ -166,7 +164,8 @@ public class AutoSetup extends BaseInterceptor {
 		    ctx=null;
 		}
 	    }
-
+	    */
+	    
             // if context not defined
 	    if( ctx  == null ) {
 		// if no explicit set up and is a directory
@@ -184,13 +183,14 @@ public class AutoSetup extends BaseInterceptor {
 		    if( debug > 0 )
 			log("automatic add " + ctx.toString() + " " + path);
 		    cm.addContext(ctx);
-		    ctx.init();
-		} else {
-		    if( debug>0)
-			log("Already set up: " + path + " "
-				+ definedContexts.get(path));
+		    // no init -  the manager is not initailized itself
+		    // ctx.init();
 		}
-            }
+	    } else {
+		if( debug>0)
+		    log("Already set up: " + path + " "
+			+ definedContexts.get(path));
+	    }
 	}
     }
 }
