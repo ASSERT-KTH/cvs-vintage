@@ -1,4 +1,4 @@
-// $Id: ClassdiagramNode.java,v 1.8 2003/12/13 10:03:43 alexb Exp $
+// $Id: ClassdiagramNode.java,v 1.9 2003/12/28 08:54:19 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,7 +77,16 @@ class ClassdiagramNode implements LayoutedNode {
      * @param newLocation represents the new location for this figure.
      */
     public void setLocation(Point newLocation) {
+        Point oldLocation = getFigure().getLocation();
+        
         getFigure().setLocation(newLocation);
+        int xTrans = newLocation.x - oldLocation.x;
+        int yTrans = newLocation.y - oldLocation.y;
+        Vector enclosingFigs = getFigure().getEnclosedFigs();
+        if (enclosingFigs != null) {
+            for (int i = 0; i < enclosingFigs.size(); i++)
+                ((Fig)(enclosingFigs.elementAt(i))).translate(xTrans,  yTrans);
+        }
     }
 
     /**
