@@ -322,8 +322,9 @@ public class ServerXmlInterceptor extends BaseInterceptor {
      * @param cm The ContextManager we are configuring
      **/
     public String getTomcatInstall() {
-	// Use the "tomcat.home" property to resolve the default filename
-	String tchome = System.getProperty("tomcat.home");
+	String tchome=IntrospectionUtils.guessHome( "tomcat.home",
+						     "tomcat_core.jar",
+				      "org/apache/tomcat/core/Request.class");
 	if (tchome == null) {
 	    System.out.println(sm.getString("tomcat.nohome"));
 	    tchome = ".";

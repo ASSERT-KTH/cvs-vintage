@@ -84,7 +84,6 @@ public final class DefaultCMSetter extends BaseInterceptor {
     }
 
     /** Adjust context manager paths.
-     *  FIRST
      */
     public void engineInit( ContextManager cm )
     	throws TomcatException
@@ -113,11 +112,15 @@ public final class DefaultCMSetter extends BaseInterceptor {
 
 	// if only one is set home==installDir
 
-	if( home!=null && installDir == null )
+	if( home!=null && installDir == null ) {
 	    cm.setInstallDir( home );
+	    installDir=home;
+	}
 
-	if( home==null && installDir != null )
+	if( home==null && installDir != null ) {
 	    cm.setHome( installDir );
+	    home=installDir;
+	}
 
 	// if neither home or install is set,
 	// and no system property, try "."
@@ -142,6 +145,9 @@ public final class DefaultCMSetter extends BaseInterceptor {
 	}
 	cm.setWorkDir( workDir );
         initLoggers(cm.getLoggers());
+
+	if(debug>1) log( "Setting: " + installDir + " " +
+			  home + " " + workDir);
     }
 
     /** Generate a random number
