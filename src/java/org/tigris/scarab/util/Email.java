@@ -81,7 +81,7 @@ import org.tigris.scarab.services.email.VelocityEmail;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.33 2003/05/03 22:37:24 jon Exp $
+ * @version $Id: Email.java,v 1.34 2003/05/06 07:50:06 jon Exp $
  */
 public class Email extends TemplateEmail
 {
@@ -380,7 +380,7 @@ public class Email extends TemplateEmail
                 .handleRequest(new ContextAdapter(context), template);
             if (result != null)
             {
-                result.trim();
+                result = result.trim();
             }
             // in some of the more complicated templates, we set a context
             // variable so that there is not a whole bunch of whitespace
