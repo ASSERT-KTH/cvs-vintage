@@ -45,21 +45,27 @@ public class TomcatAdmin extends TagSupport {
 	    if( docBase==null &&  docBaseParam!=null) {
 		docBase=req.getParameter( docBaseParam );
 	    }
-	    
+
+	    boolean found = false;
 	    if( ctxPath != null ) {
 		System.out.println("Finding " + ctxPath );
+		if( ! ctxPath.startsWith("/") )
+		    ctxPath = "/" + ctxPath;
+		if( ctxPath.equals("/") )
+		    ctxPath="";
 		Enumeration en=cm.getContexts();
 		while( en.hasMoreElements() ) {
 		    ctx=(Context)en.nextElement();
 		    // XXX virtual host
 		    if( ctxPath.equals( ctx.getPath())) {
+			found=true;
 			pageContext.setAttribute("ctx", ctx);
 			System.out.println("Found " + ctx );
 			break;
 		    }
 		}
 	    }
-	    if("removeContext".equals( action ) )
+	    if("removeContext".equals( action ) && found)
 		removeContext( cm , ctx);
 	    if("setLogger".equals( action ) )
 		setLogFile(  ctx, value );
