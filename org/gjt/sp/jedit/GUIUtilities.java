@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.27 2002/02/10 04:47:16 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.28 2002/04/06 06:00:48 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -1103,6 +1103,14 @@ public class GUIUtilities
 	{
 		for(;;)
 		{
+			if(comp instanceof JComponent)
+			{
+				Component real = (Component)((JComponent)comp)
+					.getClientProperty("KORTE_REAL_FRAME");
+				if(real != null)
+					comp = real;
+			}
+
 			if(comp instanceof View)
 				return (View)comp;
 			else if(comp instanceof JPopupMenu)

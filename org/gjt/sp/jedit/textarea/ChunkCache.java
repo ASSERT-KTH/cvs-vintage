@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.37 2002/03/20 08:52:20 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.38 2002/04/06 06:00:48 spestov Exp $
  */
 public class ChunkCache
 {
@@ -306,8 +306,11 @@ public class ChunkCache
 	 */
 	public static float offsetToX(Chunk chunks, int offset)
 	{
-		if(offset < 0)
-			throw new ArrayIndexOutOfBoundsException(offset + " < 0");
+		if(chunks != null && offset < chunks.offset)
+		{
+			throw new ArrayIndexOutOfBoundsException(offset + " < "
+				+ chunks.offset);
+		}
 
 		float x = 0.0f;
 
