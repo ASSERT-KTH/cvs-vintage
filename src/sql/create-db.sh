@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.15 2002/10/25 17:46:38 jon Exp $
+# $Id: create-db.sh,v 1.16 2002/11/06 23:20:47 jon Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -43,7 +43,7 @@ do
     --port|-P)
         DB_PORT="$2"
         shift;;
-    --DB_NAME|-n)
+    --name|-n)
         DB_NAME="$2"
         shift;;
     --loadorder|-l)
