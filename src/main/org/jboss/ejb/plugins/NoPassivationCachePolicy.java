@@ -13,9 +13,9 @@ import org.jboss.ejb.plugins.EnterpriseContextCachePolicy;
 /**
  * Implementation of a no passivation cache policy.
  *
- * @see EnterpriseInstanceCache
+ * @see AbstractInstanceCache
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class NoPassivationCachePolicy 
 	implements EnterpriseContextCachePolicy
