@@ -1,4 +1,4 @@
-// $Id: TabToDo.java,v 1.16 2004/02/29 12:35:39 linus Exp $
+// $Id: TabToDo.java,v 1.17 2004/03/21 07:13:52 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,8 +69,6 @@ public class TabToDo extends TabSpawnable implements TabToDoTarget {
     //JTextArea _description = new JTextArea();
     WizDescription _description = new WizDescription();
     JPanel _lastPanel = null;
-    private JPanel _itemPanel;
-    private JPanel _treePanel;
     private BorderSplitPane _splitPane;
     private Object _target;
 
@@ -121,8 +119,9 @@ public class TabToDo extends TabSpawnable implements TabToDoTarget {
     }
 
     public void showStep(JPanel ws) {
-        if (_lastPanel != null)
+        if (_lastPanel != null) {
             _splitPane.remove(_lastPanel);
+	}
         if (ws != null) {
             _splitPane.add(ws, BorderSplitPane.CENTER);
             _lastPanel = ws;
@@ -148,8 +147,9 @@ public class TabToDo extends TabSpawnable implements TabToDoTarget {
         // the target of description will allways be set directly by tabtodo
         _description.setTarget(target);
         Wizard w = null;
-        if (target instanceof ToDoItem)
+        if (target instanceof ToDoItem) {
             w = ((ToDoItem) target).getWizard();
+	}
         if (w != null) {
             showStep(w.getCurrentPanel());
         } else {
@@ -170,7 +170,7 @@ public class TabToDo extends TabSpawnable implements TabToDoTarget {
         setTarget(TargetManager.getInstance().getTarget());
     }
 
-    protected void updateActionsEnabled(Object target) {      
+    protected static void updateActionsEnabled(Object target) {      
         _actionResolve.updateEnabled(target);
         _actionEmailExpert.updateEnabled(target);
         _actionSnooze.updateEnabled(target);
