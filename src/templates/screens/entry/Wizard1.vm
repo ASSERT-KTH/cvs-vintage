@@ -77,6 +77,7 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
         #else
           #set ($field = "Value")
         #end
+        #if (!$attVal.Attribute.isUserAttribute())
           <tr>
             <th> #if ($attVal.isRequired())*#end 
                  $attVal.RModuleAttribute.DisplayValue: 
@@ -100,6 +101,7 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
               #attrValueErrorMsg ($attVal $field)
             </td>
           </tr>
+        #end
       #end
     #end
 </table>

@@ -64,9 +64,7 @@ $page.setTitle("Identified as duplicate")
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>
-<img src="$data.Request.ContextPath/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /><img src="$data.Request.ContextPath/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
-</th>
+<th>&#160;</th>
 <th>Issue ID</th>
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 #foreach ($attKey in $keys)
@@ -121,8 +119,7 @@ $page.setTitle("Identified as duplicate")
 <tr>
 <th width="120">Note</th>
 <td>
-<#textAreaMedium() name="$intakeAttachment.DataAsString.Key"
-     >$!intakeAttachment.DataAsString</textarea>
+#textAreaMedium("$intakeAttachment.DataAsString.Key" $intakeAttachment.DataAsString)
 <p>
 <input type="submit" name="eventSubmit_doAddnote" value="Submit note" />
 </p>

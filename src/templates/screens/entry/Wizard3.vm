@@ -84,6 +84,7 @@ $page.setTitle("Enter issue")
         #else
           #set ($field = "Value")
         #end
+        #if (!$attVal.Attribute.isUserAttribute())
           <tr>
             <th> #if ($attVal.isRequired())*#end 
                  $attVal.RModuleAttribute.DisplayValue: 
@@ -107,6 +108,7 @@ $page.setTitle("Enter issue")
               #attrValueErrorMsg ($attVal $field)
             </td>
           </tr>
+        #end
       #end
     #end
 </table>
@@ -125,8 +127,7 @@ $page.setTitle("Enter issue")
 #if ( !$intakeAttachment.Name.isValid())
 <p><strong class="alert">$intakeAttachment.Name.Message</strong></p>
 #end
-       <#textAreaMedium() name="$intakeAttachment.Name.Key"
-           >$!intakeAttachment.Name</textarea>
+       #textAreaMedium("$intakeAttachment.Name.Key" $intakeAttachment.Name)
         <p>
           Please provide a short (less than 250 characters) description
           of the attachment
