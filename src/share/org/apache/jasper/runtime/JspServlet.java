@@ -208,11 +208,19 @@ public class JspServlet extends HttpServlet {
             if (parentClassLoader == null)
                 parentClassLoader = this.getClass().getClassLoader();
             
+            // getClass().getClassLoader() returns null in JDK 1.1.6/1.1.8
+            if (parentClassLoader != null) {
             Constants.message("jsp.message.parent_class_loader_is", 
                               new Object[] {
                                   parentClassLoader.toString()
                               }, Constants.MED_VERBOSITY);
-
+            }
+            else {
+            Constants.message("jsp.message.parent_class_loader_is", 
+                              new Object[] {
+                                  "<none>"
+                              }, Constants.MED_VERBOSITY);
+            }
             this.loader = new JspLoader(context, 
                                         parentClassLoader, 
                                         options);
