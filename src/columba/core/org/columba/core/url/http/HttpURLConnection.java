@@ -45,6 +45,8 @@ public class HttpURLConnection extends java.net.HttpURLConnection {
     public HttpURLConnection(URL u, java.net.HttpURLConnection connection) {
         super(u);
         this.connection = connection;
+        connection.setUseCaches(false);
+        connection.setDefaultUseCaches(false);
     }
     
     /**
@@ -62,9 +64,7 @@ public class HttpURLConnection extends java.net.HttpURLConnection {
         return connection.getOutputStream();
     }
     
-    public void setDefaultUseCaches(boolean param) {
-        connection.setDefaultUseCaches(param);
-    }
+    public void setDefaultUseCaches(boolean param) {}
     
     public long getIfModifiedSince() {
         return connection.getIfModifiedSince();
@@ -82,9 +82,7 @@ public class HttpURLConnection extends java.net.HttpURLConnection {
         return connection.getPermission();
     }
     
-    public void setUseCaches(boolean param) {
-        connection.setUseCaches(param);
-    }
+    public void setUseCaches(boolean param) {}
     
     public void addRequestProperty(String str, String str1) {
         connection.addRequestProperty(str, str1);
