@@ -65,8 +65,9 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-// Used to find Ajp12 connector port
+// Used to find Ajp1? connector port
 import org.apache.tomcat.modules.server.Ajp12Interceptor;
+import org.apache.tomcat.modules.server.Ajp13Interceptor;
 
 /**
  * Used by ContextManager to generate automatic apache configurations
@@ -80,6 +81,11 @@ public class ApacheConfig  extends BaseInterceptor {
     public static final String WORKERS_CONFIG = "/conf/jk/workers.properties";
     public static final String JK_LOG_LOCATION = "/logs/mod_jk.log";
 
+    public static final String[] JkMount = { "ajp12", "ajp13" };
+    public static final int AJP12 = 0;
+    public static final int AJP13 = 1;
+    public static final String AJPV12 = "ajpv12";
+
     public ApacheConfig() {
     }
 
@@ -90,10 +96,11 @@ public class ApacheConfig  extends BaseInterceptor {
     Log loghelper = new Log("tc_log", this);
 
     
-    public void execute(ContextManager cm) throws TomcatException {
+    public void engineStart(ContextManager cm) throws TomcatException {
 	try {
 	    String tomcatHome = cm.getHome();
 	    String apacheHome = findApache();
+	    int jkConnector = AJP12;
 
 	    //log("Tomcat home= " + tomcatHome);
 
@@ -127,13 +134,13 @@ public class ApacheConfig  extends BaseInterceptor {
 
 
 	    pw.println("ApJServManual on");
-	    pw.println("ApJServDefaultProtocol ajpv12");
+	    pw.println("ApJServDefaultProtocol " + AJPV12);
 	    pw.println("ApJServSecretKey DISABLED");
 	    pw.println("ApJServMountCopy on");
 	    pw.println("ApJServLogLevel notice");
 	    pw.println();
 
-	    // Find Ajp12 connector
+	    // Find Ajp1? connectors
 	    int portInt=8007;
 	    BaseInterceptor ci[]=cm.getContainer().getInterceptors();
 	    for( int i=0; i<ci.length; i++ ) {
@@ -145,6 +152,9 @@ public class ApacheConfig  extends BaseInterceptor {
 		if( con instanceof  Ajp12Interceptor ) {
 		    Ajp12Interceptor tcpCon=(Ajp12Interceptor) con;
 		    portInt=tcpCon.getPort();
+		}
+		if( con instanceof  Ajp13Interceptor ) {
+      		    jkConnector = AJP13;
 		}
 	    }
 	    pw.println("ApJServDefaultPort " + portInt);
@@ -195,8 +205,8 @@ public class ApacheConfig  extends BaseInterceptor {
         mod_jk.println("#");        
         mod_jk.println("# Root context mounts for Tomcat");
         mod_jk.println("#");        
-        mod_jk.println("JkMount /*.jsp ajp12");
-        mod_jk.println("JkMount /servlet/* ajp12");
+        mod_jk.println("JkMount /*.jsp " + JkMount[jkConnector]);
+        mod_jk.println("JkMount /servlet/* " + JkMount[jkConnector]);
         mod_jk.println();
 
 	    // Set up contexts
@@ -282,8 +292,8 @@ public class ApacheConfig  extends BaseInterceptor {
             mod_jk.println("#");		    
             mod_jk.println("# The following line mounts all JSP files and the /servlet/ uri to tomcat");
             mod_jk.println("#");                        
-		    mod_jk.println("JkMount " + path +"/servlet/* ajp12");
-		    mod_jk.println("JkMount " + path +"/*.jsp ajp12");
+		    mod_jk.println("JkMount " + path +"/servlet/* " + JkMount[jkConnector]);
+		    mod_jk.println("JkMount " + path +"/*.jsp " + JkMount[jkConnector]);
 
 
 		    // Deny serving any files from WEB-INF

@@ -109,6 +109,12 @@
         <ContextInterceptor 
             className="org.apache.tomcat.modules.config.AutoSetup" />
 
+        <!-- Generate includeable Apache configuration files for mod_jserv
+             and mod_jk.
+          -->
+        <ContextInterceptor
+            className="org.apache.tomcat.modules.config.ApacheConfig" />
+
         <ContextInterceptor 
             className="org.apache.tomcat.facade.WebXmlReader" />
 
@@ -279,6 +285,12 @@
         <RequestInterceptor 
          className="org.apache.tomcat.modules.server.Ajp12Interceptor"
          port="8007" />
+
+        <!-- Apache AJP13 support (mod_jk)
+          -->
+        <RequestInterceptor 
+         className="org.apache.tomcat.modules.server.Ajp13Interceptor"
+         port="8009" />
 
         <!-- ==================== Special webapps ==================== -->
         <!-- You don't need this if you place your app in webapps/
