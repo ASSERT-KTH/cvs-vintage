@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.196 2003/08/09 20:35:14 spestov Exp $
+ * @version $Id: Buffer.java,v 1.197 2003/08/10 03:11:19 spestov Exp $
  */
 public class Buffer
 {
@@ -2963,6 +2963,17 @@ loop:		for(int i = 0; i < seg.count; i++)
 	{
 		return (line != getLineCount() - 1
 			&& getFoldLevel(line) < getFoldLevel(line + 1));
+	} //}}}
+
+	//{{{ isFoldEnd() method
+	/**
+	 * Returns if the specified line ends a fold.
+	 * @since jEdit 4.2pre5
+	 */
+	public boolean isFoldEnd(int line)
+	{
+		return (line != getLineCount() - 1
+			&& getFoldLevel(line) > getFoldLevel(line + 1));
 	} //}}}
 
 	//{{{ invalidateCachedFoldLevels() method
