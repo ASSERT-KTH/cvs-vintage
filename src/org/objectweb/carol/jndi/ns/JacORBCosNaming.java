@@ -19,13 +19,15 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBCosNaming.java,v 1.7 2005/03/03 16:23:46 benoitf Exp $
+ * $Id: JacORBCosNaming.java,v 1.8 2005/03/04 14:04:11 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Properties;
@@ -117,11 +119,13 @@ public class JacORBCosNaming implements NameService {
         if (!host.equalsIgnoreCase(RMIConfiguration.DEFAULT_HOST)) {
             try {
                 ipAddr = InetAddress.getByName(host).getHostAddress();
-                // Set the ip which was set in carol.properties (or if localhost, listen on all interfaces).
-                System.setProperty("OAIAddr" , ipAddr);
+                // Set the ip which was set in carol.properties (or if
+                // localhost, listen on all interfaces).
+                System.setProperty("OAIAddr", ipAddr);
             } catch (UnknownHostException uhe) {
                 if (TraceCarol.isDebugJndiCarol()) {
-                    TraceCarol.debugJndiCarol("Could net get ip address from host '" + host + "' : " + uhe.getMessage());
+                    TraceCarol
+                            .debugJndiCarol("Could net get ip address from host '" + host + "' : " + uhe.getMessage());
                     uhe.printStackTrace();
                 }
             }
@@ -131,13 +135,15 @@ public class JacORBCosNaming implements NameService {
         if (System.getProperty(CarolDefaultValues.SERVER_MODE, "false").equalsIgnoreCase("true")) {
             if (configurationProperties != null) {
                 String propertyName = CarolDefaultValues.SERVER_IIOP_PORT;
-                int iiopPort = PortNumber.strToint(configurationProperties.getProperty(propertyName, "0"), propertyName);
+                int iiopPort = PortNumber
+                        .strToint(configurationProperties.getProperty(propertyName, "0"), propertyName);
                 if (iiopPort > 0) {
                     TraceCarol.infoCarol("Using IIOP fixed server port number '" + iiopPort + "'.");
                     System.setProperty("OAPort", String.valueOf(iiopPort));
                 }
             } else {
-                TraceCarol.debugCarol("No properties '" + CarolDefaultValues.SERVER_IIOP_PORT + "' defined in carol.properties file.");
+                TraceCarol.debugCarol("No properties '" + CarolDefaultValues.SERVER_IIOP_PORT
+                        + "' defined in carol.properties file.");
             }
         }
 
@@ -145,18 +151,17 @@ public class JacORBCosNaming implements NameService {
         if (System.getProperty(CarolDefaultValues.SERVER_MODE, "false").equalsIgnoreCase("true")) {
             if (configurationProperties != null) {
                 String propertyName = CarolDefaultValues.SERVER_SSL_IIOP_PORT;
-                int iiopSslPort = PortNumber.strToint(configurationProperties.getProperty(propertyName, String.valueOf(CarolDefaultValues.DEFAULT_SSL_PORT)), propertyName);
+                int iiopSslPort = PortNumber.strToint(configurationProperties.getProperty(propertyName, String
+                        .valueOf(CarolDefaultValues.DEFAULT_SSL_PORT)), propertyName);
                 if (iiopSslPort > 0) {
                     TraceCarol.infoCarol("Using SSL IIOP port number '" + iiopSslPort + "'.");
                     System.setProperty("OASSLPort", String.valueOf(iiopSslPort));
                 }
             } else {
-                TraceCarol.debugCarol("No properties '" + CarolDefaultValues.SERVER_SSL_IIOP_PORT + "' defined in carol.properties file.");
+                TraceCarol.debugCarol("No properties '" + CarolDefaultValues.SERVER_SSL_IIOP_PORT
+                        + "' defined in carol.properties file.");
             }
         }
-
-
-
 
         try {
             if (!isRemoteNameServiceStarted()) {
@@ -187,26 +192,11 @@ public class JacORBCosNaming implements NameService {
 
                 // trace the start execution
                 InputStream cosError = jacORBNameServerProcess.getErrorStream();
-                if (cosError.available() != 0) {
-                    byte[] b = new byte[cosError.available()];
-                    cosError.read(b);
-                    cosError.close();
-                    if (TraceCarol.isDebugJndiCarol()) {
-                        TraceCarol.debugJndiCarol("JacORBCosNaming:");
-                        TraceCarol.debugJndiCarol(new String(b));
-                    }
-                }
-
                 InputStream cosOut = jacORBNameServerProcess.getInputStream();
-                if (cosOut.available() != 0) {
-                    byte[] b = new byte[cosOut.available()];
-                    cosOut.read(b);
-                    cosOut.close();
-                    if (TraceCarol.isDebugJndiCarol()) {
-                        TraceCarol.debugJndiCarol("JacORBCosNaming:");
-                        TraceCarol.debugJndiCarol(new String(b));
-                    }
-                }
+                Thread err = new Thread(new CosReader(cosError, true));
+                Thread out = new Thread(new CosReader(cosOut, false));
+                out.start();
+                err.start();
 
                 // add a shudown hook for this process
                 Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -352,4 +342,59 @@ public class JacORBCosNaming implements NameService {
     private static void initORB() {
         orb = ORB.init(new String[0], null);
     }
+
+    /**
+     * Allow to trace errors/output of a process
+     */
+    class CosReader implements Runnable {
+
+        /**
+         * Input stream containing information
+         */
+        private InputStream is;
+
+        /**
+         * Should send as error or debug message ?
+         */
+        private boolean isErrorMessage = false;
+
+        /**
+         * Constructor
+         * @param is given input stream
+         * @param isErrorMessage Should send as error or debug message
+         */
+        public CosReader(InputStream is, boolean isErrorMessage) {
+            this.is = is;
+            this.isErrorMessage = isErrorMessage;
+        }
+
+        /**
+         * Thread execution printing information received
+         */
+        public void run() {
+            try {
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                String str = null;
+                while ((str = br.readLine()) != null) {
+                    if (isErrorMessage) {
+                        if (TraceCarol.isDebugJndiCarol()) {
+                            TraceCarol.debugJndiCarol("JacORBCosNaming error :");
+                            TraceCarol.debugJndiCarol(str);
+                        }
+                    } else {
+                        if (TraceCarol.isDebugJndiCarol()) {
+                            TraceCarol.debugJndiCarol("JacORBCosNaming:");
+                            TraceCarol.debugJndiCarol(str);
+                        }
+                    }
+                }
+                // close input stream
+                is.close();
+            } catch (Exception e) {
+                TraceCarol.error(e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
