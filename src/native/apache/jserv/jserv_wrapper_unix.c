@@ -55,9 +55,9 @@
 
 /*****************************************************************************
  * Description: wrapper protocol implementation for Win32 systems            *
- * Author:      Pierpaolo Fumagalli <ianosh@iname.com>,                      *
- *              Ed Korthof <ed@ultimanet.com>                                *
- * Version:     $Revision: 1.2 $                                             *
+ * Author:      Pierpaolo Fumagalli <ianosh@@iname.com>,                      *
+ *              Ed Korthof <ed@@ultimanet.com>                                *
+ * Version:     $Revision: 1.3 $                                             *
  *****************************************************************************/
 #include "jserv.h"
 #include "http_conf_globals.h"
@@ -121,7 +121,10 @@ void kill_hung_jvm(int signum) {
     sleep(1);
   }
   if( waitpid(jvm_pid,NULL,WNOHANG)==0 ) {
+    jserv_error(JSERV_LOG_INFO, wrapper_data->config,
+		"wrapper: kill (SIGKILL) Java VM (PID=%d)", getpid());
     kill(jvm_pid, SIGKILL);
+    waitpid(jvm_pid,NULL,0); /* if it does not died, KERNEL bug! */
   }
   jvm_pid=0;
 }
@@ -178,6 +181,18 @@ pid_t wrapper_spawn(void) {
     char **arg;
     char **env;
 
+   /* Apache on Unix has a 2 phases startup initialization : */
+   /* we will here spawn only one JVM in the 2nd pass.       */ 
+    if (ap_standalone && getppid() == 1) {
+        jserv_error(JSERV_LOG_INFO,wrapper_data->config,
+                    "Apache-JServ 2nd  initialization starting JVM now: %d %d %d", ap_standalone, getpid(), getppid()); 
+    }
+    else {
+        jserv_error(JSERV_LOG_INFO,wrapper_data->config,
+                    "Apache-JServ 1rst  initialization: JVM will be started later %d %d %d", ap_standalone, getpid(), getppid()); 
+        return 0;
+    }
+
     /* Fork the process and return child pid to parent */
     proc=fork();
     /*jserv_error(JSERV_LOG_INFO,wrapper_data->config,
@@ -192,10 +207,6 @@ pid_t wrapper_spawn(void) {
 
     if (proc!=0) return proc;
         
-    /* Sleep two seconds waiting for first init to finish and to kill this
-     * process  - TODO remove this and find a nicer soulution to doublestart */
-    sleep(3);
-
     /* If we get a TERM signal, shut down the JVM nicely, then exit.
      */
     signal(SIGTERM, wrapper_shutdown);
@@ -297,7 +308,7 @@ pid_t wrapper_spawn(void) {
         /* Change uid to the server's User, if appropriate */
         if (
 #ifdef _OSD_POSIX
-            os_init_job_environment(cfg->config->server, ap_user_name) != 0 ||
+            os_init_job_environment(cfg->config->server, ap_user_name, 0) != 0 ||
 #endif
             setuid(cfg->config->server->server_uid) == -1) {
 
@@ -332,12 +343,17 @@ pid_t wrapper_spawn(void) {
 
     if (jvm_pid != 0) { /* The parent in this fork will be the watcher process */
         int last_restart = time(NULL);
+        jserv_error(JSERV_LOG_DEBUG,wrapper_data->config,
+                "wrapper: watching processes in %d seconds(PID=%d,PPID=%d,JVM PID=%d)",
+                wrapper_data->config->vmtimeout, getpid(),getppid(), jvm_pid);
         sleep(wrapper_data->config->vmtimeout);
       
-        jserv_error(JSERV_LOG_INFO,wrapper_data->config,
-                "wrapper: watching processes (PID=%d,PPID=%d,JVM PID=%d)",
-                getpid(),getppid(), jvm_pid);
-        /* Check every second */
+        jserv_error(JSERV_LOG_DEBUG,wrapper_data->config,
+                "wrapper: watching processes every %d seconds(PID=%d,PPID=%d,JVM PID=%d)",
+                wrapper_data->config->vminterval, getpid(),getppid(), jvm_pid);
+
+        /* Check every ApJServVMInterval seconds */
+
         while (1) {
 	  sighandler_t old_handler;
 
@@ -424,11 +440,16 @@ pid_t wrapper_spawn(void) {
 				       wrapper_exec_jserv_core(arg[0], arg, env);
 				     }
 				     last_restart = time(NULL);
+				     jserv_error(JSERV_LOG_DEBUG, wrapper_data->config,
+					      "wrapper: sleep config->vmtimeout %d (PID=%d)", wrapper_data->config->vmtimeout, getpid());
 				     sleep(wrapper_data->config->vmtimeout);
+                                     continue;
 				}
 			}
 
 			/* delay before rechecking for jvm (jluc: hope it's the rigth place) */
+                        jserv_error(JSERV_LOG_DEBUG, wrapper_data->config,
+                                    "wrapper: sleep config->vminterval %d (PID=%d)", wrapper_data->config->vminterval, getpid());
 			sleep(wrapper_data->config->vminterval);
         }
     }
