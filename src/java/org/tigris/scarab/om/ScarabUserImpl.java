@@ -74,7 +74,7 @@ import org.tigris.scarab.util.ScarabException;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.22 2001/10/09 03:51:56 elicia Exp $
+    @version $Id: ScarabUserImpl.java,v 1.23 2001/10/20 00:10:44 elicia Exp $
 */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -250,13 +250,16 @@ public class ScarabUserImpl
      * User and Module -- the attributes the user has selected
      * To appear on the IssueList for this module.
      */
-    public List getRModuleUserAttributes(ModuleEntity module)
+    public List getRModuleUserAttributes(ModuleEntity module,
+                                         IssueType issueType)
         throws Exception
     {
         List rmuas = new ArrayList();
         Criteria crit = new Criteria()
            .add(RModuleUserAttributePeer.USER_ID, getUserId())
-           .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId());
+           .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId())
+           .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
+                issueType.getIssueTypeId());
 
         return getRModuleUserAttributes(crit);
     }
@@ -265,15 +268,17 @@ public class ScarabUserImpl
     /**
      * Returns an RModuleUserAttribute object.
      */
-    public RModuleUserAttribute getModuleUserAttribute(NumberKey moduleId, 
-                                                       NumberKey attributeId) 
+    public RModuleUserAttribute getRModuleUserAttribute(ScarabModule module, 
+                                                       Attribute attribute,
+                                                       IssueType issueType)
         throws Exception
     {
         RModuleUserAttribute mua = null;
         Criteria crit = new Criteria(4)
-           .add(RModuleUserAttributePeer.MODULE_ID, moduleId)
+           .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId())
            .add(RModuleUserAttributePeer.USER_ID, getUserId())
-           .add(RModuleUserAttributePeer.ATTRIBUTE_ID, attributeId);
+           .add(RModuleUserAttributePeer.ATTRIBUTE_ID, attribute.getAttributeId())
+           .add(RModuleUserAttributePeer.ATTRIBUTE_ID, issueType.getIssueTypeId());
         try
         {
    
@@ -283,9 +288,10 @@ public class ScarabUserImpl
         catch (Exception e)
         {
             mua = new RModuleUserAttribute();
-            mua.setModuleId(moduleId);
+            mua.setModuleId(module.getModuleId());
             mua.setUserId(getUserId());
-            mua.setAttributeId(attributeId);
+            mua.setIssueTypeId(issueType.getIssueTypeId());
+            mua.setAttributeId(attribute.getAttributeId());
         }
         return mua;
     }
