@@ -81,6 +81,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
     private int encodingInfoNote;
     private int sessionEncodingNote;
 
+    private boolean safe=true;
     
     public DecodeInterceptor() {
     }
@@ -103,6 +104,14 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	charsetAttribute=s;
 	charsetURIAttribute=";" + charsetAttribute + "=";
     }
+
+    /** Decode interceptor can normalize unsafe urls, by eliminating
+	dangerous things like /../, // , etc - all of them are known
+	as very dangerous for security.
+    */
+    public void setSafe( boolean b ) {
+	safe=b;
+    }
     
     /* -------------------- Initialization -------------------- */
     
@@ -116,6 +125,123 @@ public class DecodeInterceptor extends  BaseInterceptor  {
     }
     /* -------------------- Request mapping -------------------- */
 
+
+    // Based on Apache's path normalization code
+    private void normalizePath(MessageBytes pathMB ) {
+	if( debug> 0 ) log( "Normalize " + pathMB.toString());
+	if( pathMB.getType() != MessageBytes.T_BYTES ) return;
+	
+	ByteChunk bc=pathMB.getByteChunk();
+					       
+	int start=bc.getStart();
+	int end=bc.getEnd();
+	byte buff[]=bc.getBytes();
+	int i=0;
+	int j=0;
+	
+	// remove //
+	for( i=start, j=start; i<end-1; i++ ) {
+	    if( buff[i]== '/' && buff[i+1]=='/' ) {
+		while( buff[i+1]=='/' ) i++;
+	    } 
+	    buff[j++]=buff[i];
+	}
+	if( i!=j ) {
+	    buff[j++]=buff[end-1];
+	    end=j;
+	    bc.setEnd( end );
+	    pathMB.resetStringValue();
+	    if( debug > 0 ) {
+		log( "Eliminate // " + pathMB.toString() + " " + start + " " + end );
+	    }
+	}
+	
+	// remove /./
+	for( i=start, j=start; i<end-1; i++ ) {
+	    if( buff[i]== '.' && buff[i+1]=='/' &&
+		( i==0 || buff[i-1]=='/' )) {
+		// "/./"
+		i+=1;
+		if( i==end-1 ) j--; // cut the ending /
+	    } else {
+		buff[j++]=buff[i];
+	    }
+	}
+	if( i!=j ) {
+	    buff[j++]=buff[end-1];
+	    end=j;
+	    bc.setEnd( end );
+	    pathMB.resetStringValue();
+	    if( debug > 0 ) {
+		log( "Eliminate /./ " + pathMB.toString());
+	    }
+	}
+	
+	// remove  /. at the end
+	j=end;
+	if( end==start+1 && buff[start]== '.' )
+	    end--;
+	else if( end > start+1 && buff[ end-1 ] == '.' &&
+		 buff[end-2]=='/' ) {
+	    end=end-2;
+	}
+	if( end!=j ) {
+	    bc.setEnd( end );
+	    pathMB.resetStringValue();
+	    if( debug > 0 ) {
+		log( "Eliminate ending /. " + pathMB.toString());
+	    }
+	}
+
+	// remove /../
+	for( i=start, j=start; i<end-2; i++ ) {
+	    if( buff[i] == '.' &&
+		buff[i+1] == '.' &&
+		buff[i+2]== '/' &&
+		( i==0 || buff[ i-1 ] == '/' ) ) {
+
+		i+=1;
+		// look for the previous /
+	        j=j-2;
+		while( j>0 && buff[j]!='/' ) {
+		    j--;
+		}
+	    } else {
+		buff[j++]=buff[i];
+	    }
+	}
+	if( i!=j ) {
+	    buff[j++]=buff[end-2];
+	    buff[j++]=buff[end-1];
+	    end=j;
+	    bc.setEnd( end );
+	    pathMB.resetStringValue();
+	    if( debug > 0 ) {
+		log( "Eliminate /../ " + pathMB.toString());
+	    }
+	}
+
+
+	// remove trailing xx/..
+	j=end;
+	if( end>start + 3 &&
+	    buff[end-1]=='.' &&
+	    buff[end-2]=='.' &&
+	    buff[end-3]=='/' ) {
+	    end-=4;
+	    while( end>0 &&  buff[end]!='/' )
+		end--; 
+	}
+	if( end!=j ) {
+	    bc.setEnd( end );
+	    pathMB.resetStringValue();
+	    if( debug > 0 ) {
+		log( "Eliminate ending /.. " + pathMB.toString());
+	    }
+	}
+	
+    }
+    
     public int postReadRequest( Request req ) {
 	MessageBytes pathMB = req.requestURI();
 	// copy the request 
@@ -123,6 +249,16 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	if( pathMB.isNull())
 	    throw new RuntimeException("ASSERT: null path in request URI");
 
+	if( safe &&
+	    ( pathMB.indexOf("//") >= 0 ||
+	      pathMB.indexOf("/." ) >=0
+	      )) {
+	    //debug=1;
+	    normalizePath( pathMB );
+	    if( debug > 0 )
+		log( "Normalized url "  + pathMB );
+	}
+	
 	//if( path.indexOf("?") >=0 )
 	//   throw new RuntimeException("ASSERT: ? in requestURI");
 	
