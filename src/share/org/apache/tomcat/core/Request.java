@@ -98,12 +98,24 @@ public class Request {
      */
     public static final String ATTRIB_REAL_REQUEST="org.apache.tomcat.request";
 
+    public static final int STATE_UNUSED=0;
+
+    public static final int STATE_INVALID=-1;
+
+    public static final int STATE_NEW=1;
+
+    public static final int STATE_CONTEXT_MAPPED=2;
+
+    public static final int STATE_MAPPED=3;
+    
     // -------------------- properties --------------------
 
     protected int serverPort;
     protected String remoteAddr;
     protected String remoteHost;
     protected String localHost;
+
+    protected int state;
 
     // Request components represented as MB.
     // MB are also used for headers - it allows lazy
@@ -129,6 +141,8 @@ public class Request {
 
     // Processed information ( redundant ! )
     protected Hashtable parameters = new Hashtable();
+    protected boolean didReadFormData;
+    protected boolean didParameters;
 
     protected int contentLength = -1;
     protected String contentType = null;
@@ -149,10 +163,6 @@ public class Request {
     protected ContextManager contextM;
     protected Context context;
     protected Object requestFacade;
-
-    protected boolean didReadFormData;
-    protected boolean didParameters;
-    // end "Request" variables
 
     // Session
     protected String reqSessionId;
@@ -185,6 +195,14 @@ public class Request {
  	recycle(); // XXX need better placement-super()
     }
 
+    public final int getState() {
+	return state;
+    }
+
+    final void setState( int state ) {
+	this.state=state;
+    }
+    
     /** Called by mapper interceptors after the context
 	is found or directly by server adapters when
 	this is known in advance
@@ -231,42 +249,42 @@ public class Request {
 
     // -------------------- Request data --------------------
 
-    public MessageBytes getSchemeMB() {
+//     public MessageBytes getSchemeMB() {
+// 	return schemeMB;
+//     }
+
+//     public String getScheme() {
+//         return schemeMB.toString();
+//     }
+
+//     public void setScheme( String scheme ) {
+// 	schemeMB.setString(scheme);
+//     }
+
+//     public String getMethod() {
+//         return methodMB.toString();
+//     }
+
+//     public void setMethod( String method ) {
+// 	methodMB.setString(method);
+//     }
+
+    public MessageBytes scheme() {
 	return schemeMB;
     }
-
-    public String getScheme() {
-        return schemeMB.toString();
+    
+    public MessageBytes method() {
+	return methodMB;
+    }
+    
+    public MessageBytes requestURI() {
+	return uriMB;
     }
 
-    public void setScheme( String scheme ) {
-	schemeMB.setString(scheme);
+    public MessageBytes queryString() {
+	return queryMB;
     }
-
-    public String getMethod() {
-        return methodMB.toString();
-    }
-
-    public void setMethod( String method ) {
-	methodMB.setString(method);
-    }
-
-    public String getRequestURI() {
-	return uriMB.toString();
-    }
-
-    public void setRequestURI( String r ) {
- 	uriMB.setString(r);
-    }
-
-    public String getQueryString() {
-        return queryMB.toString();
-    }
-
-    public void setQueryString(String queryString) {
-	queryMB.setString(queryString);
-    }
-
+    
     public String getProtocol() {
         return protoMB.toString();
     }
@@ -424,7 +442,7 @@ public class Request {
 	    // Call all authentication callbacks. If any of them is able to
 	    // 	identify the user it will set the principal in req.
 	    int status=0;
-	    BaseInterceptor reqI[]= context.getContainer().
+	    BaseInterceptor reqI[]= getContainer().
 		getInterceptors(Container.H_authenticate);
 	    for( int i=0; i< reqI.length; i++ ) {
 		status=reqI[i].authenticate( this, response );
@@ -477,7 +495,7 @@ public class Request {
 	checkRoles[0]=role;
 
 	int status=0;
-	BaseInterceptor reqI[]= context.getContainer().
+	BaseInterceptor reqI[]= getContainer().
 	    getInterceptors(Container.H_authorize);
 
 	// Call all authorization callbacks. 
@@ -564,8 +582,8 @@ public class Request {
 
 	if( ! create ) return null;
 
-	BaseInterceptor reqI[]= contextM.
-	    getInterceptors(this, Container.H_newSessionRequest);
+	BaseInterceptor reqI[]= getContainer().
+	    getInterceptors(Container.H_newSessionRequest);
 
 	for( int i=0; i< reqI.length; i++ ) {
 	    reqI[i].newSessionRequest( this, response );
@@ -609,15 +627,44 @@ public class Request {
     }
 
     // -------------------- LookupResult
-    public Handler getWrapper() {
+
+    /** As result of mapping the request a "handler" will be associated
+	and called to generate the result.
+
+	The handler is null if no mapping was found ( so far ).
+
+	The handler can be set if the request is found to match any
+	of the rules defined in web.xml ( and as a result, a container will
+	be set ), or if a special interceptor will define a tomcat-specific
+	handler ( like static, jsp, or invoker ).
+    */
+    public Handler getHandler() {
 	return handler;
     }
 
-    public void setWrapper(Handler handler) {
+    public void setHandler(Handler handler) {
 	this.handler=handler;
     }
 
+    /** Return the container ( URL pattern ) where this request has been
+	mapped.
+
+	If the request is invalid ( context can't be determined )
+	the ContextManager.container will be returned.
+
+	If the request is not mapped ( requestMap not called yet )
+	or the request corresponds to the "default" map ( * ) or a
+	special implicit map ( *.jsp, invoker ),
+	then the context's default container is returned
+    */
     public Container getContainer() {
+	if( container==null && context==null) {
+	    container=contextM.getContainer();
+	    // only for invalid requests !
+	}
+	if( container==null ) {
+	    container=context.getContainer();
+	}
 	return container;
     }
 
@@ -723,7 +770,7 @@ public class Request {
     // -------------------- Utils - facade for RequestUtil
     private void handleParameters() {
    	if(!didParameters) {
-	    String qString=getQueryString();
+	    String qString=queryString().toString();
 	    if(qString!=null) {
 		didParameters=true;
 		RequestUtil.processFormData( qString, parameters );
@@ -733,7 +780,8 @@ public class Request {
 	    didReadFormData = true;
 	    Hashtable postParameters=RequestUtil.readFormData( this );
 	    if(postParameters!=null)
-		parameters = RequestUtil.mergeParameters(parameters, postParameters);
+		parameters = RequestUtil.mergeParameters(parameters,
+							 postParameters);
 	}
     }
 
@@ -802,7 +850,7 @@ public class Request {
 	    if( getServletPath() != null )
 		sb.append( " + " + getServletPath() + " + " + getPathInfo());
 	} else {
-	    sb.append(getRequestURI());
+	    sb.append(requestURI().toString());
 	}
 	sb.append(")");
 	return sb.toString();
