@@ -1,0 +1,71 @@
+<html>
+<head>
+<title>Scarab - Database Independence</title>
+</head>
+
+<body bgcolor="#ffffff">
+
+<h2>Scarab - Database Independence</h2>
+<h4>$Id: database_independence.html,v 1.1 2002/10/14 17:12:24 thierrylach Exp $</h4>
+
+<p>
+Using <!-- TODO link --> Torque, 
+Scarab is able to connect to many different database types.
+
+<p>
+Some of the difference between databases
+cannot be completely handled using Torque, however.
+<p>
+One prime example is the initial data load.
+The default date format recognized by Oracle
+is inconsistent with the more commonly used date format
+recognized by several other databases including MySQL.
+<p>
+Another example is the ability to select a constant
+or a database function result separate from a database query.
+MySQL allows the following syntax:
+
+<pre>
+    SELECT 1
+</pre>
+
+while Oracle requires a select statement to include a <code>from</code> clause,
+and supplies a system table called <code>DUAL</code> which contains only
+one row for use similar to the following:
+
+<pre>
+    SELECT 1 FROM DUAL
+</pre>
+
+
+<h5>Database Configuration</h5>
+The following properties in <code>build.properties</code>
+can be used to select and customize the database.
+<ul>
+<li>
+<code>scarab.database.type</code>
+</li>
+</ul>
+<p>
+
+
+<h5>Data Load Configuration</h5>
+The following properties in <code>build.properties</code>
+can be used to customize the database load.
+<ul>
+<li>
+<code>scarab.database.loadorder</code>
+</li>
+<li>
+<code>scarab.database.validationQuery</code>
+</li>
+<li>
+<code>skip.seed.data</code>
+</li>
+<li>
+<code>seed.data.sql</code>
+</li>
+</ul>
+<p>
+</body>
+</html>
