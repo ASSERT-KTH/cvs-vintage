@@ -104,7 +104,14 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
     public void processConnection(TcpConnection connection, Object[] theData) {
 
         try {
+	    // XXX - Add workarounds for the fact that the underlying
+	    // serverSocket.accept() call can now time out.  This whole
+	    // architecture needs some serious review.
+	    if (connection == null)
+		return;
 	    Socket socket=connection.getSocket();
+	    if (socket == null)
+		return;
 	    socket.setSoLinger( true, 100);
 	    //	    socket.setSoTimeout( 1000); // or what ?
 

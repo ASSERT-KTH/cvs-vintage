@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.16 2000/03/21 23:09:44 costin Exp $
- * $Revision: 1.16 $
- * $Date: 2000/03/21 23:09:44 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.17 2000/03/24 03:29:38 craigmcc Exp $
+ * $Revision: 1.17 $
+ * $Date: 2000/03/24 03:29:38 $
  *
  * ====================================================================
  *
@@ -105,8 +105,15 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 
 	//	System.out.println("New Connection");
 	try {
+	    // XXX - Add workarounds for the fact that the underlying
+	    // serverSocket.accept() call can now time out.  This whole
+	    // architecture needs some serious review.
+	    if (connection == null)
+		return;
 	    //	    System.out.print("1");
 	    socket=connection.getSocket();
+	    if (socket == null)
+		return;
 	    //	    System.out.print("2");
 	    InputStream in=socket.getInputStream();
 	    OutputStream out=socket.getOutputStream();
@@ -175,7 +182,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	    contextM.log( "Error reading request " + e.getMessage());
 	} finally {
 	    // recycle kernel sockets ASAP
-	    try { socket.close (); }
+	    try { if (socket != null) socket.close (); }
 	    catch (IOException e) { /* ignore */ }
         }
 	//	System.out.print("6");

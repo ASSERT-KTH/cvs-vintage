@@ -84,6 +84,32 @@ public class Tomcat {
     }
     
 
+    /**
+     * Return the configuration file we are processing.  If the
+     * <code>-config filename</code> command line argument is not
+     * used, the default configuration filename will be loaded from
+     * the TOMCAT_HOME directory.
+     *
+     * @param cm The ContextManager we are configuring
+     **/
+    File getConfigFile(ContextManager cm) {
+
+	// If configFile is already set, use it
+	if (configFile != null)
+	    return (new File(configFile));
+
+	// Use the "tomcat.home" property to resolve the default filename
+	String tchome = System.getProperty("tomcat.home");
+	if (tchome == null) {
+	    System.out.println("No tomcat.home property, you need to set TOMCAT_HOME or add -Dtomcat.home");
+	    tchome = ".";	// Assume current working directory
+	}
+	cm.setHome(tchome);
+	return (new File(tchome, DEFAULT_CONFIG));
+
+    }
+
+
     public void execute(String args[] ) throws Exception {
 	if( ! processArgs( args ) ) {
 	    System.out.println("Wrong arguments");
@@ -104,27 +130,7 @@ public class Tomcat {
 	setConnectorHelper( xh );
 	setLogHelper( xh );
 
-	File f;
-
-	// - if no -f config is specified, use tomcat.home and set ContextManager.home to the same thing.
-	//   The user probably wants the default tomcat.
-	// - if a config file is specified - just use it, it will probably set the contextmanager home.
-	if( configFile==null ) {
-	    String tchome=System.getProperty("tomcat.home");
-	    if( tchome == null ) {
-		System.out.println("No tomcat.home property, you need to set TOMCAT_HOME or add -Dtomcat.home ");
-		// try "." - a better solution would be to just exit.
-		tchome=".";
-	    } 
-	    // Home will be identical to tomcat home if default config is used.
-	    cm.setHome( tchome );
-	    f=new File(tchome, DEFAULT_CONFIG );
-	} else {
-	    // config file is relative to the working directory
-	    // if it doesn't set a home for the context manager, tomcat.home will be used
-	    f=new File(configFile);
-	}
-
+	File f = getConfigFile(cm);
 	try {
 	    xh.readXml(f,cm);
 	} catch( Exception ex ) {
@@ -167,10 +173,9 @@ public class Tomcat {
 	xh.setDebug( 0 );
 	ContextManager cm=new ContextManager();
 	setConnectorHelper( xh );
+
 	// read only connector information out of server.xml
-
-	File f=new File(cm.getHome(), configFile);
-
+	File f = getConfigFile(cm);
 	try {
 	    xh.readXml(f,cm);
 	} catch( Exception ex ) {

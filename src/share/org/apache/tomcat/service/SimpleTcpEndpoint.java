@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/SimpleTcpEndpoint.java,v 1.2 2000/03/20 19:34:10 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/03/20 19:34:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/SimpleTcpEndpoint.java,v 1.3 2000/03/24 03:29:38 craigmcc Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/03/24 03:29:38 $
  *
  * ====================================================================
  *
@@ -97,7 +97,7 @@ public class SimpleTcpEndpoint  extends TcpEndpoint { // implements Endpoint {
     private StringManager sm = StringManager.getManager("org.apache.tomcat.service");
 
     private static final int BACKLOG = 100;
-    private static final int TIMEOUT = 1000;
+    private static final int TIMEOUT = 5000;
 
     private int backlog = BACKLOG;
     private int timeout = TIMEOUT;
@@ -169,7 +169,7 @@ public class SimpleTcpEndpoint  extends TcpEndpoint { // implements Endpoint {
      * more or less responsive to having their server sockets
      * shut down.
      *
-     * <p>By default this value is 1000ms.
+     * <p>By default this value is 5000ms.
      */
     public void setTimeout(int timeout) {
 	    this.timeout = timeout;
@@ -186,6 +186,9 @@ public class SimpleTcpEndpoint  extends TcpEndpoint { // implements Endpoint {
 		    serverSocket = factory.createSocket(port, backlog);
 		} else {
 		    serverSocket = factory.createSocket(port, backlog, inet);
+		}
+		if (serverSocket != null) {
+		    serverSocket.setSoTimeout(this.timeout);
 		}
 	    }
 	} catch( IOException ex ) {
@@ -212,6 +215,7 @@ public class SimpleTcpEndpoint  extends TcpEndpoint { // implements Endpoint {
 	try {
 	    serverSocket.close(); // XXX?
 	} catch(Exception e) {
+	    e.printStackTrace();
 	}
 	serverSocket = null;
     }
