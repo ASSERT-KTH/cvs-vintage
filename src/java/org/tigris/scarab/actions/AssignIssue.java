@@ -103,7 +103,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.57 2002/07/30 22:48:14 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.58 2002/09/11 17:57:19 jon Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -251,7 +251,7 @@ public class AssignIssue extends BaseModifyIssue
                             if (!notify(context, issue, assignee, assigner, 
                                         results[0], results[1]))
                             {
-                                getScarabRequestTool(context).setAlertMessage(EMAIL_ERROR);
+                                scarabR.setAlertMessage(EMAIL_ERROR);
                             }
                         }
                     }
@@ -312,7 +312,7 @@ public class AssignIssue extends BaseModifyIssue
                     if (!notify(context, oldAttVal.getIssue(), assignee, 
                                 assigner, userAction, othersAction))
                     {
-                        getScarabRequestTool(context).setAlertMessage(EMAIL_ERROR);
+                        scarabR.setAlertMessage(EMAIL_ERROR);
                     }
                 }
             }
@@ -324,8 +324,15 @@ public class AssignIssue extends BaseModifyIssue
             Issue issue = (Issue)issues.get(0);
             data.getParameters().add("id", issue.getUniqueId());
         }
+        
+        if (scarabR.getAlertMessage() == null || 
+            scarabR.getAlertMessage().length() == 0)
+        {
+            scarabR.setConfirmMessage(DEFAULT_MSG);
+        }
+        // go back to the previous page...really a doDone, but...
         doCancel(data, context);
-}
+    }
 
     /**
      * Gets temporary working list of assigned users.
