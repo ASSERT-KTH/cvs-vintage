@@ -57,7 +57,7 @@
  * Description: NT System service for Jakarta/Tomcat                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  *              Dave Oxley <Dave@JungleMoss.com>                           *
- * Version:     $Revision: 1.5 $                                           *
+ * Version:     $Revision: 1.6 $                                           *
  ***************************************************************************/
 
 #include "jk_global.h"
@@ -160,7 +160,7 @@ static void usage_message(const char *name)
     printf("        -u <user name> - In the form DomainName\\UserName (.\\UserName for local)\n");
     printf("        -p <user password>\n");
     printf("        -a - Set startup type to automatic\n");
-    printf("        -d <sevice dependancy> - Can be entered multiple times\n\n");
+    printf("        -d <service dependency> - Can be entered multiple times\n\n");
     printf("To remove the service:\n");
     printf("%s -r <service name>\n\n", name);
     printf("To start the service:\n");
@@ -193,7 +193,7 @@ void main(int argc, char **argv)
     wVersionRequested = MAKEWORD(1, 1); 
     err = WSAStartup(wVersionRequested, &wsaData);
     if(0 != err) {
-        fprintf(stderr, "Error connecting to winosck");
+        fprintf(stderr, "Error connecting to winsock");
         return;
     } 
 
