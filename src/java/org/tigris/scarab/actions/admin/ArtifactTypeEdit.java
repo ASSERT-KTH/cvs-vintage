@@ -86,7 +86,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.34 2002/09/15 18:48:19 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.35 2002/09/17 18:21:29 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -96,30 +96,27 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     public void doSaveinfo ( RunData data, TemplateContext context )
         throws Exception
     {
-        IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
-        RModuleIssueType rmit = module.getRModuleIssueType(issueType);
         if (issueType.getLocked())
         {
-            scarabR.setAlertMessage("You cannot edit this issue type, " + 
-                                    "since it is locked.");
+            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            return;
         }
-        else
+        IntakeTool intake = getIntakeTool(context);
+        if (intake.isAllValid())
         {
-            if (intake.isAllValid())
-            {
-                // Set properties for module-issue type info
-                Group rmitGroup = intake.get("RModuleIssueType", 
-                                            rmit.getQueryKey(), false);
+            Module module = scarabR.getCurrentModule();
+            RModuleIssueType rmit = module.getRModuleIssueType(issueType);
+            // Set properties for module-issue type info
+            Group rmitGroup = intake.get("RModuleIssueType", 
+                                        rmit.getQueryKey(), false);
 
-                rmitGroup.setProperties(rmit);
-                rmit.save();
-             }
+            rmitGroup.setProperties(rmit);
+            rmit.save();
+            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
          }
-         scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
     }
 
     /**
@@ -132,8 +129,14 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
 
-        Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
+        if (issueType.getLocked())
+        {
+            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            return;
+        }
+
+        Module module = scarabR.getCurrentModule();
         RModuleIssueType rmit = module.getRModuleIssueType(issueType);
 
         List attGroups = module.getAttributeGroups(issueType, false);
@@ -252,40 +255,38 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
 
         if (issueType.getLocked())
         {
-            scarabR.setAlertMessage("You cannot edit this issue type, " + 
-                                    "since it is locked.");
+            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            return;
         }
-        else
+
+        Module module = scarabR.getCurrentModule();
+        if (intake.isAllValid())
         {
-            if (intake.isAllValid())
+            List userAttributes = module.getUserAttributes(issueType, false);
+            for (int i=0; i < userAttributes.size(); i++)
             {
-                List userAttributes = module.getUserAttributes(issueType, false);
-                for (int i=0; i < userAttributes.size(); i++)
+                // Set properties for module-attribute mapping
+                Attribute attribute = (Attribute)userAttributes.get(i);
+                RModuleAttribute rma = (RModuleAttribute)module
+                        .getRModuleAttribute(attribute, issueType);
+                Group rmaGroup = intake.get("RModuleAttribute", 
+                                 rma.getQueryKey(), false);
+                // if attribute gets set to inactive, delete dependencies
+                String newActive = rmaGroup.get("Active").toString();
+                String oldActive = String.valueOf(rma.getActive());
+                if (newActive.equals("false") && oldActive.equals("true"))
                 {
-                    // Set properties for module-attribute mapping
-                    Attribute attribute = (Attribute)userAttributes.get(i);
-                    RModuleAttribute rma = (RModuleAttribute)module
-                            .getRModuleAttribute(attribute, issueType);
-                    Group rmaGroup = intake.get("RModuleAttribute", 
-                                     rma.getQueryKey(), false);
-                    // if attribute gets set to inactive, delete dependencies
-                    String newActive = rmaGroup.get("Active").toString();
-                    String oldActive = String.valueOf(rma.getActive());
-                    if (newActive.equals("false") && oldActive.equals("true"))
-                    {
-                        WorkflowFactory.getInstance().deleteWorkflowsForAttribute(
-                                                      attribute, module, issueType);
-                    }
-                    rmaGroup.setProperties(rma);
-                    rma.save();
+                    WorkflowFactory.getInstance().deleteWorkflowsForAttribute(
+                                                  attribute, module, issueType);
                 }
-                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+                rmaGroup.setProperties(rma);
+                rma.save();
             }
+            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
         }
     }
 
@@ -311,54 +312,53 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
         if (issueType.getLocked())
         {
-            scarabR.setAlertMessage("You cannot edit this issue type, " + 
-                                    "since it is locked.");
+            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            return;
         }
-        else
-        {
-            ScarabUser user = (ScarabUser)data.getUser();
-            ParameterParser params = data.getParameters();
-            Object[] keys = params.getKeys();
-            String key;
-            String groupId;
-            ScarabLocalizationTool l10n = getLocalizationTool(context);
-            Module module = scarabR.getCurrentModule();
-            List attributeGroups = module.getAttributeGroups(issueType);
 
-            for (int i =0; i<keys.length; i++)
+        ScarabUser user = (ScarabUser)data.getUser();
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        String key;
+        String groupId;
+        Module module = scarabR.getCurrentModule();
+        List attributeGroups = module.getAttributeGroups(issueType);
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("group_action"))
             {
-                key = keys[i].toString();
-                if (key.startsWith("group_action"))
+                try
                 {
-                    try
-                    {
-                        groupId = key.substring(13);
-                        AttributeGroup ag = AttributeGroupManager
-                           .getInstance(new NumberKey(groupId), false); 
-                        ag.delete(user);
-                    }
-                    catch (Exception e)
-                    {
-                        scarabR.setAlertMessage(
-                            l10n.get(NO_PERMISSION_MESSAGE));
-                    }
-                    if (attributeGroups.size() -1 < 2)
-                    {
-                        // If there are fewer than 2 attribute groups,
-                        // Turn of deduping
-                        RModuleIssueType rmit =  module.getRModuleIssueType(issueType);
-                        rmit.setDedupe(false);
-                        rmit.save();
-                        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
-                        ScarabCache.clear();
-                    }
+                    groupId = key.substring(13);
+                    AttributeGroup ag = AttributeGroupManager
+                       .getInstance(new NumberKey(groupId), false); 
+                    ag.delete(user);
+                }
+                catch (Exception e)
+                {
+                    scarabR.setAlertMessage(
+                        l10n.get(NO_PERMISSION_MESSAGE));
+                }
+                if (attributeGroups.size() -1 < 2)
+                {
+                    // If there are fewer than 2 attribute groups,
+                    // Turn of deduping
+                    RModuleIssueType rmit =  module.getRModuleIssueType(issueType);
+                    rmit.setDedupe(false);
+                    rmit.save();
+                    scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+                    ScarabCache.clear();
                 }
             }
         }
     }
+
 
     /**
      * Unmaps attributes to modules.
@@ -368,6 +368,12 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
+        IssueType issueType = scarabR.getIssueType();
+        if (issueType.getLocked())
+        {
+            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            return;
+        }
         ScarabUser user = (ScarabUser)data.getUser();
         Module module = scarabR.getCurrentModule();
         ParameterParser params = data.getParameters();
@@ -385,7 +391,6 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                    .getInstance(new NumberKey(attributeId), false);
 
                // Remove attribute - module mapping
-               IssueType issueType = scarabR.getIssueType();
                RModuleAttribute rma = module
                    .getRModuleAttribute(attribute, issueType);
                try
@@ -438,14 +443,20 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        Module module = scarabR.getCurrentModule();
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
+        if (issueType.getLocked())
+        {
+            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            return;
+        }
+
+        Module module = scarabR.getCurrentModule();
         String[] attributeIds = data.getParameters()
                                     .getStrings("attribute_ids");
  
         if (attributeIds == null || attributeIds.length <= 0)
         { 
-            ScarabLocalizationTool l10n = getLocalizationTool(context);
             scarabR.setAlertMessage(l10n.get("SelectAttribute"));
             return;
         }

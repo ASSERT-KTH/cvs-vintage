@@ -69,6 +69,7 @@ import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionManager;
 import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.RIssueTypeAttribute;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.workflow.WorkflowFactory;
 import org.tigris.scarab.util.ScarabConstants;
@@ -78,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.21 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.22 2002/09/17 18:21:29 elicia Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -88,14 +89,27 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
     public synchronized void doSave ( RunData data, TemplateContext context )
         throws Exception
     {
-        IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        Attribute attribute = scarabR.getAttribute();
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        IssueType issueType = scarabR.getIssueType();
 
+        if (issueType.getLocked())
+        {
+            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            return;
+        }
+        Attribute attribute = scarabR.getAttribute();
+        RIssueTypeAttribute ria = issueType.getRIssueTypeAttribute(attribute);
+        if (ria != null && ria.getLocked())
+        {
+            scarabR.setAlertMessage(l10n.format("LockedAttribute", attribute.getName()));
+            return;
+        }
+
+        IntakeTool intake = getIntakeTool(context);
         if ( intake.isAllValid())
         {
             Module me = scarabR.getCurrentModule();
-            IssueType issueType = scarabR.getIssueType();
             List rmos = me.getRModuleOptions(attribute, issueType, false);
             if (rmos != null)
             {
@@ -119,7 +133,6 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                         rmo.save();
                     }
                     ScarabCache.clear();
-                    ScarabLocalizationTool l10n = getLocalizationTool(context);
                     scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
                 }
             }
@@ -135,9 +148,21 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
+        IssueType issueType = scarabR.getIssueType();
+        if (issueType.getLocked())
+        {
+            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            return;
+        }
+        Attribute attribute = scarabR.getAttribute();
+        RIssueTypeAttribute ria = issueType.getRIssueTypeAttribute(attribute);
+        if (ria != null && ria.getLocked())
+        {
+            scarabR.setAlertMessage(l10n.format("LockedAttribute", attribute.getName()));
+            return;
+        }
         ScarabUser user = (ScarabUser)data.getUser();
         Module module = scarabR.getCurrentModule();
-        IssueType issueType = scarabR.getIssueType();
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
         String key;
@@ -196,8 +221,20 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
+        if (issueType.getLocked())
+        {
+            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            return;
+        }
+        Attribute attribute = scarabR.getAttribute();
+        RIssueTypeAttribute ria = issueType.getRIssueTypeAttribute(attribute);
+        if (ria != null && ria.getLocked())
+        {
+            scarabR.setAlertMessage(l10n.format("LockedAttribute", attribute.getName()));
+            return;
+        }
+        Module module = scarabR.getCurrentModule();
         IssueType templateType = 
             scarabR.getIssueType(issueType.getTemplateId().toString());
 

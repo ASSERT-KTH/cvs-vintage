@@ -50,6 +50,7 @@ package org.tigris.scarab.om;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ArrayList;
+import java.sql.Connection;
 
 // Turbine classes
 import org.apache.torque.TorqueException;
@@ -248,43 +249,82 @@ public class RModuleOption
          throws Exception
     {                
         Module module = getModule();
-        IssueType issueType = IssueTypePeer.retrieveByPK(getIssueTypeId());
 
         if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {
-            Criteria c = new Criteria()
-                .add(RModuleOptionPeer.MODULE_ID, getModuleId())
-                .add(RModuleOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
-                .add(RModuleOptionPeer.OPTION_ID, getOptionId());
-            RModuleOptionPeer.doDelete(c);
-            WorkflowFactory.getInstance().deleteWorkflowsForOption(getAttributeOption(), 
-                                         module, issueType);
-            // Correct the ordering of the remaining options
-            ArrayList optIds = new ArrayList();
-            List rmos = module.getRModuleOptions(getAttributeOption().getAttribute(), issueType, false);
-            for (int i=0; i<rmos.size();i++)
+            IssueType issueType = IssueTypeManager
+               .getInstance(getIssueTypeId(), false);
+            if (issueType.getLocked())
+            { 
+                throw new ScarabException("You cannot delete this option, " + 
+                                          "because this issue type is locked.");
+            }            
+            else
             {
-                RModuleOption rmo = (RModuleOption)rmos.get(i);
-                optIds.add(rmo.getOptionId());
-            }
-            Criteria c2 = new Criteria()
-                .add(RModuleOptionPeer.MODULE_ID, getModuleId())
-                .add(RModuleOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
-                .addIn(RModuleOptionPeer.OPTION_ID, optIds)
-                .add(RModuleOptionPeer.PREFERRED_ORDER, getOrder(), Criteria.GREATER_THAN);
-            List adjustRmos = RModuleOptionPeer.doSelect(c2);
-            for (int j=0; j<adjustRmos.size();j++)
-            {
-                RModuleOption rmo = (RModuleOption)adjustRmos.get(j);
-                //rmos.remove(rmo);
-                rmo.setOrder(rmo.getOrder() -1);
-                rmo.save();
-                //rmos.add(rmo);
-            }
+                Criteria c = new Criteria()
+                    .add(RModuleOptionPeer.MODULE_ID, getModuleId())
+                    .add(RModuleOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
+                    .add(RModuleOptionPeer.OPTION_ID, getOptionId());
+                RModuleOptionPeer.doDelete(c);
+                WorkflowFactory.getInstance().deleteWorkflowsForOption(getAttributeOption(), 
+                                             module, issueType);
+                // Correct the ordering of the remaining options
+                ArrayList optIds = new ArrayList();
+                List rmos = module.getRModuleOptions(getAttributeOption().getAttribute(), issueType, false);
+                for (int i=0; i<rmos.size();i++)
+                {
+                    RModuleOption rmo = (RModuleOption)rmos.get(i);
+                    optIds.add(rmo.getOptionId());
+                }
+                Criteria c2 = new Criteria()
+                    .add(RModuleOptionPeer.MODULE_ID, getModuleId())
+                    .add(RModuleOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
+                    .addIn(RModuleOptionPeer.OPTION_ID, optIds)
+                    .add(RModuleOptionPeer.PREFERRED_ORDER, getOrder(), Criteria.GREATER_THAN);
+                List adjustRmos = RModuleOptionPeer.doSelect(c2);
+                for (int j=0; j<adjustRmos.size();j++)
+                {
+                    RModuleOption rmo = (RModuleOption)adjustRmos.get(j);
+                    //rmos.remove(rmo);
+                    rmo.setOrder(rmo.getOrder() -1);
+                    rmo.save();
+                    //rmos.add(rmo);
+                }
+            } 
         } 
         else
         {
             throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
         }            
     }
+
+    public void save(Connection con) throws TorqueException
+    {
+        if (isModified())
+        {
+            Attribute attr = getAttributeOption().getAttribute();
+            RIssueTypeAttribute ria = null;
+            try
+            {
+                ria = getIssueType().getRIssueTypeAttribute(attr);
+            }
+            catch (Exception e)
+            {
+                throw new TorqueException("An error has occurred.");
+            }
+            if (ria != null && ria.getLocked())
+            {
+                throw new TorqueException(attr.getName() + "is locked");
+            }
+            else
+            {
+                super.save(con);
+            }
+        }
+        else
+        {
+            super.save(con);
+        }
+    }
+
 }
