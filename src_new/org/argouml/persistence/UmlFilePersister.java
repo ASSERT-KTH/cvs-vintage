@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.10 2005/01/02 07:56:26 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.11 2005/01/02 11:31:26 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -167,7 +167,7 @@ public class UmlFilePersister extends AbstractFilePersister {
      * @throws SaveException If something goes wrong.
      */
     void writeProject(Project project, OutputStream stream)
-        	throws SaveException {
+        throws SaveException {
         OutputStreamWriter outputStreamWriter;
         try {
             outputStreamWriter = new OutputStreamWriter(stream, "UTF-8");
@@ -371,7 +371,7 @@ public class UmlFilePersister extends AbstractFilePersister {
 
     /**
      * Get the version attribute value from a string of XML.
-     * @param rootLine
+     * @param rootLine the line
      * @return the version
      */
     protected String getVersion(String rootLine) {

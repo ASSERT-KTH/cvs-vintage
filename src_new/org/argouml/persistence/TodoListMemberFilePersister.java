@@ -1,4 +1,4 @@
-// $Id: TodoListMemberFilePersister.java,v 1.2 2005/01/02 04:08:32 bobtarling Exp $
+// $Id: TodoListMemberFilePersister.java,v 1.3 2005/01/02 11:31:26 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.persistence;
 import java.io.InputStream;
 
 import org.argouml.kernel.Project;
-import org.argouml.kernel.ProjectManager;
 import org.argouml.uml.cognitive.ProjectMemberTodoList;
 import org.xml.sax.SAXException;
 
@@ -43,7 +42,7 @@ public class TodoListMemberFilePersister extends MemberFilePersister {
      * java.io.InputStream)
      */
     public void load(Project project, InputStream inputStream)
-            throws OpenException {
+        throws OpenException {
 
         try {
             TodoParser parser = new TodoParser();

@@ -1,4 +1,4 @@
-// $Id: UseCasesFactoryImpl.java,v 1.1 2005/01/02 10:08:15 linus Exp $
+// $Id: UseCasesFactoryImpl.java,v 1.2 2005/01/02 11:31:26 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -306,9 +306,12 @@ public class UseCasesFactoryImpl
      * Builds an actor in the same namespace of the given actor. If
      * object is no actor nothing is build. Did not give MActor as an
      * argument but object to seperate argouml better from NSUML.<p>
-     * @param model
+     * @param model the model
      * @param actor the given actor
      * @return MActor the newly build actor
+     *
+     * @see org.argouml.model.UseCasesFactory#buildActor(java.lang.Object, 
+     * java.lang.Object)
      */
     public MActor buildActor(Object actor, Object model) {
         if (actor instanceof MActor) {

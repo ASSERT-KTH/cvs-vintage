@@ -1,4 +1,4 @@
-// $Id: SettingsTabModules.java,v 1.3 2004/12/27 23:34:38 mvw Exp $
+// $Id: SettingsTabModules.java,v 1.4 2005/01/02 11:31:26 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,14 +24,13 @@
 
 package org.argouml.moduleloader;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -42,7 +41,6 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
-import org.argouml.application.api.SettingsTabPanel;
 import org.argouml.application.helpers.SettingsTabHelper;
 
 /**

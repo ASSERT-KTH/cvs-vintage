@@ -1,4 +1,4 @@
-// $Id: SettingsTabNotation.java,v 1.21 2004/12/27 23:34:38 mvw Exp $
+// $Id: SettingsTabNotation.java,v 1.22 2005/01/02 11:31:27 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,6 @@ import org.argouml.application.ArgoVersion;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.ConfigurationKey;
 import org.argouml.application.api.Notation;
-import org.argouml.application.api.SettingsTabPanel;
 import org.argouml.application.helpers.SettingsTabHelper;
 import org.argouml.ui.ShadowComboBox;
 
