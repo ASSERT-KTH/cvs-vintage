@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.35 2000/03/30 21:46:07 costin Exp $
- * $Revision: 1.35 $
- * $Date: 2000/03/30 21:46:07 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.36 2000/03/30 21:56:49 costin Exp $
+ * $Revision: 1.36 $
+ * $Date: 2000/03/30 21:56:49 $
  *
  * ====================================================================
  *
@@ -477,8 +477,8 @@ public class ServletWrapper {
 	    Object params[]=new Object[1];
 	    params[0]=cl;
 	    setCCL.invoke( t, params );
-	    if( context.getDebug() > 5 ) context.log("Setting system loader " + old + " " + cl );
-	    context.log("Setting system loader " + old + " " + cl );
+	    // 	    if( context.getDebug() > 5 ) context.log("Setting system loader " + old + " " + cl );
+	    // 	    context.log("Setting system loader " + old + " " + cl );
 	    
 	    return old;
 	} catch (NoSuchMethodException ex ) {
