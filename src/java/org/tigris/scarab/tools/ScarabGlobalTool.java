@@ -96,7 +96,7 @@ import org.apache.turbine.Turbine;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.36 2002/09/05 00:03:02 jmcnally Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.37 2002/09/17 23:42:24 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -318,7 +318,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
             lSearchField = ScarabUserImplPeer.getTableName() + '.' + lSearchField;
             
             criteria = criteria.add(lSearchField,
-                                        (Object)("%" + searchCriteria.trim() + "%"),Criteria.LIKE);
+                                        (Object)('%' + searchCriteria.trim() + '%'),Criteria.LIKE);
         }
         
         // sort the results
