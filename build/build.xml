@@ -126,6 +126,7 @@
         <copy todir="${build.dir}" filtering="no">
             <fileset dir="${tomcat.dist.dir}">
                 <include name="scarab.sh"/>
+                <include name="scarab.bat"/>
             </fileset>
         </copy>
         <!-- no need to have two copies of this checked into CVS -->
