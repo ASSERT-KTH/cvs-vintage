@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.collections.map.LinkedMap;
 import org.apache.fulcrum.parser.StringValueParser;
 import org.apache.torque.TorqueException;
 import org.tigris.scarab.om.AttributeValue;
@@ -20,6 +20,7 @@ import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.RModuleUserAttribute;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.IteratorWithSize;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabLink;
@@ -37,18 +38,24 @@ import com.sun.syndication.feed.synd.SyndFeedImpl;
 import com.sun.syndication.io.FeedException;
 
 /**
+ * Converts a query to an RSS feed.  The private methods are mostly ripped off
+ * of ScarabRequestTool and there should be some refactoring done here.
+ * 
  * @author Eric Pugh
  *  
  */
-public class QueryFeed {
+public class QueryFeed implements Feed {
     private static final String DATE_FORMAT = "yyyy-MM-dd";
 
     private Query query;
     private ScarabUser user;
+    private ScarabLink scarabLink;
+    private ScarabRequestTool scarabRequestTool;
 
-    public QueryFeed(Query query, ScarabUser user) {
+    public QueryFeed(Query query, ScarabUser user,ScarabRequestTool scarabRequestTool, ScarabLink scarabLink) {
         this.query = query;
         this.user = user;
+        this.scarabLink = scarabLink;
     }
 
     public SyndFeed getFeed() throws IOException, FeedException, TorqueException, Exception {
@@ -77,7 +84,8 @@ public class QueryFeed {
         }
 
         feed.setTitle(query.getName());
-        feed.setLink("http://localhost:8080/scarab/issues/curmodule/3/tqk/0/template/IssueList.vm?action=Search&eventSubmit_doSearch=Search&pagenum=1&intake-grp=attv&intake-grp=search&searchsp=asc&searchtype=advanced&attv=__11&attv=__3&attv=__12&attv=__1&attv=__4&attv=__7&attv=__8&searchscai=3&searchsctoi=0&resultsperpage=25&searchscfoi=0&curmitlistid=280");
+        String link = scarabLink.setAction("Search").addPathInfo("go",query.getQueryId()).toString();
+        feed.setLink(link);
         feed.setDescription(query.getDescription());
 
         List entries = new ArrayList();
@@ -90,7 +98,7 @@ public class QueryFeed {
 
             
             
-            entry = new SyndEntryImpl();
+            entry = new SyndEntryImpl();            
             String title = queryResult.getUniqueId();
             if(showModuleName){
                 title = title + " ("+ queryResult.getModule().getRealName() + ")";
@@ -99,10 +107,10 @@ public class QueryFeed {
                 title = title + " ("+ queryResult.getRModuleIssueType().getDisplayName() + ")";
             }
             entry.setTitle(title);
-            ScarabLink scarabLink = new ScarabLink();
+            
             Issue issue = IssueManager.getInstance(Long.valueOf(queryResult.getIssueId()));
 
-            String link = "http://localhost:8080/scarab/issues/id/" + queryResult.getUniqueId();
+            link = scarabLink.getIssueIdAbsoluteLink(issue).toString();
             entry.setLink(link);
             
             Date publishedDate = null;
@@ -128,7 +136,6 @@ public class QueryFeed {
             description.setValue(desc);
 
             entry.setDescription(description);
-            
             entries.add(entry);
 
         }
@@ -148,7 +155,7 @@ public class QueryFeed {
      * 
      * @return a <code>Issue</code> value
      */
-    public IssueSearch getPopulatedSearch(String query, MITList mitList, ScarabUser searcher) throws Exception {
+    private IssueSearch getPopulatedSearch(String query, MITList mitList, ScarabUser searcher) throws Exception {
         IssueSearch search = getNewSearch(mitList,searcher);
         search.setIssueListAttributeColumns(getRModuleUserAttributes(mitList));
 
@@ -208,8 +215,8 @@ public class QueryFeed {
          * setAlertMessage(L10NKeySet.StateChangeOldEqualNew); return null; }
          */
         // Set attribute values to search on
-        SequencedHashMap avMap = search.getCommonAttributeValuesMap();
-        Iterator i = avMap.iterator();
+        LinkedMap avMap = search.getCommonAttributeValuesMap();
+        Iterator i = avMap.mapIterator();
         while (i.hasNext()) {
             AttributeValue aval = (AttributeValue) avMap.get(i.next());
          //   Group group = intake.get("AttributeValue", aval.getQueryKey());
@@ -240,7 +247,7 @@ public class QueryFeed {
      * 
      * @return a <code>Issue</code> value
      */
-    public IssueSearch getNewSearch(MITList mitList, ScarabUser searcher) throws Exception,
+    private IssueSearch getNewSearch(MITList mitList, ScarabUser searcher) throws Exception,
             MaxConcurrentSearchException {
 
         IssueSearch issueSearch = IssueSearchFactory.INSTANCE.getInstance(mitList, searcher);
@@ -255,7 +262,7 @@ public class QueryFeed {
      * 
      * Ripped off of ScarabRequestTool, but quite modified to not be user sepecific.
      */
-    public List getRModuleUserAttributes(MITList currentList)
+    private List getRModuleUserAttributes(MITList currentList)
     {
         List issueListColumns =null;
         if (issueListColumns == null) 
