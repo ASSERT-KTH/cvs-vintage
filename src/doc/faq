@@ -342,3 +342,11 @@ A. This may not happen often, but can be difficult to determine why.
          }
       }
    }
+
+
+Q. Whey I run Tomcat, my JVM gives me segmentation fault of segmentation
+   violation errors. Should I be reporting a Tomcat bug?
+
+A. No. This is surely a JVM problem. Possible solutions are to switch to
+   another JVM, apply relevant patches to your OS or find out if there are
+   any particular environmental settings required.
