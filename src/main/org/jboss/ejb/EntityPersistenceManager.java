@@ -25,10 +25,10 @@ import org.jboss.monitor.StatisticsProvider;
  * @see EntityContainer
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public interface EntityPersistenceManager
-   extends ContainerPlugin, StatisticsProvider
+   extends ContainerPlugin//, StatisticsProvider
 {
    /**
     * Returns a new instance of the bean class or a subclass of the bean class.
