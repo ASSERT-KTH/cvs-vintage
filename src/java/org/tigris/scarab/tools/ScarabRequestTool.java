@@ -1287,6 +1287,18 @@ try{
     public Issue getIssue()
         throws Exception
     {
+        return getIssue(true);
+    }
+    
+    /**
+     * Get an Issue object from unique id.
+     * If first time calling && createNew, returns a new blank issue object.
+     *
+     * @return a <code>Issue</code> value
+     */
+    public Issue getIssue(boolean createNew)
+        throws Exception
+    {
         if (issue == null)
         {
             String issueId = null;
@@ -1300,7 +1312,7 @@ try{
             {
                 issueId = data.getParameters().getString("id");
             }
-            if (issueId == null || issueId.length() == 0)
+            if (createNew && (issueId == null || issueId.length() == 0))
             {
                 issue = getCurrentModule()
                     .getNewIssue(getCurrentIssueType());
@@ -1309,27 +1321,6 @@ try{
             {
                 issue = getIssue(issueId);
             }
-        }
-        return issue;
-    }
-
-    /**
-     * The id may only be the issue's primary key.
-     *
-     * @param key a <code>String</code> value
-     * @return a <code>Issue</code> value
-     */
-    public Issue getIssueByPk(String key)
-    {
-        Issue issue = null;
-        try
-        {
-            issue = IssueManager.getInstance(new NumberKey(key));
-        }
-        catch (Exception e)
-        {
-            ScarabLocalizationTool l10n = getLocalizationTool();
-            setAlertMessage(l10n.get("InvalidIssueId"));
         }
         return issue;
     }
@@ -1361,6 +1352,27 @@ try{
             {
                 setAlertMessage(l10n.get("InvalidId"));
             }
+        }
+        return issue;
+    }
+
+    /**
+     * The id may only be the issue's primary key.
+     *
+     * @param key a <code>String</code> value
+     * @return a <code>Issue</code> value
+     */
+    public Issue getIssueByPk(String key)
+    {
+        Issue issue = null;
+        try
+        {
+            issue = IssueManager.getInstance(new NumberKey(key));
+        }
+        catch (Exception e)
+        {
+            ScarabLocalizationTool l10n = getLocalizationTool();
+            setAlertMessage(l10n.get("InvalidIssueId"));
         }
         return issue;
     }
