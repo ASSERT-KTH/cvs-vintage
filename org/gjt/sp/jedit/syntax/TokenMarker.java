@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.18 2002/05/19 09:55:04 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.19 2002/05/19 22:19:10 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -164,6 +164,7 @@ public class TokenMarker
 		TokenHandler tokenHandler, Segment line)
 	{
 		this.tokenHandler = tokenHandler;
+		this.line = line;
 		context = new LineContext();
 
 		//{{{ Set up context
