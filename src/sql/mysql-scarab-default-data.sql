@@ -427,6 +427,22 @@ insert into SCARAB_TRANSACTION_TYPE(TYPE_ID, NAME)
 insert into SCARAB_TRANSACTION_TYPE(TYPE_ID, NAME)
         values(3, 'Move Issue');
 
+
+/*
+ * Frequency values
+ */
+insert into SCARAB_FREQUENCY(FREQUENCY_ID, FREQUENCY_NAME)
+        values(1, 'every half hour');
+insert into SCARAB_FREQUENCY(FREQUENCY_ID, FREQUENCY_NAME)
+        values(2, 'hourly');
+insert into SCARAB_FREQUENCY(FREQUENCY_ID, FREQUENCY_NAME)
+        values(3, 'twice daily');
+insert into SCARAB_FREQUENCY(FREQUENCY_ID, FREQUENCY_NAME)
+        values(4, 'daily');
+insert into SCARAB_FREQUENCY(FREQUENCY_ID, FREQUENCY_NAME)
+        values(5, 'weekly');
+
+
 /*
  * root module
  */
