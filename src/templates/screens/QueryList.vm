@@ -10,7 +10,6 @@
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="QueryList.vm" />
 
 
-<p>Click on name to modify the saved query. Click on availability to execute.</p>
 
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn",""))
@@ -41,8 +40,9 @@
  #end
 #end
 
+<h3>Saved queries</h3>
+
 #if ($allQueries.size() < 1)
- <h3>Saved queries</h3>
  <p><strong class="alert">There are no saved queries.
  Please go to $link.setPage("AdvancedQuery.vm").setLabel("Advanced query")
  to create a new saved query.</strong></p>
@@ -52,8 +52,8 @@
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-<h3>Saved queries</h3>
 
+<p>Click on name to modify the saved query. Click on availability to execute.</p>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
   <th nowrap="nowrap">Select</th>

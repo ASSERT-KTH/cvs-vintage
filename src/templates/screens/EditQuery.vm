@@ -7,21 +7,18 @@
 
 <h2>Edit query</h2>
 
-<p>
-Go to your $link.setPage("QueryList.vm").setLabel("Stored Query List").
-</p>
-
-
 #set ($action = $link.setPage("EditQuery.vm").setAction("Search"))
 <form action="$action" method="post">
 <input type="hidden" name="queryId" value="$queryId" />
 <input type="hidden" name="$queryGroup.Value.Key" value="$currentQuery.Value" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="UserList.vm" />   
 <input type="hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="QueryList.vm" />
 
 <div class="functnbar">
-  <input type="submit" name="eventSubmit_doEditstoredquery" value="Save" />&#160; 
+   <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
   <input type="submit" name="eventSubmit_doRunstoredquery" value="Execute query" />&#160; 
+   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>
 
 <h3>Query: $currentQuery.Name</h3>
@@ -29,14 +26,14 @@ Go to your $link.setPage("QueryList.vm").setLabel("Stored Query List").
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
   <tr>
-   <th width="120">query Name</th>
+   <th width="120">Name</th>
    <td>
        <input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /> 
        #fieldErrorMsg($queryGroup.Name "")
    </td>
   </tr>
   <tr>
-   <th width="120">query description</th>
+   <th width="120">Description</th>
    <td>#textAreaMedium("$queryGroup.Description.Key" $queryGroup.Description)</td>
   </tr>
   <tr>
@@ -45,6 +42,11 @@ Go to your $link.setPage("QueryList.vm").setLabel("Stored Query List").
   </tr>
  </table>
 </div>
+
+<div class="functnbar3">
+  <input type="submit" name="eventSubmit_doEditqueryinfo" value="Save changes" />&#160; 
+</div>
+</form>
 
 #set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "IssueList.vm").toString())
 <form action="$action" method="get">
@@ -100,9 +102,14 @@ Go to your $link.setPage("QueryList.vm").setLabel("Stored Query List").
    #end
 #end
 
-<div class="functnbar2">
+<div class="functnbar3">
   <input type="submit" name="eventSubmit_doEditstoredquery" value="Save" />&#160; 
-  <input type="submit" name="eventSubmit_doRunstoredquery" value="Execute query" />&#160; 
+</div>
+
+<div class="functnbar2">
+   <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
+   <input type="submit" name="eventSubmit_doRunstoredquery" value="Execute query" />&#160; 
+   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>
 
 $intake.declareGroups()
