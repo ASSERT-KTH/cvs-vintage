@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ConnectionHandler.java,v 1.5 1999/10/30 01:02:38 costin Exp $
- * $Revision: 1.5 $
- * $Date: 1999/10/30 01:02:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ConnectionHandler.java,v 1.6 1999/10/31 19:28:06 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 1999/10/31 19:28:06 $
  *
  * ====================================================================
  *
@@ -84,7 +84,8 @@ class ConnectionHandler extends Thread {
     protected EndpointManager manager;
     protected Request request = new Request();
     protected HttpRequestAdapter reqA= new HttpRequestAdapter();
-    protected ServerResponse response = new ServerResponse();
+    protected HttpResponseAdapter resA= new HttpResponseAdapter();
+    protected Response response = new Response();
     protected Endpoint endpoint;
     protected Socket socket;
     
@@ -127,10 +128,11 @@ class ConnectionHandler extends Thread {
         try {
 	    int count = 1;
 	    // XXX should be in init or main ?
-	    request.setRequestAdapter( reqA );
 	    
+	    request.setRequestAdapter( reqA );
+	    response.setResponseAdapter( resA );
             reqA.setSocket(socket);
-            response.setSocket(socket);
+            resA.setOutputStream( socket.getOutputStream() );
 
             while(reqA.hasMoreRequests()) {
 
@@ -211,6 +213,8 @@ class ConnectionHandler extends Thread {
 
 		request.recycle();
 		response.recycle();
+		reqA.recycle();
+		resA.recycle();
             }
 
 	    // Some browsers send an extra CRLF after the POST data.

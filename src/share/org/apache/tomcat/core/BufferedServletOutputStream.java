@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.2 1999/10/28 05:15:23 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/28 05:15:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.3 1999/10/31 19:27:56 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/31 19:27:56 $
  *
  * ====================================================================
  * 
@@ -86,7 +86,7 @@ import javax.servlet.ServletOutputStream;
  * @author James Todd [gonzo@eng.sun.com]
  * @author Mandar Raje [mandar@eng.sun.com]
  */
-public abstract class BufferedServletOutputStream extends ServletOutputStream {
+public class BufferedServletOutputStream extends ServletOutputStream {
 
     protected StringManager sm =
         StringManager.getManager(Constants.Package);
@@ -102,19 +102,27 @@ public abstract class BufferedServletOutputStream extends ServletOutputStream {
     protected boolean committed = false;
     protected boolean closed = false;
     Response response;
+    ResponseAdapter resA;
     
     protected BufferedServletOutputStream() {
 	//	System.out.println("new BOS " + closed);
     }
-    
-    protected abstract void doWrite( byte buffer[], int pos, int count) throws IOException ;
 
+    public void setResponseAdapter( ResponseAdapter resA ) {
+	this.resA=resA;
+    }
+    
+    protected void doWrite( byte buffer[], int pos, int count) throws IOException {
+	resA.doWrite( buffer, pos, count);
+    }
 
     protected void endResponse() throws IOException {
+	response.getResponseAdapter().endResponse();
     }
 
     protected void sendHeaders() throws IOException {
 	response.writeHeaders();
+	resA.endHeaders();
     }
 
     public void setResponse( Response response ) {

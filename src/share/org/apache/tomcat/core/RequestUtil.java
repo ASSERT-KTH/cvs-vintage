@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestUtil.java,v 1.2 1999/10/28 05:15:25 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/28 05:15:25 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestUtil.java,v 1.3 1999/10/31 19:28:01 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/31 19:28:01 $
  *
  * ====================================================================
  *
@@ -337,9 +337,8 @@ public class RequestUtil {
     }           
 	
 
-    // XXX This method is duplicated in core/Response.java
+    // Basically return everything after ";charset="
     public static String getCharsetFromContentType(String type) {
-        // Basically return everything after ";charset="
         if (type == null) {
             return null;
         }
@@ -355,6 +354,12 @@ public class RequestUtil {
         String afterCharset = afterSemi.substring(charsetLocation + 8);
         String encoding = afterCharset.trim();
         return encoding;
+    }
+
+    static  StringManager sm = StringManager.getManager(Constants.Package);
+
+    public static String getStatusString(int status ) {
+	return sm.getString("sc."+ status );
     }
 
 }

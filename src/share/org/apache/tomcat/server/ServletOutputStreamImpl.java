@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ServletOutputStreamImpl.java,v 1.1 1999/10/09 00:20:48 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ServletOutputStreamImpl.java,v 1.2 1999/10/31 19:28:08 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/31 19:28:08 $
  *
  * ====================================================================
  *
@@ -82,7 +82,7 @@ public class ServletOutputStreamImpl extends BufferedServletOutputStream {
     private StringManager sm =
         StringManager.getManager(Constants.Package);
     private OutputStream out;
-    ServerResponse response;
+    Response response;
 	
     ServletOutputStreamImpl(ServerResponse response, OutputStream out) {
 	this.response=response;
@@ -98,7 +98,7 @@ public class ServletOutputStreamImpl extends BufferedServletOutputStream {
     }
 
     protected void sendHeaders() throws IOException {
-	response.writeHeaders( out );
+	response.writeHeaders();
     }
 				   
 }

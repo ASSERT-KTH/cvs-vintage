@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ServerResponse.java,v 1.2 1999/10/28 05:15:28 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/28 05:15:28 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ServerResponse.java,v 1.3 1999/10/31 19:28:08 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/31 19:28:08 $
  *
  * ====================================================================
  *
@@ -85,118 +85,129 @@ public class ServerResponse extends Response {
     protected StringManager sm =
         StringManager.getManager(Constants.Package);
     
-    Socket socket;
+//     Socket socket;
     
     public ServerResponse() {
         super();
+	resA=new HttpResponseAdapter();
     }
 
     void setSocket(Socket socket) throws IOException {
-        this.socket = socket;
-	OutputStream sout = socket.getOutputStream();
-	super.setBufferedServeletOutputStream( new ServletOutputStreamImpl(this, sout) );
+	//         this.socket = socket;
+	// 	OutputStream sout = socket.getOutputStream();
+	// 	super.setBufferedServeletOutputStream( new ServletOutputStreamImpl(this, sout) );
+	((HttpResponseAdapter)resA).setOutputStream( socket.getOutputStream() );
     }
 
     // XXX
     // need to rethink this - hackary
 
     public void setOutputStream(OutputStream os) {
-        super.setBufferedServeletOutputStream( new ServletOutputStreamImpl(this, os) );
+	((HttpResponseAdapter)resA).setOutputStream( os );
+	//        super.setBufferedServeletOutputStream( new ServletOutputStreamImpl(this, os) );
     }
     
-    public Socket getSocket() {
-        return this.socket;
-    }
+//     public Socket getSocket() {
+// 	/*XXX*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+// 	return null;
+//         //return this.socket;
+//     }
+
+//     public void setStatus( int status, String message ) {
+// 	statusSB.append("HTTP/1.0 ").append(status);
+// 	if(message!=null) statusSB.append(" ").append(message);
+// 	statusSB.append("\r\n");
+//     }
     
-    void writeHeaders(OutputStream sout) throws IOException {
-        if (omitHeaders) {
-            return;
-        }
+//     void writeHeaders(OutputStream sout) throws IOException {
+//         if (omitHeaders) {
+//             return;
+//         }
 
-	// XXX
-	// shouldn't this logic be in the servlet output stream
-	// and it should get the headers from here?
+// 	// XXX
+// 	// shouldn't this logic be in the servlet output stream
+// 	// and it should get the headers from here?
 	
-	StringBuffer buf = new StringBuffer();
+// 	StringBuffer buf = new StringBuffer();
 
-        // XXX
-        // ok, we really need to know what HTTP/1.x header to write
-        // here...
+//         // XXX
+//         // ok, we really need to know what HTTP/1.x header to write
+//         // here...
 
-        // XXX
-        // need to add nice name to end of first line
+//         // XXX
+//         // need to add nice name to end of first line
 
-	String statusPhrase = sm.getString("sc." + status);	
-        buf.append("HTTP/1.0 " + status);
-	if (statusPhrase != null) {
-	    buf.append(" " + statusPhrase);
-	}
-	buf.append("\r\n");
+// 	String statusPhrase = RequestUtil.getStatusString(status);
+//         buf.append("HTTP/1.0 " + status);
+// 	if (statusPhrase != null) {
+// 	    buf.append(" " + statusPhrase);
+// 	}
+// 	buf.append("\r\n");
 
-	HttpDate date = new HttpDate(System.currentTimeMillis());
-	buf.append("Date: " + date + "\r\n");
+// 	HttpDate date = new HttpDate(System.currentTimeMillis());
+// 	buf.append("Date: " + date + "\r\n");
 	
 	
-        // XXX
-        // need to suck this from a prop file -- also need to make it
-        // customizable at the HttpServer level...
+//         // XXX
+//         // need to suck this from a prop file -- also need to make it
+//         // customizable at the HttpServer level...
         
-        buf.append("Server: " + getServerHeader() + "\r\n");
+//         buf.append("Server: " + getServerHeader() + "\r\n");
 
-	// context is null if we are in a error handler before the context is
-	// set ( i.e. 414, wrong request )
-	if( request.getContext() != null) 
-	    buf.append("Servlet-Engine: " + 
-		       request.getContext().getEngineHeader() + "\r\n");
+// 	// context is null if we are in a error handler before the context is
+// 	// set ( i.e. 414, wrong request )
+// 	if( request.getContext() != null) 
+// 	    buf.append("Servlet-Engine: " + 
+// 		       request.getContext().getEngineHeader() + "\r\n");
 
-        // XXX
-        // do something with connnection header here if any
+//         // XXX
+//         // do something with connnection header here if any
 
-        // XXX
-        // do something with transfer encoding header here if any
+//         // XXX
+//         // do something with transfer encoding header here if any
 
-        buf.append("Content-Type: " + contentType + "\r\n");
+//         buf.append("Content-Type: " + contentType + "\r\n");
 
-        if (contentLanguage != null) {
-            buf.append("Content-Language: " + contentLanguage + "\r\n");
-        }
+//         if (contentLanguage != null) {
+//             buf.append("Content-Language: " + contentLanguage + "\r\n");
+//         }
 
-        if (contentLength != -1) {
-            buf.append("Content-Length: " + contentLength + "\r\n");
-        }
+//         if (contentLength != -1) {
+//             buf.append("Content-Length: " + contentLength + "\r\n");
+//         }
 	
-        // write system and user cookies
-        Enumeration cookieEnum = null;
-        cookieEnum = systemCookies.elements();
-        while (cookieEnum.hasMoreElements()) {
-            Cookie c  = (Cookie)cookieEnum.nextElement();
-            buf.append(CookieUtils.getCookieHeader(c) + "\r\n");
-        }
-        cookieEnum = userCookies.elements();
-        while (cookieEnum.hasMoreElements()) {
-            Cookie c  = (Cookie)cookieEnum.nextElement();
-            buf.append(CookieUtils.getCookieHeader(c) + "\r\n");
-        }
+//         // write system and user cookies
+//         Enumeration cookieEnum = null;
+//         cookieEnum = systemCookies.elements();
+//         while (cookieEnum.hasMoreElements()) {
+//             Cookie c  = (Cookie)cookieEnum.nextElement();
+//             buf.append(CookieUtils.getCookieHeader(c) + "\r\n");
+//         }
+//         cookieEnum = userCookies.elements();
+//         while (cookieEnum.hasMoreElements()) {
+//             Cookie c  = (Cookie)cookieEnum.nextElement();
+//             buf.append(CookieUtils.getCookieHeader(c) + "\r\n");
+//         }
         
-        // XXX
-        // do something with content encoding here
+//         // XXX
+//         // do something with content encoding here
 
-        // write out rest of headers here.
+//         // write out rest of headers here.
         
-        // XXX
-        // we shouldn't be getting an enum here -- we should just
-        // have the mime headers shove themselves out the outputstream
-        // however -- we've got to rewrite all the parts of the MimeHeaderXXX
-        // classes to grok outputstreams and not servletoutputstream...
+//         // XXX
+//         // we shouldn't be getting an enum here -- we should just
+//         // have the mime headers shove themselves out the outputstream
+//         // however -- we've got to rewrite all the parts of the MimeHeaderXXX
+//         // classes to grok outputstreams and not servletoutputstream...
 
-        int size = headers.size();
-        for (int i = 0; i < size; i++) {
-            MimeHeaderField h = headers.getField(i);
-            buf.append(h + "\r\n");
-        }
-        buf.append("\r\n");
+//         int size = headers.size();
+//         for (int i = 0; i < size; i++) {
+//             MimeHeaderField h = headers.getField(i);
+//             buf.append(h + "\r\n");
+//         }
+//         buf.append("\r\n");
         
-        sout.write(buf.toString().getBytes());        
-    }
+//         sout.write(buf.toString().getBytes());        
+//     }
     
 }

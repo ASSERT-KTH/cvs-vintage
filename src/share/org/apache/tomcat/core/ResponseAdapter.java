@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseAdapter.java,v 1.1 1999/10/28 05:15:25 costin Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/28 05:15:25 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseAdapter.java,v 1.2 1999/10/31 19:28:03 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/31 19:28:03 $
  *
  * ====================================================================
  *
@@ -77,19 +77,28 @@ import javax.servlet.http.*;
  */
 public interface ResponseAdapter {
 
-    public void setStatus( int status, String message);
+    /** Set the response status and message. 
+     *	@param message null will set the "default" message, "" will send no message
+     */ 
+    public void setStatus( int status, String message) throws IOException;
+
     
-    public void addHeader( String name, String value );
+    public void addHeader( String name, String value ) throws IOException;
 
     // XXX This one or multiple addHeader?
     // Probably not a big deal - but an adapter may have
-    // an optimized version for this one ( on round-trip only )
-    public void addMimeHeaders(MimeHeaders headers);
+    // an optimized version for this one ( one round-trip only )
+    public void addMimeHeaders(MimeHeaders headers) throws IOException;
 
     /** Signal that we're done with a particular request, the
 	server can go on and read more requests or close the socket
     */
-    public void endResponse();
+    public void endResponse() throws IOException;
+
+    /** Signal that we're done with the headers, and body will follow.
+	The adapter doesn't have to maintain state, it's done inside the engine
+    */
+    public void endHeaders() throws IOException;
 
     /** Either implement ServletOutputStream or return BufferedServletOutputStream(this)
 	and implement doWrite();
@@ -97,7 +106,10 @@ public interface ResponseAdapter {
     public ServletOutputStream getServletOutputStream() throws IOException;
     
     /** Write a chunk of bytes. Should be called only from ServletOutputStream implementations,
-	No need to implement it if your adapter implements ServletOutputStream.
+     *	No need to implement it if your adapter implements ServletOutputStream.
+     *  Headers and status will be written before this method is exceuted.
      */
     public void doWrite( byte buffer[], int pos, int count) throws IOException ;
+
+    public void recycle();
 }
