@@ -69,7 +69,7 @@ import javax.transaction.Transaction;
  * new CMP design.
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCOptimisticLock
    extends BeanLockSupport
@@ -223,12 +223,14 @@ public class JDBCOptimisticLock
       if(!fields.containsKey(field)
          && !field.isPrimaryKeyMember())
       {
-         log.debug( "lockField> locking field=" + field.getFieldName());
+         if(log.isDebugEnabled())
+            log.debug( "lockField> locking field=" + field.getFieldName());
          fields.put(field, field);
       }
       else
       {
-         log.debug( "lockField> field " + field.getFieldName() + " is already locked" );
+         if(log.isDebugEnabled())
+            log.debug( "lockField> field " + field.getFieldName() + " is already locked" );
       }
    }
 
@@ -242,8 +244,11 @@ public class JDBCOptimisticLock
       if( !fieldValues.containsKey( field )
          && !field.isPrimaryKeyMember() )
       {
-         log.debug( "lockFieldValue> locking field=" + field.getFieldName()
-            + "; value " + value );
+         if(log.isDebugEnabled())
+         {
+            log.debug( "lockFieldValue> locking field=" + field.getFieldName()
+               + "; value " + value );
+         }
          fieldValues.put( field, value );
       }
    }
@@ -274,10 +279,14 @@ public class JDBCOptimisticLock
          ctx = ( EntityEnterpriseContext ) container.getInstanceCache().get( getId() );
       }
 
+      if(log.isTraceEnabled())
+         log.trace("schedule> method=" + mi.getMethod().getName()
+            + "; tx=" + mi.getTransaction());
+
       if( getTransaction() != mi.getTransaction() )
       {
          if(log.isTraceEnabled()) {
-            log.debug( "schedule> other tx came in: tx="
+            log.trace( "schedule> other tx came in: tx="
                + ( mi.getTransaction() == null ? "null" : "" + mi.getTransaction().getStatus() )
                + "; " + ( ctx == null ? "ctx=null" : "ctx.id=" + ctx.getId() ) );
          }
@@ -314,7 +323,7 @@ public class JDBCOptimisticLock
          if( md.getGroupName() != null )
          {
             if(log.isTraceEnabled())
-               log.trace( "schedule> locking group: " + md.getGroupName() );
+               log.trace("schedule> locking group: " + md.getGroupName());
 
             JDBCStoreManager mngr = getJDBCStoreManager();
             for( Iterator iter = mngr.getEntityBridge().getLoadGroup( md.getGroupName() ).iterator();
@@ -328,7 +337,7 @@ public class JDBCOptimisticLock
          else if( md.getLockingField() != null )
          {
             if(log.isTraceEnabled())
-               log.debug( "schedule> locking version field: "
+               log.trace( "schedule> locking version field: "
                   + md.getLockingField().getFieldName() );
 
             JDBCStoreManager mngr = getJDBCStoreManager();
@@ -354,7 +363,7 @@ public class JDBCOptimisticLock
       }
 
       if(log.isTraceEnabled())
-         log.debug( "schedule> "
+         log.trace( "schedule> "
             + ( ctx == null ? "ctx=null" : "ctx.id=" + ctx.getId() )
             + "; id=" + getId()
             + "; method=" + ( mi.getMethod() == null ? "null" : mi.getMethod().getName() )
