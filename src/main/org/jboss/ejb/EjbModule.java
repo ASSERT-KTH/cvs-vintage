@@ -67,7 +67,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.46 $
+ * @version $Revision: 1.47 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -405,13 +405,17 @@ public class EjbModule
             {
                log.error("unexpected exception destroying Container: " + jmxName, e);
             } // end of try-catch
+        }
+        // If the container was registered with the mbeanserver, remove it
+        if (destroyContainer || conState == REGISTERED)
+        {
             try
             {
                serviceController.remove(jmxName);
             }
             catch (Throwable e)
             {
-               log.error("unexpected exception destroying Container: " + jmxName, e);
+               log.error("unexpected exception removing Container: " + jmxName, e);
             } // end of try-catch
          }
       }
