@@ -54,7 +54,8 @@ public  class IssueTemplateInfo
             setScopeId(Scope.PERSONAL__PK);
             issue.save();
 
-            // Send Email to module owner to approve new template
+            // Send Email to the people with module edit ability so
+            // that they can approve the new template
             if (context != null)
             {
                 context.put("user", user);
@@ -64,9 +65,12 @@ public  class IssueTemplateInfo
                 String template = Turbine.getConfiguration().
                     getString("scarab.email.requireapproval.template",
                               "email/RequireApproval.vm");
-                ScarabUser toUser = (ScarabUser) ScarabUserImplPeer
-                                  .retrieveByPK((NumberKey)module.getOwnerId());
-                Email.sendEmail(context, null, toUser, subject, template);
+                
+                ScarabUser[] toUsers = module.getUsers(ScarabSecurity.MODULE__EDIT);
+                for (int i = 0; i<toUsers.length; i++)
+                {
+                    Email.sendEmail(context, null, toUsers[i], subject, template);
+                }
             }
         }
         save();
