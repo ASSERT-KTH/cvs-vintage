@@ -58,11 +58,11 @@ public class MailMain extends DefaultMain {
 	 */
 	public void initGui() {
 		
-		MainInterface.popServerCollection = new POP3ServerCollection();
+		MailInterface.popServerCollection = new POP3ServerCollection();
 		
 		new MailResourceLoader();
 		
-		MainInterface.treeModel = new TreeModel(MailConfig.getFolderConfig());
+		MailInterface.treeModel = new TreeModel(MailConfig.getFolderConfig());
 		
 		/*
 		MainInterface.frameModel =

@@ -33,6 +33,7 @@ import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.command.SaveMessageCommand;
 import org.columba.mail.gui.util.SendMessageDialog;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.pgp.CancelledException;
 import org.columba.mail.pgp.PGPException;
 import org.columba.mail.smtp.SMTPServer;
@@ -97,7 +98,7 @@ public class SendMessageCommand extends FolderCommand {
 
 		// sent folder
 		Folder sentFolder =
-			(Folder) MainInterface.treeModel.getFolder(
+			(Folder) MailInterface.treeModel.getFolder(
 				item.getSpecialFoldersItem().getInteger("sent"));
 
 		// get the SendableMessage object

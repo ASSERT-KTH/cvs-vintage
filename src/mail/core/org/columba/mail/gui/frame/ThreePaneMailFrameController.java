@@ -25,6 +25,7 @@ import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.action.RenameFolderAction;
 import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
+import org.columba.mail.main.MailInterface;
 
 /**
  *
@@ -116,7 +117,7 @@ public class ThreePaneMailFrameController
 	protected void init() {
 		super.init();
 
-		treeController = new TreeController(this, MainInterface.treeModel);
+		treeController = new TreeController(this, MailInterface.treeModel);
 
 		tableController = new TableController(this);
 

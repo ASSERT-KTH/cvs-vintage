@@ -41,6 +41,7 @@ import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.CheckForNewMessagesCommand;
 import org.columba.mail.imap.IMAPStore;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.ListInfo;
 import org.columba.ristretto.imap.protocol.IMAPProtocol;
@@ -211,7 +212,7 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener, Ro
 				subFolder = new IMAPFolder(subchild, "IMAPFolder");
 				parent.add(subFolder);
 				parent.getNode().addElement(subFolder.getNode());
-				MainInterface.treeModel.insertNodeInto(subFolder,parent, parent.getIndex(subFolder));
+				MailInterface.treeModel.insertNodeInto(subFolder,parent, parent.getIndex(subFolder));
 
 				((IMAPFolder) subFolder).existsOnServer = true;
 				subFolder.getFolderItem().set("selectable", "false");
@@ -244,7 +245,7 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener, Ro
 				subFolder = new IMAPFolder(name, "IMAPFolder");
 				parent.add(subFolder);
 				parent.getNode().addElement(subFolder.getNode());
-				MainInterface.treeModel.insertNodeInto(subFolder,parent,parent.getIndex(subFolder));
+				MailInterface.treeModel.insertNodeInto(subFolder,parent,parent.getIndex(subFolder));
 
 				((IMAPFolder) subFolder).existsOnServer = true;
 			} else {
@@ -287,7 +288,7 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener, Ro
 		// maybe remove this folder
 		if (parent instanceof IMAPFolder) {
 			if (!((IMAPFolder) parent).existsOnServer) {
-				MainInterface.treeModel.removeNodeFromParent(parent);
+				MailInterface.treeModel.removeNodeFromParent(parent);
 				parent.removeFolder();
 			}
 		}

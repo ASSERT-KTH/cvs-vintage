@@ -25,6 +25,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.main.MailInterface;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
@@ -54,7 +55,7 @@ public class CreateSubFolderCommand extends Command {
 	 */
 	public void updateGUI() throws Exception {
 		if (success)
-                        MainInterface.treeModel.nodeStructureChanged(parentFolder);
+                        MailInterface.treeModel.nodeStructureChanged(parentFolder);
 	}
 
 	/**

@@ -24,9 +24,6 @@ import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.shutdown.ShutdownManager;
-import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.pgp.PGPController;
-import org.columba.mail.pop3.POP3ServerCollection;
 
 /**
  * Main Interface keeping static instances of all objects
@@ -46,23 +43,12 @@ public class MainInterface {
 	// configuration file management
 	public static Config config;
 
-	// POP3 servers 
-	// TODO: move this to the mail component
-	public static POP3ServerCollection popServerCollection;
-
-	// mailfolder treemodel
-	// TODO: move this to the mail component
-	public static TreeModel treeModel;
-
 	// addressbook treemodel
 	// TODO: move this to the addressbook component
 	public static AddressbookTreeModel addressbookTreeModel;
 
 	// scheduler
 	public static DefaultProcessor processor;
-
-	// PGP encryption package
-	public static PGPController pgpController;
 
 	public static PluginManager pluginManager;
 

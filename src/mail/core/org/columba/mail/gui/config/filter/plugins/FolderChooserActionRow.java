@@ -26,6 +26,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.config.filter.ActionList;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
+import org.columba.mail.main.MailInterface;
 
 public class FolderChooserActionRow
 	extends DefaultActionRow
@@ -43,19 +44,19 @@ public class FolderChooserActionRow
 
 		if (b) {
 			int uid = filterAction.getUid();
-			Folder folder = (Folder) MainInterface.treeModel.getFolder(uid);
+			Folder folder = (Folder) MailInterface.treeModel.getFolder(uid);
 			String treePath = folder.getTreePath();
 
 			treePathButton.setText(treePath);
 		} else {
 			String treePath = treePathButton.getText();
 			TreeNodeList list = new TreeNodeList(treePath);
-			Folder folder = (Folder) MainInterface.treeModel.getFolder(list);
+			Folder folder = (Folder) MailInterface.treeModel.getFolder(list);
 
 			if (folder == null) {
 				// user didn't select any folder
 				// -> make Inbox the default folder
-				folder = (Folder) MainInterface.treeModel.getFolder(101);
+				folder = (Folder) MailInterface.treeModel.getFolder(101);
 			}
 
 			int uid = folder.getUid();
@@ -80,7 +81,7 @@ public class FolderChooserActionRow
 
 		if (action.equals("TREEPATH")) {
 			SelectFolderDialog dialog =
-				MainInterface.treeModel.getSelectFolderDialog();
+				MailInterface.treeModel.getSelectFolderDialog();
 
 			if (dialog.success()) {
 				Folder folder = dialog.getSelectedFolder();

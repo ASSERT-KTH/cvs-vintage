@@ -31,6 +31,7 @@ import org.columba.mail.folder.command.ApplyFilterCommand;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.frame.TableOwner;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.HeaderList;
 
 /**
@@ -70,7 +71,7 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 			folder,
 			headerList);
 
-		MainInterface.treeModel.nodeChanged(folder);
+		MailInterface.treeModel.nodeChanged(folder);
 
 	}
 

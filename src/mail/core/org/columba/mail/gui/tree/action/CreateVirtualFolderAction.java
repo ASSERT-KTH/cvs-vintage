@@ -22,6 +22,7 @@ import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.CreateFolderDialog;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -90,7 +91,7 @@ public class CreateVirtualFolderAction
 					(FolderCommandReference[])
 						((AbstractMailFrameController) getFrameController())
 						.getTreeSelection();
-				MainInterface.treeModel.nodeStructureChanged(
+				MailInterface.treeModel.nodeStructureChanged(
 					reference[0].getFolder());
 
 			} catch (Exception ex) {

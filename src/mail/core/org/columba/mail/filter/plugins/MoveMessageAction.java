@@ -23,6 +23,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.MoveMessageCommand;
+import org.columba.mail.main.MailInterface;
 
 /**
  * @author freddy
@@ -43,7 +44,7 @@ public class MoveMessageAction extends AbstractFilterAction {
 	 */
 	public Command getCommand( FilterAction filterAction, Folder srcFolder, Object[] uids) throws Exception {
 		int uid = filterAction.getUid();
-		Folder destFolder = (Folder) MainInterface.treeModel.getFolder(uid);
+		Folder destFolder = (Folder) MailInterface.treeModel.getFolder(uid);
 
 		if (destFolder == null) {
 			JOptionPane.showMessageDialog(

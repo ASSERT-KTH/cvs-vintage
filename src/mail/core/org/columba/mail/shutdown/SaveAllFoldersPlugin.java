@@ -23,6 +23,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.command.SaveFolderConfigurationCommand;
+import org.columba.mail.main.MailInterface;
 
 /**
  * @author freddy
@@ -40,7 +41,7 @@ public class SaveAllFoldersPlugin implements TaskInterface {
 
 	public void saveAllFolders() {
 		FolderTreeNode rootFolder =
-			(FolderTreeNode) MainInterface.treeModel.getRoot();
+			(FolderTreeNode) MailInterface.treeModel.getRoot();
 
 		saveFolder(rootFolder);
 	}

@@ -61,6 +61,7 @@ import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.util.CArrowImage;
 import org.columba.mail.gui.tree.util.CTransferableTreePath;
+import org.columba.mail.main.MailInterface;
 
 /**
  * @author frd
@@ -432,8 +433,8 @@ public class DndTree
 							else
 								dest.append(source);
 
-							MainInterface.treeModel.nodeStructureChanged(dest);
-							MainInterface.treeModel.nodeStructureChanged(
+							MailInterface.treeModel.nodeStructureChanged(dest);
+							MailInterface.treeModel.nodeStructureChanged(
 								sourceParent);
 						} else if (isCollapsed(pathTarget)) {
 							//source.removeFromParent();
@@ -441,9 +442,9 @@ public class DndTree
 								source,
 								destParent.getIndex(dest));
 
-							MainInterface.treeModel.nodeStructureChanged(
+							MailInterface.treeModel.nodeStructureChanged(
 								destParent);
-							MainInterface.treeModel.nodeStructureChanged(
+							MailInterface.treeModel.nodeStructureChanged(
 								sourceParent);
 						}
 

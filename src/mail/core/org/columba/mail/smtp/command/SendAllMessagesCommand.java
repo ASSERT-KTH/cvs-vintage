@@ -34,6 +34,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.folder.outbox.SendListManager;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.smtp.SMTPServer;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.smtp.SMTPException;
@@ -113,7 +114,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 
 				// Sent folder
 				sentFolder =
-					(Folder) MainInterface.treeModel.getFolder(
+					(Folder) MailInterface.treeModel.getFolder(
 						Integer.parseInt(
 							accountItem.getSpecialFoldersItem().get("sent")));
 

@@ -24,6 +24,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.main.MailInterface;
 
 /**
  * @author freddy
@@ -48,7 +49,7 @@ public class FetchSubFolderListCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		MainInterface.treeModel.nodeStructureChanged(treeNode);
+		MailInterface.treeModel.nodeStructureChanged(treeNode);
 	}
 
 	/**

@@ -15,6 +15,7 @@ import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.pop3.POP3ServerController;
 
 /**
@@ -70,15 +71,15 @@ public class MailMenu extends Menu {
 		CMenuItem menuItem;
 
 		fetchMessageSubmenu.removeAll();
-		for (int i = 0; i < MainInterface.popServerCollection.count(); i++) {
-			POP3ServerController c = MainInterface.popServerCollection.get(i);
+		for (int i = 0; i < MailInterface.popServerCollection.count(); i++) {
+			POP3ServerController c = MailInterface.popServerCollection.get(i);
 			c.updateAction();
 			fetchMessageSubmenu.add(new CMenuItem(c.getCheckAction()));
 		}
 
 		manageSubmenu.removeAll();
-		for (int i = 0; i < MainInterface.popServerCollection.count(); i++) {
-			POP3ServerController c = MainInterface.popServerCollection.get(i);
+		for (int i = 0; i < MailInterface.popServerCollection.count(); i++) {
+			POP3ServerController c = MailInterface.popServerCollection.get(i);
 			c.updateAction();
 			menuItem = new CMenuItem(c.getManageAction());
 			manageSubmenu.add(menuItem);

@@ -37,6 +37,7 @@ import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
@@ -126,7 +127,7 @@ public class VirtualFolder extends Folder {
 	public void addSearchToHistory() throws Exception {
 
 		VirtualFolder searchFolder =
-			(VirtualFolder) MainInterface.treeModel.getFolder(106);
+			(VirtualFolder) MailInterface.treeModel.getFolder(106);
 
 		// only create new subfolders if we used the default "Search Folder"
 		if (!searchFolder.equals(this))
@@ -230,17 +231,17 @@ public class VirtualFolder extends Folder {
 		newFolder.renameFolder(buf.toString());
 
 		// update tree-view
-		MainInterface.treeModel.nodeStructureChanged(searchFolder);
+		MailInterface.treeModel.nodeStructureChanged(searchFolder);
 
 		// update tree-node (for renaming the new folder)
-		MainInterface.treeModel.nodeChanged(newFolder);
+		MailInterface.treeModel.nodeChanged(newFolder);
 
 	}
 
 	protected void applySearch() throws Exception {
 
 		int uid = getFolderItem().getInteger("property", "source_uid");
-		Folder srcFolder = (Folder) MainInterface.treeModel.getFolder(uid);
+		Folder srcFolder = (Folder) MailInterface.treeModel.getFolder(uid);
 
 		XmlElement filter = getFolderItem().getRoot().getElement("filter");
 
@@ -265,7 +266,7 @@ public class VirtualFolder extends Folder {
 		applySearch(srcFolder, f);
 
 		VirtualFolder folder =
-			(VirtualFolder) MainInterface.treeModel.getFolder(106);
+			(VirtualFolder) MailInterface.treeModel.getFolder(106);
 
 	}
 

@@ -64,6 +64,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.command.ExportFolderCommand;
 import org.columba.mail.gui.util.URLController;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -138,7 +139,7 @@ public class ExportDialog
 		selectAllButton.setActionCommand("SELECTALL");
 		selectAllButton.addActionListener(this);
 
-		tree = new JTree(MainInterface.treeModel);
+		tree = new JTree(MailInterface.treeModel);
 		tree.setRootVisible(false);
 		tree.setCellRenderer(new CheckRenderer(map));
 		//tree.setCellEditor(new CheckEditor());

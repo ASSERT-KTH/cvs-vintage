@@ -21,6 +21,7 @@ import java.util.ListIterator;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.main.MainInterface;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.pop3.event.ModelChangeListener;
@@ -40,7 +41,7 @@ public class ManageServerSubMenu extends IMenu implements ModelChangeListener {
 		"mainframe",
 		"menu_file_manage"));
 		
-		popServer = MainInterface.popServerCollection; 
+		popServer = MailInterface.popServerCollection; 
 		popServer.addModelListener(this);
 		
 		createMenu();

@@ -42,6 +42,7 @@ import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.SecurityIndicator;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pgp.CancelledException;
@@ -160,7 +161,7 @@ public class ViewMessageCommand extends FolderCommand {
 			mimePartTree = message.getMimePartTree();
 
 			//	map selection to this temporary message
-			TempFolder tempFolder = MainInterface.treeModel.getTempFolder();
+			TempFolder tempFolder = MailInterface.treeModel.getTempFolder();
 
 			// add message to temporary folder
 			Object uid = tempFolder.addMessage(message);

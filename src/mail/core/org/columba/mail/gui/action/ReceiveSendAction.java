@@ -27,6 +27,7 @@ import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.POP3CommandReference;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.pop3.command.FetchNewMessagesCommand;
 import org.columba.mail.util.MailResourceLoader;
@@ -68,7 +69,7 @@ public class ReceiveSendAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		ListIterator iterator = MainInterface.popServerCollection.getServerIterator(); 
+		ListIterator iterator = MailInterface.popServerCollection.getServerIterator(); 
 
 		while (iterator.hasNext()) {
 			POP3ServerController controller =

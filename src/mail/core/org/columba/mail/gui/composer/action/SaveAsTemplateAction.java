@@ -29,6 +29,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.command.SaveMessageCommand;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -71,7 +72,7 @@ public class SaveAsTemplateAction extends FrameAction {
 		SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
 		String str = folderItem.get("templates");
 		int destUid = Integer.parseInt(str);
-		Folder destFolder = (Folder) MainInterface.treeModel.getFolder(destUid);
+		Folder destFolder = (Folder) MailInterface.treeModel.getFolder(destUid);
 
 		ComposerCommandReference[] r = new ComposerCommandReference[1];
 		r[0] = new ComposerCommandReference(

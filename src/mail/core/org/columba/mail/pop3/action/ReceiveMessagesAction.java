@@ -27,6 +27,7 @@ import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.pop3.command.FetchNewMessagesCommand;
 import org.columba.mail.util.MailResourceLoader;
@@ -51,12 +52,12 @@ public class ReceiveMessagesAction extends FrameAction {
 		
 		// Select INBOX
 		FolderCommandReference[] refs = new FolderCommandReference[1];
-		refs[0] = new FolderCommandReference(MainInterface.treeModel.getFolder(101));
+		refs[0] = new FolderCommandReference(MailInterface.treeModel.getFolder(101));
 		getFrameController().getSelectionManager().setSelection("mail.tree", refs);
 		
 		// Fetch Messages
 		
-		ListIterator iterator = MainInterface.popServerCollection.getServerIterator();
+		ListIterator iterator = MailInterface.popServerCollection.getServerIterator();
 
 		while( iterator.hasNext() ) {
 			POP3ServerController controller =

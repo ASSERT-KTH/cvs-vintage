@@ -13,26 +13,27 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.facade;
+package org.columba.mail.main;
 
-import org.columba.core.main.MainInterface;
-import org.columba.mail.gui.tree.util.SelectFolderDialog;
-import org.columba.mail.main.MailInterface;
+import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.pgp.PGPController;
+import org.columba.mail.pop3.POP3ServerCollection;
 
 /**
- * @author fdietz
+ * Main Interface keeping static instances of all objects
+ * which need to be accessed by other subsystems.
  *
- 
+ * @author fdietz
  */
-public class DialogFacade {
+public class MailInterface {
 
-	/**
-	 * opens a dialog which lets the user choose a folder
-	 * 
-	 * 
-	 * @return	SelectedFolderDialog
-	 */
-	public SelectFolderDialog getSelectFolderDialog() {
-		return MailInterface.treeModel.getSelectFolderDialog();
-	}
+	// POP3 servers 
+	public static POP3ServerCollection popServerCollection;
+	
+	// mailfolder treemodel
+	public static TreeModel treeModel;
+	
+	// PGP encryption package
+	public static PGPController pgpController;
+
 }

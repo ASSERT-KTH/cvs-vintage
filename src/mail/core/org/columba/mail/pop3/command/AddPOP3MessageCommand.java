@@ -18,6 +18,7 @@ import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.ristretto.message.HeaderInterface;
 
@@ -98,7 +99,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 		TableUpdater.tableChanged(ev);
 
 		// update tree viewer
-		MainInterface.treeModel.nodeChanged(inboxFolder);
+		MailInterface.treeModel.nodeChanged(inboxFolder);
 	}
 
 }

@@ -41,6 +41,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.tree.command.CreateSubFolderCommand;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 public class SelectFolderDialog
@@ -81,7 +82,7 @@ public class SelectFolderDialog
 		JPanel contentPane = (JPanel) dialog.getContentPane();
 		contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
 
-		tree = new JTree(MainInterface.treeModel);
+		tree = new JTree(MailInterface.treeModel);
 		tree.expandRow(0);
 		tree.expandRow(1);
 		tree.putClientProperty("JTree.lineStyle", "Angled");

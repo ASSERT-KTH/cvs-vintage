@@ -30,6 +30,7 @@ import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
+import org.columba.mail.main.MailInterface;
 
 /**
  * 
@@ -147,7 +148,7 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 			// Update summary table
 			TableUpdater.tableChanged(ev);
 			// Update folder tree
-			MainInterface.treeModel.nodeChanged(inboxFolder);
+			MailInterface.treeModel.nodeChanged(inboxFolder);
 		}
 	}
 }

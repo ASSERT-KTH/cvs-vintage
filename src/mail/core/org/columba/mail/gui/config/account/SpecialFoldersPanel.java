@@ -40,6 +40,7 @@ import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 public class SpecialFoldersPanel
@@ -83,7 +84,7 @@ public class SpecialFoldersPanel
 	protected String getPath(String uid) {
 		Integer u = new Integer(uid);
 
-		Folder f = (Folder) MainInterface.treeModel.getFolder(u.intValue());
+		Folder f = (Folder) MailInterface.treeModel.getFolder(u.intValue());
 
 		if (f == null)
 			return ""; //$NON-NLS-1$
@@ -93,7 +94,7 @@ public class SpecialFoldersPanel
 
 	protected String getUid(String treePath) {
 		TreeNodeList list = new TreeNodeList(treePath);
-		Folder f = (Folder) MainInterface.treeModel.getFolder(list);
+		Folder f = (Folder) MailInterface.treeModel.getFolder(list);
 
 		if (f == null)
 			return ""; //$NON-NLS-1$
@@ -358,7 +359,7 @@ public class SpecialFoldersPanel
 		if (action.equals("TRASH")) //$NON-NLS-1$
 			{
 			SelectFolderDialog dialog =
-				MainInterface.treeModel.getSelectFolderDialog();
+				MailInterface.treeModel.getSelectFolderDialog();
 
 			if (dialog.success()) {
 				Folder selectedFolder = dialog.getSelectedFolder();
@@ -372,7 +373,7 @@ public class SpecialFoldersPanel
 		} else if (action.equals("INBOX")) //$NON-NLS-1$
 			{
 				SelectFolderDialog dialog =
-								MainInterface.treeModel.getSelectFolderDialog();
+								MailInterface.treeModel.getSelectFolderDialog();
 
 			if (dialog.success()) {
 				Folder selectedFolder = dialog.getSelectedFolder();
@@ -386,7 +387,7 @@ public class SpecialFoldersPanel
 		} else if (action.equals("DRAFTS")) //$NON-NLS-1$
 			{
 				SelectFolderDialog dialog =
-								MainInterface.treeModel.getSelectFolderDialog();
+								MailInterface.treeModel.getSelectFolderDialog();
 
 			if (dialog.success()) {
 				Folder selectedFolder = dialog.getSelectedFolder();
@@ -400,7 +401,7 @@ public class SpecialFoldersPanel
 		} else if (action.equals("TEMPLATES")) //$NON-NLS-1$
 			{
 				SelectFolderDialog dialog =
-								MainInterface.treeModel.getSelectFolderDialog();
+								MailInterface.treeModel.getSelectFolderDialog();
 
 			if (dialog.success()) {
 				Folder selectedFolder = dialog.getSelectedFolder();
@@ -414,7 +415,7 @@ public class SpecialFoldersPanel
 		} else if (action.equals("SENT")) //$NON-NLS-1$
 			{
 				SelectFolderDialog dialog =
-								MainInterface.treeModel.getSelectFolderDialog();
+								MailInterface.treeModel.getSelectFolderDialog();
 
 			if (dialog.success()) {
 				Folder selectedFolder = dialog.getSelectedFolder();

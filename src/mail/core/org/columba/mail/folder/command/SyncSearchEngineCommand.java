@@ -14,6 +14,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.search.AbstractSearchEngine;
 import org.columba.mail.folder.search.LuceneSearchEngine;
+import org.columba.mail.main.MailInterface;
 
 /**
  * 
@@ -31,7 +32,7 @@ public class SyncSearchEngineCommand extends FolderCommand {
 	}
 
 	public void updateGUI() throws Exception {
-		MainInterface.treeModel.nodeStructureChanged(parentFolder);
+		MailInterface.treeModel.nodeStructureChanged(parentFolder);
 	}
 
 	public void execute(Worker worker) throws Exception {

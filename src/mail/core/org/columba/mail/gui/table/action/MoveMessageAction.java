@@ -30,6 +30,7 @@ import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -78,7 +79,7 @@ public class MoveMessageAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		SelectFolderDialog dialog =
-			MainInterface.treeModel.getSelectFolderDialog();
+			MailInterface.treeModel.getSelectFolderDialog();
 
 		if (dialog.success()) {
 			Folder destFolder = dialog.getSelectedFolder();

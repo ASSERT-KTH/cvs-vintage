@@ -38,6 +38,7 @@ import org.columba.core.gui.util.WizardTextField;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 class LocationStep extends AbstractStep implements ActionListener {
@@ -155,7 +156,7 @@ class LocationStep extends AbstractStep implements ActionListener {
 			}
                 } else if (source == destinationButton) {
 			SelectFolderDialog dialog =
-				MainInterface.treeModel.getSelectFolderDialog();
+				MailInterface.treeModel.getSelectFolderDialog();
 			if (dialog.success()) {
 				destinationFolder = dialog.getSelectedFolder();
 				destinationButton.setText(destinationFolder.getTreePath());

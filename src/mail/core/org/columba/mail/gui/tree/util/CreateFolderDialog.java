@@ -47,6 +47,7 @@ import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 import com.jgoodies.forms.layout.FormLayout;
@@ -156,7 +157,7 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 
 		
 
-		tree = new JTree(MainInterface.treeModel);
+		tree = new JTree(MailInterface.treeModel);
 		tree.setCellRenderer(new FolderTreeCellRenderer());
 		tree.setRootVisible(false);
 		tree.getSelectionModel().setSelectionMode(

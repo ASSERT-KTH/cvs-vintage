@@ -39,6 +39,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -235,7 +236,7 @@ public class AccountDialog implements ActionListener {
 
 				int uid = accountItem.getUid();
 				POP3ServerController c =
-					MainInterface.popServerCollection.uidGet(uid);
+					MailInterface.popServerCollection.uidGet(uid);
 				c.restartTimer();
 
 			} else {
@@ -243,7 +244,7 @@ public class AccountDialog implements ActionListener {
 				int uid = accountItem.getUid();
 
 				IMAPRootFolder folder =
-					(IMAPRootFolder) MainInterface.treeModel.getImapFolder(uid);
+					(IMAPRootFolder) MailInterface.treeModel.getImapFolder(uid);
 				folder.updateConfiguration();
 
 			}

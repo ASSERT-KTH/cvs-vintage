@@ -22,6 +22,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.main.MailInterface;
 
 /**
  * Rename selected folder.
@@ -45,7 +46,7 @@ public class RenameFolderCommand extends Command {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		MainInterface.treeModel.nodeStructureChanged(parentFolder);
+		MailInterface.treeModel.nodeStructureChanged(parentFolder);
 	}
 
 	/**

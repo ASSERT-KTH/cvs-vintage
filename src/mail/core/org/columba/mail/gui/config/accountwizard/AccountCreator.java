@@ -29,6 +29,7 @@ import org.columba.mail.config.PopItem;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.main.MailInterface;
 
 class AccountCreator implements WizardModelListener {
     protected DataModel data;
@@ -52,16 +53,16 @@ class AccountCreator implements WizardModelListener {
             PopItem pop = account.getPopItem();
             pop.set("host", (String)data.getData("IncomingServer.host"));
             pop.set("user", (String)data.getData("IncomingServer.login"));
-	    MainInterface.popServerCollection.add(account);
+	    MailInterface.popServerCollection.add(account);
         } else {
             ImapItem imap = account.getImapItem();
             imap.set("host", (String)data.getData("IncomingServer.host"));
             imap.set("user", (String)data.getData("IncomingServer.login"));
             IMAPRootFolder parentFolder = new IMAPRootFolder(account);
-            ((FolderTreeNode)MainInterface.treeModel.getRoot()).add(parentFolder);
-			((FolderTreeNode)MainInterface.treeModel.getRoot()).getNode().addElement(parentFolder.getNode());
+            ((FolderTreeNode)MailInterface.treeModel.getRoot()).add(parentFolder);
+			((FolderTreeNode)MailInterface.treeModel.getRoot()).getNode().addElement(parentFolder.getNode());
 
-            MainInterface.treeModel.nodeStructureChanged(parentFolder.getParent());
+            MailInterface.treeModel.nodeStructureChanged(parentFolder.getParent());
             try {
                     FolderTreeNode inbox = new IMAPFolder("INBOX", "IMAPFolder");
                     parentFolder.add(inbox);

@@ -27,6 +27,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.outbox.OutboxFolder;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.smtp.command.SendAllMessagesCommand;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -75,7 +76,7 @@ public class SendAllMessagesAction extends FrameAction {
 		
 		// get outbox folder
 		OutboxFolder folder =
-			(OutboxFolder) MainInterface.treeModel.getFolder(103);
+			(OutboxFolder) MailInterface.treeModel.getFolder(103);
 
 		// create reference 
 		r[0] = new FolderCommandReference(folder);
