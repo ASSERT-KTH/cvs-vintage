@@ -21,7 +21,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  * 		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.11 $
+ *      @version $Revision: 1.12 $
  */
 public class StatefulSessionProxy
    extends GenericProxy
@@ -45,15 +45,15 @@ public class StatefulSessionProxy
    {
       try
       {
-		 // EJBObject methods
+        // EJBObject methods
          getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", new Class[0]);
          getHandle = EJBObject.class.getMethod("getHandle", new Class[0]);
          isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] { EJBObject.class });
          
-		 // Object methods
-		 toStr = Object.class.getMethod("toString", new Class[0]);
+        // Object methods
+        toStr = Object.class.getMethod("toString", new Class[0]);
          eq = Object.class.getMethod("equals", new Class[] { Object.class });
-	     hash = Object.class.getMethod("hashCode", new Class[0]);
+         hash = Object.class.getMethod("hashCode", new Class[0]);
       } catch (Exception e)
       {
          e.printStackTrace();
@@ -63,9 +63,9 @@ public class StatefulSessionProxy
    // Constructors --------------------------------------------------
    public StatefulSessionProxy(String name, ContainerRemote container, Object id, boolean optimize)
    {
-		super(name, container, optimize);
-	
-      	this.id = id;
+       super(name, container, optimize);
+    
+        this.id = id;
    }
    
    // Public --------------------------------------------------------
@@ -74,7 +74,7 @@ public class StatefulSessionProxy
    public final Object invoke(Object proxy, Method m, Object[] args)
       throws Throwable
    {
-	  // Normalize args to always be an array
+      // Normalize args to always be an array
       // Isn't this a bug in the proxy call??
       if (args == null)
          args = new Object[0];
@@ -86,76 +86,79 @@ public class StatefulSessionProxy
       }
       else if (m.equals(eq))
       {
+          System.out.println("SFSP:equals");
          return invoke(proxy, isIdentical, args);
       }
       
-	  else if (m.equals(hash))
+      else if (m.equals(hash))
       {
-      	return new Integer(id.hashCode());
+        return new Integer(id.hashCode());
       }
       
-	  // Implement local EJB calls
-	   else if (m.equals(getHandle))
+      // Implement local EJB calls
+       else if (m.equals(getHandle))
       {
          return new StatefulHandleImpl(name, id);
       }
      
-	  else if (m.equals(getPrimaryKey))
+      else if (m.equals(getPrimaryKey))
       {
-		  // MF FIXME 
-		  // The spec says that SSB PrimaryKeys should not be returned and the call should throw an exception
-		  // However we need to expose the field *somehow* so we can check for "isIdentical"
-		  // For now we use a non-spec compliant implementation and just return the key as is
-		  // See jboss1.0 for the PKHolder and the hack to be spec-compliant and yet solve the problem
-		  
-		  // This should be the following call 
-		  //throw new RemoteException("Session Beans do not expose their keys, RTFS");
+          System.out.println("SSP:getPrimaryKey");
+         // MF FIXME 
+         // The spec says that SSB PrimaryKeys should not be returned and the call should throw an exception
+         // However we need to expose the field *somehow* so we can check for "isIdentical"
+         // For now we use a non-spec compliant implementation and just return the key as is
+         // See jboss1.0 for the PKHolder and the hack to be spec-compliant and yet solve the problem
+         
+         // This should be the following call 
+         //throw new RemoteException("Session Beans do not expose their keys, RTFS");
       
-	  	  // This is how it was solved in jboss1.0
-		  // throw new PKHolder("RTFS", id);
-		  
-		  // This is non-spec compliant but will do for now
-		  return id;
-	  }
-	  else if (m.equals(isIdentical))
+         // This is how it was solved in jboss1.0
+         // throw new PKHolder("RTFS", id);
+         
+         // This is non-spec compliant but will do for now
+         return id;
+      }
+      else if (m.equals(isIdentical))
       {
-		    // MF FIXME
-			// See above, this is not correct but works for now (do jboss1.0 PKHolder hack in here)
-			return new Boolean(((EJBObject)args[0]).getPrimaryKey().equals(id));
+          System.out.println("SSP:isIdentical");
+           // MF FIXME
+         // See above, this is not correct but works for now (do jboss1.0 PKHolder hack in here)
+         return new Boolean(((EJBObject)args[0]).getPrimaryKey().equals(id));
       }
       
-	  // If not taken care of, go on and call the container
-	  else
+      // If not taken care of, go on and call the container
+      else
       {
-	      // Delegate to container
-	      // Optimize if calling another bean in same EJB-application
-	      if (optimize && isLocal())
-	      {
-	         return container.invoke( // The entity id, method and arguments for the invocation
-			 						  id, m, args,
-									  // Transaction attributes
-									  tm != null ? tm.getTransaction() : null,
-									  // Security attributes
-									  getPrincipal(), getCredential());
-	      } else
-	      {
-			 // Create a new MethodInvocation for distribution
-	         RemoteMethodInvocation rmi = new RemoteMethodInvocation(id, m, args);
-	         
-			 // Set the transaction context
-			 rmi.setTransaction(tm != null? tm.getTransaction() : null);
-           	 
-			 // Set the security stuff
-			 // MF fixme this will need to use "thread local" and therefore same construct as above
-			 // rmi.setPrincipal(sm != null? sm.getPrincipal() : null);
-           	 // rmi.setCredential(sm != null? sm.getCredential() : null);
-           	 // is the credential thread local? (don't think so... but...)
-			 rmi.setPrincipal( getPrincipal() );
-           	 rmi.setCredential( getCredential() );
-			 
-			 // Invoke on the remote server, enforce marshalling
-	         return container.invoke(new MarshalledObject(rmi));
-	      }
+          // Delegate to container
+          // Optimize if calling another bean in same EJB-application
+          if (optimize && isLocal())
+          {
+             return container.invoke( // The entity id, method and arguments for the invocation
+                             id, m, args,
+                          // Transaction attributes
+                          tm != null ? tm.getTransaction() : null,
+                          // Security attributes
+                          getPrincipal(), getCredential());
+          } else
+          {
+          // Create a new MethodInvocation for distribution
+             RemoteMethodInvocation rmi = new RemoteMethodInvocation(id, m, args);
+             
+          // Set the transaction context
+          rmi.setTransaction(tm != null? tm.getTransaction() : null);
+             
+          // Set the security stuff
+          // MF fixme this will need to use "thread local" and therefore same construct as above
+          // rmi.setPrincipal(sm != null? sm.getPrincipal() : null);
+             // rmi.setCredential(sm != null? sm.getCredential() : null);
+             // is the credential thread local? (don't think so... but...)
+          rmi.setPrincipal( getPrincipal() );
+             rmi.setCredential( getCredential() );
+          
+          // Invoke on the remote server, enforce marshalling
+             return container.invoke(new MarshalledObject(rmi));
+          }
       }
    }
 
@@ -165,19 +168,19 @@ public class StatefulSessionProxy
    protected void writeObject(java.io.ObjectOutputStream out)
       throws IOException
    {
-   	super.writeObject(out);
-   	out.writeObject(id);
+    super.writeObject(out);
+    out.writeObject(id);
    }
    
    protected void readObject(java.io.ObjectInputStream in)
       throws IOException, ClassNotFoundException
    {
-   	super.readObject(in);
-   	id = in.readObject();
+    super.readObject(in);
+    id = in.readObject();
    }
     
    // Private -------------------------------------------------------
-	
+    
    // Inner classes -------------------------------------------------
 }
 

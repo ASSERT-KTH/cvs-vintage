@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins.jrmp.interfaces;
 
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
+import java.rmi.MarshalledObject;
 import javax.ejb.Handle;
 import javax.ejb.EJBObject;
 import javax.naming.InitialContext;
@@ -21,7 +22,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  * 	@author <a href="mailto:marc.fleury@telkel.com>Marc Fleury</a>
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class StatefulHandleImpl
    implements Handle
@@ -34,6 +35,18 @@ public class StatefulHandleImpl
    
    // Static --------------------------------------------------------
 
+    static Method getEJBObjectMethod;
+    
+    static {
+        try {
+            
+            getEJBObjectMethod = Class.forName("javax.ejb.Handle").getMethod("getEJBObject", new Class[0]);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }   
+    }
+    
    // Constructors --------------------------------------------------
    public StatefulHandleImpl(String name, Object id)
    {
@@ -49,13 +62,31 @@ public class StatefulHandleImpl
    {
       try
       {
-         Object home = new InitialContext().lookup(name);
+         ContainerRemote container = (ContainerRemote) new InitialContext().lookup("invokers/"+name);
          
-		 // We need to wire the server to retrieve the instance with the right id
-		throw new Exception("StatefulHandleImpl.getEJBObject() NYI"); 
-		
-	   } catch (Exception e)
-      {
+          // Create a new MethodInvocation for distribution
+          System.out.println("I am about to invoke and getEJBOBject is "+getEJBObjectMethod.getName() +" My ID is "+id);
+          RemoteMethodInvocation rmi = new RemoteMethodInvocation(null, getEJBObjectMethod, new Object[] {id});
+             
+          // MF FIXME: WE DEFINITLY NEED THE SECURITY ON SUCH A CALL...
+          // We also need a pointer to the TM...:(
+          
+          // Set the transaction context
+          //rmi.setTransaction(tm != null? tm.getTransaction() : null);
+             
+          // Set the security stuff
+          // MF fixme this will need to use "thread local" and therefore same construct as above
+          // rmi.setPrincipal(sm != null? sm.getPrincipal() : null);
+          // rmi.setCredential(sm != null? sm.getCredential() : null);
+          // is the credential thread local? (don't think so... but...)
+          //rmi.setPrincipal( getPrincipal() );
+          // rmi.setCredential( getCredential() );
+          
+          // Invoke on the remote server, enforce marshalling
+          return (EJBObject) container.invokeHome(new MarshalledObject(rmi));
+         
+      
+      } catch (Exception e) {
          throw new ServerException("Could not get EJBObject", e);
       }
    }
