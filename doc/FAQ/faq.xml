@@ -6,7 +6,7 @@
 <!-- jEdit FAQ                                            -->
 <!-- Copyright (C) 2001-2002 John Gellene                 -->
 
-<!-- $Id: faq.xml,v 1.6 2003/12/25 02:56:25 spestov Exp $
+<!-- $Id: faq.xml,v 1.7 2003/12/30 04:47:02 spestov Exp $
 -->
 
 <!-- Changes required for posting on jEdit Community:     -->
@@ -20,7 +20,7 @@
 
 
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
-		"http://www.oasis-open.org/docbook/xml/4./docbookx.dtd" [
+		"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
 
 
 <!-- Changes required for posting on jEdit Community: -->

@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.77 2003/11/02 21:16:37 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.78 2003/12/30 04:47:03 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -623,7 +623,7 @@ public class GUIUtilities
 	//{{{ showVFSFileDialog() method
 	/**
 	 * Displays a VFS file selection dialog box.
-	 * @param view The view
+	 * @param view The view, should be non-null
 	 * @param path The initial directory to display. May be null
 	 * @param type The dialog type. One of
 	 * {@link org.gjt.sp.jedit.browser.VFSBrowser#OPEN_DIALOG},
@@ -636,6 +636,14 @@ public class GUIUtilities
 	public static String[] showVFSFileDialog(View view, String path,
 		int type, boolean multipleSelection)
 	{
+		// the view should not be null, but some plugins might do this
+		if(view == null)
+		{
+			Log.log(Log.WARNING,GUIUtilities.class,
+			"showVFSFileDialog(): given null view, assuming jEdit.getActiveView()");
+			view = jEdit.getActiveView();
+		}
+
 		hideSplashScreen();
 
 		VFSFileChooserDialog fileChooser = new VFSFileChooserDialog(
