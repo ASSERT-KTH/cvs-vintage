@@ -2155,6 +2155,19 @@ try{
         ((ScarabUser)data.getUser()).setAssociatedUsersMap(assoUsers);
     }
 
+    public List getAssignIssuesList()
+        throws Exception
+    {        
+        List issues = new ArrayList();
+        HashMap userMap = ((ScarabUser)data.getUser()).getAssociatedUsersMap();
+        Iterator iter = userMap.keySet().iterator();
+        while (iter.hasNext()) 
+        {
+            issues.add(IssueManager.getInstance((NumberKey)iter.next()));
+        }
+        return issues;
+    }
+
     /**
      * When a user searches for other users (in the ManageUserSearch.vm
      * template for example), the result of this search is stored into
