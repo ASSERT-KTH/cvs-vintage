@@ -76,8 +76,8 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
  */
 insert into xxxx_populate_RolePermission
 	       select  ToRole.ROLE_ID, ToCopy.PERMISSION_ID
-         from  TURBINE_ROLE as FromRole, TURBINE_ROLE as ToRole,
-               TURBINE_ROLE_PERMISSION as ToCopy
+         from  TURBINE_ROLE FromRole, TURBINE_ROLE ToRole,
+               TURBINE_ROLE_PERMISSION ToCopy
          where ToCopy.ROLE_ID = FromRole.ROLE_ID
 	   and FromRole.ROLE_NAME = 'Partner'
 	   and ToRole.ROLE_NAME = 'Observer'
@@ -100,8 +100,8 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
  */
 insert into xxxx_populate_RolePermission
 	       select  ToRole.ROLE_ID, ToCopy.PERMISSION_ID
-         from  TURBINE_ROLE as FromRole, TURBINE_ROLE as ToRole,
-               TURBINE_ROLE_PERMISSION as ToCopy
+         from  TURBINE_ROLE FromRole, TURBINE_ROLE ToRole,
+               TURBINE_ROLE_PERMISSION ToCopy
          where ToCopy.ROLE_ID = FromRole.ROLE_ID
 	   and FromRole.ROLE_NAME = 'Observer'
 	   and ToRole.ROLE_NAME = 'Developer'
@@ -126,8 +126,8 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
  */
 insert into xxxx_populate_RolePermission
 	       select  ToRole.ROLE_ID, ToCopy.PERMISSION_ID
-         from  TURBINE_ROLE as FromRole, TURBINE_ROLE as ToRole,
-               TURBINE_ROLE_PERMISSION as ToCopy
+         from  TURBINE_ROLE FromRole, TURBINE_ROLE ToRole,
+               TURBINE_ROLE_PERMISSION ToCopy
          where ToCopy.ROLE_ID = FromRole.ROLE_ID
 	   and FromRole.ROLE_NAME = 'Developer'
 	   and ToRole.ROLE_NAME = 'QA'
@@ -142,8 +142,8 @@ delete from xxxx_populate_RolePermission;
  */
 insert into xxxx_populate_RolePermission
 	       select  ToRole.ROLE_ID, ToCopy.PERMISSION_ID
-         from  TURBINE_ROLE as FromRole, TURBINE_ROLE as ToRole,
-               TURBINE_ROLE_PERMISSION as ToCopy
+         from  TURBINE_ROLE FromRole, TURBINE_ROLE ToRole,
+               TURBINE_ROLE_PERMISSION ToCopy
          where ToCopy.ROLE_ID = FromRole.ROLE_ID
 	   and FromRole.ROLE_NAME = 'Developer'
 	   and ToRole.ROLE_NAME = 'Project Owner'
@@ -169,8 +169,8 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
  */
 insert into xxxx_populate_RolePermission
 	       select  ToRole.ROLE_ID, ToCopy.PERMISSION_ID
-         from  TURBINE_ROLE as FromRole, TURBINE_ROLE as ToRole,
-               TURBINE_ROLE_PERMISSION as ToCopy
+         from  TURBINE_ROLE FromRole, TURBINE_ROLE ToRole,
+               TURBINE_ROLE_PERMISSION ToCopy
          where ToCopy.ROLE_ID = FromRole.ROLE_ID
 	   and FromRole.ROLE_NAME = 'Project Owner'
 	   and ToRole.ROLE_NAME = 'Root'
