@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.32 2004/02/25 07:06:59 billbarker Exp $
+/* $Id: ApacheConfig.java,v 1.33 2004/05/27 04:42:13 billbarker Exp $
  * ====================================================================
  *
  *   
@@ -119,7 +119,7 @@ import org.apache.tomcat.util.log.Log;
     @author Costin Manolache
     @author Larry Isaacs
     @author Mel Martinez
-	@version $Revision: 1.32 $ $Date: 2004/02/25 07:06:59 $
+	@version $Revision: 1.33 $ $Date: 2004/05/27 04:42:13 $
  */
 public class ApacheConfig  extends BaseJkConfig { 
     
@@ -336,8 +336,8 @@ public class ApacheConfig  extends BaseJkConfig {
             
 	// Verify the file exists !!
 	mod_jk.println("<IfModule !mod_jk.c>");
-	mod_jk.println("  LoadModule jk_module "+
-		       modJk.toString().replace('\\','/'));
+	mod_jk.println("  LoadModule jk_module \""+
+		       modJk.toString().replace('\\','/')+"\"");
 	mod_jk.println("</IfModule>");
 	mod_jk.println();                
 
