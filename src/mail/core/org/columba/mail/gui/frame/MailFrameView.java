@@ -121,6 +121,8 @@ public class MailFrameView extends FrameView {
 			tablePanel.add(filterToolbar, BorderLayout.NORTH);
 
 		JScrollPane tableScrollPane = new JScrollPane(table);
+		
+		
 		tableScrollPane.getViewport().setBackground(Color.white);
 		tablePanel.add(tableScrollPane, BorderLayout.CENTER);
 		rightSplitPane =

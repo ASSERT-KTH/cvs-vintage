@@ -4,6 +4,7 @@ import org.columba.core.config.ViewItem;
 import org.columba.core.gui.FrameController;
 import org.columba.core.gui.FrameView;
 import org.columba.core.gui.util.DialogStore;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.action.GlobalActionCollection;
@@ -184,5 +185,14 @@ public class MailFrameController extends FrameController {
 		}
 
 	}
+	
+	public void close()
+		{
+			ColumbaLogger.log.info("closing MailFrameController");
+			
+			tableController.saveColumnConfig();
+			super.close();
+			
+		}
 
 }
