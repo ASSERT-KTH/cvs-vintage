@@ -43,7 +43,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.16 2002/03/17 04:11:46 spestov Exp $
+ * @version $Id: View.java,v 1.17 2002/03/20 06:02:24 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -816,14 +816,6 @@ public class View extends JFrame implements EBComponent
 	 */
 	public void quickHyperSearch(boolean word)
 	{
-		if(searchBar == null)
-		{
-			getToolkit().beep();
-			return;
-		}
-
-		searchBar.setHyperSearch(true);
-
 		JEditTextArea textArea = getTextArea();
 
 		String text = textArea.getSelectedText();
@@ -842,6 +834,13 @@ public class View extends JFrame implements EBComponent
 		}
 		else
 		{
+			if(searchBar == null)
+			{
+				getToolkit().beep();
+				return;
+			}
+
+			searchBar.setHyperSearch(true);
 			searchBar.getField().setText(null);
 			searchBar.getField().requestFocus();
 			searchBar.getField().selectAll();
