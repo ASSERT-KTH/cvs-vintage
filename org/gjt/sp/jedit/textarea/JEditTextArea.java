@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.109 2002/03/16 05:23:53 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.110 2002/03/16 07:42:00 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6293,9 +6293,10 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 
 			dragged = true;
 
+			resizeSelection(dragStart,dot,rect);
+
 			if(quickCopyDrag)
 			{
-				resizeSelection(dragStart,dot,rect);
 				// just scroll to the dragged location
 				int line = buffer.getLineOfOffset(dot);
 				scrollTo(line,dot - buffer.getLineStartOffset(line),false);
