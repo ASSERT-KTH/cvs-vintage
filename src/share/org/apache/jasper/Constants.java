@@ -243,7 +243,9 @@ public class Constants {
 	    jasperLog = Log.getLog("JASPER_LOG", null);
 
 	if (jasperLog != null)
-	    jasperLog.log(getString(key, args), verbosityLevel);
+	    String msg = getString(key,args);
+	    msg=(msg==null)?key:msg;
+	    jasperLog.log(msg, verbosityLevel);
     }
 
     public static Log jasperLog = null;
