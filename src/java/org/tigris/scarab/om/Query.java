@@ -49,6 +49,7 @@ package org.tigris.scarab.om;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 import org.apache.turbine.TemplateContext;
 //import org.apache.fulcrum.template.TemplateContext;
@@ -340,4 +341,34 @@ public class Query
         }            
     }
 
+    /**
+     * Checks if user has permission to delete query.
+     * Only the creating user can delete a personal query.
+     * Only project owner or admin can delete a project-wide query.
+     */
+    public void copyQuery( ScarabUser user )
+         throws Exception
+    {                
+         Query newQuery = new Query();
+         newQuery.setName(getName() + " (copy)");
+         newQuery.setDescription(getDescription());
+         newQuery.setValue(getValue());
+         newQuery.setModuleId(getModuleId());
+         newQuery.setIssueTypeId(getIssueTypeId());
+         newQuery.setApproved(getApproved());
+         newQuery.setCreatedDate(new Date());
+         newQuery.setCreatedDate(new Date());
+         newQuery.setUserId(getUserId());
+         newQuery.setScopeId(getScopeId());
+         newQuery.save();
+
+         RQueryUser rqu = getRQueryUser(user);
+         RQueryUser rquNew = new RQueryUser();
+         rquNew.setQueryId(newQuery.getQueryId());
+         rquNew.setUserId(user.getUserId());
+         rquNew.setSubscriptionFrequency(rqu.getSubscriptionFrequency());
+         rquNew.setIsdefault(rqu.getIsdefault());
+         rquNew.setIsSubscribed(rqu.getIsSubscribed());
+         rquNew.save();
+    }
 }

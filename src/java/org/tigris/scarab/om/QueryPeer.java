@@ -19,7 +19,7 @@ public class QueryPeer
     extends org.tigris.scarab.om.BaseQueryPeer
 {
 
-    private static final String GET_ALL_QUERIES = 
+    public static final String GET_ALL_QUERIES = 
         "getAllQueries";
 
     /**
@@ -41,15 +41,12 @@ public class QueryPeer
                 .add(QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
                 .add(QueryPeer.DELETED, 0);
 
-            Criteria.Criterion cPriv1 = crit.getNewCriterion(
-                QueryPeer.SCOPE_ID, Scope.PERSONAL__PK, 
-                Criteria.EQUAL);
-            cPriv1.and( crit.getNewCriterion(TransactionPeer.CREATED_BY, 
-                user.getUserId(),  Criteria.EQUAL));
             Criteria.Criterion cGlob = crit.getNewCriterion(
-                QueryPeer.SCOPE_ID, Scope.GLOBAL__PK,
+                QueryPeer.SCOPE_ID, Scope.GLOBAL__PK, 
                 Criteria.EQUAL);
-            cGlob.or(cPriv1);
+            Criteria.Criterion cPriv = crit.getNewCriterion(
+                QueryPeer.USER_ID, user.getUserId(), Criteria.EQUAL);
+            cGlob.or(cPriv);
             crit.add(cGlob);
             crit.setDistinct();
 
