@@ -24,7 +24,7 @@ import org.jboss.logging.Logger;
  * JDBCReadAheadCommand
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCReadAheadCommand {
 
@@ -146,6 +146,7 @@ public class JDBCReadAheadCommand {
          sql.append("SELECT ");
             sql.append(SQLUtil.getColumnNamesClause(
                      entity.getJDBCPrimaryKeyFields()));
+            sql.append(",");
             sql.append(SQLUtil.getColumnNamesClause(loadFields));
             
          sql.append(" FROM ").append(entity.getTableName());
