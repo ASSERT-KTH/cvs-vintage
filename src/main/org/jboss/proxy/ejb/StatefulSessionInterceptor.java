@@ -7,6 +7,7 @@
 package org.jboss.proxy.ejb;
 
 import java.lang.reflect.Method;
+import java.rmi.RemoteException;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
@@ -18,7 +19,7 @@ import org.jboss.proxy.ejb.handle.StatefulHandleImpl;
 /**
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class StatefulSessionInterceptor
    extends GenericEJBInterceptor
@@ -83,7 +84,7 @@ public class StatefulSessionInterceptor
       }
       else if (m.equals(GET_PRIMARY_KEY))
       {
-         return ctx.getCacheId();
+         throw new RemoteException("Call to getPrimaryKey not allowed on session bean");
       }
       else if (m.equals(IS_IDENTICAL))
       {

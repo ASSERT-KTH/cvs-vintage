@@ -7,6 +7,7 @@
 package org.jboss.proxy.ejb;
 
 import java.lang.reflect.Method;
+import java.rmi.RemoteException;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
@@ -19,7 +20,7 @@ import org.jboss.proxy.ejb.handle.StatelessHandleImpl;
  * An EJB stateless session bean proxy class.
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class StatelessSessionInterceptor
    extends GenericEJBInterceptor
@@ -38,10 +39,6 @@ public class StatelessSessionInterceptor
    
    /**
     * InvocationHandler implementation.
-    *
-    * @param proxy   The proxy object.
-    * @param m       The method being invoked.
-    * @param args    The arguments for the method.
     *
     * @throws Throwable    Any exception or error thrown while processing.
     */
@@ -76,8 +73,8 @@ public class StatelessSessionInterceptor
                (String)ctx.getValue(InvocationKey.JNDI_NAME));
       }
       else if (m.equals(GET_PRIMARY_KEY))
-      {  
-         return ctx.getValue(InvocationKey.JNDI_NAME);
+      {
+         throw new RemoteException("Call to getPrimaryKey not allowed on session bean");
       }
       else if (m.equals(GET_EJB_HOME))
       {
