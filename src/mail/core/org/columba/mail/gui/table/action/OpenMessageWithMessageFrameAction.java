@@ -59,21 +59,17 @@ public class OpenMessageWithMessageFrameAction extends AbstractColumbaAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-
 		MessageFrameController c = new MessageFrameController(
-		(ThreePaneMailFrameController) getFrameMediator());
+				(ThreePaneMailFrameController) getFrameMediator());
 		new DefaultContainer(c);
-		
+
 		IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
 				.getTableSelection();
 
-		
 		c.setTreeSelection(r);
 
-		
 		c.setTableSelection(r);
-		
-		
+
 		CommandProcessor.getInstance().addOp(new ViewMessageCommand(c, r));
 
 	}

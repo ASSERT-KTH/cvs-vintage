@@ -64,11 +64,13 @@ public class DefaultFrameController implements FrameMediator {
 
 		this.id = viewItem.get("id");
 
-		// FIXME
-		//this.container = c;
-
 		// init selection handler
 		selectionManager = new SelectionManager();
+
+	}
+	
+	public DefaultFrameController(String id) {
+		this(new ViewItem(DefaultContainer.createDefaultConfiguration(id)));
 
 	}
 

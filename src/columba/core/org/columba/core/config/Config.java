@@ -73,6 +73,8 @@ public class Config {
 
     protected File toolsFile;
     
+    protected File viewsFile;
+    
     private static Config instance;
 
     /**
@@ -87,12 +89,15 @@ public class Config {
         path.mkdir();
         optionsFile = new File(path, "options.xml");
         toolsFile = new File(path, "external_tools.xml");
+        viewsFile = new File(path, "views.xml");
         
         registerPlugin(CORE_STR, optionsFile.getName(), new OptionsXmlConfig(
                 optionsFile));
 
         registerPlugin(CORE_STR, toolsFile.getName(), new DefaultXmlConfig(
                 toolsFile));
+        registerPlugin(CORE_STR, viewsFile.getName(), new DefaultXmlConfig(
+        		viewsFile));
         
         // register at shutdown-manager
         // -> this will save all configuration data, when closing Columba

@@ -55,17 +55,17 @@ public class FrameModel {
 	protected List activeFrameCtrls = new LinkedList();
 
 	/** viewlist xml treenode */
-	protected XmlElement viewList = Config.getInstance().get("options")
-			.getElement("/options/gui/viewlist");
+	protected XmlElement viewList = Config.getInstance().get("views")
+			.getElement("/views/viewlist");
 
 	/** Default view specifications to be used when opening a new view */
-	protected XmlElement defaultViews = Config.getInstance().get("options")
-			.getElement("/options/gui/defaultviews");
+	protected XmlElement defaultViews = Config.getInstance().get("views")
+			.getElement("/views/defaultviews");
 
 	protected FramePluginHandler handler;
 
 	private static FrameModel instance = new FrameModel();
-	
+
 	/**
 	 * we cache instances for later re-use
 	 */
@@ -99,7 +99,7 @@ public class FrameModel {
 	public static FrameModel getInstance() {
 		return instance;
 	}
-	
+
 	/**
 	 * Close all frames and re-open them again.
 	 * <p>
@@ -162,23 +162,14 @@ public class FrameModel {
 			// create frame controller for this view...
 			FrameMediator c;
 			try {
-				c = createFrameController(new ViewItem(view));
+				c = createFrameMediator(new ViewItem(view));
 			} catch (PluginLoadingFailedException plfe) {
 				//should not occur
 				continue;
 			}
 
-			// ...and display it
-			/*
-			 * c.openView();
-			 */
-
 		}
 
-		/*
-		 * if (activeFrameCtrls.size() == 0) { try { openView("ThreePaneMail"); }
-		 * catch (PluginLoadingFailedException plfe) {} //should not occur }
-		 */
 	}
 
 	/**
@@ -220,12 +211,6 @@ public class FrameModel {
 	}
 
 	protected XmlElement createDefaultConfiguration(String id) {
-		/*
-		 * *20030831, karlpeder* Moved code here from constructor XmlElement
-		 * child = (XmlElement) defaultView.clone(); child.addAttribute("id",
-		 * id);
-		 */
-
 		// initialize default view options
 		XmlElement defaultView = new XmlElement("view");
 		XmlElement window = new XmlElement("window");
@@ -246,24 +231,14 @@ public class FrameModel {
 	}
 
 	/**
-	 * Create new frame controller. FrameControllers are plugins.
-	 * 
-	 * @see FramePluginHandler
-	 * 
-	 * @param id
-	 *            controller ID
 	 * @param viewItem
-	 *            ViewItem containing frame properties
-	 * 
-	 * @return frame controller
+	 * @param id
+	 * @return @throws
+	 *         PluginLoadingFailedException
 	 */
-	protected FrameMediator createFrameController(Container c, ViewItem viewItem)
+	private FrameMediator instanciateFrameMediator(ViewItem viewItem)
 			throws PluginLoadingFailedException {
-
 		String id = viewItem.get("id");
-
-		//	save old framemediator in cache (use containers's old id)
-		frameMediatorCache.put(c.getViewItem().get("id"), c.getFrameMediator());
 
 		FrameMediator frame = null;
 		if (frameMediatorCache.containsKey(id)) {
@@ -279,13 +254,10 @@ public class FrameModel {
 			// -> get frame controller using the plugin handler found above
 			frame = (FrameMediator) handler.getPlugin(id, args);
 		}
-
-		c.switchFrameMediator(frame);
-
 		return frame;
 	}
 
-	protected FrameMediator createFrameController(ViewItem viewItem)
+	protected FrameMediator createFrameMediator(ViewItem viewItem)
 			throws PluginLoadingFailedException {
 
 		String id = viewItem.get("id");
@@ -293,35 +265,9 @@ public class FrameModel {
 		// create new default container
 		boolean newContainer = false;
 
-		
+		FrameMediator frame = instanciateFrameMediator(viewItem);
 
-		FrameMediator frame = null;
-		if (frameMediatorCache.containsKey(id)) {
-			LOG.fine("use cached instance " + id);
-
-			// found cached instance
-			// -> re-use this instance and remove it from cache
-			frame = (FrameMediator) frameMediatorCache.remove(id);
-
-			
-			
-		} else {
-			LOG.fine("create new instance " + id);
-			Object[] args = { viewItem };
-			try {
-				// create new instance
-				// -> get frame controller using the plugin handler found above
-				frame = (FrameMediator) handler.getPlugin(id, args);
-			} catch (PluginLoadingFailedException e) {
-				
-				e.printStackTrace();
-			}
-			
-		}
-		
 		Container c = new DefaultContainer(frame);
-		
-		//c.setFrameMediator(frame);
 
 		activeFrameCtrls.add(c);
 
@@ -345,7 +291,7 @@ public class FrameModel {
 
 		// Create a frame controller for this view
 		// view = null => defaults specified by frame controller is used
-		FrameMediator controller = createFrameController(view);
+		FrameMediator controller = createFrameMediator(view);
 
 		return controller;
 	}
@@ -359,9 +305,15 @@ public class FrameModel {
 			view = new ViewItem(createDefaultConfiguration(id));
 
 		// Create a frame controller for this view
-		FrameMediator controller = createFrameController(c, view);
 
-		return controller;
+		//	save old framemediator in cache (use containers's old id)
+		frameMediatorCache.put(c.getViewItem().get("id"), c.getFrameMediator());
+
+		FrameMediator frame = instanciateFrameMediator(view);
+
+		c.switchFrameMediator(frame);
+
+		return frame;
 	}
 
 	/**
@@ -374,8 +326,8 @@ public class FrameModel {
 	protected ViewItem loadDefaultView(String id) {
 		// If defaultViews doesn't exist, create it (backward compatibility)
 		if (defaultViews == null) {
-			XmlElement gui = Config.getInstance().get("options").getElement(
-					"/options/gui");
+			XmlElement gui = Config.getInstance().get("views").getElement(
+					"/views");
 			defaultViews = new XmlElement("defaultviews");
 			gui.addElement(defaultViews);
 		}
@@ -451,7 +403,7 @@ public class FrameModel {
 				viewList.addElement(v.getRoot());
 			}
 		}
-		
+
 		if (activeFrameCtrls.size() == 0) {
 			// shutdown Columba if no frame exists anymore
 			if (getOpenFrames().length == 0) {
@@ -459,5 +411,27 @@ public class FrameModel {
 				ShutdownManager.getShutdownManager().shutdown(0);
 			}
 		}
+	}
+
+	public ViewItem createCustomViewItem(String id) {
+		XmlElement parent = Config.getInstance().get("views").getElement("views");
+		XmlElement custom = parent.getElement("custom");
+		if ( custom == null )
+			custom = parent.addSubElement("custom");
+
+		for ( int i=0; i<custom.count(); i++) {
+			XmlElement child = custom.getElement(i);
+			String name = child.getAttribute("id");
+			if ( name.equals(id) ) return new ViewItem(child); 
+		}
+		
+		XmlElement child = createDefaultConfiguration(id);
+		custom.addElement(child);
+		
+		XmlElement.printNode(parent, " ");
+		
+		ViewItem viewItem = new ViewItem(child);
+
+		return viewItem;
 	}
 }

@@ -124,13 +124,14 @@ public class ComposerController extends DefaultFrameController implements
 	private HtmlToolbar htmlToolbar;
 
 	public ComposerController() {
-		this(new ComposerModel(), new ViewItem(MailConfig.getInstance().get(
-				"composer_options").getElement("/options/gui/view")));
+		this(new ComposerModel(), FrameModel.getInstance()
+				.createCustomViewItem("Composer"));
+
 	}
 
 	public ComposerController(ComposerModel model) {
-		this(model, new ViewItem(MailConfig.getInstance().get(
-				"composer_options").getElement("/options/gui/view")));
+		this(model, FrameModel.getInstance()
+				.createCustomViewItem("Composer"));
 	}
 
 	public ComposerController(ViewItem viewItem) {

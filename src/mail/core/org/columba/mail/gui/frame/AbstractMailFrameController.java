@@ -51,6 +51,16 @@ public class AbstractMailFrameController extends DefaultFrameController
 	// fireCharsetChanged
 	private Charset charset;
 
+	public AbstractMailFrameController(String id) {
+		super(id);
+		
+		messageController = new MessageController(this);
+
+		folderOptionsController = new FolderOptionsController(this);
+
+		
+	}
+	
 	/**
 	 * @param id
 	 * @param viewItem

@@ -31,9 +31,11 @@ public class DefaultItem implements Cloneable, IDefaultItem {
 
     /************************ composition pattern **********************/
     public XmlElement getElement(String pathToElement) {
-        return getRoot().getElement(pathToElement);
-    }
+    	XmlElement child = getRoot().getElement(pathToElement);
 
+        return child; 
+    }
+    
     public XmlElement getChildElement(int index) {
         return getRoot().getElement(index);
     }

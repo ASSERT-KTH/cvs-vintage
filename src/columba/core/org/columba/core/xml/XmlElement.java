@@ -323,8 +323,8 @@ public class XmlElement extends Observable implements Cloneable {
                 }
             }
         }
-
-        return null;
+        
+       return null;
     }
 
     public XmlElement getElement(int index) {
@@ -346,6 +346,9 @@ public class XmlElement extends Observable implements Cloneable {
     	while(path.indexOf('/') != -1) {
         	name = path.substring(0, path.indexOf('/'));
         	path = path.substring(path.indexOf('/')+1);
+        	
+        	// if path startsWith "/" -> skip
+        	if ( name.length() == 0 ) continue;
         	
         	if( parent.getElement(name) != null ) {
         		parent = parent.getElement(name);

@@ -4,13 +4,6 @@
 <options version="1.0">
  <gui>
   <table />
-  <messageframe>
-   <view id="MessageFrame" >
-    <window x="0" y="0" width="900" height="700" maximized="true"/> 
-    <toolbars main="true"/>  
-    <splitpanes main="200" header="200" attachment="100" />
-   </view>
-  </messageframe>
  </gui>
  <html prefer="true" />
  <markasread delay="2" />

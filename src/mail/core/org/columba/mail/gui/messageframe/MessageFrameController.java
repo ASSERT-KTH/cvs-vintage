@@ -26,14 +26,13 @@ import javax.swing.JPanel;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.ContentPane;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.table.ITableController;
-import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -64,13 +63,12 @@ public class MessageFrameController extends AbstractMailFrameController
 	FixedTableSelectionHandler tableSelectionHandler;
 
 	private ThreePaneMailFrameController parentController;
-
+	
 	/**
 	 * @param viewItem
 	 */
 	public MessageFrameController() {
-		super(new ViewItem(MailConfig.getInstance().get("options").getElement(
-				"/options/gui/messageframe/view")));
+		super(FrameModel.getInstance().createCustomViewItem("Messageframe"));
 
 		tableSelectionHandler = new FixedTableSelectionHandler(tableReference);
 		getSelectionManager().addSelectionHandler(tableSelectionHandler);

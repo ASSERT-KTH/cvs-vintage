@@ -39,18 +39,21 @@ import org.columba.core.pluginhandler.FramePluginHandler;
 public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 
 	private static final String MAIL_PERSPECTIVE = "ThreePaneMail";
+
 	private static final String ADDRESSBOOK_PERSPECTIVE = "Addressbook";
+
 	private static final String CHAT_PERSPECTIVE = "AlturaFrame";
-	
+
 	private JRadioButtonMenuItem mailMenu;
 
 	private JRadioButtonMenuItem addressbookMenu;
 
 	private JRadioButtonMenuItem chatMenu;
-	
+
 	private ButtonGroup group;
-	
+
 	private FramePluginHandler handler;
+
 	/**
 	 * @param controller
 	 * @param caption
@@ -64,29 +67,37 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 		// -> if so create submenu to switch perspectives
 		// -> otherwise, don't create submenu
 		boolean isManagedFrame = false;
-		
+
 		try {
-			handler = (FramePluginHandler) PluginManager.getInstance().getHandler("org.columba.core.frame");
+			handler = (FramePluginHandler) PluginManager.getInstance()
+					.getHandler("org.columba.core.frame");
 		} catch (PluginHandlerNotFoundException e) {
 			e.printStackTrace();
 		}
 		
-		String[] managedFrames = handler.getManagedFrames();
-		for ( int i=0; i<managedFrames.length; i++) {
-			if ( id.equals(managedFrames[i])) isManagedFrame = true;
+		String[] managedFrames = null;
+		if (id != null) {
+			managedFrames = handler.getManagedFrames();
+			for (int i = 0; i < managedFrames.length; i++) {
+				if (id.equals(managedFrames[i]))
+					isManagedFrame = true;
+			}
 		}
-		
-		if ( !isManagedFrame ) return;
-		
+
+		if (!isManagedFrame)
+			return;
+
 		group = new ButtonGroup();
-		
-		for ( int i=0; i<managedFrames.length; i++) {
-			JRadioButtonMenuItem menu = createMenu(managedFrames[i], managedFrames[i]);
-			if ( id.equals(managedFrames[i])) menu.setSelected(true);
-			
+
+		for (int i = 0; i < managedFrames.length; i++) {
+			JRadioButtonMenuItem menu = createMenu(managedFrames[i],
+					managedFrames[i]);
+			if (id.equals(managedFrames[i]))
+				menu.setSelected(true);
+
 			add(menu);
 		}
-		
+
 	}
 
 	/**

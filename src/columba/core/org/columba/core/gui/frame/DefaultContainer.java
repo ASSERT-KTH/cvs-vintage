@@ -190,7 +190,7 @@ public class DefaultContainer extends JFrame implements Container,
 	 *            ID of controller
 	 * @return xml treenode containing the new configuration
 	 */
-	protected XmlElement createDefaultConfiguration(String id) {
+	public static XmlElement createDefaultConfiguration(String id) {
 		// initialize default view options
 		XmlElement defaultView = new XmlElement("view");
 		XmlElement window = new XmlElement("window");
@@ -347,10 +347,10 @@ public class DefaultContainer extends JFrame implements Container,
 	public void loadPositions(ViewItem viewItem) {
 
 		// *20030831, karlpeder* Also location is restored
-		int x = viewItem.getInteger("window", "x");
-		int y = viewItem.getInteger("window", "y");
-		int w = viewItem.getInteger("window", "width");
-		int h = viewItem.getInteger("window", "height");
+		int x = viewItem.getInteger("window", "x", 0);
+		int y = viewItem.getInteger("window", "y", 0);
+		int w = viewItem.getInteger("window", "width", 900);
+		int h = viewItem.getInteger("window", "height", 700);
 		boolean maximized = viewItem.getBoolean("window", "maximized", true);
 
 		//if (WindowMaximizer.isWindowMaximized(this) == false) {
