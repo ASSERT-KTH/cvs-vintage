@@ -26,7 +26,7 @@
 
     <property name="turbine.dir" value="${basedir}/../../jakarta-turbine"/>
     <property name="scarab.turbine.version" 
-            value="2.1-dev-unreleased"/>
+            value="2.2-dev"/>
     <property name="scarab.turbine.final.name" 
             value="turbine-${scarab.turbine.version}"/>
     <property name="turbine.latest.jar" 
