@@ -24,6 +24,8 @@ import org.columba.core.help.HelpManager;
 import org.columba.core.io.DirectoryIO;
 import org.columba.core.io.ZipFileIO;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.pluginhandler.ConfigPluginHandler;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
@@ -73,7 +75,7 @@ implements ActionListener, TreeSelectionListener {
 
     public PluginManagerDialog() {
         // modal JDialog
-        super(new JFrame(), GlobalResourceLoader.getString(
+        super((JFrame)null, GlobalResourceLoader.getString(
                 RESOURCE_PATH, "pluginmanager", "title"), true);
 
         try {
@@ -195,13 +197,13 @@ implements ActionListener, TreeSelectionListener {
         centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
         /*
-listView = new FilterListTable(filterList, this);
-listView.getSelectionModel().addListSelectionListener(this);
-JScrollPane scrollPane = new JScrollPane(listView);
-scrollPane.setPreferredSize(new Dimension(300, 250));
-scrollPane.getViewport().setBackground(Color.white);
-centerPanel.add(scrollPane);
-*/
+        listView = new FilterListTable(filterList, this);
+        listView.getSelectionModel().addListSelectionListener(this);
+        JScrollPane scrollPane = new JScrollPane(listView);
+        scrollPane.setPreferredSize(new Dimension(300, 250));
+        scrollPane.getViewport().setBackground(Color.white);
+        centerPanel.add(scrollPane);
+        */
         table = new PluginTree();
         table.getTree().addTreeSelectionListener(this);
 
@@ -259,7 +261,11 @@ centerPanel.add(scrollPane);
             String id = selectedNode.getId();
             id = id.substring(id.lastIndexOf(".") + 1, id.length());
 
-            new ConfigurationDialog(id);
+            try {
+                ConfigurationDialog dialog = new ConfigurationDialog(id);
+                dialog.setVisible(true);
+            } catch (PluginHandlerNotFoundException phnfe) {
+            } catch (PluginLoadingFailedException plfe) {}
         } else if (action.equals("REMOVE")) {
             // get plugin directory
             File directory = MainInterface.pluginManager.getFolder(

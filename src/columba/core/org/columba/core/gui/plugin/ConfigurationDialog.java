@@ -13,14 +13,16 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.plugin;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.pluginhandler.ConfigPluginHandler;
 
 import org.columba.mail.util.MailResourceLoader;
@@ -31,59 +33,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
-
+import javax.swing.*;
 
 /**
  * @author frd
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ConfigurationDialog extends JDialog implements ActionListener {
-    JButton okButton;
-    JButton cancelButton;
-    JButton helpButton;
-    String pluginId;
-    AbstractConfigPlugin plugin;
-    JPanel pluginPanel;
+    protected JButton okButton;
+    protected JButton cancelButton;
+    protected JButton helpButton;
+    protected String pluginId;
+    protected AbstractConfigPlugin plugin;
+    protected JPanel pluginPanel;
 
-    /**
- * @throws java.awt.HeadlessException
- */
-    public ConfigurationDialog(String pluginId) {
+    public ConfigurationDialog(String pluginId)
+    throws PluginHandlerNotFoundException, PluginLoadingFailedException {
         // modal dialog
-        super(new JFrame(), true);
+        super((JFrame)null, true);
 
-        this.pluginId = pluginId;
+        ConfigPluginHandler h = (ConfigPluginHandler) MainInterface.pluginManager.getHandler(
+                "org.columba.core.config");
 
-        pluginPanel = null;
-
-        try {
-            ConfigPluginHandler h = (ConfigPluginHandler) MainInterface.pluginManager.getHandler(
-                    "org.columba.core.config");
-
-            Object[] args = {  };
-
-            plugin = (AbstractConfigPlugin) h.getPlugin(pluginId, null);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        if (plugin == null) {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog("Error while loading plugin " + pluginId + ".");
-
-            // exit
-            return;
-        }
+        plugin = (AbstractConfigPlugin) h.getPlugin(pluginId, null);
 
         pluginPanel = plugin.createPanel();
 
@@ -94,8 +65,6 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 
         pack();
         setLocationRelativeTo(null);
-
-        setVisible(true);
     }
 
     protected void initComponents() {

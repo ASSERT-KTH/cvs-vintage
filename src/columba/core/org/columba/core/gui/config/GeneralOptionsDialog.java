@@ -25,18 +25,7 @@ import java.awt.event.KeyEvent;
 import java.util.Locale;
 import java.util.Properties;
 
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
@@ -44,14 +33,11 @@ import org.columba.core.config.GuiItem;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.plugin.ConfigurationDialog;
 import org.columba.core.gui.themes.ThemeSwitcher;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
-import org.columba.core.gui.util.FontProperties;
-import org.columba.core.gui.util.FontSelectionDialog;
-import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.gui.util.*;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.pluginhandler.ConfigPluginHandler;
 import org.columba.core.pluginhandler.ThemePluginHandler;
 import org.columba.core.util.GlobalResourceLoader;
@@ -116,7 +102,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
             // get theme plugin-handler
             handler = (ThemePluginHandler) MainInterface.pluginManager.getHandler(
                     "org.columba.core.theme");
-        } catch (Exception ex) {
+        } catch (PluginHandlerNotFoundException ex) {
             ex.printStackTrace();
         }
 
@@ -124,7 +110,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
             // get config plugin-handler
             configHandler = (ConfigPluginHandler) MainInterface.pluginManager.getHandler(
                     "org.columba.core.config");
-        } catch (Exception ex) {
+        } catch (PluginHandlerNotFoundException ex) {
             ex.printStackTrace();
         }
 
@@ -490,7 +476,11 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
             lfButton.setEnabled(configID != null);
         } else if (action.equals("THEME_OPTIONS")) {
             String theme = (String) lfComboBox.getSelectedItem();
-            new ConfigurationDialog(configID);
+            try {
+                ConfigurationDialog dialog = new ConfigurationDialog(configID);
+                dialog.setVisible(true);
+            } catch (PluginHandlerNotFoundException phnfe) {
+            } catch (PluginLoadingFailedException plfe) {}
         }
 
         Object source = event.getSource();
