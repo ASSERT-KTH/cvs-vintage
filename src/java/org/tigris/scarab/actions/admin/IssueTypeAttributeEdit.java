@@ -52,7 +52,6 @@ import java.util.List;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.ParameterParser;
-import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 
@@ -70,7 +69,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: IssueTypeAttributeEdit.java,v 1.9 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: IssueTypeAttributeEdit.java,v 1.10 2003/03/28 01:22:41 jon Exp $
  */
 public class IssueTypeAttributeEdit extends RequireLoginFirstAction
 {
@@ -126,7 +125,7 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
             {
                optionId = key.substring(7);
                AttributeOption option = AttributeOptionManager
-                  .getInstance(new NumberKey(optionId));
+                  .getInstance(new Integer(optionId));
 
                RIssueTypeOption rio = issueType.getRIssueTypeOption(option);
                List rios = issueType.getRIssueTypeOptions(option.getAttribute(),

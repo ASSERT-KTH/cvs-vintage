@@ -52,7 +52,6 @@ import java.util.List;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.ParameterParser;
-import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 
@@ -73,7 +72,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.27 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.28 2003/03/28 01:23:34 jon Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -169,7 +168,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
             {
                optionId = key.substring(7);
                AttributeOption option = AttributeOptionManager
-                  .getInstance(new NumberKey(optionId));
+                  .getInstance(new Integer(optionId));
 
                RModuleOption rmo = module.getRModuleOption(option, issueType);
 //               List rmos = module.getRModuleOptions(option.getAttribute(),
