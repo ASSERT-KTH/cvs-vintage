@@ -21,6 +21,7 @@ package org.columba.mail.parser.text;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -52,14 +53,29 @@ public class HtmlParser {
 	private static final Pattern stripTagsPattern =
 		Pattern.compile("\\<(.|\\n)*?\\>", Pattern.CASE_INSENSITIVE);
 
+	private static String emailStr = 
+		"([\\w.\\-]*\\@([\\w\\-]+\\.*)+[a-zA-Z0-9]{2,})";
 	private static final Pattern emailPattern =
-		Pattern.compile("([\\w.\\-]*\\@([\\w\\-]+\\.*)+[a-zA-Z0-9]{2,})");
+		Pattern.compile(emailStr);
+	private static final Pattern emailPatternInclLink = 
+		Pattern.compile("<a( |\\n)*?href=(\\\")?(mailto:)" + emailStr +	"(.|\\n)*?</a>",
+			Pattern.CASE_INSENSITIVE);
 		
 	private static String urls = "(http|https|ftp)";
 	private static String letters = "\\w";
 	private static String gunk = "/#~:;.?+=&@!\\-%";
 	private static String punc = ".:?\\-";
-	private static String any = "${" + letters + "}${" + gunk + "}${" + punc + "}";		
+	private static String any = "${" + letters + "}${" + gunk + "}${" + punc + "}";
+	private static String urlStr = "\\b"
+									+ "("
+									+ urls
+									+ ":["
+									+ any
+									+ "]+?)(?=["
+									+ punc
+									+ "]*[^"
+									+ any
+									+ "]|$)";
 
 	/**
 	 *
@@ -78,7 +94,8 @@ public class HtmlParser {
 	 * )
 	 */	
 	private static final Pattern urlPattern =
-		Pattern.compile("\\b"
+		Pattern.compile(urlStr);
+	/*	Pattern.compile("\\b"
 	+ "("
 	+ urls
 	+ ":["
@@ -87,7 +104,10 @@ public class HtmlParser {
 	+ punc
 	+ "]*[^"
 	+ any
-	+ "]|$)");
+	+ "]|$)"); */
+	private static final Pattern urlPatternInclLink = 
+		Pattern.compile("<a( |\\n)*?href=(\\\")?" + urlStr +	"(.|\\n)*?</a>",
+			Pattern.CASE_INSENSITIVE);
 
 	// TODO: Add more special entities - e.g. accenture chars such as é
 
@@ -195,6 +215,9 @@ public class HtmlParser {
 	 * converted to newlines, this should be handled separately).
 	 * More preciesly it changes special entities like
 	 * amp, nbsp etc. to their real counter parts: &, space etc. 
+	 * <br>
+	 * This includes transformation of special (language specific) chars
+	 * such as the Danish æ ø å Æ Ø Å.
 	 * 	 
 	 * @param	s	input string
 	 * @return	output with special entities replaced with their
@@ -354,8 +377,6 @@ public class HtmlParser {
 		BufferedReader br = new BufferedReader(sr);
 		String ss = null;
 
-		// TODO: Extend handling of special entities as in restoreSpecialCharacters
-
 		/*
 		 * *20030618, karlpeder* Changed the way multiple spaces are 
 		 * replaced with &nbsp; to give better word wrap
@@ -382,6 +403,10 @@ public class HtmlParser {
 							break;
 						case '"' :
 							sb.append("&quot;");
+							i++;
+							break;
+						case '\'':
+							sb.append("&apos;");
 							i++;
 							break;
 						case ' ' :
@@ -470,6 +495,10 @@ public class HtmlParser {
 							break;
 						case '"' :
 							sb.append("&quot;");
+							i++;
+							break;
+						case '\'':
+							sb.append("&apos;");
 							i++;
 							break;
 						case ' ' :
@@ -564,6 +593,94 @@ public class HtmlParser {
 
 		return emailPattern.matcher(s).replaceAll("<A HREF=mailto:$1>$1</A>");
 	}
+	
+	/**
+	 * Transforms email-addresses into HTML just as
+	 * substituteEmailAddress(String), but tries to ignore email-addresses, 
+	 * which are already links, if the ignore links flag is set.
+	 * <br>
+	 * This extended functionality is necessary when parsing a text which
+	 * is already (partly) html.
+	 * <br>
+	 * TODO: Can this be done smarter, i.e. directly with reg. expr. without manual parsing??
+	 * 
+	 * @param 	s				input text
+	 * @param	ignoreLinks		if true link tags are ignored. This gives a
+	 * 							wrong result if some e-mail adresses are
+	 * 							already links (but uses reg. expr. directly,
+	 * 							and is therefore faster)
+	 * @return	text with email-adresses transformed to links
+	 */
+	public static String substituteEmailAddress(
+						String s, boolean ignoreLinks) {
+		if (ignoreLinks) {
+			// Do not take existing link tags into account
+			return substituteEmailAddress(s);
+		}
+		
+		ColumbaLogger.log.debug("Source:\n" + s);
+		
+		// initialisation
+		Matcher noLinkMatcher = emailPattern.matcher(s);
+		Matcher withLinkMatcher = emailPatternInclLink.matcher(s);
+		int pos = 0;				// current position in s
+		int length = s.length();
+		StringBuffer buf = new StringBuffer();
+		
+		while (pos < length) {
+			if (noLinkMatcher.find(pos)) {
+				// an email adress was found - check whether its already a link
+				int s1 = noLinkMatcher.start();
+				int e1 = noLinkMatcher.end();
+				boolean insertLink;
+                
+				if (withLinkMatcher.find(pos)) {
+					// found an email address with links - is it the same?
+					int s2 = withLinkMatcher.start();
+					int e2 = withLinkMatcher.end();
+					if ((s2 < s1) && (e2 > e1)) {
+						// same email adress - just append and continue
+						buf.append(s.substring(pos,e2));
+						pos = e2;
+						insertLink = false;	// already handled
+					} else {
+						// not the same
+						insertLink = true;
+					}
+					
+				} else {
+					// no match with link tags
+					insertLink = true;                    
+                    
+				}
+
+				// shall we insert a link?
+				if (insertLink) {
+					String email = s.substring(s1, e1);
+					String link  = 
+							"<a href=\"mailto:" + 
+							email + 
+							"\">" + 
+							email + 
+							"</a>";
+					buf.append(s.substring(pos,s1));
+					buf.append(link);
+					pos = e1;
+				}
+
+			} else {
+				// no more matches - append rest of string
+				buf.append(s.substring(pos));
+				pos = length;
+			}
+		}
+        
+        // return result
+        String result = buf.toString();
+        ColumbaLogger.log.debug("Result:\n" + result);
+        return result;
+
+	}
 
 	/**
 	 * parse text and transform every url
@@ -622,6 +739,93 @@ public class HtmlParser {
 		}
 		*/
 		return urlPattern.matcher(s).replaceAll("<A HREF=$1>$1</A>");
+	}
+
+	/**
+	 * Transforms urls into HTML just as substituteURL(String),
+	 * but tries to ignore urls, which are already links, if the ignore
+	 * links flag is set.
+	 * <br>
+	 * This extended functionality is necessary when parsing a text which
+	 * is already (partly) html.
+	 * <br>
+	 * TODO: Can this be done smarter, i.e. directly with reg. expr. without manual parsing??
+	 * 
+	 * @param 	s				input text
+	 * @param	ignoreLinks		if true link tags are ignored. This gives a
+	 * 							wrong result if some urls are already links
+	 * 							(but uses reg. expr. directly, and is
+	 * 							therefore faster)
+	 * @return	text with urls
+	 */
+	public static String substituteURL(String s, boolean ignoreLinks) {
+		if (ignoreLinks) {
+			// Do not take existing link tags into account
+			return substituteURL(s);
+		}
+		
+		ColumbaLogger.log.debug("Source:\n" + s);
+		
+		// initialisation
+		Matcher noLinkMatcher = urlPattern.matcher(s);
+		Matcher withLinkMatcher = urlPatternInclLink.matcher(s);
+		int pos = 0;				// current position in s
+		int length = s.length();
+		StringBuffer buf = new StringBuffer();
+		
+		while (pos < length) {
+			if (noLinkMatcher.find(pos)) {
+				// an url - check whether its already a link
+				int s1 = noLinkMatcher.start();
+				int e1 = noLinkMatcher.end();
+				boolean insertLink;
+                
+				if (withLinkMatcher.find(pos)) {
+					// found an url with links - is it the same?
+					int s2 = withLinkMatcher.start();
+					int e2 = withLinkMatcher.end();
+					if ((s2 < s1) && (e2 > e1)) {
+						// same url - just append and continue
+						buf.append(s.substring(pos,e2));
+						pos = e2;
+						insertLink = false;	// already handled
+					} else {
+						// not the same
+						insertLink = true;
+					}
+					
+				} else {
+					// no match with link tags
+					insertLink = true;                    
+                    
+				}
+
+				// shall we insert a link?
+				if (insertLink) {
+					String url = s.substring(s1, e1);
+					String link  = 
+							"<a href=\"" + 
+							url + 
+							"\">" + 
+							url + 
+							"</a>";
+					buf.append(s.substring(pos,s1));
+					buf.append(link);
+					pos = e1;
+				}
+
+			} else {
+				// no more matches - append rest of string
+				buf.append(s.substring(pos));
+				pos = length;
+			}
+		}
+        
+		// return result
+		String result = buf.toString();
+		ColumbaLogger.log.debug("Result:\n" + result);
+		return result;
+
 	}
 
 }

@@ -27,6 +27,7 @@ import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.io.StreamUtils;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
@@ -365,25 +366,35 @@ public class MessageBuilder {
 						boolean html) throws IOException {
 		String bodyText = createBodyText(message);
 
-		// The model type is set according to original message type. 
-		// Therefore tagstripping is no longer necessary
-		///*
-		// * *20030621, karlpeder* tags are stripped
-		// * if the message body part is html
-		// */
-		//MimeHeader header = message.getBodyPart().getHeader();
-		//if (header.getContentSubtype().equals("html")) {
-		//	bodyText = HtmlParser.htmlToText(bodyText);
-		//}
-
 		// Quote according model type (text/html)
 		String quotedBodyText;
 		if (html) {
-			// html
+			// html - quoting is done by inserting a div around the 
+			// message formattet with a blue line at left edge
+
+			// TODO: Implement quoting (font color, stylesheet, blockquote???)
 			
-			// TODO: Implement quoting for html messages
+			/*
+			String lcase = bodyText.toLowerCase();
+			StringBuffer buf = new StringBuffer();
+			String quoteStart = "<blockquote>";
+			String quoteEnd   = "</blockquote>";
 			
-			quotedBodyText = bodyText;
+			int pos = lcase.indexOf("<body");
+			pos = lcase.indexOf(">", pos) + 1;
+			buf.append(bodyText.substring(0, pos));
+			buf.append(quoteStart);
+			int end = lcase.indexOf("</body");
+			buf.append(bodyText.substring(pos, end));
+			buf.append(quoteEnd);
+			buf.append(bodyText.substring(end));
+
+			ColumbaLogger.log.debug("Source:\n" + bodyText);
+			ColumbaLogger.log.debug("Result:\n" + buf.toString());
+			
+			quotedBodyText = buf.toString();
+			*/
+			quotedBodyText = bodyText;			
 			
 		} else {
 			// plain text

@@ -277,6 +277,11 @@ public class MessageComposer {
 
 		StringBuffer buf = new StringBuffer();
 		String body  = model.getBodyText();
+		
+		// insert link tags for urls and email addresses
+		body = HtmlParser.substituteURL(body, false);
+		body = HtmlParser.substituteEmailAddress(body, false);
+		
 		String lcase = body.toLowerCase();	// for text comparisons
 		
 		// insert document type decl.
