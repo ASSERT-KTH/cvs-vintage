@@ -70,7 +70,7 @@ import org.tigris.scarab.om.ScarabUser;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.26 2002/09/15 15:37:19 jmcnally Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.27 2002/09/20 20:28:45 elicia Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
@@ -81,7 +81,7 @@ public abstract class ScarabTemplateAction extends TemplateAction
         "MoreInformationWasRequired";
     protected static final String NO_PERMISSION_MESSAGE = 
         "YouDoNotHavePermissionToAction";
-    protected static final String DEFAULT_MSG = "YourChangesWereSaved.";
+    protected static final String DEFAULT_MSG = "YourChangesWereSaved";
     protected static final String EMAIL_ERROR = "CouldNotSendEmail";
 
     /**

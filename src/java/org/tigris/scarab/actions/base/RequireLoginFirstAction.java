@@ -72,7 +72,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.38 2002/09/15 15:37:18 jmcnally Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.39 2002/09/20 20:28:45 elicia Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -83,7 +83,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         "MoreInformationWasRequired";
     protected static final String NO_PERMISSION_MESSAGE = 
         ScarabConstants.NO_PERMISSION_MESSAGE;
-    protected static final String DEFAULT_MSG = "YourChangesWereSaved.";
+    protected static final String DEFAULT_MSG = "YourChangesWereSaved";
     protected static final String EMAIL_ERROR = "CouldNotSendEmail";
 
     /**
