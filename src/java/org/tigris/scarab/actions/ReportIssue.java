@@ -102,7 +102,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.138 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.139 2002/09/17 23:41:27 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -287,65 +287,65 @@ public class ReportIssue extends RequireLoginFirstAction
         setRequiredFlags(issue, intake);
         if ( intake.isAllValid() ) 
         {
-        Hashtable values = new Hashtable();
-        SequencedHashMap avMap = issue.getModuleAttributeValuesMap();
-        Iterator i = avMap.iterator();
-
-        while (i.hasNext()) 
-        {
-            AttributeValue aval = (AttributeValue)avMap.get(i.next());
-            Group group = 
-                intake.get("AttributeValue", aval.getQueryKey(), false);
-            if (group != null) 
+            Hashtable values = new Hashtable();
+            SequencedHashMap avMap = issue.getModuleAttributeValuesMap();
+            Iterator i = avMap.iterator();
+    
+            while (i.hasNext()) 
             {
-                group.setProperties(aval);
-                
-                /*
-                 * FIXME! I think changes in the code have made this
-                 * hack unnecessary, but I do not have time to test
-                 * this theory atm. -jdm
-                 *
-                 * The next piece of code is for storing the values
-                 * of the attributes into the context (which is than
-                 * used by Wizard2.vm) This is necessary because it 
-                 * seems that group.setProperties(aval) does not 
-                 * store the values so they are never passed to the
-                 * next template (Wizard3.vm). This code fixes bug 
-                 * http://scarab.tigris.org/issues/show_bug.cgi?id=70
-                 */
-                String field = null;
-                if (aval.getAttribute().getAttributeType()
-                    .getValidationKey() != null)
+                AttributeValue aval = (AttributeValue)avMap.get(i.next());
+                Group group = 
+                    intake.get("AttributeValue", aval.getQueryKey(), false);
+                if (group != null) 
                 {
-                    field = aval.getAttribute().getAttributeType()
-                        .getValidationKey();
-                }
-                else if (aval.getAttribute().getAttributeType()
-                         .getName().equals(ScarabConstants.DROPDOWN_LIST))
-                {
-                    field = "OptionId";
-                }
-                else
-                {
-                    field = "Value";
-                }
-                Object key = group.get(field).getKey();
-                Object value = group.get(field).getValue();
-                if ((key != null) && (value != null)) 
-                {
-                    values.put(group.get(field).getKey()
-                                   , group.get(field).getValue());
+                    group.setProperties(aval);
+                    
+                    /*
+                     * FIXME! I think changes in the code have made this
+                     * hack unnecessary, but I do not have time to test
+                     * this theory atm. -jdm
+                     *
+                     * The next piece of code is for storing the values
+                     * of the attributes into the context (which is than
+                     * used by Wizard2.vm) This is necessary because it 
+                     * seems that group.setProperties(aval) does not 
+                     * store the values so they are never passed to the
+                     * next template (Wizard3.vm). This code fixes bug 
+                     * http://scarab.tigris.org/issues/show_bug.cgi?id=70
+                     */
+                    String field = null;
+                    if (aval.getAttribute().getAttributeType()
+                        .getValidationKey() != null)
+                    {
+                        field = aval.getAttribute().getAttributeType()
+                            .getValidationKey();
+                    }
+                    else if (aval.getAttribute().getAttributeType()
+                             .getName().equals(ScarabConstants.DROPDOWN_LIST))
+                    {
+                        field = "OptionId";
+                    }
+                    else
+                    {
+                        field = "Value";
+                    }
+                    Object key = group.get(field).getKey();
+                    Object value = group.get(field).getValue();
+                    if ((key != null) && (value != null)) 
+                    {
+                        values.put(group.get(field).getKey()
+                                       , group.get(field).getValue());
+                    }
                 }
             }
-        }
-        context.put("wizard1_intake", values);
-        // end code related to issue 70
-
-        success = true;
+            context.put("wizard1_intake", values);
+            // end code related to issue 70
+    
+            success = true;
         }
         return success;
     }
-    
+
     /**
      * handles entering an issue
      */
