@@ -1,4 +1,4 @@
-// $Id: AbstractSection.java,v 1.4 2003/06/30 21:59:33 linus Exp $
+// $Id: AbstractSection.java,v 1.5 2004/06/05 10:19:22 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -150,7 +150,7 @@ abstract public class AbstractSection
             second = line.indexOf(END2);
         }
         String s = null;
-        if ( (first > 0) && (second > 0) ) {
+        if ( (first >= 0) && (second >= 0) ) {
             first = first + new String(BEGIN).length();
             s = line.substring(first, second);
         }
