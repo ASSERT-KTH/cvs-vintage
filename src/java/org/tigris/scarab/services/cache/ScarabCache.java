@@ -51,13 +51,15 @@ import java.util.Map;
 
 import org.apache.fulcrum.TurbineServices;
 import org.apache.turbine.services.yaaficomponent.YaafiComponentService;
+import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.util.ScarabRuntimeException;
 
 /**
  * This class provides a simple Map cache that is available to the current
  * thread.
  * 
  * @author <a href="mailto:jmcnally@collab.net">John McNally </a>
- * @version $Id: ScarabCache.java,v 1.12 2004/11/15 09:23:58 dep4b Exp $
+ * @version $Id: ScarabCache.java,v 1.13 2004/12/02 21:13:19 dabbous Exp $
  */
 public class ScarabCache {
 
@@ -128,7 +130,8 @@ public class ScarabCache {
                         YaafiComponentService.SERVICE_NAME);
                 scarabCacheService = (ScarabCacheService) yaafi.lookup(ScarabCacheService.class.getName());
             } catch (Exception e) {
-                throw new RuntimeException("Problem looking up ScarabCacheService service", e);
+                throw new ScarabRuntimeException(
+                        L10NKeySet.ExceptionScarabCacheService, e);
             }
         }
         return scarabCacheService;

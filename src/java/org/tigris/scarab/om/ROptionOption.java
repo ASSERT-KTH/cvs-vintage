@@ -57,12 +57,13 @@ import org.apache.torque.util.Criteria;
 import org.apache.turbine.services.yaaficomponent.YaafiComponentService;
 import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.util.ScarabRuntimeException;
 
 /** 
   * This class represents the SCARAB_R_OPTION_OPTION table.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ROptionOption.java,v 1.17 2004/11/14 21:06:54 dep4b Exp $
+  * @version $Id: ROptionOption.java,v 1.18 2004/12/02 21:13:19 dabbous Exp $
   */
 public class ROptionOption 
     extends org.tigris.scarab.om.BaseROptionOption
@@ -249,7 +250,7 @@ public class ROptionOption
             return (GlobalCacheService) yaafi.lookup(GlobalCacheService.class.getName());
         } 
         catch (Exception e) {
-            throw new RuntimeException("Problem looking up GlobalCacheService service", e);
+            throw new ScarabRuntimeException(L10NKeySet.ExceptionLookupGlobalCache, e);
         }
     }        
 }

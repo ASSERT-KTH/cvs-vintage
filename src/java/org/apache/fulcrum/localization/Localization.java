@@ -85,7 +85,7 @@ import org.apache.turbine.services.yaaficomponent.YaafiComponentService;
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
  * @author <a href="mailto:leonardr@collab.net">Leonard Richardson</a>
- * @version $Id: Localization.java,v 1.3 2004/11/23 08:26:11 dep4b Exp $
+ * @version $Id: Localization.java,v 1.4 2004/12/02 21:13:19 dabbous Exp $
  */
 public abstract class Localization
 {
@@ -282,15 +282,17 @@ public abstract class Localization
      */
     protected static final LocalizationService getService()
     {
-        if (localizationService==null){
-        try{
-            YaafiComponentService yaafi = (YaafiComponentService) TurbineServices.getInstance().getService(
-                YaafiComponentService.SERVICE_NAME);
-            localizationService =  (LocalizationService) yaafi.lookup(LocalizationService.class.getName());
-        } 
-        catch (Exception e) {
-            throw new RuntimeException("Problem looking up localization service", e);
-        }
+        if (localizationService==null)
+        {
+            try{
+                YaafiComponentService yaafi = (YaafiComponentService) TurbineServices.getInstance().getService(
+                    YaafiComponentService.SERVICE_NAME);
+                localizationService =  (LocalizationService) yaafi.lookup(LocalizationService.class.getName());
+            } 
+            catch (Exception e) 
+            {
+                throw new RuntimeException("Problem looking up localization service: " + e.getMessage());
+            }
         }
         return localizationService;
     }
