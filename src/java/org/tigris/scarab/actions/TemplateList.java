@@ -82,15 +82,14 @@ import org.tigris.scarab.util.ScarabException;
  * This class is responsible for report managing enter issue templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.38 2003/02/01 21:59:08 jmcnally Exp $
+ * @version $Id: TemplateList.java,v 1.39 2003/02/01 22:46:04 jon Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
-
     /**
-        Creates new template.
-    */
-    public void doCreatenew( RunData data, TemplateContext context )
+     * Creates new template.
+     */
+    public void doCreatenew(RunData data, TemplateContext context)
          throws Exception
     {        
         IntakeTool intake = getIntakeTool(context);        
@@ -104,14 +103,14 @@ public class TemplateList extends RequireLoginFirstAction
         Group group = null;
         
         IssueTemplateInfo info = scarabR.getIssueTemplateInfo();
-        Group infoGroup = intake.get("IssueTemplateInfo", info.getQueryKey() );
-        Group issueGroup = intake.get("Issue", issue.getQueryKey() );
+        Group infoGroup = intake.get("IssueTemplateInfo", info.getQueryKey());
+        Group issueGroup = intake.get("Issue", issue.getQueryKey());
         issueGroup.setProperties(issue);
 
         Field name = infoGroup.get("Name");
         name.setRequired(true);
 
-        if (intake.isAllValid() ) 
+        if (intake.isAllValid()) 
         {
             // Save activitySet record
             ActivitySet activitySet = ActivitySetManager
@@ -123,7 +122,7 @@ public class TemplateList extends RequireLoginFirstAction
             {
                 aval = (AttributeValue)avMap.get(iter.next());
                 group = intake.get("AttributeValue", aval.getQueryKey(),false);
-                if ( group != null )
+                if (group != null)
                 {
                     aval.startActivitySet(activitySet);
                     group.setProperties(aval);
@@ -149,9 +148,9 @@ public class TemplateList extends RequireLoginFirstAction
     }
 
     /**
-        Edits template's attribute values.
-    */
-    public void doEditvalues( RunData data, TemplateContext context )
+     * Edits template's attribute values.
+     */
+    public void doEditvalues(RunData data, TemplateContext context)
          throws Exception
     {        
         IntakeTool intake = getIntakeTool(context);        
@@ -163,10 +162,10 @@ public class TemplateList extends RequireLoginFirstAction
         SequencedHashMap avMap = issue.getModuleAttributeValuesMap();
         AttributeValue aval = null;
         Group group = null;
-        Group issueGroup = intake.get("Issue", issue.getQueryKey() );
+        Group issueGroup = intake.get("Issue", issue.getQueryKey());
         issueGroup.setProperties(issue);
 
-        if (intake.isAllValid() ) 
+        if (intake.isAllValid()) 
         {
             // Save activitySet record
             ActivitySet activitySet = ActivitySetManager
@@ -178,7 +177,7 @@ public class TemplateList extends RequireLoginFirstAction
             {
                 aval = (AttributeValue)avMap.get(iter.next());
                 group = intake.get("AttributeValue", aval.getQueryKey(),false);
-                if ( group != null )
+                if (group != null)
                 {
                     String newValue = "";
                     String oldValue = "";
@@ -227,11 +226,10 @@ public class TemplateList extends RequireLoginFirstAction
         }
     }
 
-
     /**
-        Edits templates's basic information.
-    */
-    public void doEdittemplateinfo( RunData data, TemplateContext context )
+     * Edits templates's basic information.
+     */
+    public void doEdittemplateinfo(RunData data, TemplateContext context)
          throws Exception
     {        
         IntakeTool intake = getIntakeTool(context);        
@@ -241,11 +239,11 @@ public class TemplateList extends RequireLoginFirstAction
         Issue issue = scarabR.getIssueTemplate();
 
         IssueTemplateInfo info = scarabR.getIssueTemplateInfo();
-        Group infoGroup = intake.get("IssueTemplateInfo", info.getQueryKey() );
+        Group infoGroup = intake.get("IssueTemplateInfo", info.getQueryKey());
         Field name = infoGroup.get("Name");
         name.setRequired(true);
 
-        if (intake.isAllValid() ) 
+        if (intake.isAllValid()) 
         {
             // Save template info
             infoGroup.setProperties(info);
@@ -261,7 +259,7 @@ public class TemplateList extends RequireLoginFirstAction
         }
     }
 
-    public void doDeletetemplates( RunData data, TemplateContext context )
+    public void doDeletetemplates(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabLocalizationTool l10n = getLocalizationTool(context);
@@ -318,5 +316,4 @@ public class TemplateList extends RequireLoginFirstAction
         doEditvalues(data, context);
         doEdittemplateinfo(data, context);
     }
-
 }
