@@ -170,10 +170,34 @@
   <!-- *************************************-->
   <!-- This target call every default target of each xml file
   present in ${jdoc} directory -->
-  <target name="jdoc" description="Build carol java documentation (javadoc)">
+  <target name="jdoc" description="Build carol java documentation (javadoc)"> 
     <mkdir dir="${dist.jdoc}"/>
+    <condition property="interceptor.classes.presents">
+      <available classname="org.omg.PortableInterceptor.ORBInitInfo">
+	<classpath refid="externals.classpath"/>
+      </available>
+    </condition>
     <javadoc
       packagenames="org.objectweb.*"
+      excludepackagenames="org.objectweb.carol.rmi.iiop.interceptor.*"
+      defaultexcludes="yes"
+      destdir="${dist.jdoc}"
+      windowtitle="Objectweb Common Architecture for RMI ObjectWeb Layer API"
+      doctitle="Objectweb Common Architecture for RMI ObjectWeb Layer "
+      author="true" version="true" use="true">
+      <sourcepath>
+	<pathelement path="${src}"/>
+	<pathelement path="${build}/classes"/>
+      </sourcepath>
+      <classpath refid="externals.classpath"/>
+    </javadoc>
+    <antcall target="jdoc.iiop"/>
+  </target>
+  <!-- iiop java doc -->
+  <target name="jdoc.iiop" if="interceptor.classes.presents">
+    <mkdir dir="${dist.jdoc}"/>
+    <javadoc
+      packagenames="org.objectweb.carol.rmi.iiop.interceptor.*"
       destdir="${dist.jdoc}"
       windowtitle="Objectweb Common Architecture for RMI ObjectWeb Layer API"
       doctitle="Objectweb Common Architecture for RMI ObjectWeb Layer "

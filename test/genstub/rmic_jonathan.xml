@@ -42,14 +42,15 @@
   <!-- Compile Remote Interface Stub/Skel target for Jeremie-->
   <target name="compile.jeremie">
     <mkdir dir="${test.build.stub}/jeremie"/>
-    <java classname="${compiler.jeremie}" fork="true" failonerror="true" jvmargs="${jonathan.jvmarg}">
-            <arg value="-opt"/>
-            <arg value="-owext"/>
-            <arg value="-d"/>
-            <arg path="${test.build.stub}/jeremie"/>
-            <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicObject"/>
-            <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicMultiObject"/>
-            <classpath refid="jonathan.classpath"/>
+    <java classname="${compiler.jeremie}" fork="true" failonerror="true">
+      <jvmarg line="${jonathan.jvmarg}"/>
+      <arg value="-opt"/>
+      <arg value="-owext"/>
+      <arg value="-d"/>
+      <arg path="${test.build.stub}/jeremie"/>
+      <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicObject"/>
+      <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicMultiObject"/>
+      <classpath refid="jonathan.classpath"/>
     </java>
     <jar destfile="${test.dist.lib}/jeremie.jar" basedir="${test.build.stub}/jeremie" />
   </target>   
@@ -57,7 +58,8 @@
   <!-- Compile Remote Interface Stub/Skel target for David-->
   <target name="compile.david">
     <mkdir   dir="${test.build.stub}/david"/>
-    <java classname="${compiler.david}" fork="true" failonerror="true" jvmargs="${jonathan.jvmarg}">
+    <java classname="${compiler.david}" fork="true" failonerror="true">
+      <jvmarg line="${jonathan.jvmarg}"/>
       <arg value="-opt"/>
       <arg value="-iiop"/>
       <arg value="-d"/>
@@ -65,7 +67,8 @@
       <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicObject"/>
       <classpath refid="jonathan.classpath"/>
     </java>
-    <java classname="${compiler.david}" fork="true" failonerror="true" jvmargs="${jonathan.jvmarg}">
+    <java classname="${compiler.david}" fork="true" failonerror="true">
+      <jvmarg line="${jonathan.jvmarg}"/>
       <arg value="-opt"/>
       <arg value="-iiop"/>
       <arg value="-d"/>

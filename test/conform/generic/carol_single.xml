@@ -92,9 +92,14 @@
   <!-- test launching --> 
   <!-- those tests are launch with a parallele task -->
   <target name="launch.test.single">
+    
+    <condition property="is.jdk.1.4">
+      <equals arg1="${ant.java.version}" arg2="1.4"/>
+    </condition>
+
     <parallel>
       <!-- launch the name server -->
-      <java classname="${name.server.class.name}" fork="true" timeout="10000">
+      <java classname="${name.server.class.name}" fork="true" timeout="20000">
 	<jvmarg value="-Djava.security.policy=${test.ext}/java.policy"/>
 	<arg line="${name.server.option}"/>	
 	<classpath refid="test.name.server.classpath"/>
@@ -103,7 +108,7 @@
       <!-- launch the server -->
       <sequential>
 	<sleep seconds="3"/>
-	<java classname="org.objectweb.carol.jtests.conform.basic.server.BasicServer" fork="true" timeout="10000">
+	<java classname="org.objectweb.carol.jtests.conform.basic.server.BasicServer" fork="true" timeout="20000">
 	  <jvmarg line="${test.single.jvmargs}"/>
 	  <classpath refid="test.server.classpath"/>
 	</java>
@@ -126,13 +131,17 @@
 	    </fileset>
 	  </batchtest>
 	</junit>
-	<junitreport todir="${report.dir}">
-	  <fileset dir="${report.dir}">
-	    <include name="TEST-*.xml"/>
-	  </fileset>
-	  <report format="frames" todir="${report.dir}/html"/>
-	</junitreport>
       </sequential>
     </parallel>
+    <antcall  target="report"/>
   </target> 
+  
+  <target name="report" if="is.jdk.1.4" >
+    <junitreport todir="${report.dir}" >
+      <fileset dir="${report.dir}">
+	<include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${report.dir}/html"/>
+    </junitreport>
+  </target>
 </project>
