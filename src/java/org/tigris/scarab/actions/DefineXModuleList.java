@@ -74,18 +74,19 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class is responsible for building a list of Module/IssueTypes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefineXModuleList.java,v 1.18 2003/03/27 23:52:15 jon Exp $
+ * @version $Id: DefineXModuleList.java,v 1.19 2003/05/09 17:44:13 dlr Exp $
  */
 public class DefineXModuleList extends RequireLoginFirstAction
 {
-    public void doGotoquerywithinternallist(RunData data, TemplateContext context)
+    public void doGotoquerywithinternallist(RunData data,
+                                            TemplateContext context)
         throws Exception
     {
         String listId = data.getParameters().getString("pd_list_id");
         if (listId == null || listId.length()==0)
         {
             ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
             scarabR.setAlertMessage(
                 l10n.get("NoPredefinedXModuleListSelected"));
         }
