@@ -53,10 +53,10 @@ package org.tigris.scarab.tools.localization;
  * LocalizationKey instances are primarily used in conjunction with 
  * LocalizationMessage instances.
  * @see LocalizationMessage
- * @version $Id: LocalizationKey.java,v 1.1 2004/05/01 19:04:31 dabbous Exp $
+ * @version $Id: LocalizationKey.java,v 1.2 2004/10/11 08:52:46 dep4b Exp $
  * @author <a href="mailto:dabbous@saxess.com">Hussayn Dabbous</a>
  */
-public interface LocalizationKey
+public interface LocalizationKey extends Localizable
 {
   /** @return the <code>String<code> representation of the key */
   String toString();

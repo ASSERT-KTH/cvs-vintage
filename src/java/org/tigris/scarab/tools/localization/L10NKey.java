@@ -1,5 +1,7 @@
 package org.tigris.scarab.tools.localization;
 
+import org.tigris.scarab.tools.ScarabLocalizationTool;
+
 
 /* ================================================================
  * Copyright (c) 2000 CollabNet.  All rights reserved.
@@ -54,7 +56,7 @@ package org.tigris.scarab.tools.localization;
  * 
  * @author <a href="mailto:dabbous@saxess.com">Hussayn Dabbous</a>
  */
-public final class L10NKey implements LocalizationKey
+public final class L10NKey implements LocalizationKey, Localizable
 {
     
 
@@ -82,6 +84,26 @@ public final class L10NKey implements LocalizationKey
     public L10NKey(String theKey)
     {
         key = theKey;
+    }
+
+    /* 
+     * Return the string representation of this key for the DEFAULT_LOCALE
+     * @see org.tigris.scarab.tools.localization.Localizable#getMessage()
+     */
+    public String getMessage()
+    {
+        ScarabLocalizationTool l10n = new ScarabLocalizationTool();
+        l10n.init(ScarabLocalizationTool.DEFAULT_LOCALE);
+        return getMessage(l10n);
+    }
+
+    /*
+     * Return the string representation of this key for the goven locale.
+     * @see org.tigris.scarab.tools.localization.Localizable#getMessage(org.tigris.scarab.tools.ScarabLocalizationTool)
+     */
+    public String getMessage(ScarabLocalizationTool l10n)
+    {
+        return l10n.get(this);
     }
 
 }

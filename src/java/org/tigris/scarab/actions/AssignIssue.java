@@ -73,13 +73,14 @@ import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.L10NMessage;
 import org.tigris.scarab.util.EmailContext;
 
 /**
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.103 2004/10/07 16:06:46 dep4b Exp $
+ * @version $Id: AssignIssue.java,v 1.104 2004/10/11 08:52:46 dep4b Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -153,17 +154,18 @@ public class AssignIssue extends BaseModifyIssue
             }
             if (!isUserAttrRemoved)
             {
-                scarabR.setConfirmMessage(l10n.get(L10NKeySet.SelectedUsersWereAdded));
+                scarabR.setConfirmMessage(L10NKeySet.SelectedUsersWereAdded);
             }
             else 
             {
-                scarabR.setAlertMessage(l10n.format("UserAttributeRemoved",
-                                            msg.toString()));
+                L10NMessage l10nMsg = new L10NMessage(L10NKeySet.UserAttributeRemoved,
+                                                  msg.toString());
+                scarabR.setAlertMessage(l10nMsg);
             }
         }
         else
         {
-            scarabR.setAlertMessage(l10n.get(L10NKeySet.NoUsersSelected));
+            scarabR.setAlertMessage(L10NKeySet.NoUsersSelected);
         }
     }
         
@@ -195,11 +197,11 @@ public class AssignIssue extends BaseModifyIssue
                 item.add(su);
                 userList.remove(item);
             }
-            scarabR.setConfirmMessage(l10n.get(L10NKeySet.SelectedUsersWereRemoved));
+            scarabR.setConfirmMessage(L10NKeySet.SelectedUsersWereRemoved);
         }
         else 
         {
-            scarabR.setAlertMessage(l10n.get(L10NKeySet.NoUsersSelected));
+            scarabR.setAlertMessage(L10NKeySet.NoUsersSelected);
         }
     }
 
@@ -240,11 +242,11 @@ public class AssignIssue extends BaseModifyIssue
                 newItem.add(su);
                 userList.add(newItem);
             }
-            scarabR.setConfirmMessage(l10n.get(L10NKeySet.SelectedUsersWereModified));
+            scarabR.setConfirmMessage(L10NKeySet.SelectedUsersWereModified);
         }
         else 
         {
-            scarabR.setAlertMessage(l10n.get(L10NKeySet.NoUsersSelected));
+            scarabR.setAlertMessage(L10NKeySet.NoUsersSelected);
         }
     }
 
@@ -389,20 +391,21 @@ public class AssignIssue extends BaseModifyIssue
             }
             if (activitySet != null && !emailNotify(activitySet, issue))
             {
-                scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
+                scarabR.setAlertMessage(EMAIL_ERROR);
             }
         }
         if (isUserAttrRemoved)
         {
-            scarabR.setAlertMessage(l10n.format("UserAttributeRemoved",
-                                          msg.toString()));
+            L10NMessage l10nMsg = new L10NMessage(L10NKeySet.UserAttributeRemoved,
+                                                  msg.toString());
+            scarabR.setAlertMessage(l10nMsg);
         }
         
         Object alertMessage = scarabR.getAlertMessage();
         if (alertMessage == null || 
             alertMessage.toString().length() == 0)
         {
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            scarabR.setConfirmMessage(DEFAULT_MSG);
         }
     }
 
@@ -455,7 +458,7 @@ public class AssignIssue extends BaseModifyIssue
         }
         catch (NumberFormatException nfe) // new Integer(issueId) above could fail
         {
-            getScarabRequestTool(context).setAlertMessage("BadIntegerConversion");
+            getScarabRequestTool(context).setAlertMessage(L10NKeySet.BadIntegerConversion);
         }
     }
 

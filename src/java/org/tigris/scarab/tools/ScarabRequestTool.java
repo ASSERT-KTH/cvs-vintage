@@ -841,8 +841,7 @@ public class ScarabRequestTool
         {
             if (templateId == null || templateId.length() == 0)
             {
-                ScarabLocalizationTool l10n = getLocalizationTool();
-                setAlertMessage(l10n.get("NoTemplateId"));
+                setAlertMessage(L10NKeySet.NoTemplateId);
             }
             else 
             {
@@ -906,17 +905,17 @@ public class ScarabRequestTool
              }
              else
              {
-                reason = l10n.get("NotProvided");
+                reason = l10n.get(L10NKeySet.NotProvided);
              }
          } 
          // No reasons given for initial issue entry
          else if (activitySet.getTypeId().equals(ActivitySetTypePeer.CREATE_ISSUE__PK))
          {
-             reason = l10n.get("InitialEntry");
+             reason = l10n.get(L10NKeySet.InitialEntry);
          }
          else
          {
-             reason = l10n.get("NotProvided");
+             reason = l10n.get(L10NKeySet.NotProvided);
          }
          return reason;
     }
@@ -1229,7 +1228,6 @@ e.printStackTrace();
      */
     public String getNextEntryTemplate(IssueType issueType)
     {
-        ScarabLocalizationTool l10n = getLocalizationTool();
         RModuleIssueType rmit = null;
         String nextTemplate = null;
         try
@@ -1238,7 +1236,7 @@ e.printStackTrace();
             if (module == null) 
             {
                 nextTemplate = ((ScarabUser)data.getUser()).getHomePage();
-                setAlertMessage(l10n.get("ModuleIssueTypeRequiredToEnterIssue"));                
+                setAlertMessage(L10NKeySet.ModuleIssueTypeRequiredToEnterIssue);                
             }
             else 
             {            
@@ -1246,8 +1244,7 @@ e.printStackTrace();
                 if (rmit == null)
                 {
                     nextTemplate = ((ScarabUser)data.getUser()).getHomePage();
-                    setAlertMessage(
-                        l10n.get("ModuleIssueTypeRequiredToEnterIssue"));
+                    setAlertMessage(L10NKeySet.ModuleIssueTypeRequiredToEnterIssue);
                 }
                 else if (rmit.getDedupe() && !module
                          .getDedupeGroupsWithAttributes(issueType).isEmpty())
@@ -1264,7 +1261,7 @@ e.printStackTrace();
         {
             // system would be messed up, if we are here.  Punt
             nextTemplate = "Index.vm";
-            setAlertMessage(l10n.get("CannotDetermineIssueEntryTemplate"));
+            setAlertMessage(L10NKeySet.CannotDetermineIssueEntryTemplate);
             Log.get().error("CannotDetermineIssueEntryTemplate", e);
         }
         return nextTemplate;
@@ -1381,11 +1378,10 @@ e.printStackTrace();
      */
     public Issue getIssue(String id)
     {
-        ScarabLocalizationTool l10n = getLocalizationTool();
         Issue issue = null;
         if (id == null || id.length() == 0)
         {
-            setInfoMessage(l10n.get("EnterId"));
+            setInfoMessage(L10NKeySet.EnterId);
         }
         else
         {
@@ -1395,17 +1391,17 @@ e.printStackTrace();
                     .getIssueById(id, getCurrentModule().getCode());
                 if (issue == null)
                 {
-                    setAlertMessage(l10n.get("InvalidId"));
+                    setAlertMessage(L10NKeySet.InvalidId);
                 }
                 else if (issue.getDeleted())
                 {
-                    setAlertMessage(l10n.get("IssueMoved"));
+                    setAlertMessage(L10NKeySet.IssueMoved);
                     issue = null;
                 }
             }
             catch (Exception e)
             {
-                setAlertMessage(l10n.get("InvalidId"));
+                setAlertMessage(L10NKeySet.InvalidId);
             }
         }
         return issue;
@@ -1426,8 +1422,7 @@ e.printStackTrace();
         }
         catch (Exception e)
         {
-            ScarabLocalizationTool l10n = getLocalizationTool();
-            setAlertMessage(l10n.get("InvalidIssueId"));
+            setAlertMessage(L10NKeySet.InvalidIssueId);
         }
         return issue;
     }
@@ -1526,8 +1521,7 @@ e.printStackTrace();
                     Issue issue = IssueManager.getInstance((Long)i.next());
                     if (issue == null) 
                     {
-                        setAlertMessage(getLocalizationTool()
-                                        .get("SomeIssuePKsNotValid"));
+                        setAlertMessage(L10NKeySet.SomeIssuePKsNotValid);
                     }
                     else 
                     {
@@ -1643,7 +1637,7 @@ e.printStackTrace();
             MITList mitList = user.getCurrentMITList();
             if (mitList == null)
             {
-                setAlertMessage(getLocalizationTool().get("NoIssueTypeList"));
+                setAlertMessage(L10NKeySet.NoIssueTypeList);
                 Log.get().warn("Attempted to create a new IssueSearch and " +
                                " issue types had not been selected.");
             }
@@ -1651,7 +1645,7 @@ e.printStackTrace();
             {
                 issueSearch = 
                     IssueSearchFactory.INSTANCE.getInstance(mitList, user);
-                issueSearch.setLocale(getLocalizationTool().getLocale());
+                issueSearch.setLocale(getLocalizationTool().getPrimaryLocale());
             }
         }
         return issueSearch; 
@@ -1673,7 +1667,7 @@ e.printStackTrace();
 
         if (query == null)
         {
-            setInfoMessage(l10n.get("EnterQuery"));
+            setInfoMessage(L10NKeySet.EnterQuery);
             return null;
         }
         else
@@ -1740,7 +1734,7 @@ e.printStackTrace();
         if (!searchSuccess)
         {
             setAlertMessage(l10n.format("DateFormatPrompt",
-                                        l10n.get("ShortDateDisplay")));
+                    L10NKeySet.ShortDateDisplay));
             return null;
         }
         
@@ -1758,7 +1752,7 @@ e.printStackTrace();
         if (oldOptionId != null && oldOptionId.intValue() != 0
              && oldOptionId.equals(search.getStateChangeToOptionId())) 
         {
-            setAlertMessage(l10n.get("StateChangeOldEqualNew"));
+            setAlertMessage(L10NKeySet.StateChangeOldEqualNew);
             return null;
         }
         
@@ -1832,8 +1826,7 @@ e.printStackTrace();
         }
         catch (MaxConcurrentSearchException e)
         {
-            setAlertMessage(getLocalizationTool()
-                .get("ResourceLimitationsPreventedSearch"));
+            setAlertMessage(L10NKeySet.ResourceLimitationsPreventedSearch);
         }
         catch (ComplexQueryException e)
         {
@@ -1846,7 +1839,7 @@ e.printStackTrace();
         {
             matchingIssueIds = IteratorWithSize.EMPTY;
             L10NMessage l10nMessage = new L10NMessage(L10NKeySet.ErrorProcessingQuery,e);
-            setAlertMessage(l10nMessage.getMessage(getLocalizationTool()));
+            setAlertMessage(l10nMessage);
             Log.get().info("Error processing a query", e);
         }
         
@@ -1910,7 +1903,7 @@ e.printStackTrace();
                 queryResults = search.getQueryResults();
                 if (!queryResults.hasNext())
                 {
-                    setInfoMessage(l10n.get("NoMatchingIssues"));
+                    setInfoMessage(L10NKeySet.NoMatchingIssues);
                 }
             }
         }
@@ -2309,8 +2302,7 @@ e.printStackTrace();
         int pageNum, int resultsPerPage,  String sortColumn, 
         String sortPolarity, boolean includeCommitters)
         throws Exception
-    {
-        ScarabLocalizationTool l10n = getLocalizationTool();
+    {        
         String searchString = data.getParameters()
                .getString("searchString"); 
         String searchField = data.getParameters()
@@ -2318,7 +2310,7 @@ e.printStackTrace();
 
         if (searchField == null)
         {
-            setInfoMessage(l10n.get("SearchFieldPrompt"));
+            setInfoMessage(L10NKeySet.SearchFieldPrompt);
             return null ;
         }
         
@@ -2380,14 +2372,13 @@ e.printStackTrace();
      */
     public List getAttributeSearchResults()  throws Exception
     {
-        ScarabLocalizationTool l10n = getLocalizationTool();
         String searchString = data.getParameters()
                .getString("searchString"); 
         String searchField = data.getParameters()
                .getString("searchField"); 
         if (searchField == null)
         {
-            setInfoMessage(l10n.get("SearchFieldPrompt"));
+            setInfoMessage(L10NKeySet.SearchFieldPrompt);
             return null ;
         }
         
@@ -2944,11 +2935,22 @@ e.printStackTrace();
     
     /**
      * Set confirmation message.
+     * @deprecated
      * @param v  Value to assign to confirmMessage.
      */
     public void setConfirmMessage(Object  v) 
     {
         this.confirmMessage = v;
+    }
+
+    /**
+     * Set confirm message using Localizable localizable.
+     * @param v  Value to assign to alertMessage.
+     */
+    public void setConfirmMessage(Localizable localizable) 
+    {
+        ScarabLocalizationTool l10n = getLocalizationTool();
+        this.confirmMessage = localizable.getMessage(l10n);
     }
 
     /**
@@ -2962,11 +2964,22 @@ e.printStackTrace();
     
     /**
      * Set informational message.
+     * @deprecated
      * @param v  Value to assign to infoMessage.
      */
     public void setInfoMessage(Object  v) 
     {
         this.infoMessage = v;
+    }
+
+    /**
+     * Set alert message using Localizable localizable.
+     * @param v  Value to assign to alertMessage.
+     */
+    public void setInfoMessage(Localizable localizable) 
+    {
+        ScarabLocalizationTool l10n = getLocalizationTool();
+        this.infoMessage = localizable.getMessage(l10n);
     }
 
     /**
@@ -2980,11 +2993,22 @@ e.printStackTrace();
     
     /**
      * Set alert message.
+     * @deprecated
      * @param v  Value to assign to alertMessage.
      */
     public void setAlertMessage(Object  v) 
     {
         this.alertMessage = v;
+    }
+    
+    /**
+     * Set alert message using Localizable localizable.
+     * @param v  Value to assign to alertMessage.
+     */
+    public void setAlertMessage(Localizable localizable) 
+    {
+        ScarabLocalizationTool l10n = getLocalizationTool();
+        this.alertMessage = localizable.getMessage(l10n);
     }
 
     public IssueListIterator getIssueListIterator(IteratorWithSize iterator, 

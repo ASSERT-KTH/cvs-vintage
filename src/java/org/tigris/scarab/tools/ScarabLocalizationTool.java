@@ -149,7 +149,7 @@ public class ScarabLocalizationTool extends LocalizationTool
      * the Turbine default settings and the System Locale, 
      * if the Turbine Default Locale is not defined.
      */
-    public String get(LocalizationKey key)
+    public String get(Localizable key)
     {
         String theKey = key.toString();
         return this.get(theKey);
@@ -428,18 +428,6 @@ public class ScarabLocalizationTool extends LocalizationTool
     {
         String name = Localization.getDefaultBundleName();
         return (bundlePrefix == null) ? name : bundlePrefix + name;
-    }
-
-    /**
-     * @deprecated. Gets the current locale.
-     * Please use {@link #getPrimaryLocale()} instead.
-     * This method is obsolete 
-     * and should be completely removed from this class.
-     * @return The locale of highest preferrence.
-     */
-    public Locale getLocale()
-    {
-        return getPrimaryLocale();
     }
 
     /**
