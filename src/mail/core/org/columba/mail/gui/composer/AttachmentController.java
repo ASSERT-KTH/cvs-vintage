@@ -22,6 +22,7 @@ import org.columba.mail.util.MailResourceLoader;
 
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.StreamableMimePart;
 import org.columba.ristretto.message.io.FileSource;
 
@@ -36,6 +37,7 @@ import java.io.IOException;
 
 import java.net.FileNameMap;
 import java.net.URLConnection;
+import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -49,6 +51,8 @@ import javax.swing.event.ListSelectionListener;
  * @author redsolo
  */
 public class AttachmentController implements KeyListener, FocusOwner, ListSelectionListener {
+
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.composer");
 
     AttachmentView view;
 
@@ -178,29 +182,32 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
 
     /**
      * Attaches a file to the email as an attachment.
+     * This method accepts only files and not directories.
      * @param file the file to attach to the email.
      */
     public void addFileAttachment(File file) {
-        FileNameMap fileNameMap = URLConnection.getFileNameMap();
-        String mimetype = fileNameMap.getContentTypeFor(file.getName());
+        if (file.isFile()) {
+            FileNameMap fileNameMap = URLConnection.getFileNameMap();
+            String mimetype = fileNameMap.getContentTypeFor(file.getName());
 
-        if (mimetype == null) {
-            mimetype = "application/octet-stream"; //REALLY NEEDED?
-        }
+            if (mimetype == null) {
+                mimetype = "application/octet-stream"; //REALLY NEEDED?
+            }
 
-        MimeHeader header = new MimeHeader(mimetype.substring(0, mimetype.indexOf('/')), mimetype.substring(mimetype.indexOf('/') + 1));
+            MimeHeader header = new MimeHeader(mimetype.substring(0, mimetype.indexOf('/')), mimetype.substring(mimetype.indexOf('/') + 1));
 
-        header.putContentParameter("name", file.getName());
-        header.setContentDisposition("attachment");
-        header.putDispositionParameter("filename", file.getName());
-        header.setContentTransferEncoding("base64");
+            header.putContentParameter("name", file.getName());
+            header.setContentDisposition("attachment");
+            header.putDispositionParameter("filename", file.getName());
+            header.setContentTransferEncoding("base64");
 
-        try {
-            LocalMimePart mimePart = new LocalMimePart(header, new FileSource(file));
+            try {
+                LocalMimePart mimePart = new LocalMimePart(header, new FileSource(file));
 
-            view.add(mimePart);
-        } catch (IOException e) {
-            e.printStackTrace();
+                view.add(mimePart);
+            } catch (IOException e) {
+                LOG.warning("Could not add the file '" + file + "' to the attachment list, due to:" + e);
+            }
         }
     }
 

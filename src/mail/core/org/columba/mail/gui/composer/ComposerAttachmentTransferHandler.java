@@ -77,10 +77,7 @@ class ComposerAttachmentTransferHandler extends TransferHandler {
             List files = (List) data.getTransferData(DataFlavor.javaFileListFlavor);
             for (Iterator iterator = files.iterator(); iterator.hasNext();) {
 
-                File file = (File) iterator.next();
-                if (file.isFile()) {
-                    attachmentController.addFileAttachment(file);
-                }
+                attachmentController.addFileAttachment((File) iterator.next());
             }
             dataWasImported = true;
         } catch (UnsupportedFlavorException e) {
