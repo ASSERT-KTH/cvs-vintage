@@ -30,7 +30,6 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.ListCacheKey;
-import org.jboss.ejb.plugins.cmp.bridge.EntityBridgeInvocationHandler;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
@@ -39,13 +38,10 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCXmlFileLoader;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
-import org.jboss.proxy.Proxy;
 import org.jboss.util.CachePolicy;
 import org.jboss.util.FinderResults;
 import org.jboss.util.LRUCachePolicy;
 
-import java.lang.reflect.Constructor;
-import org.jboss.proxy.InvocationHandler;
 /**
  * JDBCStoreManager manages storage of persistence data into a table.
  * Other then loading the initial jbosscmp-jdbc.xml file this class
@@ -61,7 +57,7 @@ import org.jboss.proxy.InvocationHandler;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore {
 
@@ -70,8 +66,6 @@ public class JDBCStoreManager implements EntityPersistenceStore {
     * this value instead of 'null'
     */
    private static final Object NULL_VALUE = new Object();
-
-   private Constructor beanProxyConstructor;
 
    private EntityContainer container;
    private Logger log;
@@ -91,6 +85,7 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    private JDBCDestroyCommand destroyCommand;
 
    // Entity life cycle commands
+   private JDBCCreateBeanClassInstanceCommand createBeanClassInstanceCommand;
    private JDBCInitEntityCommand initEntityCommand;
    private JDBCFindEntityCommand findEntityCommand;
    private JDBCFindEntitiesCommand findEntitiesCommand;
@@ -194,6 +189,8 @@ public class JDBCStoreManager implements EntityPersistenceStore {
       destroyCommand = commandFactory.createDestroyCommand();
 
       /// Create ejb life cycle commands
+      createBeanClassInstanceCommand = 
+            commandFactory.createCreateBeanClassInstanceCommand();
       initEntityCommand = commandFactory.createInitEntityCommand();
       findEntityCommand = commandFactory.createFindEntityCommand();
       findEntitiesCommand = commandFactory.createFindEntitiesCommand();
@@ -243,27 +240,6 @@ public class JDBCStoreManager implements EntityPersistenceStore {
       if(readAheadCache != null) {
          readAheadCache.start();
       }
-
-      //
-      // get the bean proxy constructor
-      //
-
-      // use proxy generator to create one implementation
-      Class beanClass = container.getBeanClass();
-      Class[] classes = new Class[] { beanClass };
-      EntityBridgeInvocationHandler handler = new EntityBridgeInvocationHandler(
-            container, 
-            entityBridge,
-            beanClass);
-      ClassLoader classLoader = beanClass.getClassLoader();
-      Object o = Proxy.newProxyInstance(classLoader, classes, handler);
-
-      // steal the constructor from the object
-      beanProxyConstructor = 
-            o.getClass().getConstructor(new Class[]{InvocationHandler.class});
-      
-      // now create one to make sure everything is cool
-      createBeanClassInstance();
    }
 
    public void stop() {
@@ -296,18 +272,10 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    /**
     * Returns a new instance of a class which implemnts the bean class.
     *
-    * @see java.lang.Class#newInstance
     * @return the new instance
     */
    public Object createBeanClassInstance() throws Exception {
-      Class beanClass = container.getBeanClass();
-
-      EntityBridgeInvocationHandler handler = new EntityBridgeInvocationHandler(
-            container, 
-            entityBridge,
-            beanClass);
-
-      return beanProxyConstructor.newInstance(new Object[]{handler});
+      return createBeanClassInstanceCommand.execute();
    }
 
    public void initEntity(EntityEnterpriseContext ctx) {

@@ -17,7 +17,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class JDBCCommandFactory {
    private JDBCStoreManager manager;
@@ -92,11 +92,17 @@ public class JDBCCommandFactory {
       return new JDBCDestroyCommand(manager);
    }
    
+   // entity life cycle commands
+
+   public JDBCCreateBeanClassInstanceCommand 
+               createCreateBeanClassInstanceCommand() throws Exception {
+
+      return new JDBCCreateBeanClassInstanceCommand(manager);
+   }
+   
    public JDBCInitEntityCommand createInitEntityCommand() {
       return new JDBCInitEntityCommand(manager);
    }
-   
-   // entity persistence-related commands
    
    public JDBCFindEntityCommand createFindEntityCommand() {
       return new JDBCFindEntityCommand(manager);
