@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.17 $" />  
+     <property name="revision" value="$Revision: 1.18 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -171,7 +171,7 @@
           <comment>Ordering in RequestDispatcher.include</comment>
           <httpRequest 
               path="/test/servlet/params.RDInclude" 
-              method="POST">
+              method="GET">
              <param name="a" value="k" type="GET" />
              <param name="c" value="l" type="GET"/>
              <param name="a" value="m" type="GET"/>
@@ -186,6 +186,52 @@
           <responseMatch match="postInclude1:c = [ l ]" />
           <responseMatch 
         match="Calling RD.include for: params.Params/include2?a=c&amp;d=e"/>
+          <responseMatch match="/include2:a = [ c , k , m ]" />
+          <responseMatch match="/include2:d = [ e ]" />
+          <responseMatch match="/include2:c = [ l ]" />
+          <responseMatch match="postInclude2:a = [ k , m ]" />
+          <responseMatch match="postInclude2:c = [ l ]" />
+      </httpClient>
+    
+      <httpClient>
+          <comment>Ordering in RequestDispatcher.include, POST</comment>
+          <httpRequest 
+              path="/test/servlet/params.RDInclude" 
+              method="POST">
+             <param name="a" value="k" type="GET" />
+             <param name="c" value="l" type="GET"/>
+             <param name="a" value="m" type="POST"/>
+          </httpRequest>
+          <responseMatch match="before:a = [ k , m ]" />
+          <responseMatch match="before:c = [ l ]" />
+          <responseMatch 
+             match="Calling RD.include for: params.Params/include1?a=b"/>
+          <responseMatch match="/include1:a = [ b , k , m ]" />
+          <responseMatch match="/include1:c = [ l ]" />
+          <responseMatch match="postInclude1:a = [ k , m ]" />
+          <responseMatch match="postInclude1:c = [ l ]" />
+          <responseMatch 
+        match="Calling RD.include for: params.Params/include2?a=c&amp;d=e"/>
+          <responseMatch match="/include2:a = [ c , k , m ]" />
+          <responseMatch match="/include2:d = [ e ]" />
+          <responseMatch match="/include2:c = [ l ]" />
+          <responseMatch match="postInclude2:a = [ k , m ]" />
+          <responseMatch match="postInclude2:c = [ l ]" />
+      </httpClient>
+    
+      <httpClient>
+          <comment>RequestDispatcher - POST, include, params </comment>
+          <httpRequest 
+              path="/test/servlet/params.RDIncludeParam" 
+              method="POST">
+             <param name="a" value="k" type="GET" />
+             <param name="c" value="l" type="GET"/>
+             <param name="a" value="m" type="POST"/>
+          </httpRequest>
+          <responseMatch match="/include1:a = [ b , k , m ]" />
+          <responseMatch match="/include1:c = [ l ]" />
+          <responseMatch match="postInclude1:a = [ k , m ]" />
+          <responseMatch match="postInclude1:c = [ l ]" />
           <responseMatch match="/include2:a = [ c , k , m ]" />
           <responseMatch match="/include2:d = [ e ]" />
           <responseMatch match="/include2:c = [ l ]" />
