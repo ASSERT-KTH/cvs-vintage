@@ -260,11 +260,17 @@ public class Attribute
      * @return an <code>AttributeOption</code> value
      */
     public AttributeOption getAttributeOption(NumberKey pk)
+        throws Exception
     {
+        if (optionsMap == null)
+        {
+            buildOptionsMap();
+        }
         return (AttributeOption)optionsMap.get(pk);
     }
 
     public AttributeOption getAttributeOption(String optionID)
+        throws Exception
     {
         return getAttributeOption(new NumberKey(optionID));
     }
