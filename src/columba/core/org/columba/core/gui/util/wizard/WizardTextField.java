@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.util.wizard;
 
 import java.awt.GridBagConstraints;
@@ -32,6 +33,7 @@ public class WizardTextField extends JPanel {
 	private int y = 0;
 
 	public WizardTextField() {
+		setOpaque(false);
 		layout = new GridBagLayout();
 		setLayout(layout);
 	}
@@ -77,11 +79,9 @@ public class WizardTextField extends JPanel {
 		add(example);
 
 		y += 1;
-
 	}
 	
 	public void addEmptyExample() {
 		y += 2;
-		
 	}
 }
