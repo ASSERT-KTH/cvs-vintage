@@ -626,7 +626,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
        <option value="any">$l10n.Any</option>
     #end
     #if ($includeCommittedBy && $user.hasPermission($scarabG.Permission.ISSUE__ENTER, $modules))
-       <option value="created_by">$l10n.CommittedBy</option>
+       <option value="created_by">$l10n.CreatedBy</option>
     #end
      #foreach ($userAttr in $userAttrs)
       #if ($user.hasPermission($userAttr.Permission, $modules))

@@ -74,7 +74,7 @@
          >$l10n.Any</option>
       <option value="created_by"
          #if ($attrId.equals("created_by")) selected="selected" #end
-         >$l10n.CommittedBy</option>
+         >$l10n.CreatedBy</option>
      #foreach ($selectUserAttr in $userAttrs)
       #if ($user.hasPermission($selectUserAttr.Permission, $mitList.Modules))
         #set ($selected = false)
