@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JikesJavaCompiler.java,v 1.7 2001/01/14 20:45:40 larryi Exp $
- * $Revision: 1.7 $
- * $Date: 2001/01/14 20:45:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JikesJavaCompiler.java,v 1.8 2001/03/25 13:33:45 nacho Exp $
+ * $Revision: 1.8 $
+ * $Date: 2001/03/25 13:33:45 $
  *
  * ====================================================================
  *
@@ -77,10 +77,17 @@ public class JikesJavaCompiler implements JavaCompiler {
 
     static final int OUTPUT_BUFFER_SIZE = 1024;
     static final int BUFFER_SIZE = 512;
-
+    static final String q;
+    static {
+        if( System.getProperty("file.separator").equals("\\") ){
+            q="\"";
+        } else {
+            q="";
+        }
+    }
     /*
      * Contains extra classpath for Jikes use from Microsoft systems:
-     * Microsoft does not report it's internal classpath in 
+     * Microsoft does not report it's internal classpath in
      * System.getProperty(java.class.path) which results in jikes to fail.  
      * (Internal classpath with other JVMs contains for instance rt.jar).
      */
@@ -102,35 +109,35 @@ public class JikesJavaCompiler implements JavaCompiler {
 
     /**
      * Set the encoding (character set) of the source
-     */ 
+     */
     public void setEncoding(String encoding) {
       this.encoding = encoding;
     }
 
     /**
      * Set the class path for the compiler
-     */ 
+     */
     public void setClasspath(String classpath) {
       this.classpath = classpath;
     }
 
     /**
      * Set the output directory
-     */ 
+     */
     public void setOutputDir(String outdir) {
       this.outdir = outdir;
     }
 
     /**
-     * Set where you want the compiler output (messages) to go 
-     */ 
+     * Set where you want the compiler output (messages) to go
+     */
     public void setMsgOutput(OutputStream out) {
       this.out = out;
     }
 
     /**
-     * Set if you want debugging information in the class file 
-     */ 
+     * Set if you want debugging information in the class file
+     */
     public void setClassDebugInfo(boolean classDebugInfo) {
         this.classDebugInfo = classDebugInfo;
     }
@@ -149,35 +156,35 @@ public class JikesJavaCompiler implements JavaCompiler {
             MicrosoftClasspath = new StringBuffer(200);
             if (System.getProperty("java.vendor").startsWith("Microsoft")) {
                 //Get Microsoft classpath
-                String javaHome = System.getProperty("java.home") + 
+                String javaHome = System.getProperty("java.home") +
                                   "\\Packages";
                 File libDir=new File(javaHome);
                 String[] zips=libDir.list();
                 for(int i=0;i<zips.length;i++) {
                     MicrosoftClasspath.append(";" + javaHome + "\\" + zips[i]);
-                }                       
-            } 
+                }
+            }
         }
 
         String[] compilerCmd;
         if (classDebugInfo) {
 	    compilerCmd = new String[] {
-		"\"" + compilerPath + "\"",
+		q + compilerPath + q,
                 "-g",
 		//XXX - add encoding once Jikes supports it
-		"-classpath", "\"" + classpath + MicrosoftClasspath + "\"",
-		"-d", "\"" + outdir + "\"",
+		"-classpath", q + classpath + MicrosoftClasspath + q,
+		"-d", q + outdir + q,
 		"-nowarn",
-		"\"" + source + "\""
+		q + source + q
 	    };
         } else {
 	    compilerCmd = new String[] {
-		"\"" + compilerPath + "\"",
+		q + compilerPath + q,
 		//XXX - add encoding once Jikes supports it
-		"-classpath", "\"" + classpath + MicrosoftClasspath + "\"",
-		"-d", "\"" + outdir + "\"",
+		"-classpath", q + classpath + MicrosoftClasspath + q,
+		"-d", q + outdir + q,
 		"-nowarn",
-		"\"" + source + "\""
+		q + source + q
 	    };
 	}
 
