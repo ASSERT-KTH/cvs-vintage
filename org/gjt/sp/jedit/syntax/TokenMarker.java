@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.52 2003/04/28 01:35:28 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.53 2003/04/28 18:52:35 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -131,7 +131,7 @@ main_loop:	for(pos = line.offset; pos < lineLength; pos++)
 				rule = context.parent.inRule;
 				if(rule != null)
 				{
-					if(checkDelegateEnd(rule)) //XXX
+					if(checkDelegateEnd(rule))
 					{
 						seenWhitespaceEnd = true;
 						continue main_loop;
@@ -306,9 +306,12 @@ unwind:		while(context.parent != null)
 		}
 
 		// check escape rule of parent
-		rule = context.parent.rules.getEscapeRule();
-		if(rule != null && handleRule(rule,false))
-			return true;
+		if((rule.action & ParserRule.NO_ESCAPE) == 0)
+		{
+			ParserRule escape = context.parent.rules.getEscapeRule();
+			if(escape != null && handleRule(escape,false))
+				return true;
+		}
 
 		return false;
 	} //}}}
