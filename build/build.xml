@@ -257,7 +257,7 @@
     <target name="torque-init" depends="torque-expanded-check"
             unless="torque.is.expanded">
         <copy file="${src.lib.dir}/torque.zip" todir="${build.src.scarab}"/>
-        <unzip src="${build.src.scarab}/torque.zip" 
+        <unzip src="${build.src.scarab}/torque.zip"
                 dest="${build.src.scarab}" />
     </target>
 
@@ -278,21 +278,85 @@
               todir="${torque.dir.scarab}/schema"/>
         <copy file="${src.conf.dir}/torque.props" 
               overwrite="true" todir="${torque.dir.scarab}/config"/>
-        <ant antfile="torque.xml" 
+        <ant antfile="torque.xml"
                 dir="${torque.dir.scarab}" target="project-sql">
             <property name="torque.home" value="${torque.dir.scarab}"/>
         </ant>
 
-        <move file="${src.java.dir.scarab}/${project}-schema.sql" 
+        <move file="${src.java.dir.scarab}/${project}-schema.sql"
             tofile="${src.sql.dir}/mysql-${project}.sql"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Generate Data DTD from Torque                                      -->
+    <!-- ================================================================== -->
+    <target name="datadtd-check">
+        <echo message="checking: ${src.sql.dir}/${project}-data.dtd"/>
+        <uptodate property="datadtd.uptodate"
+            targetfile="${src.sql.dir}/${project}-data.dtd">
+            <srcfiles dir="${src.sql.dir}" includes="scarab-schema.xml"/>
+        </uptodate>
+    </target>
+
+    <target name="datadtd" depends="datadtd-check,compile"
+            unless="datadtd.uptodate">
+        <copy file="${src.sql.dir}/${project}-schema.xml"
+              todir="${torque.dir.scarab}/schema"/>
+        <copy file="${src.conf.dir}/torque.props"
+              overwrite="true" todir="${torque.dir.scarab}/config"/>
+        <ant antfile="torque.xml"
+                dir="${torque.dir.scarab}" target="project-datadtd">
+            <property name="torque.home" value="${torque.dir.scarab}"/>
+            <property name="databaseName" value="default"/>
+        </ant>
+
+        <move file="${src.java.dir.scarab}/${project}-data.dtd"
+            tofile="${src.sql.dir}/${project}-data.dtd"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Dump data from DB into xml                                         -->
+    <!-- ================================================================== -->
+
+    <target name="datadump" depends="compile">
+        <copy file="${src.sql.dir}/${project}-schema.xml"
+            todir="${torque.dir.scarab}/schema"/>
+        <copy file="${src.conf.dir}/torque.props" overwrite="true"
+            todir="${torque.dir.scarab}/config"/>
+        <ant antfile="torque.xml" dir="${torque.dir.scarab}"
+            target="project-datadump">
+            <property name="torque.home" value="${torque.dir.scarab}"/>
+        </ant>
+        <move file="${src.java.dir.scarab}/${project}-default-all-data.xml"
+            tofile="${src.sql.dir}/${project}-default-all-data.xml"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Generate SQL from data XML                                         -->
+    <!-- ================================================================== -->
+
+    <target name="datasql" depends="datadtd,compile">
+        <copy file="${src.sql.dir}/${project}-schema.xml"
+            todir="${torque.dir.scarab}/schema"/>
+        <copy file="${src.sql.dir}/${project}-data.xml"
+            todir="${torque.dir.scarab}/schema"/>
+        <copy file="${src.sql.dir}/${project}-data.dtd"
+            todir="${torque.dir.scarab}/schema"/>
+        <copy file="${src.conf.dir}/torque.props" overwrite="true"
+            todir="${torque.dir.scarab}/config"/>
+        <ant antfile="torque.xml" dir="${torque.dir.scarab}"
+            target="project-datasql">
+            <property name="torque.home" value="${torque.dir.scarab}"/>
+        </ant>
+        <move file="${src.java.dir.scarab}/${project}-data.sql"
+            tofile="${src.sql.dir}/${project}-data.sql"/>
     </target>
 
     <!-- ================================================================== -->
     <!-- Generate OM/Peer classes from Torque                               -->
     <!-- ================================================================== -->
     <target name="generated-check" depends="prepare-build.dir">
-        <echo message="checking: 
-            ${torque.dir.scarab}/report.scarab.om.generation"/>
+        <echo message="checking: ${torque.dir.scarab}/report.scarab.om.generation"/>
         <uptodate property="gen.uptodate"
             targetfile=
                "${torque.dir.scarab}/report.scarab.om.generation">
