@@ -987,7 +987,7 @@ public class IssueSearch
                 else
                 {
                     Criteria.Criterion c1 = crit.getNewCriterion("av"+index,
-                        AV_ISSUE_ID, "av" + index + "." + AV_ISSUE_ID + "=" + 
+                        AV_ISSUE_ID, "av" + index + '.' + AV_ISSUE_ID + '=' + 
                         IssuePeer.ISSUE_ID, Criteria.CUSTOM); 
                     crit.addAlias("av"+index, AttributeValuePeer.TABLE_NAME);
                     c2 = buildOptionCriterion(aval);
