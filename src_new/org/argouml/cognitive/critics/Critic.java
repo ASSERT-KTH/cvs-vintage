@@ -24,7 +24,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.10 2002/08/10 14:57:44 linus Exp $
+// $Id: Critic.java,v 1.11 2002/08/15 20:37:00 linus Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -121,7 +121,9 @@ public class Critic implements Poster, Serializable {
   /** The moreInfoURL of the ToDoItem produced. */
   private String _moreInfoURL;
 
-  /** Arguments used to configure the critic. */
+  /** Arguments used to configure the critic.
+   * TODO: Could this be removed from the main critics class?
+   */
   private Hashtable _args = new Hashtable();
 
   /** The icon representing the resource.
