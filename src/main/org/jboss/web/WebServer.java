@@ -21,6 +21,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Properties;
 
+import org.jboss.logging.log4j.JBossCategory;
+
 /**
  *   A mini webserver that should be embedded in another application. It can server any file that is available from
  *   classloaders that are registered with it, including class-files.
@@ -34,10 +36,11 @@ import java.util.Properties;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  *
  *   Revisions:
  *   
+ *   20010619 scott.stark: Use log4j JBossCategory to enable trace level msgs
  *   20010618 scott.stark: Fixed extraction of mime-type from file extension in getMimeType
  */
 public class WebServer
@@ -46,6 +49,7 @@ public class WebServer
     // Constants -----------------------------------------------------
 
     // Attributes ----------------------------------------------------
+   private static JBossCategory category = (JBossCategory)JBossCategory.getInstance(WebServer.class);
     /** The port the web server listens on */
     private int port = 8080;
     /** The map of class loaders registered with the web server */
@@ -311,11 +315,11 @@ public class WebServer
 
     protected void trace(String msg)
     {
-        System.out.println(msg);
+        category.trace(msg);
     }
     protected void debug(String msg)
     {
-        System.out.println(msg);
+        category.debug(msg);
     }
 
     protected void listen()
@@ -329,7 +333,7 @@ public class WebServer
     protected String getPath(BufferedReader in) throws IOException
     {
         String line = in.readLine();
-        debug("WebServer: raw path="+line);
+        trace("WebServer: raw path="+line);
         // Find the request path by parsing the 'REQUEST_TYPE filePath HTTP_VERSION' string
         int start = line.indexOf(' ')+1;
         int end = line.indexOf(' ', start+1);
