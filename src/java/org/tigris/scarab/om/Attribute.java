@@ -53,6 +53,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
+import com.workingdogs.village.Record;
 
 // Turbine classes
 import org.apache.torque.TorqueException;
@@ -75,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.65 2003/04/25 03:58:27 elicia Exp $
+  * @version $Id: Attribute.java,v 1.66 2003/05/05 23:54:07 elicia Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -716,7 +717,9 @@ public class Attribute
         Criteria crit = new Criteria();
         crit.add(RModuleAttributePeer.ATTRIBUTE_ID,
                  getAttributeId());
-        return (RModuleAttributePeer.doSelect(crit).size() > 0);
+        crit.addSelectColumn("count(" + RModuleAttributePeer.ATTRIBUTE_ID + ")");
+        return ((Record)IssuePeer.doSelectVillageRecords(crit).get(0))
+            .getValue(1).asInt() > 0;
     }
  
     /* 
@@ -728,7 +731,9 @@ public class Attribute
         Criteria crit = new Criteria();
         crit.add(RIssueTypeAttributePeer.ATTRIBUTE_ID,
                  getAttributeId());
-        return (RIssueTypeAttributePeer.doSelect(crit).size() > 0);
+        crit.addSelectColumn("count(" + RModuleAttributePeer.ATTRIBUTE_ID + ")");
+        return ((Record)IssuePeer.doSelectVillageRecords(crit).get(0))
+            .getValue(1).asInt() > 0;
     }
 
     /* 
