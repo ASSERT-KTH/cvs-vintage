@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.18 2001/08/23 18:44:02 jon Exp $
+$Id: README.txt,v 1.19 2001/08/24 18:10:03 jon Exp $
 
 Welcome to Scarab!
 
@@ -68,6 +68,8 @@ Within the /src directory are a number of sub directories...
 
 /src
     /conf       <-- Various configuration files for Scarab.
+                    TurbineResources.properties and Scarab.properties
+                    live here.
     /dtd        <-- Intake and Torque DTD's.
     /html       <-- Files which show up within the webapp directory.
     /images     <-- Copied to the webapp/images directory.
@@ -96,6 +98,7 @@ NOTE: If you modify this value after you have build the sandbox
       (instructions below), then you will need to re-run the ant
       script and restart the servlet engine in order for the changes to
       take effect.
+
 
 -------------------------------------------------------------------------
 | B U I L D I N G  T H E  S A N D B O X                                 |
@@ -139,11 +142,12 @@ NOTE: There may be problems building and running Scarab with Tomcat 3.2.1.
 | I N S T A L L I N G  T H E  D A T A B A S E                           |
 -------------------------------------------------------------------------
 
-To install the database schema's, right now, you will need to install
-MySQL and put the path to the mysqladmin and mysql binaries into your
-PATH environment variable. Once you have done that and you have MySQL up
-and running with no username/password for localhost access, you can
-simply execute the following:
+The process of building Scarab creates the .sql file that is used to
+describe the Scarab database schema. To install the database schema's,
+you will need to install MySQL and put the path to the mysqladmin and
+mysql binaries into your PATH environment variable. Once you have done
+that and you have MySQL up and running with no username/password for
+localhost access, you can simply execute the following:
 
 cd src/sql
 ./create-mysql-database.sh   <-- Unix
