@@ -1,4 +1,4 @@
-// $Id: TabTaggedValues.java,v 1.40 2005/01/30 20:47:49 linus Exp $
+// $Id: TabTaggedValues.java,v 1.41 2005/03/05 10:37:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -164,8 +164,6 @@ public class TabTaggedValues extends TabSpawnable
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         table.sizeColumnsToFit(0);
 
-        Vector tvs =
-            new Vector(Model.getFacade().getTaggedValuesCollection(target));
         tableModel.setTarget(target);
         if (target != null) {
             titleLabel.setText("Target: "

@@ -1,4 +1,4 @@
-// $Id: ToDoByDecision.java,v 1.12 2005/01/09 14:58:05 linus Exp $
+// $Id: ToDoByDecision.java,v 1.13 2005/03/05 10:37:21 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -134,7 +134,6 @@ public class ToDoByDecision extends ToDoPerspective
      */
     public void toDoItemsRemoved(ToDoListEvent tde) {
 	LOG.debug("toDoItemRemoved");
-	ToDoList list = Designer.theDesigner().getToDoList(); //source?
 	Vector items = tde.getToDoItems();
 	int nItems = items.size();
 	Object[] path = new Object[2];

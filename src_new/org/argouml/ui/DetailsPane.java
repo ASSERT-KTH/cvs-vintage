@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.50 2005/02/19 22:00:39 mvw Exp $
+// $Id: DetailsPane.java,v 1.51 2005/03/05 10:37:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -506,7 +506,7 @@ public class DetailsPane
         //should register a listener
         LOG.debug("double: "
                 + topLevelTabbedPane.getComponentAt(tab).toString());
-        JPanel t = (JPanel) tabPanelList.elementAt(tab);
+//        JPanel t = (JPanel) tabPanelList.elementAt(tab);
         // Currently this feature is disabled for ArgoUML.
 //        if (t instanceof TabSpawnable)
 //	    ((TabSpawnable) t).spawn();

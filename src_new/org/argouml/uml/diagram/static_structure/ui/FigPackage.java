@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.56 2005/01/30 20:48:00 linus Exp $
+// $Id: FigPackage.java,v 1.57 2005/03/05 10:37:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -479,7 +479,6 @@ public class FigPackage extends FigNodeModelElement {
      */
     public Vector getPopUpActions(MouseEvent me) {
         Vector popUpActions = super.getPopUpActions(me);
-        Object mpackage = /*(MPackage)*/ getOwner();
 
         // Show ...
         ArgoJMenu showMenu = new ArgoJMenu("menu.popup.show");

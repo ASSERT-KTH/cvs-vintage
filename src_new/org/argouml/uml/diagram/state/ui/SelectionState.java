@@ -1,4 +1,4 @@
-// $Id: SelectionState.java,v 1.24 2005/01/30 01:21:55 bobtarling Exp $
+// $Id: SelectionState.java,v 1.25 2005/03/05 10:37:21 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -158,9 +158,6 @@ public class SelectionState extends SelectionWButtons {
 	}
 	int cx = _content.getX(), cy = _content.getY();
 	int cw = _content.getWidth(), ch = _content.getHeight();
-	int newX = cx, newY = cy, newW = cw, newH = ch;
-	Dimension minSize = _content.getMinimumSize();
-	int minWidth = minSize.width, minHeight = minSize.height;
 	Object edgeType= null;
 	Object nodeType = Model.getMetaTypes().getState();
 
@@ -169,8 +166,6 @@ public class SelectionState extends SelectionWButtons {
 	if (!(gm instanceof MutableGraphModel)) {
 	    return;
 	}
-
-	MutableGraphModel mgm = (MutableGraphModel) gm;
 
 	int bx = mX, by = mY;
 	boolean reverse = false;

@@ -1,4 +1,4 @@
-// $Id: DnDExplorerTree.java,v 1.10 2005/01/29 16:28:47 linus Exp $
+// $Id: DnDExplorerTree.java,v 1.11 2005/03/05 10:37:22 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -237,11 +237,6 @@ public class DnDExplorerTree
 
                 Object destinationModelElement =
 		    ((DefaultMutableTreeNode) destinationPath
-		             .getLastPathComponent()).getUserObject();
-
-                //get old parent node
-                Object oldParentME =
-		    ((DefaultMutableTreeNode) selectedTreePath.getParentPath()
 		             .getLastPathComponent()).getUserObject();
 
                 int action = dropTargetDropEvent.getDropAction();

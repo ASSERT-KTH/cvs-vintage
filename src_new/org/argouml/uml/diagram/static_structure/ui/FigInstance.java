@@ -1,4 +1,4 @@
-// $Id: FigInstance.java,v 1.11 2005/01/10 16:24:15 mvw Exp $
+// $Id: FigInstance.java,v 1.12 2005/03/05 10:37:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,6 @@ public class FigInstance extends FigNodeModelElement {
      * Constructor
      */
     public FigInstance() {
-	Color handleColor = Globals.getPrefs().getHandleColor();
 
 	getNameFig().setUnderline(true);
 	getNameFig().setTextFilled(true);

@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.41 2005/02/18 21:20:42 mvw Exp $
+// $Id: FigComment.java,v 1.42 2005/03/05 10:37:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -292,7 +292,6 @@ public class FigComment
      * @see org.argouml.kernel.DelayedVChangeListener#delayedVetoableChange(java.beans.PropertyChangeEvent)
      */
     public void delayedVetoableChange(PropertyChangeEvent pce) {
-        Object src = pce.getSource();
         // update any text, colors, fonts, etc.
         renderingChanged();
         // update the relative sizes and positions of internel Figs

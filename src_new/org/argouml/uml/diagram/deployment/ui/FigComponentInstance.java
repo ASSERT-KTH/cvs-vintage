@@ -1,4 +1,4 @@
-// $Id: FigComponentInstance.java,v 1.35 2005/02/10 20:33:16 mvw Exp $
+// $Id: FigComponentInstance.java,v 1.36 2005/03/05 10:37:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigComponentInstance.java,v 1.35 2005/02/10 20:33:16 mvw Exp $
+// $Id: FigComponentInstance.java,v 1.36 2005/03/05 10:37:20 mvw Exp $
 package org.argouml.uml.diagram.deployment.ui;
 
 import java.awt.Color;
@@ -240,8 +240,7 @@ public class FigComponentInstance extends FigNodeModelElement {
                 else if (Model.getFacade().isANode(nodeOrComp)) {
                     super.setEnclosingFig(encloser);
                 }
-                Vector figures = getEnclosedFigs();
-
+                
                 if (getLayer() != null) {
                     // elementOrdering(figures);
                     List contents = getLayer().getContents();

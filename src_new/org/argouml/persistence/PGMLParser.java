@@ -1,4 +1,4 @@
-// $Id: PGMLParser.java,v 1.19 2005/02/16 23:47:10 bobtarling Exp $
+// $Id: PGMLParser.java,v 1.20 2005/03/05 10:37:22 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -262,14 +262,6 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
                 String elementName,
                 Attributes attrList)
     	throws SAXException {
-
-        String descr = null;
-        if (attrList != null) {
-            descr = attrList.getValue("description");
-        }
-        if (descr != null) {
-            descr = descr.trim();
-        }
 
         if (_elementState == NODE_STATE
                 && elementName.equals("group")

@@ -1,4 +1,4 @@
-// $Id: CrMultipleInheritance.java,v 1.14 2005/02/19 23:22:43 mvw Exp $
+// $Id: CrMultipleInheritance.java,v 1.15 2005/03/05 10:37:22 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,10 +73,6 @@ public class CrMultipleInheritance extends CrUML {
     public void initWizard(Wizard w) {
 	if (w instanceof WizCueCards) {
 	    WizCueCards wcc = (WizCueCards) w;
-	    ToDoItem item = (ToDoItem) w.getToDoItem();
-	    Object modelElement = /*(MModelElement)*/
-	        item.getOffenders().elementAt(0);
-	    String nameStr = Model.getFacade().getName(modelElement);
 	    wcc.addCue("Remove the generalization arrow to one of the base "
 		   + "classes of {name}.");
 	    wcc.addCue("Optionally, use the MInterface tool to create a new "

@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.33 2005/02/10 20:33:16 mvw Exp $
+// $Id: FigObject.java,v 1.34 2005/03/05 10:37:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -162,8 +162,6 @@ public class FigObject extends FigNodeModelElement {
      * @see org.tigris.gef.presentation.Fig#getMinimumSize()
      */
     public Dimension getMinimumSize() {
-        Dimension bigPortMin = getBigPort().getMinimumSize();
-        Dimension coverMin = cover.getMinimumSize();
         Dimension nameMin = getNameFig().getMinimumSize();
 
         int w = nameMin.width + 10;

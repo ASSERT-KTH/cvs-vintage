@@ -1,4 +1,4 @@
-// $Id: FigAssociationClass.java,v 1.6 2005/02/09 20:23:22 mvw Exp $
+// $Id: FigAssociationClass.java,v 1.7 2005/03/05 10:37:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -326,9 +326,6 @@ public class FigAssociationClass
                     oldMin = minIndex;
                     oldMax = minIndex + 2;
                 }
-                classFigIndex = layP.indexOf(fig);
-                myIndex = layP.indexOf(this);
-                edgeFigIndex = layP.indexOf(edge);
             }
             damageLock = false;
         }

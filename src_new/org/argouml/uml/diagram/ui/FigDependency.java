@@ -1,4 +1,4 @@
-// $Id: FigDependency.java,v 1.17 2005/01/30 20:47:53 linus Exp $
+// $Id: FigDependency.java,v 1.18 2005/03/05 10:37:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,7 +85,6 @@ public class FigDependency extends FigEdgeModelElement {
      * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
      */
     public void setOwner(Object own) {
-        Object oldOwner = getOwner();
         super.setOwner(own);
 
         if (Model.getFacade().isADependency(own)) {

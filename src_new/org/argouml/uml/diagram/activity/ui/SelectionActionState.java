@@ -1,4 +1,4 @@
-// $Id: SelectionActionState.java,v 1.25 2005/01/30 01:21:56 bobtarling Exp $
+// $Id: SelectionActionState.java,v 1.26 2005/03/05 10:37:22 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -221,8 +221,6 @@ public class SelectionActionState extends SelectionWButtons {
 	if (!(gm instanceof MutableGraphModel)) {
 	    return;
 	}
-
-	MutableGraphModel mgm = (MutableGraphModel) gm;
 
 	int bx = mX, by = mY;
 	boolean reverse = false;

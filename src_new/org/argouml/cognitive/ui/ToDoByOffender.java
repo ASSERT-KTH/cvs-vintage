@@ -1,4 +1,4 @@
-// $Id: ToDoByOffender.java,v 1.14 2005/02/16 23:47:12 bobtarling Exp $
+// $Id: ToDoByOffender.java,v 1.15 2005/03/05 10:37:21 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -139,7 +139,6 @@ public class ToDoByOffender extends ToDoPerspective
     public void toDoItemsRemoved(ToDoListEvent tde) {
         LOG.debug("toDoItemRemoved");
         Vector items = tde.getToDoItems();
-        int nItems = items.size();
         Object[] path = new Object[2];
         path[0] = Designer.theDesigner().getToDoList();
 

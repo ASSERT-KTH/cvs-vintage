@@ -1,4 +1,4 @@
-// $Id: FigFeature.java,v 1.9 2005/01/10 16:24:15 mvw Exp $
+// $Id: FigFeature.java,v 1.10 2005/03/05 10:37:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,7 +78,6 @@ public class FigFeature extends CompartmentFigText {
 
                 Fig fig = getGroup().getGroup();
                 if (fig instanceof FigClass) {
-                    FigClass classFig = (FigClass) fig;
                     FigGroup group = (FigGroup) getGroup();
                 // TODO: in future version of GEF call getFigs returning array
                     Object[] figs = group.getFigs().toArray();

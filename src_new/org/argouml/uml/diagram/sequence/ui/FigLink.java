@@ -1,4 +1,4 @@
-// $Id: FigLink.java,v 1.7 2005/01/30 20:48:32 linus Exp $
+// $Id: FigLink.java,v 1.8 2005/03/05 10:37:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,7 +92,6 @@ public abstract class FigLink
         if (computeRouteNumbersOfTime == 0) {
             computeRouteNumbersOfTime++;
         } else if (computeRouteNumbersOfTime == 1) {
-            FigPoly p = ((FigPoly) _fig);
             Point srcPt = getSourcePortFig().center();
             Point dstPt = getSourcePortFig().center();
             Point centerPnt =

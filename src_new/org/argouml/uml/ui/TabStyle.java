@@ -1,4 +1,4 @@
-// $Id: TabStyle.java,v 1.30 2005/01/30 20:47:48 linus Exp $
+// $Id: TabStyle.java,v 1.31 2005/03/05 10:37:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -288,8 +288,6 @@ public class TabStyle extends TabSpawnable implements TabFigTarget,
      */
     public Class panelClassFor(Class targetClass) {
         if (targetClass == null) return null;
-
-        String pack = "org.argouml.ui";
 
         StringNamespace classNs = (StringNamespace) StringNamespace
                 .parse(targetClass);

@@ -1,4 +1,4 @@
-// $Id: Init.java,v 1.40 2005/02/13 15:28:17 mvw Exp $
+// $Id: Init.java,v 1.41 2005/03/05 10:37:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -287,7 +287,6 @@ public class Init {
     public static void init() {
         Object modelCls = Model.getMetaTypes().getModel();
         Object packageCls = Model.getMetaTypes().getPackage();
-        Object modelElementCls = Model.getMetaTypes().getModelElement();
         Object classCls = Model.getMetaTypes().getUMLClass();
         Object classifierCls = Model.getMetaTypes().getClassifier();
         Object interfaceCls = Model.getMetaTypes().getInterface();

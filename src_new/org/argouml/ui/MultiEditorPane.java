@@ -1,4 +1,4 @@
-// $Id: MultiEditorPane.java,v 1.46 2005/02/16 21:06:47 mvw Exp $
+// $Id: MultiEditorPane.java,v 1.47 2005/03/05 10:37:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -289,7 +289,7 @@ public class MultiEditorPane
         //TODO: should fire its own event and ProjectBrowser
         //should register a listener
         LOG.debug("double: " + tabs.getComponentAt(tab).toString());
-        JPanel t = (JPanel) tabPanels.elementAt(tab);
+//        JPanel t = (JPanel) tabPanels.elementAt(tab);
         // Currently this feature is disabled for ArgoUML.
 //        if (t instanceof TabSpawnable)
 //             ((TabSpawnable) t).spawn();

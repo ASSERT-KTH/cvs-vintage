@@ -1,4 +1,4 @@
-// $Id: FigModel.java,v 1.14 2005/01/30 20:48:02 linus Exp $
+// $Id: FigModel.java,v 1.15 2005/03/05 10:37:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigModel.java,v 1.14 2005/01/30 20:48:02 linus Exp $
+// $Id: FigModel.java,v 1.15 2005/03/05 10:37:20 mvw Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -80,8 +80,6 @@ public class FigModel extends FigPackage {
 
         if (figPoly != null) {
             Rectangle oldBounds = getBounds();
-            Rectangle polyBounds = figPoly.getBounds();
-;
             figPoly.translate((x - oldBounds.x) + (w - oldBounds.width), y
                     - oldBounds.y);
 

@@ -1,4 +1,4 @@
-// $Id: ModeCreateLink.java,v 1.9 2005/01/30 20:48:32 linus Exp $
+// $Id: ModeCreateLink.java,v 1.10 2005/03/05 10:37:19 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import org.apache.log4j.Logger;
 
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
-import org.tigris.gef.base.LayerManager;
 import org.tigris.gef.base.ModeCreate;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.graph.MutableGraphModel;
@@ -168,7 +167,6 @@ public class ModeCreateLink extends ModeCreate {
         }
 
         int x = me.getX(), y = me.getY();
-        Class arcClass;
         Editor ce = Globals.curEditor();
         Fig f = ce.hit(x, y);
         if (f == null) {
@@ -212,7 +210,6 @@ public class ModeCreateLink extends ModeCreate {
                 // (determined by the GraphEdgeRenderer).
 
                 if (null != newEdge) {
-                    LayerManager lm = ce.getLayerManager();
                     ce.damaged(_newItem);
                     sourceFigNode.damage();
                     destFigNode.damage();

@@ -1,4 +1,4 @@
-// $Id: FigMNodeInstance.java,v 1.28 2005/02/10 20:33:16 mvw Exp $
+// $Id: FigMNodeInstance.java,v 1.29 2005/03/05 10:37:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -233,8 +233,6 @@ public class FigMNodeInstance extends FigNodeModelElement {
             }
         }
 
-        Vector figures = getEnclosedFigs();
-
         if (getLayer() != null) {
             // elementOrdering(figures);
             List contents = getLayer().getContents();
@@ -303,7 +301,6 @@ public class FigMNodeInstance extends FigNodeModelElement {
                 getNameFig().setText(nameStr.trim() + " : " + baseStr);
             }
         }
-        Dimension nameMin = getNameFig().getMinimumSize();
         Rectangle r = getBounds();
         setBounds(r.x, r.y, r.width, r.height);
     }

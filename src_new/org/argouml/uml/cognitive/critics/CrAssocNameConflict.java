@@ -1,4 +1,4 @@
-// $Id: CrAssocNameConflict.java,v 1.14 2005/02/19 23:22:37 mvw Exp $
+// $Id: CrAssocNameConflict.java,v 1.15 2005/03/05 10:37:20 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrAssocNameConflict.java,v 1.14 2005/02/19 23:22:37 mvw Exp $
+// $Id: CrAssocNameConflict.java,v 1.15 2005/03/05 10:37:20 mvw Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
@@ -60,7 +60,6 @@ public class CrAssocNameConflict extends CrUML {
 	if (!(Model.getFacade().isANamespace(dm))) return NO_PROBLEM;
 	Collection oes = Model.getFacade().getOwnedElements(dm);
 	if (oes == null) return NO_PROBLEM;
-	Vector namesSeen = new Vector();
 	Iterator elems = oes.iterator();
 	while (elems.hasNext()) {
 	    if (!Model.getFacade().isAAssociation(elems.next())) continue;

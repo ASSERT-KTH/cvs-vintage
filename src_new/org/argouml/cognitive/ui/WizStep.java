@@ -1,4 +1,4 @@
-// $Id: WizStep.java,v 1.31 2005/03/01 19:47:32 mvw Exp $
+// $Id: WizStep.java,v 1.32 2005/03/05 10:37:21 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -191,7 +191,8 @@ public class WizStep extends JPanel
             nextButton.setEnabled(w != null ? w.canGoNext() : false);
             finishButton.setEnabled(w != null ? w.canFinish() : false);
 
-            if (tdi.getMoreInfoURL() == null || "".equals(tdi.getMoreInfoURL())) {
+            if (tdi.getMoreInfoURL() == null 
+                    || "".equals(tdi.getMoreInfoURL())) {
                 helpButton.setEnabled(false);
             } else
                 helpButton.setEnabled(true);

@@ -1,4 +1,4 @@
-// $Id: FigBranchState.java,v 1.20 2005/01/10 16:24:18 mvw Exp $
+// $Id: FigBranchState.java,v 1.21 2005/03/05 10:37:22 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.diagram.state.ui;
 
 import java.awt.Color;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Iterator;
@@ -69,7 +68,6 @@ public class FigBranchState extends FigStateVertex {
         addFig(head);
 
         setBlinkPorts(false); //make port invisble unless mouse enters
-        Rectangle r = getBounds();
     }
 
     /** constructor
