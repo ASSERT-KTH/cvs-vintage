@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE book SYSTEM "../docbook-setup/docbookx/docbookx.dtd" [
-<!-- $Id: cookbook.in,v 1.8 2003/08/26 22:08:50 linus Exp $ -->
+<!-- $Id: cookbook.in,v 1.9 2003/09/25 05:55:44 linus Exp $ -->
 
 <!ENTITY building SYSTEM "building.xml">
 <!ENTITY requirements SYSTEM "require.xml">
@@ -496,7 +496,7 @@ Example:
 </para>
     </sect1>
 
-    <sect1>
+    <sect1 id="components_relationships">
       <title>Relationship of the components</title>
 
       <para>
