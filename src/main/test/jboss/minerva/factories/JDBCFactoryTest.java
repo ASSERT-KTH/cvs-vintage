@@ -13,10 +13,11 @@ import test.jboss.testdb.*;
  * Tests for JDBCConnectionFactory.  Currently a work in progress.  Uses the
  * test database driver so it doesn't rely on any particular real database
  * being present.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class JDBCFactoryTest extends TestCase {
+    private final static int MAX_ITERATIONS = 10000;
     ObjectPool pool;
     private JDBCConnectionFactory factory;
     private String url;
@@ -85,7 +86,6 @@ public class JDBCFactoryTest extends TestCase {
     }
 
     public void testCreateAndDelete() {
-        final int MAX_ITERATIONS = 10000;
         factory.setConnectURL(url);
         factory.poolStarted(pool, null);
         Vector v = new Vector();
@@ -108,5 +108,33 @@ public class JDBCFactoryTest extends TestCase {
             } catch(SQLException e) {
                 fail(e.getMessage());
             }
+        factory.poolClosing(pool);
+    }
+
+    public void testPrepareAndReturn() {
+        factory.setConnectURL(url);
+        factory.poolStarted(pool, null);
+        Vector v = new Vector();
+        HashMap map = new HashMap();
+        for(int i = 0; i<MAX_ITERATIONS; i++) {
+            Object o = factory.createObject();
+            v.addElement(o);
+        }
+        for(int i = v.size()-1; i >= 0; i--) {
+            Object src = v.elementAt(i);
+            assert(src != null);
+            Object trans = factory.prepareObject(src);
+            assert(trans instanceof ConnectionInPool);
+            map.put(trans, src);
+        }
+        assert(map.size() == v.size());
+        for(Iterator it = new HashSet(map.keySet()).iterator(); it.hasNext();) {
+            Object trans = it.next();
+            Object orig = factory.returnObject(trans);
+            assert(orig == map.get(trans));
+            map.remove(trans);
+        }
+        assert(map.size() == 0);
+        factory.poolClosing(pool);
     }
 }
