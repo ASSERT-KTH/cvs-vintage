@@ -8,15 +8,14 @@
     <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
     <classpathentry kind="src" path="/jmx"/>
     <classpathentry kind="src" path="/common"/>
-    <classpathentry kind="lib" path="/thirdparty/apache/log4j/lib/log4j.jar"/>
     <classpathentry kind="src" path="/system"/>
-    <classpathentry kind="lib" path="/thirdparty/gnu/getopt/lib/getopt.jar"/>
     <classpathentry kind="src" path="/j2ee"/>
     <classpathentry kind="src" path="/naming"/>
-    <classpathentry kind="lib" path="/thirdparty/oswego/concurrent/lib/concurrent.jar"/>
     <classpathentry kind="src" path="/transaction"/>
-    <classpathentry kind="lib" path="/thirdparty/apache/bcel/lib/bcel.jar"/>
-    <classpathentry kind="lib" path="/thirdparty/gjt/jpl-util/lib/jpl-pattern.jar"/>
-    <classpathentry kind="lib" path="/thirdparty/gjt/jpl-util/lib/jpl-util.jar"/>
+    <classpathentry kind="lib" path="/thirdparty/apache-bcel/lib/bcel.jar"/>
+    <classpathentry kind="lib" path="/thirdparty/gjt-jpl-util/lib/jpl-pattern.jar"/>
+    <classpathentry kind="lib" path="/thirdparty/gjt-jpl-util/lib/jpl-util.jar"/>
+    <classpathentry kind="lib" path="/thirdparty/apache-log4j/lib/log4j.jar"/>
+    <classpathentry kind="lib" path="/thirdparty/oswego-concurrent/lib/concurrent.jar"/>
     <classpathentry kind="output" path="output/eclipse-classes"/>
 </classpath>
