@@ -52,7 +52,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.90 2002/10/07 21:13:19 spestov Exp $
+ * @version $Id: jEdit.java,v 1.91 2002/10/22 18:26:46 spestov Exp $
  */
 public class jEdit
 {
@@ -2990,8 +2990,8 @@ public class jEdit
 		{
 			File snippet = snippets[i];
 
-			Macros.Handler handler = Macros.getHandlerForFileName(
-				snippet.getName());
+			Macros.Handler handler = Macros.getHandlerForPathName(
+				snippet.getPath());
 			if(handler == null)
 				continue;
 
