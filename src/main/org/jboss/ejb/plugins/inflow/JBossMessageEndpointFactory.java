@@ -50,7 +50,7 @@ import EDU.oswego.cs.dl.util.concurrent.SynchronizedInt;
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a> .
- * @version <tt>$Revision: 1.9 $</tt>
+ * @version <tt>$Revision: 1.10 $</tt>
  */
 public class JBossMessageEndpointFactory
    extends ServiceMBeanSupport
@@ -183,11 +183,13 @@ public class JBossMessageEndpointFactory
 
    public boolean isDeliveryTransacted(Method method) throws NoSuchMethodException
    {
+      boolean result = false;
       int transType = metaData.getMethodTransactionType(method.getName(), method.getParameterTypes(), InvocationType.LOCAL);
       if (transType == MetaData.TX_REQUIRED)
-         return true;
-      else
-         return false;
+         result = true;
+      if (trace)
+         log.trace("isDeliveryTransacted " + container.getBeanMetaData().getContainerObjectNameJndiName() + " method=" + method + " result=" + result);
+      return result;
    }
    
    // ServiceMBeanSupport overrides ---------------------------------
