@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/2000/REC-xhtml1-20000126/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+
+
+  <title>Scarab Help Index</title>
+ </head>
+
+ <body>
+<div class="docs" id="[file name w/o ext]"> 
+  <h2>Scarab Help Index</h2>
+  <div id="toc"> 
+    <h3><a href="/servlets/HelpTOC">Help index</a></h3>
+    <ul>
+      <li>Scarab Help 
+        <ul>
+          <li><a href="Introduction.vm">Introduction to Scarab</a></li>
+          <li><a href="UserIssues.vm">Managing Issues</a></li>
+          <li><a href="UserQuery.vm">Searching the database</a></li>
+          <li><a href="UserReports.vm">Reports</a></li>
+          <li><a href="ScarabBestPractices.vm">Best Practices</a></li>
+          <li><a href="ScarabFaq.vm">FAQ</a></li>
+          <li><a href="ScarabGlossary.vm">Glossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div class="courtesylinks"> 
+    <p><a href="#Top">Top</a> 
+  </div>
+</div>
+ </body>
+</html>
+
+
