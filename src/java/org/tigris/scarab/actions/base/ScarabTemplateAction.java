@@ -70,7 +70,7 @@ import org.tigris.scarab.om.ScarabUser;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.17 2002/02/20 23:50:41 elicia Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.18 2002/03/01 14:04:11 maartenc Exp $
  */
 public class ScarabTemplateAction extends TemplateAction
 {
@@ -243,7 +243,14 @@ public class ScarabTemplateAction extends TemplateAction
             {
                 cancelTargets.pop();
             }
-            data.setTarget("ArtifactTypeSelect.vm");
+            if (user.hasLoggedIn())
+            {
+                data.setTarget("ArtifactTypeSelect.vm");
+            }
+            else
+            {
+                data.setTarget("Login.vm");
+            }
             return;
         }
 
