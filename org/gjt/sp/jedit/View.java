@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.textarea.*;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.46 2003/01/28 03:07:19 spestov Exp $
+ * @version $Id: View.java,v 1.47 2003/01/29 01:08:36 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -497,7 +497,9 @@ public class View extends JFrame implements EBComponent
 		}
 		else
 		{
-			oldParent.add(splitPane);
+			this.splitPane = newSplitPane;
+
+			oldParent.add(newSplitPane);
 			oldParent.revalidate();
 
 			Dimension size;
