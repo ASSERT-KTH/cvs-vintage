@@ -1,4 +1,4 @@
-// $Id: ClassifierEndCodePiece.java,v 1.14 2004/08/03 09:28:00 linus Exp $
+// $Id: ClassifierEndCodePiece.java,v 1.15 2004/08/03 19:01:19 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import org.argouml.model.ModelFacade;
 /**
  * This code piece represents the end of a class or an interface.
  *
- * JavaRE - Code generation and reverse engineering for UML and Java´
+ * JavaRE - Code generation and reverse engineering for UML and Java
  *
  * @author Marcus Andersson andersson@users.sourceforge.net
  */
