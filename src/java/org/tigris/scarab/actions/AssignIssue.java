@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.18 2001/12/04 23:29:31 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.19 2001/12/06 00:35:42 elicia Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -300,6 +300,9 @@ public class AssignIssue extends RequireLoginFirstAction
 
             data.setMessage("Your changes to the assignee list" +
                             " have been saved.");
+            String template = data.getParameters()
+               .getString(ScarabConstants.NEXT_TEMPLATE);
+            setTemplate(data, template);            
         }
         else 
         {                
