@@ -44,131 +44,147 @@ import org.columba.ristretto.message.io.SourceInputStream;
  * The spam filter is executed on this message.
  * <p>
  * The Inbox filters are applied to the message.
- *
+ * 
  * @author fdietz
  */
 public class AddPOP3MessageCommand extends FolderCommand {
 
-    private MessageFolder inboxFolder;
+	private MessageFolder inboxFolder;
 
-    /**
-     * @param references command arguments
-     */
-    public AddPOP3MessageCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
+	/**
+	 * @param references
+	 *            command arguments
+	 */
+	public AddPOP3MessageCommand(DefaultCommandReference[] references) {
+		super(references);
+	}
 
-    /** {@inheritDoc} */
-    public void execute(WorkerStatusController worker) throws Exception {
-        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+	/** {@inheritDoc} */
+	public void execute(WorkerStatusController worker) throws Exception {
+		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-        inboxFolder = (MessageFolder) r[0].getFolder();
+		inboxFolder = (MessageFolder) r[0].getFolder();
 
-        ColumbaMessage message = (ColumbaMessage) r[0].getMessage();
+		ColumbaMessage message = (ColumbaMessage) r[0].getMessage();
 
-        // add message to folder
-        SourceInputStream messageStream = new SourceInputStream(message.getSource());
-        Object uid = inboxFolder.addMessage(messageStream, message.getHeader().getAttributes(),message.getHeader().getFlags());
-        messageStream.close();
-        inboxFolder.getFlags(uid).set(Flags.RECENT);
+		// add message to folder
+		SourceInputStream messageStream = new SourceInputStream(message
+				.getSource());
+		Object uid = inboxFolder.addMessage(messageStream, message.getHeader()
+				.getAttributes(), message.getHeader().getFlags());
+		messageStream.close();
+		inboxFolder.getFlags(uid).set(Flags.RECENT);
 
-        inboxFolder.getMessageFolderInfo().incRecent();
+		inboxFolder.getMessageFolderInfo().incRecent();
 
-        // apply spam filter
-        applySpamFilter(uid, worker);
+		// apply spam filter
+		boolean messageWasMoved = applySpamFilter(uid, worker);
 
-        // apply filter on message
-        applyFilters(uid);
-    }
+		if (messageWasMoved == false) {
+			// apply filter on message
+			applyFilters(uid);
+		}
+	}
 
-    /**
-     * Apply spam filter engine on message.
-     * <p>
-     * Message is marked as ham or spam.
-     *
-     * @param uid
-     *            message uid.
-     * @throws Exception
-     */
-    private void applySpamFilter(Object uid, WorkerStatusController worker)
-            throws Exception {
-        // message belongs to which account?
-        AccountItem item = CommandHelper.retrieveAccountItem(inboxFolder, uid);
+	/**
+	 * Apply spam filter engine on message.
+	 * <p>
+	 * Message is marked as ham or spam.
+	 * 
+	 * @param uid
+	 *            message uid.
+	 * @throws Exception
+	 */
+	private boolean applySpamFilter(Object uid, WorkerStatusController worker)
+			throws Exception {
+		// message belongs to which account?
+		AccountItem item = CommandHelper.retrieveAccountItem(inboxFolder, uid);
 
-        // if spam filter is not enabled -> return
-        if (!item.getSpamItem().isEnabled()) {
-            return;
-        }
+		// if spam filter is not enabled -> return
+		if (!item.getSpamItem().isEnabled()) {
+			return false;
+		}
 
-        // create reference
-        FolderCommandReference[] r = new FolderCommandReference[1];
-        r[0] = new FolderCommandReference(inboxFolder, new Object[] {uid});
+		// create reference
+		FolderCommandReference[] r = new FolderCommandReference[1];
+		r[0] = new FolderCommandReference(inboxFolder, new Object[]{uid});
 
-        // pass command to command scheduler
-        new ScoreMessageCommand(r).execute(worker);
+		// score message and mark as "spam" or "not spam"
+		new ScoreMessageCommand(r).execute(worker);
 
-        if (item.getSpamItem().isMoveIncomingJunkMessagesEnabled()) {
-            if (item.getSpamItem().isIncomingTrashSelected()) {
-                // move message to trash
-                MessageFolder trash = (MessageFolder) ((RootFolder) inboxFolder
-                        .getRootFolder()).getTrashFolder();
+		// is message marked as spam
+		boolean spam = ((Boolean) inboxFolder.getAttribute(uid, "columba.spam"))
+				.booleanValue();
+		if (spam == false)
+			return false;
 
-                // create reference
-                FolderCommandReference[] ref2 = new FolderCommandReference[2];
-                ref2[0] = new FolderCommandReference(inboxFolder,
-                        new Object[] {uid});
-                ref2[1] = new FolderCommandReference(trash);
+		if (item.getSpamItem().isMoveIncomingJunkMessagesEnabled()) {
+			if (item.getSpamItem().isIncomingTrashSelected()) {
+				// move message to trash
+				MessageFolder trash = (MessageFolder) ((RootFolder) inboxFolder
+						.getRootFolder()).getTrashFolder();
 
-                MainInterface.processor.addOp(new MoveMessageCommand(ref2));
-            } else {
-                // move message to user-configured folder (generally "Junk"
-                // folder)
-                AbstractFolder destFolder = MailInterface.treeModel
-                        .getFolder(item.getSpamItem().getMoveCustomFolder());
+				// create reference
+				FolderCommandReference[] ref2 = new FolderCommandReference[2];
+				ref2[0] = new FolderCommandReference(inboxFolder,
+						new Object[]{uid});
+				ref2[1] = new FolderCommandReference(trash);
 
-                // create reference
-                FolderCommandReference[] ref2 = new FolderCommandReference[2];
-                ref2[0] = new FolderCommandReference(inboxFolder,
-                        new Object[] {uid});
-                ref2[1] = new FolderCommandReference(destFolder);
-                MainInterface.processor.addOp(new MoveMessageCommand(ref2));
-            }
-        }
-    }
+				MainInterface.processor.addOp(new MoveMessageCommand(ref2));
+			} else {
+				// move message to user-configured folder (generally "Junk"
+				// folder)
+				AbstractFolder destFolder = MailInterface.treeModel
+						.getFolder(item.getSpamItem().getMoveCustomFolder());
 
-    /**
-     * Apply filters on new message.
-     *
-     * @param uid
-     *            message uid
-     */
-    private void applyFilters(Object uid) throws Exception {
-        FilterList list = inboxFolder.getFilterList();
+				// create reference
+				FolderCommandReference[] ref2 = new FolderCommandReference[2];
+				ref2[0] = new FolderCommandReference(inboxFolder,
+						new Object[]{uid});
+				ref2[1] = new FolderCommandReference(destFolder);
+				MainInterface.processor.addOp(new MoveMessageCommand(ref2));
 
-        for (int j = 0; j < list.count(); j++) {
-            Filter filter = list.get(j);
+			}
 
-            Object[] result = inboxFolder.searchMessages(filter,
-                    new Object[] {uid});
+			return true;
+		}
 
-            if (result.length != 0) {
-                CompoundCommand command = filter
-                        .getCommand(inboxFolder, result);
+		return false;
+	}
 
-                MainInterface.processor.addOp(command);
-            }
-        }
-    }
+	/**
+	 * Apply filters on new message.
+	 * 
+	 * @param uid
+	 *            message uid
+	 */
+	private void applyFilters(Object uid) throws Exception {
+		FilterList list = inboxFolder.getFilterList();
 
-    /** {@inheritDoc} */
-    public void updateGUI() throws Exception {
-        // update table viewer
-        TableModelChangedEvent ev = new TableModelChangedEvent(
-                TableModelChangedEvent.UPDATE, inboxFolder);
+		for (int j = 0; j < list.count(); j++) {
+			Filter filter = list.get(j);
 
-        TableUpdater.tableChanged(ev);
+			Object[] result = inboxFolder.searchMessages(filter,
+					new Object[]{uid});
 
-        // update tree viewer
-        MailInterface.treeModel.nodeChanged(inboxFolder);
-    }
+			if (result.length != 0) {
+				CompoundCommand command = filter
+						.getCommand(inboxFolder, result);
+
+				MainInterface.processor.addOp(command);
+			}
+		}
+	}
+
+	/** {@inheritDoc} */
+	public void updateGUI() throws Exception {
+		// update table viewer
+		TableModelChangedEvent ev = new TableModelChangedEvent(
+				TableModelChangedEvent.UPDATE, inboxFolder);
+
+		TableUpdater.tableChanged(ev);
+
+		// update tree viewer
+		MailInterface.treeModel.nodeChanged(inboxFolder);
+	}
 }

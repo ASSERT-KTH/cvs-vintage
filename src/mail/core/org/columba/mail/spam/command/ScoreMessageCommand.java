@@ -53,237 +53,212 @@ import org.macchiato.maps.ProbabilityMap;
  */
 public class ScoreMessageCommand extends FolderCommand {
 
-    protected FolderCommandAdapter adapter;
+	protected FolderCommandAdapter adapter;
 
-    private Object[] uids;
+	private Object[] uids;
 
-    private MessageFolder srcFolder;
+	private MessageFolder srcFolder;
 
-    private WorkerStatusController worker;
+	private WorkerStatusController worker;
 
-    private CloneStreamMaster master;
+	private CloneStreamMaster master;
 
-    /**
-     * @param references
-     */
-    public ScoreMessageCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
+	private MarkMessageCommand markAsSpamCommand;
+	private MarkMessageCommand markAsNotSpamCommand;
 
-    /**
-     * @param frame
-     * @param references
-     */
-    public ScoreMessageCommand(FrameMediator frame,
-            DefaultCommandReference[] references) {
-        super(frame, references);
-    }
+	/**
+	 * @param references
+	 */
+	public ScoreMessageCommand(DefaultCommandReference[] references) {
+		super(references);
+	}
 
-    public void updateGUI() throws Exception {
-        // get source references
-        FolderCommandReference[] r = adapter.getSourceFolderReferences();
+	/**
+	 * @param frame
+	 * @param references
+	 */
+	public ScoreMessageCommand(FrameMediator frame,
+			DefaultCommandReference[] references) {
+		super(frame, references);
+	}
 
-        // for every source references
-        TableModelChangedEvent ev;
+	public void updateGUI() throws Exception {
+		// update table
+		markAsSpamCommand.updateGUI();
+		markAsNotSpamCommand.updateGUI();
+	}
 
-        for (int i = 0; i < r.length; i++) {
-            // update table
-            ev = new TableModelChangedEvent(TableModelChangedEvent.UPDATE, r[i]
-                    .getFolder());
-            TableUpdater.tableChanged(ev);
+	/**
+	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
+		this.worker = worker;
 
-            // update treemodel
-            MailInterface.treeModel.nodeChanged(r[i].getFolder());
-        }
+		//		use wrapper class for easier handling of references array
+		adapter = new FolderCommandAdapter(
+				(FolderCommandReference[]) getReferences());
 
-        // get update reference
-        // -> only available if VirtualFolder is involved in operation
-        FolderCommandReference u = adapter.getUpdateReferences();
+		// get array of source references
+		FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
-        if (u != null) {
-            ev = new TableModelChangedEvent(TableModelChangedEvent.UPDATE, u
-                    .getFolder());
+		// for every folder
+		for (int i = 0; i < r.length; i++) {
+			// get array of message UIDs
+			uids = r[i].getUids();
 
-            TableUpdater.tableChanged(ev);
-            MailInterface.treeModel.nodeChanged(u.getFolder());
-        }
-    }
+			// get source folder
+			srcFolder = (MessageFolder) r[i].getFolder();
 
-    /**
-     * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
-        this.worker = worker;
+			// register for status events
+			((StatusObservableImpl) srcFolder.getObservable())
+					.setWorker(worker);
 
-        //		use wrapper class for easier handling of references array
-        adapter = new FolderCommandAdapter(
-                (FolderCommandReference[]) getReferences());
+			// update status message
+			worker.setDisplayText("Scoring messages ...");
+			worker.setProgressBarMaximum(uids.length);
 
-        // get array of source references
-        FolderCommandReference[] r = adapter.getSourceFolderReferences();
+			ArrayList spamList = new ArrayList();
+			ArrayList nonspamList = new ArrayList();
 
-        // for every folder
-        for (int i = 0; i < r.length; i++) {
-            // get array of message UIDs
-            uids = r[i].getUids();
+			for (int j = 0; j < uids.length; j++) {
+				try {
+					// apply additional handcrafted rules
+					ProbabilityMap map = applyAdditionalRules(j);
 
-            // get source folder
-            srcFolder = (MessageFolder) r[i].getFolder();
+					// score message
+					boolean result = scoreMessage(j, map);
 
-            // register for status events
-            ((StatusObservableImpl) srcFolder.getObservable())
-                    .setWorker(worker);
+					// if message is spam
+					if (result) {
+						// mark message as spam
+						
+						spamList.add(uids[j]);
+					} else {
+						// mark message as *not* spam
+						
+						nonspamList.add(uids[j]);
+					}
 
-            // update status message
-            worker.setDisplayText("Scoring messages ...");
-            worker.setProgressBarMaximum(uids.length);
+					// train message as spam or non spam
+					trainMessage(j, result);
 
-            ArrayList spamList = new ArrayList();
-            ArrayList nonspamList = new ArrayList();
+					worker.setProgressBarValue(j);
 
-            for (int j = 0; j < uids.length; j++) {
-                try {
-                    // apply additional handcrafted rules
-                    ProbabilityMap map = applyAdditionalRules(j);
+					if (worker.cancelled()) {
+						break;
+					}
+				} catch (IOException e) {
+					new ExceptionDialog(e);
 
-                    // score message
-                    boolean result = scoreMessage(j, map);
+					if (MainInterface.DEBUG) {
+						e.printStackTrace();
+					}
+				} catch (Exception e) {
+					new ExceptionDialog(e);
 
-                    // if message is spam
-                    if (result) {
-                        // mark message as spam
-                        /*
-                         * srcFolder.markMessage(new Object[] { uids[j]},
-                         * MarkMessageCommand.MARK_AS_SPAM);
-                         */
-                        spamList.add(uids[j]);
-                    } else {
-                        // mark message as *not* spam
-                        /*
-                         * srcFolder.markMessage(new Object[] { uids[j]},
-                         * MarkMessageCommand.MARK_AS_NOTSPAM);
-                         */
-                        nonspamList.add(uids[j]);
-                    }
+					if (MainInterface.DEBUG) {
+						e.printStackTrace();
+					}
+				}
+			}
 
-                    // train message as spam or non spam
-                    trainMessage(j, result);
+			// mark spam messages
+			if (spamList.size() != 0) {
+				FolderCommandReference[] ref = new FolderCommandReference[1];
+				ref[0] = new FolderCommandReference(srcFolder, spamList
+						.toArray());
+				ref[0].setMarkVariant(MarkMessageCommand.MARK_AS_SPAM);
+				markAsSpamCommand = new MarkMessageCommand(ref);
+				MainInterface.processor.addOp(markAsSpamCommand);
+			}
 
-                    worker.setProgressBarValue(j);
+			// mark non spam messages
+			if (nonspamList.size() != 0) {
+				FolderCommandReference[] ref = new FolderCommandReference[1];
+				ref[0] = new FolderCommandReference(srcFolder, nonspamList
+						.toArray());
+				ref[0].setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
+				markAsNotSpamCommand = new MarkMessageCommand(ref);
+				MainInterface.processor.addOp(markAsNotSpamCommand);
+			}
 
-                    if (worker.cancelled()) {
-                        break;
-                    }
-                } catch (IOException e) {
-                    new ExceptionDialog(e);
+		}
+	}
 
-                    if (MainInterface.DEBUG) {
-                        e.printStackTrace();
-                    }
-                } catch (Exception e) {
-                    new ExceptionDialog(e);
+	private ProbabilityMap applyAdditionalRules(int j) throws Exception {
+		ProbabilityMap map = RuleList.getInstance().getProbabilities(srcFolder,
+				uids[j]);
 
-                    if (MainInterface.DEBUG) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+		return map;
+	}
 
-            // mark spam messages
-            if (spamList.size() != 0) {
-                FolderCommandReference[] ref = new FolderCommandReference[1];
-                ref[0] = new FolderCommandReference(srcFolder, spamList
-                        .toArray());
-                ref[0].setMarkVariant(MarkMessageCommand.MARK_AS_SPAM);
-                MainInterface.processor.addOp(new MarkMessageCommand(ref));
-            }
+	/**
+	 * Score message, meaning decide if message is spam or non spam.
+	 * 
+	 * @param j
+	 *            message UID index
+	 * @return true, if spam. False, otherwise.
+	 * @throws Exception
+	 * @throws IOException
+	 */
+	private boolean scoreMessage(int j, ProbabilityMap map) throws Exception,
+			IOException {
+		// get inputstream of message body
+		InputStream istream = CommandHelper.getBodyPart(srcFolder, uids[j]);
 
-            // mark non spam messages
-            if (nonspamList.size() != 0) {
-                FolderCommandReference[] ref = new FolderCommandReference[1];
-                ref[0] = new FolderCommandReference(srcFolder, nonspamList
-                        .toArray());
-                ref[0].setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
-                MainInterface.processor.addOp(new MarkMessageCommand(ref));
-            }
+		// we are using this inpustream multiple times
+		master = new CloneStreamMaster(istream);
 
-        }
-    }
+		// calculate message score
+		boolean result = SpamController.getInstance().scoreMessage(
+				master.getClone(), map);
 
-    private ProbabilityMap applyAdditionalRules(int j) throws Exception {
-        ProbabilityMap map = RuleList.getInstance().getProbabilities(srcFolder,
-                uids[j]);
+		// message belongs to which account?
+		AccountItem item = CommandHelper
+				.retrieveAccountItem(srcFolder, uids[j]);
 
-        return map;
-    }
+		// check if sender is in user's addressbook
+		boolean checkAddressbook = item.getSpamItem().checkAddressbook();
 
-    /**
-     * Score message, meaning decide if message is spam or non spam.
-     * 
-     * @param j
-     *            message UID index
-     * @return true, if spam. False, otherwise.
-     * @throws Exception
-     * @throws IOException
-     */
-    private boolean scoreMessage(int j, ProbabilityMap map) throws Exception,
-            IOException {
-        // get inputstream of message body
-        InputStream istream = CommandHelper.getBodyPart(srcFolder, uids[j]);
+		boolean isInAddressbook = false;
+		if (checkAddressbook)
+			isInAddressbook = new AddressbookFilter().process(srcFolder,
+					uids[j]);
 
-        // we are using this inpustream multiple times
-        master = new CloneStreamMaster(istream);
+		// only go on if all values are true
+		result = result && checkAddressbook && !isInAddressbook;
+		istream.close();
+		return result;
+	}
 
-        // calculate message score
-        boolean result = SpamController.getInstance().scoreMessage(
-                master.getClone(), map);
+	/**
+	 * Train selected message as spam or non spam.
+	 * 
+	 * @param j
+	 *            UID index
+	 * @param result
+	 *            true, if spam. False, otherwise.
+	 * @throws Exception
+	 */
+	private void trainMessage(int j, boolean result) throws Exception {
+		// get headers
+		Header h = srcFolder.getHeaderFields(uids[j], Message.HEADERFIELDS);
 
-        // message belongs to which account?
-        AccountItem item = CommandHelper
-                .retrieveAccountItem(srcFolder, uids[j]);
+		// put headers in list
+		Enumeration enum = h.getKeys();
+		List list = new ArrayList();
 
-        // check if sender is in user's addressbook
-        boolean checkAddressbook = item.getSpamItem().checkAddressbook();
+		while (enum.hasMoreElements()) {
+			String key = (String) enum.nextElement();
+			list.add(h.get(key));
+		}
 
-        boolean isInAddressbook = false;
-        if (checkAddressbook)
-                isInAddressbook = new AddressbookFilter().process(srcFolder,
-                        uids[j]);
-
-        // only go on if all values are true
-        result = result && checkAddressbook && !isInAddressbook;
-        istream.close();
-        return result;
-    }
-
-    /**
-     * Train selected message as spam or non spam.
-     * 
-     * @param j
-     *            UID index
-     * @param result
-     *            true, if spam. False, otherwise.
-     * @throws Exception
-     */
-    private void trainMessage(int j, boolean result) throws Exception {
-        // get headers
-        Header h = srcFolder.getHeaderFields(uids[j], Message.HEADERFIELDS);
-
-        // put headers in list
-        Enumeration enum = h.getKeys();
-        List list = new ArrayList();
-
-        while (enum.hasMoreElements()) {
-            String key = (String) enum.nextElement();
-            list.add(h.get(key));
-        }
-
-        // add this message to frequency database
-        if (result)
-            SpamController.getInstance().trainMessageAsSpam(master.getClone(),
-                    list);
-        else
-            SpamController.getInstance().trainMessageAsHam(master.getClone(),
-                    list);
-    }
+		// add this message to frequency database
+		if (result)
+			SpamController.getInstance().trainMessageAsSpam(master.getClone(),
+					list);
+		else
+			SpamController.getInstance().trainMessageAsHam(master.getClone(),
+					list);
+	}
 }
