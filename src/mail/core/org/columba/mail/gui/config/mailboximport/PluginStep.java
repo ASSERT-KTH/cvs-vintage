@@ -101,6 +101,7 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
 
 	public void valueChanged(ListSelectionEvent event) {
                 //adjust description field
+    	
 	}
         
         public void prepareRendering() {}

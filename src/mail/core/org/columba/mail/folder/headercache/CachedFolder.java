@@ -18,6 +18,7 @@ package org.columba.mail.folder.headercache;
 import java.util.Enumeration;
 
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.Mutex;
 import org.columba.mail.coder.EncodedWordDecoder;
 import org.columba.mail.config.FolderItem;
@@ -142,8 +143,11 @@ public abstract class CachedFolder extends LocalFolder {
 			Object uid = uids[i];
 
 			// if message with uid doesn't exist -> skip
-			if (exists(uid, worker) == false)
+			if (exists(uid, worker) == false) {
+				ColumbaLogger.log.debug("uid " + uid + " doesn't exist");
+
 				continue;
+			}
 
 			// retrieve header of messages
 			ColumbaHeader h = getMessageHeader(uid, worker);
@@ -151,6 +155,8 @@ public abstract class CachedFolder extends LocalFolder {
 
 			if (expunged.equals(Boolean.TRUE)) {
 				// move message to trash if marked as expunged
+
+				ColumbaLogger.log.debug("removing uid=" + uid);
 
 				// remove message
 				removeMessage(uid, worker);
@@ -379,7 +385,12 @@ public abstract class CachedFolder extends LocalFolder {
 				}
 			case MarkMessageCommand.MARK_AS_EXPUNGED :
 				{
+					if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+						getMessageFolderInfo().decUnseen();
 
+					h.set("columba.flags.seen", Boolean.TRUE);
+					h.set("columba.flags.recent", Boolean.FALSE);
+					
 					h.set("columba.flags.expunged", Boolean.TRUE);
 					break;
 				}
@@ -421,7 +432,8 @@ public abstract class CachedFolder extends LocalFolder {
 	public void removeMessage(Object uid, WorkerStatusController worker)
 		throws Exception {
 		ColumbaHeader header = (ColumbaHeader) getMessageHeader(uid, worker);
-
+		if ( header == null ) return;
+		
 		if (header.get("columba.flags.seen").equals(Boolean.FALSE))
 			getMessageFolderInfo().decUnseen();
 		if (header.get("columba.flags.recent").equals(Boolean.TRUE))

@@ -54,8 +54,9 @@ public class SaveMessageCommand extends FolderCommand {
 
 	public void updateGUI() throws Exception {
 
+		// update the table
 		TableChangedEvent ev =
-			new TableChangedEvent(TableChangedEvent.ADD, folder, headerList);
+			new TableChangedEvent(TableChangedEvent.UPDATE, folder);
 
 		TableUpdater.tableChanged(ev);
 
@@ -79,12 +80,20 @@ public class SaveMessageCommand extends FolderCommand {
 
 		folder = (Folder) r[0].getFolder();
 
-		Object uid = folder.addMessage(message, worker);
+		// we can't use this addMessage-method here
+		// -> IMAP only supports sending sources
+		//Object uid = folder.addMessage(message, worker);
+		
+		Object uid = folder.addMessage(message.getSource(), worker);
+		
 
+		// IMAP can't give you this information
+		/*
 		// we need this to reflect changes in table-widget
 		// -> this is cached in folder anyway, so actually
 		// -> we just get the HeaderInterface from a Hashtable
 		headerList[0] = folder.getMessageHeader(uid, worker);
+		*/
 	}
 
 }

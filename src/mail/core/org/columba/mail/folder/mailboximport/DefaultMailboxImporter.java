@@ -60,38 +60,22 @@ public abstract class DefaultMailboxImporter {
 		return TYPE_FILE;
 	}
 
-	
-
-	public void importMailbox(WorkerStatusController worker) {
-		File[] listing = getSourceFiles();
-
-		for (int i = 0; i < listing.length; i++) {
-			if (worker.cancelled())
-				return;
-
-			try {
-
-				importMailboxFile(listing[i], worker, getDestinationFolder());
-			} catch (Exception ex) {
-				if (ex instanceof FileNotFoundException) {
-					NotifyDialog dialog = new NotifyDialog();
-					dialog.showDialog("Source File not found:");
-				} else {
-					ExceptionDialog dialog = new ExceptionDialog();
-					dialog.showDialog(ex);
-				}
-			}
-
-		}
-	}
-
 	/**
 	 * this method does all the import work
 	 */
 	public abstract void importMailboxFile(
 		File file,
-		WorkerStatusController worker, Folder destFolder)
+		WorkerStatusController worker,
+		Folder destFolder)
 		throws Exception;
+
+	/**
+	 * enter a description which will be shown
+	 * to the user here
+	 */
+	public String getDescription() {
+		return "";
+	}
 
 	/*********** intern methods (no need to overwrite these) ****************/
 
@@ -122,7 +106,7 @@ public abstract class DefaultMailboxImporter {
 		worker.setDisplayText("Importing messages...");
 
 		importMailbox(worker);
-		
+
 		if (getCount() == 0) {
 			NotifyDialog dialog = new NotifyDialog();
 			dialog.showDialog(
@@ -143,9 +127,46 @@ public abstract class DefaultMailboxImporter {
 	}
 
 	/**
+	 * 
+	 * Import all mailbox files in Columba
+	 * 
+	 * This method makes use of the importMailbox method
+	 * you have to overwrite and simple iterates over all
+	 * given files/directories
+	 * 
+	 * 
+	 * @param worker
+	 */
+	public void importMailbox(WorkerStatusController worker) {
+		File[] listing = getSourceFiles();
+
+		for (int i = 0; i < listing.length; i++) {
+			if (worker.cancelled())
+				return;
+
+			try {
+
+				importMailboxFile(listing[i], worker, getDestinationFolder());
+			} catch (Exception ex) {
+				if (ex instanceof FileNotFoundException) {
+					NotifyDialog dialog = new NotifyDialog();
+					dialog.showDialog("Source File not found:");
+				} else {
+					ExceptionDialog dialog = new ExceptionDialog();
+					dialog.showDialog(ex);
+				}
+			}
+
+		}
+	}
+
+	/**
 	 * use this method to save a message to the specified destination folder
 	 */
-	protected void saveMessage(String rawString, WorkerStatusController worker, Folder destFolder)
+	protected void saveMessage(
+		String rawString,
+		WorkerStatusController worker,
+		Folder destFolder)
 		throws Exception {
 		destFolder.addMessage(rawString, worker);
 

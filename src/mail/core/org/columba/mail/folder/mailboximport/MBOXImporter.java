@@ -21,21 +21,22 @@ import java.io.FileReader;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.util.MailResourceLoader;
 
-public class MBOXImporter extends DefaultMailboxImporter
-{
-	public MBOXImporter( Folder destinationFolder, File[] sourceFiles)
-	{
+public class MBOXImporter extends DefaultMailboxImporter {
+	public MBOXImporter(Folder destinationFolder, File[] sourceFiles) {
 		super(destinationFolder, sourceFiles);
 	}
 
-	public int getType()
-	{
+	public int getType() {
 		return TYPE_FILE;
 	}
-	
-	public void importMailboxFile(File file, WorkerStatusController worker, Folder destFolder) throws Exception
-	{
+
+	public void importMailboxFile(
+		File file,
+		WorkerStatusController worker,
+		Folder destFolder)
+		throws Exception {
 
 		boolean success = false;
 
@@ -45,28 +46,26 @@ public class MBOXImporter extends DefaultMailboxImporter
 		String str;
 
 		// parse line by line
-		while ((str = in.readLine()) != null)
-		{
+		while ((str = in.readLine()) != null) {
 			// if user cancelled task exit immediately			
-			if ( worker.cancelled() )
+			if (worker.cancelled())
 				return;
 
 			// if line doesn't start with "From" or line length is 0
 			//  -> save everything in StringBuffer
-			if (!str.startsWith("From ") || (str.length() == 0))
-			{
+			if (!str.startsWith("From ") || (str.length() == 0)) {
 				strbuf.append(str + "\n");
-			}
-			else
-			{
+			} else {
 
 				//  -> import message in Columba
 
-				if (strbuf.length() != 0)
-				{
+				if (strbuf.length() != 0) {
 					// found new message
 
-					saveMessage(strbuf.toString(), worker, getDestinationFolder());
+					saveMessage(
+						strbuf.toString(),
+						worker,
+						getDestinationFolder());
 
 					success = true;
 
@@ -78,11 +77,20 @@ public class MBOXImporter extends DefaultMailboxImporter
 		}
 
 		// save last message, because while loop aborted before being able to save message
-		if (success && (strbuf.length() > 0))
-		{
+		if (success && (strbuf.length() > 0)) {
 			saveMessage(strbuf.toString(), worker, getDestinationFolder());
 		}
 
 		in.close();
 	}
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.mailboximport.DefaultMailboxImporter#getDescription()
+	 */
+	public String getDescription() {
+		return MailResourceLoader.getString(
+			"dialog",
+			"mailboximport",
+			"MBOX_description");
+	}
+
 }
