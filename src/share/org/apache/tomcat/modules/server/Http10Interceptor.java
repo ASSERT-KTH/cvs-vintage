@@ -100,7 +100,7 @@ public class Http10Interceptor extends PoolTcpConnector
 {
     private int	timeout = 300000;	// 5 minutes as in Apache HTTPD server
     private String reportedname;
-    private boolean delaySocketClose = false;
+    private int socketCloseDelay=-1;
 
     public Http10Interceptor() {
 	super();
@@ -123,8 +123,8 @@ public class Http10Interceptor extends PoolTcpConnector
     reportedname = reportedName;
     }
 
-    public void setDelaySocketClose(boolean b) {
-        delaySocketClose=b;
+    public void setSocketCloseDelay( int d ) {
+        socketCloseDelay=d;
     }
 
     public void setProperty( String prop, String value ) {
@@ -175,6 +175,18 @@ public class Http10Interceptor extends PoolTcpConnector
 	    
 	    cm.service( reqA, resA );
 
+            // If unread input arrives after the shutdownInput() call
+            // below and before or during the socket.close(), an error
+            // may be reported to the client.  To help troubleshoot this
+            // type of error, provide a configurable delay to give the
+            // unread input time to arrive so it can be successfully read
+            // and discarded by shutdownInput().
+            if( socketCloseDelay >= 0 ) {
+                try {
+                    Thread.sleep(socketCloseDelay);
+                } catch (InterruptedException ie) { /* ignore */ }
+            }
+
         // XXX didn't honor HTTP/1.0 KeepAlive, should be fixed
 	    TcpConnection.shutdownInput( socket );
 	}
@@ -208,16 +220,6 @@ public class Http10Interceptor extends PoolTcpConnector
 	    log( "Error reading request, ignored", e, Log.ERROR);
 	} 
 	finally {
-            // When running tests against Tomcat on the same
-            // system, we may need to force a thread switch
-            // before closing the socket to give the other
-            // end of the connection a chance to run
-            if( delaySocketClose ) {
-                try {
-                    Thread.sleep(0);
-                } catch (InterruptedException ie) { /* ignore */ }
-            }
-
 	    // recycle kernel sockets ASAP
         // XXX didn't honor HTTP/1.0 KeepAlive, should be fixed
 	    try { if (socket != null) socket.close (); }
