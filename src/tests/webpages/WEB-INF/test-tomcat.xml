@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.35 $" />  
+     <property name="revision" value="$Revision: 1.36 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -25,61 +25,40 @@
      <property name="http.protocol" value="HTTP/1.0" />
 
      <property name="gdir" value="../Golden" />
-     <property name="g.jar"
-	       value="${tomcat.home}/lib/container/tomcat_util.jar" />
-  
-     <path id="cp.g" >
-       <pathelement location="${g.jar}"/>
-     </path>
 
      <!-- ==================== Tasks ==================== -->     
      <taskdef name="httpClient" 
-	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.HttpClient" />
      <taskdef name="httpRequest" 
-	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.HttpRequest" />
      <taskdef name="header" 
-	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.Header" />
      <taskdef name="param" 
-	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.Parameter" />
      <taskdef name="cookie" 
-	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.Cookie" />
      <taskdef name="body" 
-	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.Body" />
      <taskdef name="goldenMatch" 
-	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.matchers.GoldenMatch" />
      <taskdef name="headerMatch" 
-	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.matchers.HeaderMatch" />
      <taskdef name="httpStatusMatch" 
-	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.matchers.HttpStatusMatch" />
      <taskdef name="responseMatch" 
-	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.matchers.ResponseMatch" />
      <taskdef name="responseMatchFile" 
-	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.matchers.ResponseMatchFile" />
      <taskdef name="sessionMatch" 
-	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.matchers.SessionMatch" />
      <taskdef name="comment" 
-	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.Body" />
 
      <taskdef name="gtestDefaults"
-	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.TestDefaults" />
 
      <!-- Backward compatibility -->
      <taskdef name="gtest" 
-	      classpathRef="cp.g"
 	      classname="org.apache.tomcat.util.test.GTest" />
 
 
