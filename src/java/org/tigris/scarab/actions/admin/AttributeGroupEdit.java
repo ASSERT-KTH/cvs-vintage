@@ -88,7 +88,7 @@ import org.tigris.scarab.util.ScarabLocalizedTorqueException;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.60 2004/05/10 21:04:44 dabbous Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.61 2004/10/20 23:21:20 dep4b Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -106,7 +106,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         IssueType issueType = scarabR.getIssueType();
         if (issueType.isSystemDefined())
         {
-            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.SystemSpecifiedIssueType);
             return false;
         }
         String groupId = data.getParameters().getString("groupId");
@@ -116,19 +116,19 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                                     ag.getQueryKey(), false);
         if (!ag.isGlobal() && scarabR.getIssueType().getLocked())
         {
-            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.LockedIssueType);
             return false;
         }
         if (intake.isAllValid())
         {
             agGroup.setProperties(ag);
             ag.save();
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            scarabR.setConfirmMessage(DEFAULT_MSG);
         }
         else
         {
             success = false;
-            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+            scarabR.setAlertMessage(ERROR_MESSAGE);
         }
         return success;
     }
@@ -149,7 +149,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         // Check if issue type is system-defined, hence unmodifyable
         if (issueType.isSystemDefined())
         {
-            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.SystemSpecifiedIssueType);
             return false;
         }
 
@@ -162,7 +162,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         // Check if issue type is locked
         if (!ag.isGlobal() && issueType.getLocked())
         {
-            scarabR.setAlertMessage(l10n.get(L10NKeySet.LockedIssueType));
+            scarabR.setAlertMessage(L10NKeySet.LockedIssueType);
             return false;
         }
 
@@ -195,7 +195,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                     List options = module.getRModuleOptions(rma.getAttribute(), issueType, true);
                     if (options == null || options.isEmpty())
                     {
-                        scarabR.setAlertMessage(l10n.get("CannotRequireAttributeWithNoOptions"));
+                        scarabR.setAlertMessage(L10NKeySet.CannotRequireAttributeWithNoOptions);
                         success = false;
                     }
                 }
@@ -261,7 +261,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                                          raag.getQueryKey(), false);
                             raagGroup.setProperties(raag);
                             raag.save();
-                            scarabR.setConfirmMessage(l10n.get(l10nKey));
+                            scarabR.setConfirmMessage(l10nKey);
                         }
                         catch (ScarabLocalizedTorqueException slte) 
                         {
@@ -286,7 +286,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         else
         {
             success = false;
-            scarabR.setAlertMessage(l10n.get(L10NKeySet.MoreInformationWasRequired));
+            scarabR.setAlertMessage(L10NKeySet.MoreInformationWasRequired);
         }
         return success;
     }
@@ -310,12 +310,12 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         // Check if issue type is system defined, hence unmodifyable
         if (issueType.isSystemDefined())
         {
-            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.SystemSpecifiedIssueType);
             return false;
         }
         if (issueType.getIssueTypeId() == null)
         {
-            scarabR.setAlertMessage(l10n.get("IssueTypeNotFound"));
+            scarabR.setAlertMessage(L10NKeySet.IssueTypeNotFound);
             return false;
         }
 
@@ -349,7 +349,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                     if (options == null || options.isEmpty())
                     if (issueType.getRIssueTypeOptions(attr, true).isEmpty())
                     {
-                        scarabR.setAlertMessage(l10n.get("CannotRequireAttributeWithNoOptions"));
+                        scarabR.setAlertMessage(L10NKeySet.CannotRequireAttributeWithNoOptions);
                         success = false;
                     }
                 }
@@ -409,7 +409,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         IssueType issueType = scarabR.getIssueType();
         if (issueType.isSystemDefined())
         {
-            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.SystemSpecifiedIssueType);
             return;
         }
         ScarabUser user = (ScarabUser)data.getUser();
@@ -420,12 +420,12 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
 
         if (!user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+            scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
             return;
         }
         if (!ag.isGlobal() && issueType.getLocked())
         {
-            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.LockedIssueType);
             return;
         }
         ParameterParser params = data.getParameters();
@@ -465,7 +465,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         }
         if(!hasAttributes)
         {
-            scarabR.setAlertMessage(l10n.get("NoAttributeSelected"));
+            scarabR.setAlertMessage(L10NKeySet.NoAttributeSelected);
         }
 
         // If there are no attributes in any of the dedupe
@@ -506,7 +506,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         ScarabCache.clear();
         if(hasAttributes)
         {
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            scarabR.setConfirmMessage(DEFAULT_MSG);
         }
     }
 
@@ -522,7 +522,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         IssueType issueType = scarabR.getIssueType();
         if (issueType.isSystemDefined())
         {
-            scarabR.setAlertMessage(getLocalizationTool(context).get("SystemSpecifiedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.SystemSpecifiedIssueType);
             return;
         }
         Group attGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
@@ -543,14 +543,14 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         IssueType issueType = scarabR.getIssueType();
         if (issueType.isSystemDefined())
         {
-            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.SystemSpecifiedIssueType);
             return;
         }
         AttributeGroup ag = scarabR.getAttributeGroup();
 
         if (!ag.isGlobal() && scarabR.getIssueType().getLocked())
         {
-            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.LockedIssueType);
             return;
         }
         String[] attributeIds = data.getParameters()
@@ -558,7 +558,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
  
         if (attributeIds == null || attributeIds.length <= 0)
         { 
-            scarabR.setAlertMessage(l10n.get("SelectAttribute"));
+            scarabR.setAlertMessage(L10NKeySet.SelectAttribute);
             return;
         }
         else
@@ -575,13 +575,13 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 catch (TorqueException e)
                 {
                     alreadySubmited = true;
-                    scarabR.setAlertMessage(l10n.get("ResubmitError"));
+                    scarabR.setAlertMessage(L10NKeySet.ResubmitError);
                 }
             }
             doCancel(data, context);
             if (!alreadySubmited)
             {
-                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+                scarabR.setConfirmMessage(DEFAULT_MSG);
             }
         }
     }
