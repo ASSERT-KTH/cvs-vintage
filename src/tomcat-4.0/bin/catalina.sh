@@ -12,7 +12,7 @@
 #
 #   JAVA_HOME     Must point at your Java Development Kit installation.
 #
-# $Id: catalina.sh,v 1.6 2001/06/07 01:41:25 jon Exp $
+# $Id: catalina.sh,v 1.7 2001/06/28 01:49:50 jon Exp $
 # -----------------------------------------------------------------------------
 
 

@@ -13,7 +13,7 @@
 #   JAVA_HOME     
 #       Must point at your Java Development Kit installation.
 #
-# $Id: jasper.sh,v 1.6 2001/06/07 01:41:25 jon Exp $
+# $Id: jasper.sh,v 1.7 2001/06/28 01:49:51 jon Exp $
 # -----------------------------------------------------------------------------
 
 
