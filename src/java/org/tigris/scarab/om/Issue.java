@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.208 2002/11/05 23:59:41 elicia Exp $
+ * @version $Id: Issue.java,v 1.209 2002/11/06 21:00:27 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2499,7 +2499,7 @@ public class Issue
     }
 
     /**
-     * Assigns user to issue, and creates attachment to hold reason.
+     * Assigns user to issue.
      */
     public ActivitySet assignUser(ActivitySet activitySet, 
                                   ScarabUser assignee, ScarabUser assigner,
@@ -2519,11 +2519,11 @@ public class Issue
         }
 
         // Save activity record
-        String actionString = getAssignUserChangeString(assignee, assigner, 
+        String actionString = getAssignUserChangeString(assigner, assignee, 
                                                         attribute);
         ActivityManager
             .createUserActivity(this, attribute, activitySet,
-                                actionString, attachment,
+                                actionString, new Attachment(),
                                 assignee.getUserId(), null);
 
         // Save user attribute values
@@ -2589,7 +2589,7 @@ public class Issue
                                                            oldAttr, newAttr);
         ActivityManager
             .createUserActivity(this, newAttr, activitySet,
-                                actionString, attachment,
+                                actionString, new Attachment(),
                                 assignee.getUserId(), null);
 
         // Save assignee value
@@ -2628,10 +2628,6 @@ public class Issue
 
     /**
      * Used to delete a user attribute value.
-     * Returns a string array (size 2) that contains the messages 
-     * used for sending the emails (first string: message to person who
-     * is being deleted; second string: message to everyone else associated
-     * to the issue).
      */
     public ActivitySet deleteUser(ActivitySet activitySet, ScarabUser assignee, 
                                   ScarabUser assigner,
@@ -2652,8 +2648,9 @@ public class Issue
         // Save activity record
         String actionString = getUserDeleteString(assigner, assignee, attr);
         ActivityManager
-            .createUserActivity(attVal.getIssue(), attVal.getAttribute(), activitySet,
-                                actionString, attachment,
+            .createUserActivity(attVal.getIssue(), attVal.getAttribute(), 
+                                activitySet,
+                                actionString, new Attachment(),
                                 assignee.getUserId(), null);
 
         // Save assignee value
