@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.212 2004/02/22 20:00:52 spestov Exp $
+ * @version $Id: jEdit.java,v 1.213 2004/02/22 20:51:18 spestov Exp $
  */
 public class jEdit
 {
@@ -3170,6 +3170,12 @@ public class jEdit
 		}
 	} //}}}
 
+	//{{{ fontStyleToString() method
+	private static String fontStyleToString(int style)
+	{
+		return "ITALIC";
+	} //}}}
+
 	//{{{ initPLAF() method
 	/**
 	 * Sets the Swing look and feel.
@@ -3181,6 +3187,46 @@ public class jEdit
 			theme = new JEditMetalTheme();
 			theme.propertiesChanged();
 			MetalLookAndFeel.setCurrentTheme(theme);
+
+			Font primaryFont = jEdit.getFontProperty(
+				"metal.primary.font");
+			if(primaryFont != null)
+			{
+				String primaryFontString =
+					primaryFont.getFamily()
+					+ "-"
+					+ fontStyleToString(
+					primaryFont.getStyle())
+					+ "-"
+					+ primaryFont.getSize();
+
+				System.getProperties().put(
+					"swing.plaf.metal.controlFont",
+					primaryFontString);
+				System.getProperties().put(
+					"swing.plaf.metal.menuFont",
+					primaryFontString);
+			}
+
+			Font secondaryFont = jEdit.getFontProperty(
+				"metal.secondary.font");
+			if(secondaryFont != null)
+			{
+				String secondaryFontString =
+					secondaryFont.getFamily()
+					+ "-"
+					+ fontStyleToString(
+					secondaryFont.getStyle())
+					+ "-"
+					+ secondaryFont.getSize();
+
+				System.getProperties().put(
+					"swing.plaf.metal.systemFont",
+					secondaryFontString);
+				System.getProperties().put(
+					"swing.plaf.metal.userFont",
+					secondaryFontString);
+			}
 		}
 
 		try
