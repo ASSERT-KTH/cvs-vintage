@@ -219,7 +219,8 @@ public class JNIConnectionHandler extends BaseInterceptor implements JNIEndpoint
 				   " was loaded from the lib path");
 		return;
 	    } catch(UnsatisfiedLinkError usl) {
-		System.err.println("Failed to loadLibrary() " + lib);
+		System.err.println("loadLibrary(" + lib +
+				   ") didn't find the library, try with full path");
 		if( debug > 0 )
 		    usl.printStackTrace();
 	    }
