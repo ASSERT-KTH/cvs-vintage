@@ -133,10 +133,15 @@
 	  <menuitem action="CreateVFolderOnTo"/>
 	 </menu>
 	 <separator/>
+	 <!--
+	  fdietz: disabled for stable release.
+	   these actions are only available for macchiato developers
+	   TODO: add debug flag instead
 	 <menuitem action="TrainMessageAsSpam"/>
 	 <menuitem action="TrainMessageAsHam"/>
 	 <menuitem action="ScoreMessage"/>
 	 <separator/>
+	 -->
 	 <extensionpoint name="mail_bottom" />	
 	 <separator/>
 	 <menuitem action="ExportDialog"/>
