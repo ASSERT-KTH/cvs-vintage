@@ -34,6 +34,7 @@
 		<separator/>
 		<extensionpoint name="top"/>
 		<extensionpoint name="bottom"/>
+		<menuitem action="PluginManagerDialog" />
 		<menuitem action="GlobalOptions"/>
 	</menu>
 	
