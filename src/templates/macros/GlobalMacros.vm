@@ -404,6 +404,20 @@
  </p>
 #end
 
+#macro (paginateWithSearch $resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField)
+ <p class="paginate">
+ #if($scarabR.PrevPage != 0)
+  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
+  <a href="$prevLink">&laquo; previous</a> |
+ #end
+ $pageNum of $scarabR.NbrPages
+ #if ($scarabR.NextPage != 0)
+  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.NextPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
+  | <a href="$nextLink">&raquo; next</a>
+ #end
+ </p>
+#end
+
 #macro (navigate)
  <p class="paginate">
  #if($scarabR.PrevIssue)
@@ -458,6 +472,22 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResults.size()
         #end $longName
      #else
         #set ($sortLink = $link.setPage("$scarabR.CurrentTemplate").setPathInfo("sortColumn", "$shortName").setPathInfo("sortPolarity", "$sortPolarity").setPathInfo("pageNum", $pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()))
+        <a href="$sortLink">$longName</a>
+     #end
+#end
+
+#macro (sortWithSearch $shortName $longName $searchString $searchField)
+#if (!$resultsPerPage) #set ($resultsPerPage = 25) #end
+     #if ($sortColumn.equals($shortName))
+        #if ($sortPolarity.equals("desc"))
+           #set ($arrowLink = $link.setPage("$scarabR.CurrentTemplate").setPathInfo("sortPolarity", "asc").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum",$pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchfield", $searchField))
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
+        #else
+           #set ($arrowLink = $link.setPage("$scarabR.CurrentTemplate").setPathInfo("sortPolarity", "desc").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum", $pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchfield", $searchField))
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&#160;
+        #end $longName
+     #else
+        #set ($sortLink = $link.setPage("$scarabR.CurrentTemplate").setPathInfo("sortColumn", "$shortName").setPathInfo("sortPolarity", "$sortPolarity").setPathInfo("pageNum", $pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchfield", $searchField))
         <a href="$sortLink">$longName</a>
      #end
 #end
