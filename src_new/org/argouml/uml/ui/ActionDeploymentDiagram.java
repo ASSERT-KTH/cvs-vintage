@@ -1,4 +1,4 @@
-// $Id: ActionDeploymentDiagram.java,v 1.7 2003/01/09 19:52:15 kataka Exp $
+// $Id: ActionDeploymentDiagram.java,v 1.8 2003/02/18 20:12:52 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
 import ru.novosoft.uml.foundation.core.MNamespace;
+import ru.novosoft.uml.model_management.MPackage;
 
 /** Action to trigger creation of a deployment diagram.
  *  @stereotype singleton
@@ -61,7 +62,10 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
      * @see org.argouml.uml.ui.ActionAddDiagram#isValidNamespace(MNamespace)
      */
     public boolean isValidNamespace(MNamespace ns) {
-        return ns == ProjectManager.getManager().getCurrentProject().getModel(); // may only occur as child of the model
+        
+         // may only occur as child of the model or in a package
+        return (ns == ProjectManager.getManager().getCurrentProject().getModel()
+                || ns instanceof MPackage);
     }
 
 } /* end class ActionDeploymentDiagram */
