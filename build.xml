@@ -143,20 +143,20 @@
     </javac> 
 </target>
 
-<condition property="stub.to.compile">
-    <or>
+<condition property="stub.already.compiled">
+    <and>
       <uptodate property="JNDIResourceWrapper.done"
-              srcfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.class"
-              targetfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.java" />
+              targetfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.class"
+              srcfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.java" />
 <uptodate property="JNDIResourceWrapper.done"
-              srcfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.class"
-              targetfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.java" />
-    </or>
+              targetfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.class"
+              srcfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.java" />
+    </and>
   </condition>
 
 <target name="compile.stub.jeremie"
       description="build stub and skeleton "
-      if="stub.to.compile" > 
+      unless="stub.already.compiled" > 
     <!-- for jeremie -->
       <echo message="stub ${stub.jeremie.done}"/>
       <java classname="${compiler.jeremie}" fork="true" failonerror="true">
