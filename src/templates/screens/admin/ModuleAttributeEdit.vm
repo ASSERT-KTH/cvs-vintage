@@ -1,0 +1,105 @@
+$page.setTitle("Module Attribute/options editor")
+
+#set ($module = $scarabR.CurrentModule)
+#set ($attribute = $scarabR.Attribute)
+#set ($attType = $attribute.AttributeType)
+
+<div class="app" id="div3-0-2-0">
+<h2>$page.Title</h2>
+
+<p>
+On this screen, one can modify a module's Attribute information.
+</p>
+
+
+<form action="$link.setPage("admin,ModuleAttributeEdit.vm")" method="get">
+<input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ModuleAttributeEdit.vm" />
+<input type="hidden" name="attributeid" value="$attribute.AttributeId" />
+<input type="hidden" name="att_0id" value="$attribute.AttributeId" />
+
+<h3>Attribute Info</h3>
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+ <tr>
+  <th>Input type</th>
+  <td>$attType.Name</td>
+ <tr>
+  <th>Attribute name</th>
+  <td>$attribute.Name</td>
+ </tr>
+ <tr>
+  <th>Attribute description</th>
+  <td>$attribute.Description</td>
+ </tr>
+  #if ($attribute.CreatedDate)
+ <tr>
+  <th>Created by</th>
+  <td>
+  #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
+  <a href="mailto:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
+  </td>
+ </tr>
+  #end
+  #if ($attribute.CreatedDate)
+ <tr>
+  <th>Creation date</th>
+  <td>
+    $attribute.CreatedDate
+  </td>
+ </tr>
+  #end
+</tr>
+</table>
+</div>
+
+#if ($attType.AttributeClass.Name.equals("select-one"))
+#set ($rmos = $scarabR.CurrentModule.getRModuleOptions($attribute,$scarabR.CurrentIssueType))
+#set ($maxNum = $rmos.size())
+#datatitle ("Attribute Options")
+<table width="70%" border="1" cellspacing="2" cellpadding="2">
+<tr>
+#if ($maxNum > 0)
+ <th>Deleted</th>
+#else
+ <th>&#160;</th>
+#end
+ <th>Parent attribute option</th>
+ <th>Display Name</th>
+ <th>Active</th>
+ <th>Preferred order</th>
+ <th>Weight</th>
+</tr>
+#foreach ($rmo in $rmos)
+    #set ($rmoGroup = $intake.RModuleOption.mapTo($rmo))
+    #indexedRows($velocityCount)
+     <td><input type="checkbox" name="delete_$rmo.OptionId">
+     <td>$rmo.AttributeOption.Parent.Name</td>
+     <td><input type="text" size="25" name="$rmoGroup.DisplayValue.Key" value="$rmoGroup.DisplayValue.Value" /></td>
+     <td>
+        #booleanCheckbox($rmoGroup.Active)
+     </td>
+     <td>
+        #numericSelect($rmoGroup.Order.Key 1 $maxNum $rmoGroup.Order.Value 1)
+     </td>
+     <td>
+        #numericSelect($rmoGroup.Weight.Key 1 $maxNum $rmoGroup.Weight.Value 1)
+     </td>
+    </tr>
+#end
+
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+  <tr>
+    <td class="firstchild">
+    <input type="submit" name="eventSubmit_doModifyattributeoptions" value="Save" />&nbsp; <input type="submit" name="eventSubmit_doDeleteattributeoptions" value="Delete" />&nbsp; <input type="submit" name="eventSubmit_doAddnewattributeoption" value="Add new" />
+    </td>
+  </tr>
+</table>
+</div>
+
+#end 
+$intake.declareGroups()
+</form>
+</div>

@@ -76,7 +76,7 @@ $page.setTitle("Add/Edit attribute group to Issue Type '$scarabR.getIssueType($i
  #indexedRows($velocityCount)
  <td><input type="checkbox" name="att_delete_$attribute.AttributeId" /></td>
  #if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
- <td><a href="$link.setPage("admin,GlobalAttributeShow.vm").setAction("admin.GlobalAttributes").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE","admin,GlobalAttributeEdit.vm").addPathInfo("eventSubmit_doSelectattribute", "foo").addPathInfo("intake-grp", "att").addPathInfo("att", "_0").addPathInfo("att_0id", "$attribute.AttributeId")">$attribute.Name</a></td>
+ <td><a href="$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$attribute.AttributeId")">$attribute.Name</a></td>
  #else
  <td>$attribute.Name</td>
  #end
