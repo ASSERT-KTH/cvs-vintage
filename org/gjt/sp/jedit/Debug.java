@@ -22,12 +22,14 @@
 
 package org.gjt.sp.jedit;
 
+import org.gjt.sp.jedit.Debug;
+
 /**
  * This class contains various debugging flags mainly useful for core
  * development.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: Debug.java,v 1.11 2003/05/23 21:19:51 spestov Exp $
+ * @version $Id: Debug.java,v 1.12 2003/06/16 02:40:20 spestov Exp $
  */
 public class Debug
 {
@@ -103,4 +105,18 @@ public class Debug
 	 * Logs messages when BeanShell code is evaluated.
 	 */
 	public static boolean BEANSHELL_DEBUG = false;
+
+	/**
+	 * If true, an alternative dispatcher using key typed events will be
+	 * used to handle a modifier key press in conjunction with an alphabet
+	 * key. <b>On by default on MacOS.</b>
+	 */
+	public static boolean ALTERNATIVE_DISPATCHER = OperatingSystem.isMacOS();
+
+	/**
+	 * If true, A+ shortcuts are disabled. If you use this, you should also
+	 * remap the the modifiers so that A+ is actually something else.
+	 * <b>On by default on MacOS.</b>
+	 */
+	public static boolean ALT_KEY_PRESSED_DISABLED = OperatingSystem.isMacOS();
 }

@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * warts in the AWT key event API.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventTranslator.java,v 1.1 2003/06/15 23:41:14 spestov Exp $
+ * @version $Id: KeyEventTranslator.java,v 1.2 2003/06/16 02:40:20 spestov Exp $
  */
 public class KeyEventTranslator
 {
@@ -54,30 +54,37 @@ public class KeyEventTranslator
 		switch(evt.getID())
 		{
 		case KeyEvent.KEY_PRESSED:
-			if(OperatingSystem.isMacOS())
+			if((keyCode >= KeyEvent.VK_0
+				&& keyCode <= KeyEvent.VK_9)
+				|| (keyCode >= KeyEvent.VK_A
+				&& keyCode <= KeyEvent.VK_Z))
 			{
-				if(keyCode >= KeyEvent.VK_0
-					&& keyCode <= KeyEvent.VK_9)
-				{
+				if(Debug.ALTERNATIVE_DISPATCHER)
 					return null;
-				}
-
-				if(keyCode >= KeyEvent.VK_A
-					&& keyCode <= KeyEvent.VK_Z)
+				else
 				{
-					return null;
+					return new Key(getModifierString(evt),
+						'\0',Character.toLowerCase(
+						(char)keyCode));
 				}
 			}
-
-			return new Key(getModifierString(evt),keyCode,'\0');
+			else
+			{
+				return new Key(getModifierString(evt),
+					keyCode,'\0');
+			}
 		case KeyEvent.KEY_TYPED:
+			if(evt.getKeyChar() == '\b')
+				return null;
+
 			if(System.currentTimeMillis() - KeyEventWorkaround.lastKeyTime < 750
-				&& KeyEventWorkaround.modifiers != 0 && OperatingSystem.isMacOS())
+				&& KeyEventWorkaround.modifiers != 0 && Debug.ALTERNATIVE_DISPATCHER)
 			{
 				return new Key(modifiersToString(modifiers),
 					0,evt.getKeyChar());
 			}
-			return new Key(null,0,evt.getKeyChar());
+			else
+				return new Key(null,0,evt.getKeyChar());
 		}
 
 		return null;
@@ -279,6 +286,27 @@ public class KeyEventTranslator
 			this.modifiers = modifiers;
 			this.key = key;
 			this.input = input;
+		}
+
+		public int hashCode()
+		{
+			return key + input;
+		}
+
+		public boolean equals(Object o)
+		{
+			if(o instanceof Key)
+			{
+				Key k = (Key)o;
+				if(MiscUtilities.objectsEqual(modifiers,
+					k.modifiers) && key == k.key
+					&& input == k.input)
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 	} //}}}
 }
