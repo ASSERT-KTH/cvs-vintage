@@ -1,3 +1,5 @@
+<div id="userlist" class="app">
+
 ## USER SEARCH
 <form action="$link.setPage("UserList.vm")" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
@@ -5,6 +7,8 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($searchString = $data.Parameters.getString("searchString" , ""))
+
+<h2>Select users</h2> 
 
 <h3>Users</h3>
 
@@ -38,24 +42,22 @@
 #end
 
 
-<div class="axial">
-  <table width="100%" border="1" cellspacing="2" cellpadding="3">
-	<tr>
-	<th nowrap="nowrap">&#160;</th>
-	<th>Name</th>
-	<th>Email</th>
-	</tr>
-        ##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
-		
-       #foreach ($user in $searchResults)
-		<tr class="a">
-		<td><input type="checkbox" name="user_list" value="$user.UserId" /></td>
-		<td><strong>$!user.FirstName $!user.LastName</strong></td>
-		<td><a href="mailTo:$user.Email">$user.UserName</a></td>
-		</tr>
-       #end
-   </table>  
-</div>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+  <tr>
+    <th nowrap="nowrap">&#160;</th>
+    <th>Name</th>
+    <th>Email</th>
+  </tr>
+  ##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
+    
+  #foreach ($user in $searchResults)
+    <tr class="a">
+    <td><input type="checkbox" name="user_list" value="$user.UserId" /></td>
+    <td><strong>$!user.FirstName $!user.LastName</strong></td>
+    <td><a href="mailTo:$user.Email">$user.UserName</a></td>
+    </tr>
+   #end
+</table>  
 
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doCancel" value="Add selected to assignee list" />
@@ -68,4 +70,4 @@
 $intake.declareGroups()
 </form>
 
-
+</div>
