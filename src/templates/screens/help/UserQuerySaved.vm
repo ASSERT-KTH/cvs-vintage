@@ -13,13 +13,13 @@
     <ul>
       <li>Scarab Help
        <ul> 
-         <li><a href="Introduction.vm">Introduction to Scarab</a></li>
-         <li><a href="UserIssues.vm">Managing Issues</a> </li>
+         <li><a href="$link.setPage("help,Introduction.vm")">Introduction to Scarab</a></li>
+         <li><a href="$link.setPage("help,UserIssues.vm")">Managing Issues</a> </li>
          <li>Searching the database 
           <ul>
-            <li><a href="UserQuery.vm">Overview</a></li>
-            <li><a href="UserQueryAdvanced.vm">Advanced queries</a></li>
-            <li><a href="UserQueryCustom.vm">Custom queries</a></li>
+            <li><a href="$link.setPage("help,UserQuery.vm")">Overview</a></li>
+            <li><a href="$link.setPage("help,UserQueryAdvanced.vm")">Advanced queries</a></li>
+            <li><a href="$link.setPage("help,UserQueryCustom.vm")">Custom queries</a></li>
             <li><strong>Saved queries</strong> 
               <ul>
                 <li><a href="#saving">Saving queries</a></li>
@@ -30,20 +30,20 @@
             </li>
           </ul>
         </li>
-      <li><a href="UserReports.vm">Reports</a></li>
-      <li><a href="ScarabBestPractices.vm">Best Practices</a></li>
-      <li><a href="ScarabFaq.vm">FAQ</a></li>
-      <li><a href="ScarabGlossary.vm">Glossary</a></li>
+      <li><a href="$link.setPage("help,UserReports.vm")">Reports</a></li>
+      <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Best Practices</a></li>
+      <li><a href="$link.setPage("help,ScarabFaq.vm")">FAQ</a></li>
+      <li><a href="$link.setPage("help,ScarabGlossary.vm")">Glossary</a></li>
      </ul>
     </li>
     </ul>
   </div>
-  <h3><a id="top" name="top"></a>Saved queries</h3>
+  <h3><a name="top" id="top">Saved queries</a></h3>
   <p>Once you have a well defined set of search parameters you may want to save 
     them for future use. Saved queries can be used to generate reminders, keep 
     you informed of progress on issues or to quickly access a specific issue configuration. 
     You may have access to globally available saved queries or create your own.</p>
-  <p><strong><a name="saving"></a>Saving queries</strong></p>
+  <p><strong><a name="saving">Saving queries</a></strong></p>
   <p>To create a saved query access the <strong>Advanced query</strong> page and 
     define your search parameters (for more information see Advanced). Click the 
     <strong>Save this query </strong> button. Stored queries are accessible through 
@@ -69,7 +69,7 @@
     to create a global saved query, the query will be submitted to the administrator 
     for approval (see Approval for further information on the approval process).</p>
   <p>Click the <strong>Save</strong> button to complete the saving process.</p>
-  <p><strong><a name="managing"></a>Managing saved queries</strong></p>
+  <p><strong><a name="managing" id="managing">Managing saved queries</a></strong></p>
   <p>The <strong>Stored query</strong> page is used to manage the saved queries. 
     All queries that are available for this issue type appear in this table. Click 
     on the name of the query to access the query edit screen. The location link 
@@ -85,7 +85,7 @@
     <li>The <strong>Delete selected </strong>button will remove the saved query 
       from your list. You can delete any of your personal saved queries.</li>
   </ul>
-  <p><strong><a name="subscribing"></a>Subscribing to saved queries</strong></p>
+  <p><strong><a name="subscribing" id="subscribing">Subscribing to saved queries</a></strong></p>
   <p>Scarab can create and send regular email alerts to you regarding issues matching 
     your saved criteria. From the <strong>Stored query list</strong> page, accessed 
     through the <em>Saved queries</em> link on the left navigation, click the 
@@ -105,15 +105,15 @@
     database access for users on the Windows 95 operating system. Creating, saving 
     and subscribing to a query with the search parameters that define your area 
     of concern will keep alert you to issues as frequently as you need them.</p>
-  <p><strong><a name="default"></a>Setting a default query</strong></p>
+  <p><strong><a name="default" id="default">Setting a default query</a></strong></p>
   <p>You can set one of your saved queries as the default query. The default query 
     is used by the <em>Issue List</em> link if you have not performed any other 
     queries during the current session. If you have performed any other queries 
     during the current session the <em>Issue List</em> link will repeat the most 
     recently run query. </p>
-  <div class="courtesylinks"> 
-    <p><a href="#Top">Top</a> 
-  </div>
+  
+    <p><a href="#top">Top</a> 
+ 
 </div>
  </body>
 </html>

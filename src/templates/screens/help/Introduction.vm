@@ -18,55 +18,69 @@
           <li><strong>Introduction to Scarab</strong> 
             <ul>
               <li><a href="#help">Getting Help</a></li>
-              <li><a href="Navigation.vm">Navigating Scarab</a></li>
+              <li><a href="$link.setPage("help,Navigation.vm")">Navigating Scarab</a></li>
             </ul>
           </li>
-          <li><a href="UserIssues.vm">Managing Issues</a></li>
-          <li><a href="UserQuery.vm">Searching the database </a></li>
-          <li><a href="UserReports.vm">Reports</a> </li>
-          <li><a href="ScarabBestPractices.vm">Best Practices</a></li>
-          <li><a href="ScarabFaq.vm">FAQ</a></li>
-          <li><a href="ScarabGlossary.vm">Glossary</a></li>
+          <li><a href="$link.setPage("help,UserIssues.vm")">Managing Issues</a></li>
+          <li><a href="$link.setPage("help,UserQuery.vm")">Searching the database </a></li>
+          <li><a href="$link.setPage("help,UserReports.vm")">Reports</a> </li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Best Practices</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">FAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">Glossary</a></li>
         </ul>
       </li>
     </ul>
   </div>
-  <h3><b><a name="top"></a>Introduction to Scarab</b></h3>
-  <p> Scarab offers a highly configurable issue tracking tool that can be used 
-    for all types of projects: technical and non-technical alike. Because all 
-    parameters in the system are configurable, Scarab meets the needs of the project 
-    as well as the individual user.</p>
-  <p>The issue entry process of Scarab is designed to help users create meaningful 
-    issues and avoid duplication. A short set of issue attributes are used to 
-    check the issue database for similar entries. If any are found, the user has 
-    the opportunity to review potential duplicates, comment or modify their issue 
-    before committing it to the database. </p>
-  <p>Frequently entered issue criteria can be saved in templates for speedy entry. 
-    Patches and attachments are managed directly with the issues to which they 
-    are associated Users can add and edit comments to issues simply and viewing 
-    the history of an issue is simple while viewing an issue.</p>
-  <p>Accessing issues in the database is simple using the query feauter. Users 
-    can easily find, access and modify issues individually or in groups. The Advanced 
-    Query feature allows the user to create detailed issue searches, specifying 
-    values for multiple attributes and limiting their search to specific date 
-    or issue number ranges. The Custom Query feature allows the user to search 
-    by text string-the user can specify a set of information to compare against 
-    issues in the database. Frequently used query can be saved and easily run. 
-    Once a saved query has been created, the user can request frequent email updates 
-    on issues matching the search criteria.</p>
-  <p> The robust reports interface allows the user to create and save reports. 
-    Reports provide customizable and meaningful metrics.</p>
-  <p>As important events occur, email is generated and sent to all parties associated 
-    with the event. Alert emails contain links to views of the event.</p>
-  </div>
-<h3><a name="help"></a>Getting Help</h3>
+  <h3><strong><a name="top" id="top">Introduction to Scarab</a></strong></h3>
+  <p> Scarab is a highly configurable issue tracking tool that can be used for 
+    all types of projects: technical and non-technical alike. Because all parameters 
+    in the system are configurable, Scarab meets the needs of the project as well 
+    as the individual user. Each Scarab implementation can be configured directly 
+    to the workflow processes of the project through the definition of issue types 
+    and attributes. The user interface is designed to be accessible and constant: 
+    once you become familiar with the Scarab look and feel you will find learning 
+    new processes within the system quick to master.</p>
+  <p>Scarab provides a robust set of tools for issue management:</p>
+
+<ul>
+  <li> 
+    <strong>Issue entry: </strong>The issue entry process 
+      of Scarab is designed to help users create meaningful issues and avoid duplication. 
+      Attributes are used to describe issues and to check the issue database for 
+      similar entries. If any duplicates are found, the user has the opportunity 
+      to review potential duplicates, add comments to like issues or modify their 
+      issue before committing it to the database. 
+  </li>
+  <li><strong>Templates for issue entry : </strong>Frequently entered issue criteria 
+    can be saved in templates for speedy entry. Files can be attached to an issue, 
+    and are tracked directly with their issue. Users can add and edit comments 
+    to issues as needed. Users can access and review the complete issue history 
+    while viewing an issue. </li>
+  <li><strong>Issue query: </strong>Accessing issues in the database is simple using the 
+    query feature. Users can easily find, access and modify issues individually 
+    or in groups. The Advanced Query feature allows the user to create detailed 
+    issue searches, specifying values for multiple attributes and limiting their 
+    search to specific date or issue number ranges. The Custom Query feature allows 
+    the user to search by text string-the user can specify a set of information 
+    to compare against issues in the database. Frequently used queries can be 
+    saved and easily run. Once a saved query has been created, the user can request 
+    frequent email updates on issues matching the search criteria.</li>
+  <li><strong>Reports: </strong>The robust reports interface allows the user to create and 
+    save reports. Reports provide customizable and meaningful metrics. </li>
+  <li><strong>Email notifications: </strong>As important events occur, email is generated 
+    and sent to all parties associated with the event. Alert emails contain links 
+    to views of the event.</li>
+</ul>
+
+<h3><a name="help" id="help">Getting Help</a></h3>
 <p>While Scarab is designed to be an easy to use, intuitive application, should 
-  you need help a help system has been provided. In the help system you will find 
-  definitions of Scarab terminology and navigation aid as well as hints for using 
-  the application.</p>
-<div class="docs" id="introduction">
-<div class="courtesylinks"> 
+  you need additional assistance this help system has been provided. In the help 
+  system you will find definitions of Scarab terminology and navigation aid as 
+  well as hints for using the application.</p>
+
+
     <p><a href="#Top">Top</a> 
-  </div>
+
 </div>
- 
+ </body>
+</html>

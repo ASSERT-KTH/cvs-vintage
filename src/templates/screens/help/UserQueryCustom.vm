@@ -8,33 +8,33 @@
   <title>Custom queries</title>
  </head>
 
- <strongody>
+ <body>
 <div class="docs" id="userquerycustom"> 
   <h2>Custom queries</h2>
   <div id="toc"> 
  <ul> 
 <li>Scarab Help 
   <ul>
-    <li><a href="Introduction.vm">Introduction to Scarab</a></li>
-    <li><a href="UserIssues.vm">Managing Issues</a> </li>
+    <li><a href="$link.setPage("help,Introduction.vm")">Introduction to Scarab</a></li>
+    <li><a href="$link.setPage("help,UserIssues.vm")">Managing Issues</a> </li>
     <li>Searching the database 
             <ul>
-              <li><a href="UserQuery.vm">Overview</a></li>
-              <li><a href="UserQueryAdvanced.vm">Advanced queries</a></li>
+              <li><a href="$link.setPage("help,UserQuery.vm")">Overview</a></li>
+              <li><a href="$link.setPage("help,UserQueryAdvanced.vm")">Advanced queries</a></li>
               <li><strong>Custom queries</strong></li>
-              <li><a href="UserQuerySaved.vm">Saved queries</a></li>
+              <li><a href="$link.setPage("help,UserQuerySaved.vm")">Saved queries</a></li>
             </ul>
     </li>
-    <li><a href="UserReports.vm">Reports</a></li>
+    <li><a href="$link.setPage("help,UserReports.vm")">Reports</a></li>
    
-      <li><a href="ScarabBestPractices.vm">Best Practices</a></li>
-      <li><a href="ScarabFaq.vm">FAQ</a></li>
-      <li><a href="ScarabGlossary.vm">Glossary</a></li>
+      <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Best Practices</a></li>
+      <li><a href="$link.setPage("help,ScarabFaq.vm")">FAQ</a></li>
+      <li><a href="$link.setPage("help,ScarabGlossary.vm")">Glossary</a></li>
     </ul></li>
   </ul>
   </div>
-  <p>
-  <h3><a id="top" name="top"></a>Custom queries</h3>
+
+  <h3><a name="top" id="top">Custom queries</a></h3>
   <p>Custom queries allow you to search the database based on a refined set of 
     parameters. You can search on any of the text attributes as well as any other 
     attribute your project owner has included as a quick search parameter.</p>
@@ -49,8 +49,8 @@
   <p>You can use this form to determine how you would like the search results 
     displayed. You can select what attribute you would like the results ordered 
     by as well as the number of issues you would like to see per page.</p>
-  <p><a href="#Top">Top</a> </p>
-  <div class="courtesylinks"></div>
+  <p><a href="#top">Top</a> </p>
+
 </div>
- </strongody>
+ </body>
 </html>

@@ -7,18 +7,19 @@
 
   <title>Modifying issues</title>
  </head>
+<body>
 <div class="docs" id="userissuemodify"> 
   <h2>Modifying issues</h2>
   <div id="toc"> 
     <ul>
       <li>Scarab Help 
         <ul>
-          <li><a href="/Introduction.vm">Introduction to Scarab</a> </li>
+          <li><a href="$link.setPage("help,Introduction.vm")">Introduction to Scarab</a> </li>
           <li>Managing Issues 
             <ul>
-              <li><a href="UserIssues.vm">Overview</a> 
-              <li><a href="UserIssueEnter.vm">Entering Issues </a> </li>
-              <li><a href="UserIssueTemplates.vm">Using templates</a></li>
+              <li><a href="$link.setPage("help,UserIssues.vm")">Overview</a> 
+              <li><a href="$link.setPage("help,UserIssueEntry.vm")">Entering Issues </a> </li>
+              <li><a href="$link.setPage("help,UserIssueTemplates.vm")">Using templates</a></li>
               <li><strong>Modifying issues</strong> 
                 <ul>
                   <li><a href="#info">Managing information</a></li>
@@ -28,74 +29,71 @@
               </li>
             </ul>
           
-          <li><a href="UserQuery.vm">Searching the database </a></li>
-          <li><a href="UserReports.vm">Reports</a> </li>
-          <li><a href="ScarabBestPractices.vm">Best Practices</a></li>
-          <li><a href="ScarabFaq.vm">FAQ</a></li>
-          <li><a href="ScarabGlossary.vm">Glossary</a></li>
+          <li><a href="$link.setPage("help,UserQuery.vm")">Searching the database </a></li>
+          <li><a href="$link.setPage("help,UserReports.vm")">Reports</a> </li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Best Practices</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">FAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">Glossary</a></li>
         </ul>
       </li>
     </ul>
   </div>
-  <h3><a id="top" name="top">Modifying issues</a></h3>
+  <h3><a name="top" id="top">Modifying issues</a></h3>
   <p>Once an issue has been created it is ready for assignment or manipulation. 
     You can perform the following functions on issues in the database:</p>
-</div>
+
 <ul>
   <li>review, add or edit information about the issue</li>
   <li>associate users </li>
   <li>move issue</li>
 </ul>
-<div class="docs" id="userissuemodify"> 
-  <h3><b><a name="info"></a>Managing issue information</b></h3>
+
+  <h3><strong><a name="info" id="info">Managing issue information</a></strong></h3>
   <p>Almost all attributes of an issue are editable from the view issue screen. 
     You can alter most attribues, if you have the proper permission level, view 
     user associations, add url links, create dependencies, add attachments, and 
     view the issue history.</p>
-  <p><b>Dependencies</b></p>
+  <p><strong>Dependencies</strong></p>
   <p>You can alter or add dependencies as necessary. As when creating an issue, 
     you must define the dependency type. Dependencies can be blocking, non-blocking 
-    or duplicating. For more information on dependencies see <a href="UserIssueEnter.vm#depend">Dependencies</a>.</p>
-  <h3><a name="users"></a>Associate users</h3>
-  <div class="courtesylinks"> 
-    <div class="docs" id="userissueassign">
+    or duplicating. For more information on dependencies see <a href="$link.setPage("help,UserIssueEntry.vm")#dependencies">Dependencies</a>.</p>
+  <h3><a name="users" id="users">Associate users</a></h3>
+  
       <p>The administrator may have defined several types of user attributes that 
         allow users to easily track the issues they are responsible for or in 
         which they have an interest. You can also use user attributes to search 
         for specfic issues.</p>
-      <p> All user association tasks are performed on the <b>Assign</b> screen. 
-        To access this screen either use the <b>edit list</b> button on the view 
-        issue page or search for a group of issues and use the <b>assign</b> button. 
+      <p> All user association tasks are performed on the <strong>Assign</strong> screen. 
+        To access this screen either use the <strong>edit list</strong> button on the view 
+        issue page or search for a group of issues and use the <strong>assign</strong> button. 
         On the Assign screen you will see a list of users currently associated 
         with the issue, their email adress and the type of association and a User 
         section which allows you to add users to the issue. You can filter the 
         list of users using the filter form. You can search for users by First 
         name, Last name or email address. </p>
-      <p><b>associating a user</b>: Once you have narrowed the list of users to 
+      <p><strong>associating a user</strong>: Once you have narrowed the list of users to 
         select from you can select an association type for the drop down box next 
         to the users name. Use the check box to add multiple users at the same 
         time. Once you have selected your users and set their association type 
-        use the <b>add selected to assignee list </b>button.</p>
-      <p><b>removing an associated user</b>: select the user or users you would 
-        like to remove from the issue and click the <b>remove selected from assignee 
-        list </b>button.</p>
-      <p><b>altering the association type</b>: If you need to change the type 
+        use the <strong>add selected to assignee list </strong>button.</p>
+      <p><strong>removing an associated user</strong>: select the user or users you would 
+        like to remove from the issue and click the <strong>remove selected from assignee 
+        list </strong>button.</p>
+      <p><strong>altering the association type</strong>: If you need to change the type 
         of association use the association type drop down box next to the name 
         of the user. Each association type available for that user will be listed 
         in that box. </p>
       <p>User attributes can also be used in a search criteria.If you do not see 
         a specific user on the user list contact your administrator and make sure 
         that they have been added to the user attribute. </p>
-    </div>
-    <div class="docs" id="userissueassign"></div>
-    <h3><a name="move"></a>Moving issues</h3>
+    
+    <h3><a name="move" id="move">Moving issues</a></h3>
     <p>You may need to track a similar issue in multiple areas. Rather than entering 
       the same issue twice, in different areas, you can copy an issue to another 
       module. Use the Copy/move functionality. Select copy. You will be presented 
       with an attribute mapping functionality. You will be able to track where 
       each attribute in the original 
-    <p><a href="#Top">Top</a> 
+    <p><a href="#top">Top</a> 
   </div>
-</div>
- </body>
+</body>
 </html>

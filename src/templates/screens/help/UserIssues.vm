@@ -5,13 +5,14 @@
  <head>
 <title>UserIssue</title>
 </head>
+<body>
 <div class="docs" id="userissue"> 
   <h2>Managing Issues: overview</h2>
   <div id="toc"> 
     <ul>
       <li>Scarab Help 
         <ul>
-          <li><a href="Introduction.vm">Introduction to Scarab</a> </li>
+          <li><a href="$link.setPage("help,Introduction.vm")">Introduction to Scarab</a> </li>
           <li>Managing Issues 
             <ul>
               <li><strong>Overview</strong> 
@@ -21,20 +22,20 @@
                   <li><a href="#entry">The Issue Entry screen</a></li>
                 </ul>
               </li>
-              <li><a href="UserIssueEnter.vm">Entering Issues </a> </li>
-              <li><a href="UserIssueTemplates.vm">Using templates</a></li>
-              <li><a href="UserIssueModify.vm">Modifying issues</a></li>
+              <li><a href="$link.setPage("help,UserIssueEntry.vm")">Entering Issues </a> </li>
+              <li><a href="$link.setPage("help,UserIssueTemplates.vm")">Using templates</a></li>
+              <li><a href="$link.setPage("help,UserIssueModify.vm")">Modifying issues</a></li>
             </ul>
-          <li><a href="UserQuery.vm">Searching the database </a></li>
-          <li><a href="UserReports.vm">Reports</a> </li>
-          <li><a href="ScarabBestPractices.vm">Best Practices</a></li>
-          <li><a href="ScarabFaq.vm">FAQ</a></li>
-          <li><a href="ScarabGlossary.vm">Glossary</a></li>
+          <li><a href="$link.setPage("help,UserQuery.vm")">Searching the database </a></li>
+          <li><a href="$link.setPage("help,UserReports.vm")">Reports</a> </li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Best Practices</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">FAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">Glossary</a></li>
         </ul>
       </li>
     </ul>
   </div>
-  <h3>Managing issues: overview</h3>
+  <h3><a name="top" id="top">Managing issues: overview</a></h3>
   <p>Scarab has a very dynamic issue management strategy. Committing, tracking 
     and modifying issues is a simple process. Scarab has the following issue management 
     features:</p>
@@ -69,7 +70,7 @@
     and the user can alter information as needed.</li>
 </ul>
 
-  <h3><a name="types"></a>Issue types </h3>
+  <h3><a name="types" id="types"></a>Issue types </h3>
   <p> Issue types provide a unique set of attributes and options used to describe 
     issues in a meaningful manner. Attributes within an issue type are defined 
     by the project administrator and affect only issues within that issue type. 
@@ -93,7 +94,7 @@
     by how your project is organized. Once you have selected the issue type that 
     best describes your issue, click on the name of the artifact. The <strong>Enter 
     issue</strong> screen will appear.</p>
-  <h3><a name="attributes"></a>Issue Attributes</h3>
+  <h3><a name="attributes" id="attributes"></a>Issue Attributes</h3>
   <p> Attributes are the common descriptors for issues. Attributes are used to 
     categorize issues for tracking, comparative and rate of change analysis. Each 
     issue type has a unique set of attributes like <strong>Summary, Description, Milestone</strong>, 
@@ -108,9 +109,9 @@
     attributes must be entered before committing the issue. Required attributes 
     are identified by an asterisks (*) beside the name of the attribute.</p>
   <p>On many results pages you can change which attributes appear on your screen. 
-    For information on customizing your interface see <a href="Navigating.vm#customizing">Customizing 
+    For information on customizing your interface see <a href="$link.setPage("help,Navigation.vm")#customizing">Customizing 
     the interface</a>.</p>
-  <h3><a name="entry"></a>The Issue Entry screen</h3>
+  <h3><a name="entry" id="entry">The Issue Entry screen</a></h3>
   <p>After selecting your issue type and the Enter new link from the left navigation, 
     The <strong>Enter New</strong> screen will appear. At this point you can enter 
     values for the available attributes. Each attribute will have either a drop 
@@ -125,7 +126,7 @@
     management). The third step is to enter values for the remaining attributes.</p>
   <p>While you are entering the issue you can attach a relevant file using the 
     same form. Attaching a file helps you and others to easily share relevant 
-    information or patches. For more information on adding attachments see <a href="UserIssueEntry.vm#attachments">Attachments</a>.</p>
+    information or patches. For more information on adding attachments see <a href="$link.setPage("help,UserIssueEntry.vm")#attachments">Attachments</a>.</p>
   <p>Before submitting your issue you can select where in the application you 
     would like to go next. Each option submits the issue and takes you to one 
     of the following functional areas:</p>
@@ -135,8 +136,8 @@
     <li>View this issue</li>
     <li>Start page</li>
   </ul>
-   <div class="courtesylinks"><a href="#Top">Top</a>
-   </div>
+   <a href="#top">Top</a>
+   
   </div>
  </body>
 </html>

@@ -15,7 +15,7 @@
     <ul>
       <li>Scarab Help 
         <ul>
-          <li><a href="Introduction.vm">Introduction to Scarab</a> 
+          <li><a href="$link.setPage("help,Introduction.vm")">Introduction to Scarab</a> 
             <ul>
               <li><strong>Navigating Scarab</strong>
                 <ul>
@@ -26,63 +26,56 @@
               </li>
             </ul>
           </li>
-          <li><a href="UserIssues.vm">Managing Issues</a></li>
-          <li><a href="UserQuery.vm">Searching the database </a></li>
-          <li><a href="UserReports.vm">Reports</a> </li>
-          <li><a href="ScarabBestPractices.vm">Best Practices</a></li>
-          <li><a href="ScarabFaq.vm">FAQ</a></li>
-          <li><a href="ScarabGlossary.vm">Glossary</a></li>
+          <li><a href="$link.setPage("help,UserIssues.vm")">Managing Issues</a></li>
+          <li><a href="$link.setPage("help,UserQuery.vm")">Searching the database </a></li>
+          <li><a href="$link.setPage("help,UserReports.vm")">Reports</a> </li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Best Practices</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">FAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">Glossary</a></li>
         </ul>
       </li>
     </ul>
   </div>
-  <h3> Navigating Scarab</h3>
-  <p>The Scarab interface is organized to allow access to all major parts functionality 
+  <h3> <a name="top" id="top">Navigating Scarab</a></h3>
+  <p>The Scarab interface is organized to allow access to all major functionality 
     from anywhere in the application. Each of the action screens provides relevant 
     information along with links to access further details as needed. A unified 
-    and consistent interface will allow you to easily recognize the types of information 
+    and consistent interface allows you to easily recognize the types of information 
     and actions available on each screen. </p>
-  <p>Each screen provides the following navigation aids</p>
-  </div>
+  <p>Each screen provides the following navigational aids</p>
+  
 <ul>
-  <li> 
-    <div class="docs" id="introduction"><strong>The Left navigation bar</strong>: Accessing 
-      any part of the Scarab functionality is easy using the left navigation bar. 
-      You can access a different issue type by clicking on it's heading on the 
-      left navigation. From that point you can access any of the functionality.</div>
+  <li> <strong>The Left navigation bar</strong>: The left navigation bar is organized 
+    by issue type, then by function. To access functionality within a specific 
+    issue type, select the title of the issue type on the left navigation bar. 
+    The functionality available to that issue type will appear below the title. 
   </li>
   <li> 
-    <div class="docs" id="introduction"><strong>The Query bar</strong>: The query bar provides 
-      easy access to defining or using queries or accessing a single issue. Links 
-      on this bar include a drop down of any saved queries, the issue id search 
-      form, the advanced query, custom query links and a Issue List link to run 
-      your last query. </div>
+    <strong>The Query bar</strong>: The query 
+      bar provides access to Scarab's search tools. Th issue id box allows you 
+      to access a specific issue number. The select query box provides access 
+      to the Advanced and Custom query features. If you have any saved queries, 
+      they will appear in the select query box.
   </li>
-  <li> 
-    <div class="docs" id="introduction"><strong>Section titles</strong>: provide descriptions 
-      of the type of information to be found in the section. Information chunks 
-      are in a table format with the type of information with important descriptive 
-      data organized in columns beside it. To change the sort order of any infromation 
-      you can click on the title of the column. The title of the column will have 
-      an arrow indicating the direction of the sort: the default is ascending. 
-      If you would like to see the data in descending order, click on the arrow. 
-      The page will be refreshed with the data in descending order.</div>
-  </li>
-  <li> 
-    <div class="docs" id="introduction"><strong>Buttons:</strong> just below the section 
-      title indicate a set of actions that can be performed on that data set only. 
-      For instance, you may find an <strong>Update Options </strong> button beside an attribute 
-      selector in one section. This indicates that if you change the attribute 
-      clicking the button will change the options available to that attribute.</div>
-  </li>
-  <li><strong>Checkboxes:</strong> used as a means of selecting list items. on many screens 
-    checked items can be modified as a group.</li>
+  <li> <strong>Section titles</strong>: Most information screens are organized 
+    in tabular format. Each section is presented with an informative section header, 
+    describing the section and, often, providing general information about the 
+    section. Each column header acts as a link to change the sort order for that 
+    table. For the sort column, the title has an arrow indicating the direction 
+    of the sort: the default is ascending. To change the direction of the sort 
+    click on the arrow. </li>
+  <li> <strong>Buttons:</strong> indicate a set of actions that can be performed. 
+    Often you will find more than one set of buttons on a page. Buttons directly 
+    below a section will perform actions on the section only, if you have you 
+    may find an <strong>Update Options </strong> button beside an attribute selector 
+    in one section. This indicates that if you change the attribute clicking the 
+    button will change the options available to that attribute. </li>
+  <li><strong>Checkboxes:</strong> used to select list items for modification.</li>
 </ul>
-<div class="docs" id="introduction"> In many cases, helpful information is included 
-  directly on the screens to help clarify unusual operations. Error messages are 
-  provided in line to help identify where the error occurred and specific means 
-  for remedy. 
-  <h3><a name="forms"></a>Entry forms</h3>
+ In many cases, helpful information is included 
+  directly on the screens to clarify unusual operations. Error messages are provided 
+  in line to help identify where the error occurred and specific means for remedy. 
+  <h3><a name="forms" id="forms">Entry forms</a></h3>
   <p>Entry forms are easy to use. Default data points are indicated with * (astricks) 
     beside the field title. Often you will find textual guidelines within the 
     entry forms to help you through the form entry process.</p>
@@ -90,11 +83,11 @@
   <p>Above and below the form appear a set of buttons. These buttons perform actions 
     on the data entered in the form. The </p>
   <ul>
-    <li> <strong>Cancel</strong> cancels the process in which you currently are engaged 
+    <li> <strong>Cancel</strong> cancels the process in which you currently are engaged. 
     </li>
     <li><strong>Continue</strong> button will take you to the next part of the entry process. 
     </li>
-    <li><strong>Done</strong> </li>
+    <li><strong>Done</strong>button will save your work and return you to the last process in which you were engaged. </li>
     <li><strong>Next</strong> button indicates that there is further information to be gathered 
       on the next screen. Clicking this button will cache your current data and 
       take you to the next part in the wizard.</li>
@@ -110,7 +103,7 @@
     from the drop down box and use the <strong>select</strong> button to render the selection.</p>
   <p>Each attribute in an entry form displays all available options, from which 
     you can select one or more. </p>
-  <h3><a name="results"></a>Results and selection pages</h3>
+  <h3><a name="results" id="results">Results and selection pages</a></h3>
   <p>Results screens appear after you have activated a request, like a query, 
     a report, etc. Each results screen provides a list of items with some descriptive 
     information.</p>
@@ -126,12 +119,12 @@
     click the title of the attribute. The sort will change to ascending by that 
     attribute. Clicking the arrow beside the attribute name will provide a descending 
     sort. </p>
-  <h3><a name="customizing"></a>Customizing the interface</h3>
+  <h3><a name="customizing" id="customizing">Customizing the interface</a></h3>
   <p>Many screens are customizable. You can add to or remove the attributes that 
     appear on your screen by clicking on the <em>add/remove attributes from view</em> 
     link. Use the check boxes to show or hide attributes. Add a check to the items 
     you would like to appear on your screen. Use this screen to determine the 
     order of the columns by using the &quot;Columnar sequence&quot; field.</p>
-  <a href="#Top">Top</a> 
+  <a href="#top">Top</a> 
   <div class="courtesylinks"></div>
 </div>

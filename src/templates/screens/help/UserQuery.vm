@@ -13,7 +13,7 @@
   <h2>Searching the database: overview</h2>
   <div id="toc"> 
        <ul>
-      <li><a name="#Top"Scarab Help</a>
+      <li>Scarab Help 
         <ul>
           <li><a href="$link.setPage("help,Introduction.vm")">Introduction to Scarab</a></li>
           <li><a href="$link.setPage("help,UserIssues.vm")">Managing Issues</a></li>
@@ -38,7 +38,7 @@
       </li>
     </ul>  
   </div>
-  <h3><strong>Searching the database: overview</strong></h3>
+  <h3><strong><a name="top" id="top">Searching the database: overview</a></strong></h3>
   <p>Query functionality includes defining a very specific query, using a customized 
     query, using saved queries and accessing specific issue ids. You can also 
     use the <em>Issue List </em> to access the last query.</p>
@@ -50,7 +50,7 @@
   </ul>
   <p>For ease of use, frequently used queries can be saved. Use the left navigation 
     link or the query bar to access saved queries. </p>
-  <p><strong><a name="bar">The Query bar</a></strong> 
+  <p><strong><a name="bar" id="bar">The Query bar</a></strong> 
   <p>The query bar contains links to frequently used search functionality. </p>
   <ul>
     <li>If you have any saved queries, a drop down box will appear first on this 
@@ -63,7 +63,7 @@
     <li>The <em>Issue List</em> link will run the last query or any saved query 
       you've set as a default</li>
   </ul>
-  <p><strong><a name="issueid">Searching by Issue ID</a></strong></p>
+  <p><strong><a name="issueid" id="issueid">Searching by Issue ID</a></strong></p>
   <p>To access a specific issue enter the issue number <bo>in</bo> the search 
     form and click the <strong>Artifact Id</strong> button. If the id you requested is not 
     found an error message will appear and you can enter a different id.</p>

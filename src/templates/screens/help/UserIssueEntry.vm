@@ -5,49 +5,58 @@
  <head>
 <title>UserIssueEntry</title>
 </head>
+<body>
 <div class="docs" id="userissueentry"> 
   <h2>Entering issues</h2>
-  <div id="toc"> 
-    <ul>
-      <li>Scarab Help 
+  <div id="toc"><ul>
+<li>Scarab Help 
         <ul>
-          <li><a href="Introduction.vm">Introduction to Scarab</a></li>
-          <li><a href="UserIssues.vm">Managing Issues</a> 
-            <ul>
-              <li><a href="Introduction.vm>Introduction to Scarab</a> </li>
-        <li><strong>Managing Issues</strong>
-        <ul>
-          <li><a href="UserIssueOverview.vm">Overview</a> </li>
-              <li><strong>Entering Issues </strong> 
+          <li> 
+           <a href="$link.setPage("help,Introduction.vm")">Introduction to 
+                Scarab</a> </li>
+              <li><strong>Managing Issues</strong> 
                 <ul>
-                  <li><a href="UserIssueComposing.vm">Composing effective issues</a></li>
-                  <li><a href="UserDuplicate.vm">Entering an issue</a> 
+                  <li><a href="$link.setPage("help,UserIssueOverview.vm")">Overview</a> 
+                  </li>
+                  <li><strong>Entering Issues </strong> 
                     <ul>
-                      <li><a href="#dependencies">Setting dependencies</a></li>
-                      <li><a href="#attachments">Issue attachments</a></li>
+                      <li><a href="#top">Composing 
+                        effective issues</a></li>
+                      
+                  <li><a href="#entering">Entering an 
+                    issue</a> 
+                    <ul>
+                          <li><a href="#dependencies">Setting dependencies</a></li>
+                          <li><a href="#attachments">Issue attachments</a></li>
+                        </ul>
+                      </li>
+                      <li><a href="#duplicates">Handling duplicates</a> 
+                        <ul>
+                          <li><a href="#reviewing">Reviewing duplicates</a></li>
+                          <li><a href="#commenting">Commenting on like issues</a></li>
+                        </ul>
+                      </li>
                     </ul>
                   </li>
-                  <li><a href="#duplicates">Handling duplicates</a> 
-                    <ul>
-                      <li><a href="#reviewing">Reviewing duplicates</a></li>
-                      <li><a href="#commenting">Commenting on like issues</a></li>
-                    </ul>
-                  </li>
+                  <li><a href="$link.setPage("help,UserIssueTemplates.vm")">Using 
+                    templates</a></li>
+                  <li><a href="$link.setPage("help,UserIssueModify.vm")">Modifying 
+                    issues</a></li>
                 </ul>
               </li>
-              <li><a href="UserIssueTemplates.vm">Using templates</a></li>
-              <li><a href="UserIssueModify.vm">Modifying issues</a></li>
+              <li><a href="$link.setPage("help,UserQuery.vm")">Searching the database</a></li>
+              <li><a href="$link.setPage("help,UserReports.vm")">Reports</a> 
+              <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Best 
+                Practices</a></li>
+              <li><a href="$link.setPage("help,ScarabFaq.vm")">FAQ</a> </li>
+              <li><a href="$link.setPage("help,ScarabGlossary.vm")">Glossary</a> 
+              </li>
             </ul>
           </li>
-          <li><a href="UserQuery.vm">Searching the database</a></li>
-          <li><a href="UserReports.vm">Reports</a> 
-          <li><a href="ScarabBestPractices.vm">Best Practices</a></li>
-          <li><a href="ScarabFaq.vm">FAQ</a> </li>
-          <li><a href="ScarabGlossary.vm">Glossary</a> </li>
         </ul>
-    </ul>
+    
   </div>
-  <h3><a id="top" name="top">Composing effective issues</a></h3>
+  <h3><a name="top" id="top">Composing effective issues</a></h3>
   <p>Effective issue reports assist in the process of refining projects and reaching 
     the ultimate goal of completion. A useful issue report normally has two qualities:</p>
   <ol>
@@ -60,12 +69,13 @@
   <p>For example: you're testing a web browser. You crash at site.com, and want 
     to write up an issue report:</p>
   <p><strong>Inappropriate:</strong> </p>
-  "My browser crashed. I think I was on site.com. My computer uses Windows. I 
-  think that this is a really bad problem and you should fix it now. By the way, 
-  I don't like the icons. Nobody will use your software if you keep those ugly 
-  icons. Oh, and my grandmother's home page doesn't look right, either, it's all 
-  messed up. Good luck." 
-  <p><strong>More appropriate:</strong> </p>
+  
+"My browser crashed. I think I was on site.com. My computer uses Windows. I think 
+that this is a really bad problem and you should fix it now. By the way, I don't 
+like the icons. Nobody will use your software if you keep those ugly icons. Oh, 
+and my grandmother's home page doesn't look right, either, it's all messed up. 
+Good luck." 
+<p><strong>More appropriate:</strong> </p>
   <p>"I crashed each time when I went to site.com, using the 10.28.99 build on 
     a Win NT 4.0 (Service Pack 5) system. I also rebooted into Linux, and reproduced 
     this problem using the 10.28.99 Linux build.</p>
@@ -74,7 +84,7 @@
     crash the application reproducibly, unless you remove the "border=0" attribute:</p>
   <p><em>&lt;emMG SRC="http://site.com/images/topics/topicfoos.gif" width=34 height=44 
     border=0 alt="News"&gt;"</em></p>
-  <h3><a name="entering"></a>Entering an issue</h3>
+  <h3><a name="entering" id="entering">Entering an issue</a></h3>
   <p>Because of it's highly customizable nature, entering issues in Scarab can 
     be as individual as the person entering the issue. There are some basic principles 
     that apply to all issues being entered in the database: for each issue entered 
@@ -94,7 +104,7 @@
   <p>In the issue entry process you can add additional relevant information; you 
     can include dependencies on other issues as well as attaching appropriate 
     files (like patches, emails, etc.).</p>
-  <p><strong><a name="dependencies"></a>Setting dependencies: </strong>Issues 
+  <p><strong><a name="dependencies" id="dependencies">Setting dependencies: </a></strong>Issues 
     often have dependencies on other issues. One issue may require a resolution 
     from another before any work can be done. Two issues may have parallel resolutions 
     and need to be tracked together, though they have no direct influence on one 
@@ -111,7 +121,7 @@
   <p>You can track the progress of interrelated issues by using the <strong>Dependencies</strong> 
     section of the issue and clicking on either the issue id or the Issue summary 
     links to the issues. In this area you can also redefine the Dependency type.</p>
-  <p><strong><a name="attachments"></a>Issue attachments: </strong>Keeping track 
+  <p><strong><a name="attachments" id="attachments">Issue attachments:</a> </strong>Keeping track 
     of information relating to an issue is simplified using the issue attachment 
     feature. You can include email conversations, relevant documentation, patch 
     files, or any other supporting file. If you need to include a url, you can 
@@ -122,7 +132,7 @@
     to the file on your local system or enter a path for the file and click the 
     <strong>Add file</strong> button. You can repeat this process to add multiple 
     files.</p>
-  <h3><a name="duplicates"></a>Handling Duplicates</h3>
+  <h3><a name="duplicates" id="duplicates">Handling Duplicates</a></h3>
   <p>If you have duplication checking active, Scarab will use a subset of attributes 
     to check for possible duplicates in the database. If duplicates are found 
     a report of similar issues will be presented with your issue listed at the 
@@ -141,7 +151,7 @@
     <li>Skip this process by clicking on the <strong>bypass duplicates</strong> 
       button.</li>
   </ul>
-  <p><strong><a name="reviewing"></a>Reviewing duplicates</strong></p>
+  <p><strong><a name="reviewing" id="reviewing">Reviewing duplicates</a></strong></p>
   <p>For each item in the database that has been identified as a possible duplicate 
     for the criteria you entered, an entry appears in the <strong>Identified as 
     duplicate</strong> screen. You can change the sort order by clicking on the 
@@ -151,7 +161,7 @@
     of the attributes is parsed into a search string so that each value becomes 
     a searchable string. Use this page to compare your potential new issue with 
     those in the database. </p>
-  <p><strong><a name="commenting"></a>Commenting on like issues</strong></p>
+  <p><strong><a name="commenting" id="commenting">Commenting on like issues</a></strong></p>
   <p>The note box under the list of like issues allows you to add comments to 
     issues without going to the issue. You may want to comment that you are experiencing 
     similar problems, recommend a solution for a similar issue or add to the information 
@@ -160,6 +170,7 @@
     in the <em>Note</em> box and click the <em>Submit note</em> button. Once your 
     entry has been processed a message will appear at the top of the screen letting 
     you know that hat your comment has been added.</p>
-  <p><a href="#Top">Top</a> </p>
+  <p><a href="#top">Top</a> </p>
   </div>
+  </body>
  </html>

@@ -8,36 +8,36 @@
   <title>Using templates</title>
  </head>
 
- <strongody>
-<div class="docs" id="[file name w/o ext]"> 
+ <body>
+<div class="docs" id="userissuetemplates"> 
   <h2>Issue entry templates</h2>
   <div id="toc"> 
     <ul>
       <li>Scarab Help 
         <ul>
-          <li><a href="/Introduction.vm">Introduction to Scarab</a> </li>
+          <li><a href="$link.setPage("help,Introduction.vm")">Introduction to Scarab</a> </li>
           <li>Managing Issues 
             <ul>
-              <li><a href="UserIssues.vm">Overview</a> 
-              <li><a href="UserIssueEnter.vm">Entering Issues </a> </li>
+              <li><a href="$link.setPage("help,UserIssues.vm")">Overview</a> 
+              <li><a href="$link.setPage("help,UserIssueEntry.vm")">Entering Issues </a> </li>
               <li><strong>Using templates</strong> 
                 <ul>
-                  <li><a href="creating">Creating templates</a></li>
-                  <li><a href="using">Using templates</a></li>
+                  <li><a href="#creating">Creating templates</a></li>
+                  <li><a href="#using">Using templates</a></li>
                 </ul>
               </li>
-              <li><a href="UserIssueModify.vm">Modifying issues</a></li>
+              <li><a href="$link.setPage("help,UserIssueModify.vm")">Modifying issues</a></li>
             </ul>
-          <li><a href="UserQuery.vm">Searching the database </a></li>
-          <li><a href="UserReports.vm">Reports</a> </li>
-          <li><a href="ScarabBestPractices.vm">Best Practices</a></li>
-          <li><a href="ScarabFaq.vm">FAQ</a></li>
-          <li><a href="ScarabGlossary.vm">Glossary</a></li>
+          <li><a href="$link.setPage("help,UserQuery.vm")">Searching the database </a></li>
+          <li><a href="$link.setPage("help,UserReports.vm")">Reports</a> </li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Best Practices</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">FAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">Glossary</a></li>
         </ul>
       </li>
     </ul>
   </div>
-  <h3><a id="top" name="top">Issue entry templates</a></h3>
+  <h3><a name="top" id="top">Issue entry templates</a></h3>
   <p>You may find you often enter the same values for attributes for similar issues. 
     Templates allow you to save a set of values for quick access and use while 
     creating issues. Templates store descriptive dataset that can be used to populate 
@@ -59,7 +59,7 @@
     list</em> link under your issue type. On the <strong> Template list</strong> screen you 
     will find a list of any templates currently available.You can either manage 
     the templates there or create a new template.</p>
-  <h3><strong><a name="creating"></a>Creating a template</strong></h3>
+  <h3><strong><a name="creating" id="creating">Creating a template</a></strong></h3>
   <ol>
     <li>From the <em>Template list</em> screen click the <strong>Create new</strong> button.</li>
     <li>Enter values into the Template details section. The name of your template 
@@ -76,14 +76,14 @@
       screen. </li>
     <li>Click the <strong>Done</strong> button to save your template.</li>
   </ol>
-  <h3><strong><a name="using"></a>Using templates</strong></h3>
+  <h3><strong><a name="using" id="using">Using templates</a></strong></h3>
   <p>To use the template, on the <strong>Enter New</strong> screen click on the name of 
     the template and click the <strong>Select</strong> button. If you're not sure which 
     template to select use the <em>View all templates</em> link. Make sure to use 
     the <strong>Done</strong> button to return to the Enter new screen.</p>
-  <div class="courtesylinks"> 
-    <p><a href="#Top">Top</a> 
-  </div>
+ 
+    <p><a href="#top">Top</a> 
+  
 </div>
- </strongody>
+ </body>
 </html>
