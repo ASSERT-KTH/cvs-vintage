@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.55 2003/03/02 10:39:42 cooperfbi Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.56 2003/03/19 16:43:25 mnewcomb Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -2139,10 +2139,8 @@
          <attribute name="key-generator-factory">UUIDKeyGeneratorFactory</attribute>
       </entity-command>
 
-<!-- JDK1.4
       <entity-command name="get-generated-keys"
                       class="org.jboss.ejb.plugins.cmp.jdbc.jdbc3.JDBCGetGeneratedKeysCreateCommand"/>
--->
    </entity-commands>
 
 </jbosscmp-jdbc>
