@@ -101,9 +101,9 @@ $l10n.NoTemplates
 #end
 
 <div class="functnbar3">
-  <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />
+  <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doGotoothertemplate" />
   #if ($permItemDelete || $ownsAtLeastOne)
-    &#160;<input type="submit" value="Delete selected" name="eventSubmit_doDeletetemplates" />
+    &#160;<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletetemplates" />
   #end
 </div>
 
