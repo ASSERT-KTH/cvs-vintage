@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin name="SpamAssassin Plugin" description="Simple Example" id="org.columba.mail.SpamAssassin" version="1.0" category="Spam" enabled="false">
-  <extension name="org.columba.mail.pop3preprocessingfilter">
-    <pop3preprocessingfilter name="SpamAssassin" class="SpamAssassinPOP3PreProcessingFilterPlugin"></pop3preprocessingfilter>
-  </extension>
+<plugin name="SpamAssassin Plugin" description="Simple Example" id="org.columba.mail.SpamAssassin" version="1.0" category="Spam" enabled="true">
   <extension name="org.columba.core.externaltools">
     <tool name="spamc" class="SpamcExternalToolPlugin"></tool>
     <tool name="spamassassin" class="SpamAssassinExternalToolPlugin"></tool>
@@ -17,7 +14,7 @@
     <action name="RemoveAddressFromWhitelist" class="RemoveAddressFromWhiteListAction"></action>
   </extension>
   <extension name="org.columba.mail.menu">
-    <menu name="menu_utilities" extensionpoint="mail_bottom">
+    <menu name="menu_utilities" extensionpoint="bottom">
       <menu name="SpamAssassin">
         <menuitem action="AddAddressToWhitelist"></menuitem>
         <menuitem action="AddAddressToBlacklist"></menuitem>
@@ -29,6 +26,9 @@
         <menuitem action="MarkMessageAsHam"></menuitem>
       </menu>
     </menu>
+  </extension>
+  <extension name="org.columba.mail.filteraction">
+   <action name="SpamAssassin Analyze Message" main_class="AnalyzeMessageFilterAction" gui_class="org.columba.mail.gui.config.filter.plugins.DefaultActionRow" />
   </extension>
   <runtime jar="SpamAssassinPlugin.jar" type="java"></runtime>
 </plugin>

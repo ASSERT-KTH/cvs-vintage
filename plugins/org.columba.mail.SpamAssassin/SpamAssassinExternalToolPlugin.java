@@ -25,7 +25,7 @@ import java.net.URL;
 /**
  * @author fdietz
  */
-public class SpamassassinExternalToolPlugin extends AbstractExternalToolsPlugin {
+public class SpamAssassinExternalToolPlugin extends AbstractExternalToolsPlugin {
     protected static URL websiteURL;
 
     static {
@@ -39,7 +39,7 @@ public class SpamassassinExternalToolPlugin extends AbstractExternalToolsPlugin 
     File defaultLinux = new File("/usr/bin/spamassassin");
     File defaultLocalLinux = new File("/usr/local/bin/spamassassin");
 
-    public SpamassassinExternalToolPlugin() {
+    public SpamAssassinExternalToolPlugin() {
         super();
     }
 

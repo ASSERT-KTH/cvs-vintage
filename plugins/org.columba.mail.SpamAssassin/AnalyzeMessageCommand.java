@@ -78,16 +78,15 @@ public class AnalyzeMessageCommand extends Command {
 				return;
 			}
 
-			AnalyzeMessageCommand.addHeader(srcFolder, uids[i], worker);
+			analyzeMessage(srcFolder, uids[i], worker);
 			worker.setProgressBarValue(i);
 		}
 
 	}
 
-	public static void addHeader(IMailbox srcFolder, Object uid,
+	private void analyzeMessage(IMailbox srcFolder, Object uid,
 			WorkerStatusController worker) throws Exception {
-		//Header header = srcFolder.getHeaderFields(uid, new String[]
-		// {"X-Spam-Level"} );
+		
 		InputStream rawMessageSource = srcFolder.getMessageSourceStream(uid);
 		IPCHelper ipcHelper = new IPCHelper();
 
@@ -122,7 +121,6 @@ public class AnalyzeMessageCommand extends Command {
 			return;
 		}
 
-		//header.set("X-Spam-Level", result);
 		if (exitVal == 1) {
 			// spam found
 			srcFolder.setAttribute(uid, "columba.spam", Boolean.TRUE);

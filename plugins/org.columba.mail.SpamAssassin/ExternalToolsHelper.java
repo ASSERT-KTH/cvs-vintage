@@ -1,3 +1,5 @@
+import java.io.File;
+
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
 
@@ -24,8 +26,9 @@ public class ExternalToolsHelper {
         try {
             handler = (ExternalToolsPluginHandler) PluginManager.getInstance().getHandler(
                     "org.columba.core.externaltools");
-
-            return handler.getLocationOfExternalTool(name).getPath();
+            File file = handler.getLocationOfExternalTool(name);
+            
+            return file.getPath();
         } catch (Exception e) {
             e.printStackTrace();
         }
