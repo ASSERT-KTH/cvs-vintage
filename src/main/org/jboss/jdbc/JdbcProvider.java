@@ -20,7 +20,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class JdbcProvider
    extends org.jboss.util.ServiceMBeanSupport
@@ -51,7 +51,7 @@ public class JdbcProvider
    // ServiceMBeanSupport overrides ---------------------------------
    public String getName()
    {
-      return "Transaction manager";
+      return "JDBC provider";
     }
    
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
