@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BeanGenerator.java,v 1.4 1999/11/24 01:11:00 mandar Exp $
- * $Revision: 1.4 $
- * $Date: 1999/11/24 01:11:00 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BeanGenerator.java,v 1.5 2000/04/05 21:09:58 mandar Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/04/05 21:09:58 $
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -77,6 +77,7 @@ public class BeanGenerator extends GeneratorBase implements ServiceMethodPhase,
 	Hashtable attrs;
 	BeanRepository beanInfo;
 	boolean genSession;
+	boolean beanRT = false;
   
     public BeanGenerator (Mark start, Hashtable attrs, BeanRepository beanInfo,
 			  boolean genSession) {
@@ -161,13 +162,13 @@ public class BeanGenerator extends GeneratorBase implements ServiceMethodPhase,
 	    String  clsname    = getAttribute ("class");
 	    String  type       = getAttribute ("type");
 	    String  beanName   = getAttribute ("beanName");
-
 	    
 	    if (type == null) type = clsname;
 
 	    // See if beanName is a request-time expression.
 	    if (beanName != null && JspUtil.isExpression (beanName)) {
 		beanName = JspUtil.getExpr (beanName);
+		beanRT = true;
 	    }
 	    
 	    if (scope == null || scope.equals ("page")) {
@@ -340,9 +341,14 @@ public class BeanGenerator extends GeneratorBase implements ServiceMethodPhase,
 	if (beanName != null) clsname = beanName;
 	writer.println ("try {");
 	writer.pushIndent ();
-	writer.println(varname+" = ("+ convert + 
-		       ") Beans.instantiate(getClassLoader(), "+
-		       writer.quoteString(clsname) +");");
+	if (beanRT == false)
+	    writer.println(varname+" = ("+ convert + 
+			   ") Beans.instantiate(getClassLoader(), "+
+			   writer.quoteString(clsname) +");");
+	else
+	    writer.println(varname+" = ("+ convert + 
+			   ") Beans.instantiate(getClassLoader(), "+
+			   clsname +");");
 	writer.popIndent ();
 	writer.println ("} catch (Exception exc) {");
 	writer.pushIndent ();
