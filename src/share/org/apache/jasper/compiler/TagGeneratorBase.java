@@ -1,13 +1,13 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagGeneratorBase.java,v 1.3 1999/10/21 07:57:23 akv Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/21 07:57:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagGeneratorBase.java,v 1.4 2000/07/03 09:11:17 bergsten Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/07/03 09:11:17 $
  *
  * ====================================================================
- * 
+ *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -23,15 +23,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -57,7 +57,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- */ 
+ */
 
 package org.apache.jasper.compiler;
 
@@ -67,16 +67,18 @@ import java.util.Hashtable;
 import javax.servlet.jsp.tagext.VariableInfo;
 
 /**
- * Common stuff for use with TagBegin and TagEndGenerators. 
+ * Common stuff for use with TagBegin and TagEndGenerators.
  *
  * @author Anil K. Vijendran
+ * @author Hans Bergsten [hans@gefionsoftware.com] (changed all statics to
+ *         regular instance vars and methods to avoid corrupt state and
+ *         multi-threading issues)
  */
 abstract class TagGeneratorBase extends GeneratorBase {
-    static private Stack tagHandlerStack = new Stack();
+    private Stack tagHandlerStack;
+    private Hashtable tagVarNumbers;
 
-    static private Hashtable tagVarNumbers = new Hashtable();
-
-    static class TagVariableData {
+    class TagVariableData {
         String tagHandlerInstanceName;
         String tagEvalVarName;
         TagVariableData(String tagHandlerInstanceName, String tagEvalVarName) {
@@ -85,21 +87,38 @@ abstract class TagGeneratorBase extends GeneratorBase {
         }
     }
 
-    static protected void tagBegin(TagVariableData tvd) {
+    /**
+     * Sets the tag handler nesting stack for the current page.
+     * Called when an instance is created.
+     */
+    protected void setTagHandlerStack(Stack tagHandlerStack) {
+        this.tagHandlerStack = tagHandlerStack;
+    }
+
+    /**
+     * Sets the tag variable number repository for the current page.
+     * Called when an instance is created.
+     */
+    protected void setTagVarNumbers(Hashtable tagVarNumbers) {
+        this.tagVarNumbers = tagVarNumbers;
+    }
+
+    protected void tagBegin(TagVariableData tvd) {
 	tagHandlerStack.push(tvd);
     }
 
-    static protected TagVariableData tagEnd() {
+    protected TagVariableData tagEnd() {
 	return (TagVariableData) tagHandlerStack.pop();
     }
 
-    static protected TagVariableData topTag() {
+    protected TagVariableData topTag() {
 	if (tagHandlerStack.empty())
 	    return null;
 	return (TagVariableData) tagHandlerStack.peek();
     }
-	    
-    static protected String getTagVarName(String prefix, String shortTagName) {
+
+    protected String getTagVarName(String prefix, String shortTagName) {
+	// Fix: Can probably remove the synchronization now when no vars or method is static
 	synchronized (tagVarNumbers) {
 	    String tag = prefix+":"+shortTagName;
 	    String varName = prefix+"_"+shortTagName+"_";
@@ -115,8 +134,8 @@ abstract class TagGeneratorBase extends GeneratorBase {
 	}
     }
 
-    protected static void declareVariables(ServletWriter writer, VariableInfo[] vi, 
-                                           boolean declare, boolean update, int scope) 
+    protected void declareVariables(ServletWriter writer, VariableInfo[] vi,
+                                           boolean declare, boolean update, int scope)
     {
         if (vi != null)
             for(int i = 0; i < vi.length; i++)
@@ -125,7 +144,7 @@ abstract class TagGeneratorBase extends GeneratorBase {
                         writer.println(vi[i].getClassName()+" "+vi[i].getVarName()+" = null;");
                     if (update == true)
                         writer.println(vi[i].getVarName()+" = ("+
-                                       vi[i].getClassName()+") pageContext.getAttribute("
+                                       vi[i].getClassName()+") pageContext.findAttribute("
                                        +writer.quoteString(vi[i].getVarName())+");");
                 }
     }

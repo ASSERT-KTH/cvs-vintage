@@ -1,8 +1,8 @@
 /*
- * 
+ *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -10,7 +10,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -18,15 +18,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -52,10 +52,11 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- */ 
+ */
 package org.apache.jasper.compiler;
 
 import java.util.Hashtable;
+import java.util.Stack;
 import java.util.Enumeration;
 import java.lang.reflect.Method;
 
@@ -78,8 +79,8 @@ import org.apache.jasper.compiler.ServletWriter;
  *
  * @author Anil K. Vijendran
  */
-public class TagBeginGenerator 
-    extends TagGeneratorBase 
+public class TagBeginGenerator
+    extends TagGeneratorBase
     implements ServiceMethodPhase
 {
     String prefix;
@@ -94,11 +95,14 @@ public class TagBeginGenerator
     Mark start;
     TagLibraries libraries;
 
-    
+
     public TagBeginGenerator(Mark start, String prefix, String shortTagName, Hashtable attrs,
-			     TagLibraryInfo tli, TagInfo ti, TagLibraries libraries) 
+			     TagLibraryInfo tli, TagInfo ti, TagLibraries libraries,
+                             Stack tagHandlerStack, Hashtable tagVarNumbers)
         throws JasperException
     {
+        setTagHandlerStack(tagHandlerStack);
+        setTagVarNumbers(tagVarNumbers);
         this.prefix = prefix;
         this.shortTagName = shortTagName;
         this.attrs = attrs;
@@ -123,7 +127,7 @@ public class TagBeginGenerator
                 clz = cl.loadClass(ti.getTagClassName());
             } catch (Exception ex) {
                 throw new CompileException(start,
-					   Constants.getString("jsp.error.unable.loadclass", 
+					   Constants.getString("jsp.error.unable.loadclass",
                                                               new Object[] { ti.getTagClassName(),
                                                                              ex.getMessage()
                                                               }
@@ -133,13 +137,13 @@ public class TagBeginGenerator
             libraries.putTagCache(prefix, shortTagName, tc);
         }
     }
-    
+
     void validate() throws JasperException {
 
         // Sigh! I wish I didn't have to clone here.
-        Hashtable attribs = (Hashtable) attrs.clone(); 
+        Hashtable attribs = (Hashtable) attrs.clone();
 
-        // First make sure all required attributes are indeed present. 
+        // First make sure all required attributes are indeed present.
         for(int i = 0; i < attributes.length; i++)
             if (attributes[i].isRequired() && attribs.get(attributes[i].getName()) == null)
                 throw new CompileException(start,
@@ -149,7 +153,7 @@ public class TagBeginGenerator
                                                                   shortTagName
                                                               }
                                                               ));
-        // Now make sure there are no invalid attributes... 
+        // Now make sure there are no invalid attributes...
         Enumeration e = attribs.keys();
         while (e.hasMoreElements()) {
             String attr = (String) e.nextElement();
@@ -161,7 +165,7 @@ public class TagBeginGenerator
 			JspUtil.isExpression((String)attribs.get(attr)))
                         attribs.put(attr, TagData.REQUEST_TIME_VALUE);
 		}
-            
+
             if (!found)
                 throw new CompileException(start,
 					   Constants.getString("jsp.error.bad_attribute",
@@ -177,7 +181,7 @@ public class TagBeginGenerator
 				       Constants.getString("jsp.error.invalid_attributes"));
     }
 
-    private final void generateSetters(ServletWriter writer, String parent) 
+    private final void generateSetters(ServletWriter writer, String parent)
         throws JasperException
     {
         writer.println(thVarName+".setPageContext(pageContext);");
@@ -187,7 +191,7 @@ public class TagBeginGenerator
 	    for(int i = 0; i < attributes.length; i++) {
                 String attrValue = (String) attrs.get(attributes[i].getName());
                 if (attrValue != null) {
-		    
+
 		    if (attributes[i].canBeRequestTime()) {
 			if (JspUtil.isExpression(attrValue))
 			    attrValue = JspUtil.getExpr(attrValue);
@@ -195,23 +199,23 @@ public class TagBeginGenerator
 			    attrValue = writer.quoteString(attrValue);
 		    } else
 			attrValue = writer.quoteString(attrValue);
-		    
+
 		    String attrName = attributes[i].getName();
 		    Method m = tc.getSetterMethod(attrName);
-		    
+
 		    if (m == null)
 			throw new CompileException
 			    (start, Constants.getString
 			     ("jsp.error.unable.to_find_method",
 			      new Object[] { attrName }));
-		    
+
 		    writer.println(thVarName+"."+m.getName()+"("+attrValue+");");
                 }
             }
     }
-    
-    public void generateServiceMethodStatements(ServletWriter writer) 
-        throws JasperException 
+
+    public void generateServiceMethodStatements(ServletWriter writer)
+        throws JasperException
     {
         TagVariableData top = topTag();
         String parent = top == null ? null : top.tagHandlerInstanceName;
@@ -224,10 +228,10 @@ public class TagBeginGenerator
         writer.println(ti.getTagClassName()+" "+thVarName+" = new "+ti.getTagClassName()+"();");
 
         generateSetters(writer, parent);
-        
+
         VariableInfo[] vi = ti.getVariableInfo(tagData);
 
-        // Just declare AT_BEGIN here... 
+        // Just declare AT_BEGIN here...
         declareVariables(writer, vi, true, false, VariableInfo.AT_BEGIN);
 
 	writer.println("try {");
@@ -237,15 +241,15 @@ public class TagBeginGenerator
 
         writer.println("int "+evalVar+" = "
                        +thVarName+".doStartTag();");
-        
+
         boolean implementsBodyTag = BodyTag.class.isAssignableFrom(tc.getTagHandlerClass());
-        
+
         // Need to update AT_BEGIN variables here
         declareVariables(writer, vi, false, true, VariableInfo.AT_BEGIN);
-        
-        // FIXME: I'm not too sure if this is the right approach. I don't like 
-        //        throwing English language strings into the generated servlet. 
-        //        Perhaps, I'll just define an inner classes as necessary for these 
+
+        // FIXME: I'm not too sure if this is the right approach. I don't like
+        //        throwing English language strings into the generated servlet.
+        //        Perhaps, I'll just define an inner classes as necessary for these
         //        types of exceptions? -akv
 
         if (implementsBodyTag) {
@@ -277,10 +281,10 @@ public class TagBeginGenerator
 
 	    writer.popIndent();
 	    writer.println("}");
-	    
+
 	    writer.println(thVarName+".doInitBody();");
 	}
-        
+
 	writer.println("do {");
 	writer.pushIndent();
         // Need to declare and update NESTED variables here
@@ -289,9 +293,9 @@ public class TagBeginGenerator
         declareVariables(writer, vi, false, true, VariableInfo.AT_BEGIN);
     }
 
-    public void generate(ServletWriter writer, Class phase) 
-        throws JasperException 
+    public void generate(ServletWriter writer, Class phase)
+        throws JasperException
     {
         generateServiceMethodStatements(writer);
-    }    
+    }
 }
