@@ -116,7 +116,11 @@
           <attribute>
             <name>$activity.Attribute.Name</name>
             <value>$activity.NewValue</value>
-            <old-value>$!activity.OldValue</old-value>
+            #if ($activity.OldValue)
+
+            <old-value>$activity.OldValue</old-value>
+            #end
+
             <type>$activity.Attribute.AttributeType.Name</type>
           </attribute>
           <description>$activity.Description</description>
