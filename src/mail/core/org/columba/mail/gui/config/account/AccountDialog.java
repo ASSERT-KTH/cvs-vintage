@@ -71,12 +71,6 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		dialog.setTitle(
 			MailResourceLoader.getString("dialog", "account", "dialog_title"));
 		this.accountItem = item;
-		dialog.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				dialog.setVisible(false);
-			}
-		});
-
 		createPanels();
 		initComponents();
 
