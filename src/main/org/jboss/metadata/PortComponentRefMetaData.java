@@ -6,24 +6,33 @@
  */
 package org.jboss.metadata;
 
-// $Id: PortComponentRefMetaData.java,v 1.2 2004/05/07 14:58:49 tdiesler Exp $
+// $Id: PortComponentRefMetaData.java,v 1.3 2004/05/14 18:34:20 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.w3c.dom.Element;
 
+import javax.xml.rpc.JAXRPCException;
 import java.io.Serializable;
 
 /** The metdata data from service-ref/port-component-ref element in web.xml, ejb-jar.xml, and application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class PortComponentRefMetaData implements Serializable
 {
+   // The parent service-ref
+   private ServiceRefMetaData serviceRefMetaData;
+
    // The required <service-endpoint-interface> element
    private String serviceEndpointInterface;
    // The optional <port-component-link> element
    private String portComponentLink;
+
+   public PortComponentRefMetaData(ServiceRefMetaData serviceRefMetaData)
+   {
+      this.serviceRefMetaData = serviceRefMetaData;
+   }
 
    public String getPortComponentLink()
    {
@@ -33,6 +42,19 @@ public class PortComponentRefMetaData implements Serializable
    public String getServiceEndpointInterface()
    {
       return serviceEndpointInterface;
+   }
+
+   public Class getServiceEndpointInterfaceClass()
+   {
+      try
+      {
+         ClassLoader cl = serviceRefMetaData.getResourceCL();
+         return cl.loadClass(serviceEndpointInterface);
+      }
+      catch (ClassNotFoundException e)
+      {
+         throw new JAXRPCException("Cannot load service endpoint interface: " + serviceEndpointInterface);
+      }
    }
 
    public void importStandardXml(Element element)

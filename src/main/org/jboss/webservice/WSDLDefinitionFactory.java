@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice;
 
-// $Id: WSDLDefinitionFactory.java,v 1.2 2004/05/13 20:53:22 tdiesler Exp $
+// $Id: WSDLDefinitionFactory.java,v 1.3 2004/05/14 18:34:21 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.xml.sax.InputSource;
@@ -19,6 +19,10 @@ import javax.wsdl.xml.WSDLReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.File;
+import java.io.PrintStream;
+import java.io.ByteArrayOutputStream;
+import java.io.BufferedReader;
+import java.io.StringReader;
 import java.net.URL;
 
 /**
@@ -37,11 +41,45 @@ public final class WSDLDefinitionFactory
    {
    }
 
+   /**
+    * Read the wsdl document from the given URL
+    */
    public static Definition readWSDL(URL wsdlLocation) throws WSDLException
    {
-      WSDLFactory wsdlFactory = WSDLFactory.newInstance();
-      WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
-      Definition wsdlDefinition = wsdlReader.readWSDL(new WSDLLocatorImpl(wsdlLocation));
+      // wsdl4j is quite noisy on system out, we swallow the output
+      PrintStream out = System.out;
+      ByteArrayOutputStream baos = new ByteArrayOutputStream(128);
+      System.setOut(new PrintStream(baos));
+
+      Definition wsdlDefinition = null;
+      try
+      {
+         WSDLFactory wsdlFactory = WSDLFactory.newInstance();
+         WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
+         wsdlDefinition = wsdlReader.readWSDL(new WSDLLocatorImpl(wsdlLocation));
+      }
+      finally
+      {
+         System.setOut(out);
+      }
+
+      // write wsdl4j output as debug
+      try
+      {
+         baos.close();
+         BufferedReader br = new BufferedReader(new StringReader(new String(baos.toByteArray())));
+         String line = br.readLine();
+         while(line != null)
+         {
+            log.debug(line);
+            line = br.readLine();
+         }
+      }
+      catch (IOException ignore)
+      {
+         // do nothing
+      }
+
       return wsdlDefinition;
    }
 
@@ -85,11 +123,11 @@ public final class WSDLDefinitionFactory
          String parentDir = parent.substring(0, parent.lastIndexOf("/"));
 
          // remove references to current dir
-         while(relative.startsWith("./"))
+         while (relative.startsWith("./"))
             relative = relative.substring(2);
 
          // remove references to parentdir
-         while(relative.startsWith("../"))
+         while (relative.startsWith("../"))
          {
             parentDir = parentDir.substring(0, parentDir.lastIndexOf("/"));
             relative = relative.substring(3);

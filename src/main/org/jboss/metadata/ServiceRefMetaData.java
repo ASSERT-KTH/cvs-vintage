@@ -6,16 +6,21 @@
  */
 package org.jboss.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.10 2004/05/12 22:09:54 tdiesler Exp $
+// $Id: ServiceRefMetaData.java,v 1.11 2004/05/14 18:34:20 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.webservice.WSDLDefinitionFactory;
+import org.jboss.webservice.metadata.jaxrpcmapping.JavaWsdlMapping;
+import org.jboss.webservice.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
+import org.jboss.xml.binding.Unmarshaller;
 import org.w3c.dom.Element;
 
 import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
 import javax.xml.namespace.QName;
+import javax.xml.rpc.JAXRPCException;
 import java.io.Serializable;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -25,7 +30,7 @@ import java.util.Iterator;
 /** The metdata data from service-ref element in web.xml, ejb-jar.xml, and application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class ServiceRefMetaData implements Serializable
 {
@@ -51,6 +56,8 @@ public class ServiceRefMetaData implements Serializable
    private transient URLClassLoader resourceCL;
    // The wsdl definition, if we have one
    private transient Definition wsdlDefinition;
+   // The java/wsdl mapping, if we have one
+   private transient JavaWsdlMapping javaWsdlMapping;
 
    /** Default constructor, used when unmarshalling on the client side
     */
@@ -66,6 +73,7 @@ public class ServiceRefMetaData implements Serializable
    }
 
    /** Set the resource classloader that can load the wsdl file
+    * On the client side this is set expicitly after unmarshalling.
     */
    public void setResourceCl(URLClassLoader resourceCl)
    {
@@ -75,9 +83,34 @@ public class ServiceRefMetaData implements Serializable
       this.resourceCL = resourceCl;
    }
 
+   public URLClassLoader getResourceCL()
+   {
+      return resourceCL;
+   }
+
    public String getJaxrpcMappingFile()
    {
       return jaxrpcMappingFile;
+   }
+
+   public JavaWsdlMapping getJavaWsdlMapping()
+   {
+      if (javaWsdlMapping == null)
+      {
+         try
+         {
+            // setup the XML binding Unmarshaller
+            Unmarshaller unmarshaller = new Unmarshaller();
+            JavaWsdlMappingFactory factory = new JavaWsdlMappingFactory();
+            InputStream is = resourceCL.getResourceAsStream(jaxrpcMappingFile);
+            javaWsdlMapping = (JavaWsdlMapping)unmarshaller.unmarshal(is, factory, null);
+         }
+         catch (Exception e)
+         {
+            throw new JAXRPCException("Cannot unmarshal jaxrpc-mapping-file: " + jaxrpcMappingFile, e);
+         }
+      }
+      return javaWsdlMapping;
    }
 
    public PortComponentRefMetaData[] getPortComponentRefs()
@@ -162,7 +195,7 @@ public class ServiceRefMetaData implements Serializable
       while (iterator.hasNext())
       {
          Element pcrefElement = (Element) iterator.next();
-         PortComponentRefMetaData pcrefMetaData = new PortComponentRefMetaData();
+         PortComponentRefMetaData pcrefMetaData = new PortComponentRefMetaData(this);
          pcrefMetaData.importStandardXml(pcrefElement);
          portComponentRefs.add(pcrefMetaData);
       }
