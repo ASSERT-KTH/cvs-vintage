@@ -93,7 +93,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.164 2003/05/22 00:45:03 elicia Exp $
+ * @version $Id: ModifyIssue.java,v 1.165 2003/05/29 17:22:08 jmcnally Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -447,7 +447,7 @@ public class ModifyIssue extends BaseModifyIssue
         }
 
         IntakeTool intake = getIntakeTool(context);
-        Group group = intake.get("Attachment", "fileKey", false);
+        Group group = intake.get("Attachment", "fileKey" + issue.getQueryKey(), false);
         Field nameField = group.get("Name"); 
         // set some required fields
         if (nameField.isValid())

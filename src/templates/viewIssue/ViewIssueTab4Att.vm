@@ -1,6 +1,6 @@
 #set ($atch = $scarabR.Attachment)
 #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
-#set ($intakeAttachment = $intake.Attachment.setKey("fileKey"))
+#set ($intakeAttachment = $intake.Attachment.setKey("fileKey$currentIssue.QueryKey"))
 #set ($attachments = $currentIssue.ExistingAttachments)
 
 <h3>$l10n.Attachments</h3>
