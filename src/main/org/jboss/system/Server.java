@@ -32,7 +32,7 @@ import org.jboss.Version;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class Server
    implements ServerMBean
@@ -72,7 +72,7 @@ public class Server
       log.info("JBoss Release: " + mainPkg.getImplementationTitle());
       
       this.config = config;
-      log.info("Using config: " + config);
+      log.debug("Using config: " + config);
       
       // remeber when we we started
       started = new Date();
