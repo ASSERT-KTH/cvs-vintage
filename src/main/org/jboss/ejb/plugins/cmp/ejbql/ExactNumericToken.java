@@ -1,9 +1,9 @@
 package org.jboss.ejb.plugins.cmp.ejbql;
 
-public class ExactNumericLiteral implements Token {
+public class ExactNumericToken implements Token {
 	private final long value;
 	
-	public ExactNumericLiteral(long value) {
+	public ExactNumericToken(long value) {
 		this.value = value;
 	}
 
@@ -16,8 +16,8 @@ public class ExactNumericLiteral implements Token {
 	}
 	
 	public boolean equals(Object o) {
-		if(o instanceof ExactNumericLiteral) {
-			return ((ExactNumericLiteral)o).value == value;
+		if(o instanceof ExactNumericToken) {
+			return ((ExactNumericToken)o).value == value;
 		}
 		return false;
 	}

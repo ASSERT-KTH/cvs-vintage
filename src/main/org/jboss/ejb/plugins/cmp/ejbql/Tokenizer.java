@@ -3,17 +3,19 @@ package org.jboss.ejb.plugins.cmp.ejbql;
 import java.io.Reader;
 import java.io.PushbackReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
 public class Tokenizer implements Iterator {
-	private static final TokenizerState NUMBER_STATE = new EJBQLNumberState();
-	private static final TokenizerState QUOTE_STATE = new EJBQLQuoteState();
+	private static final TokenizerState INPUT_PARAMETER_STATE = new InputParameterState();
+	private static final TokenizerState NUMBER_STATE = new NumberState();
+	private static final TokenizerState QUOTE_STATE = new QuoteState();
 	private static final TokenizerState SYMBOL_STATE = new SymbolState();	
 	private static final TokenizerState WHITESPACE_STATE = new WhitespaceState();
-	private static final TokenizerState WORD_STATE = new EJBQLWordState();
+	private static final TokenizerState WORD_STATE = new WordState();
 
 	private Map tokenizerStates = new HashMap(256);
 	private TokenizerState defaultState;
@@ -22,6 +24,15 @@ public class Tokenizer implements Iterator {
 
 	public Tokenizer() {
 		initDefaultStates();
+	}
+	
+	public Tokenizer(String string) {
+		this(new StringReader(string));
+	}
+	
+	public Tokenizer(Reader reader) {
+		this();
+		setReader(reader);
 	}
 
 	public TokenizerState getCharacterState(char character) {
@@ -61,7 +72,7 @@ public class Tokenizer implements Iterator {
 		return n;
 	}
 	
-	private Token peekToken() {
+	public Token peekToken() {
 		if(peekedToken == null) {
 			try{
 				int c = reader.read();
@@ -95,7 +106,7 @@ public class Tokenizer implements Iterator {
 			}
 		}
 		tokenizerStates.put(new Character('\''), QUOTE_STATE);
-		tokenizerStates.put(new Character('?'), WORD_STATE);
+		tokenizerStates.put(new Character('?'), INPUT_PARAMETER_STATE);
 		tokenizerStates.put(new Character('.'), NUMBER_STATE);
 	}
 }

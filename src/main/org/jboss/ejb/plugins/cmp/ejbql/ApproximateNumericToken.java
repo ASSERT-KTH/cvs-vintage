@@ -1,9 +1,9 @@
 package org.jboss.ejb.plugins.cmp.ejbql;
 
-public class ApproximateNumericLiteral implements Token {
+public class ApproximateNumericToken implements Token {
 	private final double value;
 	
-	public ApproximateNumericLiteral(double value) {
+	public ApproximateNumericToken(double value) {
 		this.value = value;
 	}
 
@@ -17,8 +17,8 @@ public class ApproximateNumericLiteral implements Token {
 	}
 	
 	public boolean equals(Object o) {
-		if(o instanceof ApproximateNumericLiteral) {
-			return ((ApproximateNumericLiteral)o).value == value;
+		if(o instanceof ApproximateNumericToken) {
+			return ((ApproximateNumericToken)o).value == value;
 		}
 		return false;
 	}

@@ -4,16 +4,16 @@ import java.io.PushbackReader;
 import java.io.IOException;
 import java.io.CharArrayWriter;
 
-public class EJBQLQuoteState implements TokenizerState {
+public class QuoteState implements TokenizerState {
 	private static final char SINGLE_QUOTE = '\'';
 	
-	public EJBQLQuoteState() {
+	public QuoteState() {
 	}
 
 	public Token nextToken(PushbackReader in, char character, Tokenizer tokenizer)
 			throws IOException {
 		if(character != SINGLE_QUOTE) {
-			throw new IllegalArgumentException("EJBQLQuoteState can only tokenize single quoted strings");
+			throw new IllegalArgumentException("QuoteState can only tokenize single quoted strings");
 		}
 		if(in == null) {
 			throw new IllegalArgumentException("in is null");
@@ -46,7 +46,7 @@ public class EJBQLQuoteState implements TokenizerState {
 					if(nextChar != -1) {
 						in.unread(nextChar);
 					}
-					return new StringLiteral(out.toString());
+					return new StringToken(out.toString());
 				} 
 			}
 		}

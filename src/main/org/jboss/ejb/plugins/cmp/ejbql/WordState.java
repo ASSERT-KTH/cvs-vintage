@@ -4,15 +4,15 @@ import java.io.PushbackReader;
 import java.io.IOException;
 import java.io.CharArrayWriter;
 
-public class EJBQLWordState implements TokenizerState {
+public class WordState implements TokenizerState {
 
-	public EJBQLWordState() {
+	public WordState() {
 	}
 
 	public Token nextToken(PushbackReader in, char character, Tokenizer tokenizer)
 			throws IOException {
 		if(!isEJBQLIdentifierStart(character)) {
-			throw new IllegalArgumentException("EJBQLWordState must begin with a valid identified start: c="+character);
+			throw new IllegalArgumentException("WordState must begin with a valid identified start: c="+character);
 		}
 		if(in == null) {
 			throw new IllegalArgumentException("in is null");
@@ -38,7 +38,7 @@ public class EJBQLWordState implements TokenizerState {
 	}
 	
 	private boolean isEJBQLIdentifierStart(char c) {
-		return Character.isJavaIdentifierStart(c) || c=='?';
+		return Character.isJavaIdentifierStart(c) || c!='?';
 	}
 
 	private boolean isEJBQLIdentifierPart(char c) {

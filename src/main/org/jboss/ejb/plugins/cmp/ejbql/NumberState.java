@@ -4,17 +4,17 @@ import java.io.PushbackReader;
 import java.io.IOException;
 import java.io.CharArrayWriter;
 
-public class EJBQLNumberState implements TokenizerState {
+public class NumberState implements TokenizerState {
 	private TokenizerState symbolState = new SymbolState();
 
-	public EJBQLNumberState() {
+	public NumberState() {
 	}
 
 	public Token nextToken(PushbackReader in, char c, Tokenizer tokenizer)
 			throws IOException {
 				
 		if(!Character.isDigit(c) && c != '.') {
-			throw new IllegalArgumentException("EJBQLWordState must begin with a digit or a '.': c="+c);
+			throw new IllegalArgumentException("NumberState must begin with a digit or a '.': c="+c);
 		}
 		
 		// do we just have a peroid
@@ -51,9 +51,9 @@ public class EJBQLNumberState implements TokenizerState {
 		String number = out.toString().toLowerCase();
 		System.out.println("number is ["+number+"]");
 		if(isExactNumeric(number)) {
-			return createExactNumericLiteral(number);
+			return createExactNumericToken(number);
 		} else {
-			return createApproximateNumericLiteral(number);
+			return createApproximateNumericToken(number);
 		}
 	}
 	
@@ -170,24 +170,24 @@ public class EJBQLNumberState implements TokenizerState {
 	 * This function is broken.  It does not support bit field style
 	 * integers and longs 0xffffffff
 	 */
-	private ExactNumericLiteral createExactNumericLiteral(String number) throws IOException {
+	private ExactNumericToken createExactNumericToken(String number) throws IOException {
 		// long suffix
 		if(number.endsWith("l") || number.endsWith("L")) {
 			// chop off the suffix
 			number = number.substring(0, number.length()-1);
 			System.out.println("decode long number ["+number+"]");
-			return new ExactNumericLiteral(Long.decode(number).longValue()); 
+			return new ExactNumericToken(Long.decode(number).longValue()); 
 		} else { 
-			return new ExactNumericLiteral(Integer.decode(number.toUpperCase()).intValue()); 
+			return new ExactNumericToken(Integer.decode(number.toUpperCase()).intValue()); 
 		}
 	}
 	
-	private ApproximateNumericLiteral createApproximateNumericLiteral(String number) throws IOException {
+	private ApproximateNumericToken createApproximateNumericToken(String number) throws IOException {
 		// float suffix
 		if(number.endsWith("f") || number.endsWith("F")) {
 			// chop off the suffix
 			number = number.substring(0, number.length()-1);
-			return new ApproximateNumericLiteral(Float.parseFloat(number));
+			return new ApproximateNumericToken(Float.parseFloat(number));
 		} 
 		
 		// ends with a d suffix, chop it off
@@ -196,7 +196,7 @@ public class EJBQLNumberState implements TokenizerState {
 		}
 	
 		// regular double
-		return new ApproximateNumericLiteral(Double.parseDouble(number));		
+		return new ApproximateNumericToken(Double.parseDouble(number));		
 	}
 
 	private int peekChar(PushbackReader in) throws IOException {
