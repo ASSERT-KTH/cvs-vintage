@@ -955,6 +955,14 @@ try{
     }
 
     /**
+     * Returns name of current template
+     */
+    public String getCurrentTemplate()
+    {
+        return data.getTarget().replace('/',',');
+    }
+
+    /**
      * The issue that is currently being entered.
      *
      * @return an <code>Issue</code> value
