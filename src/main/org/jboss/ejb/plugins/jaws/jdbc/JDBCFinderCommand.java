@@ -33,7 +33,7 @@ import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public abstract class JDBCFinderCommand
    extends JDBCQueryCommand
@@ -107,7 +107,7 @@ public abstract class JDBCFinderCommand
 
          while (rs.next())
          {
-            result.add(getResultObject(rs, 1, pkFieldInfo.getPkField().getType()));
+            result.add(getResultObject(rs, 1, pkFieldInfo.getCMPField().getType()));
          }
       }
 
