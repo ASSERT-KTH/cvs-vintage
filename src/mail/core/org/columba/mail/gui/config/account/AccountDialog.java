@@ -83,9 +83,7 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		//panelChooser.addListSelectionListener(this);
 
 		dialog.pack();
-//		for jdk1.3 compatibility, this is called dynamically
-		Compatibility.simpleSetterInvoke(dialog, "setLocationRelativeTo", Component.class, null );
-		//dialog.setLocationRelativeTo(null);
+		dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
 	}
 
