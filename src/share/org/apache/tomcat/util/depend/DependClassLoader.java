@@ -55,15 +55,12 @@
 
 package org.apache.tomcat.util.depend;
 
-import java.io.*;
-import java.lang.*;
-import java.net.*;
-import java.text.*;
-import java.util.*;
-import java.util.zip.*;
-import java.security.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
-import org.apache.tomcat.util.compat.*;
+import org.apache.tomcat.util.compat.Jdk11Compat;
 
 /**
  * This is a wrapper class loader that will delegate all calls to

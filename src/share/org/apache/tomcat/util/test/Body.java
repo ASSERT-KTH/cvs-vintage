@@ -58,10 +58,6 @@
  */ 
 package org.apache.tomcat.util.test;
 
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import java.net.*;
 
 //XXX rename it to Text
 

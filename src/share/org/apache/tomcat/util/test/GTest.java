@@ -58,12 +58,16 @@
  */ 
 package org.apache.tomcat.util.test;
 
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import java.net.*;
-import org.apache.tomcat.util.test.matchers.*;
-import org.apache.tools.ant.*;
+import java.io.PrintWriter;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import org.apache.tomcat.util.test.matchers.GoldenMatch;
+import org.apache.tomcat.util.test.matchers.HeaderMatch;
+import org.apache.tomcat.util.test.matchers.HttpStatusMatch;
+import org.apache.tomcat.util.test.matchers.ResponseMatch;
+import org.apache.tomcat.util.test.matchers.ResponseMatchFile;
+import org.apache.tools.ant.Project;
 
 /** Original tester for a web application. Will send a http request and
     verify the response code, compare the response with a golden

@@ -55,13 +55,7 @@
 
 package org.apache.tomcat.util.depend;
 
-import java.io.*;
-import java.lang.*;
-import java.net.*;
-import java.text.*;
-import java.util.*;
-import java.util.zip.*;
-import java.security.*;
+import java.io.File;
 
 /** Represents a dependency between a real file and a server object.
  *  The servler object has a timestamp, and it is compared with the

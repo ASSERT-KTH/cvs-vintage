@@ -55,13 +55,6 @@
 
 package org.apache.tomcat.util.depend;
 
-import java.io.*;
-import java.lang.*;
-import java.net.*;
-import java.text.*;
-import java.util.*;
-import java.util.zip.*;
-import java.security.*;
 
 /** How it works:
     - A DependManager gets loaded with a number of Dependency

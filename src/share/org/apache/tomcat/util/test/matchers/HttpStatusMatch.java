@@ -58,11 +58,9 @@
  */ 
 package org.apache.tomcat.util.test.matchers;
 
-import org.apache.tomcat.util.test.*;
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import java.net.*;
+import java.util.Hashtable;
+
+import org.apache.tomcat.util.test.Matcher;
 
 
 /**

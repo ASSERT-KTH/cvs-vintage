@@ -58,11 +58,13 @@
  */ 
 package org.apache.tomcat.util.test.matchers;
 
-import org.apache.tomcat.util.test.*;
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import java.net.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
+
+import org.apache.tomcat.util.test.Matcher;
 
 
 /**

@@ -55,16 +55,21 @@
 
 package org.apache.tomcat.util.depend;
 
-import java.io.*;
-import java.lang.*;
-import java.net.*;
-import java.text.*;
-import java.util.*;
-import java.util.jar.*;
-import java.util.zip.*;
-import java.security.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.security.ProtectionDomain;
+import java.util.Enumeration;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
-import org.apache.tomcat.util.compat.*;
+import org.apache.tomcat.util.compat.SimpleClassLoader;
 
 public class DependClassLoader12 implements DependClassLoader.DCLFactory {
 

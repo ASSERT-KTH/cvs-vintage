@@ -58,11 +58,13 @@
  */ 
 package org.apache.tomcat.util.test.matchers;
 
-import org.apache.tomcat.util.test.*;
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Hashtable;
+
+import org.apache.tomcat.util.test.Matcher;
 
 /**
    Check if the response matches a response file

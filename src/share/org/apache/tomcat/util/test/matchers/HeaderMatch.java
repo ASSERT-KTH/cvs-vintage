@@ -58,11 +58,12 @@
  */ 
 package org.apache.tomcat.util.test.matchers;
 
-import org.apache.tomcat.util.test.*;
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import java.net.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import org.apache.tomcat.util.test.Header;
+import org.apache.tomcat.util.test.Matcher;
 
 /** Check if the response has ( or has not ) some headers
  */

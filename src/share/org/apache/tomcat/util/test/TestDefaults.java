@@ -58,11 +58,7 @@
  */ 
 package org.apache.tomcat.util.test;
 
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import java.net.*;
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.Project;
 
 /** Set default values for HttpClient and GTest.
  */

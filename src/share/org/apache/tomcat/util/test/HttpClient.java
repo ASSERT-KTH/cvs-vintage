@@ -58,12 +58,24 @@
  */ 
 package org.apache.tomcat.util.test;
 
-import org.apache.tomcat.util.test.matchers.*;
-import org.apache.tools.ant.*;
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.SocketException;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import org.apache.tomcat.util.test.matchers.GoldenMatch;
+import org.apache.tomcat.util.test.matchers.HeaderMatch;
+import org.apache.tomcat.util.test.matchers.HttpStatusMatch;
+import org.apache.tomcat.util.test.matchers.ResponseMatch;
+import org.apache.tomcat.util.test.matchers.ResponseMatchFile;
+import org.apache.tomcat.util.test.matchers.SessionMatch;
+import org.apache.tools.ant.Project;
 
 
 /**

@@ -59,9 +59,8 @@
 
 package org.apache.tomcat.util.compat.jar;
 
-import java.net.*;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.net.URL;
 
 
 /** Jar: protocol handler for JDK1.1 ( where it is not present ).

@@ -54,13 +54,15 @@
  */
 package org.apache.tomcat.util.compat;
 
-import java.io.*;
-import java.lang.*;
-import java.net.*;
-import java.text.*;
-import java.util.*;
-import java.util.zip.*;
-import java.security.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * This is a JDK1.1 equivalent of URLClassLoader. It have no dependency on

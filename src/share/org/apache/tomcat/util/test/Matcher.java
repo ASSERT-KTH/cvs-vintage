@@ -58,11 +58,9 @@
  */ 
 package org.apache.tomcat.util.test;
 
-import org.apache.tools.ant.*;
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import java.net.*;
+import java.util.StringTokenizer;
+
+import org.apache.tools.ant.Project;
 
 /**
    Part of the GTest application

@@ -58,10 +58,8 @@
  */ 
 package org.apache.tomcat.util.io;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.text.*;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 
 public class RecycleBufferedInputStream extends BufferedInputStream {
     public RecycleBufferedInputStream( InputStream is ) {

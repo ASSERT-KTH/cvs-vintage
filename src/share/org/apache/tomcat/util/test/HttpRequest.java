@@ -58,10 +58,10 @@
  */ 
 package org.apache.tomcat.util.test;
 
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import java.net.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 import org.apache.tomcat.util.buf.Base64;
 

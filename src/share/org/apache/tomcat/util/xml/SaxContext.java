@@ -1,17 +1,8 @@
 package org.apache.tomcat.util.xml;
 
-import org.apache.tomcat.util.*;
-import java.beans.*;
-import java.io.*;
-import java.io.IOException;
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.StringTokenizer;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
-import org.w3c.dom.*;
+import java.util.Stack;
+
+import org.xml.sax.AttributeList;
 
 // XXX this interface is not final, but a prototype.
 

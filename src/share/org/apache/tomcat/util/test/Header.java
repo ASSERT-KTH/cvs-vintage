@@ -58,10 +58,12 @@
  */ 
 package org.apache.tomcat.util.test;
 
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 // XXX TODO Use the util.http
 
