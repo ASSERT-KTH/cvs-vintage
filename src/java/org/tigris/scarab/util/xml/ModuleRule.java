@@ -108,6 +108,7 @@ public class ModuleRule extends Rule
             module = (ScarabModule)ModuleManager.getInstance();
         }
         module.setParentId(attributes.getValue("parent"));
+        module.setOwnerId("0");
         digester.push(module);
     }
     
