@@ -284,21 +284,25 @@ $l10n.TransitionsExplanation3
 	#indexedRows($velocityCount)	
 	<td><input type="checkbox" name="trans_delete_$transition.transitionId"></td>	
 	<td>
-          #if ($transition.from.optionId == 0)
-            $l10n.TransitionsEmptyOption
-          #else 
-	    #if ($transition.from.Name)
-              $transition.from.Name
-            #else
-              $l10n.TransitionsAnyOption
-            #end
+        #if ($transition.from.optionId == 0)
+          $l10n.TransitionsEmptyOption
+        #else 
+	      #if ($transition.from.Name)
+            $transition.from.Name
+          #else
+            $l10n.TransitionsAnyOption
           #end
+        #end
 	</td>
 	<td>
-		#if ($transition.to.Name)
-		  $transition.to.Name
-		#else
-		  $l10n.TransitionsAnyOption
+        #if ($transition.to.optionId == 0)
+          $l10n.TransitionsEmptyOption
+        #else 
+		  #if ($transition.to.Name)
+		    $transition.to.Name
+		  #else
+		    $l10n.TransitionsAnyOption
+		  #end
 		#end
 	</td>
 	<td>
@@ -330,42 +334,46 @@ $l10n.TransitionsExplanation3
 	</td>
 	</tr>
 #end
-	<tr>
-	#indexedRows($velocityCount)
-	<td>$l10n.New</td>
-	<td>
-       	#set ($froms = $scarabR.Attribute.AttributeOptions)
-        <select name="trans_new_FromId">
-       	  <option value="0" >$l10n.TransitionsEmptyOption</option>
-       	  <option selected="selected" value="-1" >$l10n.TransitionsAnyOption</option>
-    	#foreach ($f in $froms)
-    	  #if ($f.deleted == false)
-	  <option value="$f.OptionId">$f.Name</option>
- 	  #end
-    	#end
-	</select>
-	</td>
-	<td>
-       	#set ($tos = $scarabR.Attribute.AttributeOptions)
-       	<select name="trans_new_ToId">
-       		<option selected="selected" value="-1" >$l10n.TransitionsAnyOption</option>
-    	#foreach ($t in $tos)
-    		#if ($t.deleted == false)
-      			<option value="$t.OptionId">$t.Name</option>
-      		#end
-    	#end
-		</select>
-	</td>
-	<td>
-	<select name="trans_new_RoleId">
-	<option selected="selected" value="-1" >$l10n.TransitionsAnyRole</option>
-	#foreach ($role in $securityAdmin.Roles)
-		<option value="$role.RoleId">$role.Name</option>
-	#end
-	</select>
-	</td>
-	<td colspan="2">&nbsp;</td>
-	</tr>
+    <tr>
+    #indexedRows($velocityCount)
+    <td>$l10n.New</td>
+
+    <td>
+      #set ($froms = $scarabR.Attribute.AttributeOptions)
+      <select name="trans_new_FromId">
+        <option value="0" >$l10n.TransitionsEmptyOption</option>
+        <option selected="selected" value="-1" >$l10n.TransitionsAnyOption</option>
+        #foreach ($f in $froms)
+          #if ($f.deleted == false)
+            <option value="$f.OptionId">$f.Name</option>
+          #end
+        #end
+      </select>
+    </td>
+
+    <td>
+      #set ($tos = $scarabR.Attribute.AttributeOptions)
+      <select name="trans_new_ToId">
+        <option value="0" >$l10n.TransitionsEmptyOption</option>
+        <option selected="selected" value="-1" >$l10n.TransitionsAnyOption</option>
+        #foreach ($t in $tos)
+          #if ($t.deleted == false)
+            <option value="$t.OptionId">$t.Name</option>
+          #end
+        #end
+      </select>
+    </td>
+
+    <td>
+      <select name="trans_new_RoleId">
+        <option selected="selected" value="-1" >$l10n.TransitionsAnyRole</option>
+        #foreach ($role in $securityAdmin.Roles)
+          <option value="$role.RoleId">$role.Name</option>
+        #end
+      </select>
+    </td>
+    <td colspan="2">&nbsp;</td>
+  </tr>
 </table>
 <div class="functnbar3">
    <input type="submit" value="$l10n.Save"  name="eventSubmit_doSavetransitiondata" />
