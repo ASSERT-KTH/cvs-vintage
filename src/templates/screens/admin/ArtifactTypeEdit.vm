@@ -41,7 +41,7 @@ $page.setTitle("Attribute Editor")
 
 <form method="get" action="$link.setPage("admin,ArtifactTypeEdit.vm")">
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
 <input type="hidden" name="$scarabG.Constant.BACK_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
 <input type="hidden" name="issueTypeId" value="$issueTypeId" />

@@ -17,7 +17,7 @@
 
 <form method="get" action="$link.setPage("admin,AttributeGroup.vm")">
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,AttributeGroup.vm"/>
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageArtifactTypes.vm"/>
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,AttributeGroup.vm"/>
 <input type="hidden" name="$scarabG.Constant.BACK_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,AttributeSelect.vm" />
