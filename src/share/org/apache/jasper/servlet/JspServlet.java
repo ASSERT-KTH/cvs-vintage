@@ -461,8 +461,8 @@ public class JspServlet extends HttpServlet {
         Compiler compiler = ctxt.createCompiler();
         
         try {
-            outDated = compiler.compile();
-            if ( (jsw.servletClass == null) || (compiler.isOutDated()) ) {
+            outDated = compiler.isOutDated();
+            if ( (jsw.servletClass == null) || outDated ) {
                 synchronized ( this ) {
                     if ((jsw.servletClass == null) ||
 			(compiler.isOutDated() ))  {
