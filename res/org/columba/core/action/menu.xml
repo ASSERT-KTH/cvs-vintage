@@ -50,6 +50,9 @@
 	</menu>
 	
 	<menu name="menu_utilities">
+	 <menuitem action="OpenNewMailWindow"/>
+	 <menuitem action="OpenNewAddressbookWindow"/>
+	 <separator/>
 	 <menuitem action="PluginManagerDialog" />
 	 <menuitem action="OpenExternalToolsDialog" />
 	 <extensionpoint name="bottom"/>
@@ -57,7 +60,9 @@
 
 	<menu name="menu_help">
 	 <menuitem action="ShowHelp"/>
+	 <!--
 	 <menuitem action="ShowContextSpecificHelp"/>
+	 -->
 	 <separator/>
 	 <menuitem action="ShowFAQ"/>
 	 <menuitem action="ShowBugDatabase"/>
