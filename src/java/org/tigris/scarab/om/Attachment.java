@@ -52,6 +52,8 @@ import org.apache.torque.util.Criteria;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
 
+import org.apache.turbine.Log;
+
 import org.apache.fulcrum.upload.FileItem;
 import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.upload.UploadService;
@@ -154,6 +156,7 @@ public class Attachment
      * @return String
      */
     public String getRepositoryDirectory(String moduleCode)
+        throws Exception
     {
         ExtendedProperties extProp = TurbineServices.getInstance()
             .getService(UploadService.SERVICE_NAME).getConfiguration();
@@ -163,7 +166,13 @@ public class Attachment
         
         if (!repoDir.exists())
         {
-            repoDir.mkdir();
+            try {
+                repoDir.mkdir();
+            } catch (SecurityException e) {
+                String errorMessage = "Unable to create directory for repository: " + repoModuleDir;
+                Log.error(errorMessage + ", " + e.getMessage());
+                throw new Exception(errorMessage);
+            }
         }
         
         return repoModuleDir;
