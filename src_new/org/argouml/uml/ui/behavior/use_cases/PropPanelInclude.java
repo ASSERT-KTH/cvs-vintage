@@ -1,4 +1,4 @@
-// $Id: PropPanelInclude.java,v 1.17 2003/09/01 00:59:51 bobtarling Exp $
+// $Id: PropPanelInclude.java,v 1.18 2003/09/06 15:24:39 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,6 @@ import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
-import ru.novosoft.uml.behavior.use_cases.MInclude;
 import ru.novosoft.uml.behavior.use_cases.MUseCase;
 import ru.novosoft.uml.foundation.core.MModelElement;
 
@@ -154,7 +153,7 @@ public class PropPanelInclude extends PropPanelModelElement {
         // than setBase() to set the base use case.
 
         if (org.argouml.model.ModelFacade.isAInclude(target)) {
-            ((MInclude) target).setAddition((MUseCase) base);
+            ModelFacade.setAddition(target, base);
         }
     }
 
@@ -212,7 +211,7 @@ public class PropPanelInclude extends PropPanelModelElement {
         // than setAddition() to set the addition use case.
 
         if (org.argouml.model.ModelFacade.isAInclude(target)) {
-            ((MInclude) target).setBase((MUseCase) addition);
+            ModelFacade.setBase(target, addition);
         }
     }
 

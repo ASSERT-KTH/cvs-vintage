@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.72 2003/09/06 14:27:36 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.73 2003/09/06 15:24:39 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.72 2003/09/06 14:27:36 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.73 2003/09/06 15:24:39 bobtarling Exp $
 
 
 
@@ -288,7 +288,7 @@ public class ParserDisplay extends Parser {
 			    if (value != null && value.equalsIgnoreCase("false"))
 				isAbstract = false;
 			    if (ModelFacade.isAOperation(element))
-				((MOperation) element).setAbstract(isAbstract);
+				ModelFacade.setAbstract(element, isAbstract);
 			}
 		    });
 	_operationSpecialStrings[5] =
