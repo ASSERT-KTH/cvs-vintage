@@ -1,4 +1,4 @@
-// $Id: ActionDeleteFromDiagram.java,v 1.12 2004/12/30 12:34:05 mvw Exp $
+// $Id: ActionDeleteFromDiagram.java,v 1.13 2005/01/01 19:47:40 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,8 @@ import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 import org.argouml.uml.ui.UMLAction;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
+import org.tigris.gef.graph.MutableGraphSupport;
+import org.tigris.gef.presentation.Connecter;
 import org.tigris.gef.presentation.Fig;
 
 
@@ -115,13 +117,18 @@ public class ActionDeleteFromDiagram extends UMLAction {
      */
     public void actionPerformed(ActionEvent ae) {
         int size = 0;
+        Editor ce = Globals.curEditor();
+        MutableGraphSupport graph = (MutableGraphSupport)ce.getGraphModel();
         try {
-            Editor ce = Globals.curEditor();
             Vector figs = ce.getSelectionManager().getFigs();
             size = figs.size();
             for (int i = 0; i < size; i++) {
-                Fig f = (Fig) figs.elementAt(i);                
-                f.removeFromDiagram();
+                Fig f = (Fig) figs.elementAt(i);
+                if (f instanceof Connecter) {
+                    f.removeFromDiagram();
+                } else {
+                    graph.removeFig(f);
+                }
                 TargetManager.getInstance().removeHistoryElement(f);
             }
         } catch (Exception ex) {
