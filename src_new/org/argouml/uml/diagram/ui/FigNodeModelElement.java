@@ -24,7 +24,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.9 2001/10/12 20:20:31 thierrylach Exp $
+// $Id: FigNodeModelElement.java,v 1.10 2001/10/22 16:03:46 thierrylach Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -508,6 +508,11 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
 	renderingChanged();
         damage();
     }
+
+    public void notationAdded(ArgoNotationEvent event) { }
+    public void notationRemoved(ArgoNotationEvent event) { }
+    public void notationProviderAdded(ArgoNotationEvent event) { }
+    public void notationProviderRemoved(ArgoNotationEvent event) { }
 
     public void renderingChanged() {
     }
