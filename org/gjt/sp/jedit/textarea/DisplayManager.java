@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.96 2004/09/04 02:55:59 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.97 2004/09/04 03:57:24 spestov Exp $
  */
 public class DisplayManager
 {
@@ -1210,7 +1210,8 @@ loop:		for(;;)
 			if(Debug.SCROLL_DEBUG)
 			{
 				Log.log(Log.DEBUG,this,"changed() before: "
-					+ physicalLine + ":" + scrollLine);
+					+ physicalLine + ":" + scrollLine
+					+ ":" + skew);
 			} //}}}
 
 			ensurePhysicalLineIsVisible();
@@ -1247,7 +1248,8 @@ loop:		for(;;)
 			if(Debug.SCROLL_DEBUG)
 			{
 				Log.log(Log.DEBUG,this,"changed() after: "
-					+ physicalLine + ":" + scrollLine);
+					+ physicalLine + ":" + scrollLine
+					+ ":" + skew);
 			} //}}}
 
 			if(!scrollLineCount.callChanged
@@ -1607,31 +1609,8 @@ loop:		for(;;)
 			{
 				delayedMultilineUpdate = true;
 
-				/* this is a sloppy hack to fix bug
-				   "[ 677902 ] hitting return after collapsed
-				   fold"
-
-				   the idea is that if we extend the range then
-				   the problem described in the bug happends, so
-				   if the insert is at the very end of the range
-				   we don't extend it, instead we push the
-				   insert into the next range, however for this
-				   to work properly we also have to mess with
-				   screen line counts. */
 				int index = fvmget(startLine);
 				int start = index + 1;
-				/* if(start + 1 < fvmcount && fvm[start]
-					== startLine + 1)
-				{
-					if(index % 2 == 0)
-					{
-						System.err.println("case 1");
-						scrollLineCount.scrollLine -=
-							getScreenLineCount(
-							startLine + 1);
-						start++;
-					}
-				} */
 
 				for(int i = start; i < fvmcount; i++)
 				{
