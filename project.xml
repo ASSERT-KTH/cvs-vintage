@@ -434,7 +434,7 @@
       <groupId>turbine</groupId>
       <artifactId>turbine</artifactId>
       <!--version>20041101.200423</version-->
-      <version>20041111.235030</version>
+      <version>20041117.142852</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
