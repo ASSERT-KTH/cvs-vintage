@@ -85,13 +85,12 @@ import org.tigris.scarab.util.word.QueryResult;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.services.security.ScarabSecurity;
-import org.tigris.scarab.util.EmailContext;
 
 /**
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.167 2003/04/29 23:00:32 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.168 2003/04/30 01:08:48 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -443,11 +442,8 @@ public class ReportIssue extends RequireLoginFirstAction
                     doRedirect(data, context, templateCode, issue);
                 
                     // send email
-                    EmailContext ectx= new EmailContext();
-                    ectx.setLinkTool((ScarabLink)context.get("link"));
-                
-                    if (!activitySet.sendEmail(ectx, issue, 
-                         "NewIssueNotification.vm"))
+                    if (!activitySet.sendEmail(issue, 
+                                               "NewIssueNotification.vm"))
                     {
                         scarabR.setInfoMessage(
                             l10n.get("IssueSavedButEmailError"));
@@ -572,9 +568,7 @@ public class ReportIssue extends RequireLoginFirstAction
                         activitySet = 
                             prevIssue.addComment(activitySet, attachment, 
                                 (ScarabUser)data.getUser());
-                        EmailContext ectx = new EmailContext();
-                        ectx.setLinkTool((ScarabLink)context.get("link"));
-                        if (!activitySet.sendEmail(ectx, prevIssue))
+                        if (!activitySet.sendEmail(prevIssue))
                         {
                             scarabR.setInfoMessage(
                                 l10n.get("CommentAddedButEmailError"));
