@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.23 2002/05/28 03:01:22 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.24 2002/08/13 18:59:48 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -253,6 +253,12 @@ public class FileVFS extends VFS
 	public DirectoryEntry _getDirectoryEntry(Object session, String path,
 		Component comp)
 	{
+		if(path.equals("/") && OperatingSystem.isUnix())
+		{
+			return new VFS.DirectoryEntry(path,path,path,
+				VFS.DirectoryEntry.DIRECTORY,0L,false);
+		}
+
 		// workaround for Java bug where paths with trailing / return
 		// null getName()
 		if(path.endsWith("/") || path.endsWith(File.separator))
