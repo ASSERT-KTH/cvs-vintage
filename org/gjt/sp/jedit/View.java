@@ -74,7 +74,7 @@ import org.gjt.sp.jedit.textarea.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.56 2003/02/20 22:17:14 spestov Exp $
+ * @version $Id: View.java,v 1.57 2003/03/11 17:25:13 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1112,6 +1112,8 @@ public class View extends JFrame implements EBComponent
 			Buffer buffer = (Buffer)buffers.elementAt(i);
 			title.append((showFullPath && !buffer.isNewFile())
 				? buffer.getPath() : buffer.getName());
+			if(buffer.isDirty())
+				title.append(jEdit.getProperty("view.title.dirty"));
 		}
 		setTitle(title.toString());
 	} //}}}
@@ -1344,18 +1346,13 @@ public class View extends JFrame implements EBComponent
 		Buffer buffer = msg.getBuffer();
 		if(msg.getWhat() == BufferUpdate.DIRTY_CHANGED)
 		{
-			if(!buffer.isDirty())
+			EditPane[] editPanes = getEditPanes();
+			for(int i = 0; i < editPanes.length; i++)
 			{
-				// have to update title after each save
-				// in case it was a 'save as'
-				EditPane[] editPanes = getEditPanes();
-				for(int i = 0; i < editPanes.length; i++)
+				if(editPanes[i].getBuffer() == buffer)
 				{
-					if(editPanes[i].getBuffer() == buffer)
-					{
-						updateTitle();
-						break;
-					}
+					updateTitle();
+					break;
 				}
 			}
 		}
