@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.OperatingSystem;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSFileNameField.java,v 1.22 2004/07/30 07:25:02 spestov Exp $
+ * @version $Id: VFSFileNameField.java,v 1.23 2005/02/05 20:34:40 spestov Exp $
  * @since jEdit 4.2pre1
  */
 class VFSFileNameField extends HistoryTextField
@@ -142,15 +142,16 @@ class VFSFileNameField extends HistoryTextField
 				}
 				else if(!MiscUtilities.isAbsolutePath(path))
 				{
-					VFS.DirectoryEntry[] files = browser
-						.getBrowserView().getSelectedFiles();
+					VFSFile[] files = browser
+						.getBrowserView()
+						.getSelectedFiles();
 					if(files.length != 1
-						|| files[0].type ==
-						VFS.DirectoryEntry.FILE)
+						|| files[0].getType() ==
+						VFSFile.FILE)
 					{
 						return;
 					}
-					path = files[0].path;
+					path = files[0].getPath();
 				}
 				else if(OperatingSystem.isDOSDerived()
 					&& path.length() == 3
@@ -213,12 +214,12 @@ class VFSFileNameField extends HistoryTextField
 			browser.getMode() == VFSBrowser
 			.CHOOSE_DIRECTORY_DIALOG);
 
-		VFS.DirectoryEntry[] files = view.getSelectedFiles();
+		VFSFile[] files = view.getSelectedFiles();
 		if(files.length == 0)
 			return;
 
-		String path = files[0].path;
-		String name = files[0].name;
+		String path = files[0].getPath();
+		String name = files[0].getName();
 		String parent = MiscUtilities.getParentOfPath(path);
 
 		String newText;

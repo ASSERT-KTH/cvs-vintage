@@ -32,7 +32,7 @@ import org.gjt.sp.util.*;
 /**
  * A browser I/O request.
  * @author Slava Pestov
- * @version $Id: BrowserIORequest.java,v 1.20 2004/05/29 01:55:24 spestov Exp $
+ * @version $Id: BrowserIORequest.java,v 1.21 2005/02/05 20:34:39 spestov Exp $
  */
 class BrowserIORequest extends WorkRequest
 {
@@ -144,7 +144,7 @@ class BrowserIORequest extends WorkRequest
 	//{{{ listDirectory() method
 	private void listDirectory()
 	{
-		VFS.DirectoryEntry[] directory = null;
+		VFSFile[] directory = null;
 
 		String[] args = { path1 };
 		setStatus(jEdit.getProperty("vfs.status.listing-directory",args));
@@ -156,7 +156,7 @@ class BrowserIORequest extends WorkRequest
 			setAbortable(true);
 
 			canonPath = vfs._canonPath(session,path1,browser);
-			directory = vfs._listDirectory(session,canonPath,browser);
+			directory = vfs._listFiles(session,canonPath,browser);
 		}
 		catch(IOException io)
 		{
@@ -247,7 +247,7 @@ class BrowserIORequest extends WorkRequest
 				path1 = vfs._canonPath(session,path1,browser);
 				path2 = vfs._canonPath(session,path2,browser);
 
-				VFS.DirectoryEntry file = vfs._getDirectoryEntry(
+				VFSFile file = vfs._getFile(
 					session,path2,browser);
 				if(file != null)
 				{

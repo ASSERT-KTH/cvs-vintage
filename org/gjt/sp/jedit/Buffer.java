@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.222 2004/12/31 21:10:16 spestov Exp $
+ * @version $Id: Buffer.java,v 1.223 2005/02/05 20:34:39 spestov Exp $
  */
 public class Buffer
 {
@@ -3761,23 +3761,23 @@ loop:		for(int i = 0; i < seg.count; i++)
 
 			try
 			{
-				VFS.DirectoryEntry file = vfs._getDirectoryEntry(session,path,view);
+				VFSFile file = vfs._getFile(session,path,view);
 				if(file == null)
 				{
 					setNewFile(true);
 					return true;
 				}
 
-				if(!file.canRead)
+				if(!file.isReadable())
 				{
 					VFSManager.error(view,path,"ioerror.no-read",null);
 					setNewFile(false);
 					return false;
 				}
 
-				setFlag(READ_ONLY,!file.canWrite);
+				setFlag(READ_ONLY,!file.isWriteable());
 
-				if(file.type != VFS.DirectoryEntry.FILE)
+				if(file.getType() != VFSFile.FILE)
 				{
 					VFSManager.error(view,path,
 						"ioerror.open-directory",null);
@@ -3820,11 +3820,11 @@ loop:		for(int i = 0; i < seg.count; i++)
 
 			try
 			{
-				VFS.DirectoryEntry file = vfs._getDirectoryEntry(session,path,view);
+				VFSFile file = vfs._getFile(session,path,view);
 				if(file == null)
 					return true;
 
-				if(file.type != VFS.DirectoryEntry.FILE)
+				if(file.getType() != VFSFile.FILE)
 				{
 					VFSManager.error(view,path,
 						"ioerror.save-directory",null);

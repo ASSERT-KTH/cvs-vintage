@@ -36,7 +36,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.31 2004/10/17 04:36:32 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.32 2005/02/05 20:34:40 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -199,11 +199,11 @@ public class BufferIORequest extends WorkRequest
 
 				path = vfs._canonPath(session,path,view);
 
-				VFS.DirectoryEntry entry = vfs._getDirectoryEntry(
+				VFSFile entry = vfs._getFile(
 					session,path,view);
 				long length;
 				if(entry != null)
-					length = entry.length;
+					length = entry.getLength();
 				else
 					length = 0L;
 
@@ -978,11 +978,11 @@ public class BufferIORequest extends WorkRequest
 
 				path = vfs._canonPath(session,path,view);
 
-				VFS.DirectoryEntry entry = vfs._getDirectoryEntry(
+				VFSFile entry = vfs._getFile(
 					session,path,view);
 				long length;
 				if(entry != null)
-					length = entry.length;
+					length = entry.getLength();
 				else
 					length = 0L;
 
