@@ -65,7 +65,10 @@
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
+#set ($haveMultipleIssues = ($issueList.size() > 1))
+#if ($haveMultipleIssues)
 <th>$l10n.Select</th>
+#end
 <th>$l10n.IssueId</th>
 #foreach ($attrGroup in $dedupeAttrGroups)
    #foreach ($att in $attrGroup.Attributes)
@@ -94,13 +97,13 @@
   #set ($issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString())
   #indexedRows($velocityCount)
   #set ($issueGroup = $intake.Issue.Default)
+  #if ($haveMultipleIssues)
   <td>
-  #if ($issueList.size() == 1)
-    <input type="radio" name="$issueGroup.Ids.Key" value="$issue.IssueId" checked="checked" />
-  #else
     <input type="checkbox" name="$issueGroup.Ids.Key" value="$issue.IssueId" />
-  #end
   </td>
+  #else
+    <input type="hidden" name="$issueGroup.Ids.Key" value="$issue.IssueId" />
+  #end
   <td><strong><a href="$link.setPage("ViewIssue.vm").addPathInfo("id",$issue.UniqueId)">$issue.UniqueId</a></strong></td>
 #foreach ($attrGroup in $dedupeAttrGroups)
    #foreach ($attr in $attrGroup.Attributes)
@@ -155,7 +158,7 @@
 </div>
 
 <div class="functnbar2">
-<input type="submit" name="eventSubmit_doGotowizard3" value="$l10n.BypassDuplicates" />&#160;
+<input type="submit" name="eventSubmit_doGotowizard3" value="$l10n.ContinueEntry" />&#160;
 <input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" />
 </div>
 
