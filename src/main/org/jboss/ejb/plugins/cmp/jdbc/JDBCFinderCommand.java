@@ -37,7 +37,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public abstract class JDBCFinderCommand
    extends JDBCQueryCommand
@@ -75,20 +75,14 @@ public abstract class JDBCFinderCommand
          Collection keys = (Collection)jdbcExecute(args);
          boolean readAheadOnLoad = queryMetaData.getReadAhead().isOnLoadUsed();
 
-//
-//   The commented out code is for the old readahead code
-//         // creat the finder results
-//         if(finderMetaData.hasReadAhead()) {
-//            result = new FinderResults(keys, getWhereClause(args), this, args);
-//         } else {
-//            result = new FinderResults(keys, null, null, null);
-//         }
          result = new FinderResults(keys, null, null, null, readAheadOnLoad);
          if (readAheadOnLoad) {
             // add to the cache
-            manager.getReadAheadCache().insert(new Long(result.getListId()), result);
+            manager.getReadAheadCache().insert(
+                  new Long(result.getListId()), result);
          }
       } catch (Exception e) {
+         e.printStackTrace();
          log.debug(e);
          throw new FinderException("Find failed");
       }
@@ -96,7 +90,8 @@ public abstract class JDBCFinderCommand
    }
 
    // JDBCQueryCommand overrides ------------------------------------
-   protected Object handleResult(ResultSet rs, Object argOrArgs) throws Exception {
+   protected Object handleResult(ResultSet rs, Object argOrArgs)
+         throws Exception {
       
       Collection result = new ArrayList();   
       try {

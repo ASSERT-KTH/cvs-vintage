@@ -42,7 +42,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCCommandFactory implements CommandFactory
 {
@@ -88,13 +88,13 @@ public class JDBCCommandFactory implements CommandFactory
    }
    
    public FindEntitiesCommand createDefinedFinderCommand(JDBCQueryMetaData q) 
-      throws Exception
+      throws DeploymentException
    {
       return new JDBCDefinedFinderCommand(manager, q);
    }
    
    public FindEntitiesCommand createEJBQLFinderCommand(JDBCQueryMetaData q) 
-      throws Exception
+      throws DeploymentException
    {
       return new JDBCEJBQLFinderCommand(manager, q);
    }
