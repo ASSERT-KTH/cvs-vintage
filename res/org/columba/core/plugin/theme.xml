@@ -6,5 +6,5 @@
  <theme name="Mac" class="org.columba.core.gui.themes.plugin.MacLookAndFeelPlugin" />
  <theme name="CDE/Motif" class="org.columba.core.gui.themes.plugin.MotifLookAndFeelPlugin" />
  <theme name="Gtk" class="org.columba.core.gui.themes.plugin.GtkLookAndFeelPlugin" />
- <theme name="Plastic" class="org.columba.core.gui.themes.plugin.PlasticLookAndFeelPlugin" />
+ <theme name="Plastic" class="org.columba.core.gui.themes.plugin.PlasticLookAndFeelPlugin" config="PlasticConfigPlugin" />
 </themelist>

@@ -44,12 +44,14 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
+import org.columba.core.gui.plugin.ConfigurationDialog;
 import org.columba.core.gui.themes.ThemeSwitcher;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.FontSelectionDialog;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.ConfigPluginHandler;
 import org.columba.core.plugin.ThemePluginHandler;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
@@ -94,6 +96,11 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 	JFrame frame;
 
+	ConfigPluginHandler configHandler;
+	
+	// ID of configuration plugin of this theme plugin
+	String configID;
+
 	public GeneralOptionsDialog(JFrame frame) {
 		super(
 			frame,
@@ -103,10 +110,21 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 		this.frame = frame;
 
 		try {
-			// get plugin-handler
+			// get theme plugin-handler
 			handler =
 				(ThemePluginHandler) MainInterface.pluginManager.getHandler(
 					"org.columba.core.theme");
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		try {
+			// get config plugin-handler
+			configHandler =
+				(ConfigPluginHandler) MainInterface.pluginManager.getHandler(
+					"org.columba.core.config");
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -379,6 +397,8 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 		// TODO: LOCALIZE
 		lfButton = new JButton("Options...");
+		lfButton.setActionCommand("THEME_OPTIONS");
+		lfButton.addActionListener(this);
 
 		overwriteCheckBox =
 			new JCheckBox(
@@ -453,17 +473,20 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 		// button panel
 
-		okButton = new ButtonWithMnemonic(
+		okButton =
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "ok"));
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
 
-		cancelButton = new ButtonWithMnemonic(
+		cancelButton =
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "cancel"));
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
 
-		helpButton = new ButtonWithMnemonic(
+		helpButton =
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "help"));
 		helpButton.setActionCommand("HELP");
 		helpButton.addActionListener(this);
@@ -505,9 +528,20 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 			setVisible(false);
 
 		} else if (action.equals("THEME")) {
-			int index = lfComboBox.getSelectedIndex();
-			lfButton.setEnabled(false);
+			// theme selection changed
+			String theme = (String) lfComboBox.getSelectedItem();
 
+			configID = handler.getAttribute(theme, "config");
+
+			if (configID == null)
+				lfButton.setEnabled(false);
+			else {
+				lfButton.setEnabled(true);
+			}
+
+		} else if (action.equals("THEME_OPTIONS")) {
+			String theme = (String) lfComboBox.getSelectedItem();
+			new ConfigurationDialog(configID);
 		}
 
 		if (source == mainFontButton) {

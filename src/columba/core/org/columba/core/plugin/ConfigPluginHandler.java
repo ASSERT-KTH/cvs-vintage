@@ -17,7 +17,10 @@ package org.columba.core.plugin;
 
 /**
  * ConfigPluginHandler provides an easy way for plugins to have
- * their own configuration file. 
+ * their own configuration dialog.
+ * <p>
+ * Note that every plugin can have its own configuration file
+ * "config.xml" in its folder anyway.  
  *
  * @author fdietz
  */

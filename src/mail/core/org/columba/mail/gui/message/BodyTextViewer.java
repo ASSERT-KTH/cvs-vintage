@@ -135,7 +135,7 @@ public class BodyTextViewer extends JTextPane implements Observer {
 		if (textFontElement == null)
 			textFontElement = fonts.addSubElement("text");
 
-		if (overwrite) {
+		if (!overwrite) {
 			name = "Default";
 			size = "12";
 

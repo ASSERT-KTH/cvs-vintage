@@ -185,22 +185,7 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 		}
 	}
 
-	/**
-	 * @param name
-	 * @return
-	 */
-	public Class getPluginClass(String name) {
-		String className = getPluginClassName(name, "class");
-
-		try {
-
-			Class clazz = Class.forName(className);
-			return clazz;
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return null;
-	}
+	
 
 	/**
 	 * @param name      example: "org.columba.example.TextPlugin"
@@ -357,12 +342,6 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 		return pluginManager;
 	}
 
-	/**
-	 * @return
-	 */
-	public Hashtable getTransformationTable() {
-		return transformationTable;
-	}
 
 	/**
 	 * @param className

@@ -32,25 +32,26 @@ import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
 /**
- * @author fdietz
  *
  * The plugin manager is the central place for all plugin related
  * operations.
- * 
+ * <p>
  * It manages all plugin handlers. Plugin handlers need to register 
  * at the plugin handler.
- * 
+ * <p>
  * On startup the plugin manager goes through all plugins found in the
  * plugins directory and registers them at the plugin handlers.
- * 
+ * <p>
  * It offers a common set of operations all plugins share. These are:
  * - enable/disable plugin
  * - get URL of readme.txt/readme.html file shipped with plugin
  * - get folder of plugin
  * - get plugin.xml configuration
- * 
+ * <p>
  * It therefore saves all plugin id's in a list. Additionally it uses a 
  * HashMap to save all plugin folders.
+ * 
+ * @author fdietz
  */
 public class PluginManager {
 	Map elements;
@@ -172,11 +173,13 @@ public class PluginManager {
 	}
 
 	/**
-	 * return top level tree xml node of config.xml
-	 * 
+	 * Gets top level tree xml node of config.xml
+	 * <p>
+	 * This can be used in conjunction with {@link AbstractConfigPlugin} as
+	 * an easy way to configure plugins.
 	 * 
 	 * @param id	id of plugin
-	 * @return		
+	 * @return		top leve xml treenode
 	 */
 	public XmlIO getConfiguration(String id) {
 		try {
