@@ -391,6 +391,9 @@ public WorkbenchPage(WorkbenchWindow w, IAdaptable input)
 	init(w, null, input);
 }
 
+
+
+
 private final HashSet activationServices = new HashSet();
 private final IActivationService compositeActivationService = ActivationServiceFactory.getActivationService();
 
@@ -425,6 +428,9 @@ public IActivationService getActivationService() {
 public IActivationService getCompositeActivationService() {
 	return compositeActivationService;
 }
+
+
+
 
 private IActionService actionService;
 
