@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.22 2003/08/12 03:47:52 spestov Exp $
+ * @version $Id: Java14.java,v 1.23 2003/08/15 07:42:24 spestov Exp $
  */
 public class Java14
 {
@@ -249,6 +249,7 @@ public class Java14
 
 		public boolean importData(JComponent c, Transferable t)
 		{
+			Log.log(Log.DEBUG,this,"Import data");
 			if(!canImport(c,t.getTransferDataFlavors()))
 				return false;
 
@@ -282,6 +283,7 @@ public class Java14
 		protected void exportDone(JComponent c, Transferable t,
 			int action)
 		{
+			Log.log(Log.DEBUG,this,"Export done");
 			JEditTextArea textArea = (JEditTextArea)c;
 			if(action == MOVE)
 				textArea.setSelectedText(null,false);
@@ -315,6 +317,7 @@ public class Java14
 
 		public void dragEnter(DropTargetDragEvent dtde)
 		{
+			Log.log(Log.DEBUG,this,"Drag enter");
 			textArea.setDragInProgress(true);
 			//textArea.getBuffer().beginCompoundEdit();
 			savedCaret = textArea.getCaretPosition();
@@ -335,6 +338,7 @@ public class Java14
 
 		public void dragExit(DropTargetEvent dtde)
 		{
+			Log.log(Log.DEBUG,this,"Drag exit");
 			textArea.setDragInProgress(false);
 			//textArea.getBuffer().endCompoundEdit();
 			textArea.moveCaretPosition(savedCaret,
@@ -343,6 +347,7 @@ public class Java14
 
 		public void drop(DropTargetDropEvent dtde)
 		{
+			Log.log(Log.DEBUG,this,"Drop");
 			textArea.setDragInProgress(false);
 			//textArea.getBuffer().endCompoundEdit();
 		}
