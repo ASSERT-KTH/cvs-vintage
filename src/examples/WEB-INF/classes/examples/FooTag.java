@@ -20,6 +20,7 @@ public class FooTag
     private String atts[] = new String[3];
     int i = 0;
     
+    public void resetCustomAttributes() {}
     private final void setAtt(int index, String value) {
         atts[index] = value;
     }

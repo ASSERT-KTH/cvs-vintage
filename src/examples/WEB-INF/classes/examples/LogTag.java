@@ -14,6 +14,8 @@ public class LogTag
     implements BodyTag 
 {
     boolean toBrowser = false;
+    public void resetCustomAttributes() {}
+
     
     public void setToBrowser(String value) {
         if (value == null)
