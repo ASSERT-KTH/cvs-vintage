@@ -16,10 +16,13 @@ import java.rmi.server.UnicastRemoteObject;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import org.jboss.web.WebClassLoader;
+import org.jboss.web.WebServer;
+
 /** A test server for dynamic class loading.
  *
  * @author Scott_Stark@displayscape.com
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class MiniAppServer
 {
@@ -27,6 +30,7 @@ public class MiniAppServer
     private Remote remoteImpl;
     private Remote stub;
     private URLClassLoader loader;
+    private WebServer server;
 
     public MiniAppServer() throws RemoteException
     {
@@ -35,10 +39,19 @@ public class MiniAppServer
 
     private void loadObjects(String jarPath) throws Exception
     {
+        server = new WebServer();
+        server.start();
+
         File jarFile = new File(jarPath);
         URL[] urls = {jarFile.toURL()};
         ClassLoader parent = Thread.currentThread().getContextClassLoader();
-        loader = new URLClassLoader(urls, parent);
+        //loader = new URLClassLoader(urls, parent);
+        WebClassLoader webLoader = new WebClassLoader(urls, parent);
+        loader = webLoader;
+        URL loaderURL = server.addClassLoader(loader);
+        URL[] webUrls = {loaderURL};
+        webLoader.setWebUrls(webUrls);
+
         Thread.currentThread().setContextClassLoader(loader);
         // This causes the java.rmi.server.codebase value to be used for any classes loaded by loader
         //sun.rmi.server.LoaderHandler.registerCodebaseLoader(loader);
@@ -73,12 +86,13 @@ public class MiniAppServer
 
     public static void main(String[] args) throws Exception
     {
-        System.setProperty("java.rmi.server.codebase", "http://siren:8080/jboss/remote.jar");
+        //System.setProperty("java.rmi.server.codebase", "http://siren:8080/jboss/remote.jar");
+        System.setProperty("java.rmi.server.codebase", "http://succubus:8080");
         System.setProperty("java.rmi.server.hostname", "succubus");
         MiniAppServer appServer = new MiniAppServer();
         String jarPath = args.length > 0 ? args[0] : "remote.jar";
         appServer.loadObjects(jarPath);
-        //appServer.bindToRegistry();
-        appServer.exportAsProxy();
+        appServer.bindToRegistry();
+        //appServer.exportAsProxy();
     }
 }
