@@ -80,7 +80,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.32 2001/10/24 23:03:41 jon Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.33 2001/10/25 00:02:06 jon Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -94,7 +94,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
 
-        ModuleEntity module = (ModuleEntity)scarabR.getCurrentModule();
+        ModuleEntity module = scarabR.getCurrentModule();
         List rmits = module.getRModuleIssueTypes();
         int navCount = 0;
         Group rmitGroup = null;
@@ -210,7 +210,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
             return ag;            
         }
 
-        ModuleEntity module = (ModuleEntity)scarabR.getCurrentModule();
+        ModuleEntity module = scarabR.getCurrentModule();
         List groups = issueType.getAttributeGroups(module);
 
         ag = new AttributeGroup();
@@ -299,7 +299,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         IssueType issueType = (IssueType) IssueTypePeer
                             .retrieveByPK(new NumberKey(issueTypeId));
 
-        ModuleEntity module = (ModuleEntity)scarabR.getCurrentModule();
+        ModuleEntity module = scarabR.getCurrentModule();
 
         RModuleAttribute rma = new RModuleAttribute();
         rma.setModuleId(module.getModuleId());
@@ -327,7 +327,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
 
-        ModuleEntity module = (ModuleEntity)scarabR.getCurrentModule();
+        ModuleEntity module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
         RModuleIssueType rmit = module.getRModuleIssueType(issueType);
 
@@ -421,7 +421,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         ParameterParser params = data.getParameters();
-        ModuleEntity module = (ModuleEntity)scarabR.getCurrentModule();
+        ModuleEntity module = scarabR.getCurrentModule();
         Object[] keys = params.getKeys();
         String key;
         String issueTypeId;
@@ -518,7 +518,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
 
         if ( intake.isAllValid() )
         {
-            ModuleEntity module = (ModuleEntity)scarabR.getCurrentModule();
+            ModuleEntity module = scarabR.getCurrentModule();
             for (int i=attributes.size()-1; i>=0; i--) 
             {
                 // Set properties for module-attribute mapping
@@ -565,7 +565,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         String issueTypeId = data.getParameters().getString("issueTypeId");
         IssueType issueType = (IssueType) IssueTypePeer
                             .retrieveByPK(new NumberKey(issueTypeId));
-        ModuleEntity module = (ModuleEntity)scarabR.getCurrentModule();
+        ModuleEntity module = scarabR.getCurrentModule();
         List rmas = new ArrayList (module
                            .getRModuleAttributes(issueType, false));
         List attributeGroups = issueType.getAttributeGroups(module);
@@ -654,7 +654,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         String key;
         String groupId;
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ModuleEntity module = (ModuleEntity)scarabR.getCurrentModule();
+        ModuleEntity module = scarabR.getCurrentModule();
         String issueTypeId = data.getParameters().getString("issueTypeId");
         IssueType issueType = (IssueType) IssueTypePeer
                             .retrieveByPK(new NumberKey(issueTypeId));
@@ -699,7 +699,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
-        ModuleEntity module = (ModuleEntity)scarabR.getCurrentModule();
+        ModuleEntity module = scarabR.getCurrentModule();
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
         String key;

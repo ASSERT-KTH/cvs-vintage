@@ -78,7 +78,6 @@ import org.tigris.scarab.om.IssueTemplateInfoPeer;
 import org.tigris.scarab.om.Depend;
 import org.tigris.scarab.om.DependPeer;
 import org.tigris.scarab.om.ScopePeer;
-import org.tigris.scarab.om.ScarabModulePeer;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeGroup;
 import org.tigris.scarab.om.AttributeGroupPeer;
@@ -719,8 +718,7 @@ try{
         ModuleEntity me = null;
         try
         {
-            me = (ModuleEntity) 
-                ScarabModulePeer.retrieveByPK(new NumberKey(key));
+            me = ModuleManager.getInstance(new NumberKey(key));
         }
         catch (Exception e)
         {
