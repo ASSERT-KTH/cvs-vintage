@@ -52,7 +52,7 @@ import org.gjt.sp.util.*;
  * <li>Displaying memory status
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.59 2003/11/12 00:24:11 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.60 2003/11/30 04:22:52 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -785,7 +785,7 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 			timer.setInitialDelay((int)(
 				millisecondsPerMinute
 				- System.currentTimeMillis()
-				% millisecondsPerMinute));
+				% millisecondsPerMinute) + 500);
 			timer.start();
 			ToolTipManager.sharedInstance().registerComponent(this);
 		} //}}}
