@@ -71,7 +71,7 @@ import org.tigris.scarab.om.Issue;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.7 2001/07/17 21:40:28 jon Exp $
+    @version $Id: ScarabUserImpl.java,v 1.8 2001/07/18 23:03:56 elicia Exp $
 */
 public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
 {    
@@ -277,20 +277,23 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
 
     /**
      * Gets all attributes which this user has selected to appear on the 
-     * IssueList screen. If they have not selected attributes, use the
-     * Default attributes in the database for user 0.
+     * IssueList screen. If they have not selected attributes, 
+     * Or it is an anonymous user, use the default attributes
+     * In the database for user 0.
      */
     public List getAttributesForIssueList(ModuleEntity module) throws Exception
     {
-        Criteria crit = new Criteria(3)
+        Criteria crit = new Criteria(4)
             .add(RModuleUserAttributePeer.DELETED, false)
             .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId())
-            .add(RModuleUserAttributePeer.USER_ID, getUserId());
+            .add(RModuleUserAttributePeer.USER_ID, getUserId())
+            .addAscendingOrderByColumn(RModuleUserAttributePeer.PREFERRED_ORDER);
         Vector userAttributes = RModuleUserAttributePeer.doSelect(crit);
         if (userAttributes.isEmpty())
         {
-            crit = new Criteria(3)
-               .add(RModuleUserAttributePeer.USER_ID, 0);
+            crit = new Criteria(2)
+               .add(RModuleUserAttributePeer.USER_ID, 0)
+               .addAscendingOrderByColumn(RModuleUserAttributePeer.PREFERRED_ORDER);
             userAttributes = RModuleUserAttributePeer.doSelect(crit);
         }
 
@@ -308,6 +311,61 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
         }
         return attributes;
     }
+
+    /**
+     * Returns list of RModuleUserAttribute objects for this
+     * User and Module -- the attributes the use has selected
+     * To appear on the IssueList for this module.
+     */
+    public List getRModuleUserAttributes(Module module)
+        throws Exception
+    {
+        List rmuas = new ArrayList();
+        Criteria crit = new Criteria()
+           .add(RModuleUserAttributePeer.USER_ID, getUserId())
+           .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId());
+
+        Vector results = getRModuleUserAttributes(crit);
+        Iterator i = results.iterator();
+        while ( i.hasNext() ) 
+        {
+            RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
+            rmuas.add(rmua);
+        }
+        
+        return rmuas;
+    }
+
+    /**
+     * Returns an RModuleUserAttribute objects.
+     */
+    public RModuleUserAttribute getModuleUserAttribute(NumberKey moduleId, 
+                                                       NumberKey attributeId) 
+        throws Exception
+    {
+        RModuleUserAttribute mua = null;
+        Criteria crit = new Criteria(4)
+           .add(RModuleUserAttributePeer.DELETED, false)
+           .add(RModuleUserAttributePeer.MODULE_ID, moduleId)
+           .add(RModuleUserAttributePeer.USER_ID, getUserId())
+           .add(RModuleUserAttributePeer.ATTRIBUTE_ID, attributeId);
+        try
+        {
+   
+            mua = (RModuleUserAttribute)RModuleUserAttributePeer
+                                        .doSelect(crit).elementAt(0);
+        }
+        catch (Exception e)
+        {
+            mua = new RModuleUserAttribute();
+            mua.setModuleId(moduleId);
+            mua.setUserId(getUserId());
+            mua.setAttributeId(attributeId);
+        }
+        return mua;
+    }
+
+
 
     /**
      * Gets modules which are currently associated (relationship has not 
