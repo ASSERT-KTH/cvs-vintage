@@ -60,21 +60,6 @@ public class AddressbookFrameController extends DefaultFrameController
 		tree = new TreeController(this);
 		table = new TableController(this);
 
-		container.extendMenuFromFile(this,
-				"org/columba/addressbook/action/menu.xml");
-		try {
-			((MenuPluginHandler) MainInterface.pluginManager
-					.getHandler("org.columba.addressbook.menu"))
-					.insertPlugins(getContainer().getMenu());
-		} catch (PluginHandlerNotFoundException ex) {
-			throw new RuntimeException(ex);
-		}
-
-		container.extendToolbar(this, AddressbookInterface.config.get(
-				"main_toolbar").getElement("toolbar"));
-
-		container.setInfoPanel(new ContainerInfoPanel());
-
 		// table should be updated when tree selection changes
 		tree.getView().addTreeSelectionListener(table);
 
@@ -122,6 +107,21 @@ public class AddressbookFrameController extends DefaultFrameController
 		JSplitPane splitPane = new UIFSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 				treeScrollPane, tableScrollPane);
 		splitPane.setBorder(null);
+
+		getContainer().extendMenuFromFile(this,
+				"org/columba/addressbook/action/menu.xml");
+		try {
+			((MenuPluginHandler) MainInterface.pluginManager
+					.getHandler("org.columba.addressbook.menu"))
+					.insertPlugins(getContainer().getMenu());
+		} catch (PluginHandlerNotFoundException ex) {
+			throw new RuntimeException(ex);
+		}
+
+		getContainer().extendToolbar(this, AddressbookInterface.config.get(
+				"main_toolbar").getElement("toolbar"));
+
+		getContainer().setInfoPanel(new ContainerInfoPanel());
 
 		return splitPane;
 	}

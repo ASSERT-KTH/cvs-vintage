@@ -104,26 +104,6 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		getSelectionManager().addSelectionHandler(
 				new AttachmentSelectionHandler(attachmentController.getView()));
 
-		container.extendMenuFromFile(this, "org/columba/mail/action/menu.xml");
-
-		try {
-			((MenuPluginHandler) MainInterface.pluginManager
-					.getHandler("org.columba.mail.menu"))
-					.insertPlugins(container.getMenu());
-		} catch (PluginHandlerNotFoundException ex) {
-			throw new RuntimeException(ex);
-		}
-
-		container.extendToolbar(this, MailInterface.config.get("main_toolbar")
-				.getElement("toolbar"));
-
-		tableController.createPopupMenu();
-		treeController.createPopupMenu();
-		messageController.createPopupMenu();
-		attachmentController.createPopupMenu();
-
-		//getContainer().setContentPane(this);
-
 		RenameFolderAction renameFolderAction = new RenameFolderAction(this);
 
 		// Register F2 hotkey for renaming folder when the message panel has
@@ -262,11 +242,6 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		}
 
 		getContainer().setInfoPanel(folderInfoPanel);
-		/*
-		 * // same as menu if (((AbstractFrameController) frameController)
-		 * .isToolbarEnabled(MailFrameView.FOLDERINFOPANEL) == true) {
-		 * toolbarPane.add(folderInfoPanel); }
-		 */
 
 		int count = MailInterface.config.getAccountList().count();
 
@@ -282,6 +257,24 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 						"splitpanes", "header", 100));
 		}
 
+		getContainer().extendMenuFromFile(this, "org/columba/mail/action/menu.xml");
+
+		try {
+			((MenuPluginHandler) MainInterface.pluginManager
+					.getHandler("org.columba.mail.menu"))
+					.insertPlugins(getContainer().getMenu());
+		} catch (PluginHandlerNotFoundException ex) {
+			throw new RuntimeException(ex);
+		}
+
+		getContainer().extendToolbar(this, MailInterface.config.get("main_toolbar")
+				.getElement("toolbar"));
+
+		tableController.createPopupMenu();
+		treeController.createPopupMenu();
+		messageController.createPopupMenu();
+		attachmentController.createPopupMenu();
+		
 		return panel;
 	}
 

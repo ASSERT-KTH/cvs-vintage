@@ -81,13 +81,13 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 
 		if (action.equals("MAIL")) {
 			try {
-				MainInterface.frameModel.openView(container, "ThreePaneMail");
+				MainInterface.frameModel.switchView(container, "ThreePaneMail");
 			} catch (PluginLoadingFailedException e) {
 				e.printStackTrace();
 			}
 		} else if (action.equals("ADDRESSBOOK")) {
 			try {
-				MainInterface.frameModel.openView(container, "Addressbook");
+				MainInterface.frameModel.switchView(container, "Addressbook");
 			} catch (PluginLoadingFailedException e) {
 				e.printStackTrace();
 			}

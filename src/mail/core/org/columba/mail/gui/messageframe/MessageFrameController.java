@@ -73,11 +73,6 @@ public class MessageFrameController extends AbstractMailFrameController
 		getSelectionManager().addSelectionHandler(
 				new AttachmentSelectionHandler(attachmentController.getView()));
 
-		getContainer().extendMenuFromFile(this, "org/columba/mail/action/messageframe_menu.xml");
-
-		getContainer().extendToolbar(this, MailInterface.config.get("messageframe_toolbar")
-				.getElement("toolbar"));
-
 		getContainer().setContentPane(this);
 	}
 
@@ -146,6 +141,14 @@ public class MessageFrameController extends AbstractMailFrameController
 
 		ViewItem viewItem = getViewItem();
 
+		getContainer().extendMenuFromFile(this,
+				"org/columba/mail/action/messageframe_menu.xml");
+
+		getContainer().extendToolbar(
+				this,
+				MailInterface.config.get("messageframe_toolbar").getElement(
+						"toolbar"));
+
 		// TODO re-add folderinfopanel
 		/*
 		 * if (viewItem.getBoolean("toolbars", "show_folderinfo") == true) {
@@ -154,9 +157,10 @@ public class MessageFrameController extends AbstractMailFrameController
 
 		return panel;
 	}
-	
+
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#getString(java.lang.String, java.lang.String, java.lang.String)
+	 * @see org.columba.core.gui.frame.FrameMediator#getString(java.lang.String,
+	 *      java.lang.String, java.lang.String)
 	 */
 	public String getString(String sPath, String sName, String sID) {
 		return MailResourceLoader.getString(sPath, sName, sID);

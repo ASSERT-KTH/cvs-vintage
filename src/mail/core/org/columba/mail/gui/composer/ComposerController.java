@@ -74,7 +74,6 @@ import com.jgoodies.forms.layout.FormLayout;
 public class ComposerController extends DefaultFrameController implements
 		CharsetOwnerInterface, Observer, ContentPane {
 
-	
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.composer");
@@ -118,10 +117,11 @@ public class ComposerController extends DefaultFrameController implements
 	private JPanel centerPanel = new FormDebugPanel();
 
 	private JPanel topPanel;
-	
+
 	private HtmlToolbar htmlToolbar;
 
-	public ComposerController(org.columba.core.gui.frame.Container container, ViewItem viewItem) {
+	public ComposerController(org.columba.core.gui.frame.Container container,
+			ViewItem viewItem) {
 		super(container, viewItem);
 
 		getContainer().getFrame().setTitle(
@@ -139,7 +139,6 @@ public class ComposerController extends DefaultFrameController implements
 		priorityController = new PriorityController(this);
 		accountController = new AccountController(this);
 		composerSpellCheck = new ComposerSpellCheck(this);
-
 
 		// set default html or text based on stored option
 		// ... can be overridden by setting the composer model
@@ -173,18 +172,13 @@ public class ComposerController extends DefaultFrameController implements
 
 		initComponents();
 
-//		 add JPanel with useful HTML related actions.
+		//		 add JPanel with useful HTML related actions.
 		htmlToolbar = new HtmlToolbar(this);
-		
+
 		layoutComponents();
 
 		showAttachmentPanel();
 
-		container.extendMenuFromFile(this, "org/columba/mail/action/composer_menu.xml");
-
-		container.extendToolbar(this, MailInterface.config.get("composer_toolbar").getElement(
-				"toolbar"));
-		
 		// Hack to ensure charset is set correctly at start-up
 		XmlElement charsetElement = optionsElement.getElement("charset");
 
@@ -243,7 +237,7 @@ public class ComposerController extends DefaultFrameController implements
 				new ComposerFocusTraversalPolicy());
 
 		getContainer().setContentPane(this);
-		
+
 		//		 To: editor should request focus
 		headerController.getView().getToComboBox().requestFocusInWindow();
 	}
@@ -320,7 +314,7 @@ public class ComposerController extends DefaultFrameController implements
 				"dialog", "composer", "identity"));
 		priorityLabel = new LabelWithMnemonic(MailResourceLoader.getString(
 				"dialog", "composer", "priority"));
-		
+
 		editorPanel = new JPanel();
 		editorPanel.setBorder(null);
 		editorPanel.setLayout(new BorderLayout());
@@ -370,11 +364,7 @@ public class ComposerController extends DefaultFrameController implements
 		builder.add(subjectLabel, cc.xy(1, 5));
 		builder.add(getSubjectController().getView(), cc.xy(3, 5));
 
-		
-
 		builder.add(htmlToolbar, cc.xywh(3, 7, 2, 1));
-
-		
 
 		// *20030907, karlpeder* getViewUIComponent returns view
 		//            already encapsulated in a scroll pane.
@@ -902,13 +892,20 @@ public class ComposerController extends DefaultFrameController implements
 
 		panel.add(centerPanel, BorderLayout.CENTER);
 
-		
+		getContainer().extendMenuFromFile(this,
+				"org/columba/mail/action/composer_menu.xml");
+
+		getContainer().extendToolbar(
+				this,
+				MailInterface.config.get("composer_toolbar").getElement(
+						"toolbar"));
 
 		return panel;
 	}
-	
+
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#getString(java.lang.String, java.lang.String, java.lang.String)
+	 * @see org.columba.core.gui.frame.FrameMediator#getString(java.lang.String,
+	 *      java.lang.String, java.lang.String)
 	 */
 	public String getString(String sPath, String sName, String sID) {
 		return MailResourceLoader.getString(sPath, sName, sID);
