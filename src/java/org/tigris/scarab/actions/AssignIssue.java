@@ -102,7 +102,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.49 2002/06/06 21:18:51 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.50 2002/06/13 22:05:05 jon Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -170,7 +170,7 @@ public class AssignIssue extends BaseModifyIssue
         String othersAction = null;
         String userAction = null;
         Attachment attachment = null;
-        ScarabUser user = (ScarabUser)data.getUser();
+        ScarabUser assigner = (ScarabUser)data.getUser();
         String reason = data.getParameters().getString("reason", "");
 
         for (int i=0; i < issues.size(); i++)
@@ -185,7 +185,7 @@ public class AssignIssue extends BaseModifyIssue
                 String attrId = (String)pair.get(0);
                 String assigneeId = (String)pair.get(1);
                 ScarabUser assignee = scarabR.getUser(new NumberKey(assigneeId));
-                Attribute attribute = AttributeManager
+                Attribute newUserAttribute = AttributeManager
                     .getInstance(new NumberKey(attrId));
                 boolean alreadyAssigned = false;
                 boolean userSwitched = false;
@@ -193,14 +193,24 @@ public class AssignIssue extends BaseModifyIssue
                 for (int k=0; k < oldAssignees.size(); k++)
                 {
                     AttributeValue oldAttVal = (AttributeValue)oldAssignees.get(k);
+                    // ignore already assigned users
                     if (assigneeId.equals(oldAttVal.getUserId().toString()))
                     {
+                        // unless user has different attribute id, then
+                        // switch their user attribute
                         alreadyAssigned = true;
                         if (!attrId.equals(oldAttVal.getAttributeId().toString()))
                         {
-                            switchUser(context, assignee, user, 
-                                       oldAttVal.getAttribute(), 
-                                       attribute, oldAttVal, reason);
+                            String[] results = issue
+                                .doChangeUserAttributeValue(assignee, assigner, 
+                                                            oldAttVal, newUserAttribute, 
+                                                            reason);
+
+                            if (!notify(context, issue, assignee, 
+                                        results[0], results[1]))
+                            {
+                                getScarabRequestTool(context).setAlertMessage(EMAIL_ERROR);
+                            }
                         }
                     }
                 }
@@ -208,15 +218,16 @@ public class AssignIssue extends BaseModifyIssue
                 if (!alreadyAssigned)
                 {
                     String attrDisplayName = issue.getModule()
-                       .getRModuleAttribute(attribute, issue.getIssueType())
+                       .getRModuleAttribute(newUserAttribute, issue.getIssueType())
                        .getDisplayValue();
-                    othersAction = ("User " + user.getUserName() 
+                    othersAction = ("User " + assigner.getUserName() 
                               + " has added user " 
                               + assignee.getUserName() + " to " 
                               + attrDisplayName + ".");
                     userAction = ("You have been added to " 
                                    + attrDisplayName + ".");
-                    issue.assignUser(assignee, user, othersAction, attribute, reason);
+                    issue.assignUser(assignee, assigner, othersAction, newUserAttribute, reason);
+                    
                     // Notification email
                     if (!notify(context, issue, assignee, 
                                 userAction, othersAction))
@@ -244,7 +255,7 @@ public class AssignIssue extends BaseModifyIssue
                 if (!userStillAssigned)
                 {
                     ScarabUser assignee = scarabR.getUser(oldAttVal.getUserId());
-                    deleteUser(context, assignee, user, oldAttVal, reason);
+                    deleteUser(context, assignee, assigner, oldAttVal, reason);
                 }
             }
                 
@@ -295,16 +306,15 @@ public class AssignIssue extends BaseModifyIssue
 
         // Save transaction record
         Transaction transaction = new Transaction();
-        transaction.create(TransactionTypePeer
-                           .EDIT_ISSUE__PK, 
-                           assigner, attachment);
+        transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                           assigner);
         attVal.startTransaction(transaction);
 
         // Save activity record
         Activity activity = new Activity();
         activity.create(attVal.getIssue(), attVal.getAttribute(),
-                        othersAction, transaction, 0, 0, null, 
-                        null, null, null, "", "");
+                        othersAction, transaction, 
+                        assignee.getUserId(), null, attachment);
 
         // remove the user from the List and reset the 
         // index, so the next AttributeValue is not skipped
@@ -318,67 +328,6 @@ public class AssignIssue extends BaseModifyIssue
         }
    }
 
-    /**
-     * Switches the attribute a user is assigned to.
-     */
-    private void switchUser(TemplateContext context, 
-                            ScarabUser assignee, ScarabUser assigner,
-                            Attribute oldAttribute, Attribute newAttribute,
-                            AttributeValue attVal, String reason)
-        throws Exception
-    {
-        Issue issue = attVal.getIssue();
-
-        // Create attachments and email notification text
-        // For assigned user, and for other associated users
-        Attachment attachment = null;
-        String oldAttrDisplayName = issue.getModule()
-             .getRModuleAttribute(oldAttribute, issue.getIssueType())
-             .getDisplayValue();
-        String newAttrDisplayName = issue.getModule()
-             .getRModuleAttribute(newAttribute, issue.getIssueType())
-             .getDisplayValue();
-        StringBuffer buf1 = new StringBuffer("You have been "
-               + "switched from attribute ");
-        buf1.append(oldAttrDisplayName).append(" to ");
-        buf1.append(newAttrDisplayName).append(".");
-        String userAction = buf1.toString();
-
-        StringBuffer buf2 = new StringBuffer();
-        buf2.append("User " + assigner.getUserName());
-        buf2.append(" has switched user ");
-        buf2.append(assignee.getUserName()).append(" from ");
-        buf2.append(oldAttrDisplayName).append(" to ");
-        buf2.append(newAttrDisplayName + ".");
-        String othersAction = buf2.toString();
-
-        if (!reason.equals(""))
-        {
-            // Save attachment if reason has been provided
-            attachment = new Attachment();
-            attachment.setName("comment");
-            attachment.setDataAsString(reason);
-            attachment.setTextFields(assigner, issue, 
-                                     Attachment.MODIFICATION__PK);
-            attachment.save();
-        }
-
-        // Save transaction record
-        Transaction transaction = new Transaction();
-        transaction.create(TransactionTypePeer
-                           .EDIT_ISSUE__PK, 
-                           assigner, attachment);
-        attVal.startTransaction(transaction);
-
-        // Save assignee value
-        attVal.setAttributeId(newAttribute.getAttributeId());
-        attVal.save();
-        if (!notify(context, issue, assignee, 
-                    userAction, othersAction))
-        {
-            getScarabRequestTool(context).setAlertMessage(EMAIL_ERROR);
-        }
-    }
 
     /**
      * Gets temporary working list of assigned users.
