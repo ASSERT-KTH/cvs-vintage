@@ -1,4 +1,4 @@
-<!-- $Id: scarab-design.html,v 1.7 2002/10/23 20:57:34 jon Exp $ -->
+<!-- $Id: scarab-design.html,v 1.8 2002/10/23 21:48:09 jon Exp $ -->
 <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
@@ -7,7 +7,7 @@
 </head>
 <body text="#000000" bgcolor="#FFFFFF" link="#0000FF" vlink="#551A8B" alink="#0000FF">
 <h2>Scarab Design Document </h2>
-<p>Last Updated: $Date: 2002/10/23 20:57:34 $</p>
+<p>Last Updated: $Date: 2002/10/23 21:48:09 $</p>
 <p>This document is broken up into several different &quot;chapters.&quot; 
 <ul>
     <li><a href="#goals">Goals</a></li>
@@ -38,7 +38,7 @@ provides the structure necessary to facilitate the development of web applicatio
 by combining not only a large collection of useful code, but a model in which 
 to develop web applications. In addition to using Turbine, we will also be using 
 <a href="http://jakarta.apache.org/velocity/">Velocity</a> as the template language 
-for providing <a href="http://java.apache.org/turbine/pullmodel.html">Pull</a> 
+for providing <a href="http://jakarta.apache.org/turbine/turbine-2/pullmodel.html">Pull</a> 
 MVC style development where the HTML is completely abstracted from the business 
 logic of the application. We are aware that people often <i>claim </i>that their 
 applications provide this, so we have worked hard to insure that this is a reality. 
@@ -64,7 +64,7 @@ applications provide this, so we have worked hard to insure that this is a reali
   engine that implements JSDK 2.0 and higher although our target goal is to work 
   with Tomcat because it supports the newer API features such as WAR files. The 
   development database that will be used is MySQL. Scarab will be using the Object 
-  Relational (OR) tool that is built into Turbine called <a href="http://java.apache.org/turbine/peers.html">Peers</a>. 
+  Relational (OR) tool that is built into Turbine called <a href="http://java.apache.org/turbine/torque/">Torque</a>. 
   This tool will abstract out all the SQL by adding a layer on top of JDBC making 
   it possible to use any database without code changes. Schema's specific to Oracle 
   and MySQL will be distributed by default with Scarab. Schema contributions by 
@@ -84,7 +84,7 @@ applications provide this, so we have worked hard to insure that this is a reali
   only need to develop an IDBroker which is a <a href="http://www.ambysoft.com/mappingObjects.html">well 
   defined</a> methodology for providing efficient auto-increment functionality 
   that is outside of the database. 
-<p>One goal of Scarab is to be able to translate from a <a href="http://www.mozilla.org/projects/bugzilla/documentation.html">Bugzilla</a> 
+<p>One goal of Scarab is to be able to translate from a <a href="http://www.bugzilla.org/docs/html/">Bugzilla</a> 
     schema to a Scarab schema. Given this requirement, the functionality within 
     the two schema's will remain consistent. For instance, a Milestone in Bugzilla 
     is still a Milestone in Scarab. The only primary differences between the two 
@@ -113,7 +113,7 @@ applications provide this, so we have worked hard to insure that this is a reali
     <br>
 <hr size=0 NOSHADE width="100%">
 <p><b><a name="features">Features</a></b> 
-<p>Scarab's initial goal is to have equal feature functionality to <a href="http://www.mozilla.org/projects/bugzilla/documentation.html">Bugzilla</a>, 
+<p>Scarab's initial goal is to have equal feature functionality to <a href="http://www.bugzilla.org/docs/html/">Bugzilla</a>, 
   because Bugzilla is the most used issue tracking system for OSS projects. While 
   Bugzilla is a great step forward from other systems (like GNATS), it is still 
   missing out on a good UI design, code design and database schema design. So, 
@@ -241,7 +241,7 @@ applications provide this, so we have worked hard to insure that this is a reali
 <p>The <i>java/</i> subdirectory contains all of the Java source code. Within 
   that directory is a package structure that is dictated by Java Coding Standards. 
   The coding standards that will be used by Scarab are the same as what is used 
-  in the <a href="http://java.apache.org/turbine/coding_conventions.html">Turbine 
+  in the <a href="http://jakarta.apache.org/turbine/common/code-standards.html">Turbine 
   Project</a>. The Turbine layout standards which break up the content into various 
   modules such as Screen, Action and Page which are reflected by appropriate directories. 
   The om/</i> directory is where the Object Model code for 
@@ -338,7 +338,7 @@ applications provide this, so we have worked hard to insure that this is a reali
   will redirect them to a login page. The UI design will need to account for the 
   fact that data may or may not exist depending on which user is logged into the 
   system.</p>
-<p>The implementation of the access control will be inherited from Turbine's <a href="http://www.working-dogs.com/turbine/cvsweb/index.cgi/turbine/src/java/org/apache/turbine/services/security/">ACL 
+<p>The implementation of the access control will be inherited from Turbine's <a href="http://jakarta.apache.org/turbine/turbine-3/apidocs/org/apache/turbine/modules/actions/AccessController.html">ACL 
   System</a>. The idea being that a user can have one or more roles. Roles are 
   a collection of one or more permissions. Thus, you can either validate access 
   based on their role or their permission. We will also probably have to extend 
@@ -376,8 +376,8 @@ applications provide this, so we have worked hard to insure that this is a reali
   an XML formatted piece of data. This will be implemented with <a href="http://xml.apache.org/soap/">SOAP</a> 
   (or something like it) technology. By using XML, it will be easy to provide 
   the user with a template that they can fill out. It will also be easy to use 
-  an existing XML parser such as <a href="http://xml.apache.org/xerces/">Xerces</a> 
-  to parse the data and perform actions on it including validation. We will <a href="http://scarab.tigris.org/scarab-dev/current/msg00111.html">take 
+  an existing XML parser such as <a href="http://xml.apache.org/xerces-j/">Xerces</a> 
+  to parse the data and perform actions on it including validation. We will <a href="http://scarab.tigris.org/servlets/ReadMsg?list=dev&msgNo=144">take 
   advantage of Bugzilla's DTD</a> for defining a bug.</p>
 <p>On the other side, sending email will be a very large part of Scarab. Nearly 
   every &quot;event&quot;, such as a modification to an issue will be broadcast 
@@ -464,20 +464,19 @@ applications provide this, so we have worked hard to insure that this is a reali
     of issue, but it is listed here seperately because the user interface should 
     allow a user to enter a support issue which would allow the developers to track 
     a conversation with a user. It might work something like this:</p>
-<p>Imagine <a href="http://java.apache.org/jyve/">Jyve</a> with a feature where 
+<p>Imagine a FAQ/support tracking tool with a feature where 
     someone asks a question and it bugs a developer via email until that person 
     either answers the question or assigns the issue to someone else. If the person 
     answers the question, then it will automatically become part of the larger FAQ 
     system. I think that would be a very cool feature, but is essentially beyond 
-    the scope of Scarab for Alpha 1. This will be integrated later into Jyve which 
-    will then be integrated alongside of Scarab.</p>
+    the scope of Scarab for Alpha 1.</p>
 <p><u>Integration with Source Version Control (<a href="http://subversion.tigris.org/">Subversion</a>)</u><br>
   To be discussed further. Essentially, the idea is that <a href="http://subversion.tigris.org/">Subversion</a> 
   can be provided API's to allow it to send events to Scarab (for example, through 
   <a href="http://xml.apache.org/soap/">SOAP</a>). Scarab can also use the client 
   libraries to communicate directly with Subversion. Since neither project is 
   finished yet, we can only try to consider ideas on how they will be integrated 
-  together. One blue sky feature would be to do something like <a href="http://scarab.tigris.org/scarab-dev/current/msg00115.html">this</a>. 
+  together. One blue sky feature would be to do something like <a href="http://scarab.tigris.org/servlets/ReadMsg?list=dev&msgNo=149">this</a>.
   Further input here is appreciated.</p>
 <hr size=0 NOSHADE width="100%">
 <p><b><a name="site">Site Layout</a></b></p>
