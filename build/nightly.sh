@@ -5,16 +5,45 @@ echo "You have 10 seconds to hit ctrl-c now"
 echo "if you don't know what you are doing"
 sleep 10
 
+StopTomcat()
+{
+echo "---------------------------------"
+cd ${DIR}
+if [ -d ${SCARAB}/target/bin ] ; then
+    echo "Stopping Tomcat..."
+    cd ${SCARAB}/target
+    ./bin/catalina.sh stop
+fi
+sleep 5
+echo "---------------------------------"
+}
+
+StartTomcat()
+{
+echo "---------------------------------"
+cd ${DIR}
+if [ -d ${SCARAB}/target/bin ] ; then
+    echo "Starting Tomcat..."
+    cd ${SCARAB}/target
+    ./bin/catalina.sh start
+fi
+sleep 5
+echo "---------------------------------"
+}
+
+
 echo "Runbox update started: "
 date
 
 TURBINE="../../jakarta-turbine-3"
 TORQUE="../../jakarta-turbine-torque"
 SCARAB=".."
-DIR=`pwd`
 CVSUPDATE=1
-MYSQL=/usr/local/mysql/bin
 DEPBUILD=0
+
+DIR=`pwd`
+MYSQL=/usr/local/mysql/bin
+WGET=/usr/bin/wget
 
 ## Environment variables
 if [ -z ${JAVA_HOME} ] ; then
@@ -39,7 +68,7 @@ echo "Path: $PATH"
 cd ${DIR}
 if [ -x ${SCARAB}/target/bin/catalina.sh ] ; then
     echo "Killing Catalina..."
-    ./${SCARAB}/target/bin/catalina.sh stop
+    StopTomcat
 else
     echo "Target directory doesn't exist. No need to kill Catalina..."
 fi
@@ -55,10 +84,12 @@ else
 fi
 
 # remove so we don't have conflicts
+if [ ${CVSUPDATE} -gt 0 ] ; then
 cd ${DIR}
 echo "Removing Torque and Turbine from ${SCARAB}/lib..."
 rm -rf ${SCARAB}/lib/turbine*.jar
 rm -rf ${SCARAB}/lib/torque*.zip
+fi
 
 if [ ${DEPBUILD} -gt 0 ] ; then
 cd ${DIR}
@@ -109,12 +140,14 @@ else
     echo "Skipping CVS update..."
 fi
 
+if [ ${CVSUPDATE} -gt 0 ] ; then
 if [ ${DEPBUILD} -gt 0 ] ; then
 # remove after the cvs update
 cd ${DIR}
 echo "Removing Torque and Turbine from ${SCARAB}/lib again..."
 rm -rf ${SCARAB}/lib/turbine*.jar
 rm -rf ${SCARAB}/lib/torque*.zip
+fi
 fi
 
 ## Build things now
@@ -147,13 +180,16 @@ echo "Recreating the database..."
 cd ${DIR}; cd ${SCARAB}/src/sql
 ./create-mysql-database.sh
 
-## Start Tomcat running...
-cd ${DIR}
-if [ -d ${SCARAB}/target/bin ] ; then
-    echo "Starting Tomcat..."
-    cd ${SCARAB}/target
-    ./bin/startup.sh
-fi
+
+StartTomcat
+
+echo "Hitting the Login page..."
+${WGET} -q -O /dev/null -T 30 \
+"http://127.0.0.1:8080/scarab/servlet/scarab/curmodule/5/template/Login.vm"
+
+StopTomcat
+
+StartTomcat
 
 echo "Runbox update finished:"
 date
