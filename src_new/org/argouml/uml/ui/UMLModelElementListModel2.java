@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.27 2004/12/17 13:41:16 mvw Exp $
+// $Id: UMLModelElementListModel2.java,v 1.28 2004/12/17 22:56:20 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,7 +81,7 @@ public abstract class UMLModelElementListModel2
      */
     public UMLModelElementListModel2(String name) {
         super();
-        setEventName(name);
+        eventName = name;
     }
 
     /**

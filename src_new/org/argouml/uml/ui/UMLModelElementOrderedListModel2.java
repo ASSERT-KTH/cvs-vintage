@@ -1,4 +1,4 @@
-// $Id: UMLModelElementOrderedListModel2.java,v 1.1 2004/12/16 16:12:41 mvw Exp $
+// $Id: UMLModelElementOrderedListModel2.java,v 1.2 2004/12/17 22:56:20 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 /**
- * @author Michiel
+ * This class resembles UMLModelElementListModel2, but is for those 
+ * associations in the metamodel (see UML standard) that have a {ordered}
+ * constraint. <p>
+ * 
+ * This adds the functionality of a popup menu with the items "Move Up" 
+ * and "Move Down".
+ * 
+ * @author mvw@tigris.org
  *
  */
 public abstract class UMLModelElementOrderedListModel2 
@@ -114,7 +121,7 @@ class MoveUpAction extends UMLAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-        model.swap(index, index - 1);
+        model.swap(index - 1, index);
     }
     /**
      * @see javax.swing.Action#isEnabled()

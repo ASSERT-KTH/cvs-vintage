@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.3 2004/12/12 18:00:45 mvw Exp $
+// $Id: ModelManagementHelper.java,v 1.4 2004/12/17 22:56:20 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -302,6 +302,37 @@ public class ModelManagementHelper {
         return set;
     }
 
+    /**
+     * @return a collection of all behavioralfeatures in the current project
+     */
+    public Collection getAllBehavioralFeatures() {
+        Object model = ProjectManager.getManager().getCurrentProject()
+            .getModel();
+        return getAllBehavioralFeatures(model);
+    }
+    
+    /**
+     * @param ns the given namespace
+     * @return a collection of all behavioralfeatures in the given namespace
+     */
+    public Collection getAllBehavioralFeatures(Object ns) {
+        Collection classifiers = getAllModelElementsOfKind(ns,
+                (Class) ModelFacade.CLASSIFIER);
+        ArrayList features = new ArrayList();
+        Iterator i = classifiers.iterator();
+        while (i.hasNext()) {
+            features.addAll(ModelFacade.getFeatures(i.next()));
+        }
+        ArrayList behavioralfeatures = new ArrayList();
+        Iterator ii = features.iterator();
+        while (ii.hasNext()) {
+            Object f = ii.next();  
+            if (ModelFacade.isABehavioralFeature(f))
+                behavioralfeatures.add(f);
+        }
+        return behavioralfeatures;
+    }
+    
     /**
      * Get the modelelement a given path below a given root-namespace.
      * 
