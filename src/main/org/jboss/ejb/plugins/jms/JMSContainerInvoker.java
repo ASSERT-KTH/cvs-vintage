@@ -59,7 +59,7 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.3 $
+ *      @version $Revision: 1.4 $
  */
 public class JMSContainerInvoker implements
 ContainerInvoker, XmlLoadable
@@ -242,7 +242,8 @@ ContainerInvoker, XmlLoadable
 
        // Get configuration data from jboss.xml
        String destinationJNDI = config.getDestinationJndiName();
-
+       String user = config.getUser();
+       
 
        /*
 	* Set upp JNDI
@@ -269,14 +270,21 @@ ContainerInvoker, XmlLoadable
        
        
        if (destinationType.equals("javax.jms.Topic")) {
-	   Logger.debug("Got destination type Topic");
+	   Logger.debug("Got destination type Topic for " + config.getEjbName());
 	   
 	   // All classes are different between topics and queues!!
 	   TopicConnectionFactory topicFactory = 
 	       (TopicConnectionFactory)context.lookup(adapter.getTopicFactoryName());
-	   TopicConnection topicConnection = topicFactory.createTopicConnection();
-	   // Test to set an identity
-	   //topicConnection.setClientID(((MessageDrivenMetaData)container.getBeanMetaData()).getEjbName());
+	   // Do we have a user - this is messy code (should be done for queues to)
+	   TopicConnection topicConnection;
+	   if(user != null) {
+	       Logger.debug("Creating topic connection with user: " + user +
+			    " passwd: " + config.getPasswd());
+	       topicConnection = topicFactory.createTopicConnection(user, config.getPasswd());
+	   }else {
+	       topicConnection = topicFactory.createTopicConnection();
+	   }
+	   
 	   // Lookup destination
 	   Topic topic = (Topic)context.lookup(destinationJNDI);
 	   
@@ -287,8 +295,15 @@ ContainerInvoker, XmlLoadable
 	       // Create non durable
 	    connectionConsumer = topicConnection.createConnectionConsumer(topic, messageSelector, pool, maxMessagesNr); 
 	   } else {
+	       // ClientId
+	       // Test to set an identity - have to be there for durable!
+	       String clientId = config.getClientId();
+	       //topicConnection.setClientID(clientId);
 	       // Create durable - FIXME durable name!!
-	       String durableName = config.getEjbName();
+	       //String durableName = config.getEjbName();
+	       String durableName = clientId != null ? 
+		   clientId:
+		   config.getEjbName();
 	       connectionConsumer = topicConnection.createDurableConnectionConsumer(topic, durableName,messageSelector, pool, maxMessagesNr);
 	   }
 	   // set global connection, so we have something to start() and close()
@@ -300,7 +315,13 @@ ContainerInvoker, XmlLoadable
 	   QueueConnectionFactory queueFactory = 
 	       (QueueConnectionFactory)context.lookup(adapter.getQueueFactoryName());
 
-	   QueueConnection queueConnection = queueFactory.createQueueConnection();
+	   // Do we have a user
+	   QueueConnection queueConnection;
+	   if (user != null) {
+	       queueConnection = queueFactory.createQueueConnection(user,config.getPasswd());
+	   } else {
+	       queueConnection = queueFactory.createQueueConnection();
+	   }
 	   // Test to set an identity
 	   //topicConnection.setClientID(((MessageDrivenMetaData)container.getBeanMetaData()).getEjbName());
 	   // Lookup destination

@@ -22,7 +22,7 @@ import org.jboss.ejb.DeploymentException;
 ' *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Peter Antman (peter.antman@tim.se)
 
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class MessageDrivenMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------
@@ -39,6 +39,9 @@ public class MessageDrivenMetaData extends BeanMetaData {
     private byte subscriptionDurability = NON_DURABLE_SUBSCRIPTION;
     private String messageSelector = null;
     private String destinationJndiName;
+    private String user = null;
+    private String passwd = null;
+    private String clientId = null;
 
     // Static --------------------------------------------------------
     
@@ -60,6 +63,9 @@ public class MessageDrivenMetaData extends BeanMetaData {
     public String getDestinationType() { return destinationType;}
     public String getMessageSelector() { return messageSelector;}
     public String getDestinationJndiName(){return destinationJndiName;}
+    public String getUser() { return user;}
+    public String getPasswd() {return passwd;}
+    public String getClientId() {return clientId;}
     /**
      * returns MessageDrivenMetaData.DURABLE_SUBSCRIPTION or 
      * MessageDrivenMetaData.NON_DURABLE_SUBSCRIPTION
@@ -140,6 +146,9 @@ public class MessageDrivenMetaData extends BeanMetaData {
 	super.importJbossXml(element);
 	// set the jndi name, (optional)		
 	destinationJndiName = getElementContent(getUniqueChild(element, "destination-jndi-name"));
+	user = getElementContent(getOptionalChild(element,"mdb-user"));
+	passwd = getElementContent(getOptionalChild(element,"mdb-passwd"));
+	clientId = getElementContent(getOptionalChild(element,"mdb-client-id"));
     }	
     // Package protected ---------------------------------------------
     
