@@ -74,7 +74,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.38 2003/02/10 23:57:58 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.39 2003/03/04 17:27:18 jmcnally Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -273,8 +273,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         // If user came from editing a module,
                         // Add new option to module.
                         String lastTemplate = getCancelTemplate(data);
-                        if (newAdded && lastTemplate != null && 
-                            lastTemplate.indexOf("Module") > -1)
+                        if (newAdded && lastTemplate != null)
                         {
                             IssueType issueType = scarabR.getIssueType();
                             AttributeOption option = null;
@@ -287,15 +286,17 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                                 log().error(e);
                             }
                             // add new option to current module
-                            if (lastTemplate.equals("admin,ModuleAttributeEdit.vm"))
+                            if (lastTemplate.equals("admin,AttributeOptionSelect.vm"))
                             {
                                 scarabR.getCurrentModule()
                                    .addAttributeOption(issueType, option);
+                                data.getParameters().setString(ScarabConstants.CANCEL_TEMPLATE, "admin,ModuleAttributeEdit.vm");
                             }
-                            // add new option to current module
-                            else if (lastTemplate.equals("admin,IssueTypeAttributeEdit.vm"))
+                            // add new option to current issue type
+                            else if (lastTemplate.equals("admin,GlobalAttributeOptionSelect.vm"))
                             {
                                 issueType.addRIssueTypeOption(option);
+                                data.getParameters().setString(ScarabConstants.CANCEL_TEMPLATE, "admin,IssueTypeAttributeEdit.vm");
                             }
                         }
                     }

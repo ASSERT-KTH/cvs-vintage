@@ -65,7 +65,7 @@ import org.apache.commons.logging.LogFactory;
  * This class manages the validation and importing of issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.23 2003/02/18 21:22:47 jon Exp $
+ * @version $Id: ScarabIssues.java,v 1.24 2003/03/04 17:27:20 jmcnally Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {

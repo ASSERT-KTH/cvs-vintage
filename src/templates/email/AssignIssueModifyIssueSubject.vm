@@ -1,0 +1,1 @@
+#set($args = [$issue.Module.RealName.toUpperCase(), $issue.UniqueId])$l10n.format("AssignIssueEmailSubject", $args)

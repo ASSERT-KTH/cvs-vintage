@@ -52,8 +52,10 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.security.TurbineSecurity;
+import org.apache.turbine.ParameterParser;
 
 // Scarab Stuff
+import org.tigris.scarab.om.GlobalParameterManager;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -66,10 +68,14 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.29 2003/02/04 11:25:59 jon Exp $
+ * @version $Id: ModifyModule.java,v 1.30 2003/03/04 17:27:18 jmcnally Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
+    private static final String[] emailParms = 
+        {GlobalParameterManager.EMAIL_ENABLED, 
+         GlobalParameterManager.EMAIL_INCLUDE_ISSUE_DETAILS};
+
     /**
      * Process Update button which updates a Module
      */
@@ -137,8 +143,22 @@ public class ModifyModule extends RequireLoginFirstAction
                     setTarget(data, template);
                     return;
                 }
-
                 me.save();
+
+                // Set email overrides
+                if (GlobalParameterManager.getBoolean(
+                        GlobalParameterManager.EMAIL_ALLOW_MODULE_OVERRIDE)) 
+                {
+                    ParameterParser pp = data.getParameters();
+                    String name;
+                    for (int i=0; i<emailParms.length; i++) 
+                    {
+                        name = emailParms[i];
+                        GlobalParameterManager
+                            .setBoolean(name, pp.getBoolean(name));
+                    }
+                }
+
                 intake.remove(moduleGroup);
                 setTarget(data, nextTemplate);
                 getScarabRequestTool(context)

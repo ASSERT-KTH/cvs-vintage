@@ -75,7 +75,7 @@ import org.tigris.scarab.util.TurbineInitialization;
  * call the init() method.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssues.java,v 1.4 2003/02/01 03:39:44 jon Exp $
+ * @version $Id: ImportIssues.java,v 1.5 2003/03/04 17:27:20 jmcnally Exp $
  */
 public class ImportIssues
 {
@@ -148,10 +148,21 @@ public class ImportIssues
         TurbineInitialization.setTurbineResources(getTurbineResources());
         TurbineInitialization.setUp(getConfigDir().getAbsolutePath(), getConfigFile());
     }
-    
-    public void execute() 
+
+    /**
+     * The core of the import process.
+     *
+     * Assumes you've already set the xml file we're to run the import with
+     * by calling  {@link #setXmlFile setXmlFile}.
+     *
+     * @return List of errors if any.
+     *
+     * @exception Exception
+     */
+    public List runImport()
         throws Exception
     {
+        List importErrors = null;
         try
         {
             BeanReader reader = createBeanReader();
@@ -162,13 +173,13 @@ public class ImportIssues
 
             // turn on validation
             ScarabIssues.setInValidationMode(true);
-            ScarabIssues si = (ScarabIssues) reader.parse(
-                getXmlFile().getAbsolutePath());
+            ScarabIssues si = (ScarabIssues)reader.parse
+                (getXmlFile().getAbsolutePath());
             si.doValidateDependencies();
             si.doValidateUsers();
             
             // list out any errors.
-            List importErrors = si.getImportErrors();
+            importErrors = si.getImportErrors();
             if (importErrors != null && importErrors.size() > 0)
             {
                 log.error("Found " + importErrors.size() + " errors:");
@@ -177,33 +188,40 @@ public class ImportIssues
                     String message = (String)itr.next();
                     log.error(message);
                 }
-                return;
             }
-            log.debug("Zero validation errors!");
-            
-            // turn off validation and do import
-            ScarabIssues.setInValidationMode(false);
-            si = (ScarabIssues) reader.parse(
-                getXmlFile().getAbsolutePath());
-            si.doHandleDependencies();
-
-            // now lets output it to a buffer
-//            StringWriter buffer = new StringWriter();
-//            write(si, buffer);
-//            log.debug(buffer.toString());
+            else
+            {
+                log.debug("Zero validation errors!");
+                
+                // turn off validation and do import
+                ScarabIssues.setInValidationMode(false);
+                si = (ScarabIssues) reader.parse(
+                    getXmlFile().getAbsolutePath());
+                si.doHandleDependencies();
+            }
         }
+
         catch(Exception e)
         {
-            log.debug("\nThe following error(s) were found: " +
-                      "\n------------------------------------------------------\n" +
-                      e.getMessage());
+            log.debug("\nThe following error(s) were found: " 
+                + "\n------------------------------------------------------\n" 
+                + e.getMessage());
             throw e;
         }
+
         finally
         {
             // enable workflow
             WorkflowFactory.setForceUseDefault(false);
         }
+
+        return importErrors;
+    }
+
+    public void execute() 
+        throws Exception
+    {
+        runImport();
     }
 
     protected BeanReader createBeanReader()

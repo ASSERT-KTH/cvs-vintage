@@ -40,19 +40,12 @@
 #set ($multiHeading = $headings && $headings.size() > 1)
 
 
-#if ($report.isReadyForCalculation() || $singleHeading)
+#if ($report.isReadyForCalculation())
 <div class="functnbar">
-  #if ($report.isReadyForCalculation())
     <input type="submit" value="$l10n.RecalculateOutput" 
       name="eventSubmit_doGenerateReport" />
-  #end
-  #if ($singleHeading)
-    <input type="submit" name="eventSubmit_doAddHeading" 
-        value="$l10n.AddNewHeading">
-  #end
 </div>
 #end						
-
 
 ## don't show the headings section if the axis is Dates 
 ##if (($singleHeading && $headings.get(0).calculateType() != 2) || $multiHeading)
@@ -104,7 +97,7 @@
 #end
 
 #if ($multiHeading)
-  <div class="functnbar2">
+  <div class="functnbar3">
     <input type="submit" name="eventSubmit_doSelectHeading" 
         value="$l10n.EditSelectedHeading">
     <input type="submit" name="eventSubmit_doRemoveHeading" 
@@ -116,6 +109,10 @@
     #set ($headingIndex = 0)
     <input type="hidden" name="heading" value="0" />
     #set ($selectedHeading = $headings.get(0))
+  <div class="functnbar3">
+    <input type="submit" name="eventSubmit_doAddHeading" 
+        value="$l10n.AddNewHeading">
+  </div>
 #end
 			
 <h3>$l10n.get("${rowCol}Criteria")</h3>	  

@@ -12,11 +12,11 @@ $data.User.setCurrentMITList($report.getMITList())
         value="$l10n.AddEditGroups"></div>
 #end
 
-  #queryAttributesSection($search true 4)
+#queryAttributesSection($search true 4)
 
-  <div class="functnbar3">
-    <input type="submit" name="eventSubmit_doAddoptions" value="Save" />
-  </div>
+<div class="functnbar3">
+  <input type="submit" name="eventSubmit_doAddoptions" value="$l10n.Update" />
+</div>
 
 #if ($report.isReadyForCalculation())
   <div class="functnbar2"><input type="submit" value="$l10n.RecalculateOutput" 

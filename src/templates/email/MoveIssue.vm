@@ -4,8 +4,7 @@
   #set ($actionWord = "$l10n.moved")
 #end
 
-#set ($user = $issue.ModifiedBy)
-#set ($msgArgs = [$oldModule, $newModule, $newIssueType, $user.UserName])
+#set ($msgArgs = [$oldModule.Name, $issue.Module.Name, $issue.IssueType.Name, $issue.ModifiedBy.UserName])
 $l10n.format("IssueMoved", $issue.UniqueId, $actionWord) $l10n.format("IssueMoved2", $msgArgs) 
 
 $l10n.YouCanViewIssue:

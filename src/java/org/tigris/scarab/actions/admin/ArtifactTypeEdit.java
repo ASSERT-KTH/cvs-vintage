@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.44 2003/02/11 00:08:18 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.45 2003/03/04 17:27:18 jmcnally Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -102,18 +102,41 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         // Set properties for module-issue type info
         Group rmitGroup = intake.get("RModuleIssueType", 
                                         rmit.getQueryKey(), false);
-        Field displayName = rmitGroup.get("DisplayName");
-        displayName.setRequired(true);
-        if (displayName.isValid())
+        if (intake.isAllValid())
         {
-            rmitGroup.setProperties(rmit);
-            rmit.save();
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+            boolean nameTaken = false;
+            List issueTypes = module.getRModuleIssueTypes();
+            if (issueTypes != null)
+            {
+                String displayName = rmitGroup.get("DisplayName").toString();
+                for (int i=0;i<issueTypes.size();i++)
+                {
+                    RModuleIssueType tmpRmit = ((RModuleIssueType)issueTypes.get(i));
+                    if (tmpRmit.getDisplayName().equals(displayName) 
+                        && !tmpRmit.getIssueTypeId().equals(issueType.getIssueTypeId()))
+                    {
+                        nameTaken = true;
+                        break;
+                    }
+                }
+            }
+         
+            if (nameTaken) 
+            {
+                scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+                rmitGroup.get("DisplayName").setMessage("IssueTypeNameExists");
+                return false;
+            }
+            else
+            {
+                rmitGroup.setProperties(rmit);
+                rmit.save();
+                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+            }
         }
         else
         {
             scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
-            displayName.setMessage("intake_FieldRequired");
             return false;
         }
         return success;
@@ -485,9 +508,16 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     public void doDone(RunData data, TemplateContext context)
         throws Exception
     {
+        boolean groupSuccess = false;
         boolean infoSuccess = doSaveinfo(data, context);
-        boolean groupSuccess = doSavegroups(data, context);
-        doSaveuserattributes(data, context);
+        if (infoSuccess)
+        {
+            groupSuccess = doSavegroups(data, context);
+            if (groupSuccess)
+            {
+                doSaveuserattributes(data, context);
+            }
+        }
         if (infoSuccess && groupSuccess)
         {
             doCancel(data, context);

@@ -68,7 +68,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.42 2003/02/11 00:08:18 elicia Exp $
+ * @version $Id: IssueType.java,v 1.43 2003/03/04 17:27:18 jmcnally Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -89,9 +89,6 @@ public  class IssueType
     protected static final String GET_ALL_R_ISSUETYPE_OPTIONS = 
         "getAllRIssueTypeOptions";
 
-    public static final NumberKey ISSUE__PK = new NumberKey("1");
-    public static final NumberKey USER_TEMPLATE__PK = new NumberKey("2");
-    public static final NumberKey MODULE_TEMPLATE__PK = new NumberKey("3");
     static final String USER = "user";
     static final String NON_USER = "non-user";
 
@@ -121,6 +118,7 @@ public  class IssueType
         }
         return templateIssueType;
     }
+
 
     /**
      * Gets the id of the template that corresponds to the issue type.

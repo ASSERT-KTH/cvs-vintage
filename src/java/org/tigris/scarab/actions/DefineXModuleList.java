@@ -75,7 +75,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class is responsible for building a list of Module/IssueTypes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefineXModuleList.java,v 1.14 2003/02/15 02:33:18 jmcnally Exp $
+ * @version $Id: DefineXModuleList.java,v 1.15 2003/03/04 17:27:18 jmcnally Exp $
  */
 public class DefineXModuleList extends RequireLoginFirstAction
 {
@@ -140,18 +140,18 @@ public class DefineXModuleList extends RequireLoginFirstAction
         {
             report.setMITList(mitList);
             scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+
+            if (!mitList.isSingleModule() && 
+                Scope.MODULE__PK.equals(report.getScopeId())) 
+            {
+                report.setScopeId(Scope.PERSONAL__PK);
+                scarabR.setInfoMessage(l10n.get("ScopeChangedToPersonal"));
+            }
         }
         catch (IncompatibleMITListException e)
         {
-            scarabR.setInfoMessage(l10n.get("IncompatibleMITListReport"));
+            scarabR.setAlertMessage(l10n.get("IncompatibleMITListReport"));
             setTarget(data, "reports,XModuleList.vm");
-        }
-
-        if (!mitList.isSingleModule() && 
-            Scope.MODULE__PK.equals(report.getScopeId())) 
-        {
-            report.setScopeId(Scope.PERSONAL__PK);
-            scarabR.setInfoMessage(l10n.get("ScopeChangedToPersonal"));
         }
     }
 

@@ -3,6 +3,7 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
+#set ($canDeleteAtLeastOne = false)
 
 <form method="post" action="$link.setPage("QueryList.vm").setAction("QueryList")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="QueryList.vm" />
@@ -16,23 +17,28 @@
 #if (!$sortPolarity || $sortPolarity.length() == 0)
    #set ($sortPolarity = "desc")
 #end
-#set ($allQueries = $scarabR.Queries)
+
+#if ($scarabR.hasPermission($scarabG.Permission.ITEM__APPROVE, $module))
+   #set ($queries = $scarabR.AllQueries)
+#else
+   #set ($queries = $scarabR.PrivateQueries)
+#end
 
 ## PAGINATION
 ## if results exceed limit, get subset list
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
 #set ($pageNum = $data.Parameters.getInt("pageNum", 1))
-#if ($resultsPerPage > 0 && $allQueries.size() > $resultsPerPage)
+#if ($resultsPerPage > 0 && $queries.size() > $resultsPerPage)
  #set ($paginated = "true")
- #set ($pagList = $scarabR.getPaginatedList($allQueries, $pageNum, $resultsPerPage))
+ #set ($pagList = $scarabR.getPaginatedList($queries, $pageNum, $resultsPerPage))
  #if ($pagList)
-   #set ($allQueries = $pagList)
+   #set ($queries = $pagList)
  #end
 #end
 
 <h3>$l10n.SavedQueries</h3>
 
-#if ($allQueries.size() < 1)
+#if ($queries.size() < 1)
  <p class="alert">$l10n.NoSavedQueries $link.setPage("AdvancedQuery.vm").setLabel("Advanced query").
  </p>
 
@@ -57,11 +63,19 @@ $l10n.Click
   <th>#sort ("user" "$l10n.CreatedBy")</th>
  </tr>
  
- #foreach ($query in $allQueries)
+ #foreach ($query in $queries)
   #set ($rqu = $query.getRQueryUser($user))
   #set ($rquGroup = $intake.RQueryUser.mapTo($rqu))
+  #set ($canDelete = $query.canDelete($user))
+  #if ($canDelete) #set ($canDeleteAtLeastOne = true) #end
   #indexedRows($velocityCount)
-  <td><input type="checkbox" name="action_$query.QueryId" /></td>
+  <td>
+  #if ($canDelete)
+    <input type="checkbox" name="action_$query.QueryId" />
+  #else
+    &#160;
+  #end
+  </td>
 ##  <td>#booleanCheckbox($rquGroup.Subscribed) </td>
 ##  <td>#fieldErrorMsg ($rquGroup.Frequency "")
 ##    <select name="$rquGroup.Frequency.Key">
@@ -69,14 +83,17 @@ $l10n.Click
 ##    </select>
 ##  </td>
                
-  <td><a href="$scarabR.getEditLink($link.setPage("EditQuery.vm").toString(),$query)">$query.Name</a></td>
+  <td>
+      <a href="$scarabR.getEditLink($link.setPage("EditQuery.vm").toString(),$query)">$query.Name</a></td>
   <td>#if($query.Description)  $query.Description #else &#160; #end</td>
   <td><input type="radio" name="default" value="$query.QueryId" 
           #if ($rqu.Isdefault) checked="checked" #end /></td>
-  <td><a href="$scarabR.getExecuteLink($link.setPage("IssueList.vm").toString(), $query)">$query.Scope.Name</a>
+  <td>
   #if (!$query.Approved)
-   ($l10n.UntilApproved)
-  #end
+   <a href="$scarabR.getExecuteLink($link.setPage("IssueList.vm").toString(), $query)">$l10n.Personal ($l10n.UntilApproved)</a>
+  #else
+  <a href="$scarabR.getExecuteLink($link.setPage("IssueList.vm").toString(), $query)">$query.Scope.Name</a>
+#end
   </td>
   #set ($createdUser = $scarabR.getUser($query.UserId.toString()))
   <td><a href="mailto:$createdUser.Email">$!createdUser.Name</a></td>
@@ -87,7 +104,7 @@ $l10n.Click
 <div class="functnbar3">
 <input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
 <input type="submit" value="$l10n.CopySelected" name="eventSubmit_doCopyquery" />
-  #if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE) || !$module.getPrivateQueries($user).isEmpty())
+  #if ($canDeleteAtLeastOne)
    &#160;<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletequeries" />
   #end
    &#160;<input type="submit" value="$l10n.CreateNewQuery" name="eventSubmit_doNewquery" />

@@ -1,0 +1,66 @@
+<div id="emailconfigure" class="app">
+   
+<form name="ConfigureForm" action="$link.setPage("admin,GlobalEmailSettings.vm")" 
+    method="post">
+<input type="hidden" name="action" value="admin.GlobalEmailSettings">
+                           
+<h3>$l10n.EmailConfiguration</h3>
+<div class="axial">
+<table border="0" cellspacing="2" cellpadding="3">        
+ <tr>
+  <th>$l10n.EmailEnable</th>
+  <td> 
+   #set ($name = $scarabG.ParameterName.EMAIL_ENABLED)
+   #set ($selected = $scarabG.Parameter.getBoolean($name))
+   <input type="checkbox" name="$name" #checked($selected)/> 
+     $l10n.EmailEnableDescription  
+  </td> 
+ </tr>
+#*
+ <tr>
+  <th>$l10n.EmailIncludeModuleInfo</th>
+  <td> 
+   #set ($name = $scarabG.ParameterName.EMAIL_INCLUDE_MODULE_INFO)
+   #set ($selected = $scarabG.Parameter.getBoolean($name))
+   <input type="checkbox" name="$name" #checked($selected)/> 
+     $l10n.EmailIncludeModuleInfoDescription  
+  </td> 
+ </tr>
+
+ <tr>
+  <th>$l10n.EmailIncludeUserInfo</th>
+  <td> 
+   #set ($name = $scarabG.ParameterName.EMAIL_INCLUDE_USER_INFO)
+   #set ($selected = $scarabG.Parameter.getBoolean($name))
+   <input type="checkbox" name="$name" #checked($selected)/> 
+     $l10n.EmailIncludeUserInfoDescription  
+  </td> 
+ </tr>
+*#
+ <tr>
+  <th>$l10n.EmailIncludeIssueDetails</th>
+  <td> 
+   #set ($name = $scarabG.ParameterName.EMAIL_INCLUDE_ISSUE_DETAILS)
+   #set ($selected = $scarabG.Parameter.getBoolean($name))
+   <input type="checkbox" name="$name" #checked($selected)/> 
+     $l10n.EmailIncludeIssueDetailsDescription  
+  </td> 
+ </tr>
+
+ <tr>
+  <th>$l10n.EmailAllowModuleOverride</th>
+  <td> 
+   #set ($name = $scarabG.ParameterName.EMAIL_ALLOW_MODULE_OVERRIDE)
+   #set ($selected = $scarabG.Parameter.getBoolean($name))
+   <input type="checkbox" name="$name" #checked($selected)/> 
+     $l10n.EmailAllowModuleOverrideDescription  
+  </td> 
+ </tr>
+
+</table>
+<div class="functnbar3">
+  <input type="submit" name="eventSubmit_doSave" value="$l10n.Save" />
+</div>
+
+</form>
+</div>

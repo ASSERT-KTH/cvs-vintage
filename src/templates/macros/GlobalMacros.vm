@@ -252,10 +252,6 @@
 #end
 #end
 
-#macro (checked $v1 $v2)
-#if ($v1.toString().equals($v2.toString()))checked="checked"#end
-#end
-
 #macro (textField $field $size)
 #if ($field.Validator.MaxLength && $field.Validator.MaxLength > 0)
 #set ($maxLength = $field.Validator.MaxLength)
@@ -322,7 +318,7 @@
   #set ($queryGroup = $intake.Query.mapTo($query))
   <select name="$queryGroup.ScopeId.Key">
   #foreach ($scope in $scarabR.getScopes())
-    <option value = "$scope.ScopeId" #if($scope.ScopeId.toString().equals("$query.ScopeId")) selected="selected" #end>
+    <option value = "$scope.ScopeId" #if($scope.ScopeId.toString().equals("$queryGroup.ScopeId.Value")) selected="selected" #end>
     $scope.Name
     </option>
   #end
@@ -333,7 +329,7 @@
   #set ($group = $intake.IssueTemplateInfo.mapTo($templateInfo))
   <select name="$group.ScopeId.Key">
   #foreach ($scope in $scarabR.getScopes())
-    <option value = "$scope.ScopeId" #if($scope.ScopeId.toString().equals("$templateInfo.ScopeId")) selected="selected" #end>
+    <option value = "$scope.ScopeId" #if($scope.ScopeId.toString().equals("$group.ScopeId.Value")) selected="selected" #end>
     $scope.Name
     </option>
   #end

@@ -82,17 +82,19 @@ import org.tigris.scarab.om.AttachmentManager;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.util.word.QueryResult;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.util.EmailContext;
 
 /**
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.161 2003/02/26 00:42:49 dlr Exp $
+ * @version $Id: ReportIssue.java,v 1.162 2003/03/04 17:27:18 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -331,10 +333,9 @@ public class ReportIssue extends RequireLoginFirstAction
                 // if necessary.  We can
                 // only do this after setting the attributes above.
                 boolean saveIssue = true;
-                String summary = issue.getDefaultText();
                 Group reasonGroup = intake.get("Attachment", "_1", false);
                 Field reasonField = reasonGroup.get("Data");
-                if (summary == null || summary.length() == 0) 
+                if (issue.getDefaultTextAttributeValue() == null)
                 {
                     reasonField.setRequired(true);
                     saveIssue = false;
@@ -419,25 +420,12 @@ public class ReportIssue extends RequireLoginFirstAction
                     doRedirect(data, context, templateCode, issue);
                 
                     // send email
-                    // FIXME: get rid of this logic.
-                    if (summary.length() == 0 && reason != null)
-                    {
-                        summary = reason.getData();
-                    }
-                    if (summary.length() > 60)
-                    {
-                        summary = summary.substring(0,60) + "...";
-                    }
-                    summary = (summary.length() == 0) ? summary : " - " + summary;
-                    
-                    String[] args = { 
-                        issue.getModule().getRealName().toUpperCase(), 
-                        issue.getUniqueId(), summary};
-                    String subj = l10n.format("IssueAddedEmailSubject", args);
+                    EmailContext ectx= new EmailContext();
+                    ectx.setLocalizationTool(l10n);
+                    ectx.setLinkTool((ScarabLink)context.get("link"));
                 
-                    if (!activitySet.sendEmail(
-                         new ContextAdapter(context), issue, 
-                         subj, "email/NewIssueNotification.vm"))
+                    if (!activitySet.sendEmail(ectx, issue, 
+                         "NewIssueNotification.vm"))
                     {
                         scarabR.setInfoMessage(
                             l10n.get("IssueSavedButEmailError"));
@@ -562,8 +550,10 @@ public class ReportIssue extends RequireLoginFirstAction
                         activitySet = 
                             prevIssue.addComment(activitySet, attachment, 
                                 (ScarabUser)data.getUser());
-                        if (!activitySet.sendEmail(
-                             new ContextAdapter(context), prevIssue))
+                        EmailContext ectx= new EmailContext();
+                        ectx.setLocalizationTool(l10n);
+                        ectx.setLinkTool((ScarabLink)context.get("link"));
+                        if (!activitySet.sendEmail(ectx, prevIssue))
                         {
                             scarabR.setInfoMessage(
                                 l10n.get("CommentAddedButEmailError"));

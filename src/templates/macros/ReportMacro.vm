@@ -44,7 +44,7 @@
       #if ($singleAttribute)
           $model.displayOption($cellLabel)
       #else
-          $model.displayAttribute($cellLabel):$model.displayOption($cellLabel)
+          $model.displayAttribute($cellLabel):&nbsp;$model.displayOption($cellLabel)
       #end
   #elseif ($model.isOptionGroup($cellLabel))
       $cellLabel.Name
@@ -52,10 +52,10 @@
       #if ($singleAttribute)
           $model.displayUser($cellLabel)
       #else
-          $model.displayAttribute($cellLabel):$model.displayUser($cellLabel)
+          $model.displayAttribute($cellLabel):&nbsp;$model.displayUser($cellLabel)
       #end
   #elseif ($model.isUser($cellLabel))
-      Author:$cellLabel.UserName
+      $l10n.Author:&nbsp;$cellLabel.UserName
   #end
 #end
 
@@ -78,7 +78,7 @@
      #end
    #end
    #if ($singleAttribute)
-     <th align="right">$model.displayAttribute($columnHeadingLevel.get(0)) &#8594</th>
+     <th align="right">$model.displayAttribute($columnHeadingLevel.get(0))&nbsp;&#8594</th>
    #else
      <th>&nbsp;</th>
    #end
@@ -110,6 +110,7 @@
   #end
  </tr>
 
+ #if ($model.RowHeadings.size() > 1 || $model.RowHeadings.get(0).isSingleAttribute())
  <tr>
   #foreach ($curHeading in $model.RowHeadings)
     #set ($level = $velocityCount - 1)
@@ -125,6 +126,7 @@
        <td>&nbsp;</td>
    #end
  </tr>
+ #end
 
 #foreach ($rowIndex in [0..$maxRow])
  <tr>

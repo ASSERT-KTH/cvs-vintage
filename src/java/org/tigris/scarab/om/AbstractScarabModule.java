@@ -126,7 +126,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.83 2003/02/11 00:08:18 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.84 2003/03/04 17:27:18 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -139,12 +139,10 @@ public abstract class AbstractScarabModule
     // the following Strings are method names that are used in caching results
     protected static final String GET_R_MODULE_ATTRIBUTES = 
         "getRModuleAttributes";
-    protected static final String GET_DEDUPE_GROUPS_WITH_ATTRIBUTES = 
-        "getDedupeGroupsWithAttributes";
-    protected static final String GET_ATTRIBUTE_GROUPS = 
-        "getAttributeGroups";
     protected static final String GET_ATTRIBUTE_GROUP = 
         "getAttributeGroup";
+    protected static final String GET_DEDUPE_GROUPS_WITH_ATTRIBUTES = 
+        "getDedupeGroupsWithAttributes";
     protected static final String GET_SAVED_REPORTS = 
         "getSavedReports";
     protected static final String GET_DEFAULT_RMODULE_USERATTRIBUTES = 
@@ -358,27 +356,7 @@ public abstract class AbstractScarabModule
     public AttributeGroup createNewGroup (IssueType issueType)
         throws Exception
     {
-        List groups = getAttributeGroups(issueType, false);
-        AttributeGroup ag = new AttributeGroup();
-
-        // Make default group name 'new attribute group' 
-        ag.setName("new attribute group");
-        ag.setActive(true);
-        ag.setModuleId(getModuleId());
-        ag.setIssueTypeId(issueType.getIssueTypeId());
-        if (groups.size() == 0)
-        {
-            ag.setDedupe(true);
-            ag.setOrder(groups.size() +1);
-        }
-        else 
-        {
-            ag.setDedupe(false);
-            ag.setOrder(groups.size() +2);
-        }
-        ag.save();
-        groups.add(ag);
-        return ag;
+        return issueType.createNewGroup(this);
     }
 
     /**
@@ -430,29 +408,7 @@ public abstract class AbstractScarabModule
     public List getAttributeGroups(IssueType issueType, boolean activeOnly)
         throws Exception
     {
-        List groups = null;
-        Boolean activeBool = activeOnly ? Boolean.TRUE : Boolean.FALSE;
-        Object obj = getMethodResult().get(this, GET_ATTRIBUTE_GROUPS,
-                                           issueType, activeBool);
-        if (obj == null)
-        {
-            Criteria crit = new Criteria()
-                .add(AttributeGroupPeer.MODULE_ID, getModuleId())
-                .add(AttributeGroupPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
-                .addAscendingOrderByColumn(AttributeGroupPeer.PREFERRED_ORDER);
-            if (activeOnly)
-            {
-                crit.add(AttributeGroupPeer.ACTIVE, true);
-            }
-            groups = AttributeGroupPeer.doSelect(crit);
-            getMethodResult().put(groups, this, GET_ATTRIBUTE_GROUPS,
-                                  issueType, activeBool);
-        }
-        else 
-        {
-            groups = (List)obj;
-        }
-        return groups;
+        return issueType.getAttributeGroups(this, activeOnly);
     }
 
 
@@ -1860,6 +1816,7 @@ public abstract class AbstractScarabModule
         rmit.setActive(true);
         rmit.setDisplay(false);
         rmit.setOrder(getRModuleIssueTypes().size() + 1);
+        rmit.setDedupe(issueType.getDedupe());
         rmit.save();
 
         // add user attributes

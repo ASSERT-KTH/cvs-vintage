@@ -25,7 +25,7 @@
 <div class="colbar">
   #set ($checked = false)
   #set ($queryType = $data.Parameters.getString("querytype",""))
-  #if ($queryType == "custom")
+  #if ($queryType.equals("custom") || $queryType.length() == 0)
       #set ($checked = true)
   #end
   <div><input type="radio" name="querytype" value="custom" 

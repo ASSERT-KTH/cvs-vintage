@@ -1189,7 +1189,8 @@ try{
                 nextTemplate = ((ScarabUser)data.getUser()).getHomePage();
                 setAlertMessage(l10n.get("ModuleIssueTypeRequiredToEnterIssue"));
             }
-            else if (rmit.getDedupe())
+            else if (rmit.getDedupe() && !getCurrentModule()
+                     .getDedupeGroupsWithAttributes(getCurrentIssueType()).isEmpty())
             {
                 nextTemplate = "entry,Wizard1.vm";
             }
@@ -1522,7 +1523,7 @@ try{
     {
         // query.getValue() begins with a &
         link = link 
-            + "/template/IssueList.vm?action=Search&eventSubmit_doSearch=Search" 
+            + "?action=Search&eventSubmit_doSearch=Search" 
             + "&resultsperpage=25&pagenum=1" + query.getValue();
 
         NumberKey listId = query.getListId();
@@ -1543,8 +1544,9 @@ try{
     public String getEditLink(String link, Query query)
     {
         // query.getValue() begins with a &
-        link = link + "/template/EditQuery.vm?queryId=" + query.getQueryId()
-                    + query.getValue();
+        link = link + "?queryId=" + query.getQueryId()
+            + "&action=Search&eventSubmit_doGotoEditQuery=foo" 
+            + query.getValue();
 
         NumberKey listId = query.getListId();
         if (listId != null) 
@@ -2017,7 +2019,7 @@ try{
      * Returns all issue templates that are global, 
      * Plus those that are personal and created by logged-in user.
     */
-    public List getIssueTemplates()
+    public List getAllIssueTemplates()
         throws Exception
     {
         String sortColumn = data.getParameters().getString("sortColumn");
@@ -2030,38 +2032,38 @@ try{
         {
             sortPolarity = "asc";
         }
-        return IssueTemplateInfoPeer.getAllTemplates(getCurrentModule(),
+        return IssueTemplateInfoPeer.getTemplates(getCurrentModule(),
                getCurrentIssueType(), (ScarabUser)data.getUser(), 
-               sortColumn, sortPolarity);
+               sortColumn, sortPolarity, IssueTemplateInfoPeer.TYPE_ALL);
     }
 
     /**
-     * Returns queries that are personal and created by logged-in user.
+     * Returns templates that are personal and created by logged-in user.
     */
-    public List getPrivateQueries()
+    public List getPrivateTemplates()
         throws Exception
     {
-        return QueryPeer.getQueries(getCurrentModule(),
+        return IssueTemplateInfoPeer.getTemplates(getCurrentModule(),
                getCurrentIssueType(), (ScarabUser)data.getUser(), 
-               "name", "asc", "private");
+               "name", "asc", IssueTemplateInfoPeer.TYPE_PRIVATE);
     }
 
     /**
-     * Returns all queries that are global.
+     * Returns templates that are personal and created by logged-in user.
     */
-    public List getGlobalQueries()
+    public List getGlobalTemplates()
         throws Exception
     {
-        return QueryPeer.getQueries(getCurrentModule(),
+        return IssueTemplateInfoPeer.getTemplates(getCurrentModule(),
                getCurrentIssueType(), (ScarabUser)data.getUser(), 
-               "name", "asc", "global");
+               "name", "asc", IssueTemplateInfoPeer.TYPE_GLOBAL);
     }
 
     /**
      * Returns all queries that are global, 
      * Plus those that are personal and created by logged-in user.
     */
-    public List getQueries()
+    public List getAllQueries()
         throws Exception
     {
         String sortColumn = data.getParameters().getString("sortColumn");
@@ -2076,7 +2078,29 @@ try{
         }
         return QueryPeer.getQueries(getCurrentModule(),
                getCurrentIssueType(), (ScarabUser)data.getUser(), 
-               sortColumn, sortPolarity, "all");
+               sortColumn, sortPolarity, IssueTemplateInfoPeer.TYPE_ALL);
+    }
+
+    /**
+     * Returns queries that are personal and created by logged-in user.
+    */
+    public List getPrivateQueries()
+        throws Exception
+    {
+        return QueryPeer.getQueries(getCurrentModule(),
+               getCurrentIssueType(), (ScarabUser)data.getUser(), 
+               "name", "asc", IssueTemplateInfoPeer.TYPE_PRIVATE);
+    }
+
+    /**
+     * Returns all queries that are global.
+    */
+    public List getGlobalQueries()
+        throws Exception
+    {
+        return QueryPeer.getQueries(getCurrentModule(),
+               getCurrentIssueType(), (ScarabUser)data.getUser(), 
+               "name", "asc", IssueTemplateInfoPeer.TYPE_GLOBAL);
     }
 
     /**

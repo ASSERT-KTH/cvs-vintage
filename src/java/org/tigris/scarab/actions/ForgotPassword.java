@@ -150,7 +150,7 @@ public class ForgotPassword extends ScarabTemplateAction
             te.setTemplate(
                 Turbine.getConfiguration()
                     .getString("scarab.email.forgotpassword.template",
-                               "email/ForgotPassword.vm"));
+                               "ForgotPassword.vm"));
             te.send();
         }
         catch (TurbineSecurityException e)

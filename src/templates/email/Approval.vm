@@ -1,7 +1,8 @@
 $l10n.Details:
 ---------------------------------------------------------------------
 
-$body
+#set ($args = [$user.getUserName(), $actionIndex, $artifactIndex, $artifactName])
+$l10n.format("ApprovalEmailBody", $args)
 
 #if($comment)
 

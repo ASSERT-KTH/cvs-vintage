@@ -1,0 +1,11 @@
+#set ($summary = $issue.DefaultText)
+#if ($summary.length() > 0)
+ #set ($summary = " - $summary")
+ #if ($summary.length() > 60)
+  #set($summary = "${summary.substring(0,60)}...")
+ #end
+#end
+#set ($formatArgs = [$issue.Module.RealName.toUpperCase(), $issue.UniqueId, $summary])
+#set ($emailSubject = $l10n.format("IssueAddedEmailSubject", $formatArgs))
+
+

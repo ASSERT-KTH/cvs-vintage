@@ -65,7 +65,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.29 2003/02/04 11:26:00 jon Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.30 2003/03/04 17:27:18 jmcnally Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
@@ -218,6 +218,8 @@ public abstract class ScarabTemplateAction extends TemplateAction
                                      TemplateContext context)
         throws Exception
     {
+        data.getParameters().setString(ScarabConstants.CANCEL_TEMPLATE,
+                                       getCurrentTemplate(data));
         setTarget(data, getOtherTemplate(data));            
     }
 

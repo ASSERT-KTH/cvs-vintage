@@ -147,7 +147,7 @@
    #set ($maxNum = $userAttrs.size())
  #indexedRows($velocityCount)
  <td><input type="checkbox" name="att_delete_$userAttr.AttributeId" /></td>
- <td>$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$userAttr.AttributeId").addPathInfo("issueTypeId", $issueType.IssueTypeId).setLabel("$userAttr.Name").addPathInfo("$scarabG.Constant.CANCEL_TEMPLATE", "admin,ArtifactTypeEdit.vm")</td>
+ <td>$link.setPage("admin,IssueTypeAttributeEdit.vm").addPathInfo("att_0id", "$userAttr.AttributeId").addPathInfo("issueTypeId", $issueType.IssueTypeId).setLabel("$userAttr.Name").addPathInfo("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalArtifactTypeEdit.vm")</td>
 <td>#booleanCheckbox ($riaGroup.Active)</td>
 <td>#booleanCheckbox ($riaGroup.Locked)</td>
 <td>#numericSelect( "$riaGroup.Order.Key" 1 $maxNum $riaGroup.Order.Value 1 )</td>

@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.123 2002/12/09 18:14:32 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.124 2003/03/04 17:27:20 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -1673,10 +1673,6 @@
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
-
-    <unique>
-        <unique-column name="NAME"/>
-    </unique>
 </table>
 
 </database>

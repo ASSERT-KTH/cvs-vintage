@@ -66,7 +66,7 @@ import org.tigris.scarab.util.Log;
 /**
  * 
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DatabaseInitializer.java,v 1.7 2003/01/14 01:34:47 jmcnally Exp $
+ * @version $Id: DatabaseInitializer.java,v 1.8 2003/03/04 17:27:19 jmcnally Exp $
  */
 public class DatabaseInitializer
     extends BaseService
@@ -83,9 +83,9 @@ public class DatabaseInitializer
     {
         try
         {
-            GlobalParameter dbState =
-                GlobalParameterManager.getInstance(DB_L10N_STATE);
-            if (dbState.getValue().equals(PRE_L10N)) 
+            String dbState =
+                GlobalParameterManager.getString(DB_L10N_STATE);
+            if (dbState.equals(PRE_L10N)) 
             {
                 Locale defaultLocale = new Locale(
                     Localization.getDefaultLanguage(), 
@@ -94,11 +94,9 @@ public class DatabaseInitializer
                 long start = System.currentTimeMillis();
                 Log.get().info("New scarab database; localizing strings for '" +
                                defaultLocale.getDisplayName() + "'...");
-                dbState.setValue("started");
-                dbState.save();
+                GlobalParameterManager.setString(DB_L10N_STATE, "started");
                 initdb(defaultLocale);     
-                dbState.setValue(POST_L10N);
-                dbState.save();
+                GlobalParameterManager.setString(DB_L10N_STATE, POST_L10N);
                 Log.get().info("Done localizing.  Time elapsed = " + 
                     (System.currentTimeMillis()-start)/1000.0 + " s");
             }

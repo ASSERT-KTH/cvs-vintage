@@ -49,7 +49,8 @@ package org.tigris.scarab.om;
 import java.util.Arrays;
 import java.util.Locale;
 
-import org.apache.fulcrum.template.TemplateContext;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.modules.ContextAdapter;
 import org.apache.fulcrum.localization.Localization;
 import org.apache.turbine.Turbine;
 
@@ -57,7 +58,10 @@ import org.apache.torque.om.Persistent;
 
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.util.Email;
+import org.tigris.scarab.util.EmailContext;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 
@@ -80,43 +84,50 @@ public  class IssueTemplateInfo
     }
 
 
-    public void saveAndSendEmail(ScarabUser user, Module module, 
-                                  TemplateContext context)
+    public boolean canDelete(ScarabUser user)
         throws Exception
     {
+        // can delete a template if they have delete permission
+        // Or if is their personal template
+        return (user.hasPermission(ScarabSecurity.ITEM__DELETE, getIssue().getModule())
+            || (user.getUserId().equals(getIssue().getCreatedBy().getUserId()) 
+                && getScopeId().equals(Scope.PERSONAL__PK)));
+    }
+
+    public boolean canEdit(ScarabUser user)
+        throws Exception
+    {
+        return canDelete(user);
+    }
+
+    public boolean saveAndSendEmail(ScarabUser user, Module module, 
+                                    TemplateContext context)
+        throws Exception
+    {
+        // If it's a module scoped template, user must have Item | Approve 
+        //   permission, Or its Approved field gets set to false
+        boolean success = true;
         Issue issue = IssuePeer.retrieveByPK(getIssueId());
 
         // If it's a module template, user must have Item | Approve 
         //   permission, or its Approved field gets set to false
-        if (getScopeId().equals(Scope.PERSONAL__PK))
-        {
-            setApproved(true);
-        }
-        else if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
+        if (getScopeId().equals(Scope.PERSONAL__PK)
+            || user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
         {
             setApproved(true);
         } 
         else
         {
             setApproved(false);
-            setScopeId(Scope.PERSONAL__PK);
             issue.save();
 
             // Send Email to the people with module edit ability so
             // that they can approve the new template
             if (context != null)
             {
-                context.put("user", user);
-                context.put("module", module);
-
-                String subject = Localization.getString(
-                    ScarabConstants.DEFAULT_BUNDLE_NAME,
-                    Locale.getDefault(),
-                    "NewTemplateRequiresApproval");
-
                 String template = Turbine.getConfiguration().
                     getString("scarab.email.requireapproval.template",
-                              "email/RequireApproval.vm");
+                              "RequireApproval.vm");
                 
                 ScarabUser[] toUsers = module.getUsers(ScarabSecurity.MODULE__EDIT);
                 // if the module doesn't have any users, then we need to add at 
@@ -126,12 +137,26 @@ public  class IssueTemplateInfo
                     toUsers = new ScarabUser[1];
                     toUsers[0] = user;
                 }
-                Email.sendEmail(context, module, module.getSystemEmail(), 
-                    module.getSystemEmail(), Arrays.asList(toUsers), 
-                    null, subject, template);
+
+                EmailContext ectx = new EmailContext();
+                ectx.setLocalizationTool(
+                    (ScarabLocalizationTool)context.get("l10n"));
+                ectx.setLinkTool((ScarabLink)context.get("link"));
+                ectx.setUser(user);
+                ectx.setModule(module);
+                ectx.setDefaultTextKey("NewTemplateRequiresApproval");
+
+                String fromUser = "scarab.email.default";
+                if (!Email.sendEmail(ectx, module, 
+                    fromUser, module.getSystemEmail(), Arrays.asList(toUsers),
+                    null, template))
+                {
+                    success = false;
+                }
             }
         }
         save();
+        return success;
     }
 
     /*
@@ -146,9 +171,9 @@ public  class IssueTemplateInfo
         if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
         {
             setApproved(true);
-            if (approved)
+            if (!approved)
             {
-                setScopeId(Scope.MODULE__PK);
+                setScopeId(Scope.PERSONAL__PK);
             }
             save();
         } 

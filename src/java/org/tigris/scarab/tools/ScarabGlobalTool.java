@@ -71,6 +71,7 @@ import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.GlobalParameterManager;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.MITListManager;
@@ -102,7 +103,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.53 2003/02/12 19:23:06 elicia Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.54 2003/03/04 17:27:19 jmcnally Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -118,6 +119,11 @@ public class ScarabGlobalTool implements ScarabGlobalScope
      * holds the Scarab security permission constants
      */
     private FieldMethodizer security = null;
+
+    /**
+     * holds the Scarab parameter name constants
+     */
+    private FieldMethodizer parameterName = null;
 
     private static final String buildVersion = 
         Turbine.getConfiguration().getString("scarab.build.version", "");
@@ -142,6 +148,8 @@ public class ScarabGlobalTool implements ScarabGlobalScope
             "org.tigris.scarab.util.ScarabConstants");
         security = new FieldMethodizer(
             "org.tigris.scarab.services.security.ScarabSecurity");
+        parameterName = new FieldMethodizer(
+            "org.tigris.scarab.om.GlobalParameterManager");
     }
 
     /**
@@ -168,6 +176,19 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public FieldMethodizer getPermission()
     {
         return security;
+    }
+
+    /**
+     * holds the names of parameters that are configurable through the ui.
+     */
+    public FieldMethodizer getParameterName()
+    {
+        return parameterName;
+    }
+
+    public GlobalParameterManager getParameter()
+    {
+        return GlobalParameterManager.getManager();
     }
 
     /**

@@ -86,7 +86,7 @@ import org.apache.commons.betwixt.io.BeanWriter;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ConfigureReport.java,v 1.8 2003/02/15 02:33:18 jmcnally Exp $
+    @version $Id: ConfigureReport.java,v 1.9 2003/03/04 17:27:18 jmcnally Exp $
 */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -124,13 +124,17 @@ public class ConfigureReport
 
                 if (report.isReadyForCalculation()) 
                 {
-                    scarabR.setConfirmMessage(l10n.get("ChangesSaved"));
+                    scarabR.setConfirmMessage(l10n.get(
+                        report.isNew() ? 
+                        "ReportUpdated" : "ReportUpdatedNotSaved")); 
                     setTarget(data, "reports,Info.vm");     
                 }
                 else 
                 {
-                    scarabR.setConfirmMessage(
-                        l10n.get("ChangesSavedPleaseAddRowAndColumnCriteria"));
+                    scarabR.setConfirmMessage(l10n.get(
+                        report.isNew() ? 
+                        "ReportUpdatedPleaseAddRowAndColumnCriteria" :
+                        "ReportUpdatedNotSavedPleaseAddRowAndColumnCriteria"));
                     setTarget(data, "reports,AxisConfiguration.vm");
                 }
             }
@@ -313,17 +317,8 @@ public class ConfigureReport
                 params.setString("heading", "0");
             }
 
-            if (report.isReadyForCalculation()) 
-            {
-                scarabR.setConfirmMessage(
-                    l10n.get("OptionsSavedDoMoreOrCalculate"));                
-            }
-            else 
-            {
-                scarabR.setConfirmMessage(
-                    l10n.get("OptionsSavedDoMore"));
-                
-            }
+            scarabR.setConfirmMessage(
+                l10n.get(getHeadingConfirmMessageKey(report)));
 
 /*
             //testing
@@ -337,6 +332,23 @@ public class ConfigureReport
         }
     }
 
+
+    private static String getHeadingConfirmMessageKey(ReportBridge report)
+    {
+        String key = null;
+        if (report.isReadyForCalculation()) 
+        {
+            key = report.isNew() ? 
+                "ReportUpdatedDoMoreOrCalculate" :
+                "ReportUpdatedNotSavedDoMoreOrCalculate";
+        }
+        else 
+        {
+            key = report.isNew() ? 
+                "ReportUpdatedDoMore" : "ReportUpdatedNotSavedDoMore";
+        }
+        return key;
+    }
 
     /**
      * remove unset AttributeValues. this method is c/p from IssueSearch
@@ -413,17 +425,9 @@ public class ConfigureReport
             {
                 params.setString("heading", "0");
             }
-            if (report.isReadyForCalculation()) 
-            {
-                scarabR.setConfirmMessage(
-                    l10n.get("SelectedUsersWereAddedDoMoreOrCalculate")); 
-            }
-            else 
-            {
-                scarabR.setConfirmMessage(
-                    l10n.get("SelectedUsersWereAddedDoMore"));
-            }
 
+            scarabR.setConfirmMessage(
+                l10n.get(getHeadingConfirmMessageKey(report)));
         }
         else 
         {

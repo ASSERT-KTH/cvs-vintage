@@ -55,7 +55,7 @@ $data.User.setCurrentMITList($report.getMITList())
 </div>
 
 <div class="functnbar3">
-  <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveInfo" />
+  <input type="submit" value="$l10n.Update" name="eventSubmit_doSaveInfo" />
 </div>
 
 #if ($report.isReadyForCalculation())

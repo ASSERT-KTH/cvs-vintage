@@ -83,7 +83,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.44 2003/02/13 21:48:04 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.45 2003/03/04 17:27:18 jmcnally Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -103,14 +103,12 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                             .getInstance(new NumberKey(groupId), false);
         Group agGroup = intake.get("AttributeGroup", 
                                     ag.getQueryKey(), false);
-        Field name = agGroup.get("Name");
-        name.setRequired(true);
         if (!ag.isGlobal() && scarabR.getIssueType().getLocked())
         {
             scarabR.setAlertMessage(l10n.get("LockedIssueType"));
             return false;
         }
-        if (name.isValid())
+        if (intake.isAllValid())
         {
             agGroup.setProperties(ag);
             ag.save();
@@ -118,7 +116,6 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         }
         else
         {
-            name.setMessage("intake_FieldRequired");
             success = false;
             scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }

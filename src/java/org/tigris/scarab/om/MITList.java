@@ -63,7 +63,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.17 2003/02/15 02:33:18 jmcnally Exp $
+ * @version $Id: MITList.java,v 1.18 2003/03/04 17:27:18 jmcnally Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList

@@ -49,9 +49,9 @@
 <select name="templateId">
 #foreach ($template in $allTemplates)
 #if ($template.IssueId.toString().equals($data.Parameters.getString("templateId")))
- <option value="$template.IssueId" selected="selected">$template.TemplateInfo.Name</option>
+ <option value="$template.Issue.IssueId" selected="selected">$template.Name</option>
 #else
- <option value="$template.IssueId">$template.TemplateInfo.Name</option>
+ <option value="$template.Issue.IssueId">$template.Name</option>
 #end
 #end
 </select>

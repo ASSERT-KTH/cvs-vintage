@@ -124,15 +124,15 @@ public class QueryPeer
             Criteria.Criterion cGlob = crit.getNewCriterion(
                 QueryPeer.SCOPE_ID, Scope.MODULE__PK, 
                 Criteria.EQUAL);
-            Criteria.Criterion cPriv1 = crit.getNewCriterion(
+            Criteria.Criterion cPriv = crit.getNewCriterion(
                 QueryPeer.USER_ID, user.getUserId(), Criteria.EQUAL);
-            Criteria.Criterion cPriv2 = crit.getNewCriterion(
+            cPriv.and(crit.getNewCriterion(
                 QueryPeer.SCOPE_ID, Scope.PERSONAL__PK, 
-                Criteria.EQUAL);
-            cPriv1.and(cPriv2);
+                Criteria.EQUAL));
+
             if (TYPE_PRIVATE.equals(type))
             {
-                crit.add(cPriv1);
+                crit.add(cPriv);
             }
             else if (TYPE_GLOBAL.equals(type))
             {
@@ -141,7 +141,7 @@ public class QueryPeer
             else
             {
                 // All queries
-                cGlob.or(cPriv1);
+                cGlob.or(cPriv);
                 crit.add(cGlob);
             }
             crit.setDistinct();

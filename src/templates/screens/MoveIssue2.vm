@@ -84,12 +84,17 @@
 <th>$l10n.Value</th>
 </tr>
 #foreach ($attr in $matchingAttributes)
-#indexedRows($velocityCount)
-    <td>$attr.Attribute.Name
-     #set ($displayValue = $module.getRModuleAttribute($attr.Attribute, $issueType).getDisplayValue())
+  #indexedRows($velocityCount)
+  #set ($displayValue = $module.getRModuleAttribute($attr.Attribute, $issueType).getDisplayValue())
+  <td>
+    #if ($displayValue)
+     $attr.Attribute.Name
      #if (!$attr.Attribute.Name.equals($displayValue))
       ($displayValue)
      #end
+    #else
+     $l10n.format("IssueAttributeValueActive", $attr.Attribute.Name)
+    #end
     </td>
 <td>$attr.Attribute.AttributeType.Name</td>
 <td>$attr.Value</td>

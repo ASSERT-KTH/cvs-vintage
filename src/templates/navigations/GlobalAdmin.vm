@@ -1,3 +1,4 @@
  <div>$link.setPage("admin,GlobalArtifactTypeShow.vm").setLabel("$l10n.GlobalIssueTypes")</div>
  <div>$link.setPage("admin,GlobalAttributeShow.vm").setLabel("$l10n.GlobalAttributes")</div>
+ <div>$link.setPage("admin,GlobalEmailSettings.vm").setLabel("$l10n.EmailConfiguration")</div>
  <div>$link.setPage("admin,UpdateSearchIndex.vm").setLabel("$l10n.UpdateSearchIndex")</div>

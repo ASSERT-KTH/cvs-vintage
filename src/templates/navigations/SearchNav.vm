@@ -85,7 +85,7 @@
 
 #if ($currentIssueType)
   ## Add Template list to the top bar so that using a template will be easier
-  #set ($allTemplates = $scarabR.IssueTemplates)
+  #set ($allTemplates = $scarabR.AllIssueTemplates)
   #if ($allTemplates.size() > 0)    
    <td>
     <form action="$link.setPage("SaveTemplate.vm")" method="POST">
@@ -93,14 +93,14 @@
     <input type="hidden" name="eventSubmit_doUsetemplate" value="foo" />
     <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" 
         value="$scarabR.NextEntryTemplate" />
-    #set ($permItemDelete = $scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
+    ##set ($permItemDelete = $scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
     <select name="templateId" tabindex="5" onChange="this.form.submit();">
          <option value="0">$l10n.SelectTemplate</option>
      #foreach ($template in $allTemplates)
-       #set ($isCreatedBy = $template.isCreatingUser($user))
-       #if ($permItemDelete || $isCreatedBy)
-         <option value="$template.IssueId">$template.TemplateInfo.Name</option>
-       #end
+       ##set ($isCreatedBy = $template.Issue.isCreatingUser($user))
+      ##if ($permItemDelete || $isCreatedBy)
+         <option value="$template.Issue.IssueId">$template.Name</option>
+       ##end
      #end
     </select>
     <noscript><input type="submit" value="$l10n.Go" name="eventSubmit_doUsetemplate" tabindex="6" /></noscript>

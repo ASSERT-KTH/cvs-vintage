@@ -171,17 +171,6 @@ public class ModuleManager
                     AbstractScarabModule.GET_NAV_ISSUE_TYPES);
             }
         }
-        else if (om instanceof AttributeGroup)
-        {
-            AttributeGroup castom = (AttributeGroup)om;
-            ObjectKey key = castom.getModuleId();
-            Serializable obj = (Serializable)cacheGet(key);
-            if (obj != null) 
-            {
-                getMethodResult().removeAll(obj, 
-                    AbstractScarabModule.GET_ATTRIBUTE_GROUPS);
-            }
-        }
         else if (om instanceof Attribute) 
         {
             getMethodResult().clear();

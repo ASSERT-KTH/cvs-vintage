@@ -63,7 +63,7 @@ import org.apache.torque.util.Criteria;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.23 2003/02/26 18:05:56 dlr Exp $
+ * @version $Id: IssueTest.java,v 1.24 2003/03/04 17:27:21 jmcnally Exp $
  */
 public class IssueTest extends BaseTestCase
 {

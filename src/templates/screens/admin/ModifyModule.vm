@@ -99,6 +99,28 @@
     #fieldErrorMsg($moduleGroup.ArchiveEmail "")
    </td>
   </tr>
+
+ #if ($scarabG.Parameter.getBoolean($scarabG.ParameterName.EMAIL_ALLOW_MODULE_OVERRIDE)) 
+ <tr>
+  <th>$l10n.EmailEnable</th>
+  <td> 
+   #set ($name = $scarabG.ParameterName.EMAIL_ENABLED)
+   #set ($selected = $scarabG.Parameter.getBoolean($name) || $data.Parameters.getBoolean($name))
+   <input type="checkbox" name="$name" #checked($selected)/> 
+     $l10n.EmailEnableDescription  
+  </td> 
+ </tr>
+ <tr>
+  <th>$l10n.EmailIncludeIssueDetails</th>
+  <td> 
+   #set ($name = $scarabG.ParameterName.EMAIL_INCLUDE_ISSUE_DETAILS)
+   #set ($selected = $scarabG.Parameter.getBoolean($name) || $data.Parameters.getBoolean($name))
+   <input type="checkbox" name="$name" #checked($selected)/> 
+     $l10n.EmailIncludeIssueDetailsDescription  
+  </td> 
+ </tr>
+ #end
+
 #if ($createNew.equals("true") || $moduleId != "0")
   <tr>
    <th>* $l10n.ParentModule</th>

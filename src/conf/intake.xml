@@ -99,6 +99,7 @@
         </field>
         <field name="Name" key="name" type="String">
             <rule name="required" value="true">intake_IssueTypeNameNotAllowedEmpty</rule>
+            <rule name="mask" value="\S">intake_IssueTypeNameNotAllowedEmpty</rule>
             <rule name="maxLength" value="255">intake_IssueTypeNameMustBeLessThan255Characters</rule>    
         </field>
         <field name="Description" key="desc" type="String">
@@ -125,7 +126,9 @@
            <rule name="mask" value="^$|[0-9]+">intake_PleaseSelectValidChoice</rule>
         </field>
         <field name="Name" key="name" type="String">
-            <rule name="maxLength" value="255">intake_AttributeGroupNameMustBeLessThan255Characters</rule>
+            <rule name="required" value="true">intake_AttributeGroupNameNotAllowedEmpty</rule>
+            <rule name="mask" value="\S">intake_AttributeGroupNameNotAllowedEmpty</rule>
+            <rule name="maxLength" value="255">intake_AttributeGroupNameMustBeLessThan255Characters</rule>    
         </field>
         <field name="Description" key="desc" type="String">
             <rule name="maxLength" value="255">intake_AttributeGroupDescriptionMustBeLessThan255Characters</rule>
@@ -477,6 +480,7 @@
     </field>
     <field name="Name" key="n" type="String">
         <required-message>intake_EnterNameForQuery</required-message>
+        <rule name="mask" value="\S">intake_EnterNameForQuery</rule>
         <rule name="maxLength" value="255">intake_NameMustBeLessThan256Characters</rule>
     </field>
     <field name="Description" key="d" type="String">
@@ -499,6 +503,7 @@
     </field>
     <field name="Name" key="n" type="String">
         <required-message>intake_EnterNameForTemplate</required-message>
+        <rule name="mask" value="\S">intake_EnterNameForTemplate</rule>
         <rule name="maxLength" value="255">intake_NameMustBeLessThan256Characters</rule>
     </field>
     <field name="Description" key="d" type="String">

@@ -1,0 +1,6 @@
+$l10n.YouCanViewIssue:
+
+    $link.getIssueIdAbsoluteLink($issue)
+
+$l10n.Type:        $issue.RModuleIssueType.DisplayName
+$l10n.IssueId:    $issue.UniqueId

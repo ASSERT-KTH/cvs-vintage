@@ -2057,7 +2057,9 @@ public class IssueSearch
      * (non-existent) values for that attribute, we'd like to separate
      * them for presentation at the end of the list.  Otherwise, for
      * certain polarity (such as when sorting in ascending order) they
-     * will be shown first.
+     * will be shown first.  The
+     * <code>java.sql.DatabaseMetaData.nullsAreSortedAtEnd()</code>
+     * method may be able to help us here.
      *
      * @param resultSet The database cursor.
      * @param sortAttrPos The column position into the ResultSet

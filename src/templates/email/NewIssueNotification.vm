@@ -1,6 +1,4 @@
 #set ($user = $issue.ModifiedBy)
-#set ($module = $issue.Module)
-#set ($issueType = $issue.IssueType)
 #set ($attachmentData = $attachment.Data)
 #set ($defaultText = $issue.DefaultText)
 $l10n.YouCanViewIssue:

@@ -1,4 +1,4 @@
-#set ($user = $data.User)
+#set ($user = $issue.ModifiedBy)
 #set ($defaultText = $issue.DefaultText)
 $l10n.YouCanViewIssue:
 

@@ -69,7 +69,7 @@ import org.tigris.scarab.om.Module;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.45 2003/02/04 11:26:00 jon Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.46 2003/03/04 17:27:18 jmcnally Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -278,6 +278,8 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
                                      TemplateContext context)
         throws Exception
     {
+        data.getParameters().setString(ScarabConstants.CANCEL_TEMPLATE,
+                                       getCurrentTemplate(data));
         setTarget(data, getOtherTemplate(data));            
     }
 

@@ -73,6 +73,7 @@ import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssueTemplateInfo;
 import org.tigris.scarab.om.IssueTemplateInfoPeer;
 import org.tigris.scarab.util.Email;
+import org.tigris.scarab.util.EmailContext;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -85,7 +86,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.32 2003/02/04 11:26:00 jon Exp $
+ * @version $Id: Approval.java,v 1.33 2003/03/04 17:27:18 jmcnally Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {
@@ -209,32 +210,25 @@ public class Approval extends RequireLoginFirstAction
             if (!action.equals("none"))
             {
                 // send email
-                Object[] subjectArgs = {artifact, actionWord};
-                String subject = Localization.format(
-                    ScarabConstants.DEFAULT_BUNDLE_NAME,
-                    Locale.getDefault(),
-                    "ApprovalEmailSubject",
-                    subjectArgs);
-
-                Object[] bodyArgs = {user.getUserName(), actionWord, 
-                           artifact, artifactName};
-                String body = Localization.format(
-                    ScarabConstants.DEFAULT_BUNDLE_NAME,
-                    Locale.getDefault(),
-                    "ApprovalEmailBody",
-                    bodyArgs);
-
-                // add data to context for email template
-                context.put("body", body);
-                context.put("comment", comment);
-                context.put("globalComment", globalComment);
+                EmailContext ectx = new EmailContext();
+                ectx.setLocalizationTool(
+                    (ScarabLocalizationTool)context.get("l10n"));
+                //ectx.setLinkTool((ScarabLink)context.get("link"));
+                ectx.setUser(user);
+                //ectx.setModule(module);
+                // add specific data to context for email template
+                ectx.put("artifactIndex", artifact);
+                ectx.put("artifactName", artifactName);
+                ectx.put("actionIndex", actionWord);
+                ectx.put("comment", comment);
+                ectx.put("globalComment", globalComment);
 
                 String template = Turbine.getConfiguration().
                     getString("scarab.email.approval.template",
-                              "email/Approval.vm");
-                if (!Email.sendEmail(new ContextAdapter(context), 
-                                     module, user, module.getSystemEmail(), 
-                                     toUser, subject, template))
+                              "Approval.vm");
+                if (!Email.sendEmail(ectx, module, user, 
+                                     module.getSystemEmail(), 
+                                     toUser, template))
                 {
                     scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
                 }

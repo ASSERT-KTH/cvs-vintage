@@ -52,6 +52,7 @@ import java.util.List;
 import java.util.Iterator;
 import javax.mail.SendFailedException;
 
+import org.apache.fulcrum.template.TurbineTemplate;
 import org.apache.fulcrum.template.TemplateContext;
 import org.apache.fulcrum.template.DefaultTemplateContext;
 import org.apache.fulcrum.template.TemplateEmail;
@@ -62,6 +63,7 @@ import org.apache.fulcrum.velocity.VelocityService;
 import org.apache.turbine.Turbine;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.GlobalParameterManager;
 
 /**
  * Sends a notification email.
@@ -69,7 +71,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.17 2003/02/26 18:05:56 dlr Exp $
+ * @version $Id: Email.java,v 1.18 2003/03/04 17:27:19 jmcnally Exp $
  */
 public class Email
 {
@@ -84,13 +86,14 @@ public class Email
         enableEmail = value;
     }
 
-    public static boolean sendEmail(TemplateContext context, Module module, 
-                                     Object fromUser, Object replyToUser,
-                                     Collection toUsers, Collection ccUsers,
-                                     String subject, String template)
+    public static boolean sendEmail(EmailContext context, Module module, 
+                                    Object fromUser, Object replyToUser,
+                                    Collection toUsers, Collection ccUsers,
+                                    String template)
         throws Exception
     {
-        if (!enableEmail)
+        if (!enableEmail || !GlobalParameterManager
+            .getBoolean(GlobalParameterManager.EMAIL_ENABLED, module))
         {
             return true;
         }
@@ -106,7 +109,7 @@ public class Email
             boolean success = true;
 
             TemplateEmail te = getTemplateEmail(context, fromUser, 
-                replyToUser, subject, template);
+                replyToUser, template);
 
             for (Iterator iter = toUsers.iterator(); iter.hasNext();) 
             {
@@ -158,28 +161,26 @@ public class Email
     /**
      * Single user recipient.
      */ 
-    public static boolean sendEmail(TemplateContext context, Module module,
+    public static boolean sendEmail(EmailContext context, Module module,
                                      Object fromUser, Object replyToUser, 
-                                     ScarabUser toUser, 
-                                     String subject, String template)
+                                     ScarabUser toUser, String template)
         throws Exception
     {
         Collection toUsers = new ArrayList(2);
         toUsers.add(toUser);
         return sendEmail(context, module, fromUser, replyToUser, toUsers, 
-                          null, subject, template);
+                          null, template);
     }
 
-    private static TemplateEmail getTemplateEmail(
-                                     TemplateContext context,
-                                     Object fromUser, Object replyToUser,
-                                     String subject, String template)
+
+    private static TemplateEmail getTemplateEmail(EmailContext context,
+        Object fromUser, Object replyToUser, String template)
         throws Exception
     {
         TemplateEmail te = new TemplateEmail();
         if (context == null) 
         {
-            context = new DefaultTemplateContext();
+            context = new EmailContext();
         }        
         te.setContext(context);
         
@@ -235,25 +236,24 @@ public class Email
                                      "help@localhost"));
         }
         
-        if (subject == null)
-        {
-            te.setSubject((Turbine.getConfiguration().
-                           getString("scarab.email.default.subject")));
-        }
-        else
-        {
-            te.setSubject(subject);
-        }
-        
         if (template == null)
         {
-            te.setTemplate(Turbine.getConfiguration().
-                           getString("scarab.email.default.template"));
+            template = Turbine.getConfiguration().
+                getString("scarab.email.default.template");
         }
-        else
+        te.setTemplate(prependDir(template));
+    
+        String subjectTemplate = context.getSubjectTemplate();
+        if (subjectTemplate == null) 
         {
-            te.setTemplate(template);
+            StringBuffer templateSB = 
+                new StringBuffer(template.length() + 7);
+            templateSB.append(
+                template.substring(0, template.length()-3));
+            subjectTemplate = templateSB.append("Subject.vm").toString();
         }
+
+        te.setSubject(getSubject(context, subjectTemplate));
         
         String charset = Turbine.getConfiguration()
             .getString(ScarabConstants.DEFAULT_EMAIL_ENCODING_KEY); 
@@ -262,5 +262,44 @@ public class Email
             te.setCharset(charset);                
         }
         return te;
+    }
+
+    private static String getSubject(TemplateContext context, String template)
+    {
+        template = prependDir(template);
+        String result = null;
+        try 
+        {            
+            result = TurbineTemplate
+                .handleRequest(context, template).trim();
+            String subject = (String)context.get("emailSubject");
+            if (subject != null) 
+            {
+                result = subject;
+            }
+        }
+        catch (Exception e)
+        {
+            Log.get()
+                .error("Error rendering subject for" + template + ". ", e);
+            result = "Scarab System Notification";
+        }
+        return result;
+    }
+
+    private static String prependDir(String template)
+    {
+        boolean b = false;
+        try 
+        {
+            b = GlobalParameterManager.getBoolean(
+                GlobalParameterManager.EMAIL_INCLUDE_ISSUE_DETAILS);
+        }
+        catch (Exception e)
+        {
+            Log.get().debug("", e);
+            // use the basic email
+        }
+        return b ? "email/" + template : "basic_email/" + template;
     }
 }

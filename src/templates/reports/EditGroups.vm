@@ -119,7 +119,7 @@
  #end
 
 <div class="functnbar2">
-  <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveGroups" />&#160;
+  <input type="submit" value="$l10n.Update" name="eventSubmit_doSaveGroups" />
 </div>
 #end
 

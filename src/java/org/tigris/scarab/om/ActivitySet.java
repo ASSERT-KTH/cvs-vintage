@@ -64,6 +64,7 @@ import org.apache.turbine.Turbine;
 import org.apache.torque.om.Persistent;
 
 import org.tigris.scarab.util.Email;
+import org.tigris.scarab.util.EmailContext;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.services.cache.ScarabCache;
 
@@ -73,7 +74,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ActivitySet.java,v 1.9 2003/02/26 01:20:40 jon Exp $
+ * @version $Id: ActivitySet.java,v 1.10 2003/03/04 17:27:18 jmcnally Exp $
  */
 public class ActivitySet 
     extends BaseActivitySet
@@ -114,7 +115,8 @@ public class ActivitySet
                 .add(ActivityPeer.TRANSACTION_ID, getActivitySetId());
             result = ActivityPeer.doSelect(crit);
             ScarabCache.put(result, this, GET_ACTIVITY_LIST);
-/*        }
+/*
+        }
         else 
         {
             result = (List)obj;
@@ -129,17 +131,17 @@ public class ActivitySet
         return getScarabUser();
     }
 
-    public boolean sendEmail(TemplateContext context, Issue issue)
+    public boolean sendEmail(EmailContext context, Issue issue)
          throws Exception
     {
-        return sendEmail(context, issue, null, null, null, null);
+        return sendEmail(context, issue, null, null, null);
     }
 
-    public boolean sendEmail(TemplateContext context, Issue issue, 
-                           String subject, String template)
+    public boolean sendEmail(EmailContext context, Issue issue, 
+                             String template)
          throws Exception
     {
-        return sendEmail(context, issue, null, null, subject, template);
+        return sendEmail(context, issue, null, null, template);
     }
 
     /** 
@@ -148,18 +150,18 @@ public class ActivitySet
      *   If no subject and template specified, assume modify issue action.
      *   throws Exception
      */
-    public boolean sendEmail(TemplateContext context, Issue issue, 
-                           Collection toUsers, Collection ccUsers,
-                           String subject, String template)
+    public boolean sendEmail(EmailContext context, Issue issue, 
+                             Collection toUsers, Collection ccUsers,
+                             String template)
          throws Exception
     {
         if (context == null) 
         {
-            context = new DefaultTemplateContext();
+            context = new EmailContext();
         }
         
         // add data to context
-        context.put("issue", issue);
+        context.setIssue(issue);
         context.put("attachment", getAttachment());
 
         List activityList = getActivityList();
@@ -173,20 +175,11 @@ public class ActivitySet
         }
         context.put("uniqueActivityDescriptions", set);
 
-        if (subject == null)
-        {
-            subject = Localization.format(ScarabConstants.DEFAULT_BUNDLE_NAME,
-                Locale.getDefault(),
-                "DefaultModifyIssueEmailSubject", 
-                issue.getModule().getRealName().toUpperCase(), 
-                issue.getUniqueId());
-        }
-        
         if (template == null)
         {
             template = Turbine.getConfiguration().
                 getString("scarab.email.modifyissue.template",
-                "email/ModifyIssue.vm");
+                "ModifyIssue.vm");
         }
         
         if (toUsers == null)
@@ -204,6 +197,6 @@ public class ActivitySet
         String[] replyToUser = issue.getModule().getSystemEmail();
 
         return Email.sendEmail(context, issue.getModule(), getCreator(), 
-            replyToUser, toUsers, ccUsers, subject, template);
+            replyToUser, toUsers, ccUsers, template);
     }
 }

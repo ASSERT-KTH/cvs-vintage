@@ -78,6 +78,8 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.Email;
+import org.tigris.scarab.util.EmailContext;
+import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.services.security.ScarabSecurity;
 
@@ -85,7 +87,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.82 2003/02/26 23:39:47 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.83 2003/03/04 17:27:18 jmcnally Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -342,22 +344,16 @@ public class AssignIssue extends BaseModifyIssue
             return false;
         }
 
-        context.put("issue", issue);
-
         String template = Turbine.getConfiguration().
            getString("scarab.email.assignissue.template",
-                     "email/ModifyIssue.vm");
-        Object[] subjArgs = {
-            issue.getModule().getRealName().toUpperCase(),
-            issue.getUniqueId()
-        };
-        String subject = Localization.format(
-                ScarabConstants.DEFAULT_BUNDLE_NAME,
-                Locale.getDefault(),
-                "AssignIssueEmailSubject", subjArgs);
+                     "ModifyIssue.vm");
 
-        return activitySet.sendEmail(new ContextAdapter(context), issue, 
-                                     subject, template);
+        EmailContext ectx = new EmailContext();
+        ectx.setLocalizationTool((ScarabLocalizationTool)context.get("l10n"));
+        ectx.setLinkTool((ScarabLink)context.get("link"));
+        ectx.setSubjectTemplate("email/AssignIssueModifyIssueSubject.vm");
+
+        return activitySet.sendEmail(ectx, issue, template);
     }
 
     /**

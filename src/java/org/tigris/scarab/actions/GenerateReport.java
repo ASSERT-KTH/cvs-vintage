@@ -71,7 +71,7 @@ import org.tigris.scarab.util.ScarabConstants;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.28 2003/02/06 03:27:23 jmcnally Exp $
+    @version $Id: GenerateReport.java,v 1.29 2003/03/04 17:27:18 jmcnally Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction
@@ -107,7 +107,7 @@ public class GenerateReport
         else if (intake.isAllValid()) 
         {
             // make sure report has a name
-            if (report.getName() == null || report.getName().length() == 0) 
+            if (report.getName() == null || report.getName().trim().length() == 0) 
             {
                 Group intakeReport = 
                     intake.get("Report", report.getQueryKey(), false);
@@ -122,7 +122,7 @@ public class GenerateReport
                 }
             }
 
-            if (report.getName() == null || report.getName().length() == 0) 
+            if (report.getName() == null || report.getName().trim().length() == 0) 
             {
                 getScarabRequestTool(context)
                     .setAlertMessage(l10n.get("SavedReportsMustHaveName"));
@@ -163,26 +163,33 @@ public class GenerateReport
     {
         ScarabUser user = (ScarabUser)data.getUser();
         String[] reportIds = data.getParameters().getStrings("report_id");
-        for (int i=0;i<reportIds.length; i++)
+        if (reportIds == null || reportIds.length == 0) 
         {
-            String reportId = reportIds[i];
-            if (reportId != null && reportId.length() > 0)
+            getScarabRequestTool(context).setAlertMessage(
+                getLocalizationTool(context).get("MustSelectReport"));            
+        }
+        else 
+        {
+            for (int i=0;i<reportIds.length; i++)
             {
-                Report torqueReport = ReportManager
-                       .getInstance(new NumberKey(reportId), false);
-                if (new ReportBridge(torqueReport).isDeletable(user)) 
+                String reportId = reportIds[i];
+                if (reportId != null && reportId.length() > 0)
                 {
-                    torqueReport.setDeleted(true);
-                    torqueReport.save();
-                }                   
-                else 
-                {
-                    getScarabRequestTool(context).setAlertMessage(
-                        getLocalizationTool(context)
-                        .get(NO_PERMISSION_MESSAGE));
+                    Report torqueReport = ReportManager
+                        .getInstance(new NumberKey(reportId), false);
+                    if (new ReportBridge(torqueReport).isDeletable(user)) 
+                    {
+                        torqueReport.setDeleted(true);
+                        torqueReport.save();
+                    }                   
+                    else 
+                    {
+                        getScarabRequestTool(context).setAlertMessage(
+                            getLocalizationTool(context).get(NO_PERMISSION_MESSAGE));
+                    }
                 }
             }
-        }
+        }        
     }
 
     public void doPrint(RunData data, TemplateContext context)

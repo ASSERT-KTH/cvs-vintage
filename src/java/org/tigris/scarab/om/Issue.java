@@ -98,7 +98,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.276 2003/02/27 01:58:28 elicia Exp $
+ * @version $Id: Issue.java,v 1.277 2003/03/04 17:27:18 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -481,7 +481,7 @@ public class Issue
      */
     public boolean isTemplate() throws Exception
     {
-       return !getIssueType().equals(IssueType.ISSUE__PK);
+        return (!getIssueType().getParentId().equals(new NumberKey(0)));
     }
 
     /**
@@ -2102,7 +2102,6 @@ public class Issue
 
     /**
      * Returns list of issue template types.
-     */
     public List getTemplateTypes() throws Exception
     {
         List result = null;
@@ -2121,6 +2120,7 @@ public class Issue
         }
         return result;
     }
+     */
 
 
     /**
@@ -2175,45 +2175,45 @@ public class Issue
             newIssue = newModule.getNewIssue(newIssueType);
         }
         newIssue.save();
-        Attribute zeroAttribute = AttributeManager
-            .getInstance(new NumberKey("0"));
 
-        // Adjust dependencies if its a new issue id
-        // (i.e.. moved to new module)
-        List children = getChildren();
-        for (Iterator i = children.iterator(); i.hasNext();)
+        if (newIssue != this) 
         {
-             Depend depend = (Depend)i.next();
-             depend.setObservedId(newIssue.getIssueId());
-             depend.save();
-        }
-        List parents = getParents();
-        for (Iterator j = parents.iterator(); j.hasNext();)
-        {
-             Depend depend = (Depend)j.next();
-             depend.setObserverId(newIssue.getIssueId());
-             depend.save();
-        }
-
-        // Save activitySet record
-        ActivitySet activitySet = ActivitySetManager
-            .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, getCreatedBy());
-        activitySet.save();
-        
-        // Copy over attributes
-        List matchingAttributes = getMatchingAttributeValuesList(newModule, 
-                                                                 newIssueType);
-
-        for (int i=0;i<matchingAttributes.size();i++)
-        {
-           AttributeValue attVal = (AttributeValue) matchingAttributes
+            // Adjust dependencies if its a new issue id
+            // (i.e.. moved to new module)
+            List children = getChildren();
+            for (Iterator i = children.iterator(); i.hasNext();)
+            {
+                 Depend depend = (Depend)i.next();
+                 depend.setObservedId(newIssue.getIssueId());
+                 depend.save();
+            }
+            List parents = getParents();
+            for (Iterator j = parents.iterator(); j.hasNext();)
+            {
+                 Depend depend = (Depend)j.next();
+                 depend.setObserverId(newIssue.getIssueId());
+                 depend.save();
+            }
+            // Save activitySet record
+            ActivitySet activitySet = ActivitySetManager
+                .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, getCreatedBy());
+            activitySet.save();
+            
+            // Copy over attributes
+            List matchingAttributes = getMatchingAttributeValuesList(newModule, 
+                                                                     newIssueType);
+            
+            for (int i=0;i<matchingAttributes.size();i++)
+            {
+                AttributeValue attVal = (AttributeValue) matchingAttributes
                                                     .get(i);
-           AttributeValue newAttVal = attVal.copy();
-           newAttVal.setIssueId(newIssue.getIssueId());
-           newAttVal.startActivitySet(activitySet);
-           newAttVal.save();
+                AttributeValue newAttVal = attVal.copy();
+                newAttVal.setIssueId(newIssue.getIssueId());
+                newAttVal.startActivitySet(activitySet);
+                newAttVal.save();
+            }
         }
-
+        
         // Generate comment to deal with attributes that do not
         // Exist in destination module, as well as the user attributes.
         StringBuffer attachmentBuf = new StringBuffer();
@@ -2287,18 +2287,21 @@ public class Issue
         attachment.save();
 
         // copy attachments: comments/files etc.
-        Iterator attachments = getAttachments().iterator();
-        while (attachments.hasNext()) 
+        if (newIssue != this) 
         {
-            Attachment oldA = (Attachment)attachments.next();
-            Attachment newA = oldA.copy();
-            newA.setIssueId(newIssue.getIssueId());
-            newA.save();
-            if (Attachment.FILE__PK.equals(newA.getTypeId())) 
+            Iterator attachments = getAttachments().iterator();
+            while (attachments.hasNext()) 
             {
-                oldA.copyFileTo(newA.getFullPath());
+                Attachment oldA = (Attachment)attachments.next();
+                Attachment newA = oldA.copy();
+                newA.setIssueId(newIssue.getIssueId());
+                newA.save();
+                if (Attachment.FILE__PK.equals(newA.getTypeId())) 
+                {
+                    oldA.copyFileTo(newA.getFullPath());
+                }
             }
-        }
+        }        
 
         // Create activitySet for the MoveIssue activity
         ActivitySet activitySet2 = ActivitySetManager
@@ -2354,13 +2357,15 @@ public class Issue
             Locale.getDefault(),
             "MovedIssueDescription", args);
 
+        Attribute zeroAttribute = AttributeManager
+            .getInstance(new NumberKey("0"));
         ActivityManager
             .createTextActivity(newIssue, zeroAttribute, activitySet2,
                                 desc, null,
                                 getUniqueId(), newIssue.getUniqueId());
 
         // Save activity record for old issue
-        if (!getIssueId().equals(newIssue.getIssueId()))
+        if (newIssue != this)
         {
             Object[] args2 = {
                 comment2,
@@ -2663,32 +2668,6 @@ public class Issue
          return getOrphanAttributeValuesList(module, issueType);
     }
 
-    /**
-     * Checks permission and approves or rejects issue template. If template
-     * is approved, template type set to "module", else set to "personal".
-     */
-    public void approve(ScarabUser user, boolean approved)
-         throws Exception, ScarabException
-
-    {                
-        Module module = getModule();
-
-        if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
-        {
-            IssueTemplateInfo templateInfo = getTemplateInfo();
-            templateInfo.setApproved(true);
-            templateInfo.save();
-            if (approved)
-            {        
-                setTypeId(IssueType.MODULE_TEMPLATE__PK);
-            }
-            save();
-        } 
-        else
-        {
-            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
-        }            
-    }
 
     /**
      * Checks if user has permission to delete issue template.
@@ -2699,9 +2678,8 @@ public class Issue
          throws Exception, ScarabException
     {                
         Module module = getModule();
-        if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module)
-            || (user.equals(getCreatedBy()) 
-            && getTypeId().equals(IssueType.USER_TEMPLATE__PK)))
+        if (user.hasPermission(ScarabSecurity.ITEM__DELETE, module)
+            || (user.getUserId().equals(getCreatedBy().getUserId()) && isTemplate()))
         {
             setDeleted(true);
             save();
@@ -2745,7 +2723,8 @@ public class Issue
     /**
      * This calls getDefaultTextAttributeValue() and then returns the
      * String value of the Attribute. This method is used to get the
-     * subject of an email.
+     * subject of an email. if no text attribute value is found it
+     * will use the first ActivitySet comment.
      */
     public String getDefaultText()
         throws Exception
@@ -2758,7 +2737,12 @@ public class Issue
             if (emailAV != null) 
             {
                 result = emailAV.getValue();
-            }        
+            }
+            if (result == null) 
+            {
+                result = getInitialActivitySet().getAttachment().getData();
+            }
+            
             result = (result == null ? "" : result);
             ScarabCache.put(result, this, GET_DEFAULT_TEXT);
         }

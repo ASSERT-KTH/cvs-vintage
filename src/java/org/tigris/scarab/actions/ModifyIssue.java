@@ -86,13 +86,15 @@ import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.attribute.OptionAttribute;
 
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.EmailContext;
+import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.util.Log;
 
 /**
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.150 2003/02/13 02:14:06 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.151 2003/03/04 17:27:18 jmcnally Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -571,7 +573,11 @@ public class ModifyIssue extends BaseModifyIssue
                            TemplateContext context)
         throws Exception
     {
-        if (!activitySet.sendEmail(new ContextAdapter(context), issue))
+        EmailContext ectx = new EmailContext();
+        ectx.setLocalizationTool((ScarabLocalizationTool)context.get("l10n"));
+        ectx.setLinkTool((ScarabLink)context.get("link"));
+
+        if (!activitySet.sendEmail(ectx, issue))
         {
             ScarabLocalizationTool l10n = getLocalizationTool(context);
             String emailError = l10n.get(EMAIL_ERROR);

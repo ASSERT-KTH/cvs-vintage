@@ -79,7 +79,7 @@ import org.xbill.DNS.Type;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.34 2003/02/04 11:26:00 jon Exp $
+ * @version $Id: Register.java,v 1.35 2003/03/04 17:27:18 jmcnally Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -296,7 +296,7 @@ public class Register extends ScarabTemplateAction
             te.setTemplate(
                 Turbine.getConfiguration()
                     .getString("scarab.email.register.template",
-                               "email/Confirmation.vm"));
+                               "Confirmation.vm"));
             te.send();
 
             // set the next template on success

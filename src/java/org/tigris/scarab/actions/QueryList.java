@@ -74,7 +74,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class is responsible for managing the query lists (deleting queries).
  *    
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: QueryList.java,v 1.21 2003/02/13 01:31:52 jmcnally Exp $
+ * @version $Id: QueryList.java,v 1.22 2003/03/04 17:27:18 jmcnally Exp $
  */
 public class QueryList extends RequireLoginFirstAction
 {
@@ -91,7 +91,7 @@ public class QueryList extends RequireLoginFirstAction
        
         if (intake.isAllValid())
         {
-            List queries = scarabR.getQueries();
+            List queries = scarabR.getAllQueries();
             for (int i = 0; i < queries.size(); i++)
             {    
                 Query query = (Query)queries.get(i);

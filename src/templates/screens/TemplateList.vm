@@ -1,7 +1,7 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
-#set ($ownsAtLeastOne = false)
+#set ($canDeleteAtLeastOne = false)
 
 <div class="app" id="templateList">
 
@@ -19,18 +19,22 @@
 #if (!$sortPolarity || $sortPolarity.length() == 0)
    #set ($sortPolarity = "asc")
 #end
-#set ($allTemplates = $scarabR.IssueTemplates)
 
+#if ($scarabR.hasPermission($scarabG.Permission.ITEM__APPROVE, $module))
+   #set ($templates = $scarabR.AllIssueTemplates)
+#else
+   #set ($templates = $scarabR.PrivateTemplates)
+#end
 
 ## PAGINATION
 ## if results exceed limit, get subset list
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
 #set ($pageNum = $data.Parameters.getInt("pageNum", 1))
-#if ($resultsPerPage > 0 && $allTemplates.size() > $resultsPerPage)
+#if ($resultsPerPage > 0 && $templates.size() > $resultsPerPage)
  #set ($paginated = "true")
- #set ($pagList = $scarabR.getPaginatedList($allTemplates, $pageNum, $resultsPerPage))
+ #set ($pagList = $scarabR.getPaginatedList($templates, $pageNum, $resultsPerPage))
  #if ($pagList)
-   #set ($allTemplates = $pagList)
+   #set ($templates = $pagList)
  #end
 #end
 
@@ -40,7 +44,7 @@
 
 <h3>$l10n.Templates</h3>
 
-#if ($allTemplates.size() < 1)
+#if ($templates.size() < 1)
 <p class="alert">
 $l10n.NoTemplates
 </p>
@@ -56,37 +60,39 @@ $l10n.NoTemplates
   </tr>
 
 #set ($permItemDelete = $scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
-#foreach ($template in $allTemplates)
+#foreach ($template in $templates)
 #indexedRows($velocityCount)
-#set ($isCreatedBy = $template.isCreatingUser($user))
-#if ($isCreatedBy) #set ($ownsAtLeastOne = true) #end
-#if ($permItemDelete || $isCreatedBy)
+#set ($canDelete = $template.canDelete($user))
+#if ($canDelete) #set ($canDeleteAtLeastOne = true) #end
+#if ($canDelete)
   <td><input type="checkbox" name="delete_$template.IssueId" /></td>
 #else
   <td>&#160;</td>
 #end
   <td>
-    #if ($permItemDelete || $isCreatedBy)
+    #if ($canDelete)
       <a href="$link.setPathInfo("templateId", "$template.IssueId").setPage("SaveTemplate.vm")">
-      $template.TemplateInfo.Name</a>
+      $template.Name</a>
     #else
-      $template.TemplateInfo.Name
+      $template.Name
     #end
   </td>
   <td>
-    #if($template.TemplateInfo.Description)
-      $template.TemplateInfo.Description 
+    #if($template.Description)
+      $template.Description 
     #else
       &#160; 
     #end
   </td>
-  <td>$template.templateInfo.Scope.Name
-     #if (!$template.TemplateInfo.Approved)
-       ($l10n.UntilApproved)
-     #end
+  <td>
+  #if (!$template.Approved)
+    $l10n.Personal ($l10n.UntilApproved)
+  #else
+    $template.Scope.Name
+  #end
   </td>
    <td>
-   #set ($createdUser = $template.CreatedBy)
+   #set ($createdUser = $template.Issue.CreatedBy)
    #if ($createdUser)
      <a href="mailTo:$createdUser.Email">$!createdUser.Name</a>
    #else
@@ -102,7 +108,7 @@ $l10n.NoTemplates
 
 <div class="functnbar3">
   <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doGotoothertemplate" />
-  #if ($permItemDelete || $ownsAtLeastOne)
+  #if ($canDeleteAtLeastOne)
     &#160;<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletetemplates" />
   #end
 </div>
