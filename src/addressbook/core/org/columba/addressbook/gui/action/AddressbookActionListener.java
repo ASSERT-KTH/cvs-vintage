@@ -344,20 +344,22 @@ public class AddressbookActionListener implements ActionListener {
 		} else if (command.equals(addAddressbookAction.getActionCommand())) {
 			String name = JOptionPane.showInputDialog(
 					addressbookInterface.frame,
-					null, AddressbookResourceLoader.getString(
+					AddressbookResourceLoader.getString(
+						"menu", "mainframe", "add_addressbook_message"),
+					AddressbookResourceLoader.getString(
 						"menu", "mainframe", "add_addressbook_title"),
 					JOptionPane.PLAIN_MESSAGE);
 
-			if (name != null) {
+			if (name != null && name.length() != 0) {
 				System.out.println("name:" + name);
-				
+				//TODO: Create new addressbook with the given name
 			}
 		} else if (command.equals(addContactAction.getActionCommand())) {
 			ContactDialog dialog =
 				new ContactDialog(addressbookInterface.frame);
 
 			dialog.setVisible(true);
-			if (dialog.getResult() == true) {
+			if (dialog.getResult()) {
 				System.out.println("saving contact");
 
 				// Ok
@@ -371,11 +373,7 @@ public class AddressbookActionListener implements ActionListener {
 				folder.add(card);
 
 				addressbookInterface.table.setFolder(folder);
-			} else {
-				// cancel
-				System.out.println("cancelled");
 			}
-
 		} else if (command.equals(addGroupAction.getActionCommand())) {
 
 			Folder folder =
@@ -428,7 +426,7 @@ public class AddressbookActionListener implements ActionListener {
 					.tree
 					.getSelectedFolder();
 
-			if (item.isContact() == true) {
+			if (item.isContact()) {
 				ContactCard card = (ContactCard) folder.get(uid);
 				System.out.println("card:" + card);
 
@@ -438,7 +436,7 @@ public class AddressbookActionListener implements ActionListener {
 				dialog.updateComponents(card, true);
 				dialog.setVisible(true);
 
-				if (dialog.getResult() == true) {
+				if (dialog.getResult()) {
 					System.out.println("saving contact");
 
 					// Ok
@@ -447,12 +445,8 @@ public class AddressbookActionListener implements ActionListener {
 					folder.modify(card, uid);
 
 					addressbookInterface.table.setFolder(folder);
-				} else {
-					// cancel
-					System.out.println("cancelled");
 				}
 			} else {
-
 				GroupListCard card = (GroupListCard) folder.get(uid);
 
 				EditGroupDialog dialog =
@@ -469,14 +463,10 @@ public class AddressbookActionListener implements ActionListener {
 				dialog.setVisible(true);
 
 				if (dialog.getResult()) {
-					// Ok
-
 					dialog.updateComponents(card, null, false);
 					folder.modify(card, uid);
 					addressbookInterface.table.setFolder(folder);
-
 				}
-
 			}
 
 		} else if (
