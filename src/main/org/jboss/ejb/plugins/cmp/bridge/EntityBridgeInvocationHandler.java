@@ -37,7 +37,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean instance, including beans in pool.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */                            
 public class EntityBridgeInvocationHandler implements InvocationHandler {
    private final EntityContainer container;
@@ -57,7 +57,7 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
    public EntityBridgeInvocationHandler(
          EntityContainer container,
          EntityBridge entityBridge,
-         Class beanClass) throws Exception {
+         Class beanClass) throws DeploymentException {
 
       this.container = container;
       this.entityBridge = entityBridge;
@@ -74,47 +74,62 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
       this.ctx = ctx;
    }
    
-   public Object invoke(Object proxy, Method method, Object[] args)
-         throws Throwable {
+   public Object invoke(Object proxy, Method method, Object[] args) 
+         throws FinderException {
 
       String methodName = method.getName();
-
-      SelectorBridge selector = (SelectorBridge) selectorMap.get(method);
-      if(selector != null) {
-         Transaction tx;
-         if(ctx != null) {
-            // it is probably safer to get the tx from the context if we have
-            // one (ejbHome methods don't have a context)
-            tx = ctx.getTransaction();
-         } else {
-            tx = container.getTransactionManager().getTransaction();
+   
+      try {
+         SelectorBridge selector = (SelectorBridge) selectorMap.get(method);
+         if(selector != null) {
+            Transaction tx;
+            if(ctx != null) {
+               // it is probably safer to get the tx from the context if we have
+               // one (ejbHome methods don't have a context)
+               tx = ctx.getTransaction();
+            } else {
+               tx = container.getTransactionManager().getTransaction();
+            }
+            EntityContainer.synchronizeEntitiesWithinTransaction(tx);
+            return selector.execute(args);
          }
-         EntityContainer.synchronizeEntitiesWithinTransaction(tx);
-         return selector.execute(args);
+      } catch(RuntimeException e) {
+         throw e;
+      } catch(FinderException e) {
+         throw e;
+      } catch(Exception e) {
+         throw new EJBException("Internal error", e);
+      }
+   
+      try {
+         // get the field object
+         FieldBridge field = (FieldBridge) fieldMap.get(method);
+   
+         if(field == null) { 
+            throw new EJBException("Method is not a known CMP field " +
+                  "accessor, CMR field accessor, or ejbSelect method: " +
+                  "methodName=" + methodName);
+         }
+   
+         // In the case of ejbHome methods there is no context, but ejb home
+         // methods are only allowed to call selectors.
+         if(ctx == null) {
+            throw new EJBException("EJB home methods are not allowed to " +
+                  "access CMP or CMR fields: methodName=" + methodName);
+         }
+   
+         if(methodName.startsWith("get")) {
+            return field.getValue(ctx);
+         } else if(methodName.startsWith("set")) {
+            field.setValue(ctx, args[0]);
+            return null;
+         }
+      } catch(RuntimeException e) {
+         throw e;
+      } catch(Exception e) {
+         throw new EJBException("Internal error", e);
       }
 
-      // get the field object
-      FieldBridge field = (FieldBridge) fieldMap.get(method);
-
-      if(field == null) { 
-         throw new EJBException("Method is not a known CMP field accessor, " +
-               "CMR field accessor, or ejbSelect method: " +
-               "methodName=" + methodName);
-      }
-
-      // In the case of ejbHome methods there is no context, but ejb home
-      // methods are only allowed to call selectors.
-      if(ctx == null) {
-         throw new EJBException("EJB home methods are not allowed to access " +
-               "CMP or CMR fields: methodName=" + methodName);
-      }
-
-      if(methodName.startsWith("get")) {
-         return field.getValue(ctx);
-      } else if(methodName.startsWith("set")) {
-         field.setValue(ctx, args[0]);
-         return null;
-      }
       // Should never get here, but it's better to be safe then sorry.
       throw new EJBException("Unknown field accessor method: " +
             "methodName=" + methodName);
