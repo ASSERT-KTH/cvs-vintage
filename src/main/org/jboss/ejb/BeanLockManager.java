@@ -8,13 +8,15 @@
 package org.jboss.ejb;
 
 import java.util.HashMap;
+import javax.naming.InitialContext;
+
+import org.w3c.dom.Element;
 
 import org.jboss.ejb.Container;
-import org.w3c.dom.Element;
 import org.jboss.monitor.LockMonitor;
 import org.jboss.monitor.EntityLockMonitor;
-import org.jboss.util.WeakValueHashMap;
-import javax.naming.InitialContext;
+import org.jboss.util.collection.WeakValueHashMap;
+
 /**
  * Manages BeanLocks.  All BeanLocks have a reference count.
  * When the reference count goes to 0, the lock is released from the
@@ -23,7 +25,7 @@ import javax.naming.InitialContext;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * <p><b>Revisions:</b><br>
  * <p><b>20010802: marcf</b>
  * <ol>
