@@ -20,8 +20,8 @@ import org.apache.scaffold.lang.Tokens;
  * Standard Action to forward control to another mapping
  * given as a runtime parameter (?forward=).
  * @author Ted Husted
- * @version $Revision: 1.2 $ $Date: 2001/12/28 13:34:57 $
- */
+ * @version $Revision: 1.3 $ $Date: 2002/01/01 13:44:04 $
+**/
 public final class RelayAction extends Action {
 
     /**
@@ -31,7 +31,7 @@ public final class RelayAction extends Action {
      * @param response The HTTP response we are creating
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception occurs
-     */
+    **/
     public ActionForward perform(ActionMapping mapping,
                  ActionForm form,
                  HttpServletRequest request,
@@ -46,9 +46,9 @@ public final class RelayAction extends Action {
 
 
 /*
- * $Header: /tmp/cvs-vintage/struts/contrib/scaffold/src/framework/main/org/apache/scaffold/http/Attic/RelayAction.java,v 1.2 2001/12/28 13:34:57 vmassol Exp $
- * $Revision: 1.2 $
- * $Date: 2001/12/28 13:34:57 $
+ * $Header: /tmp/cvs-vintage/struts/contrib/scaffold/src/framework/main/org/apache/scaffold/http/Attic/RelayAction.java,v 1.3 2002/01/01 13:44:04 husted Exp $
+ * $Revision: 1.3 $
+ * $Date: 2002/01/01 13:44:04 $
  *
  * ====================================================================
  *
@@ -104,7 +104,7 @@ public final class RelayAction extends Action {
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- */
+**/
 
 
 
