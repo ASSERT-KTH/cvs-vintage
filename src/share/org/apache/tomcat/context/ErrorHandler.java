@@ -79,7 +79,8 @@ import org.apache.tomcat.util.log.*;
  * @author Costin Manolache
  */
 public final class ErrorHandler extends BaseInterceptor {
-
+    private Context rootContext=null;
+    
     public ErrorHandler() {
     }
 
@@ -91,6 +92,8 @@ public final class ErrorHandler extends BaseInterceptor {
     public void addContext( ContextManager cm, Context ctx)
 	throws TomcatException
     {
+	if( ctx.getHost() == null && ctx.getPath().equals(""))
+	    rootContext = ctx;
     }
 
     /** Add default error handlers
@@ -108,11 +111,15 @@ public final class ErrorHandler extends BaseInterceptor {
 	ctx.addErrorPage( "404", "tomcat.notFoundHandler");
     }
 
-
     public int handleError( Request req, Response res, Throwable t ) {
 	ContextManager cm=req.getContextManager();
 	Context ctx = req.getContext();
-	if(ctx==null) ctx=cm.getDefaultContext();
+	if(ctx==null) {
+	    // that happens only if the request can't pass contextMap
+	    // hook. The reason for that is a malformed request, or any
+	    // other error.
+	    ctx=rootContext;
+	}
 
 	if( t==null ) {
 	    handleStatusImpl( cm, ctx, req, res, res.getStatus() );
@@ -264,9 +271,9 @@ public final class ErrorHandler extends BaseInterceptor {
 	Response res1=new Response();
 	cm.initRequest( req1, res1 );
 
-	req1.setRequestURI( ctx.getPath() + path );
+	req1.requestURI().setString( ctx.getPath() + path );
 	cm.processRequest( req1 );
-	return req1.getWrapper();
+	return req1.getHandler();
     }
 
     /** Handle the case of error handler generating an error or special status
@@ -311,7 +318,7 @@ class NotFoundHandler extends Handler {
 	    getAttribute("javax.servlet.include.request_uri");
 
 	if (requestURI == null) {
-	    requestURI = req.getRequestURI();
+	    requestURI = req.requestURI().toString();
 	}
 
 	if( sbNote==0 ) {
@@ -396,7 +403,7 @@ class ExceptionHandler extends Handler {
 	// More info - where it happended"
 	buf.append("<h2>")
 	    .append(sm.getString("defaulterrorpage.location"))
-	    .append(req.getRequestURI())
+	    .append(req.requestURI().toString())
 	    .append("</h2>");
 
 	buf.append("<b>")
@@ -466,7 +473,7 @@ class StatusHandler extends Handler {
 	// More info - where it happended"
 	buf.append("<h2>")
 	    .append(sm.getString("defaulterrorpage.location"))
-	    .append(req.getRequestURI())
+	    .append(req.requestURI().toString())
 	    .append("</h2>");
 
 	buf.append("<b>")
@@ -556,9 +563,9 @@ class RedirectHandler extends Handler {
 
     static String getRequestURL( Request req )  {
  	StringBuffer url = new StringBuffer ();
-	String scheme = req.getScheme ();
+	String scheme = req.scheme().toString();
 	int port = req.getServerPort ();
-	String urlPath = req.getRequestURI();
+	String urlPath = req.requestURI().toString();
 	
 	url.append (scheme);		// http, https
 	url.append ("://");
