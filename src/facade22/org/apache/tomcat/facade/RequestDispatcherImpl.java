@@ -188,9 +188,8 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
 	// CM should have set the wrapper - call it
 	Handler wr=realRequest.getHandler();
-	if( wr!=null )
-	    wr.service(realRequest, realResponse);
-
+	if( wr!=null ) 
+	    invoke( wr, realRequest, realResponse);
 	// Clean up the request and response as needed
 	;       // No action required
 
@@ -328,9 +327,9 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	// for the realRequest ( since the real request will still have the
 	// original handler/wrapper )
 	Handler wr=subRequest.getHandler();
-	if( wr!=null )
-	    wr.service(realRequest, realResponse);
-
+	if( wr!=null ) 
+	    invoke( wr, realRequest, realResponse);
+	
 	// After request, we want to restore the include attributes - for
 	// chained includes.
 	realRequest.setChild( old_child );
@@ -385,7 +384,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	if( ! old_included ) realResponse.setIncluded( true );
 
 	if( wr!=null)
-	    wr.service( realRequest, realResponse);
+	    invoke( wr, realRequest, realResponse);
 
         // Clean up the request and response as needed
 	if( ! old_included ) {
@@ -423,7 +422,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	if( ! old_included ) realResponse.setIncluded( true );
 
 	if( wr!=null)
-	    wr.service( realRequest, realResponse);
+	    invoke( wr, realRequest, realResponse);
 
 	// Clean up the request and response as needed
 	;       // No action required
@@ -517,4 +516,17 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	    realRequest.setAttribute( name, value );
     }
 
+    private void invoke( Handler wr, Request req, Response resp )
+	throws IOException, ServletException
+    {
+	try {
+	    wr.service(req, resp);
+	} catch( Exception ex ) {
+	    if( ex instanceof ServletException )
+		throw (ServletException)ex;
+	    if( ex instanceof IOException )
+		throw (IOException)ex;
+	    throw new ServletException( ex );
+	}
+    }
 }

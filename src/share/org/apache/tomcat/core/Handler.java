@@ -62,7 +62,6 @@ import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.*;
 
 /**
  * The class that will generate the actual response.
@@ -329,17 +328,28 @@ public class Handler {
 	}
     }
 
+    // XXX XXX XXX
+    // Must be changed - it's very confusing since it has the same name
+    // with the servlet's service() method.
+    // The Handler is at a different ( lower ) level, we should
+    // use different names ( invoke() ? )
+
     /** Call the service method, and notify all listeners
      *
-     * @exception IOException if an input/output error occurs and we are
-     *  processing an included servlet (otherwise it is swallowed and
-     *  handled by the top level error handler mechanism)
-     * @exception ServletException if a servlet throws an exception and
+     * @exception Exception if an error happens during handling of
+     *   the request. Common errors are:
+     *   <ul><li>IOException if an input/output error occurs and we are
+     *   processing an included servlet (otherwise it is swallowed and
+     *   handled by the top level error handler mechanism)
+     *       <li>ServletException if a servlet throws an exception and
      *  we are processing an included servlet (otherwise it is swallowed
      *  and handled by the top level error handler mechanism)
+     *  </ul>
+     *  Tomcat should be able to handle and log any other exception ( including
+     *  runtime exceptions )
      */
-    public void service(Request req, Response res)
-	throws IOException, ServletException
+    public /*final*/ void service(Request req, Response res)
+	throws Exception
     {
 	if( ! initialized ) {
 	    Exception ex=null;
@@ -371,7 +381,7 @@ public class Handler {
 		return;
 	    }
 	}
-
+	
 	if( ! internal ) {
 	    BaseInterceptor reqI[]=
 		req.getContainer().getInterceptors(Container.H_preService);

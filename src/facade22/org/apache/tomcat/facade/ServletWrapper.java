@@ -399,7 +399,7 @@ public class ServletWrapper extends Handler {
 	JspHandler
     */
     public void service(Request req, Response res) 
-	throws IOException, ServletException
+	throws Exception
     {
 	// <servlet><jsp-file> case
 	if( path!=null ) {
@@ -424,7 +424,8 @@ public class ServletWrapper extends Handler {
 		// otherwise handle error
 		contextM.handleError( req, res, getErrorException());
 	    }
-	    context.log(getServletName() + " unavailable time expired, trying again ");
+	    context.log(getServletName() +
+			" unavailable time expired, trying again ");
 	}
 
 	// we reach here of there is no error or the exception has expired

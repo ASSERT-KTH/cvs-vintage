@@ -67,7 +67,6 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.security.*;
-import javax.servlet.*;
 
 
 import org.apache.tomcat.util.log.*;
@@ -183,10 +182,14 @@ public final class ErrorHandler extends BaseInterceptor {
 	try {
 	    errorServlet.service( req, res );
 	} catch( IOException e ) {
-	    ;   // ASSERT: Only thrown by included servlets
-	} catch( ServletException e) {
-	    ;   // ASSERT: Only thrown by included servlets
-	}
+	    // ASSERT: Only thrown by included servlets
+	    // we can ignore it and it's very common - probably the user
+	    // has clicked "STOP"
+	} catch( Exception e ) {
+	    // we need to log any other error - something may be
+	    // broken if the error servlet has errors.
+	    ctx.log( "Error in errorServlet", e);
+	} 
     }
 
     // XXX XXX Security - we should log the message, but nothing
@@ -280,10 +283,14 @@ public final class ErrorHandler extends BaseInterceptor {
 	try {
 	    errorServlet.service( req, res );
 	} catch( IOException e ) {
-	    ;   // ASSERT: Only thrown by included servlets
-	} catch( ServletException e) {
-	    ;   // ASSERT: Only thrown by included servlets
-	}
+	    // ASSERT: Only thrown by included servlets
+	    // we can ignore it and it's very common - probably the user
+	    // has clicked "STOP"
+	} catch( Exception e ) {
+	    // we need to log any other error - something may be
+	    // broken if the error servlet has errors.
+	    ctx.log( "Error in errorServlet", e);
+	} 
     }
 
     public final Handler getHandlerForPath( ContextManager cm,
