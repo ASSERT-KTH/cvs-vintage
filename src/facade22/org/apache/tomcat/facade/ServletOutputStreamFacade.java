@@ -140,10 +140,14 @@ final class ServletOutputStreamFacade extends ServletOutputStream {
     /** Will send the buffer to the client.
      */
     public void flush() throws IOException {
+	if( ob.flushCharsNeeded() )
+	    ob.flushChars();
 	ob.flushBytes();
     }
 
     public void close() throws IOException {
+	if( ob.flushCharsNeeded() )
+	    ob.flushChars();
 	ob.flushBytes();
 	closed = true;
     }
