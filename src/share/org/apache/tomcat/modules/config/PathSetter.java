@@ -126,13 +126,11 @@ public final class PathSetter extends BaseInterceptor {
 	// Make it absolute
 	home=FileUtil.getCanonicalPath( home );
 	cm.setHome( home );
-	log( "engineInit: home= " + home );
 	
 	String installDir=cm.getInstallDir();
 	if( installDir!= null ) {
 	    installDir=FileUtil.getCanonicalPath( installDir );
 	    cm.setInstallDir( installDir );
-	    log( "engineInit: install= " + installDir );
 	}
 
 	// if only one is set home==installDir
@@ -179,8 +177,13 @@ public final class PathSetter extends BaseInterceptor {
 	}
 	cm.setWorkDir( workDir );
 
-	if(debug>1) log( "Setting: " + cm.getInstallDir() + " " +
-			 cm.getHome() + " " + workDir);
+	if( debug>0 ||
+	    ! cm.getHome().equals( cm.getInstallDir() ) ) {
+	    log( "install=" + cm.getInstallDir());
+	}
+	log( "home=" +  cm.getHome());
+	if( debug>0)
+	    log( " work=" + workDir);
     }
 
     /** Adjust paths for a context - make the base and all loggers
