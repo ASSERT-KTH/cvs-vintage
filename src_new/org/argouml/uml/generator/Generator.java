@@ -1,4 +1,4 @@
-// $Id: Generator.java,v 1.25 2003/08/27 13:05:42 bobtarling Exp $
+// $Id: Generator.java,v 1.26 2003/08/27 16:45:59 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,6 @@ import ru.novosoft.uml.foundation.core.MAttribute;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MConstraint;
 import ru.novosoft.uml.foundation.core.MOperation;
-import ru.novosoft.uml.foundation.core.MParameter;
 import ru.novosoft.uml.foundation.data_types.MExpression;
 import ru.novosoft.uml.foundation.data_types.MMultiplicity;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
@@ -113,7 +112,7 @@ public abstract class Generator
         if (org.argouml.model.ModelFacade.isAAttribute(o))
             return generateAttribute((MAttribute) o, false);
         if (org.argouml.model.ModelFacade.isAParameter(o))
-            return generateParameter((MParameter) o);
+            return generateParameter(o);
         if (org.argouml.model.ModelFacade.isAPackage(o))
             return generatePackage((MPackage) o);
         if (org.argouml.model.ModelFacade.isAClassifier(o))
@@ -177,7 +176,7 @@ public abstract class Generator
     public abstract String generateAttribute(
         MAttribute attr,
         boolean documented);
-    public abstract String generateParameter(MParameter param);
+    public abstract String generateParameter(Object param);
     public abstract String generatePackage(MPackage p);
     public abstract String generateClassifier(MClassifier cls);
     public abstract String generateTaggedValue(MTaggedValue s);

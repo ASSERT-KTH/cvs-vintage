@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.78 2003/08/25 19:08:53 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.79 2003/08/27 16:45:58 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1832,6 +1832,13 @@ public class ModelFacade {
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
 
+    /** Determine if the passed parameter has a RETURN direction kind
+     */
+    public static boolean hasReturnParameterDirectionKind(Object o) {
+        MParameter parameter = (MParameter)o;
+        return (parameter.getKind().equals(MParameterDirectionKind.RETURN));
+    }
+        
     /** Get a parameter of a behavioral feature.
      *
      * @param handle behavioral feature to retrieve from

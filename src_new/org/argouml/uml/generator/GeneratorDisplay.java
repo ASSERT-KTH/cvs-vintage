@@ -1,6 +1,4 @@
-
-
-// $Id: GeneratorDisplay.java,v 1.49 2003/08/25 23:57:45 bobtarling Exp $
+// $Id: GeneratorDisplay.java,v 1.50 2003/08/27 16:45:59 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.49 2003/08/25 23:57:45 bobtarling Exp $
+// $Id: GeneratorDisplay.java,v 1.50 2003/08/27 16:45:59 bobtarling Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -67,12 +65,10 @@ import ru.novosoft.uml.foundation.core.MGeneralization;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.core.MOperation;
-import ru.novosoft.uml.foundation.core.MParameter;
 import ru.novosoft.uml.foundation.core.MStructuralFeature;
 import ru.novosoft.uml.foundation.data_types.MChangeableKind;
 import ru.novosoft.uml.foundation.data_types.MMultiplicity;
 import ru.novosoft.uml.foundation.data_types.MMultiplicityRange;
-import ru.novosoft.uml.foundation.data_types.MParameterDirectionKind;
 import ru.novosoft.uml.foundation.data_types.MScopeKind;
 import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
 import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
@@ -174,8 +170,8 @@ public class GeneratorDisplay extends Generator {
         Iterator it = parameters.iterator();
         int counter = 0;
         while (it.hasNext()) {
-            MParameter parameter = (MParameter) it.next();
-            if (!parameter.getKind().equals(MParameterDirectionKind.RETURN)) {
+            Object parameter = it.next();
+            if (!ModelFacade.hasReturnParameterDirectionKind(parameter)) {
                 counter++;
                 parameterListBuffer.append(
                     generateParameter(parameter)).append(
@@ -197,9 +193,9 @@ public class GeneratorDisplay extends Generator {
             returnParasSb.append(": ");
             Iterator it2 = returnParas.iterator();
             while (it2.hasNext()) {
-                MParameter param = (MParameter) it2.next();
-                if (param.getType() != null) {
-                    returnParasSb.append(param.getType().getName());
+                Object type = ModelFacade.getType(it2.next());
+                if (type != null) {
+                    returnParasSb.append(ModelFacade.getName(type));
                 }
                 returnParasSb.append(",");
             }
@@ -340,12 +336,12 @@ public class GeneratorDisplay extends Generator {
 
     }
 
-    public String generateParameter(MParameter param) {
+    public String generateParameter(Object parameter) {
         String s = "";
         //TODO: qualifiers (e.g., const)
         //TODO: stereotypes...
-        s += generateName(param.getName()) + ": ";
-        s += generateClassifierRef(param.getType());
+        s += generateName(ModelFacade.getName(parameter)) + ": ";
+        s += generateClassifierRef(ModelFacade.getType(parameter));
         //TODO: initial value
         return s;
     }

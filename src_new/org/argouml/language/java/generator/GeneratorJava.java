@@ -1,8 +1,4 @@
-
-
-
-
-// $Id: GeneratorJava.java,v 1.72 2003/08/27 12:26:57 bobtarling Exp $
+// $Id: GeneratorJava.java,v 1.73 2003/08/27 16:45:59 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.72 2003/08/27 12:26:57 bobtarling Exp $
+// $Id: GeneratorJava.java,v 1.73 2003/08/27 16:45:59 bobtarling Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -273,10 +269,10 @@ public class GeneratorJava
                     // check the parameter types
                     Iterator it = ModelFacade.getParameters(mFeature).iterator();
                     while (it.hasNext()) {
-                        MParameter p = (MParameter) it.next();
+                        Object parameter = it.next();
                         if ((ftype =
-			     generateImportType(p.getType(), packagePath))
-                            != null) {
+                                generateImportType(ModelFacade.getType(parameter), packagePath))
+                                != null) {
                             importSet.add(ftype);
                         }
                     }
@@ -288,10 +284,10 @@ public class GeneratorJava
 			.getReturnParameters((MOperation) mFeature)
 			.iterator();
                     while (it.hasNext()) {
-                        MParameter p = (MParameter) it.next();
+                        Object parameter = it.next();
                         if ((ftype =
-			     generateImportType(p.getType(), packagePath))
-                            != null) {
+                                 generateImportType(ModelFacade.getType(parameter), packagePath))
+                                != null) {
                             importSet.add(ftype);
                         }
                     }
@@ -424,16 +420,13 @@ public class GeneratorJava
         sb.append(nameStr).append('(');
 
         if (params != null) {
-            boolean first = true;
-
             for (int i = 0; i < params.size(); i++) {
-                MParameter p = (MParameter) params.elementAt(i);
-
-                if (!first)
+                if (i > 0) {
                     sb.append(", ");
-
-                sb.append(generateParameter(p));
-                first = false;
+                }
+                sb.append(generateParameter(params.elementAt(i)));
+//                MParameter p = (MParameter) params.elementAt(i);
+//                sb.append(generateParameter(p));
             }
         }
 
@@ -505,12 +498,12 @@ public class GeneratorJava
         return sb.toString();
     }
 
-    public String generateParameter(MParameter param) {
+    public String generateParameter(Object parameter) {
         StringBuffer sb = new StringBuffer(20);
         //TODO: qualifiers (e.g., const)
         //TODO: stereotypes...
-        sb.append(generateClassifierRef(param.getType())).append(' ');
-        sb.append(generateName(param.getName()));
+        sb.append(generateClassifierRef(ModelFacade.getType(parameter))).append(' ');
+        sb.append(generateName(ModelFacade.getName(parameter)));
         //TODO: initial value
         return sb.toString();
     }

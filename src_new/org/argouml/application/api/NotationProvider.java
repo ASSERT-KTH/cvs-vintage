@@ -1,4 +1,4 @@
-// $Id: NotationProvider.java,v 1.8 2003/08/25 14:08:24 bobtarling Exp $
+// $Id: NotationProvider.java,v 1.9 2003/08/27 16:45:58 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: NotationProvider.java
 // Interfaces: NotationProvider
 // Original Author: Thierry Lach
-// $Id: NotationProvider.java,v 1.8 2003/08/25 14:08:24 bobtarling Exp $
+// $Id: NotationProvider.java,v 1.9 2003/08/27 16:45:58 bobtarling Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -46,7 +46,6 @@ import ru.novosoft.uml.foundation.core.MAssociationEnd;
 import ru.novosoft.uml.foundation.core.MAttribute;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MOperation;
-import ru.novosoft.uml.foundation.core.MParameter;
 import ru.novosoft.uml.foundation.data_types.MExpression;
 import ru.novosoft.uml.foundation.data_types.MMultiplicity;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
@@ -60,7 +59,7 @@ public interface NotationProvider {
     public String generateExtensionPoint(MExtensionPoint op);
     public String generateOperation(MOperation op, boolean documented);
     public String generateAttribute(MAttribute attr, boolean documented);
-    public String generateParameter(MParameter param);
+    public String generateParameter(Object parameter);
     public String generateName(String name);
     public String generatePackage(MPackage pkg);
     public String generateExpression(MExpression expr);
