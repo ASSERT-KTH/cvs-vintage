@@ -579,7 +579,7 @@
 
 
    <target name="startup">
-     <java class="org.apache.tomcat.shell.Startup" args="" />
+     <java class="org.apache.tomcat.startup.Tomcat" args="" />
    </target>
 
 
@@ -588,7 +588,7 @@
 
 
    <target name="shutdown">
-     <java class="org.apache.tomcat.shell.Startup" args="" />
+     <java class="org.apache.tomcat.startup.Tomcat" args="-stop" />
    </target>
 
 
