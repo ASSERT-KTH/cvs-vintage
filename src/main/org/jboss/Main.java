@@ -30,7 +30,7 @@ import org.jboss.system.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.16 $
+ *   @version $Revision: 1.17 $
  */
 public class Main
 {
@@ -66,7 +66,11 @@ public class Main
       }
 
       System.setProperty("java.security.policy", serverPolicy);
-      System.setSecurityManager(new SecurityManager());
+
+      // Set security manager
+      // Optional for better performance
+      if (System.getProperty("java.security.manager") != null)
+         System.setSecurityManager((SecurityManager)Class.forName(System.getProperty("java.security.manager")).newInstance());
 
       // use thread-local principal and credential propagation
       SecurityAssociation.setServer();
