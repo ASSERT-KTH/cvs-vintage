@@ -31,7 +31,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.EBMessage
  *
  * @author Slava Pestov
- * @version $Id: EBPlugin.java,v 1.5 2003/02/07 21:57:27 spestov Exp $
+ * @version $Id: EBPlugin.java,v 1.6 2003/02/07 23:23:38 spestov Exp $
  */
 public abstract class EBPlugin extends EditPlugin implements EBComponent
 {
@@ -44,6 +44,7 @@ public abstract class EBPlugin extends EditPlugin implements EBComponent
 		Log.log(Log.WARNING,this,getClassName() + " should extend"
 			+ " EditPlugin not EBPlugin since it has an empty"
 			+ " handleMessage()");
+		EditBus.removeFromBus(this);
 	}
 
 	// protected members

@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.102 2003/02/03 02:07:59 spestov Exp $
+ * @version $Id: jEdit.java,v 1.103 2003/02/07 23:23:39 spestov Exp $
  */
 public class jEdit
 {
@@ -2095,7 +2095,11 @@ public class jEdit
 
 	//{{{ getSettingsDirectory() method
 	/**
-	 * Returns the user settings directory.
+	 * Returns the path of the directory where user-specific settings
+	 * are stored. This will be <code>null</code> if jEdit was
+	 * started with the <code>-nosettings</code> command-line switch; do not
+	 * blindly use this method without checking for a <code>null</code>
+	 * return value first.
 	 */
 	public static String getSettingsDirectory()
 	{

@@ -35,17 +35,18 @@ import org.gjt.sp.jedit.*;
  * line numbers, for determining which lines are visible and which aren't,
  * and for expanding and collapsing folds.<p>
  *
- * Note that a "physical" line number is a line index, numbered from the
- * start of the buffer. A "virtual" line number is a visible line index;
- * lines after a collapsed fold have a virtual line number that is less
- * than their physical line number, for example.<p>
+ * When jEdit's folding or narrowing features are used to hide
+ * portions of a buffer, the "virtual" line count visible
+ * in the text area is generally not equal to the "physical"
+ * line count of the buffer represented by the gutter's display.<p>
  *
  * You can use the {@link #physicalToVirtual(int)} and
  * {@link #virtualToPhysical(int)} methods to convert one type of line
  * number to another.
  *
  * @author Slava Pestov
- * @version $Id: FoldVisibilityManager.java,v 1.28 2003/02/07 21:57:44 spestov Exp $
+ * @author John Gellene (API documentation)
+ * @version $Id: FoldVisibilityManager.java,v 1.29 2003/02/07 23:23:40 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FoldVisibilityManager
