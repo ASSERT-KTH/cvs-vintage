@@ -58,12 +58,6 @@ public class BodyTextViewer extends JTextPane {
 		htmlEditorKit = new HTMLEditorKit();
 		setEditorKit(htmlEditorKit);
 
-		//		setup base url in order to be able to display images
-		// in html-component
-		URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
-		ColumbaLogger.log.debug(baseUrl.toString());
-		((HTMLDocument) getDocument()).setBase(baseUrl);
-
 		parser = new DocumentParser();
 
 		setContentType("text/html");
@@ -137,6 +131,7 @@ public class BodyTextViewer extends JTextPane {
 				e.printStackTrace();
 			}
 		} else {
+
 			// this is a text/plain message
 			try {
 				// substitute special characters like:
@@ -161,6 +156,12 @@ public class BodyTextViewer extends JTextPane {
 
 				// display bodytext
 				setText(r);
+
+				//		setup base url in order to be able to display images
+				// in html-component
+				URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
+				ColumbaLogger.log.debug(baseUrl.toString());
+				((HTMLDocument) getDocument()).setBase(baseUrl);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
