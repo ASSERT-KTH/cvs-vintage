@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.315 2002/12/13 00:45:43 jon Exp $ -->
+<!-- $Id: changes.html,v 1.316 2002/12/15 21:28:39 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -13,7 +13,7 @@
 </p>
 
 <p>
-Last updated: $Id: changes.html,v 1.315 2002/12/13 00:45:43 jon Exp $
+Last updated: $Id: changes.html,v 1.316 2002/12/15 21:28:39 jon Exp $
 </p>
 
 <table border="0" cellpadding="2" width="98%" bgcolor="white">
@@ -25,6 +25,10 @@ Last updated: $Id: changes.html,v 1.315 2002/12/13 00:45:43 jon Exp $
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Changes since 1.0b13</h3>
             <ul>
+                <li>If there are two modules a user could have and one
+                    of them is global and the other isn't, then always
+                    pick the non-global one and take them directly into
+                    it on login. (JSS)</li>
                 <li>It is no longer possible for child issues to delete
                     dependency relationships with parent issues. Only the 
                     parent can do this delete operation. (JSS)</li>
