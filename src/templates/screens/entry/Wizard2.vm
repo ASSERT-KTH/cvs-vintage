@@ -1,26 +1,31 @@
-<div id="wizard2" class="app">
 $page.setTitle("Identified as duplicate")
+
+<div id="wizard2" class="app">
+
 #set ($currentIssue = $scarabR.ReportingIssue)
-#set ( $action = $link.setPage("entry,Wizard2.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm") )
+#set ($action = $link.setPage("entry,Wizard2.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm").toString())
+
 <h2>$page.Title</h2>
 <form method="get" name="Report2Form" action="$action">
+
 <h3>New issue</h3>
+
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-#set( $attrValues = $currentIssue.ModuleAttributeValuesMap )
-#set( $keys = $attrValues.sequence() )
-#foreach ( $attKey in $keys )
-#set ( $attVal = $attrValues.get($attKey) )
-#if ($attVal.isDedupeAttribute())
-<td>
-<strong>$attVal.Attribute.Name: </strong>
-#if ($attVal.Attribute.AttributeType.Name == "email" && $attVal.Value && $attVal.Value.toString().length() != 0 )
-   <a href="mailto:$attVal.Value">$attVal.Value</a>
-#else
-   $!attVal.Value
-#end
-</td>
-#end
+#set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
+#set ($keys = $attrValues.sequence())
+#foreach ($attKey in $keys)
+  #set ($attVal = $attrValues.get($attKey))
+  #if ($attVal.isDedupeAttribute())
+  <td>
+  <strong>$attVal.Attribute.Name:</strong> 
+   #if ($attVal.Attribute.AttributeType.Name.equals("email") && $attVal.Value && $attVal.Value.toString().length() != 0)
+    <a href="mailto:$attVal.Value">$attVal.Value</a>
+   #else
+    $!attVal.Value
+   #end
+  </td>
+  #end
 #end
 </tr>
 </table>
@@ -28,66 +33,66 @@ $page.setTitle("Identified as duplicate")
 <h3>Possible duplicates</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th><a href="#"><img src="/scarab/images/icon_uparrow.gif"
-   width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a><a href="#"><img
-   src="/scarab/images/icon_downarrow.gif" width="13" height="8"
-   alt="sort descending" title="sort descending" border="0" /></a></th>
-<th><a href="#">Issue ID #</a></th>
-#set( $attrValues = $currentIssue.ModuleAttributeValuesMap )
-#foreach ( $attKey in $keys )
-#set ( $attVal = $attrValues.get($attKey) )
-#if ($attVal.isDedupeAttribute())
-<th>$attVal.Attribute.Name</th>
-#end
+<th>
+<img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
+<img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
+</th>
+<th>Issue ID</th>
+#set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
+#foreach ($attKey in $keys)
+  #set ($attVal = $attrValues.get($attKey))
+  #if ($attVal.isDedupeAttribute())
+   <th>$attVal.Attribute.Name</th>
+  #end
 #end
 <th>Creation date</th>
 <th>Date closed</th>
 </tr>
 #foreach ($issue in $scarabR.IssueList)
-#set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString() )
-<tr class="a">
-#set ($issueGroup = $intake.Issue.Default)
-#if ($velocityCount == 1)
-#set ($checked = ' checked="checked"' )
-#else
-#set ($checked = '')
-#end
-<td><input type="radio" name="$issueGroup.Id.Key"
-     value="$issue.IssueId"$checked /></td>
-<td><strong>$issue.UniqueId</strong></td>
-#set( $attrValues = $issue.ModuleAttributeValuesMap )
-#foreach ( $attKey in $keys )
-#set ( $attVal = $attrValues.get($attKey) )
-#if ($attVal.isDedupeAttribute())
-<td>
-#if ($attVal.Attribute.AttributeType.Name == "email" && $attVal.Value && $attVal.Value.toString().length() != 0 )
-   <a href="mailto:$attVal.Value">$attVal.Value</a>
-#else
-   $!attVal.Value
-#end
-</td>
-#end
-#end
+  #set ($issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString())
+  <tr>
+  #set ($issueGroup = $intake.Issue.Default)
+  <td>
+  #if ($velocityCount == 1)
+    <input type="radio" name="$issueGroup.Id.Key" value="$issue.IssueId" checked="checked" />
+  #else
+    <input type="radio" name="$issueGroup.Id.Key" value="$issue.IssueId" />
+  #end
+  </td>
+  <td><strong>$issue.UniqueId</strong></td>
+  #set ($attrValues = $issue.ModuleAttributeValuesMap)
+  #foreach ($attKey in $keys)
+    #set ($attVal = $attrValues.get($attKey))
+    #if ($attVal.isDedupeAttribute())
+      <td>
+      #if ($attVal.Attribute.AttributeType.Name == "email" && $attVal.Value && $attVal.Value.toString().length() != 0)
+        <a href="mailto:$attVal.Value">$attVal.Value</a>
+      #else
+        $!attVal.Value
+      #end
+     </td>
+    #end
+  #end
 <td>$issue.CreatedDate</td>
-<td>#if ($issue.ClosedDate)$issue.ClosedDate#else&nbsp;#end</td>
+<td>#if ($issue.ClosedDate)$issue.ClosedDate#else&#160;#end</td>
 </tr>
 #end
 </table>
 
-<p><input type="submit"  name="eventSubmit_doAddvote"
-value="Add vote to selected" /></p>
-#set ( $atch = $scarabR.Attachment )
-#set( $intakeAttachment = $intake.Attachment.mapTo($atch) )
+<p><input type="submit"  name="eventSubmit_doAddvote" value="Add vote to selected" /></p>
+#set ($atch = $scarabR.Attachment)
+#set ($intakeAttachment = $intake.Attachment.mapTo($atch))
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
-<th width="120" class="a">Append with note</th>
+<th>Append with note</th>
 <td>
 <textarea name="$intakeAttachment.DataAsString.Key" rows="4"
  cols="40">$!intakeAttachment.DataAsString</textarea>
-<p><input type="submit" name="eventSubmit_doAddnote"
-    value="submit note" /></p>
+<p>
+<input type="submit" name="eventSubmit_doAddnote" value="submit note" />
+</p>
 </td>
 </tr>
 </table>
@@ -95,12 +100,10 @@ value="Add vote to selected" /></p>
 
 <p>
 The issues above do not match my issue:<br />
-<input type="submit" name="eventSubmit_doGotowizard3"
-value="Continue issue entry" />
-&#160;
-<input type="submit" name="eventSubmit_doCancel"
- value="Cancel" />
+<input type="submit" name="eventSubmit_doGotowizard3" value="Continue issue entry" />&#160;
+<input type="submit" name="eventSubmit_doCancel" value="Cancel" />
 </p>
+
 #*
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
@@ -114,15 +117,15 @@ value="Continue issue entry" />
 <td>Issue ID#</td>
 <td>Issue Summary</td>
 </tr>
-#set ( $currentIssueId = $data.Parameters.getString("currentIssueId", $issueList.get(0).UniqueId))
-#if ( $currentIssueId == $issue.UniqueId )
-#set ( $currentIssue = $issue )
-#if ( $velocityCount != $issueList.size() )
-#set ($nextIssueIndex = $velocityCount )
+#set ($currentIssueId = $data.Parameters.getString("currentIssueId", $issueList.get(0).UniqueId))
+#if ($currentIssueId == $issue.UniqueId)
+#set ($currentIssue = $issue)
+#if ($velocityCount != $issueList.size())
+#set ($nextIssueIndex = $velocityCount)
 #else
-#set ($nextIssueIndex = 0 )
+#set ($nextIssueIndex = 0)
 #end
-#set ( $nextIssueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issueList.get($nextIssueIndex).UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString() )
+#set ($nextIssueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issueList.get($nextIssueIndex).UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString())
 #else
 <a href="$issueLink">$issue.UniqueId</a>
 $issue.ModuleAttributeValuesMap.get("SUMMARY").Value
@@ -130,9 +133,9 @@ $issue.ModuleAttributeValuesMap.get("SUMMARY").Value
 #end
 ## The issue details
 Issue ID#: $currentIssue.UniqueId
-#foreach ( $attVal in $currentIssue.OrderedModuleAttributeValues )
+#foreach ($attVal in $currentIssue.OrderedModuleAttributeValues)
 <b>$attVal.Attribute.Name:</b>
-#if ($attVal.Attribute.AttributeType.Name == "email" && $attVal.Value && $attVal.Value.toString().length() != 0 )
+#if ($attVal.Attribute.AttributeType.Name == "email" && $attVal.Value && $attVal.Value.toString().length() != 0)
 <a href="mailto:$attVal.Value">$attVal.Value</a>
 #else
 $!attVal.Value
@@ -140,31 +143,31 @@ $!attVal.Value
 </td></tr>
 #end
 Reported by:<br />
-#set ( $email = $currentIssue.CreatedBy.Email )
+#set ($email = $currentIssue.CreatedBy.Email)
 <a href="mailto:$email">$email</a>
 Date Entered:<br />
 $currentIssue.CreatedDate
 Last Modified:<br />
 $currentIssue.ModifiedDate
-#set ( $comma = "" )
+#set ($comma = "")
 #foreach ($issue in $currentIssue.BlockerIssues)
-#set ( $issueLink = $link.setPage("IssueDetails.vm").addPathInfo("currentIssueId", $currentIssueId).addPathInfo($data.Parameters).addPathInfo("prevTemplate", $link.CurrentTemplate) )
+#set ($issueLink = $link.setPage("IssueDetails.vm").addPathInfo("currentIssueId", $currentIssueId).addPathInfo($data.Parameters).addPathInfo("prevTemplate", $link.CurrentTemplate))
 $comma<a href="$issueLink">$issue.UniqueId</a>
-#set ( $comma = ", " )
+#set ($comma = ", ")
 #end
 </td>
 </tr>
 <tr>
 <td>Dependents:<br />
-#set ( $comma = "" )
+#set ($comma = "")
 #foreach ($issue in $currentIssue.BlockerIssues)
-#set ( $issueLink = $link.setPage("IssueDetails.vm").addPathInfo("currentIssueId", $currentIssueId).addPathInfo($data.Parameters).addPathInfo("prevTemplate", $link.CurrentTemplate) )
+#set ($issueLink = $link.setPage("IssueDetails.vm").addPathInfo("currentIssueId", $currentIssueId).addPathInfo($data.Parameters).addPathInfo("prevTemplate", $link.CurrentTemplate))
 $comma<a href="$issueLink">$issue.UniqueId</a>
-#set ( $comma = ", " )
+#set ($comma = ", ")
 #end
 </td>
 </tr>
-#set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString() )
+#set ($issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString())
 <tr><td>
 Does this issue match yours?<a href="$link.setPage("links.vm")">Yes</a>(Vote)
 <a href="$nextIssueLink">No</a>(Next issue)
