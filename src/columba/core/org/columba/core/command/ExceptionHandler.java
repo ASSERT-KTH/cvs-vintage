@@ -19,13 +19,18 @@
 package org.columba.core.command;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.BindException;
+import java.net.ConnectException;
+import java.net.NoRouteToHostException;
+import java.net.PortUnreachableException;
+import java.net.ProtocolException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import java.net.UnknownServiceException;
 import java.text.MessageFormat;
 
-import javax.swing.JOptionPane;
-
 import org.columba.core.gui.util.ErrorDialog;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPDisconnectedException;
 import org.columba.ristretto.imap.IMAPException;
@@ -39,126 +44,128 @@ import org.columba.ristretto.io.ConnectionDroppedException;
  */
 public class ExceptionHandler {
 
-    /**
-     * Handle all kinds of exceptions.
-     * 
-     * @param e
-     *            exception to process
-     */
-    public void processException(Exception e) {
-        if (e instanceof SocketException) {
-            processSocketException((SocketException) e);
-        } else if (e instanceof IOException) {
-            processIOException((IOException) e);
-        } else if ( e instanceof IMAPException ) {
-            processIMAPExcpetion((IMAPException) e);
-        } else {
-            // unknown exception - this is most likely a Columba-specific bug
-            e.printStackTrace();
+	/**
+	 * Handle all kinds of exceptions.
+	 * 
+	 * @param e
+	 *            exception to process
+	 */
+	public void processException(Exception e) {
+		if (e instanceof SocketException) {
+			processSocketException((SocketException) e);
+		} else if (e instanceof IOException) {
+			processIOException((IOException) e);
+		} else if (e instanceof IMAPException) {
+			processIMAPExcpetion((IMAPException) e);
+		} else {
+			// unknown exception - this is most likely a Columba-specific bug
+			e.printStackTrace();
 
-            // show error dialog, with exception message and stack-trace
-            // -> dialog also provides a button for the user to easily
-            // -> report a bug
-            showErrorDialog(e.getMessage(),e);
-        }
-    }
+			// show error dialog, with exception message and stack-trace
+			// -> dialog also provides a button for the user to easily
+			// -> report a bug
+			showErrorDialog(e.getMessage(), e);
+		}
+	}
 
-    /**
-     * @param exception
-     */
-    private void processIMAPExcpetion(IMAPException exception) {
-        String errorMessage = "";
-        String serverResponse = "";
+	/**
+	 * @param exception
+	 */
+	private void processIMAPExcpetion(IMAPException exception) {
+		String errorMessage = "";
+		String serverResponse = "";
 
-        if (exception.getResponse() != null) {
-            serverResponse = ": " + exception.getResponse().getResponseMessage();
-        }
+		if (exception.getResponse() != null) {
+			serverResponse = ": "
+					+ exception.getResponse().getResponseMessage();
+		}
 
-        if (exception instanceof IMAPDisconnectedException) {
-            errorMessage = MailResourceLoader.getString("dialog", "error",
-                    "imap_disconnected_error") + serverResponse;
-        } else {
-            errorMessage = MailResourceLoader.getString("dialog", "error",
-            "imap_error") + serverResponse;
-        }
+		if (exception instanceof IMAPDisconnectedException) {
+			errorMessage = MailResourceLoader.getString("dialog", "error",
+					"imap_disconnected_error")
+					+ serverResponse;
+		} else {
+			errorMessage = MailResourceLoader.getString("dialog", "error",
+					"imap_error")
+					+ serverResponse;
+		}
 
-        showErrorDialog(errorMessage, exception);
-    }
+		showErrorDialog(errorMessage, exception);
+	}
 
-    /**
-     * Handle all java.net.SocketException
-     * 
-     * @param e
-     *            a socket exception
-     */
-    private void processSocketException(SocketException e) {
-        String errorMessage = "";
+	/**
+	 * Handle all java.net.SocketException
+	 * 
+	 * @param e
+	 *            a socket exception
+	 */
+	private void processSocketException(SocketException e) {
+		String errorMessage = "";
 
-        if (e instanceof BindException) {
-            errorMessage = MailResourceLoader.getString("dialog", "error",
-                    "bind_error");
-        } else if (e instanceof ConnectException) {
-            errorMessage = MailResourceLoader.getString("dialog", "error",
-                    "connect_error");
-        } else if (e instanceof NoRouteToHostException) {
-            errorMessage = MailResourceLoader.getString("dialog", "error",
-                    "no_route_to_host_error");
-        } else if (e instanceof PortUnreachableException) {
-            errorMessage = MailResourceLoader.getString("dialog", "error",
-                    "port_unreachable_error");
-        }
+		if (e instanceof BindException) {
+			errorMessage = MailResourceLoader.getString("dialog", "error",
+					"bind_error");
+		} else if (e instanceof ConnectException) {
+			errorMessage = MailResourceLoader.getString("dialog", "error",
+					"connect_error");
+		} else if (e instanceof NoRouteToHostException) {
+			errorMessage = MailResourceLoader.getString("dialog", "error",
+					"no_route_to_host_error");
+		} else if (e instanceof PortUnreachableException) {
+			errorMessage = MailResourceLoader.getString("dialog", "error",
+					"port_unreachable_error");
+		}
 
-        showErrorDialog(errorMessage, e);
-    }
+		showErrorDialog(errorMessage, e);
+	}
 
-    /**
-     * Handle all java.io.IOExceptions
-     * 
-     * @param e
-     *            io exception to process
-     */
-    private void processIOException(IOException e) {
-        String errorMessage = e.getMessage();
+	/**
+	 * Handle all java.io.IOExceptions
+	 * 
+	 * @param e
+	 *            io exception to process
+	 */
+	private void processIOException(IOException e) {
+		String errorMessage = e.getMessage();
 
-        if (e instanceof ProtocolException) {
-            errorMessage = MailResourceLoader.getString("dialog", "error",
-                    "protocol_error");
-        } else if (e instanceof SocketException) {
-            errorMessage = MailResourceLoader.getString("dialog", "error",
-                    "socket_error");
-        } else if (e instanceof SocketTimeoutException) {
-            errorMessage = MailResourceLoader.getString("dialog", "error",
-                    "socket_timeout_error");
-        } else if (e instanceof UnknownHostException) {
-            errorMessage = MessageFormat.format(
-            		MailResourceLoader.getString("dialog", "error",
-                    "unknown_host_error"), new Object[] { e.getMessage()});
-        } else if (e instanceof UnknownServiceException) {
-            errorMessage = MailResourceLoader.getString("dialog", "error",
-                    "unknown_service_error");
-        } else if (e instanceof ConnectionDroppedException) {
-            errorMessage = MailResourceLoader.getString("dialog", "error",
-            "connection_dropped_error");
-        }
-        
-        showErrorDialog(errorMessage, e);
-    }
+		if (e instanceof ProtocolException) {
+			errorMessage = MailResourceLoader.getString("dialog", "error",
+					"protocol_error");
+		} else if (e instanceof SocketException) {
+			errorMessage = MailResourceLoader.getString("dialog", "error",
+					"socket_error");
+		} else if (e instanceof SocketTimeoutException) {
+			errorMessage = MailResourceLoader.getString("dialog", "error",
+					"socket_timeout_error");
+		} else if (e instanceof UnknownHostException) {
+			errorMessage = MessageFormat.format(MailResourceLoader.getString(
+					"dialog", "error", "unknown_host_error"), new Object[] { e
+					.getMessage() });
+		} else if (e instanceof UnknownServiceException) {
+			errorMessage = MailResourceLoader.getString("dialog", "error",
+					"unknown_service_error");
+		} else if (e instanceof ConnectionDroppedException) {
+			errorMessage = MailResourceLoader.getString("dialog", "error",
+					"connection_dropped_error");
+		}
 
-    /**
-     * Show error dialog.
-     * 
-     * @param errorMessage
-     *            human-readable error message
-     * @param e
-     *            exception to process
-     */
-    private void showErrorDialog(String details, Exception e) {
-    	//new ErrorDialog(details, e);
-      JOptionPane.showMessageDialog(MainInterface.frameModel.getActiveFrame(),
-                                    details,
-                                    "Columba Error",
-                                    JOptionPane.ERROR_MESSAGE,
-                                    null);
-      
-    }
+		showErrorDialog(errorMessage, e);
+	}
+
+	/**
+	 * Show error dialog.
+	 * 
+	 * @param errorMessage
+	 *            human-readable error message
+	 * @param e
+	 *            exception to process
+	 */
+	private void showErrorDialog(String details, Exception e) {
+		
+		if (details == null)
+			details = e.toString();
+
+		new ErrorDialog(details, e);
+		
+	}
 }
