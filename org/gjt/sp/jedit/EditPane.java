@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.52 2004/09/01 22:52:05 spestov Exp $
+ * @version $Id: EditPane.java,v 1.53 2004/09/13 12:59:25 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -573,11 +573,15 @@ public class EditPane extends JPanel implements EBComponent
 				Buffer newBuffer = (recentBuffer != null ?
 					recentBuffer : _buffer.getPrev());
 				if(newBuffer != null && !newBuffer.isClosed())
+				{
 					setBuffer(newBuffer);
+					recentBuffer = newBuffer.getPrev();
+				}
 				else if(jEdit.getBufferCount() != 0)
+				{
 					setBuffer(jEdit.getFirstBuffer());
-
-				recentBuffer = null;
+					recentBuffer = null;
+				}
 			}
 			else if(_buffer == recentBuffer)
 				recentBuffer = null;

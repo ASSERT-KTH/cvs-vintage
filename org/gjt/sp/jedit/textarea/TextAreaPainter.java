@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.102 2004/09/05 20:14:11 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.103 2004/09/13 12:59:25 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -162,16 +162,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 		textArea.propertiesChanged();
 		textArea.updateMaxHorizontalScrollWidth();
 		textArea.scrollBarsInitialized = true;
-	} //}}}
-
-	//{{{ isManagingFocus() method
-	/**
-	 * Returns if this component can be traversed by pressing the
-	 * Tab key. This returns false.
-	 */
-	public boolean isManagingFocus()
-	{
-		return false;
 	} //}}}
 
 	//{{{ getFocusTraversalKeysEnabled() method
