@@ -142,8 +142,8 @@
             <name>Hypersonic SQL</name>
             <mapping>
                 <java-type>java.lang.Byte</java-type>
-                <jdbc-type>TINYINT</jdbc-type>
-                <sql-type>TINYINT</sql-type>
+                <jdbc-type>SMALLINT</jdbc-type>
+                <sql-type>SMALLINT</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.util.Date</java-type>
@@ -167,8 +167,8 @@
             </mapping>
             <mapping>
                 <java-type>java.lang.Short</java-type>
-                <jdbc-type>TINYINT</jdbc-type>
-                <sql-type>TINYINT</sql-type>
+                <jdbc-type>SMALLINT</jdbc-type>
+                <sql-type>SMALLINT</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.lang.Character</java-type>
