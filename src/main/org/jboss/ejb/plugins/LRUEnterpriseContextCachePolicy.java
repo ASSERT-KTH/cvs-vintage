@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class LRUEnterpriseContextCachePolicy
         extends LRUCachePolicy
@@ -436,9 +436,9 @@ public class LRUEnterpriseContextCachePolicy
                      log(entry.m_key, initialSize);
 
                      // Kick out of the cache this entry
-                     m_cache.remove(entry.m_object);
                      if (removedEntries == null) removedEntries = new ArrayList();
                      removedEntries.add(entry.m_object);
+                     m_cache.remove(entry.m_object);
 
                      int finalSize = list.m_count;
 
