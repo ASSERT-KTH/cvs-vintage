@@ -22,7 +22,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public abstract class MetaData implements XmlLoadable {
     // Constants -----------------------------------------------------
@@ -121,7 +121,7 @@ public abstract class MetaData implements XmlLoadable {
 	protected boolean jdk13Enabled() {
 		// should use "java.version" ?
 		String javaVersion = System.getProperty("java.vm.version");
-		return javaVersion.startsWith("1.3");
+		return !javaVersion.startsWith("1.2.2");
 	}
 	
 	// Private -------------------------------------------------------
