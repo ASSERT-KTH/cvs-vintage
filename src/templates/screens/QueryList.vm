@@ -28,13 +28,13 @@ $page.setTitle("Saved query list")
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
   <th nowrap="nowrap"></th>
+  <th>Subscribe</th>
+  <th>Subscribe frequency</th>
   <th>Query name</th>
   <th>Query description</th>
   <th>Location</th>
   <th>Initiated by</th>
   <th>Default</th>
-  <th>Subscribe</th>
-  <th>Subscribe frequency</th>
  </tr>
  
  #foreach ($query in $module.getAllUserQueries($user, $issueType))
@@ -42,6 +42,12 @@ $page.setTitle("Saved query list")
   #set ($rquGroup = $intake.RQueryUser.mapTo($rqu))
   #indexedRows($velocityCount)
   <td><input type="checkbox" name="action_$query.QueryId" /></td>
+  <td>#booleanCheckbox($rquGroup.Subscribed) </td>
+  <td>#fieldErrorMsg ($rquGroup.Frequency "<br>")
+    <select name="$rquGroup.Frequency.Key">
+        #frequencySelectBox ($rqu.SubscriptionFrequency)
+    </select>
+  </td>
   <td><a href="$query.getEditLink($link.setPage("EditQuery.vm").toString())">$query.Name</a></td>
   <td>#if($query.Description)  $query.Description #else &#160; #end</td>
   <td><a href="$query.getExecuteLink($link.setPage("IssueList.vm").toString())">$query.Scope.Name</a>
@@ -53,23 +59,17 @@ $page.setTitle("Saved query list")
   <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
   <td><input type="radio" name="default" value="$query.QueryId" 
           #if ($rqu.Isdefault) checked="checked" #end /></td>
-  <td>#booleanCheckbox($rquGroup.Subscribed) </td>
-  <td>#fieldErrorMsg ($rquGroup.Frequency "<br>")
-    <select name="$rquGroup.Frequency.Key">
-        #frequencySelectBox ($rqu.SubscriptionFrequency)
-    </select>
-  </td>
   </tr>
  #end
 </table>
 
-<div class="functnbar3">        
-<input type="submit" value="save" name="eventSubmit_doSave" />
-<input type="submit" value="copy" name="eventSubmit_doCopyquery" />
+<div class="functnbar3">
+<input type="submit" value="Save" name="eventSubmit_doSave" />
+<input type="submit" value="Copy" name="eventSubmit_doCopyquery" />
   #if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE) || !$module.getPrivateQueries($user).isEmpty())
-   &#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletequeries" />&#160;
+   &#160;<input type="submit" value="Delete selected" name="eventSubmit_doDeletequeries" />&#160;
   #end
-   &#160;<input type="submit" value="create new query" name="eventSubmit_doNewquery" />&#160;
+   &#160;<input type="submit" value="Create new query" name="eventSubmit_doNewquery" />&#160;
 </div>
 
 ##    <p>&#171; previous | 1 of 1 | next &#187; </p>
@@ -78,7 +78,6 @@ $page.setTitle("Saved query list")
 
 <div class="functnbar2">        
 <input type="submit" value="Done"  name="eventSubmit_doSave" />&#160;
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
 </div>
 
 $intake.declareGroups()
