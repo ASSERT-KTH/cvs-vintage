@@ -202,7 +202,7 @@
 
      <copydir src="${etc.dir}/conf" dest="${dist.dir}/conf"/>
      <copydir src="${src.bin.dir}" dest="${dist.dir}/bin"/>
-     <copydir src="${src.lib.dir}" dest="${dist.dir}/lib/ext"/>
+     <copydir src="${src.lib.dir}" dest="${dist.dir}/lib/ext" excludes="xml.jar"/>
      <copydir src="${build.bin.dir}" dest="${dist.dir}/bin"/>
      <copydir src="${build.lib.dir}/ext" dest="${dist.dir}/lib/ext"/>
      <copydir src="${build.dir}/client" dest="${dist.dir}/client"/>
