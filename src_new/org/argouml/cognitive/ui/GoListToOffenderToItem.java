@@ -1,4 +1,4 @@
-// $Id: GoListToOffenderToItem.java,v 1.7 2003/08/30 20:09:52 alexb Exp $
+// $Id: GoListToOffenderToItem.java,v 1.8 2003/12/13 12:34:37 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +32,10 @@ import javax.swing.tree.TreePath;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ToDoList;
+import org.argouml.kernel.Project;
+import org.argouml.kernel.ProjectManager;
 import org.tigris.gef.util.VectorSet;
-
+import org.tigris.gef.util.Predicate;
 
 
 public class GoListToOffenderToItem implements TreeModel {
@@ -69,8 +71,12 @@ public class GoListToOffenderToItem implements TreeModel {
 
 
     public Vector getChildren(Object parent) {
-	VectorSet allOffenders =
-	    Designer.TheDesigner.getToDoList().getOffenders();
+        VectorSet allOffenders = new VectorSet();
+        allOffenders.addAllElementsSuchThat(Designer.TheDesigner.getToDoList().
+            getOffenders(), 
+            new PredicateNotInTrash());
+        
+        
 	if (parent instanceof ToDoList) {
 	    return allOffenders.asVector();
 	}
@@ -81,7 +87,9 @@ public class GoListToOffenderToItem implements TreeModel {
 	    Enumeration enum = list.elements();
 	    while (enum.hasMoreElements()) {
 		ToDoItem item = (ToDoItem) enum.nextElement();
-		VectorSet offs = item.getOffenders();
+		VectorSet offs = new VectorSet();
+                offs.addAllElementsSuchThat(item.getOffenders(),
+                    new PredicateNotInTrash());
 		if (offs.contains(parent)) res.addElement(item);
 	    }
 	    return res;
@@ -95,3 +103,17 @@ public class GoListToOffenderToItem implements TreeModel {
 
 
 } /* end class GoListToOffenderToItem */
+
+/** A Predicate to determine if a given object is in the Project Trash or not.
+ * Required so that the GoListToOfffenderItem does not display offenders,
+ * which are already in the trash bin.
+ **/
+class PredicateNotInTrash implements Predicate {
+    Project p; 
+    public boolean predicate(Object obj) {
+        p = ProjectManager.getManager().getCurrentProject();
+        if (p == null) return true;
+        if (p.isInTrash(obj)) return false;
+        return true;
+    }
+}
