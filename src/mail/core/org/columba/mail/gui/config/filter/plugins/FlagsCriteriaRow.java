@@ -66,6 +66,7 @@ public class FlagsCriteriaRow extends DefaultCriteriaRow {
 		flagsComboBox.addItem("Recent");
 		flagsComboBox.addItem("Draft");
 		flagsComboBox.addItem("Seen");
+		flagsComboBox.addItem("Spam");
 
 		addComponent(flagsComboBox);
 
