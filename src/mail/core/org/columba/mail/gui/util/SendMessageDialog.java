@@ -129,6 +129,13 @@ public class SendMessageDialog
 					label.setText((String) e.getNewValue());
 					break;
 
+				case WorkerStatusChangedEvent.DISPLAY_TEXT_CLEARED :
+				
+					// implemented for completeness.
+					// Time-out for clearing text is ignored here.
+					label.setText("");
+					break;
+				
 				case WorkerStatusChangedEvent.PROGRESSBAR_MAX_CHANGED :
 					{
 						progressBar.setMaximum(

@@ -113,7 +113,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 		if (getObservable() != null) {
 			getObservable().setMessage(
-				folder.getName() +
+				folder.getName() + ": " +
 					MailResourceLoader.getString(
 						"statusbar",
 						"message",
@@ -165,10 +165,9 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 		// we are done
 		if (getObservable() != null) {
-			getObservable().clearMessage();
+			getObservable().clearMessage(500);	// 500 ms delay
 			getObservable().resetCurrent();
 		}
-		//getObservable().setCurrent(capacity);
 
 	}
 
@@ -302,7 +301,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		
 		// we are done
 		if (getObservable() != null) {
-			getObservable().clearMessage();
+			getObservable().clearMessage(500); // 500 ms delay
 			getObservable().resetCurrent();
 		}
 		

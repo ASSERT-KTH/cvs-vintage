@@ -144,9 +144,10 @@ public class SendAllMessagesCommand extends FolderCommand {
 			}
 		}
 
-		// we are done - clear status text (if this is not done,
-		// the initial text will stay in case no messages were sent)
-		worker.clearDisplayText();
+		// we are done - clear status text with 500 ms delay
+		// (if this is not done, the initial text will stay in 
+		// case no messages were sent)
+		worker.clearDisplayText(500);
 
 		// move all successfully send messages to the Sent folder
 		if (sentList.size() > 0) {

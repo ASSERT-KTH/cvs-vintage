@@ -187,8 +187,8 @@ public class CopyMessageCommand extends FolderCommand {
 			}
 		}
 		
-		// We are done - clear the status message
-		worker.clearDisplayText();
+		// We are done - clear the status message (with a delay of 500 ms)
+		worker.clearDisplayText(500);
 
 	}
 

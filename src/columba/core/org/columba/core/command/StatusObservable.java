@@ -61,5 +61,12 @@ public interface StatusObservable {
 	 * Clears the text displayed in the status bar.
 	 */
 	public void clearMessage();
+	/**
+	 * Clears the text displayed in the status bar after a given delay.
+	 * If a new text is set within this delay, the text is not cleared 
+	 * 
+	 * @param delay		Delay before clearing in milliseconds
+	 */
+	public void clearMessage(int delay);
 	
 }

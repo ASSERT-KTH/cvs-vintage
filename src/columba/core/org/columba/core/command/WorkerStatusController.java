@@ -27,10 +27,15 @@ public interface WorkerStatusController {
 	 */
 	public String getDisplayText();
 	/**
-	 * Clears the text displayed in the status bar. This is the same as
-	 * calling setDisplayText("")
+	 * Clears the text displayed in the status bar - without any delay
 	 */
 	public void clearDisplayText();
+	/**
+	 * Clears the text displayed in the status bar - with a given delay.
+	 * If a new text is set within this delay, the text is not cleared.
+	 * @param delay		Delay in milliseconds before clearing the text
+	 */
+	public void clearDisplayText(int delay);
 	
 	/**
 	 * Sets the maximum value for the progress bar.

@@ -381,8 +381,8 @@ public abstract class AbstractSearchEngine {
 		//return searchMessages(filter, null);
 		Object[] result = searchMessages(filter, null);
 		if (getObservable() != null) {
-			// clear status bar message now we are done
-			getObservable().clearMessage();
+			// clear status bar message now we are done (500 ms delay)
+			getObservable().clearMessage(500);
 		}
 		return result;
 	}

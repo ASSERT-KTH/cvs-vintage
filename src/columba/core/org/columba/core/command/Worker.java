@@ -219,11 +219,30 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 	}
 	
 	/**
-	 * Clears the text displayed in the status bar. This is the same as
-	 * calling setDisplayText("")
+	 * Clears the text displayed in the status bar - without any delay
 	 */
 	public void clearDisplayText() {
-		setDisplayText("");		
+		clearDisplayText(0);		
+	}
+
+	/**
+	 * Clears the text displayed in the status bar - with a given delay.
+	 * If a new text is set within this delay, the text is not cleared.
+	 * @param delay		Delay in milliseconds before clearing the text
+	 */
+	public void clearDisplayText(int delay) {
+		// init event
+		WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(getTimeStamp());
+		e.setType(WorkerStatusChangedEvent.DISPLAY_TEXT_CLEARED);
+		
+		// "new value" is used to pass on the delay
+		e.setNewValue(new Integer(delay));
+		
+		// set display text stored here to an empty string (~ cleared)
+		displayText = "";
+		
+		// fire event
+		fireWorkerStatusChanged(e);
 	}
 
 	public void addWorkerStatusChangeListener(WorkerStatusChangeListener l) {

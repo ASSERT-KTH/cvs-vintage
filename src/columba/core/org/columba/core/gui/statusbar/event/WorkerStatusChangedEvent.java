@@ -22,6 +22,7 @@ public class WorkerStatusChangedEvent {
 	public final static int PROGRESSBAR_MAXANDVALUE_CHANGED = 2;
 	public final static int PROGRESSBAR_MAX_CHANGED = 3;
 	public final static int FINISHED = 4;
+	public final static int DISPLAY_TEXT_CLEARED = 5;
 
 	private int type;
 	

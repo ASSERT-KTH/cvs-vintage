@@ -27,6 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -65,6 +66,10 @@ public class StatusBar
 	private JButton onlineButton;
 
 	private boolean online = true;
+	
+	/** Timer to use when clearing status bar text after a certain timeout */
+	private Timer clearTextTimer;
+
 
 	public StatusBar(TaskManager tm) {
 		taskManager = tm;
@@ -155,6 +160,9 @@ public class StatusBar
 		add(rightPanel, BorderLayout.EAST);
 
 		initActions();
+		
+		// init timer
+		initClearTextTimer();
 
 	}
 
@@ -187,6 +195,11 @@ public class StatusBar
 	}
 
 	protected void setText(String s) {
+		
+		// *20031102, karlpeder* Setting a new text must cancel pending
+		// requests for clearing the text
+		clearTextTimer.stop();
+		
 		final String str = s;
 
 		Runnable run = new Runnable() {
@@ -319,6 +332,18 @@ public class StatusBar
 				setText((String) e.getNewValue());
 				break;
 
+			/*
+			 * 20031102, karlpeder* Added handling of DISPLAY_TEXT_CLEARED:
+			 * The status bar text is cleared after a certain time out
+			 * found as e.getNewValue()
+			 */
+			case WorkerStatusChangedEvent.DISPLAY_TEXT_CLEARED :
+				clearTextTimer.stop();
+				clearTextTimer.setInitialDelay(
+						((Integer) e.getNewValue()).intValue());
+				clearTextTimer.restart();
+				break;
+
 			case WorkerStatusChangedEvent.PROGRESSBAR_MAX_CHANGED :
 				setMaximum(((Integer) e.getNewValue()).intValue());
 				break;
@@ -334,9 +359,23 @@ public class StatusBar
 		}
 	}
 
-	protected void initActions() {
-
+	/**
+	 * Initializes the timer to use when the status bar text must be cleared
+	 * after a certain timeout.
+	 */
+	private void initClearTextTimer() {
+		clearTextTimer = new Timer(0, new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				// stop timer and clear status bar text when timer runs out
+				clearTextTimer.stop();
+				setText("");
+			}
+		});
 	}
+	
+	protected void initActions() {
+	}
+		
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
 

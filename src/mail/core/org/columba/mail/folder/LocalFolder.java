@@ -495,7 +495,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 		
 		// we are done - clear the progress bar
 		if (getObservable() != null)
-			getObservable().setCurrent(0);
+			getObservable().resetCurrent();
 		
 	}
 
