@@ -33,16 +33,19 @@
     <property name="build.classes.dir" value="${build.dir}/classes"/>
     <property name="build.javadocs.dir" value="${build.dir}/docs/api"/>
     <property name="dist.dir" value="dist"/>
+    <property name="external.dir" value="${dist.dir}/external"/>
 
     <property name="classpath" value="${lib.dir}/jmxri.jar;${build.classes.dir};${src.lib.dir}/awt.jar;${lib.dir}/xml.jar;${src.lib.dir}/ejb.jar;${src.lib.dir}/ejb2.0.jar;${src.lib.dir}/ejxeditor.jar;${src.lib.dir}/jndi.jar;${src.lib.dir}/ejxejb.jar;${src.lib.dir}/jta-spec1_0_1.jar;${src.lib.dir}/jnpserver.jar;${src.lib.dir}/dynaserver.jar;${src.lib.dir}/hsql.jar;${src.lib.dir}/webserver.jar;${src.lib.dir}/idb.jar;${src.lib.dir}/jdbc2_0-stdext.jar;${src.lib.dir}/jaas.jar;${src.lib.dir}/jpl-util-0_5b.jar;${src.lib.dir}/jms.jar;${src.lib.dir}/openjms-client-patched-0.5.1.jar;${src.lib.dir}/exolabcore-0.1.jar;${src.lib.dir}/jboss-jms.jar;${src.lib.dir}/openjms-pool.jar;${src.lib.dir}/jaxp.jar;${src.lib.dir}/connector.jar;${src.lib.dir}/mail.jar;${src.lib.dir}/minerva-1_0b3.jar"/>
-
     <property name="packages" value="org.jboss,org.jboss.configuration,org.jboss.dependencies,org.jboss.deployment,org.jboss.ejb,org.jboss.ejb.plugins,org.jboss.ejb.plugins.jaws,org.jboss.ejb.plugins.jaws.deployment,org.jboss.ejb.plugins.jaws.jdbc,org.jboss.ejb.plugins.jaws.metadata,org.jboss.ejb.plugins.jrmp.server,org.jboss.ejb.plugins.jrmp.interfaces,org.jboss.ejb.plugins.jrmp12.server,org.jboss.ejb.plugins.jrmp12.interfaces,org.jboss.ejb.plugins.jrmp13.server,org.jboss.ejb.plugins.jrmp13.interfaces,org.jboss.ejb.plugins.jms,org.jboss.jdbc,org.jboss.jmx.client,org.jboss.jmx.interfaces,org.jboss.jmx.server,org.jboss.logging,org.jboss.metadata,org.jboss.minerva.datasource,org.jboss.minerva.factories,org.jboss.minerva.jdbc,org.jboss.minerva.pools,org.jboss.minerva.xa,org.jboss.naming,org.jboss.naming.java,org.jboss.proxy,org.jboss.resource,org.jboss.resource.pool,org.jboss.resource.security,org.jboss.security,org.jboss.security.plugins,org.jboss.security.plugins.samples,org.jboss.tm,org.jboss.tomcat,org.jboss.util,org.jboss.util.timeout,org.jboss.verifier,org.jboss.verifier.event,org.jboss.verifier.factory,org.jboss.web,org.jboss.jms.asf,org.jboss.jms.jndi"/>
 
     <property name="build.compiler" value="classic"/>
 
+    <property name="build.util.classes.dir"     value="${build.dir}/util/classes/"/>
+    <property name="build.metadata.classes.dir" value="${build.dir}/metadata/classes"/>
     <property name="build.verifier.classes.dir" value="${build.dir}/verifier/classes"/>
-    <property name="verifier.classpath" value="${build.verifier.classes.dir};${lib.dir}/jaxp.jar;${src.lib.dir}/ejb.jar;${src.lib.dir}/jta-spec1_0_1.jar;${src.lib.dir}/jpl-util-0_5b.jar;${src.lib.dir}/jms.jar;${src.lib.dir}/jmxri.jar;${src.lib.dir}/parser.jar"/>
-
+    <property name="verifier.classpath"         value="${build.verifier.classes.dir};${lib.dir}/jaxp.jar;${src.lib.dir}/ejb.jar;${src.lib.dir}/jta-spec1_0_1.jar;${src.lib.dir}/jpl-util-0_5b.jar;${src.lib.dir}/jms.jar;${src.lib.dir}/jmxri.jar;${src.lib.dir}/parser.jar;${external.dir}/metadata.jar"/>
+    <property name="util.classpath"             value="${build.util.classes.dir};${lib.dir}/jmxri.jar"/>
+    
     <available property="jdk1.3+" classname="java.lang.StrictMath" />
   </target>
 
@@ -275,7 +278,7 @@
   <!-- =================================================================== -->
   <!-- Creates a stand-alone verifier package                              -->
   <!-- =================================================================== -->
-  <target name="verifier" depends="init">
+  <target name="verifier" depends="init, metadata">
     <mkdir dir="${build.verifier.classes.dir}"/>
 
     <javac srcdir="${src.dir}"
@@ -284,25 +287,21 @@
            debug="on"
            deprecation="off"
            optimize="off"
-           includes="org/jboss/verifier/**,
-                     org/jboss/metadata/**,
-                     org/jboss/ejb/DeploymentException.java"
+           includes="org/jboss/verifier/**"
     />
 
     <copy todir="${build.verifier.classes.dir}/org/jboss/verifier">
         <fileset dir="${src.resources}/org/jboss/verifier"/>
     </copy>
+<!--
     <copy file="${etc.dir}/conf/default/standardjboss.xml" tofile="${build.verifier.classes.dir}/standardjboss.xml"/>
-
+-->
 
     <mkdir dir="${dist.dir}/bin"/>
     <jar jarfile="${dist.dir}/bin/verifier.jar"
          basedir="${build.verifier.classes.dir}"
          manifest="${etc.dir}/verifier.mf"
-         includes="org/jboss/metadata/**,
-                   org/jboss/ejb/**,
-                   org/jboss/verifier/**,
-                   standardjboss.xml"
+         includes="org/jboss/verifier/**"
     />
 
   </target>
@@ -310,7 +309,7 @@
   <!-- =================================================================== -->
   <!-- Creates the distribution                                            -->
   <!-- =================================================================== -->
-  <target name="dist" depends="main,jar,javadocs,verifier">
+  <target name="dist" depends="main,jar,javadocs,verifier,metadata,util">
      <mkdir dir="${dist.dir}/docs"/>
      <mkdir dir="${dist.dir}/docs/api"/>
      <copy todir="${dist.dir}/docs">
@@ -354,6 +353,61 @@
     <copy file="${build.dir}/client/rmiconnector.jar" tofile="${dist.dir}/external/rmiconnector.jar"/>
   </target>
 
+  <!-- =================================================================== -->
+  <!-- Creates the JBoss Metadata lib.                                     -->
+  <!-- =================================================================== -->
+  <target name="metadata" depends="init">
+
+    <mkdir dir="${build.metadata.classes.dir}"/>
+   
+    <javac srcdir="${src.dir}"
+           destdir="${build.metadata.classes.dir}"
+           classpath="${verifier.classpath}"
+           debug="on"
+           deprecation="off"
+           optimize="off"
+           includes="org/jboss/metadata/**,
+                     org/jboss/ejb/DeploymentException.java"
+    />
+  
+    <copy file="${etc.dir}/conf/default/standardjboss.xml" tofile="${build.metadata.classes.dir}/standardjboss.xml"/>
+    
+    <mkdir dir="${external.dir}"/>
+    <jar jarfile="${dist.dir}/external/metadata.jar"
+         basedir="${build.metadata.classes.dir}"
+         includes="org/jboss/metadata/**,
+                   org/jboss/ejb/**,
+                   standardjboss.xml"
+    />
+  </target>
+
+  
+  <!-- =================================================================== -->
+  <!-- Creates the JBoss Util lib.                                         -->
+  <!-- =================================================================== -->
+  <target name="util" depends="init">
+
+    <mkdir dir="${build.util.classes.dir}"/>
+   
+    <javac srcdir="${src.dir}"
+           destdir="${build.util.classes.dir}"
+           classpath="${util.classpath}"
+           debug="on"
+           deprecation="off"
+           optimize="off"
+           includes="org/jboss/util/Service.java,
+                     org/jboss/util/ServiceMBean.java,
+                     org/jboss/util/ServiceMBeanSupport.java,
+                     org/jboss/logging/Log.java"
+    />
+    
+    <mkdir dir="${external.dir}"/>
+    <jar jarfile="${dist.dir}/external/jboss-util.jar"
+         basedir="${build.util.classes.dir}"
+         includes="org/jboss/util/**, org/jboss/logging/**"
+    />
+  </target>
+    
   <!-- =================================================================== -->
   <!-- Cleans up generated stuff                                           -->
   <!-- =================================================================== -->
