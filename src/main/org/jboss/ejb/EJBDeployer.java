@@ -74,7 +74,7 @@ import org.jboss.management.j2ee.EjbModule;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.4 $ 
+* @version $Revision: 1.5 $ 
 */
 public class EJBDeployer
 extends ServiceMBeanSupport
@@ -357,8 +357,10 @@ implements EJBDeployerMBean
    
    
    public synchronized void deploy(DeploymentInfo sdi)
-   throws DeploymentException
+      throws DeploymentException
    {
+      boolean debug = log.isDebugEnabled();
+      
       try 
       {
          // Create a file loader with which to load the files
@@ -369,7 +371,9 @@ implements EJBDeployerMBean
          // Load XML
          sdi.metaData =  efm.load();
       }
-      catch (Exception e) {log.error("Problem loading metaData ", e);}
+      catch (Exception e) {
+         log.error("Problem loading metaData ", e);
+      }
       
       // Check validity
       NDC.push("Verifier" );
@@ -380,10 +384,11 @@ implements EJBDeployerMBean
          if( verifyDeployments )
          {
             BeanVerifier verifier = new BeanVerifier();
-            
             verifier.addVerificationListener( new DeployListener ());
-            if (log.isInfoEnabled())
-               log.info( "Verifying " + sdi.url );
+            if (debug) {
+               log.debug("Verifying " + sdi.url);
+            }
+            
             verifier.verify( sdi.url, (ApplicationMetaData) sdi.metaData, sdi.ucl );
          }
       }
@@ -403,7 +408,7 @@ implements EJBDeployerMBean
          
          app.setURL( sdi.url );
          
-         if (log.isDebugEnabled()) {
+         if (debug) {
             log.debug( "Deploying: " + sdi.url );
          }
          
@@ -412,8 +417,7 @@ implements EJBDeployerMBean
          {
             BeanMetaData bean = (BeanMetaData) beans.next();
             
-            if (log.isInfoEnabled())
-               log.info( "Deploying " + bean.getEjbName() );
+            log.info( "Deploying " + bean.getEjbName() );
             try 
             {
                app.addContainer( createContainer( bean, sdi ) );
@@ -431,7 +435,7 @@ implements EJBDeployerMBean
          app.start();
          
          // Done
-         if (log.isDebugEnabled()) {
+         if (debug) {
             log.debug( "Deployed: " + app.getName() );
          }
          
@@ -440,11 +444,11 @@ implements EJBDeployerMBean
       }
       catch( Exception e )
       {
-         log.error("Could not deploy " + sdi.url.toString(), e);
+         log.error("Could not deploy " + sdi.url, e);
          app.stop();
          //app.destroy();
          
-         throw new DeploymentException( "Could not deploy " + sdi.url.toString(), e );
+         throw new DeploymentException( "Could not deploy " + sdi.url, e );
       }
    }
    
@@ -456,12 +460,13 @@ implements EJBDeployerMBean
    * @throws DeploymentException
    */
    public void undeploy(DeploymentInfo di)
-   throws DeploymentException
+      throws DeploymentException
    {
       undeploy(di.url);  
    }
+   
    public void undeploy(URL url )
-   throws DeploymentException
+      throws DeploymentException
    {
       // Get application from table
       Application app = (Application) deployments.get( url );
@@ -473,8 +478,7 @@ implements EJBDeployerMBean
       }
       
       // Undeploy application
-      if (log.isInfoEnabled())
-         log.info( "Undeploying:" + url );
+      log.info( "Undeploying:" + url );
       app.stop();
       //app.destroy();
       
@@ -502,8 +506,6 @@ implements EJBDeployerMBean
       
       // Remove deployment
       deployments.remove( url );
-   
-   
    }
    
    /**
@@ -736,7 +738,8 @@ implements EJBDeployerMBean
          }
          catch(Exception e)
          {
-            throw new DeploymentException("Failed to create SecurityProxy of type: " + securityProxyClassName + ", "+ conf.getContainerInvoker() +" - " + e);
+            throw new DeploymentException("Failed to create SecurityProxy of type: " +
+                                          securityProxyClassName + ", "+ conf.getContainerInvoker(), e);
          }
       }
       
@@ -865,7 +868,7 @@ implements EJBDeployerMBean
       }
       catch( Exception e )
       {
-         throw new DeploymentException( "Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml): " + invoker+ " - " + e );
+         throw new DeploymentException( "Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml): " + invoker, e );
       }
       
       if( ci instanceof XmlLoadable )
@@ -912,7 +915,7 @@ implements EJBDeployerMBean
       }
       catch( Exception e )
       {
-         throw new DeploymentException( "Missing or invalid Instance Pool (in jboss.xml or standardjboss.xml)" );
+         throw new DeploymentException( "Missing or invalid Instance Pool (in jboss.xml or standardjboss.xml)", e);
       }
       
       if( ip instanceof XmlLoadable )
@@ -938,7 +941,7 @@ implements EJBDeployerMBean
       }
       catch( Exception e )
       {
-         throw new DeploymentException( "Missing or invalid Instance Cache (in jboss.xml or standardjboss.xml)" );
+         throw new DeploymentException( "Missing or invalid Instance Cache (in jboss.xml or standardjboss.xml)", e );
       }
       
       if( ic instanceof XmlLoadable )
@@ -947,38 +950,29 @@ implements EJBDeployerMBean
       return ic;
    }
    
-   /** A callback listener for the EJB verifier.
-   */
+   /**
+    * A callback listener for the EJB verifier.
+    */
    class DeployListener implements VerificationListener
    {
       /* Accessing the EJBDeployer.log directory is
-      causing a NoSuchMethodError when the log is used
-      so obtain it via the getLog() method and then use
-      logger
-      */
+       * causing a NoSuchMethodError when the log is used
+       * so obtain it via the getLog() method and then use
+       * logger
+       */
       final Logger logger = EJBDeployer.this.getLog();
+      
       public void beanChecked( VerificationEvent event )
       {
          logger.debug( event.getMessage() );
       }
+      
       public void specViolation( VerificationEvent event )
       {
          if( verifierVerbose )
             logger.info( event.getVerbose() );
          else
             logger.info( event.getMessage() );
-      }
-   }
-   
-   protected ObjectName getServiceControllerName() throws DeploymentException
-   {
-      try 
-      {
-         return new ObjectName(SERVICE_CONTROLLER_NAME);
-      }
-      catch(MalformedObjectNameException mone)
-      {
-         throw new DeploymentException("Can't construct service controller object name!!" + mone);
       }
    }
 }
