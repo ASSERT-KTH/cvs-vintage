@@ -69,6 +69,8 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
 </table>
 </div>
 
+#if ( $attType.AttributeClass.Name.equals("select-one") )
+
 #datatitle ( "List options" )
 
 #set ( $maxNum = $attOptions.size() )
@@ -106,14 +108,6 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
     </tr>
 #end
 
-
-
-
-
-
-
-
-
 #set ( $newOption = $scarabR.AttributeOption )
 #set ( $intakeOption = $intake.AttributeOption.mapTo($newOption) )
 #if ( ($maxNum + 1) % 2 > 0 )<tr class="a">#else<tr class="b">#end
@@ -134,8 +128,9 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
      </td>
 </tr>
 
-
 </table>
+#end #* if select-one *#
+
   <input type="submit" name="eventSubmit_doAddormodifyattributeoptions" 
         value="Save"/>
 
