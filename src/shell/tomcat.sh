@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.25 2001/07/05 09:05:27 hgomez Exp $
+# $Id: tomcat.sh,v 1.26 2001/08/21 05:55:50 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -8,10 +8,10 @@
 # commented commands good replacements. The first works well with
 # Java Platform 1.1 based runtimes. The second works well with
 # Java2 Platform based runtimes.
-
 #jre -cp lib/tomcat.jar org.apache.tomcat.startup.Main $*
 #java -cp lib/tomcat.jar org.apache.tomcat.startup.Main $*
 #java -jar lib/tomcat.jar
+
 
 # Read local properties 
 if [ -f $HOME/.tomcatrc ] ; then 
@@ -79,10 +79,6 @@ if [ "$TOMCAT_OPTS" = "" ] ; then
   TOMCAT_OPTS=""
 fi
 
-if [ "$ANT_OPTS" = "" ] ; then
-  ANT_OPTS=""
-fi
-
 if [ "$JSPC_OPTS" = "" ] ; then
   JSPC_OPTS=""
 fi
@@ -112,17 +108,22 @@ oldCP=$CLASSPATH
 unset CLASSPATH
 CLASSPATH=${TOMCAT_HOME}/lib/tomcat.jar
 
-if [ "$oldCP" != "" ]; then
-    CLASSPATH=${CLASSPATH}:${oldCP}
-fi
+# Ignore previous CLASSPATH
+#if [ "$oldCP" != "" ]; then
+#    CLASSPATH=${CLASSPATH}:${oldCP}
+#fi
 
 if [ -f ${JAVA_HOME}/jre/lib/rt.jar ] ; then
     CLASSPATH=${CLASSPATH}:${JAVA_HOME}/jre/lib/rt.jar
 fi
 
+# This is consistent with "java -jar tomcat.jar "
 export CLASSPATH
 
 ## -------------------- Process options -------------------- 
+# add tomcat.policy - even if we don't use sandbox, it doesn't hurt
+TOMCAT_OPTS="$TOMCAT_OPTS -Djava.security.policy==${TOMCAT_HOME}/lib/tomcat.policy "
+
 
 # We start the server up in the background for a couple of reasons:
 #   1) It frees up your command window
@@ -138,9 +139,6 @@ elif [ "$1" = "stop_msg" ]; then
 elif [ "$1" = "start" ] ; then 
   shift 
 
-  #Old code for -security: -Djava.security.manager -Djava.security.policy==${TOMCAT_HOME}/conf/tomcat.policy 
-  # not needed, java starter will do that automatically
-
   if [ -f ${TOMCAT_HOME}/conf/ajp12.id ] ;  then  
         rm -f  ${TOMCAT_HOME}/conf/ajp12.id
   fi
@@ -151,15 +149,15 @@ elif [ "$1" = "start" ] ; then
     # wait at least 6 min 
     WAIT=360
   fi
-
+    
   if [ "$1" = "-noout" ] ; then
     shift
-    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  $MAIN "$@" >${TOMCAT_HOME}/logs/stdout.log 2>&1 &
+    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  $MAIN start "$@" >${TOMCAT_HOME}/logs/stdout.log 2>&1 &
   else
     echo Using classpath: ${CLASSPATH}
     echo Using JAVA_HOME: ${JAVA_HOME}
     echo Using TOMCAT_HOME: ${TOMCAT_HOME}
-    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  $MAIN "$@" &
+    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  $MAIN start "$@" &
   fi
 
 
@@ -184,30 +182,56 @@ elif [ "$1" = "stop" ] ; then
   echo Using classpath: ${CLASSPATH}
   echo Using JAVA_HOME: ${JAVA_HOME}
   echo Using TOMCAT_HOME: ${TOMCAT_HOME}
-  CLASSPATH=${CLASSPATH}:${TOMCAT_HOME}/lib/stop-tomcat.jar
-  $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} org.apache.tomcat.startup.StopTomcat "$@"
+  $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN stop "$@"
 
   if [ "$1" = "-force" ] ; then
     shift
+    echo "Killing: `cat $TOMCAT_HOME/logs/tomcat.pid`"
     kill -9 `cat $TOMCAT_HOME/logs/tomcat.pid`
   fi
 
 elif [ "$1" = "run" ] ; then 
   shift 
-  echo Using classpath: ${CLASSPATH}
-  echo Using JAVA_HOME: ${JAVA_HOME}
-  echo Using TOMCAT_HOME: ${TOMCAT_HOME}
-  $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN "$@" 
+  # Backward compat
+  if [ "$1" = "enableAdmin" ] ; then
+    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN enableAdmin "$@" 
+  elif  [ "$1" = "-enableAdmin" ] ; then  
+    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN enableAdmin "$@" 
+  else
+    echo Using classpath: ${CLASSPATH}
+    echo Using JAVA_HOME: ${JAVA_HOME}
+    echo Using TOMCAT_HOME: ${TOMCAT_HOME}
+    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN start "$@" 
+  fi
+elif [ "$1" = "enableAdmin" ] ; then 
 
-elif [ "$1" = "ant" ] ; then 
-  shift 
+  $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN enableAdmin "$@"
 
-  $JAVACMD $ANT_OPTS -Dant.home=${TOMCAT_HOME} -Dtomcat.home=${TOMCAT_HOME} org.apache.tools.ant.Main $@
+elif [ "$1" = "estart" ] ; then 
+
+  $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN estart "$@"
 
 elif [ "$1" = "jspc" ] ; then 
-  shift 
+    shift 
+    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN jspc "$@"
 
-  $JAVACMD $JSPC_OPTS -Dtomcat.home=${TOMCAT_HOME} org.apache.jasper.JspC "$@"
+elif [ "$1" = "jspcOrig" ] ; then 
+    shift 
+    CLASSPATH=.
+    for i in ${TOMCAT_HOME}/lib/container/* ${TOMCAT_HOME}/lib/common/* ; do
+	CLASSPATH=${CLASSPATH}:$i
+    done
+    CLASSPATH=${CLASSPATH}:${JAVA_HOME}/lib/tools.jar
+    # Backdoor classpath setting for development purposes when all classes
+	# are compiled into a /classes dir and are not yet jarred.
+    if [ -d ${TOMCAT_HOME}/classes ]; then
+	    CLASSPATH=${TOMCAT_HOME}/classes:${CLASSPATH}
+    fi
+    
+    if [ "$oldCP" != "" ]; then
+	CLASSPATH=${CLASSPATH}:${oldCP}
+    fi
+    (cd $TOMCAT_HOME; $JAVACMD $JSPC_OPTS -Dtomcat.home=${TOMCAT_HOME} org.apache.jasper.JspC "$@" )
 
 elif [ "$1" = "env" ] ; then 
   ## Call it with source tomcat.sh to set the env for tomcat
@@ -238,14 +262,13 @@ elif [ "$1" = "env" ] ; then
 
 else
   echo "Usage:"
-  echo "tomcat (start|env|run|stop|ant)"
+  echo "tomcat (start|env|run|stop|jspc)"
   echo "        start - start tomcat in the background"
   echo "        run   - start tomcat in the foreground"
   echo "        run -wait - wait until tomcat is initialized before returning  "
   echo "            -security - use a SecurityManager when starting"
   echo "        stop  - stop tomcat"
   echo "        env  -  set CLASSPATH and TOMCAT_HOME env. variables"
-  echo "        ant  - run ant script in tomcat context ( classes, directories, etc)"
   echo "        jspc - run jsp pre compiler"
 
   exit 0
