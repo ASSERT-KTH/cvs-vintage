@@ -48,6 +48,7 @@ package org.tigris.scarab.actions;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateAction;
@@ -63,6 +64,7 @@ import org.apache.turbine.services.intake.model.Field;
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.word.IssueSearch;
@@ -71,7 +73,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.17 2001/08/02 17:31:54 jmcnally Exp $
+    @version $Id: Search.java,v 1.18 2001/08/07 22:48:36 elicia Exp $
 */
 public class Search extends TemplateAction
 {
@@ -120,7 +122,14 @@ public class Search extends TemplateAction
             List matchingIssues = search.getMatchingIssues(issueLimit);
             if ( matchingIssues != null && matchingIssues.size() > 0 )
             {
-                user.setTemp("issueList", matchingIssues);
+                List issueIdList = new ArrayList();
+                i = matchingIssues.iterator();
+                for (int j=0;j<matchingIssues.size();j++)
+                {
+                    issueIdList.add(((Issue)matchingIssues.get(j)).getIssueId());
+                }
+                user.setTemp("issueIdList", issueIdList);
+                context.put("issueList", matchingIssues);
                 
                 String template = data.getParameters()
                     .getString(ScarabConstants.NEXT_TEMPLATE, 
