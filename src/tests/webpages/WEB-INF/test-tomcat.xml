@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.27 $" />  
+     <property name="revision" value="$Revision: 1.28 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -349,6 +349,14 @@
              returnCode="${http.protocol} 200"
              goldenFile="${gdir}/SimpleForward.txt" 
        />
+
+      <httpClient>
+          <comment>Dispatch to html error page using error-page web.xml element</comment>
+          <httpRequest path="/test/servlet/error402" />
+          <httpStatusMatch match="402" />
+          <headerMatch name="Content-Type" value="text/html" />
+          <goldenMatch file="${gdir}/error402.html.txt"/>
+      </httpClient>
 
       <!-- Removed: the test calls RequestDispatcher.include(), and 
            the included servlet throws an exception. 

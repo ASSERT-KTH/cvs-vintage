@@ -1,219 +1,207 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<!DOCTYPE web-app
-    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+<!-- edited with XML Spy v3.0 NT (http://www.xmlspy.com) by Hippo (Hippo Ltd.) -->
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
     "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
-
 <web-app>
-    <servlet>
-        <servlet-name>
+	<servlet>
+		<servlet-name>
             servlet1
         </servlet-name>
-        <servlet-class>
+		<servlet-class>
             requestMap.Servlet1
         </servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>
+	</servlet>
+	<servlet>
+		<servlet-name>
             servlet2
         </servlet-name>
-        <servlet-class>
+		<servlet-class>
             requestMap.Servlet2
         </servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>
+	</servlet>
+	<servlet>
+		<servlet-name>
             servlet3
         </servlet-name>
-        <servlet-class>
+		<servlet-class>
             requestMap.Servlet3
         </servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>
+	</servlet>
+	<servlet>
+		<servlet-name>
             servlet4
         </servlet-name>
-        <servlet-class>
+		<servlet-class>
             requestMap.Servlet4
         </servlet-class>
-    </servlet>
-
-        <servlet>
-      <servlet-name>
+	</servlet>
+	<servlet>
+		<servlet-name>
           jspParams1
       </servlet-name>
-      <jsp-file>
+		<jsp-file>
           /jsp/params.jsp
       </jsp-file>
-      <init-param>
-        <param-name>abc</param-name>
-        <param-value>def</param-value>
-      </init-param>
-    </servlet>
-    <servlet>
-      <servlet-name>
+		<init-param>
+			<param-name>abc</param-name>
+			<param-value>def</param-value>
+		</init-param>
+	</servlet>
+	<servlet>
+		<servlet-name>
           jspParams2.jsp
       </servlet-name>
-      <jsp-file>
+		<jsp-file>
           /jsp/params.jsp
       </jsp-file>
-      <init-param>
-        <param-name>xyz</param-name>
-        <param-value>klm</param-value>
-      </init-param>
-    </servlet>
-    <servlet>
-      <servlet-name>
+		<init-param>
+			<param-name>xyz</param-name>
+			<param-value>klm</param-value>
+		</init-param>
+	</servlet>
+	<servlet>
+		<servlet-name>
           jspParams3
       </servlet-name>
-      <jsp-file>
+		<jsp-file>
           /jsp/params.jsp
       </jsp-file>
-      <init-param>
-        <param-name>foo</param-name>
-        <param-value>bar</param-value>
-      </init-param>
-      <init-param>
-        <param-name>foo1</param-name>
-        <param-value>bar1</param-value>
-      </init-param>
-    </servlet>
-    
-     <servlet-mapping>
-        <servlet-name>
-           jspParams1            
-        </servlet-name>
-        <url-pattern>
-            /jsp/jspParams1
-        </url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>
-           jspParams1            
-        </servlet-name>
-        <url-pattern>
-            /jsp/jspParams11
-        </url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>
-           jspParams2.jsp            
-        </servlet-name>
-        <url-pattern>
-            /jsp/jspParams2
-        </url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>
-           jspParams2.jsp            
-        </servlet-name>
-        <url-pattern>
-            /jsp/jspParams2.jsp
-        </url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>
-           jspParams3            
-        </servlet-name>
-        <url-pattern>
-            /jsp/jspParams3
-        </url-pattern>
-    </servlet-mapping>
-
-
-
-    <servlet-mapping>
-        <servlet-name>
-            servlet1
-        </servlet-name>
-        <url-pattern>
-            /foo/bar/*
-        </url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>
-            servlet2
-        </servlet-name>
-        <url-pattern>
-            /baz/*
-        </url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>
-            servlet3
-        </servlet-name>
-        <url-pattern>
-            /catalog
-        </url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>
-            servlet4
-        </servlet-name>
-        <url-pattern>
-            *.bop
-        </url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>
+		<init-param>
+			<param-name>foo</param-name>
+			<param-value>bar</param-value>
+		</init-param>
+		<init-param>
+			<param-name>foo1</param-name>
+			<param-value>bar1</param-value>
+		</init-param>
+	</servlet>
+	<servlet>
+		<servlet-name>
             servletParam1
         </servlet-name>
-        <servlet-class>
+		<servlet-class>
             ServletParam
         </servlet-class>
-        <init-param>
-            <param-name>param1</param-name>
-            <param-value>value1</param-value>
-        </init-param>
-        <init-param>
-            <param-name>param2</param-name>
-            <param-value>value2</param-value>
-        </init-param>
-    </servlet>          
-
-    <servlet>
-        <servlet-name>
+		<init-param>
+			<param-name>param1</param-name>
+			<param-value>value1</param-value>
+		</init-param>
+		<init-param>
+			<param-name>param2</param-name>
+			<param-value>value2</param-value>
+		</init-param>
+	</servlet>
+	<servlet>
+		<servlet-name>
             servletParam2
         </servlet-name>
-        <servlet-class>
+		<servlet-class>
             ServletParam
         </servlet-class>
-        <init-param>
-            <param-name>param3</param-name>
-            <param-value>value3</param-value>
-        </init-param>
-        <init-param>
-            <param-name>param4</param-name>
-            <param-value>value4</param-value>
-        </init-param>
-    </servlet>          
-
-    <security-constraint>
-      <web-resource-collection>
-         <web-resource-name>a</web-resource-name>
-         <url-pattern>/foo1/*</url-pattern>
-         <url-pattern>/bar1/*</url-pattern>
-         <http-method>GET</http-method>
-         <http-method>POST</http-method>
-      </web-resource-collection>
-
-      <web-resource-collection>
-         <web-resource-name>a</web-resource-name>
-         <url-pattern>/foo2/*</url-pattern>
-         <url-pattern>/bar2/*</url-pattern>
-      </web-resource-collection>
-
-      <auth-constraint>
-         <role-name>manager</role-name>
-         <role-name>role1</role-name>
-      </auth-constraint>
-
-      <user-data-constraint>
-         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-      </user-data-constraint>
-    </security-constraint>
+		<init-param>
+			<param-name>param3</param-name>
+			<param-value>value3</param-value>
+		</init-param>
+		<init-param>
+			<param-name>param4</param-name>
+			<param-value>value4</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>
+           jspParams1            
+        </servlet-name>
+		<url-pattern>
+            /jsp/jspParams1
+        </url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>
+           jspParams1            
+        </servlet-name>
+		<url-pattern>
+            /jsp/jspParams11
+        </url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>
+           jspParams2.jsp            
+        </servlet-name>
+		<url-pattern>
+            /jsp/jspParams2
+        </url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>
+           jspParams2.jsp            
+        </servlet-name>
+		<url-pattern>
+            /jsp/jspParams2.jsp
+        </url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>
+           jspParams3            
+        </servlet-name>
+		<url-pattern>
+            /jsp/jspParams3
+        </url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>
+            servlet1
+        </servlet-name>
+		<url-pattern>
+            /foo/bar/*
+        </url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>
+            servlet2
+        </servlet-name>
+		<url-pattern>
+            /baz/*
+        </url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>
+            servlet3
+        </servlet-name>
+		<url-pattern>
+            /catalog
+        </url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>
+            servlet4
+        </servlet-name>
+		<url-pattern>
+            *.bop
+        </url-pattern>
+	</servlet-mapping>
+	<error-page>
+		<error-code>402</error-code>
+		<location>/error402.html</location>
+	</error-page>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>a</web-resource-name>
+			<url-pattern>/foo1/*</url-pattern>
+			<url-pattern>/bar1/*</url-pattern>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+		</web-resource-collection>
+		<web-resource-collection>
+			<web-resource-name>a</web-resource-name>
+			<url-pattern>/foo2/*</url-pattern>
+			<url-pattern>/bar2/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>manager</role-name>
+			<role-name>role1</role-name>
+		</auth-constraint>
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
 </web-app>
