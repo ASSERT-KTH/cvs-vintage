@@ -26,6 +26,11 @@
 
         <AutoWebApp dir="webapps" host="DEFAULT" />
 
+        <AutoDeploy source="internal" target="internal" 
+		    redeploy="true" />
+
+        <AutoWebApp dir="internal" host="DEFAULT" trusted="true"/>
+
         <PolicyLoader securityManagerClass="java.lang.SecurityManager"
 		      policyFile="conf/tomcat.policy" />
 
@@ -148,7 +153,10 @@
 
         <SessionId cookiesFirst="true" noCookies="false" /> 
 
-
+        <!-- Uncoment for the automatic apache config generator 
+        <ApacheConfig forwardAll="true" useJkMount="true"
+		      noRoot="false" />
+          -->
 
       <!-- ==================== Connectors ==================== -->
 
