@@ -1,4 +1,4 @@
-// $Id: ActionNewEvent.java,v 1.3 2004/06/01 19:31:20 mvw Exp $
+// $Id: ActionNewEvent.java,v 1.4 2004/07/17 13:10:31 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.argouml.ui.targetmanager.TargetManager;
 
 /**
+ * Abstract action to create new events.
  * @since Dec 15, 2002
  * @author jaap.branderhorst@xs4all.nl
  */

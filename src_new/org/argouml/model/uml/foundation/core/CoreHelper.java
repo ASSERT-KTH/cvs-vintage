@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.77 2004/02/29 12:35:40 linus Exp $
+// $Id: CoreHelper.java,v 1.78 2004/07/17 13:10:26 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,6 +50,7 @@ import ru.novosoft.uml.behavior.use_cases.MUseCase;
 import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MAssociationEnd;
 import ru.novosoft.uml.foundation.core.MAttribute;
+import ru.novosoft.uml.foundation.core.MBehavioralFeature;
 import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MComponent;
@@ -525,6 +526,26 @@ public class CoreHelper {
         }
         return list;
     }
+    
+    /**
+     * Returns all behavioral features of some classifier.
+     * @param clazz The classifier
+     * @return
+     */
+    public Collection getBehavioralFeatures(Object clazz) {
+        if (ModelFacade.isAClassifier(clazz)) {
+        List ret = new ArrayList();
+            Iterator it = ModelFacade.getFeatures(clazz).iterator();
+        while (it.hasNext()) {
+            Object o = it.next();
+            if (ModelFacade.isABehavioralFeature(o)) {
+                ret.add(o);
+            }      
+        }        
+        return ret;
+        } else
+            throw new IllegalArgumentException("Argument is not a classifier");
+    }
 
     /**
      * Returns all behavioralfeatures found in this classifier and its
@@ -539,7 +560,7 @@ public class CoreHelper {
             Iterator it = clazz.getFeatures().iterator();
             while (it.hasNext()) {
                 Object o = it.next();
-                if (!(o instanceof MStructuralFeature)) {
+                if (o instanceof MBehavioralFeature) {
                     features.add(o);
                 }
             }
@@ -1102,7 +1123,7 @@ public class CoreHelper {
         }
         if (relation instanceof MInclude) {
             MInclude include = (MInclude) relation;
-            return include.getAddition();
+            return ModelFacade.getBase(include);
         }
         return null;
     }
@@ -1176,7 +1197,7 @@ public class CoreHelper {
         }
         if (relation instanceof MInclude) {
             MInclude include = (MInclude) relation;
-            return include.getBase();
+            return ModelFacade.getAddition(include);
         }
         return null;
     }

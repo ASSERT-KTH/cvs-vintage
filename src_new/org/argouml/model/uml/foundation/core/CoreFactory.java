@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.66 2004/04/30 17:38:30 mvw Exp $
+// $Id: CoreFactory.java,v 1.67 2004/07/17 13:10:26 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1436,7 +1436,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
 	if (o instanceof MEvent) {
 	    MEvent event = (MEvent) o;
 	    MParameter res = buildParameter();
-	    res.setKind(MParameterDirectionKind.INOUT);
+	    res.setKind(MParameterDirectionKind.IN);
 	    //    removing this next line solves issue 2209
 	    //res.setNamespace(event.getNamespace()); 
             event.addParameter(res);

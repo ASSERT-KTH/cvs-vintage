@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.41 2004/07/02 16:15:19 mvw Exp $
+// $Id: UMLActivityDiagram.java,v 1.42 2004/07/17 13:10:28 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
+import org.argouml.uml.diagram.activity.ActivityDiagramGraphModel;
 import org.argouml.uml.diagram.state.StateDiagramGraphModel;
 import org.argouml.uml.diagram.state.ui.ActionCreatePseudostate;
 import org.argouml.uml.diagram.state.ui.StateDiagramRenderer;
@@ -73,6 +74,7 @@ public class UMLActivityDiagram extends UMLDiagram {
     protected static Action _actionBranchPseudoState;
     protected static Action _actionForkPseudoState;
     protected static Action _actionJoinPseudoState;
+    // protected static Action _actionNewSwimlane;
 
     protected static Action _actionTransition =
         new CmdSetMode(
@@ -116,6 +118,8 @@ public class UMLActivityDiagram extends UMLDiagram {
 	_actionJoinPseudoState =
 	    new ActionCreatePseudostate(ModelFacade.JOIN_PSEUDOSTATEKIND,
 					"Join");
+	
+	//_actionNewSwimlane = new CmdCreateNode(ModelFacade.PARTITION, "Create a new swimlane");
 
     }
 
@@ -192,7 +196,7 @@ public class UMLActivityDiagram extends UMLDiagram {
             throw new IllegalArgumentException();
 
         super.setNamespace(m);
-        StateDiagramGraphModel gm = new StateDiagramGraphModel();
+        ActivityDiagramGraphModel gm = new ActivityDiagramGraphModel();
         gm.setNamespace(m);
         if (agraph != null) {
             gm.setMachine(agraph);
@@ -244,6 +248,7 @@ public class UMLActivityDiagram extends UMLDiagram {
 	    _actionBranchPseudoState,
 	    _actionForkPseudoState,
 	    _actionJoinPseudoState,
+	    //_actionNewSwimlane,
 	    null,
 	    ActionAddNote.SINGLETON,
 	};

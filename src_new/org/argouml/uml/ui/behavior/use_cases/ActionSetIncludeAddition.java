@@ -1,4 +1,4 @@
-// $Id: ActionSetIncludeAddition.java,v 1.8 2004/02/08 12:45:27 mvw Exp $
+// $Id: ActionSetIncludeAddition.java,v 1.9 2004/07/17 13:10:32 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,19 +55,29 @@ public class ActionSetIncludeAddition extends UMLChangeAction {
         super.actionPerformed(e);
         Object source = e.getSource();
         Object newAddition = null;
-        Object inc = null;
+        Object oldBase = null;
+        Object include = null;
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 combo = (UMLComboBox2) source;
             newAddition = /*(MUseCase)*/ combo.getSelectedItem();
-            if (org.argouml.model.ModelFacade.isAInclude(combo.getTarget())) {
-                inc = /*(MInclude)*/ combo.getTarget();
+            Object o = combo.getTarget();
+            if (org.argouml.model.ModelFacade.isAInclude(o)) {
+                include = /*(MInclude)*/ o;
+                o = combo.getSelectedItem();
+                if (org.argouml.model.ModelFacade.isAUseCase(o)) {
+                    newAddition = /*(MUseCase)*/ o;
+                    oldBase = ModelFacade.getAddition(include);
+                    if (newAddition != oldBase) {
+                        ModelFacade.setAddition(include, newAddition);
+                    }
+                } else {
+                    if (o != null && o.equals("")) {
+                        ModelFacade.setAddition(include, null);
+                    }
+                }
+
             }
-        }
-        Object oldAddition = ModelFacade.getAddition(inc);
-        // oldbase can never be null
-        if (oldAddition == null || newAddition == null) throw new IllegalStateException("Base of inc is null!");
-        if (oldAddition != newAddition) {
-            ModelFacade.setAddition(inc, newAddition);
+
         }
     }
 

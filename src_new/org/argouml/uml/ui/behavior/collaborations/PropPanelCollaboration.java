@@ -1,4 +1,4 @@
-// $Id: PropPanelCollaboration.java,v 1.17 2004/02/08 12:45:26 mvw Exp $
+// $Id: PropPanelCollaboration.java,v 1.18 2004/07/17 13:10:31 kataka Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,11 +51,12 @@ public class PropPanelCollaboration extends PropPanelNamespace {
         super("Collaboration", ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-        addField(Translator.localize("UMLMenu", "label.stereotype"),
-            new UMLComboBoxNavigator(this, Translator.localize("UMLMenu",
-							 "tooltip.nav-stereo"),
-				     getStereotypeBox()));
-        addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceScroll());
+//        addField(Translator.localize("UMLMenu", "label.stereotype"),
+//            new UMLComboBoxNavigator(this, Translator.localize("UMLMenu",
+//							 "tooltip.nav-stereo"),
+//				     getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
+       addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceScroll());
 
         UMLLinkedList classifierList =
 	    new UMLLinkedList(new UMLCollaborationRepresentedClassifierListModel());

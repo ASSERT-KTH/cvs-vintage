@@ -1,4 +1,4 @@
-// $Id: PropPanelExtensionPoint.java,v 1.25 2003/11/25 10:58:17 jhraigniac Exp $
+// $Id: PropPanelExtensionPoint.java,v 1.26 2004/07/17 13:10:32 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,8 +69,9 @@ public class PropPanelExtensionPoint extends PropPanelModelElement {
         // PropPanelModelElement.
 
         addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-        addField(Translator.localize("UMLMenu", "label.stereotype"),
-            new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+//        addField(Translator.localize("UMLMenu", "label.stereotype"),
+//            new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
 
         // Our location (a String). We can pass in the get and set methods from
         // NSUML associated with the NSUML type. Allow the location label to

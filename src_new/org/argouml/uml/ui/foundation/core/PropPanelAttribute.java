@@ -1,4 +1,4 @@
-// $Id: PropPanelAttribute.java,v 1.40 2004/03/25 22:30:02 mvw Exp $
+// $Id: PropPanelAttribute.java,v 1.41 2004/07/17 13:10:41 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
 // Refactored by: jaap.branderhorst@xs4all.nl
-// $Id: PropPanelAttribute.java,v 1.40 2004/03/25 22:30:02 mvw Exp $
+// $Id: PropPanelAttribute.java,v 1.41 2004/07/17 13:10:41 kataka Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -46,12 +46,13 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
 	super("Attribute", ConfigLoader.getTabPropsOrientation());
 
 	addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-	addField(
-	        Translator.localize("UMLMenu", "label.stereotype"),
-		 new UMLComboBoxNavigator(
-					  this,
-		         Translator.localize("UMLMenu", "tooltip.nav-stereo"),
-					  getStereotypeBox()));
+//	addField(
+//	        Translator.localize("UMLMenu", "label.stereotype"),
+//		 new UMLComboBoxNavigator(
+//					  this,
+//		         Translator.localize("UMLMenu", "tooltip.nav-stereo"),
+//					  getStereotypeBox()));
+	addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
 	addField(Translator.localize("UMLMenu", "label.owner"), getOwnerScroll());
 	addField(
 	        Translator.localize("UMLMenu", "label.multiplicity"),

@@ -1,4 +1,4 @@
-// $Id: FigInclude.java,v 1.9 2004/01/29 07:41:42 linus Exp $
+// $Id: FigInclude.java,v 1.10 2004/07/17 13:10:30 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigInclude.java
 // Classes: FigInclude
 // Original Author: mail@jeremybennett.com
-// $Id: FigInclude.java,v 1.9 2004/01/29 07:41:42 linus Exp $
+// $Id: FigInclude.java,v 1.10 2004/07/17 13:10:30 kataka Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Written to support
 // Include relationships.
@@ -155,16 +155,6 @@ public class FigInclude extends FigEdgeModelElement {
     // Event handlers
     //
     ///////////////////////////////////////////////////////////////////////////
-
-    /**
-     * <p>This is called aftern any part of the UML MModelElement has
-     *   changed. This method automatically updates things specific to this
-     *   fig. Subclasses should override and update other parts.</p>
-     *
-     * <p>This implementation does nothing.</p>
-     */
-
-    protected void modelChanged(MElementEvent e) { }
 
     public void paint(Graphics g) {
         endArrow.setLineColor(getLineColor());

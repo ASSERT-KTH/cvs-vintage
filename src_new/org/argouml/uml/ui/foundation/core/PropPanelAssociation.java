@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociation.java,v 1.34 2004/01/06 21:47:17 jjones Exp $
+// $Id: PropPanelAssociation.java,v 1.35 2004/07/17 13:10:41 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,7 +64,8 @@ public class PropPanelAssociation extends PropPanelRelationship {
     public PropPanelAssociation() {
 	this("Association", ConfigLoader.getTabPropsOrientation());
 	addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-	addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+	// addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+	addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
 	addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
         addField(Translator.localize("UMLMenu", "label.modifiers"), _modifiersPanel);
 

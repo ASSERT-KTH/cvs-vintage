@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.47 2004/06/23 07:02:34 linus Exp $
+// $Id: Notation.java,v 1.48 2004/07/17 13:10:25 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -292,6 +292,10 @@ public final class Notation implements PropertyChangeListener {
 
     protected static String generateAction(NotationName notation, Object m) {
         return getProvider(notation).generateAction(m);
+    }
+    
+    protected static String generateActionState(NotationName notation, Object m) {
+        return getProvider(notation).generateActionState(m);
     }
 
     protected static String generateGuard(NotationName notation,
@@ -595,6 +599,9 @@ public final class Notation implements PropertyChangeListener {
         if (ModelFacade.isAMultiplicity(o)) {
             return SINGLETON.generateMultiplicity(nn, o);
 	}
+        if (ModelFacade.isAActionState(o)) {
+            return SINGLETON.generateActionState(nn, o);
+        }
         if (ModelFacade.isAState(o)) {
             return SINGLETON.generateState(nn, o);
 	}

@@ -1,4 +1,4 @@
-// $Id: UMLModelElementStereotypeComboBoxModel.java,v 1.18 2004/06/24 06:25:46 linus Exp $
+// $Id: UMLModelElementStereotypeComboBoxModel.java,v 1.19 2004/07/17 13:10:42 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -115,7 +115,8 @@ public class UMLModelElementStereotypeComboBoxModel extends UMLComboBoxModel2 {
 	    paths,
 	    ExtensionMechanismsHelper.getHelper()
 	        .getAllPossibleStereotypes(elem));
-        setElements(elements);
+        setElements( ExtensionMechanismsHelper.getHelper()
+	        .getAllPossibleStereotypes(elem));
     }   
 
     /**

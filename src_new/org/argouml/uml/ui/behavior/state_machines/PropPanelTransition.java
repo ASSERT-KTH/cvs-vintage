@@ -1,4 +1,4 @@
-// $Id: PropPanelTransition.java,v 1.23 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: PropPanelTransition.java,v 1.24 2004/07/17 13:10:31 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelTransition.java
 // Classes: PropPanelTransition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelTransition.java,v 1.23 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: PropPanelTransition.java,v 1.24 2004/07/17 13:10:31 kataka Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -51,7 +51,8 @@ public class PropPanelTransition extends PropPanelModelElement {
         super("Transition", ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-        addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        // addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
         JList statemachineList = new UMLLinkedList(new UMLTransitionStatemachineListModel());
         statemachineList.setVisibleRowCount(1);
         addField(Translator.localize("UMLMenu", "label.statemachine"), new JScrollPane(statemachineList));

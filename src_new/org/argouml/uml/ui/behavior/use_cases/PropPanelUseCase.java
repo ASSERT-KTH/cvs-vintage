@@ -1,4 +1,4 @@
-// $Id: PropPanelUseCase.java,v 1.42 2004/01/06 21:47:16 jjones Exp $
+// $Id: PropPanelUseCase.java,v 1.43 2004/07/17 13:10:32 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.42 2004/01/06 21:47:16 jjones Exp $
+// $Id: PropPanelUseCase.java,v 1.43 2004/07/17 13:10:32 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -73,7 +73,8 @@ public class PropPanelUseCase extends PropPanelClassifier {
         super("UseCase", ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-    	addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+    	// addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
     	addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
 	
@@ -116,6 +117,7 @@ public class PropPanelUseCase extends PropPanelClassifier {
                             localize("New Extension Point"),
                             "newExtensionPoint",
                             null);
+        new PropPanelButton(this, buttonPanel, _receptionIcon, Translator.localize("UMLMenu", "button.new-reception"), getActionNewReception());
         new PropPanelButton(this, buttonPanel, _deleteIcon,
                             localize("Delete"), "removeElement",
                             null);

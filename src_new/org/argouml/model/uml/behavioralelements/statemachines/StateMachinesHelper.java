@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.22 2004/06/23 07:02:42 linus Exp $
+// $Id: StateMachinesHelper.java,v 1.23 2004/07/17 13:10:26 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.model.uml.behavioralelements.statemachines;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
@@ -280,6 +281,27 @@ public class StateMachinesHelper {
             }
         }
         return null;
+    }
+    
+    /**
+     * Returns all substates some composite state contains.
+     * @param compState
+     * @return
+     */
+    public Collection getAllSubStates(Object compState) {
+        if (ModelFacade.isACompositeState(compState)) {
+            List retList = new ArrayList();
+            Iterator it = ModelFacade.getSubvertices(compState).iterator();
+            while (it.hasNext()) {
+                Object subState = it.next();
+                if (ModelFacade.isACompositeState(subState)) {
+                    retList.addAll(getAllSubStates(subState));
+                }
+                retList.add(subState);
+            }
+            return retList;
+        } else
+            throw new IllegalArgumentException("Argument is not a composite state");
     }
 
 }

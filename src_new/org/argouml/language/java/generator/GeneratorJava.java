@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.95 2004/07/05 08:38:25 d00mst Exp $
+// $Id: GeneratorJava.java,v 1.96 2004/07/17 13:10:25 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2036,5 +2036,12 @@ public class GeneratorJava
     }
 
     public boolean isModuleEnabled() { return true; }
+    
+    /**
+     * @see org.argouml.application.api.NotationProvider2#generateActionState(java.lang.Object)
+     */
+    public String generateActionState(Object actionState) {       
+        return generateState(actionState);
+    }
 
 }

@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.39 2004/02/29 12:35:45 linus Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.40 2004/07/17 13:10:29 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -382,14 +382,10 @@ public class UseCaseDiagramGraphModel
             end0 = ModelFacade.getBase(edge);
             end1 = ModelFacade.getExtension(edge);
         }
-        else if (ModelFacade.isAInclude(edge)) {
+        else if (ModelFacade.isAInclude(edge)) {           
 
-            // There is a bug in NSUML which gets the addition and base
-            // relationships back to front for include relationships. Solve
-            // by reversing their accessors in the code
-
-            end0 = ModelFacade.getAddition(edge);
-            end1 = ModelFacade.getBase(edge);
+            end0 = ModelFacade.getBase(edge);
+            end1 = ModelFacade.getAddition(edge);
         }
         else if (ModelFacade.isADependency(edge)) {
 

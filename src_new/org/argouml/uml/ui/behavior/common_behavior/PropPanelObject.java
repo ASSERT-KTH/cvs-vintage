@@ -1,4 +1,4 @@
-// $Id: PropPanelObject.java,v 1.33 2004/05/17 07:53:16 linus Exp $
+// $Id: PropPanelObject.java,v 1.34 2004/07/17 13:10:31 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,10 +81,11 @@ public class PropPanelObject extends PropPanelModelElement {
 			 Translator.localize("tooltip.nav-class"),
 			 clsComboBox));
 
-	addField(Translator.localize("label.stereotype"),
-		 new UMLComboBoxNavigator(this,
-			 Translator.localize("tooltip.nav-stereo"),
-			 getStereotypeBox()));
+//	addField(Translator.localize("label.stereotype"),
+//		 new UMLComboBoxNavigator(this,
+//			 Translator.localize("tooltip.nav-stereo"),
+//			 getStereotypeBox()));
+	addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
 
 	addLinkField(Translator.localize("label.namespace"),
 		     getNamespaceComboBox());

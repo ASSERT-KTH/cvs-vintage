@@ -1,4 +1,4 @@
-// $Id: PropPanelFlow.java,v 1.9 2003/11/25 11:38:55 jhraigniac Exp $
+// $Id: PropPanelFlow.java,v 1.10 2004/07/17 13:10:41 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,8 @@ public class PropPanelFlow extends PropPanelRelationship {
 
     private void initialize() {
         addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-        addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        // addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
         addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceScroll());
         addField(Translator.localize("UMLMenu", "label.constraints"), getConstraintScroll());
 

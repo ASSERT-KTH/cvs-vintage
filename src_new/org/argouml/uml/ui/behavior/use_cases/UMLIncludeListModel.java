@@ -1,4 +1,4 @@
-// $Id: UMLIncludeListModel.java,v 1.18 2004/04/27 08:20:14 thn Exp $
+// $Id: UMLIncludeListModel.java,v 1.19 2004/07/17 13:10:41 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -187,13 +187,6 @@ public class UMLIncludeListModel extends UMLModelElementListModel  {
      * In this current implementation, more rigorously checks it is
      * formatting an extend relationship.<p>
      *
-     * <em>Note</em>. There is a bug in NSUML, where the "include" and
-     * "include2" associations of a use case are back to front, i.e
-     * "include" is used as the opposite end of "addition" to point to
-     * an including use case, rather than an included use case. Fixed
-     * within the include relationship, rather than the use case, by
-     * reversing the meaning of the "base" and "association"
-     * associations in the code.<p>
      *
      * @param element  the model element to format
      *
@@ -203,12 +196,9 @@ public class UMLIncludeListModel extends UMLModelElementListModel  {
 
         Object value = _nullLabel;
 
-        // Note that we cope with the NSUML bug by using the getBase() accessor
-        // rather than the getAddition() accessor to reverse the problem.
-
         if (ModelFacade.isAInclude(element)) {
             Object include = /*(MInclude)*/ element;
-            Object target  = ModelFacade.getBase(include);
+            Object target  = ModelFacade.getAddition(include);
 
             if (target != null) {
                 value = super.formatElement(target);

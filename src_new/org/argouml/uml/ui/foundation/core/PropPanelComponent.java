@@ -1,4 +1,4 @@
-// $Id: PropPanelComponent.java,v 1.31 2004/03/25 22:30:02 mvw Exp $
+// $Id: PropPanelComponent.java,v 1.32 2004/07/17 13:10:41 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ import org.argouml.uml.ui.UMLComboBoxNavigator;
 /**
  * PropPanel for a UML component.
  *
- * <p>$Id: PropPanelComponent.java,v 1.31 2004/03/25 22:30:02 mvw Exp $
+ * <p>$Id: PropPanelComponent.java,v 1.32 2004/07/17 13:10:41 kataka Exp $
  *
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
@@ -48,7 +48,8 @@ public class PropPanelComponent extends PropPanelClassifier {
 	Class mclass = (Class)ModelFacade.COMPONENT;
 
 	addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-	addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+	// addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+	addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
 	addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 	addField(Translator.localize("UMLMenu", "label.modifiers"), _modifiersPanel);
 
@@ -63,6 +64,7 @@ public class PropPanelComponent extends PropPanelClassifier {
 	addField(Translator.localize("UMLMenu", "label.supplier-dependencies"), getSupplierDependencyScroll());
 
 	new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateUp", null);
+	new PropPanelButton(this, buttonPanel, _receptionIcon, Translator.localize("UMLMenu", "button.new-reception"), getActionNewReception());
 	new PropPanelButton(this, buttonPanel, _deleteIcon, Translator.localize("UMLMenu", "button.delete-class"), "removeElement", null);
 
 

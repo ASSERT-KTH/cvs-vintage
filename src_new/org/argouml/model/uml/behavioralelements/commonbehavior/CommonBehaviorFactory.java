@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorFactory.java,v 1.27 2004/06/23 07:02:41 linus Exp $
+// $Id: CommonBehaviorFactory.java,v 1.28 2004/07/17 13:10:26 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -429,18 +429,14 @@ public class CommonBehaviorFactory extends AbstractUmlModelFactory {
     }
 
     /**
-     * Builds a reception belonging to some signal
+     * Builds a reception belonging to some classifier
      */
-    public MReception buildReception(Object asignal) {
-        MSignal signal = (MSignal) asignal;
-        if (signal == null)
-            return null;
-        MReception reception = createReception();
-        reception.setSignal(signal);
-        if (signal.getNamespace() != null) {
-            reception.setNamespace(signal.getNamespace());
+    public Object buildReception(Object aClassifier) {
+        Object reception = createReception();
+        if (ModelFacade.isAClassifier(aClassifier)) {           
+            ModelFacade.setOwner(reception, aClassifier);
         }
-        return reception;
+        return reception;        
     }
 
     public void deleteAction(Object elem) {

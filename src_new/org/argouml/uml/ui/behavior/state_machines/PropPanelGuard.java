@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.18 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: PropPanelGuard.java,v 1.19 2004/07/17 13:10:31 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelGuard.java,v 1.18 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: PropPanelGuard.java,v 1.19 2004/07/17 13:10:31 kataka Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -63,7 +63,8 @@ public class PropPanelGuard extends PropPanelModelElement {
         super("Guard", ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-        addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        // addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
         addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceScroll());
 
         JList transitionList = new UMLLinkedList(new UMLGuardTransitionListModel());

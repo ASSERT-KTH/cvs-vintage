@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.44 2004/02/08 12:45:28 mvw Exp $
+// $Id: PropPanelPackage.java,v 1.45 2004/07/17 13:10:42 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,7 +74,8 @@ public class PropPanelPackage extends PropPanelNamespace  {
      */
     protected void placeElements() {
         addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-        addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        // addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
         addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
         addField(Translator.localize("UMLMenu", "label.visibility"), getNamespaceVisibilityPanel());

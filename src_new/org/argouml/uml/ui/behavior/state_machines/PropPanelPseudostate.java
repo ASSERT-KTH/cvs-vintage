@@ -1,4 +1,4 @@
-// $Id: PropPanelPseudostate.java,v 1.22 2004/07/02 16:15:19 mvw Exp $
+// $Id: PropPanelPseudostate.java,v 1.23 2004/07/17 13:10:31 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelPseudostate.java
 // Classes: PropPanelPseudostate
 // Original Author: your email address here
-// $Id: PropPanelPseudostate.java,v 1.22 2004/07/02 16:15:19 mvw Exp $
+// $Id: PropPanelPseudostate.java,v 1.23 2004/07/17 13:10:31 kataka Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -48,9 +48,10 @@ public class PropPanelPseudostate extends PropPanelStateVertex {
 
         addField(Translator.localize("UMLMenu", "label.name"),
                 getNameTextField());
-        addField(Translator.localize("UMLMenu", "label.stereotype"),
-                new UMLComboBoxNavigator(this, Translator.localize("UMLMenu",
-                        "tooltip.nav-stereo"), getStereotypeBox()));
+//        addField(Translator.localize("UMLMenu", "label.stereotype"),
+//                new UMLComboBoxNavigator(this, Translator.localize("UMLMenu",
+//                        "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
         addField(Translator.localize("UMLMenu", "label.container"),
                 containerScroll);
 

@@ -1,4 +1,4 @@
-// $Id: GoNamespaceToDiagram.java,v 1.8 2004/06/24 06:25:40 linus Exp $
+// $Id: GoNamespaceToDiagram.java,v 1.9 2004/07/17 13:10:28 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
+import org.argouml.uml.diagram.activity.ui.UMLActivityDiagram;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
@@ -58,20 +59,14 @@ public class GoNamespaceToDiagram extends AbstractPerspectiveRule {
             Iterator it = proj.getDiagrams().iterator();
             while (it.hasNext()) {
                 UMLDiagram diagram = (UMLDiagram) it.next();
-                if (diagram instanceof UMLStateDiagram) {
-                    UMLStateDiagram stateDiagram = (UMLStateDiagram) diagram;
-                    Object stateMachine = stateDiagram.getStateMachine();
-                    Object context = ModelFacade.getContext(stateMachine);
-                    if (ModelFacade.isABehavioralFeature(context)) {
-                    	continue;
-                    }
-                }       
                 // sequence diagrams are not shown as children of the
                 // collaboration that they show but as children of the
                 // classifier/operation the collaboration represents
-                if (diagram instanceof UMLSequenceDiagram) {
-                	continue;
-                }         
+                // statediagrams and activitydiagrams are shown as children 
+                // of the statemachine of activitygraph they belong to.
+                if (diagram instanceof UMLStateDiagram || diagram instanceof UMLActivityDiagram || diagram instanceof UMLSequenceDiagram) {
+                    continue;
+                }                      
                 if (diagram.getNamespace() == namespace) {
                     returnList.add(diagram);
                 }

@@ -1,4 +1,4 @@
-// $Id: PerspectiveManager.java,v 1.14 2004/06/23 07:02:45 linus Exp $
+// $Id: PerspectiveManager.java,v 1.15 2004/07/17 13:10:26 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -242,8 +242,10 @@ public class PerspectiveManager {
         packagePerspective.addRule(new GoOperationToCollaborationDiagram());
         packagePerspective.addRule(new GoBehavioralFeatureToStateMachine());
         packagePerspective.addRule(new GoBehavioralFeatureToStateDiagram());
+        // works for both statediagram as activitygraph
+        packagePerspective.addRule(new GoStatemachineToDiagram()); 
         packagePerspective.addRule(new GoMachineToState());
-        packagePerspective.addRule(new GoCompositeStateToSubvertex());
+        packagePerspective.addRule(new GoCompositeStateToSubvertex());        
         packagePerspective.addRule(new GoStateToInternalTrans());
         packagePerspective.addRule(new GoStateToDoActivity());
         packagePerspective.addRule(new GoStateToEntry());

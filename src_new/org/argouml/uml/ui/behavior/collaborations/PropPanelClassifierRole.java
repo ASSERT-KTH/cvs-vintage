@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.36 2004/02/28 12:29:44 linus Exp $
+// $Id: PropPanelClassifierRole.java,v 1.37 2004/07/17 13:10:31 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.36 2004/02/28 12:29:44 linus Exp $
+// $Id: PropPanelClassifierRole.java,v 1.37 2004/07/17 13:10:31 kataka Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -60,11 +60,12 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 
 	addField(Translator.localize("UMLMenu", "label.name"),
 		 getNameTextField());
-	addField(Translator.localize("UMLMenu", "label.stereotype"),
-		 new UMLComboBoxNavigator(this,
-					  Translator.localize("UMLMenu",
-							"tooltip.nav-stereo"),
-					  getStereotypeBox()));
+//	addField(Translator.localize("UMLMenu", "label.stereotype"),
+//		 new UMLComboBoxNavigator(this,
+//					  Translator.localize("UMLMenu",
+//							"tooltip.nav-stereo"),
+//					  getStereotypeBox()));
+	addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
 	addField(Translator.localize("UMLMenu", "label.namespace"),
 		 getNamespaceScroll());
 
@@ -116,6 +117,7 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 					  "button.go-up"),
 			    "navigateUp",
 			    null);
+	new PropPanelButton(this, buttonPanel, _receptionIcon, Translator.localize("UMLMenu", "button.new-reception"), getActionNewReception());
 	new PropPanelButton(this, buttonPanel, _deleteIcon,
 			    localize("Delete"),
 			    "removeElement",

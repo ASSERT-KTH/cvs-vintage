@@ -1,4 +1,4 @@
-// $Id: ActionRemoveModelElement.java,v 1.8 2003/06/30 21:59:34 linus Exp $
+// $Id: ActionRemoveModelElement.java,v 1.9 2004/07/17 13:10:30 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,7 @@ public class ActionRemoveModelElement extends AbstractActionRemoveElement {
         super.actionPerformed(e);
         Project p = ProjectManager.getManager().getCurrentProject();
         if (getObjectToRemove() != null && ActionRemoveFromModel.sureRemove(getObjectToRemove()))
-            p.moveToTrash(getTarget());
+            p.moveToTrash(getObjectToRemove());
         setObjectToRemove(null);
     }
 

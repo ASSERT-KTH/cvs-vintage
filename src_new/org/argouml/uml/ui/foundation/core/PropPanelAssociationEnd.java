@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.40 2004/01/06 21:47:17 jjones Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.41 2004/07/17 13:10:41 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -160,7 +160,8 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
 
     protected void positionStandardControls() {
         addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-        addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        // addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
     }
 
     protected void positionControls() {

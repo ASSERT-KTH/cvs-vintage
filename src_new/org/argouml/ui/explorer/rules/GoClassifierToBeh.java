@@ -1,4 +1,4 @@
-// $Id: GoClassifierToBeh.java,v 1.5 2004/04/22 21:43:21 d00mst Exp $
+// $Id: GoClassifierToBeh.java,v 1.6 2004/07/17 13:10:28 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,15 @@ import java.util.Set;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.foundation.core.CoreHelper;
 
+/**
+ * Go rule to navigate from a classifier to the behavioral features owned by that classifier
+ * 
+ *
+ * @since Jul 13, 2004
+ * @author jaap.branderhorst@xs4all.nl
+ */
 public class GoClassifierToBeh extends AbstractPerspectiveRule {
 
     public String getRuleName() {
@@ -38,8 +46,8 @@ public class GoClassifierToBeh extends AbstractPerspectiveRule {
     }
 
     public Collection getChildren(Object parent) {
-	if (ModelFacade.isAClassifier(parent)) {
-	    return ModelFacade.getOperations(parent);
+	if (ModelFacade.isAClassifier(parent)) {	    
+	    return CoreHelper.getHelper().getBehavioralFeatures(parent);
 	}
 	return null;
     }

@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.34 2004/03/18 01:21:42 d00mst Exp $
+// $Id: FigUseCase.java,v 1.35 2004/07/17 13:10:30 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1475,5 +1475,16 @@ public class FigUseCase extends FigNodeModelElement {
         }
         damage();
     }
+    
+    
 
+    /**
+     * @see org.tigris.gef.presentation.Fig#postLoad()
+     */
+    public void postLoad() {       
+        super.postLoad();
+        if (_epVec != null && _epVec.isVisible()) {
+            setExtensionPointVisible(true);
+        }
+    }
 } /* end class FigUseCase */

@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.94 2004/04/27 08:20:13 thn Exp $
+// $Id: FigClass.java,v 1.95 2004/07/17 13:10:29 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -767,6 +767,7 @@ public class FigClass extends FigNodeModelElement {
      * @see FigNodeModelElement#modelChanged(MElementEvent)
      */
     protected void modelChanged(MElementEvent mee) {
+        super.modelChanged(mee);
 
         if (getOwner() == null) {
             return;
@@ -797,6 +798,10 @@ public class FigClass extends FigNodeModelElement {
             updateStereotypeText();
             updateAttributes();
             updateOperations();
+            damage();
+        }
+        if (mee != null && mee.getSource().equals(ModelFacade.getStereoType(getOwner()))) {
+            updateStereotypeText();
             damage();
         }
         // name updating

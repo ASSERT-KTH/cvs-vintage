@@ -1,4 +1,4 @@
-// $Id: PropPanelInstance.java,v 1.26 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: PropPanelInstance.java,v 1.27 2004/07/17 13:10:31 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.26 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: PropPanelInstance.java,v 1.27 2004/07/17 13:10:31 kataka Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -64,7 +64,8 @@ public class PropPanelInstance extends PropPanelModelElement {
         UMLComboBox clsComboBox = new UMLComboBox(classifierModel);
         addField("Classifier:", new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-class"), clsComboBox));
 
-        addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        // addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
         addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
     //

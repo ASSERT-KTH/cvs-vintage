@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.55 2004/04/22 23:47:01 d00mst Exp $
+// $Id: FigEdgeModelElement.java,v 1.56 2004/07/17 13:10:29 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -495,6 +495,8 @@ public abstract class FigEdgeModelElement
         String nameStr =
 	    Notation.generate(this, ModelFacade.getName(getOwner()));
         _name.setText(nameStr);
+        calcBounds();
+        setBounds(getBounds());
     }
 
     protected void updateStereotypeText() {

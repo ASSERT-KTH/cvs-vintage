@@ -1,4 +1,4 @@
-// $Id: StateDiagramRenderer.java,v 1.16 2004/06/27 09:38:53 mvw Exp $
+// $Id: StateDiagramRenderer.java,v 1.17 2004/07/17 13:10:29 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.activity.ui.FigActionState;
+import org.argouml.uml.diagram.activity.ui.FigSwimlane;
 
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.graph.GraphEdgeRenderer;
@@ -87,6 +88,9 @@ public class StateDiagramRenderer
         }
         else if (org.argouml.model.ModelFacade.isAState(node)) {
             return new FigSimpleState(gm, node);
+        }
+        else if (ModelFacade.isAPartition(node)) {
+            return new FigSwimlane(gm, node);
         }
         else if (org.argouml.model.ModelFacade.isAPseudostate(node)) {
             Object pState = node;

@@ -1,4 +1,4 @@
-// $Id: UMLIncludeAdditionComboBoxModel.java,v 1.15 2004/02/08 12:45:27 mvw Exp $
+// $Id: UMLIncludeAdditionComboBoxModel.java,v 1.16 2004/07/17 13:10:32 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,8 @@ public class UMLIncludeAdditionComboBoxModel extends UMLComboBoxModel2 {
      * Constructor for UMLIncludeAdditionComboBoxModel.
      */
     public UMLIncludeAdditionComboBoxModel() {
-        super("addition", false);
+//      there is a bug in NSUML so this model listens for base modelevents
+        super("base", false);
         UmlModelEventPump.getPump().addClassModelEventListener(this, (Class)ModelFacade.NAMESPACE, "ownedElement");
     }
 
@@ -51,8 +52,8 @@ public class UMLIncludeAdditionComboBoxModel extends UMLComboBoxModel2 {
         if (inc == null) return;
         Object ns = ModelFacade.getNamespace(inc);
         addAll(ModelManagementHelper.getHelper().getAllModelElementsOfKind(ns, (Class)ModelFacade.USE_CASE));
-        if (contains(ModelFacade.getBase(inc)))
-            removeElement(ModelFacade.getBase(inc));
+        if (contains(ModelFacade.getAddition(inc)))
+            removeElement(ModelFacade.getAddition(inc));
     }
 
     /**

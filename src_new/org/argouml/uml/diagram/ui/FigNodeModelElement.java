@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.107 2004/06/27 18:03:48 d00mst Exp $
+// $Id: FigNodeModelElement.java,v 1.108 2004/07/17 13:10:29 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -840,6 +840,12 @@ public abstract class FigNodeModelElement
         }
         if ((mee.getSource() == getOwner()
 	     && mee.getName().equals("stereotype"))) {
+            if (mee.getOldValue() != null) {
+                UmlModelEventPump.getPump().removeModelEventListener(this, mee.getRemovedValue(), "name");
+            }
+            if (mee.getNewValue() != null) {
+                UmlModelEventPump.getPump().addModelEventListener(this, mee.getNewValue(), "name");
+            }
             updateStereotypeText();
             damage();
         }

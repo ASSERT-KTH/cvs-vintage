@@ -1,4 +1,4 @@
-// $Id: PropPanelActor.java,v 1.34 2004/01/06 21:47:16 jjones Exp $
+// $Id: PropPanelActor.java,v 1.35 2004/07/17 13:10:32 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelActor.java
 // Classes: PropPanelActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelActor.java,v 1.34 2004/01/06 21:47:16 jjones Exp $
+// $Id: PropPanelActor.java,v 1.35 2004/07/17 13:10:32 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -74,7 +74,8 @@ public class PropPanelActor extends PropPanelClassifier {
 
 
     	addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-    	addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+    	// addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+    	addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
 
         addField(Translator.localize("UMLMenu", "label.modifiers"),
                  _modifiersPanel);
@@ -98,6 +99,7 @@ public class PropPanelActor extends PropPanelClassifier {
         new PropPanelButton(this, buttonPanel, _actorIcon,
                 Translator.localize("UMLMenu", "button.new-actor"), "newActor",
                             null);
+        new PropPanelButton(this, buttonPanel, _receptionIcon, Translator.localize("UMLMenu", "button.new-reception"), getActionNewReception());
         new PropPanelButton(this, buttonPanel, _deleteIcon,
                             localize("Delete"), "removeElement",
                             null);

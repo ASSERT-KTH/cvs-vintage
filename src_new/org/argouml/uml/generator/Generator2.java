@@ -1,4 +1,4 @@
-// $Id: Generator2.java,v 1.3 2004/05/30 06:11:09 mvw Exp $
+// $Id: Generator2.java,v 1.4 2004/07/17 13:10:30 kataka Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,10 +96,13 @@ public abstract class Generator2
      * @param o the element to be generated
      * @return String the generated code
      */
-    public String generate(Object o) {
+    public String generate(Object o) {        
         if (o == null) {
             return "";
 	}
+        if (ModelFacade.isAActionState(o)) {
+            return generateActionState(o);
+        }
         if (ModelFacade.isAExtensionPoint(o)) {
             return generateExtensionPoint(o);
 	}
@@ -241,7 +244,7 @@ public abstract class Generator2
     /**
      * @see NotationProvider2#generateAction(Object)
      */
-    public abstract String generateAction(Object m);
+    public abstract String generateAction(Object m);     
 
     /**
      * @see NotationProvider2#generateGuard(Object)

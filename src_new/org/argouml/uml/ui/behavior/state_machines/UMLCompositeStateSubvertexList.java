@@ -1,4 +1,4 @@
-// $Id: UMLCompositeStateSubvertexList.java,v 1.7 2004/02/08 12:45:26 mvw Exp $
+// $Id: UMLCompositeStateSubvertexList.java,v 1.8 2004/07/17 13:10:31 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,7 +79,7 @@ public class UMLCompositeStateSubvertexList extends UMLMutableLinkedList {
      */
     public UMLCompositeStateSubvertexList(
         UMLModelElementListModel2 dataModel) {
-        super(dataModel, null);
+        super(dataModel);
     }
 
     /**

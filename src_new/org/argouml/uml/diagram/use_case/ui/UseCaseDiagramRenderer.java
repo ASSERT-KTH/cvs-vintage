@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramRenderer.java,v 1.13 2003/09/14 13:03:28 bobtarling Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.14 2004/07/17 13:10:30 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UseCaseDiagramRenderer.java
 // Classes: UseCaseDiagramRenderer
 // Original Author: abonner@ics.uci.edu
-// $Id: UseCaseDiagramRenderer.java,v 1.13 2003/09/14 13:03:28 bobtarling Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.14 2004/07/17 13:10:30 kataka Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity.
@@ -178,13 +178,10 @@ public class UseCaseDiagramRenderer
 
         else if (org.argouml.model.ModelFacade.isAInclude(edge)) {
             Object   inc    = /*(MInclude)*/ edge;
-            FigInclude incFig = new FigInclude(inc);
+            FigInclude incFig = new FigInclude(inc);          
 
-            // The nodes at the two ends. NSUML has a bug which gets base and
-            // additon reversed, so we must reverse their accessors here.
-
-            Object base     = ModelFacade.getAddition(inc);
-            Object addition = ModelFacade.getBase(inc);
+            Object base     = ModelFacade.getBase(inc);
+            Object addition = ModelFacade.getAddition(inc);
 
             // The figs for the two end nodes
 

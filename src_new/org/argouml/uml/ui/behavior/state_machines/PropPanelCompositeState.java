@@ -1,4 +1,4 @@
-// $Id: PropPanelCompositeState.java,v 1.13 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: PropPanelCompositeState.java,v 1.14 2004/07/17 13:10:31 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,8 @@ public class PropPanelCompositeState extends PropPanelState {
         initialize();
 
         addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-        addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        // addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
         addField(Translator.localize("UMLMenu", "label.container"), containerScroll);
         addField(Translator.localize("UMLMenu", "label.modifiers"), new UMLCompositeStateConcurentCheckBox());
         addField(Translator.localize("UMLMenu", "label.entry"), entryScroll);

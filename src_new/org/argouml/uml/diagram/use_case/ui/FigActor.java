@@ -1,4 +1,4 @@
-// $Id: FigActor.java,v 1.11 2004/02/28 12:29:43 linus Exp $
+// $Id: FigActor.java,v 1.12 2004/07/17 13:10:30 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigActor.java,v 1.11 2004/02/28 12:29:43 linus Exp $
+// $Id: FigActor.java,v 1.12 2004/07/17 13:10:30 kataka Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -214,9 +214,9 @@ public class FigActor extends FigNodeModelElement {
             return getOwner();
         return null;
     }
-
-	/**
-     * Makes sure that the edges stick to the elipse fig of the usecase.
+    
+    /**
+     * Makes sure that the edges stick to the outline of the fig.
      * @see org.tigris.gef.presentation.Fig#getGravityPoints()
      */
     public Vector getGravityPoints() {
@@ -233,6 +233,14 @@ public class FigActor extends FigNodeModelElement {
 			      (int) (cy + Math.sin(angle) * radiusy));
             ret.add(point);
         }
+        ret.add(new Point(_body.getX(), _body.getY()));
+        ret.add(new Point(_body.getX1(), _body.getY1()));
+        ret.add(new Point(_leftLeg.getX(), _leftLeg.getY()));
+        ret.add(new Point(_leftLeg.getX1(), _leftLeg.getY1()));
+        ret.add(new Point(_rightLeg.getX(), _rightLeg.getY()));
+        ret.add(new Point(_rightLeg.getX1(), _rightLeg.getY1()));
+        ret.add(new Point(_arms.getX(), _arms.getY()));
+        ret.add(new Point(_arms.getX1(), _arms.getY1()));
         return ret;
     }
 
