@@ -98,14 +98,14 @@ $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$chil
 #end
 <td> 
  <input type="hidden" name="$newDependGroup.ObservedId.Key" value="$currentIssue.IssueId" />
- #if (!$newDependGroup.ObserverUniqueId.Message.equals(""))
+ #if ($newDependGroup.ObserverUniqueId.Message.toString().length() > 0)
   <p class="alert">$l10n.get($newDependGroup.ObserverUniqueId.Message)</p>
  #end
     <input type="text" size="5" name="$newDependGroup.ObserverUniqueId.Key" value = "$!newDependGroup.ObserverUniqueId" />
 </td>
 #*<td>$l10n.Child</td>*#
 <td> 
- #if (!$newDependGroup.TypeId.Message.equals(""))
+ #if (!$newDependGroup.TypeId.Message.toString().length() > 0)
   <p class="alert">$l10n.get($newDependGroup.TypeId.Message)</p>
  #end
  <select name="$newDependGroup.TypeId.Key" class="select">
@@ -142,7 +142,7 @@ $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$chil
 #if (!$issueParents.isEmpty() || !$issueChildren.isEmpty())
    <input type="submit" value="$l10n.SaveChanges"  name="eventSubmit_doUpdatedependencies" />&nbsp;
 #end
-   <input type="submit" value="$l10n.AddNewChild" name="eventSubmit_doAdddependency" />&nbsp;
+   <input type="submit" value="$l10n.AddNew" name="eventSubmit_doAdddependency" />&nbsp;
 #if (!$issueParents.isEmpty() || !$issueChildren.isEmpty())
   <input type="submit" value="$l10n.DeleteSelected"  name="eventSubmit_doUpdatedependencies" />
 #end
