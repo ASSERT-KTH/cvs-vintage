@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.80 2002/05/17 04:59:49 spestov Exp $
+ * @version $Id: Buffer.java,v 1.81 2002/05/17 06:41:08 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -3240,7 +3240,21 @@ loop:		for(int i = 0; i < seg.count; i++)
 	private void finishLoading()
 	{
 		parseBufferLocalProperties();
+		// AHA!
+		// this is probably the only way to fix this
+		FoldHandler oldFoldHandler = foldHandler;
 		setMode();
+
+		if(foldHandler == oldFoldHandler)
+		{
+			// on a reload, the fold handler doesn't change, but
+			// we still need to re-collapse folds.
+			// don't do this on initial fold handler creation
+			offsetMgr.lineInfoChangedFrom(0);
+
+			int collapseFolds = getIntegerProperty("collapseFolds",0);
+			offsetMgr.expandFolds(collapseFolds);
+		}
 
 		if(parseFully)
 		{
