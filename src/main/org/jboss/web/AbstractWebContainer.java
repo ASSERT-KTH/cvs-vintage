@@ -6,6 +6,16 @@ import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.io.File;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.net.JarURLConnection;
+import java.util.jar.JarFile;
+import java.util.jar.Attributes;
+import java.util.jar.JarEntry;
+import java.util.Enumeration;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.LinkRef;
@@ -118,7 +128,7 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.19 $
+@version $Revision: 1.20 $
 */
 public abstract class AbstractWebContainer 
 extends ServiceMBeanSupport 
@@ -191,7 +201,7 @@ implements AbstractWebContainerMBean
                   // The wars come from packages and thus are unpackaged under /tmp/deploy/<intNumber>.myweb.war
                   if (di.shortName.lastIndexOf(mod.getFileName()) != -1)
                      di.webContext = mod.getWebContext();
-                  
+               
                }     
             }
          }
@@ -222,8 +232,80 @@ implements AbstractWebContainerMBean
             // If directory we watch the xml files
             else di.watch = new URL(di.url, "WEB-INF/web.xml"); 
          }   
+         
+         parseWEBINFClasses(di);
       }
       catch (Exception e) {log.error("Problem in init ", e); throw new DeploymentException(e.getMessage());}
+   }
+   
+   
+   public void parseWEBINFClasses(DeploymentInfo di) throws DeploymentException
+   {
+      JarFile jarFile = null;
+      
+      // Do we have a jar file jar:<theURL>!/..
+      try {jarFile = ((JarURLConnection)new URL("jar:"+di.localUrl.toString()+"!/").openConnection()).getJarFile();}
+         catch (Exception ignored) {throw new DeploymentException(ignored.getMessage());}
+      
+      boolean directoryCreated = false;
+      
+      for (Enumeration e = jarFile.entries(); e.hasMoreElements(); )
+      {
+         JarEntry entry = (JarEntry)e.nextElement();
+         String name = entry.getName();
+         
+         File localCopyDir = new File(System.getProperty("jboss.system.home")+File.separator+"tmp"+File.separator+"deploy");
+         
+         
+         if (name.lastIndexOf("WEB-INF/classes") != -1 && name.endsWith("class") )
+         {
+            
+            try {
+               
+               
+               // We use the name of the entry as the name of the file under deploy 
+               File outFile = new File(localCopyDir, di.shortName+".webinf"+File.separator+name);
+               
+               if (!directoryCreated) 
+               {
+                  outFile.getParentFile().mkdirs();
+                  
+                  DeploymentInfo sub = new DeploymentInfo(outFile.getParentFile().toURL(), di);
+                  // There is no copying over, just use the url for the UCL
+                  sub.localUrl = sub.url;
+                  
+                  // Create a URL for the sub
+                  sub.createClassLoaders();
+                  
+                  directoryCreated = true;  
+                  
+                  di.subDeployments.add(sub);
+               }
+               
+               // Copy in and out 
+               OutputStream out = new FileOutputStream(outFile); 
+               InputStream in = jarFile.getInputStream(entry);
+               
+               try { copy(in, out);}
+                  
+               finally { out.close(); }
+            
+            }
+            catch (Exception ignore) {ignore.printStackTrace();log.error("Error in webinf "+name, ignore);}
+         }
+      }
+   }
+   
+   protected void copy(InputStream in, OutputStream out)
+   throws IOException
+   {
+      
+      byte[] buffer = new byte[1024];
+      int read;
+      while ((read = in.read(buffer)) > 0)
+      {
+         out.write(buffer, 0, read);
+      }
    }
    
    /** A template pattern implementation of the deploy() method. This method
