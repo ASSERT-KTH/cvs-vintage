@@ -7,168 +7,219 @@
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.lang.reflect.Method;
-
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
-
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import javax.sql.DataSource;
-
+import org.jboss.ejb.DeploymentException;
+import org.jboss.metadata.EntityMetaData;
+import org.jboss.metadata.MetaData;
+import org.jboss.metadata.QueryMetaData;
 import org.w3c.dom.Element;
 
-import org.jboss.ejb.DeploymentException;
-
-import org.jboss.metadata.EntityMetaData;
-import org.jboss.metadata.QueryMetaData;
-import org.jboss.metadata.MetaData;
-import org.jboss.metadata.XmlLoadable;
-
 /**
- *      
+ *	This immutable class contains information about an entity
+ *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
-public class JDBCEntityMetaData extends MetaData implements XmlLoadable {
-	// Constants -----------------------------------------------------
-	 
-	// Attributes ----------------------------------------------------
-	 
-	// parent metadata structures
-	private JDBCApplicationMetaData jdbcApplication;
-	private EntityMetaData entity;
+public final class JDBCEntityMetaData {
+	/**
+    * application metadata in which this entity is defined
+	 */
+	private final JDBCApplicationMetaData jdbcApplication;
 	
-	// the name of the bean (same as entity.getEntityName())
-	private String entityName;
+	/**
+	 * data source name in jndi
+	 */
+	private final String dataSourceName;
 	
-	// Class loader for this entity
-	private ClassLoader classLoader;
+	/**
+    * type mapping used for this entity
+	 */
+	private final JDBCTypeMappingMetaData typeMapping;
 	
-	// the implementation class of the bean
-	private Class entityClass;
+	/**
+    * should excess debug information be logged
+	 */
+	private final boolean debug;
 	
-	// the home class of the bean
-	private Class homeClass;
+	/**
+    * the name of this entity
+	 */
+	private final String entityName;
 	
-	// the local home class of the bean
-	private Class localHomeClass;
+	/**
+	 * the implementation class of this entity
+	 */
+	private final Class entityClass;
 	
-	// the name of the table to use for this bean
-	private String tableName;
+	/**
+    * the home class of this entity
+	 */
+	private final Class homeClass;
 	
-	// do we have to try and create the table on deployment?
-	private boolean createTable;
+	/**
+    * the local home class of this entity
+	 */
+	private final Class localHomeClass;
 	
-	// do we have to drop the table on undeployment?
-	private boolean removeTable;
+	/**
+    * Does this entity use cmp 1.x?
+	 */
+	private final boolean isCMP1x;
 	
-	// do we use 'SELECT ... FOR UPDATE' syntax?
-	private boolean selectForUpdate;
+	/**
+    * the name of the table to which this entity is persisted
+	 */
+	private final String tableName;
 	
-	// is the bean read-only?
-	private boolean readOnly;
+	/**
+    * Should we try and create the table when deployed?
+	 */
+	private final boolean createTable;
 	
-	// how long is read valid
-	private int readTimeOut = -1;
+	/** 
+	 * Should we drop the table when undeployed?
+	 */
+	private final boolean removeTable;
 	
-	// should the table have a primary key constraint?
-	private boolean primaryKeyConstraint;
+	/**
+    * Should we use 'SELECT ... FOR UPDATE' syntax when loading?
+	 */
+	private final boolean selectForUpdate;
 	
-	// the class of the primary key
-	private Class primaryKeyClass;
+	/**
+	 * Is this entity read-only?
+	 */
+	private final boolean readOnly;
 	
-	// the fields we must persist for this bean
-	private HashMap cmpFields;
+	/**
+    * how long is a read valid
+	 */
+	private final int readTimeOut;
 	
-	// the fields we must persist for this bean
-	private ArrayList eagerLoadFields;
+	/**
+    * Should the table have a primary key constraint?
+	 */
+	private final boolean primaryKeyConstraint;
 	
-	// the fields we must persist for this bean
-	private ArrayList lazyLoadGroups;
+	/**
+    * the java class of the primary key
+	 */
+	private final Class primaryKeyClass;
 	
-	// finders for this bean
-	private HashMap queries;
+	/**
+    * the name of the primary key field or null if the primary key field is multivalued
+	 */
+   private final String primaryKeyFieldName;
 	
-	// used to create query meta data
-	private JDBCQueryMetaDataFactory queryFactory;
+	/**
+	 * Map of the cmp fields of this entity by field name.
+	 */
+	private final Map cmpFields = new HashMap();
 	
-	// all relationship roles for this entity
-	private ArrayList relationshipRoles;
-
-	// Static --------------------------------------------------------
-   
-	// Constructors --------------------------------------------------
-    
+	/** 
+	 * The fields which should always be loaded when an entity of this type is loaded.
+	 */
+	private final List eagerLoadFields = new ArrayList();
+	
+	/**
+    * A list of groups (also lists) of the fields that should be lazy loaded together.
+	 */
+	private final List lazyLoadGroups = new ArrayList();
+	
+	/**
+    * Map of the queries on this entity by the Method that invokes the query. 
+	 */
+	private final Map queries = new HashMap();
+	
+	/**
+    * The factory used to used to create query meta data
+	 */
+	private final JDBCQueryMetaDataFactory queryFactory;
+	
+	/**
+	 * Constructs jdbc entity meta data defined in the jdbcApplication and with the 
+	 * data from the entity meta data which is loaded from the ejb-jar.xml file.
+	 *
+	 * @param jdbcApplication the application in which this entity is defined
+	 * @param entity the entity meta data for this entity that is loaded from the ejb-jar.xml file
+	 * @throws DeploymentException if an problem occures while loading the classes or if 
+	 * 		data in the ejb-jar.xml is inconsistent with data from jbosscmp-jdbc.xml file
+	 */
 	public JDBCEntityMetaData(JDBCApplicationMetaData jdbcApplication, EntityMetaData entity) throws DeploymentException {
-		// initialisation of this object goes as follows:
-		//  - constructor
-		//  - importXml() for standardjbosscmp-jdbc.xml and jbosscmp-jdbc.xml
-		
 		this.jdbcApplication = jdbcApplication;
-		this.entity = entity;
 		entityName = entity.getEjbName();
 		
-		classLoader = jdbcApplication.getClassLoader();
 		try {
-			entityClass = classLoader.loadClass(entity.getEjbClass());
+			entityClass = getClassLoader().loadClass(entity.getEjbClass());
 		} catch (ClassNotFoundException e) {
 			throw new DeploymentException("entity class not found: " + entityName);
 		}
-
+		
 		try {
-			primaryKeyClass = classLoader.loadClass(entity.getPrimaryKeyClass());
+			primaryKeyClass = getClassLoader().loadClass(entity.getPrimaryKeyClass());
 		} catch (ClassNotFoundException e) {
 			throw new DeploymentException("could not load primary key class: " + entity.getPrimaryKeyClass());
 		}
 		
+		isCMP1x = entity.isCMP1x();
+		primaryKeyFieldName = entity.getPrimKeyField();
+		
 		String home = entity.getHome();
-		try {
-			if(home != null) {
-				homeClass = classLoader.loadClass(home);
+		if(home != null) {
+			try {
+				homeClass = getClassLoader().loadClass(home);
+			} catch (ClassNotFoundException e) {
+				throw new DeploymentException("home class not found: " + home);
 			}
-		} catch (ClassNotFoundException e) {
-			throw new DeploymentException("home class not found: " + home);
+		} else {
+			homeClass = null;
 		}
 
 		String localHome = entity.getLocalHome();
-		try {
-			if(localHome != null) {
-				localHomeClass = classLoader.loadClass(localHome);
-			} else if(home == null) {
+		if(localHome != null) {
+			try {
+				localHomeClass = getClassLoader().loadClass(localHome);
+			} catch (ClassNotFoundException e) {
+				throw new DeploymentException("local home class not found: " + localHome);
+			}
+		} else {
+			// we must have a home or local home
+			if(home == null) {
 				throw new DeploymentException("Entity must have atleast a home or local home: " + entityName);
 			}
-		} catch (ClassNotFoundException e) {
-			throw new DeploymentException("local home class not found: " + localHome);
-		}
 
+			localHomeClass = null;
+		}
+		
 		// we replace the . by _ because some dbs die on it...
 		// the table name may be overridden in importXml(jbosscmp-jdbc.xml)
 		tableName = entityName.replace('.', '_');
 		
 		// build the metadata for the cmp fields now in case there is no jbosscmp-jdbc.xml
-		cmpFields = new HashMap();
-		
-		Iterator cmpFieldNames = entity.getCMPFields();
-		while (cmpFieldNames.hasNext()) {
-			String cmpFieldName = (String)cmpFieldNames.next();
-		 	JDBCCMPFieldMetaData cmpField = new JDBCCMPFieldMetaData(cmpFieldName, this);
-			
+		for(Iterator i = entity.getCMPFields(); i.hasNext(); ) {
+			String cmpFieldName = (String)i.next();
+		 	JDBCCMPFieldMetaData cmpField = new JDBCCMPFieldMetaData(this, cmpFieldName);			
 			cmpFields.put(cmpFieldName, cmpField);		    
 		}
 
 		// set eager load fields to all cmp fields in case there is no jbosscmp-jdbc.xml
-	   eagerLoadFields = new ArrayList(cmpFields.values()); 
+	 	eagerLoadFields.addAll(cmpFields.values()); 
 		
 		// Create no lazy load groups. By default every thing is eager loaded.
-	   lazyLoadGroups = new ArrayList(); 
 		
 		// build the metadata for the queries now in case there is no jbosscmp-jdbc.xml
-		queries = new HashMap();
 		queryFactory = new JDBCQueryMetaDataFactory(this);
 		
-		Iterator queriesIterator = entity.getQueries();
-		while(queriesIterator.hasNext()) {
+		for(Iterator queriesIterator = entity.getQueries(); queriesIterator.hasNext();) {
 			QueryMetaData queryData = (QueryMetaData)queriesIterator.next();
 			Method[] methods = queryFactory.getQueryMethods(queryData);
 			for(int i=0; i<methods.length; i++) {
@@ -178,85 +229,155 @@ public class JDBCEntityMetaData extends MetaData implements XmlLoadable {
 		}
 		
 		// Create no relationship roles for this entity, will be added by the relation meta data
-		relationshipRoles = new ArrayList();
+		
+		
+		// other default values
+		dataSourceName = null;
+		typeMapping = null;
+		debug = false;
+		createTable = false;
+		removeTable = false;
+		selectForUpdate = false;
+		primaryKeyConstraint = false;
+		readOnly = false;
+		readTimeOut = -1;
 	}
 	
-	// Public --------------------------------------------------------
+	/**
+	 * Constructs entity meta data with the data contained in the entity xml 
+	 * element from a jbosscmp-jdbc xml file. Optional values of the xml element that
+	 * are not present are loaded from the defalutValues parameter.
+	 *
+	 * @param jdbcApplication the application in which this entity is defined
+	 * @param element the xml Element which contains the metadata about this entity
+	 * @param defaultValues the JDBCEntityMetaData which contains the values
+	 * 		for optional elements of the element
+	 * @throws DeploymentException if the xml element is not semantically correct
+	 */
+	public JDBCEntityMetaData(JDBCApplicationMetaData jdbcApplication, Element element, JDBCEntityMetaData defaultValues) throws DeploymentException {
+		// store passed in application... application in defaultValues may be different 
+		// because jdbcApplication is imutable
+		this.jdbcApplication = jdbcApplication;
+
+		// set default values 
+		entityName = defaultValues.getName(); 
+		entityClass = defaultValues.getEntityClass();
+		primaryKeyClass = defaultValues.getPrimaryKeyClass();
+		isCMP1x = defaultValues.isCMP1x;
+		primaryKeyFieldName = defaultValues.getPrimaryKeyFieldName();
+		homeClass = defaultValues.getHomeClass();
+		localHomeClass = defaultValues.getLocalHomeClass();
+		queryFactory = new JDBCQueryMetaDataFactory(this);
+		
+		// datasource name
+		String dataSourceNameString = MetaData.getOptionalChildContent(element, "datasource");
+		if(dataSourceNameString != null) {
+			dataSourceName = dataSourceNameString;
+		} else {
+			dataSourceName = defaultValues.getDataSourceName();
+		}
+		
+		// get the type mapping for this datasource (optional, but always set in standardjbosscmp-jdbc.xml)
+		String typeMappingString = MetaData.getOptionalChildContent(element, "type-mapping");		
+		if(typeMappingString != null) {
+			typeMapping = jdbcApplication.getTypeMappingByName(typeMappingString);
+		
+			if(typeMapping == null) {
+				throw new DeploymentException("Error in jbosscmp-jdbc.xml : type-mapping " + typeMappingString + " not found");
+			}
+		} else {
+			typeMapping = defaultValues.getTypeMapping();
+		}
+		
+		// enable extra debugging?
+		String debugString = MetaData.getOptionalChildContent(element, "debug");
+		if(debugString != null) {
+			debug = Boolean.valueOf(debugString).booleanValue();
+		} else {
+			debug = defaultValues.isDebug();
+		}
       
-	public void importXml(Element element) throws DeploymentException {		
-		// This method will be called:
-		//  - with element = <default-entity> from standardjbosscmp-jdbc.xml (always)
-		//  - with element = <default-entity> from jbosscmp-jdbc.xml (if provided)
-		//  - with element = <entity> from jbosscmp-jdbc.xml (if provided)
-		
-		// All defaults are set during the first call. The following calls override them. 
-		
-		
 		// get table name
-		String tableStr = getElementContent(getOptionalChild(element, "table-name"));
+		String tableStr = MetaData.getOptionalChildContent(element, "table-name");
 		if(tableStr != null) {
 			tableName = tableStr;
+		} else {
+			tableName = defaultValues.getTableName();	
 		}
-			
+		
 		// create table?  If not provided, keep default.
-		String createStr = getElementContent(getOptionalChild(element, "create-table"));
+		String createStr = MetaData.getOptionalChildContent(element, "create-table");
 		if(createStr != null) {
 	   	createTable = Boolean.valueOf(createStr).booleanValue();
+		} else {
+			createTable = defaultValues.getCreateTable();
 		}
 			
     	// remove table?  If not provided, keep default.
-		String removeStr = getElementContent(getOptionalChild(element, "remove-table"));
+		String removeStr = MetaData.getOptionalChildContent(element, "remove-table");
 		if(removeStr != null) {
 			removeTable = Boolean.valueOf(removeStr).booleanValue();
+		} else {
+			removeTable = defaultValues.getRemoveTable();
 		}
     	
 		// read-only
-		String readOnlyStr = getElementContent(getOptionalChild(element, "read-only"));
+		String readOnlyStr = MetaData.getOptionalChildContent(element, "read-only");
 		if(readOnlyStr != null) {
 			readOnly = Boolean.valueOf(readOnlyStr).booleanValue();
+		} else {
+			readOnly = defaultValues.isReadOnly();
 		}
 
 		// read-time-out
-		if(isReadOnly()) {
-			// read-time-out
-			String readTimeOutStr = getElementContent(getOptionalChild(element, "read-time-out"));
-		   if(readTimeOutStr != null) {
-				readTimeOut = Integer.parseInt(readTimeOutStr);
-			}
-		}		
+		String readTimeOutStr = MetaData.getOptionalChildContent(element, "read-time-out");
+		if(readTimeOutStr != null) {
+			readTimeOut = Integer.parseInt(readTimeOutStr);
+		} else {
+			readTimeOut = defaultValues.getReadTimeOut();
+		} 	
 
-		String sForUpStr = getElementContent(getOptionalChild(element, "select-for-update"));
+		String sForUpStr = MetaData.getOptionalChildContent(element, "select-for-update");
 		if(sForUpStr != null) {
-	   	selectForUpdate = (Boolean.valueOf(sForUpStr).booleanValue());
-			selectForUpdate = selectForUpdate && !isReadOnly();
+			selectForUpdate = !isReadOnly() && (Boolean.valueOf(sForUpStr).booleanValue());
+		} else {
+			selectForUpdate = defaultValues.hasSelectForUpdate();
 		}
 
 		// primary key constraint?  If not provided, keep default.
-		String pkStr = getElementContent(getOptionalChild(element, "pk-constraint"));
+		String pkStr = MetaData.getOptionalChildContent(element, "pk-constraint");
 		if(pkStr != null) {
 			primaryKeyConstraint = Boolean.valueOf(pkStr).booleanValue();
+		} else {
+			primaryKeyConstraint = defaultValues.hasPrimaryKeyConstraint();
 		}
 
 		// cmp fields
-		Iterator iterator = getChildrenByTagName(element, "cmp-field");
-		while (iterator.hasNext()) {
-			Element cmpField = (Element)iterator.next();
-			String fieldName = getElementContent(getUniqueChild(cmpField, "field-name"));
+		cmpFields.putAll(defaultValues.cmpFields);
+		for(Iterator i = MetaData.getChildrenByTagName(element, "cmp-field"); i.hasNext(); ) {
+			Element cmpFieldElement = (Element)i.next();
+			String fieldName = MetaData.getUniqueChildContent(cmpFieldElement, "field-name");
 			
-			JDBCCMPFieldMetaData cmpFieldMetaData = getExistingFieldByName(fieldName);
-			cmpFieldMetaData.importXml(cmpField);
+			JDBCCMPFieldMetaData cmpFieldMetaData = (JDBCCMPFieldMetaData)cmpFields.get(fieldName);
+			if(cmpFieldMetaData == null) {
+				throw new DeploymentException("CMP field not found : fieldName=" + fieldName);
+			}
+			cmpFieldMetaData = new JDBCCMPFieldMetaData(this, cmpFieldElement, cmpFieldMetaData);
+			cmpFields.put(fieldName, cmpFieldMetaData);
 		}
 
 		// eager-load
+		eagerLoadFields.addAll(defaultValues.eagerLoadFields);
 		loadEagerLoadXml(element);
 
 		// lazy-loads
+		lazyLoadGroups.addAll(defaultValues.lazyLoadGroups);
 		loadLazyLoadGroupsXml(element);
 
 		// build the metadata for the queries now in case there is no jbosscmp-jdbc.xml
-		iterator = getChildrenByTagName(element, "query");
-		while(iterator.hasNext()) {
-			Element queryElement = (Element)iterator.next();
+		queries.putAll(defaultValues.queries);
+		for(Iterator queriesIterator = MetaData.getChildrenByTagName(element, "query"); queriesIterator.hasNext(); ) {
+			Element queryElement = (Element)queriesIterator.next();
 			Method[] methods = queryFactory.getQueryMethods(queryElement);
 			for(int i=0; i<methods.length; i++) {
 				JDBCQueryMetaData jdbcQueryData = (JDBCQueryMetaData)queries.get(methods[i]);
@@ -266,8 +387,11 @@ public class JDBCEntityMetaData extends MetaData implements XmlLoadable {
 		}
 	}
 	
-	protected void loadEagerLoadXml(Element element) throws DeploymentException {
-		Element eagerLoadElement = getOptionalChild(element, "eager-load");
+	/**
+	 * Loads the list of eager loaded fields from the xml element.
+	 */
+	private void loadEagerLoadXml(Element element) throws DeploymentException {
+		Element eagerLoadElement = MetaData.getOptionalChild(element, "eager-load");
 		
 		// If no info, we're done. Default work was already done in constructor.
 		if(eagerLoadElement == null) {
@@ -275,27 +399,27 @@ public class JDBCEntityMetaData extends MetaData implements XmlLoadable {
 		}
 		
 		// only allowed for cmp 2.x
-		if(entity.isCMP1x()) {
+		if(isCMP1x) {
 			throw new DeploymentException("eager-load is only allowed for CMP 2.x");
 		}
 		
 		// get the fields
-		Iterator iterator = getChildrenByTagName(eagerLoadElement, "field-name");
+		Iterator fieldNames = MetaData.getChildrenByTagName(eagerLoadElement, "field-name");
 		
 		// If no eager fields, clear current list and return
-		if(!iterator.hasNext()) {
+		if(!fieldNames.hasNext()) {
 			eagerLoadFields.clear();
 			return;
 		}
 			
 		// check for * option
-		String fieldName = getElementContent((Element)iterator.next());
+		String fieldName = MetaData.getElementContent((Element)fieldNames.next());
 		if("*".equals(fieldName)) {
 			// all case, which is the default
 			// default work already done in constructor, so do nothing
 			
 			// check that there are no other fields listed
-			if(iterator.hasNext()) {
+			if(fieldNames.hasNext()) {
 				throw new DeploymentException("When * is specified in eager-load, it is the only field-name element allowed.");
 			}
 			return;
@@ -308,43 +432,45 @@ public class JDBCEntityMetaData extends MetaData implements XmlLoadable {
 		eagerLoadFields.add(getExistingFieldByName(fieldName));
 		
 		// add the rest
-		while (iterator.hasNext()) {
-			fieldName = getElementContent((Element)iterator.next());
+		while(fieldNames.hasNext()) {
+			fieldName = MetaData.getElementContent((Element)fieldNames.next());
 			eagerLoadFields.add(getExistingFieldByName(fieldName));
 		}
 
 		// remove any primary key fields from the set
 		// primary key fields do not need to be loaded
-		iterator = getEagerLoadFields();
-		while(iterator.hasNext()) {
-			JDBCCMPFieldMetaData field = (JDBCCMPFieldMetaData)iterator.next();
+		for(Iterator i = getEagerLoadFields().iterator(); i.hasNext(); ) {
+			JDBCCMPFieldMetaData field = (JDBCCMPFieldMetaData)i.next();
 			if(field.isPrimaryKeyMember()) {
-				iterator.remove();
+				i.remove();
 			}
 		}
 	}
 
-	protected void loadLazyLoadGroupsXml(Element element) throws DeploymentException {
-		Element lazyLoadGroupsElement = getOptionalChild(element, "lazy-load-groups");
+	/**
+	 * Loads the lazy load groups of cmp fields from the xml element
+	 */
+	private void loadLazyLoadGroupsXml(Element element) throws DeploymentException {
+		Element lazyLoadGroupsElement = MetaData.getOptionalChild(element, "lazy-load-groups");
 		if(lazyLoadGroupsElement == null) {
 			// no info, default work already done in constructor
 			return;
 		}
 		
 		// only allowed for cmp 2.x
-		if(entity.isCMP1x()) {
+		if(isCMP1x) {
 			throw new DeploymentException("lazy-load-groups are only allowed for CMP 2.x");
 		}
 		
-		Iterator groups = getChildrenByTagName(lazyLoadGroupsElement, "lazy-load-group");
+		Iterator groups = MetaData.getChildrenByTagName(lazyLoadGroupsElement, "lazy-load-group");
 		while(groups.hasNext()) {
 			Element groupsElement = (Element)groups.next();
 			ArrayList group = new ArrayList();
 
 			// add each field
-			Iterator fields = getChildrenByTagName(groupsElement, "field-name");
+			Iterator fields = MetaData.getChildrenByTagName(groupsElement, "field-name");
 			while(fields.hasNext()) {
-				String fieldName = getElementContent((Element)fields.next());
+				String fieldName = MetaData.getElementContent((Element)fields.next());
 				group.add(getExistingFieldByName(fieldName));
 			}
 			
@@ -352,63 +478,135 @@ public class JDBCEntityMetaData extends MetaData implements XmlLoadable {
 		}
 	}
 
-	public String getName() {
-		return entityName;
-	}
-
-	public ClassLoader getClassLoader() {
-		return classLoader;
-	}
-	
-	public Class getEntityClass() {
-		return entityClass;
-	}
-	
-	public Class getHomeClass() {
-		return homeClass;
-	}
-	
-	public Class getLocalHomeClass() {
-		return localHomeClass;
-	}
-	
+	/**
+	 * Gets the meta data for the application of which this entity is a member.
+	 * @return the meta data for the application that this entity is a memeber
+	 */
 	public JDBCApplicationMetaData getJDBCApplication() {
 		return jdbcApplication;
 	}
 	
-	public boolean isCMP1x() {
-		return entity.isCMP1x();
-	}
-	
-	public boolean isCMP2x() {
-		return entity.isCMP2x();
-	}
-	
-	public EntityMetaData getEntity() {
-		return entity;
-	}
-	
-	public int getCMPFieldCount() {
-		return cmpFields.size();
-	}
-	
-	public Iterator getCMPFields() {
-		return cmpFields.values().iterator();
-	}
-	
-	public Iterator getEagerLoadFields() {
-		return eagerLoadFields.iterator();
-	}
-	
-	public Iterator getLazyLoadGroups() {
-		return lazyLoadGroups.iterator();
+	/**
+	 * Gets the name of the datasource in jndi for this entity
+	 * @return the name of datasource in jndi
+	 */
+	public String getDataSourceName() {
+		return dataSourceName;
 	}
 
+	/**
+	 * Gets the jdbc type mapping for this entity
+	 * @return the jdbc type mapping for this entity
+	 */
+	public JDBCTypeMappingMetaData getTypeMapping() {
+		return typeMapping;
+	}
+	
+	/**
+	 * Is extra debug info being logged?
+	 * @return true if extra debug info is being logged
+	 */
+	public boolean isDebug() {
+		return debug;
+	}
+	
+	/**
+	 * Gets the name of this entity. The name come from the ejb-jar.xml file.
+	 * @return the name of this entity
+	 */
+	public String getName() {
+		return entityName;
+	}
+
+	/**
+	 * Gets the class loaded which is used to load all classes used by this entity
+	 * @return the class loader which is used to load all classes used by this entity
+	 */
+	public ClassLoader getClassLoader() {
+		return jdbcApplication.getClassLoader();
+	}
+	
+	/**
+	 * Gets the implementation class of this entity
+	 * @return the implementation class of this entity
+	 */
+	public Class getEntityClass() {
+		return entityClass;
+	}
+	
+	/**
+	 * Gets the home class of this entity
+	 * @return the home class of this entity
+	 */
+	public Class getHomeClass() {
+		return homeClass;
+	}
+	
+	/**
+	 * Gets the local home class of this entity
+	 * @return the local home class of this entity
+	 */
+	public Class getLocalHomeClass() {
+		return localHomeClass;
+	}
+	
+	/**
+	 * Does this entity use CMP version 1.x
+	 * @return true if this entity used CMP version 1.x; otherwise false
+	 */
+	public boolean isCMP1x() {
+		return isCMP1x;
+	}
+	
+	/**
+	 * Does this entity use CMP version 2.x
+	 * @return true if this entity used CMP version 2.x; otherwise false
+	 */
+	public boolean isCMP2x() {
+		return !isCMP1x;
+	}
+
+	/**
+	 * Gets the cmp fields of this entity
+	 * @return an unmodifiable collection of JDBCCMPFieldMetaData objects
+	 */
+	public Collection getCMPFields() {
+		return Collections.unmodifiableCollection(cmpFields.values());
+	}
+	
+	/**
+	 * Gets the cmp fields of this entity which are eager loaded 
+	 * @return an unmodifiable collection of the JDBCCMPFieldMetaData objects that are eager loaded
+	 */
+	public Collection getEagerLoadFields() {
+		return Collections.unmodifiableCollection(eagerLoadFields);
+	}
+	
+	/**
+	 * Gets the collections cmp fields of this entity which are lazy loaded together 
+	 * @return an unmodifiable collection of unmodifiable collections of the JDBCCMPFieldMetaData 
+	 * 		objects that are lazy loaded together
+	 */
+	public Collection getLazyLoadGroups() {
+		return Collections.unmodifiableCollection(lazyLoadGroups);
+	}
+
+	/**
+	 * Gets the cmp field with the specified name
+	 * @param name the name of the desired field
+	 * @return the cmp field with the specified name or null if not found
+	 */
 	public JDBCCMPFieldMetaData getCMPFieldByName(String name) {
 		return (JDBCCMPFieldMetaData)cmpFields.get(name);
 	}
 	
-	protected JDBCCMPFieldMetaData getExistingFieldByName(String name) throws DeploymentException {
+	/**
+	 * Gets the cmp field with the specified name
+	 * @param name the name of the desired field
+	 * @return the cmp field with the specified name
+	 * @throws DeploymentException if the field is not found
+	 */
+	private JDBCCMPFieldMetaData getExistingFieldByName(String name) throws DeploymentException {
 		JDBCCMPFieldMetaData field = getCMPFieldByName(name);
 		if(field == null) {
 			throw new DeploymentException("field-name '"+name+"' found in jbosscmp-jdbc.xml but not in ejb-jar.xml");
@@ -416,74 +614,143 @@ public class JDBCEntityMetaData extends MetaData implements XmlLoadable {
 		return field;
 	}
 
+	/**
+	 * Gets the name of the table to which this entity is persisted
+	 * @return the name of the table to which this entity is persisted
+	 */
 	public String getTableName() {
 		return tableName;
 	}
 	
+	/**
+	 * Gets the flag used to determine if the store manager should attempt to create 
+	 * database table when the entity is deployed.
+	 * @return true if the store manager should attempt to create the table
+	 */
 	public boolean getCreateTable() {
 		return createTable;
 	}
 	
+	/**
+	 * Gets the flag used to determine if the store manager should attempt to remove 
+	 * database table when the entity is undeployed.
+	 * @return true if the store manager should attempt to remove the table
+	 */
 	public boolean getRemoveTable() {
 		return removeTable;
 	}
 	
+	/**
+	 * Gets the flag used to determine if the store manager should add a priary key 
+	 * constraint when creating the table
+	 * @return true if the store manager should add a primary key constraint to the 
+	 * 		create table sql statement
+	 */
 	public boolean hasPrimaryKeyConstraint() {
 		return primaryKeyConstraint;
 	}
 	
-	public DataSource getDataSource() {
-		return jdbcApplication.getDataSource();
+	/**
+	 * Gets the flag used to determine if the store manager should add a for update  
+	 * clause when selecting data from the table
+	 * @return true if the store manager should add a for update  
+	 * 		clause when selecting data from the table
+	 */
+	public boolean hasSelectForUpdate() {
+		return selectForUpdate;
 	}
-	
-	public String getDbURL() {
-		return jdbcApplication.getDbURL();
-	}
-	
-	public Iterator getQueries() {
-		return queries.values().iterator();
+
+	/**
+	 * Gets the queries defined on this entity
+	 * @return an unmodifiable collection of JDBCQueryMetaData objects
+	 */
+	public Collection getQueries() {
+		return Collections.unmodifiableCollection(queries.values());
 	}
 	
 	/**
 	 * Get the relationsip roles of this entity. 
 	 * Items are instance of JDBCRelationshipRoleMetaData.
+	 * @return an unmodifiable collection of the relationship roles defined for this entity
 	 */
-	public Iterator getRelationshipRoles() {
-		return relationshipRoles.iterator();
+	public Collection getRelationshipRoles() {
+		return jdbcApplication.getRolesForEntity(entityName);
 	}
-	
+		
 	/**
-	 * Adds a new relationsip roles to this entity. 
+	 * Gets the primary key class for this entity
+	 * @return the primary key class for this entity
 	 */
-	public void addRelationshipRole(JDBCRelationshipRoleMetaData role) {
-		relationshipRoles.add(role);
-	}
-	
 	public Class getPrimaryKeyClass() {
 		return primaryKeyClass;
 	}
 	
+	/**
+	 * Is this entity read only? A readonly entity will never be stored into the database.
+	 * @return true if this entity is read only
+	 */
 	public boolean isReadOnly() {
 		return readOnly;
 	}
 	
+	/**
+	 * How long is a read of this entity valid. This property should only be used on 
+	 * read only entities, and determines how long the data read from the database is 
+	 * valid. When the read times out it should be reread from the database. If the value
+	 * is -1 and the entity is not using commit option a, the read is only valid for the length of the transaction in which it was 
+	 * loaded.
+	 * @return the length of time that a read is valid or -1 if the read is only 
+	 * 		valid for the length of the transaction
+	 */
 	public int getReadTimeOut() {
 		return readTimeOut;
 	}
 	
-	public String getPrimKeyField() {
-		return entity.getPrimKeyField();
+	/**
+	 * Gets the name of the primary key field of this entity or null if the primary key is multivalued
+	 * @return the name of the primary key field of this entity or null if the primary key is multivalued
+	 */
+	public String getPrimaryKeyFieldName() {
+		return primaryKeyFieldName;
 	}
 	
-	public boolean hasSelectForUpdate() {
-		return selectForUpdate;
+	/**
+	 * Compares this JDBCEntityMetaData against the specified object. Returns
+	 * true if the objects are the same. Two JDBCEntityMetaData are the same 
+	 * if they both have the same name and are defined in the same application.
+	 * @param o the reference object with which to compare
+	 * @return true if this object is the same as the object argument; false otherwise
+	 */
+	public boolean equals(Object o) {
+		if(o instanceof JDBCEntityMetaData) {
+			JDBCEntityMetaData entity = (JDBCEntityMetaData)o;
+			return entityName.equals(entity.entityName) && jdbcApplication.equals(entity.jdbcApplication);
+		}
+		return false;
 	}
-				
-	// Package protected ---------------------------------------------
- 
-	// Protected -----------------------------------------------------
-
-	// Private -------------------------------------------------------
-
-	// Inner classes -------------------------------------------------
+	
+	/**
+	 * Returns a hashcode for this JDBCEntityMetaData. The hashcode is computed
+	 * based on the hashCode of the declaring application and the hashCode of the 
+	 * entityName
+	 * @return a hash code value for this object
+	 */
+	public int hashCode() {
+		int result = 17;
+		result = 37*result + jdbcApplication.hashCode();
+		result = 37*result + entityName.hashCode();
+		return result;
+	}
+	/**
+	 * Returns a string describing this JDBCEntityMetaData. The exact details
+	 * of the representation are unspecified and subject to change, but the following
+	 * may be regarded as typical:
+	 * 
+	 * "[JDBCEntityMetaData: entityName=UserEJB]"
+	 *
+	 * @return a string representation of the object
+	 */
+	public String toString() {
+		return "[JDBCEntityMetaData : entityName=" + entityName + "]";
+	}
 }

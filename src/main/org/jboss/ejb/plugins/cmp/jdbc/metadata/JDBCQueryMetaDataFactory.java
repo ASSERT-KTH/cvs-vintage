@@ -22,7 +22,7 @@ import org.jboss.metadata.QueryMetaData;
  * on the query specifiection type.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class JDBCQueryMetaDataFactory {
 	private JDBCEntityMetaData entity;
@@ -32,23 +32,23 @@ public class JDBCQueryMetaDataFactory {
 	}
 	
 	public JDBCQueryMetaData createJDBCQueryMetaData(QueryMetaData queryMetaData, Method method) throws DeploymentException  {
-		return new JDBCQlQueryMetaData(queryMetaData, method, entity);		
+		return new JDBCQlQueryMetaData(queryMetaData, method);		
 	}
 
 	public JDBCQueryMetaData createJDBCQueryMetaData(JDBCQueryMetaData jdbcQueryMetaData, Element queryElement, Method method) throws DeploymentException {
 		Element rawSql = MetaData.getOptionalChild(queryElement, "raw-sql");
 		if(rawSql != null) {
-			return new JDBCRawSqlQueryMetaData(jdbcQueryMetaData, rawSql, method, entity);
+			return new JDBCRawSqlQueryMetaData(method);
 		}
 		
 		Element delcaredSql = MetaData.getOptionalChild(queryElement, "declared-sql");
 		if(delcaredSql != null) {
-			return new JDBCDeclaredQueryMetaData(jdbcQueryMetaData, delcaredSql, method, entity);
+			return new JDBCDeclaredQueryMetaData(delcaredSql, method);
 		}
 		
 		Element ejbQl = MetaData.getOptionalChild(queryElement, "ejb-ql");
 		if(ejbQl != null) {
-			return new JDBCQlQueryMetaData(jdbcQueryMetaData, ejbQl, method, entity);
+			return new JDBCQlQueryMetaData((JDBCQlQueryMetaData)jdbcQueryMetaData, ejbQl, method);
 		}
 		
 		if(jdbcQueryMetaData == null) {
@@ -115,7 +115,7 @@ public class JDBCQueryMetaDataFactory {
 		return (Method[])methods.toArray(new Method[methods.size()]);
 	}
 		
-	protected Method getQueryMethod(String queryName, Class[] parameters, Class clazz) {
+	private Method getQueryMethod(String queryName, Class[] parameters, Class clazz) {
 		try {
 			Method method  = clazz.getMethod(queryName, parameters);
 
@@ -129,7 +129,7 @@ public class JDBCQueryMetaDataFactory {
 		return null;
 	}
    
-	protected Class[] convertToJavaClasses(Iterator iter) throws DeploymentException {
+	private Class[] convertToJavaClasses(Iterator iter) throws DeploymentException {
 		ArrayList classes = new ArrayList();
 		while(iter.hasNext()) {
 			classes.add(convertToJavaClass((String)iter.next()));
@@ -137,7 +137,7 @@ public class JDBCQueryMetaDataFactory {
 		return (Class[]) classes.toArray(new Class[classes.size()]);
 	}
 	
-	protected static final String[] PRIMITIVES = {
+	private static final String[] PRIMITIVES = {
 			"boolean",
 			"byte",
 			"char",
@@ -147,7 +147,7 @@ public class JDBCQueryMetaDataFactory {
 			"float",
 			"double"};
 	
-	protected static final Class[] PRIMITIVE_CLASSES = {
+	private static final Class[] PRIMITIVE_CLASSES = {
 			Boolean.TYPE,
 			Byte.TYPE,
 			Character.TYPE,
@@ -157,7 +157,7 @@ public class JDBCQueryMetaDataFactory {
 			Float.TYPE,
 			Double.TYPE};
 
-	protected Class convertToJavaClass(String name) throws DeploymentException {
+	private Class convertToJavaClass(String name) throws DeploymentException {
 		// Check primitive first
 		for (int i = 0; i < PRIMITIVES.length; i++) {
 			if(name.equals(PRIMITIVES[i])) {

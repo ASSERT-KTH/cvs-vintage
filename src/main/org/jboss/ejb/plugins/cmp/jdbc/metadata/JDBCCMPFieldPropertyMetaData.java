@@ -6,88 +6,178 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import org.jboss.ejb.DeploymentException;
+import org.jboss.metadata.MetaData;
 
 import org.w3c.dom.Element;
 
-import org.jboss.ejb.DeploymentException;
-
-import org.jboss.metadata.XmlLoadable;
-import org.jboss.metadata.MetaData;
-
 /**
- *	This class holds all the information jbosscmp-jdbc needs to know about a CMP field
- * It loads its data from standardjbosscmp-jdbc.xml and jbosscmp-jdbc.xml
+ *	This immutable class contains information about the an overriden field property.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
-public class JDBCCMPFieldPropertyMetaData extends MetaData implements XmlLoadable {
-	// Constants -----------------------------------------------------
-
-	// Attributes ----------------------------------------------------
+public final class JDBCCMPFieldPropertyMetaData {
+	/**
+	 * the cmp field on which this property is defined
+	 */
+	private final JDBCCMPFieldMetaData cmpField;
 	
-   protected String propertyName;
+	/** 
+	 * name of this property
+	 */
+   private final String propertyName;
 
-	// the column name in the table
-	protected String columnName;
+	/**
+    * the column name in the table
+	 */
+	private final String columnName;
 
-	// the jdbc type (see java.sql.Types), used in PreparedStatement.setParameter
-	// default value used is intended to cause an exception if used
-	protected int jdbcType = Integer.MIN_VALUE;
+	/**
+    * the jdbc type (see java.sql.Types), used in PreparedStatement.setParameter
+	 */
+	private final int jdbcType;
 
-	// the sql type, used for table creation.
-	protected String sqlType;
+	/**
+	 * the sql type, used for table creation.
+	 */
+	private final String sqlType;
 
-	// Static --------------------------------------------------------
+	/**
+	 * Constructs cmp field property meta data with the data contained in the property xml 
+	 * element from a jbosscmp-jdbc xml file.
+	 *
+	 * @param cmpField the JDBCCMPFieldMetaData on which this property is defined
+	 * @param element the xml Element which contains the metadata about this field
+	 * @throws DeploymentException if the xml element is not semantically correct
+	 */
+	public JDBCCMPFieldPropertyMetaData(JDBCCMPFieldMetaData cmpField, Element element) throws DeploymentException {
+		this.cmpField = cmpField;
+	   
+		// Property name
+		propertyName = MetaData.getUniqueChildContent(element, "property-name");
 
-	// Constructors --------------------------------------------------
-	public JDBCCMPFieldPropertyMetaData(Element element) throws DeploymentException {
-		// column name
-		propertyName = getElementContent(getUniqueChild(element, "property-name"));
-
-		// column name
-		String columnStr = getElementContent(getOptionalChild(element, "column-name"));
+		// Column name
+		String columnStr = MetaData.getOptionalChildContent(element, "column-name");
 		if(columnStr != null) {
 			columnName = columnStr;
-		} 
+		} else {
+			columnName = null;
+		}
 
 		// jdbc type
-		String jdbcStr = getElementContent(getOptionalChild(element, "jdbc-type"));
+		String jdbcStr = MetaData.getOptionalChildContent(element, "jdbc-type");
 		if(jdbcStr != null) {
 			jdbcType = JDBCMappingMetaData.getJdbcTypeFromName(jdbcStr);
-			sqlType = getElementContent(getUniqueChild(element, "sql-type"));
-		}
+			sqlType = MetaData.getUniqueChildContent(element, "sql-type");
+		} else {
+			jdbcType = Integer.MIN_VALUE;
+			sqlType = null;
+		}	
 	}
 
+	/**
+	 * Constructs cmp field property meta data based on the data contained in the 
+	 * defaultValues parameter but defined on the specified cmpField. This is effectly
+	 * a copy constructory, except it can change the cmpField object on which the
+	 * property is defined.
+	 *
+	 * @param cmpField the JDBCCMPFieldMetaData on which this property is defined
+	 * @param defaultValues the defaultValues of this property
+	 * @throws DeploymentException if the xml element is not semantically correct
+	 */
+	public JDBCCMPFieldPropertyMetaData(JDBCCMPFieldMetaData cmpField, JDBCCMPFieldPropertyMetaData defaultValues) {
+		this.cmpField = cmpField;
+	   
+		// Property name
+		propertyName = defaultValues.propertyName;
 
-	// Public --------------------------------------------------------
+		// Column name
+		columnName = defaultValues.columnName;
+
+		// jdbc type
+		jdbcType = defaultValues.jdbcType;
+		
+		// sql type
+		sqlType = defaultValues.sqlType;
+	}
+
+	/**
+	 * Gets the cmpField on which this property is defined
+	 * @return the cmpField on which this property is defined
+	 */
+	public JDBCCMPFieldMetaData getCMPField() {
+		return cmpField;
+	}
+	 
+	/**
+	 * Gets the name of the property to be overriden.
+	 */
 	public String getPropertyName() {
 		return propertyName;
 	}
 
+	/**
+	 * Gets the column name the property should use or null if the
+	 * column name is not overriden. 
+	 */
 	public String getColumnName() {
 		return columnName;
 	}
 
+	/**
+	 * Gets the JDBC type the property should use or Integer.MIN_VALUE 
+	 * if not overriden.
+	 */
 	public int getJDBCType() {
 		return jdbcType;
 	}
 
+	/**
+	 * Gets the SQL type the property should use or null 
+	 * if not overriden.
+	 */
 	public String getSQLType() {
 		return sqlType;
 	}
-
-	// Package protected ---------------------------------------------
-
-	// Protected -----------------------------------------------------
-
-	// Private -------------------------------------------------------
-
-	// Inner classes -------------------------------------------------
+	
+	/**
+	 * Compares this JDBCCMPFieldPropertyMetaData against the specified object. Returns
+	 * true if the objects are the same. Two JDBCCMPFieldPropertyMetaData are the same 
+	 * if they both have the same name and are defined on the same cmpField.
+	 * @param o the reference object with which to compare
+	 * @return true if this object is the same as the object argument; false otherwise
+	 */
+	public boolean equals(Object o) {
+		if(o instanceof JDBCCMPFieldPropertyMetaData) {
+			JDBCCMPFieldPropertyMetaData cmpFieldProperty = (JDBCCMPFieldPropertyMetaData)o;
+			return propertyName.equals(cmpFieldProperty.propertyName) && 
+							cmpField.equals(cmpFieldProperty.cmpField);
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns a hashcode for this JDBCCMPFieldPropertyMetaData. The hashcode is computed
+	 * based on the hashCode of the declaring entity and the hashCode of the fieldName
+	 * @return a hash code value for this object
+	 */
+	public int hashCode() {
+		int result = 17;
+		result = 37*result + cmpField.hashCode();
+		result = 37*result + propertyName.hashCode();
+		return result;
+	}
+	/**
+	 * Returns a string describing this JDBCCMPFieldPropertyMetaData. The exact details
+	 * of the representation are unspecified and subject to change, but the following
+	 * may be regarded as typical:
+	 * 
+	 * "[JDBCCMPFieldPropertyMetaData: propertyName=line1, [JDBCCMPFieldMetaData: fieldName=address,  [JDBCEntityMetaData: entityName=UserEJB]]"
+	 *
+	 * @return a string representation of the object
+	 */
+	public String toString() {
+		return "[JDBCCMPFieldPropertyMetaData : propertyName=" + propertyName + ", " + cmpField + "]";
+	}	
 }

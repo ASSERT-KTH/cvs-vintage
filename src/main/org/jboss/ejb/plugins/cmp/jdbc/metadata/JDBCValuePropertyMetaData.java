@@ -7,47 +7,43 @@
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.lang.reflect.Method;
-
+import org.jboss.ejb.DeploymentException;
+import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
 
-import org.jboss.ejb.DeploymentException;
-
-import org.jboss.metadata.MetaData;
-import org.jboss.metadata.XmlLoadable;
-
 /**
- * JDBCValuePropertyMetaData contains information about a single dependent
+ * Imutable class which contains information about a single dependent
  * value object property.
  *     
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
-public class JDBCValuePropertyMetaData extends MetaData implements XmlLoadable {
-	// Constants -----------------------------------------------------
+public final class JDBCValuePropertyMetaData {
+	private final String propertyName;
+	private final Class propertyType;
+	private final String columnName;
+	private final String sqlType;
+	private final int jdbcType;
+	private final Method getter;
+	private final Method setter;
 	
-	// Attributes ----------------------------------------------------
-	
-	private String propertyName;
-	private Class propertyType;
-	private String columnName;
-	private String sqlType;
-	// default value used is intended to cause an exception if used
-	private int jdbcType = Integer.MIN_VALUE;
-	private Method getter;
-	private Method setter;
-	
-	// Static --------------------------------------------------------
-	
-	// Constructors --------------------------------------------------
-   
-	// Public --------------------------------------------------------
-	public JDBCValuePropertyMetaData(Element propertyElement, JDBCValueClassMetaData valueClass) throws DeploymentException {
-		Class classType = valueClass.getJavaType();
-		
-		propertyName = getElementContent(getUniqueChild(propertyElement, "property-name"));
+	/**
+	 * Constructs a value property metadata class with the data contained in 
+	 * the property xml element from a jbosscmp-jdbc xml file.
+	 *
+	 * @param propertyElement the xml Element which contains the metadata about
+	 * 		this property
+	 * @param classType the java Class type of the value class on which this 
+	 * 		property is defined
+	 * @throws DeploymentException if the xml element is not semantically correct
+	 */
+	public JDBCValuePropertyMetaData(Element propertyElement, Class classType) throws DeploymentException {
+		propertyName = MetaData.getUniqueChildContent(propertyElement, "property-name");
 
-		columnName = getElementContent(getOptionalChild(propertyElement, "column-name"));
-		if(columnName == null) {
+		String columnNameString = MetaData.getOptionalChildContent(propertyElement, "column-name");
+		if(columnNameString != null) {
+			columnName = columnNameString;
+		} else {
 			columnName = propertyName;
 		}
 
@@ -73,58 +69,97 @@ public class JDBCValuePropertyMetaData extends MetaData implements XmlLoadable {
 		}
 
 		// jdbc type - optional
-		String jdbcString = getElementContent(getOptionalChild(propertyElement, "jdbc-type"));
+		String jdbcString = MetaData.getOptionalChildContent(propertyElement, "jdbc-type");
 		if(jdbcString != null) {
 			jdbcType = JDBCMappingMetaData.getJdbcTypeFromName(jdbcString); 
 			
 			// sql type - required if jdbc-type specified
-			sqlType = getElementContent(getUniqueChild(propertyElement, "sql-type"));
+			sqlType = MetaData.getUniqueChildContent(propertyElement, "sql-type");
+		} else {
+			jdbcType = Integer.MIN_VALUE;
+			sqlType = null;
 		}
 	}
 	
+	/**
+	 * Gets the name of this property. The name will always begin with a lower
+	 * case letter and is a Java Beans property name.  This is the base name of
+	 * the getter and setter property.
+	 *
+	 * @return the name of this property
+	 */
 	public String getPropertyName() {
 		return propertyName;
 	}
 
+	/**
+	 * Gets the java class type of this property. The class the the return type
+	 * of the getter and type of the sole argument of the setter.
+	 *
+	 * @return the java Class type of this property
+	 */
 	public Class getPropertyType() {
 		return propertyType;
 	}
 
+	/**
+	 * Gets the column name which this property will be persisted.
+	 *
+	 * @return the name of the column which this property will be persisted
+	 */
 	public String getColumnName() {
 		return columnName;
 	}
 	
+	/**
+	 * Gets the jdbc type of this property. The jdbc type is used to retrieve data
+	 * from a result set and to set parameters in a prepared statement.
+	 *
+	 * @return the jdbc type of this property
+	 */
 	public int getJDBCType() {
 		return jdbcType;
 	}
 
+	/**
+	 * Gets the sql type of this mapping. The sql type is the sql column data 
+	 * type, and is used in CREATE TABLE statements. 
+	 *
+	 * @return the sql type String of this mapping
+	 */
 	public String getSqlType() {
 		return sqlType;
 	}
 
+	/**
+	 * Gets the getter method of this property. The getter method is used to 
+	 * retrieve the value of this property from the value class.
+	 *
+	 * @return the Method which gets the value of this property
+	 */
 	public Method getGetter() {
 		return getter;
 	}
 
+	/**
+	 * Gets the setter method of this property. The setter method is used to 
+	 * set the value of this property in the value class.
+	 *
+	 * @return the Method which sets the value of this property
+	 */
 	public Method getSetter() {
 		return setter;
 	}
 	
-	// Package protected ---------------------------------------------
-	
-	// Protected -----------------------------------------------------
-	protected String toGetterName(String propertyName) {
+	private String toGetterName(String propertyName) {
 		return "get" + upCaseFirstCharacter(propertyName); 
 	}
 	
-	protected String toSetterName(String propertyName) {
+	private String toSetterName(String propertyName) {
 		return "set" + upCaseFirstCharacter(propertyName); 
 	}
 	
-	protected String upCaseFirstCharacter(String propertyName) {
+	private String upCaseFirstCharacter(String propertyName) {
 		return Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
 	}
-	// Private -------------------------------------------------------
-	
-	// Inner classes -------------------------------------------------
 }

@@ -8,42 +8,20 @@ package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.lang.reflect.Method;
 
-import org.jboss.metadata.MetaData;
-
-import org.w3c.dom.Element;
-
 /**
- *      
+ *	This interface is used to identify a query that will be invoked in 
+ * responce to the invocation of a finder method in a home interface or
+ * an ejbSelect method in a bean implementation class.
+ *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *	@author <a href="danch@nvisia.com">danch</a>
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
-public class JDBCQueryMetaData extends MetaData {
-	// Constants -----------------------------------------------------
-    
-	// Attributes ----------------------------------------------------
-   protected Method method;
-	protected JDBCEntityMetaData entity;
-   	
-	// Static --------------------------------------------------------
-   
-	// Constructors --------------------------------------------------
-   public JDBCQueryMetaData(Method method, JDBCEntityMetaData entity) {
-      this.method = method;
-		this.entity = entity;
-   }
-   
-	// Public --------------------------------------------------------
-   public Method getMethod() {
-		return method;
-	}
-		
-	// Package protected ---------------------------------------------
-    
-	// Protected -----------------------------------------------------
-    
-	// Private -------------------------------------------------------
-
-	// Inner classes -------------------------------------------------
+public interface JDBCQueryMetaData {
+	/**
+	 * Gets the method which invokes this query.
+	 * @return the Method object which invokes this query  
+	 */
+	public Method getMethod();
 }

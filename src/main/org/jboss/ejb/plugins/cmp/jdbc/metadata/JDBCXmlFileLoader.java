@@ -8,73 +8,70 @@
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.net.URL;
-import java.io.IOException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import org.jboss.logging.Log;
-
 import org.jboss.ejb.DeploymentException;
-
+import org.jboss.logging.Log;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.XmlFileLoader;
-
+import org.w3c.dom.Element;
 
 /**
+ * Immutable class which loads the JDBC application meta data from the jbosscmp-jdbc.xml files.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
-public class JDBCXmlFileLoader {
+public final class JDBCXmlFileLoader {
+	private final ApplicationMetaData application;
+	private final ClassLoader classLoader;
+	private final ClassLoader localClassLoader;
+	private final Log log;
 	
-	// Attributes ----------------------------------------------------
-	private ApplicationMetaData application;
-	private ClassLoader classLoader;
-	private ClassLoader localClassLoader;
-	private Log log;
-	
-	
-	// Constructors --------------------------------------------------
-	public JDBCXmlFileLoader(ApplicationMetaData app, ClassLoader cl, ClassLoader localCl, Log l) {
-		application = app;
-		classLoader = cl;
-		localClassLoader = localCl;
-		log = l;
+	/**
+	 * Constructs a JDBC XML file loader, which loads the JDBC application meta data from
+	 * the jbosscmp-xml files.
+	 *
+	 * @param application the application meta data loaded from the ejb-jar.xml file
+	 * @param classLoader the classLoader used to load all classes in the application
+	 * @param localClassLoader the classLoader used to load the jbosscmp-jdbc.xml file from the jar
+	 * @param log the log for this application
+	 */
+	public JDBCXmlFileLoader(ApplicationMetaData application, ClassLoader classLoader, ClassLoader localClassLoader, Log log) {
+		this.application = application;
+		this.classLoader = classLoader;
+		this.localClassLoader = localClassLoader;
+		this.log = log;
 	}
 
-
-	// Public --------------------------------------------------------
+	/**
+	 * Loads the application meta data from the jbosscmp-jdbc.xml file
+	 *
+	 * @return the jdbc application meta data loaded from the jbosscmp-jdbc.xml files
+	 */
 	public JDBCApplicationMetaData load() throws DeploymentException {
-		
-		// first create the metadata
 		JDBCApplicationMetaData jamd = new JDBCApplicationMetaData(application, classLoader);
 		
 		// Load standardjbosscmp-jdbc.xml from the default classLoader
 		// we always load defaults first
-		URL stdJDBCUrl = classLoader.getResource("standardjbosscmp-jdbc.xml");
-		
+		URL stdJDBCUrl = classLoader.getResource("standardjbosscmp-jdbc.xml");	
 		if(stdJDBCUrl == null) {
 			throw new DeploymentException("No standardjbosscmp-jdbc.xml found");
 		}
 		
 		log.debug("Loading standardjbosscmp-jdbc.xml : " + stdJDBCUrl.toString());
-		Document stdJDBCDocument = XmlFileLoader.getDocument(stdJDBCUrl);
-		jamd.importXml(stdJDBCDocument.getDocumentElement());
+		Element stdJDBCElement = XmlFileLoader.getDocument(stdJDBCUrl).getDocumentElement();
+		
+		// first create the metadata
+		jamd = new JDBCApplicationMetaData(stdJDBCElement, jamd);
 		
 		// Load jbosscmp-jdbc.xml if provided
-		URL jdbcUrl = localClassLoader.getResource("META-INF/jbosscmp-jdbc.xml");
-		
-		if (jdbcUrl != null) {
+		URL jdbcUrl = localClassLoader.getResource("META-INF/jbosscmp-jdbc.xml");		
+		if(jdbcUrl != null) {
 			log.debug(jdbcUrl.toString() + " found. Overriding defaults");
-			Document jdbcDocument = XmlFileLoader.getDocument(jdbcUrl);
-			jamd.importXml(jdbcDocument.getDocumentElement());
+			Element jdbcElement = XmlFileLoader.getDocument(jdbcUrl).getDocumentElement();
+			jamd = new JDBCApplicationMetaData(jdbcElement, jamd);
 		}
-		
-		// this can only be done once all the beans are built
-		jamd.init();
-		
+
 		return jamd;
 	}
 }

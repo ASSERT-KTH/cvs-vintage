@@ -10,15 +10,60 @@ import java.lang.reflect.Method;
 import org.w3c.dom.Element;
 
 /**
- * JDBCRawSqlQueryMetaData holds information about a raw sql query.
+ * Imutable class which holds information about a raw sql query.
  * A raw sql query allows you to do anything sql allows you to do.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
-public class JDBCRawSqlQueryMetaData extends JDBCQueryMetaData {
-	public JDBCRawSqlQueryMetaData(JDBCQueryMetaData jdbcQueryMetaData, Element queryElement, Method method, JDBCEntityMetaData entity) {
-		super(method, entity);
-		// other stuff here
+public final class JDBCRawSqlQueryMetaData implements JDBCQueryMetaData {
+   private final Method method;
+
+	/**
+	 * Constructs a JDBCRawSqlQueryMetaData which is invoked by the specified
+	 * method.
+	 * @param method the method which invokes this query
+	 */
+	public JDBCRawSqlQueryMetaData(Method method) {
+      this.method = method;
+	}
+	
+	public Method getMethod() {
+		return method;
+	}
+	
+	/**
+	 * Compares this JDBCRawSqlQueryMetaData against the specified object. Returns
+	 * true if the objects are the same. Two JDBCRawSqlQueryMetaData are the same 
+	 * if they are both invoked by the same method.
+	 * @param o the reference object with which to compare
+	 * @return true if this object is the same as the object argument; false otherwise
+	 */
+	public boolean equals(Object o) {
+		if(o instanceof JDBCRawSqlQueryMetaData) {
+			return ((JDBCRawSqlQueryMetaData)o).method.equals(method);
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns a hashcode for this JDBCRawSqlQueryMetaData. The hashcode is computed
+	 * by the method which invokes this query.
+	 * @return a hash code value for this object
+	 */
+	public int hashCode() {
+		return method.hashCode();
+	}
+	/**
+	 * Returns a string describing this JDBCRawSqlQueryMetaData. The exact details
+	 * of the representation are unspecified and subject to change, but the following
+	 * may be regarded as typical:
+	 * 
+	 * "[JDBCRawSqlQueryMetaData: method=public org.foo.User findByName(java.lang.String)]"
+	 *
+	 * @return a string representation of the object
+	 */
+	public String toString() {
+		return "[JDBCRawSqlQueryMetaData : method=" + method + "]";
 	}
 }
