@@ -19,7 +19,7 @@
 </div>
 <div class="colbar">	
   <div><input type="radio" name="querytype" value="custom" />&nbsp;
-    <strong>Query selected:</strong> query common fields from Issue types in 
+    <strong>Query selected:</strong> query common fields from issue types in 
     this module
   </div>
   <div><input type="radio" name="querytype" value="all" />&nbsp;
