@@ -179,7 +179,7 @@ Fixed bugs:
 - added more-failsafe handling of loading/saving header-cache
 - added jniwrapper support, trayicon for win32
 - moved independent classes to core, deleted independent directory
-- #926690, Foreward Message with Attachement failes
+- #926690, Forward Message with Attachment files
 - #956286, Date/time is not displayed correctly for my date settings
 - fixed dialog parent frame reference for many dialogs
 - #956288, recent mailfolderinfo wasn't updated when deleting message

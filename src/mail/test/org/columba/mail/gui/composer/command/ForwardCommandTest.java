@@ -75,7 +75,7 @@ public class ForwardCommandTest extends AbstractComposerTestCase {
 		assertEquals("Subject", "Fwd: test", subject);
 	}
 
-	public void testForewardWithAttachement() throws Exception {
+	public void testForewardWithAttachment() throws Exception {
 		String input = FolderTstHelper.getString("0_attachment.eml");
 		System.out.println("input=" + input);
 		// create stream from string
