@@ -618,10 +618,12 @@ public class ContextManager implements LogAware {
 	// clean up
 	try {
 	    res.finish();
-	    req.recycle();
-	    res.recycle();
 	} catch( Throwable ex ) {
 	    handleError( req, res, ex );
+	}
+	finally {
+	    req.recycle();
+	    res.recycle();
 	}
 	return;
     }
