@@ -1,4 +1,4 @@
-// $Id: CrUselessInterface.java,v 1.4 2003/01/25 16:25:27 linus Exp $
+// $Id: CrUselessInterface.java,v 1.5 2003/06/19 06:36:08 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ public class CrUselessInterface extends CrUML {
 	    return NO_PROBLEM;
 
 
-	Iterator iter = ModelFacade.getSupplierDependencies(dm);
+	Iterator iter = ModelFacade.getSupplierDependencies(dm).iterator();
 
 	while (iter.hasNext())
 	    if (ModelFacade.isRealize(iter.next()))

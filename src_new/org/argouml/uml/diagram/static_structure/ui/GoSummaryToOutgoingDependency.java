@@ -36,9 +36,9 @@ import org.argouml.ui.AbstractGoRule;
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  *
- * @author  alexb, $Author: alexb $
+ * @author  alexb, $Author: kataka $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class GoSummaryToOutgoingDependency extends AbstractGoRule {
@@ -52,7 +52,7 @@ public class GoSummaryToOutgoingDependency extends AbstractGoRule {
           
           List list = new ArrayList();
           
-          Iterator it = ModelFacade.getClientDependencies(((OutgoingDependencyNode)parent).getParent());
+          Iterator it = ModelFacade.getClientDependencies(((OutgoingDependencyNode)parent).getParent()).iterator();
           
           while(it.hasNext()){
               

@@ -1,4 +1,4 @@
-// $Id: SelectionInterface.java,v 1.13 2003/06/19 06:04:27 kataka Exp $
+// $Id: SelectionInterface.java,v 1.14 2003/06/19 06:36:08 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: SelectionInterface.java
 // Classes: SelectionInterface
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionInterface.java,v 1.13 2003/06/19 06:04:27 kataka Exp $
+// $Id: SelectionInterface.java,v 1.14 2003/06/19 06:36:08 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -50,7 +50,7 @@ import org.tigris.gef.graph.MutableGraphModel;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.Handle;
-import ru.novosoft.uml.foundation.core.MAbstraction;
+
 import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.foundation.core.MClassImpl;
 import ru.novosoft.uml.foundation.core.MInterface;
@@ -134,7 +134,7 @@ public class SelectionInterface extends SelectionWButtons {
     boolean reverse = false;
     switch (hand.index) {
     case 11: //add realization
-      edgeClass = MAbstraction.class;
+      edgeClass = (Class)ModelFacade.ABSTRACTION;
       reverse = true;
       by = cy + ch;
       bx = cx + cw/2;
@@ -165,7 +165,7 @@ public class SelectionInterface extends SelectionWButtons {
      * @see org.argouml.uml.diagram.ui.SelectionWButtons#createEdgeUnder(org.tigris.gef.graph.MutableGraphModel, java.lang.Object)
      */
     protected Object createEdgeUnder(MutableGraphModel gm, Object newNode) {
-        return gm.connect(newNode, _content.getOwner(), MAbstraction.class);
+        return gm.connect(newNode, _content.getOwner(), (Class)ModelFacade.ABSTRACTION);
     }
 
     /**

@@ -24,7 +24,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.33 2003/06/19 06:04:27 kataka Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.34 2003/06/19 06:36:08 kataka Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -117,7 +117,7 @@ implements VetoableChangeListener  {
       // top of the hierarchy is ME:
       if(ModelFacade.isAModelElement(port)){
           
-          Iterator it = ModelFacade.getSupplierDependencies(port);
+          Iterator it = ModelFacade.getSupplierDependencies(port).iterator();
           while (it.hasNext()) {
               edges.add(it.next());
           }
@@ -194,7 +194,7 @@ implements VetoableChangeListener  {
       // top of the hierarchy is ME:
       if(ModelFacade.isAModelElement(port)){
           
-          Iterator it = ModelFacade.getClientDependencies(port);
+          Iterator it = ModelFacade.getClientDependencies(port).iterator();
           while (it.hasNext()) {
               edges.add(it.next());
           }

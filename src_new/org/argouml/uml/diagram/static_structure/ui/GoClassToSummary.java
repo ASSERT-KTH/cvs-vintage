@@ -36,9 +36,9 @@ import org.argouml.ui.AbstractGoRule;
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  *
- * @author  alexb, $Author: alexb $
+ * @author  alexb, $Author: kataka $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class GoClassToSummary extends AbstractGoRule {
@@ -78,7 +78,7 @@ public class GoClassToSummary extends AbstractGoRule {
 
   private boolean hasIncomingDependencies(Object parent){
       
-            Iterator incomingIt = ModelFacade.getSupplierDependencies(parent);
+            Iterator incomingIt = ModelFacade.getSupplierDependencies(parent).iterator();
           
           while(incomingIt.hasNext()){
               
@@ -91,7 +91,7 @@ public class GoClassToSummary extends AbstractGoRule {
   
   private boolean hasOutGoingDependencies(Object parent){
       
-          Iterator incomingIt = ModelFacade.getClientDependencies(parent);
+          Iterator incomingIt = ModelFacade.getClientDependencies(parent).iterator();
           
           while(incomingIt.hasNext()){
               
@@ -104,8 +104,8 @@ public class GoClassToSummary extends AbstractGoRule {
  
   private boolean hasInheritance(Object parent){
       
-          Iterator incomingIt = ModelFacade.getSupplierDependencies(parent);
-          Iterator outgoingIt = ModelFacade.getClientDependencies(parent);
+          Iterator incomingIt = ModelFacade.getSupplierDependencies(parent).iterator();
+          Iterator outgoingIt = ModelFacade.getClientDependencies(parent).iterator();
           Iterator generalizationsIt = ModelFacade.getGeneralizations(parent);
           Iterator specializationsIt = ModelFacade.getSpecializations(parent);
           
