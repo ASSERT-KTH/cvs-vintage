@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.13 2001/08/12 03:57:52 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2001/08/12 03:57:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.14 2001/08/22 16:58:29 mmanders Exp $
+ * $Revision: 1.14 $
+ * $Date: 2001/08/22 16:58:29 $
  *
  * ====================================================================
  *
@@ -291,12 +291,15 @@ public class PoolTcpEndpoint { // implements Endpoint {
 		    s=new Socket("127.0.0.1", port );
 		}else{
 		    s=new Socket(inet, port );
+                    // setting soLinger to a small value will help shutdown the
+                    // connection quicker
+                    s.setSoLinger(true, 0);
 		}
 		s.close();
 		//		System.out.println("Closing socket " + port );
 		serverSocket.close(); // XXX?
 	    } catch(Exception e) {
-		e.printStackTrace();
+                log("Caught exception trying to unlock accept.", e);
 	    }
 	    serverSocket = null;
 	}
