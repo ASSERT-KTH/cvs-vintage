@@ -1,4 +1,4 @@
-// $Id: CrComponentInstanceWithoutClassifier.java,v 1.9 2003/12/14 17:14:03 mkl Exp $
+// $Id: CrComponentInstanceWithoutClassifier.java,v 1.10 2003/12/29 16:26:40 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Vector;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
@@ -82,16 +83,18 @@ public class CrComponentInstanceWithoutClassifier extends CrUML {
      **/
     public VectorSet computeOffenders(UMLDeploymentDiagram deploymentDiagram) { 
 
-	Vector figs = deploymentDiagram.getLayer().getContents();
+	Collection figs = deploymentDiagram.getLayer().getContents(null);
 	VectorSet offs = null;
 	int size = figs.size();
 	boolean isNode = false;
-	for (int j = 0; j < size; j++) {
-	    Object obj = figs.elementAt(j);
+        Iterator figIter = figs.iterator();
+	while (figIter.hasNext()) {
+	    Object obj = figIter.next();
 	    if (obj instanceof FigMNodeInstance) isNode = true;
 	}
-	for (int i = 0; i < size; i++) {
-	    Object obj = figs.elementAt(i);
+        figIter = figs.iterator();
+	while (figIter.hasNext()) {
+	    Object obj = figIter.next();
 	    if (!(obj instanceof FigComponentInstance)) continue;
 	    FigComponentInstance figComponentInstance = (FigComponentInstance) obj;
 	    if (figComponentInstance != null) {

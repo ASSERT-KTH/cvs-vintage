@@ -1,4 +1,4 @@
-// $Id: CrNodesOverlap.java,v 1.9 2003/08/30 20:09:52 alexb Exp $
+// $Id: CrNodesOverlap.java,v 1.10 2003/12/29 16:26:40 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrNodesOverlap.java
 // Classes: CrNodesOverlap
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNodesOverlap.java,v 1.9 2003/08/30 20:09:52 alexb Exp $
+// $Id: CrNodesOverlap.java,v 1.10 2003/12/29 16:26:40 bobtarling Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -99,7 +99,7 @@ public class CrNodesOverlap extends CrUML {
 
     public VectorSet computeOffenders(Diagram d) {
 	//TODO: algorithm is n^2 in number of nodes
-	Vector figs = d.getLayer().getContents();
+	Vector figs = new Vector(d.getLayer().getContents(null));
 	int numFigs = figs.size();
 	int numRects = 0;
 	VectorSet offs = null;

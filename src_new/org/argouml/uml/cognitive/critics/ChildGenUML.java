@@ -1,4 +1,4 @@
-// $Id: ChildGenUML.java,v 1.14 2003/12/11 22:11:52 mkl Exp $
+// $Id: ChildGenUML.java,v 1.15 2003/12/29 16:26:40 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,10 +25,11 @@
 // File: ChildGenUML.java
 // Classes: ChildGenUML
 // Original Author: jrobbins
-// $Id: ChildGenUML.java,v 1.14 2003/12/11 22:11:52 mkl Exp $
+// $Id: ChildGenUML.java,v 1.15 2003/12/29 16:26:40 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
+import java.util.Collection;
 import org.apache.log4j.Logger;
 
 import java.util.Enumeration;
@@ -56,7 +57,10 @@ public class ChildGenUML implements ChildGenerator {
 
     private static Logger cat = Logger.getLogger(ChildGenUML.class);
     
-    /** Reply a java.util.Enumeration of the children of the given Object */
+    /** Reply a java.util.Enumeration of the children of the given Object 
+     * TODO GEF has moved away from vectors to collections
+     * returning an iterator would now seem better.
+     */
     public Enumeration gen(Object o) {
         
         if (o == null) cat.debug("Object is null");
@@ -69,8 +73,8 @@ public class ChildGenUML implements ChildGenerator {
 	}
 
 	if (o instanceof Diagram) {
-	    Vector figs = ((Diagram) o).getLayer().getContents();
-	    if (figs != null) return figs.elements();
+	    Collection figs = ((Diagram) o).getLayer().getContents(null);
+	    if (figs != null) return new Vector(figs).elements();
 	}
 
 	if (ModelFacade.isAPackage(o)) {

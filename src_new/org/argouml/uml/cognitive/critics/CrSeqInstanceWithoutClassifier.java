@@ -1,4 +1,4 @@
-// $Id: CrSeqInstanceWithoutClassifier.java,v 1.9 2003/12/14 17:14:07 mkl Exp $
+// $Id: CrSeqInstanceWithoutClassifier.java,v 1.10 2003/12/29 16:26:40 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Vector;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
@@ -81,11 +82,11 @@ public class CrSeqInstanceWithoutClassifier extends CrUML {
      * and FigMNodeInstances with no classifier.
      **/
     public VectorSet computeOffenders(UMLSequenceDiagram sd) { 
-	Vector figs = sd.getLayer().getContents();
+	Collection figs = sd.getLayer().getContents(null);
+        Iterator figIter = figs.iterator();
 	VectorSet offs = null;
-	int size = figs.size();
-	for (int i = 0; i < size; i++) {
-	    Object obj = figs.elementAt(i);
+	while (figIter.hasNext()) {
+	    Object obj = figIter.next();
 	    if (!(obj instanceof FigNodeModelElement)) continue;
 	    FigNodeModelElement fn = (FigNodeModelElement) obj;
 	    if (fn != null && (ModelFacade.isAInstance(fn.getOwner()))) {

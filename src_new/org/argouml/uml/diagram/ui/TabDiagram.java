@@ -1,5 +1,5 @@
 
-// $Id: TabDiagram.java,v 1.35 2003/12/23 20:44:18 jjones Exp $
+// $Id: TabDiagram.java,v 1.36 2003/12/29 16:26:39 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TabDiagram.java,v 1.35 2003/12/23 20:44:18 jjones Exp $
+// $Id: TabDiagram.java,v 1.36 2003/12/29 16:26:39 bobtarling Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -313,11 +313,14 @@ public class TabDiagram
         Vector figList = new Vector();
         for (int i = 0; i < targets.length; i++) {
             if (targets[i] != null) {
-                Object target =
-                    (targets[i] instanceof Fig
-		     && manager.getContents().contains(targets[i]))
-		    ? targets[i]
-		    : manager.presentationFor(targets[i]);
+                Object target = null;
+                if (targets[i] instanceof Fig
+		        && manager.getContents(null).contains(targets[i])) {
+		    target = targets[i];
+                } else {
+		    target = manager.presentationFor(targets[i]);
+                }
+
                 if (target != null) {
                     figList.add(target);
                 }
@@ -387,12 +390,20 @@ class ArgoEditor extends Editor {
         
     public ArgoEditor(Diagram d) {
 	super(d);
-    setupRenderingHints();
+        setupRenderingHints();
     }
         
+    /**
+     * @deprecated in 0.16 in favour of ArgoEditor(GraphModel gm, JComponent c)
+     */
     public ArgoEditor(GraphModel gm, Component c) {
+	super(gm, (JComponent)c);
+        setupRenderingHints();
+    }
+
+    public ArgoEditor(GraphModel gm, JComponent c) {
 	super(gm, c);
-    setupRenderingHints();
+        setupRenderingHints();
     }
 
     /**

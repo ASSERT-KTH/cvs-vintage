@@ -1,4 +1,4 @@
-// $Id: FigComponentInstance.java,v 1.20 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: FigComponentInstance.java,v 1.21 2003/12/29 16:26:39 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigComponentInstance.java
 // Classes: FigComponentInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigComponentInstance.java,v 1.20 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: FigComponentInstance.java,v 1.21 2003/12/29 16:26:39 bobtarling Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -204,10 +204,10 @@ public class FigComponentInstance extends FigNodeModelElement {
 
             if (getLayer() != null) {
                 // elementOrdering(figures);
-                Vector contents = getLayer().getContents();
-                int contentsSize = contents.size();
-                for (int j = 0; j < contentsSize; j++) {
-                    Object o = contents.elementAt(j);
+                Collection contents = getLayer().getContents(null);
+                Iterator it = contents.iterator();
+                while (it.hasNext()) {
+                    Object o = it.next();
                     if (o instanceof FigEdgeModelElement) {
                         FigEdgeModelElement figedge = (FigEdgeModelElement) o;
                         figedge.getLayer().bringToFront(figedge);

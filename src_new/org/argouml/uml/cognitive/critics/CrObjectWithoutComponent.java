@@ -1,5 +1,5 @@
 
-// $Id: CrObjectWithoutComponent.java,v 1.9 2003/12/14 17:14:07 mkl Exp $
+// $Id: CrObjectWithoutComponent.java,v 1.10 2003/12/29 16:26:40 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,10 +26,12 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrObjectWithoutComponent.java,v 1.9 2003/12/14 17:14:07 mkl Exp $
+// $Id: CrObjectWithoutComponent.java,v 1.10 2003/12/29 16:26:40 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Vector;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
@@ -82,11 +84,11 @@ public class CrObjectWithoutComponent extends CrUML {
      * with no enclosing FigComponent or FigComponentInstance
      **/
     public VectorSet computeOffenders(UMLDeploymentDiagram dd) { 
-	Vector figs = dd.getLayer().getContents();
+	Collection figs = dd.getLayer().getContents(null);
+        Iterator figIter = figs.iterator();
 	VectorSet offs = null;
-	int size = figs.size();
-	for (int i = 0; i < size; i++) {
-	    Object obj = figs.elementAt(i);
+	while (figIter.hasNext()) {
+	    Object obj = figIter.next();
 	    if (!(obj instanceof FigObject)) continue;
 	    FigObject fo = (FigObject) obj;
 	    if (fo.getEnclosingFig() == null ||

@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.39 2003/11/10 12:35:04 jhraigniac Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.40 2003/12/29 16:26:39 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -136,13 +136,14 @@ public class UMLCollaborationDiagram extends UMLDiagram {
 
     public int getNumMessages() {
         Layer lay = getLayer();
-        Vector figs = lay.getContents();
+        Collection figs = lay.getContents(null);
         int res = 0;
-        int size = figs.size();
-        for (int i = 0; i < size; i++) {
-            Fig f = (Fig)figs.elementAt(i);
-            if (org.argouml.model.ModelFacade.isAMessage(f.getOwner()))
+        Iterator it = figs.iterator();
+        while (it.hasNext()) {
+            Fig f = (Fig)it.next();
+            if (ModelFacade.isAMessage(f.getOwner())) {
                 res++;
+            }
         }
         return res;
     }

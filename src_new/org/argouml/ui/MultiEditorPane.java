@@ -1,4 +1,4 @@
-// $Id: MultiEditorPane.java,v 1.32 2003/11/11 22:01:15 linus Exp $
+// $Id: MultiEditorPane.java,v 1.33 2003/12/29 16:26:39 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -226,7 +226,7 @@ public class MultiEditorPane
         Component curTab = _tabs.getSelectedComponent();
         if (curTab instanceof TabDiagram) {
             JGraph jg = ((TabDiagram) curTab).getJGraph();
-            if (jg.getEditor().getLayerManager().getContents().contains(o))
+            if (jg.getEditor().getLayerManager().getContents(null).contains(o))
                 jg.selectByOwnerOrFig(o);
         }
         //TODO: handle tables
@@ -235,9 +235,9 @@ public class MultiEditorPane
     
 
 
-      /**
-       *  called when the user selects a tab, by clicking or otherwise. 
-       */
+    /**
+     *  called when the user selects a tab, by clicking or otherwise. 
+     */
     public void stateChanged(ChangeEvent  e) {
         //TODO: should fire its own event and ProjectBrowser
         //should register a listener

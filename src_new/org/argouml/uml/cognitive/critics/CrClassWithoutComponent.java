@@ -1,4 +1,4 @@
-// $Id: CrClassWithoutComponent.java,v 1.10 2003/12/14 17:14:03 mkl Exp $
+// $Id: CrClassWithoutComponent.java,v 1.11 2003/12/29 16:26:40 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,10 +25,12 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrClassWithoutComponent.java,v 1.10 2003/12/14 17:14:03 mkl Exp $
+// $Id: CrClassWithoutComponent.java,v 1.11 2003/12/29 16:26:40 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Vector;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
@@ -80,11 +82,11 @@ public class CrClassWithoutComponent extends CrUML {
      * enclosing FigComponent
      **/
     public VectorSet computeOffenders(UMLDeploymentDiagram dd) { 
-	Vector figs = dd.getLayer().getContents();
+	Collection figs = dd.getLayer().getContents(null);
 	VectorSet offs = null;
-	int size = figs.size();
-	for (int i = 0; i < size; i++) {
-	    Object obj = figs.elementAt(i);
+	Iterator figIter = figs.iterator();
+	while (figIter.hasNext()) {
+	    Object obj = figIter.next();
 	    if (!(obj instanceof FigClass)) continue;
 	    FigClass fc = (FigClass) obj;
 	    if (fc.getEnclosingFig() == null

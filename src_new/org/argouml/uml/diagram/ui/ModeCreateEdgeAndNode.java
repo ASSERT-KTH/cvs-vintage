@@ -1,4 +1,4 @@
-// $Id: ModeCreateEdgeAndNode.java,v 1.20 2003/12/06 18:12:56 alexb Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.21 2003/12/29 16:26:39 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.20 2003/12/06 18:12:56 alexb Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.21 2003/12/29 16:26:39 bobtarling Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -229,10 +229,10 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
                 mgm.addNode(newNode);
                 Fig encloser = null;
                 Rectangle bbox = _fn.getBounds();
-                Vector otherFigs = lay.getContents();
-                java.util.Enumeration others = otherFigs.elements();
-                while (others.hasMoreElements()) {
-                    Fig otherFig = (Fig) others.nextElement();
+                Collection otherFigs = lay.getContents(null);
+                Iterator others = otherFigs.iterator();
+                while (others.hasNext()) {
+                    Fig otherFig = (Fig) others.next();
                     if (!(otherFig instanceof FigNode))
                         continue;
                     if (otherFig.equals(_fn))
