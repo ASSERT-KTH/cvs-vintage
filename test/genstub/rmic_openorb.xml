@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+ - The contents of this file are subject to the LGPL Licence 
+ -
+ - <a href="Guillaume.Riviere@inrialpes.fr">Guillaume RIVIERE</a>
+ -
+ - Compilation directive for openorb 
+ - this task did not use the rmic ant task because this 
+ - task is not supporded with the david or jeremie rmic 
+ - and so we use a java task ...
+ -
+ -->
+
+<project name="rmic_openorb" default="compile.all" basedir=".">
+
+  <!-- Building of a path which contains carol jars for tests compilation-->
+  <path id="openorb.classpath">
+    <fileset dir="${carol.dist}/lib">
+      <include name="**/*.jar"/>
+    </fileset>   
+    <fileset dir="${test.externals}">
+      <include name="**/*.jar"/>
+    </fileset>    
+    <fileset dir="${test.ext}">
+      <include name="jonathan.xml"/>
+    </fileset>
+    <pathelement location="${test.build}/classes"/>
+    <fileset dir="${test.build}">
+      <include name="**/*.class"/>
+    </fileset>
+  </path>
+
+  <property name="compiler.openorb" value="org.openorb.rmi.compiler.JavaToIdl" />
+ 
+
+  <target name="compile.all"> 
+    <antcall target="compile.openorb"/>
+    <!--antcall target="compile.david"/-->
+  </target>
+
+
+  <!-- Compile Remote Interface Stub/Skel target for Jeremie-->
+  <target name="compile.openorb">
+    <mkdir dir="${test.build.stub}/openorb"/>
+    <java classname="${compiler.openorb}" fork="true" failonerror="true">
+
+
+      <arg value="-tie"/>
+      <arg value="-stub"/>
+      <arg value="-noidl"/>
+      <arg value="-d"/>
+      <arg path="${test.build.stub}/openorb"/>
+      <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicObject"/>
+      <!--<arg value="org.objectweb.carol.jtests.conform.basic.server.BasicMultiObject"/>-->
+      <classpath refid="openorb.classpath"/>
+    </java>
+    <jar destfile="${test.dist.lib}/openorb.jar" basedir="${test.build.stub}/openorb" />
+  </target>   
+
+  
+</project>
