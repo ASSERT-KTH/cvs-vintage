@@ -24,6 +24,7 @@ import java.io.FileReader;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.util.AddressbookResourceLoader;
 
 /**
  * @version 1.0
@@ -100,4 +101,10 @@ public class NetscapeLDIFAddressbookImporter
 
 		in.close();
 	}
+	
+	
+	public String getDescription() {
+		return AddressbookResourceLoader.getString("dialog", "addressbookimport","netscapeldifaddressbook_description");
+	}
+
 }

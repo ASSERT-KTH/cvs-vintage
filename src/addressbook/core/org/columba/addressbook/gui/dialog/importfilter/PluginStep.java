@@ -72,6 +72,17 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
 	}
 
 	protected JComponent createComponent() {
+		JList list =
+			new JList(
+				((ImportPluginHandler) data.getData("Plugin.handler"))
+					.getPluginIdList());
+		list.setCellRenderer(new PluginListCellRenderer());
+
+		descriptionLabel = new MultiLineLabel("description");
+		descriptionLabel.setWrapStyleWord(true);
+		descriptionLabel.setLineWrap(true);
+		
+		
 		JComponent component = new JPanel(new BorderLayout());
 		component.setLayout(new BorderLayout(0, 30));
 		component.add(
@@ -85,11 +96,7 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
 		middlePanel.setAlignmentX(1);
 		GridBagLayout layout = new GridBagLayout();
 		middlePanel.setLayout(layout);
-		JList list =
-			new JList(
-				((ImportPluginHandler) data.getData("Plugin.handler"))
-					.getPluginIdList());
-		list.setCellRenderer(new PluginListCellRenderer());
+
 		Method method = null;
 		try {
 			method = list.getClass().getMethod("getSelectedValue", null);
@@ -111,9 +118,7 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
 		c.weighty = 1.0;
 		layout.setConstraints(scrollPane, c);
 		middlePanel.add(scrollPane);
-		descriptionLabel = new MultiLineLabel("description");
-		descriptionLabel.setWrapStyleWord(true);
-		descriptionLabel.setLineWrap(true);
+
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.weightx = 0.6;
 		c.gridx = 1;
@@ -135,9 +140,10 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
 				(DefaultAddressbookImporter) pluginHandler.getPlugin(
 					(String) data.getData("Plugin.ID"),
 					null);
+
 			String description = importer.getDescription();
-			if ( description.length() != 0 )
-			descriptionLabel.setText(description);
+			if (description.length() != 0)
+				descriptionLabel.setText(description);
 
 		} catch (Exception e) {
 
