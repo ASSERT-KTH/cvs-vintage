@@ -24,7 +24,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.12 2002/10/23 05:24:22 mkl Exp $
+// $Id: UMLClassDiagram.java,v 1.13 2002/10/28 20:48:20 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -147,13 +147,9 @@ public class UMLClassDiagram extends UMLDiagram {
   /** initialize the toolbar for this diagram type */
   protected void initToolBar() {
     _toolBar = new ToolBar();
-    _toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    _toolBar.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
 
-//     _toolBar.add(Actions.Cut);
-//     _toolBar.add(Actions.Copy);
-//     _toolBar.add(Actions.Paste);
-//     _toolBar.addSeparator();
-
+    //_toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
     _toolBar.add(_actionSelect);
     _toolBar.add(_actionBroom);
     _toolBar.addSeparator();
@@ -172,7 +168,7 @@ public class UMLClassDiagram extends UMLDiagram {
 //     _toolBar.addSeparator();
 
     _toolBar.add(_actionInterface);
-	_toolBar.add(_actionRealize);
+    _toolBar.add(_actionRealize);
     _toolBar.addSeparator();
 
     _toolBar.add(ActionAddAttribute.SINGLETON);

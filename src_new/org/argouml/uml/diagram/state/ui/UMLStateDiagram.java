@@ -24,7 +24,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.17 2002/10/08 20:04:30 kataka Exp $
+// $Id: UMLStateDiagram.java,v 1.18 2002/10/28 20:48:20 bobtarling Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -186,11 +186,8 @@ public MStateMachine getStateMachine() {
   protected void initToolBar() {
     cat.debug("making state toolbar");
     _toolBar = new ToolBar();
-    _toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-//     _toolBar.add(Actions.Cut);
-//     _toolBar.add(Actions.Copy);
-//     _toolBar.add(Actions.Paste);
-//     _toolBar.addSeparator();
+    _toolBar.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
+    //_toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
     _toolBar.add(_actionSelect);
     _toolBar.add(_actionBroom);

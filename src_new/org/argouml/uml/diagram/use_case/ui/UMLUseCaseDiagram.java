@@ -24,7 +24,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.10 2002/10/08 20:04:33 kataka Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.11 2002/10/28 20:48:20 bobtarling Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity. Default
@@ -248,15 +248,8 @@ public class UMLUseCaseDiagram extends UMLDiagram {
         // Create a toolbar
 
         _toolBar = new ToolBar();
-        _toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-
-        // The Cut/Copy/Past tools would go here, but are currently not
-        // working, so commented out.
-
-        // _toolBar.add(Actions.Cut);
-        // _toolBar.add(Actions.Copy);
-        // _toolBar.add(Actions.Paste);
-        // _toolBar.addSeparator();
+        //_toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        _toolBar.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
 
         // Select and broom
 

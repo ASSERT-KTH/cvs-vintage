@@ -24,7 +24,7 @@
 // File: UMLActivityDiagram.java
 // Classes: UMLActivityDiagram
 // Original Author: your email here
-// $Id: UMLActivityDiagram.java,v 1.16 2002/10/08 20:04:28 kataka Exp $
+// $Id: UMLActivityDiagram.java,v 1.17 2002/10/28 20:48:20 bobtarling Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -189,12 +189,8 @@ public class UMLActivityDiagram extends UMLDiagram {
   protected void initToolBar() {
     cat.debug("making state toolbar");
     _toolBar = new ToolBar();
-    _toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-
-    //     _toolBar.add(Actions.Cut);
-    //     _toolBar.add(Actions.Copy);
-    //     _toolBar.add(Actions.Paste);
-    //     _toolBar.addSeparator();
+    _toolBar.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
+    //_toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
     _toolBar.add(_actionSelect);
     _toolBar.add(_actionBroom);
