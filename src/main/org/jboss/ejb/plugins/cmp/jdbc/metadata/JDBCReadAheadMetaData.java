@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * It loads its data from standardjbosscmp-jdbc.xml and jbosscmp-jdbc.xml
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class JDBCReadAheadMetaData {
 
@@ -46,7 +46,6 @@ public final class JDBCReadAheadMetaData {
 
    /**
     * Read ahead during "find" (not lazily, the best for queries with small result set).
-    * supporting LIMIT clause).
     */
    public static final byte ON_FIND = 2;
 
@@ -56,6 +55,8 @@ public final class JDBCReadAheadMetaData {
    public static final byte DEFAULT_STRATEGY = ON_LOAD;
 
    public static final int DEFAULT_LIMIT = 255;
+
+   public static final int DEFAULT_CACHE_SIZE = 100;
 
    /**
     * The strategy of reading ahead, one of {@link #NONE}, {@link #ON_LOAD}, {@link #ON_FIND}.
@@ -67,6 +68,10 @@ public final class JDBCReadAheadMetaData {
     */
    private final int limit;
 
+   /**
+    * The size of the cache of queries
+    */
+   private final int cacheSize;
 
    /**
     * Constructs default read ahead meta data: no read ahead.
@@ -74,6 +79,7 @@ public final class JDBCReadAheadMetaData {
    private JDBCReadAheadMetaData() {
       strategy = DEFAULT_STRATEGY;
       limit = DEFAULT_LIMIT;
+      cacheSize = DEFAULT_CACHE_SIZE;
    }
 
    /**
@@ -92,9 +98,11 @@ public final class JDBCReadAheadMetaData {
       if (trueOrFalse.equals("true")) {
          strategy = DEFAULT_STRATEGY;
          limit = DEFAULT_LIMIT;
+         cacheSize = DEFAULT_CACHE_SIZE;
       } else if (trueOrFalse.equals("false")) {
          strategy = NONE;
-         limit = 0;
+         limit = DEFAULT_LIMIT;
+         cacheSize = DEFAULT_CACHE_SIZE;
       } else {
          // This is new style: strategy and limit sub-elements
 
@@ -123,6 +131,21 @@ public final class JDBCReadAheadMetaData {
          } else {
             limit = DEFAULT_LIMIT;
          }
+
+         // Size of the cache of queries
+         String cacheSizeStr = MetaData.getOptionalChildContent(element, "cache-size");
+         if (cacheSizeStr != null) {
+            try {
+               cacheSize = Integer.parseInt(cacheSizeStr);
+            } catch (NumberFormatException ex) {
+               throw new DeploymentException("Wrong number format of read ahead cache size '" + cacheSizeStr + "': " + ex);
+            }
+            if (cacheSize < 2) {
+               throw new DeploymentException("The ahead cache size is '" + cacheSizeStr + "', should be >= 2.");
+            }
+         } else {
+            cacheSize = DEFAULT_CACHE_SIZE;
+         }
       }
    }
 
@@ -131,6 +154,13 @@ public final class JDBCReadAheadMetaData {
     */
    public boolean isUsed() {
       return (strategy != NONE);
+   }
+
+   /**
+    * Convenience method, tells whether read ahead on load is used (i.e. whether the strategy is not ON_LOAD).
+    */
+   public boolean isOnLoadUsed() {
+      return (strategy == ON_LOAD);
    }
 
    /**
@@ -145,6 +175,13 @@ public final class JDBCReadAheadMetaData {
     */
    public int getLimit() {
       return limit;
+   }
+
+   /**
+    * @returns Size of the cache of queries.
+    */
+   public int getCacheSize() {
+      return cacheSize;
    }
 
    /**

@@ -25,13 +25,13 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * JDBCLoadFieldCommand loads the data for a single field in responce to
  * a lazy load. Lazy load groups can be thought of as the other half of
  * eager loading.  Any field that is not eager loaded must be lazy loaded.
- * In the jbosscmp-jdbc.xml file the bean developer can create groups of 
+ * In the jbosscmp-jdbc.xml file the bean developer can create groups of
  * fields to load together.  This command finds all groups of which the
- * field is a member, performs a union of the groups, and loads all the 
+ * field is a member, performs a union of the groups, and loads all the
  * fields.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCLoadFieldCommand
    extends JDBCQueryCommand
@@ -41,14 +41,18 @@ public class JDBCLoadFieldCommand
    public JDBCLoadFieldCommand(JDBCStoreManager manager) {
       super(manager, "LoadField");
    }
-   
-   // LoadEntityCommand implementation ---------------------------
-   
+
+   // implementation ---------------------------
+
    public void execute(JDBCCMPFieldBridge field, EntityEnterpriseContext ctx) {
-      // start with a set with containing just the field 
+      execute(getFieldGroupsUnion(field), ctx);
+   }
+
+   public JDBCCMPFieldBridge[] getFieldGroupsUnion(JDBCCMPFieldBridge field) {
+      // start with a set with containing just the field
       ArrayList fields = new ArrayList(entityMetaData.getCMPFields().size());
       fields.add(field);
-      
+
       // union all the groups of which field is a member
       Iterator groups = entity.getLazyLoadGroups();
       while(groups.hasNext()) {
@@ -57,18 +61,21 @@ public class JDBCLoadFieldCommand
             fields.addAll(group);
          }
       }
-      
-      // pass this info on 
+      // pass this info on
+      return (JDBCCMPFieldBridge[]) fields.toArray(new JDBCCMPFieldBridge[fields.size()]);
+   }
+
+   public void execute(JDBCCMPFieldBridge[] fields, EntityEnterpriseContext ctx) {
       ExecutionState es = new ExecutionState();
-      es.fields = (JDBCCMPFieldBridge[]) fields.toArray(new JDBCCMPFieldBridge[fields.size()]);
+      es.fields = fields;
       es.ctx = ctx;
-      
+
       try {
          jdbcExecute(es);
       } catch(EJBException e) {
          throw e;
       } catch(Exception e) {
-         throw new EJBException("Could not load field value: " + field, e);
+         throw new EJBException("Could not load field value: " + fields[0], e);
       }
    }
 
@@ -77,12 +84,12 @@ public class JDBCLoadFieldCommand
    protected String getSQL(Object argOrArgs) throws Exception {
       ExecutionState es = (ExecutionState)argOrArgs;
 
-      
+
       StringBuffer sql = new StringBuffer();
       sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(es.fields));
       sql.append(" FROM ").append(entityMetaData.getTableName());
       sql.append(" WHERE ").append(SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields()));
-      
+
       return sql.toString();
    }
 
@@ -106,7 +113,7 @@ public class JDBCLoadFieldCommand
          parameterIndex = es.fields[i].loadInstanceResults(rs, parameterIndex, es.ctx);
          es.fields[i].setClean(es.ctx);
       }
-      
+
       return null;
    }
    

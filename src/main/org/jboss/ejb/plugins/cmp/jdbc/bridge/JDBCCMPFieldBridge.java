@@ -29,20 +29,26 @@ import org.jboss.logging.Logger;
 
 /**
  * JDBCCMPFieldBridge represents one CMP field. This implementations of 
- * this interface handles setting are responsible for setting statement 
+ * this interface handles setting are responsible for setting statement
  * parameters and loading results for instance values and primary
  * keys.
  *
  * Life-cycle:
  *      Tied to the EntityBridge.
  *
- * Multiplicity:   
- *      One for each entity bean cmp field.       
+ * Multiplicity:
+ *      One for each entity bean cmp field.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
- */                            
+ * @version $Revision: 1.7 $
+ */
 public interface JDBCCMPFieldBridge extends CMPFieldBridge {
+
+   /**
+    * Get metadata for the field.
+    */
+   public JDBCCMPFieldMetaData getMetaData();
+
    /**
     * Has current data read timed out?
     */

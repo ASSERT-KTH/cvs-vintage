@@ -37,7 +37,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public abstract class JDBCFinderCommand
    extends JDBCQueryCommand
@@ -46,33 +46,34 @@ public abstract class JDBCFinderCommand
    protected JDBCQueryMetaData queryMetaData;
    protected JDBCEntityBridge selectEntity;
    protected JDBCCMPFieldBridge selectCMPField;
-   
+
    // Constructors --------------------------------------------------
-   
+
    public JDBCFinderCommand(JDBCStoreManager manager, JDBCQueryMetaData q) {
       super(manager, q.getMethod().getName());
 
       queryMetaData = q;
       selectEntity = entity;
    }
-   
+
    public JDBCQueryMetaData getQueryMetaData() {
       return queryMetaData;
    }
-   
+
    // FindEntitiesCommand implementation -------------------------
-   
+
    public FinderResults execute(Method finderMethod,
          Object[] args,
          EntityEnterpriseContext ctx)
       throws RemoteException, FinderException
    {
       FinderResults result = null;
-      
+
       try {
          //
          // Execute the find... will return a collection of pks
          Collection keys = (Collection)jdbcExecute(args);
+         boolean readAheadOnLoad = queryMetaData.getReadAhead().isOnLoadUsed();
 
 //
 //   The commented out code is for the old readahead code
@@ -80,8 +81,13 @@ public abstract class JDBCFinderCommand
 //         if(finderMetaData.hasReadAhead()) {
 //            result = new FinderResults(keys, getWhereClause(args), this, args);
 //         } else {
-            result = new FinderResults(keys, null, null, null);
+//            result = new FinderResults(keys, null, null, null);
 //         }
+         result = new FinderResults(keys, null, null, null, readAheadOnLoad);
+         if (readAheadOnLoad) {
+            // add to the cache
+            manager.getReadAheadCache().insert(new Long(result.getListId()), result);
+         }
       } catch (Exception e) {
          log.debug(e);
          throw new FinderException("Find failed");

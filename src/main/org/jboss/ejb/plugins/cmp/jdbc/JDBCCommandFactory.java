@@ -42,7 +42,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCCommandFactory implements CommandFactory
 {
@@ -98,13 +98,13 @@ public class JDBCCommandFactory implements CommandFactory
    {
       return new JDBCEJBQLFinderCommand(manager, q);
    }
-   
+
    public FindEntitiesCommand createFindByCommand(JDBCQueryMetaData q)
       throws IllegalArgumentException
    {
       return new JDBCFindByCommand(manager, q);
    }
-   
+
    public JDBCFindByForeignKeyCommand createFindByForeignKeyCommand() {
       return new JDBCFindByForeignKeyCommand(manager);
    }
@@ -112,17 +112,21 @@ public class JDBCCommandFactory implements CommandFactory
    public JDBCLoadRelationCommand createLoadRelationCommand() {
       return new JDBCLoadRelationCommand(manager);
    }
-   
+
    public JDBCDeleteRelationsCommand createDeleteRelationsCommand() {
       return new JDBCDeleteRelationsCommand(manager);
    }
-   
+
    public JDBCInsertRelationsCommand createInsertRelationsCommand() {
       return new JDBCInsertRelationsCommand(manager);
    }
-   
+
+   public JDBCReadAheadCommand createReadAheadCommand() {
+      return new JDBCReadAheadCommand(manager);
+   }
+
    // CommandFactory implementation ------------------------------
-   
+
    // lifecycle commands
    
    public InitCommand createInitCommand() {

@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -114,7 +114,7 @@ public final class JDBCEntityMetaData {
     * Should the table have a primary key constraint?
     */
    private final boolean primaryKeyConstraint;
-   
+
    /**
     * the java class of the primary key
     */
@@ -210,7 +210,7 @@ public final class JDBCEntityMetaData {
 
          localHomeClass = null;
       }
-      
+
       // we replace the . by _ because some dbs die on it...
       // the table name may be overridden in importXml(jbosscmp-jdbc.xml)
       tableName = entityName.replace('.', '_');
@@ -460,7 +460,7 @@ public final class JDBCEntityMetaData {
 
       // remove any primary key fields from the set
       // primary key fields do not need to be loaded
-      for(Iterator i = getEagerLoadFields().iterator(); i.hasNext(); ) {
+      for(Iterator i = eagerLoadFields.iterator(); i.hasNext(); ) {
          JDBCCMPFieldMetaData field = (JDBCCMPFieldMetaData)i.next();
          if(field.isPrimaryKeyMember()) {
             i.remove();
@@ -506,7 +506,7 @@ public final class JDBCEntityMetaData {
    public JDBCApplicationMetaData getJDBCApplication() {
       return jdbcApplication;
    }
-   
+
    /**
     * Gets the name of the datasource in jndi for this entity
     * @return the name of datasource in jndi
@@ -628,7 +628,7 @@ public final class JDBCEntityMetaData {
    public JDBCCMPFieldMetaData getCMPFieldByName(String name) {
       return (JDBCCMPFieldMetaData)cmpFields.get(name);
    }
-   
+
    /**
     * Gets the cmp field with the specified name
     * @param name the name of the desired field
@@ -659,9 +659,9 @@ public final class JDBCEntityMetaData {
    public boolean getCreateTable() {
       return createTable;
    }
-   
+
    /**
-    * Gets the flag used to determine if the store manager should attempt to remove 
+    * Gets the flag used to determine if the store manager should attempt to remove
     * database table when the entity is undeployed.
     * @return true if the store manager should attempt to remove the table
     */
@@ -678,7 +678,7 @@ public final class JDBCEntityMetaData {
    public boolean hasPrimaryKeyConstraint() {
       return primaryKeyConstraint;
    }
-   
+
    /**
     * Gets the flag used to determine if the store manager should add a for update  
     * clause when selecting data from the table
@@ -723,18 +723,18 @@ public final class JDBCEntityMetaData {
    }
    
    /**
-    * How long is a read of this entity valid. This property should only be used on 
-    * read only entities, and determines how long the data read from the database is 
+    * How long is a read of this entity valid. This property should only be used on
+    * read only entities, and determines how long the data read from the database is
     * valid. When the read times out it should be reread from the database. If the value
-    * is -1 and the entity is not using commit option a, the read is only valid for the length of the transaction in which it was 
+    * is -1 and the entity is not using commit option a, the read is only valid for the length of the transaction in which it was
     * loaded.
-    * @return the length of time that a read is valid or -1 if the read is only 
+    * @return the length of time that a read is valid or -1 if the read is only
     *       valid for the length of the transaction
     */
    public int getReadTimeOut() {
       return readTimeOut;
    }
-   
+
    /**
     * Gets the name of the primary key field of this entity or null if the primary key is multivalued
     * @return the name of the primary key field of this entity or null if the primary key is multivalued
@@ -742,10 +742,19 @@ public final class JDBCEntityMetaData {
    public String getPrimaryKeyFieldName() {
       return primaryKeyFieldName;
    }
-   
+
+
+   /**
+    * Gets the read ahead meta data for this entity.
+    * @return the read ahead meta data for this entity.
+    */
+   public JDBCReadAheadMetaData getReadAhead() {
+      return readAhead;
+   }
+
    /**
     * Compares this JDBCEntityMetaData against the specified object. Returns
-    * true if the objects are the same. Two JDBCEntityMetaData are the same 
+    * true if the objects are the same. Two JDBCEntityMetaData are the same
     * if they both have the same name and are defined in the same application.
     * @param o the reference object with which to compare
     * @return true if this object is the same as the object argument; false otherwise

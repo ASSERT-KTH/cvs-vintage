@@ -39,7 +39,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCLoadEntityCommand
    extends JDBCQueryCommand
@@ -50,19 +50,14 @@ public class JDBCLoadEntityCommand
    public JDBCLoadEntityCommand(JDBCStoreManager manager) {
       super(manager, "Load");
    }
-   
+
    // LoadEntityCommand implementation ---------------------------
-   
+
    public void execute(EntityEnterpriseContext ctx) throws RemoteException {
-      // is any on the data already in the entity valid
-      if(!ctx.isValid()) {
-         entity.resetPersistenceContext(ctx);
-      }
-      
       // load the instance primary key fields
       entity.injectPrimaryKeyIntoInstance(ctx, ctx.getId());
       
-      // pass this info on 
+      // pass this info on
       ExecutionState es = new ExecutionState();
       es.ctx = ctx;
       es.fields = getLoadFields(ctx);
