@@ -91,6 +91,9 @@
 
 #if ($attribute.AttributeType.AttributeClass.Name.equals("select-one"))
 #datatitle ("Attribute options")
+
+<div class="colbar">$l10n.AttributeOptionCannotBeDeleted</div>
+
 #set ($pcaos = $attribute.ParentChildAttributeOptions)
 #set ($maxNum = $pcaos.size())
 
@@ -178,8 +181,6 @@
 <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doSaveoptions" />&#160;
 <input type="submit" value="$l10n.DeleteUndeleteSelected"  name="eventSubmit_doSaveoptions" />&#160;
 </div>
-
-<p><small>$l10n.AttributeOptionCannotBeDeleted</small></p>
 
 #end
 
