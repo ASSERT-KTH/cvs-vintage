@@ -28,12 +28,7 @@ import org.columba.mail.util.MailResourceLoader;
 
 import java.lang.reflect.Method;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -142,5 +137,10 @@ class IdentityStep extends AbstractStep {
     }
 
     public void prepareRendering() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                nameTextField.requestFocus();
+            }
+        });
     }
 }
