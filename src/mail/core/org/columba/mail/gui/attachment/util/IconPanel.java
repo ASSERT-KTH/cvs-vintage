@@ -103,8 +103,10 @@ public class IconPanel extends JPanel implements MouseInputListener {
         super.add(icon);
     }
 
-    public void add(Icon image, String text) {
+    public void add(Icon image, String text, String tooltip) {
         ClickableIcon icon = new ClickableIcon(labelFactory, image, text, count);
+        icon.setToolTipText(tooltip);
+        
         preferredIconSize = icon.getPreferredSize();
         addItem(icon);
         count++;
