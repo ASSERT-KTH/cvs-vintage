@@ -5,7 +5,7 @@ $page.setTitle("Copy/move issue")
 
 #set ($moveIssueGroup = $intake.MoveIssue.Default)
 #set ($issueId = $moveIssueGroup.IssueId)
-#set ($issue = $scarabR.getIssueByPk("$issueId"))
+#set ($issue = $scarabR.getIssue("$issueId"))
 
 #if (!$issueId || $issueId.length() == 0 || !$issue)
 
@@ -132,8 +132,7 @@ $issue.Module.Name
    #foreach ($attr in $matchingAttributes)
     #indexedRows($velocityCount)
     <td>$attr.Attribute.Name
-## !FIXME! jdm add $scarabR.CurrentIssueType to args or get it some other way?
-     #set ($displayValue = $newModule.getRModuleAttribute($attr.Attribute).getDisplayValue())
+     #set ($displayValue = $newModule.getRModuleAttribute($attr.Attribute, $scarabR.CurrentIssueType).getDisplayValue())
      #if (!$attr.Attribute.Name.equals($displayValue))
       ($displayValue)
      #end
