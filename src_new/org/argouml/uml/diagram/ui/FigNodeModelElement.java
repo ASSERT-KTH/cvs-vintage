@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.49 2002/12/31 07:32:34 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.50 2002/12/31 14:28:24 d00mst Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
+import java.text.ParseException;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
@@ -71,6 +72,7 @@ import org.argouml.ui.ActionGoToCritique;
 import org.argouml.ui.Clarifier;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.UUIDManager;
+import org.argouml.uml.generator.ParserDisplay;
 import org.argouml.uml.ui.ActionProperties;
 import org.argouml.util.Trash;
 import org.tigris.gef.base.Selection;
@@ -469,7 +471,14 @@ public abstract class FigNodeModelElement
             MModelElement me = (MModelElement) getOwner();
             if (me == null)
                 return;
-            me.setName(ft.getText());
+            try {
+                ParserDisplay.SINGLETON.parseModelElement(me, ft.getText().trim());
+                ProjectBrowser.TheInstance.getStatusBar().showStatus("");
+		updateNameText();
+            } catch (ParseException pe) {
+                ProjectBrowser.TheInstance.getStatusBar().showStatus("Error: " + pe + " at " + pe.getErrorOffset());
+            }
+            //me.setName(ft.getText());
         }
     }
 
@@ -676,12 +685,14 @@ public abstract class FigNodeModelElement
    /**
     * Updates the text of the sterotype FigText. Override in subclasses to get
     * wanted behaviour.
-    * TODO remove all 'misuses' of the stereotype figtexts (like in FigInterface)    */
+    * TODO remove all 'misuses' of the stereotype figtexts (like in FigInterface)
+    */
     protected void updateStereotypeText() {
     }
     
     /**
-     * Updates the text of the name FigText.     */
+     * Updates the text of the name FigText.
+     */
     protected void updateNameText() {
         if (_readyToEdit) {
             if (getOwner() == null) return;
