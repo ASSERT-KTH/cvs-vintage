@@ -1,4 +1,4 @@
-// $Id: ClassdiagramLayouter.java,v 1.14 2003/06/30 18:00:34 linus Exp $
+// $Id: ClassdiagramLayouter.java,v 1.15 2003/08/30 13:23:42 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -173,8 +173,7 @@ public class ClassdiagramLayouter implements Layouter {
                 
                 if ( ModelFacade.isAModelElement(node)) {
                     Vector specs =
-			new Vector(((MModelElement) node)
-				   .getClientDependencies());
+			new Vector(ModelFacade.getClientDependencies(node));
                     specs.addAll(ModelFacade.getSupplierDependencies(node));
                     for ( Iterator iter = specs.iterator(); iter.hasNext(); ) {
                         
@@ -801,7 +800,6 @@ public class ClassdiagramLayouter implements Layouter {
     /** internal */
     private int yPos;
 }
-
 
 
 

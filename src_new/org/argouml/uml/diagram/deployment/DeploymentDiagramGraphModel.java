@@ -1,4 +1,4 @@
-// $Id: DeploymentDiagramGraphModel.java,v 1.24 2003/06/30 18:00:30 linus Exp $
+// $Id: DeploymentDiagramGraphModel.java,v 1.25 2003/08/30 13:23:41 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -289,8 +289,8 @@ public class DeploymentDiagramGraphModel extends UMLMutableGraphSupport
 	}
 	if ( ModelFacade.isAModelElement(node) ) {
 	    Vector specs =
-		new Vector(((MModelElement) node).getClientDependencies());
-	    specs.addAll(((MModelElement) node).getSupplierDependencies());
+		new Vector(ModelFacade.getClientDependencies(node));
+	    specs.addAll(ModelFacade.getSupplierDependencies(node));
 	    Iterator iter = specs.iterator();
 	    while (iter.hasNext()) {
 		MDependency dep = (MDependency) iter.next();

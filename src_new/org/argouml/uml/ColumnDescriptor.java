@@ -1,4 +1,4 @@
-// $Id: ColumnDescriptor.java,v 1.25 2003/08/30 10:51:53 bobtarling Exp $
+// $Id: ColumnDescriptor.java,v 1.26 2003/08/30 13:23:41 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -258,9 +258,10 @@ class ColumnStereotype extends ColumnDescriptor {
   
     public Object getValueFor(Object target) {
 	if (ModelFacade.isAModelElement(target)) {
-	    MStereotype st = ((MModelElement) target).getStereotype();
-	    if (st != null && st.getName() != null)
-		return st.getName();
+	    Object stereotype = ModelFacade.getStereotype(target);
+	    if (stereotype != null && ModelFacade.getName(stereotype) != null) {
+		return ModelFacade.getName(stereotype);
+            }
 	}
 	return "N/A";
     }
@@ -271,9 +272,9 @@ class ColumnStereotype extends ColumnDescriptor {
 	String stereoName = (String) value;
 	MStereotype s =
 	    UmlFactory.getFactory().getExtensionMechanisms()
-	    .buildStereotype((MModelElement) target,
+	    .buildStereotype(target,
 			     stereoName,
-			     ((MModelElement) target).getNamespace());
+			     ModelFacade.getNamespace(target));
     }
 } /* end class ColumnStereotype */
 

@@ -1,8 +1,4 @@
-
-
-
-
-// $Id: ClassDiagramGraphModel.java,v 1.40 2003/08/25 23:57:46 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.41 2003/08/30 13:23:42 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +25,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.40 2003/08/25 23:57:46 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.41 2003/08/30 13:23:42 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -369,8 +365,8 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 	}
 	if ( org.argouml.model.ModelFacade.isAModelElement(node) ) {
 	    Vector specs =
-		new Vector(((MModelElement) node).getClientDependencies());
-	    specs.addAll(((MModelElement) node).getSupplierDependencies());
+		new Vector(ModelFacade.getClientDependencies(node));
+	    specs.addAll(ModelFacade.getSupplierDependencies(node));
 	    Iterator iter = specs.iterator();
 	    while (iter.hasNext()) {
 		MDependency dep = (MDependency) iter.next();

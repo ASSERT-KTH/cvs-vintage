@@ -1,5 +1,5 @@
 
-// $Id: UMLComboBoxEntry.java,v 1.7 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: UMLComboBoxEntry.java,v 1.8 2003/08/30 13:23:41 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.lang.reflect.*;
 import ru.novosoft.uml.*;
 import java.awt.event.*;
 import java.util.*;
+import org.argouml.model.ModelFacade;
 import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.model_management.*;
@@ -137,7 +138,7 @@ public class UMLComboBoxEntry implements Comparable {
                     ownedElement = (MModelElement) iter.next();
                     targetName = ownedElement.getName();
                     if (targetName != null && phantomName.equals(targetName)) {
-                        if (org.argouml.model.ModelFacade.isAPackage(ownedElement)) {
+                        if (ModelFacade.isAPackage(ownedElement)) {
                             ns = (MPackage) ownedElement;
                             break;
                         }
@@ -153,19 +154,19 @@ public class UMLComboBoxEntry implements Comparable {
         return ns;
     }
 
-    public MModelElement getElement(MModel targetModel) {
+    public MModelElement getElement(Object targetModel) {
         //
         //  if phantom then
         //    we need to possibly recreate the package structure
         //       in the target model
         if (_isPhantom && targetModel != null) {
-            MNamespace targetNS = findNamespace(_element.getNamespace(), targetModel);
+            MNamespace targetNS = findNamespace(_element.getNamespace(), (MModel)targetModel);
             MModelElement clone = null;
             try {
                 clone = (MModelElement) _element.getClass().getConstructor(new Class[] {}).newInstance(new Object[] {});
                 clone.setName(_element.getName());
                 clone.setStereotype(_element.getStereotype());
-                if (org.argouml.model.ModelFacade.isAStereotype(clone)) {
+                if (ModelFacade.isAStereotype(clone)) {
                     ((MStereotype) clone).setBaseClass(((MStereotype) _element).getBaseClass());
                 }
                 targetNS.addOwnedElement(clone);

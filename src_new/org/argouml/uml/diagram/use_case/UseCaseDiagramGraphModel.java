@@ -1,7 +1,4 @@
-
-
-
-// $Id: UseCaseDiagramGraphModel.java,v 1.23 2003/08/25 19:15:50 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.24 2003/08/30 13:23:41 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +26,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.23 2003/08/25 19:15:50 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.24 2003/08/30 13:23:41 bobtarling Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the Extend and Include relationships. JavaDoc added for clarity. Adding edge
@@ -47,6 +44,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Category;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import ru.novosoft.uml.behavior.use_cases.MActor;
@@ -635,9 +633,9 @@ public class UseCaseDiagramGraphModel
 
         if ( org.argouml.model.ModelFacade.isAModelElement(node) ) {
             Vector specs =
-                new Vector(((MModelElement) node).getClientDependencies());
+                new Vector(ModelFacade.getClientDependencies(node));
 
-            specs.addAll(((MModelElement) node).getSupplierDependencies());
+            specs.addAll(ModelFacade.getSupplierDependencies(node));
 
             Iterator iter = specs.iterator();
 
