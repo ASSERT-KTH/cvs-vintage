@@ -141,9 +141,9 @@ public class ThreadedViewAction
             ((TreeSelectionChangedEvent) e).getSelected();
         if (selection.length == 1) {
             XmlElement threadedview =
-                FolderOptionsController.getConfigNode(
+			((MailFrameMediator) getFrameMediator()).getFolderOptionsController().getConfigNode(
                     (Folder) selection[0],
-                    "threadedview");
+                    "ThreadedViewOptions");
             if (threadedview.getAttribute("enabled").equals("true")) {
                 getCheckBoxMenuItem().setSelected(true);
             } else {

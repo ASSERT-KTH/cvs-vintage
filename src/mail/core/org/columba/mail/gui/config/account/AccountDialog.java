@@ -17,18 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.account;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DialogStore;
-import org.columba.core.help.HelpManager;
-
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.IdentityItem;
-import org.columba.mail.config.SmtpItem;
-import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.pop3.POP3ServerController;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -41,6 +29,16 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DialogStore;
+import org.columba.core.help.HelpManager;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.IdentityItem;
+import org.columba.mail.config.SmtpItem;
+import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
 
 
 public class AccountDialog implements ActionListener {
@@ -226,8 +224,7 @@ public class AccountDialog implements ActionListener {
 
             if (accountItem.isPopAccount()) {
                 int uid = accountItem.getUid();
-                POP3ServerController c = MailInterface.popServerCollection.uidGet(uid);
-                c.restartTimer();
+               
             } else {
                 // update tree label
                 int uid = accountItem.getUid();
@@ -235,6 +232,10 @@ public class AccountDialog implements ActionListener {
                 IMAPRootFolder folder = (IMAPRootFolder) MailInterface.treeModel.getImapFolder(uid);
                 folder.updateConfiguration();
             }
+            
+            // restart timer 
+            MailInterface.mailCheckingManager.restartTimer(accountItem.getUid());
+            
 
             dialog.setVisible(false);
         } else if (action.equals("CANCEL")) //$NON-NLS-1$

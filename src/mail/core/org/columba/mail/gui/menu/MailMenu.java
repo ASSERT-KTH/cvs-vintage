@@ -6,6 +6,7 @@
  */
 package org.columba.mail.gui.menu;
 
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.CMenu;
 import org.columba.core.gui.menu.CMenuItem;
@@ -15,9 +16,7 @@ import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
-
 import org.columba.mail.main.MailInterface;
-import org.columba.mail.pop3.POP3ServerController;
 
 
 /**
@@ -64,12 +63,20 @@ public class MailMenu extends Menu {
 
         fetchMessageSubmenu.removeAll();
 
+		AbstractColumbaAction[] actions = MailInterface.mailCheckingManager.getActions();
+		for ( int i=0; i<actions.length; i++) {
+			fetchMessageSubmenu.add(new CMenuItem(actions[i]));
+		}
+		
+		/*
         for (int i = 0; i < MailInterface.popServerCollection.count(); i++) {
             POP3ServerController c = MailInterface.popServerCollection.get(i);
             c.updateAction();
             fetchMessageSubmenu.add(new CMenuItem(c.getCheckAction()));
         }
+        */
 
+		/*
         manageSubmenu.removeAll();
 
         for (int i = 0; i < MailInterface.popServerCollection.count(); i++) {
@@ -78,6 +85,7 @@ public class MailMenu extends Menu {
             menuItem = new CMenuItem(c.getManageAction());
             manageSubmenu.add(menuItem);
         }
+        */
     }
 
     public void updateSortMenu() {

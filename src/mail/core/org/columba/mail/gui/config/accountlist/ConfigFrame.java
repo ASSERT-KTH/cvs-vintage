@@ -331,7 +331,12 @@ public class ConfigFrame implements ActionListener,
             AccountItem item = accountList.remove(index);
 
             if (item.isPopAccount()) {
+            	
                 MailInterface.popServerCollection.removePopServer(item.getUid());
+                
+                 
+                 
+                 
             } else {
                 FolderTreeNode folder = (FolderTreeNode) MailInterface.treeModel.getImapFolder(item.getUid());
 
@@ -343,6 +348,10 @@ public class ConfigFrame implements ActionListener,
                     ex.printStackTrace();
                 }
             }
+            
+            // remove mail-checking stuff
+			MailInterface.mailCheckingManager.remove(item.getUid());
+			
 
             removeButton.setEnabled(false);
             editButton.setEnabled(false);

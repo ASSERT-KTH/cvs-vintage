@@ -36,7 +36,7 @@ public class ThreadedViewOptionsPlugin extends AbstractFolderOptionsPlugin {
      * @param mediator      mail framemediator
      */
     public ThreadedViewOptionsPlugin(MailFrameMediator mediator) {
-        super("threadedview", mediator);
+        super("threadedview", "ThreadedViewOptions", mediator);
     }
 
     /**

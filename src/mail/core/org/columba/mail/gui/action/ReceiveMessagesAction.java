@@ -22,42 +22,23 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 
-public class ReceiveSendAction extends AbstractColumbaAction {
-    public ReceiveSendAction(FrameMediator controller) {
+public class ReceiveMessagesAction extends AbstractColumbaAction {
+    public ReceiveMessagesAction(FrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "mainframe",
-                "menu_file_receivesend"));
-
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_file_receivesend_tooltip").replaceAll("&", ""));
-
-        // toolbar text
-        putValue(TOOLBAR_NAME,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_file_receivesend_toolbar"));
-
-        // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("send-receive.png"));
-
-        // large icon for toolbar
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("send-24-receive.png"));
-
-        // shortcut key
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0));
+                "menu_file_receive"));
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
     }
 
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-    	MailInterface.mailCheckingManager.check();
-    	
+		MailInterface.mailCheckingManager.check();
     }
 }

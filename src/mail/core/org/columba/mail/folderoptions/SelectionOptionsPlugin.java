@@ -45,7 +45,7 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
      * @param mediator  mail frame mediator
      */
     public SelectionOptionsPlugin(MailFrameMediator mediator) {
-        super("selection", mediator);
+        super("selection", "SelectionOptions", mediator);
     }
 
     /**

@@ -38,7 +38,7 @@ public class SortingOptionsPlugin extends AbstractFolderOptionsPlugin {
      * @param mediator      mail framemediator
      */
     public SortingOptionsPlugin(MailFrameMediator mediator) {
-        super("sorting", mediator);
+        super("sorting", "SortingOptions",  mediator);
     }
 
     /**

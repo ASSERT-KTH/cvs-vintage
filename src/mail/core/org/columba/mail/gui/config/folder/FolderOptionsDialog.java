@@ -435,10 +435,10 @@ public class FolderOptionsDialog
 			// remove all old elements
 			property.removeAllElements();
 
-			DefaultListModel model= (DefaultListModel) checkableList.getModel();
+			CheckableItemListTableModel model= (CheckableItemListTableModel) checkableList.getModel();
 
-			for (int i= 0; i < model.getSize(); i++) {
-				OptionsItem optionsItem= (OptionsItem) model.get(i);
+			for (int i= 0; i < model.count(); i++) {
+				OptionsItem optionsItem= (OptionsItem) model.getElement(i);
 
 				// add new element
 				property.addElement(optionsItem.getElement());

@@ -15,18 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.folderoptions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.plugin.FolderOptionsPluginHandler;
-
-import java.util.HashMap;
-import java.util.Map;
-
 
 /**
  * Controller used by {@link TableController} to handle all
@@ -39,177 +37,193 @@ import java.util.Map;
  * @author fdietz
  */
 public class FolderOptionsController {
-    /**
-     * Plugins executed before updating the table model
-     * <p>
-     * example:<b>
-     * Sorting/Filtering state
-     */
-    public final static int STATE_BEFORE = 0;
+	/**
+	 * Plugins executed before updating the table model
+	 * <p>
+	 * example:<b>
+	 * Sorting/Filtering state
+	 */
+	public final static int STATE_BEFORE= 0;
 
-    /**
-     * Plugins executed after updating the table model
-     * <p>
-     * example:<br>
-     * Selection of messages
-     */
-    public final static int STATE_AFTER = 1;
+	/**
+	 * Plugins executed after updating the table model
+	 * <p>
+	 * example:<br>
+	 * Selection of messages
+	 */
+	public final static int STATE_AFTER= 1;
 
-    /**
-     * mail frame mediator
-     */
-    private MailFrameMediator mediator;
+	/**
+	 * mail frame mediator
+	 */
+	private MailFrameMediator mediator;
 
-    /**
-     * Stores all instanciated plugins for later re-use
-     */
-    private Map map;
+	/**
+	 * Stores all instanciated plugins for later re-use
+	 */
+	private Map map;
 
-    /**
-     * plugin handler for instanciating folder options plugins
-     */
-    private FolderOptionsPluginHandler handler;
+	/**
+	 * plugin handler for instanciating folder options plugins
+	 */
+	private FolderOptionsPluginHandler handler;
 
-    /**
-     * Constructor
-     *
-     * @param mediator      mail frame mediator
-     */
-    public FolderOptionsController(MailFrameMediator mediator) {
-        this.mediator = mediator;
+	/**
+	 * Constructor
+	 *
+	 * @param mediator      mail frame mediator
+	 */
+	public FolderOptionsController(MailFrameMediator mediator) {
+		this.mediator= mediator;
 
-        // init map
-        map = new HashMap();
+		// init map
+		map= new HashMap();
 
-        // init plugin handler
-        try {
-            handler = (FolderOptionsPluginHandler) MainInterface.pluginManager.getHandler(
-                    "org.columba.mail.folderoptions");
-        } catch (PluginHandlerNotFoundException e) {
-            // TODO: show error dialoghere
-            e.printStackTrace();
-        }
-    }
+		// init plugin handler
+		try {
+			handler=
+				(
+					FolderOptionsPluginHandler) MainInterface
+						.pluginManager
+						.getHandler(
+					"org.columba.mail.folderoptions");
+		} catch (PluginHandlerNotFoundException e) {
+			// TODO: show error dialoghere
+			e.printStackTrace();
+		}
+	}
 
-    /**
-     * Get plugin with specific name.
-     *
-     * @param name      name of plugin
-     * @return          instance of plugin
-     */
-    public AbstractFolderOptionsPlugin getPlugin(String name) {
-        // check if this plugin was already loaded
-        if (map.containsKey(name)) {
-            // already loaded -> re-use it
-            return (AbstractFolderOptionsPlugin) map.get(name);
-        } else {
-            AbstractFolderOptionsPlugin plugin = null;
+	/**
+	 * Get plugin with specific name.
+	 *
+	 * @param name      name of plugin
+	 * @return          instance of plugin
+	 */
+	public AbstractFolderOptionsPlugin getPlugin(String name) {
+		// check if this plugin was already loaded
+		if (map.containsKey(name)) {
+			// already loaded -> re-use it
+			return (AbstractFolderOptionsPlugin) map.get(name);
+		} else {
+			AbstractFolderOptionsPlugin plugin= null;
 
-            try {
-                plugin = (AbstractFolderOptionsPlugin) handler.getPlugin(name,
-                        new Object[] { mediator });
-            } catch (Exception e) {
-                // TODO: add error dialog
-                e.printStackTrace();
-            }
+			try {
+				plugin=
+					(AbstractFolderOptionsPlugin) handler.getPlugin(
+						name,
+						new Object[] { mediator });
+			} catch (Exception e) {
+				// TODO: add error dialog
+				e.printStackTrace();
+			}
 
-            // save plugin instance in map
-            map.put(name, plugin);
+			// save plugin instance in map
+			map.put(name, plugin);
 
-            return plugin;
-        }
-    }
+			return plugin;
+		}
+	}
 
-    /**
-     * Load all folder options for this folder.
-     *
-     * @param folder        selected folder
-     */
-    public void load(Folder folder, int state) {
-        // get list of plugins
-        String[] ids = handler.getPluginIdList(state);
+	/**
+	 * Load all folder options for this folder.
+	 *
+	 * @param folder        selected folder
+	 */
+	public void load(Folder folder, int state) {
+		// get list of plugins
+		String[] ids= handler.getPluginIdList(state);
 
-        for (int i = 0; i < ids.length; i++) {
-            AbstractFolderOptionsPlugin plugin = getPlugin(ids[i]);
-            plugin.loadOptionsFromXml(folder);
-        }
-    }
+		for (int i= 0; i < ids.length; i++) {
+			AbstractFolderOptionsPlugin plugin= getPlugin(ids[i]);
+			plugin.loadOptionsFromXml(folder);
+		}
+	}
 
-    /**
-     * Save all folder options for this folder.
-     *
-     * @param folder        selected folder
-     */
-    public void save(Folder folder) {
-        // get list of plugins
-        String[] ids = handler.getPluginIdList();
+	/**
+	 * Save all folder options for this folder.
+	 *
+	 * @param folder        selected folder
+	 */
+	public void save(Folder folder) {
+		// get list of plugins
+		String[] ids= handler.getPluginIdList();
 
-        for (int i = 0; i < ids.length; i++) {
-            AbstractFolderOptionsPlugin plugin = getPlugin(ids[i]);
-            plugin.saveOptionsToXml(folder);
-        }
-    }
+		for (int i= 0; i < ids.length; i++) {
+			AbstractFolderOptionsPlugin plugin= getPlugin(ids[i]);
+			plugin.saveOptionsToXml(folder);
+		}
+	}
 
-    /**
-     * Load all folder options globally.
-     *
-     */
-    public void load(int state) {
-        // get list of plugins
-        String[] ids = handler.getPluginIdList(state);
+	/**
+	 * Load all folder options globally.
+	 *
+	 */
+	public void load(int state) {
+		// get list of plugins
+		String[] ids= handler.getPluginIdList(state);
 
-        for (int i = 0; i < ids.length; i++) {
-            AbstractFolderOptionsPlugin plugin = getPlugin(ids[i]);
-            plugin.loadOptionsFromXml(null);
-        }
-    }
+		for (int i= 0; i < ids.length; i++) {
+			AbstractFolderOptionsPlugin plugin= getPlugin(ids[i]);
+			plugin.loadOptionsFromXml(null);
+		}
+	}
 
-    /**
-     * Get parent configuration node of plugin.
-     * <p>
-     * Example for the sorting plugin configuration node. This is
-     * how it can be found in options.xml and tree.xml:<br>
-     * <pre>
-     *  <sorting column="Date" order="true" />
-     * </pre>
-     * <p>
-     *
-     * @param folder        selected folder
-     * @param name          name of plugin
-     * @return              parent configuration node
-     */
-    public static XmlElement getConfigNode(Folder folder, String name) {
-        XmlElement parent = null;
-        boolean global = false;
+	/**
+	 * Get parent configuration node of plugin.
+	 * <p>
+	 * Example for the sorting plugin configuration node. This is
+	 * how it can be found in options.xml and tree.xml:<br>
+	 * <pre>
+	 *  <sorting column="Date" order="true" />
+	 * </pre>
+	 * <p>
+	 *
+	 * @param folder        selected folder
+	 * @param name          name of plugin (example: ColumnOptions)
+	 * @return              parent configuration node
+	 */
+	public XmlElement getConfigNode(Folder folder, String name) {
+		XmlElement parent= null;
+		boolean global= false;
 
-        if (folder == null) {
-            // if no folder was passed as argument, use global options
-            parent = FolderItem.getGlobalOptions();
-            global = true;
-        } else {
-            // use folder specific options
-            parent = folder.getFolderItem().getFolderOptions();
-            global = false;
-        }
+		if ((folder == null) || (name == null)) {
+			// if no folder was passed as argument, use global options
+			parent= FolderItem.getGlobalOptions();
+			global= true;
+		} else {
+			// use folder specific options
+			parent= folder.getFolderItem().getFolderOptions();
+			global= false;
+		}
 
-        XmlElement child = parent.getElement(name);
+		// load plugin
+		AbstractFolderOptionsPlugin plugin= getPlugin(name);
+		XmlElement child= parent.getElement(plugin.getName());
 
-        if (global) {
-            return child;
-        }
+		if (child == null) {
+			// create default configuration
+			child= plugin.createDefaultElement(global);
+			parent.addElement(child);
+		}
 
-        String overwrite = child.getAttribute("overwrite");
+		if (global) {
+			return child;
+		}
 
-        // check if this folder is overwriting global options
-        if ((overwrite != null) && (overwrite.equals("true"))) {
-            // use folder-based options
-            return child;
-        } else {
-            // use global options
-            parent = FolderItem.getGlobalOptions();
-            child = parent.getElement(name);
+		String overwrite= child.getAttribute("overwrite");
 
-            return child;
-        }
-    }
+		// check if this folder is overwriting global options
+		if ((overwrite != null) && (overwrite.equals("true"))) {
+			// use folder-based options
+			return child;
+		} else {
+			// use global options
+			parent= FolderItem.getGlobalOptions();
+			child= parent.getElement(plugin.getName());
+
+			return child;
+		}
+	}
+
+	
 }

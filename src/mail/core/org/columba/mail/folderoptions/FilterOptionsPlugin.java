@@ -41,7 +41,7 @@ public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
      * @param mediator  mail frame mediator
      */
     public FilterOptionsPlugin(MailFrameMediator mediator) {
-        super("filter", mediator);
+        super("filter", "FilterOptions", mediator);
     }
 
     /**

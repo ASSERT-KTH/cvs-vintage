@@ -81,8 +81,10 @@ public class CheckForNewMessagesCommand extends Command {
             JOptionPane.showMessageDialog(null, e.getLocalizedMessage(),
                 name.substring(name.lastIndexOf(".")), JOptionPane.ERROR_MESSAGE);
         } finally {
+        	/*
             // always enable the menuitem again 
             r[0].getPOP3ServerController().enableActions(true);
+            */
         }
     }
 

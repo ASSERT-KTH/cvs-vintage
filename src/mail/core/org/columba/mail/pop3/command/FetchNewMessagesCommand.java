@@ -115,8 +115,10 @@ public class FetchNewMessagesCommand extends Command {
             // clear statusbar message
             server.getObservable().clearMessage();
         } finally {
+        	/*
             // always enable the menuitem again 
             r[0].getPOP3ServerController().enableActions(true);
+            */
         }
     }
 

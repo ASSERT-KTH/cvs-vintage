@@ -13,23 +13,18 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.pop3.menu;
+package org.columba.mail.mailchecking;
 
+import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.FrameMediator;
-
 import org.columba.mail.main.MailInterface;
-import org.columba.mail.pop3.POP3ServerCollection;
-import org.columba.mail.pop3.POP3ServerController;
-import org.columba.mail.pop3.event.ModelChangeListener;
-import org.columba.mail.pop3.event.ModelChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
-import java.util.ListIterator;
 
-
-public class FetchMessageSubMenu extends IMenu implements ModelChangeListener {
-    private POP3ServerCollection popServer;
+public class FetchMessageSubMenu extends IMenu  {
+    //private POP3ServerCollection popServer;
+  
 
     /**
      *
@@ -39,37 +34,30 @@ public class FetchMessageSubMenu extends IMenu implements ModelChangeListener {
             MailResourceLoader.getString("menu", "mainframe",
                 "menu_file_checkmessage"));
 
+		/*
         popServer = MailInterface.popServerCollection;
         popServer.addModelListener(this);
-
+		*/
+		
+		
         createMenu();
     }
 
-    /* (non-Javadoc)
-     * @see org.columba.core.event.ModelChangeListener#modelChanged(org.columba.core.event.ModelChangedEvent)
-     */
-    public void modelChanged(ModelChangedEvent e) {
-        switch (e.getMode()) {
-        case ModelChangedEvent.ADDED: {
-            add(((POP3ServerController) e.getData()).getCheckAction());
-
-            break;
-        }
-
-        case ModelChangedEvent.REMOVED: {
-            removeAll();
-            createMenu();
-
-            break;
-        }
-        }
-    }
+  
 
     protected void createMenu() {
+		MailCheckingManager mailCheckingManager = MailInterface.mailCheckingManager;
+		AbstractColumbaAction[] actions = mailCheckingManager.getActions();
+		for ( int i=0; i<actions.length; i++) {
+			add(actions[i]);
+		}
+		
+		/*
         ListIterator it = popServer.getServerIterator();
 
         while (it.hasNext()) {
             add(((POP3ServerController) it.next()).getCheckAction());
         }
+        */
     }
 }

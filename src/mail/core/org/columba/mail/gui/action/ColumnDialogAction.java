@@ -58,8 +58,8 @@ public class ColumnDialogAction extends AbstractColumbaAction {
 
             // check if we should use the folder-based configuration
             // or the global table configuration
-            XmlElement columns = FolderOptionsController.getConfigNode((Folder) folder,
-                    "columns");
+            XmlElement columns = ((MailFrameMediator) getFrameMediator()).getFolderOptionsController().getConfigNode((Folder) folder,
+                    "ColumnOptions");
 
             new ColumnConfigDialog((MailFrameMediator) getFrameMediator(),
                 columns);

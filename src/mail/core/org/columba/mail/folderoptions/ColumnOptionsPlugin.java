@@ -55,7 +55,7 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
 	 * @param mediator      mail frame mediator
 	 */
 	public ColumnOptionsPlugin(MailFrameMediator mediator) {
-		super("columns", mediator);
+		super("columns", "ColumnOptions", mediator);
 	}
 
 	/**
