@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-
-<plugin id="Play Sound" description="Play sound" version="1.0" >
- <extension name="filter_actions">
-  <action name="Play Sound" main_class="org.columba.mail.filter.plugins.PlaySoundFilterAction" gui_class="org.columba.mail.gui.config.filter.plugins.DefaultActionRow" />
- </extension>
- <runtime type="java" jar="PlaySoundFilterAction.jar"/>
-</plugin>

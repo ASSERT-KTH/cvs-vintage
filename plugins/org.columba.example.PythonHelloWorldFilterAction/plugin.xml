@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<plugin id="org.columba.example.HelloWorld" name="Hello World python filter action plugin" description="Displays Hello World" version="1.0" >
+ <extension name="org.columba.mail.filteraction">
+  <filteraction name="Hello World" main_class="HelloWorld.py" gui_class="HelloWorldGui.py" />
+ </extension>
+ <runtime type="python"/>
+</plugin>

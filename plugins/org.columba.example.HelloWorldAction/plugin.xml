@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<plugin id="org.columba.example.HelloWorldAction" name="My Hello World Plugin" description="Simple Example" version="1.0" >
+ <extension name="org.columba.core.action">
+  <action name="HelloWorld" class="com.mycom.HelloWorldAction" />
+ </extension>
+ <extension name="org.columba.core.menu">
+  <menu name="menu_file" extensionpoint="main">
+  	<menuitem action="org.columba.example.HelloWorldAction$HelloWorld"/>
+  	<separator/>
+  </menu>
+ </extension>
+ <runtime type="java" jar="HelloWorldAction.jar"/>
+</plugin>
