@@ -15,12 +15,14 @@
 //All Rights Reserved.
 package org.columba.mail.pgp;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
 
+import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.gui.util.PasswordDialog;
@@ -175,6 +177,15 @@ public class PGPController {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
 		}
+		if( exitVal != 0 ) {
+			try {
+				// An error occured
+				StreamUtils.streamCopy( utils[GPG].getErrorStream(), System.err);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
 		return utils[GPG].getStreamResult();
 	}
 
