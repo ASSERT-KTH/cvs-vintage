@@ -24,7 +24,7 @@
 // File: PropPanelNote.java
 // Classes: PropPanelNote
 // Original Author: your email address here
-// $Id: PropPanelNote.java,v 1.1 2000/09/04 12:50:18 1sturm Exp $
+// $Id: PropPanelNote.java,v 1.2 2000/09/18 11:35:46 toby Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -48,8 +48,7 @@ import org.argouml.uml.ui.*;
  *  the user to edit the properties of the selected UML model
  *  element. */
 
-public class PropPanelNote extends PropPanel
-implements DocumentListener, ItemListener {
+public class PropPanelNote extends PropPanel {
 
   ////////////////////////////////////////////////////////////////
   // constants
@@ -82,30 +81,5 @@ implements DocumentListener, ItemListener {
 
     // register interest in change events from all widgets
   }
-
-  ////////////////////////////////////////////////////////////////
-  // event handlers
-
-
-  /** The user typed some text */
-  public void insertUpdate(DocumentEvent e) {
-    //System.out.println(getClass().getName() + " insert");
-    // check if it was one of my text fields
-    super.insertUpdate(e);
-  }
-
-  public void removeUpdate(DocumentEvent e) { insertUpdate(e); }
-
-  public void changedUpdate(DocumentEvent e) {
-    System.out.println(getClass().getName() + " changed");
-    // Apparently, this method is never called.
-  }
-
-  /** The user modified one of the widgets */
-  public void itemStateChanged(ItemEvent e) {
-    Object src = e.getSource();
-    // check for each widget, and update the model with new value
-  }
-
 
 } /* end class PropPanelNote */
