@@ -82,6 +82,7 @@ public class GlobalResourceLoader {
                 String name, language, country, variant;
                 StringTokenizer tokenizer;
                 LinkedList locales = new LinkedList();
+                locales.add(new Locale("en", ""));
                 for (int i=0; i<langpacks.length; i++) {
                         name = langpacks[i].getName();
                         name = name.substring(9, name.length() - 4);
