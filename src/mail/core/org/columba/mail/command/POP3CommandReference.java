@@ -16,8 +16,6 @@
 package org.columba.mail.command;
 
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pop3.POP3Server;
 
 /**
@@ -43,6 +41,19 @@ public class POP3CommandReference extends DefaultCommandReference {
 	public POP3Server getServer() {
 		return server;
 	}
-
 	
+    /**
+     * @see org.columba.core.command.DefaultCommandReference#releaseLock(java.lang.Object)
+     */
+    public void releaseLock(Object locker) {
+        server.releaseLock(locker);
+    }
+
+    /**
+     * @see org.columba.core.command.DefaultCommandReference#tryToGetLock(java.lang.Object)
+     */
+    public boolean tryToGetLock(Object locker) {
+        return server.tryToGetLock(locker);
+    }
+
 }

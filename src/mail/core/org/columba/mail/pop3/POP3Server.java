@@ -17,10 +17,16 @@
 //All Rights Reserved.
 package org.columba.mail.pop3;
 
+import java.io.File;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.columba.core.command.StatusObservable;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.ListTools;
-
+import org.columba.core.util.Lock;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
@@ -29,15 +35,7 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
-
 import org.columba.ristretto.pop3.protocol.POP3Protocol;
-
-import java.io.File;
-
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 
 public class POP3Server {
@@ -47,6 +45,8 @@ public class POP3Server {
     private boolean alreadyLoaded;
     private POP3Store store;
     protected POP3HeaderCache headerCache;
+    
+    private Lock lock;
 
     public POP3Server(AccountItem accountItem) {
         this.accountItem = accountItem;
@@ -60,6 +60,8 @@ public class POP3Server {
         store = new POP3Store(item);
 
         headerCache = new POP3HeaderCache(this);
+        
+        lock = new Lock();
     }
 
     public void save() throws Exception {
@@ -211,5 +213,13 @@ public class POP3Server {
 
     public StatusObservable getObservable() {
         return store.getObservable();
+    }
+    
+    public boolean tryToGetLock(Object locker) {
+        return lock.tryToGetLock(locker);
+    }
+    
+    public void releaseLock(Object locker) {
+        lock.release(locker);
     }
 }
