@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.25 2002/08/28 21:59:49 csjank Exp $
+@version $Id: ManageUserSearch.vm,v 1.26 2002/10/17 00:07:41 jon Exp $
 *#
 
 #set ($newSearch = $data.Parameters.getString("newSearch",""))
@@ -33,7 +33,7 @@ $scarabR.setGlobalUserSearchParam("pageNum",$pageNum.toString())
 
 <p>$l10n.EnterSearchCriteria</p>
 
-<form action="$link.setPage("admin,ManageUserSearch.vm")" method="post">
+<form action="$link.setPage("admin,ManageUserSearch.vm")" method="post" name="ManageUserSearchForm">
   <input type="hidden" name="action" value="admin.ManageUser" />
   <input type="hidden" name="searchCommand" value="search" />
   <input type="hidden" name="pageNum" value="$pageNum" />
@@ -79,6 +79,12 @@ $l10n.ResultsPerPage
    <input type="submit" name="eventSubmit_doGotoadduser" value="$l10n.AddUser" />
 </div>
 
+<script type="text/javascript">
+<!--
+document.ManageUserSearchForm.searchCriteria.focus();
+// -->
+</script>
+
 </form>
 
 #if (!$newSearch.equals("true"))
@@ -89,7 +95,7 @@ $l10n.ResultsPerPage
    <p class="warn">$l10n.NoUsersFound</p>
  #else
 
-<form name="ManageUserSearchForm" action="$link.setPage("admin,ManageUserSearch.vm")" method="post">
+<form action="$link.setPage("admin,ManageUserSearch.vm")" method="post">
  <input type="hidden" name="action" value="admin.ManageUser" />
  <input type="hidden" name="state" value="" />
 
