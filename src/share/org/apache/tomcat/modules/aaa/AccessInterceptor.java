@@ -421,6 +421,12 @@ class SecurityConstraints {
 
     // It's called in a single thread anyway
     public synchronized void addContainer(Container ct) {
+	//bug 2148
+	if(patterns>=securityPatterns.length) {
+	    Container [] newsecurityPatterns = new Container[MAX_CONSTRAINTS+securityPatterns.length];
+	    System.arraycopy(securityPatterns,0,newsecurityPatterns,0,securityPatterns.length);
+	    securityPatterns = newsecurityPatterns;
+	}
 	securityPatterns[ patterns ]= ct;
 	patterns++;
     }
