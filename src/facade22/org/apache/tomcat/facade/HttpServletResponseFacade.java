@@ -101,7 +101,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
     void recycle() {
 	usingStream = false;
 	usingWriter= false;
-	// 	writer=null; // no need - the OutputBuffer will deal with enc
+	writer=null; // no need - the OutputBuffer will deal with enc
 	if( osFacade != null ) osFacade.recycle();
     }
 
