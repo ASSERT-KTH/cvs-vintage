@@ -24,7 +24,7 @@
 // File: FigMNode.java
 // Classes: FigMNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigMNode.java,v 1.7 2002/12/05 21:47:18 kataka Exp $
+// $Id: FigMNode.java,v 1.8 2002/12/29 21:18:25 kataka Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -53,8 +53,7 @@ public class FigMNode extends FigNodeModelElement {
 
   ////////////////////////////////////////////////////////////////
   // instance variables
-
-  protected FigRect _bigPort;
+ 
   protected FigCube _cover;
   protected FigRect _test;
 
@@ -112,12 +111,7 @@ public class FigMNode extends FigNodeModelElement {
 
   public Selection makeSelection() {
       return new SelectionNode(this);
-  }
-
-  public void setOwner(Object node) {
-    super.setOwner(node);
-    bindPort(node, _bigPort);
-  }
+  } 
 
   public Dimension getMinimumSize() {
     Dimension stereoDim = _stereo.getMinimumSize();

@@ -24,7 +24,7 @@
 // File: FigFinalState.java
 // Classes: FigFinalState
 // Original Author: ics125b spring 98
-// $Id: FigFinalState.java,v 1.8 2002/12/25 10:22:28 kataka Exp $
+// $Id: FigFinalState.java,v 1.9 2002/12/29 21:18:25 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -141,11 +141,6 @@ public class FigFinalState extends FigStateVertex {
 			}
 		}
 		return sel;
-	}
-
-	public void setOwner(Object node) {
-		super.setOwner(node);
-		bindPort(node, _bigPort);
 	}
 
 	/** Final states are fixed size. */

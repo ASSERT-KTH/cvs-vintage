@@ -23,7 +23,7 @@
 
 // File: FigSeqObject.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigSeqObject.java,v 1.8 2002/12/06 10:54:51 kataka Exp $
+// $Id: FigSeqObject.java,v 1.9 2002/12/29 21:18:25 kataka Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -72,7 +72,6 @@ public class FigSeqObject extends FigNodeModelElement
   ////////////////////////////////////////////////////////////////
   // instance variables
 
-  FigRect _bigPort;
   FigRect _cover, _lifeline, fr;
 
   FigDynPort _port;

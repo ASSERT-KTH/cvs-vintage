@@ -24,7 +24,7 @@
 // File: FigObject.java
 // Classes: FigObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigObject.java,v 1.6 2002/12/05 21:47:18 kataka Exp $
+// $Id: FigObject.java,v 1.7 2002/12/29 21:18:25 kataka Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -59,7 +59,6 @@ public class FigObject extends FigNodeModelElement {
   ////////////////////////////////////////////////////////////////
   // instance variables
 
-  FigRect _bigPort;
   FigRect _cover;
   public MElementResidence resident = UmlFactory.getFactory().getCore().createElementResidence();
 
@@ -121,11 +120,6 @@ public class FigObject extends FigNodeModelElement {
   
   public Selection makeSelection() {
     return new SelectionObject(this);
-  }
-
-  public void setOwner(Object node) {
-    super.setOwner(node);
-    bindPort(node, _bigPort);
   }
 
   public Dimension getMinimumSize() {

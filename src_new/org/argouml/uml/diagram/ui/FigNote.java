@@ -24,7 +24,7 @@
 // File: FigNote.java
 // Classes: FigNote
 // Original Author: your email address here
-// $Id: FigNote.java,v 1.5 2002/12/05 21:47:19 kataka Exp $
+// $Id: FigNote.java,v 1.6 2002/12/29 21:18:25 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -47,11 +47,6 @@ public class FigNote extends FigNodeModelElement {
 
   ////////////////////////////////////////////////////////////////
   // instance variables
-
-  /** UML does not really use ports, so just define one big one so
-   *  that users can drag edges to or from any point in the icon. */
-
-  FigRect _bigPort;
 
   // add other Figs here aes needed
 
@@ -79,11 +74,6 @@ public class FigNote extends FigNodeModelElement {
     this();
     setOwner(node);
 
-  }
-
-  public void setOwner(Object node) {
-    super.setOwner(node);
-    bindPort(node, _bigPort);
   }
 
 

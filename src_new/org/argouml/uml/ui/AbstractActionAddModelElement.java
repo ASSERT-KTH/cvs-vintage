@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
+// $Id: AbstractActionAddModelElement.java,v 1.3 2002/12/29 21:18:25 kataka Exp $
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;

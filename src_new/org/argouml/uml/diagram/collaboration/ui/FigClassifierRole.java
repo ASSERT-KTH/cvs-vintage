@@ -24,7 +24,7 @@
 // File: FigClassifierRole.java
 // Classes: FigClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigClassifierRole.java,v 1.12 2002/12/05 21:47:18 kataka Exp $
+// $Id: FigClassifierRole.java,v 1.13 2002/12/29 21:18:25 kataka Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed to stop
 // collaboration roles all stretching to the top left on reload. Problem was
@@ -89,14 +89,7 @@ public class FigClassifierRole extends FigNodeModelElement {
     // Instance variables
     //
     ///////////////////////////////////////////////////////////////////////////
-
-    /**
-     * <p>The invisible fig that is used as the contact port for the
-     *   classifier role.</p>
-     */
-
-    FigRect _bigPort;
-
+    
 
     /**
      * <p>The fig that is used for the complete classifier role. Identical in
@@ -311,22 +304,7 @@ public class FigClassifierRole extends FigNodeModelElement {
     public boolean getFilled() { return _cover.getFilled(); }
 
     public void setLineWidth(int w) { _cover.setLineWidth(w); }
-    public int getLineWidth() { return _cover.getLineWidth(); }
-
-
-    /**
-     * <p>Change the owning NSUML object for this Fig.</p>
-     *
-     * <p>Use the superclass method, but then bind our big port to the NSUML
-     *  object, and advise that the model has changed.</p>
-     *
-     * @param  node  The NSUML object to own this fig.
-     */
-
-    public void setOwner(Object node) {
-        super.setOwner(node);
-        bindPort(node, _bigPort);
-    }
+    public int getLineWidth() { return _cover.getLineWidth(); }   
 
 
     /**

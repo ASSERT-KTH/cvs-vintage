@@ -24,7 +24,7 @@
 // File: FigComment.java
 // Classes: FigComment
 // Original Author: a_rueckert@gmx.net
-// $Id: FigComment.java,v 1.8 2002/12/28 21:27:45 kataka Exp $
+// $Id: FigComment.java,v 1.9 2002/12/29 21:18:25 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -102,11 +102,7 @@ public class FigComment extends FigNodeModelElement implements VetoableChangeLis
     private MModelElement _noteOwner = null;
 
     // The figure that holds the text of the note.
-    FigText _text;
-
-    /** UML does not really use ports, so just define one big one so
-     *  that users can drag edges to or from any point in the icon. */
-    FigRect _bigPort;
+    FigText _text;    
 
     FigPoly _body;
     FigPoly _urCorner;

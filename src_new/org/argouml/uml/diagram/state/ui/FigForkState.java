@@ -24,7 +24,7 @@
 // File: FigForkState.java
 // Classes: FigForkState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigForkState.java,v 1.5 2002/12/05 21:47:19 kataka Exp $
+// $Id: FigForkState.java,v 1.6 2002/12/29 21:18:25 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -53,7 +53,6 @@ public class FigForkState extends FigStateVertex {
   ////////////////////////////////////////////////////////////////
   // instance variables
 
-  FigRect _bigPort;
   FigRect _head;
 
   ////////////////////////////////////////////////////////////////
@@ -85,11 +84,6 @@ public class FigForkState extends FigStateVertex {
 
   ////////////////////////////////////////////////////////////////
   // Fig accessors
-
-  public void setOwner(Object node) {
-    super.setOwner(node);
-    bindPort(node, _bigPort);
-  }
 
   /** Initial states are fixed size. */
   //public boolean isResizable() { return false; }
