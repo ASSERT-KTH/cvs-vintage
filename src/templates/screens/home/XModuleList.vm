@@ -7,7 +7,7 @@
     <tr>
     <td><a href="$link.setPage("home,ModuleQuery.vm")">Module query</a></td>
 	<td><a href="$link.setPage("home,EnterNew.vm")">Enter new...</a></td>
-	<th>Build X-project query</th>
+	<th>Build cross module query</th>
 	</tr>
   </table>
 </div>
@@ -40,7 +40,7 @@
     <th nowrap="nowrap">Select</th>
     <th>Module</th>
     <th>Issue type</th>
-    <th># of issues</th>
+    <th>Number of issues</th>
     <th>Description</th>
   </tr>
 #if (!$user.CurrentMITList || $user.CurrentMITList.isEmpty())
@@ -88,7 +88,7 @@
   <tr>
    <th>Filter string</th>
    <td><input type="text" value="" />&nbsp;<select name="#"
-   size=""><option value="">Project</option>
+   size=""><option value="">Module</option>
             <option value="18">Issue type</option>
             </select>&nbsp;<input type="submit" value="filter" /></td>
   </tr>
@@ -109,7 +109,7 @@
 	  <th>
           <a href="#"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" 
               width="13" height="8" alt="sort descending" border="0" /></a>
-          &nbsp;Project
+          &nbsp;Module
       </th>
 	  <th><a href="#">Issue type</a></th>
 	  <th><a href="#">Description</a></th>
@@ -134,7 +134,7 @@
 
 <div class="functnbar3">
  <input type="submit"  name="eventSubmit_doAddselectedrmits" 
-     value="Add selected to x-project query list" />
+     value="Add selected to cross module query list" />
 </div>
 
 <!-- commented out until paging is implemented

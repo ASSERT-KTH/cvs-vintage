@@ -5,7 +5,7 @@
   <tr>
     <td><a href="$link.setPage("home,ModuleQuery.vm")">Project query</a></td>
     <th>Enter new...</th>
-	<td><a href="$link.setPage("home,XModuleList.vm")">Build x-project query</a></td>
+	<td><a href="$link.setPage("home,XModuleList.vm")">Build cross project query</a></td>
   </tr>
  </table>
 </div>
