@@ -37,6 +37,7 @@ import org.columba.mail.parser.text.BodyTextParser;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.CharsetDecoderInputStream;
+import org.columba.ristretto.coder.EncodedWord;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
@@ -457,6 +458,7 @@ public class MessageBuilder {
 			to = createToMailinglist(header);
 
 		if (to != null) {
+			to = EncodedWord.decode(to).toString();
 			model.setTo(to);
 			addSenderToAddressbook(to);
 		}
