@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 // Turbine Stuff
+import org.apache.log4j.Category;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateSecureAction;
@@ -70,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.21 2002/01/28 20:20:06 elicia Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.22 2002/02/03 04:51:06 jmcnally Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -289,4 +290,8 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         }
     }
 
+    protected Category log()
+    {
+        return Category.getInstance(getClass().getName());
+    }
 }
