@@ -53,5 +53,29 @@ final public class AspectSupport {
 		}
 		return set;
 	}
+   
+   /**
+    * Adds all the interfaces of the aspectObject class to the interfaces array and returns
+    * the new array.  Duplicates will not be added.
+    */
+   static public Class[] appendInterfaces( Class interfaces[], Class targetClass ) {
+         
+      ArrayList interfaceList = new ArrayList();
+
+      for( int i=0; i < interfaces.length; i++ ) 
+         interfaceList.add( interfaces[i] );
+      
+      interfaces = targetClass.getInterfaces();
+      for( int i=0; i < interfaces.length; i++ ) {
+         if( interfaceList.contains(interfaces[i]) )
+            continue;
+         interfaceList.add( interfaces[i] );
+      }
+   
+      interfaces = new Class[interfaceList.size()];
+      interfaces = (Class[])interfaceList.toArray(interfaces);
+      
+      return interfaces;
+   }
 
 }

@@ -17,7 +17,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import org.jboss.aspect.AspectComposition;
+import org.jboss.aspect.AspectDefinition;
 import org.jboss.aspect.proxy.AspectInitizationException;
 
 /**
@@ -32,7 +32,7 @@ final public class XMLConfiguration {
 	/**
 	 * Parses the aspect XML file pointed to by the configSource URL.
 	 * return a Map with the aspect names mapped to the corresponding 
-	 * AspectComposition objects.
+	 * AspectDefinition objects.
 	 */
 	final static public Map loadAspects(URL configSource) throws AspectInitizationException {
 		try {
@@ -42,7 +42,7 @@ final public class XMLConfiguration {
 	    	Iterator i = doc.getRootElement().elements("aspect").iterator();
 	    	while( i.hasNext() ) {
 	    		Element aspectXML = (Element)i.next();	    	
-				AspectComposition c = loadAspectObjectComposition(aspectXML);
+				AspectDefinition c = loadAspectObjectDefinition(aspectXML);
 				Object previous = aspects.put(c.name,c);
 				if( previous!=null ) {
 					throw new AspectInitizationException("Invalid Aspect configuration file: "+configSource); 
@@ -56,14 +56,14 @@ final public class XMLConfiguration {
 	
 	/**
 	 * 
-	 * Creates AspectComposition given a properly formated Dom4j "aspect" element.
+	 * Creates AspectDefinition given a properly formated Dom4j "aspect" element.
 	 * 
 	 */
-	final static public AspectComposition loadAspectObjectComposition(Element aoXML) throws AspectInitizationException {
+	final static public AspectDefinition loadAspectObjectDefinition(Element aoXML) throws AspectInitizationException {
 		
 		String name = aoXML.attribute("name").getValue();
-		String baseClass = aoXML.attribute("base-class")==null 
-			? null : aoXML.attribute("base-class").getValue();
+		String targetClass = aoXML.attribute("aspectObject-class")==null 
+			? null : aoXML.attribute("aspectObject-class").getValue();
 		
 		ArrayList interceptorList = new ArrayList();
 		ArrayList interceptorConfigList = new ArrayList();
@@ -92,7 +92,7 @@ final public class XMLConfiguration {
     	Map interceptorConfigs[] = new Map[interceptorConfigList.size()];
     	interceptorConfigList.toArray(interceptorConfigs);
     	
-		return new AspectComposition(name, interceptors, interceptorConfigs, baseClass);		
+		return new AspectDefinition(name, interceptors, interceptorConfigs, targetClass);		
 	}	
 
 }

@@ -20,7 +20,7 @@ import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.PUSH;
 import org.apache.bcel.generic.Type;
 import org.jboss.aspect.AspectClassLoader;
-import org.jboss.aspect.AspectComposition;
+import org.jboss.aspect.AspectDefinition;
 import org.jboss.proxy.compiler.InvocationHandler;
 import org.jboss.proxy.compiler.ProxyImplementationFactory;
 
@@ -79,15 +79,15 @@ public class AspectProxyImplementationFactory extends ProxyImplementationFactory
     InstructionHandle ih_27 = il.append(_factory.createLoad(Type.OBJECT, 2));
     il.append(_factory.createLoad(Type.OBJECT, 0));
     il.append(_factory.createInvoke("java.lang.Object", "getClass", new ObjectType("java.lang.Class"), Type.NO_ARGS, Constants.INVOKEVIRTUAL));
-    il.append(_factory.createInvoke("org.jboss.aspect.AspectClassLoader", "getAspectComposition", new ObjectType("org.jboss.aspect.AspectComposition"), new Type[] { new ObjectType("java.lang.Class") }, Constants.INVOKEVIRTUAL));
+    il.append(_factory.createInvoke("org.jboss.aspect.AspectClassLoader", "getAspectDefinition", new ObjectType("org.jboss.aspect.AspectDefinition"), new Type[] { new ObjectType("java.lang.Class") }, Constants.INVOKEVIRTUAL));
     il.append(_factory.createStore(Type.OBJECT, 3));
     InstructionHandle ih_36 = il.append(_factory.createLoad(Type.OBJECT, 0));
     il.append(_factory.createNew("org.jboss.aspect.proxy.AspectInvocationHandler"));
     il.append(InstructionConstants.DUP);
     il.append(_factory.createLoad(Type.OBJECT, 3));
     il.append(_factory.createLoad(Type.OBJECT, 3));
-    il.append(_factory.createFieldAccess("org.jboss.aspect.AspectComposition", "baseClass", new ObjectType("java.lang.Class"), Constants.GETFIELD));
-    il.append(_factory.createInvoke("org.jboss.aspect.proxy.AspectInvocationHandler", "<init>", Type.VOID, new Type[] { new ObjectType("org.jboss.aspect.AspectComposition"), Type.OBJECT }, Constants.INVOKESPECIAL));
+    il.append(_factory.createFieldAccess("org.jboss.aspect.AspectDefinition", "targetClass", new ObjectType("java.lang.Class"), Constants.GETFIELD));
+    il.append(_factory.createInvoke("org.jboss.aspect.proxy.AspectInvocationHandler", "<init>", Type.VOID, new Type[] { new ObjectType("org.jboss.aspect.AspectDefinition"), Type.OBJECT }, Constants.INVOKESPECIAL));
     il.append(_factory.createFieldAccess(proxyClassName, "invocationHandler", new ObjectType("org.jboss.proxy.compiler.InvocationHandler"), Constants.PUTFIELD));
     InstructionHandle ih_52 = il.append(_factory.createReturn(Type.VOID));
     InstructionHandle ih_53 = il.append(_factory.createLoad(Type.OBJECT, 1));

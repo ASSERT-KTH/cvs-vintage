@@ -25,7 +25,7 @@ final public class AspectInvocation {
 	private int currentInterceptor=-1;
 	
 	/** the aspect object that the invocation was performed on */
-	public Object target;
+	public Object aspectObject;
 	/** the method that was call on the aspect object */
 	public Method method;
 	/** the arguments that were passed in the method call */
@@ -35,8 +35,8 @@ final public class AspectInvocation {
 	 * Constructor used by the AspectInvocationHandler
 	 * to create a AspectInvocation.
 	 */
-	public AspectInvocation(Object target, Method method, Object[] args, AspectInvocationHandler handler) {
-		this.target=target;
+	public AspectInvocation(Object aspectObject, Method method, Object[] args, AspectInvocationHandler handler) {
+		this.aspectObject=aspectObject;
 		this.method=method;
 		this.args=args;
 		this.handler=handler;
@@ -49,8 +49,27 @@ final public class AspectInvocation {
 	public Object invokeNext() throws Throwable {
 		currentInterceptor++;
 		try {
-			if(currentInterceptor==handler.composition.interceptors.length) 
-				return method.invoke(handler.baseObject, args);
+         // have we reached the aspectObject object??
+			if(currentInterceptor==handler.composition.interceptors.length) {
+            // Do we need to lazy load the aspectObject object.
+            if( handler.targetObject == null ) {
+               // test again in a synchronized block because we only want to lazyload once
+               // even if called concurrently.
+               synchronized( handler ) {
+                  if( handler.targetObject == null ) {
+                     Class clazz = handler.targetClass;
+                     if( clazz == null )
+                        clazz = handler.composition.targetClass;
+                     if( clazz == null )
+                        throw new RuntimeException("Cannot lazyload aspect aspectObject object (aspectObject class not set)");
+      
+                     // create an instance of the class               
+                     handler.targetObject = clazz.newInstance();
+                  }
+               }
+            }
+				return method.invoke(handler.targetObject, args);
+         }
 			return handler.composition.interceptors[currentInterceptor].invoke(this);
 		} finally {
 			currentInterceptor--;

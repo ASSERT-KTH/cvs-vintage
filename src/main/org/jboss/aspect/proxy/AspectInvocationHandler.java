@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 import org.jboss.proxy.compiler.InvocationHandler;
 import org.jboss.proxy.compiler.ProxyImplementationFactory;
 
-import org.jboss.aspect.AspectComposition;
+import org.jboss.aspect.AspectDefinition;
 import org.jboss.aspect.proxy.*;
 
 /**
@@ -27,13 +27,17 @@ import org.jboss.aspect.proxy.*;
  */
 public class AspectInvocationHandler implements InvocationHandler {
 	
-	AspectComposition composition;
+	AspectDefinition composition;
 	private Object attachments[];
-	Object baseObject;
+	Object targetObject;
+   Class targetClass;
 
-	public AspectInvocationHandler(AspectComposition composition, Object baseObject) {
+	public AspectInvocationHandler(AspectDefinition composition, Object targetObject) {
 		this.composition = composition;
-		this.baseObject = baseObject;
+      if( targetObject instanceof Class )
+         this.targetClass = (Class)targetObject;
+      else
+   		this.targetObject = targetObject;
 	}
 	
 	/**

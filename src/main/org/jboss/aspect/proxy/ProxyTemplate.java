@@ -11,7 +11,7 @@ import java.net.URL;
 import org.jboss.proxy.compiler.InvocationHandler;
 
 import org.jboss.aspect.*;
-import org.jboss.aspect.AspectComposition;
+import org.jboss.aspect.AspectDefinition;
 
 /**
  * This class is used to generate most of the BECL code that
@@ -44,8 +44,8 @@ public class ProxyTemplate {
 		while( c!=null ) {
 			if( c instanceof AspectClassLoader) {
 				AspectClassLoader acl = (AspectClassLoader)c;
-				AspectComposition ac = acl.getAspectComposition(getClass());
-				invocationHandler = new AspectInvocationHandler(ac, ac.baseClass);
+				AspectDefinition ac = acl.getAspectDefinition(getClass());
+				invocationHandler = new AspectInvocationHandler(ac, ac.targetClass);
 				return;
 			}
 			c = c.getParent();

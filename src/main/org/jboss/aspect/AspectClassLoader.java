@@ -69,7 +69,7 @@ import org.jboss.proxy.compiler.ProxyCompiler;
 public class AspectClassLoader extends java.lang.ClassLoader {
 
 	Hashtable classes = new Hashtable();
-	Hashtable aspectCompositions = new Hashtable();
+	Hashtable aspectDefinitions = new Hashtable();
 
 	public AspectClassLoader() {
 		super(ClassLoader.getSystemClassLoader());
@@ -111,14 +111,14 @@ public class AspectClassLoader extends java.lang.ClassLoader {
 			throw new AspectNotFoundException(class_name);
 
 		// Parse the aspect file.
-		AspectComposition aspectComposition;
+		AspectDefinition aspectDefinition;
 		try {
 			SAXReader xmlReader = new SAXReader();
 			Document doc = xmlReader.read(aspectURL);
-			aspectComposition =
-				XMLConfiguration.loadAspectObjectComposition(
+			aspectDefinition =
+				XMLConfiguration.loadAspectObjectDefinition(
 					doc.getRootElement());
-			if (!class_name.equals(aspectComposition.name))
+			if (!class_name.equals(aspectDefinition.name))
 				throw new ClassFormatError(
 					aspectDefPath
 						+ " invalid: aspect name did not match class name");
@@ -130,8 +130,12 @@ public class AspectClassLoader extends java.lang.ClassLoader {
 		}
 
 		try {
+         
+         Class interfaces[] = aspectDefinition.interfaces;
+         if( aspectDefinition.targetClass != null )
+            interfaces = AspectSupport.appendInterfaces(interfaces, aspectDefinition.targetClass);
 
-			Set mset = AspectSupport.getExposedMethods(aspectComposition.interfaces);
+			Set mset = AspectSupport.getExposedMethods(interfaces);
 			Method m[] = new Method[mset.size()];
 			mset.toArray(m);
 
@@ -140,12 +144,12 @@ public class AspectClassLoader extends java.lang.ClassLoader {
 				new ProxyCompiler(
 					this,
 					Object.class,
-					aspectComposition.interfaces,
+					interfaces,
 					m,
 					new AspectProxyImplementationFactory());
 
 			Class proxyClass = pc.getProxyType();
-			aspectCompositions.put(proxyClass, aspectComposition);
+			aspectDefinitions.put(proxyClass, aspectDefinition);
 			return proxyClass;
 
 		} catch (Exception e) {
@@ -153,11 +157,11 @@ public class AspectClassLoader extends java.lang.ClassLoader {
 				class_name + ": Could not generate dynamic proxy: " + e);
 		}
 		/*		
-				AspectInvocationHandler h = new AspectInvocationHandler(aspectComposition, null);
+				AspectInvocationHandler h = new AspectInvocationHandler(aspectDefinition, null);
 		*/
 	}
 
-	public AspectComposition getAspectComposition(Class clazz) {
-		return (AspectComposition) aspectCompositions.get(clazz);
+	public AspectDefinition getAspectDefinition(Class clazz) {
+		return (AspectDefinition) aspectDefinitions.get(clazz);
 	}
 }
