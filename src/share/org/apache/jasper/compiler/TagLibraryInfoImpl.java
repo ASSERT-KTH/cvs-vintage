@@ -1,4 +1,8 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.9 1999/11/24 01:11:00 mandar Exp $
+ * $Revision: 1.9 $
+ * $Date: 1999/11/24 01:11:00 $
+ *
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -152,45 +156,44 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
                                                          Constants.WEBAPP_DTD_PUBLIC_ID);
                 NodeList nList =  webtld.getElementsByTagName("taglib");
 	    
-                // Check if a matching "taglib" exists.
-                // XXX. Some changes that akv recommended.
-                if (nList.getLength() != 0) {
-                    for(int i = 0; i < nList.getLength(); i++) {
-                        Element e = (Element) nList.item(i);
-                        NodeList list = e.getChildNodes();
-                        String tagLoc = null;
-                        boolean match = false;
-                        for(int j = 0; j < list.getLength(); j++) {
-                            Element em = (Element) list.item(j);
-                            String tname = em.getNodeName();
-                            if (tname.equals("taglib-location")) {
-                                Text t = (Text) em.getFirstChild();
-                                if (t != null) {
-                                    tagLoc = t.getData();
-                                    if (tagLoc != null)
-                                        tagLoc = tagLoc.trim();
-                                }
-                            }
-                            if (tname.equals("taglib-uri")) {
-                                Text t = (Text) em.getFirstChild();
-                                if (t != null) {
-                                    String tmpUri =  t.getData();
-                                    if (tmpUri != null) {
-                                        tmpUri = tmpUri.trim();
-                                        if (tmpUri.equals(uriIn))
-                                            match = true;
-                                    }
-                                }
-                            }
-                        }
-                        if (match == true && tagLoc != null) 
-                            this.uri = tagLoc;
-                    }
-                }
-            }
+		// Check if a matching "taglib" exists.
+		// XXX. Some changes that akv recommended.
+		if (nList.getLength() != 0) {
+		    for(int i = 0; i < nList.getLength(); i++) {
+			Element e = (Element) nList.item(i);
+			NodeList list = e.getChildNodes();
+			String tagLoc = null;
+			boolean match = false;
+			for(int j = 0; j < list.getLength(); j++) {
+			    Element em = (Element) list.item(j);
+			    String tname = em.getNodeName();
+			    if (tname.equals("taglib-location")) {
+				Text t = (Text) em.getFirstChild();
+				if (t != null) {
+				    tagLoc = t.getData();
+				    if (tagLoc != null)
+					tagLoc = tagLoc.trim();
+				}
+			    }
+			    if (tname.equals("taglib-uri")) {
+				Text t = (Text) em.getFirstChild();
+				if (t != null) {
+				    String tmpUri =  t.getData();
+				    if (tmpUri != null) {
+					tmpUri = tmpUri.trim();
+					if (tmpUri.equals(uriIn))
+					    match = true;
+				    }
+				}
+			    }
+			}
+			if (match == true && tagLoc != null) 
+			    this.uri = tagLoc; 
+		    }
+		}
+	    }
 
 	    // "uri" should point to the correct tld location.
-
 	    if (!uri.startsWith("/")) {
 		HttpServletRequest request = ctxt.getRequest();
 		String actURI =  request.getServletPath();

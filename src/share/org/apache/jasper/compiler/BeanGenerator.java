@@ -1,4 +1,7 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BeanGenerator.java,v 1.4 1999/11/24 01:11:00 mandar Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/11/24 01:11:00 $
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
