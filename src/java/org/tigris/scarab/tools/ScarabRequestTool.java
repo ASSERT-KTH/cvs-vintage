@@ -653,42 +653,55 @@ public class ScarabRequestTool
         ScarabUser user = (ScarabUser)data.getUser();
         if (issueListColumns == null) 
         {
-        try
-        {
-            MITList currentList = user.getCurrentMITList();
-            if (currentList != null)
+            try
             {
-                if (currentList.isSingleModuleIssueType()) 
+                //
+                // First check whether an MIT list is currently
+                // active and if so, whether it has attributes
+                // associated with it. 
+                //
+                MITList currentList = user.getCurrentMITList();
+                if (currentList != null)
                 {
-                    Module module = currentList.getModule();
-                    IssueType issueType = currentList.getIssueType();
-                    issueListColumns = user.getRModuleUserAttributes(module, issueType);
-                    if (issueListColumns.isEmpty())
+                    //
+                    // Here we fetch the collection of attributes
+                    // associated with the current MIT list.
+                    //
+                    issueListColumns =
+                        currentList.getCommonRModuleUserAttributes();
+                    
+                    //
+                    // If there are no attributes associated with
+                    // the list, and the list only contains a single
+                    // module and a single issue type, get the default
+                    // attributes for that combination of module and
+                    // issue type.
+                    //
+                    if (issueListColumns.isEmpty()
+                        && currentList.isSingleModuleIssueType())
                     {
-                        issueListColumns = module
-                            .getDefaultRModuleUserAttributes(issueType);
+                        issueListColumns = currentList.getModule()
+                            .getDefaultRModuleUserAttributes(
+                                currentList.getIssueType());
                     }
                 }
-                else 
+    
+                if (issueListColumns == null)
                 {
-                    issueListColumns = currentList.getCommonRModuleUserAttributes();
-                }                
-            }
-
-            if (issueListColumns == null)
-            {
-                issueListColumns = user.getRModuleUserAttributes(module, issueType);
-                if (issueListColumns.isEmpty())
-                {
-                    issueListColumns = module.getDefaultRModuleUserAttributes(issueType);
+                    issueListColumns = user.getRModuleUserAttributes(module,
+                                                                     issueType);
+                    if (issueListColumns.isEmpty())
+                    {
+                        issueListColumns =
+                            module.getDefaultRModuleUserAttributes(issueType);
+                    }
                 }
+                initialIssueListColumnsSize = issueListColumns.size();
             }
-            initialIssueListColumnsSize = issueListColumns.size();
-        }
-        catch (Exception e)
-        {
-            Log.get().error("Could not get list attributes", e);
-        }
+            catch (Exception e)
+            {
+                Log.get().error("Could not get list attributes", e);
+            }
         }
         else if (initialIssueListColumnsSize > issueListColumns.size())
         {

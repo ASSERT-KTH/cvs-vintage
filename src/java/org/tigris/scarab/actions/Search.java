@@ -66,6 +66,7 @@ import org.apache.fulcrum.util.parser.ValueParser;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
+import org.tigris.scarab.om.RModuleUserAttribute;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.QueryPeer;
@@ -91,7 +92,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.146 2003/11/13 10:52:29 dep4b Exp $
+ * @version $Id: Search.java,v 1.147 2003/12/20 13:30:43 pledbrook Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -322,6 +323,15 @@ public class Search extends RequireLoginFirstAction
             }
             else
             {
+                //
+                // Get hold of all the attributes that apply to
+                // this list. We will have to copy them manually
+                // to the new list because MITList.copy() won't
+                // do it for us.
+                //
+                List commonAttributes = 
+                    currentList.getCommonRModuleUserAttributes();
+                
                 // associate the query with a new list, the current
                 // implementation does not allow for multiple queries to
                 // work from the same MITList and this guarantees they
@@ -331,6 +341,33 @@ public class Search extends RequireLoginFirstAction
                 {
                     currentList.setName(null);
                 }
+                
+                //
+                // Copy the attributes from the original list
+                // to the new one.
+                //
+                for (Iterator iter = commonAttributes.iterator();
+                              iter.hasNext(); )
+                {
+                    RModuleUserAttribute attr =
+                            (RModuleUserAttribute) iter.next();
+                    
+                    //
+                    // When we copy the attribute, we don't actually
+                    // want to keep the list ID because that refers
+                    // to the old list rather than the new one. So
+                    // we just clear it - when the list is saved the
+                    // correct list ID will automatically be set for
+                    // the attribute.
+                    //
+                    RModuleUserAttribute newAttr = attr.copy();
+                    newAttr.setListId(null);
+                    currentList.addRModuleUserAttribute(newAttr);
+                }
+                
+                //
+                // Update the query to use the new MIT list.
+                //
                 query.setMITList(currentList);
                 if (!currentList.isSingleModule())
                 {
