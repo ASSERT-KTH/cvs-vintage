@@ -24,7 +24,7 @@
 // File: FigFinalState.java
 // Classes: FigFinalState
 // Original Author: ics125b spring 98
-// $Id: FigFinalState.java,v 1.11 1999/04/20 01:52:59 jrobbins Exp $
+// $Id: FigFinalState.java,v 1.12 1999/04/20 21:58:53 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -98,6 +98,12 @@ public class FigFinalState extends FigStateVertex {
   ////////////////////////////////////////////////////////////////
   // Fig accessors
 
+  public Selection makeSelection() {
+    SelectionState sel = new SelectionState(this);
+    sel.setOutgoingButtonEnabled(false);
+    return sel;
+  }
+
   public void setOwner(Object node) {
     super.setOwner(node);
     bindPort(node, _bigPort);
@@ -109,9 +115,9 @@ public class FigFinalState extends FigStateVertex {
   /** Final states are fixed size. */
   public boolean isResizable() { return false; }
 
-  public Selection makeSelection() {
-    return new SelectionMoveClarifiers(this);
-  }
+//   public Selection makeSelection() {
+//     return new SelectionMoveClarifiers(this);
+//   }
 
   public void setLineColor(Color col) { _outCircle.setLineColor(col); }
   public Color getLineColor() { return _outCircle.getLineColor(); }

@@ -24,7 +24,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigInitialState.java,v 1.11 1999/04/20 01:53:00 jrobbins Exp $
+// $Id: FigInitialState.java,v 1.12 1999/04/20 21:58:54 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -93,6 +93,16 @@ public class FigInitialState extends FigStateVertex {
   ////////////////////////////////////////////////////////////////
   // Fig accessors
 
+  public Selection makeSelection() {
+    SelectionState sel = new SelectionState(this);
+    sel.setIncomingButtonEnabled(false);
+    if (getOwner() != null) {
+      Vector outs = ((StateVertex)getOwner()).getOutgoing();
+      sel.setOutgoingButtonEnabled(outs == null || outs.size() == 0);
+    }
+    return sel;
+  }
+
   public void setOwner(Object node) {
     super.setOwner(node);
     bindPort(node, _bigPort);
@@ -104,9 +114,9 @@ public class FigInitialState extends FigStateVertex {
   /** Initial states are fixed size. */
   public boolean isResizable() { return false; }
 
-  public Selection makeSelection() {
-    return new SelectionMoveClarifiers(this);
-  }
+//   public Selection makeSelection() {
+//     return new SelectionMoveClarifiers(this);
+//   }
 
   public void setLineColor(Color col) { _head.setLineColor(col); }
   public Color getLineColor() { return _head.getLineColor(); }

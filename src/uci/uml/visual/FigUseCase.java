@@ -26,7 +26,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.16 1999/03/17 03:22:25 jrobbins Exp $
+// $Id: FigUseCase.java,v 1.17 1999/04/20 21:58:57 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -103,6 +103,10 @@ public class FigUseCase extends FigNodeModelElement {
 
   ////////////////////////////////////////////////////////////////
   // Fig accessors
+
+  public Selection makeSelection() {
+    return new SelectionUseCase(this);
+  }
 
   public void setOwner(Object node) {
     super.setOwner(node);

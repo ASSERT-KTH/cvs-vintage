@@ -26,7 +26,7 @@
 // File: FigState.java
 // Classes: FigState
 // Original Author: ics 125b silverbullet team
-// $Id: FigState.java,v 1.14 1999/03/17 03:22:24 jrobbins Exp $
+// $Id: FigState.java,v 1.15 1999/04/20 21:58:56 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -125,6 +125,11 @@ public class FigState extends FigStateVertex {
 
   ////////////////////////////////////////////////////////////////
   // accessors
+
+  public Selection makeSelection() {
+    return new SelectionState(this);
+  }
+
 
   public void setOwner(Object node) {
     super.setOwner(node);

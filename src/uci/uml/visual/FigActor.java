@@ -24,7 +24,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigActor.java,v 1.13 1999/04/20 01:52:55 jrobbins Exp $
+// $Id: FigActor.java,v 1.14 1999/04/20 21:58:50 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -116,6 +116,10 @@ public class FigActor extends FigNodeModelElement {
   ////////////////////////////////////////////////////////////////
   // Fig accessors
 
+  public Selection makeSelection() {
+    return new SelectionActor(this);
+  }
+
   public void setOwner(Object node) {
     super.setOwner(node);
     bindPort(node, _bigPort);
@@ -124,9 +128,9 @@ public class FigActor extends FigNodeModelElement {
   /** Returns true if this Fig can be resized by the user. */
   public boolean isResizable() { return false; }
 
-  public Selection makeSelection() {
-    return new SelectionMoveClarifiers(this);
-  }
+//   public Selection makeSelection() {
+//     return new SelectionMoveClarifiers(this);
+//   }
 
   public void setLineColor(Color col) {
     _head.setLineColor(col);

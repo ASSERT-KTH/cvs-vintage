@@ -26,7 +26,7 @@
 // File: FigCompositeState.java
 // Classes: FigCompositeState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigCompositeState.java,v 1.3 1999/03/17 03:22:12 jrobbins Exp $
+// $Id: FigCompositeState.java,v 1.4 1999/04/20 21:58:52 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -130,6 +130,10 @@ public class FigCompositeState extends FigStateVertex {
 
   ////////////////////////////////////////////////////////////////
   // accessors
+
+  public Selection makeSelection() {
+    return new SelectionState(this);
+  }
 
   public void setOwner(Object node) {
     super.setOwner(node);
