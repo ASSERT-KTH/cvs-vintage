@@ -61,7 +61,7 @@ import org.tigris.gef.presentation.Fig;
  * // naming for extension points in convertValueToText.
  * </pre>
  *
- * $Id: DisplayTextTree.java,v 1.29 2003/05/19 11:11:02 mkl Exp $
+ * $Id: DisplayTextTree.java,v 1.30 2003/05/30 05:50:29 mkl Exp $
  */
 public class DisplayTextTree extends JTree implements TargetListener {
 
@@ -96,9 +96,7 @@ public class DisplayTextTree extends JTree implements TargetListener {
         setRootVisible(false);
         setShowsRootHandles(true);
 
-        // can save a significant amount of rendering time.
-        this.setLargeModel(true); // works for now.
-        //this.setRowHeight(18); // can't use this yet
+        this.setRowHeight(18); 
 
         showStereotype =
             Configuration.getBoolean(Notation.KEY_SHOW_STEREOTYPES, false);
