@@ -34,6 +34,15 @@ $page.setTitle("Registration Confirmation")
         button to continue.</li>
 </ul>
 
+#if ($data.getMessage())
+    <p>
+    <TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+            <TR>
+                <TD class="MessageText">$data.getMessage()</TD>
+            </TR>
+    </TABLE>
+#end
+
 <P>
 <FORM name="RegisterConfirmForm" action="$link.setPage("RegisterConfirm.vm")" method="post">
     <input type="hidden" name="action" value="RegisterConfirm">
