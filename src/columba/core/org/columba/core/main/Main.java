@@ -15,8 +15,6 @@
 //All Rights Reserved.
 package org.columba.core.main;
 
-import jargs.gnu.CmdLineParser;
-
 import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -33,7 +31,6 @@ import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
-import org.columba.core.config.ConfigPath;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.menu.MenuPluginHandler;
@@ -47,7 +44,6 @@ import org.columba.core.plugin.PluginManager;
 import org.columba.core.shutdown.SaveConfigPlugin;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.CharsetManager;
-import org.columba.core.util.CmdLineArgumentParser;
 import org.columba.core.util.TempFileStore;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.config.accountwizard.AccountWizard;
