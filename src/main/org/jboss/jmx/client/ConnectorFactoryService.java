@@ -52,15 +52,18 @@ public class ConnectorFactoryService
 	/**
 	* Returns a list of available servers
 	*
+	* @param pProtocol			Servers supporting this protocol if not null
+	*							or empty otherwise it will be ignored
 	* @param pServerQuery		Query instance to filter the list of servers
 	*
 	* @return					A collection of available servers
 	*							names/identifications (String)
-	*/
+	**/
 	public Collection getServers(
+		String pProtocol
 //AS		ServerQuery pServerQuery
 	) {
-		return mFactory.getServers();
+		return mFactory.getServers( pProtocol );
 	}
 	
 	/**
