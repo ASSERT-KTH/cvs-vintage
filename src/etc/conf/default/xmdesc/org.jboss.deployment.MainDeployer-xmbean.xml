@@ -35,6 +35,21 @@
          <value value="deployer,deployer.xml,sar,rar,ds.xml,service.xml,har,jar,war,wsr,ear,zip,bsh,last"/>
       </descriptors>
    </attribute>
+   <attribute access='read-only' getMethod='getSuffixOrder'>
+      <description></description>
+      <name>SuffixOrder</name>
+      <type>[Ljava.lang.String;</type>
+   </attribute>
+   <attribute access='read-write' setMethod='setEnhancedSuffixOrder' getMethod='getEnhancedSuffixOrder'>
+      <description></description>
+      <name>EnhancedSuffixOrder</name>
+      <type>[Ljava.lang.String;</type>
+      <!--
+      <descriptors>
+        <value value="100:deployer,100:deployer.xml,200:sar,200:service.xml,300:rar,300:ds.xml,500:jar,600:war,600:wsr,600:ear,700:zip,900:last"/>
+      </descriptors>
+      -->
+   </attribute>   
    <attribute access='read-write' setMethod='setTempDir' getMethod='getTempDir'>
       <description></description>
       <name>TempDir</name>
