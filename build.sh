@@ -8,7 +8,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-# $Id: build.sh,v 1.9 2001/12/06 02:16:10 user57 Exp $
+# $Id: build.sh,v 1.10 2002/02/28 04:08:05 user57 Exp $
 
 PROGNAME=`basename $0`
 DIRNAME=`dirname $0`
@@ -130,7 +130,7 @@ main() {
     fi
 
     # need to specify planet57/buildmagic protocol handler package
-    ANT_OPTS="$ANT_OPTS -Djava.protocol.handler.pkgs=planet57.net.protocol"
+    ANT_OPTS="$ANT_OPTS -Djava.protocol.handler.pkgs=org.jboss.net.protocol"
 
     # setup some build properties
     ANT_OPTS="$ANT_OPTS -Dbuild.script=$0"

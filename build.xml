@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project [
-  <!ENTITY buildmagic SYSTEM "resource://planet57/tools/buildmagic/common.xml">
+  <!ENTITY buildmagic SYSTEM "resource://org/jboss/tools/buildmagic/common.xml">
 ]>
 
 <!-- ====================================================================== -->
@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.73 2002/02/27 05:41:20 starksm Exp $ -->
+<!-- $Id: build.xml,v 1.74 2002/02/28 04:08:05 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
