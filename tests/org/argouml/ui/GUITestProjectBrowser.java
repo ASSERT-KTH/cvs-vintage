@@ -1,4 +1,4 @@
-// $Id: GUITestProjectBrowser.java,v 1.2 2004/02/24 08:28:19 linus Exp $
+// $Id: GUITestProjectBrowser.java,v 1.3 2004/07/23 17:53:53 linus Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +68,6 @@ public class GUITestProjectBrowser extends TestCase {
 	assertNotNull(pb.getNamedTab("tab.properties"));
 	assertNotNull(pb.getNamedTab("tab.source"));
 	assertNotNull(pb.getTodoPane());
-	assertNotNull(pb.getNavigatorPane());
     }
 
     /**
@@ -91,8 +90,6 @@ public class GUITestProjectBrowser extends TestCase {
      */
     public void compileTestSplashScreen() {
 	ProjectBrowser.setSplash(true);
-	ProjectBrowser inst = ProjectBrowser.getInstance();
-	inst.setSplashScreen(inst.getSplashScreen());
     }
 
     /** Test the existance of public static members.
@@ -151,7 +148,5 @@ public class GUITestProjectBrowser extends TestCase {
     {
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 	pb.getTarget();
-	pb.getActiveDiagram();
-	pb.getDetailsTarget();
     }
 }

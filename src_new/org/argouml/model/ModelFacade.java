@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.198 2004/07/21 13:14:13 mkl Exp $
+// $Id: ModelFacade.java,v 1.199 2004/07/23 17:53:52 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2171,24 +2171,6 @@ public class ModelFacade {
 
         // ...
 	return illegalArgumentBoolean(handle);
-    }
-
-    /**
-     * Count the number of Connections or AssociationEnds to an Association.
-     *
-     * @param handle to the association.
-     * @return an Iterator with all connections.
-     * @deprecated by Linus Tolke as of 0.15.5. Use
-     * {@link #getConnections(Object)}.size() instead.
-     */
-    public static int getConnectionCount(Object handle) {
-        if (handle instanceof MAssociation) {
-            return ((MAssociation) handle).getConnections().size();
-        }
-
-        // ...
-	illegalArgument(handle);
-	return 0;
     }
 
     /**

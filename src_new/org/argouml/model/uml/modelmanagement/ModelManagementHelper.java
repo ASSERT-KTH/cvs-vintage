@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.41 2004/02/29 12:35:41 linus Exp $
+// $Id: ModelManagementHelper.java,v 1.42 2004/07/23 17:53:51 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,12 +55,7 @@ import org.apache.log4j.Logger;
  * @stereotype singleton
  */
 public class ModelManagementHelper {
-
-    /**
-     * @deprecated by Linus Tolke as of 0.15.4. Use your own logger in your
-     * class. This will be removed.
-     */
-    protected static Logger cat =
+    private static final Logger LOG =
 	Logger.getLogger(ModelManagementHelper.class);
     
     /**
@@ -71,11 +66,13 @@ public class ModelManagementHelper {
 
     /** Singleton instance.
     */
-    private static ModelManagementHelper SINGLETON =
+    private static final ModelManagementHelper SINGLETON =
         new ModelManagementHelper();
 
     /**
      * Singleton instance access method.
+     *
+     * @return The model management helper.
      */
     public static ModelManagementHelper getHelper() {
         return SINGLETON;
@@ -280,7 +277,7 @@ public class ModelManagementHelper {
             // TODO: This assumes we are working with MThings
             col = getAllModelElementsOfKind(nsa, Class.forName("M" + kind));
         } catch (ClassNotFoundException cnfe) {
-            cat.error(cnfe);
+            LOG.error(cnfe);
             return Collections.EMPTY_LIST;
         }
         return col;

@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.66 2004/07/17 22:29:05 linus Exp $
+// $Id: NavigatorPane.java,v 1.67 2004/07/23 17:53:53 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.apache.log4j.Logger;
 import org.argouml.application.api.QuadrantPanel;
 import org.argouml.i18n.Translator;
 import org.argouml.ui.explorer.ExplorerTree;
@@ -67,34 +66,25 @@ public class NavigatorPane
     public static int _clicksInNavPane = 0;
     /** for collecting user statistics */
     public static int _navPerspectivesChanged = 0;
-
-    /**
-     * to be removed once forceUpdate() is also removed
-     *
-     * @deprecated from 0.15.3.
-     */
-    ExplorerTree tree;
     
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    private static NavigatorPane INSTANCE = null;
+    private static NavigatorPane theInstance = null;
 
-    private static boolean instanceSet = false;
-    
     /** Don't automatically instantiate the instance.
      * 
      * @return the singleton
      */
     public static NavigatorPane getInstance() {
-	if (!instanceSet) {
-	    INSTANCE = new NavigatorPane();
-	    instanceSet = true;
+	if (theInstance == null) {
+	    theInstance = new NavigatorPane();
 	}
-	return INSTANCE;
+	return theInstance;
     }
     
-    /** Allow setting of the navigator pane instance.
+    /**
+     * Allow setting of the navigator pane instance.
      * Currently this is only applicable for unit tests.
      * 
      * @param pane
@@ -102,8 +92,7 @@ public class NavigatorPane
      * until the model is cleaned up
      */
     public static void setInstance(NavigatorPane pane) {
-	INSTANCE = pane;
-	instanceSet = true;
+	theInstance = pane;
     }
     
     /**
@@ -132,7 +121,7 @@ public class NavigatorPane
         
         JComboBox combo = new PerspectiveComboBox();
         JComboBox orderByCombo = new JComboBox();
-        tree = new ExportExplorer(); //DnDExplorerTree();
+        ExplorerTree tree = new ExportExplorer(); //DnDExplorerTree();
         ToolBar toolbar = new ToolBar();
         
         toolbar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
@@ -192,7 +181,11 @@ public class NavigatorPane
     public void forceUpdate() {
     }
 
-    /** sets minimum size to 120,100 */
+    /**
+     * @see java.awt.Component#getMinimumSize()
+     *
+     * sets minimum size to 120,100
+     */
     public Dimension getMinimumSize() {
         return new Dimension(120, 100);
     }

@@ -1,4 +1,4 @@
-// $Id: ModelManagementFactory.java,v 1.11 2004/02/29 12:35:41 linus Exp $
+// $Id: ModelManagementFactory.java,v 1.12 2004/07/23 17:53:51 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -148,11 +148,10 @@ public class ModelManagementFactory extends AbstractUmlModelFactory {
     /**
      * Used by the copy functions. Do not call this function directly.
      *
-     * @param source is the source package
-     * @param target is the target package.
-     * @deprecated by Linus Tolke as of 0.15.4, will be made private.
+     * @param source The source package.
+     * @param target The target package.
      */
-    public void doCopyPackage(MPackage source, MPackage target) {
+    private void doCopyPackage(MPackage source, MPackage target) {
 	CoreFactory.getFactory().doCopyNamespace(source, target);
     }
 }

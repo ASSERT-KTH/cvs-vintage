@@ -1,4 +1,4 @@
-// $Id: Init.java,v 1.11 2004/01/28 07:17:46 linus Exp $
+// $Id: Init.java,v 1.12 2004/07/23 17:53:46 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,27 +41,11 @@ import org.argouml.i18n.Translator;
  * @see org.argouml.cognitive.checklist.CheckManager
  */
 public class Init {
-
-    /**
-     * @deprecated as of 0.15.3. Visibility changed to private.
-     */
-    protected static Logger cat =
-	Logger.getLogger(Init.class);
-
     /** 
      * static initializer, register all appropriate critics<p>
      */
     public static void init() {
 	createChecklists();
-    }
-
-    /**
-     * static initializer, register all appropriate critics<p>
-     *
-     * @deprecated as of 0.15.3. use @see #init()
-     */
-    public static void init(Locale locale) {
-	init();
     }
 
 
