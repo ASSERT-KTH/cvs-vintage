@@ -87,7 +87,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCEJBQLCompiler extends BasicVisitor {
 
@@ -98,16 +98,12 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
    private JDBCReadAheadMetaData readAhead;
 
    // alias info
-   private String aliasHeaderPrefix;
-   private String aliasHeaderSuffix;
-   private int aliasMaxLength;
-   private int aliasCount;
-   private Map aliases = new HashMap();
-   private Map relationTableAliases = new HashMap();
+   private AliasManager aliasManager;
 
    // join info
    private Set declaredPaths = new HashSet();
    private Set joinPaths = new HashSet();
+   private Map collectionMemberJoinPaths = new HashMap();
    private Map leftJoinPaths = new HashMap();
 
    // mapping metadata
@@ -199,17 +195,14 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       parameterTypes = null;
       readAhead = null;
       inputParameters = new ArrayList();
-      aliases = new HashMap();
-      relationTableAliases = new HashMap();
+      declaredPaths = new HashSet();
       joinPaths = new HashSet();
+      collectionMemberJoinPaths = new HashMap();
       leftJoinPaths = new HashMap();
       selectObject = null;
       typeFactory = null;
       typeMapping = null;
-      aliasHeaderPrefix = null;
-      aliasHeaderSuffix = null;
-      aliasMaxLength = 0;
-      aliasCount = 0;
+      aliasManager = null;
       subquerySupported = true;
    }
 
@@ -245,56 +238,12 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
    private void setTypeFactory(JDBCTypeFactory typeFactory) {
       this.typeFactory = typeFactory;
       this.typeMapping = typeFactory.getTypeMapping();
-      aliasHeaderPrefix = typeMapping.getAliasHeaderPrefix();
-      aliasHeaderSuffix = typeMapping.getAliasHeaderSuffix();
-      aliasMaxLength = typeMapping.getAliasMaxLength();
+      aliasManager = new AliasManager(
+            typeMapping.getAliasHeaderPrefix(),
+            typeMapping.getAliasHeaderSuffix(),
+            typeMapping.getAliasMaxLength());
       subquerySupported = typeMapping.isSubquerySupported();
    }
-
-   private String getAlias(String path) {
-      String alias = (String)aliases.get(path);
-      if(alias == null) {
-         alias = createAlias(path);
-         aliases.put(path, alias);
-      }
-      return alias;
-   }
-
-   private String createAlias(String path) {
-      StringBuffer alias = new StringBuffer();
-
-      alias.append(aliasHeaderPrefix);
-      alias.append(aliasCount++);
-      alias.append(aliasHeaderSuffix);
-
-      alias.append(path.replace('.', '_'));
-
-      return alias.substring(0, Math.min(aliasMaxLength, alias.length()));
-   }         
-
-   private String getRelationTableAlias(String path) {
-      String relationTableAlias = (String)relationTableAliases.get(path);
-      if(relationTableAlias == null) {
-         relationTableAlias = createRelationTableAlias(path);
-         relationTableAliases.put(path, relationTableAlias);
-      }
-      return relationTableAlias;
-   }
-
-   private String createRelationTableAlias(String path) {
-      StringBuffer relationTableAlias = new StringBuffer();
-
-      relationTableAlias.append(aliasHeaderPrefix);
-      relationTableAlias.append(aliasCount++);
-      relationTableAlias.append(aliasHeaderSuffix);
-
-      relationTableAlias.append(path.replace('.', '_'));
-      relationTableAlias.append("_RELATION_TABLE");
-      
-      return relationTableAlias.substring(0, 
-            Math.min(aliasMaxLength, relationTableAlias.length()));
-   }         
-
 
    private Class getParameterType(int index) {
       int zeroBasedIndex = index - 1;
@@ -339,7 +288,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       JDBCEntityBridge fromEntity;
       ASTPath fromPath = (ASTPath)fromNode;
       joinPaths.add(fromPath);
-      fromAlias = getAlias(fromPath.getPath());
+      fromAlias = aliasManager.getAlias(fromPath.getPath());
       fromEntity = (JDBCEntityBridge)fromPath.getEntity();
       
       if(toNode instanceof ASTParameter) {
@@ -359,7 +308,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          JDBCEntityBridge toEntity;
          ASTPath toPath = (ASTPath)toNode;
          joinPaths.add(toPath);
-         toAlias = getAlias(toPath.getPath());
+         toAlias = aliasManager.getAlias(toPath.getPath());
          toEntity = (JDBCEntityBridge)toPath.getEntity();
 
          // can only compare like kind entities
@@ -388,7 +337,8 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField();
       JDBCEntityBridge parentEntity = cmrField.getEntity();
-      String parentAlias = getAlias((String)path.getPath(path.size()-2));
+      String parentAlias = aliasManager.getAlias(
+            (String)path.getPath(path.size()-2));
 
       // if exists is not supported we use a left join and is null
       if(!subquerySupported) {
@@ -404,14 +354,15 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          if(cmrField.getRelationMetaData().isForeignKeyMappingStyle()) {
             JDBCEntityBridge childEntity = 
                   (JDBCEntityBridge)cmrField.getRelatedEntity();
-            String childAlias = getAlias(path.getPath());
+            String childAlias = aliasManager.getAlias(path.getPath());
 
             buf.append(SQLUtil.getIsNullClause(
                   false, childEntity.getPrimaryKeyFields(), childAlias));
             
          } else {
 
-            String relationTableAlias = getRelationTableAlias(path.getPath());
+            String relationTableAlias = 
+                  aliasManager.getRelationTableAlias(path.getPath());
 
             buf.append(SQLUtil.getIsNullClause(
                   false, cmrField.getTableKeyFields(), relationTableAlias));
@@ -424,7 +375,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       if(cmrField.getRelationMetaData().isForeignKeyMappingStyle()) {
          JDBCEntityBridge childEntity = 
                (JDBCEntityBridge)cmrField.getRelatedEntity();
-         String childAlias = getAlias(path.getPath());
+         String childAlias = aliasManager.getAlias(path.getPath());
 
          buf.append("SELECT ");
          buf.append(SQLUtil.getColumnNamesClause(
@@ -438,7 +389,8 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          
       } else {
 
-         String relationTableAlias = getRelationTableAlias(path.getPath());
+         String relationTableAlias = 
+               aliasManager.getRelationTableAlias(path.getPath());
          buf.append("SELECT ");
          buf.append(SQLUtil.getColumnNamesClause(
                cmrField.getTableKeyFields(), relationTableAlias));
@@ -567,11 +519,12 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       buf.append(", ");
       buf.append(entity.getTableName());
       buf.append(" ");
-      buf.append(getAlias(path.getPath(i)));
+      buf.append(aliasManager.getAlias(path.getPath(i)));
       leftJoins(path.getPath(i), buf);
 
       if(cmrField.getRelationMetaData().isTableMappingStyle()) {
-         String relationTableAlias = getRelationTableAlias(path.getPath(i));
+         String relationTableAlias = 
+               aliasManager.getRelationTableAlias(path.getPath(i));
          buf.append(", ");
          buf.append(cmrField.getTableName());
          buf.append(" ");
@@ -592,12 +545,12 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
          JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField();
          JDBCEntityBridge parentEntity = cmrField.getEntity();
-         String parentAlias = getAlias(parentPath);
+         String parentAlias = aliasManager.getAlias(parentPath);
 
          if(cmrField.getRelationMetaData().isForeignKeyMappingStyle()) {
             JDBCEntityBridge childEntity = 
                   (JDBCEntityBridge)cmrField.getRelatedEntity();
-            String childAlias = getAlias(path.getPath());
+            String childAlias = aliasManager.getAlias(path.getPath());
 
             buf.append(" LEFT JOIN ");
             buf.append(childEntity.getTableName());
@@ -612,7 +565,8 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          
          } else {
    
-            String relationTableAlias = getRelationTableAlias(path.getPath());
+            String relationTableAlias = 
+                  aliasManager.getRelationTableAlias(path.getPath());
       
             buf.append(" LEFT JOIN ");
             buf.append(cmrField.getTableName());
@@ -630,13 +584,29 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
    }
 
    private void createThetaJoin(BlockStringBuffer buf) {
-      Set joinedPaths = new HashSet();
+      Set joinedAliases = new HashSet();
 
       // add all the additional path tables
       for(Iterator iter = joinPaths.iterator(); iter.hasNext(); ) {
          ASTPath path = (ASTPath)iter.next();
          for(int i=0; i < path.size(); i++) {
-            createThetaJoin(path, i, joinedPaths, buf);
+            createThetaJoin(path, i, joinedAliases, buf);
+         }
+      }
+
+      // add all the collection member path tables
+      for(Iterator iter = collectionMemberJoinPaths.keySet().iterator(); 
+            iter.hasNext(); ) {
+         
+         String childAlias = (String)iter.next();
+         ASTPath path = (ASTPath)collectionMemberJoinPaths.get(childAlias);
+         
+         // join the memeber path
+         createThetaJoin(path, path.size()-1, joinedAliases, childAlias, buf);
+
+         // join the memeber path parents
+         for(int i=0; i < path.size()-1; i++) {
+            createThetaJoin(path, i, joinedAliases, buf);
          }
       }
 
@@ -651,7 +621,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          ASTPath path = (ASTPath)iter.next();
          // don't declare the last one as the first path was left joined
          for(int i=0; i < path.size()-1; i++) {
-            createThetaJoin(path, i, joinedPaths, buf);
+            createThetaJoin(path, i, joinedAliases, buf);
          }
       }
    }
@@ -659,18 +629,28 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
    private void createThetaJoin(
          ASTPath path,
          int i,
-         Set joinedPaths,
+         Set joinedAliases,
          BlockStringBuffer buf) {
 
-      if(!path.isCMRField(i) || joinedPaths.contains(path.getPath(i))) {
+      String childAlias = aliasManager.getAlias(path.getPath(i));
+      createThetaJoin(path, i, joinedAliases, childAlias, buf); 
+   }
+
+   private void createThetaJoin(
+         ASTPath path,
+         int i,
+         Set joinedAliases,
+         String childAlias,
+         BlockStringBuffer buf) {
+
+      if(!path.isCMRField(i) || joinedAliases.contains(childAlias)) {
          return;
       }
 
       JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField(i);
-      String childAlias = getAlias(path.getPath(i));
-      String parentAlias = getAlias(path.getPath(i-1));
+      String parentAlias = aliasManager.getAlias(path.getPath(i-1));
 
-      if(joinedPaths.size() > 0) {
+      if(joinedAliases.size() > 0) {
          buf.append(" AND ");
       }
 
@@ -680,7 +660,8 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
                parentAlias,
                childAlias));
       } else {
-         String relationTableAlias = getRelationTableAlias(path.getPath(i));
+         String relationTableAlias = 
+               aliasManager.getRelationTableAlias(path.getPath(i));
             
          // parent to relation table
          buf.append(SQLUtil.getRelationTableJoinClause(
@@ -697,7 +678,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
                relationTableAlias));
       }
       
-      joinedPaths.add(path.getPath(i));
+      joinedAliases.add(childAlias);
    }
 
 
@@ -710,9 +691,6 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       // add this path to the list of declared paths
       declaredPaths.add(path.getPath());
 
-      // add this path to the list of join paths so parent paths will be joined
-      joinPaths.add(path);
-
       // get the entity at the end of this path
       JDBCEntityBridge entity = (JDBCEntityBridge)path.getEntity();
 
@@ -720,10 +698,13 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       ASTIdentifier id = (ASTIdentifier)node.jjtGetChild(1);
 
       // get the alias
-      String alias = getAlias(id.identifier);
+      String alias = aliasManager.getAlias(id.identifier);
+
+      // add this path to the list of join paths so parent paths will be joined
+      collectionMemberJoinPaths.put(alias, path);
 
       // declare the alias mapping
-      aliases.put(path.getPath(), alias);
+      aliasManager.addAlias(path.getPath(), alias);
 
       buf.append(entity.getTableName());
       buf.append(" ");
@@ -733,7 +714,8 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       // add the relation-table
       JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField();
       if(cmrField.getRelationMetaData().isTableMappingStyle()) {
-         String relationTableAlias = getRelationTableAlias(path.getPath());
+         String relationTableAlias = 
+               aliasManager.getRelationTableAlias(path.getPath());
          buf.append(", ");
          buf.append(cmrField.getTableName());
          buf.append(" ");
@@ -752,7 +734,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       buf.append(entity.getTableName());
       buf.append(" ");
-      buf.append(getAlias(id.identifier));
+      buf.append(aliasManager.getAlias(id.identifier));
       leftJoins(id.identifier, buf);
 
       return buf;
@@ -784,7 +766,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          selectObject = selectEntity;
 
          joinPaths.add(path);
-         String alias = getAlias(path.getPath());
+         String alias = aliasManager.getAlias(path.getPath());
 
          // get a list of all fields to be loaded
          List loadFields = new ArrayList();
@@ -818,7 +800,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          }
       }
 
-      String alias = getAlias((String)path.getPath(path.size()-2));
+      String alias = aliasManager.getAlias((String)path.getPath(path.size()-2));
       JDBCFieldBridge field = (JDBCFieldBridge)path.getField();
       buf.append(SQLUtil.getIsNullClause(node.not, field, alias));
       return buf;
@@ -863,11 +845,13 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
             (JDBCEntityBridge)toPath.getEntity(toPath.size()-2);
       JDBCEntityBridge toChildEntity = (JDBCEntityBridge)toPath.getEntity();
 
-      String toParentAlias = getAlias((String)toPath.getPath(toPath.size()-2));
-      String toChildAlias = getAlias(toPath.getPath());
+      String toParentAlias = aliasManager.getAlias(
+            (String)toPath.getPath(toPath.size()-2));
+      String toChildAlias = aliasManager.getAlias(toPath.getPath());
       String relationTableAlias = null;
       if(toCMRField.getRelationMetaData().isTableMappingStyle()) {
-         relationTableAlias = getRelationTableAlias(toPath.getPath());
+         relationTableAlias = 
+               aliasManager.getRelationTableAlias(toPath.getPath());
       }
    
       // setup from variables
@@ -884,7 +868,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          ASTPath fromPath = (ASTPath)node.jjtGetChild(0);
             
          JDBCEntityBridge fromEntity = (JDBCEntityBridge)fromPath.getEntity();
-         fromAlias = getAlias((String)fromPath.getPath());
+         fromAlias = aliasManager.getAlias((String)fromPath.getPath());
                
          // can only compare like kind entities
          if(!fromEntity.equals(toChildEntity)) {
@@ -1006,7 +990,8 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       // setup the from path
       ASTPath fromPath = (ASTPath)node.jjtGetChild(0);
       joinPaths.add(fromPath);
-      String fromAlias = getAlias((String)fromPath.getPath(fromPath.size()-2));
+      String fromAlias = aliasManager.getAlias(
+            (String)fromPath.getPath(fromPath.size()-2));
       JDBCCMPFieldBridge fromCMPField = 
             (JDBCCMPFieldBridge)fromPath.getCMPField();
 
@@ -1030,7 +1015,8 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       } else {
          ASTPath toPath = (ASTPath)toNode;
          joinPaths.add(toPath);
-         String toAlias = getAlias((String)toPath.getPath(toPath.size()-2));
+         String toAlias = aliasManager.getAlias(
+               (String)toPath.getPath(toPath.size()-2));
          JDBCCMPFieldBridge toCMPField = 
                (JDBCCMPFieldBridge)toPath.getCMPField();
 
@@ -1220,7 +1206,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
  
       joinPaths.add(node);
       JDBCCMPFieldBridge cmpField = (JDBCCMPFieldBridge)node.getCMPField();
-      String alias = getAlias((String)node.getPath(node.size()-2));
+      String alias = aliasManager.getAlias((String)node.getPath(node.size()-2));
       buf.append(SQLUtil.getColumnNamesClause(cmpField, alias));
       return buf;
    }
