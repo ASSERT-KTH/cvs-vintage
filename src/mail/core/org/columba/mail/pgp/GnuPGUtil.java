@@ -29,13 +29,13 @@ import java.util.StringTokenizer;
 
 public class GnuPGUtil extends DefaultUtil {
 	// For signing we use the SHA1 algo as digest
-
+    //	--textmode (textmode signature - not binary!!), --armor, --digest-algo SHA (we use SHA1 as default)
 	static String[] cmd =
 		{
 			"--batch --no-tty --passphrase-fd 0 -d",
-			"--no-secmem-warning --no-greeting --batch --no-tty --armor --output - --encrypt --group recipientgroup=%recipients%  -r recipientgroup",
-			"--no-secmem-warning --no-greeting --batch --digest-algo SHA1 --yes --no-tty --armor --passphrase-fd 0 --output - --detach-sign -u %user% ",
-			"--no-secmem-warning --batch --no-tty --digest-algo SHA1 --armor --verify %sigfile% -" };
+			"--no-secmem-warning --no-greeting --batch --no-tty --armor --output - --encrypt --group recipientgroup=%recipients%  -r recipientgroup",		
+			"--no-secmem-warning --no-greeting --batch --digest-algo SHA1 --yes --no-tty --armor --textmode --passphrase-fd 0 --output - --detach-sign -u %user% ",
+			"--no-secmem-warning --batch --no-tty --digest-algo SHA1 --verify %sigfile% -" };
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.pgp.DefaultUtil#getRawCommandString(int)
