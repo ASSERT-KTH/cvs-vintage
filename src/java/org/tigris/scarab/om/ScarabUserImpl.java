@@ -92,7 +92,7 @@ import org.apache.fulcrum.security.impl.db.entity
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.33 2001/11/01 00:26:46 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.34 2001/11/01 01:43:54 elicia Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -439,7 +439,7 @@ public class ScarabUserImpl
     }
 
     /**
-     * Clears default query for this module/issuetype.
+     * Gets default query-user map for this module/issuetype.
      */
     public RQueryUser getDefaultQueryUser(ModuleEntity module, 
                                           IssueType issueType)
@@ -464,6 +464,15 @@ public class ScarabUserImpl
         throws Exception
     {
         internalUser.resetDefaultQuery(module, issueType);
+    }
+
+    /**
+     * If user has no default query set, gets a default default query.
+     */
+    public String getDefaultDefaultQuery()
+        throws Exception
+    {
+        return internalUser.getDefaultDefaultQuery();
     }
 
     /**

@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.47 2001/11/01 00:25:35 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.48 2001/11/01 01:43:54 elicia Exp $
  */
 public interface ScarabUser extends User
 {
@@ -140,6 +140,13 @@ public interface ScarabUser extends User
      */
     public Query getDefaultQuery(ModuleEntity me, IssueType issueType)
         throws Exception;
+
+    /**
+     * If user has no default query set, gets a default default query.
+     */
+    public String getDefaultDefaultQuery()
+        throws Exception;
+
 
     /**
      * Clears default query for this module/issuetype.

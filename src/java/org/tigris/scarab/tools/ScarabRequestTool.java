@@ -815,7 +815,6 @@ try{
      * The most recent query entered.
      *
      * @return an <code>Issue</code> value
-     */
     public String getCurrentQuery()
         throws Exception
     {
@@ -835,6 +834,7 @@ try{
     {
         currentQuery = query;
     }
+     */
 
     /**
      * Sets the current ModuleEntity
@@ -1019,24 +1019,24 @@ try{
            // Check for default query.
            Query query = user.getDefaultQuery(getCurrentModule(),
                                               getCurrentIssueType());
+           String defaultQuery = null;
            if (query == null)
            {
-               data.setMessage("No search has been performed in "
-                               + "this session, and you have no"
-                               + " default queries for this module"
-                               + " and issue type. Go to QueryList"
-                               + " to create a default query.");
+               // Use default query : all issues created by or
+               // Assigned to this user.
+               defaultQuery = user.getDefaultDefaultQuery();
            }
            else
            {
-               String defaultQuery = query.getValue();
-               intake = parseQuery(defaultQuery);
+               defaultQuery = query.getValue();
            } 
+           intake = parseQuery(defaultQuery);
         }
         else
         {
-           String currentQuery = user.getTemp(ScarabConstants.CURRENT_QUERY)
-                                     .toString();
+           String currentQuery = user.getTemp(ScarabConstants
+                                              .CURRENT_QUERY).toString();
+           System.out.println(currentQuery);
            intake = parseQuery(currentQuery);
         }
         

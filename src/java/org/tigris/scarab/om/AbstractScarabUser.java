@@ -81,7 +81,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * go here.
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AbstractScarabUser.java,v 1.1 2001/10/30 00:44:33 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.2 2001/11/01 01:43:54 elicia Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -258,7 +258,7 @@ public abstract class AbstractScarabUser
     }
 
     /**
-     * Clears default query for this module/issuetype.
+     * Clears default query-user map for this module/issuetype.
      */
     public RQueryUser getDefaultQueryUser(ModuleEntity me, IssueType issueType)
         throws Exception
@@ -305,6 +305,18 @@ public abstract class AbstractScarabUser
             rqu.setIsdefault(false);
             rqu.save();
         }
+    }
+
+    /**
+     * If user has no default query set, gets a default default query
+     * This query returns set of issues assigned to the user.
+     */
+    public String getDefaultDefaultQuery()
+        throws Exception
+    {
+        StringBuffer buf = new StringBuffer("&attv__2visids=");
+        buf.append(getUserId());
+        return buf.toString();
     }
 
     /**
