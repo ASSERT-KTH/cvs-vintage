@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -134,9 +134,15 @@ public class EARDeployer
                   if (isDeployable(name, url))
                   {
                      // Obtain a jar url for the nested jar
-                    URL nestedURL = JarUtils.extractNestedJar(url, this.tempDeployDir);
-                    // and store in it in map
-                    extractedJars.put(name, nestedURL);
+                     URL nestedURL = JarUtils.extractNestedJar(url, this.tempDeployDir);
+                     // and store in it in map
+                     extractedJars.put(name, nestedURL);
+                     log.debug("Extracted deployable content: "+name);
+                  }
+                  else if( entry.isDirectory() == false )
+                  {
+                     URL nestedURL = JarUtils.extractNestedJar(url, this.tempDeployDir);
+                     log.debug("Extracted non-deployable content: "+name);
                   }
                }
                catch (MalformedURLException mue)
