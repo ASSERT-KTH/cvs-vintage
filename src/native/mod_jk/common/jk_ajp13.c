@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Experimental bi-directionl protocol handler.               *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.4 $                                           *
+ * Version:     $Revision: 1.5 $                                           *
  ***************************************************************************/
 
 
@@ -82,8 +82,8 @@
 
 /*
  * Request methods, coded as numbers instead of strings.
- * The list of methods was taken from Section 5.1.1 of RFC 2616
- * and RFC 2518
+ * The list of methods was taken from Section 5.1.1 of RFC 2616,
+ * RFC 2518, and the ACL IETF draft.
  *          Method        = "OPTIONS"
  *                        | "GET"    
  *                        | "HEAD"   
@@ -98,6 +98,7 @@
  *                        | "MOVE"
  *                        | "LOCK"
  *                        | "UNLOCK"
+ *                        | "ACL"
  * 
  */
 #define SC_M_OPTIONS            (unsigned char)1
@@ -114,6 +115,7 @@
 #define SC_M_MOVE               (unsigned char)12
 #define SC_M_LOCK               (unsigned char)13
 #define SC_M_UNLOCK             (unsigned char)14
+#define SC_M_ACL		(unsigned char)15
 
 
 /*
@@ -239,6 +241,8 @@ int sc_for_req_method(const char *method,
 	*sc = SC_M_LOCK;
     } else if(0 == strcmp(method, "UNLOCK")) {
 	*sc = SC_M_UNLOCK;
+    } else if(0 == strcmp(method, "ACL")) {
+	*sc = SC_M_ACL;
     } else {
         rc = JK_FALSE;
     }
