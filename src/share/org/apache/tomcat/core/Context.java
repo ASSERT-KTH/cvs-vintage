@@ -980,7 +980,6 @@ public class Context {
      * Add a servlet. Servlets are mapped by name.
      * This method is used to maintain the list of declared
      * servlets, that can be used for mappings.
-     * @deprecated. Use addHandler() 
      */
     public void addHandler(Handler wrapper)
     	throws TomcatException
