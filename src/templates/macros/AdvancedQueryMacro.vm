@@ -85,7 +85,7 @@ from:&#160;<input type="text" size="20"
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attVal = $attrValues.get($attKey) )
   #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-  #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
+  #if ($attVal.Attribute.isUserAttribute())
     #if ( $attVal.Attribute.AttributeType.ValidationKey )
         #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
     #else
