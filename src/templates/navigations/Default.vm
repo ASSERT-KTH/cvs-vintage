@@ -10,7 +10,7 @@
 #set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
 #if ($issueTypes && $issueTypes.size() > 0)
 <div><strong>
-$link.setPage("SelectArtifactType.vm").setLabel("Artifact types")
+$link.setPage("SelectArtifactType.vm").setLabel("Issue types")
 </strong>
 $renderer.render("navigations", $data, "ArtifactTypes.vm")
 </div>
