@@ -1,4 +1,6 @@
-$page.setTitle("Add/Edit attribute group")
+#set ($groupId = $data.Parameters.getString("groupId"))
+#set ($issueTypeId = $data.Parameters.getString("issueTypeId"))
+$page.setTitle("Add/Edit attribute group to Issue Type '$scarabR.getIssueType($issueTypeId).Name'")
 
 #macro (AttributeGroupBar $val)
 <div class="functnbar$val">
@@ -22,8 +24,6 @@ $page.setTitle("Add/Edit attribute group")
 <div class="app" id="div2-1-4-0">
 <h2>$page.Title</h2>
 
-#set ($groupId = $data.Parameters.getString("groupId"))
-#set ($issueTypeId = $data.Parameters.getString("issueTypeId"))
 
 <form method="get" action="$link.setPage("admin,AttributeGroup.vm")">
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
