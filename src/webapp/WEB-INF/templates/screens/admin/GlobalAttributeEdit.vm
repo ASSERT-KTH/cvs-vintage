@@ -1,0 +1,264 @@
+#set ($module = $scarabR.CurrentModule)
+#set ($attribute = $scarabR.Attribute)
+#set ($groupId = $data.Parameters.getString("groupid"))
+#set ($immutable = $attribute.SystemDefined)
+<div class="app" id="div3-0-2-0">
+#if($immutable)
+<p class="infomark"><strong>$l10n.SystemSpecifiedAttribute</strong></p>
+#end
+#if ($deleting)
+   <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="post">
+   <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
+   <input type="hidden" name="attId" value="$attribute.AttributeId" />
+   <input type="hidden" name="groupId" value="$groupId" />
+   <input type="hidden" name="issueTypeId" value="$!data.Parameters.getString("issueTypeId")" />
+
+   #set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalAttributeShow.vm"))
+   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
+
+   <div class="warningmessage">
+   $l10n.ConfirmDeleteAttribute
+   #if ($attribute.hasModuleMappings())
+       $l10n.AttrMappedToModules
+   #elseif ($attribute.hasGlobalIssueTypeMappings())
+       $l10n.AttrMappedToIssueTypes
+   #end
+   <p><input type="submit" value="$l10n.ConfirmDelete"  name="eventSubmit_doDeleteattribute" /></p>
+
+#else
+
+#if ($attribute.AttributeId)
+   #set ($attgroup = $intake.Attribute.mapTo($attribute))
+   #set ($createNew = false)
+#else
+   #set ($attgroup = $intake.Attribute.Default)
+   #set ($createNew = true)
+#end
+
+<p>$l10n.GlobalAttributes </p>
+
+<form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="post">
+<input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
+#if (!$createNew)
+   <input type="hidden" name="attId" value="$attribute.AttributeId" />
+#end
+#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalAttributeShow.vm"))
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
+<input type="hidden" name="groupId" value="$!data.Parameters.getString("groupId")" />
+<input type="hidden" name="issueTypeId" value="$!data.Parameters.getString("issueTypeId")" />
+<input type="hidden" name="pageNum" value="$!data.Parameters.getInt("pageNum",1)" />
+
+<div class="functnbar">
+#if (!$createNew)
+    <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />&#160;
+#end
+<input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
+</div>
+
+#asterisk()
+
+<h3>$l10n.GlobalAttributeInfo</h3>
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+ <tr>
+  <th>$l10n.InputType</th>
+  <td>
+    #set ($types = $attribute.CompatibleAttributeTypes)
+    #if ($types.isEmpty())
+      <input type="hidden" name="$attgroup.TypeId.Key" value="$attribute.TypeId" />
+      $attribute.AttributeType.Name <p><em>$l10n.TypeCannotChange</em></p>
+    #elseif ($immutable)
+      <input type="hidden" name="$attgroup.TypeId.Key" value="$attribute.TypeId" />
+      $attribute.AttributeType.Name
+    #else
+    <select name="$attgroup.TypeId.Key" size="1">
+    #foreach ($atype in $types)
+      #if (!$atype.Name.equals("user"))
+      <option value="$atype.AttributeTypeId" #if($attribute.TypeId && $attribute.TypeId == $atype.AttributeTypeId)selected#end>$atype.Name</option>
+      #end
+    #end
+    </select>
+    #end
+  </td>
+</tr> 
+<tr>
+  <th>* $l10n.Name</th>
+  <td>
+    #fieldErrorMsg($attgroup.Name "")
+    #if(!$immutable)
+    <input type="text" name="$attgroup.Name.Key" value="$!attgroup.Name" />
+    #else
+    <input type="hidden" name="$attgroup.Name.Key" value="$!attgroup.Name" />
+    $!attgroup.Name
+    #end
+  </td>
+ </tr>
+ <tr>
+  <th>* $l10n.Description</th>
+  <td>
+    #fieldErrorMsg($attgroup.Description "")
+    <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attgroup.Description</textarea>
+  </td>
+ </tr>
+#if (!$createNew)
+  #if ($attribute.CreatedDate)
+ <tr>
+  <th>$l10n.CreatedBy</th>
+  <td>#attributeCreatedBy($attribute)</td>
+ </tr>
+ <tr>
+  <th>$l10n.CreationDate</th>
+  <td>
+    $format.getDate($scarabR.DateFormat, $attribute.CreatedDate)
+  </td>
+ </tr>
+  #end
+
+ <tr>
+  <th>$l10n.Deleted</th>
+  #if(!$immutable)
+  <td>#booleanCheckbox ($attgroup.Deleted)</td>
+  #else
+  <td>#booleanCheckboxLock ($attgroup.Deleted $immutable)</td>
+  #end
+ </tr>
+#end
+</table>
+</div>
+
+<div class="functnbar3">
+   <input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveattributedata" />
+</div>
+
+
+#if ($attribute.AttributeType.AttributeClass.Name.equals("select-one"))
+#datatitle ("$l10n.AttributeOptions")
+
+<div class="colbar">$l10n.AttributeOptionCannotBeDeleted</div>
+
+#set ($pcaos = $attribute.ParentChildAttributeOptions)
+#set ($maxNum = $pcaos.size())
+
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+#if ($maxNum > 0)
+ <th>$l10n.Deleted</th>
+#else
+ <th>&#160;</th>
+#end
+ <th>$l10n.ParentAttributeOption</th>
+ <th>$l10n.AttributeOption</th>
+ <th>$l10n.PreferredOrder</th>
+ ## hiding until implemented<th>$l10n.Weight</th>
+</tr>
+#foreach ($pcao in $pcaos)
+    #set ($immutableOption = $pcao.getChildOption().SystemDefined)
+    #set ($pcaoGroup = $intake.ParentChildAttributeOption.mapTo($pcao))
+    #indexedRows($velocityCount)
+     #if(!$immutableOption)
+       <td>#booleanCheckbox ($pcaoGroup.Deleted)</td>
+     #else
+       <td>#booleanCheckboxLock ($pcaoGroup.Deleted $immutable)</td>
+     #end
+     <td>
+     #if($immutableOption)
+         $pcao.ParentOption.Name
+     #else
+       <select name="$pcaoGroup.ParentId.Key">
+       #if ($pcao.ParentId.toString().equals("0"))
+          <option selected="selected" value="0">$l10n.Root</option>
+       #else
+          <option value="0">$l10n.Root</option>
+       #end
+       #foreach ($parentAttrOption in $attribute.ParentChildAttributeOptions)
+         #if (! $parentAttrOption.Name.equals($pcao.Name) )
+           #if($pcao.ParentId.toString().equals($parentAttrOption.OptionId.toString()))
+              <option selected="selected" value="$parentAttrOption.OptionId">$parentAttrOption.Name</option>
+           #else
+              <option value="$parentAttrOption.OptionId">$parentAttrOption.Name</option>
+           #end
+         #end
+       #end
+     #end
+     </select>
+     </td>
+
+     <td>
+     #if(!$immutableOption)
+      <input type="text" size="25" name="$pcaoGroup.Name.Key" value="$pcaoGroup.Name" />
+     #else
+       $pcaoGroup.Name
+       <input type="hidden" size="25" name="$pcaoGroup.Name.Key" value="$pcaoGroup.Name" />
+     #end
+     </td>
+
+     <td>
+     #if($immutableOption)
+        $pcaoGroup.PreferredOrder.Value
+        <input type="hidden" size="25" name="$pcaoGroup.PreferredOrder.Key" value="$pcaoGroup.PreferredOrder.Value" />
+     #else
+        #numericSelect($pcaoGroup.PreferredOrder.Key 1 $maxNum $pcaoGroup.PreferredOrder.Value 1)
+     #end
+     </td>
+#* Hiding until implemented
+     <td>
+        #numericSelect($pcaoGroup.Weight.Key 1 $maxNum $pcaoGroup.Weight.Value 1)
+     </td>
+*#
+    </tr>
+#end
+#set ($newPCAO = $scarabR.ParentChildAttributeOption)
+#set ($newPCAOGroup = $intake.ParentChildAttributeOption.mapTo($newPCAO))
+    #set ($number = $maxNum + 1)
+    #indexedRows($number)
+     <td>$l10n.New</td>
+     <td>
+     <select name="$newPCAOGroup.ParentId.Key">
+     <option value="0">$l10n.Root</option>
+     #foreach ($parentAttrOption in $attribute.ParentChildAttributeOptions)
+         #set ($pcaoGroupTemp = $intake.ParentChildAttributeOption.mapTo($parentAttrOption))
+         <option value="$pcaoGroupTemp.OptionId">$pcaoGroupTemp.Name</option>
+     #end
+     </select>
+     </td>
+     <td><input type="text" size="25" name="$newPCAOGroup.NewName.Key" value="$newPCAOGroup.NewName" /></td>
+     <td>
+#set ($maxNum = $maxNum + 1)
+#if ($newPCAOGroup.PreferredOrder.Value != 0)
+    #set ($selected = $newPCAOGroup.PreferredOrder.Value)
+#else
+    #set ($selected = $maxNum)
+#end
+#numericSelect($newPCAOGroup.PreferredOrder.Key 1 $maxNum $selected 1)
+     </td>
+#* Hide until implemented
+     <td>
+#if ($newPCAOGroup.Weight.Value != 0)
+    #set ($selected = $newPCAOGroup.Weight.Value)
+#else
+    #set ($selected = $maxNum)
+#end
+#numericSelect($newPCAOGroup.Weight.Key 1 $maxNum $selected 1)
+     </td>
+*#
+</tr>
+</table>
+
+<div class="functnbar3">
+<input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveoptions" />
+</div>
+
+#end
+
+<div class="functnbar2">
+#if (!$createNew)
+    <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />&#160;
+#end
+<input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
+</div>
+
+$intake.declareGroups()
+</div>
+#end
+</form>

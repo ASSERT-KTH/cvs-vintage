@@ -1,0 +1,66 @@
+<div class="docs" id="navigation"> 
+  <div id="toc"> 
+    <ul>
+      <li>$l10n.ScarabHelp 
+        <ul>
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a> 
+            <ul>
+              <li><strong>$l10n.NavigatingScarab</strong>
+                <ul>
+                  <li><a href="#forms">$l10n.EntryForms</a></li>
+                  <li><a href="#results">$l10n.ResultsandSelection<strong> </strong></a></li>
+                  <li><a href="#customizing">$l10n.CustomizingInterface</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+         <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a></li>
+	 <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase</a></li>
+	 <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a> </li>
+	 <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.BestPractices</a></li>
+	 <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+         <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <h3> <a name="top" id="top">$l10n.Title</a></h3>
+  <p>$l10n.TheScarab $l10n.NavP1</p>
+  <p>$l10n.NavP2</p>
+  
+<ul>
+  <li> <strong>$l10n.NavP3Head</strong> $l10n.NavP3
+  </li>
+  <li> 
+    <strong>$l10n.NavP4Head</strong> $l10n.NavP4
+  </li>
+  <li> <strong>$l10n.NavP5Head</strong> $l10n.NavP5</li>
+  <li> <strong>$l10n.Buttons</strong> $l10n.NavP6<strong>$l10n.NavP6S2 </strong> $l10n.NavP6S3</li>
+  <li><strong>$l10n.NavP7Head</strong> $l10n.NavP7</li>
+</ul>
+ $l10n.NavP8
+  <h3><a name="forms" id="forms">$l10n.NavP9Head</a></h3>
+  <p>$l10n.NavP9</p>
+  <p><strong>$l10n.Buttons1</strong></p>
+  <p>$l10n.NavP10</p>
+  <ul>
+    <li> <strong>$l10n.Cancel</strong> $l10n.CancelDesc 
+    </li>
+    <li><strong>$l10n.Continue</strong> $l10n.ContinueDesc 
+    </li>
+    <li><strong>$l10n.Done</strong> $l10n.DoneDesc</li>
+    <li><strong>$l10n.Next</strong> $l10n.NextDesc</li>
+  </ul>
+  <p><strong>$l10n.NavP10Head</strong></p>
+  <p>$l10n.NavP10S1</p>
+  <p>$l10n.NavP11 <strong>$l10n.Selectlc</strong> $l10n.NavP11S2</p>
+  <p>$l10n.NavP12</p>
+  <h3><a name="results" id="results">$l10n.NavP13Head</a></h3>
+  <p>$l10n.NavP13</p>
+  <p>$l10n.NavP14</p>
+  <p>$l10n.NavP15</p>
+  <p><strong>$l10n.NavP16Head</strong></p>
+  <p>$l10n.NavP16</p>
+  <h3><a name="customizing" id="customizing">$l10n.CustomizingInterface</a></h3>
+  <p>$l10n.NavP17</p>
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div></div>

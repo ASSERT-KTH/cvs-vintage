@@ -1,0 +1,14 @@
+$l10n.Details:
+---------------------------------------------------------------------
+
+$l10n.format("UserSubmittedQuery", $user.UserName, $module.Name)
+
+$l10n.ToApprove:
+
+    $link.setPage("admin,Approval.vm")
+
+---------------------------------------------------------------------
+$l10n.EmailFooterA
+$l10n.EmailFooterB
+$l10n.EmailFooterC
+$l10n.EmailFooterD

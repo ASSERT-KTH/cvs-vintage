@@ -1,0 +1,32 @@
+<td id="rightcol" width="20%">
+    <div class="help" id="artifacttypehelp">
+        
+        <p><img src="$staticLink.setPath("/images/artifact.gif")"
+        width="113" height="72" alt="" border="0" /></p>
+        
+        <p>An issue type is a unique instance of a Scarab
+        database, including the following attributes:</p>
+        
+        <ul>
+        <li>a customizable set of attributes</li>
+        <li>a customizable set of options (per attribute)</li>
+        <li>a unique set of permissions per role</li>
+        </ul>
+        
+        <p>Once a user selects an issue type, Scarab's
+        navigation will indicate their selection state by dropping down
+        a list of functions within that issue type, giving authorized
+        user's access to functionality such as:</p>
+        
+        <ul>
+        <li>enter a new issue</li>
+        <li>query the database</li>
+        <li>run reports on database activity</li>
+        </ul>
+
+        <p>The user's input remains confined to the selected
+        issue type until they select another issue type from the
+        left side-bar navigation, or from the issue type
+        index.</p>
+    </div>    
+</td>

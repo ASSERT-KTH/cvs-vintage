@@ -1,0 +1,69 @@
+<div id="requestuser" class="app">
+
+<h3>$l10n.RequestRoles</h3>
+
+#set ($user = $data.User)
+#if (!$user.hasLoggedIn())
+<p class="infomark"><em>$l10n.ToAccessPage $link.setPage("Login.vm").setLabel("Login").</em></p>
+#else
+
+#set ($acl = $securityAdmin.getACL($user))
+
+<form method="post" action="$link.setPage("SelectModule.vm")">
+<input type="hidden" name="action" value="HandleRoleRequests" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="SelectModule.vm" />
+<table>
+<tr>
+<td bgcolor="#000000">
+<table cellspacing="1" cellpadding="2">
+  <tr>
+    <td bgcolor="#ffffff">
+        &#160;
+    </td>
+      
+    #foreach ($role in $securityAdmin.NonRootRoles)
+    <td bgcolor="#ffffff">
+        <b>$role.Name</b>
+    </td>
+    #end
+  </tr>
+
+  #foreach ($group in $securityAdmin.getNonMemberGroups($user))
+  #indexedRows ($velocityCount)
+    <td bgcolor="#ffffff">
+        <b>$group.Name</b>
+    </td>
+
+    #foreach ($role in $securityAdmin.NonRootRoles)
+      #if ($securityAdmin.hasRequestedRole($user, $role, $group))
+        #set ($checked = "checked")
+      #else
+        #set ($checked = "")
+      #end
+    
+    <td>
+      <center>
+      <input type="radio" name="${group.Name}" 
+          value="${role.Name}" $checked />
+      </center>
+    </td>
+    #end    
+  </tr>
+  #end
+    
+</table>
+
+</td>
+</tr>
+</table>
+
+<div class="functnbar2">
+ <input type="submit" name="eventSubmit_doRequestroles" 
+     value="Request roles" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+</div>
+
+</form>
+#end
+
+</div>

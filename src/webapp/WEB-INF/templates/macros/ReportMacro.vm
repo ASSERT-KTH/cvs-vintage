@@ -1,0 +1,328 @@
+#macro ( reportFunctionBar $cssClass $report )
+#if ($report.isReadyForCalculation())
+<div class="$cssClass">
+    <input type="submit" value="$l10n.RecalculateOutput" 
+      name="eventSubmit_doGenerateReport" />
+ #if ($report.isSavable($data.User))
+  &#160;<input type="submit" value="$l10n.SaveReport" 
+    name="eventSubmit_doSavereport" />
+ #end
+</div>
+#end						
+#end
+
+#macro (reportScopeSelectBox $reportGroup)
+ #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
+  <select name="$reportGroup.ScopeId.Key">
+  #foreach ($scope in $scarabR.getScopes())
+    <option value = "$scope.ScopeId" #if($scope.ScopeId.toString().equals("$report.ScopeId.toString()")) selected="selected" #end>
+    $scope.Name
+    </option>
+  #end
+  </select>
+ #else
+  $l10n.Personal
+  <input type="hidden" name="$reportGroup.ScopeId.Key" value="1" />
+ #end
+#end
+
+
+#macro ( attributeOptionOptionList $optionList $selectOptions )
+#set ($showSeparator = false)
+#foreach ( $option in $optionList )
+    #if ($showSeparator && $option.isAttribute())
+       <option value="">----------------------------------</option>
+    #end
+    #set ($showSeparator = true)
+    #if ($option.isAttribute())
+        #set ($spaces = "")
+    #else
+        #set ($spaces = "&#160;&#160;&#160;")
+    #end
+    #set ($selected = false)
+    #foreach ($value in $selectOptions)
+        #if ($option.Value == $value)
+            #set ($selected = true)
+        #end
+    #end
+    <option value="$option.Value"
+        #if($selected) selected="selected"#end>$spaces$option.Name</option>
+#end
+#end
+
+#macro (reportLabel $model $cellLabel $singleAttribute)
+  #if ($model.isReportDate($cellLabel))
+      $format.getDate('yyyy-MM-dd HH:mm', $cellLabel.dateValue())
+  #elseif ($model.isOption($cellLabel))
+      #if ($singleAttribute)
+          $model.displayOption($cellLabel)
+      #else
+          $model.displayAttribute($cellLabel):&nbsp;$model.displayOption($cellLabel)
+      #end
+  #elseif ($model.isOptionGroup($cellLabel))
+      $cellLabel.Name
+  #elseif ($model.isAttributeAndUser($cellLabel))
+      #if ($singleAttribute)
+          $model.displayUser($cellLabel)
+      #else
+          $model.displayAttribute($cellLabel):&nbsp;$model.displayUser($cellLabel)
+      #end
+  #elseif ($model.isUser($cellLabel))
+      $l10n.Author:&nbsp;$cellLabel.UserName
+  #end
+#end
+
+#macro ( reportTable $model )
+
+#set ($maxRow = $model.RowCount - 1)
+#set ($maxColumn = $model.ColumnCount - 1)
+
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+#set ($multiplier = 1)
+#foreach ($columnHeadingLevel in $model.ColumnHeadings)
+   #set ($level = $velocityCount - 1)
+   #set ($colspan = $model.getColspan($level))
+   #set ($singleAttribute = $columnHeadingLevel.singleAttribute())
+ <tr>
+   #set ($maxBlank = $model.RowHeadings.size() - 1)
+   #if ($maxBlank > 0)
+     #foreach ($foo in [1..$maxBlank])
+       <th>&nbsp;</th>
+     #end
+   #end
+   #if ($singleAttribute)
+     <th align="right">$model.displayAttribute($columnHeadingLevel.get(0))&nbsp;&#8594</th>
+   #else
+     <th>&nbsp;</th>
+   #end
+
+   #foreach ($foo in [1..$multiplier])
+   #foreach ($indexPlusOne in [1..$columnHeadingLevel.size()])
+     #set ($index = $indexPlusOne - 1)
+     #set ($columnHeading = $columnHeadingLevel.get($index))
+     <th>
+       #reportLabel($model $columnHeading $singleAttribute)
+     </th>
+     #if ($colspan > 1)
+     #foreach ($dummy in [2..$colspan])
+           <th>&nbsp;</th>
+     #end
+     #end
+   #end
+   #end
+   #set ($multiplier = $multiplier * $columnHeadingLevel.size())   
+ </tr>
+#end
+
+ <tr>
+  #foreach ($rowHeadingLevel in $model.RowHeadings)
+      <th>&nbsp;</th>
+  #end
+  #foreach ($columnIndex in [0..$maxColumn])
+      <th>&nbsp;</th>
+  #end
+ </tr>
+
+ #if ($model.RowHeadings.size() > 1 || $model.RowHeadings.get(0).singleAttribute())
+ <tr>
+  #foreach ($curHeading in $model.RowHeadings)
+    #set ($level = $velocityCount - 1)
+    #set ($singleAttribute = $curHeading.singleAttribute())
+    #if ($singleAttribute)
+      <th>&#8595$model.displayAttribute($curHeading.get(0))</th>
+    #else
+      <th>&nbsp;</th>
+    #end
+  #end
+
+   #foreach ($columnIndex in [0..$maxColumn])
+       <td>&nbsp;</td>
+   #end
+ </tr>
+ #end
+
+#foreach ($rowIndex in [0..$maxRow])
+ <tr>
+  #foreach ($curHeading in $model.RowHeadings)
+    #set ($level = $velocityCount - 1)
+    #set ($singleAttribute = $curHeading.singleAttribute())
+    #set ($rowspan = $model.getRowspan($level))
+    #if (($rowIndex % $rowspan) == 0)
+      #set ($index = ($rowIndex / $rowspan) % $curHeading.size())
+         <th>#reportLabel($model $curHeading.get($index) $singleAttribute)</th>
+    #else
+         <th>&nbsp;</th>
+    #end
+  #end
+
+   #foreach ($columnIndex in [0..$maxColumn])
+     #set ($cell = $model.getValueAt($rowIndex, $columnIndex))
+     <td>
+     #if ($model.isDate($cell))
+        $format.getDate('yyyy-MM-dd HH:mm', $cell)
+     #elseif ($cell && $cell.toString() != '')
+         $cell
+     #else
+         &nbsp;
+     #end
+     </td>
+   #end
+ </tr>
+#end
+</table>
+#end
+
+
+#*
+#macro ( addReportHiddenInputs $report $template)
+
+#set ( $ir = $intake.Report.mapTo($report) )
+#if ($data.Parameters.getString("report_id") && $data.Parameters.getString("report_id").length() > 0)
+    <input type="hidden" name="report_id" 
+        value="$data.Parameters.getString("report_id")" />
+#end
+#if ($template != "reports,Step1.vm")
+#if ($report.Name)
+    <input type="hidden" name="$ir.Name.Key" value="$ir.Name" />
+#end
+#if ($report.Description)
+    <input type="hidden" name="$ir.Description.Key" value="$ir.Description" />
+#end
+#if ($report.Type != 0)
+    <input type="hidden" name="$ir.Type.Key" value="$ir.Type" />
+#end
+#end
+
+#if ($template != "reports,Step2.vm")
+#if ($report.AttributesAndOptionsForGrouping)
+    #foreach ($ao in $report.AttributesAndOptionsForGrouping)
+    <input type="hidden" name="$ir.AttributesAndOptionsForGrouping.Key" value="$ao" />
+    #end
+#end
+#end
+
+#if ($template != "reports,Step2b.vm")
+#if ($report.OptionGroups)
+    #foreach ($group in $report.OptionGroups)
+        #set ($intakeOptionGroup = $intake.OptionGroup.mapTo($group))
+        <input type="hidden" name="$intakeOptionGroup.DisplayValue.Key"  value="$intakeOptionGroup.DisplayValue" />
+        #if ($group.Options)
+            #foreach ($option in $group.Options)
+                <input type="hidden" name="ofg$option.QueryKey"
+                    value="$group.QueryKey" />
+            #end
+        #end
+    #end
+#end
+#end
+
+#if ($template != "reports,Step3_1a.vm"  && $template != "reports,Step3_2a")
+#if ($report.Axis1Category >= 0)
+    <input type="hidden" name="$ir.Axis1Category.Key"
+        value="$ir.Axis1Category" />
+#end
+#if ($report.Axis2Category >= 0)
+    <input type="hidden" name="$ir.Axis2Category.Key"
+        value="$ir.Axis2Category" />
+#end
+#end
+
+#if ($template != "reports,Step3_1b.vm"  && $template != "reports,Step3_2b")
+#if ($report.Axis1Keys)
+    #foreach ($ao in $report.Axis1Keys)
+    <input type="hidden" name="$ir.Axis1Keys.Key"
+        value="$ao" />
+    #end
+#end
+#if ($report.Axis2Keys)
+    #foreach ($ao in $report.Axis2Keys)
+    <input type="hidden" name="$ir.Axis2Keys.Key"
+        value="$ao" />
+    #end
+#end
+#end
+
+#if ($template != "reports,Step3_1a.vm" && $template != "reports,Step3_2b")
+#if ($report.ReportDates)
+    #foreach ($date in $report.ReportDates)
+        #set ($intakeDate = $intake.ReportDate.mapTo($date))
+        <input type="hidden" name="$intakeDate.Date.Key"
+            value="$format.getDate("yyyy-MM-dd HH:mm", $date.Date)" />
+    #end
+#end
+#end
+
+#end
+*#
+
+#macro (wizardLinks $template $reportParameters $link)
+<div class="tabs">
+   <table cellpadding="3" cellspacing="0" border="0">
+   <tr>
+
+#if ($template == "reports,Step1.vm")
+   <th>1: $l10n.Summary</th>
+#else
+    #set ($wizardLink = $link.setPage("reports,Step1.vm"))
+    #if ($reportParameters)
+        #set ($wizardLink = $wizardLink.addPathInfo($reportParameters))
+    #end
+   <td><a href="$wizardLink">1: $l10n.Summary</a></td>
+#end
+
+#if ($template == "reports,Step2.vm" || $template == "reports,Step2b.vm")
+   <th>2: $l10n.ConfineReportDataSet</th>
+#else
+    #set ($wizardLink = $link.setPage("reports,Step2.vm"))
+    #if ($reportParameters)
+        #set ($wizardLink = $wizardLink.addPathInfo($reportParameters))
+    #end
+   <td><a href="$wizardLink">2: $l10n.SelectReportDataSet</a></td>
+#end
+
+#if ($template == "reports,Step3_1a.vm" || $template == "reports,Step3_1b.vm" || $template == "reports,Step3_2a.vm" || $template == "reports,Step3_2b.vm" )
+   <th>3: $l10n.RowColumnHeadings</th>
+#else
+    #if ($report.Type == 1)
+        #set ($wizardLink = $link.setPage("reports,Step3_2a.vm"))
+    #else
+        #set ($wizardLink = $link.setPage("reports,Step3_1a.vm"))
+    #end
+    #if ($reportParameters)
+        #set ($wizardLink = $wizardLink.addPathInfo($reportParameters))
+    #end
+   <td><a href="$wizardLink">3: $l10n.RowColumnHeadings</a></td>
+#end
+   </tr>
+   </table>
+</div>
+#end
+
+
+#macro (subWizardLinks $template $params $link $option1 $template1 $option2 $template2)
+
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+    #if ($template == $template1 && $params.containsKey("report_id"))
+        #set ($wizardLink = $link.setPage($template2))
+        #if ($params)
+            #set ($wizardLink = $wizardLink.addPathInfo($params))
+        #end
+         <strong>$option1</strong> | <a href="$wizardLink">$option2</a>
+    #elseif ($template == $template2)
+        #set ($wizardLink = $link.setPage($template1))
+        #if ($params)
+            #set ($wizardLink = $wizardLink.addPathInfo($params))
+        #end
+         <a href="$wizardLink">$option1</a> | <strong>$option2</strong>
+    #else
+         <strong>$option1</strong> | $option2
+    #end
+  </td>
+ </tr>
+</table>
+</div>
+
+#end

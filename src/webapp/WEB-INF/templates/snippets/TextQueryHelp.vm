@@ -1,0 +1,1 @@
+#enterHelp($link.setPage("help,UserQueryText.vm") "" "$l10n.Documentation")

@@ -1,0 +1,68 @@
+#set ($report = $scarabR.Report)
+#set ($intakeReport = $intake.Report.mapTo($report))
+#set ($reportIsEditable = $report.isEditable($data.User))
+
+<div class="app" id="div2-4-1-step1">
+
+<div class="tabs">
+  <table cellpadding="3" cellspacing="0" border="0">
+    <tr>
+      <th>$l10n.ReportInformation</th>
+      <td><a href="$link.setPage("reports,AxisConfiguration.vm").setPathInfo("axis", "0")" title="builder1_row">$l10n.RowContent</a></td>
+      <td><a href="$link.setPage("reports,AxisConfiguration.vm").setPathInfo("axis", "1")" title="builder1_col">$l10n.ColumnContent</a></td>
+    </tr>
+  </table>
+</div>
+
+<form method="get" action="$link.setPage("reports,Info.vm")">
+<input type="hidden" name="action" value="ConfigureReport"/>
+
+#reportFunctionBar("functnbar" $report)
+
+$data.User.setCurrentMITList($report.getMITList())
+#showMITList($l10n.MITListReportHeading $data.User true)
+
+<h3>$l10n.Summary</h3>
+<p><strong>$l10n.Saving</strong> $l10n.EditInfo</p>
+
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="0">
+  <tr>
+   <th width="120">$l10n.ReportName</th>
+   <td>
+   <input type="text" size="30" maxlength="255"
+                name="$intakeReport.Name.Key" value="$intakeReport.Name" />
+   </td>
+  </tr>
+  <tr>
+   <th width="120">$l10n.ReportDescription</th>
+   <td>
+     #textAreaMedium("$intakeReport.Description.Key" $intakeReport.Description)
+   </td>
+  </tr>
+  <tr>
+   <th width="120">$l10n.Availability</th>
+   <td>
+   #if ($report.MITList.isSingleModule())
+     #reportScopeSelectBox ($intakeReport)</td>
+   #else
+     $l10n.Personal
+   #end
+  </tr>
+  #exportFormatsRow($intakeReport.Format.Key "$!report.Format")
+ </table>
+</div>
+
+<div class="functnbar3">
+  <input type="submit" value="$l10n.Update" name="eventSubmit_doSaveInfo" />
+</div>
+
+#reportFunctionBar("functnbar2" $report)
+
+$intake.declareGroups()
+</form>
+</div>
+
+#if ($data.Parameters.getString($scarabG.Constant.DEBUG))
+<p><pre>$report.ReportDefinition.toXmlString()</pre></p>
+#end

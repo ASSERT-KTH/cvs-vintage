@@ -1,0 +1,44 @@
+#**
+@author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+@version $Id: AddPermission.vm,v 1.9 2003/12/01 22:50:42 mpoeschl Exp $
+*#
+
+#set ($lastAction = $data.Parameters.getString("lastAction"))
+
+<div id="addpermission" class="app">
+
+<h3>$l10n.AddPermission</h3>
+
+<form name="EditUserForm" action="$link.setPage("admin,AddPermission.vm")" method="post">
+  <input type="hidden" name="action" value="admin.ManagePermissions" />
+  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManagePermissions.vm" />
+  <input type="hidden" name="lastAction" value="" />
+
+#set ($regGroup = $intake.EditPermission.Default)
+#if (($lastAction) && ($lastAction == "addedpermission"))
+    #set ($permissionNameData = "")
+#else
+    #set ($permissionNameData = $regGroup.PermissionName)
+#end
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+ <th>$l10n.Permission</th>
+ <td>
+   <input name="$regGroup.PermissionName.Key" value="$permissionNameData" type="text" size="25" />
+   #fieldErrorMsg($regGroup.PermissionName "")
+ </td>
+</tr>
+</table>
+</div>
+
+<div class="functnbar2">
+ <input type="submit" name="eventSubmit_doAddpermission" value="$l10n.Add" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" />
+</div>
+
+$intake.declareGroups()
+
+</form>
+</div>

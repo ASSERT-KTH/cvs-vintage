@@ -1,0 +1,67 @@
+#set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
+
+#macro (AttributeSelectBar $val)
+<div class="functnbar$val">
+#if ($attributes.size() > 0)
+   <input type="submit" value="$l10n.AddSelectedToModule" name="eventSubmit_doSelectuserattribute" />
+#end
+#if ($canEditDomain)
+    <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doCreatenewuserattribute"/>&#160;
+#end
+<input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel"/>
+</div>
+#end
+
+<div class="app" id="globalAttributeSelect">
+
+#set ($issueType = $scarabR.IssueType)
+#set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($issueType, "user"))
+#set ($attGroup = $intake.Attribute.Default)
+
+<form action="$link.setPage("admin,UserAttributeSelect.vm")" method="post">
+<input type="hidden" name="action" value="admin.ArtifactTypeEdit" />
+<input type="hidden" name="groupId" value="$data.Parameters.getString("groupId","").trim()" />
+<input type="hidden" name="_session_access_counter" value="$data.User.getTemp("_session_access_counter")" />
+<input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,UserAttributeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
+#AttributeSelectBar("")
+
+<h3>$l10n.GlobalUserAttributes</h3>
+
+#if ($attributes.size() == 0)
+
+<p><em>$l10n.NoUserAttibutesForModule</em></p>
+
+#else
+
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th nowrap="nowrap">$l10n.Select</th>
+<th>$l10n.AttributeName</th>
+<th>$l10n.Description</th>
+<th>$l10n.InputType</th>
+<th>$l10n.Author</th>
+<th>$l10n.CreationDate</th>
+</tr>
+
+#foreach ($attribute in $attributes)
+ #indexedRows($velocityCount)
+  <td><input type="checkbox" name="attribute_ids" value="$attribute.AttributeId" /></td>
+  <td>$attribute.Name</td>
+  <td>$attribute.Description</td>
+  <td>$attribute.AttributeType.Name</td>
+  <td>#attributeCreatedBy($attribute)</td>
+  <td>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
+  </label>
+ </tr>
+#end
+</table>
+
+#end
+
+#AttributeSelectBar("2")
+$intake.declareGroups()
+</form>
+
+</div>

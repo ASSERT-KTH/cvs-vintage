@@ -1,0 +1,20 @@
+<div id="updatesearchindex" class="app">
+
+<form action="$link.setPage("admin,UpdateSearchIndex.vm").setAction("admin.UpdateSearchIndex")" method="get" name="updatesearchindex">
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,UpdateSearchIndex.vm" />
+
+ <h3>$l10n.UpdateSearchIndex</h3>
+
+<p>
+$l10n.UpdateSearchIndexBody
+</p>
+
+#if (!$updateFrequency || $updateFrequency.length() == 0)
+ <div class="functnbar2">
+   <input type="submit" value="$l10n.UpdateSearchIndex" name="eventSubmit_doSubmit" 
+   onclick="eventSubmit_doSubmit.disabled=true;document.updatesearchindex.submit()" />
+ </div>
+#end
+
+</form>
+</div>

@@ -1,0 +1,11 @@
+<div class="app" id="setinfomessage">
+
+<form action="$link.setPage("admin,SetInfoMessage.vm")" method="post">
+<input type="hidden" name="action" value="admin.SetInfoMessage" />
+
+<div>$l10n.SetInfoMessagePrompt</div>
+<div><input type="text" name="msg" value="" size="80" /></div> 
+<div><input type="submit" name="foo" value="Set message" /></div> 
+
+</form>
+</div>

@@ -1,0 +1,35 @@
+#set ($user = $issue.ModifiedBy)
+#set ($attachmentData = $attachment.Data)
+#set ($defaultText = $issue.DefaultText)
+$l10n.YouCanViewIssue:
+
+    $link.getIssueIdLink($issue)
+
+$l10n.Type
+ $issue.RModuleIssueType.DisplayName
+
+$l10n.IssueId
+ $issue.UniqueId #if($defaultText && $defaultText.length() > 0)($defaultText.trim())#end
+
+
+$l10n.ReportedBy
+ $user.Name
+ $user.UserName ($user.Email)
+
+$l10n.NewIssueDetails:
+---------------------------------------------------------
+
+#foreach ($desc in $uniqueActivityDescriptions)
+$desc
+#end
+#if ($attachmentData && $attachmentData.length() > 0)
+
+$l10n.Reason:
+$attachmentData
+#end
+
+---------------------------------------------------------
+$l10n.EmailFooterA
+$l10n.EmailFooterB
+$l10n.EmailFooterC
+$l10n.EmailFooterD

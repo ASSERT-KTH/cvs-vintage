@@ -1,0 +1,19 @@
+<td id="rightcol" width="20%">
+    <div class="help" id="modulehelp">
+        
+        <p><img src="$staticLink.setPath("/images/module2.gif")" 
+        width="113" height="51" alt="" border="0" /></p>
+        
+        <p>$l10n.SelectModule2</p> 
+        <ul>
+        <li>$l10n.SetOfUsers</li>
+        <li>$l10n.SetOfRoles</li>
+        <li>$l10n.SetOfPermissions</li>
+        </ul>
+        
+        <p>$l10n.ScarabUsesGenericTerm</p>
+        
+        <p>$l10n.NoModuleAccess</p>
+    </div>    
+</td>
+

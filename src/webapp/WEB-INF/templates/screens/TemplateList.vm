@@ -1,0 +1,145 @@
+#set ($module = $scarabR.CurrentModule)
+#set ($currentIssueType = $scarabR.CurrentIssueType)
+#set ($user = $data.User)
+#set ($canDeleteAtLeastOne = false)
+<div class="app" id="templateList">
+
+#set ($issueTypes = $module.IssueTypes)
+#if (!$currentIssueType)
+  #foreach($issueTypeOption in $issueTypes)
+    #if (!$currentIssueType)
+        #set ($currentIssueType = $issueTypeOption)
+    #end
+  #end
+#end
+
+#if ($currentIssueType)
+
+## SORTING
+#set ($sortColumn = $data.Parameters.getString("sortColumn", "name"))
+#set ($sortPolarity = $data.Parameters.getString("sortPolarity", "asc"))
+
+#if ($scarabR.hasPermission($scarabG.Permission.ITEM__APPROVE, $module))
+   #set ($templates = $scarabR.getAllIssueTemplates($currentIssueType))
+#else
+   #set ($templates = $scarabR.getPrivateTemplates($currentIssueType))
+#end
+
+## PAGINATION
+## if results exceed limit, get subset list
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
+#set ($pageNum = $data.Parameters.getInt("pageNum",1))
+#if ($resultsPerPage > 0 && $templates.size() > $resultsPerPage)
+ #set ($paginated = "true")
+ #set ($pagList = $scarabR.getPaginatedList($templates, $pageNum, $resultsPerPage))
+ #if ($pagList)
+   #set ($templates = $pagList)
+ #end
+#end
+
+#if ($paginated)
+  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
+#end
+
+<h3>$l10n.EditTemplates</h3>
+
+#if ($issueTypes && !$issueTypes.Empty)
+<div class="colbar">
+<form action="$link.setPage("TemplateList.vm")" method="get">
+ <select name="$scarabG.Constant.CURRENT_ISSUE_TYPE" tabindex="3" 
+    onchange="this.form.submit();">
+  #foreach($issueTypeOption in $issueTypes)
+    #set ($rmit = $module.getRModuleIssueType($issueTypeOption))
+    <option#if ($issueTypeOption.QueryKey == $currentIssueType.QueryKey) selected="selected"#end value="$issueTypeOption.QueryKey">$rmit.DisplayName</option>
+  #end
+ </select>
+## give actionEvent as hidden field so user does not have to click Go,
+## if javascript is enabled. show button only if script disabled.
+  <input type="hidden" value="foo" name="eventSubmit_doSelect" />
+  <noscript><input type="submit" value="$l10n.Go" name="foo" 
+      tabindex="4" /></noscript>
+  $l10n.TemplateListBriefInstructions
+</form>
+</div>
+#end
+
+<form method="post" action="$link.setPage("TemplateList.vm").setAction("TemplateList")">
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="SaveTemplate.vm" />
+
+#if ($templates.isEmpty())
+<p><em>
+$l10n.NoTemplates
+</em></p>
+#else
+  
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+  <tr>
+  <th nowrap="nowrap">$l10n.Select</th>
+  <th>#sort ("name" "$l10n.Name")</th>
+  <th>#sort ("desc" "$l10n.Description")</th>
+  <th>#sort ("avail" "$l10n.Availability")</th>
+  <th>#sort ("user" "$l10n.Author")</th>
+  </tr>
+
+#set ($permItemDelete = $scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
+#foreach ($template in $templates)
+#indexedRows($velocityCount)
+#set ($canDelete = $template.canDelete($user))
+#if ($canDelete) #set ($canDeleteAtLeastOne = true) #end
+#if ($canDelete)
+  <td><input type="checkbox" name="delete_$template.IssueId" /></td>
+#else
+  <td>&#160;</td>
+#end
+  <td>
+    #if ($canDelete)
+      <a href="$link.setPathInfo('templateId', $template.IssueId.toString()).setPathInfo("$scarabG.Constant.CANCEL_TEMPLATE", 'TemplateList.vm').setPage('SaveTemplate.vm')">
+      $template.Name</a>
+    #else
+      $template.Name
+    #end
+  </td>
+  <td>
+    #if($template.Description)
+      $template.Description 
+    #else
+      &#160; 
+    #end
+  </td>
+  <td>
+  #if (!$template.Approved)
+    <a href="$link.setPathInfo("templateId", "$template.IssueId").setPage($scarabR.getNextEntryTemplate($currentIssueType))">$l10n.Personal ($l10n.UntilApproved)</a>
+  #else
+    <a href="$link.setPathInfo("templateId", "$template.IssueId").setPage($scarabR.getNextEntryTemplate($currentIssueType))">$template.Scope.Name</a>
+  #end
+  </td>
+   <td>
+   #set ($createdUser = $template.Issue.CreatedBy)
+   #if ($createdUser)
+     <a href="mailTo:$createdUser.Email">$!createdUser.Name</a>
+   #else
+     &#160;
+   #end
+   </td>
+  </tr>
+#end
+
+  </table>
+
+#end
+
+<div class="functnbar2">
+  <input type="hidden" name="$scarabG.Constant.CURRENT_ISSUE_TYPE" value="$currentIssueType.QueryKey" />
+  <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doGotoothertemplate" />
+  #if ($canDeleteAtLeastOne)
+    &#160;<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletetemplates" />
+  #end
+</div>
+
+</form>
+#else
+<h3>$l10n.EditTemplates</h3>
+ <p class="warningmark"><strong>$l10n.IssueTypeUnavailable</strong></p>
+#end
+</div>

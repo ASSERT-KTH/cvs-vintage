@@ -1,0 +1,155 @@
+#set ($issue = $scarabR.ReportingIssue)
+#set ($module = $issue.Module)
+#set ($issueType = $issue.IssueType)
+
+<div class="app" id="div2-1-0">
+<form method="post" action="$link.setPage("entry,Wizard3.vm")" enctype="multipart/form-data">
+<input type="hidden" name="action" value="ReportIssue" />
+
+<input type="hidden" name="issueType" value="$issueType.IssueTypeId" />
+
+#set ($moduleAttributeGroups = $issueType.getAttributeGroups($module, true))
+#set ($showTemplates = true)
+#if ($data.Parameters.getString("oldscreen"))
+  #set ($showTemplates = false)
+#end
+#entryTemplateAndAttributes ($issue $moduleAttributeGroups $l10n.SubmitIssue "eventSubmit_doEnterissue" $showTemplates)
+
+## ATTACHMENT
+#set ($atch = $scarabR.Attachment)
+#set ($intakeAttachment = $intake.Attachment.mapTo($atch))
+#set ($reportingIssue = $scarabR.ReportingIssue)
+#set ($attachments = $reportingIssue.Attachments)
+<h3>$l10n.Attachments</h3>
+#if ($attachments.size() > 0)
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+   <tr>
+     <th>$l10n.Select</th>
+     <th>$l10n.Name</th>
+     <th>$l10n.Description</th>
+     <th>$l10n.Type</th>
+   </tr>
+   #foreach ($file in $attachments)
+     #indexedRows($velocityCount)
+     #if ($file.TypeId.toString().equals("1"))
+       <td>
+         <input type="checkbox" name="file_delete_$velocityCount" />
+       </td>
+       <td>$file.File.Name</td>
+       <td>$file.Name</td>
+       <td>$file.MimeType</td>
+     </tr>
+     #end
+   #end
+ </table>
+
+<div class="functnbar3">
+  <input type="submit" value="$l10n.Delete" name="eventSubmit_doRemovefile" />
+</div>
+#end
+
+<h4>$l10n.AddAttachment</h4>
+<div class="colbar">
+*&nbsp;$l10n.format("AttachmentFieldRequired", $l10n.Path)
+</div>
+
+<div class="axial">
+  <table cellpadding="3" cellspacing="2" border="0">
+    <tr>
+      <th>$l10n.Path</th>
+      <td>
+       <input type="file" name="$intakeAttachment.File.Key" size="45"
+            value="$!intakeAttachment.File.Value.FileName" />
+       #fieldErrorMsg($intakeAttachment.File "")
+       <p><small>$l10n.SelectFile</small></p>
+      </td>
+    </tr>
+    <tr>
+      <th>*&nbsp;$l10n.Description</th>
+      <td>
+       #textAreaMedium("$intakeAttachment.Name.Key" "$intakeAttachment.Name")
+       #fieldErrorMsg($intakeAttachment.Name "")
+      </td>
+    </tr>    
+    <tr>
+      <th>*&nbsp;$l10n.Type</th>
+      <td>
+        <select name="$intakeAttachment.MimeTypeA.Key" class="select">
+        #if ($intakeAttachment.MimeTypeA)
+          #set ($mimeA = $intakeAttachment.MimeTypeA.toString())
+        #end
+         #mimeTypeOptions($mimeA)
+        </select>
+        <p><small>$l10n.Other &#160;
+        <input type="text" name="$intakeAttachment.MimeTypeB.Key" 
+                          value="$intakeAttachment.MimeTypeB" />$l10n.CloseParenth</small></p>
+        #fieldErrorMsg($intakeAttachment.MimeTypeA "")
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div class="functnbar3">
+  <input type="submit" value="$l10n.AddAttachment" name="eventSubmit_doAddfile" />
+</div>
+
+<h4>$l10n.SubmitNewIssue</h4>
+
+<div class="axial">
+<table width="100%" cellpadding="3" cellspacing="2" border="1">
+ <tr>
+   <th>
+#if ($issue.DefaultTextAttributeValue)
+    #set ($reasonOptional = true)
+#else
+      * 
+#end
+      $l10n.Reason
+   </th>
+   <td>
+#set ($intakeAttachment = $intake.Attachment.setKey("_1"))
+#if (!$reasonOptional)
+    #fieldErrorMsg($intakeAttachment.Data "")
+    <p><small><strong>$l10n.MissedRequired1</strong> $l10n.MissedRequired2</small></p>
+#end
+#textAreaMedium("$intakeAttachment.Data.Key" $intakeAttachment.Data)
+#fieldErrorMsg($intakeAttachment.Data "")
+   </td>
+ </tr>
+
+#set ($userPref = $data.User.EnterIssueRedirect)
+#if (!$userPref)
+  #set ($userPref = 2)
+#end
+
+<tr>
+<th width="120">$l10n.AfterSubmit</th>
+<td><select name="template_code">
+<option value="1"
+  #if ($userPref == 1) selected="selected" #end>$l10n.EnterNewIssue</option>
+#if (($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
+     && (!$module.getUserAttributes($issueType).isEmpty()))
+  <option value="2"
+  #if ($userPref == 0 || $userPref == 2) selected="selected" #end>$l10n.AssignIssue</option>
+#end
+<option value="3"
+  #if ($userPref == 3) selected="selected" #end>$l10n.ViewThisIssue</option>
+<option value="5"
+  #if ($userPref == 5) selected="selected" #end>$l10n.AddInitialComment</option>
+<option value="4"
+  #if ($userPref == 4) selected="selected" #end>$l10n.ReturnToHome</option>
+</select></td>
+</tr>
+</table>
+</div>
+
+#if (!$moduleAttributeGroups.isEmpty())
+<div class="functnbar2">
+<input type="submit" value="$l10n.SubmitIssue"  name="eventSubmit_doEnterissue" />&#160;
+<input type="reset" value="$l10n.Reset" name="eventSubmit_doRefresh" />&#160;
+</div>
+#end
+
+$intake.declareGroups()
+</form>
+</div>

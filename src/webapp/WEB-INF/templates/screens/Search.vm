@@ -1,0 +1,155 @@
+<div class="app" id="search">
+#set ($user = $data.User)
+$user.setHomePage("query")
+#set ($mitlist = $user.CurrentMITList)
+#if (!$mitlist.isSingleModuleIssueType())
+    <p class="infomark"><em>$l10n.IssueTypeListMoreThanOne</em></p> 
+    $renderer.render("screens", "AdvancedQuery.vm")
+#elseif ($searchTextAttributes.isEmpty() && $searchValues.isEmpty())
+    <p class="infomark"><em>$l10n.NoCustomSearch</em></p> 
+    $renderer.render("screens", "AdvancedQuery.vm")
+#else
+
+#set ($module = $scarabR.CurrentModule)
+#set ($search = $scarabR.NewSearch)
+#set ($searchGroup = $intake.SearchIssue.mapTo($search))
+#set ($issueType = $mitlist.IssueType)
+#set ($searchTextAttributes = $search.QuickSearchTextAttributeValues)
+#set ($searchValues = $search.QuickSearchOptionAttributeValues)
+#set ($attrValues = $search.ModuleAttributeValuesMap)
+
+<div align="right"><a href="$link.setPage("AdvancedQuery.vm").addPathInfo("action", "Search").addPathInfo("eventSubmit_doSetquerytarget", "foo")">$l10n.AdvancedQuery</a></div>
+
+<form action="$link.setPage("Search.vm")" method="post">
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="IssueList.vm" />
+<input type="hidden" name="action" value="Search" />
+<input type="hidden" name="searchType" value="custom" />
+
+<p class="functnbar">
+<input type="submit" value="$l10n.Search" name="eventSubmit_doSearch" />
+</p>
+
+#if (!$searchTextAttributes.isEmpty())
+<h3>$l10n.TextSearch</h3>
+
+<div class="axial">
+  <table border="0" cellspacing="2" cellpadding="3">
+  <tr>
+   <th width="120">$l10n.SelectTextAttributes</th>
+   <td>
+    ## default to first attribute if none was selected previously
+    #if ($searchGroup.TextScope.isSet())
+      #set ($selectedIds = $searchGroup.TextScope.Value)
+      #set ($selected = false)
+    #else
+      #set ($selected = true)
+    #end
+    <select name="$searchGroup.TextScope.Key" size="5" multiple="multiple">
+    #if ($searchTextAttributes.size() > 4)
+      <option value="$search.ALL_TEXT"#selected($selected)>$l10n.SearchAll</option>
+      #set ($selected = false)
+    #end
+
+#foreach ($att in $searchTextAttributes)
+  #if ($selectedIds)
+    #foreach ($id in $selectedIds)
+      #if ($id == $att.PrimaryKey)
+        #set ($selected = true)
+      #end
+    #end
+  #end
+  #set ($rma = $att.RModuleAttribute)
+  #if ($rma)
+  <option value="$att.Attribute.QueryKey"#selected($selected)>$rma.DisplayValue</option>
+  #else
+  <option value="$att.Attribute.QueryKey"#selected($selected)>$att.Attribute.Name</option>
+  #end
+  #set ($selected = false)
+#end
+   </select>
+   </td>
+  </tr>
+
+  <tr>
+   <th width="120">$l10n.EnterString</th>
+   <td>#textAreaSmall("$searchGroup.SearchWords.Key" $searchGroup.SearchWords)
+   </td>
+  </tr>
+ </table>
+</div>
+#end
+
+#if (!$searchValues.isEmpty())
+<h3>$l10n.MultiChoiceSearch</h3>
+ <div class="axial">
+ <table border="0" cellspacing="2" cellpadding="3">
+#foreach ($attVal in $searchValues)
+  #if ($attVal.Attribute.AttributeType.ValidationKey)
+    #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
+  #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
+    #set ($field = "OptionIds")
+  #end
+  <tr>
+   <th width="120">$attVal.RModuleAttribute.DisplayValue</th>
+   <td>
+     #attrValueErrorMsg ($attVal $field)
+     #attrValueHierarchySelect ($attVal $field $searchValues.size() true)
+   </td>
+  </tr>
+#end
+ </table>
+ </div>
+#end
+
+<h3>$l10n.ResultPrefs</h3>
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+ <th width="120">$l10n.SortBy</th>
+ #set ($rmuas = $scarabR.RModuleUserAttributes)
+ <td>
+ #if (!$rmuas.isEmpty())
+ <select name="$searchGroup.SortAttributeId.Key">
+    <option value="">$l10n.Choose</option>
+#foreach ($rmua in $rmuas)
+#set ($attribute = $rmua.Attribute)
+   <option value="$attribute.AttributeId"
+     #if ($searchGroup.SortAttributeId.Value.equals($attribute.AttributeId))
+          selected="selected" #end>
+       $attribute.Name
+   </option>
+#end
+</select>&#160;
+ #end
+<select name="$searchGroup.SortPolarity.Key">
+    <option value="asc"
+     #if ($searchGroup.SortPolarity.Value.equals("asc"))
+          selected="selected" #end>
+        $l10n.Ascending
+    </option>
+    <option value="desc"
+     #if ($searchGroup.SortPolarity.Value.equals("desc"))
+          selected="selected" #end>
+        $l10n.Descending
+    </option>
+</select>
+</td>
+</tr>
+<tr>
+<th width="120">$l10n.IssuesPerPage</th>
+<td>
+#resultsPerPageRadioSelect($data.getParameters().getInt("resultsperpage", 25) true)
+</td>
+</tr>
+</table>
+</div>
+
+<p class="functnbar2">
+<input type="submit" value="$l10n.Search" name="eventSubmit_doSearch" />
+</p>
+
+$intake.declareGroups()
+
+</form>
+#end ## end if (any options exist to search on)
+</div>

@@ -1,0 +1,34 @@
+#**
+@author <a href="mailto:dr@bitonic.com">Douglas B.Robertson</a>
+@version $Id: ManagePermissions.vm,v 1.7 2002/08/28 21:59:49 csjank Exp $
+*#
+
+<div id="managePermissions" class="app">
+
+<h3>$l10n.PermissionList</h3>
+
+<form action="$link.setPage("admin,ManagePermissions.vm")" method="post">
+  <input type="hidden" name="action" value="admin.ManagePermissions" />
+
+<table cellspacing="0" cellpadding="2">
+<tr>
+  <th>$l10n.Select</th>
+  <th>$l10n.Permission</th>
+</tr>
+
+#foreach ($permission in $securityAdmin.Permissions)
+#indexedRows ($velocityCount)
+  <label for="radio_$permission.Name">
+  <td><center><input type="radio" name="name" value="$permission.Name" id="radio_$permission.Name" /></center></td>
+  <td>$permission.Name</td>
+  </label>
+</tr>
+#end
+</table>
+
+<div class="functnbar2">
+ <input type="submit" name="eventSubmit_doGotodeletepermission" value="$l10n.Delete" />&#160;
+ <input type="submit" name="eventSubmit_doGotoaddpermission" value="$l10n.AddNew" />
+</div>
+
+</form>

@@ -1,0 +1,19 @@
+## FIXME: define this macro in another file or in the database
+##        so that it is more easily customized by end users
+##
+#macro (mimeTypeOptions $mimeA)
+<option value="autodetect" #if (!$mimeA || $mimeA.length() == 0)selected="selected"#end>$l10n.AutoDetect</option>
+<option value="text/plain" #if ($mimeA == "text/plain"))selected="selected"#end>$l10n.PatchFile</option>
+<option value="text/plain" #if ($mimeA == "text/plain")selected="selected"#end>$l10n.PlainText</option>
+<option value="text/html" #if ($mimeA == "text/html")selected="selected"#end>$l10n.HTMLSource</option>
+<option value="image/bmp" #if ($mimeA == "image/bmp")selected="selected"#end>$l10n.BMPImage</option>
+<option value="image/gif" #if ($mimeA == "image/gif")selected="selected"#end>$l10n.GIFImage</option>
+<option value="image/jpeg" #if ($mimeA == "image/jpeg")selected="selected"#end>$l10n.JPEGImage</option>
+<option value="image/png" #if ($mimeA == "image/png")selected="selected"#end>$l10n.PNGImage</option>
+<option value="application/mac-binhex40" #if ($mimeA == "application/mac-binhex40")selected="selected"#end>$l10n.MacBinhex</option>
+<option value="application/pdf" #if ($mimeA == "application/pdf")selected="selected"#end>$l10n.PDFFormat</option>
+<option value="application/x-zip-compressed" #if ($mimeA == "application/x-zip-compressed")selected="selected"#end>$l10n.ZipFormat</option>
+<option value="application/x-gzip" #if ($mimeA == "application/x-gzip")selected="selected"#end>$l10n.GZipFormat</option>
+<option value="application/octet-stream" #if ($mimeA == "application/octet-stream")selected="selected"#end>$l10n.GenericBinary</option>
+#end
+

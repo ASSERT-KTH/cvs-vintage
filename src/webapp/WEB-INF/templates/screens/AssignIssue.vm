@@ -1,0 +1,151 @@
+<div class="app" id="viewissue">
+
+#macro (assignIssue $issue)
+    #set ($module = $issue.Module)
+    #set ($issueType = $issue.IssueType)
+
+<h3>$l10n.format("PersonnelAssociatedWithIssue", "$issue.UniqueId")</h3>
+
+
+<div class="colbar">
+<ul>
+<li>$l10n.format("ClickHereToSelectUsers", $issueListSize)</li>
+<li>$l10n.ChangesSavedOnDone</li>
+</ul>
+</div>
+
+#set ($pair = $assoUsers.get($issue.IssueId))
+    #if ($pair.size() == 0)
+     <p><em>$l10n.NoneAssigned.</em></p>
+    #else
+		
+		<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<tr>
+		<th nowrap="nowrap">$l10n.Select</th>
+		<th>$l10n.Username</th>
+		<th>$l10n.FullName</th>
+		<th>$l10n.Association</th>
+		</tr>
+#foreach ($item in $pair)
+  #set ($attr = $item.get(0))
+  #set ($user = $item.get(1))
+  #set ($userId = $user.UserId)
+    #indexedRows($velocityCount)
+    <td>
+      <input type="checkbox" name="select_user" value="{$userId}_$attr.AttributeId" />
+      <input type="hidden" name="old_attr_$userId" value="$attr.AttributeId" />
+    </td>
+    <td><a href="mailto:$user.Email">$user.UserName</a></td>
+    <td>$!user.Name</td>
+    <td><select name="asso_user_{$userId}_attr_{$attr.AttributeId}_issue_{$issue.IssueId}">
+     #foreach ($selectUserAttr in $userAttrs)
+      #set ($selected = $attr.AttributeId.toString().equals($selectUserAttr.AttributeId.toString()))
+      #if ($user.hasPermission($selectUserAttr.Permission, $module))
+        <option value="$selectUserAttr.AttributeId" #selected($selected)>$selectUserAttr.Name</option>
+      #elseif ($selected)
+        <option value="$attr.AttributeId" selected="selected">$attr.Name $l10n.ParenDisabled</option>
+      #end
+     #end
+       </select></td>
+    </tr>
+#end
+
+   </table>  
+
+<div class="functnbar3">
+ <input type="submit" name="eventSubmit_doRemove_$issue.IssueId" value="$l10n.RemoveSelected" />
+ <input type="submit" name="eventSubmit_doUpdate_$issue.IssueId" value="$l10n.UpdateSelected" />
+</div>
+#end
+#end
+## end macro
+
+
+#set ($searchString = $data.Parameters.getString("searchString" , ""))
+#set ($searchField = $data.Parameters.getString("searchField" , ""))
+#set ($assoUsers =  $data.User.AssociatedUsersMap)
+#set ($issueList = $scarabR.AssignIssuesList)
+#set ($issueListSize = $issueList.size())
+#set ($singleIssueId = $data.Parameters.getString("id"))
+#if ($singleIssueId)
+  #set ($singleIssue = $scarabR.getIssue($singleIssueId))
+  #set ($issueListSize = 1)
+#end
+#set ($userAttrs = $scarabR.getUserAttributes($issueList, true)) 
+#set ($reason = $data.Parameters.getString("reason" , ""))
+#if ($userAttrs.isEmpty())
+ <p class="infomark"><em>$l10n.NoAssignableUserAttributes</em></p>
+#elseif ($issueListSize == 0)
+ <p class="warningmark"><strong>$l10n.AssociateUsersAndIssues</strong></p>
+#else
+
+#printCollisionInfo()
+
+#if (!$actionLink)
+  #set ($actionLink = $link.setPage("AssignIssue.vm").toString())
+#end
+
+<form action="$actionLink" method="post">
+<input type="hidden" name="action" value="AssignIssue" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "ViewIssue.vm")" />
+#set ($parameters = [])
+#if ($singleIssue)
+  #set ($idParameter = ["id", "$singleIssueId"])
+  #set($booldummy = $parameters.add($idParameter))
+#end
+#foreach ($issue in $issueList)
+  #set ($idParameter = ["issue_ids", "$issue.UniqueId"])
+  #set($booldummy = $parameters.add($idParameter))
+#end
+#foreach ($parameter in $parameters)
+  <input type="hidden" name="$parameter.get(0)" value="$parameter.get(1)" />
+#end
+
+<div class="functnbar">
+<input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />
+</div>
+
+
+
+##ASSIGNEE LIST
+## Determine if there are any users to show up in the added/assigned list
+#if ($singleIssue)
+  #assignIssue ($singleIssue)
+#else
+    #foreach ($issue in $issueList)
+       #if (!$issue)
+          <p><strong>$l10n.format("IssueIdNotValid", "$issue.IssueId")<strong></p>
+       #else
+          #assignIssue ($issue)
+       #end
+    #end
+#end
+
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="0">
+    
+ <tr>
+   <th>$l10n.Reason</th>
+   <td>$l10n.EnterReason   
+         <p><textarea rows="4" cols="60" name ="reason">$!reason</textarea></p>
+   </td>
+ </tr>
+   
+ </table>
+</div>
+<div class="functnbar2">
+ <input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />
+</div>
+
+#set ($mitList = $scarabR.getMITList($issueList))
+#userList($mitList false false $parameters true)
+
+<div class="functnbar3">
+ <input type="submit" name="eventSubmit_doAdd" value="$l10n.AddAssignee" />
+</div>
+
+$intake.declareGroups()
+
+#end
+</form>
+</div>

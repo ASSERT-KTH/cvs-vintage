@@ -1,0 +1,198 @@
+<div class="app" id="moveissue2">
+
+#set ($moveIssueGroup = $intake.MoveIssue.Default)
+#set ($issueList = $data.Parameters.getStrings("issue_ids"))
+
+#if (!$issueList || $issueList.length() == 0)
+
+<p class="warningmark"><strong>$l10n.CouldNotFindIssue</strong></p>
+
+#else
+
+#set ($selectAction = $moveIssueGroup.Action.Value)
+#set ($newModuleId = $moveIssueGroup.ModuleId.Value)
+#set ($newIssueTypeId = $moveIssueGroup.IssueTypeId.Value)
+#set ($newModule = $scarabR.getModule("$newModuleId"))
+#set ($newIssueType = $scarabR.getIssueType("$newIssueTypeId"))
+## $issue is really only valid if its a single issue move, but we only
+## handle the case where multiple issues come from the same module and type
+## so $module and $issueType are valid
+#set ($issue = $scarabR.getIssue($data.Parameters.getString("issue_ids")))
+#set ($module = $issue.Module)
+#set ($issueType = $issue.IssueType)
+#set ($unsetReqdAttrs = $issue.getUnsetRequiredAttrs($newModule, $newIssueType))
+#set ($isSingleIssueOp = $scarabG.sizeOfArray($issueList) == 1)
+
+#if ($isSingleIssueOp)
+  ## For single issue move, display attribute values for this issue
+  #set ($matchingAttributes = $issue.getMatchingAttributeValuesList($newModule, $newIssueType))
+  #set ($nonMatchingAttributes = $issue.getNonMatchingAttributeValuesList($newModule, $newIssueType))
+#else
+  ## For multiple issue move, cannot display attribute values, only attributes.
+  #set ($matchingAttributes = $issueType.getMatchingAttributeValuesList($module, $newModule, $newIssueType))
+  #set ($nonMatchingAttributes = $issueType.getNonMatchingAttributeValuesList($module, $newModule, $newIssueType))
+#end
+
+#if ($selectAction.toString().equals("move"))
+ #set ($actionText = "move")
+ #set ($booleanAction = true)
+#else
+ #set ($actionText = "copy")
+ #set ($booleanAction = false)
+#end
+#if (!$unsetReqdAttrs.isEmpty())
+  <p class="warningmark"><strong>$l10n.format("IssueCannotBeCopied", $l10n.Issue, $l10n.Module, $l10n.IssueType.toLowerCase())</strong></p>
+#end
+
+<form method="post" action="$link.setPage("MoveIssue2.vm")">
+<input type="hidden" name="action" value="MoveIssue" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="MoveIssue.vm" />
+<input type="hidden" name="mod_ts" value="$scarabG.Now.Time" />
+#foreach ($issueId in $issueList)
+<input type="hidden" name="issue_ids" value="$issueId" />
+<input type="hidden" name="id" value="$issueId" />
+#end
+<input type="hidden" name="$moveIssueGroup.ModuleId.key" value="$newModuleId" />
+<input type="hidden" name="$moveIssueGroup.IssueTypeId.key" value="$newIssueTypeId" />
+<input type="hidden" name="$moveIssueGroup.Action.key" value="$selectAction" />
+
+<div class="functnbar">
+#if ($unsetReqdAttrs.isEmpty())
+ #if ($booleanAction)
+  <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doSaveissue" />&#160;
+ #else
+  <input type="submit" value="$l10n.CopyIssue" name="eventSubmit_doSaveissue" />&#160;
+ #end
+#end
+  <input type="submit" value="$l10n.Cancel" name="eventSubmit_doBacktoone" />
+</div>
+
+<h3>$l10n.Destination</h3>
+<div class="axial">
+<table border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th>$l10n.DestinationModule</th>
+<td> $newModule.Name / $newModule.getRModuleIssueType($newIssueType).DisplayName </td>
+</tr>
+</table>
+</div>
+
+#if (!$unsetReqdAttrs.isEmpty())
+<h3>$l10n.format("AttributesThatReqdInDestinationIssueType", $l10n.Module, $l10n.IssueType.toLowerCase())</h3>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th>$l10n.Attribute</th>
+<th>$l10n.InputType</th>
+#foreach ($attr in $unsetReqdAttrs)
+  #indexedRows($velocityCount)
+  <td>
+     $attr.Name
+     #set ($displayValue = "")
+     #set ($displayValue = $newModule.getRModuleAttribute($attr, $newIssueType).getDisplayValue())
+     #if ($displayValue.length() > 0 && !$attr.Name.equals($displayValue))
+      ($displayValue)
+     #end
+  </td>
+<td>$attr.AttributeType.Name</td>
+</tr>
+#end
+</table>
+#else
+
+#if (!$matchingAttributes.isEmpty())
+<h3>$l10n.AttributesToBeCopied</h3>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th>$l10n.Attribute</th>
+<th>$l10n.InputType</th>
+#if ($isSingleIssueOp)
+<th>$l10n.Value</th>
+#end
+</tr>
+#foreach ($attr in $matchingAttributes)
+  #if ($isSingleIssueOp)
+     #set ($attVal=$attr)
+     #set ($attr = $attVal.Attribute)
+  #end
+  #indexedRows($velocityCount)
+  <td>
+     $attr.Name
+     #set ($displayValue = "")
+     #set ($displayValue = $module.getRModuleAttribute($attr, $issueType).getDisplayValue())
+    #if ($displayValue.length() > 0 && !$attr.Name.equals($displayValue))
+      ($displayValue)
+     #end
+  </td>
+<td>$attr.AttributeType.Name</td>
+#if ($isSingleIssueOp)
+<td>$attVal.Value</td>
+#end
+</tr>
+#end
+</table>
+#end
+
+#if (!$nonMatchingAttributes.isEmpty())
+<h3>$l10n.AttributesThatDoNotExist</h3>
+<div class="colbar">$l10n.IncludedAsComment</div>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th>$l10n.Select</th>
+<th>$l10n.Attribute</th>
+<th>$l10n.InputType</th>
+#if ($isSingleIssueOp)
+<th>$l10n.Value</th>
+#end
+</tr>
+#foreach($attr in $nonMatchingAttributes)
+  #if ($isSingleIssueOp)
+     #set ($attVal=$attr)
+     #set ($attr = $attVal.Attribute)
+  #end
+#indexedRows($velocityCount)
+<td><input type="checkbox" name="comment_attr_ids_$attr.AttributeId" checked="checked" /></td>
+    <td>$attr.Name 
+     #set ($displayValue = "")
+     #set ($displayValue = $module.getRModuleAttribute($attr, $issueType).getDisplayValue())
+     #if ($displayValue.length() > 0 && !$attr.Name.equals($displayValue))
+      ($displayValue)
+     #end
+    </td>
+<td>$attr.AttributeType.Name</td>
+#if ($isSingleIssueOp)
+<td>$attVal.Value</td>
+#end
+</tr>
+#end
+</table>
+#end
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+<th>*$l10n.ReasonForChange</th>
+<td>$l10n.CopyChangeHistory 
+     <p><textarea rows="4" cols="60" name ="reason"></textarea></p>
+</td>
+</tr>
+</table>
+</div>
+#end
+<div class="functnbar2">
+#if ($unsetReqdAttrs.isEmpty())
+ #if ($booleanAction)
+  <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doSaveissue" />&#160;
+ #else
+  <input type="submit" value="$l10n.CopyIssue" name="eventSubmit_doSaveissue" />&#160;
+ #end
+#end
+  <input type="submit" value="$l10n.Cancel" name="eventSubmit_doBacktoone" />
+</div>
+
+$intake.declareGroups()
+</form>
+
+#end
+
+</div>

@@ -1,0 +1,48 @@
+<div id="registerconfirm" class="app">
+
+## get the user out of the temp hashtable
+#set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
+#if (!$user.FirstName)
+
+<p class="warningmark"><strong>
+$l10n.ErrorLocatingInfo $link.setPage("Register.vm").setLabel("Registration") $l10n.ErrorLocatingInfo2</strong>
+</p>
+
+#else
+
+<p>
+$l10n.ConfirmAccuracy
+</p>
+
+<h3>$l10n.Confirmation</h3>
+
+<form action="$link.setPage("RegisterConfirm.vm")" method="post">
+<input type="hidden" name="action" value="Register" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Confirm.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Register.vm" />
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+ <tr>
+  <th>$l10n.FullName</th>
+  <td>$user.Name</td>
+ </tr>
+ <tr>
+  <th>$l10n.Email</th>
+  <td>$user.Email</td>
+ </tr>
+ <tr>
+  <th>$l10n.Username</th>
+  <td>$user.UserName</td>
+ </tr>
+</table>
+</div>
+
+<div class="functnbar2">
+<input type="submit" name="eventSubmit_doBack" value="Back" />&#160;
+<input type="submit" name="eventSubmit_doConfirmRegistration" value="Confirm registration" />
+</div>
+
+</form>
+#end
+</div>

@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN"
+    "$staticLink.setPath("/style/tigris_transitional.dtd")">
+<html>
+ <head>
+  <title>${l10n.ScarabWordMark}#if ($title): ${title}#end</title>
+  <meta http-equiv="Content-type" content="$data.ContentType" />
+  #if ($updateFrequency && $updateFrequency.length() > 0)
+  <meta http-equiv="refresh" content="$updateFrequency" />
+  #end
+  <style type="text/css">
+  @import url($staticLink.setPath("/style/tigris.css"));
+  @import url($staticLink.setPath("/style/inst.css"));
+  @import url($staticLink.setPath("/style/scarab.css"));
+  </style>
+  <link rel="stylesheet" type="text/css" href="$staticLink.setPath("/style/print.css")" media="print" />
+<script type="text/javascript">
+if (document.layers) 
+{ 
+document.write('<link rel="stylesheet" type="text/css" href="$staticLink.setPath("/style/ns4_only.css")" media="screen" />')
+}
+</script>
+<script src="$staticLink.setPath("/scripts/inputs.js")" type="text/javascript"></script>
+<script src="$staticLink.setPath("/scripts/main.js")" type="text/javascript"></script>
+ </head>
+<body marginwidth="0" marginheight="0" class="composite">
+ <div id="banner">
+  <table border="0" cellspacing="0" cellpadding="8" width="100%">
+  <tr>
+  <td>
+  <a href="$link.setPage("Index.vm")"><img src="$staticLink.setPath("/images/logo.gif")" alt="Scarab" width="118" height="23" border="0" /></a>
+  </td>
+  <td valign="center">
+  $scarabG.SiteName
+  </td>
+  <td>
+  <div align="right" id="login">
+   #if ($data.User.hasLoggedIn())
+   <div>
+    $l10n.LoggedIn <strong class="username">$!data.User.FirstName $!data.User.LastName</strong>
+   </div>
+   #end
+   <div>
+    #if ($data.User.hasLoggedIn())
+    $link.omitModule().setPage("Login.vm").setAction("Logout").setLabel("$l10n.Logout")
+    #else
+    $link.omitModule().setPage("Login.vm").setLabel("$l10n.Login")
+    #end
+   </div>
+  </div>
+  </td>
+  </tr>
+  </table>
+ </div>
+
+#if ($data.User.hasLoggedIn())
+<div id="breadcrumbs"><table border="0" cellspacing="0" cellpadding="4" width="100%"><tr><td> 
+#if ($scarabR.CurrentModule)
+<a href="$link.setPage("SelectModule.vm")">$l10n.Modules</a> > 
+ $scarabR.CurrentModule.Name
+
+ #set ($currentIssueId = $data.parameters.getString('id', ''))
+ #if ($currentIssueId != '')
+  #set ($currentIssue = $scarabR.getIssue($currentIssueId))
+  #if ($currentIssue)
+   &gt; <strong>Issue $currentIssue.UniqueId:</strong>
+   (<strong>$currentIssue.DefaultText</strong>)
+  #end
+ #end
+
+
+#else
+<a href="$link.setPage("SelectModule.vm")">$l10n.Modules</a>
+#end
+</td></tr></table></div>
+#end
+
+<table border="0" cellspacing="0" cellpadding="4" width="100%" id="main">
+ <tr valign="top">
+  <td id="leftcol" width="20%">
+  <div id="navcolumn">
+$renderer.render("navigations", $template, "Default.vm")
+<div id="helptext" class="toolgroup">
+<div class="label"><strong>$l10n.HowDoI</strong></div>
+<div class="body">
+  $renderer.render("navigations", "Help.vm")
+</div></div>
+  </div>
+ </td>
+ <td>
+#if (!$data.Parameters.getString("nonav") && !$data.Parameters.getString("nosearchnav"))
+    $renderer.render("navigations", "SearchNav.vm")
+#end
+<div id="bodycol">
+<div id="apphead"><h2>$!title</h2></div>
+ <!-- Scarab - App -->
+$renderer.render("layouts", "MainContent.vm")
+<!-- Structural Elements -->
+</div>
+ </td>
+#if ($template.equals("SelectModule.vm"))
+  $renderer.render("layouts", "/ModuleHelp.vm")
+#end
+ </tr>
+</table>
+<!-- Structural Elements -->
+$renderer.render("navigations", "/ScarabBottom.vm")
+</body>
+</html>

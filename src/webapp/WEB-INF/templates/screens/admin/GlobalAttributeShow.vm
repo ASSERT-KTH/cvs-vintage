@@ -1,0 +1,136 @@
+<div id="globalattributeshow" class="app">
+<form action="$link.setPage("admin,GlobalAttributeShow.vm")" method="post">
+
+#set ($sortColumn = $data.Parameters.getString("sortColumn",""))
+#set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
+#if (!$sortColumn || $sortColumn.length() == 0)
+   #set ($sortColumn = "name")
+#end
+
+#if (!$sortPolarity || $sortPolarity.length() == 0)
+   #set ($sortPolarity = "asc")
+#end
+
+#set ($allAttributes = $scarabG.getAllAttributes("non-user", true, $sortColumn, $sortPolarity))
+#set ($attributes = $allAttributes)
+#set ($searchString = $data.Parameters.getString("searchString" , ""))
+#set ($searchField = $data.Parameters.getString("searchField" , ""))
+
+#if ($searchString && $searchString.length() > 0)
+   #set ($attributes = $scarabR.AttributeSearchResults) 
+   #if ( $attributes.isEmpty())
+      <p class="infomark"><em>$l10n.NoAttributesMatch</em></p>
+      #set ($attributes = $allAttributes)
+   #end
+#end
+
+## PAGINATION
+## if results exceed limit, get subset list
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
+#set ($pageNum = $data.Parameters.getInt("pageNum",1))
+#if ($resultsPerPage > 0 && $attributes.size() > $resultsPerPage)
+ #set ($paginated = "true")
+ #set ($pagList = $scarabR.getPaginatedList($attributes, $pageNum, $resultsPerPage))
+ #if ($pagList)
+   #set ($attributes = $pagList)
+ #end
+#end
+
+## INPUT FORM
+<input type="hidden" name="action" value="admin.GlobalAttributes" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,GlobalAttributeShow.vm" />
+
+<div class="tabs">
+<table cellpadding="3" cellspacing="0" border="0">
+<tr>
+<th>
+$l10n.GlobalAttributes
+</th>
+<td><a href="$link.setPage("admin,GlobalUserAttributes.vm")">$l10n.GlobalUserAttributes</a></td>
+</tr>
+</table>
+</div>
+
+#set ($parameters = [])
+#set ($param = ["$scarabG.Constant.CANCEL_TEMPLATE", "GlobalAttributeShow.vm"])
+#set($booldummy = $parameters.add($param))
+#if ($paginated)
+  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField $parameters)
+#end
+
+<h3>$l10n.GlobalAttributes</h3>
+
+<div class="axial">
+<table border="0" cellspacing="2" cellpadding="3">
+  <tr>
+   <th>$l10n.FilterThisList</th>
+   <td><input type="text" name="searchString" value="$searchString" />&nbsp;
+     <select name="searchField" >
+      <option value="Any" #if($searchField.equals("Any")) selected="selected"#end>$l10n.Any</option>
+      <option value="Name" #if($searchField.equals("Name")) selected="selected"#end>$l10n.Name</option>
+      <option value="Description" #if($searchField.equals("Description")) selected="selected"#end>$l10n.Description</option>
+     </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="$l10n.Filter" /></td>
+  </tr>
+</table>
+</div>
+
+#if ($attributes.isEmpty())
+<p><em>$l10n.ClickCreateNew</em></p>
+#else
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th>$l10n.Select</th>
+<th>#sortWithSearch ("name" "$l10n.Name" $searchString $searchField)</th>
+<th>#sortWithSearch ("desc" "$l10n.Description" $searchString $searchField)</th>
+<th>#sortWithSearch("type" "$l10n.InputType" $searchString $searchField)</th>
+<th>#sortWithSearch ("user" "$l10n.Author" $searchString $searchField)</th>
+<th>#sortWithSearch("date" "$l10n.CreationDate" $searchString $searchField)</th>
+</tr>
+
+#macro (strikeS $attribute)
+#if($attribute.Deleted)<strike>#end
+#end
+#macro (strikeE $attribute)
+#if($attribute.Deleted)</strike>#end
+#end
+
+#foreach( $attribute in $attributes )
+  #if (!$attribute.isUserAttribute()) 
+    #set ($attgroup = $intake.Attribute.mapTo($attribute))
+    #indexedRows($velocityCount)
+    #set ($attType = $attribute.AttributeType)
+
+  <td><input type="checkbox" name="action_$attribute.AttributeId" /></td>
+  <td>#strikeS($attribute)$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").addPathInfo("pagenum", $pageNum).setLabel("$attribute.Name")#strikeE($attribute)</td>
+  <td>#strikeS($attribute)#if ($attribute.Description) $attribute.Description #else &nbsp; #end#strikeE($attribute)</td>
+  <td>
+    #foreach ( $atype in $attribute.AllAttributeTypes )
+      #if ($attType.AttributeTypeId == $atype.AttributeTypeId)
+        #strikeS($attribute)$atype.Name#strikeE($attribute)
+      #end
+    #end
+  </td>
+  <td>#strikeS($attribute)#attributeCreatedBy($attribute)#strikeE($attribute)</td>
+  <td>#strikeS($attribute)$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)#strikeE($attribute)</td>
+  </tr>
+  #end
+#end
+</table>
+#end
+
+<div class="functnbar3">
+<input type="submit" value="$l10n.CreateNew"  name="eventSubmit_doCreatenew" />&#160;
+#if (!$attributes.isEmpty())
+<input type="submit" value="$l10n.CopySelected" name="eventSubmit_doCopy" />&#160;
+#end
+</div>
+
+#if ($paginated)
+  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
+#end
+
+$intake.declareGroups()
+
+</form>
+</div>

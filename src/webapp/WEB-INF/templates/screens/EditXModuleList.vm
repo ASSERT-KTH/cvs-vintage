@@ -1,0 +1,53 @@
+#set ($user = $data.User)
+#set ($mitList = $user.CurrentMITList)
+<div class="app" id="editxmodulelist">
+
+<form method="post" action="$link.setPage("EditXModuleList.vm")">
+<input type="hidden" name="action" value="DefineXModuleList" />
+<input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" 
+    value="$data.Parameters.getString($scarabG.Constant.LAST_TEMPLATE)" />
+        
+#if ($mitList)
+
+<h3>$l10n.SaveXModuleList</h3>
+
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+  <tr>
+    <th>$l10n.Module</th>
+    <th>$l10n.IssueType</th>
+    <th>$l10n.Description</th>
+  </tr>
+ #foreach ($item in $mitList.MITListItems)
+  #indexedRows($velocityCount)
+    #set ($itemModule = $item.Module)
+    #set ($itemIT = $item.IssueType)
+    <td>$itemModule.RealName</td>
+    <td>$itemModule.getRModuleIssueType($itemIT).DisplayName</td>
+    <td>$itemIT.Description</td>
+  </tr>        
+ #end
+</table>
+<h4>$l10n.SaveNewList</h4>
+#set ($intakeList = $intake.MITList.mapTo($mitList))
+<p>
+* $l10n.Name: 
+<input type=text" name="$intakeList.Name.Key" value="$!intakeList.Name" />
+#fieldErrorMsg($intakeList.Name "")
+</p>
+<p><small>
+$l10n.EnteringListWillOverwrite
+</small></p>
+
+<div class="functnbar3">
+ <input type="submit" name="eventSubmit_doSavelist" value="$l10n.Save" />
+</div>
+
+#else
+
+$l01n.EnteringPreviouslySaved
+
+#end
+
+$intake.declareGroups()
+</form>
+</div>

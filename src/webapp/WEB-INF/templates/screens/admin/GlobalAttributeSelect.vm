@@ -1,0 +1,75 @@
+#set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
+#set ($issueType = $scarabR.IssueType)
+#set ($agGroup = $intake.AttributeGroup.Default)
+#set ($groupId = $data.Parameters.getString("groupId",""))
+#set ($group = $scarabR.getAttributeGroup($groupId))
+#if ($group.isGlobal())
+   #set ($attributes = $issueType.getAvailableAttributes("non-user"))
+   #set ($cancelTemplate = "admin,GlobalAttributeGroupEdit.vm")
+#else
+   #set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($issueType, "non-user"))
+   #set ($cancelTemplate = "admin,AttributeGroupEdit.vm")
+#end
+
+#macro (AttributeSelectBar $val)
+<div class="functnbar$val">
+#if ($attributes.size() > 0)
+   <input type="submit" value="$l10n.Add" name="eventSubmit_doSelectattribute" />
+#end
+#if ($canEditDomain)
+    <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doCreatenewglobalattribute"/>&#160;
+#end
+<input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel"/>
+</div>
+#end
+
+<div class="app" id="globalAttributeSelect">
+
+<form action="$link.setPage("admin,AttributeSelect.vm")" method="post">
+<input type="hidden" name="action" value="admin.AttributeGroupEdit" />
+<input type="hidden" name="_session_access_counter" value="$data.User.getTemp("_session_access_counter")" />
+<input type="hidden" name="$agGroup.AttributeGroupId.Key" value="$data.Parameters.getString("groupId","").trim()" />
+<input type="hidden" name="groupid" value="$groupId" />
+<input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
+
+#AttributeSelectBar("")
+
+<h3>$l10n.GlobalAttributes</h3>
+
+#if ($attributes.size() == 0)
+
+<p><em>$l10n.NoGlobalAttributes</em></p>
+
+#else
+
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th width="70">$l10n.Select</th>
+<th>$l10n.Name</th>
+<th>$l10n.Description</th>
+<th>$l10n.InputType</th>
+<th>$l10n.Author</th>
+<th>$l10n.CreationDate</th>
+</tr>
+
+#foreach ($attribute in $attributes)
+ #indexedRows($velocityCount)
+  <td><input type="checkbox" name="attribute_ids" value="$attribute.AttributeId" /></td>
+  <td>$attribute.Name</td>
+  <td>$attribute.Description</td>
+  <td>$attribute.AttributeType.Name</td>
+  <td>#attributeCreatedBy($attribute)</td>
+  <td>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
+ </tr>
+#end
+</table>
+
+#end
+
+#AttributeSelectBar("2")
+$intake.declareGroups()
+</form>
+
+</div>

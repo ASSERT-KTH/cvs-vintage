@@ -1,0 +1,89 @@
+#**
+@author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+*#
+
+#set ($state = $data.Parameters.getString("state"))
+#if (!$state)
+  #set ($state = "showadduser")
+#end
+
+<div id="adduser" class="app">
+
+<h3>$l10n.AddNewUser</h3>
+
+<form name="AddUserForm" action="$link.setPage("admin,AddUser.vm")" method="post">
+  <input type="hidden" name="action" value="admin.ManageUser" />
+  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,AddUser.vm" />
+  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageUserSearch.vm" />
+  <input type="hidden" name="state" value="execadduser" />
+  <input type="hidden" name="lastAction" value="" />
+
+#set ($lastAction = $data.Parameters.getString("lastAction"))
+
+#if (($lastAction) && ($lastAction =="addeduser"))
+    #set ($regGroup = $intake.Register.Default)
+    #set ($userNameData = "")
+    #set ($firstNameData = "")
+    #set ($lastNameData = "")
+    #set ($emailData = "")
+    #set ($passwordData = "")
+#else
+    #set ($regGroup = $intake.Register.Default)
+    #set ($userNameData = $regGroup.UserName)
+    #set ($firstNameData = $regGroup.FirstName)
+    #set ($lastNameData = $regGroup.LastName)
+    #set ($emailData = $regGroup.Email)
+    #set ($passwordData = $regGroup.Password)
+#end
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+ <th>* $l10n.FirstName</th>
+ <td>
+  <input name="$regGroup.FirstName.Key" value="$firstNameData" type="text" size="25" />
+  #fieldErrorMsg($regGroup.FirstName "")
+ </td>
+</tr>
+<tr>
+ <th>* $l10n.LastName</th>
+ <td>
+  <input name="$regGroup.LastName.Key" value="$lastNameData" type="text" size="25" />
+  #fieldErrorMsg($regGroup.LastName "")
+ </td>
+</tr>
+<tr>
+ <th>* $l10n.Username</th>
+ <td>
+  <input name="$regGroup.UserName.Key" value="$userNameData" type="text" size="25" />
+  #fieldErrorMsg($regGroup.UserName "")
+ </td>
+</tr>
+<tr>
+ <th>* $l10n.Email</th>
+ <td>
+  <input name="$regGroup.Email.Key" value="$emailData" type="text" size="25" />
+  #fieldErrorMsg($regGroup.Email "")
+ </td>
+</tr>
+<tr>
+ <th>* $l10n.Password</th>
+ <td>
+  <input name="$regGroup.Password.Key" value="$passwordData" type="password" size="25" />
+  #fieldErrorMsg($regGroup.Password "")
+ </td>
+</tr>
+</table>
+</div>
+
+<p>* $l10n.RequiredFields</p>
+
+<div class="functnbar2">
+ <input type="submit" name="eventSubmit_doAdduser" value="$l10n.Add" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" />
+</div>
+
+$intake.declareGroups()
+
+</form>
+</div>

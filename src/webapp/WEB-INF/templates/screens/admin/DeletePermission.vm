@@ -1,0 +1,34 @@
+#**
+@author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+@version $Id: DeletePermission.vm,v 1.5 2003/04/15 23:39:44 beril Exp $
+*#
+
+<div id="deletepermission" class="app">
+
+<h3>$l10n.ConfirmDeletePermission</h3>
+
+<form name="DeletePermissionForm" action="$link.setPage("admin,DeletePermission.vm")" method="post">
+  <input type="hidden" name="action" value="admin.ManagePermissions" />
+  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManagePermissions.vm" />
+  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManagePermissions.vm" />
+  <input type="hidden" name="name" value="$data.Parameters.getString("name")" />
+
+#set ($permission = $securityAdmin.getPermissionByName($data.Parameters.getString("name")))
+#set ($permissionName = $permission.Name)
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+ <th>$l10n.Permission</th>
+ <td>$permissionName</td>
+</tr>
+</table>
+</div>
+
+<div class="functnbar2">
+ <input type="submit" name="eventSubmit_doDeletepermission" value="$l10n.Delete" />
+ <input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" />&#160;
+</div>
+
+</form>
+</div>

@@ -1,0 +1,74 @@
+#**
+@author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+*#
+
+#set ($username = $data.Parameters.getString("username"))
+#set ($user = $securityAdmin.getUserByUsername($username))
+#set ($acl = $securityAdmin.getACL($user))
+
+<div id="adduser" class="app">
+
+<h3>$l10n.UserRoles</h3>
+
+<p>$l10n.ModifyingRolesFor <b><a href="mailto:$user.Email">$!user.Name</a></b>
+</p>
+
+<table>
+<tr>
+<td bgcolor="#000000">
+
+<table cellspacing="1" cellpadding="2">
+  <tr>
+    <td bgcolor="#ffffff">
+        &#160;
+    </td>
+      
+    #foreach ($role in $securityAdmin.Roles)
+    <td bgcolor="#ffffff">
+        <b>$role.Name</b>
+    </td>
+    #end
+  
+  </tr>
+
+  <form method="post" action="$link.setPage("admin,ManageUserSearch.vm")">
+    <input type="hidden" name="action" value="admin.ManageUser" />
+    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageUserSearch.vm" />
+    <input type="hidden" name="state" value="showedituser" />
+
+  #foreach ($group in $securityAdmin.Groups)
+  #indexedRows ($velocityCount)
+    <td bgcolor="#ffffff">
+        <b>$group.Name</b>
+    </td>
+
+    #foreach ($role in $securityAdmin.Roles)
+      #if ($acl.hasRole($role, $group))
+        #set ($checked = "checked")
+      #else
+        #set ($checked = "")
+      #end
+    
+    <td>
+      <center>
+      <input type="checkbox" name="${group.Name}${role.Name}" $checked />
+      <input type="hidden" name="username" value="$user.UserName" />
+      </center>
+    </td>
+    #end    
+  </tr>
+  #end
+    
+</table>
+
+</td>
+</tr>
+</table>
+
+<div class="functnbar2">
+ <input type="submit" name="eventSubmit_doRoles" value="$l10n.Save" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" />
+</div>
+
+</form>
+</div>

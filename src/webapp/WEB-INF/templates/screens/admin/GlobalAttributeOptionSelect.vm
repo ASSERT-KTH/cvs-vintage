@@ -1,0 +1,62 @@
+#set ($attribute = $scarabR.Attribute)
+#set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
+#set ($issueTypeId = $data.Parameters.getString("issuetypeid"))
+#set ($editIssueType = $scarabR.getIssueType($issueTypeId))
+#set ($availOptions = $editIssueType.getAvailableAttributeOptions($attribute))
+
+<div class="app" id="GlobalAttributeOptionSelect">
+
+<form action="$link.setPage("admin,GlobalAttributeOptionSelect.vm")" method="post">
+<input type="hidden" name="action" value="admin.IssueTypeAttributeEdit" />
+<input type="hidden" name="attributeId" value="$data.Parameters.getString("attributeId","").trim()" />
+<input type="hidden" name="att_0id" value="$data.Parameters.getString("attributeId","").trim()" />
+<input type="hidden" name="issueTypeId" value="$issueTypeId" />
+<input type="hidden" name="groupId" value="$data.Parameters.getString("groupId")" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,IssueTypeAttributeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,IssueTypeAttributeEdit.vm" />
+		
+<h3>$l10n.GlobalAttributeOptions</h3>
+
+<div class="functnbar">
+#if ($availOptions.size() > 0)
+<input type="submit" value="$l10n.Add" name="eventSubmit_doSelectissuetypeoption" />&#160;
+#end
+#if ($canEditDomain)
+<input type="submit" value="$l10n.CreateNew" name="eventSubmit_doGotoothertemplate" />&#160;
+#end
+<input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />&#160;
+</div>
+
+#if ($availOptions.size() == 0)
+
+<p><em>$l10n.NoGlobalAttributeOptions</em></p>
+
+#else
+
+<table border="1" cellspacing="2" cellpadding="3" width="100%">
+<tr>
+<th nowrap="nowrap" width="8%"></th>
+<th>$l10n.Name</th>
+</tr>
+
+#foreach ($option in $availOptions)
+ #indexedRows($velocityCount)
+  <td><input type="checkbox" name="option_ids" value="$option.OptionId" /></td>
+  <td>$option.Name</td>
+#end
+</table>
+#end
+
+<div class="functnbar2">
+#if ($availOptions.size() > 0)
+<input type="submit" value="$l10n.Add" name="eventSubmit_doSelectissuetypeoption" />&#160;
+#end
+#if ($canEditDomain)
+<input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
+#end
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
+</div>
+
+</form>
+</div>

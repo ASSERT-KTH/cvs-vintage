@@ -1,0 +1,66 @@
+<div id="home-enternew" class="app">
+
+#set ($currentModule = $scarabR.CurrentModule)
+#set ($currentModuleIssueTypes = $currentModule.IssueTypes)
+
+#if ($currentModuleIssueTypes.isEmpty())
+<p><em>$l10n.NoIssueTypesInModule</em></p>
+#else
+<h3>$l10n.IssueTypesInProject</h3>
+<div class="colbar">
+  $l10n.EnterNewBriefInstructions
+</div>
+
+  <table width="100%" border="1" cellspacing="2" cellpadding="3">
+    <tr>
+      <th>$l10n.Name</th>
+    ## commenting out until functionality is added
+    ##  <th>$l10n.ShowInLeftNav</th>
+
+      <th>$l10n.Description</th>
+      <th>$l10n.Templates</th>
+    </tr>
+
+#foreach ($issueType in $currentModuleIssueTypes)
+
+    #indexedRows($velocityCount)
+    #set ($rmit = $currentModule.getRModuleIssueType($issueType))
+      <td><a href="$link.setPage($scarabR.getNextEntryTemplate($issueType)).addPathInfo($scarabG.Constant.CURRENT_ISSUE_TYPE, $issueType.QueryKey).addPathInfo("eventSubmit_doStart", "foo").setAction("ReportIssue")">$rmit.DisplayName</a></td>
+<!-- commenting out until functionality is added
+      <td><input type="checkbox" /></td>
+-->
+      <td>$rmit.DisplayDescription</td>
+
+  ## TEMPLATE DROPDOWN
+      <td>
+  #set ($allTemplates = $scarabR.getAllIssueTemplates($issueType))
+  #if ($allTemplates.isEmpty())
+      $l10n.None
+  #else
+    <form action="$link.setPage("EnterNew.vm")" method="post">
+    <input type="hidden" name="action" value="TemplateList" />
+    <input type="hidden" name="eventSubmit_doUsetemplate" value="foo" />
+    ##<input type="hidden" name="$scarabG.Constant.CURRENT_ISSUE_TYPE" 
+    ##    value="$issueType.QueryKey" />
+    <select name="templateId" onchange="this.form.submit();">
+         <option value="">$l10n.SelectTemplate</option>
+     #foreach ($template in $allTemplates)
+         <option value="$template.Issue.IssueId">$template.Name</option>
+     #end
+    </select>
+    <noscript><input type="submit" value="$l10n.Go" name="eventSubmit_doUsetemplate" tabindex="6" /></noscript>
+    </form>
+  #end
+      </td>
+    </tr>        
+#end   
+             
+  </table>
+#end
+<!-- commenting out until functionality is added
+  <div class="functnbar2">
+     <input type="submit" value="$l10n.Save" name="#" />
+  </div>
+-->
+
+</div>

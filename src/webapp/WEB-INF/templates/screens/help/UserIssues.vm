@@ -1,0 +1,64 @@
+<div class="docs" id="userissue">
+  <div id="toc">
+    <ul>
+      <li>$l10n.ScarabHelp
+        <ul>
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a> </li>
+          <li>$l10n.ManagingIssues
+            <ul>
+              <li><strong>$l10n.Overview</strong>
+                <ul>
+                  <li><a href="#types">$l10n.IssueTypes</a></li>
+                  <li><a href="#attributes">$l10n.IssueAttributes</a></li>
+                  <li><a href="#entry">$l10n.IssueEntryScreen</a></li>
+                </ul>
+              </li>
+#if ($scarabG.templateExists("help/UserIssueImportExport.vm"))
+              <li><a href="$link.setPage("help,UserIssueImportExport.vm")">$l10n.XMLImportExport</a></li>
+#end
+              <li><a href="$link.setPage("help,UserIssueEntry.vm")">$l10n.EnteringIssues </a> </li>
+              <li><a href="$link.setPage("help,UserIssueTemplates.vm")">$l10n.UsingTemplates</a></li>
+              <li><a href="$link.setPage("help,UserIssueModify.vm")">$l10n.ModifyingIssues</a></li>
+            </ul>
+          <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase </a></li>
+          <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a> </li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.BestPractices</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <h3><a name="top" id="top">$l10n.ManagingIssues$l10n.Colon $l10n.Overview</a></h3>
+  <p>$l10n.OverviewPara</p>
+
+  <ul>
+    <li><strong>$l10n.Relationships</strong> $l10n.RelationshipsDef</li>
+    <li><strong>$l10n.ChangeTracking</strong> $l10n.ChangeTrackingDef</li>
+    <li><strong>$l10n.CommentViewing</strong> $l10n.CommentViewingDef</li>
+    <li><strong>$l10n.SaveFrequentInfo</strong> $l10n.SaveFrequentInfoDef</li>
+  </ul>
+
+  <h3><a name="types" id="types"></a>$l10n.IssueTypes </h3>
+  <p>$l10n.IssueTypesP1</p>
+
+  <p>$l10n.IssueTypesP2</p>
+  <h3><a name="attributes" id="attributes"></a>$l10n.IssueAttributes</h3>
+  <p>$l10n.IssueAttributesP1</p>
+  <p>$l10n.IssueAttributesP2</p>
+  <p>$l10n.IssueAttributesP3</p>
+  <p>$l10n.IssueAttributesP4 <a href="$link.setPage("help,Navigation.vm")#customizing">$l10n.CustomizingTheScreen</a>.</p>
+  <h3><a name="entry" id="entry">$l10n.IssueEntryScreen</a>.</h3>
+  <p>$l10n.IssueEntryScreenP1</p>
+  <p>$l10n.IssueEntryScreenP2 <strong>$l10n.Next
+    </strong> $l10n.IssueEntryScreenP2S2</p>
+  <p>$l10n.IssueEntryScreenP3 <a href="$link.setPage("help,UserIssueEntry.vm")#attachments">$l10n.Attachments</a>.</p>
+  <p>$l10n.IssueEntryScreenP5</p>
+  <ul>
+    <li>$l10n.EnterNewIssue</li>
+    <li>$l10n.AssignIssue</li>
+    <li>$l10n.ViewThisIssue</li>
+    <li>$l10n.StartPage</li>
+  </ul>
+ <div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div>
+  </div>

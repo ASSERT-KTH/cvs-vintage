@@ -1,0 +1,22 @@
+## Mockup of issue summary mirroring the one sent out weekly by Bugzilla
+Subject: Bug report for XXX [2001/09/04]
+
++---------------------------------------------------------------------------+
+| Bugzilla Bug ID                                                           |
+|     +---------------------------------------------------------------------+
+|     | Status: UNC=Unconfirmed NEW=New         ASS=Assigned                |
+|     |         OPN=Reopened    VER=Verified    (Skipped Closed/Resolved)   |
+|     |   +-----------------------------------------------------------------+
+|     |   | Severity: BLK=Blocker     CRI=Critical    MAJ=Major             |
+|     |   |           MIN=Minor       NOR=Normal      EHN=Ehnancement       |
+|     |   |   +-------------------------------------------------------------+
+|     |   |   | Date Posted                                                 |
+|     |   |   |          +--------------------------------------------------+
+|     |   |   |          | Description                                      |
+|     |   |   |          |                                                  |
+| 1462|New|Nor|2001-04-23|Incorrect Login Error Screen Bug                  |
+| 1466|New|Nor|2001-04-23|UpdateAccount.java: Doesn't provide error feedback|
+| 2721|New|Nor|2001-07-20|Cannot bring up the initial xxx      WEB page (ind|
++-----+---+---+----------+--------------------------------------------------+
+| Total    3 bugs                                                           |
++---------------------------------------------------------------------------+

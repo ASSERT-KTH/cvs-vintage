@@ -1,0 +1,92 @@
+<h3>$l10n.RelatedLinks</h3>
+#if ($currentIssue.Urls.isEmpty() && !$canEdit)
+    $l10n.NoLinks
+#else
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+   <tr>
+     #if (!$currentIssue.Urls.isEmpty())
+         #if ($canEdit)
+             <th>$l10n.Select</th>
+         #end
+     <th>$l10n.Link</th>
+     #end
+     #if ($canEdit)
+     <th>$l10n.URL</th>
+     <th>$l10n.Description</th>
+     #end
+   </tr>
+   #foreach ($url in $currentIssue.Urls)
+    #indexedRows($velocityCount)
+    #set ($counter = $velocityCount)
+     #if ($canEdit)
+     <td>
+       <input type="checkbox" name="url_delete_$url.AttachmentId" />
+     </td>
+     #end
+     #if ($url.Name && !$url.Name.toString().equals(""))
+     <td><a href="$url.Data">$url.Name</a></td>
+     #else
+     <td><a href="$url.Data">$url.Data</a></td>
+     #end
+     #if ($canEdit)
+      #set ($urlGroup = $intake.Attachment.mapTo($url))
+         <td><input type="text" size="25" name="$urlGroup.Data.Key" 
+                 value="$urlGroup.Data" />
+         #fieldErrorMsg($urlGroup.Data "")
+         </td>
+         <td><input type="text" size="25" name="$urlGroup.Name.Key" 
+                 value="$urlGroup.Name" />
+         #fieldErrorMsg($urlGroup.Name "")
+         </td>
+     #end
+    </tr>
+   #end
+   #if ($canEdit)
+    #set ($counter = $counter+1)
+    #indexedRows($counter)
+     #if (!$currentIssue.Urls.isEmpty())
+     <td>&#160;</td>
+     <td>New</td>
+     #end
+     #set ($urlGroup = $intake.Attachment.setKey("urlKey"))
+     <td>
+     <input type="text" size="25" name="$urlGroup.Data.Key" 
+         value="$!urlGroup.Data" />
+     #fieldErrorMsg($urlGroup.Data "")
+     </td>
+     <td>
+     <input type="text" size="25" name="$urlGroup.Name.Key" 
+         value="$!urlGroup.Name" />
+     #fieldErrorMsg($urlGroup.Name "")
+     </td>
+   </tr>
+   #end
+ </table>
+
+#* FIXME: in the future we might want to implement this.
+#if ($canEdit)
+<div class="axial">
+  <table cellpadding="3" cellspacing="2" border="0">
+    <tr>
+      <th>$l10n.Reason</th>
+      <td>
+        #set ($urlGroup = $intake.Attachment.setKey("urlReasonKey"))
+        #textAreaMedium("$urlGroup.Name.Key" "$urlGroup.Name")
+        #fieldErrorMsg($urlGroup.Name "")
+      </td>
+    </tr>
+  </table>
+</div>
+#end
+*#
+
+  #if ($canEdit)
+<div class="functnbar3">
+  <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveurl" />&#160;
+  #if (!$currentIssue.Urls.isEmpty())
+  <input type="submit" value="$l10n.DeleteSelected"  name="eventSubmit_doDeleteurl" />
+  #end
+</div>
+  #end
+#end
+

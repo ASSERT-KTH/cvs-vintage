@@ -1,0 +1,114 @@
+<div class="app" id="editquery">
+
+#set ($queryId = $data.Parameters.getString("queryId"))
+#set ($currentQuery = $scarabR.getQuery())
+#set ($queryGroup = $intake.Query.mapTo($currentQuery))
+
+#set ($action = $link.setPage("EditQuery.vm").setAction("Search"))
+<form action="$action" method="post">
+<input type="hidden" name="queryId" value="$queryId" />
+<input type="hidden" name="$queryGroup.Value.Key" value="$currentQuery.Value" />
+<input type="hidden" name="$queryGroup.ModuleId.Key" value = "$queryGroup.ModuleId" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="QueryList.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="UserList.vm" />
+<input type="hidden" name="searchType" value="advanced" />
+
+#if (!$data.User.hasPermission($scarabG.Permission.ITEM__APPROVE, $module))
+    <p class="warningmark"><strong>$l10n.QueryWarning</strong></p>
+#end
+
+<div class="functnbar">
+   <input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />&#160;
+  <input type="submit" name="eventSubmit_doSearch" value="$l10n.ExecuteQuery" />&#160; 
+   <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
+</div>
+
+<h3>$l10n.format("QueryAndName", $currentQuery.Name)</h3>
+
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="0">
+  <tr>
+   <th width="120">* $l10n.Name</th>
+   <td>
+       <input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /> 
+       #fieldErrorMsg($queryGroup.Name "")
+   </td>
+  </tr>
+  <tr>
+   <th width="120">$l10n.Description</th>
+   <td>#textAreaMedium("$queryGroup.Description.Key" $queryGroup.Description)</td>
+  </tr>
+  <tr>
+   <th width="120">$l10n.Availability</th>
+   <td>
+#if (!$data.User.CurrentMITList || $data.User.CurrentMITList.isSingleModule())
+    #queryTypeSelectBox ($currentQuery)
+#else
+    $l10n.CrossModuleQueriesHavePersonalScope
+#end
+   </td>
+  </tr>
+ </table>
+</div>
+
+<div class="functnbar3">
+  <input type="submit" name="eventSubmit_doEditqueryinfo" value="$l10n.Save" />&#160; 
+</div>
+
+#advancedQuery(true)
+
+#if ($currentQuery.QueryType.Name.equals("All users"))
+
+<h3>$l10n.SubscriptionInfo</h3>
+
+<div class="axial">
+ <table border="0" cellspacing="2" cellpadding="3">
+  <tr>
+   <th width="120">$l10n.DefaultFrequency</th>
+   <td>
+   <select name="$queryGroup.Frequency.Key">
+   #frequencySelectBox($currentQuery.SubscriptionFrequencyId)
+   </select></td>
+  </tr>
+ </table>
+</div>
+
+#if (!$currentQuery.RQueryUsers.isEmpty())
+
+<h3>$l10n.CurrentSubscriberList</h3>
+
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+  <tr>
+   <th>&#160;</th>
+   <th>$l10n.User</th>
+   <th>$l10n.UserSelectedFrequency</th>
+  </tr>
+
+#foreach ($su in $currentQuery.RQueryUsers)
+  #set ($user = $su.ScarabUser)
+  #indexedRows($velocityCount)
+   <td><input type="checkbox" name="subscribed_user_$user.UserId" /></td>
+   <td><a href="mailto:$user.Email">$!user.Name</a></td>
+   <td>$su.Frequency.Name</td>
+  </tr>
+#end
+  </table>
+
+  <input type="submit" value="$l10n.RevokeSubscription" name="eventSubmit_doUnsubscribeusers" />
+   #end
+#end
+
+<div class="functnbar3">
+  <input type="submit" name="eventSubmit_doEditstoredquery" value="$l10n.Save" />&#160; 
+</div>
+
+<div class="functnbar2">
+   <input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />&#160;
+   <input type="submit" name="eventSubmit_doSearch" value="$l10n.ExecuteQuery" />&#160; 
+   <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
+</div>
+
+$intake.declareGroups()
+
+</form>
+</div>

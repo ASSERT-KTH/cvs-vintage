@@ -1,0 +1,113 @@
+<div class="app" id="viewissue">
+
+#set ($queryId = $data.Parameters.getString("queryId"))
+#set ($searchString = $data.Parameters.getString("searchString" , ""))
+#set ($searchField = $data.Parameters.getString("searchField" , ""))
+#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "AdvancedQuery.vm"))
+#set ($selectedUsers =  $data.User.SelectedUsersMap)
+#set ($reason = $data.Parameters.getString("reason" , ""))
+#set ($mitList = $user.CurrentMITList)
+#set ($userAttrs = $mitList.getCommonUserAttributes())
+
+#printCollisionInfo()
+
+#if (!$actionLink)
+  #set ($actionLink = $link.setPage("UserList.vm").toString())
+#end
+
+
+<form action="$actionLink" method="post">
+<input type="hidden" name="action" value="Search" />
+<input type="hidden" name="sortPolarity" value="$data.Parameters.getString("sortPolarity","")"/>
+<input type="hidden" name="sortColumn" value="$data.Parameters.getString("sortColumn","")"/>
+#set ($parameters = [])
+#set ($param = ["refine", "true"])
+#set($booldummy = $parameters.add($param))
+#set ($param = ["$scarabG.Constant.CANCEL_TEMPLATE", "$cancelTemplate"])
+#set($booldummy = $parameters.add($param))
+#if ($queryId)
+  #set( $param = ["queryId", "$queryId"])
+  #set($booldummy = $parameters.add($param))
+#end
+#foreach ($parameter in $parameters)
+  <input type="hidden" name="$parameter.get(0)" value="$parameter.get(1)" />
+#end
+  
+<div class="functnbar">
+<input type="submit" value="$l10n.Done" name="eventSubmit_doCancel" />
+</div>
+
+
+##ASSIGNEE LIST
+## Determine if there are any users to show up in the added/assigned list
+<h3>$l10n.Personnel</h3>
+
+<div class="colbar">
+<ul>
+<li>$l10n.ClickHereToSelectUsersForQuery</li>
+<li>$l10n.ChangesSavedOnDone</li>
+</ul>
+</div>
+
+    #if (!$selectedUsers || $selectedUsers.size() == 0)
+     <p><em>$l10n.NoneAssigned.</em></p>
+    #else
+		
+		<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<tr>
+		<th nowrap="nowrap">$l10n.Select</th>
+		<th>$l10n.Username</th>
+		<th>$l10n.FullName</th>
+		<th>$l10n.Association</th>
+		</tr>
+#set ($rowIndex = 0)
+#foreach ($userId in $selectedUsers.keySet())
+  #set ($user = $scarabR.getUser($userId))
+  #set ($attrIds = $selectedUsers.get($userId))
+  #foreach ($attrId in $attrIds)
+    #set ($rowIndex = $rowIndex + 1)
+    #indexedRows($rowIndex)
+    <td>
+      <input type="checkbox" name="select_user" value="${userId}_$attrId" />
+    </td>
+    <td><a href="mailto:$user.Email">$user.UserName</a></td>
+    <td>$!user.Name</td>
+    <td><select name="user_attr_${userId}_$attrId">
+      <option value="any"
+         #if ($attrId.equals("any")) selected="selected" #end
+         >$l10n.Any</option>
+      <option value="created_by"
+         #if ($attrId.equals("created_by")) selected="selected" #end
+         >$l10n.CreatedBy</option>
+     #foreach ($selectUserAttr in $userAttrs)
+      #if ($user.hasPermission($selectUserAttr.Permission, $mitList.Modules))
+        #set ($selected = false)
+        #if ($attrId.toString().equals($selectUserAttr.AttributeId.toString())) 
+            #set ($selected = true)
+        #end
+        <option value="$selectUserAttr.AttributeId" #selected($selected)>$selectUserAttr.Name</option>
+      #end
+     #end
+       </select></td>
+  </tr>
+  #end
+#end
+
+   </table>  
+
+<div class="functnbar3">
+ <input type="submit" name="eventSubmit_doRemoveusers" value="$l10n.RemoveSelected" />
+ <input type="submit" name="eventSubmit_doUpdateusers" value="$l10n.UpdateSelected" />
+</div>
+  #end
+
+#userList($mitList true true $parameters false)
+
+<div class="functnbar3">
+ <input type="submit" name="eventSubmit_doAddusers" value="$l10n.AddAssignee" />
+</div>
+
+$intake.declareGroups()
+
+</div>
+</form>

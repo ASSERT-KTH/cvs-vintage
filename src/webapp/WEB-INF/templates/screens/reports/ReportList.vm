@@ -1,0 +1,80 @@
+<div id="savereport" class="app">
+
+<form method="post" action="$link.setPage("reports,ReportList.vm")" >
+<input type="hidden" name="action" value="ConfigureReport" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="reports,Info.vm" />
+
+##<p class="paginate">&#171; $l10n.Previous | 1 of 1 | $l10n.Next &#187;</p>
+
+<h3>$l10n.SavedReports</h3>
+
+#set ($user = $data.User)
+#set ($reports = $scarabR.CurrentModule.getSavedReports($user))
+#if ($reports.size() > 0 )
+<div>
+$l10n.ClickToExecute
+</div>
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+#set ($atLeastOneDelete = false)
+#foreach ($report in $reports)
+ #if ($report.isDeletable($user))
+  #set ($atLeastOneDelete = true)
+ #end
+#end
+#if ($atLeastOneDelete)
+  <th nowrap="nowrap">$l10n.Select</th>
+#end
+<th>$l10n.Name</th>
+<th>$l10n.Description</a></th>
+<th>$l10n.Availability</a></th>
+<th>$l10n.Author</a></th>
+</tr>
+
+#foreach ($report in $reports)
+  #set ($group = $intake.Report.mapTo($report))
+  #indexedRows($velocityCount)
+ #if ($atLeastOneDelete)
+  <td>
+  #if ($report.isDeletable($user))
+    <input type="checkbox" name="report_id" value="$report.ReportId">
+  #else
+    &nbsp;
+  #end
+  </td>
+ #end
+  <td>
+ #if ($report.isEditable($user))
+$link.setPage("reports,Info.vm").setLabel("$report.Name").addPathInfo("report_id", "$report.ReportId").addPathInfo("eventSubmit_doVerifyreport", "foo").setAction("ConfigureReport")
+ #else
+  $report.Name
+ #end
+ </td>
+
+<td>#if ($!report.Description != '') $report.Description #else &nbsp; #end</td>
+
+<td>$link.setPage("reports,Report_1.vm").setLabel("$report.Scope.Name").addPathInfo("report_id", "$report.ReportId").addPathInfo("eventSubmit_doGeneratereport", "foo").setAction("ConfigureReport")</td>
+
+<td>
+ #set ($createdUser = $scarabR.getUser($report.UserId.toString()))
+<a href="mailto:$createdUser.Email">$createdUser.Name</a></td>
+</tr>
+#end
+
+</table>
+#else
+ <p><em>$l10n.NoSavedReports</em></p>
+#end
+
+<div class="functnbar3">
+  <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doCreatenew" />&#160;
+#if ($atLeastOneDelete)
+  <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletestoredreport" />
+#end
+</div> 
+
+##<p class="paginate">&#171; $l10n.Previous | 1 of 1 | $l10n.Next &#187;</p>
+
+$intake.declareGroups()
+</form>
+</div>

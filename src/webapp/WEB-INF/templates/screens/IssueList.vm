@@ -1,0 +1,232 @@
+#set ($mitlist = $user.CurrentMITList)
+#set ($searchType = $data.Parameters.getString('searchType', ''))
+
+<div class="app" id="issuelist">
+#set ($user = $data.User)
+#if (!$queryResults)
+   #set ($queryResults = $scarabR.CurrentSearchResults)
+#end
+#set ($issueListSize = $queryResults.size())
+#set ($totalCount = $issueListSize)
+
+## if results exceed limit, get subset list
+#set ($resultsPerPage = $data.Parameters.getInt('resultsPerPage', 25))
+#set ($pageNum = $data.Parameters.getInt('pageNum', 1))
+#set ($paginated = $resultsPerPage > 0 && $issueListSize > $resultsPerPage)
+#if ($paginated)
+ #set ($queryResults = $scarabR.getPaginatedIterator($queryResults, $pageNum, $resultsPerPage))
+ #set ($issueListSize = $queryResults.size())
+#end
+
+## The functions used to control the current query.
+#macro (queryFunctionBar $id)
+#if ($queryString)
+<div class="functnbar$id">
+#if ($searchType == 'advanced' && $scarabR.hasPermission($scarabG.Permission.USER__EDIT_PREFERENCES))
+<input type="submit" value="$l10n.SaveQuery" name="eventSubmit_doRedirecttosavequery" />&#160;
+<input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />&#160;
+#end
+#exportFormats('')
+
+#if (!$mitlist || $mitlist.isSingleModuleIssueType())
+  #processQueryResults('' $issueListSize)
+#end
+</div>
+#end
+#end
+
+#if ($issueListSize == 0)
+<h3>$page.Title</h3>
+  <p><em>$l10n.NoMatchingIssues</em></p>
+#else
+<form action="$link.setPage('IssueList.vm').setAction('Search')" method="post">
+#if ($searchType)
+  <input type="hidden" name="searchType" value="$searchType" />
+#end
+<input type="hidden" name="pageNum" value="$pageNum" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="IssueList.vm" />
+
+#set ($queryString = $data.User.MostRecentQuery)
+
+#queryFunctionBar("")
+
+<h3>
+$page.Title
+<small>$l10n.format("IssueListCount", $totalCount)</small></h3>
+
+<div class="colbar">
+$format.getNow($scarabR.DateFormat)
+</div>
+
+<div class="colbar">
+<small>
+#if ($scarabR.ValidIssueListAttributes.isEmpty())
+#set ($noAttrs = true)
+<p><em>$l10n.NoCommonAttributesInList</em></p>
+#else
+$link.setPage('ConfigureIssueList.vm').setLabel($l10n.AddRemoreAttributesFromView).setPathInfo('searchType', $searchType)
+#end
+</small>
+</div>
+		
+#set ($search = $scarabR.PopulatedSearch)
+#set ($searchGroup = $intake.SearchIssue.mapTo($search))
+#set ($sortColumn = $searchGroup.get("SortAttributeId").Value.toString())
+#set ($sortPolarity = $searchGroup.get("SortPolarity").Value)
+<input type="hidden" name="sortColumn" value="$sortColumn" />
+<input type="hidden" name="sortPolarity" value="$sortPolarity" />
+
+## PAGINATION
+#if ($paginated)
+  #paginateIssueList($resultsPerPage $pageNum $sortColumn $sortPolarity $searchType)
+#end
+
+#macro (prepIssueListPageLink)
+ #set ($dummy = $link.setPage('IssueList.vm').setPathInfo('resultsPerPage', $resultsPerPage).setPathInfo('pageNum', $pageNum))
+#end
+
+## TODO: Start a new table every 100 results to speed up rendering in
+## non-IE browsers.  Count only the query results to assure that the
+## full 100 result possibility is sectioned off within a single table,
+## ignoring the row with column headings (e.g. <th> elements).
+## Issuezilla uses this trick with good results.
+
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+  <tr>
+  <th width="70">$l10n.Select</th>
+ #if ($mitlist && !$mitlist.isSingleModule())
+  <th>$l10n.CapModule</th> 
+ #end
+ #if ($mitlist && !$mitlist.isSingleIssueType())
+  <th>$l10n.IssueType</th> 
+ #end
+  <th>
+     #if (!$sortColumn || $sortColumn.length() == 0)
+        #if ($sortPolarity.equals('desc'))
+           #prepIssueListPageLink()
+           #set ($arrowLink = $link.setPathInfo('sortPolarity', 'asc').addPathInfo('sortColumn', '').addPathInfo('searchType', $searchType))
+           <a href="$arrowLink"><img src="$staticLink.setPath('/images/icon_downarrow_on.gif')" width="13" height="8" alt="$l10n.SortDescending" title="$l10n.SortDescending" border="0" /></a>&#160;
+        #else
+           #prepIssueListPageLink()
+           #set ($arrowLink = $link.setPathInfo("sortPolarity", "desc").addPathInfo("sortColumn", "").addPathInfo("searchType","$searchType"))
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="$l10n.SortAscending" title="$l10n.SortAscending" border="0" /></a>&#160;
+        #end
+     $l10n.IssueId
+     #else
+        #prepIssueListPageLink()
+        #set ($sortLink = $link.setPathInfo("sortColumn","").setPathInfo("sortPolarity", $sortPolarity).addPathInfo("searchType","$searchType"))
+        <a href="$sortLink">$l10n.IssueId</a>
+     #end
+  </th>
+
+## ISSUE ATTRIBUTE VALUES
+#if (!$noAttrs)
+#set ($rmuas = $scarabR.RModuleUserAttributes)
+#foreach ($rmua in $rmuas)
+ #set ($userAttribute = $rmua.Attribute)
+ #if ($mitlist.isSingleModuleIssueType())
+   #set ($value = $mitlist.Module.getRModuleAttribute($userAttribute, $mitlist.IssueType).DisplayValue)
+ #else
+   #set ($value = $userAttribute.Name)
+ #end
+ <th>
+     #if ($sortColumn.equals($userAttribute.AttributeId.toString()))
+        #if ($sortPolarity.equals("desc"))
+           #prepIssueListPageLink()
+           #set ($arrowLink = $link.setPathInfo("sortPolarity", "asc").setPathInfo("sortColumn", "$userAttribute.AttributeId").addPathInfo("searchType","$searchType"))
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="$l10n.SortDescending" title="$l10n.SortDescending" border="0" /></a>&#160;
+        #else
+           #prepIssueListPageLink()
+           #set ($arrowLink = $link.setPathInfo("sortPolarity", "desc").setPathInfo("sortColumn", "$userAttribute.AttributeId").addPathInfo("searchType","$searchType"))
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="$l10n.SortAscending" title="$l10n.SortAscending" border="0" /></a>&#160;
+        #end
+        $value
+     #else
+        #prepIssueListPageLink()
+        #set ($sortLink = $link.setPathInfo("sortColumn", "$userAttribute.AttributeId").setPathInfo("sortPolarity", "$sortPolarity").addPathInfo("searchType","$searchType"))
+        <a href="$sortLink">$value</a>
+     #end
+  </th>
+#end
+#end
+  </tr>
+
+#set ($showModule = $mitlist && !$mitlist.isSingleModule())
+#set ($showIssueType = $mitlist && !$mitlist.isSingleIssueType())
+ #set ($listOffset = ($pageNum - 1) * $resultsPerPage)
+#set ($qrIterator = $scarabR.getIssueListIterator($queryResults, $listOffset, $totalCount))
+#foreach ($result in $qrIterator)
+
+
+ #indexedRows($velocityCount)
+  <td>
+   <input type="hidden" name="all_issue_ids" value="$result.UniqueId" />
+   <input type="checkbox" name="issue_ids" value="$result.UniqueId" />
+  </td>
+ #if ($showModule)
+  <td>$result.Module.RealName</td> 
+ #end
+ #if ($showIssueType)
+  <td>$result.RModuleIssueType.DisplayName</td> 
+ #end
+  $qrIterator.initializeLink($link)
+  <td><a href="$link">$result.UniqueId</a></td>
+#if (!$noAttrs)
+#foreach ($value in $result.AttributeValuesAsCSV)
+  <td>
+  #if ($value.length() == 0)
+    -------
+  #else
+    $value
+  #end
+  </td>
+#end
+#end
+  </tr>
+#end
+  </table>
+
+<div class="axial">
+  <table cellpadding="3" cellspacing="2" border="0">
+    <tr>
+       <th>$l10n.MaxPerPage</th>
+ <td>
+     #resultsPerPageRadioSelect($resultsPerPage true)
+     <input type="submit" name="eventSubmit_doRefreshresultsperpage" 
+         value="$l10n.Refresh" />
+     <input type="hidden" name="oldResultsPerPage" value="$resultsPerPage" />
+ </td>
+   </tr>
+  </table>
+</div>
+
+#if ($paginated)
+  #paginateIssueList($resultsPerPage $pageNum $sortColumn $sortPolarity $searchType)
+#end
+
+#end
+
+#queryFunctionBar("2")
+
+#if ($mitlist)
+<h3>$l10n.QueryScope</h3>
+ #set ($list = $user.CurrentMITList)
+ #if ($list.isModifiable())
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+  <tr>
+   <th>$l10n.ModuleName</th>
+   <th>$l10n.IssueType</th>
+  </tr>
+  #foreach ($item in $list.ExpandedMITListItems)
+   #indexedRows($velocityCount)
+   <td>$item.Module.Name </td><td>$item.Module.getRModuleIssueType($item.IssueType).DisplayName</td>  
+  #end
+</table>
+#else
+  <div>$list.Name</div>
+ #end
+</div>
+#end
+                              
+</form>
+</div>

@@ -1,0 +1,56 @@
+<div class="app" id="loginDONOTCHANGETHISID">
+
+<p>$l10n.format("IfYouAreNotRegistered", $link.omitModule().setPage("Register.vm"))</p>
+<p>$l10n.format("ForgotYourPassword", $link.omitModule().setPage("ForgotPassword.vm"))</p>
+
+<h3>$l10n.Login</h3>
+
+#set ($nextTemplate = $data.Parameters.getString($scarabG.Constant.NEXT_TEMPLATE, ""))
+
+<form action="$link.setPage("Login.vm")" method="post" name="login">
+  <input type="hidden" name="action" value="Login" />  
+#if ($nextTemplate && $nextTemplate.trim().length() > 0)
+  #if ($nextTemplate.equals("Login.vm"))
+    #set ($nextTemplate = "SelectModule.vm")
+  #end
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" />
+#elseif ($data.Parameters.getString("viewIssueId"))
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
+ <input type="hidden" name="id" value="$data.Parameters.getString("viewIssueId")" />
+#else
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="SelectModule.vm" />
+#end
+
+#set ($loginGroup = $intake.Login.Default)
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+ <tr>
+  <th>$l10n.Username</th>
+  <td>
+  <input name="$loginGroup.Username.Key" value="$!loginGroup.Username.Value" size="25" type="text" />
+  #fieldErrorMsg ($loginGroup.Username "")
+  </td>
+ </tr>
+ <tr>
+  <th>$l10n.Password</th>
+  <td>
+  <input name="$loginGroup.Password.Key" value="" size="25" type="password" />
+  #fieldErrorMsg ($loginGroup.Password "")
+  </td>
+ </tr>
+</table>
+</div>
+
+<div class="functnbar2">
+<input type="submit" name="eventSubmit_doLogin" value="$l10n.Login" onclick="document.login.eventSubmit_doLogin.disabled=true;document.login.submit()" />
+</div>
+
+$intake.declareGroups()
+
+<script type="text/javascript">
+<!--
+document.login.${loginGroup.Username.Key}.focus();
+// -->
+</script>
+</form>
+</div>

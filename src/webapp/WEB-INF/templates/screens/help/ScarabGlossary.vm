@@ -1,0 +1,99 @@
+  <div class="docs" id="scarabglossary">
+   <div id="toc">
+    <ul>
+     <li>
+      $l10n.ScarabHelp 
+
+      <ul>
+       <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
+
+       <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a></li>
+
+       <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase</a></li>
+
+       <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
+
+       <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.BestPractices</a></li>
+
+       <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+
+       <li><strong>$l10n.HelpGlossary</strong></li>
+      </ul>
+     </li>
+    </ul>
+   </div>
+
+   <h3>$l10n.HelpGlossary</h3>
+
+   <p>$l10n.GlossaryDesc</p>
+
+   <dl>
+    <dt>$l10n.ActiveInactive</dt>
+
+    <dd>$l10n.ActiveInactiveDef</dd>
+
+    <dt>$l10n.Assign</dt>
+
+    <dd>$l10n.AssignDef</dd>
+
+    <dt>$l10n.Attachment</dt>
+
+    <dd>$l10n.AttachmentDef</dd>
+
+    <dt>$l10n.Attribute</dt>
+
+    <dd>$l10n.AttributeDef</dd>
+
+    <dt>$l10n.AttributeGroup</dt>
+
+    <dd>$l10n.AttributeGroupDef</dd>
+
+    <dt>$l10n.CompAnalysisReport</dt>
+
+    <dd>$l10n.CompAnalysisReportDef</dd>
+
+    <dt>$l10n.Defect</dt>
+
+    <dd>$l10n.DefectDef</dd>
+
+    <dt>$l10n.Feature</dt>
+
+    <dd>$l10n.FeatureDef</dd>
+
+    <dt>$l10n.GlobalAttributes</dt>
+
+    <dd>$l10n.GlobalAttributeDef</dd>
+
+    <dt>$l10n.IssueType</dt>
+
+    <dd>$l10n.IssueTypeDef</dd>
+
+    <dt>$l10n.RateOfChangeReport</dt>
+
+    <dd>$l10n.RateOfChangeReportDef</dd>
+
+    <dt>$l10n.Report</dt>
+
+    <dd>$l10n.ReportDef</dd>
+
+    <dt>$l10n.PrimaryFilterAttribute</dt>
+
+    <dd>$l10n.PrimaryFilterAttributeDef</dd>
+
+    <dt>$l10n.Query</dt>
+
+    <dd>$l10n.QueryDef</dd>
+
+    <dt>$l10n.Template</dt>
+
+    <dd>$l10n.TemplateDef</dd>
+
+    <dt>$l10n.UserAttributes</dt>
+
+    <dd>$l10n.UserAttributesDef</dd>
+   </dl>
+
+   <div class="courtesylinks">
+    <p><a href="#toc">$l10n.Top</a></p>
+   </div>
+  </div>

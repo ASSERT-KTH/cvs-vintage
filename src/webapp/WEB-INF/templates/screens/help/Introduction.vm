@@ -1,0 +1,42 @@
+<div class="docs" id="introduction"> 
+  <div id="toc"> 
+    <ul>
+      <li>$l10n.ScarabHelp
+        <ul>
+          <li><strong>$l10n.IntroToScarab</strong> 
+            <ul>
+              <li><a href="#help">$l10n.GettingHelp</a></li>
+              <li><a href="$link.setPage("help,Navigation.vm")">$l10n.NavigatingScarab</a></li>
+            </ul>
+          </li>
+          <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a></li>
+          <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase</a></li>
+          <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.BestPractices</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <h3><strong><a name="top" id="top">$l10n.IntroToScarab</a></strong></h3>
+  <p>$l10n.ScarabIs $l10n.IntroP1</p>
+  <p>$l10n.ScarabProvides $l10n.IntroP2</p>
+
+<ul>
+  <li> 
+    <strong>$l10n.IntroP3Head</strong>$l10n.IntroP3
+  </li>
+  <li><strong>$l10n.IntroP4Head</strong>$l10n.IntroP4</li>
+  <li><strong>$l10n.IntroP5Head</strong>$l10n.IntroP5</li>
+  <li><strong>$l10n.IntroP6Head</strong>$l10n.IntroP6</li>
+  <li><strong>$l10n.IntroP7Head</strong>$l10n.IntroP7</li>
+</ul>
+
+<h3><a name="help" id="help">$l10n.GettingHelp</a></h3>
+<p>$l10n.IntroP8</p>
+
+
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div> 
+
+</div>

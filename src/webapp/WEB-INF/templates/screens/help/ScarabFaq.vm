@@ -1,0 +1,41 @@
+<div class="docs" id="scarabfaq"> 
+  <div id="toc"> 
+   
+    <ul>
+      <li>$l10n.ScarabHelp 
+        <ul>
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
+          <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a></li>
+          <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase</a></li>
+          <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.BestPractices</a></li>
+          <li><strong>$l10n.HelpFAQ</strong></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <h3><a name="top" id="top">$l10n.FrequentlyAskedQuestions</a></h3>
+  <dl> 
+    <dt>$l10n.WhatIssueType</dt>
+    <dd>$l10n.WhatIssueTypeAnswer <strong>$l10n.WhatIssueTypeAnswer2</strong> $l10n.WhatIssueTypeAnswer3 <a href="$link.setPage("help,UserIssues.vm")#types">$l10n.IssueTypes</a> $l10n.WhatIssueTypeAnswer4</dd>
+    <dt>$l10n.CanIMoveIssues</dt>
+    <dd>$l10n.CanIMoveIssuesAnswer <a href="$link.setPage("help,UserIssueModify.vm")#move">$l10n.CanIMoveIssuesAnswer2</a> 
+      $l10n.CanIMoveIssuesAnswer3 <a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.BestPractices</a> $l10n.CanIMoveIssuesAnswer4</dd>
+    <dt>$l10n.StopDuplicateChecking</dt>
+    <dd>$l10n.StopDuplicateCheckingAnswer</dd>
+    <dt>$l10n.CanIAddAttributes</dt>
+    <dd>$l10n.CanIAddAttributesAnswer <a href="$link.setPage("help,Navigation.vm")#customize">$l10n.CustomizingTheScreen</a></dd>
+    </dl>
+
+<dl> 
+  <dt><strong>$l10n.GlobalAndUserAttributes</strong></dt>
+  <dd>$l10n.GlobalAndUserAttributesAnswer</dd>
+  <dt>&nbsp;</dt>
+  <dd>$l10n.GlobalAndUserAttributesAnswer2</dd>
+  <dt>&nbsp;</dt>
+  <dd>$l10n.GlobalAndUserAttributesAnswer3 <a href="$link.setPage("help,UserIssues.vm")#attributes">$l10n.ManagingIssues.</a> $l10n.GlobalAndUserAttributesAnswer4 <a href="$link.setPage("help,UserIssueModify.vm")#manage">$l10n.ModifyingIssues.</a></dd>
+</dl>
+
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div>
+</div>

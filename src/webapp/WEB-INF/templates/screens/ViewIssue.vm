@@ -1,0 +1,129 @@
+<div class="app" id="viewissue">
+
+#set ($currentIssueId = $data.Parameters.getString("id"))
+#set ($currentIssue = $scarabR.getIssue($currentIssueId))
+
+#if ($collisionDetectedOnMoveAttempt)
+  #printCollisionInfo()
+#end
+
+#if ($currentIssue && $scarabR.hasPermission($scarabG.Permission.ISSUE__VIEW, $currentIssue.Module))
+
+ #if ($currentIssue.Module != $scarabR.CurrentModule)
+  <p class="infomark"><em>
+   $l10n.format("ViewIssueInDifferentModule", $currentIssue.Module.Name)
+  </em></p>
+ #end
+##Do not call printCollisionInfo() again if $collisionDetectedOnMoveAttempt were true
+ #if (!$collisionDetectedOnMoveAttempt)
+  #printCollisionInfo()
+ #end
+
+ #set ($prevNextList = $data.Parameters.getStrings("issueList"))
+ #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
+ <form method="post" enctype="multipart/form-data" action="$link.setPage("ViewIssue.vm")">
+   <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
+   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="ViewIssue.vm" />
+
+ #if ($fullHistory)
+   <input type="hidden" name="fullHistory" value="$fullHistory" />
+ #end
+ #foreach ($prevNextId in $prevNextList)
+   <input type="hidden" name="issueList" value="$prevNextId" />
+ #end
+
+#if ($data.User.getTemp($scarabG.Constant.TAB_KEY))
+    #set ($tab = $data.User.getTemp($scarabG.Constant.TAB_KEY))
+#else
+    #set ($tab = $data.Parameters.getString("tab","1"))
+#end
+
+#macro (initializeTabLink)
+  #set ($tabLink = $link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("eventSubmit_doSetissueview", "foo").setAction("ViewIssue"))
+
+ #foreach ($prevNextId in $prevNextList)
+    #set ($dummy = $tabLink.addPathInfo("issueList", $prevNextId))
+ #end
+#end
+
+#if ($tab.equals("all"))
+    #initializeTabLink()
+    <div align="right"><small><a href="$tabLink.addPathInfo("tab", "1")">$l10n.ViewAsTabs</a></small></div>
+    #if ($data.User.hasMostRecentQuery() && $prevNextList)
+        #navigate()
+    #end
+#elseif (!$multiple.equals("true"))
+
+#initializeTabLink()
+<div align="right"><small><a href="$tabLink.addPathInfo("tab", "all")">$l10n.ViewAsSingleScreen</a></small></div>
+#if ($data.User.hasMostRecentQuery() && $prevNextList)
+    #navigate()
+#end
+
+<div class="tabs">
+<table cellpadding="3" cellspacing="0" border="0">
+<tr>
+#if ($tab.equals("1"))
+<th>$l10n.Attributes</th>
+#else
+#initializeTabLink()
+<td><a href="$tabLink.addPathInfo("tab", "1")">$l10n.Attributes</a></td>
+#end
+#if ($tab.equals("2"))
+<th>$l10n.Personnel</th>
+#else
+#initializeTabLink()
+<td><a href="$tabLink.addPathInfo("tab", "2")">$l10n.Personnel</a></td>
+#end
+#if ($tab.equals("3"))
+<th>$l10n.Comments</th>
+#else
+#initializeTabLink()
+<td><a href="$tabLink.addPathInfo("tab", "3")">$l10n.Comments</a></td>
+#end
+#if ($tab.equals("4"))
+<th>$l10n.AttachmentsDependenciesURLs</th>
+#else
+#initializeTabLink()
+<td><a href="$tabLink.addPathInfo("tab", "4")">$l10n.AttachmentsDependenciesURLs</a></td>
+#end
+#if ($tab.equals("5"))
+<th>$l10n.History</th>
+#else
+#initializeTabLink()
+<td><a href="$tabLink.addPathInfo("tab", "5")">$l10n.History</a></td>
+#end
+</tr>
+</table>
+</div>
+#end
+
+$renderer.render("viewIssue", "ViewIssueBody.vm")
+
+ $intake.declareGroups()
+ </form>
+
+<div align="right"><small><a href="$link.getIssueIdAbsoluteLink($currentIssue)">$l10n.SessionInfoLink $currentIssue.UniqueId</a></small></div>
+
+## block to handle invalid issue id or user did not have proper permissions
+#elseif ($currentIssue)
+<h3>$l10n.IssueSearchResults</h3>
+    <p><em>
+    $l10n.NoPermissionToViewIssue
+    </em></p>
+#elseif (!$collisionDetectedOnMoveAttempt)
+<h3>$l10n.IssueSearchResults</h3>
+
+  #if ($currentIssueId && $currentIssueId.length() > 0)
+    <p><em>
+    $l10n.format("IssueIdNotValid", $currentIssueId) $l10n.PleaseEnterNewIssueId
+    </em></p>
+  #else
+    <p><em>
+    $l10n.PleaseEnterIssueID
+    </em></p>
+  #end
+
+#end
+
+</div>

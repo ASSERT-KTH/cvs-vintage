@@ -1,0 +1,18 @@
+<div class="app" id="error">
+
+#if( $data.getMessage() )
+ Message: $data.getMessage()
+#else
+ #if ($data.StackTrace)
+  <h3>Stack Trace</h3>
+
+$l10n.StackTraceError 
+
+  <pre>
+  $data.StackTrace
+  </pre>
+ #else
+  <p>$l10n.format("NoErrorMessage", $link.setPage($data.User.HomePage).setLabel("Home"))
+ #end
+#end
+</div>

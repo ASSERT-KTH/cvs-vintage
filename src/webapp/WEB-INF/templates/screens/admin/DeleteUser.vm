@@ -1,0 +1,58 @@
+#**
+@author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+@version $Id: DeleteUser.vm,v 1.9 2003/04/15 23:39:44 beril Exp $
+*#
+
+#set ($state = $data.Parameters.getString("state"))
+#if (!$state)
+  #set ($state = "showdeleteuser")
+#end
+
+<div id="deleteuser" class="app">
+
+<h3>$l10n.ConfirmDeleteUser</h3>
+
+#set ($username = $data.Parameters.getString("username",""))
+
+<form name="EditUserForm" action="$link.setPage("admin,DeleteUser.vm")" method="post">
+  <input type="hidden" name="action" value="admin.ManageUser" />
+  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageUserSearch.vm" />
+  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageUserSearch.vm" />
+  <input type="hidden" name="state" value="$nextState" />
+  <input type="hidden" name="username" value="$username" />
+
+#set ($user = $securityAdmin.getUserByUsername($username))
+#set ($loginNameData = $user.UserName)
+#set ($firstNameData = $user.FirstName)
+#set ($lastNameData = $user.LastName)
+#set ($emailData = $user.Email)
+#set ($passwordData = "")
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+ <th>$l10n.LoginName</th>
+ <td>$loginNameData</td>
+</tr>
+<tr>
+ <th>$l10n.FirstName</th>
+ <td>$firstNameData</td>
+</tr>
+<tr>
+ <th>$l10n.LastName</th>
+ <td>$lastNameData</td>
+</tr>
+<tr>
+ <th>$l10n.Email</th>
+ <td>$emailData</td>
+</tr>
+</table>
+</div>
+
+<div class="functnbar2">
+ <input type="submit" name="eventSubmit_doDeleteuser" value="$l10n.Delete" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" />
+</div>
+
+</form>
+</div>

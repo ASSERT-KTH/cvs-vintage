@@ -1,0 +1,17 @@
+#set ($module = $scarabR.CurrentModule)
+
+#if ($module)
+
+<div id="projecttools" class="toolgroup">
+  <div class="label">
+  <strong><a href="$link.setPage($data.User.HomePage)">$l10n.IssueTrackingHome</a></strong>
+  </div>
+  <div class="body">
+    $renderer.render("navigations", "CommonLinks.vm")
+ </div>
+</div>
+
+## AMINISTRATION
+  $renderer.render("navigations", "Administration.vm")
+
+#end

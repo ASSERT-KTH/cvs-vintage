@@ -1,0 +1,32 @@
+<h3>$l10n.ImportResults</h3>
+<p>$l10n.Overall
+#if ($resultString.length() > 0)
+$resultString
+<div>
+    #if ($importErrors && !$importErrors.isEmpty())
+    <ul>
+        #foreach ($error in $importErrors)
+            <li>$error</li>
+        #end
+    </ul>
+    #end
+#else
+    $l10n.NoErrors
+#end
+</div>
+</p>
+
+#if ($issues)
+#set ($issuesMap = $issues.getIDs())
+#if (!$issuesMap.isEmpty())
+<table border="1" cellspacing="2" cellpadding="3">
+<tr><th>$l10n.OldID</th><th>$l10n.NewID</th></tr>
+  #foreach ($key in $issuesMap.keySet())
+    <tr><td>$key</td><td>$issuesMap.get($key)</td></tr>
+  #end
+</table>
+</p>
+#else
+<p>$l10n.NoneAffected</p>
+#end
+#end

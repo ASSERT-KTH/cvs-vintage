@@ -1,0 +1,54 @@
+<div id="xmlexportissues" class="app">
+
+<h3>$page.Title</h3>
+
+<form action="$link.setPage("admin,ViewXMLExportIssues.vm")" method="post" name="xmlexportissues">
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$data.User.HomePage" />
+
+<div class="colbar">
+$l10n.SpecifyACommaSepparatedList
+</div>
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+ <th>$l10n.Issues</th>
+ <td>
+  <input name="exportissues" value="$!exportissues" type="text" size="50" />
+ </td>
+</tr>
+<tr>
+ <th>$l10n.Options</th>
+ <td>
+ #set ($dltype = $data.Parameters.getString("downloadtype","0"))
+<input type="radio" name="downloadtype" value="0" #if ($dltype=="0") checked="checked" #end /> $l10n.ExportAsDownloadable
+<input type="radio" name="downloadtype" value="1" #if ($dltype=="1") checked="checked" #end /> $l10n.ExportToBrowser
+ </td>
+</tr>
+<tr>
+ <th>$l10n.Filename</th>
+ <td>
+<p>$l10n.SaveDownloadedAs</p> 
+#if ($data.Parameters.filename && $data.Parameters.filename.length() > 0)
+#set ($filename = $data.Parameters.filename)
+#else
+#set ($filename = "scarab-issues-export.xml")
+#end
+<input type="text" size="50" name="filename" value="$filename" />
+ </td>
+</tr>
+
+</table>
+</div>
+
+<div class="functnbar2">
+  <input type="submit" name="eventSubmit_doXmlissues" value="$l10n.Export" />
+</div>
+
+<script type="text/javascript">
+<!--
+document.xmlexportissues.exportissues.focus();
+// -->
+</script>
+</form>
+</div>

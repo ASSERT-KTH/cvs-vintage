@@ -1,0 +1,71 @@
+<div class="app" id="configureissuelist">
+
+#set ($action = $link.setPage("ConfigureIssueList.vm").setAction("ConfigureIssueList"))
+#set ($user = $data.User)
+#set ($attributes = $scarabR.ValidIssueListAttributes)
+#set ($maxNum = $attributes.size())
+#set ($usedefaults = $data.Parameters.getString("usedefaults",""))
+#set ($search = $scarabR.PopulatedSearch)
+#set ($xMITSearch = $search.isXMITSearch())
+#if (!$xMITSearch)
+  #set ($module = $search.Module)
+  #set ($issueType = $search.IssueType)
+#end
+
+<form action="$action" method="post">
+<input type="hidden" name="user_id" value="$user.UserId" />
+<input type="hidden" name="module_id" value="$scarabR.CurrentModule.ModuleId" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="IssueList.vm" />
+<input type="hidden" name="searchType" value=$data.Parameters.getString("searchType", "custom") />
+
+<div class="functnbar">
+  ##<input type="submit" value="$l10n.ResetToDefault"  name="eventSubmit_doUsedefaults" />&#160;
+  <input type="submit" value="$l10n.Done" name="eventSubmit_doSave" />&#160;
+  <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
+</div>
+
+<h3>$l10n.Attributes</h3>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+ <tr>
+  <th>$l10n.Name</th>
+  <th>$l10n.ColumnSequence</th>
+ </tr>
+
+ #foreach ($attribute in $attributes)
+  #set ($userAttribute = $user.getRModuleUserAttribute($attribute))
+  #set ($order = 0)
+  #foreach ($moduleUserAttribute in $scarabR.RModuleUserAttributes)
+   #if ($attribute.Name.equals($moduleUserAttribute.Attribute.Name))
+    #set ($order = $moduleUserAttribute.Order)
+   #end
+  #end
+
+  <tr class="a">
+  #if ($xMITSearch)
+   <td>$attribute.Name</td>
+  #else
+   <td>$module.getRModuleAttribute($attribute, $issueType).DisplayValue</td>
+  #end
+   <td>
+      <input type="hidden"  name="attid" value="$attribute.AttributeId" />
+      <select name="attorder" size="1">
+          <option value="hidden">$l10n.NotShown</option>
+        #foreach ($i in [1..$maxNum])
+          <option value="$i" #if($i==$order)selected="selected"#end>$i</option>
+        #end
+      </select>
+   </td>
+  </tr>
+ #end
+</table>
+
+
+<div class="functnbar2">
+<!--  <input type="submit" value="$l10n.ResetToDefault"  name="eventSubmit_doUsedefaults" />&#160; -->
+  <input type="submit" value="$l10n.Done" name="eventSubmit_doSave" />&#160;
+  <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
+</div>
+
+$intake.declareGroups()
+</form>
+</div>

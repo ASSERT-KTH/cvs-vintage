@@ -1,0 +1,167 @@
+<div id="wizard2" class="app">
+
+#set ($currentIssue = $scarabR.ReportingIssue)
+#set ($module = $currentIssue.Module)
+#set ($issueType = $currentIssue.IssueType)
+
+#set ($templateId = $data.Parameters.getString("templateId"))
+<form method="post" name="Report2Form" action="$link.setPage("entry,Wizard2.vm")">
+<input type="hidden" name="action" value="ReportIssue" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="entry,Wizard1.vm" />
+<input type="hidden" name="templateId" value="$!templateId" />
+
+
+<h3>$l10n.format("NewIssue", $module.getRModuleIssueType($issueType).DisplayName.toLowerCase())</h3>
+
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+#set ($dedupeAttrGroups = $module.getDedupeAttributeGroups($issueType))
+#foreach ($group in $dedupeAttrGroups)
+  #foreach ($att in $group.Attributes)
+    #set ($rma = $module.getRModuleAttribute($att, $issueType))
+    #if ($rma && $rma.Active)
+      #set ($attVal = $currentIssue.getAttributeValue($att))
+      #if (!$attVal)
+        <th>---</th>
+      #else
+        <th>$attVal.RModuleAttribute.DisplayValue</th>
+      #end
+      #end
+    #end
+#end
+</tr>
+#foreach ($group in $dedupeAttrGroups)
+#indexedRows($velocityCount)
+  #foreach ($att in $group.Attributes)
+    #set ($rma = $module.getRModuleAttribute($att, $issueType))
+    #if ($rma && $rma.Active)
+      #set ($attVal = $currentIssue.getAttributeValue($att))
+      #if (!$attVal)
+        <td>---</td>
+      #else
+        #if ($attVal.Attribute.isOptionAttribute())
+          #if ($attVal.isSet())
+             <th>$attVal.AttributeOption.Name</th>
+          #else
+            <th>---</th>
+          #end
+        #else
+          <th>$!attVal.Value</th>
+      #end
+     #end
+    #end
+  #end
+#end
+</tr>
+</table>
+
+<h3>$l10n.PossibleDuplicates</h3>
+
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+#set ($haveMultipleIssues = ($issueList.size() > 1))
+#if ($haveMultipleIssues)
+<th>$l10n.Select</th>
+#end
+<th>$l10n.IssueId</th>
+#foreach ($attrGroup in $dedupeAttrGroups)
+   #foreach ($att in $attrGroup.Attributes)
+      #set ($rma = $module.getRModuleAttribute($att, $issueType))
+      #if ($rma && $rma.Active)
+        <th>$rma.DisplayValue</th>
+      #end
+   #end
+#end
+<th>$l10n.CreationDate</th>
+
+#set ($includeClosedDate = false)
+#foreach ($issueId in $issueList)
+  #set ($issue = $scarabR.getIssue($issueId))
+  #if ($issue.ClosedDate)
+    #set ($includeClosedDate = true)
+  #end
+#end  
+
+#if ($includeClosedDate)
+  <th>$l10n.DateClosed</th>
+#end
+</tr>
+#foreach ($issueId in $issueList)
+  #set ($issue = $scarabR.getIssue($issueId))
+  #set ($issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString())
+  #indexedRows($velocityCount)
+  #set ($issueGroup = $intake.Issue.Default)
+  #if ($haveMultipleIssues)
+  <td>
+    <input type="checkbox" name="$issueGroup.Ids.Key" value="$issue.IssueId" />
+  </td>
+  #else
+    <input type="hidden" name="$issueGroup.Ids.Key" value="$issue.IssueId" />
+  #end
+  <td><strong><a href="$link.setPage("ViewIssue.vm").addPathInfo("id",$issue.UniqueId)">$issue.UniqueId</a></strong></td>
+#foreach ($attrGroup in $dedupeAttrGroups)
+   #foreach ($attr in $attrGroup.Attributes)
+      #set ($rma = $module.getRModuleAttribute($attr, $issueType))
+      #if ($rma && $rma.Active)
+       #set ($attVal = $issue.getAttributeValue($attr))
+       #if ($attVal)
+        #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
+      <td>
+        #if ($attVal.Attribute.AttributeType.ValidationKey)
+          #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
+        #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
+          #set ($field = "OptionId")
+        #else
+          #set ($field = "Value")
+        #end
+        $attVal.Value
+      </td>
+       #else
+      <td>---</td>
+       #end
+       #set ($attVal = false)
+     #end
+  #end
+#end
+<td>$format.getDate($scarabR.DateFormat, $issue.CreatedDate)</td>
+#if ($includeClosedDate)
+  <td>#if ($issue.ClosedDate)$format.getDate($scarabR.DateFormat, $issue.ClosedDate)#else&#160;#end</td>
+#end
+</tr>
+#end
+</table>
+
+## Removing until the design of voting is discussed further
+## <p><input type="submit"  name="eventSubmit_doAddvote" value="Add vote to selected" /></p>
+
+#set ($atch = $scarabR.Attachment)
+#set ($intakeAttachment = $intake.Attachment.mapTo($atch))
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+<th width="120">$l10n.Comment</th>
+<td>
+#textAreaMedium("$intakeAttachment.Data.Key" $intakeAttachment.Data)
+<p>
+<input type="submit" name="eventSubmit_doAddcomment" value="$l10n.AddCommentToSelected" />
+</p>
+</td>
+</tr>
+</table>
+</div>
+
+<div class="functnbar2">
+<input type="submit" name="eventSubmit_doGotowizard3" value="$l10n.ContinueEntry" />&#160;
+<input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" />
+</div>
+
+$intake.declareGroups()
+#set ($intakeKeys = $wizard1_intake.keys())
+#foreach ($key in $intakeKeys)
+  <input type="hidden" name="$key" value="$wizard1_intake.get($key)" />
+#end
+
+</form>
+</div>

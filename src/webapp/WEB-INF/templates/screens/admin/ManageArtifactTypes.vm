@@ -1,0 +1,114 @@
+#set ($module = $scarabR.CurrentModule)
+#set ($availableIssueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
+#set ($moreIssueTypesAvailable = false)
+#if ($availableIssueTypes && !$availableIssueTypes.isEmpty())
+    #set ($moreIssueTypesAvailable = true)
+#end
+<div class="app" id="div2-1-4-0">
+
+<form method="post" action="$link.setPage("admin,ManageArtifactTypes.vm")">
+<input type="hidden" name="action" value="admin.ManageArtifactTypes" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,ArtifactTypeSelect.vm" />
+
+## SORTING
+#set ($sortColumn = $data.Parameters.getString("sortColumn",""))
+#set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
+#if (!$sortColumn || $sortColumn.length() == 0)
+   #set ($sortColumn = "sequence")
+#end
+#if (!$sortPolarity || $sortPolarity.length() == 0)
+   #set ($sortPolarity = "asc")
+#end
+
+## PAGINATION
+## if results exceed limit, get subset list
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
+#set ($pageNum = $data.Parameters.getInt("pageNum",1))
+<input type="hidden" name="pageNum" value="$pageNum" />
+
+#set ($rmits = $module.getRModuleIssueTypes($sortColumn, $sortPolarity))
+#set ($listSize = $rmits.size())
+
+#if ($resultsPerPage > 0 && $rmits.size() > $resultsPerPage)
+ #set ($paginated = "true")
+ #set ($pagList = $scarabR.getPaginatedList($rmits, $pageNum, $resultsPerPage))
+ ##  Pass display values from previous pages so can determine if there are
+ ## More than 5 (the limit)
+ #foreach ($rmit in $rmits)
+   #if (!$pagList.contains($rmit))
+     #set ($rmitGroup = $intake.RModuleIssueType.mapTo($rmit) )
+     <input type="hidden" name="$rmitGroup.Display.Key" value="$rmitGroup.Display.Value" />
+   #end
+ #end
+ #if ($pagList)
+   #set ($rmits = $pagList)
+ #end
+#end
+
+#if ($paginated)
+  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
+#end
+
+<h3>$l10n.IssueTypes</h3>
+
+#if (!$rmits || $rmits.isEmpty())
+  <p><em>$l10n.NoIssueTypesInModule</em></p>
+  #if ($moreIssueTypesAvailable)
+    <div class="functnbar3"><input type="submit" value="$l10n.AddNew"  
+        name="eventSubmit_doGotoothertemplate"/></div>
+  #end
+#else
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th>$l10n.Select</th>
+<th>#sort ("name" "$l10n.Name")</th>
+<th>$l10n.Active</th>
+<th>$l10n.ShowInTopNav</th>
+<th>#sort ("sequence" "$l10n.Sequence")</th>
+</tr>
+
+#foreach ($rmit in $rmits)
+  #set ($rmitGroup = $intake.RModuleIssueType.mapTo($rmit) )
+  #indexedRows($velocityCount)
+  <td><input type="checkbox" name="delete_${rmit.IssueTypeId}"/></td>
+  #if ($rmit.DisplayName)
+    #set ($label = $rmit.DisplayName)
+  #else
+    #set ($label = $rmit.IssueType.Name)
+  #end
+
+  <td>#fieldErrorMsg($rmitGroup.DisplayName "")$link.setPage("admin,ArtifactTypeEdit.vm").addPathInfo("issueTypeId", $rmit.IssueTypeId).setLabel("$label")</td>
+  <td>#booleanCheckbox($rmitGroup.Active)</td>
+  <td>#booleanCheckbox($rmitGroup.Display)</td>
+  <td>
+    #numericSelect($rmitGroup.Order.Key 1 $listSize  $rmit.Order 1)
+  </td>
+  </tr>
+#end
+</table>
+
+<div class="functnbar3">
+#if ($rmits && !$rmits.isEmpty())
+  <input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
+#end
+#if ($moreIssueTypesAvailable)
+  <input type="submit" value="$l10n.AddNew" 
+      name="eventSubmit_doGotoothertemplate" />&#160;
+#end
+#if ($rmits && !$rmits.isEmpty())
+  <input type="submit" value="$l10n.RemoveSelected" 
+      name="eventSubmit_doDeletemoduleissuetype" />&#160;
+ ## <input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
+#end
+</div>
+
+#end
+
+#if ($paginated)
+  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
+#end
+
+$intake.declareGroups()
+</form>
+</div>

@@ -1,0 +1,138 @@
+<h3>$l10n.StaticIssueInfo</h3>
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+#if ($currentIssue.CreatedDate)
+<tr>
+<th>$l10n.DateCommitted</th>
+<td>$format.getDate($scarabR.DateFormat, $currentIssue.CreatedDate)</td>
+</tr>
+#end
+#if ($currentIssue.ModifiedDate)
+<tr>
+<th>$l10n.LastModified</th>
+<td>$format.getDate($scarabR.DateFormat, $currentIssue.ModifiedDate)</td>
+</tr>
+#end
+</table>
+</div>
+<div class="axial">
+#foreach ($group in $issueType.getAttributeGroups($module, true))
+  #if (!$group.Attributes.isEmpty())
+    <h3>$group.Name</h3>
+    <table cellpadding="3" cellspacing="2" border="0">
+      #foreach ($att in $group.Attributes)
+        #set ($rma = $module.getRModuleAttribute($att, $issueType))
+        #if ($rma.Active)
+            #set ($attVal = $attrValues.get($att.getName().toUpperCase()))
+            #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
+            #if ($att.AttributeType.ValidationKey)
+               #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
+            #elseif ($att.isOptionAttribute())
+               #set ($field = "OptionId")
+            #else
+              #set ($field = "Value")
+            #end
+            #if ($canEdit)
+                 <tr>
+                  <th> #if ($rma.getRequired())*#end 
+                  $rma.DisplayValue</th>
+                  <td>
+                #if ($att.isOptionAttribute())
+                  #attrValueLeafSelect ($attVal $field "" false)
+                  #attrValueErrorMsg ($attVal $field)
+                #else
+                  #attrValueErrorMsg($attVal "Value")
+                  #if ($att.AttributeType.Name == "long-string")
+                     #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
+                  #else
+                    <input name= "$attrInput.Value.Key"
+                      value="$!attrInput.Value" size="70" type="text" />
+                  #end
+                #end
+                  </td>
+                 </tr>
+            #elseif ($attVal.isSet())
+               #set ($display = true)
+               #set ($isOptionAttr = $attVal.Attribute.isOptionAttribute())
+               #if ($isOptionAttr)
+                 #if ($attVal.AttributeOption.Deleted.toString().equals("true"))
+                     #set ($display = false)
+                 #end
+               #end
+               #if ($display)
+                 <tr>
+                   <th>$attVal.RModuleAttribute.DisplayValue</th>
+                   <td>
+                   #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
+                   
+                   ## Output the value of the attribute. How this is done
+                   ## depends on the attribute type.
+                   #if ($isOptionAttr)
+                     #if ($module.getRModuleOption($attVal.AttributeOption, $issueType).Active)
+                       $!module.getRModuleOption($attVal.AttributeOption, $issueType).DisplayValue
+                     #else
+                       [I]$!module.getRModuleOption($attVal.AttributeOption, $issueType).DisplayValue
+                     #end
+                   #elseif ($att.AttributeType.Name == "long-string")
+                     ## Convert the raw text to formatted HTML before
+                     ## displaying it.
+                     $!scarabG.textToHTML($attrInput.Value.toString(), $link, $scarabR.CurrentModule)
+                   #else
+                     ## Just output the raw value directly.
+                     $!attrInput.Value
+                   #end
+                   </td>
+                 </tr>
+              #end
+            #end
+	#else
+	    #set ($allAttrValues = $currentIssue.getModuleAttributeValuesMap(false))		
+            #set ($attVal = $allAttrValues.get($att.getName().toUpperCase()))
+            #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
+ 	    #set ($isOptionAttr = $attVal.Attribute.isOptionAttribute())
+	    #if ($attVal.isSet() && !$attrInput.Value.toString().trim().equals(""))
+            	   <tr>
+              	     <th> 
+                     [I] $rma.DisplayValue</th>
+                     <td>
+                     #if ($isOptionAttr)
+			#if ($module.getRModuleOption($attVal.AttributeOption, $issueType).Active)
+                       	   $!module.getRModuleOption($attVal.AttributeOption, $issueType).DisplayValue
+			#else
+                       	   [I]$!module.getRModuleOption($attVal.AttributeOption, $issueType).DisplayValue
+			#end
+                     #else
+                       $!attrInput.Value
+                     #end 
+                     </td>
+                   </tr>
+	    #end
+        #end 
+      #end
+</table>
+  #end
+#end
+</div>
+ 
+#if ($canEdit)
+<h3>$l10n.SaveChanges</h3>
+<div class="axial">
+   #set ($attCommentGroup = $intake.Attachment.setKey("attCommentKey$currentIssue.QueryKey"))
+
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+<th>* $l10n.ReasonForChange</th>
+<td>$l10n.EnterReason
+   #fieldErrorMsg($attCommentGroup.Data "")
+   
+   <p>#textAreaMedium("$attCommentGroup.Data.Key" $attCommentGroup.Data.Value)</p>
+   <input type="hidden" name="$attCommentGroup.Name.Key" value="comment" />
+</td>
+</tr>
+</table>
+</div>
+
+<div class="functnbar3">
+<input type="submit" value="$l10n.Done" name="eventSubmit_doSubmitattributes" />
+</div>
+#end

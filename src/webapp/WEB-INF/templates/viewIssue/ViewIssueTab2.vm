@@ -1,0 +1,60 @@
+### PERSONNEL
+<h3>$l10n.Personnel</h3>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+  <th>$l10n.Name</th>
+  <th>$l10n.Username</th>
+  <th>$l10n.Association</th>
+</tr>
+
+<tr class="a">
+  #set ($createdUser = $currentIssue.CreatedBy)
+  <td><a href="mailTo:$createdUser.Email">$!createdUser.Name</a></td>
+  <td>$createdUser.UserName</td>
+  <td>$l10n.CreatedBy</td>
+</tr>
+
+#set ($userAttVals = $currentIssue.UserAttributeValues)
+   #foreach ($attVal in $userAttVals)
+      #indexedRows($velocityCount)
+      #set ($userId = $attVal.UserId)
+      #set ($assignedUser = $scarabR.getUser($userId))
+
+      <td>
+        <a href="mailto:$assignedUser.Email">$!assignedUser.Name</a>
+        #if (!$assignedUser.hasPermission($attVal.Attribute.Permission, $module))
+            <strong>$l10n.ParenDisabled</strong>
+        #end
+      </td>
+      <td>$assignedUser.UserName</td>
+      <td>$scarabR.getAttribute($attVal.AttributeId).Name </td>
+      </tr>
+   #end
+#* Commenting out to implement simple-assign, later
+  #if ($userAttVals.size() % 2 > 0)
+   <tr class="a">
+  #else
+   <tr class="b">
+  #end
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td><input type="text" name="add_user" value="" /></td>
+    <td><select name="user_attr_id" size="">
+    #foreach ($selectUserAttr in $module.getUserAttributes($issueType))
+      <option value="$selectUserAttr.AttributeId">$selectUserAttr.Name:</option>
+    #end
+   </select>
+   </tr>
+*#
+
+</table>
+
+#if ($canEdit)
+<div class="functnbar3">
+##<input type="submit" value="$l10n.AddNew" name="eventSubmit_doAssign" />&#160;
+##<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doUnassign" />&#160;
+#if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
+<input type="submit" value="$l10n.EditList" name="eventSubmit_doEditassignees" />
+#end
+</div>
+#end

@@ -1,0 +1,24 @@
+  #set ($module = $scarabR.CurrentModule)
+  #if ($module.allowsNewIssues())
+    <div>$link.setPage("home,EnterNew.vm").setLabel($l10n.EnterNewIssue).addPathInfo("eventSubmit_doStart", "foo").setAction("ReportIssue")</div>
+    #set ($lastEntered = $scarabR.LastEnteredIssueTypeOrTemplate)
+    #if ($lastEntered)
+      #if ($lastEntered.isTemplate())
+        #set ($value = $lastEntered.IssueId)
+        #set ($parameterKey = "templateId")
+        #set ($issueType = $lastEntered.IssueType.IssueTypeForTemplateType)
+      #else
+        #set ($value = $lastEntered.IssueTypeId)
+        #set ($parameterKey = "curit")
+        #set ($issueType = $lastEntered)
+      #end
+    <div>$link.setPage($scarabR.getNextEntryTemplate($issueType)).setLabel("$l10n.format('EnterNewIssueType', $module.getRModuleIssueType($issueType).DisplayName.toLowerCase())").addPathInfo($parameterKey, $value).addPathInfo("eventSubmit_doStart", "foo").setAction("ReportIssue")</div>
+    #end
+  #end
+  #if (!$module.isGlobalModule())
+    <div>$link.setPage("QueryList.vm").setLabel("$l10n.Queries")</div>
+    #if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ENTER, $module))
+    <div>$link.setPage("TemplateList.vm").setLabel("$l10n.EditTemplates")</div>
+    #end
+    <div>$link.setPage("reports,ReportList.vm").setLabel("$l10n.Reports")</div>
+  #end

@@ -1,0 +1,63 @@
+<div class="docs" id="userissuemodify"> 
+  <div id="toc"> 
+    <ul>
+      <li>Scarab Help 
+        <ul>
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a> </li>
+          <li>Managing Issues 
+            <ul>
+              <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.Overview</a> 
+ #if ($scarabG.templateExists("help/UserIssueImportExport.vm"))
+              <li><a href="$link.setPage("help,UserIssueImportExport.vm")">$l10n.XMLImportExport</a></li>
+ #end
+              <li><a href="$link.setPage("help,UserIssueEntry.vm")">$l10n.EnteringIssues </a> </li>
+              <li><a href="$link.setPage("help,UserIssueTemplates.vm")">$l10n.UsingTemplates</a></li>
+              <li><strong>$l10n.ModifyingIssues</strong> 
+                <ul>
+                  <li><a href="#manage">$l10n.ManagingInformation</a></li>
+                  <li><a href="#users">$l10n.AssociatingUsers</a></li>
+                  <li><a href="#move">$l10n.MovingIssues</a></li>
+                </ul>
+              </li>
+            </ul>
+          
+          <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase </a></li>
+          <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a> </li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.BestPractices</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <h3><a name="top" id="top">$l10n.ModifyingIssues</a></h3>
+  <p>$l10n.ModifyP1</p>
+
+<ul>
+  <li>$l10n.ModifyP2</li>
+  <li>$l10n.ModifyP3</li>
+  <li>$l10n.ModifyP4</li>
+</ul>
+
+  <h3><strong><a name="manage" id="manage">$l10n.ManagingIssueInfo</a></strong></h3>
+  <p>$l10n.ManagingIssueInfoP1</p>
+  <p><strong>$l10n.Dependencies</strong></p>
+  <p>$l10n.DependenciesP1 <a href="$link.setPage("help,UserIssueEntry.vm")#dependencies">$l10n.Dependencies</a>.</p>
+  <h3><a name="users" id="users">$l10n.AssociatingUsers</a></h3>
+  
+      <p>$l10n.AssociatingUsersP1</p>
+      <p>$l10n.AssociatingUsersP2<strong>$l10n.Assign</strong> $l10n.AssociatingUsersP2S1 <strong>$l10n.EditList</strong> $l10n.AssociatingUsersP2S2 <strong>$l10n.Assign</strong> $l10n.AssociatingUsersP2S3</p>
+      <p><strong>$l10n.AssociatingUsersP3Head</strong> $l10n.AssociatingUsersP3 <strong>$l10n.AssociateSelectedUserWithIssue</strong> $l10n.IssueEntryP26S2</p>
+      
+  <p><strong>$l10n.AssociatingUsersP4Head</strong> $l10n.AssociatingUsersP4 <strong>$l10n.RemoveSelected</strong> $l10n.IssueEntryP26S2</p>
+  <p><strong>$l10n.AssociatingUsersP5Head</strong> $l10n.AssociatingUsersP5 <strong>$l10n.UpdateSelected</strong> $l10n.IssueEntryP26S2</p>
+      <p>$l10n.AssociatingUsersP6</p>
+    
+    <h3><a name="move" id="move">$l10n.MovingIssues</a></h3>
+    <p>$l10n.MovingIssuesP1 $l10n.ToAnotherModule $l10n.MovingIssuesP1S2 $l10n.MovingIssuesP1S3 $l10n.MovingIssuesP1S4</p>
+    <p>$l10n.MovingIssuesP2 <a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase</a> $l10n.MovingIssuesP2S2 <strong>$l10n.MoveAll/$l10n.CopyAll</strong> $l10n.MovingIssuesP2S3 <strong>$l10n.ProcessResults</strong> $l10n.MovingIssuesP2S4 <strong>$l10n.MoveSelected/$l10n.CopySelected</strong> $l10n.MovingIssuesP2S3 <strong>$l10n.ProcessResults</strong> $l10n.MovingIssuesP2S5</p>
+    <p>$l10n.MovingIssuesP3 <strong>$l10n.ChooseCopyMoveDestination</strong> $l10n.MovingIssuesP3S2 <strong>$l10n.MapIssueAttributes</strong> $l10n.IssueEntryP26S2</p>
+    <p>$l10n.MovingIssuesP1S4</p>
+    
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div> 
+  </div>

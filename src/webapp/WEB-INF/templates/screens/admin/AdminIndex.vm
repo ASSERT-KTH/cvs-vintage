@@ -1,0 +1,79 @@
+#**
+@author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+@author <a href="mailto:jon@collab.net">Jon Stevens</a>
+@version $Id: AdminIndex.vm,v 1.27 2003/03/20 00:57:33 jon Exp $
+*#
+
+<div id="adminIndex" class="app">
+
+#if ($link.isAllowed("admin,GlobalArtifactTypeShow.vm") || $link.isAllowed("admin,GlobalAttributeShow.vm"))
+<h3>$l10n.GlobalData</h3>
+<ul>
+#if ($link.isAllowed("admin,GlobalArtifactTypeShow.vm"))
+ <li>$link.setPage("admin,GlobalArtifactTypeShow.vm").setLabel("$l10n.GlobalIssueTypes")</li>
+#end
+#if ($link.isAllowed("admin,GlobalAttributeShow.vm"))
+ <li>$link.setPage("admin,GlobalAttributeShow.vm").setLabel("$l10n.GlobalAttributes")</li>
+#end
+#if ($link.isAllowed("admin,UpdateSearchIndex.vm"))
+ <li>$link.setPage("admin,UpdateSearchIndex.vm").setLabel("$l10n.UpdateSearchIndex")</li>
+#end
+#if ($link.isAllowed("admin,SetInfoMessage.vm"))
+ <li>$link.setPage("admin,SetInfoMessage.vm").setLabel("$l10n.SetInfoMessage")</li>
+#end
+</ul>
+#end
+
+#if ($link.isAllowed("admin,Approval.vm"))
+<h3>$l10n.Approve</h3>
+<ul>
+ <li>$link.setPage("admin,Approval.vm").setLabel("$l10n.Approve")</li>
+</ul>
+#end
+
+#if ($link.isAllowed("admin,ManageArtifactTypes.vm") || $link.isAllowed("admin,ManageModules.vm") || $link.isAllowed("admin,XMLExportIssues.vm"))
+<h3>$l10n.Modules</h3>
+<ul>
+#if ($link.isAllowed("admin,ManageArtifactTypes.vm"))
+ <li>$link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.AdminManageIssueTypes")</li>
+#end
+#if ($link.isAllowed("admin,ManageModules.vm"))
+ <li>$link.setPage("admin,ManageModules.vm").setLabel("$l10n.ManageModules")</li>
+#end
+#if ($link.isAllowed("admin,XMLImportIssues.vm"))
+ <li>$link.setPage("admin,XMLImportIssues.vm").setLabel("$l10n.XMLImport")</li>
+#end
+#if ($link.isAllowed("admin,XMLExportIssues.vm"))
+ <li>$link.setPage("admin,XMLExportIssues.vm").setLabel("$l10n.XMLExport")</li>
+#end
+</ul>
+#end
+
+#if ($link.isAllowed("admin,ManageRoles.vm") || $link.isAllowed("admin,AddRole.vm"))
+<h3>$l10n.Roles</h3>
+<ul>
+#if ($link.isAllowed("admin,ManageRoles.vm"))
+ <li>$link.setPage("admin,ManageRoles.vm").setLabel("$l10n.RoleList")</li>
+#end
+#if ($link.isAllowed("admin,AddRole.vm"))
+ <li>$link.setPage("admin,AddRole.vm").setLabel("$l10n.AddNewRole")</li>
+#end
+</ul>
+#end
+
+#if ($link.isAllowed("admin,ManageUserSearch.vm") || $link.isAllowed("admin,AddUser.vm") || $link.isAllowed("ChangePassword.vm"))
+<h3>$l10n.Users</h3>
+<ul>
+#if ($link.isAllowed("admin,ManageUserSearch.vm"))
+ <li>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setLabel("$l10n.UserManagement")</li>
+#end
+#if ($link.isAllowed("admin,AddUser.vm"))
+ <li>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("$l10n.AddNewUser")</li>
+#end
+#if ($link.isAllowed("ChangePassword.vm"))
+ <li>$link.setPage("ChangePassword.vm").setLabel("$l10n.ChangePassword")</li>
+#end
+</ul>
+#end
+
+</div>

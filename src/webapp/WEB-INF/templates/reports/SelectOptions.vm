@@ -1,0 +1,23 @@
+$data.User.setCurrentMITList($report.getMITList())
+#set ($search = $scarabR.NewSearch)
+#if ($selectedHeading)
+  $report.populateSearch($search, $selectedHeading)
+#end
+
+<h3>$l10n.format("SelectOptionsHeader", $axisIndex)</h3>
+<div>
+
+#if ( ($selectedHeading.ReportGroups && !$selectedHeading.ReportGroups.isEmpty()) || ($selectedHeading.ReportOptionAttributes && !$selectedHeading.ReportOptionAttributes.isEmpty()) ) 
+<div class="functnbar"><input type="submit" name="eventSubmit_doGotoEditGroups"
+        value="$l10n.AddEditGroups"></div>
+#end
+
+#queryAttributesSection($search true 4)
+
+<div class="functnbar3">
+  <input type="submit" name="eventSubmit_doAddoptions" value="$l10n.Update" />
+</div>
+
+#reportFunctionBar("functnbar2" $report)
+
+</div>

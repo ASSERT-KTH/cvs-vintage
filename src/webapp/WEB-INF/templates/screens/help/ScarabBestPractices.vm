@@ -1,0 +1,32 @@
+<div class="docs" id="scarabbestpractices"> 
+  <div id="toc"> 
+      <ul>
+      <li>$l10n.ScarabHelp 
+        <ul>
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
+          <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a></li>
+	  <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase</a></li>
+	  <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a> </li>
+          <li><strong>$l10n.ScarabGuidelines</strong>
+            <ul>
+              <li><a href="#sharing">$l10n.ProjectKnowledge</a></li>
+              <li><a href="#health">$l10n.TrackingProject</a></li>
+            </ul>
+          </li>
+         <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+         <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <h3><a name="top" id="top">$l10n.ScarabGuidelines</a></h3>
+
+  <p>$l10n.BestP1</p>
+  <h3><a name="sharing" id="sharing">$l10n.ProjectKnowledge</a></h3>
+  <p>$l10n.BestP2</p>
+
+  <h3><a name="health" id="health">$l10n.TrackingProject</a></h3>
+  <p>$l10n.BestP3</p>
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div>
+</div>

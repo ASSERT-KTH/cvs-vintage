@@ -1,0 +1,31 @@
+#if ($action.equals("copy"))
+  #set ($actionChoice = 1)
+#else
+  #set ($actionChoice = 2)
+#end
+
+#set ($msgArgs = [$issue.UniqueId, $actionChoice, $oldModule.Name, $issue.Module.Name, $issue.IssueType.Name, $issue.ModifiedBy.UserName])
+$l10n.format("IssueMoved", $msgArgs) 
+
+$l10n.YouCanViewIssue:
+
+    $link.getIssueIdLink($issue)
+
+$l10n.Details:
+---------------------------------------------------------------------
+
+#if ($reason && $reason.length() > 0)
+$l10n.Reason:
+$reason
+#end
+
+#set ($attachmentData = $attachment.Data)
+#if ($attachmentData && $attachmentData.length() > 0)
+$l10n.Comment:
+$attachmentData
+#end
+---------------------------------------------------------------------
+$l10n.EmailFooterA
+$l10n.EmailFooterB
+$l10n.EmailFooterC
+$l10n.EmailFooterD

@@ -1,0 +1,191 @@
+#set ($issueType = $scarabR.IssueType)
+#set ($itGroup = $intake.IssueType.mapTo($issueType))
+#set ($immutable = $issueType.SystemDefined)
+#if($immutable)
+<p class="infomark"><strong>$l10n.SystemSpecifiedIssueType</strong></p>
+#end
+
+<div class="app" id="div2-1-4-0">
+
+#macro (GlobalArtifactTypeEdit $var)
+<div class="functnbar$var">
+#if (!$createNew && !$immutable)
+<input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />&#160;
+#end
+<input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
+</div>
+#end
+
+
+#if ($issueType.IssueTypeId)
+   #set ($createNew = false)
+#else
+   #set ($createNew = true)
+#end
+
+<form method="post" action="$link.setPage("admin,GlobalArtifactTypeEdit.vm")">
+<input type="hidden" name="action" value="admin.GlobalArtifactTypeCreate" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalUserAttributeSelect.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,GlobalArtifactTypeShow.vm" />
+#if (!$createNew)
+  <input type="hidden" name="issueTypeId" value="$issueType.IssueTypeId" />
+#end
+  
+
+#GlobalArtifactTypeEdit("")
+
+<h3>$l10n.IssueTypeDetails</h3>
+<div class="axial">
+  <table border="0" cellspacing="2" cellpadding="3">
+    <tr>
+    <th>* $l10n.Name</th>
+    <td>
+       #fieldErrorMsg($itGroup.Name "")  
+       <input type="text" size="25" name="$itGroup.Name.Key" value="$!itGroup.Name.Value"/>
+    </td>
+    </tr>
+    <tr>
+    <th>$l10n.Description</th>
+    <td>
+       #fieldErrorMsg($itGroup.Description "")  
+       #textAreaMedium("$itGroup.Description.Key" $itGroup.Description.Value)</td>
+    </tr>
+    <tr>
+    <th>$l10n.Locked</th>
+    <td>
+       #fieldErrorMsg($itGroup.Locked "")  
+       #booleanCheckbox ($itGroup.Locked)
+    </td>
+    </tr>
+    <tr>
+    <th>$l10n.Default</th>
+    <td>
+       #fieldErrorMsg($itGroup.Isdefault "")  
+       #booleanCheckbox ($itGroup.Isdefault)
+    </td>
+    </tr>
+    <tr>
+    <th>$l10n.Deleted</th>
+    <td>
+       #fieldErrorMsg($itGroup.Deleted "")  
+       #booleanCheckbox ($itGroup.Deleted)
+    </td>
+    </tr>
+  </table>
+</div>
+#if (!$immutable)
+<div class="functnbar3">
+      <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveinfo" />&#160;
+</div>
+#end
+#asterisk()
+
+#if ($createNew.equals(false))
+## LIST GROUPS
+#set ($groups = $issueType.getAttributeGroups(false))
+
+<h3>$l10n.AttributeGroups</h3>
+#set ($maxNum = $groups.size())
+#set ($showDuplicateCheck = ($maxNum >= 2))
+#if ($showDuplicateCheck)
+## The duplicate check gives us an extra sequence to account for.
+#set ($maxNum = $maxNum + 1)
+#end
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+#if (!$groups.isEmpty())
+<tr>
+<th nowrap="nowrap">$l10n.Select</th>
+<th>$l10n.Name</th>
+<th>$l10n.Active</th>
+<th>$l10n.Sequence</th>
+</tr>
+
+#set ($issueDedupeSequence = $issueType.DedupeSequence)
+#foreach ($group in $groups)
+ #if ($velocityCount == $issueDedupeSequence && $showDuplicateCheck)
+ <tr>
+   <td>&#160;</td>
+   <td>$l10n.DuplicateCheck</td>
+   <td>#booleanCheckbox ($itGroup.Dedupe)</td>
+   <td>#numericSelect("dupe_order" 2 $maxNum $issueDedupeSequence 1)</td>
+ </tr>
+ #end
+  #set ($agGroup = $intake.AttributeGroup.mapTo($group))
+  #indexedRows($velocityCount)
+  <td><input type="checkbox" name="group_action_$group.AttributeGroupId" /></td>
+  <td>$link.setPage("admin,GlobalAttributeGroupEdit.vm").addPathInfo("groupid", $group.AttributeGroupId).addPathInfo("issueTypeId", $issueType.IssueTypeId).setLabel("$group.Name")</td>
+  <td>#booleanCheckbox ($agGroup.Active)</td>
+  <td>#numericSelect($agGroup.Order.Key 1 $maxNum $group.Order 1)</td>
+ </tr>
+#end
+#if ($showDuplicateCheck && $issueDedupeSequence == $maxNum)
+ <tr>
+  <td>&#160;</td>
+  <td>$l10n.DuplicateCheck</td>
+  <td>#booleanCheckbox ($itGroup.Dedupe)</td>
+  <td>#numericSelect("dupe_order" 2 $maxNum $issueDedupeSequence 1)</td>
+ </tr>
+#end
+#else
+<p><em>$l10n.NoAttributeGroups</em></p>
+#end
+</table>
+#if (!$immutable)
+<div class="functnbar3">
+<input type="submit" value="$l10n.AddNew"  name="eventSubmit_doCreatenewgroup" />&#160;
+#if ($groups.size() > 0)
+<input type="submit" value="$l10n.Save"  name="eventSubmit_doSavegroups" />&#160;
+<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletegroup" />&#160;
+#end
+</div>
+#end
+
+<h3>$l10n.UserAttributes</h3>
+#set ($userAttrs = $issueType.getUserAttributes(false))
+#if ($userAttrs.isEmpty() && !$immutable)
+  <p><em>$l10n.NoUserAttributesForType</em></p>
+
+<div class="functnbar3">
+<input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />&#160;
+</div>
+
+#else
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th nowrap="nowrap">$l10n.Select</th>
+<th>$l10n.Name</th>
+<th>$l10n.Active</th>
+<th>$l10n.Locked</th>
+<th>$l10n.Sequence</th>
+</tr>
+
+#foreach ($userAttr in $userAttrs)
+   #set ($ria = $issueType.getRIssueTypeAttribute($userAttr))
+   #set ($riaGroup = $intake.RIssueTypeAttribute.mapTo($ria))
+   #set ($maxNum = $userAttrs.size())
+ #indexedRows($velocityCount)
+ <td><input type="checkbox" name="att_delete_$userAttr.AttributeId" /></td>
+ <td>$link.setPage("admin,IssueTypeAttributeEdit.vm").addPathInfo("att_0id", "$userAttr.AttributeId").addPathInfo("issueTypeId", $issueType.IssueTypeId).setLabel("$userAttr.Name").addPathInfo("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalArtifactTypeEdit.vm")</td>
+<td>#booleanCheckbox ($riaGroup.Active)</td>
+<td>#booleanCheckbox ($riaGroup.Locked)</td>
+<td>#numericSelect( "$riaGroup.Order.Key" 1 $maxNum $riaGroup.Order.Value 1 )</td>
+</tr>
+#end
+
+</table>
+#if (!$immutable)
+<div class="functnbar3">
+<input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveuserattributes" />&#160;
+<input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />&#160;
+<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteuserattribute" />&#160;
+##<input type="submit" value="$l10n.Resort" name="eventSubmit_doSaveuserattributes" />
+</div>
+#end
+#end
+
+#end
+#GlobalArtifactTypeEdit("2")
+
+$intake.declareGroups()
+</form>
+</div>

@@ -1,0 +1,26 @@
+<div class="app" id="advancedquery">
+#set ($user = $data.User)
+$user.setHomePage('query')
+#set ($mitlist = $user.CurrentMITList)
+#if ($mitlist)
+<form action="$link.setPage("AdvancedQuery.vm")" method="post">
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="IssueList.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="UserList.vm" />
+<input type="hidden" name="action" value="Search" />
+<input type="hidden" name="searchType" value="advanced" />
+<input type="hidden" name="pageNum" value="1" />
+
+#if ($mitlist.isSingleModuleIssueType())
+<div align="right"><a href="$link.setPage("Search.vm").addPathInfo("action", "Search").addPathInfo("eventSubmit_doSetquerytarget", "foo")">$l10n.CustomQuery</a></div>
+#end
+#advancedQueryFunctionBar('functnbar')
+#advancedQuery(true)
+#advancedQueryFunctionBar('functnbar2')
+
+$intake.declareGroups()
+</form>
+
+#else
+<p><em>$l10n.NoIssueTypesInModule</em></p>
+#end
+</div>

@@ -1,0 +1,349 @@
+#macro (showMITList $header $user $showButton)
+<h3>$header</h3>
+<div class="colbar">
+#if ($user.CurrentMITList)
+  #set ($list = $user.CurrentMITList)
+  #if ($list.isModifiable())
+    #foreach ($item in $list.ExpandedMITListItems)
+      <div>$item.Module.Name $item.Module.getRModuleIssueType($item.IssueType).DisplayName</div>
+    #end
+  #else
+    <div>$list.Name</div>
+  #end
+#else
+  <div>$l10n.NoIssueTypeList</div>
+#end
+</div>
+## we only show the edit link, if we are editing a saved query.
+## It is easier to have the user use the back button if they are just creating
+## a new query, otherwise we need to keep track of a lot of info. 
+#if ($showButton)
+    <div class="functnbar3">
+    <input type="submit" value="$l10n.EditList" 
+        name="eventSubmit_doRedirecttocrossmodulelist" />
+    </div>
+#end
+#end
+
+
+#macro (createMITList $event $buttonName $user $screenTemplate $displayText)
+
+<p>$l10n.format("ToQuery", $buttonName)</p>
+
+#set ($mitList = $user.CurrentMITList)
+#set ($editingList = ($mitList && !$mitList.isEmpty()))
+#if ($editingList)
+<div class="functnbar">
+ <input type="submit" name="eventSubmit_do$event" value="$buttonName" />
+</div>
+
+<h3>$l10n.PreviouslySelectedIssueTypes</h3>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+  <tr>
+    <th nowrap="nowrap">$l10n.Select</th>
+    <th>$l10n.CapModule</th>
+    <th>$l10n.IssueType</th>
+    <th>$l10n.NumberOfIssues</th>
+    <th>$l10n.Description</th>
+  </tr>
+ #foreach ($item in $mitList.MITListItems)
+  #if (!$item.IssueType.Deleted)
+   #indexedRows($velocityCount)
+    <td>
+    <input type="checkbox" name="mitlistitem" value="$item.QueryKey" />
+    </td>
+    <td>$item.Module.Name</td>
+    <td>$item.Module.getRModuleIssueType($item.IssueType).DisplayName</td>
+    #set ($issuecount = $item.getIssueCount($data.User))
+    <td>#if ($issuecount >= 0)$issuecount #else $l10n.Unavailable #end</td>
+    <td>$item.IssueType.Description</td>
+   </tr>
+  #end
+ #end
+</table>
+
+ <div class="functnbar3">
+  <input type="submit" name="eventSubmit_doStartover"
+     value="$l10n.RemoveAll" />&nbsp;
+  <input type="submit" name="eventSubmit_doRemoveitemsfromlist"
+     value="$l10n.RemoveSelected" />&nbsp;
+  <input type="submit" name="eventSubmit_doGotosavelist" value="$l10n.Save" />
+ </div>
+#end
+
+<a name="add"></a>
+
+#set ($currentModule = $scarabR.CurrentModule)
+#set ($currentRmits = $user.getUnusedRModuleIssueTypes($currentModule))
+#set ($savedLists = $user.MITLists)
+#set ($isMoreThanOne = $currentRmits.size() > 1)
+#set ($atLeastOneRMIT = $currentRmits && !$currentRmits.isEmpty())
+#set ($atLeastOneSaved = $savedLists && !$savedLists.isEmpty())
+#set ($rowIndex = 1)
+
+<h3>$l10n.IssueTypesInModuleAndSavedLists</h3>
+<div class="colbar">
+
+#set ($showOtherModuleSection = $user.isShowOtherModulesInIssueTypeList())
+#if ($showOtherModuleSection)
+$l10n.CurrentModuleTypesIntroShown
+#else
+$l10n.format('CurrentModuleTypesIntroHidden', $link.setPage($screenTemplate).setAction("DefineXModuleList").addPathInfo("eventSubmit_doToggleOtherModules", "show").toString())
+#end
+
+  <p>
+  #if ($atLeastOneSaved)
+  <select name="list_id" onclick="allit.checked=false" >
+    <option value="">$displayText</option>
+  #foreach ($list in $savedLists)
+    <option value="$list.QueryKey"#if($list.QueryKeyfoo == $data.Parameters.getString("list_id", "")) selected="selected"#end>$list.Name</option>
+  #end
+  </select>
+  #else
+  <select name="list_id">
+    <option value="">$l10n.NoSavedIssueTypeLists</option>
+  </select>
+  #end
+  </p>
+</div>
+
+#if ($atLeastOneRMIT)
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+  <tr>
+    <th>$l10n.Select</th>
+    <th>$l10n.Name</th>
+    ##<th>$l10n.Description</th>
+  </tr>
+ #if ($isMoreThanOne)
+  <tr class="a">
+  #set ($rowIndex = 2)
+  #set ($rmitId = $data.Parameters.getString("rmitid"))
+  #set ($checked = !$rmitId && !$editingList)
+    <td><input type="checkbox" name="allit" value="true"
+        #checked($checked) /></td>
+    <td>$l10n.format("AllIssueTypesInModule", $module.Name)</td>
+    ##<td>$l10n.QueryAllIssueTypes</td>
+  </tr>
+ #end
+ #set ($checked = !$isMoreThanOne)
+ #foreach ($rmit in $currentRmits)
+  #indexedRows($rowIndex)
+  #set ($rowIndex = $rowIndex + 1)
+    <td>
+  #if ($rmitId && $rmitId == $rmit.QueryKey)
+      #set ($checked = true)
+  #end
+      <input type="checkbox" name="rmitid" value="$rmit.QueryKey" 
+          onclick="allit.checked=false" #checked($checked) />
+      #set ($checked = false)
+    </td>
+    <td><a href="$link.setPage("Search.vm").addPathInfo("rmitid", $rmit.QueryKey).addPathInfo("eventSubmit_do$event", "foo").setAction("DefineXModuleList")">$rmit.DisplayName</a></td>
+    ##<td>$rmit.DisplayDescription</td>
+  </tr>
+ #end
+</table>
+#else
+$l10n.NoMoreIssueTypes
+#end
+#if ($atLeastOneRMIT || $atLeastOneSaved)
+<div class="functnbar3">
+ #if (!$editingList)
+  <input type="submit" name="eventSubmit_do$event" value="$buttonName" />
+  &nbsp;
+ #end
+ <input type="submit"  name="eventSubmit_doAddselectedrmits" 
+     value="$l10n.AddSelected" />
+</div>
+#end
+
+#if ($showOtherModuleSection)
+
+<h3>$l10n.OtherModuleIssuesInDomain</h3>
+<div class="colbar">
+$l10n.format('HideThisSection', $link.setPage($screenTemplate).setAction("DefineXModuleList").addPathInfo("eventSubmit_doToggleOtherModules", "hide").toString())
+</div>
+
+## calculations for other module section
+#set ($searchField = $data.Parameters.getString("searchField", ""))
+#set ($searchString = $data.Parameters.getString("searchString", ""))
+#set ($sortPolarity = $data.Parameters.getString("sortPolarity", "asc"))
+#set ($sortColumn = $data.Parameters.getString("sortColumn", "module"))
+#set ($searchableRMITs = $user.getSearchableRMITs($searchField, $searchString, $sortColumn, $sortPolarity, $currentModule))
+#if ($searchableRMITs.isEmpty() && $searchField.length() != 0 && $searchString.length() != 0)
+ ## try one more time with no search criteria
+ #set ($searchableRMITs = $user.getSearchableRMITs("", "", $sortColumn, $sortPolarity, $currentModule))
+ #if (!$searchResults.isEmpty())
+   #set ($filterIgnored = true)
+ #end
+#end
+
+#if ($searchableRMITs.isEmpty())
+    <p><em>$l10n.NoMoreIssueTypes</em></p>
+    #set ($showOtherModuleSection = false)
+#else
+
+#if ($searchField.equals("module"))
+ #set ($searchValue = $l10n.Modules.toLowerCase())
+#else
+ #set ($searchValue = $l10n.IssueTypes.toLowerCase())
+#end
+
+## FILTERING
+<div class="axial">
+<table border="0" cellspacing="2" cellpadding="3">
+  <tr>
+   <th>$l10n.FilterThisList</th>
+   <td><input type="text" name="searchString" value="$searchString" />&nbsp;
+     <select name="searchField" size="">
+       <option value="module" #if($searchField.equals("module")) selected="selected"#end>$l10n.Module</option>
+       <option value="issuetype" #if($searchField.equals("issuetype")) selected="selected"#end>$l10n.IssueType</option>
+     </select>&nbsp;
+     <input type="submit" name="eventSubmit_doRefresh"
+       value="$l10n.Filter" />
+   </td>
+  </tr>
+</table>
+</div>
+
+#if ($filterIgnored)
+   <p class="infomark"><em>$l10n.format("FilterNoResults", $searchValue)</em></p>
+#end
+
+## PAGINATION
+## if results exceed limit, get subset list
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
+#set ($pageNum = $scarabR.AdjustedPageNum)
+
+
+#set ($isAddPagination = $resultsPerPage > 0 && $searchableRMITs.size() > $resultsPerPage)
+#if ($isAddPagination)
+  #set ($searchableRMITs = $scarabR.getPaginatedList($searchableRMITs, $pageNum, $resultsPerPage))
+  #paginateXModuleList($screenTemplate)
+#end
+
+<div class="directory">
+  <table width="100%" border="1" cellspacing="2" cellpadding="3">
+	<tr>
+	  <th nowrap="nowrap">$l10n.Select</th>
+	  <th>#rmitSort("module" "$l10n.CapModule" $screenTemplate)</th>
+	  <th>#rmitSort("issuetype" "$l10n.IssueType" $screenTemplate)</th>
+	  ##<th>$l10n.Description</th>
+    </tr>
+
+#foreach ($rmit in $searchableRMITs)
+ #if (!$rmit.IssueType.Deleted && $rmit.Module != $scarabR.CurrentModule)
+  #indexedRows($rowIndex)
+  #set ($rowIndex = $rowIndex + 1)
+    <td>
+     <input type="checkbox" name="rmitid" value="$rmit.QueryKey"
+          onclick="allit.checked=false" />
+    </td>
+    <td>$rmit.Module.Name</td>
+    <td>
+        #set ($issueTypeName = $rmit.IssueType.Name)
+        #set ($issueTypeDisplay = $rmit.DisplayName)
+        ##if (!$issueTypeDisplay.toString().equals($issueTypeName.toString()))
+        #if (!$issueTypeDisplay.equals($issueTypeName))
+           $issueTypeDisplay ($issueTypeName)
+        #else
+           $issueTypeName
+        #end
+    </td>
+    ##<td>$rmit.DisplayDescription</td>
+  </tr>
+ #end
+#end
+</table>
+</div>
+
+#if ($isAddPagination)
+  #paginateXModuleList($screenTemplate)
+#end
+
+<div class="axial">
+  <table cellpadding="3" cellspacing="2" border="0">
+     <tr>
+       <th>$l10n.MaxPerPage</th>
+       <td>
+        #resultsPerPageRadioSelect($resultsPerPage true)
+        &#160;<input type="submit" name="eventSubmit_doRefresh" 
+                  value="$l10n.Refresh" />
+        <input type="hidden" name="oldResultsPerPage" value="$resultsPerPage" />
+       </td>
+     </tr>
+  </table>
+</div>
+
+<div class="functnbar3">
+ #if (!$editingList)
+  <input type="submit" name="eventSubmit_do$event" value="$buttonName" />
+  &nbsp;
+ #end
+ <input type="submit"  name="eventSubmit_doAddselectedrmits" 
+     value="$l10n.AddSelected" />
+</div>
+#end
+
+#end
+
+#if ($editingList)
+<div class="functnbar2">
+  <input type="submit" name="eventSubmit_do$event" value="$buttonName" />
+</div>
+#end
+
+## keep track of state of the list, resultsPerPage should come after the
+## chance to change it, because we will use the first value
+<input type="hidden" name="sortColumn" value="$sortColumn" />
+<input type="hidden" name="sortPolarity" value="$sortPolarity" />
+<input type="hidden" name="pageNum" value="$pageNum" />
+<input type="hidden" name="resultsPerPage" value="$resultsPerPage" />
+
+#end
+
+#macro (prepRMITPageLink $screenTemplate)
+ #set ($dummy = $link.setPage($screenTemplate).setPathInfo("resultsPerPage", "$resultsPerPage").setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField).setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity"))
+#end
+
+#macro (paginateXModuleList $screenTemplate)
+<div class="colbar">
+ <p class="paginate">
+
+ #if($scarabR.PrevPage != 0)
+  #prepRMITPageLink($screenTemplate)
+  #set ($prevLink = $link.setPathInfo("pageNum", "$scarabR.PrevPage"))
+  <a href="$prevLink">&laquo; $l10n.Previous</a> |
+ #end
+
+ $pageNum of $scarabR.NbrPages
+
+ #if ($scarabR.NextPage != 0)
+  #prepRMITPageLink($screenTemplate)
+  #set ($nextLink = $link.setPathInfo("pageNum", "$scarabR.NextPage"))
+  | <a href="$nextLink">$l10n.Next &raquo;</a>
+ #end
+ </p>
+</div> 
+#end
+
+#macro (prepRMITLink $sortKey $screenTemplate)
+ #set ($dummy = $link.setPage($screenTemplate).setPathInfo("pageNum",$pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField).setPathInfo("sortColumn", "$sortKey"))
+#end
+
+#macro (rmitSort $shortName $longName $screenTemplate)
+  #if ($sortColumn.equals($shortName))
+    #if ($sortPolarity.equals("desc"))
+      #prepRMITLink($shortName $screenTemplate)
+      #set ($arrowLink = $link.setPathInfo("sortPolarity", "asc"))
+      <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
+    #else
+      #prepRMITLink($shortName $screenTemplate)
+      #set ($arrowLink = $link.setPathInfo("sortPolarity", "desc"))
+      <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&#160;
+    #end $longName
+  #else
+    #prepRMITLink($shortName $screenTemplate)
+    #set ($sortLink = $link.setPathInfo("sortPolarity", "$sortPolarity"))
+    <a href="$sortLink">$longName</a>
+  #end
+#end

@@ -1,2 +1,0 @@
-$page.setStyleSheet($staticLink.setPath("/style.css"))
-$page.setBgColor("#ffffff")

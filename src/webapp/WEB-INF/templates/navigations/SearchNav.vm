@@ -1,0 +1,60 @@
+#if ($scarabR.CurrentModule)
+  #set ($module = $scarabR.CurrentModule)
+#end
+#set ($user = $data.User)
+
+#if ($user.hasLoggedIn() && $module)
+<div id="topmodule">
+ <table border="0" cellspacing="0" cellpadding="3">
+  <tr>
+   <td id="issueid">
+<form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
+## mozilla sends the button name, if there is only one button and you hit
+## enter instead of the button.  It appears IE does not, so passing as a hidden
+## field
+ <input type="hidden" name="eventSubmit_doGonext" value="foo" />
+ <input type="text" name="id" size="15" maxlength="255" tabindex="1" />
+    &#160;<input type="submit" value="$l10n.IssueId" name="eventSubmit_doGonext" tabindex="2" />
+</form>
+</td>
+
+<td>
+<form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
+  <select name="go" tabindex="3" onchange="this.form.submit();">
+    <option value="newQuery">$l10n.SelectQuery</option>
+    <option value="newQuery">&#160;$l10n.NewQuery</option>
+    <option value="newQueryIT">&#160;$l10n.NewQueryWithNewIssueTypes</option>
+    <option value="myIssues">&#160;$l10n.MyIssues</option>
+    #if ($user.hasMostRecentQuery())
+        <option value="mostRecent">&#160;$l10n.MostRecent</option>
+    #end
+
+#set ($privateQueries = $scarabR.PrivateQueries)
+#set ($globalQueries = $scarabR.GlobalQueries)
+
+#if ($privateQueries && !$privateQueries.isEmpty())
+    <option value="QueryList.vm">$l10n.SavedPersonalQueries</option>
+   #foreach ($query in $privateQueries)
+    <option value="$query.QueryId">&#160;$query.Name</option>
+   #end
+#end
+
+#if ($globalQueries && !$globalQueries.isEmpty())
+    <option value="QueryList.vm">$l10n.SavedProjectQueries</option>
+   #foreach ($query in $globalQueries)
+    <option value="$query.QueryId">&#160;$query.Name</option>
+   #end
+#end
+  </select>
+## give actionEvent as hidden field so user does not have to click Go,
+## if javascript is enabled. show button only if script disabled.
+  <input type="hidden" value="foo" name="eventSubmit_doSelectquery" />
+  <noscript><input type="submit" value="$l10n.Go" name="eventSubmit_doSelectquery" tabindex="4" /></noscript>
+</form>
+  </td>
+  </tr>
+ </table>
+</div>
+#end

@@ -1,0 +1,45 @@
+#* -------------------------------------------------------------------------
+Links given doc and label in 'Help window' mode. 
+Usage: #enterHelp($link "#middle" "label")
+------------------------------------------------------------------------- *#
+#macro (enterHelp $link $anchor $linktext)
+    <a href="$link$anchor" onclick="return launch(this.href, 1)" title="$l10n.NoteMayOpenNewWindow" class="helplink">$linktext</a>
+#end
+
+#if( $link.setPage("help,Introduction.vm").isAllowed() ) 
+ 
+<div>#enterHelp($link "" "$l10n.GetHelp")</div>
+#end
+#if( $link.setPage("help,UserIssues.vm").isAllowed() ) 
+ 
+<div>#enterHelp($link "" "$l10n.EntryHelp")</div>
+#end
+#if( $link.setPage("help,UserQuery.vm").isAllowed() ) 
+ 
+<div>#enterHelp($link "" "$l10n.SearchHelp")</div>
+#end
+
+#if( $link.setPage("help,UserReports.vm").isAllowed() ) 
+ 
+<div>#enterHelp($link "" "$l10n.ReportsHelp")</div>
+#end
+
+#if( $link.setPage("help,ScarabBestPractices.vm").isAllowed() ) 
+ 
+<div>#enterHelp($link "" "$l10n.UsingScarabHelp")</div>
+#end
+#if( $link.setPage("help,ScarabFaq.vm").isAllowed() ) 
+ 
+<div>#enterHelp($link "" "$l10n.FAQHelp")</div>
+#end
+
+#if( $link.setPage("help,ScarabGlossary.vm").isAllowed() ) 
+ 
+<div>#enterHelp($link "" "$l10n.GlossaryHelp")</div>
+#end
+
+#* link template
+#if( $link.setPage("help,").isAllowed() ) 
+ <div>#enterHelp($link "" "")</div>
+#end
+*#

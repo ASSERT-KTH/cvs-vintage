@@ -1,0 +1,64 @@
+#set ($canAddComment = $canEdit)
+#set ($canEditComments = $scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
+#set ($isEditComments = $canEditComments && $data.Parameters.getBoolean("edit_comments"))
+#set ($comments = $currentIssue.getComments($fullComments.equals("true")))
+
+<h3>$l10n.Comments</h3>
+#if ($comments.isEmpty() && !$canAddComment)
+$l10n.NoComments
+#else
+  #if ($canAddComment && !$isEditComments)
+   <h4>$l10n.EnterComment</h4>
+   <table cellspacing="2" cellpadding="3" border="0">
+     <tr>
+       <td>
+          #set ($commentGroup = $intake.Attachment.setKey("commentKey"))
+          #textAreaLarge("$commentGroup.Data.Key" "")
+          #fieldErrorMsg($commentGroup.Data "")
+          <input type="hidden" name="$commentGroup.Name.Key" value="comment" />
+       </td>
+     </tr>
+   </table>
+   <div class="functnbar3">
+      <input type="submit" value="$l10n.Save" name="eventSubmit_doSubmitcomment" />
+   </div>
+  #end
+
+  #foreach ($comment in $comments)
+     #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
+     <h4>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)&#160;|&#160;Added by: <a href="mailto:$commentUser.Email">$!commentUser.Name</a></h4>
+    #if ($isEditComments)
+      <p>#textAreaLarge( "edit_comment_$comment.AttachmentId" $comment.Data)</p>
+    #else
+      <p>$scarabG.getCommentText($comment.Data, $link, $scarabR.CurrentModule)</p>
+    #end
+  #end
+
+  #if ($isEditComments)
+   <div class="functnbar3">
+   <input type="submit" value="$l10n.EditComment" name="eventSubmit_doEditcomment" />
+   <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
+   </div>
+      #elseif ($canEditComments && !$comments.isEmpty())
+         <div align="right"><small>
+         #set ($editCommentsLink = $link.setPage("$template").addPathInfo("id", $currentIssue.UniqueId).addPathInfo("edit_comments", true).addPathInfo("fullcomments", $fullComments))
+         #foreach ($issueId in $data.Parameters.getStrings("issue_ids"))
+           #set ($editCommentsLink = $editCommentsLink.addPathInfo("issue_ids", $issueId))
+         #end
+         <p><a href="$editCommentsLink">$l10n.EditComment</a></p>
+         </small></div>
+  #end
+
+#end
+
+#if ($currentIssue.isCommentsLong())
+  #if ($fullComments.equals("true"))
+    #set ($commentsLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssue.UniqueId).addPathInfo("fullcomments", "false").addPathInfo("tab", $tab).addPathInfo("edit_comments", $isEditComments))
+    <p><a href="$commentsLink">$l10n.HideCommentList</a></p>
+  #else
+    #set ($commentsLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullcomments", "true").addPathInfo("tab", $tab).addPathInfo("edit_comments", $isEditComments))
+    #set ($hiddenCommentCount = $currentIssue.CommentsCount - $currentIssue.CommentsLimit)
+    <p>$l10n.format("ThereAreMoreComments", $hiddenCommentCount)
+    <a href="$commentsLink">$l10n.ShowCommentList</a></p>
+  #end
+#end

@@ -1,0 +1,88 @@
+<div class="docs" id="userissueentry"> 
+  <div id="toc"><ul>
+<li>$l10n.ScarabHelp 
+        <ul>
+          <li> 
+           <a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a> </li>
+              <li><strong>$l10n.ManagingIssues</strong> 
+                <ul>
+                  <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.Overview</a> 
+                  </li>
+ #if ($scarabG.templateExists("help/UserIssueImportExport.vm"))                  <li><a href="$link.setPage("help,UserIssueImportExport.vm")">$l10n.XMLImportExport</a></li>
+ #end
+                  <li><strong>$l10n.EnteringIssues </strong> 
+                    <ul>
+                      <li><a href="#top">$l10n.Composing</a></li>
+                      
+                  <li><a href="#entering">$l10n.EnteringAnIssues</a> 
+                    <ul>
+                          <li><a href="#dependencies">$l10n.SettingDependecies</a></li>
+                          <li><a href="#attachments">$l10n.IssueAttachments</a></li>
+                        </ul>
+                      </li>
+                      <li><a href="#duplicates">$l10n.HandlingDuplicates</a> 
+                        <ul>
+                          <li><a href="#reviewing">$l10n.ReviewDuplicates</a></li>
+                          <li><a href="#commenting">$l10n.CommentingOn</a></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                  <li><a href="$link.setPage("help,UserIssueTemplates.vm")">$l10n.UsingTemplates</a></li>
+                  <li><a href="$link.setPage("help,UserIssueModify.vm")">$l10n.ManagingIssues</a></li>
+                </ul>
+              </li>
+              <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase</a></li>
+              <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a> 
+              <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.BestPractices</a></li>
+              <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a> </li>
+              <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a> 
+              </li>
+            </ul>
+          </li>
+        </ul>
+    
+  </div>
+  <h3><a name="top" id="top">$l10n.Composing</a></h3>
+  <p>$l10n.IssueEntryP1</p>
+  <ol>
+    <li><strong>$l10n.IssueEntryP2Head</strong> $l10n.IssueEntryP2 
+    </li>
+    <li><strong>$l10n.IssueEntryP3Head</strong> $l10n.IssueEntryP3</li>
+  </ol>
+  <p>$l10n.IssueEntryP4</p>
+  <p><strong>$l10n.IssueEntryP5</strong> </p>
+  
+<p>$l10n.IssueEntryP6</p> 
+<p><strong>$l10n.IssueEntryP7</strong> </p>
+  <p>$l10n.IssueEntryP8</p>
+  <p>$l10n.IssueEntryP9</p>
+  <p><em>$l10n.IssueEntryP10</em></p>
+  <h3><a name="entering" id="entering">$l10n.IssueEntryP11Head</a></h3>
+  <p>$l10n.IssueEntryP11</p>
+  <p><strong>$l10n.IssueEntryP12Head</strong></p>
+  <p>$l10n.IssueEntryP12</p>
+  <p>$l10n.IssueEntryP13</p>
+  <p><strong>$l10n.IssueEntryP14Head</strong></p>
+  <p>$l10n.IssueEntryP14</p>
+  <p><strong><a name="dependencies" id="dependencies">$l10n.IssueEntryP15Head</a></strong>$l10n.IssueEntryP15</p>
+  <p>$l10n.IssueEntryP16</p>
+  <p>$l10n.IssueEntryP17</p>
+  <p>$l10n.IssueEntryP18</p>
+  <p>$l10n.IssueEntryP19</p>
+  <p><strong><a name="attachments" id="attachments">$l10n.IssueEntryP20Head</a> </strong>$l10n.IssueEntryP20S1 <strong>$l10n.AddAttachment</strong> $l10n.IssueEntryP20S2 <strong>$l10n.EnterNewIssue</strong> $l10n.IssueEntryP20S3 <strong>$l10n.AddFile</strong> $l10n.IssueEntryP20S4</p>
+  <h3><a name="duplicates" id="duplicates">$l10n.IssueEntryP21Head</a></h3>
+  <p>$l10n.IssueEntryP22</p>
+  <ul>
+    <li>$l10n.IssueEntryP23</li>
+    <li>$l10n.IssueEntryP24</li>
+    <li>$l10n.IssueEntryP25 <strong>$l10n.Notelc</strong> $l10n.IssueEntryP25S2<strong>$l10n.SubmitNote</strong> $l10n.IssueEntryP25S3</li>
+    <li>$l10n.IssueEntryP26 <strong>$l10n.BypassDuplicates</strong> $l10n.IssueEntryP26S2</li>
+  </ul>
+  <p><strong><a name="reviewing" id="reviewing">$l10n.IssueEntryP27Head</a></strong></p>
+  <p>$l10n.IssueEntryP27 <strong>$l10n.IssueEntryP27S2</strong> $l10n.IssueEntryP27S3</p>
+  <p>$l10n.IssueEntryP28</p>
+  <p><strong><a name="commenting" id="commenting">$l10n.IssueEntryP29Head</a></strong></p>
+  <p>$l10n.IssueEntryP29 <em>$l10n.Notes</em> $l10n.IssueEntryP29S2 <em>$l10n.Notes</em> $l10n.IssueEntryP29S3 <em>$l10n.Notes</em> $l10n.IssueEntryP29S4 <em>$l10n.Submit</em> $l10n.IssueEntryP29S5</p>
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div>
+</div>

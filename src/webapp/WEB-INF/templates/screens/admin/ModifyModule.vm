@@ -1,0 +1,166 @@
+#set ($createNew = $data.Parameters.getString("New", ""))
+#set ($canEdit = "false")
+
+#set ($moduleId = $data.Parameters.getString("moduleid"))
+#if (!$moduleId || $moduleId.length() == 0)
+   #set ($createNew = "true")
+#end
+
+#if ($createNew.equals("true"))
+  #set ($title = "$l10n.NewModule")
+#else
+  #set ($title = "$l10n.ModifyModule")
+  #set ($editModule = $scarabR.getModule($moduleId))
+  #set ($canEdit = $scarabR.hasPermission($scarabG.Permission.MODULE__EDIT, $editModule))
+#end
+
+#if ($editModule)
+  #set ($userModules = $data.User.getEditableModules($editModule))
+#else
+  #set ($userModules = $data.User.getEditableModules())
+#end
+
+#macro (ModifyModuleBar $var)
+<div class="functnbar$var">
+#if ($createNew.equals("true"))
+   <input type="submit" name="eventSubmit_doCreate" value="$l10n.Create" /> 
+#else
+   <input type="submit" name="eventSubmit_doUpdate" value="$l10n.Save" /> 
+#end
+   <input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" />
+</div>
+#end
+
+<div id="module" class="app">
+
+<h3>$title</h3>
+
+#if ($userModules.size() == 0)
+
+<p><em>$l10n.NoModuleEditPermission</em></p>
+
+#else
+
+<form action="$link.setPage("admin,ModifyModule.vm")" method="post">
+<input type="hidden" name="action" value="ModifyModule" /> 
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageModules.vm" /> 
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageModules.vm" /> 
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,ManageModules.vm" /> 
+
+#set ($moduleGroup = $intake.Module.Default)
+#if ($createNew.equals("true"))
+<input type="hidden" name="new" value="true" /> 
+#else
+<input type="hidden" name="new" value="false" /> 
+<input type="hidden" name="$moduleGroup.Id.Key" value="$moduleId" /> 
+<input type="hidden" name="moduleid" value="$moduleId" /> 
+#end
+
+#set ($moduleGroup = $intake.Module.mapTo($editModule))
+#if (!$moduleGroup.get("Id").isValid())
+<p><em>$moduleGroup.get("Id").Message</em></p>
+#end
+
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="1">
+  <tr>
+   <th>* $l10n.ModuleName</th>
+   <td>
+    <input name="$moduleGroup.RealName.Key" value="$moduleGroup.RealName" type="text" size="25" />
+    #fieldErrorMsg($moduleGroup.RealName "")
+   </td>
+  </tr>
+  <tr>
+   <th>* $l10n.Description</th>
+   <td>
+     #textAreaMedium ("$moduleGroup.Description.Key" $moduleGroup.Description)
+    #fieldErrorMsg($moduleGroup.Description "")
+   </td>
+  </tr>
+  <tr>
+   <th>* $l10n.Code</th>
+   <td>
+    <input name="$moduleGroup.Code.Key" value="$moduleGroup.Code" type="text" size="10" maxlength="4" />
+    #fieldErrorMsg($moduleGroup.Code "")
+   </td>
+  </tr>
+#if ($createNew.equals("true") || $moduleId != "0")
+  <tr>
+   <th>* $l10n.ParentModule</th>
+   <td> 
+    <select name="$moduleGroup.ParentId.Key">
+    #if ($editModule)
+      #foreach ($userModule in $userModules)
+        #if ($editModule.Parent.ModuleId.toString().equals($userModule.ModuleId.toString()))
+          <option selected="selected" value="$userModule.ModuleId">[$userModule.Name] $userModule.RealName</option>
+        #else
+          <option value="$userModule.ModuleId">[$userModule.Name] $userModule.RealName</option>
+        #end
+      #end
+    #else
+      #foreach ($userModule in $userModules)
+        <option value="$userModule.ModuleId">[$userModule.Name] $userModule.RealName</option>
+      #end
+    #end
+    </select>
+    #fieldErrorMsg($moduleGroup.ParentId "")
+   </td>
+  </tr>
+#end
+#*
+  <tr>
+   <th>$l10n.URL</th>
+   <td>
+    <input name="$moduleGroup.Url.Key" value="$moduleGroup.Url" type="text" size="25" />
+    #fieldErrorMsg($moduleGroup.Url "")
+   </td>
+  </tr>
+*#
+  <tr>
+   <th>$l10n.ArchiveEmail</th>
+   <td>
+    <input name="$moduleGroup.ArchiveEmail.Key" value="$moduleGroup.ArchiveEmail" type="text" size="25" />
+    #fieldErrorMsg($moduleGroup.ArchiveEmail "")
+   </td>
+  </tr>
+
+ #if ($scarabG.Parameter.getBoolean($scarabG.ParameterName.EMAIL_ALLOW_MODULE_OVERRIDE)) 
+ <tr>
+  <th>$l10n.EmailEnable</th>
+  <td> 
+   #set ($name = $scarabG.ParameterName.EMAIL_ENABLED)
+   #set ($selected = $scarabG.Parameter.getBoolean($name) || $data.Parameters.getBoolean($name))
+   <input type="checkbox" name="$name" #checked($selected)/> 
+     $l10n.EmailEnableDescription  
+  </td> 
+ </tr>
+ <tr>
+  <th>$l10n.EmailIncludeIssueDetails</th>
+  <td> 
+   #set ($name = $scarabG.ParameterName.EMAIL_INCLUDE_ISSUE_DETAILS)
+   #set ($selected = $scarabG.Parameter.getBoolean($name) || $data.Parameters.getBoolean($name))
+   <input type="checkbox" name="$name" #checked($selected)/> 
+     $l10n.EmailIncludeIssueDetailsDescription  
+  </td> 
+ </tr>
+ #end
+
+#if ($editModule || $createNew != "true")
+  <tr>
+    <th>$l10n.Deleted</th>
+    <td>
+        #booleanCheckbox($moduleGroup.Deleted)
+    </td>
+  </tr>
+#end
+ </table>
+</div>
+
+#ModifyModuleBar("2")
+
+$intake.declareGroups()
+</form>
+
+#end
+
+</div>

@@ -1,0 +1,90 @@
+#set ($report = $scarabR.Report)
+#set ($reportDefn = $report.ReportDefinition)
+#set ($reportIsEditable = $report.isEditable($data.User))
+<div class="app" id="div2-4-1-a-output">
+
+#if ($reportIsEditable)
+<div class="tabs">
+  <table cellpadding="3" cellspacing="0" border="0">
+    <tr>
+      <td><a href="$link.setPage("reports,Info.vm")" title="Dataset">$l10n.ReportInformation</a></td>
+      <td><a href="$link.setPage("reports,AxisConfiguration.vm").setPathInfo("axis", "0")" title="builder1_row">$l10n.RowContent</a></td>
+      <td><a href="$link.setPage("reports,AxisConfiguration.vm").setPathInfo("axis", "1")" title="builder1_col">$l10n.ColumnContent</a></td>
+     ## <th>$l10n.Report</th>
+    </tr>
+  </table>
+</div>
+#end
+
+#if (!$report.isReadyForCalculation())
+    <p>$l10n.IncompleteReportDefinition</p>
+#else 
+
+$data.User.setCurrentMITList($report.getMITList().getPermittedSublist($scarabG.Permission.ISSUE__SEARCH, $data.User))
+#showMITList($l10n.MITListReportHeading $data.User false)
+
+<div class="axial">
+<table border="1" cellspacing="2" cellpadding="3">
+  <tr>
+    <th width="120">$l10n.DateGenerated</th>
+	<td>         
+      $format.getNow("yyyy MMMM dd hh:mm a")
+	</td>
+  </tr>
+
+  #if ($report.GeneratedBy.Name)
+  <tr>
+	<th>$l10n.GeneratedBy</th>
+	<td>
+      <a href="mailto:$!report.GeneratedBy.Email">$report.GeneratedBy.Name</a>
+    </td>
+  </tr>
+  #end
+</table>
+</div>
+
+<h3>
+#if ($report.Name)
+$report.Name
+#else
+$l10n.Report
+#end
+</h3>
+
+#if ($reportDefn.reportQueryIsExpensive())
+
+<p>$l10n.format("ReportIsTooExpensive", $reportDefn.maximumHeadings())</p>
+
+#else
+
+#if ($reportIsEditable && $reportDefn.ReportAxisList.size() > 0)
+<div class="colbar"><a href="$link.setPage("reports,Report_1.vm").addPathInfo("action", "ConfigureReport").addPathInfo("eventSubmit_doSwapRowCol", "foo")">$l10n.SwapRowCol</a></div>
+#end
+
+<div>
+## note: it is preferable to pass the object, instead of the method reference,
+## to the macro.  If the method reference is used as the argument to the macro 
+## and the model is referenced many times within the macro,
+## a new model will be created each time.
+#set ($reportModel = $report.getModel($data.User))
+#reportTable($reportModel)
+</div>
+
+<form method="get" action="$link.setPage("reports,Report_1.vm")">
+<input type="hidden" name="action" value="ConfigureReport" />
+<div class="functnbar3">
+#if ($report.isSavable($data.User))
+ <input type="submit" value="$l10n.SaveReport" name="eventSubmit_doSavereport" />&#160;
+#end 
+ #exportFormats('eventSubmit_doGenerateReport')
+</div>
+</form>
+
+#end
+
+</div>
+#if ($data.Parameters.getString($scarabG.Constant.DEBUG))
+<p><pre>$report.ReportDefinition.toXmlString()</pre></p>
+#end
+
+#end

@@ -1,0 +1,3 @@
+#set ($page.Title = $title)
+#actionMessage()
+$renderer.render("screens", $template)

@@ -1,0 +1,58 @@
+#set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
+
+<div class="app" id="artifactTypeSelect">
+
+<form action="$link.setPage("admin,ArtifactTypeSelect.vm")" method="post">
+<input type="hidden" name="action" value="admin.ManageArtifactTypes" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalArtifactTypeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="admin,ArtifactTypeSelect.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
+
+#set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
+
+<div class="functnbar">
+#if ($issueTypes && !$issueTypes.isEmpty())
+  <input type="submit" value="$l10n.Add" name="eventSubmit_doSelectissueType" />&#160;
+#end
+<input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
+</div>
+
+#if ($issueTypes.isEmpty())
+
+<h3>$l10n.IssueTypes</h3>
+
+<p><em>$l10n.NoIssueTypes</em></p>
+
+#else
+        
+<h3>$l10n.IssueTypes</h3>
+
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th width="70">$l10n.Select</th>
+<th>$l10n.Name</th>
+<th>$l10n.Description</th>
+</tr>
+        
+#foreach($issueType in $issueTypes)
+  #indexedRows($velocityCount)
+  <td>
+  <label for="radio_$issueType.IssueTypeId">
+  <input type="radio" name="issueTypeId" value="$issueType.IssueTypeId" id="radio_$issueType.IssueTypeId" /></label></td>  
+  <td>$issueType.Name</td>
+  <td>$!issueType.Description &nbsp;</td>
+  </tr>
+#end
+</table>
+        
+#end
+
+<div class="functnbar2">
+#if (!$issueTypes.isEmpty())
+      <input type="submit" value="$l10n.Add" name="eventSubmit_doSelectissueType" />&#160;
+#end
+<input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
+</div>
+
+</form>
+</div>

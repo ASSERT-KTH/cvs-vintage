@@ -1,0 +1,69 @@
+#set ($currentModule = $scarabR.CurrentModule)
+<div id="selectmodule" class="app">
+
+#set ($user = $data.User)
+#if (!$user.hasLoggedIn())
+<p class="infomark"><em>$l10n.ToAccessPage $link.setPage("Login.vm").setLabel("Login").</em></p>
+#else
+#if ($link.setPage("RequestRoles.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm").isAllowed())
+<p>$l10n.format("RequestRolesInOtherModules", $link)</p>
+#end
+
+#if ($currentModule)
+<h3>$l10n.CurrentModule</h3>
+<table cellpadding="3" cellspacing="2" border="1" width="100%">
+<tr>
+    <th>$l10n.Name</th>
+    <th>$l10n.Description</th>
+</tr>
+<tr class="a">
+    <td>
+    $currentModule.Name
+    </td>
+    <td>$currentModule.Description</td>
+</tr>
+</table>
+
+#set ($canEdit = $scarabR.hasPermission($scarabG.Permission.MODULE__EDIT, $currentModule))
+#if ($canEdit)
+<form action="$link.setPage("admin,ModifyModule.vm").addPathInfo("moduleid","$currentModule.ModuleId")" method="post">
+<div class="functnbar2">
+  <input type="submit" name="maxumusDorkus" value="Edit" />
+</div>
+</form>
+#end
+
+#end
+
+<h3>$page.Title</h3>
+#set ($userModules = $data.User.Modules)
+#if ($userModules.size() > 0)
+<table border="1" cellspacing="2" cellpadding="3" width="100%">
+<tr>
+    <th>$l10n.Name</th>
+    <th>$l10n.Description</th>
+</tr>
+
+#foreach ($module in $userModules)
+ #if (!$module.isGlobalModule())
+  #indexedRows($velocityCount)
+   <td>
+     $modulelink.setPage("$module.ModuleId").setLabel($module.Name)
+   </td>
+   <td>
+     $module.Description
+   </td>
+  </tr>
+  #end
+#end
+
+</table>
+
+#else
+<p class="infomark"><em>
+$l10n.format("YouCannotAccessModules", $link.setPage("Login.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm"))
+</em></p>
+#end
+#end
+
+</div>

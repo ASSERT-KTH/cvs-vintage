@@ -1,0 +1,119 @@
+
+<div class="docs" id="userreports"> 
+  <div id="toc"> 
+
+    <ul>
+      <li>$l10n.ScarabHelp 
+        <ul>
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
+          <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a></li>
+          <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase</a></li>
+          <li><strong>$l10n.HelpReports</strong></li>
+          <ul>
+             
+            <li><a href="#usingreports">$l10n.ReportsOverview</a></li>
+            <li><a href="#reportinfo">$l10n.ReportInformation</a></li>
+            <li><a href="#reportcontent">$l10n.ReportContent</a></li>
+            <li><a href="#savereports">$l10n.GeneratingReports</a></li>
+          </ul>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <h2><a name="usingreports" id="usingreports"></a>$l10n.ReportsOverview</h2>
+   <p>$l10n.ReportsP1</p>
+   <p>$l10n.ReportsP2</p>
+    <ol>
+     <li>$l10n.ReportsP3</li>
+     <li>$l10n.ReportsP4</li>
+     <li>$l10n.ReportsP5</li>
+    </ol>
+   <p>$l10n.ReportsP6 <strong>$l10n.ReportInformation</strong>, <strong>$l10n.RowContent</strong>, <strong>$l10n.ColumnContent</strong>. </p>
+  <h3><a name="reportinfo" id="reportinfo"></a>$l10n.ReportInformation</h3>
+   <p>$l10n.ReportsP7</p>
+   <p><strong>$l10n.ReportsP8</strong></p>
+   <p>$l10n.ReportsP9</p>
+   <p>$l10n.ReportsP10</p>
+    <ul>
+      <li>$l10n.ReportsP11</li>
+      <li>$l10n.ReportsP12</li>
+      <li>$l10n.ReportsP13</li>
+      <li>$l10n.ReportsP14</li>
+      <li>$l10n.ReportsP15</li>
+    </ul>
+   <p><strong>$l10n.ReportsP16</strong></p>
+   <p>$l10n.ReportsP17</p>
+    <ul>
+      <li>$l10n.ReportsP18</li>
+      <li>$l10n.ReportsP19</li>
+      <li>$l10n.ReportsP20</li>
+      <li>$l10n.ReportsP21</li>
+    </ul>
+   <p>$l10n.ReportsP22</p>
+  <h3><a name="reportcontent" id="reportcontent"></a>$l10n.ReportContent</h3>
+   <p>$l10n.ReportsP23</p>
+  <h4><strong>$l10n.ReportsP24</strong></h4>
+   <p> $l10n.ReportsP25</p>
+   <dl>
+    <dt>$l10n.AttributesOrOptions</dt>
+    <dd>$l10n.ReportsP26</dd>
+    <dt>$l10n.UsersByUserAttribute</dt>
+    <dd>$l10n.ReportsP27</dd>
+    <dt>$l10n.DatesOrDatesRanges</dt>
+    <dd>$l10n.ReportsP28</dd>
+   </dl>
+   <p>$l10n.ReportsP29</p>
+  <h4><strong>$l10n.ReportsP30</strong></h4>
+   <p>$l10n.ReportsP31</p>
+  <p>$l10n.ReportsP32</p>
+  <ol>
+    <li>$l10n.ReportsP33</li>
+    <li>$l10n.ReportsP34</li>
+    <li>$l10n.ReportsP35</li>
+    <li>$l10n.ReportsP36</li>
+    <li>$l10n.ReportsP37</li>
+    <li>$l10n.ReportsP38</li>
+    <li>$l10n.ReportsP39</li>
+    <li>$l10n.ReportsP40</li>
+    <li>$l10n.ReportsP41</li>
+  </ol>
+  <p>$l10n.ReportsP42</p> 
+  <p>$l10n.ReportsP43</p>
+  <p>$l10n.ReportsP44</p>
+   <ol>
+    <li>$l10n.ReportsP45</li>
+    <li>$l10n.ReportsP46</li>
+    <li>$l10n.ReportsP47</li>
+    <li>$l10n.ReportsP48</li>
+   </ol>
+ <h4>$l10n.ReportsP49</h4>
+  <p>$l10n.ReportsP50</p>
+  <p>$l10n.ReportsP51</p>
+   <ol>
+    <li>$l10n.ReportsP52</li>
+    <li>$l10n.ReportsP53</li>
+    <li>$l10n.ReportsP54</li>
+   </ol>
+  <p>$l10n.ReportsP55</p>
+ <h4>$l10n.ReportsP56</h4>
+  <p>$l10n.ReportsP57</p>
+  <p>$l10n.ReportsP58</p>
+   <ol>
+    <li>$l10n.ReportsP59</li>
+    <li>$l10n.ReportsP60</li>
+    <li>$l10n.ReportsP61</li>
+    <li>$l10n.ReportsP62</li>
+   </ol>
+ <p>$l10n.ReportsP63</p>
+<h3><a name="savereports" id="savereports"></a>$l10n.GeneratingReports</h3>
+ <p>$l10n.ReportsP64</p>
+ <p>$l10n.ReportsP65</p>
+  <ol>
+   <li>$l10n.ReportsP66</li>
+   <li>$l10n.ReportsP67</li>
+   <li>$l10n.ReportsP68</li>
+  </ol>
+</div>

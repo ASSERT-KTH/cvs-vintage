@@ -1,0 +1,28 @@
+<div id="xmlexportsettings" class="app">
+
+<h3>$page.Title</h3>
+
+<form action="$link.setPage("admin,ViewXMLExportSettings.vm")" method="post">
+
+<p>$l10n.XMLExportSettingsScreen
+</p>
+
+<p>
+<input type="radio" name="downloadtype" value="0" checked="checked" /> $l10n.ExportAsDownloadable
+<input type="radio" name="downloadtype" value="1" /> $l10n.ExportToBrowser
+</p>
+
+<p>
+<input type="checkbox" name="includeusers" value="1" /> $l10n.ExportUserInfo
+</p>
+
+<p>
+$l10n.SaveDownloadedAs<input type="text" size="50" name="filename" value="scarab-settings-export.xml" />
+</p>
+
+<div class="functnbar2">
+  <input type="submit" name="export" value="$l10n.Export" />
+</div>
+
+</form>
+</div>

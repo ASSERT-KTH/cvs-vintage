@@ -1,0 +1,66 @@
+<div class="docs" id="userqueryadvanced"> 
+  <div id="toc"> 
+    <ul>
+      <li>$l10n.ScarabHelp 
+        <ul>
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
+          <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a> </li>
+          <li>$l10n.SearchingDatabase 
+            <ul>
+              <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingOverview</a></li>
+              <li><strong>$l10n.AdvancedQueries</strong> 
+                <ul>
+                  <li><a href="#knowledge">$l10n.SearchingKnowledge</a></li>
+                  <li><a href="#personnel">$l10n.SearchingPerson</a></li>
+                  <li><a href="#state">$l10n.SearchingChange</a></li>
+                </ul>
+              </li>
+              <li><a href="$link.setPage("help,UserQueryAdvanced.vm")">$l10n.AdvancedQueries</a></li>
+              <li><a href="$link.setPage("help,UserQueryCustom.vm")">$l10n.CustomQueries</a></li>
+              <li><a href="$link.setPage("help,UserQuerySaved.vm")">$l10n.SavedQueries</a></li>
+              <li><a href="$link.setPage("help,UserQueryCrossProject.vm")">$l10n.CrossProjectQueries</a></li>
+            </ul>
+          </li>
+          <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <p> 
+  <h3><a name="top" id="top"></a>$l10n.TextQueries</h3>
+
+<h3>$l10n.UQT1</h3>
+<p>$l10n.UQT2</p>
+<h3>$l10n.UQT3</h3>
+<p>$l10n.UQT4 <em>$l10n.UQT4S2</em> $l10n.UQT4S3</p>
+<p>$l10n.UQT5 <em>$l10n.UQT5S2</em></p>
+<p>$l10n.UQT6</p>
+<h3>$l10n.UQT7</h3>
+<p>$l10n.UQT8 <em>$l10n.UQT8S2</em> $l10n.UQT8S3</p>
+<h3>$l10n.UQT9</h3>
+<p>$l10n.UQT10 <em>$l10n.UQT10S2</em></p>
+
+
+<h3>$l10n.UQT11</h3>
+<p>$l10n.UQT12</p>
+<p><strong>OR</strong> $l10n.UQT13</p>
+<p><strong>AND</strong> $l10n.UQT14</p>
+<p><strong>+</strong> $l10n.UQT15</p>
+<p><strong>NOT</strong> $l10n.UQT16</p>
+<p><strong>-</strong> $l10n.UQT17</p>
+
+<h3>$l10n.UQT18</h3>
+<p>$l10n.UQT19 <em>$l10n.UQT19S2</em> $l10n.UQT19S3</p>
+
+<h3>$l10n.UQT20</h3>
+<p>$l10n.UQT21</p>
+<p>$l10n.UQT22</p>
+<p>$l10n.UQT23</p>
+<p><small>$l10n.UQT24<small></p>
+  
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div> 
+ 
+</div>

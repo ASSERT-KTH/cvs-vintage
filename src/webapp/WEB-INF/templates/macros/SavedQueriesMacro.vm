@@ -1,0 +1,21 @@
+#macro( savedQueries )
+<div id="topmodule">
+ <table border="0" cellspacing="0" cellpadding="3" width="100%">
+  <tr>
+  <td nowrap="nowrap">
+   <select>
+    <option>$l10n.MacroSavedQueries</option>
+    <option>$l10n.QueryOne</option>
+    <option>$l10n.QueryTwo</option>
+   </select>
+   <input type="submit" name="query" value="$l10n.Go" />
+   &nbsp;<img src="../csi/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
+   <input type="text" size="15" name="" />
+   <input type="submit" name="query" value="$l10n.Query" />
+   &nbsp;<img src="../csi/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
+   <a href="#">$l10n.Advanced</a>&nbsp;|&nbsp;<a href="#">$l10n.Custom</a>
+  </td>
+  </tr>
+ </table>
+</div>
+#end

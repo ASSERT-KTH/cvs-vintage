@@ -1,0 +1,146 @@
+
+#set ($attribute = $scarabR.Attribute)
+#set ($attType = $attribute.AttributeType)
+#set ($cancelTemplate = $data.Parameters.getString($scarabG.Constant.CANCEL_TEMPLATE))
+#if ($cancelTemplate.equals("admin,IssueTypeAttributeEdit.vm"))
+    #set ($cancelTemplate = "admin,GlobalAttributeGroupEdit.vm")
+#end
+
+#set ($attTypeName = $attType.AttributeClass.Name)
+
+#macro (IssueTypeAttributeEditBar $val)
+<div class="functnbar$val">
+#if ($attTypeName.equals("select-one"))
+<input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
+#end
+<input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
+</div>
+#end
+
+<div class="app" id="div3-0-2-0">
+
+#if (!$attType)
+<p class="infomark"><em>$l10n.AttributeNotFound
+$link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").</em></p>
+#else
+
+<form action="$link.setPage("admin,IssueTypeAttributeEdit.vm")" method="post">
+<input type="hidden" name="action" value="admin.IssueTypeAttributeEdit" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeOptionSelect.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
+<input type="hidden" name="att_0id" value="$attribute.AttributeId" />
+<input type="hidden" name="attributeid" value="$attribute.AttributeId" />
+<input type="hidden" name="groupId" value="$data.Parameters.getString("groupId","").trim()" /> 
+<input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" /> 
+
+#IssueTypeAttributeEditBar("")
+
+<h3>$l10n.AttributeInfo</h3>
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+ <tr>
+  <th>$l10n.InputType</th>
+  <td>$attType.Name</td>
+ <tr>
+  <th>$l10n.Name</th>
+  <td>$attribute.Name</td>
+ </tr>
+ <tr>
+  <th>$l10n.Description</th>
+  <td>$attribute.Description</td>
+ </tr>
+  #if ($attribute.CreatedDate)
+ <tr>
+  <th>$l10n.CreatedBy</th>
+  <td>
+  #attributeCreatedBy($attribute)
+  </td>
+ </tr>
+ <tr>
+  <th>$l10n.CreationDate</th>
+  <td>
+    $format.getDate($scarabR.DateFormat, $attribute.CreatedDate)
+  </td>
+ </tr>
+  #end
+</tr>
+</table>
+</div>
+
+#set ($issueType = $scarabR.IssueType)
+#set ($rios = $issueType.getRIssueTypeOptions($attribute, false))
+#if ($attTypeName.equals("select-one"))
+#set ($maxNum = $rios.size())
+#datatitle ("Attribute Options")
+#if (!$rios || $rios.isEmpty())
+  There are no attribute options.
+  <div class="functnbar3">
+  <input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
+  </div>
+#else
+
+<table width="100%" border="1" cellspacing="2" cellpadding="2">
+<tr>
+ <th>$l10n.Select</th>
+ <th>$l10n.AttributeOption</th>
+ <th>$l10n.ParentAttributeOptions</th>
+ <th>$l10n.Active</th>
+ <th>$l10n.Locked</th>
+ <th>$l10n.PreferredOrder</th>
+ ## Hiding until implemented <th>$l10n.Weight</th>
+</tr>
+#foreach ($rio in $rios)
+    #set ($rioGroup = $intake.RIssueTypeOption.mapTo($rio))
+    #indexedRows($velocityCount)
+     <td><input type="checkbox" name="delete_$rio.OptionId" /></td>
+     <td>$rio.AttributeOption.Name</td>
+     <td>
+       #set ($comma = "")
+       #set ($parents = $rio.AttributeOption.Parents)
+       #foreach ($parent in $parents)
+         #if ($parents.size() > 1)
+           #if ($velocityCount < $parents.size())
+               #set ($comma = ", ")
+           #else
+               #set ($comma = "")
+           #end
+         #end
+         $parent.Name$comma
+       #end
+     </td>
+     <td>
+        #booleanCheckbox($rioGroup.Active)
+     </td>
+     <td>
+        #booleanCheckbox ($rioGroup.Locked)
+     </td>
+     <td>
+        #numericSelect($rioGroup.Order.Key 1 $maxNum $rioGroup.Order.Value 1)
+     </td>
+#* hiding until implemented
+     <td>
+        #numericSelect($rioGroup.Weight.Key 1 $maxNum $rioGroup.Weight.Value 1)
+     </td>
+*#
+    </tr>
+#end
+</table>
+
+<div class="functnbar3">
+<input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
+<input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
+## commenting out till we decide how to do <input type="submit" value="$l10n.Copy" />&#160;
+<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteissuetypeoptions" />&#160;
+##<input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
+</div>
+#end
+
+#end
+
+#IssueTypeAttributeEditBar("2")
+
+$intake.declareGroups()
+</form>
+</div>
+#end

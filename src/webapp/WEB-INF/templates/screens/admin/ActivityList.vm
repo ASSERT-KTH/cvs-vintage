@@ -1,0 +1,45 @@
+## This template is not exposed via the ui.  It is useful for debugging
+## but is potentially memory intensive.  The list can be limited 
+## via parameters, see the backing java screen class for info.
+
+<div class="app">
+#foreach ($set in $activitySets)
+  #set ($creator = $set.Creator)
+  <h3>PK: $set.PrimaryKey $format.getDate("yyyy-MM-dd HH:mm:ss", $set.CreatedDate)  ::
+  <a href="mailto:$creator.Email">$creator.Name</a> (${creator.UserName})
+  Transaction type: $set.ActivitySetType.Name</h3>
+##<div class="axial">
+  #set ($activities = $set.getActivityList())
+  #if ($activities.isEmpty())
+  <p><em>No Activities (this might be an error)</em></p>
+  #else
+    <table width="100%" cellpadding="3" cellspacing="2" border="1">
+    <tr><th>Activity PK</th><th>Issue</th><th>Description</th></tr>
+    #foreach ($activity in $activities)
+      #indexedRows($velocityCount)
+       <td>$activity.ActivityId</td>
+       <td>$activity.Issue.UniqueId</td>
+       <td>
+       #set ($comment = "")
+       #set ($comment = $activity.Attachment.Data)
+       #if ($comment.trim().length() > 0)
+         <p><strong>Comment: </strong> $comment
+       #else
+         $activity.Description
+       #end
+       </td>
+      </tr>
+    #end
+    </table>
+  #end
+  <p><strong>Reason for change: </strong>
+  #set ($reason = "")
+  #set ($reason = $set.Attachment.Data)
+  #if ($reason.trim().length() > 0)
+    $reason
+  #else
+    None given
+  #end
+  </p>
+#end
+</div>

@@ -1,0 +1,80 @@
+<div class="app" id="index">
+
+<table cellpadding="0" cellspacing="4" border="0">
+<tr>
+
+#if (! $data.User.hasLoggedIn())
+
+<td>
+<p>
+$l10n.ToAccessFunctions1 
+<a href="$link.setPage("Login.vm")">$l10n.Login</a>. $l10n.ToAccessFunctions2
+</p>
+
+<p>$l10n.format('IfYouAreNotRegistered', $link.setPage('Register.vm'))</p>
+</td>
+
+#elseif (!$scarabR.CurrentModule)
+
+<td>
+#*
+<p>
+<img src="$staticLink.setPath("/images/module.gif")" alt="What is a
+module?" width="260" height="105" />
+</p>
+*#
+
+<p>
+$l10n.SelectModule1<a href="$link.setPage("SelectModule.vm").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE","Index.vm")"><strong>$l10n.Module</strong></a>.
+$l10n.SelectModule2
+</p>
+
+<ul>
+<li>$l10n.SetOfUsers</li>
+<li>$l10n.SetOfRoles</li>
+<li>$l10n.SetOfPermissions</li>
+</ul>
+
+<p>$l10n.ScarabUsesGenericTerm</p>
+
+<p>$l10n.NoModuleAccess
+</p>
+</td>
+
+#else
+
+<td>
+#*
+<p>
+<img src="$staticLink.setPath("/images/artifact_type.gif")" alt="What is an issue type?" width="260"
+height="105" /></p> 
+*#
+
+<p>
+$l10n.SelectIssueType1 <a href="$link.setPage("home,EnterNew.vm")">$l10n.SelectIssueType2</a> 
+</p>
+
+<ul>
+<li>$l10n.SetOfAttributes</li>
+<li>$l10n.SetOfOptions</li>
+<li>$l10n.SetOfPermissionsPerRole</li>
+</ul>
+
+<p>$l10n.OnceYouSelectIssueType</p>
+
+<ul>
+<li>$l10n.EnterANewIssue</li>
+<li>$l10n.QueryTheDatabase</li>
+<li>$l10n.RunReports</li>
+</ul>
+
+<p>$l10n.YourInputRemains</p>
+
+</td>
+
+#end
+
+</tr>
+</table>
+
+</div>

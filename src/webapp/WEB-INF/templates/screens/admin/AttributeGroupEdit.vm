@@ -1,0 +1,156 @@
+#set ($groupId = $data.Parameters.getString("groupid"))
+#set ($group = $scarabR.getAttributeGroup($groupId))
+#set ($issueTypeId = $data.Parameters.getString("issueTypeId"))
+#set ($issueType = $group.IssueType)
+#set ($issueTypeLocked = $issueType.Locked)
+#set ($immutable = $issueType.SystemDefined)
+#if($immutable)
+<p class="infomark"><strong>$l10n.SystemSpecifiedIssueType</strong></p>
+#end
+<div class="app" id="div2-1-4-0">
+
+#if (!$groupId)
+<p class="infomark"><em>$l10n.GroupNotFound 
+<a href="$link.setPage("admin,ManageArtifactTypes.vm")">$l10n.Here</a>.</em></p>
+#else
+
+<form method="post" action="$link.setPage("admin,AttributeGroupEdit.vm")">
+<input type="hidden" name="action" value="admin.AttributeGroupEdit" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,AttributeSelect.vm" />
+<input type="hidden" name="groupId" value="$groupId" />
+<input type="hidden" name="issueTypeId" value="$issueTypeId" />
+<input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="admin,AttributeGroupEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
+
+<div class="functnbar">
+#if (!$issueTypeLocked && !$immutable)
+  <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
+#end
+<input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
+</div>
+
+<h3>$l10n.AttributeGroupInfo</h3>
+
+#set ($agGroup = $intake.AttributeGroup.mapTo($group))
+<div class="axial">
+ <table border="0" cellspacing="2" cellpadding="3">
+ <tr>
+ <th>* $l10n.Name</th>
+ <td>
+    #fieldErrorMsg($agGroup.Name "")
+    #if ($issueTypeLocked || $immutable)
+        $group.Name
+    #else
+       <input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" />
+    #end
+ </td>
+ </tr>
+ <tr>
+ <th>$l10n.Description</th>
+ <td>
+    #if ($issueTypeLocked || $immutable)
+        $!group.Description
+    #else
+     #textAreaMedium("$agGroup.Description.Key" $agGroup.Description.Value)</td>
+    #end
+ </tr>
+ </table>
+</div>
+
+#if (!$issueTypeLocked && !$immutable)
+<div class="functnbar3">
+<input type="submit" value="$l10n.Save" name="eventSubmit_doSaveinfo" />&#160;
+</div>
+#end
+
+<h3>$l10n.AttributesInGroup</h3>
+#if (!$group.Attributes.isEmpty())
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+#if (!$issueTypeLocked && !$immutable)
+  <th>$l10n.Select</th>
+#end
+<th>$l10n.Name</th>
+<th>$l10n.PerProjectName</th>
+<th>$l10n.Active</th>
+<th>$l10n.Required</th>
+<th>$l10n.IncludedInCustomQuery</th>
+<th>$l10n.DefaultTxt</th>
+<th>$l10n.Sequence</th>
+</tr>
+#foreach ($attribute in $group.Attributes)
+   #set ($rma = $scarabR.CurrentModule.getRModuleAttribute($attribute, $group.IssueType))
+   #set ($rmaGroup = $intake.RModuleAttribute.mapTo($rma))
+   #set ($raag = $group.getRAttributeAttributeGroup($attribute))
+   #set ($raagGroup = $intake.RAttributeAttributeGroup.mapTo($raag))
+   #set ($ria = "")
+   #set ($ria = $group.IssueType.getRIssueTypeAttribute($attribute))
+   #set ($locked = ($issueTypeLocked) || (!$ria.equals("") && $ria.Locked) || $immutable)
+ #indexedRows($velocityCount)
+ #if (!$issueTypeLocked && !$immutable) <td> #if (!$locked) <input type="checkbox" name="att_delete_$attribute.AttributeId" /> #end</td>#end
+ <td>$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$attribute.AttributeId").addPathInfo("key", "groupId").addPathInfo("groupId", $groupId).addPathInfo("issueTypeId", $group.IssueTypeId).setLabel("$attribute.Name")</td>
+ <td>
+    #if ($rmaGroup.DisplayValue.toString().length() > 0)
+          #set ($value="$rmaGroup.DisplayValue" )
+    #else
+          #set ($value="$attribute.Name")
+    #end
+    #if (!$locked) 
+         <input type="text" size="15" name="$rmaGroup.DisplayValue.Key" value="$value" />
+    #else 
+         $value
+    #end
+    </td>
+ <td>#booleanCheckboxLock ($rmaGroup.Active $locked)</td>
+ <td>#booleanCheckboxLock ($rmaGroup.Required $locked)</td>
+ <td>#booleanCheckboxLock ($rmaGroup.QuickSearch $locked)</td>
+ <td>
+#if ($rma.Attribute.isTextAttribute())
+    #set ($defaultText = $data.Parameters.getString("default_text",""))
+    #if ($defaultText.length() > 0)
+        #if($defaultText == $rma.Attribute.QueryKey)
+            #set ($checked = true)
+        #end
+    #elseif ($rma.IsDefaultText)
+        #set ($checked = true)
+    #end        
+    <input type="radio"  #if($checked)checked="checked"#end #if($locked)disabled="disabled"#end name="default_text" value="$rma.Attribute.QueryKey"/>
+    #set ($checked = false)    
+#else
+    N/A
+#end
+</td>
+ <td>#if ($locked) $raag.Order #else #numericSelect( "$raagGroup.Order.Key" 1 $group.Attributes.size() $raagGroup.Order.Value 1 ) #end</td>
+ </tr>
+#end
+</table>
+<p><small>$l10n.DefaultText </small></p>
+#else
+  <p><em>$l10n.ClickAddButton</em></p>
+#end
+
+#if (!$issueTypeLocked && !$immutable)
+  <div class="functnbar3">
+  #if (!$group.Attributes.isEmpty())
+    <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveattributes" />&#160;
+  #end
+  <input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
+  ##<input type="submit" value="$l10n.CopySelected" />&#160;
+  #if (!$group.Attributes.isEmpty())
+     <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteattributes" />&#160;
+  ##   <input type="submit" value="$l10n.Resort" name="eventSubmit_doSaveattributes" />
+  #end
+</div>
+#end
+
+<div class="functnbar2">
+#if (!$issueTypeLocked && !$immutable)
+<input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
+#end
+<input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
+</div>
+
+$intake.declareGroups()
+</form>
+#end
+</div>

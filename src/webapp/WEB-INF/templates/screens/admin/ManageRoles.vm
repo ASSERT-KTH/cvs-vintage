@@ -1,0 +1,41 @@
+#**
+@author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+@version $Id: ManageRoles.vm,v 1.15 2003/12/01 22:50:42 mpoeschl Exp $
+*#
+
+<div id="manageRoles" class="app">
+
+<h3>$l10n.RoleList</h3>
+
+<form action="$link.setPage("admin,ManageRoles.vm")" method="post">
+  <input type="hidden" name="action" value="admin.ManageRoles" />
+
+<table cellpadding="3" cellspacing="2" border="1" width="100%">
+<tr>
+  <th width="60">$l10n.Select</th>
+  <th>$l10n.Role</th>
+</tr>
+
+#foreach ($role in $securityAdmin.Roles)
+#indexedRows ($velocityCount)
+  <label for="radio_$role.Name">
+  <td>
+      <input type="radio" name="name" value="$role.Name" id="radio_$role.Name" />
+  </td>
+  <td>
+    $role.Name
+  </td>
+  </label>
+</tr>
+#end
+</table>
+
+<div class="functnbar2">
+ <input type="submit" name="eventSubmit_doGotoeditrole" value="$l10n.Edit" />&#160;
+ <input type="submit" name="eventSubmit_doGotodeleterole" value="$l10n.Delete" />&#160;
+ <input type="submit" name="eventSubmit_doGotoaddrole" value="$l10n.AddNew" />
+</div>
+
+</form>
+
+</div>

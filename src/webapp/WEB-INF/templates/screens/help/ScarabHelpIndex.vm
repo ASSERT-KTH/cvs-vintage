@@ -1,0 +1,19 @@
+<div class="docs" id="ScarabHelpIndex"> 
+  <div id="toc"> 
+ 
+    <ul>
+      <li>Scarab Help 
+        <ul>
+          <li><a href="$link.setPage("help,Introduction,vm")">$l10n.IntroToScarab</a></li>
+          <li><a href="$link.setPage("help,UserIssues,vm")">$l10n.ManagingIssues</a></li>
+          <li><a href="$link.setPage("help,UserQuery,vm")">$l10n.SearchingDatabase</a></li>
+          <li><a href="$link.setPage("help,UserReports,vm")">$l10n.HelpReports</a></li>
+          <li><a href="$link.setPage("help,ScarabBestPractices,vm")">$l10n.BestPractices</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq,vm")">$l10n.HelpFAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary,vm")">$l10n.HelpGlossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+</div>

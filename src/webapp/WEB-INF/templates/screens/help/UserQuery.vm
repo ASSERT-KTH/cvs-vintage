@@ -1,0 +1,63 @@
+<div class="docs" id="userquery"> 
+  <div id="toc"> 
+       <ul>
+      <li>$l10n.ScarabHelp 
+        <ul>
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
+          <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a></li>
+          <li>$l10n.SearchingDatabase
+            <ul>
+             <li><strong>$l10n.SearchingOverview</strong>
+              <ul>
+               <li><a href="#bar">$l10n.QueryBar</a></li>
+               <li><a href="#issueid">$l10n.SearchIssue</a></li>
+              </ul>
+             </li>
+            <li><a href="$link.setPage("help,UserQueryAdvanced.vm")">$l10n.AdvancedQueries</a></li>
+            <li><a href="$link.setPage("help,UserQueryCustom.vm")">$l10n.CustomQueries</a></li>
+            <li><a href="$link.setPage("help,UserQueryText.vm")">$l10n.TextQueries</a></li>
+            <li><a href="$link.setPage("help,UserQuerySaved.vm")">$l10n.SavedQueries</a></li>
+            <li><a href="$link.setPage("help,UserQueryCrossProject.vm")">$l10n.CrossProjectQueries</a></li>
+            <li><a href="$link.setPage("help,UserQueryComplex.vm")">$l10n.QueryLimits</a></li>
+           </ul>
+           </li>
+          <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
+        </ul>
+      </li>
+    </ul>  
+  </div>
+  <h3><strong><a name="top" id="top">$l10n.SearchingDatabase</a></strong></h3>
+  <p>$l10n.UQP1S1 <em>$l10n.IssueList</em> $l10n.UQP1S2</p>
+  <ul>
+    <li>$l10n.UQP2</li>
+    <li>$l10n.UQP3</li>
+    <li>$l10n.UQP4</li>
+    <li>$l10n.UQP5</li>
+  </ul>
+  <p>$l10n.UQP6 </p>
+  <h4><a name="bar" id="bar">$l10n.QueryBar</a></h4>
+  <p>$l10n.UQP7</p>
+  <ul>
+    <li>$l10n.UQP8S1</li>
+    <li>$l10n.The <strong>$l10n.IssueId</strong> $l10n.UQP9</li>
+    <li><strong>$l10n.AdvancedQueries</strong> $l10n.UQP10</li>
+    <li><strong>$l10n.CustomQueries</strong> $l10n.UQP11</li>
+    <li><strong>$l10n.TextQueries</strong> $l10n.UQP20</li>
+    <li><strong>$l10n.MyIssues</strong> $l10n.UQP21</li>
+    <li><strong>$l10n.MostRecent</strong> $l10n.UQP12</li>
+  </ul>
+  <h4><a name="issueid" id="issueid">$l10n.SearchIssue</a></h4>
+  <p>$l10n.UQP13S1 <strong>$l10n.IssueId</strong> $l10n.UQP13S2</p>
+  <p>$l10n.UQP14</p>
+  <ul>
+    <li> $l10n.UQP15</li>
+    <li> $l10n.UQP16</li>
+    <li> $l10n.UQP17</li>
+  </ul>
+  <p> $l10n.UQP18S1 <strong>$l10n.IssueId</strong> $l10n.UQP18S2</p>
+  <p>$l10n.UQP19</p>
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div>
+</div>

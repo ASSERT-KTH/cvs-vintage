@@ -1,0 +1,90 @@
+<div id="register" class="app">
+
+<h3>$l10n.Registration</h3>
+
+<form name="register" action="$link.setPage("Register.vm")" method="post">
+<input type="hidden" name="action" value="Register" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="RegisterConfirm.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm" />
+
+## we set $password because we don't want the mapped users password to
+## show up in the form! Doh!
+#set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
+#if ($user.FirstName)
+  #set ($regGroup = $intake.Register.mapTo($user))
+  #set ($password = "")
+#else
+  #set ($regGroup = $intake.Register.Default)
+  #set ($password = $regGroup.Password)
+#end
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+ <th width="130"> * $l10n.FirstName</th>
+ <td>
+  <input name="$regGroup.FirstName.Key" value="$regGroup.FirstName" type="text" size="25" tabindex="1" />
+  #fieldErrorMsg($regGroup.FirstName "")
+ </td>
+</tr>
+<tr>
+ <th> * $l10n.LastName</th>
+ <td>
+  <input name="$regGroup.LastName.Key" value="$regGroup.LastName" type="text" size="25" tabindex="2" />
+  #fieldErrorMsg($regGroup.LastName "")
+ </td>
+</tr>
+<tr>
+ <th> * $l10n.Email</th>
+ <td>
+  <input name="$regGroup.Email.Key" value="$regGroup.Email" type="text" size="25" tabindex="3" />
+  #fieldErrorMsg($regGroup.Email "")
+<p><small>
+ $l10n.EnterValidEmailAddress
+</small></p>
+ </td>
+</tr>
+<tr>
+ <th> * $l10n.Username</th>
+ <td>
+  <input name="$regGroup.UserName.Key" value="$regGroup.UserName" type="text" size="25" tabindex="4" />
+  #fieldErrorMsg($regGroup.UserName "")
+<p><small>$l10n.UserNameCanBe</small></p>
+ </td>
+</tr>
+<tr>
+ <th> * $l10n.Password</th>
+ <td>
+  <input name="$regGroup.Password.Key" type="password" value="$password" size="25" tabindex="5" />
+  #if ($password.Message)
+  #fieldErrorMsg($password "")
+  #end
+ </td>
+</tr>
+<tr>
+ <th> * $l10n.ConfirmPassword</th>
+ <td>
+  <input name="$regGroup.PasswordConfirm.Key" type="password" value="$regGroup.PasswordConfirm" size="25" tabindex="6" />
+  #fieldErrorMsg($regGroup.PasswordConfirm "")
+ </td>
+</tr>
+</table>
+</div>
+
+#asterisk()
+
+<div class="functnbar2">
+ <input type="submit" name="eventSubmit_doRegister" value="Register" tabindex="7" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" tabindex="8" />
+</div>
+
+$intake.declareGroups()
+
+<script>
+<!--
+document.register.${regGroup.FirstName.Key}.focus();
+// -->
+</script>
+
+</form>
+</div>

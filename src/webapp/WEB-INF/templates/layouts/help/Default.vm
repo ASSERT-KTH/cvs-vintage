@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
+    "$staticLink.setPath("/style/tigris_transitional.dtd")">
+
+#set ($page.Title = $l10n.Title)
+<html>
+ <head>
+  <title>$page.Title</title>
+  <meta http-equiv="Content-type" content="$data.ContentType" />
+  <style type="text/css">
+  @import url($staticLink.setPath("/style/tigris.css"));
+  </style>
+  <link rel="stylesheet" type="text/css" href="$staticLink.setPath("/style/print.css")" media="print" />
+<script type="text/javascript">
+if (document.layers) 
+{ 
+document.writeln('<link rel="stylesheet" type="text/css" href="$staticLink.setPath("/style/ns4_only.css")" media="screen" />')
+}
+</script>
+ </head>
+<body class="docs" onload="self.focus()">
+$renderer.render("screens", $template)
+</body>
+</html>
