@@ -1,4 +1,4 @@
-// $Id: ActionPageSetup.java,v 1.3 2005/01/09 14:58:13 linus Exp $
+// $Id: ActionPageSetup.java,v 1.4 2005/03/07 21:54:04 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,22 +26,26 @@ package org.argouml.ui.cmd;
 
 import java.awt.event.ActionEvent;
 
-import org.argouml.uml.ui.UMLAction;
+import javax.swing.AbstractAction;
+
+import org.argouml.application.helpers.ResourceLoaderWrapper;
+import org.argouml.i18n.Translator;
 
 /** Page setup for printing.
  */
-class ActionPageSetup extends UMLAction {
-    private static ActionPrint ap = new ActionPrint();
+class ActionPageSetup extends AbstractAction {
 
     public ActionPageSetup() {
-        super("action.page-setup", HAS_ICON);
+        super(Translator.localize("action.page-setup"), ResourceLoaderWrapper
+                .lookupIconResource(Translator.getImageBinding("PageSetup"),
+                        Translator.localize("action.page-setup")));
     }
 
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-	ap.getCmdPrint().doPageSetup();
+	    PrintManager.getInstance().showPageSetupDialog();
     }
 } /* end class ActionPageSetup */
 

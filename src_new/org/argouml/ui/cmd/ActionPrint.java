@@ -1,4 +1,4 @@
-// $Id: ActionPrint.java,v 1.3 2005/01/09 14:58:13 linus Exp $
+// $Id: ActionPrint.java,v 1.4 2005/03/07 21:54:04 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,10 @@ package org.argouml.ui.cmd;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.AbstractAction;
+
+import org.argouml.application.helpers.ResourceLoaderWrapper;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.uml.ui.UMLAction;
 import org.tigris.gef.base.CmdPrint;
@@ -36,34 +40,21 @@ import org.tigris.gef.base.Diagram;
 // file menu actions
 /** print the current active diagram.
  */
-public class ActionPrint extends UMLAction {
-
-    private final CmdPrint cmd = new CmdPrint();
+public class ActionPrint extends AbstractAction {
 
     /**
      * The constructor.
      */
     public ActionPrint() {
-        super("action.print", HAS_ICON);
+        super(Translator.localize("action.print"), ResourceLoaderWrapper
+                .lookupIconResource(Translator.getImageBinding("Print"),
+                        Translator.localize("action.print")));
     }
 
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-	Object target =
-	    ProjectManager.getManager().getCurrentProject().getActiveDiagram();
-	if (target instanceof Diagram) {
-	    String n = ((Diagram) target).getName();
-	    cmd.setDiagramName(n);
-	    cmd.doIt();
-	}
-    }
-
-    /**
-     * @return the command to print
-     */
-    public CmdPrint getCmdPrint() {
-	return cmd;
+        PrintManager.getInstance().print();
     }
 } /* end class ActionPrint */
