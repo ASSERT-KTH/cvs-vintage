@@ -139,7 +139,6 @@ public abstract class AbstractHeaderCache {
 		}
 
 		headerList = new HeaderList(capacity);
-		Integer uid;
 
 		//System.out.println("Number of Messages : " + capacity);
 
@@ -210,7 +209,6 @@ public abstract class AbstractHeaderCache {
 		ColumbaHeader h;
 		//Message message;
 
-		int i = 0;
 		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
 			Object uid = e.nextElement();
 
@@ -219,16 +217,6 @@ public abstract class AbstractHeaderCache {
 			if (h != null)
 				saveHeader(p, h);
 		}
-		/*
-		for (int i = 0; i < count; i++) {
-			p.writeInt(i + 1);
-		
-			h = headerList.getHeader(new Integer(i));
-		
-			saveHeader(p, h);
-		
-		}
-		*/
 		//p.flush();
 		p.close();
 	}
