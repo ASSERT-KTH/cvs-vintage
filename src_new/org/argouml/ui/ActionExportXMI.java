@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.14 2005/01/02 16:43:42 linus Exp $
+// $Id: ActionExportXMI.java,v 1.15 2005/01/03 15:43:06 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.ui;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.Writer;
 import java.text.MessageFormat;
 import java.util.Vector;
 
@@ -41,7 +42,13 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.ProjectMember;
+import org.argouml.persistence.DiagramMemberFilePersister;
+import org.argouml.persistence.MemberFilePersister;
+import org.argouml.persistence.ModelMemberFilePersister;
+import org.argouml.persistence.TodoListMemberFilePersister;
 import org.argouml.uml.ProjectMemberModel;
+import org.argouml.uml.cognitive.ProjectMemberTodoList;
+import org.argouml.uml.diagram.ProjectMemberDiagram;
 import org.argouml.uml.ui.UMLAction;
 
 /**
@@ -212,7 +219,16 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
                 currentProject.getMembers().getMember(ProjectMemberModel.class);
 
             try {
-                member.save(new FileWriter(selectedFile), null);
+                Writer writer = new FileWriter(selectedFile);
+                MemberFilePersister persister = null;
+                if (member instanceof ProjectMemberDiagram) {
+                    persister = new DiagramMemberFilePersister();
+                } else if (member instanceof ProjectMemberTodoList) {
+                    persister = new TodoListMemberFilePersister();
+                } else if (member instanceof ProjectMemberModel) {
+                    persister = new ModelMemberFilePersister();
+                }
+                persister.save(member, writer, null);
             } catch (Exception ex) {
                 String sMessage =
                     MessageFormat.format(Translator.localize(
