@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsHelper.java,v 1.1 2004/11/01 19:55:06 mvw Exp $
+// $Id: ActivityGraphsHelper.java,v 1.2 2004/12/12 13:16:36 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,7 +86,7 @@ public class ActivityGraphsHelper {
             ns = ModelFacade.getNamespace(ns);
         if (ns != null) {
             Collection c = ModelManagementHelper.getHelper()
-                .getAllModelElementsOfKind(ns, (Class) ModelFacade.CLASSIFIER);
+                .getAllModelElementsOfKind(ns, ModelFacade.CLASSIFIER);
             Iterator i = c.iterator();
             while (i.hasNext()) { 
                 Object classifier = i.next();
