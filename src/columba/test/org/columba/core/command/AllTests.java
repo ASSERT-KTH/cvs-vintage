@@ -29,7 +29,6 @@ public class AllTests {
 
         //$JUnit-BEGIN$
         suite.addTest(new TestSuite(DefaultProcessorTest.class));
-        suite.addTest(new TestSuite(UndoManagerTest.class));
 
         //$JUnit-END$
         return suite;

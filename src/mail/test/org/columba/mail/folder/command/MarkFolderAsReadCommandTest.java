@@ -25,7 +25,7 @@ import org.columba.core.util.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTest;
 import org.columba.mail.folder.MHFolderFactory;
-import org.columba.mail.folder.MailboxTestFactory;
+import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.mail.folder.MessageFolder;
 
 /**
@@ -33,19 +33,16 @@ import org.columba.mail.folder.MessageFolder;
  */
 public class MarkFolderAsReadCommandTest extends AbstractFolderTest {
 
+    public MarkFolderAsReadCommandTest(String arg0) {
+        super(arg0);
+    }
+    
     /**
      * @param factory folder factory
      * @param test the name of the test
      */
-    public MarkFolderAsReadCommandTest(MailboxTestFactory factory, String test) {
+    public MarkFolderAsReadCommandTest(MailboxTstFactory factory, String test) {
         super(factory, test);
-    }
-
-    /**
-     * @param test the name of the test
-     */
-    public MarkFolderAsReadCommandTest(String test) {
-        super(new MHFolderFactory(), test);
     }
 
     /**

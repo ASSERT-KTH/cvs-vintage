@@ -30,7 +30,7 @@ import org.columba.core.io.DiskIO;
  * 
  * @author fdietz
  */
-public final class FolderTestHelper {
+public final class FolderTstHelper {
 
     /**
      * This directory is used to create mail folders

@@ -53,9 +53,10 @@ public class PlasticLookAndFeelPlugin extends AbstractThemePlugin {
      */
     public void setLookAndFeel() throws Exception {
         UIManager.put(Options.USE_SYSTEM_FONTS_APP_KEY, Boolean.TRUE);
+        
         Options.setGlobalFontSizeHints(FontSizeHints.MIXED);
         Options.setDefaultIconSize(new Dimension(16, 16));
-
+        
         ClearLookManager.setMode(ClearLookMode.ON);
         ClearLookManager.setPolicy(
             "com.jgoodies.clearlook.DefaultClearLookPolicy");

@@ -41,7 +41,7 @@ public class DefaultCommandProcessor implements CommandProcessor, Runnable {
      */
     private boolean isBusy;
     
-    private UndoManager undoManager;
+  
     private TaskManager taskManager;
     private int timeStamp;
 
@@ -65,7 +65,6 @@ public class DefaultCommandProcessor implements CommandProcessor, Runnable {
 
         taskManager = new TaskManager();
 
-        undoManager = new UndoManager(this);
         timeStamp = 0;
         
         new Thread(this).start();
@@ -283,14 +282,7 @@ public class DefaultCommandProcessor implements CommandProcessor, Runnable {
         return isBusy;
     }
 
-    /**
-     * Returns the undoManager.
-     * 
-     * @return UndoManager
-     */
-    public UndoManager getUndoManager() {
-        return undoManager;
-    }
+    
 
     /**
      * Returns the taskManager.

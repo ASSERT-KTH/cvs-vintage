@@ -23,7 +23,7 @@ import org.columba.mail.folder.mh.CachedMHFolder;
  * @author fdietz
  *  
  */
-public class MHFolderFactory implements MailboxTestFactory {
+public class MHFolderFactory implements MailboxTstFactory {
 
     /**
      *  
@@ -34,11 +34,11 @@ public class MHFolderFactory implements MailboxTestFactory {
     }
 
     /**
-     * @see org.columba.mail.folder.MailboxTestFactory#createSourceFolder()
+     * @see org.columba.mail.folder.MailboxTstFactory#createSourceFolder()
      */
     public MessageFolder createFolder(int folderId) {
         return new CachedMHFolder("test" + folderId, "CachedMHFolder",
-                FolderTestHelper.homeDirectory + "/folders/");
+                FolderTstHelper.homeDirectory + "/folders/");
 
     }
 

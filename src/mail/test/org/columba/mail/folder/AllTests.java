@@ -44,7 +44,7 @@ public class AllTests {
      * @param factory
      *            factory which creates the folder instances
      */
-    private static void setup(TestSuite suite, MailboxTestFactory factory) {
+    private static void setup(TestSuite suite, MailboxTstFactory factory) {
         try {
             for (int j = 0; j < list.length; j++) {
                 Class clazz = Class.forName("org.columba.mail.folder."
@@ -55,7 +55,7 @@ public class AllTests {
                     if (methods[i].getName().startsWith("test")) {
 
                         suite.addTest((TestCase) clazz.getConstructor(
-                                new Class[] { MailboxTestFactory.class,
+                                new Class[] { MailboxTstFactory.class,
                                         String.class}).newInstance(
                                 new Object[] { factory, methods[i].getName()}));
                     }

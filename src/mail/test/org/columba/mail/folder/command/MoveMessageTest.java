@@ -22,8 +22,8 @@ import java.io.InputStream;
 import org.columba.core.util.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTest;
-import org.columba.mail.folder.FolderTestHelper;
-import org.columba.mail.folder.MailboxTestFactory;
+import org.columba.mail.folder.FolderTstHelper;
+import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.ristretto.message.MessageFolderInfo;
 
 /**
@@ -31,19 +31,23 @@ import org.columba.ristretto.message.MessageFolderInfo;
  */
 public class MoveMessageTest extends AbstractFolderTest {
 
+    public MoveMessageTest(String arg0) {
+        super(arg0);
+    }
+    
     /**
      * @param arg0
      */
-    public MoveMessageTest(MailboxTestFactory factory, String arg0) {
+    public MoveMessageTest(MailboxTstFactory factory, String arg0) {
         super(factory, arg0);
     }
 
     public void testMoveMessage() throws Exception {
         //		 add message "0.eml" as inputstream to folder
-        String input = FolderTestHelper.getString(0);
+        String input = FolderTstHelper.getString(0);
         System.out.println("input=" + input);
         // create stream from string
-        ByteArrayInputStream inputStream = FolderTestHelper.getByteArrayInputStream(input);
+        ByteArrayInputStream inputStream = FolderTstHelper.getByteArrayInputStream(input);
         // add stream to folder
         Object uid = getSourceFolder().addMessage(inputStream);
 
@@ -61,7 +65,7 @@ public class MoveMessageTest extends AbstractFolderTest {
         // get inputstream of this message from folder
         InputStream outputStream = destFolder.getMessageSourceStream(uid);
         // create string from inputstream
-        String output = FolderTestHelper.getStringFromInputStream(outputStream);
+        String output = FolderTstHelper.getStringFromInputStream(outputStream);
         // compare both messages
         assertEquals(input, output);
         MessageFolderInfo info = getDestFolder().getMessageFolderInfo();

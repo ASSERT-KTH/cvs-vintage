@@ -25,11 +25,16 @@ import java.io.InputStream;
  */
 public class GetMessageSourceStreamTest extends AbstractFolderTest {
 
+    
+    public GetMessageSourceStreamTest(String arg0) {
+        super(arg0);
+    }
+    
     /**
      * @param factory
      * @param test
      */
-    public GetMessageSourceStreamTest(MailboxTestFactory factory, String test) {
+    public GetMessageSourceStreamTest(MailboxTstFactory factory, String test) {
         super(factory, test);
     }
 
@@ -40,11 +45,11 @@ public class GetMessageSourceStreamTest extends AbstractFolderTest {
      */
     public void test() throws Exception {
         // add message "0.eml" as inputstream to folder
-        String input = FolderTestHelper.getString(0);
+        String input = FolderTstHelper.getString(0);
         System.out.println("input=" + input);
 
         // create stream from string
-        ByteArrayInputStream inputStream = FolderTestHelper
+        ByteArrayInputStream inputStream = FolderTstHelper
                 .getByteArrayInputStream(input);
 
         // add stream to folder
@@ -54,7 +59,7 @@ public class GetMessageSourceStreamTest extends AbstractFolderTest {
         InputStream outputStream = sourceFolder.getMessageSourceStream(uid);
 
         // create string from inputstream
-        String output = FolderTestHelper.getStringFromInputStream(outputStream);
+        String output = FolderTstHelper.getStringFromInputStream(outputStream);
 
         // compare both messages
         assertEquals("message source should be equal", input, output);

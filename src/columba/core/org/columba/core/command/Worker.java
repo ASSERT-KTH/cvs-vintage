@@ -101,9 +101,6 @@ public class Worker extends SwingWorker implements WorkerStatusController {
         try {
             op.process(this, operationMode);
 
-            if (!cancelled() && (operationMode == Command.FIRST_EXECUTION)) {
-                boss.getUndoManager().addToUndo(op);
-            }
         } catch (CommandCancelledException e) {
             LOG.info("Command cancelled: " + this);
         } catch (Exception e) {

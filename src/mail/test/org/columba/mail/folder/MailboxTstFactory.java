@@ -22,7 +22,7 @@ package org.columba.mail.folder;
  * @author fdietz
  *
  */
-public interface MailboxTestFactory {
+public interface MailboxTstFactory {
 
     MessageFolder createFolder(int folderId);
 }

@@ -29,12 +29,15 @@ import org.columba.ristretto.message.MessageFolderInfo;
 public class AddMessageFolderTest extends AbstractFolderTest {
 
   
+    public AddMessageFolderTest(String arg0) {
+        super(arg0);
+    }
     /**
      * Constructor for CachedMHFolderTest.
      *
      * @param arg0
      */
-    public AddMessageFolderTest(MailboxTestFactory factory, String arg0) {
+    public AddMessageFolderTest(MailboxTstFactory factory, String arg0) {
         super(factory, arg0);
     }
 
@@ -56,11 +59,11 @@ public class AddMessageFolderTest extends AbstractFolderTest {
         assertEquals("starting with empty folder", 0, info1.getExists());
 
         // add message "0.eml" as inputstream to folder
-        String input = FolderTestHelper.getString(0);
+        String input = FolderTstHelper.getString(0);
         System.out.println("input=" + input);
 
         // create stream from string
-        ByteArrayInputStream inputStream = FolderTestHelper
+        ByteArrayInputStream inputStream = FolderTstHelper
                 .getByteArrayInputStream(input);
 
         // add stream to folder
@@ -70,7 +73,7 @@ public class AddMessageFolderTest extends AbstractFolderTest {
         InputStream outputStream = sourceFolder.getMessageSourceStream(uid);
 
         // create string from inputstream
-        String output = FolderTestHelper.getStringFromInputStream(outputStream);
+        String output = FolderTstHelper.getStringFromInputStream(outputStream);
 
         // compare both messages
         assertEquals("message source should be equal", input, output);
@@ -99,11 +102,11 @@ public class AddMessageFolderTest extends AbstractFolderTest {
         assertEquals("starting with empty folder", 0, info1.getExists());
 
         //		 add message "0.eml" as inputstream to folder
-        String input = FolderTestHelper.getString(0);
+        String input = FolderTstHelper.getString(0);
         System.out.println("input=" + input);
 
         // create stream from string
-        ByteArrayInputStream inputStream = FolderTestHelper
+        ByteArrayInputStream inputStream = FolderTstHelper
                 .getByteArrayInputStream(input);
 
         // add stream to folder

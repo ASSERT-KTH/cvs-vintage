@@ -212,7 +212,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	<!-- run test for all defined testcases -->
 	<target name="test" depends="compile-tests" 
 	description="runs all tests for columba. Failures only reported on console.">
-		<junit fork="no" haltonfailure="no">
+		<junit fork="no" haltonfailure="yes">
 			<classpath>
 				<pathelement path="${ownclasspath}"/>
 				<pathelement path="${test-dest}"/>

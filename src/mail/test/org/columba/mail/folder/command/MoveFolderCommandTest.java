@@ -18,7 +18,7 @@ package org.columba.mail.folder.command;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTest;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.MailboxTestFactory;
+import org.columba.mail.folder.MailboxTstFactory;
 
 /**
  * Test cases for the MoveFolder command.
@@ -27,7 +27,11 @@ import org.columba.mail.folder.MailboxTestFactory;
  */
 public class MoveFolderCommandTest extends AbstractFolderTest {
 
-    public MoveFolderCommandTest(MailboxTestFactory factory, String arg0) {
+    public MoveFolderCommandTest(String arg0) {
+        super(arg0);
+    }
+    
+    public MoveFolderCommandTest(MailboxTstFactory factory, String arg0) {
         super(factory, arg0);
     }
     /**

@@ -21,8 +21,8 @@ import java.io.InputStream;
 
 import org.columba.core.util.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.FolderTestHelper;
-import org.columba.mail.folder.MailboxTestFactory;
+import org.columba.mail.folder.FolderTstHelper;
+import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.mail.gui.composer.ComposerModel;
 
 /**
@@ -31,20 +31,25 @@ import org.columba.mail.gui.composer.ComposerModel;
  */
 public class ReplyCommandTest extends AbstractComposerTestCase {
 
+    public ReplyCommandTest(String arg0) {
+        super(arg0);
+        
+    }
+    
     /**
      * @param arg0
      */
-    public ReplyCommandTest(MailboxTestFactory factory, String arg0) {
+    public ReplyCommandTest(MailboxTstFactory factory, String arg0) {
         super(factory, arg0);
     }
 
     public void test() throws Exception {
 
         // add message "0.eml" as inputstream to folder
-        String input = FolderTestHelper.getString(0);
+        String input = FolderTstHelper.getString(0);
         System.out.println("input=" + input);
         // create stream from string
-        InputStream inputStream = FolderTestHelper
+        InputStream inputStream = FolderTstHelper
                 .getByteArrayInputStream(input);
         // add stream to folder
         Object uid = getSourceFolder().addMessage(inputStream);

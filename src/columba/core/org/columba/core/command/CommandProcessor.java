@@ -26,6 +26,5 @@ public interface CommandProcessor {
     public boolean isBusy();
     
     public TaskManager getTaskManager();
-    
-    public UndoManager getUndoManager();
+  
 }

@@ -19,8 +19,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 
-public class XmlTest {
-    public XmlTest() {
+public class XmlDemo {
+    public XmlDemo() {
     }
 
     public static void main(String[] argv) {

@@ -23,7 +23,7 @@ import org.columba.mail.folder.temp.TempFolder;
  * @author fdietz
  *  
  */
-public class TempFolderFactory implements MailboxTestFactory {
+public class TempFolderFactory implements MailboxTstFactory {
 
     /**
      *  
@@ -34,10 +34,10 @@ public class TempFolderFactory implements MailboxTestFactory {
     }
 
     /**
-     * @see org.columba.mail.folder.MailboxTestFactory#createSourceFolder(int)
+     * @see org.columba.mail.folder.MailboxTstFactory#createSourceFolder(int)
      */
     public MessageFolder createFolder(int folderId) {
-        return new TempFolder(FolderTestHelper.homeDirectory + "/folders/"
+        return new TempFolder(FolderTstHelper.homeDirectory + "/folders/"
                 + folderId);
     }
 

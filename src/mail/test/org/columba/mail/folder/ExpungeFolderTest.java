@@ -28,10 +28,14 @@ import org.columba.ristretto.message.MessageFolderInfo;
  */
 public class ExpungeFolderTest extends AbstractFolderTest {
 
+    public ExpungeFolderTest(String arg0) {
+        super(arg0);
+    }
+    
     /**
      * @param arg0
      */
-    public ExpungeFolderTest(MailboxTestFactory factory, String arg0) {
+    public ExpungeFolderTest(MailboxTstFactory factory, String arg0) {
         super(factory, arg0);
 
     }
@@ -43,10 +47,10 @@ public class ExpungeFolderTest extends AbstractFolderTest {
      */
     public void testExpungeMessage() throws Exception {
         //		 add message "0.eml" as inputstream to folder
-        String input = FolderTestHelper.getString(0);
+        String input = FolderTstHelper.getString(0);
         System.out.println("input=" + input);
         // create stream from string
-        ByteArrayInputStream inputStream = FolderTestHelper
+        ByteArrayInputStream inputStream = FolderTstHelper
                 .getByteArrayInputStream(input);
         // add stream to folder
         Object uid = getSourceFolder().addMessage(inputStream);
@@ -76,10 +80,10 @@ public class ExpungeFolderTest extends AbstractFolderTest {
      */
     public void testExpungeMessage2() throws Exception {
         //		 add message "0.eml" as inputstream to folder
-        String input = FolderTestHelper.getString(0);
+        String input = FolderTstHelper.getString(0);
         System.out.println("input=" + input);
         // create stream from string
-        ByteArrayInputStream inputStream = FolderTestHelper
+        ByteArrayInputStream inputStream = FolderTstHelper
                 .getByteArrayInputStream(input);
         // add stream to folder
         Object uid = getSourceFolder().addMessage(inputStream);

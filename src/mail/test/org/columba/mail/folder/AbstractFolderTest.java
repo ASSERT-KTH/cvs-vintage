@@ -33,7 +33,7 @@ import junit.framework.TestCase;
  * @author fdietz
  * @author redsolo
  */
-public abstract class AbstractFolderTest extends TestCase {
+public class AbstractFolderTest extends TestCase {
 
     /** A source folder. */
     protected MessageFolder sourceFolder;
@@ -46,12 +46,27 @@ public abstract class AbstractFolderTest extends TestCase {
 
     private static int folderId = 0;
 
-    private MailboxTestFactory factory;
+    private MailboxTstFactory factory;
 
     /**
      * Constructor for test.
+     * <p>
+     * This is used when executing this individual test only or
+     * by the ant task.
+     * <p>
      */
-    public AbstractFolderTest(MailboxTestFactory factory, String test) {
+    public AbstractFolderTest(String test) {
+        super(test);
+
+        this.factory = new MHFolderFactory();
+    }
+    
+    /**
+     * Constructor for test.
+     * <p>
+     * Used by {@link AllTests}.
+     */
+    public AbstractFolderTest(MailboxTstFactory factory, String test) {
         super(test);
 
         this.factory = factory;
@@ -92,7 +107,7 @@ public abstract class AbstractFolderTest extends TestCase {
             // delete folder
             f.delete();
         }
-        new File(FolderTestHelper.homeDirectory + "/folders/").delete();
+        new File(FolderTstHelper.homeDirectory + "/folders/").delete();
     }
 
     /**
@@ -107,5 +122,13 @@ public abstract class AbstractFolderTest extends TestCase {
      */
     public MessageFolder getDestFolder() {
         return destFolder;
+    }
+    
+    /**
+     * Empty test, so that the automatic ant task doesn't fail.
+     *
+     */
+    public void testForAntTask() {
+        
     }
 }

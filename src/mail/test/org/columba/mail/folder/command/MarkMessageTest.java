@@ -23,8 +23,8 @@ import java.io.ByteArrayInputStream;
 import org.columba.core.util.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTest;
-import org.columba.mail.folder.FolderTestHelper;
-import org.columba.mail.folder.MailboxTestFactory;
+import org.columba.mail.folder.FolderTstHelper;
+import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.MessageFolderInfo;
 
@@ -37,10 +37,15 @@ public class MarkMessageTest extends AbstractFolderTest {
 
     private ByteArrayInputStream inputStream;
 
+    
+    public MarkMessageTest(String arg0) {
+        super(arg0);
+    }
+    
     /**
      * @param arg0
      */
-    public MarkMessageTest(MailboxTestFactory factory, String arg0) {
+    public MarkMessageTest(MailboxTstFactory factory, String arg0) {
         super(factory, arg0);
     }
 
@@ -122,10 +127,10 @@ public class MarkMessageTest extends AbstractFolderTest {
         super.setUp();
 
         // add message "0.eml" as inputstream to folder
-        String input = FolderTestHelper.getString(0);
+        String input = FolderTstHelper.getString(0);
         System.out.println("input=" + input);
         // create stream from string
-        inputStream = FolderTestHelper.getByteArrayInputStream(input);
+        inputStream = FolderTstHelper.getByteArrayInputStream(input);
         // add stream to folder
         uid = getSourceFolder().addMessage(inputStream);
 
