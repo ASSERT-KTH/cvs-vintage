@@ -169,10 +169,13 @@ function initializeAll() {
   <table border="0" cellspacing="0" cellpadding="8" width="100%">
   <tr>
   <td>
-  <a href="$link.setPage("Index.vm")"><img src="$staticLink.setPath("/images/logo.gif")" alt="Scarab" width="118" height="23" border="0" /></a>
+  <a href="$link.setPage("Index.vm")"><img src="$staticLink.setPath("../images/logo.gif")" alt="Scarab" width="118" height="23" border="0" /></a>
   </td>
   <td valign="center">
   $scarabG.SiteName
+  #if($scarabG.SiteLogo)
+  <img src="$staticLink.setPath("$scarabG.SiteLogo")" border="1"/>
+  #end
   </td>
     #if (!$data.User.hasLoggedIn())
     <td>

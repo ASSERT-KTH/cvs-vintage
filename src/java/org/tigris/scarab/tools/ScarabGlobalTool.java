@@ -101,7 +101,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.64 2004/07/29 09:55:26 legout Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.65 2004/12/13 21:59:24 dabbous Exp $
  */
 public class ScarabGlobalTool
     implements ApplicationTool
@@ -131,6 +131,9 @@ public class ScarabGlobalTool
 
     private static String siteName = 
         Turbine.getConfiguration().getString("scarab.site.name","");
+
+    private static String siteLogo = 
+        Turbine.getConfiguration().getString("scarab.site.logo","");
 
     public void init(Object data)
     {
@@ -684,6 +687,20 @@ public class ScarabGlobalTool
             siteName = "";
         }
         return siteName;
+    }
+
+    /**
+     * Provides the site logo for the top banner.
+     *
+     * @return the configured site logo
+     */
+    public String getSiteLogo()
+    {
+        if (siteLogo == null)
+        {
+            siteLogo = "";
+        }
+        return siteLogo;
     }
 
     /**
