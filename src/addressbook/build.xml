@@ -5,6 +5,11 @@
 	<property name="currsrc" value="${src}"/>
 	
 	<target name="compile">
+		<antcall target="compile-classes"/>
+		<antcall target="compile-tests"/>
+	</target>
+
+	<target name="compile-classes">
 		<echo message="compile adressbook"/>
 		<ant dir="./core" target="compile" inheritall="false">
 			<property name="dest" value="${dest}"/>
@@ -16,5 +21,8 @@
 			<property name="ownclasspath" value="${ownclasspath}"/>
 			<property name="src" value="${currsrc}"/>
 		</ant>
+	</target>
+
+	<target name="compile-tests">
 	</target>
 </project>

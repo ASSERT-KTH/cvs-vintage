@@ -6,11 +6,19 @@
 	
 	<target name="compile">
 		<echo message="compile columba"/>
+		<antcall target="compile-classes"/>
+		<antcall target="compile-tests"/>
+	</target>
+	
+	<target name="compile-classes">
 		<ant dir="./core" target="compile" inheritall="false">
 			<property name="dest" value="${dest}"/>
 			<property name="ownclasspath" value="${ownclasspath}"/>
 			<property name="src" value="${currsrc}"/>
 		</ant>
+	</target>	
+	
+	<target name="compile-tests">
 		<ant dir="./test" target="compile" inheritall="false">
 			<property name="dest" value="${dest}"/>
 			<property name="ownclasspath" value="${ownclasspath}"/>
