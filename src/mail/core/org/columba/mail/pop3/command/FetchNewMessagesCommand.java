@@ -150,7 +150,7 @@ public class FetchNewMessagesCommand extends Command {
 		// server message numbers start with 1
 		// whereas List numbers start with 0
 		//  -> always increase fetch number
-		ColumbaMessage message = server.getMessage(serverUID);
+		ColumbaMessage message = server.getMessage(serverUID, worker);
 
 		if (message == null) {
 			LOG.severe("Message with UID=" + serverUID
@@ -181,8 +181,7 @@ public class FetchNewMessagesCommand extends Command {
 			totalSize += server.getMessageSize(it.next());
 		}
 
-		// return kB
-		return totalSize / 1024;
+		return totalSize;
 	}
 
 	public void downloadNewMessages(List newMessagesUIDList,
