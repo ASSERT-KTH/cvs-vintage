@@ -27,7 +27,7 @@ import javax.naming.NamingException;
  *
  * 6/22/01 - hchirino - The queue/topic jndi references are now configed via JMX
  *
- * @version <pre>$Revision: 1.6 $</pre>
+ * @version <pre>$Revision: 1.7 $</pre>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  */
@@ -39,6 +39,9 @@ public abstract class AbstractJMSProviderAdapter
 
     /** The provider url. */
     protected String providerURL;
+
+    /** The factory name to use. */
+    protected String factoryRef;
 
     /** The queue factory name to use. */
     protected String queueFactoryRef;
@@ -88,6 +91,15 @@ public abstract class AbstractJMSProviderAdapter
      * 
      * @return  ???
      */
+    public String getFactoryRef() {
+        return factoryRef;
+    }
+
+    /**
+     * ???
+     * 
+     * @return  ???
+     */
     public String getQueueFactoryRef() {
         return queueFactoryRef;
     }
@@ -99,6 +111,15 @@ public abstract class AbstractJMSProviderAdapter
      */
     public String getTopicFactoryRef() {
         return topicFactoryRef;
+    }
+
+    /**
+     * ???
+     * 
+     * @return  ???
+     */
+    public void setFactoryRef(String newFactoryRef) {
+        factoryRef = newFactoryRef;
     }
 
     /**

@@ -22,7 +22,7 @@ import java.io.Serializable;
  *
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public interface JMSProviderAdapter
    extends Serializable
@@ -40,8 +40,10 @@ public interface JMSProviderAdapter
    String getName();
    void setProviderUrl(String url);
    String getProviderUrl();
+   String getFactoryRef();
    String getQueueFactoryRef();
    String getTopicFactoryRef();
+   void setFactoryRef(String newFactoryRef);
    void setQueueFactoryRef(String newQueueFactoryRef);
    void setTopicFactoryRef(String newTopicFactoryRef);
 }

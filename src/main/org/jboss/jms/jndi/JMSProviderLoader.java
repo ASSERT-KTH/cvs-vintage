@@ -33,7 +33,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class JMSProviderLoader
    extends ServiceMBeanSupport
@@ -50,6 +50,9 @@ public class JMSProviderLoader
 
    /** The provider adapter classname. */
    protected String providerAdapterClass;
+
+   /** The factory jndi name. */
+   protected String factoryRef;
 
    /** The queue factory jndi name. */
    protected String queueFactoryRef;
@@ -127,6 +130,13 @@ public class JMSProviderLoader
    /**
     * @jmx:managed-attribute
     */
+   public void setFactoryRef(final String newFactoryRef) {
+      factoryRef = newFactoryRef;
+   }
+   
+   /**
+    * @jmx:managed-attribute
+    */
    public void setQueueFactoryRef(final String newQueueFactoryRef) {
       queueFactoryRef = newQueueFactoryRef;
    }
@@ -136,6 +146,13 @@ public class JMSProviderLoader
     */
    public void setTopicFactoryRef(final String newTopicFactoryRef) {
       topicFactoryRef = newTopicFactoryRef;
+   }
+
+   /**
+    * @jmx:managed-attribute
+    */
+   public String getFactoryRef() {
+      return factoryRef;
    }
 
    /**
@@ -177,6 +194,7 @@ public class JMSProviderLoader
       providerAdapter = (JMSProviderAdapter)cls.newInstance();
       providerAdapter.setName(providerName);
       providerAdapter.setProviderUrl(url);
+      providerAdapter.setFactoryRef(factoryRef);
       providerAdapter.setQueueFactoryRef(queueFactoryRef);
       providerAdapter.setTopicFactoryRef(topicFactoryRef);
 
