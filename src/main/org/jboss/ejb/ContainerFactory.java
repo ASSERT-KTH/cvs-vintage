@@ -78,7 +78,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Peter Antman (peter.antman@tim.se)
 *
-*   @version $Revision: 1.64 $
+*   @version $Revision: 1.65 $
 */
 public class ContainerFactory
   extends org.jboss.util.ServiceMBeanSupport
@@ -326,7 +326,7 @@ public class ContainerFactory
       log.log( "Deploying:" + appUrl );
 
       // create the _real_ classloader for this app
-      ClassLoader cl = new URLClassLoader( jarUrls, Thread.currentThread().getContextClassLoader() );
+      ClassLoader cl = Thread.currentThread().getContextClassLoader() ;
       app.setClassLoader( cl );
 
       for( int i = 0; i < jarUrls.length; i++ )

@@ -58,7 +58,7 @@ import org.w3c.dom.Element;
  *
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class Installer
 {
@@ -306,13 +306,13 @@ public class Installer
 					}
 				}
 
+*/
 				// put all ejb jars to the common classpath too
 				it = d.ejbModules.iterator();
 				if (it.hasNext())
 					log.log("add all ejb jar files to the common classpath");
 				while (it.hasNext())
 					d.commonUrls.add (((Deployment.Module)it.next()).localUrls.firstElement());
-*/
 				break;
 			}
 			saveConfig ();
