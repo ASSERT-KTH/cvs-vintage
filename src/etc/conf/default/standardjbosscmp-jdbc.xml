@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.26 2002/05/10 01:31:37 danch Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.27 2002/05/14 18:05:55 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -1177,7 +1177,11 @@
          <mapping>
             <java-type>java.lang.Object</java-type>
             <jdbc-type>JAVA_OBJECT</jdbc-type>
-            <sql-type>BLOB</sql-type>
+            <sql-type>LONGBLOB</sql-type>
+            <!--
+            | Change this from LONGBLOB to BLOB if you know your
+            | serialized object will be <= 2^16 bytes
+            -->
          </mapping>
          <mapping>
             <java-type>java.lang.Integer</java-type>
