@@ -1,3 +1,5 @@
+<html><title>Tomcat Self-Test</title>
+<body bgcolor="#FFFFFF">
 <h1>Tomcat Self-test</h1> 
 
 <%@ taglib uri="http://jakarta.apache.org/taglibs/tomcat_admin-1.0" 
@@ -32,22 +34,21 @@ Debug: <input type="checkbox" name="debug" value="10"><br>
    // Keep in mind this is just a way to jump-start testing, not a 
    // production-quality test runner.
 %>
-
+<!-- trozo  -->
 <% out.flush(); 
    if( request.getParameter("target") == null ) return;
 %>
-
+<!-- trozo  -->
 <adm:admin ctxPath="/test" 
 	   action="setLogger" 
 	   value="webapps/test/context_log.txt" />
-
-
+<!-- trozo 1 -->
 <adm:gtest testFile="WEB-INF/test-tomcat.xml" 
 	   testApp="/test" 
 	   target='<%= request.getParameter("target") %>' 
            debug='<%= request.getParameter("debug") %>' 
            outputType='none' />
-
+<!-- trozo 1 -->
 <% // Test completed, display the results ( outType=none means
    // Gtest doesn't generate any output ( but we have to wait untill
    // it's done ), use 'html' for "interactive" results
@@ -70,24 +71,10 @@ TEST: <%= failures.getMatcher().getTestDescription() %>
 <pre>
   <%= failures.getHttpClient().getFullRequest() %>
 </pre>
-
 <b>Message: </b>
 <pre>
   <%= failures.getMatcher().getMessage() %>
 </pre>
-
-<b>Response status: </b> 
-<%= failures.getHttpClient().getResponse().getResponseLine() %>
-<br>
-<b>Response headers: </b>
- (I'm not sure how to do embeded iterations, need JSP expert )
-<br>
-
-<b>Response body: </b>
-<pre>
-<%= failures.getHttpClient().getResponse().getResponseBody() %>
-</pre>
-
 </adm:iterate>
 
 <% // -------------------- Success story -------------------- %>
@@ -104,3 +91,5 @@ OK</a> ( <%= success.getDescription() %> )
 TEST: <%= success.getMatcher().getTestDescription() %>
 <br>
 </adm:iterate>
+</body>
+</html>
