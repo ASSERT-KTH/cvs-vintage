@@ -53,8 +53,6 @@ public class GlobalOptionsAction extends FrameAction {
 		GeneralOptionsDialog dialog =
 			new GeneralOptionsDialog(frameController.getView());
 
-		dialog.setVisible(true);
-
 		/*
 		ThemeSwitcher.updateFrame(frameController.getView());
 		*/
