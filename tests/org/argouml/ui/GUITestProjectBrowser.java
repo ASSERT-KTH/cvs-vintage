@@ -1,4 +1,4 @@
-// $Id: GUITestProjectBrowser.java,v 1.3 2004/07/23 17:53:53 linus Exp $
+// $Id: GUITestProjectBrowser.java,v 1.4 2004/09/03 07:27:10 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,7 +103,7 @@ public class GUITestProjectBrowser extends TestCase {
      * Test the existance of public members.
      */
     public void compileTestPublicMembers() {
-	assertNotNull(ProjectBrowser.getInstance().defaultFont);
+	assertNotNull(ProjectBrowser.getInstance().getDefaultFont());
     }
     
 

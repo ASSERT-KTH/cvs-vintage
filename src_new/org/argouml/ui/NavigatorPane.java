@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.69 2004/08/21 07:09:02 mvw Exp $
+// $Id: NavigatorPane.java,v 1.70 2004/09/03 07:27:10 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,8 +47,8 @@ import org.argouml.uml.ui.UMLAction;
 import org.tigris.toolbar.ToolBar;
 
 /**
- * The upper-left pane of the main Argo/UML window, contains a tree view
- * of the UML model.
+ * The upper-left pane of the main ArgoUML window, contains a tree view
+ * of the UML model. Currently named "Explorer" instead of "Navigator".
  *
  * <p>The model can be viewed from different tree "Perspectives".
  *
