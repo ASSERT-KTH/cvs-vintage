@@ -207,7 +207,7 @@
  <option value="">Choose...</option>
  #end
    #foreach ($user in $module.getUsers($attr.Permission))
-   #set ($selected = "") $user.PrimaryKey
+   #set ($selected = "") 
    #if ($user.PrimaryKey.toString().equals($currentValue.toString()))
    <option selected="selected" value="$user.PrimaryKey">$user.UserName</option>
    #else
