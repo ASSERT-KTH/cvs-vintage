@@ -65,7 +65,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.54 $
+ * @version $Revision: 1.55 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -1408,15 +1408,17 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       
       public void beforeCompletion()
       {
-         //no-op
-      }
-
-      public void afterCompletion(int status)
-      {
+         // Be Careful where you put this invalidate
+         // If you put it in afterCompletion, the beanlock will probably
+         // be released before the invalidate and you will have a race
          FieldState fieldState = (FieldState)fieldStateRef.get();
          if(fieldState != null) {
             fieldState.invalidate();
          }
+      }
+
+      public void afterCompletion(int status)
+      {
       }
    }
 }
