@@ -22,7 +22,8 @@ $l10n.NoDependencies
   #indexedRows($counter)
   #set ($counter = $counter + 1)
 #if ( $canEdit && $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $parent.Module) )
-  <td>#booleanCheckbox($dependGroup.Deleted)</td>
+  <td> #* Don't allow children issues to delete parent issues. Only
+         parents can delete children. #booleanCheckbox($dependGroup.Deleted) *#</td>
 #elseif ($canEdit)
   <td>&nbsp;</td>
 #end
