@@ -75,13 +75,14 @@
    #fieldErrorMsg($attgroup.Permission "")
         <select name="$attgroup.Permission.Key">
    		 <option value="">Select...</option>
-  #foreach ($permission in $securityAdmin.Permissions)
-         <option value="$permission.Name"
-          #if ($permission.Name.equals($attgroup.Permission.Value))
+  #foreach ($permission in $scarabG.AllPermissions)
+         <option value="$permission"
+          #if ($permission.equals($attgroup.Permission.Value))
              selected="selected"
           #end
-          >$permission.Name</option>
+          >$permission</option>
   #end
+        </select>
   </td>
 </tr>
 </table>
