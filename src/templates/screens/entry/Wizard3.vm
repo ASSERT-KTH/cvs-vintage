@@ -20,9 +20,8 @@
 
 ## Only show templates if user has not come through the wizard.
 #if (!$data.Parameters.getString("oldscreen"))
-    #set ($privateTemplateList = $module.getPrivateTemplates($user,$issueType))
-    #set ($globalTemplateList = $module.getGlobalTemplates($issueType))
-    #if ($privateTemplateList.size() > 0 || $globalTemplateList.size() > 0)
+    #set ($allTemplates = $scarabR.IssueTemplates)
+    #if ($allTemplates.size() > 0 )
      <h3>Apply issue entry template</h3>
      <div class="axial">
        <table width="100%" cellpadding="3" cellspacing="2" border="1">
@@ -30,10 +29,7 @@
           <th width="120">Templates</th>
           <td>
           <select name="select_template_id">
-     #foreach ($template in $privateTemplateList)
-     <option value="$template.IssueId">$template.TemplateInfo.Name</option>
-     #end
-     #foreach ($template in $globalTemplateList)
+     #foreach ($template in $allTemplates)
      <option value="$template.IssueId">$template.TemplateInfo.Name</option>
      #end
           </select> 
