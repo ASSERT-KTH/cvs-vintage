@@ -28,6 +28,9 @@ $page.setTitle("Scarab Links")
     <a href="$link.setPage("admin,ModuleAttributeEditor.vm")">admin,ModuleAttributeEditor.vm</a>
 </li>
 <li>
+    <a href="$link.setPage("admin,Approval.vm")">admin,Approval.vm</a>
+</li>
+<li>
     <a href="$link.setPage("FluxIndex.vm")">Flux</a>
 </li>
 </ul>
