@@ -323,9 +323,11 @@ insert into SCARAB_R_OPTION_OPTION values (87, 83, 1, 0);
  * Issue Dependencies
  */
 insert into SCARAB_DEPEND_TYPE(DEPEND_TYPE_ID, DEPEND_TYPE_NAME)
-        values(1, 'BLOCK');
+        values(1, 'blocking');
 insert into SCARAB_DEPEND_TYPE(DEPEND_TYPE_ID, DEPEND_TYPE_NAME)
-        values(2, 'DUPLICATE');
+        values(2, 'duplicate');
+insert into SCARAB_DEPEND_TYPE(DEPEND_TYPE_ID, DEPEND_TYPE_NAME)
+        values(3, 'non-blocking');
 
 /*
  *
