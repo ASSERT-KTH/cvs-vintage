@@ -72,13 +72,13 @@
    #set ($singleAttribute = $columnHeadingLevel.singleAttribute())
  <tr>
    #set ($maxBlank = $model.RowHeadings.size() - 1)
-   #if ($maxBlank > 1)
+   #if ($maxBlank > 0)
      #foreach ($foo in [1..$maxBlank])
        <th>&nbsp;</th>
      #end
    #end
    #if ($singleAttribute)
-     <th>$model.displayAttribute($columnHeadingLevel.get(0))</th>
+     <th align="right">$model.displayAttribute($columnHeadingLevel.get(0)) &#8594</th>
    #else
      <th>&nbsp;</th>
    #end
@@ -115,7 +115,7 @@
     #set ($level = $velocityCount - 1)
     #set ($singleAttribute = $curHeading.singleAttribute())
     #if ($singleAttribute)
-      <th>$model.displayAttribute($curHeading.get(0))</th>
+      <th>&#8595$model.displayAttribute($curHeading.get(0))</th>
     #else
       <th>&nbsp;</th>
     #end
