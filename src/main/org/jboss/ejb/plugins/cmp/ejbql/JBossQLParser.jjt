@@ -46,7 +46,7 @@ import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
  * This class parses JBossQL into an abstract syntax tree.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */                            
 public class JBossQLParser {
    private Catalog catalog;
@@ -358,7 +358,9 @@ void ComparisonExpression() #void :
       (
          <EQ> { jjtThis.opp="="; } |
          <GT> { jjtThis.opp=">"; } |
+         <GE> { jjtThis.opp=">="; } |
          <LT> { jjtThis.opp="<"; } |
+         <LE> { jjtThis.opp="<="; } |
          <NE> { jjtThis.opp="<>"; } 
       )
       DatetimeExpression()
