@@ -81,7 +81,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.100 2003/01/15 20:10:57 elicia Exp $
+ * @version $Id: Search.java,v 1.101 2003/01/16 01:30:14 elicia Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -99,10 +99,10 @@ public class Search extends RequireLoginFirstAction
         data.getParameters().setString("queryString", queryString);
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        List searchResults = scarabR.getCurrentSearchResults();
-        if (searchResults != null && searchResults.size() > 0)
+        List queryResults = scarabR.getCurrentSearchResults();
+        if (queryResults != null && queryResults.size() > 0)
         {
-            context.put("issueList", searchResults);
+            context.put("queryResults", queryResults);
             String template = data.getParameters()
                 .getString(ScarabConstants.NEXT_TEMPLATE, 
                            "IssueList.vm");
