@@ -83,7 +83,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -1064,18 +1064,13 @@ public class EjbModule
       throws DeploymentException
    {
       String path = name.substring(0, name.indexOf('#'));
-      log.info("path: " + path);
       String ejbName = name.substring(name.indexOf('#') + 1);
-      log.info("ejbName: " + ejbName);
       String us = deploymentInfo.url.toString();
-      log.info("us: " + us);
       //remove our jar name
       String ourPath = us.substring(0, us.lastIndexOf('/'));
-      log.info("ourPath: " + ourPath);
       for (StringTokenizer segments = new StringTokenizer(path, "/"); segments.hasMoreTokens(); )
       {
          String segment = segments.nextToken();
-         log.info("segment: " + segment);
          //kind of silly, but takes care of ../s1/s2/../s3/myjar.jar
          if (segment.equals("..")) 
          {
@@ -1085,7 +1080,6 @@ public class EjbModule
          {
             ourPath += "/" + segment;
          } // end of else
-         log.info("ourPath: " + ourPath);
       }
       URL target = null;
       try 
