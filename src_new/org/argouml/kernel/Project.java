@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.45 2002/12/27 10:07:01 linus Exp $
+// $Id: Project.java,v 1.46 2003/01/01 22:36:57 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -199,6 +199,7 @@ public class Project implements java.io.Serializable {
         setCurrentNamespace(model);
         addMember(new UMLClassDiagram("class diagram 1", model));
         addMember(new UMLUseCaseDiagram("use case diagram 1", model));
+        setNeedsSave(false);
     }
 
     public Project(MModel model) {
