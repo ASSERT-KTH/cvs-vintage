@@ -44,7 +44,7 @@ $page.setTitle("Enter issue")
  <option value="$template.IssueId">$template.TemplateInfo.Name</option>
  #end
       </select> 
-      &#160;<input type="submit" value="Select" name="eventSubmit_doGotowizard3" /> 
+      &#160;<input type="submit" value="Select" name="eventSubmit_doUsetemplates" /> 
       &#160;<a href="$link.setPage("TemplateList.vm")">template list</a>
       </td>
       </tr>
