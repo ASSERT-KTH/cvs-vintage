@@ -1,10 +1,21 @@
 <bookinfo>
 
   <title>CAROL Library User Manual</title>
-  <subtitle>CAROL (Common Architecture for RMI ObjectWeb Layer), a RMI manager</subtitle>
+  <subtitle> </subtitle>
   
-  <authorgroup>
-    
+  	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="img/carol" align="center"  format="eps" width="325px" depth="174px" scalefit="1" >
+	  </imageobject>
+	  <imageobject>
+	    <imagedata fileref="img/carol.jpg" format="jpg" align="center" 		      
+	           width="325px" 
+		       depth="174px"
+		       scalefit="1" >
+	  </imageobject>
+	</mediaobject>
+  		
+  <authorgroup>	
     <author>
       <firstname>Guillaume</firstname>
       <surname>Riviere</surname>
