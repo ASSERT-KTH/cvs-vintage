@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelper.java,v 1.2 2004/12/27 21:01:22 bobtarling Exp $
+// $Id: CollaborationsHelper.java,v 1.3 2004/12/28 10:25:34 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -231,7 +231,7 @@ public class CollaborationsHelper {
     public boolean hasAsActivator(MMessage message, MMessage activator) {
     	if (message.getActivator() == null) return false;
     	if (message.getActivator() == activator
-        	    || message.getActivator().getPredecessors().contains(activator)) {
+            || message.getActivator().getPredecessors().contains(activator)) {
     	    return true;
         }
         return hasAsActivator(message.getActivator(), activator);
