@@ -6,8 +6,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.0//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_0.dtd">
 
-$Id: jboss_3_0.dtd,v 1.5 2002/03/11 01:37:48 reverbel Exp $
-$Revision: 1.5 $
+$Id: jboss_3_0.dtd,v 1.6 2002/05/29 16:56:47 starksm Exp $
+$Revision: 1.6 $
 
 Overview of the architecture of jboss.xml
 
@@ -256,9 +256,12 @@ Overview of the architecture of jboss.xml
   The configuration-name element gives the name of the container
   configuration for this bean. It must match one of the container-name
   tags in the container-configurations section, or one of the standard
-  configurations. If none is provided, jboss will automatically use the
+  configurations. If no element is provided, jboss will automatically use the
   right standard configuration, see container-configurations.
   
+  Note: unlike earlier releases, this element may not be specified as an
+   empty element to achieve the same effect as not specifying the element.
+
   Used in: entity, session, and message-driven
 -->
 <!ELEMENT configuration-name (#PCDATA)>
