@@ -39,8 +39,10 @@
              ## TODO not sure what this is
         #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
            #set ($attrOptionIdValue = $attrInput.OptionId.toString())
-           #if ($attrOptionIdValue)
+           #if ($attrOptionIdValue.length() > 0)
              $att.getAttributeOption($attrOptionIdValue).Name
+           #else
+             ---
            #end
         #else
              $!attrInput.Value
@@ -97,6 +99,7 @@
    #foreach ($attr in $attrGroup.Attributes)
       #set ($rma = $module.getRModuleAttribute($attr, $issueType))
       #if ($rma.Active)
+       #if ($issue.getAttributeValue($attr))
         #set ($attVal = $issue.getAttributeValue($attr))
         #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
       <td>
@@ -108,8 +111,11 @@
           #set ($field = "Value")
         #end
          $attVal.Value
-     </td>
-    #end
+      </td>
+      #else
+      <td>---</td>
+      #end
+     #end
   #end
 #end
 <td>$issue.CreatedDate</td>
