@@ -1,4 +1,4 @@
-// $Id: TargetEvent.java,v 1.2 2003/04/29 19:25:07 kataka Exp $
+// $Id: TargetEvent.java,v 1.3 2003/04/30 14:59:57 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -91,7 +91,15 @@ public class TargetEvent extends EventObject {
 	 * @return an object array with the old targets
 	 */
 	public Object[] getOldTargets() {
-		return _oldTargets;
+		return _oldTargets == null ? new Object[] {null} : _oldTargets;
 	}
+
+    /**
+     * Getter for the new targets
+     * @return an object array with the new targets
+     */
+    public Object[] getNewTargets() {
+        return _newTargets == null ? new Object[] {null} : _newTargets;
+    }
 
 }
