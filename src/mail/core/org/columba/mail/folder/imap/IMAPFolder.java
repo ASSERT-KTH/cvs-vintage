@@ -30,10 +30,10 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.RemoteFolder;
-import org.columba.mail.folder.RemoteHeaderCache;
-import org.columba.mail.folder.RemoteSearchEngine;
-import org.columba.mail.folder.AbstractSearchEngine;
 import org.columba.mail.folder.command.MarkMessageCommand;
+import org.columba.mail.folder.headercache.RemoteHeaderCache;
+import org.columba.mail.folder.search.AbstractSearchEngine;
+import org.columba.mail.folder.search.RemoteSearchEngine;
 import org.columba.mail.imap.IMAPStore;
 import org.columba.mail.imap.parser.IMAPFlags;
 import org.columba.mail.message.AbstractMessage;
@@ -663,9 +663,7 @@ public class IMAPFolder extends RemoteFolder {
 		*/
 	}
 
-	/**
-	 * @see org.columba.mail.folder.FolderTreeNode#getDefaultProperties()
-	 */
+	
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#getDefaultProperties()
 	 */
@@ -677,9 +675,7 @@ public class IMAPFolder extends RemoteFolder {
 		return props;
 	}
 
-	/**
-	 * @see org.columba.mail.folder.FolderTreeNode#tryToGetLock(java.lang.Object)
-	 */
+	
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#tryToGetLock(java.lang.Object)
 	 */
@@ -690,9 +686,7 @@ public class IMAPFolder extends RemoteFolder {
 		return getRootFolder().tryToGetLock(locker);
 	}
 
-	/**
-	 * @see org.columba.mail.folder.FolderTreeNode#releaseLock()
-	 */
+	
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#releaseLock()
 	 */

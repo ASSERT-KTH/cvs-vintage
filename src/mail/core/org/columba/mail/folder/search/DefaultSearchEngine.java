@@ -13,13 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.folder;
+package org.columba.mail.folder.search;
 
 import java.util.LinkedList;
 import java.util.Vector;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.filter.FilterRule;
+import org.columba.mail.folder.Folder;
 
 /**
  * @author freddy

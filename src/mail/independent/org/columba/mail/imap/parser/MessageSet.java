@@ -47,6 +47,19 @@ public class MessageSet {
 		int lastPos = 0;
 		int newPos = 0;
 		char lastChar = 'p';
+		
+		if ( uids.length == 1 ) 
+		{
+			Integer uid = new Integer(Integer.parseInt((String) uids[0]));
+			return uid.toString();
+		} 
+		else if ( uids.length == 2 )
+		{
+			Integer uid1 = new Integer(Integer.parseInt((String) uids[0]));
+			Integer uid2 = new Integer(Integer.parseInt((String) uids[1]));
+			
+			return uid1.toString()+":"+uid2.toString();
+		}
 
 		for (int i = 0; i < uids.length; i++) {
 			//System.out.println("parsing="+uids[i]);

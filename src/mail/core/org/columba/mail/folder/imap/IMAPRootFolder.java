@@ -18,6 +18,8 @@
 //
 package org.columba.mail.folder.imap;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -28,6 +30,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.MailConfig;
@@ -35,6 +38,7 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.Root;
+import org.columba.mail.folder.command.CheckForNewMessagesCommand;
 import org.columba.mail.imap.IMAPStore;
 import org.columba.mail.imap.parser.Imap4Parser;
 import org.columba.mail.imap.parser.ListInfo;
@@ -45,8 +49,7 @@ import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 
-public class IMAPRootFolder extends Folder //implements ActionListener 
-{
+public class IMAPRootFolder extends Folder implements ActionListener {
 	protected final static ImageIcon imapRootIcon =
 		ImageLoader.getSmallImageIcon("remotehost.png");
 
@@ -63,17 +66,21 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 
 	//    private ImapOperator operator;
 
+	private AccountItem accountItem;
+
 	private IMAPStore store;
 
 	public IMAPRootFolder(FolderItem folderItem) {
 		//super(node, folderItem);
 		super(folderItem);
 
-		AccountItem accountItem =
+		accountItem =
 			MailConfig.getAccountList().uidGet(
 				folderItem.getInteger("account_uid"));
 
 		store = new IMAPStore(accountItem.getImapItem(), this);
+		
+		restartTimer();
 
 	}
 
@@ -81,12 +88,16 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 		//super(node, folderItem);
 		super(getDefaultItem("IMAPRootFolder", getDefaultProperties()));
 
+		this.accountItem = accountItem;
+
 		getFolderItem().set("account_uid", accountItem.getInteger("uid"));
 		getFolderItem().set("property", "name", accountItem.get("name"));
 
 		((Root) MainInterface.treeModel.getRoot()).addWithXml(this);
 
 		store = new IMAPStore(accountItem.getImapItem(), this);
+		
+		restartTimer();
 
 	}
 
@@ -98,26 +109,6 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 		return imapRootIcon;
 	}
 
-	/*
-	public String getName() {
-		String name = null;
-	
-		FolderItem item = getFolderItem();
-		name = item.get("property", "name");
-	
-		return name;
-	}
-	*/
-
-	/*
-	public void setName(String newName) {
-	
-		FolderItem item = getFolderItem();
-		item.set("property", "name", newName);
-	
-	}
-	*/
-
 	public String getDefaultChild() {
 		return "IMAPFolder";
 	}
@@ -127,18 +118,18 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 		 */
 	/*
 	public FolderTreeNode addFolder(String name) throws Exception {
-
+	
 		String path = name;
-
+	
 		boolean result = getStore().createFolder(path);
-
+	
 		if (result)
 			return super.addFolder(name);
-
+	
 		return null;
 	}
 	*/
-	
+
 	// we can't use 
 	//   "folder.addFolder(subchild)"
 	// here
@@ -254,58 +245,44 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 		return store;
 	}
 
-	/*
 	public void restartTimer() {
-	
-		if (item.isMailCheck() == true) {
-			int interval = -1;
-	
-			try {
-				interval = Integer.parseInt(item.getInterval());
-			} catch (NumberFormatException ex) {
-				ex.printStackTrace();
-			}
-	
-			if (interval != -1) {
-				timer =
-					new Timer(
-						ONE_SECOND * interval * 60,
-						(ActionListener) this);
-				timer.restart();
-			}
+
+		if (accountItem.getImapItem().getBoolean("enable_mailcheck")) {
+			int interval =
+				accountItem.getImapItem().getInteger("mailcheck_interval");
+
+			timer = new Timer(ONE_SECOND * interval * 60, this);
+			timer.restart();
+
+			System.out.println("---------------->timer restarted");
 		} else {
+			System.out.println("----------------->timer stopped");
+
 			if (timer != null) {
 				timer.stop();
+				timer = null;
 			}
 		}
 	}
-	
+
 	public void actionPerformed(ActionEvent e) {
 		Object src = e.getSource();
-	
+
 		if (src.equals(timer)) {
-	
+
 			System.out.println("timer action");
-	
-			IMAPFolder inboxFolder = (IMAPFolder) getChild("inbox");
-	
-			if (inboxFolder != null) {
-				
-				//MainInterface.treeViewer.setSelected(inboxFolder);
-				
-				
-				//MainInterface.headerTableViewer.setFolder(inboxFolder);
-				
-				FolderOperation op =
-					new FolderOperation(Operation.IMAP_CHECK, 20, inboxFolder);
-	
-				MainInterface.crossbar.operate(op);
-				
-			}
-	
+
+			FolderCommandReference[] r = new FolderCommandReference[1];
+			r[0] = new FolderCommandReference(this);
+
+			MainInterface.processor.addOp(
+				new CheckForNewMessagesCommand(r));
+
+
 		}
 	}
-	
+
+	/*
 	public String getDelimiter() {
 		return delimiter;
 	}
@@ -803,6 +780,13 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 		WorkerStatusController worker)
 		throws Exception {
 		return null;
+	}
+
+	/**
+	 * @return
+	 */
+	public AccountItem getAccountItem() {
+		return accountItem;
 	}
 
 }

@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.folder;
+package org.columba.mail.folder.search;
 
 import java.io.IOException;
 import java.io.Reader;

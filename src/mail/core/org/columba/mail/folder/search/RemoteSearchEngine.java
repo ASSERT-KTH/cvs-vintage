@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.folder;
+package org.columba.mail.folder.search;
 
 import java.util.LinkedList;
 import java.util.Vector;
@@ -22,6 +22,7 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
+import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.message.AbstractMessage;

@@ -40,7 +40,8 @@ public class UIDParser {
 
 			String uid = parseLine(data);
 			
-			v.add(uid);
+			if ( uid != null)
+				v.add(uid);
 
 		}
 
@@ -48,7 +49,9 @@ public class UIDParser {
 	}
 
 	protected static String parseLine(String data) {
-
+		int uidStringPos = data.indexOf("UID");
+		if ( uidStringPos == -1 ) return null;
+		
 		int index = data.indexOf(" ");
 
 		return data.substring(index + 1, data.length());

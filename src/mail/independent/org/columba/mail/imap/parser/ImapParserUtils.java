@@ -30,6 +30,8 @@ public abstract class ImapParserUtils {
 		int left = line.indexOf("(");
 		int right = getClosingParenthesis(line, left + 1);
 
+		if ( ( left == -1 ) || ( right == -1) ) return line;
+		
 		return line.substring(left + 1, right);
 	}
 

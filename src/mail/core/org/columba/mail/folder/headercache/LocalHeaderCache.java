@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.folder;
+package org.columba.mail.folder.headercache;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -22,6 +22,7 @@ import java.util.Date;
 import org.columba.core.config.HeaderItem;
 import org.columba.core.config.TableItem;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.message.HeaderInterface;
 
 

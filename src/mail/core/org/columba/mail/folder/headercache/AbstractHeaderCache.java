@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.folder;
+package org.columba.mail.folder.headercache;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,6 +24,7 @@ import java.util.Enumeration;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;

@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.folder;
+package org.columba.mail.folder.search;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +52,7 @@ import org.columba.core.util.Mutex;
 import org.columba.core.util.NullWorkerStatusController;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
+import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.MimePart;
