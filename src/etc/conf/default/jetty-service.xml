@@ -22,7 +22,7 @@
      |
    -->
   <mbean code="org.jboss.jetty.JettyService"
-	 name=":service=Jetty">
+	 name="JBOSS-SYSTEM:service=Jetty">
     <attribute name="JettyHome">dummy</attribute>
     <attribute name="Configuration">../conf/default/jetty.xml</attribute>
     <attribute name="WebDefault">../conf/default/webdefault.xml</attribute>
