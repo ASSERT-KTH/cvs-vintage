@@ -1,4 +1,4 @@
-// $Id: TabText.java,v 1.19 2004/09/01 16:36:41 mvw Exp $
+// $Id: TabText.java,v 1.20 2004/11/28 20:47:55 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -219,21 +219,21 @@ public class TabText
     }
 
     /**
-     * @return Returns the _toolbar.
+     * @return Returns the toolbar.
      */
     protected JToolBar getToolbar() {
         return toolbar;
     }
 
     /**
-     * @param s The _shouldBeEnabled to set.
+     * @param s true if we are enabled
      */
     protected void setShouldBeEnabled(boolean s) {
         this.enabled = s;
     }
 
     /**
-     * @return Returns the _shouldBeEnabled.
+     * @return returns true if enabled
      */
     protected boolean shouldBeEnabled() {
         return enabled;
