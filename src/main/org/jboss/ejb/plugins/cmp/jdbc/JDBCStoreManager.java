@@ -46,10 +46,12 @@ import org.jboss.metadata.ApplicationMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
 public class JDBCStoreManager extends CMPStoreManager {
 	protected DataSource dataSource;
+	protected Integer transactionIsolation;
+	
 	protected JDBCTypeFactory typeFactory;
 	protected boolean debug;
 	
@@ -117,7 +119,11 @@ public class JDBCStoreManager extends CMPStoreManager {
 	 * Returns a database connection
 	 */
 	public Connection getConnection() throws SQLException {
-		return dataSource.getConnection();
+		Connection connection = dataSource.getConnection();
+		if(transactionIsolation != null) {
+			connection.setTransactionIsolation(transactionIsolation.intValue());
+		}
+		return connection;
 	}
 	
 	//
@@ -143,6 +149,10 @@ public class JDBCStoreManager extends CMPStoreManager {
 	   if(dataSource == null) {
 			throw new DeploymentException("Unable to locate data source.");
 		}
+		
+		// Transaction Isolation 
+		transactionIsolation = jamd.getTransactionIsolation();
+		log.debug("Transaction Isolation set to " + transactionIsolation);
 
 		// Get JDBC Bean MetaData
 		String ejbName = container.getBeanMetaData().getEjbName();

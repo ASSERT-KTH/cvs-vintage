@@ -9,6 +9,7 @@ package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import java.sql.Connection;
 import javax.sql.DataSource;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -29,7 +30,7 @@ import org.jboss.metadata.ApplicationMetaData;
  *      
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class JDBCApplicationMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -50,6 +51,7 @@ public class JDBCApplicationMetaData extends MetaData implements XmlLoadable {
 	// the datasource to use for this application
 	private String dbURL;
 	private DataSource dataSource;
+	private Integer transactionIsolation;
 	
 	// should we print tons of info?
 	private boolean debug = false;
@@ -104,6 +106,10 @@ public class JDBCApplicationMetaData extends MetaData implements XmlLoadable {
 	
 	public String getDbURL() {
 		return dbURL;
+	}
+
+	public Integer getTransactionIsolation() {
+		return transactionIsolation;
 	}
 	
 	public JDBCTypeMappingMetaData getTypeMapping() {
@@ -169,7 +175,25 @@ public class JDBCApplicationMetaData extends MetaData implements XmlLoadable {
 		if (!dbURL.startsWith("java:/")) {
 			dbURL = "java:/"+dbURL;
 		}
-		
+
+		// get the datasource (optional, but always set in standardjbosscmp-jdbc.xml)
+		String txIsolation = getElementContent(getOptionalChild(element, "transaction-isolation"));
+		if(txIsolation != null) {
+			if(txIsolation.equals("transaction-")) {
+				transactionIsolation = new Integer(Connection.TRANSACTION_NONE);
+			} else if(txIsolation.equals("transaction-none")) {
+				transactionIsolation = new Integer(Connection.TRANSACTION_READ_COMMITTED);
+			} else if(txIsolation.equals("transaction-read-uncommitted")) {
+				transactionIsolation = new Integer(Connection.TRANSACTION_READ_UNCOMMITTED);
+			} else if(txIsolation.equals("transaction-repeatable-read")) {
+				transactionIsolation = new Integer(Connection.TRANSACTION_REPEATABLE_READ);
+			} else if(txIsolation.equals("transaction-serializable")) {
+				transactionIsolation = new Integer(Connection.TRANSACTION_SERIALIZABLE);
+			} else {
+				throw new DeploymentException("Unknown transaction isolation level " + txIsolation);
+			}
+		}
+
 		// get the type mapping for this datasource (optional, but always set in standardjbosscmp-jdbc.xml)
 		String typeMappingString = getElementContent(getOptionalChild(element, "type-mapping"));		
 		if (typeMappingString != null) {
