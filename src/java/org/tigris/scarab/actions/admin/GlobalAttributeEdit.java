@@ -67,6 +67,8 @@ import org.tigris.scarab.om.ROptionOption;
 import org.tigris.scarab.om.ParentChildAttributeOption;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.RModuleIssueType;
+import org.tigris.scarab.om.AttributeOption;
+import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.Log;
@@ -77,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.22 2002/05/03 00:54:13 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.23 2002/06/20 22:43:24 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -177,6 +179,13 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         // map the form data onto the objects
                         pcaoGroup.setProperties(pcao);
  
+                        // If deleting, delete mappings with module 
+                        if (pcao.getDeleted())
+                        {
+                            AttributeOption option = AttributeOptionPeer.retrieveByPK(pcao.getOptionId());
+                            option.deleteModuleMappings((ScarabUser)data.getUser());
+                        }
+
                         // the UI prevents this from being true, but check
                         // anyway just in case.
                         if (pcao.getOptionId().equals(pcao.getParentId()))

@@ -68,7 +68,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.14 2002/05/14 00:04:05 elicia Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.15 2002/06/20 22:43:24 elicia Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -131,6 +131,7 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
     public void doDelete( RunData data, TemplateContext context )
         throws Exception
     {
+        ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         if (((ScarabUser)data.getUser())
             .hasPermission(ScarabSecurity.DOMAIN__ADMIN,
@@ -151,6 +152,7 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
                       .retrieveByPK(new NumberKey(id));
                    issueType.setDeleted(true);
                    issueType.save();
+                   issueType.deleteModuleMappings(user);
                  }
              }
          }
