@@ -1,5 +1,4 @@
 <div class="app" id="issuelist">
-
 #set ($user = $data.User)
 #set ($searchType = $data.Parameters.getString("searchType",""))
 #if (!$queryResults)
@@ -17,16 +16,10 @@
  #set ($issueListSize = $queryResults.size())
 #end
 
-## note it is expensive to determine the following and it is even
-## more resource intensive to show a large list on the assign issue page, so
-## limit showing the assign buttons to lists of less than 500 issues
-#set ($showAssignButtons = $issueListSize <= 500 && false)
-#if ($showAssignButtons)
-    #set ($modules = $scarabG.getModulesFromIssueList($scarabR.getIssues($issueIdList)))
-    #set ($showAssignButtons = $user.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $modules))
-#end
-
 #set ($mitlist = $user.CurrentMITList)
+## do not show assign buttons if the list is greater than 10
+## Or if this is a cross module or cross issue type search
+#set ($showAssignButtons = $issueListSize <= 10 && !$mitlist)
 #if ($issueListSize == 0)
 <h3>
 #if ($mitlist)
