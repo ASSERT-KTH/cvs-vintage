@@ -89,6 +89,7 @@ public class AutoWebApp extends BaseInterceptor {
     String profile=null;
     boolean trusted=false;
     String prefix="";
+    boolean reloadable=true;
     
     // encoding scheme - XXX review, customize, implement
     char hostSeparator='@'; // if support for vhost configuration is enabled
@@ -158,6 +159,10 @@ public class AutoWebApp extends BaseInterceptor {
     */
     public void setTrusted( boolean b ) {
 	trusted=b;
+    }
+
+    public void setReloadable( boolean b ) {
+        reloadable=b;
     }
     
     //-------------------- Implementation --------------------
@@ -256,6 +261,7 @@ public class AutoWebApp extends BaseInterceptor {
 	    Context ctx=cm.createContext();
 	    ctx.setContextManager( cm );
 	    ctx.setPath(prefix + path);
+            ctx.setReloadable(reloadable);
 	    if( ! "DEFAULT".equals( host ) )
 		ctx.setHost( host );
 	    try {
