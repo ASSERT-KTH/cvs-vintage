@@ -1,5 +1,6 @@
      <div class="app" id="divselect_module">
 
+        $link.setPage("SelectArtifactType.vm").setAction("SelectIssueType").addPathInfo("eventSubmit_doSelect", "foo").setLabel("hhe")
 <h2>Issue tracking: $scarabR.CurrentModule.RealName</h2>
 
         <h3>$page.Title</h3>

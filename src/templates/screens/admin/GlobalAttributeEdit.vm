@@ -36,9 +36,7 @@ On this screen, one can modify system wide Attribute information.
 <input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
 </div>
 
-<p>
-<small>"<strong>*</strong>" indicates required fields</small>
-</p>
+#asterisk()
 
 <h3>Global attribute information</h3>
 

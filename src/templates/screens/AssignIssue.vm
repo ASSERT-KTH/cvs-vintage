@@ -9,7 +9,13 @@
 #set ($searchField = $data.Parameters.getString("searchField" , ""))
 #set ($now = $scarabG.Now.Time)
 
-#pagetitle()
+#if ($issueListSize > 1)
+  #set ($thisIssue = "these issues")
+#else
+  #set ($thisIssue = "this issue")
+#end
+#set ($pageTitle = "Associate users with $thisIssue")
+<h2>$pageTitle</h2>
 
 #if ($userAttrs.isEmpty())
  <p><strong class="alert">
@@ -40,11 +46,6 @@
 </div>
 </form>
 
-#if ($issueListSize > 1)
-  #set ($thisIssue = "these issues")
-#else
-  #set ($thisIssue = "this issue")
-#end
 
 
 ##ASSIGNEE LIST
@@ -249,7 +250,7 @@ $intake.declareGroups()
 	<tr>
 	<th nowrap="nowrap">Select</th>
     <th>#userSort ("name" "Name")</th>
-	<th>#userSort ("email" "Email")</a></th>
+	<th>#userSort ("email" "Email")</th>
 	<th>Association</th>
 	</tr>
    #foreach ($user in $searchResults)
@@ -279,7 +280,7 @@ $intake.declareGroups()
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
      <tr>
-       <th>Max items per page</td>
+       <th>Max items per page</th>
        <td><input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage.toString().equals("25")) checked="checked" #end /> 25
          <input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.toString().equals("50")) checked="checked" #end /> 50
          <input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.toString().equals("75")) checked="checked" #end /> 75
