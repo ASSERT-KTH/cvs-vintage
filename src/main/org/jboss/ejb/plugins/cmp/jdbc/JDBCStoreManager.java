@@ -10,12 +10,11 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
@@ -59,17 +58,15 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore {
 
    /**
-    * To simplify null values handling in the preloaded data pool we use 
-    * this value instead of 'null'
+    * The key used to store the tx data map.
     */
-   private static final Object NULL_VALUE = new Object();
+   private static final Object TX_DATA_KEY = "TX_DATA_KEY";
 
-   private static final Object TX_DATA_KEY = new Object();
    private static final Map applicationData = 
          Collections.synchronizedMap(new HashMap());
 
@@ -83,6 +80,8 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    private JDBCQueryManager queryManager;
 
    private JDBCCommandFactory commandFactory;
+
+   private ReadAheadCache readAheadCache;
 
    // Manager life cycle commands
    private JDBCInitCommand initCommand;
@@ -104,39 +103,42 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    private JDBCPassivateEntityCommand passivateEntityCommand;
 
    // commands
-   private JDBCLoadFieldCommand loadFieldCommand;
-   private JDBCFindByForeignKeyCommand findByForeignKeyCommand;
+//   private JDBCFindByForeignKeyCommand findByForeignKeyCommand;
    private JDBCLoadRelationCommand loadRelationCommand;
    private JDBCDeleteRelationsCommand deleteRelationsCommand;
    private JDBCInsertRelationsCommand insertRelationsCommand;
-
-   // read ahead stuff
-   private boolean readAheadOnLoad;
-   private int readAheadLimit;
-   private JDBCReadAheadCommand readAheadCommand;
-   private LRUCachePolicy readAheadCache;
 
    /**
     * A map of data preloaded within some transaction for some entity. This map
     * is keyed by Transaction, entityKey and CMP field name
     * and the data is Object containing the field value.
     */
-   private Map preloadedData = new HashMap();
+//   private Map preloadedData = new HashMap();
 
    /**
     * A set of transactions for which data was preloaded.
     */
-   private Set transactions = new HashSet();
+//   private Set transactions = new HashSet();
 
    /**
     * A Transaction manager so that we can link preloaded data to a transaction
     */
    private TransactionManager tm;
 
+   /**
+    * Gets the container for this entity.
+    * @return the container for this entity; null if container has not been set
+    */
    public EntityContainer getContainer() {
       return container;
    }
 
+   /**
+    * Sets the container for this entity.
+    * @param container the container for this entity
+    * @throws ClassCastException if the container is not an instance of 
+    * EntityContainer
+    */
    public void setContainer(Container container) {
       this.container = (EntityContainer)container;
       this.log = Logger.getLogger(
@@ -162,9 +164,16 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    }
 
    public JDBCCommandFactory getCommandFactory() {
-      return (JDBCCommandFactory) commandFactory;
+      return commandFactory;
    }
    
+   public ReadAheadCache getReadAheadCache() {
+      return readAheadCache;
+   }
+   
+   //
+   // Genertic data containers
+   //
    public Map getApplicationDataMap() {
       return applicationData;
    }
@@ -204,6 +213,8 @@ public class JDBCStoreManager implements EntityPersistenceStore {
             }
             return txDataMap;
          }
+      } catch(EJBException e) {
+         throw e;
       } catch(Exception e) {
          throw new EJBException("Error getting application tx data map.", e);
       }
@@ -221,6 +232,27 @@ public class JDBCStoreManager implements EntityPersistenceStore {
       getApplicationTxDataMap().remove(key);
    }
 
+   public Map getEntityTxDataMap() {
+      Map entityTxDataMap = (Map)getApplicationTxData(this);
+      if(entityTxDataMap == null) {
+         entityTxDataMap = new HashMap();
+         putApplicationTxData(this, entityTxDataMap);
+      }
+      return entityTxDataMap;
+   }
+
+   public Object getEntityTxData(Object key) {
+      return getEntityTxDataMap().get(key);
+   }
+
+   public void putEntityTxData(Object key, Object value) {
+      getEntityTxDataMap().put(key, value);
+   }
+
+   public void removeEntityTxData(Object key) {
+      getEntityTxDataMap().remove(key);
+   }
+
    private void initApplicationDataMap() {
       synchronized(applicationData) {
          Map txDataMap = (Map)getApplicationData(TX_DATA_KEY);
@@ -235,13 +267,17 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    // Store Manager Life Cycle Commands
    //
    public void create() throws Exception {
-      if (log.isDebugEnabled())
-         log.debug("Initializing CMP plugin for " +
+      log.debug("Initializing CMP plugin for " +
                 container.getBeanMetaData().getEjbName());
 
+      // initializes the generic data containers
       initApplicationDataMap();
 
+      // load the metadata for this entity
       metaData = loadJDBCEntityMetaData();
+
+      // get the transaction manager
+      tm = (TransactionManager) container.getTransactionManager();
 
       // setup the type factory, which is used to map java types to sql types.
       typeFactory = new JDBCTypeFactory(
@@ -250,6 +286,10 @@ public class JDBCStoreManager implements EntityPersistenceStore {
 
       // create the bridge between java land and this engine (sql land)
       entityBridge = new JDBCEntityBridge(metaData, this);
+
+      // create the read ahead cache
+      readAheadCache = new ReadAheadCache(this);
+      readAheadCache.create();
 
       // Set up Commands
       commandFactory = new JDBCCommandFactory(this);
@@ -268,7 +308,6 @@ public class JDBCStoreManager implements EntityPersistenceStore {
       findEntitiesCommand = commandFactory.createFindEntitiesCommand();
       createEntityCommand = commandFactory.createCreateEntityCommand();
       removeEntityCommand = commandFactory.createRemoveEntityCommand();
-      loadFieldCommand = commandFactory.createLoadFieldCommand();
       loadEntityCommand = commandFactory.createLoadEntityCommand();
       isModifiedCommand = commandFactory.createIsModifiedCommand();
       storeEntityCommand = commandFactory.createStoreEntityCommand();
@@ -276,21 +315,10 @@ public class JDBCStoreManager implements EntityPersistenceStore {
       passivateEntityCommand = commandFactory.createPassivateEntityCommand();
 
       // Create relationship commands
-      findByForeignKeyCommand = commandFactory.createFindByForeignKeyCommand();
+//      findByForeignKeyCommand = commandFactory.createFindByForeignKeyCommand();
       loadRelationCommand = commandFactory.createLoadRelationCommand();
       deleteRelationsCommand = commandFactory.createDeleteRelationsCommand();
       insertRelationsCommand = commandFactory.createInsertRelationsCommand();
-
-      // Initialize the read ahead code
-      readAheadCommand = commandFactory.createReadAheadCommand();
-      readAheadOnLoad = metaData.getReadAhead().isOnLoadUsed();
-      if (readAheadOnLoad) {
-         readAheadLimit = metaData.getReadAhead().getLimit();
-         readAheadCache = 
-               new LRUCachePolicy(2, metaData.getReadAhead().getCacheSize());
-         readAheadCache.create();
-      }
-      tm = (TransactionManager) container.getTransactionManager();
 
       // Create the query manager
       queryManager = new JDBCQueryManager(this);
@@ -308,10 +336,7 @@ public class JDBCStoreManager implements EntityPersistenceStore {
       // all entities are gaurenteed to be createed until the start phase.
       queryManager.start();
       
-      // If we are using a readAheadCache, start it.
-      if(readAheadCache != null) {
-         readAheadCache.start();
-      }
+      readAheadCache.start();
    }
 
    public void stop() {
@@ -320,10 +345,7 @@ public class JDBCStoreManager implements EntityPersistenceStore {
          stopCommand.execute();
       }
 
-      // Inform the readAhead cache that we are done.
-      if(readAheadCache != null) {
-         readAheadCache.stop();
-      }
+      readAheadCache.stop();
    }
 
    public void destroy() {
@@ -332,10 +354,8 @@ public class JDBCStoreManager implements EntityPersistenceStore {
          destroyCommand.execute();
       }
 
-      if (readAheadCache != null) {
-         readAheadCache.stop();
-         readAheadCache = null;
-      }
+      readAheadCache.destroy();
+      readAheadCache = null;
    }
 
    //
@@ -384,33 +404,17 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    public void loadEntity(EntityEnterpriseContext ctx) {
       // is any on the data already in the entity valid
       if(!ctx.isValid()) {
-         if (log.isDebugEnabled())
-            log.debug("RESET PERSISTENCE CONTEXT: id="+ctx.getId());
+         log.debug("RESET PERSISTENCE CONTEXT: id="+ctx.getId());
          entityBridge.resetPersistenceContext(ctx);
       }
 
-      if(readAheadOnLoad) {
-         JDBCCMPFieldBridge[] fieldsToLoad = entityBridge.getEagerLoadFields();
-         if((fieldsToLoad.length == 0) || readAheadFields(fieldsToLoad, ctx)) {
-           return;
-         }
-      }
-      
       loadEntityCommand.execute(ctx);
    }
 
    public void loadField(
          JDBCCMPFieldBridge field, EntityEnterpriseContext ctx) {
 
-      JDBCCMPFieldBridge[] fieldsToLoad = 
-            loadFieldCommand.getFieldGroupsUnion(field);
-
-      if(readAheadOnLoad) {
-         if(readAheadFields(fieldsToLoad, ctx)) {
-            return;
-         }
-      }
-      loadFieldCommand.execute(fieldsToLoad, ctx);
+      loadEntityCommand.execute(field, ctx);
    }
 
    public boolean isModified(EntityEnterpriseContext ctx) {
@@ -460,14 +464,14 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    //
    // Relationship Commands
    //
-   public Set findByForeignKey(
-         Object foreignKey, 
-         JDBCCMPFieldBridge[] foreignKeyFields) {
+//   public Collection findByForeignKey(
+//         Object foreignKey, 
+//         JDBCCMRFieldBridge cmrField) {
+//
+//      return findByForeignKeyCommand.execute(foreignKey, cmrField);
+//   }
 
-      return findByForeignKeyCommand.execute(foreignKey, foreignKeyFields);
-   }
-
-   public Set loadRelation(JDBCCMRFieldBridge cmrField, Object pk) {
+   public Collection loadRelation(JDBCCMRFieldBridge cmrField, Object pk) {
       return loadRelationCommand.execute(cmrField, pk);
    }
 
@@ -477,72 +481,6 @@ public class JDBCStoreManager implements EntityPersistenceStore {
 
    public void insertRelations(RelationData relationData) {  
       insertRelationsCommand.execute(relationData);
-   }
-
-   //
-   // Read Ahead Code
-   //
-   
-   /**
-    * Fills all preloaded fields.
-    * @return The list of fields that are not preloaded yet.
-    */
-   private JDBCCMPFieldBridge[] fillFromPreloaded(JDBCCMPFieldBridge[] fields, EntityEnterpriseContext ctx) {
-      ArrayList notPreloaded = null;
-      JDBCCMPFieldBridge[] fieldsToLoad;
-      Object[] fieldValueRef;
-      Object id;
-      boolean found;
-
-      id = ctx.getId();
-
-      fieldValueRef = new Object[1];
-      for (int i = 0; i < fields.length; i++) {
-         found = getPreloadData(id, fields[i], fieldValueRef);
-         if (found) {
-            fields[i].setInstanceValue(ctx, fieldValueRef[0]);
-            fields[i].setClean(ctx);
-         } else {
-            if (notPreloaded == null) {
-               notPreloaded = new ArrayList();
-            }
-            notPreloaded.add(fields[i]);
-         }
-      }
-      return (notPreloaded == null ? null :
-            (JDBCCMPFieldBridge[]) notPreloaded.toArray(new JDBCCMPFieldBridge[notPreloaded.size()]));
-   }
-
-   private boolean readAheadFields(JDBCCMPFieldBridge[] fields, EntityEnterpriseContext ctx) {
-      JDBCCMPFieldBridge[] fieldsToLoad;
-      ListCacheKey key;
-      boolean success = false;
-      FinderResults results;
-
-      //first check to see if the data was preloaded
-      fieldsToLoad = fillFromPreloaded(fields, ctx);
-      if (fieldsToLoad == null) {
-         success = true;
-      } else if (ctx.getCacheKey() instanceof ListCacheKey) {
-         key = (ListCacheKey) ctx.getCacheKey();
-         results = (FinderResults) readAheadCache.get(new Long(key.getListId()));
-         if (results != null) {
-            try {
-               readAheadCommand.execute(fieldsToLoad, results, key.getIndex(),
-                                        Math.min(results.size(), key.getIndex() + readAheadLimit));
-               fieldsToLoad = fillFromPreloaded(fields, ctx);
-               if (fieldsToLoad == null) {
-                  success = true;
-               } else {
-                  log.warn("Didn't read ahead field '" + fieldsToLoad[0].getMetaData().getFieldName() + "'");
-                  success = false;
-               }
-            } catch(EJBException e) {
-               log.warn("Read ahead failed", e);
-            }
-         }
-      }
-      return success;
    }
 
    private JDBCEntityMetaData loadJDBCEntityMetaData() 
@@ -575,164 +513,6 @@ public class JDBCStoreManager implements EntityPersistenceStore {
          throw new DeploymentException("No metadata found for bean " + ejbName);
       }
       return metadata;
-   }
-
-   public CachePolicy getReadAheadCache() {
-      return readAheadCache;
-   }
-
-   /**
-    * Add preloaded data for an entity within the scope of a transaction
-    */
-   void addPreloadData(
-         Object entityKey,
-         JDBCCMPFieldBridge field,
-         Object fieldValue)
-   {
-      Transaction trans = null;
-      PreloadKey preloadKey;
-
-      try {
-         trans = tm.getTransaction();
-      } catch (javax.transaction.SystemException sysE) {
-         log.warn("System exception getting transaction for preload - " +
-               "can't preload data for " + entityKey, sysE);
-         return;
-      }
-
-      synchronized (transactions) { 
-         if (trans != null && !transactions.contains(trans)) {
-            if (!transactions.contains(trans)) {
-               try {
-                  trans.registerSynchronization(new PreloadClearSynch(trans));
-               } catch (javax.transaction.SystemException se) {
-                  log.warn("System exception getting transaction for " +
-                        "preload - can't get preloaded data for " + 
-                        entityKey, se);
-                  return;
-               } catch (javax.transaction.RollbackException re) {
-                  log.warn("Rollback exception getting transaction for " + 
-                        "preload - can't get preloaded data for " + 
-                        entityKey, re);
-                  return;
-               }
-               transactions.add(trans);
-            }
-         }
-      }
-      preloadKey = new PreloadKey(
-            trans, 
-            entityKey, 
-            field.getMetaData().getFieldName());
-      preloadedData.put(
-            preloadKey, 
-            (fieldValue == null ? NULL_VALUE : fieldValue));
-   }
-
-   /**
-    * Get data that we might have preloaded for an entity in a transaction
-    * @param fieldValueRef will be filled with the field value
-    * @return whether the data was found in the pool (null field value doesn't
-    * mean that it wasn't).
-    */
-   private boolean getPreloadData(
-         Object entityKey, 
-         JDBCCMPFieldBridge field,
-         Object[] fieldValueRef)
-   {
-      Transaction trans = null;
-      PreloadKey preloadKey;
-      Object fieldValue;
-      boolean found;
-
-      try {
-         trans = tm.getTransaction();
-      } catch (javax.transaction.SystemException sysE) {
-         log.warn("System exception getting transaction for preload - not " +
-               "preloading " + entityKey, sysE);
-         return false;
-      }
-
-      preloadKey = new PreloadKey(
-            trans, entityKey, field.getMetaData().getFieldName());
-      fieldValue = preloadedData.remove(preloadKey);
-      if (log.isDebugEnabled())
-         log.debug("Getting Preload " + preloadKey + " " +
-            field.getMetaData().getFieldName() + " " + fieldValue);
-      found = (fieldValue != null);
-
-
-      // due to this trick we avoid synchronization on preloadedData
-      if (fieldValue == NULL_VALUE) { 
-         fieldValue = null;
-      }
-      fieldValueRef[0] = fieldValue;
-      return found;
-   }
-
-   /**
-    * Clear out any data we have preloaded for any entity in this transaction
-    */
-   private void clearPreloadForTrans(Transaction trans)
-   {
-      Map.Entry entry;
-      PreloadKey preloadKey;
-
-      if(transactions.remove(trans)) {
-         for(Iterator it = preloadedData.entrySet().iterator(); it.hasNext();) {
-            entry = (Map.Entry) it.next();
-            preloadKey = (PreloadKey) entry.getKey();
-            if (preloadKey.trans == trans) {
-               it.remove();
-            }
-         }
-      }
-   }
-
-   /** Inner class used in the preload Data hashmaps so that we can wrap a
-    *  SoftReference around the data and still have enough information to remove
-    *  the reference from the appropriate hashMap.
-    */
-   private class PreloadKey {
-      final Object key;
-      final Transaction trans;
-      final String field;
-
-      PreloadKey(Transaction trans, Object key, String field) {
-         this.trans = trans;
-         this.key = key;
-         this.field = field;
-      }
-
-      public boolean equals(Object obj) {
-         PreloadKey preloadKey = (PreloadKey) obj;
-
-         return ((trans == preloadKey.trans) &&
-                     field.equals(preloadKey.field) &&
-               key.equals(preloadKey.key));
-      }
-
-      public int hashCode() {
-         return (
-               key.hashCode() +
-               field.hashCode() +
-               (trans == null ? 0 : trans.hashCode()));
-      }
-   }
-
-   private class PreloadClearSynch 
-         implements javax.transaction.Synchronization {
-
-      private Transaction forTrans;
-      public PreloadClearSynch(Transaction forTrans) {
-         this.forTrans = forTrans;
-      }
-      public void afterCompletion(int p0) {
-         clearPreloadForTrans(forTrans);
-      }
-      public void beforeCompletion() {
-         //no-op
-      }
    }
 
    private class ApplicationTxDataSynchronization implements Synchronization {
