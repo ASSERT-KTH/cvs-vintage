@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.19 2004/07/17 13:10:31 kataka Exp $
+// $Id: PropPanelGuard.java,v 1.20 2004/07/26 08:40:34 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelGuard.java,v 1.19 2004/07/17 13:10:31 kataka Exp $
+// $Id: PropPanelGuard.java,v 1.20 2004/07/26 08:40:34 mkl Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -36,9 +36,7 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-
 import org.argouml.uml.ui.PropPanelButton;
-import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLExpressionBodyField;
 import org.argouml.uml.ui.UMLExpressionLanguageField;
 import org.argouml.uml.ui.UMLExpressionModel;

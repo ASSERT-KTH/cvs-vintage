@@ -1,4 +1,4 @@
-// $Id: PropPanelStateVertex.java,v 1.14 2003/11/25 11:38:55 jhraigniac Exp $
+// $Id: PropPanelStateVertex.java,v 1.15 2004/07/26 08:40:34 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,17 +46,17 @@ public abstract class PropPanelStateVertex extends PropPanelModelElement {
 
     ////////////////////////////////////////////////////////////////
     // constants
-    protected static ImageIcon _stateIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("State");
-    protected static ImageIcon _actionStateIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("ActionState");
-    protected static ImageIcon _compositeStateIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("CompositeState");
-    protected static ImageIcon _simpleStateIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("SimpleState");
-    protected static ImageIcon _shallowHistoryIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("ShallowHistory");
-    protected static ImageIcon _deepHistoryIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("DeepHistory");
-    protected static ImageIcon _finalStateIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("FinalState");
-    protected static ImageIcon _initialIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Initial");
-    protected static ImageIcon _forkIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Fork");
-    protected static ImageIcon _joinIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Join");
-    protected static ImageIcon _transitionIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Transition");
+    protected static ImageIcon _stateIcon = ResourceLoaderWrapper.lookupIconResource("State");
+    protected static ImageIcon _actionStateIcon = ResourceLoaderWrapper.lookupIconResource("ActionState");
+    protected static ImageIcon _compositeStateIcon = ResourceLoaderWrapper.lookupIconResource("CompositeState");
+    protected static ImageIcon _simpleStateIcon = ResourceLoaderWrapper.lookupIconResource("SimpleState");
+    protected static ImageIcon _shallowHistoryIcon = ResourceLoaderWrapper.lookupIconResource("ShallowHistory");
+    protected static ImageIcon _deepHistoryIcon = ResourceLoaderWrapper.lookupIconResource("DeepHistory");
+    protected static ImageIcon _finalStateIcon = ResourceLoaderWrapper.lookupIconResource("FinalState");
+    protected static ImageIcon _initialIcon = ResourceLoaderWrapper.lookupIconResource("Initial");
+    protected static ImageIcon _forkIcon = ResourceLoaderWrapper.lookupIconResource("Fork");
+    protected static ImageIcon _joinIcon = ResourceLoaderWrapper.lookupIconResource("Join");
+    protected static ImageIcon _transitionIcon = ResourceLoaderWrapper.lookupIconResource("Transition");
 
     ////////////////////////////////////////////////////////////////
 

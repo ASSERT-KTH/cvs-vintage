@@ -1,4 +1,4 @@
-// $Id: PropPanelEvent.java,v 1.20 2004/07/17 13:10:31 kataka Exp $
+// $Id: PropPanelEvent.java,v 1.21 2004/07/26 08:40:34 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,6 @@ import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.swingext.Orientation;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
-import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.uml.ui.foundation.core.ActionNewParameter;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;

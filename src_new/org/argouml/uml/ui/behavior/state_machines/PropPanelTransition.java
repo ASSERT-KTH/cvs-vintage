@@ -1,4 +1,4 @@
-// $Id: PropPanelTransition.java,v 1.24 2004/07/17 13:10:31 kataka Exp $
+// $Id: PropPanelTransition.java,v 1.25 2004/07/26 08:40:34 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelTransition.java
 // Classes: PropPanelTransition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelTransition.java,v 1.24 2004/07/17 13:10:31 kataka Exp $
+// $Id: PropPanelTransition.java,v 1.25 2004/07/26 08:40:34 mkl Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -34,9 +34,7 @@ import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
-
 import org.argouml.uml.ui.PropPanelButton;
-import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;

@@ -1,4 +1,4 @@
-// $Id: PropPanelPseudostate.java,v 1.24 2004/07/18 07:01:26 mvw Exp $
+// $Id: PropPanelPseudostate.java,v 1.25 2004/07/26 08:40:34 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,12 @@
 // File: PropPanelPseudostate.java
 // Classes: PropPanelPseudostate
 // Original Author: your email address here
-// $Id: PropPanelPseudostate.java,v 1.24 2004/07/18 07:01:26 mvw Exp $
+// $Id: PropPanelPseudostate.java,v 1.25 2004/07/26 08:40:34 mkl Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.util.ConfigLoader;
 import org.tigris.gef.presentation.Fig;
 
