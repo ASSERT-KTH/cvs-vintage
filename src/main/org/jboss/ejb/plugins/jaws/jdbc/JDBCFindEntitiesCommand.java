@@ -32,7 +32,7 @@ import org.jboss.ejb.plugins.jaws.bmp.CustomFindByEntitiesCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
 {
@@ -51,26 +51,26 @@ public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
       // defined and automatic finders.
       Class ejbClass = null;
       try {
-      	ejbClass = Class.forName(factory.getMetaData().getEntity().getEjbClass());
-      } catch (ClassNotFoundException e) {
-      	e.printStackTrace();
-      }
+      	  ejbClass = Class.forName(factory.getMetaData().getEntity().getEjbClass());
 
-      Method[] customMethods = ejbClass.getMethods();
-      
-      for (int i = 0; i < customMethods.length; i++)
-      {
-         Method m = customMethods[i];
-         String name = m.getName();
-		 if (name.startsWith("ejbFindBy")) {
-			 String remoteName = "f"+name.substring(4);
-			 try {
-				 knownFinderCommands.put(remoteName, new CustomFindByEntitiesCommand(m));
-				 factory.getLog().debug("Added custom finder " + remoteName +".");
-			 } catch (IllegalArgumentException e) {
-			    factory.getLog().debug("Could not create the custom finder " + remoteName+".");
+	      Method[] customMethods = ejbClass.getMethods();
+	      
+	      for (int i = 0; i < customMethods.length; i++)
+	      {
+	         Method m = customMethods[i];
+	         String name = m.getName();
+			 if (name.startsWith("ejbFindBy")) {
+				 String remoteName = "f"+name.substring(4);
+				 try {
+					 knownFinderCommands.put(remoteName, new CustomFindByEntitiesCommand(m));
+					 factory.getLog().debug("Added custom finder " + remoteName +".");
+				 } catch (IllegalArgumentException e) {
+				    factory.getLog().debug("Could not create the custom finder " + remoteName+".");
+				 }
 			 }
-		 }
+		  }
+	  } catch (Exception e) {
+	  	// for some reason, this failed; try to use defined or automatic instead
 	  }
 
       // Make commands for the defined finders

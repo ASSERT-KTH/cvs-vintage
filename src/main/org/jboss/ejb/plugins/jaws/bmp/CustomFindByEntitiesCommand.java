@@ -29,7 +29,7 @@ import org.jboss.metadata.BeanMetaData;
  *
  * @see org.jboss.ejb.plugins.jaws.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class CustomFindByEntitiesCommand implements JPMFindEntitiesCommand
 {
