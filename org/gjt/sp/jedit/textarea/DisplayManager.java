@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.9 2003/03/27 04:03:10 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.10 2003/03/28 02:47:55 spestov Exp $
  */
 public class DisplayManager
 {
@@ -665,7 +665,7 @@ public class DisplayManager
 					physicalLine = getNextVisibleLine(physicalLine);
 			}
 			textArea.updateScrollBars();
-			textArea.chunkCache.setFirstLine(scrollLine,physicalLine);
+			textArea.chunkCache.setFirstLine(scrollLine,physicalLine,0);
 		} //}}}
 
 		//{{{ reset() method

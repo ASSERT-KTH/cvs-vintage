@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.214 2003/03/24 01:29:37 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.215 2003/03/28 02:47:55 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4745,6 +4745,8 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 
 	// used to store offsetToXY() results
 	Point returnValue;
+
+	boolean lastLinePartial;
 	//}}}
 
 	//{{{ isCaretVisible() method
@@ -4795,6 +4797,8 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		int lineHeight = painter.getFontMetrics().getHeight();
 		visibleLines = height / lineHeight;
 		lastLinePartial = (height % lineHeight != 0);
+		if(lastLinePartial)
+			visibleLines++;
 
 		chunkCache.recalculateVisibleLines();
 		maxHorizontalScrollWidth = 0;
@@ -4876,7 +4880,6 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 
 	private int physLastLine;
 	private int screenLastLine;
-	private boolean lastLinePartial;
 
 	private int visibleLines;
 	private int electricScroll;

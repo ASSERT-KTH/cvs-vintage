@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.48 2003/03/27 04:03:09 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.49 2003/03/28 02:47:54 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -243,7 +243,7 @@ public class OffsetManager
 			Anchor anchor = anchors;
 			for(;;)
 			{
-				if(anchor == null || anchor.physicalLine < line)
+				if(anchor == null || anchor.physicalLine <= line)
 					break;
 
 				long anchorVisibilityMask = (1L << (anchor.index + VISIBLE_SHIFT));
