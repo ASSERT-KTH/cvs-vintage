@@ -169,7 +169,7 @@ public class CarolDefaultValues {
      */
     public static String getRMIProtocol(String url) {
 	if (url != null) {
-	    StringTokenizer st = new StringTokenizer(url, ":");
+	    StringTokenizer st = new StringTokenizer(url, "://");
 	    String pref = st.nextToken().trim();
 	    return mapping.getProperty(pref,pref);
 	} else {
