@@ -1,4 +1,4 @@
-<!-- $Id: project_status.html,v 1.18 2001/07/02 23:10:35 jon Exp $ -->
+<!-- $Id: project_status.html,v 1.19 2001/07/11 00:39:04 jon Exp $ -->
 <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-Last Updated: $Date: 2001/07/02 23:10:35 $
+Last Updated: $Date: 2001/07/11 00:39:04 $
 </p>
 
 <h3><i>Tentative</i> Roadmap</h3>
@@ -30,12 +30,18 @@ Code Freeze / QA Starts: September 15th<br/>
 Code completion: October 15th
 </p>
 
+<p>
+Note: We are behind about 2 weeks. M2 is what we are focused on now and
+we hope to pick up some of the delay during the rest of the project
+lifecycle.
+</p>
+
 <ul>
 <li>
     <strong>Milestone 0</strong>: IA/UI started.
 </li>
 <li>
-    <strong>Milestone 1</strong> (June 11th - June 29th): 
+    <strong>Milestone 1 (95% Complete)</strong> (June 11th - June 29th): 
 Enter an Issue (2.1.0)(2.1.1)(2.1.2) 
 Show an Issue (2.6.1.x)(2.6.2.x)  
 Attribute Editor (2.1.4.0: milestone 1 version)(3.0.0)(3.0.2.0) 
@@ -43,7 +49,7 @@ Attribute Editor (2.1.4.0: milestone 1 version)(3.0.0)(3.0.2.0)
  abstracted. Login. Registration.
 </li>
 <li>
-    <strong>Milestone 2</strong> (June 25th - July 9th): 
+    <strong>Milestone 2 (20% Complete)</strong> (June 25th - July 20th): 
 Query for an Issue (2.2.0.x (simple query)) (2.2.0)(2.6.0) 
 Query for an Issue by id (part of global navigation).  
 Save stored query. (2.2.1)
@@ -142,18 +148,6 @@ up to date reflection of the current project status.
 
 <ul>
 <li>
-    We are now in the process of focusing our attention <a
-    href="/servlets/ProjectDocumentList">IA/UI development</a> as well
-    as continuing some initial application development. We have also
-    started a <a href="/servlets/ProjectMailingListList">"ui_docs"
-    mailing list</a> to discuss this development.
-</li>
-<li>
-    6-10-01 - Added tentative dates to milestones. Community involvement
-    may help lower the timeframes. (hint hint). Working on initial
-    integration of Milestone 1 UI mockups.
-</li>
-<li>
     6-22-01 - People are still coding, however the M1 milestone has been
     pushed back another 5 days until 6-29 because Jon is out of town for
     6-25-6-26 and I think that we won't make 6-25 for M1. Some of the
@@ -170,6 +164,19 @@ up to date reflection of the current project status.
     Scarab running on a test server. Each night, Scarab and Turbine are
     checked out from CVS, built clean and Catalina is restarted. We are
     still waiting on M2 UI's from Briano.
+</li>
+<li>
+    7-10-01 - After some discussion, John is going back and making it so
+    that multiple Attribute values can be defined. This will require
+    creating another table and modifying a bunch of code. This is
+    necessary because it will provide us with a better schema design in
+    the long run. Previously, we were going to just store this
+    information in a text column, but that isn't a good long standing
+    design. Elicia is going to pick up the IssueQuery changes. Jon is
+    working on upgrading Scarab to work with Turbine 2.2 as well as
+    trying to resolve some classloader issues with Tomcat. The UI team
+    is working on updating the UI with a better stylesheet and finishing
+    up the rest of the milestone deliverables.
 </li>
 </ul>
 
