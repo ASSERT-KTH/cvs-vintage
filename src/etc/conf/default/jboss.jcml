@@ -138,7 +138,7 @@
   <!-- ==================================================================== -->
   <!-- JBoss Server Management                                              -->
   <!-- ==================================================================== -->
-  <mbean code="org.jboss.mgt.ServerDataCollector" name="Management:service=Collector">
+  <mbean code="org.jboss.management.ServerDataCollector" name="Management:service=Collector">
     <attribute name="RefreshSleep">5000</attribute>
   </mbean>
 
