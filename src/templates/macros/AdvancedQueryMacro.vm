@@ -3,6 +3,20 @@
 #set ($intake = $scarabR.getConditionalIntake($scarabG.Constant.CURRENT_QUERY))
 #set ($searchGroup = $intake.SearchIssue.mapTo($search))
 #set ($attrValues = $search.CommonAttributeValuesMap)
+#set ($user = $data.User)
+		
+<h3>Issue types selected for this query</h3>
+<div class="colbar">
+#if ($user.CurrentMITList)
+  #set ($list = $user.CurrentMITList)
+  #foreach ($item in $list.ExpandedMITListItems)
+    <div>$item.Module.Name $item.IssueType.Name</div>
+  #end
+#else
+  <div>$scarabR.CurrentModule.Name $scarabR.CurrentIssueType</div>
+#end
+</div>
+
 
 <h3>Issue ID query</h3>
 <div class="axial">
@@ -165,7 +179,7 @@ from:&#160;<input type="text" size="20"
             #set ( $selectedAttribute = $attVal.Attribute )
         #end
     <option#selected($selected) value="$attVal.AttributeId">
- #if ($attVal.Issue.Module)
+ #if ($attVal.Issue.Module && $attVal.Issue.IssueType)
         $attVal.RModuleAttribute.DisplayValue
  #else
         $attVal.Attribute.Name
@@ -292,7 +306,7 @@ from:&#160;<input type="text" size="20"
     #end
   <tr>
     <th width="120">
- #if ($attVal.Issue.Module)
+ #if ($attVal.Issue.Module && $attVal.Issue.IssueType)
         $attVal.RModuleAttribute.DisplayValue
  #else
         $attVal.Attribute.Name
