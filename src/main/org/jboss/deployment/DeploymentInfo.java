@@ -54,7 +54,7 @@ import org.w3c.dom.Document;
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
 * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
-* @version   $Revision: 1.6 $ <p>
+* @version   $Revision: 1.7 $ <p>
 *
 *      <b>20011211 marc fleury:</b>
 *      <ul>
@@ -89,6 +89,8 @@ public class DeploymentInfo
    public String shortName;
    
    public long lastDeployed = 0;
+
+   public long lastModified = 0; //use for "should we redeploy failed"
    
    // A free form status for the "state" can be Deployed/failed etc etc
    public String status;
@@ -222,12 +224,18 @@ public class DeploymentInfo
    
    public void cleanup(Logger log)
    {
-      if (!recursiveDelete(new File(localUrl.getFile())))
-         if (log.isInfoEnabled())
-            log.info("could not delete directory " + localUrl.toString()+" restart will delete it");
+      if (localUrl == null || localUrl.equals(url)) 
+      {
+         log.info("not deleting localUrl, it is null or not a copy: " + localUrl);
+      } // end of if ()
+      else if (recursiveDelete(new File(localUrl.getFile())))
+      {
+         log.info("Cleaned Deployment "+url);
+      }
       else 
-         if (log.isInfoEnabled())
-           log.info("Cleaned Deployment "+url);
+      {
+         log.info("could not delete directory " + localUrl.toString()+" restart will delete it");
+      }
       
       if (!isXML)
          ServiceLibraries.getLibraries().removeClassLoader((UnifiedClassLoader) ucl);
@@ -269,6 +277,12 @@ public class DeploymentInfo
       }
       return false;
    }
+
+   public String toString()
+   {
+      return "DeploymentInfo:url=" + url;
+   }
+      
 }
 
 
