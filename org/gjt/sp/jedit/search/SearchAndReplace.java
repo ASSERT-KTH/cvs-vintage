@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * Class that implements regular expression and literal search within
  * jEdit buffers.
  * @author Slava Pestov
- * @version $Id: SearchAndReplace.java,v 1.18 2002/02/06 09:54:01 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.19 2002/02/08 02:37:17 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -726,7 +726,7 @@ loop:			for(;;)
 loop:			while(path != null)
 			{
 				Buffer buffer = jEdit.openTemporary(
-						view,null,path,false);
+					view,null,path,false);
 
 				/* this is stupid and misleading.
 				 * but 'path' is not used anywhere except
@@ -785,6 +785,8 @@ loop:			while(path != null)
 				new Integer(fileCount) };
 			view.getStatus().setMessageAndClear(jEdit.getProperty(
 				"view.status.replace-all",args));
+			if(occurCount == 0)
+				view.getToolkit().beep();
 		}
 
 		return (fileCount != 0);
@@ -906,6 +908,9 @@ loop:			while(path != null)
 			return 0;
 
 		int occurCount = 0;
+
+		if(replace == null)
+			replace = "";
 
 		boolean smartCaseReplace = (TextUtilities.getStringCase(replace)
 			== TextUtilities.LOWER_CASE);

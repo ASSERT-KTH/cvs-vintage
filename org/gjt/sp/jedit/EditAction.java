@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 1998, 1999, 2000, 2001 Slava Pestov
+ * Copyright (C) 1998, 1999, 2000, 2001, 2002 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * actions.xml file.
  *
  * @author Slava Pestov
- * @version $Id: EditAction.java,v 1.7 2001/11/24 13:03:36 spestov Exp $
+ * @version $Id: EditAction.java,v 1.8 2002/02/08 02:37:17 spestov Exp $
  */
 public abstract class EditAction
 {
@@ -66,6 +66,18 @@ public abstract class EditAction
 	public String getLabel()
 	{
 		return jEdit.getProperty(name + ".label");
+	} //}}}
+
+	//{{{ getMouseOverText() method
+	/**
+	 * Returns the text that should be shown when the mouse is placed over
+	 * this action's menu item or tool bar button. Currently only used by
+	 * the macro system.
+	 * @since jEdit 4.0pre5
+	 */
+	public String getMouseOverText()
+	{
+		return null;
 	} //}}}
 
 	//{{{ invoke() method

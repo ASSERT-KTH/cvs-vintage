@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.31 2002/02/06 09:54:01 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.32 2002/02/08 02:37:17 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -1376,7 +1376,7 @@ public class VFSBrowser extends JPanel implements EBComponent
 					else
 					{
 						MiscUtilities.quicksort(favorites,
-							new MiscUtilities.StringCompare());
+							new MiscUtilities.StringICaseCompare());
 						for(int i = 0; i < favorites.length; i++)
 						{
 							mi = new JMenuItem(favorites[i].toString());

@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * This class records and runs macros.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.13 2002/02/07 22:26:18 spestov Exp $
+ * @version $Id: Macros.java,v 1.14 2002/02/08 02:37:17 spestov Exp $
  */
 public class Macros
 {
@@ -244,7 +244,7 @@ public class Macros
 		return (Handler[])macroHandlers.toArray(handlers);
 	} //}}}
 
-	//{{{
+	//{{{ getHandler() method
 	/**
 	 * Returns the macro handler with the specified name, or null if
 	 * there is no registered handler with that name.
@@ -325,6 +325,12 @@ public class Macros
 		public String getLabel()
 		{
 			return label;
+		} //}}}
+
+		//{{{ getMouseOverText() method
+		public String getMouseOverText()
+		{
+			return handler.getLabel() + " - " + path;
 		} //}}}
 
 		//{{{ getPath() method

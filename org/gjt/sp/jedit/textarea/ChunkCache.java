@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.20 2002/02/05 06:28:10 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.21 2002/02/08 02:37:17 spestov Exp $
  */
 public class ChunkCache
 {
@@ -240,6 +240,8 @@ public class ChunkCache
 
 		float _x = 0.0f;
 
+		Chunk first = chunks;
+
 		Font lastFont = null;
 		Color lastColor = null;
 
@@ -251,7 +253,8 @@ public class ChunkCache
 				Color bgColor = chunks.style.getBackgroundColor();
 				if(bgColor != null)
 				{
-					float x2 = (chunks.next == null ? width
+					float x2 = (chunks.next == null
+						&& chunks == first ? width
 						: _x + chunks.width);
 
 					//LineMetrics lm = font.getLineMetrics(
