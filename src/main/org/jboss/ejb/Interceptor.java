@@ -6,12 +6,14 @@
  */
 package org.jboss.ejb;
 
+import org.jboss.invocation.Invocation;
+
 
 /**
  * Provides the interface for all container interceptors.
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public interface Interceptor
    extends ContainerPlugin
@@ -38,7 +40,7 @@ public interface Interceptor
     *
     * @throws Exception ???
     */
-   Object invokeHome(MethodInvocation mi) throws Exception;
+   Object invokeHome(Invocation mi) throws Exception;
 
    /**
     * ???
@@ -48,6 +50,6 @@ public interface Interceptor
     *
     * @throws Exception ???
     */
-   Object invoke(MethodInvocation mi) throws Exception;
+   Object invoke(Invocation mi) throws Exception;
 }
 
