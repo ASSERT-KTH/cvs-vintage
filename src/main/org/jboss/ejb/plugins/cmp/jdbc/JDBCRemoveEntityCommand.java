@@ -17,7 +17,6 @@ import java.util.List;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.RemoveException;
 import javax.sql.DataSource;
-import javax.transaction.TransactionRolledbackException;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
@@ -31,7 +30,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class JDBCRemoveEntityCommand {
    
@@ -68,13 +67,9 @@ public class JDBCRemoveEntityCommand {
 
       // update the related entities (stores the removal from relationships)
       if(!entity.getCMRFields().isEmpty()) {
-         try {
-            manager.getContainer().synchronizeEntitiesWithinTransaction(
-                  context.getTransaction());
-         } catch(TransactionRolledbackException tre) {
-            throw new RemoveException("Transaction rolled back, cannot " +
-                  "remove in tx");
-         }
+         // if one of the store fails an EJBException will be thrown
+         manager.getContainer().synchronizeEntitiesWithinTransaction(
+               context.getTransaction());
       }
       
       Connection con = null;
