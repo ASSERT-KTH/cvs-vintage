@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.31 2000/09/25 07:21:17 costin Exp $
- * $Revision: 1.31 $
- * $Date: 2000/09/25 07:21:17 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.32 2000/09/29 07:01:30 costin Exp $
+ * $Revision: 1.32 $
+ * $Date: 2000/09/29 07:01:30 $
  *
  * ====================================================================
  *
@@ -71,7 +71,7 @@ import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.net.*;
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 
 public class HttpConnectionHandler  implements  TcpConnectionHandler {
     
@@ -94,7 +94,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
     
     public void setServer( Object  contextM ) {
 	this.contextM=(ContextManager)contextM;
-	loghelper.setProxy(this.contextM.getLoggerHelper());
+	//	loghelper.setProxy(this.contextM.getLoggerHelper());
     }
 
     public Object[] init() {
@@ -244,7 +244,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	//	System.out.print("6");
     }
 
-    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    Log loghelper = new Log("tc_log", this);
     // note: as soon as we get a ContextManager, we start using its
     // log stream, see setServer()
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.5 2000/07/11 03:48:35 alex Exp $
- * $Revision: 1.5 $
- * $Date: 2000/07/11 03:48:35 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.6 2000/09/29 07:00:38 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/09/29 07:00:38 $
  *
  * ====================================================================
  * 
@@ -69,7 +69,7 @@ import javax.servlet.jsp.JspEngineInfo;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.tomcat.util.SimplePool;
-import org.apache.tomcat.logging.Logger;
+import org.apache.tomcat.util.log.*;
 
 /**
  * Implementation of JspFactory from the spec. Helps create
@@ -81,7 +81,7 @@ public class JspFactoryImpl extends JspFactory {
     private SimplePool pool=new SimplePool( 100 );
     private static final boolean usePool=true;
     
-    Logger.Helper loghelper = new Logger.Helper("JASPER_LOG", "JspFactoryImpl");
+    Log loghelper = new Log("JASPER_LOG", "JspFactoryImpl");
     
     public PageContext getPageContext(Servlet servlet, ServletRequest request,
                                       ServletResponse response, 

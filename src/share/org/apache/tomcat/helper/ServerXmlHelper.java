@@ -68,7 +68,7 @@ import java.net.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 import org.xml.sax.*;
 
 /**
@@ -196,25 +196,25 @@ public class ServerXmlHelper {
      */
     public void setLogHelper( XmlMapper xh ) {
 	xh.addRule("Server/Logger",
-		   xh.objectCreate("org.apache.tomcat.logging.TomcatLogger"));
+		   xh.objectCreate("org.apache.tomcat.util.log.QueueLogger"));
 	xh.addRule("Server/Logger", xh.setProperties());
 	xh.addRule("Server/Logger", 
 		   xh.addChild("addLogger",
-			       "org.apache.tomcat.logging.Logger") );
+			       "org.apache.tomcat.util.log.Logger") );
 
 	xh.addRule("Context/Logger",
-		   xh.objectCreate("org.apache.tomcat.logging.TomcatLogger"));
+		   xh.objectCreate("org.apache.tomcat.util.log.QueueLogger"));
 	xh.addRule("Context/Logger", xh.setProperties());
 	xh.addRule("Context/Logger", 
 		   xh.addChild("setLogger",
-			       "org.apache.tomcat.logging.Logger") );
+			       "org.apache.tomcat.util.log.Logger") );
 
 	xh.addRule("Context/ServletLogger",
-		   xh.objectCreate("org.apache.tomcat.logging.TomcatLogger"));
+		   xh.objectCreate("org.apache.tomcat.util.log.QueueLogger"));
 	xh.addRule("Context/ServletLogger", xh.setProperties());
 	xh.addRule("Context/ServletLogger", 
 		   xh.addChild("setServletLogger",
-			       "org.apache.tomcat.logging.Logger") );
+			       "org.apache.tomcat.util.log.Logger") );
 
 
     }

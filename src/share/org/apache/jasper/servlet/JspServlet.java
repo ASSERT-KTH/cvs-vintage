@@ -84,7 +84,7 @@ import org.apache.jasper.runtime.*;
 
 import org.apache.jasper.compiler.Compiler;
 
-import org.apache.tomcat.logging.Logger;
+import org.apache.tomcat.util.log.*;
 
 /**
  * The JSP engine (a.k.a Jasper)! 
@@ -94,7 +94,7 @@ import org.apache.tomcat.logging.Logger;
  */
 public class JspServlet extends HttpServlet {
 
-    Logger.Helper loghelper = new Logger.Helper("JASPER_LOG", "JspServlet");
+    Log loghelper = new Log("JASPER_LOG", "JspServlet");
 
     class JspServletWrapper {
         Servlet theServlet;

@@ -64,7 +64,7 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.context.*;
 import org.apache.tomcat.request.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -1106,7 +1106,7 @@ public final class ContextManager implements LogAware{
 
     // -------------------- Logging and debug --------------------
     boolean firstLog = true;
-    Logger.Helper loghelper = new Logger.Helper("tc_log", "ContextManager");
+    Log loghelper = new Log("tc_log", "ContextManager");
 
     /**
      * Get the Logger object that the context manager is writing to (necessary?)
@@ -1119,7 +1119,7 @@ public final class ContextManager implements LogAware{
      * So other classes can piggyback on the context manager's log
      * stream, using Logger.Helper.setProxy()
      **/
-    public Logger.Helper getLoggerHelper() {
+    public Log getLog() {
 	return loghelper;
     }
  

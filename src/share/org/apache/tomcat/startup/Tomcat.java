@@ -12,7 +12,7 @@ import org.apache.tomcat.helper.*;
 import org.apache.tomcat.task.*;
 import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 import org.xml.sax.*;
 
 /**
@@ -21,7 +21,7 @@ import org.xml.sax.*;
  *
  * @author costin@dnt.ro
  */
-public class Tomcat extends Logger.Helper {
+public class Tomcat extends Log {
 
     private static StringManager sm =
 	StringManager.getManager("org.apache.tomcat.resources");

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.19 2000/07/11 03:48:34 alex Exp $
- * $Revision: 1.19 $
- * $Date: 2000/07/11 03:48:34 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.20 2000/09/29 07:00:27 costin Exp $
+ * $Revision: 1.20 $
+ * $Date: 2000/09/29 07:00:27 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
 import org.apache.jasper.JspCompilationContext;
 
-import org.apache.tomcat.logging.Logger;
+import org.apache.tomcat.util.log.*;
 
 /**
  * JSP code generator "backend".

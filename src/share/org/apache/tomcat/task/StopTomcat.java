@@ -62,7 +62,7 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.xml.*;
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -84,7 +84,7 @@ public class StopTomcat {
 
     String configFile;
     String tomcatHome;
-    Logger.Helper loghelper = new Logger.Helper("tc_log", "StopTomcat");
+    Log loghelper = new Log("tc_log", "StopTomcat");
     
     public StopTomcat() 
     {

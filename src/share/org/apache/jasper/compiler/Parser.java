@@ -65,7 +65,7 @@ import org.apache.jasper.Constants;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 
-import org.apache.tomcat.logging.Logger;
+import org.apache.tomcat.util.log.*;
 
 /**
  * The class that parses the JSP input and calls the right methods on

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.12 2000/07/25 04:19:29 craigmcc Exp $
- * $Revision: 1.12 $
- * $Date: 2000/07/25 04:19:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.13 2000/09/29 07:01:51 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/09/29 07:01:51 $
  *
  * ====================================================================
  *
@@ -67,7 +67,7 @@ package org.apache.tomcat.util;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.tomcat.logging.Logger;
+import org.apache.tomcat.util.log.*;
 
 /*
  * FileUtil contains utils for dealing with Files. Some of these are 
@@ -126,7 +126,7 @@ public class FileUtil {
 	return lookupPath + "/" + path;
     }
 
-    static Logger.Helper loghelper = new Logger.Helper("tc_log", "FileUtil");
+    static Log loghelper = new Log("tc_log", "FileUtil");
     
     /** All the safety checks from getRealPath() and
 	DefaultServlet.

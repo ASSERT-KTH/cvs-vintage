@@ -59,7 +59,7 @@
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -341,7 +341,7 @@ public class Handler {
 
     // -------------------- Debug --------------------
 
-    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    Log loghelper = new Log("tc_log", this);
     
     public void setDebug( int d ) {
 	debug=d;
@@ -349,13 +349,13 @@ public class Handler {
 
     protected void log( String s ) {
 	if (context != null)
-	    loghelper.setLogger(context.getLoggerHelper().getLogger());
+	    loghelper.setLogger(context.getLog().getLogger());
 	loghelper.log(s);
     }
 
     protected void log( String s, Throwable t ) {
 	if (context != null)
-	    loghelper.setLogger(context.getLoggerHelper().getLogger());
+	    loghelper.setLogger(context.getLog().getLogger());
 	loghelper.log(s, t);
     }
 

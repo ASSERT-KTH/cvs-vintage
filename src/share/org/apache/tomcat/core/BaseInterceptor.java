@@ -62,8 +62,7 @@ package org.apache.tomcat.core;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.logging.Logger.Helper;
-import org.apache.tomcat.logging.Logger;
+import org.apache.tomcat.util.log.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -85,7 +84,7 @@ public class BaseInterceptor
     public static final int OK=0;
     
     //  loghelper will use name of actual impl subclass
-    protected Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    protected Log loghelper = new Log("tc_log", this);
 
     public BaseInterceptor() {
     }
@@ -131,7 +130,7 @@ public class BaseInterceptor
 
     public void setContext( Context ctx ) {
 	this.ct=ctx.getContainer();
-	loghelper.setLogger(ctx.getLoggerHelper().getLogger());
+	loghelper.setLogger(ctx.getLog().getLogger());
     }
 
     protected void log( String s ) {

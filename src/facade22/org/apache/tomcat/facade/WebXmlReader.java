@@ -3,7 +3,6 @@ package org.apache.tomcat.facade;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.xml.*;
-import org.apache.tomcat.logging.*;
 import java.beans.*;
 import java.io.*;
 import java.io.IOException;

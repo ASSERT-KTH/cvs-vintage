@@ -8,7 +8,7 @@ import org.apache.tomcat.request.*;
 import org.apache.tomcat.modules.server.*;
 import org.apache.tomcat.session.StandardSessionInterceptor;
 import org.apache.tomcat.context.*;
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 import java.security.*;
 import java.util.*;
 
@@ -48,7 +48,7 @@ public class EmbededTomcat { // extends WebService
 
     String workDir;
 
-    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    Log loghelper = new Log("tc_log", this);
     
     // configurable properties
     int debug=0;

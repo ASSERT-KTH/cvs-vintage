@@ -79,7 +79,7 @@ import org.apache.jasper.JspEngineContext;
 import org.apache.jasper.Options;
 import org.apache.jasper.compiler.Compiler;
 
-import org.apache.tomcat.logging.Logger;
+import org.apache.tomcat.util.log.*;
 import javax.servlet.http.*;
 /**
  * This is a class loader that loads JSP files as though they were

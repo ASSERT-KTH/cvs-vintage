@@ -60,7 +60,7 @@ package org.apache.tomcat.task;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -77,7 +77,7 @@ public class NSConfig  { // implements XXX
     public static final String NS_CONFIG = "/conf/jk/obj.conf";
     public static final String JK_LOG_LOCATION = "/logs/netscape_redirect.log";
 
-    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    Log loghelper = new Log("tc_log", this);
     
     public NSConfig() 
     {

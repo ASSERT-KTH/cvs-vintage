@@ -63,7 +63,7 @@ package org.apache.tomcat.modules.server;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -85,7 +85,7 @@ public class Http10 {
     protected int oBufferCount = 0;
 
     static final byte CRLF[]= { (byte)'\r', (byte)'\n' };
-    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    Log loghelper = new Log("tc_log", this);
     
     public Http10() {
         super();

@@ -68,7 +68,7 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.util.net.ServerSocketFactory;
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 
 /** Standalone http.
  *

@@ -70,7 +70,7 @@ import java.util.Stack;
 
 import org.apache.jasper.Constants;
 import org.apache.jasper.JspCompilationContext;
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 
 /**
  * JspReader is an input buffer for the JSP parser. It should allow
@@ -93,7 +93,7 @@ public class JspReader {
     
     private JspCompilationContext context;
 
-    Logger.Helper loghelper = new Logger.Helper("JASPER_LOG", "JspReader");
+    Log loghelper = new Log("JASPER_LOG", "JspReader");
     
     public String getFile(int fileid) {
 	return (String) sourceFiles.elementAt(fileid);

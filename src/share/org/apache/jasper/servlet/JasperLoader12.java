@@ -79,7 +79,7 @@ import org.apache.jasper.JspEngineContext;
 import org.apache.jasper.Options;
 import org.apache.jasper.compiler.Compiler;
 
-import org.apache.tomcat.logging.Logger;
+import org.apache.tomcat.util.log.*;
 import javax.servlet.http.*;
 /**
  * 1.2 version of the JspLoader

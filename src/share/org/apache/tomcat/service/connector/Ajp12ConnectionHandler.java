@@ -71,7 +71,7 @@ import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 import org.apache.tomcat.service.http.*;
 import org.apache.tomcat.service.http.HttpResponseAdapter;
 import org.apache.tomcat.service.http.HttpRequestAdapter;
@@ -84,7 +84,7 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 
     ContextManager contextM;
 
-    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    Log loghelper = new Log("tc_log", this);
     
     public Ajp12ConnectionHandler() {
     }

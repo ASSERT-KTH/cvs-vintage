@@ -68,7 +68,7 @@ import java.net.*;
 import java.util.*;
 import java.security.*;
 
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 
 /**
  * Check ContextManager and set defaults for non-set properties

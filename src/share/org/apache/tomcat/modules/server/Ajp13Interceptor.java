@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.2 2000/09/24 18:09:54 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/09/24 18:09:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.3 2000/09/29 07:01:16 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/09/29 07:01:16 $
  *
  * ====================================================================
  *
@@ -69,7 +69,7 @@ import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 
 public class Ajp13Interceptor extends PoolTcpConnector
     implements  TcpConnectionHandler

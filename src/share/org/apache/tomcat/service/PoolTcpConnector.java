@@ -63,7 +63,7 @@ package org.apache.tomcat.service;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.net.*;
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -227,9 +227,9 @@ public final class PoolTcpConnector extends BaseInterceptor implements LogAware 
     // -------------------- Bean-setters for TcpConnector --------------------
     public void setServer( Object ctx ) {
 	this.cm=ctx;
-	if (cm instanceof LogAware) {
-	    loghelper.setProxy(((LogAware)cm).getLoggerHelper());
-	}
+// 	if (cm instanceof LogAware) {
+// 	    loghelper.setProxy(((LogAware)cm).getLoggerHelper());
+// 	}
     }
 
     public void setDebug( int i ) {
@@ -333,7 +333,7 @@ public final class PoolTcpConnector extends BaseInterceptor implements LogAware 
     }
 
     // ----- Logging -----
-    private Logger.Helper loghelper = new Logger.Helper("tc_log", "PoolTcpConnector");
+    private Log loghelper = new Log("tc_log", "PoolTcpConnector");
         
     /**
      * Set a logger explicitly. Note that setLogger(null) will not
@@ -344,7 +344,7 @@ public final class PoolTcpConnector extends BaseInterceptor implements LogAware 
 	loghelper.setLogger(logger);
     }
 
-    public Logger.Helper getLoggerHelper() {
+    public Log getLog() {
 	return loghelper;
     }
     

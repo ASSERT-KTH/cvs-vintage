@@ -64,11 +64,12 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
+import org.apache.tomcat.util.log.*;
+
 import org.apache.jasper.*;
 import org.apache.jasper.Constants;
 import org.apache.jasper.runtime.*;
 import org.apache.jasper.compiler.*;
-import org.apache.tomcat.logging.Logger;
 import org.apache.jasper.compiler.Compiler;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.facade.ServletWrapper;

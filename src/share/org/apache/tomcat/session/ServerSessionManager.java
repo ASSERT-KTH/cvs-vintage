@@ -68,8 +68,7 @@ import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.threads.*;
 import org.apache.tomcat.helper.*;
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.logging.Logger.Helper;
-import org.apache.tomcat.logging.Logger;
+import org.apache.tomcat.util.log.*;
 
 /**
  *
@@ -77,7 +76,7 @@ import org.apache.tomcat.logging.Logger;
  */
 public final class ServerSessionManager  
 {
-    protected Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    protected Log loghelper = new Log("tc_log", this);
     
     /** The set of previously recycled Sessions for this Manager.
      */

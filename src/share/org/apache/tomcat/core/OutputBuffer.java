@@ -125,7 +125,7 @@ public final class OutputBuffer extends Writer {
 	if( conv!= null ) {
 	    conv.reset(); // reset ?
 	} else {
-	    log( "Recycle without conv ??");
+	    //	    log( "Recycle without conv ??");
 	}
     }
 

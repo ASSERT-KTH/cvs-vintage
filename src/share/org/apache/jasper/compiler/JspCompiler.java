@@ -62,7 +62,7 @@ import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
 
-import org.apache.tomcat.logging.Logger;
+import org.apache.tomcat.util.log.*;
 
 /**
  * JspCompiler is an implementation of Compiler with a funky code
@@ -88,7 +88,7 @@ public class JspCompiler extends Compiler implements Mangler {
     boolean outDated;
     static final int JSP_TOKEN_LEN= Constants.JSP_TOKEN.length();
 
-    Logger.Helper loghelper = new Logger.Helper("JASPER_LOG", "JspCompiler");
+    Log loghelper = new Log("JASPER_LOG", "JspCompiler");
     
     public JspCompiler(JspCompilationContext ctxt) throws JasperException {
         super(ctxt);

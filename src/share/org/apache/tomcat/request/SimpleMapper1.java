@@ -63,7 +63,6 @@ package org.apache.tomcat.request;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.logging.*;
 import java.util.*;
 
 /**
@@ -102,8 +101,6 @@ public class SimpleMapper1 extends  BaseInterceptor  {
     // Property for the PrefixMapper - cache the mapping results
     boolean mapCacheEnabled=false;
     
-    Logger.Helper loghelper = new Logger.Helper("tc_log", "SimpleMapper1");
-
     public SimpleMapper1() {
 	map=new PrefixMapper();
     }

@@ -76,7 +76,7 @@ import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
 import org.apache.jasper.Options;
 
-import org.apache.tomcat.logging.Logger;
+import org.apache.tomcat.util.log.*;
 import javax.servlet.http.*;
 /**
  * Jsp compiler and runtime depends on special features from the

@@ -65,7 +65,7 @@ import org.apache.tomcat.util.depend.*;
 import org.apache.tomcat.util.*;
 import java.security.*;
 import java.lang.reflect.*;
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -856,8 +856,8 @@ public class Context implements LogAware {
 
     // ------------------- Logging ---------------
 
-    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
-    Logger.Helper loghelperServlet;
+    Log loghelper = new Log("tc_log", this);
+    Log loghelperServlet;
 
     /** Internal log method
      */
@@ -884,9 +884,8 @@ public class Context implements LogAware {
      */
     public void logServlet( String msg , Throwable t ) {
 	if (loghelperServlet == null) {
-	    loghelperServlet = new Logger.Helper
-		("servlet_log",
-		 (vhost==null ? "" : vhost + ":" )  +  path);
+	    String pr= ((vhost==null) ? "" : vhost + ":" )  +  path;
+	    loghelperServlet = new Log("servlet_log", pr );
 	}
 	if (t == null)
 	    loghelperServlet.log(msg);	// uses level INFORMATION
@@ -901,23 +900,21 @@ public class Context implements LogAware {
 
     public void setLogger(Logger logger) {
 	if (loghelper == null) {
-	    loghelper = new Logger.Helper
-		("tc_log",
-		 (vhost==null ? "" : vhost + ":" )  +  path);
+	    String pr=((vhost==null ? "" : vhost + ":" )  +  path);
+	    loghelper = new Log("tc_log", pr );
 	}
 	loghelper.setLogger(logger);
     }
 
     public void setServletLogger(Logger logger) {
 	if (loghelperServlet == null) {
-	    loghelperServlet = new Logger.Helper
-		("servlet_log",
-		 (vhost==null ? "" : vhost + ":" )  +  path);
+	    String pr=((vhost==null ? "" : vhost + ":" )  +  path);
+	    loghelperServlet = new Log("servlet_log",pr);
 	}
 	loghelperServlet.setLogger(logger);
     }
 
-    public Logger.Helper getLoggerHelper() {
+    public Log getLog() {
 	return loghelper;
     }
 

@@ -62,7 +62,6 @@ package org.apache.tomcat.core;
 
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.session.*;
-import org.apache.tomcat.logging.*;
 import org.apache.tomcat.helper.*;
 import java.io.IOException;
 import java.io.*;

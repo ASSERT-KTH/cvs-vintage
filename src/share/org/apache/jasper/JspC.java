@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.16 2000/07/11 00:15:03 shemnon Exp $
- * $Revision: 1.16 $
- * $Date: 2000/07/11 00:15:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.17 2000/09/29 07:00:01 costin Exp $
+ * $Revision: 1.17 $
+ * $Date: 2000/09/29 07:00:01 $
  *
  * ====================================================================
  * 
@@ -73,8 +73,7 @@ import org.apache.jasper.compiler.CommandLineCompiler;
 //import org.apache.jasper.runtime.JspLoader;
 import org.apache.jasper.servlet.JasperLoader;
 
-import org.apache.tomcat.logging.Logger;
-import org.apache.tomcat.logging.TomcatLogger;
+import org.apache.tomcat.util.log.*;
 
 /**
  * Shell for the jspc compiler.  Handles all options associated with the 
@@ -314,7 +313,7 @@ public class JspC implements Options { //, JspCompilationContext {
             }
         }
 
-        Constants.jasperLog = new TomcatLogger();
+        Constants.jasperLog = new QueueLogger();
         Constants.jasperLog.setVerbosityLevel(verbosityLevel);
 
     }

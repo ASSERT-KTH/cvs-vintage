@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.9 2000/07/11 00:15:04 shemnon Exp $
- * $Revision: 1.9 $
- * $Date: 2000/07/11 00:15:04 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.10 2000/09/29 07:00:02 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/09/29 07:00:02 $
  *
  * ====================================================================
  * 
@@ -81,7 +81,7 @@ import org.apache.jasper.compiler.JspCompiler;
 import org.apache.jasper.compiler.SunJavaCompiler;
 import org.apache.jasper.compiler.JavaCompiler;
 
-import org.apache.tomcat.logging.Logger;
+import org.apache.tomcat.util.log.*;
 /**
  * A place holder for various things that are used through out the JSP
  * engine. This is a per-request/per-context data structure. Some of

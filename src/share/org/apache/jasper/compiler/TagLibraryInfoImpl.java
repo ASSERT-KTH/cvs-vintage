@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.25 2000/08/07 19:04:37 glenn Exp $
- * $Revision: 1.25 $
- * $Date: 2000/08/07 19:04:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.26 2000/09/29 07:00:30 costin Exp $
+ * $Revision: 1.26 $
+ * $Date: 2000/09/29 07:00:30 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -88,7 +88,7 @@ import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
 //import org.apache.jasper.runtime.JspLoader;
 
-import org.apache.tomcat.logging.Logger;
+import org.apache.tomcat.util.log.*;
 
 /**
  * Implementation of the TagLibraryInfo class from the JSP spec. 

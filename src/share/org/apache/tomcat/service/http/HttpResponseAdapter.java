@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.20 2000/09/25 07:21:23 costin Exp $
- * $Revision: 1.20 $
- * $Date: 2000/09/25 07:21:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.21 2000/09/29 07:01:32 costin Exp $
+ * $Revision: 1.21 $
+ * $Date: 2000/09/29 07:01:32 $
  *
  * ====================================================================
  *
@@ -67,7 +67,7 @@ package org.apache.tomcat.service.http;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.helper.*;
-import org.apache.tomcat.logging.*;
+import org.apache.tomcat.util.log.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -86,7 +86,7 @@ public class HttpResponseAdapter extends  Response {
     protected byte[] buffer = new byte[DEFAULT_HEAD_BUFFER_SIZE];
     protected int bufferCount = 0;
 
-    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    Log loghelper = new Log("tc_log", this);
     
     public HttpResponseAdapter() {
         super();

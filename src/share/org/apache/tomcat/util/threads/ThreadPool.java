@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/threads/Attic/ThreadPool.java,v 1.1 2000/08/28 03:14:09 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/08/28 03:14:09 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/threads/Attic/ThreadPool.java,v 1.2 2000/09/29 07:01:55 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/09/29 07:01:55 $
  *
  * ====================================================================
  *
@@ -67,8 +67,7 @@ import java.util.zip.*;
 import java.net.*;
 import java.util.*;
 import java.io.*;
-
-import org.apache.tomcat.logging.*; 
+import org.apache.tomcat.util.log.*; 
 
 /**
  * A thread pool that is trying to copy the apache process management.
@@ -131,7 +130,7 @@ public class ThreadPool  {
     /**
      * Helper object for logging
      **/
-    Logger.Helper loghelper = new Logger.Helper("tc_log", "ThreadPool");
+    Log loghelper = new Log("tc_log", "ThreadPool");
     
     public ThreadPool() {
         maxThreads      = MAX_THREADS;

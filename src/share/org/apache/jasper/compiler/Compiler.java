@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.19 2000/06/27 20:59:40 costin Exp $
- * $Revision: 1.19 $
- * $Date: 2000/06/27 20:59:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.20 2000/09/29 07:00:26 costin Exp $
+ * $Revision: 1.20 $
+ * $Date: 2000/09/29 07:00:26 $
  *
  * ====================================================================
  * 
@@ -72,7 +72,7 @@ import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
 import org.apache.jasper.compiler.ParseException;
 
-import org.apache.tomcat.logging.Logger;
+import org.apache.tomcat.util.log.*;
 
 /**
  * If you want to customize JSP compilation aspects, this class is
