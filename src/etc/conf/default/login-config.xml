@@ -23,7 +23,7 @@ The outline of the application-policy is:
   </authentication>
 </application-policy>
 
-$Revision: 1.8 $
+$Revision: 1.9 $
 -->
 
 <policy>
@@ -102,6 +102,28 @@ $Revision: 1.8 $
       changed to a stronger authentication mechanism as required.
     -->
     <application-policy name = "web-console">
+       <authentication>
+          <login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule"
+             flag = "required" />
+       </authentication>
+    </application-policy>
+
+    <!-- A template configuration for the jboss.net web application (and transport layer!). 
+      This defaults to the UsersRolesLoginModule the same as other and should be
+      changed to a stronger authentication mechanism as required.
+    -->
+    <application-policy name = "jboss.net">
+       <authentication>
+          <login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule"
+             flag = "required" />
+       </authentication>
+    </application-policy>
+
+    <!-- A template configuration for the jboss.net builtin uddi server. 
+      This defaults to the UsersRolesLoginModule the same as other and should be
+      changed to a stronger authentication mechanism as required.
+    -->
+    <application-policy name = "jboss.net-uddi">
        <authentication>
           <login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule"
              flag = "required" />
