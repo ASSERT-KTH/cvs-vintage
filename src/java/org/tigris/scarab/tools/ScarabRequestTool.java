@@ -499,7 +499,9 @@ try{
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            // Logged at debug level, as a null user is interpreted 
+            // as an invalid user id
+            Log.get().debug("User with user id "+ id +" could not be found,", e);
         }
         return su;
     }
@@ -517,7 +519,9 @@ try{
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            // Logged at debug level, as a null user is interpreted 
+            // as an invalid username
+            Log.get().debug("User, "+username+" could not be found,", e);
         }
         return su;
     }
