@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.78 2004/09/07 18:50:07 mvw Exp $
+// $Id: CoreFactory.java,v 1.79 2004/09/08 09:45:05 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -713,9 +713,11 @@ public class CoreFactory extends AbstractUmlModelFactory {
         }
         if (type instanceof MDataType || type instanceof MInterface) {
             if (!navigable) {
-                throw new IllegalArgumentException("type is either datatype "
-						   + "or interface and is "
-						   + "navigable to");
+                throw new IllegalArgumentException(
+                        "Wellformedness rule 2.5.3.3 [1] is broken. "
+                        + "The Classifier of an AssociationEnd cannot be an "
+                        + "Interface or a DataType if the association is "
+                        + "navigable away from that end.");
             }
             List ends = new ArrayList();
             ends.addAll(assoc.getConnections());
