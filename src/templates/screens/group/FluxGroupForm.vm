@@ -1,0 +1,78 @@
+$page.setTitle("Module Administration")
+$page.setBgColor($ui.bgcolor)
+
+<form method="post" action="$link.setPage("group,FluxGroupForm.vm").setAction("admin.ModifyModule")">
+
+    <table bgcolor="$ui.bgcolor" cellpadding="$ui.tableCellPadding">
+
+    #set ( $intakeModule = $intake.Module.mapTo($scarabR.Module) )
+
+    <tr>
+        <td nowrap>Module Name:</td>
+        <td>
+            #textField($intakeModule.Name "40")
+        </td>
+    </tr>
+
+    <tr>
+        <td nowrap>Project Description:</td>
+        <td>
+            #textField($intakeModule.Description "40")
+        </td>
+    </tr>
+
+    <tr>
+        <td nowrap>Project Code:</td>
+        <td>
+            #textField($intakeModule.Code "40")
+        </td>
+    </tr>
+                    
+    <tr>
+        <td nowrap>Project URL:</td>
+        <td>
+            #textField($intakeModule.Url "40")
+        </td>
+    </tr>
+
+#* !FIXME! not implemented yet
+    <tr>
+        <td nowrap>Project Owner:</td>
+        <td>
+            #textField($intakeModule.Owner "40")
+        </td>
+    </tr>
+
+    <tr>
+        <td nowrap>Project QA Contact:</td>
+        <td>
+            #textField($intakeModule.QAContact "40")
+        </td>
+    </tr>
+*#
+
+      <tr>
+        <td>&nbsp;</td>
+        <td align="$ui.buttonAlignment" bgcolor="$ui.buttonColor">
+          #*
+            Check for a mode, the update and delete buttons
+            shouldn't appear when inserting a new user.
+          *#
+
+          <font face="$ui.sansSerifFonts">
+
+          <input type="submit" name="eventSubmit_doCancel" value="Cancel">
+          #if ($flux.Mode && $flux.Mode == "modify")
+            <input type="submit" name="eventSubmit_doUpdate" value="Update Group"/>
+          #elseif ($flux.Mode && $flux.Mode == "delete")
+            <input type="submit" name="eventSubmit_doDelete" value="Confirm Deletion"/>
+          #else
+            <input type="submit" name="eventSubmit_doInsert" value="Add Group"/>
+          #end
+          
+          </font>
+       <td>
+     </tr>
+  </table>
+
+</form>
