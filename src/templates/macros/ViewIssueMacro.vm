@@ -557,7 +557,7 @@ $l10n.NoDependencies
 #end
 
 #if (!$activity.isEmpty())
-<h3>$l10n.IssueChangeHistory</h3>
+<h3>$l10n.ChangeHistory</h3>
   <table width="100%" cellpadding="3" cellspacing="2" border="1">
   <tr>
     <th>$l10n.DateStamp</th>
