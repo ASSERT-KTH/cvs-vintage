@@ -37,7 +37,7 @@ import org.jboss.logging.Logger;
  * </ul>
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public abstract class EnterpriseInstanceCache 
 	implements InstanceCache, XmlLoadable
@@ -337,7 +337,7 @@ public abstract class EnterpriseInstanceCache
 								try
 								{
 									// If the next call throws RemoteException we can 
-									// reinsert the context meaningfully in the cache
+									// remove the context from the cache
 									passivate(ctx);
 									executed();
 									removeLock(id);
@@ -345,11 +345,11 @@ public abstract class EnterpriseInstanceCache
 								} 
 								catch (RemoteException x)
 								{
-									// Can't passivate this bean, keep it in memory
-									// Reinsert it in the cache
+									// Can't passivate this bean, remove it
+									// EJB 1.1, 6.4.1
 									synchronized (getCacheLock())
 									{
-										getCache().insert(id, ctx);
+										getCache().remove(id);
 									}
 									throw x;
 								}
