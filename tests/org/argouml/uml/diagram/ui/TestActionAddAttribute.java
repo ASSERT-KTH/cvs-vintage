@@ -1,4 +1,4 @@
-// $Id: TestActionAddAttribute.java,v 1.1 2004/10/27 15:45:42 mkl Exp $
+// $Id: TestActionAddAttribute.java,v 1.2 2004/10/27 16:05:59 mkl Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,10 @@ import org.argouml.i18n.Translator;
  */
 public class TestActionAddAttribute extends TestCase {
 
+    
+    public TestActionAddAttribute(String arg0) {
+        super(arg0);
+    }
     /*
      * @see TestCase#setUp()
      */
