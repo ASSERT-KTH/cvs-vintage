@@ -21,7 +21,13 @@ import org.jboss.util.Sync;
  * 
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
+ *
+ * <p><b>Revisions:</b>
+ * <p><b>2001/01/29: billb</b>
+ * <ol>
+ *   <li>Expose cache flush and size
+ * </ol>
  */
 public class EntityInstanceCache
 	extends AbstractInstanceCache 
@@ -38,6 +44,15 @@ public class EntityInstanceCache
 	// Constructors --------------------------------------------------
 
 	// Public --------------------------------------------------------
+
+    public int getCacheSize() {
+	return getCache().size();
+    }
+
+    public void flush() {
+	getCache().flush();
+    }
+	
 	/* From ContainerPlugin interface */
 	public void setContainer(Container c) 
 	{

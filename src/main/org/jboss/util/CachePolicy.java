@@ -13,7 +13,7 @@ import org.jboss.system.Service;
  * a MRU one, or any other suitable policy.
  * 
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public interface CachePolicy extends Service
 {
@@ -67,4 +67,6 @@ public interface CachePolicy extends Service
 	 * Flushes the cached objects from the cache.
 	 */
 	public void flush();
+    
+    public int size();
 }

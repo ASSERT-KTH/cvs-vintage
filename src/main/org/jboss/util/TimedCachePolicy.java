@@ -23,7 +23,7 @@ This is a lazy cache policy in that objects are not checked for expiration
 until they are accessed.
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.4 $
+@version $Revision: 1.5 $
 */
 public class TimedCachePolicy extends TimerTask implements CachePolicy
 {
@@ -205,6 +205,10 @@ public class TimedCachePolicy extends TimerTask implements CachePolicy
 	{
         entryMap.clear();
 	}
+
+    public int size() {
+	return entryMap.size();
+    }
 // --- End CachePolicy interface methods
 
     /** The TimerTask run method. It updates the cache time to the

@@ -12,7 +12,7 @@ import java.util.HashMap;
  * Implementation of a Least Recently Used cache policy.
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class LRUCachePolicy
 	implements CachePolicy
@@ -180,6 +180,10 @@ public class LRUCachePolicy
 			ageOut(entry);
 		}
 	}
+
+    public int size() {
+	return m_list.m_count;
+    }
 
 	// Y overrides ---------------------------------------------------
 

@@ -15,7 +15,7 @@ import org.jboss.ejb.plugins.EnterpriseContextCachePolicy;
  *
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class NoPassivationCachePolicy 
 	implements EnterpriseContextCachePolicy
@@ -96,6 +96,7 @@ public class NoPassivationCachePolicy
 		}
 	}
 	public void flush() {}
+    public int size() { return m_map.size(); }
 
 	// Y overrides ---------------------------------------------------
 

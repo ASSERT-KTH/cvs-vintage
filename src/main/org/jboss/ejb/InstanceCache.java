@@ -16,7 +16,7 @@ import org.jboss.monitor.StatisticsProvider;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *      
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
@@ -88,6 +88,9 @@ public interface InstanceCache
     * @see #insert
     */
    boolean isActive(Object id);
+
+
+   
 }
 
 
