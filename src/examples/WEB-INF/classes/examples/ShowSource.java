@@ -20,6 +20,10 @@ public class ShowSource
     }
 
     public int doEndTag() throws JspException {
+	if( jspFile.indexOf( ".." ) >= 0 ) {
+	    out.println("<body><h1>Invalid file " + jspFile + "</h1></body>");
+	    return;
+	}
         InputStream in
             = pageContext.getServletContext().getResourceAsStream(jspFile);
 
