@@ -1,4 +1,4 @@
-// $Id: CrDupRoleNames.java,v 1.6 2003/06/30 18:00:28 linus Exp $
+// $Id: CrDupRoleNames.java,v 1.7 2003/06/30 19:23:18 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written

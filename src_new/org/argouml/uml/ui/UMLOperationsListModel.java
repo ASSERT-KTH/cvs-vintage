@@ -1,4 +1,4 @@
-// $Id: UMLOperationsListModel.java,v 1.11 2003/06/30 18:00:36 linus Exp $
+// $Id: UMLOperationsListModel.java,v 1.12 2003/06/30 19:23:20 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written

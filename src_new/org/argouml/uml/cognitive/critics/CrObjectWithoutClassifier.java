@@ -1,4 +1,4 @@
-// $Id: CrObjectWithoutClassifier.java,v 1.4 2003/06/30 18:00:28 linus Exp $
+// $Id: CrObjectWithoutClassifier.java,v 1.5 2003/06/30 19:23:18 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrObjectWithoutClassifier.java,v 1.4 2003/06/30 18:00:28 linus Exp $
+// $Id: CrObjectWithoutClassifier.java,v 1.5 2003/06/30 19:23:18 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 

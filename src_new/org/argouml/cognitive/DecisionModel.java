@@ -1,4 +1,4 @@
-// $Id: DecisionModel.java,v 1.5 2003/06/29 23:53:42 linus Exp $
+// $Id: DecisionModel.java,v 1.6 2003/06/30 19:23:17 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: DecisionModel.java
 // Classes: DecisionModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DecisionModel.java,v 1.5 2003/06/29 23:53:42 linus Exp $
+// $Id: DecisionModel.java,v 1.6 2003/06/30 19:23:17 linus Exp $
 
 package org.argouml.cognitive;
 

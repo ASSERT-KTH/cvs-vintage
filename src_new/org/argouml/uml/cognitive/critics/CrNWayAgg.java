@@ -1,4 +1,4 @@
-// $Id: CrNWayAgg.java,v 1.5 2003/06/30 18:00:28 linus Exp $
+// $Id: CrNWayAgg.java,v 1.6 2003/06/30 19:23:18 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrNWayAgg.java
 // Classes: CrNWayAgg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNWayAgg.java,v 1.5 2003/06/30 18:00:28 linus Exp $
+// $Id: CrNWayAgg.java,v 1.6 2003/06/30 19:23:18 linus Exp $
 
 // 12 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Code corrected as part
 // of fix to issue 619.
