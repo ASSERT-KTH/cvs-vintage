@@ -76,7 +76,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.59 2002/07/10 00:54:19 jmcnally Exp $
+ * @version $Id: Default.java,v 1.60 2002/07/18 02:04:02 jon Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -92,14 +92,14 @@ public class Default extends TemplateSecureScreen
     public String doBuild(RunData data)
         throws Exception
     {
-        this.doBuildTemplate(data, getTemplateContext(data));
+        super.doBuild(data);
         return "";
     }
 
     /**
      * builds up the context for display of variables on the page.
      */
-    public void doBuildTemplate( RunData data, TemplateContext context )
+    protected void doBuildTemplate( RunData data, TemplateContext context )
         throws Exception 
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -155,7 +155,6 @@ public class Default extends TemplateSecureScreen
             template = template.replace(',','.');
 
             String perm = ScarabSecurity.getScreenPermission(template);
-
             ScarabRequestTool scarabR = getScarabRequestTool(getTemplateContext(data));
             Module currentModule = scarabR.getCurrentModule();
             IssueType currentIssueType = scarabR.getCurrentIssueType();
