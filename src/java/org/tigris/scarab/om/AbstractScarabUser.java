@@ -69,6 +69,7 @@ import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.ScarabConstants;
 
 /**
  * This class contains common code for the use in ScarabUser implementations.
@@ -76,7 +77,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.76 2003/04/10 23:01:30 dlr Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.77 2003/04/23 21:10:16 jon Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -1481,6 +1482,10 @@ public abstract class AbstractScarabUser
         String preferredLocale = pref.getLocale();
         if (StringUtils.isEmpty(preferredLocale))
         {
+            if (localeInfo == null)
+            {
+                localeInfo = ScarabConstants.DEFAULT_LOCALE;
+            }
             if (localeInfo instanceof Locale)
             {
                 Locale l = (Locale) localeInfo;
