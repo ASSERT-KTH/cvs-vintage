@@ -437,45 +437,25 @@ public class ReceiveOptionsPanel extends DefaultPanel implements ActionListener 
 
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("ENABLE")) {
-            if (intervalCheckingCheckBox.isSelected()) {
-                defaultRadioButton.setEnabled(true);
-                autodownloadCheckBox.setEnabled(true);
-                playsoundCheckBox.setEnabled(true);
-                chooseButton.setEnabled(true);
-                chooseRadioButton.setEnabled(true);
-                intervalCheckingLabel.setEnabled(true);
-                intervalCheckingLabel2.setEnabled(true);
-                intervalCheckingTextField.setEnabled(true);
-            } else {
-                defaultRadioButton.setEnabled(false);
-                autodownloadCheckBox.setEnabled(false);
-                playsoundCheckBox.setEnabled(false);
-                chooseButton.setEnabled(false);
-                intervalCheckingLabel.setEnabled(false);
-                intervalCheckingLabel2.setEnabled(false);
-                intervalCheckingTextField.setEnabled(false);
-                chooseRadioButton.setEnabled(false);
-            }
+            boolean doIntervalChecking = intervalCheckingCheckBox.isSelected();
+            defaultRadioButton.setEnabled(doIntervalChecking);
+            autodownloadCheckBox.setEnabled(doIntervalChecking);
+            playsoundCheckBox.setEnabled(doIntervalChecking);
+            chooseButton.setEnabled(doIntervalChecking);
+            chooseRadioButton.setEnabled(doIntervalChecking);
+            intervalCheckingLabel.setEnabled(doIntervalChecking);
+            intervalCheckingLabel2.setEnabled(doIntervalChecking);
+            intervalCheckingTextField.setEnabled(doIntervalChecking);
 
-            if (playsoundCheckBox.isSelected()) {
-                defaultRadioButton.setEnabled(true);
-                chooseRadioButton.setEnabled(true);
-                chooseButton.setEnabled(true);
-            } else {
-                defaultRadioButton.setEnabled(false);
-                chooseButton.setEnabled(false);
-                chooseRadioButton.setEnabled(false);
-            }
+            boolean playSound = playsoundCheckBox.isSelected();
+            defaultRadioButton.setEnabled(playSound);
+            chooseRadioButton.setEnabled(playSound);
+            chooseButton.setEnabled(playSound);
         } else if (e.getActionCommand().equals("PLAYSOUND")) {
-            if (playsoundCheckBox.isSelected()) {
-                defaultRadioButton.setEnabled(true);
-                chooseRadioButton.setEnabled(true);
-                chooseButton.setEnabled(true);
-            } else {
-                defaultRadioButton.setEnabled(false);
-                chooseButton.setEnabled(false);
-                chooseRadioButton.setEnabled(false);
-            }
+            boolean playSound = playsoundCheckBox.isSelected();
+            defaultRadioButton.setEnabled(playSound);
+            chooseButton.setEnabled(playSound);
+            chooseRadioButton.setEnabled(playSound);
         } else if (e.getActionCommand().equals("CHOOSE")) {
             JFileChooser fc = new JFileChooser();
             int returnVal = fc.showOpenDialog(this);
