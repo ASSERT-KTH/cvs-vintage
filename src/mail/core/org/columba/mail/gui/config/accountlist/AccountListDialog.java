@@ -59,287 +59,268 @@ import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
+/**
+ * A dialog showing a list with the user's accounts.
+ */
 public class AccountListDialog extends JDialog
-		implements
-			ActionListener,
-			ListSelectionListener {
-
-	private AccountListTable listView;
-
-	private AccountList accountList;
-
-	private AccountItem accountItem;
-
-	JTextField nameTextField = new JTextField();
-
-	JButton addButton;
-
-	JButton removeButton;
-
-	JButton editButton;
-
-	private int index;
-	private FrameMediator mediator;
-
-	public AccountListDialog(FrameMediator mediator) {
-		super(mediator.getView().getFrame(), true);
-		
-		this.mediator = mediator;
-		
-		setTitle(MailResourceLoader.getString("dialog", "account",
-				"dialog_title"));
-		accountList = MailInterface.config.getAccountList();
-
-		initComponents();
-		getRootPane().registerKeyboardAction(this, "CLOSE",
-				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-				JComponent.WHEN_IN_FOCUSED_WINDOW);
-		getRootPane().registerKeyboardAction(this, "HELP",
-				KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-				JComponent.WHEN_IN_FOCUSED_WINDOW);
-		pack();
-		setLocationRelativeTo(null);
-		setVisible(true);
-	}
-
-	public AccountItem getSelected() {
-		return accountItem;
-	}
-
-	public void setSelected(AccountItem item) {
-		accountItem = item;
-	}
-
-	public void initComponents() {
-		getContentPane().setLayout(new BorderLayout());
-
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout(5, 0));
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-
-		addButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-				"dialog", "account", "addaccount")); //$NON-NLS-1$
-
-		addButton.setActionCommand("ADD"); //$NON-NLS-1$
-		addButton.addActionListener(this);
-
-		removeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-				"dialog", "account", "removeaccount")); //$NON-NLS-1$
-
-		removeButton.setActionCommand("REMOVE"); //$NON-NLS-1$
-
-		removeButton.setEnabled(false);
-		removeButton.addActionListener(this);
-
-		editButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-				"dialog", "account", "editsettings")); //$NON-NLS-1$
-
-		editButton.setActionCommand("EDIT"); //$NON-NLS-1$
-
-		editButton.setEnabled(false);
-		editButton.addActionListener(this);
-
-		// top panel
-		JPanel topPanel = new JPanel();
-		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
-
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
-
-		//topPanel.setLayout( );
-		JPanel topBorderPanel = new JPanel();
-		topBorderPanel.setLayout(new BorderLayout());
-		topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-		topBorderPanel.add(topPanel, BorderLayout.CENTER);
-
-		//mainPanel.add( topBorderPanel, BorderLayout.NORTH );
-		JLabel nameLabel = new JLabel(MailResourceLoader.getString("dialog",
-				"account", "name")); //$NON-NLS-1$
-		nameLabel.setEnabled(false);
-		topPanel.add(nameLabel);
-
-		topPanel.add(Box.createRigidArea(new java.awt.Dimension(10, 0)));
-		topPanel.add(Box.createHorizontalGlue());
-
-		nameTextField.setText(MailResourceLoader.getString("dialog", "account",
-				"name")); //$NON-NLS-1$
-		nameTextField.setEnabled(false);
-		topPanel.add(nameTextField);
-
-		Component glue = Box.createVerticalGlue();
-		c.anchor = GridBagConstraints.EAST;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-
-		//c.fill = GridBagConstraints.HORIZONTAL;
-		gridBagLayout.setConstraints(glue, c);
-
-		gridBagLayout = new GridBagLayout();
-		c = new GridBagConstraints();
-
-		JPanel eastPanel = new JPanel(gridBagLayout);
-		mainPanel.add(eastPanel, BorderLayout.EAST);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1.0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		gridBagLayout.setConstraints(addButton, c);
-		eastPanel.add(addButton);
-
-		Component strut1 = Box.createRigidArea(new Dimension(30, 5));
-		gridBagLayout.setConstraints(strut1, c);
-		eastPanel.add(strut1);
-
-		gridBagLayout.setConstraints(editButton, c);
-		eastPanel.add(editButton);
-
-		Component strut = Box.createRigidArea(new Dimension(30, 5));
-		gridBagLayout.setConstraints(strut, c);
-		eastPanel.add(strut);
-
-		gridBagLayout.setConstraints(removeButton, c);
-		eastPanel.add(removeButton);
-
-		strut = Box.createRigidArea(new Dimension(30, 20));
-		gridBagLayout.setConstraints(strut, c);
-		eastPanel.add(strut);
-
-		glue = Box.createVerticalGlue();
-		c.fill = GridBagConstraints.BOTH;
-		c.weighty = 1.0;
-		gridBagLayout.setConstraints(glue, c);
-		eastPanel.add(glue);
-
-		listView = new AccountListTable(accountList, this);
-		listView.getSelectionModel().addListSelectionListener(this);
-
-		JScrollPane scrollPane = new JScrollPane(listView);
-		scrollPane.setPreferredSize(new Dimension(300, 250));
-		scrollPane.getViewport().setBackground(Color.white);
-		mainPanel.add(scrollPane);
-		getContentPane().add(mainPanel);
-
-		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-
-		ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "close"));
-		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
-		closeButton.addActionListener(this);
-		buttonPanel.add(closeButton);
-
-		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "help"));
-		buttonPanel.add(helpButton);
-
-		bottomPanel.add(buttonPanel, BorderLayout.EAST);
-		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-		getRootPane().setDefaultButton(closeButton);
-
-		// associate with JavaHelp
-		HelpManager.getHelpManager().enableHelpOnButton(helpButton,
-				"configuring_columba");
-		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
-				"configuring_columba");
-	}
-
-	public void valueChanged(ListSelectionEvent e) {
-		if (e.getValueIsAdjusting()) {
-			return;
-		}
-
-		DefaultListSelectionModel theList = (DefaultListSelectionModel) e
-				.getSource();
-
-		if (theList.isSelectionEmpty()) {
-			removeButton.setEnabled(false);
-			editButton.setEnabled(false);
-		} else {
-			removeButton.setEnabled(true);
-			editButton.setEnabled(true);
-
-			//String value = (String) theList.getSelectedValue();
-			index = theList.getAnchorSelectionIndex();
-
-			setSelected(accountList.get(index));
-		}
-	}
-
-	public void showAccountDialog() {
-		AccountItem parent = getSelected();
-
-		if (parent != null) {
-			AccountDialog dialog = new AccountDialog(mediator, parent);
-		}
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		String action = e.getActionCommand();
-
-		if (action.equals("CLOSE")) //$NON-NLS-1$
-		{
-			try {
-				MainInterface.config.save();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-			setVisible(false);
-		} else if (action.equals("ADD")) //$NON-NLS-1$
-		{
-			try {
-				new AccountWizardLauncher().launchWizard(false);
-				listView.update();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		} else if (action.equals("REMOVE")) //$NON-NLS-1$
-		{
-			// TODO: i18n
-			Object[] options = {"Delete", "No"};
-			int n = JOptionPane.showOptionDialog(null,
-					"Would you really like to delete this account?",
-					"Question", JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-
-			if (n == JOptionPane.NO_OPTION) {
-				return;
-			}
-
-			AccountItem item = accountList.remove(index);
-
-			if (item.isPopAccount()) {
-				MailInterface.popServerCollection
-						.removePopServer(item.getUid());
-			} else {
-				AbstractFolder folder = (AbstractFolder) MailInterface.treeModel
-						.getImapFolder(item.getUid());
-
-				try {
-					AbstractFolder parentFolder = (AbstractFolder) folder
-							.getParent();
-					folder.removeFolder();
-					MailInterface.treeModel.nodeStructureChanged(parentFolder);
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-
-			// remove mail-checking stuff
-			MailInterface.mailCheckingManager.remove(item.getUid());
-
-			// notify all observers
-			MailInterface.mailCheckingManager.update();
-
-			removeButton.setEnabled(false);
-			editButton.setEnabled(false);
-			listView.update();
-		} else if (action.equals("EDIT")) //$NON-NLS-1$
-		{
-			showAccountDialog();
-			listView.update();
-		}
-	}
+implements ActionListener, ListSelectionListener {
+    
+    private AccountListTable listView;
+    private AccountList accountList;
+    private AccountItem accountItem;
+    protected JTextField nameTextField = new JTextField();
+    protected JButton addButton;
+    protected JButton removeButton;
+    protected JButton editButton;
+    private int index;
+    private FrameMediator mediator;
+    
+    public AccountListDialog(FrameMediator mediator) {
+        super(mediator.getView().getFrame(), MailResourceLoader.getString(
+            "dialog", "account", "dialog_title"), true);
+        this.mediator = mediator;
+        accountList = MailInterface.config.getAccountList();
+        
+        initComponents();
+        getRootPane().registerKeyboardAction(this, "CLOSE",
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+        getRootPane().registerKeyboardAction(this, "HELP",
+            KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+    
+    public AccountItem getSelected() {
+        return accountItem;
+    }
+    
+    public void setSelected(AccountItem item) {
+        accountItem = item;
+    }
+    
+    public void initComponents() {
+        getContentPane().setLayout(new BorderLayout());
+        
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout(5, 0));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        
+        addButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+            "dialog", "account", "addaccount"));
+        
+        addButton.setActionCommand("ADD");
+        addButton.addActionListener(this);
+        
+        removeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+            "dialog", "account", "removeaccount"));
+        
+        removeButton.setActionCommand("REMOVE");
+        
+        removeButton.setEnabled(false);
+        removeButton.addActionListener(this);
+        
+        editButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+            "dialog", "account", "editsettings"));
+        
+        editButton.setActionCommand("EDIT");
+        
+        editButton.setEnabled(false);
+        editButton.addActionListener(this);
+        
+        // top panel
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+        
+        GridBagLayout gridBagLayout = new GridBagLayout();
+        GridBagConstraints c = new GridBagConstraints();
+        
+        //topPanel.setLayout( );
+        JPanel topBorderPanel = new JPanel();
+        topBorderPanel.setLayout(new BorderLayout());
+        topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+        topBorderPanel.add(topPanel, BorderLayout.CENTER);
+        
+        //mainPanel.add( topBorderPanel, BorderLayout.NORTH );
+        JLabel nameLabel = new JLabel(MailResourceLoader.getString("dialog",
+            "account", "name"));
+        nameLabel.setEnabled(false);
+        topPanel.add(nameLabel);
+        
+        topPanel.add(Box.createRigidArea(new java.awt.Dimension(10, 0)));
+        topPanel.add(Box.createHorizontalGlue());
+        
+        nameTextField.setText(MailResourceLoader.getString("dialog", "account",
+            "name"));
+        nameTextField.setEnabled(false);
+        topPanel.add(nameTextField);
+        
+        Component glue = Box.createVerticalGlue();
+        c.anchor = GridBagConstraints.EAST;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        
+        //c.fill = GridBagConstraints.HORIZONTAL;
+        gridBagLayout.setConstraints(glue, c);
+        
+        gridBagLayout = new GridBagLayout();
+        c = new GridBagConstraints();
+        
+        JPanel eastPanel = new JPanel(gridBagLayout);
+        mainPanel.add(eastPanel, BorderLayout.EAST);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1.0;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridBagLayout.setConstraints(addButton, c);
+        eastPanel.add(addButton);
+        
+        Component strut1 = Box.createRigidArea(new Dimension(30, 5));
+        gridBagLayout.setConstraints(strut1, c);
+        eastPanel.add(strut1);
+        
+        gridBagLayout.setConstraints(editButton, c);
+        eastPanel.add(editButton);
+        
+        Component strut = Box.createRigidArea(new Dimension(30, 5));
+        gridBagLayout.setConstraints(strut, c);
+        eastPanel.add(strut);
+        
+        gridBagLayout.setConstraints(removeButton, c);
+        eastPanel.add(removeButton);
+        
+        strut = Box.createRigidArea(new Dimension(30, 20));
+        gridBagLayout.setConstraints(strut, c);
+        eastPanel.add(strut);
+        
+        glue = Box.createVerticalGlue();
+        c.fill = GridBagConstraints.BOTH;
+        c.weighty = 1.0;
+        gridBagLayout.setConstraints(glue, c);
+        eastPanel.add(glue);
+        
+        listView = new AccountListTable(accountList, this);
+        listView.getSelectionModel().addListSelectionListener(this);
+        
+        JScrollPane scrollPane = new JScrollPane(listView);
+        scrollPane.setPreferredSize(new Dimension(300, 250));
+        scrollPane.getViewport().setBackground(Color.white);
+        mainPanel.add(scrollPane);
+        getContentPane().add(mainPanel);
+        
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+        
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        
+        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
+        MailResourceLoader.getString("global", "close"));
+        closeButton.setActionCommand("CLOSE");
+        closeButton.addActionListener(this);
+        buttonPanel.add(closeButton);
+        
+        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+        MailResourceLoader.getString("global", "help"));
+        buttonPanel.add(helpButton);
+        
+        bottomPanel.add(buttonPanel, BorderLayout.EAST);
+        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+        getRootPane().setDefaultButton(closeButton);
+        
+        // associate with JavaHelp
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+            "configuring_columba");
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+            "configuring_columba");
+    }
+    
+    public void valueChanged(ListSelectionEvent e) {
+        if (e.getValueIsAdjusting()) {
+            return;
+        }
+        
+        DefaultListSelectionModel theList = (DefaultListSelectionModel) e
+        .getSource();
+        
+        if (theList.isSelectionEmpty()) {
+            removeButton.setEnabled(false);
+            editButton.setEnabled(false);
+        } else {
+            removeButton.setEnabled(true);
+            editButton.setEnabled(true);
+            
+            //String value = (String) theList.getSelectedValue();
+            index = theList.getAnchorSelectionIndex();
+            
+            setSelected(accountList.get(index));
+        }
+    }
+    
+    protected void showAccountDialog() {
+        AccountItem parent = getSelected();
+        
+        if (parent != null) {
+            AccountDialog dialog = new AccountDialog(mediator, parent);
+        }
+    }
+    
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
+        if (action.equals("CLOSE")) {
+            try {
+                MainInterface.config.save();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            
+            setVisible(false);
+        } else if (action.equals("ADD")) {
+            try {
+                new AccountWizardLauncher().launchWizard(false);
+                listView.update();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } else if (action.equals("REMOVE")) {
+            int n = JOptionPane.showConfirmDialog(this,
+                MailResourceLoader.getString("dialog", "account", "confirmDelete.msg"),
+                MailResourceLoader.getString("dialog", "account", "confirmDelete.title"),
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            
+            if (n == JOptionPane.NO_OPTION) {
+                return;
+            }
+            
+            AccountItem item = accountList.remove(index);
+            if (item.isPopAccount()) {
+                MailInterface.popServerCollection.removePopServer(item.getUid());
+            } else {
+                AbstractFolder folder = (AbstractFolder) 
+                    MailInterface.treeModel.getImapFolder(item.getUid());
+                try {
+                    AbstractFolder parentFolder = (AbstractFolder)
+                        folder.getParent();
+                    folder.removeFolder();
+                    MailInterface.treeModel.nodeStructureChanged(parentFolder);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            
+            // remove mail-checking stuff
+            MailInterface.mailCheckingManager.remove(item.getUid());
+            
+            // notify all observers
+            MailInterface.mailCheckingManager.update();
+            
+            removeButton.setEnabled(false);
+            editButton.setEnabled(false);
+            listView.update();
+        } else if (action.equals("EDIT")) {
+            showAccountDialog();
+            listView.update();
+        }
+    }
 }
