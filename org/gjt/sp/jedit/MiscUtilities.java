@@ -67,7 +67,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.55 2003/06/11 20:33:35 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.56 2003/06/14 01:22:27 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -694,10 +694,12 @@ loop:		for(int i = 0; i < str.length(); i++)
 	 */
 	public static String globToRE(String glob)
 	{
+		final Object NEG = new Object();
+		final Object GROUP = new Object();
+		Stack state = new Stack();
+
 		StringBuffer buf = new StringBuffer();
 		boolean backslash = false;
-		int insideGroup = 0;
-		boolean insideNegativeLookahead = false;
 
 		for(int i = 0; i < glob.length(); i++)
 		{
@@ -729,34 +731,23 @@ loop:		for(int i = 0; i < str.length(); i++)
 				if(i + 1 != glob.length() && glob.charAt(i + 1) == '!')
 				{
 					buf.append('?');
-					insideNegativeLookahead = true;
+					state.push(NEG);
 				}
 				else
-					insideGroup++;
+					state.push(GROUP);
 				break;
 			case ',':
-				if(insideGroup != 0)
-				{
-					if(insideNegativeLookahead)
-					{
-						buf.append(").*");
-						insideNegativeLookahead = false;
-					}
+				if(!state.isEmpty() && state.peek() == GROUP)
 					buf.append('|');
-				}
 				else
 					buf.append(',');
 				break;
 			case '}':
-				if(insideNegativeLookahead)
+				if(!state.isEmpty())
 				{
-					buf.append(").*");
-					insideNegativeLookahead = false;
-				}
-				else if(insideGroup != 0)
-				{
-					buf.append(')');
-					insideGroup--;
+					buf.append(")");
+					if(state.pop() == NEG)
+						buf.append(".*");
 				}
 				else
 					buf.append('}');
