@@ -285,7 +285,7 @@ public  class AttributeGroup
             List attrGroups = module.getAttributeGroups(getIssueType());
             attrGroups.remove(this);
             ScarabCache.put(attrGroups, module, GET_ATTRIBUTE_GROUPS, 
-                            getIssueType(), new Boolean(false));
+                            getIssueType(), Boolean.FALSE);
         } 
         else
         {
