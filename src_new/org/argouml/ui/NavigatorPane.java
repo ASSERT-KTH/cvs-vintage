@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.67 2004/07/23 17:53:53 linus Exp $
+// $Id: NavigatorPane.java,v 1.68 2004/07/24 10:40:32 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,29 +70,39 @@ public class NavigatorPane
     ////////////////////////////////////////////////////////////////
     // constructors
 
+    /**
+     * The NavigatorPane instance. This can be a NavigatorPane or 
+     * <tt>null</tt>.
+     */
     private static NavigatorPane theInstance = null;
+    private static boolean theInstanceIsSet = false;
 
-    /** Don't automatically instantiate the instance.
+    /** 
+     * Don't automatically instantiate the instance.
      * 
-     * @return the singleton
+     * @return the singleton or <tt>null</tt> if the NavigatorPane was 
+     * 	       explicitly set to <tt>null</tt>.
      */
     public static NavigatorPane getInstance() {
-	if (theInstance == null) {
+	if (!theInstanceIsSet) {
 	    theInstance = new NavigatorPane();
+	    theInstanceIsSet = true;
 	}
 	return theInstance;
     }
     
     /**
      * Allow setting of the navigator pane instance.
-     * Currently this is only applicable for unit tests.
+     * Currently this is only applicable for unit tests that sets it to 
+     * <tt>null</tt>.
      * 
-     * @param pane
+     * @param pane A new NavigatorPane or <tt>null</tt>.
      * @deprecated without replacement - this is a temporary hack
      * until the model is cleaned up
      */
     public static void setInstance(NavigatorPane pane) {
 	theInstance = pane;
+	theInstanceIsSet = true;
     }
     
     /**
