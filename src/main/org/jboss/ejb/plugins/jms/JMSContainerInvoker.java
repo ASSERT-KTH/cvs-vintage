@@ -11,7 +11,6 @@ import java.security.Principal;
 import java.util.Collection;
 import java.util.Hashtable;
 import javax.ejb.EJBHome;
-
 import javax.ejb.EJBMetaData;
 import javax.ejb.EJBObject;
 
@@ -22,28 +21,23 @@ import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-
 import javax.naming.Name;
 import javax.naming.NamingException;
 
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
-import org.apache.log4j.Category;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvoker;
-import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.MethodInvocation;
-
+import org.jboss.logging.Logger;
 import org.jboss.jms.ConnectionFactoryHelper;
 import org.jboss.jms.asf.ServerSessionPoolFactory;
-
 import org.jboss.jms.asf.StdServerSessionPool;
-
 import org.jboss.jms.jndi.JMSProviderAdapter;
 import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.metadata.MetaData;
-
 import org.jboss.metadata.XmlLoadable;
 
 import org.w3c.dom.Element;
@@ -57,7 +51,7 @@ import org.w3c.dom.Node;
  *      </a>
  * @author    <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version   $Revision: 1.34 $
+ * @version   $Revision: 1.35 $
  */
 public class JMSContainerInvoker
        implements ContainerInvoker, XmlLoadable
@@ -164,7 +158,7 @@ public class JMSContainerInvoker
    /**
     * Instance logger.
     */
-   private final Category log = Category.getInstance(this.getClass());
+   private final Logger log = Logger.getLogger(this.getClass());
 
    // ContainerService implementation -------------------------------
 
@@ -282,7 +276,8 @@ public class JMSContainerInvoker
       log.debug("Destroying JMSContainerInvoker for bean " + beanName);
 
       // Take down DLQ
-      if ( dlqHandler != null) {
+      if ( dlqHandler != null)
+      {
 	 dlqHandler.destroy();
       }
 
@@ -907,7 +902,7 @@ public class JMSContainerInvoker
       {
          // assert message != null;
 
-         if (log.isDebugEnabled())
+         if (log.isTraceEnabled())
          {
             log.debug("processing message: " + message);
          }
@@ -922,7 +917,6 @@ public class JMSContainerInvoker
             // what ?
             id = "JMSContainerInvoker";
          }
-
 
          // Invoke, shuld we catch any Exceptions??
          try
@@ -1032,7 +1026,8 @@ public class JMSContainerInvoker
    /**
     * Return a string representation of the current config state.
     */
-   public String toString() {
+   public String toString()
+   {
       StringBuffer buff = new StringBuffer();
       buff.append("JMSContainerInvoker: {");
       buff.append("beanName=").append(beanName);
