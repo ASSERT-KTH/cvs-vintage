@@ -1,4 +1,4 @@
-// $Id: Critic.java,v 1.31 2003/12/08 16:19:27 jhraigniac Exp $
+// $Id: Critic.java,v 1.32 2003/12/09 14:43:09 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.31 2003/12/08 16:19:27 jhraigniac Exp $
+// $Id: Critic.java,v 1.32 2003/12/09 14:43:09 mkl Exp $
 
 
 package org.argouml.cognitive.critics;
@@ -54,13 +54,18 @@ import org.tigris.gef.util.VectorSet;
 /** "Abstract" base class for design critics.  Each subclass should define
  *  its own predicate method and define its own relevance tags. <p>
  *
+ *  A critic supports design goals and decisions, which can be adjusted
+ *  accordingly. It will post todo items which may or may not be relevant to
+ *  the particular designer.<p>
+ *
  *  Steps to follow when adding a critic are listed in the Argo
  *  cookbook under <A HREF="../cookbook.html#define_critic">
  *  define_critic</a>. */
 
 public class Critic implements Poster, Serializable {
-	/** logger */
-	private static Logger cat = Logger.getLogger(Critic.class);
+	
+    /** logger */
+    private static Logger cat = Logger.getLogger(Critic.class);
 
     ////////////////////////////////////////////////////////////////
     // constants
@@ -372,8 +377,10 @@ public class Critic implements Poster, Serializable {
 	_supportedDecisions.addElement(d);
     }
 
-    public boolean supports(Goal g) { return true; }
-
+    public boolean supports(Goal g) { 
+        return _supportedGoals.contains(g);
+    }
+    
     public Vector getSupportedGoals() {
 	return _supportedGoals;
     }
