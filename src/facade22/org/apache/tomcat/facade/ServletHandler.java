@@ -202,91 +202,75 @@ public final class ServletHandler extends Handler {
      *  This is a final method to insure consistent behavior on errors.
      *  It also saves handlers from dealing with synchronization issues.
      */
-    public final void init()
+    public final synchronized void init()
     {
 	// we use getState() as a workaround for bugs in VMs
 	
 	if( getState() == STATE_READY || getState() == STATE_DISABLED )
 	    return;
 
-	synchronized( this ) {
-	    // check again - if 2 threads are in init(), the first one will
-	    // init and the second will enter the sync block after that
-	    if( getState() == STATE_READY ) 
-		return;
-
-	    // if exception present, then we were sync blocked when first
-	    // init() failed or an interceptor set an inital exeception
-	    // A different thread got an error in init() - throw
-	    // the same error.
-	    if (getState() == STATE_DISABLED )
-		return; //throw errorException;
-
-	    try {
-		// special preInit() hook
-		preInit();
-		// preInit may either throw exception or setState DELAYED_INIT
-	    } catch( ClassNotFoundException ex ) {
-		log( context, "Class not found: " + servletClassName);
-		setErrorException(ex);
-		setState(STATE_DISABLED);
-	    } catch( Exception ex ) {
-		// save error, assume permanent
-		log(context, "Exception in preInit " + ex.getMessage(), ex );
-		setErrorException(ex);
-		setState(STATE_DISABLED);
-		return;
-	    }
+	try {
+	    // special preInit() hook
+	    preInit();
+	    // preInit may either throw exception or setState DELAYED_INIT
+	} catch( ClassNotFoundException ex ) {
+	    log( context, "Class not found: " + servletClassName);
+	    setErrorException(ex);
+	    setState(STATE_DISABLED);
+	    return;
+	} catch( Exception ex ) {
+	    // save error, assume permanent
+	    log(context, "Exception in preInit " + ex.getMessage(), ex );
+	    setErrorException(ex);
+	    setState(STATE_DISABLED);
+	    return;
+	}
 	    
-	    // we'll try again later 
-	    if( getState() == STATE_DELAYED_INIT ||
-		getState()==STATE_DISABLED ) { // or disabled 
-		return;
-	    }
-	    // preInit have no exceptions and doesn't delay us
-	    // We can run init hooks and init
+	// we'll try again later 
+	if( getState() == STATE_DELAYED_INIT ||
+	    getState()==STATE_DISABLED ) { // or disabled 
+	    return;
+	}
+	// preInit have no exceptions and doesn't delay us
+	// We can run init hooks and init
 
-	    // Call pre, doInit and post
-	    BaseInterceptor cI[]=context.getContainer().getInterceptors();
-	    for( int i=0; i< cI.length; i++ ) {
-		try {
-		    cI[i].preServletInit( context, this );
-		} catch( TomcatException ex) {
-		    // log, but ignore.
-		    log(context, "preServletInit" , ex);
-		}
+	// Call pre, doInit and post
+	BaseInterceptor cI[]=context.getContainer().getInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    try {
+		cI[i].preServletInit( context, this );
+	    } catch( TomcatException ex) {
+		// log, but ignore.
+		log(context, "preServletInit" , ex);
 	    }
+	}
 		
-	    try {
-		doInit();
-		// if success, we are ready to serve
-	    } catch( Exception ex ) {
-		// save error, assume permanent
-		log(context, "Exception in init  " + ex.getMessage(), ex );
-		setErrorException(ex);
-		state=STATE_DISABLED;
-	    }
+	try {
+	    doInit();
+	    // if success, we are ready to serve
+	} catch( Exception ex ) {
+	    // save error, assume permanent
+	    log(context, "Exception in init  " + ex.getMessage(), ex );
+	    setErrorException(ex);
+	    state=STATE_DISABLED;
+	}
 	    
-	    for( int i=0; i< cI.length; i++ ) {
-		try {
-		    cI[i].postServletInit( context, this );
-		} catch( TomcatException ex) {
-		    log(context, "postServletInit" , ex);
-		}
+	for( int i=0; i< cI.length; i++ ) {
+	    try {
+		cI[i].postServletInit( context, this );
+	    } catch( TomcatException ex) {
+		log(context, "postServletInit" , ex);
 	    }
+	}
 
-	    // Now that both pre/post hooks have been called, the
-	    // servlet is ready to serve.
+	// Now that both pre/post hooks have been called, the
+	// servlet is ready to serve.
 
-	    // We are still in the sync block, that means other threads
-	    // are waiting for this to be over.
-
-	    // if no error happened and if doInit didn't put us in
-	    // a special state, we are ready
-	    if( state!=STATE_DISABLED &&
+	// if no error happened and if doInit didn't put us in
+	// a special state, we are ready
+	if( state!=STATE_DISABLED &&
 		getErrorException() == null ) {
-		state=STATE_READY;
-	    }
+	    state=STATE_READY;
 	}
     }
 
