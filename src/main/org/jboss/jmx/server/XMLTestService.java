@@ -15,7 +15,7 @@ import javax.naming.InitialContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 import org.w3c.dom.Document;
 
@@ -24,7 +24,7 @@ import org.w3c.dom.Document;
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
 * @created June 22, 2001
-* @version $Revision: 1.4 $
+* @version $Revision: 1.5 $
 */
 public class XMLTestService
   extends ServiceMBeanSupport

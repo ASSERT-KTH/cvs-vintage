@@ -14,7 +14,7 @@ package org.jboss.jmx.server;
 * @author <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
 **/
 public interface RMIConnectorServiceMBean
-	extends org.jboss.util.ServiceMBean
+	extends org.jboss.system.ServiceMBean
 {
 	// Constants -----------------------------------------------------
 	public static final String OBJECT_NAME = "Connector:name=RMI";

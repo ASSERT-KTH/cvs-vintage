@@ -28,14 +28,14 @@ import javax.management.MBeanServer;
 import javax.naming.InitialContext;
 
 import org.jboss.logging.Log;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class JMXAdaptorService
    extends ServiceMBeanSupport

@@ -103,7 +103,7 @@ public class ConnectorFactoryImpl {
             );
             mServer.registerMBean(
                lConnector,
-               new ObjectName( "DefaultDomain:name=RMIConnectorTo" + pConnector.getServer() )
+               new ObjectName( "JBOSS-SYSTEM:name=RMIConnectorTo" + pConnector.getServer() )
             );
          }
          catch( Exception e ) {
@@ -124,7 +124,7 @@ public class ConnectorFactoryImpl {
       if( pConnector.getProtocol().equals( "rmi" ) ) {
          try {
             Set lConnectors = mServer.queryMBeans(
-               new ObjectName( "DefaultDomain:name=RMIConnectorTo" + pConnector.getServer() ),
+               new ObjectName( "JBOSS-SYSTEM:name=RMIConnectorTo" + pConnector.getServer() ),
                null
             );
             if( !lConnectors.isEmpty() ) {

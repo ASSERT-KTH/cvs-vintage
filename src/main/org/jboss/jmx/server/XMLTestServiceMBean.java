@@ -6,7 +6,7 @@
 */
 package org.jboss.jmx.server;
 
-import org.jboss.util.ServiceMBean;
+import org.jboss.system.ServiceMBean;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
 * @created   June 22, 2001
-* @version   $Revision: 1.2 $
+* @version   $Revision: 1.3 $
  */
 public interface XMLTestServiceMBean
   extends ServiceMBean

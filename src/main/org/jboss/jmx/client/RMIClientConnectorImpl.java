@@ -44,7 +44,7 @@ import javax.management.ReflectionException;
 import javax.naming.InitialContext;
 
 import org.jboss.logging.Log;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 import org.jboss.jmx.interfaces.JMXConnectorMBean;
 import org.jboss.jmx.interfaces.RMIConnector;

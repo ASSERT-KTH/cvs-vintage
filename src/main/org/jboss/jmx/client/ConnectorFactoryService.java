@@ -19,7 +19,7 @@ import javax.management.MBeanServer;
 import javax.naming.InitialContext;
 
 import org.jboss.jmx.interfaces.JMXConnector;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 /**
 * Factory delivering a list of servers and its available protocol connectors

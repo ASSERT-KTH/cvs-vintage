@@ -19,7 +19,7 @@ import javax.naming.StringRefAddr;
 // import org.jboss.logging.Log;
 import org.jboss.naming.NonSerializableFactory;
 
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
 * @created June 22, 2001
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 */
 public class XMLAdaptorService
   extends ServiceMBeanSupport

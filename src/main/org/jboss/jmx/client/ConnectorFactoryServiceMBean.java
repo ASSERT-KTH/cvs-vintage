@@ -16,7 +16,7 @@ import javax.management.DynamicMBean;
 import javax.management.MBeanServer;
 
 import org.jboss.jmx.interfaces.JMXConnector;
-import org.jboss.util.ServiceMBean;
+import org.jboss.system.ServiceMBean;
 
 /**
 * Factory delivering a list of servers and its available protocol connectors

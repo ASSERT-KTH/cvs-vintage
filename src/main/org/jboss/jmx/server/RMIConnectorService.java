@@ -29,7 +29,7 @@ import javax.management.MBeanServer;
 import javax.naming.InitialContext;
 
 import org.jboss.logging.Log;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 /**
 *   <description>
