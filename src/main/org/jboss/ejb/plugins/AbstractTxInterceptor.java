@@ -39,7 +39,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 abstract class AbstractTxInterceptor
    extends AbstractInterceptor
@@ -222,16 +222,24 @@ abstract class AbstractTxInterceptor
          // We inherited tx: Tell caller we marked for rollback only.
          if (isLocal) 
          {
-            throw new TransactionRolledbackLocalException(
-                  cause.getMessage(),
-                  (Exception)cause);
+            if(cause instanceof TransactionRolledbackLocalException) {
+               throw (TransactionRolledbackLocalException)cause;
+            } else {
+               throw new TransactionRolledbackLocalException(
+                     cause.getMessage(),
+                     (Exception)cause);
+            }
          }
          else
          {
-            TransactionRolledbackException ex = 
-                  new TransactionRolledbackException(cause.getMessage());
-            ex.detail = cause;
-            throw ex;
+            if(cause instanceof TransactionRolledbackException) {
+               throw (TransactionRolledbackException)cause;
+            } else {
+               TransactionRolledbackException ex = 
+                     new TransactionRolledbackException(cause.getMessage());
+               ex.detail = cause;
+               throw ex;
+            }
          }
       }
    }
