@@ -1,4 +1,4 @@
-// $Id: FigSimpleState.java,v 1.9 2004/01/28 07:17:47 linus Exp $
+// $Id: FigSimpleState.java,v 1.10 2004/05/26 08:34:04 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,10 +35,7 @@ import java.beans.PropertyVetoException;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
-
 import org.argouml.uml.generator.ParserDisplay;
-
-import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigLine;
 import org.tigris.gef.presentation.FigRRect;
@@ -121,10 +118,6 @@ public class FigSimpleState extends FigState {
 
     ////////////////////////////////////////////////////////////////
     // accessors
-
-    public Selection makeSelection() {
-	return new SelectionState(this);
-    }
 
 
     public void setOwner(Object node) {
