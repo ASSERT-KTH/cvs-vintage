@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: DatabasePersistencePolicy.java,v 1.8 2004/11/20 08:31:50 starksm Exp $
+// $Id: DatabasePersistencePolicy.java,v 1.9 2004/12/12 10:01:35 starksm Exp $
 
 import org.jboss.ejb.ContainerMBean;
 import org.jboss.logging.Logger;
@@ -33,12 +33,14 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This service implements a PersistencePolicy that persistes the timer to a database.
+ * This service implements a PersistencePolicy that persistes the timer to a
+ * database.
  *
  * @author Thomas.Diesler@jboss.org
  * @jmx.mbean name="jboss.ejb:service=EJBTimerService,persistencePolicy=database"
  * extends="org.jboss.system.Service, org.jboss.ejb.txtimer.PersistencePolicy"
  * @since 09-Sep-2004
+ * @version $Revision: 1.9 $
  */
 public class DatabasePersistencePolicy extends ServiceMBeanSupport implements NotificationListener, DatabasePersistencePolicyMBean
 {
@@ -54,6 +56,8 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
 
    // The transaction manager, to suspend the current Tx during delete
    private TransactionManager tm;
+   /** The peristed timers seen on startup */
+   private List timersToRestore;
 
    /**
     * Initializes this service.
@@ -88,6 +92,14 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
 
       // create the table if needed
       dbpPlugin.createTableIfNotExists();
+
+      timersToRestore = dbpPlugin.selectTimers();
+      log.debug("Found " + timersToRestore.size() + " timer(s)");
+      if (timersToRestore.size() > 0)
+      {
+         // delete all timers
+         dbpPlugin.clearTimers();
+      }
 
       // await the server startup notification
       registerNotificationListener();
@@ -170,43 +182,33 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    }
 
    /**
-    * Restore the persistet timers
+    * Restore the persistent timers seen during service startup
     */
    public void restoreTimers()
    {
-      try
+      if (timersToRestore != null && timersToRestore.size() > 0)
       {
-         List list = dbpPlugin.selectTimers();
-         if (list.size() > 0)
+         log.debug("Restoring " + timersToRestore.size() + " timer(s)");
+
+         // recreate the timers
+         for (int i = 0; i < timersToRestore.size(); i++)
          {
-            log.info("Restoring " + list.size() + " timer(s)");
+            TimerHandleImpl handle = (TimerHandleImpl)timersToRestore.get(i);
 
-            // delete all timers
-            dbpPlugin.clearTimers();
-
-            // recreate the timers
-            for (int i = 0; i < list.size(); i++)
+            try
             {
-               TimerHandleImpl handle = (TimerHandleImpl)list.get(i);
-
-               try
-               {
-                  TimedObjectId targetId = handle.getTimedObjectId();
-                  ObjectName containerName = targetId.getContainerId();
-                  ContainerMBean container = (ContainerMBean)MBeanProxy.get(ContainerMBean.class, containerName, server);
-                  TimerService timerService = container.getTimerService(targetId.getInstancePk());
-                  timerService.createTimer(handle.getFirstTime(), handle.getPeriode(), handle.getInfo());
-               }
-               catch (Exception e)
-               {
-                  log.warn("Unable to restore timer record: " + handle);
-               }
+               TimedObjectId targetId = handle.getTimedObjectId();
+               ObjectName containerName = targetId.getContainerId();
+               ContainerMBean container = (ContainerMBean)MBeanProxy.get(ContainerMBean.class, containerName, server);
+               TimerService timerService = container.getTimerService(targetId.getInstancePk());
+               timerService.createTimer(handle.getFirstTime(), handle.getPeriode(), handle.getInfo());
+            }
+            catch (Exception e)
+            {
+               log.warn("Unable to restore timer record: " + handle);
             }
          }
-      }
-      catch (SQLException e)
-      {
-         log.warn("Unable to restore timers", e);
+         timersToRestore.clear();
       }
    }
 
