@@ -30,7 +30,7 @@
          <td>$format.getDate($scarabG.DateFormat, $issue.CreatedDate)</td>
 
          <td>
-             #set ($createdUser = $scarabR.getUser($oldIssue.CreatedBy.toString()) )
+             #set ($createdUser = $scarabR.getUser($issue.CreatedBy.toString()) )
              <a href="mailTo:$createdUser.Email">$createdUser.UserName</a>
          </td>
         </tr>
@@ -129,6 +129,7 @@
 </div>
 
 
+#if (!$orphanAttributes.isEmpty()) 
           <h3>attributes that do not exist in destination project (saved as comment)</h3>
 
        <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -156,7 +157,7 @@
 #end
 
         </table>
-                        
+#end                        
 <p class="functnbar"><input type="submit" value="move / copy" name="eventSubmit_doSaveissue" />&nbsp;<input type="submit" value="cancel" class="button" name="eventSubmit_doCancel" /></p>
         
      </div></td>
