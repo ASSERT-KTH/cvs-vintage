@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.176 2003/05/29 19:52:41 spestov Exp $
+ * @version $Id: Buffer.java,v 1.177 2003/05/29 21:57:24 spestov Exp $
  */
 public class Buffer
 {
@@ -257,16 +257,6 @@ public class Buffer
 				try
 				{
 					writeLock();
-
-					if(contentMgr.getLength() != 0)
-					{
-						firePreContentRemoved(0,0,
-							offsetMgr.getLineCount(),
-							contentMgr.getLength() - 1);
-						fireContentRemoved(0,0,
-							offsetMgr.getLineCount(),
-							contentMgr.getLength() - 1);
-					}
 
 					// theoretically a segment could
 					// have seg.offset != 0 but

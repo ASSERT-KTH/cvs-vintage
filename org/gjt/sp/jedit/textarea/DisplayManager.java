@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.52 2003/05/29 19:02:57 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.53 2003/05/29 21:57:24 spestov Exp $
  */
 public class DisplayManager
 {
@@ -1078,10 +1078,10 @@ loop:		for(;;)
 				scrollLineCount.reset();
 			else if(scrollLineCount.callChanged)
 				scrollLineCount.changed();
-		}
 
-		firstLine.callReset = firstLine.callChanged = false;
-		scrollLineCount.callReset = scrollLineCount.callChanged = false;
+			firstLine.callReset = firstLine.callChanged = false;
+			scrollLineCount.callReset = scrollLineCount.callChanged = false;
+		}
 	} //}}}
 
 	//}}}
@@ -1570,6 +1570,9 @@ loop:		for(;;)
 		public void contentRemoved(Buffer buffer, int startLine,
 			int offset, int numLines, int length)
 		{
+			if(!buffer.isLoaded())
+				return;
+
 			delayedUpdate(startLine,startLine);
 
 			if(!buffer.isTransactionInProgress())
