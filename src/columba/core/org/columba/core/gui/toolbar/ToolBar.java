@@ -55,7 +55,7 @@ public class ToolBar extends JToolBar {
 
 		setRollover(true);
 
-		//setFloatable(false);
+		setFloatable(false);
 
 	}
 
