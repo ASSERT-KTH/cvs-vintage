@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.56 2003/03/19 16:43:25 mnewcomb Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.57 2003/06/08 02:07:11 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -1618,7 +1618,7 @@
 
       <type-mapping> 
          <name>MS SQLSERVER2000</name> 
-         <row-locking-template>SELECT ?1 FROM ?2 with (rowlock) WHERE ?3</row-locking-template>
+         <row-locking-template>SELECT ?1 FROM ?2 with (xlock) WHERE ?3</row-locking-template>
          <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
          <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
          <alias-header-prefix>t</alias-header-prefix>
