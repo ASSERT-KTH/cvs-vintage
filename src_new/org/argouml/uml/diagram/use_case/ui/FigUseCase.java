@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.24 2003/09/29 17:40:40 jjones Exp $
+// $Id: FigUseCase.java,v 1.25 2003/10/22 18:50:40 jjones Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.24 2003/09/29 17:40:40 jjones Exp $
+// $Id: FigUseCase.java,v 1.25 2003/10/22 18:50:40 jjones Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extension points.
@@ -393,17 +393,17 @@ public class FigUseCase extends FigNodeModelElement {
         // Add menu to add an extension point or note. Placed one before last,
         // so the "Properties" entry is always last.
 
-        JMenu addMenu = new JMenu("Add");
+        ArgoJMenu addMenu = new ArgoJMenu(BUNDLE, "menu.popup.add");
 
         addMenu.add(ActionAddExtensionPoint.singleton());
         addMenu.add(ActionAddNote.SINGLETON);
 
-        popUpActions.insertElementAt(addMenu, popUpActions.size() - 1);
+        popUpActions.insertElementAt(addMenu, popUpActions.size() - 2);
 
         // Show menu to display/hide the extension point compartment. Placed
         // one before last, so the "Properties" entry is always last.
 
-        JMenu showMenu = new JMenu("Show");
+        ArgoJMenu showMenu = new ArgoJMenu(BUNDLE, "menu.popup.show");
 
         if (_epVec.isDisplayed()) {
             showMenu.add(ActionCompartmentDisplay.HideExtPointCompartment);
@@ -411,12 +411,12 @@ public class FigUseCase extends FigNodeModelElement {
             showMenu.add(ActionCompartmentDisplay.ShowExtPointCompartment);
         }
 
-        popUpActions.insertElementAt(showMenu, popUpActions.size() - 1);
+        popUpActions.insertElementAt(showMenu, popUpActions.size() - 2);
 
         // Modifier menu. Placed one before last, so the "Properties" entry is
         // always last.
 
-        ArgoJMenu modifierMenu = new ArgoJMenu("Modifiers");
+        ArgoJMenu modifierMenu = new ArgoJMenu(BUNDLE, "menu.popup.modifiers");
 
         Object useCase = /*(MUseCase)*/ getOwner();
 
@@ -438,7 +438,7 @@ public class FigUseCase extends FigNodeModelElement {
 						     "setRoot",
 						     (MUseCase)useCase));
 
-        popUpActions.insertElementAt(modifierMenu, popUpActions.size() - 1);
+        popUpActions.insertElementAt(modifierMenu, popUpActions.size() - 2);
 
         return popUpActions;
     }

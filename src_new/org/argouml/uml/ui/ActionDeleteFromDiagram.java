@@ -1,4 +1,4 @@
-// $Id: ActionDeleteFromDiagram.java,v 1.11 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionDeleteFromDiagram.java,v 1.12 2003/10/22 18:50:40 jjones Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,10 @@ package org.argouml.uml.ui;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
 
+import javax.swing.Action;
+
 import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
@@ -49,6 +52,10 @@ public class ActionDeleteFromDiagram extends UMLChangeAction {
 
     private ActionDeleteFromDiagram() {
         super("action.remove-from-diagram");
+        String localMnemonic = Translator.localize("action.remove-from-diagram.mnemonic");
+        if (localMnemonic != null && localMnemonic.length() == 1) {
+            putValue(Action.MNEMONIC_KEY, new Integer((int) localMnemonic.charAt(0)));
+        }                
     }
 
     ////////////////////////////////////////////////////////////////

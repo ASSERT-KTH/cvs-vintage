@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.82 2003/10/21 19:54:25 jjones Exp $
+// $Id: FigNodeModelElement.java,v 1.83 2003/10/22 18:50:40 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -49,7 +48,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
-import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -58,7 +56,6 @@ import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.Icon;
-import javax.swing.JMenu;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
@@ -86,6 +83,7 @@ import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.ui.ActionGoToCritique;
 import org.argouml.ui.ArgoDiagram;
+import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.Clarifier;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.UUIDManager;
@@ -152,6 +150,8 @@ public abstract class FigNodeModelElement
      * The transparency value of the shadow color (0-255).
     **/    
     protected static final int SHADOW_COLOR_ALPHA = 128;
+    
+    protected static final String BUNDLE = "UMLMenu";
 
     static {
         LABEL_FONT =
@@ -272,7 +272,7 @@ public abstract class FigNodeModelElement
         ToDoList list = Designer.TheDesigner.getToDoList();
         Vector items = (Vector) list.elementsForOffender(getOwner()).clone();
         if (items != null && items.size() > 0) {
-            JMenu critiques = new JMenu("Critiques");
+            ArgoJMenu critiques = new ArgoJMenu(BUNDLE, "menu.popup.critiques");
             ToDoItem itemUnderMouse = hitClarifier(me.getX(), me.getY());
             if (itemUnderMouse != null) {
                 critiques.add(new ActionGoToCritique(itemUnderMouse));
