@@ -49,7 +49,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.107 $
+ * @version $Revision: 1.108 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -641,7 +641,7 @@ public class EntityContainer
             (EntityEnterpriseContext)mi.getEnterpriseContext());
 
          //create the EJBObject
-         return localProxyFactory.getEntityEJBLocalObject(id);
+         return id == null ? null : localProxyFactory.getEntityEJBLocalObject(id);
       }
    }
 
@@ -701,7 +701,7 @@ public class EntityContainer
             (EntityEnterpriseContext)mi.getEnterpriseContext());
 
          //create the EJBObject
-         return (EJBObject)ci.getEntityEJBObject(id);
+         return id == null ? null : (EJBObject)ci.getEntityEJBObject(id);
       }
    }
 

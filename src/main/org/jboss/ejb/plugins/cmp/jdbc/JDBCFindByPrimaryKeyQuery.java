@@ -15,6 +15,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.deployment.DeploymentException;
 
 import javax.ejb.FinderException;
+import javax.ejb.ObjectNotFoundException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +30,7 @@ import java.lang.reflect.Method;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public final class JDBCFindByPrimaryKeyQuery extends JDBCAbstractQueryCommand
 {
@@ -72,7 +73,8 @@ public final class JDBCFindByPrimaryKeyQuery extends JDBCAbstractQueryCommand
             SQLUtil.appendColumnNamesClause(entity.getTableFields(), getEagerLoadMask(), alias, select);
 
             List onFindCMRList = JDBCAbstractQueryCommand.getLeftJoinCMRNodes(
-               entity, entity.getTableName(), readAhead.getLeftJoins());
+               entity, entity.getTableName(), readAhead.getLeftJoins()
+            );
 
             if(!onFindCMRList.isEmpty())
             {
@@ -123,6 +125,14 @@ public final class JDBCFindByPrimaryKeyQuery extends JDBCAbstractQueryCommand
       {
          return Collections.singletonList(args[0]);
       }
-      return super.execute(finderMethod, args, ctx);
+
+      Collection results = super.execute(finderMethod, args, ctx);
+
+      if(results.isEmpty())
+      {
+         throw new ObjectNotFoundException("No such entity!");
+      }
+
+      return results;
    }
 }
