@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.37 2002/01/21 11:36:47 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.38 2002/01/22 08:17:36 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -125,7 +125,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 		extensionMgr = new ExtensionManager();
 
 		setAutoscrolls(true);
-		setDoubleBuffered(true);
 		setOpaque(true);
 
 		setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
@@ -600,8 +599,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 	 */
 	public void paintComponent(Graphics _gfx)
 	{
-		long start = System.currentTimeMillis();
-
 		Graphics2D gfx = (Graphics2D)_gfx;
 		gfx.setRenderingHints(renderingHints);
 		fontRenderContext = gfx.getFontRenderContext();
@@ -665,9 +662,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 				+ lastInvalid + "}:");
 			Log.log(Log.ERROR,this,e);
 		}
-
-		System.err.println((lastInvalid - firstInvalid)
-			+ ":" + (System.currentTimeMillis() - start));
 	} //}}}
 
 	//{{{ nextTabStop() method
@@ -823,7 +817,7 @@ public class TextAreaPainter extends JComponent implements TabExpander
 			{
 				x += ChunkCache.paintChunkList(
 					lineInfo.chunks,gfx,x,baseLine,
-					getWidth(),bgColor);
+					getWidth(),bgColor,true);
 			}
 
 			gfx.setFont(defaultFont);

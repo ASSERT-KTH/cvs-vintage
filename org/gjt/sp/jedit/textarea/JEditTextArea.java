@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.71 2002/01/21 10:54:33 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.72 2002/01/22 08:17:36 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5105,24 +5105,13 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				buffer,caretLine,offset - 1,0,buffer.getLineCount() - 1);
 			if(bracketOffset != -1)
 			{
-				int endLine;
-				if(visibleLines == 0)
-					endLine = buffer.getLineCount();
-				else
-				{
-					endLine = virtualToPhysical(
-						Math.min(foldVisibilityManager
-						.getVirtualLineCount() - 1,
-						firstLine + visibleLines));
-				}
-
 				bracketLine = getLineOfOffset(bracketOffset);
 				bracketPosition = bracketOffset
 					- getLineStartOffset(bracketLine);
 				invalidateLineRange(bracketLine,caretLine);
 
 				if(bracketLine < physFirstLine
-					|| bracketLine > endLine)
+					|| bracketLine > physLastLine)
 				{
 					showBracketStatusMessage(bracketLine < caretLine);
 				}

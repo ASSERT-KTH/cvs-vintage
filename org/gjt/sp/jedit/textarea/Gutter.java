@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.19 2002/01/21 11:36:47 spestov Exp $
+ * @version $Id: Gutter.java,v 1.20 2002/01/22 08:17:36 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -127,8 +127,8 @@ public class Gutter extends JComponent implements SwingConstants
 			line++, y += lineHeight)
 		{
 			ChunkCache.LineInfo info = textArea.chunkCache.getLineInfo(line);
-			//if(!info.chunksValid)
-			//	System.err.println("gutter paint: not valid");
+			if(!info.chunksValid)
+				System.err.println("gutter paint: not valid");
 			int physicalLine = info.physicalLine;
 
 			//{{{ Paint text area extensions
