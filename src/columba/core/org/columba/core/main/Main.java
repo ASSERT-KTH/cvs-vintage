@@ -17,6 +17,7 @@
 package org.columba.core.main;
 
 import java.text.MessageFormat;
+import java.util.logging.Logger;
 
 import javax.swing.RepaintManager;
 
@@ -46,6 +47,8 @@ import org.columba.core.util.GlobalResourceLoader;
 public class Main {
 	/** If true, enables debugging output from org.columba.core.logging */
 	public static boolean DEBUG = false;
+
+	private static final Logger LOG = Logger.getLogger("org.columba.core.main");
 
 	private static final String RESOURCE_PATH = "org.columba.core.i18n.global";
 
@@ -91,6 +94,10 @@ public class Main {
 		ColumbaLogger.createDefaultHandler();
 		ColumbaLogger.createDefaultFileHandler();
 
+		for ( int i=0; i<args.length; i++) {
+			LOG.info("arg["+i+"]="+args[i]);
+		}
+		
 		SessionController.passToRunningSessionAndExit(args);
 
 		// enable debugging of repaint manager to track down swing gui
@@ -152,7 +159,7 @@ public class Main {
 
 		// ensure that native libraries are correctly initialized
 		NativeWrapperHandler.getInstance();
-		
+
 		// call the postStartups of the modules
 		// e.g. check for default mailclient
 		handler.postStartup();

@@ -17,6 +17,8 @@ package org.columba.mail.gui.composer;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
@@ -565,11 +567,25 @@ public class ComposerModel {
 
 		if( options.get("attachment") != null) {
 			if( options.get("attachment") instanceof String ) {
-				addFileAttachment(new File((String) options.get("attachment")));
+				String s = (String) options.get("attachment");
+				try {
+					URI uri = new URI(s);
+					addFileAttachment(new File(uri));
+				} catch (URISyntaxException e) {
+					// if this is no URI
+					addFileAttachment(new File(s));
+				}			
 			} else {
 				String[] attachments = (String[]) options.get("attachment");
 				for( int i=0; i<attachments.length; i++) {
-					addFileAttachment(new File(attachments[i]));
+					String s = attachments[i];
+					try {
+						URI uri = new URI(s);
+						addFileAttachment(new File(uri));
+					} catch (URISyntaxException e) {
+						// if this is no URI
+						addFileAttachment(new File(s));
+					}	
 				}
 			}
 			
