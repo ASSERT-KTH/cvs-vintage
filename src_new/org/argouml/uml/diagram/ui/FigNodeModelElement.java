@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.50 2002/12/31 14:28:24 d00mst Exp $
+// $Id: FigNodeModelElement.java,v 1.51 2003/01/07 21:07:05 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -134,8 +134,8 @@ public abstract class FigNodeModelElement
     // instance variables
 
     protected FigRect _bigPort;
-    protected FigText _name;
-    protected FigText _stereo;
+    public FigText _name;   // Scope problem in jdk1.2
+    public FigText _stereo; // Scope problem in jdk1.2
     protected Vector _enclosedFigs = new Vector();
     protected Fig _encloser = null;
     protected boolean _readyToEdit = true;
