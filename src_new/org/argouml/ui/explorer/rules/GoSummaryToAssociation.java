@@ -1,4 +1,4 @@
-// $Id: GoSummaryToAssociation.java,v 1.4 2003/12/22 23:00:16 alexb Exp $
+// $Id: GoSummaryToAssociation.java,v 1.5 2003/12/26 17:56:35 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import org.argouml.model.uml.UmlHelper;
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.4 $
+ * $Revision: 1.5 $
  *
  * @author  alexb, $Author: alexb $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
@@ -40,27 +40,15 @@ import org.argouml.model.uml.UmlHelper;
 public class GoSummaryToAssociation extends AbstractPerspectiveRule{
 
     public String getRuleName() {
-	return Translator.localize ("Tree", "misc.class.attribute");
+	return "Summary->Association";
     }
 
 
     public Collection getChildren(Object parent) {
 	if ( parent instanceof AssociationsNode) {
           
-	    //List list = new ArrayList();
-          
-	    return UmlHelper.getHelper().getCore().getAssociations(((AssociationsNode) parent).getParent());
-	    //ModelFacade.getAssociationEnds(((AssociationsNode)parent).getParent());
-	    /*
-	      Iterator it = col.iterator();
-          
-	      while(it.hasNext()){
-              
-              list.add(it.next());
-	      }
-	      return list;
-	    */
-           
+	    return UmlHelper.getHelper().getCore()
+                .getAssociations(((AssociationsNode) parent).getParent());
 	}
 	return null;
     }

@@ -1,4 +1,4 @@
-// $Id: GoClassifierToSequenceDiagram.java,v 1.2 2003/12/22 23:00:15 alexb Exp $
+// $Id: GoClassifierToSequenceDiagram.java,v 1.3 2003/12/26 17:56:35 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,7 @@ public class GoClassifierToSequenceDiagram extends AbstractPerspectiveRule{
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
     public String getRuleName() {        
-		return "Classifier -> Sequence diagram";
+		return "Classifier->Sequence diagram";
     }
 
     /**
