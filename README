@@ -14,7 +14,7 @@ There are a 2 compilation scripts provided, a ksh based script for
 Unix and a .bat based DOS build script. Essentially these scripts are
 wrappers that put the ant.jar file on the classpath and calls:
 
-	java com.sun.ant.Main
+        java org.apache.tools.ant.Main
 
 To build, execute the following command in the jakarta-tomcat directory:
 
