@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- $Id: tomcat-users.dtd,v 1.1 2000/02/11 00:22:35 costin Exp $ -->
+
+<!-- The "tomcat-users" element contains all of the defined users and groups
+     within a specific security domain (realm), as well as the roles assigned
+     to those users and groups.  In addition, a role that contains the special
+     sub-element "anyone" is implicitly assigned to all defined users.  -->
+
+<!ELEMENT tomcat-users (user|group|role)+>
+
+<!-- The "user" element represents an individual person that is allowed access
+     to application components protected via this security domain (realm),
+     once they establish their identity by presenting a correct password.
+
+     The "name" attribute is an identifier that will be presented to select
+     a particular user.  It must be unique within a given security domain
+     (realm).  -->
+
+     The "password" attribute contains the result of calculating an SHA
+     MessageDigest on the cleartext password, and representing each byte
+     of the result as a two-digit hexadecimal number.  -->
+
+<!ELEMENT user EMPTY>
+<!ATTLIST user
+     name      ID    #REQUIRED
+     password  CDATA #REQUIRED>
+
+<!-- The "group" element represents a named group of users, or contains the
+     special sub-element "anyone" that declares all named users to be members
+     of this group.
+
+     XXX This DTD does not groups as members of other groups.  This can be
+     accomplished by adding group-member as a valid sub-element, and adjusting
+     the implementation to correctly represent these semantics.
+
+     The "name" attribute is an identifier that will be presented to select
+     a particular group.  It must be unique within a given security domain
+     (realm).  -->
+
+<!ELEMENT group ((user-member)+|anyone)>
+<!ATTLIST group
+     name       ID    #REQUIRED>
+
+<!-- The "role" element defines an application role that can be assigned to
+     a defined set of users and groups, or contains the special sub-element
+     "anyone" that declares all named users to be assigned this role.  -->
+
+<!ELEMENT role ((user-member|group-member)+|anyone)>
+<!ATTLIST role
+     name       ID    #REQUIRED>
+
+<!-- The "anyone" element declares all defined users in this security domain
+     (realm) to be members of the containing group, or assigned the
+     containing role.  -->
+
+<!ELEMENT anyone EMPTY>
+
+<!-- The "user-member" element defines a named user as a member of a group,
+     or as being assigned a particular role.  -->
+
+<!ELEMENT user-member EMPTY>
+<!ATTLIST user-member
+     name        IDREF #REQUIRED>
+
+<!-- The "group-member" element defines a named group whose users are all
+     assigned a particular role. -->
+
+<!ELEMENT group-member EMPTY>
+<!ATTLIST group-member
+     name        IDREF #REQUIRED>
+
