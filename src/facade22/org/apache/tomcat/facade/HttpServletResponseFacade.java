@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.19 2001/03/07 21:29:38 larryi Exp $
- * $Revision: 1.19 $
- * $Date: 2001/03/07 21:29:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.20 2001/04/22 18:56:03 costin Exp $
+ * $Revision: 1.20 $
+ * $Date: 2001/04/22 18:56:03 $
  *
  * ====================================================================
  *
@@ -359,7 +359,11 @@ final class HttpServletResponseFacade  implements HttpServletResponse
         // Set the URL port to HTTP default if not available before comparing
         int urlPort = url.getPort();
         if (urlPort == -1) {
-            urlPort = 80;
+	    if("http".equalsIgnoreCase(url.getProtocol())) {
+		urlPort = 80;
+	    } else if ("https".equalsIgnoreCase(url.getProtocol())) {
+		urlPort = 443;
+            }
         }
 	int serverPort = request.getServerPort();
 	if (serverPort == -1)	// Work around bug in java.net.URL.getHost()
