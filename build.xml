@@ -90,6 +90,8 @@
   <target name="detect">
     <available property="jsse.present.runtime"
                classname="javax.net.ssl.SSLServerSocket"/>
+    <available property="ant15-present"
+               classname="org.apache.tools.ant.taskdefs.optional.jsp.JspC" />
     <available property="jsse.present"
                file="${jsse.jar}"/>
     <available property="puretls.present"
@@ -603,14 +605,14 @@
 
   
   <!-- ==================== Ant utilities ========== -->
-  <target name="tomcat-ant" >
+  <target name="tomcat-ant" depends="detect" if="ant15-present" >
     <javac srcdir="src/share"
            destdir="${tomcat.build}/classes" >
        <include name="org/apache/tomcat/ant/*.java" />
        <classpath>
           <pathelement path="${ant.lib}/ant.jar" />
-          <pathelement path="${ant.lib}/ant-optional.jar" />
           <pathelement path="${ant.lib}/optional.jar" />
+          <pathelement path="${ant.lib}/ant-optional.jar" />
        </classpath>
     </javac>
     <mkdir dir="${tomcat.build}/ant" />
