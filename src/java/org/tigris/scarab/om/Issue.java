@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.235 2002/12/19 00:15:19 jon Exp $
+ * @version $Id: Issue.java,v 1.236 2002/12/19 19:08:38 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -518,10 +518,6 @@ public class Issue
             activitySet = getActivitySet(user, 
                             ActivitySetTypePeer.EDIT_ISSUE__PK);
         }
-        else
-        {
-            activitySet.setAttachment(attachment);
-        }
         activitySet.save();
 
         String summary = attachment.getData();
@@ -531,12 +527,14 @@ public class Issue
             {
                 summary = summary.substring(0,254) + "...";
             }
-            summary = desc + ' ' + summary;
+            summary = desc + ": '" + summary + "'";
         }                
         
-        ActivityManager
+        Activity activity = ActivityManager
             .createTextActivity(this, activitySet,
                                 summary, attachment);
+        activity.setAttachment(attachment);
+        activity.save();
         return activitySet;
     }
 
