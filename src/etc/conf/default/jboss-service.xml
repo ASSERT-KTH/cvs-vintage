@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.29 2002/02/16 03:52:52 user57 Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.30 2002/02/16 04:39:59 user57 Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -139,19 +139,6 @@
   <!-- Uncomment to enable JMX monitoring of the bean cache
   <mbean code="org.jboss.monitor.BeanCacheMonitor" 
          name="jboss.jmx:name=BeanCacheMonitor"/>
-  -->
-
-  <!-- Uncomment this and set up according to manual to add Castor JDO service
-  <mbean code="org.jboss.jdo.castor.CastorJDOImpl"
-         name="jboss:service=CastorJDO,name=someName">
-    <attribute name="Configuration">
-      file:../conf/default/database.xml
-    </attribute>
-    <attribute name="JndiName">jdo/someName</attribute>
-    <attribute name="LockTimeout">0</attribute>
-    <attribute name="LoggingEnabled">false</attribute>
-    <attribute name="CommonClassPath">false</attribute>
-  </mbean>
   -->
 
   <!-- ==================================================================== -->
