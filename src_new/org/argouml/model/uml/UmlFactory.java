@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.35 2003/09/17 21:17:56 thierrylach Exp $
+// $Id: UmlFactory.java,v 1.36 2003/11/08 11:20:46 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -323,6 +323,8 @@ public class UmlFactory extends AbstractUmlModelFactory {
             new ObjectCreateInfo(MInclude.class, factory, "createInclude"));
         elements.put(Uml.LINK,
             new ObjectCreateInfo(MLink.class, factory, "createLink"));
+        elements.put(Uml.LINK_END,
+            new ObjectCreateInfo(MLinkEnd.class, factory, "createLinkEnd"));
         elements.put(Uml.PERMISSION,
             new ObjectCreateInfo(
                 MPermission.class,
