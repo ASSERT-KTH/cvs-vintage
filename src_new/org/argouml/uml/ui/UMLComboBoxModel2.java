@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.45 2004/12/02 19:51:08 mvw Exp $
+// $Id: UMLComboBoxModel2.java,v 1.46 2004/12/20 14:12:28 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -126,9 +126,10 @@ public abstract class UMLComboBoxModel2
     }
 
     /**
-     * If the property that this comboboxmodel depicts is changed by the UML
+     * If the property that this comboboxmodel depicts is changed in the UML
      * model, this method will make sure that it is changed in the comboboxmodel
      * too.
+     * TODO: This function is not yet completely written!
      * 
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
