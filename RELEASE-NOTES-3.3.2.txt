@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.2.txt,v 1.7 2002/05/17 05:15:29 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.2.txt,v 1.8 2002/05/17 13:03:46 keith Exp $
 
 
 This document describes the changes that have been made since the
@@ -25,6 +25,11 @@ Bug No.  Description
 
 	 (Re-) Open the log files with "append", so that log rotation can
 	 be configured to be other than daily.
+
+         Package an Ant compiler adapter that compiles JSPs with the correct
+         naming convention and an Ant task which creates .ver files.  These
+         tasks allow the Tomcat work directory to be pre-populated with 
+         compiled JSPs.
 
 Server:
 
