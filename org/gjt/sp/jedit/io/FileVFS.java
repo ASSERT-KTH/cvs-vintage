@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.43 2003/10/09 00:00:31 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.44 2003/10/21 17:39:30 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -408,6 +408,9 @@ public class FileVFS extends VFS
 	{
 		int permissions = 0;
 
+		if(jEdit.getBooleanProperty("chmodDisabled"))
+			return permissions;
+
 		if(OperatingSystem.isUnix())
 		{
 			String[] cmdarray = { "ls", "-ld", path };
@@ -448,6 +451,9 @@ public class FileVFS extends VFS
 	 */
 	public static void setPermissions(String path, int permissions)
 	{
+		if(jEdit.getBooleanProperty("chmodDisabled"))
+			return;
+
 		if(permissions != 0)
 		{
 			if(OperatingSystem.isUnix())

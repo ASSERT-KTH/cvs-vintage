@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.197 2003/10/10 23:46:24 spestov Exp $
+ * @version $Id: jEdit.java,v 1.198 2003/10/21 17:39:29 spestov Exp $
  */
 public class jEdit
 {
@@ -351,6 +351,21 @@ public class jEdit
 		Log.log(Log.MESSAGE,jEdit.class,"Settings directory is "
 			+ settingsDirectory);
 
+		//{{{ Get things rolling
+		initMisc();
+		initSystemProperties();
+
+		GUIUtilities.advanceSplashProgress();
+
+		GUIUtilities.init();
+		BeanShell.init();
+
+		if(jEditHome != null)
+			initSiteProperties();
+
+		initUserProperties();
+		//}}}
+
 		//{{{ Initialize server
 		if(portFile != null)
 		{
@@ -368,21 +383,7 @@ public class jEdit
 			}
 		} //}}}
 
-		//{{{ Get things rolling
-		initMisc();
-		initSystemProperties();
-
-		GUIUtilities.advanceSplashProgress();
-
-		GUIUtilities.init();
-		BeanShell.init();
-
-		if(jEditHome != null)
-			initSiteProperties();
-
-		initUserProperties();
-
-
+		//{{{ Do more stuff
 		initPLAF();
 
 		VFSManager.init();

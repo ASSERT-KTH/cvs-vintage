@@ -57,7 +57,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.290 2003/10/09 00:00:32 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.291 2003/10/21 17:39:30 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6175,7 +6175,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 
 			if(isDragEnabled() && getDragAndDropCallback() != null
 				&& getSelectionAtOffset(dragStart) != null
-				&& clickCount == 1)
+				&& clickCount == 1 && !evt.isShiftDown())
 			{
 				maybeDragAndDrop = true;
 				moveCaretPosition(dragStart,false);
