@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.74 2002/12/19 17:15:10 jboynes Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.75 2003/02/07 01:04:29 d_jencks Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -273,11 +273,15 @@
 
   <!--
      | UserTransaction support.
-   -->
+   - ->
   <mbean code="org.jboss.tm.usertx.server.ClientUserTransactionService"
 	 name="jboss.tm:service=ClientUserTransaction">
     <depends optional-attribute-name="TransactionManagerService">jboss.tm:service=TransactionManagerService</depends>
     <depends optional-attribute-name="CachedConnectionManager">jboss.jca:service=CachedConnectionManager</depends>
+  </mbean-->
+  <mbean code="org.jboss.invocation.XATerminatorContainer"
+	 name="jboss.invoker:service=XATerminatorContainer">
+    <depends optional-attribute-name="TransactionManagerService">jboss.tm:service=TransactionManagerService</depends>
   </mbean>
 
 

@@ -31,9 +31,11 @@ import org.jboss.invocation.ServerID;
 import org.jboss.system.client.Client;
 import org.jboss.system.client.ClientServiceMBeanSupport;
 import org.jboss.tm.JBossXidFactory;
+import org.jboss.tm.NoLogTxLogger;
+import org.jboss.tm.TransactionManagerService;
 import org.jboss.tm.XAResourceFactory;
-import org.jboss.tm.client.ClientTransactionManager;
-import org.jboss.tm.client.ClientUserTransaction;
+import org.jboss.tm.XATerminatorMethods;
+import org.jboss.tm.UserTransactionImpl;
 import org.jboss.util.jmx.ObjectNameFactory;
 
 
@@ -66,38 +68,23 @@ public class InvokerXAResource
    
    private static final ObjectName TRANSACTION_MANAGER_SERVICE = ObjectNameFactory.create("jboss.tm:service=TransactionManagerService");
 
+   private static final ObjectName XID_FACTORY = ObjectNameFactory.create("jboss.tm:service=XidFactory");
+
+   private static final ObjectName TX_LOGGER = ObjectNameFactory.create("jboss.tm:service=NoLogTxLogger");
+
+   private static final ObjectName USER_TRANSACTION = ObjectNameFactory.create("jboss.tm:service=UserTransaction");
+
+   private static final ObjectName XATERMINATOR_CONTAINER = ObjectNameFactory.create("jboss.invoker:service=XATerminatorContainer");
+
    private static final Object[] noArgs = new Object[0];
    private static final String[] noTypes = new String[0];
 
-   private static final Method PREPARE_METHOD;
 
-   private static final Method COMMIT_METHOD;
-
-   private static final Method ROLLBACK_METHOD;
-
-   private static final Method FORGET_METHOD;
-
-   private static final Method RECOVER_METHOD;
-
-   static 
-   {
-      try
-      {
-	 PREPARE_METHOD = XATerminator.class.getMethod("prepare", new Class[] {Xid.class});
-
-	 COMMIT_METHOD = XATerminator.class.getMethod("commit", new Class[] {Xid.class, boolean.class});
-
-	 ROLLBACK_METHOD = XATerminator.class.getMethod("rollback", new Class[] {Xid.class});
-
-	 FORGET_METHOD = XATerminator.class.getMethod("forget", new Class[] {Xid.class});
-
-	 RECOVER_METHOD = XATerminator.class.getMethod("recover", new Class[] {int.class});
-      }
-      catch (NoSuchMethodException nsme)
-      {
-	 throw new RuntimeException("Could not initialize ProxyXAResource with XATerminator methods");
-      }
-   }
+   /**
+    * The variable <code>xaTerminatorNameHash</code> here.
+    * @todo set xaTerminatorNameHash rather than hardcode it.
+    */
+   private static Integer xaTerminatorNameHash = new Integer(XATERMINATOR_CONTAINER.hashCode());
 
    private transient ThreadLocal xids = new ThreadLocal();
 
@@ -133,7 +120,7 @@ public class InvokerXAResource
       serviceName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerXAResource," + getServerID().toObjectNameClause());
    }
    
-   public Object readResolve() throws ObjectStreamException
+   private Object readResolve() throws ObjectStreamException
    {
       return internalReadResolve();
    }
@@ -147,38 +134,62 @@ public class InvokerXAResource
     */
    protected void internalSetup() throws Exception
    {
+      //register ourselves
+      super.internalSetup();
+
+      if (xids == null) 
+      {
+	 xids = new ThreadLocal();
+      } // end of if ()
+      if (invocations == null) 
+      {
+	 invocations = new ThreadLocal();
+      } // end of if ()
+      
       //This part is independent of which invoker we are using...
       //Set up the client transaction manager for this vm and remote server, if there is no "real" jboss tm.
-      ObjectName tmName = TRANSACTION_MANAGER_SERVICE;
-      if (!getServer().isRegistered(tmName))
+      //ObjectName tmName = TRANSACTION_MANAGER_SERVICE;
+      if (!getServer().isRegistered(TRANSACTION_MANAGER_SERVICE))
       {
-	 String serverIdObjectNameClause = getServerID().toObjectNameClause();
-         ObjectName xidFactoryName = ObjectNameFactory.create("jboss.client:service=XidFactory," + serverIdObjectNameClause);
-         //Yikes it's an xmbean!
-         Client.createXMBean(JBossXidFactory.class.getName(), xidFactoryName, "org/jboss/tm/JBossXidFactory.xml");
-         //needs work
-         getServer().setAttribute(xidFactoryName, new Attribute("BaseGlobalId", serverIdObjectNameClause + "_client"));
-         //getServer().setAttribute(xidFactoryName, new Attribute("TxLoggerName", ??));
 
-         tmName = ObjectNameFactory.create("jboss.client:service=TransactionManager," + serverIdObjectNameClause);
-         getServer().createMBean(ClientTransactionManager.class.getName(), tmName);
-         getServer().setAttribute(tmName, new Attribute("XidFactoryName", xidFactoryName));
+	 //No recovery on clients by default
+	 if (!getServer().isRegistered(TX_LOGGER))
+	 {
+	    Client.createXMBean(NoLogTxLogger.class.getName(), TX_LOGGER, "org/jboss/tm/NoLogTxLogger.xml");
+	    //no attributes
+	 } // end of if ()
+	 
+	 if (!getServer().isRegistered(XID_FACTORY))
+	 {
+	    Client.createXMBean(JBossXidFactory.class.getName(), XID_FACTORY, "org/jboss/tm/JBossXidFactory.xml");
+	    getServer().setAttribute(XID_FACTORY, new Attribute("TxLoggerName", TX_LOGGER));
+	    //leave pad at default
+	 } // end of if ()
 
-         ObjectName clientUTName = ObjectNameFactory.create("jboss.client:service=UserTransaction," + serverIdObjectNameClause);
-         getServer().createMBean(ClientUserTransaction.class.getName(), clientUTName);
-         getServer().setAttribute(clientUTName, new Attribute("TransactionManagerName", tmName));
+	 Client.createXMBean(TransactionManagerService.class.getName(), TRANSACTION_MANAGER_SERVICE, "org/jboss/tm/TransactionManagerService.xml");
+	 getServer().setAttribute(TRANSACTION_MANAGER_SERVICE, new Attribute("TransactionLogger", TX_LOGGER));
+	 getServer().setAttribute(TRANSACTION_MANAGER_SERVICE, new Attribute("XidFactory", XID_FACTORY));
+
+	 if (!getServer().isRegistered(USER_TRANSACTION))
+	 {
+	    //getServer().createMBean(UserTransactionImpl.class.getName(), USER_TRANSACTION);
+	    Client.createXMBean(UserTransactionImpl.class.getName(), USER_TRANSACTION, "org/jboss/tm/UserTransactionImpl.xml");
+	    getServer().setAttribute(USER_TRANSACTION, new Attribute("TransactionManagerServiceName", TRANSACTION_MANAGER_SERVICE));
+	 } // end of if ()
 
          //create everything
-         getServer().invoke(xidFactoryName, "create", noArgs, noTypes);
-         getServer().invoke(tmName, "create", noArgs, noTypes);
-         getServer().invoke(clientUTName, "create", noArgs, noTypes);
+         getServer().invoke(TX_LOGGER, "create", noArgs, noTypes);
+         getServer().invoke(XID_FACTORY, "create", noArgs, noTypes);
+         getServer().invoke(TRANSACTION_MANAGER_SERVICE, "create", noArgs, noTypes);
+         getServer().invoke(USER_TRANSACTION, "create", noArgs, noTypes);
 
          //start everything
-         getServer().invoke(xidFactoryName, "start", noArgs, noTypes);
-         getServer().invoke(tmName, "start", noArgs, noTypes);
-         getServer().invoke(clientUTName, "start", noArgs, noTypes);
+         getServer().invoke(TX_LOGGER, "start", noArgs, noTypes);
+         getServer().invoke(XID_FACTORY, "start", noArgs, noTypes);
+         getServer().invoke(TRANSACTION_MANAGER_SERVICE, "start", noArgs, noTypes);
+         getServer().invoke(USER_TRANSACTION, "start", noArgs, noTypes);
       }
-      getServer().setAttribute(getServiceName(), new Attribute("TransactionManagerService", tmName));
+      getServer().setAttribute(getServiceName(), new Attribute("TransactionManagerService", TRANSACTION_MANAGER_SERVICE));
       getServer().invoke(getServiceName(), "create", noArgs, noTypes);
       getServer().invoke(getServiceName(), "start", noArgs, noTypes);
    }
@@ -382,7 +393,8 @@ public class InvokerXAResource
    {
       log.info("preparing xid: " + xid);
       Invocation invocation = new Invocation();
-      invocation.setMethod(PREPARE_METHOD);
+      invocation.setObjectName(xaTerminatorNameHash);
+      invocation.setMethod(XATerminatorMethods.PREPARE_METHOD);
       invocation.setArguments(new Object[] {xid});
       try
       {
@@ -409,7 +421,8 @@ public class InvokerXAResource
    {
       log.info("Committing xid: " + xid);
       Invocation invocation = new Invocation();
-      invocation.setMethod(COMMIT_METHOD);
+      invocation.setObjectName(xaTerminatorNameHash);
+      invocation.setMethod(XATerminatorMethods.COMMIT_METHOD);
       invocation.setArguments(new Object[] {xid, new Boolean(onePhase)});
       try
       {
@@ -421,6 +434,7 @@ public class InvokerXAResource
 	 {
 	    throw (XAException)e;
 	 }
+	 getLog().info("Unexpected exception in commit of xid: " + xid, e);
 	 throw new RuntimeException("Unexpected exception in commit of xid: " + xid + ", exception: " + e);
       }
 
@@ -435,7 +449,8 @@ public class InvokerXAResource
    {
       log.info("Rolling back xid: " + xid);
       Invocation invocation = new Invocation();
-      invocation.setMethod(ROLLBACK_METHOD);
+      invocation.setObjectName(xaTerminatorNameHash);
+      invocation.setMethod(XATerminatorMethods.ROLLBACK_METHOD);
       invocation.setArguments(new Object[] {xid});
       try
       {
@@ -460,7 +475,8 @@ public class InvokerXAResource
    public void forget(Xid xid) throws XAException
    {
       Invocation invocation = new Invocation();
-      invocation.setMethod(FORGET_METHOD);
+      invocation.setObjectName(xaTerminatorNameHash);
+      invocation.setMethod(XATerminatorMethods.FORGET_METHOD);
       invocation.setArguments(new Object[] {xid});
       try
       {
@@ -487,7 +503,8 @@ public class InvokerXAResource
    public Xid[] recover(int flag) throws XAException
    {
       Invocation invocation = new Invocation();
-      invocation.setMethod(RECOVER_METHOD);
+      invocation.setObjectName(xaTerminatorNameHash);
+      invocation.setMethod(XATerminatorMethods.RECOVER_METHOD);
       invocation.setArguments(new Object[] {new Integer(flag)});
       try
       {

@@ -27,8 +27,9 @@ import javax.transaction.Transaction;
  *    a series of of predifined variables and method calls to get at the 
  *    pointers.  But really it is just  a repository of objects. 
  *
- * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.14 $
+ * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.15 $
  *   <p><b>20020911 Bill Burke:</b>
  *   <ul>
  *   <li> Optimize access to certain variables.  Avoid hash lookups
@@ -37,7 +38,7 @@ import javax.transaction.Transaction;
 public class Invocation
 {
    /** The signature of the invoke() method */
-   public static final String[] INVOKE_SIGNATURE = { "java.lang.Object" };
+   public static final String[] INVOKE_SIGNATURE = {Invocation.class.getName()};//{ "java.lang.Object" };
 
    // The payload is a repository of everything associated with the invocation
    // It is information that will need to travel 
@@ -225,6 +226,7 @@ public class Invocation
    
    /**
     * container for server side association.
+    * This is usually new Integer(objectName.hashCode()) for ejbs.
     */
    public void setObjectName(Object objectName)
    {

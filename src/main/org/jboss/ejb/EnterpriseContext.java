@@ -37,7 +37,7 @@ import org.jboss.metadata.SecurityRoleRefMetaData;
 import org.jboss.security.RealmMapping;
 import org.jboss.security.SimplePrincipal;
 
-import org.jboss.tm.usertx.interfaces.UserTransactionStartedListener;
+import org.jboss.tm.UserTransactionStartedListener;
 
 /**
  * The EnterpriseContext is used to associate EJB instances with
@@ -52,7 +52,7 @@ import org.jboss.tm.usertx.interfaces.UserTransactionStartedListener;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.54 $
+ * @version $Revision: 1.55 $
  *
  * Revisions:
  * 2001/06/29: marcf

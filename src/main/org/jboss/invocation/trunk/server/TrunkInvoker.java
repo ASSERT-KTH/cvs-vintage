@@ -301,7 +301,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
          ObjectName mbean = (ObjectName) Registry.lookup(invocation.getObjectName());
 
          // The cl on the thread should be set in another interceptor
-         Object obj = getServer().invoke(mbean, "", new Object[] { invocation }, Invocation.INVOKE_SIGNATURE);
+         Object obj = getServer().invoke(mbean, "invoke", new Object[] { invocation }, Invocation.INVOKE_SIGNATURE);
 	 //log.info("got return object: " + obj);
 
          return new MarshalledObject(obj);

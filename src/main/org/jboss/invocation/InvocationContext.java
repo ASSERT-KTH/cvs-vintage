@@ -33,7 +33,7 @@ import org.jboss.invocation.Invoker;
  *  and code readability in the codebase
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class InvocationContext
    implements java.io.Serializable
@@ -65,6 +65,7 @@ public class InvocationContext
    
    /**
     * A container for server side association.
+    * This is usually new Integer(objectName.hashCode()) for ejbs.
     */
    public void setObjectName(Object objectName)
    {

@@ -75,6 +75,9 @@ public final class TrunkInvokerProxy
 
    protected void internalSetup() throws Exception
    {
+      //register ourselves
+      super.internalSetup();
+
       String serverIdObjectNameClause = getServerID().toObjectNameClause();
       ObjectName workManagerName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerWorkManager," + serverIdObjectNameClause);
       if (!getServer().isRegistered(workManagerName))
