@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.219 2004/12/12 13:56:05 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.220 2004/12/12 14:00:03 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -5306,7 +5306,7 @@ public class ModelFacade {
 		(MExpressionEditor) UmlFactory.getFactory().getDataTypes()
 		    .createExpressionEditor(handle);
             expressionEditor.setBody((String) expr);
-            handle = (Object) expressionEditor.toExpression();
+            expressionEditor.toExpression();
             // this last step creates a new MExpression
             return;
         }
