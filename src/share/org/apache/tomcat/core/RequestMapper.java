@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestMapper.java,v 1.2 1999/10/12 07:17:47 gonzo Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/12 07:17:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestMapper.java,v 1.3 1999/11/03 20:38:53 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/11/03 20:38:53 $
  *
  * ====================================================================
  *
@@ -80,6 +80,7 @@ public class RequestMapper {
     private String servletPath = null;
     private String mapPath = null;
     private String pathInfo = null;
+    private String resourceName = null;
 
     RequestMapper() {
     }
@@ -101,9 +102,11 @@ public class RequestMapper {
 	ServletWrapper wrapper = getMatch(path);
 
 	if (wrapper != null) {
-	    lookupResult = new LookupResult(wrapper,
-	        this.servletPath, this.mapPath, this.pathInfo);
-	}
+            this.mapPath = getMapPath(wrapper);
+
+            lookupResult = new LookupResult(wrapper,
+                this.servletPath, this.mapPath, this.pathInfo);
+        }
 
 	return lookupResult;
     }
@@ -130,30 +133,7 @@ public class RequestMapper {
 	// lookup real servlet if what we're actually
 	// dealing with a jsp file
 
-	if (wrapper != null) {
-	    String servletPath = this.servletPath;
-	    String pathInfo = this.pathInfo;
-	    boolean stillSearching = true;
-	    int counter = 0;
-
-            while (stillSearching) {
-                if (wrapper.getPath() != null &&
-		    wrapper.getServletClass() == null) {
-		    wrapper = getMatch(wrapper.getPath() + pathInfo);
-		    this.mapPath = this.servletPath;
-
-                    if (stillSearching &&
-		        ++counter > Constants.RequestURIMatchRecursion) {
-		        stillSearching = false;
-		    }
-		} else {
-		  stillSearching = false;
-		}
-	    }
-
-	    this.servletPath = servletPath;
-	    this.pathInfo = pathInfo;
-	}
+        wrapper = getResolvedServlet(wrapper);
 
 	return wrapper;
     }
@@ -245,5 +225,74 @@ public class RequestMapper {
 	}
 
 	return wrapper;
+    }
+
+    private ServletWrapper getResolvedServlet(ServletWrapper wrapper) {
+        if (wrapper != null) {
+            String servletPath = this.servletPath;
+            String pathInfo = this.pathInfo;
+            boolean stillSearching = true;
+            int counter = 0;
+
+            this.resourceName = this.servletPath;
+
+            while (stillSearching) {
+                if (wrapper.getPath() != null &&
+                    wrapper.getServletClass() == null) {
+                        this.resourceName = wrapper.getPath();
+                        wrapper = getMatch(wrapper.getPath() +
+                            (pathInfo == null ? "" : pathInfo));
+                        this.mapPath = this.servletPath;
+
+                        if (stillSearching &&
+                            ++counter > Constants.RequestURIMatchRecursion) {
+                            stillSearching = false;
+                        }
+                } else {
+                    stillSearching = false;
+                }
+            }
+
+            this.servletPath = servletPath;
+            this.pathInfo = pathInfo;
+        }
+
+        return wrapper;
+    }
+
+    private String getMapPath(ServletWrapper wrapper) {
+        String mapPath = this.mapPath;
+
+        // XXX
+        // this is added to make available the destination
+        // resource be it a servlet or jsp file - could be
+        // cleaned up a bit (wobbly)
+        if (this.servletPath.equals(Constants.Servlet.Invoker.Map) &&
+            this.pathInfo != null) {
+            String s = this.pathInfo;
+
+            if (this.pathInfo.startsWith("/")) {
+                s = this.pathInfo.substring(1);
+            }
+
+            int i = s.indexOf("/");
+
+            if (i > -1) {
+                s = s.substring(0, i);
+            }
+
+            mapPath = "/" + s;
+        } else if (mapPath == null &&
+            this.resourceName != null) {
+            // XXX
+            // hack to differentiate amongst a mapped servlet and a jsp
+            if (! wrapper.getServletName().equals(Constants.JSP.NAME)) {
+                mapPath = "/" + wrapper.getServletClass();
+            } else {
+                mapPath = this.resourceName;
+            }
+        }
+
+        return mapPath;
     }
 }

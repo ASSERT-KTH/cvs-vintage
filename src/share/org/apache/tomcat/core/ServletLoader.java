@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletLoader.java,v 1.2 1999/10/15 03:20:26 harishp Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/15 03:20:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletLoader.java,v 1.3 1999/11/03 20:38:54 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/11/03 20:38:54 $
  *
  * ====================================================================
  *
@@ -222,7 +222,7 @@ class ServletLoader extends ClassLoader {
         Class clazz = null;
 
 	try {
-	    ClassLoader parent = container.getClassLoader();
+	    ClassLoader parent = container.getContext().getClassLoader();
 
 	    if (parent != null) {
 	        clazz = parent.loadClass(name);
@@ -361,7 +361,8 @@ class ServletLoader extends ClassLoader {
 
 	    if (f.exists() &&
 	        f.isDirectory()) {
-		String[] jars = getJarFiles(f);
+                JarFinder jarFinder = new JarFinder();
+		String[] jars = jarFinder.getJars(f);
 
 		for (int i = 0; i < jars.length; i++) {
 		    String s = f.toString() + File.separator + jars[i];
@@ -369,11 +370,12 @@ class ServletLoader extends ClassLoader {
 		    try {
 		        URL tURL = new URL(Constants.Request.FILE,
                             null, s);
-			URL jURL = new URL(Constants.Request.WAR +
-                            ":" + tURL);
+			URL jURL = new URL(Constants.Request.JAR +
+                            ":" + tURL + "!/" + entryName);
 
-			u = resolveURL(jURL, null, entryName);
+			u = jURL;
 		    } catch (MalformedURLException mue) {
+		        mue.printStackTrace();
 		        u = null;
 		    }
 
@@ -406,7 +408,8 @@ class ServletLoader extends ClassLoader {
 
                 if (f.exists() &&
                     f.isDirectory()) {
-                    String[] jars = getJarFiles(f);
+                    JarFinder jarFinder = new JarFinder();
+		    String[] jars = jarFinder.getJars(f);
 
                     for (int i = 0; i < jars.length; i++) {
                         String s = f.toString() + File.separator +
@@ -457,8 +460,8 @@ class ServletLoader extends ClassLoader {
 	    s += ((! s.endsWith("/")) ? "/" : "") + name.trim();
 	}
 
-	if (base.getProtocol().equalsIgnoreCase(Constants.Request.WAR)) {
-	    u = new URL(base.toString() +
+	if (base.getProtocol().equalsIgnoreCase(Constants.Request.JAR)) {
+	  u = new URL(base.toString() +
                 ((s.length() > 0) ? "!" : "") + s);
 	} else {
 	    u = new URL(base.toString() +
@@ -484,12 +487,6 @@ class ServletLoader extends ClassLoader {
 	return baos.toByteArray();
     }
 
-    private String[] getJarFiles(File f) {
-        FilenameFilter filter = new JarFilter("jar");
-
-        return f.list(filter);
-    }
-
     private String classPathFormat(Enumeration e) {
         String cp = "";
 
@@ -509,15 +506,51 @@ class ServletLoader extends ClassLoader {
     }
 }
 
-class JarFilter implements FilenameFilter {
-    String extension = "";
+class JarFinder {
+    private Vector jars = null;
 
-    JarFilter(String extension) {
-        this.extension = extension;
+    String[] getJars(String dir) {
+        File f = new File(dir);
+
+        return getJars(f, null);
     }
 
-    public boolean accept(File dir, String name) {
-        return (name != null &&
-	    name.endsWith("." + this.extension));
+    String[] getJars(String dir, String path) {
+        File f = new File(dir);
+
+        return getJars(f, path);
+    }
+
+    String[] getJars(File dir) {
+        return getJars(dir, null);
+    }
+
+    private String[] getJars(File dir, String path) {
+        File[] files = dir.listFiles();
+
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+            String p = (path != null) ? path + File.separator : "";
+
+            if (file.canRead()) {
+                if (file.isFile() &&
+                    file.getName().toLowerCase().endsWith(
+                        "." + "jar")) {
+                    if (this.jars == null) {
+                        this.jars = new Vector();
+                    }
+
+                    this.jars.addElement(p + file.getName());
+                } else if (file.isDirectory()) {
+                    getJars(file, p + file.getName());
+                }
+            }
+        }
+
+        String[] jars = new String[this.jars.size()];
+
+        this.jars.copyInto((Object[])jars);
+
+        return jars;
     }
 }

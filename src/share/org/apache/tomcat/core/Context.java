@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Context.java,v 1.6 1999/11/01 20:50:46 costin Exp $
- * $Revision: 1.6 $
- * $Date: 1999/11/01 20:50:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Context.java,v 1.7 1999/11/03 20:38:51 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 1999/11/03 20:38:51 $
  *
  * ====================================================================
  *
@@ -64,6 +64,7 @@
 
 package org.apache.tomcat.core;
 
+import org.apache.tomcat.server.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.deployment.*;
 import java.io.*;
@@ -240,19 +241,11 @@ public class Context {
     }
 
     public ClassLoader getClassLoader() {
-        ClassLoader cl = this.container.getClassLoader();
-
-        if (cl == null) {
-            cl = (ClassLoader)this.container.getLoader();
-        }
-
-	return (ClassLoader)cl;
+      return this.classLoader;
     }
 
     public void setClassLoader(ClassLoader classLoader) {
-        if (! this.initialized) {
-	    this.container.setClassLoader(classLoader);
-        }
+      this.classLoader = classLoader;
     }
 
     public String getClassPath() {
@@ -269,8 +262,12 @@ public class Context {
         return cp;
     }
     
-    public void setClassPath(String classpath) {
-        this.classPath = classpath;
+    public void setClassPath(String classPath) {
+        if (this.classPath.trim().length() > 0) {
+	    this.classPath += File.pathSeparator;
+	}
+
+        this.classPath += classPath;
     }
     
     /**
@@ -521,8 +518,10 @@ public class Context {
 
     public Object getAttribute(String name) {
         if (name.equals("org.apache.tomcat.jsp_classpath"))
-            return getClassPath();
-        else {
+	  return getClassPath();
+	else if(name.equals("org.apache.tomcat.classloader")) {
+	  return this.container.getLoader();
+        }else {
             Object o = attributes.get(name);
             return attributes.get(name);
         }
@@ -636,6 +635,13 @@ public class Context {
 	request.setServletPath(result.getServletPath());
 	request.setPathInfo(result.getPathInfo());
 
+        if (result.getMappedPath() != null) {
+            request.setAttribute(Constants.Attribute.RESOLVED_SERVLET,
+                result.getMappedPath());
+        } else {
+            request.removeAttribute(Constants.Attribute.RESOLVED_SERVLET);
+        }
+
 	result.getWrapper().handleRequest(request.getFacade(),
             response.getFacade());
 
@@ -663,27 +669,25 @@ public class Context {
     private void clearDir(File dir) {
         String[] files = dir.list();
 
-        if (files == null) {
-            return;
-        }
+        if (files != null) {
+	    for (int i = 0; i < files.length; i++) {
+	        File f = new File(dir, files[i]);
 
-	for (int i = 0; i < files.length; i++) {
-	    File f = new File(dir, files[i]);
+	        if (f.isDirectory()) {
+		    clearDir(f);
+	        }
 
-	    if (f.isDirectory()) {
-		clearDir(f);
+	        try {
+	            f.delete();
+	        } catch (Exception e) {
+	        }
 	    }
 
 	    try {
-	        f.delete();
+	        dir.delete();
 	    } catch (Exception e) {
 	    }
-	}
-
-	try {
-	    dir.delete();
-	} catch (Exception e) {
-	}
+        }
     }
 
     private void processWebApp(InputStream is) {
@@ -755,14 +759,14 @@ public class Context {
 		resourceName =
 		    ((ServletDescriptor)webComponentDescriptor).getClassName();
 
-		if (container.containsServlet(resourceName)) {
+		if (container.containsServletByName(name)) {
 		    String msg = sm.getString("context.dd.dropServlet",
-		        resourceName);
+		        name + "(" + resourceName + ")" );
 
 		    System.out.println(msg);
 		    
 		    removeResource = true;
-		    container.removeServlet(resourceName);
+		    container.removeServletByName(name);
 		}
 
 		container.addServlet(name, resourceName, description);
@@ -912,41 +916,56 @@ public class Context {
     }
 
     private void loadServlets() {
-	Vector loadServlets = new Vector();
+	Vector orderedKeys = new Vector();
 	Enumeration e = loadableServlets.keys();
+	
+	// order keys
 
 	while (e.hasMoreElements()) {
 	    Integer key = (Integer)e.nextElement();
-	    Vector v = (Vector)loadableServlets.get(key);
-	    Enumeration lse = v.elements();
+	    int slot = -1;
 
-	    while (lse.hasMoreElements()) {
-	        loadServlets.addElement(lse.nextElement());
+	    for (int i = 0; i < orderedKeys.size(); i++) {
+	        if (key.intValue() <
+		    ((Integer)(orderedKeys.elementAt(i))).intValue()) {
+		    slot = i;
+
+		    break;
+		}
+	    }
+
+	    if (slot > -1) {
+	        orderedKeys.insertElementAt(key, slot);
+	    } else {
+	        orderedKeys.addElement(key);
 	    }
 	}
 
-        // Changed because this is exactly opposite of what we want....
-        // Servlets were being loaded in the exact opposite order.
-        // Priorities IMO, should start with 0.
-        // Only System Servlets should be at 0 and rest of the servlets
-        // should be +ve integers.
-        // WARNING: Please do not change this without talking to:
-        // harishp@eng.sun.com (J2EE impact)
-	// for (int i = loadServlets.size() - 1; i >= 0; i--) {
+	// loaded ordered servlets
 
-	for(int i = 0; i < loadServlets.size(); ++i) {
-            String servletName = (String)loadServlets.elementAt(i);
-	    LookupResult result =
-	        container.lookupServletByName(servletName);
+	// Priorities IMO, should start with 0.
+	// Only System Servlets should be at 0 and rest of the
+	// servlets should be +ve integers.
+	// WARNING: Please do not change this without talking to:
+	// harishp@eng.sun.com (J2EE impact)
 
-	    try {
-	        result.getWrapper().loadServlet(); 
-	    } catch (Exception ee) {
-		ee.printStackTrace();
-	        String msg = sm.getString("context.loadServlet.e",
-		    servletName);
+	for (int i = 0; i < orderedKeys.size(); i ++) {
+	    Integer key = (Integer)orderedKeys.elementAt(i);
+	    e = ((Vector)(loadableServlets.get(key))).elements();
 
-	        System.out.println(msg);
+	    while (e.hasMoreElements()) {
+		String servletName = (String)e.nextElement();
+		LookupResult result =
+		    container.lookupServletByName(servletName);
+
+		try {
+		    result.getWrapper().loadServlet();
+		} catch (Exception ee) {
+		    String msg = sm.getString("context.loadServlet.e",
+		        servletName);
+
+		    System.out.println(msg);
+		} 
 	    }
 	}
     }

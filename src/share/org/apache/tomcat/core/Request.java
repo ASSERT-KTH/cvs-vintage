@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.7 1999/11/02 17:37:19 costin Exp $
- * $Revision: 1.7 $
- * $Date: 1999/11/02 17:37:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.8 1999/11/03 20:38:52 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 1999/11/03 20:38:52 $
  *
  * ====================================================================
  *
@@ -421,7 +421,8 @@ public class Request  {
     }
 
     public void setParameters( Hashtable h ) {
-	this.parameters=h;
+	if(h!=null)
+	    this.parameters=h;
 	// XXX Should we override query parameters ??
     }
         
@@ -453,6 +454,13 @@ public class Request  {
      */
     public void setQueryString(String queryString) {
 	this.queryString = queryString;
+        // catch any parse exceptions
+
+        try {
+            this.parameters = HttpUtils.parseQueryString(queryString);
+        } catch (Exception e) {
+            this.parameters.clear();
+        }
     }
     
 //     public void setScheme(String scheme) {

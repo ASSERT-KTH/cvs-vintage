@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/Constants.java,v 1.2 1999/10/15 00:34:29 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/15 00:34:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/Constants.java,v 1.3 1999/11/03 20:38:49 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/11/03 20:38:49 $
  *
  * ====================================================================
  *
@@ -171,6 +171,8 @@ public class Constants {
     }
 
     public static class JSP {
+	public static final String NAME = "jsp";
+	
         public static class Directive {
             public static class Compile {
                 public static final String Name = "jsp_precompile";
@@ -196,6 +198,8 @@ public class Constants {
             "javax.servlet.error.exception_type";
         public static final String ERROR_MESSAGE =
             "javax.servlet.error.message";
+        public static final String RESOLVED_SERVLET =
+            "javax.servlet.resolved";
     }
 
     public static class Locale {
@@ -221,5 +225,6 @@ public class Constants {
         public static final String HTTPS = "https";
         public static final String FILE = "file";
         public static final String WAR = "war";
+        public static final String JAR = "jar";
     }
 }

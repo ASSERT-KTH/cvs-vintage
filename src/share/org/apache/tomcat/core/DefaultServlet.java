@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/DefaultServlet.java,v 1.4 1999/11/01 20:50:46 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/11/01 20:50:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/DefaultServlet.java,v 1.5 1999/11/03 20:38:52 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/11/03 20:38:52 $
  *
  * ====================================================================
  *
@@ -64,6 +64,7 @@
 
 package org.apache.tomcat.core;
 
+import org.apache.tomcat.server.*;
 import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
@@ -282,12 +283,16 @@ public class DefaultServlet extends HttpServlet {
 
 	while (enum.hasMoreElements()) {
 	    String fileName = (String)enum.nextElement();
-	    File f = new File(file, fileName);
 
-	    if (f.exists()) {
-	        welcomeFile = fileName;
+            if (fileName != null &&
+                fileName.trim().length() > 0) {
+	        File f = new File(file, fileName);
 
-		break;
+	        if (f.exists()) {
+	            welcomeFile = fileName;
+
+		    break;
+                }
 	    }
 	}
 
@@ -351,10 +356,32 @@ public class DefaultServlet extends HttpServlet {
         // return 404 instead of the JSP source
 	// On all platforms, makes sure we don't let ../'s through
         // Unfortunately, on Unix, it prevents symlinks from working
-	if (! absPath.equals(canPath)) {
-	    response.sendError(response.SC_NOT_FOUND);
+	// So, a check for File.separatorChar='\\' ..... It hopefully
+	// happens on flavors of Windows.
+	if (File.separatorChar  == '\\') { 
+		// On Windows check ignore case....
+		if(!absPath.equalsIgnoreCase(canPath)) {
+	    	response.sendError(response.SC_NOT_FOUND);
+	    	return;
+		}
+	} else {
+		// The following code on Non Windows disallows ../ 
+		// in the path but also disallows symlinks.... 
+		// 
+		// if(!absPath.equals(canPath)) {
+	    	// response.sendError(response.SC_NOT_FOUND);
+	    	// return;
+		// }
+		// instead lets look for ".." in the absolute path
+		// and disallow only that. 
+		// Why should we loose out on symbolic links?
+		//
 
-	    return;
+		if(absPath.indexOf("..") != -1) {
+			// We have .. in the path...
+	    	response.sendError(response.SC_NOT_FOUND);
+	    	return;
+		}
 	}
 
 	String mimeType = mimeTypes.getContentTypeFor(file.getName());
@@ -484,12 +511,32 @@ public class DefaultServlet extends HttpServlet {
 
         absPath = FilePathUtil.patch(absPath);
 
-	if (! absPath.equals(canPath)) {
-	    response.sendError(response.SC_NOT_FOUND);
+	if (File.separatorChar  == '\\') { 
+		// On Windows check ignore case....
+		if(!absPath.equalsIgnoreCase(canPath)) {
+		    response.sendError(response.SC_NOT_FOUND);
+		    return;
+		}
+	} else {
+		// The following code on Non Windows disallows ../ 
+		// in the path but also disallows symlinks.... 
+		// 
+		// if(!absPath.equals(canPath)) {
+	    	// response.sendError(response.SC_NOT_FOUND);
+	    	// return;
+		// }
+		// instead lets look for ".." in the absolute path
+		// and disallow only that. 
+		// Why should we loose out on symbolic links?
+		//
 
-	    return;
+		if(absPath.indexOf("..") != -1) {
+		    // We have .. in the path...
+		    response.sendError(response.SC_NOT_FOUND);
+		    return;
+		}
 	}
-	
+
 	Vector dirs = new Vector();
 	Vector files = new Vector();
 	String[] fileNames = file.list();

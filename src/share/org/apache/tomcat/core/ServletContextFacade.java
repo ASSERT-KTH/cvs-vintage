@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletContextFacade.java,v 1.2 1999/10/15 00:34:30 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/15 00:34:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletContextFacade.java,v 1.3 1999/11/03 20:38:53 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/11/03 20:38:53 $
  *
  * ====================================================================
  *
@@ -338,7 +338,7 @@ implements ServletContext {
         // Can't get this anymore - Harish. A stop-gap arrangement.
 	// context.getLogModule().log(msg);
 	
-	System.err.println(msg);
+	//	System.err.println(msg);
     }
 
     public String getInitParameter(String name) {

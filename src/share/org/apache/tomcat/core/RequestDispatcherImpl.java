@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestDispatcherImpl.java,v 1.1 1999/10/09 00:30:15 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestDispatcherImpl.java,v 1.2 1999/11/03 20:38:52 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/11/03 20:38:52 $
  *
  * ====================================================================
  * 
@@ -90,34 +90,6 @@ public class RequestDispatcherImpl implements RequestDispatcher {
     RequestDispatcherImpl(Context context) {
         this.context = context;
     }
-
-    void setName(String name) {
-        this.name = name;
-	this.lookupResult =
-	    context.getContainer().lookupServletByName(this.name);
-    }
-
-    void setPath(String urlPath) {
-	int i = urlPath.indexOf("?");
-
-	if (i > -1) {
-	    try {
-		this.queryString =
-                    urlPath.substring(i + 1, urlPath.length());
-	    } catch (Exception e) {
-	    }
-
-	    urlPath = urlPath.substring(0, i);
-	}
-
-	this.urlPath = urlPath;
-	this.lookupResult =
-	    context.getContainer().lookupServlet(this.urlPath);
-    }
-
-    public boolean isValid() {
-        return (this.lookupResult != null);
-    }
     
     public void forward(ServletRequest request, ServletResponse response)
     throws ServletException, IOException {
@@ -125,12 +97,8 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	    (HttpServletRequestFacade)request;
 	HttpServletResponseFacade resFacade =
 	    (HttpServletResponseFacade)response;
-
-	Request realRequest = null;
-	Response realResponse = null;
-
-        realRequest = reqFacade.getRealRequest();
-        realResponse = resFacade.getRealResponse();
+        Request realRequest = reqFacade.getRealRequest();
+        Response realResponse = resFacade.getRealResponse();
 
 	if (realResponse.isStarted()) {
             String msg = sm.getString("rdi.forward.ise");
@@ -145,9 +113,23 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	ForwardedRequest fRequest =
 	    new ForwardedRequest(realRequest, urlPath);
 
+        // join the query strings of the destination request
+        // with the originaing request in that order.
+
+        String aggregatedQueryString = this.queryString;
+
+        if (realRequest.getQueryString() != null &&
+            realRequest.getQueryString().trim().length() > 0) {
+            if (aggregatedQueryString == null) {
+                aggregatedQueryString = realRequest.getQueryString();
+            } else {
+                aggregatedQueryString += "&" + realRequest.getQueryString();
+            }
+        }
+
         fRequest.setServletPath(this.lookupResult.getServletPath());
 	fRequest.setPathInfo(this.lookupResult.getPathInfo());
-        fRequest.setQueryString(queryString);
+        fRequest.setQueryString(aggregatedQueryString);
 
 	this.lookupResult.getWrapper().handleRequest(fRequest, resFacade);
     }
@@ -155,6 +137,10 @@ public class RequestDispatcherImpl implements RequestDispatcher {
     public void include(ServletRequest request, ServletResponse response)
     throws ServletException, IOException {
 	HttpServletRequest req = (HttpServletRequest)request;
+
+        // XXX
+        // while this appears to work i believe the code
+        // could be streamlined/normalized a bit.
 	
 	// if we are in a chained include, then we'll store the attributes
 	// from the last round so that we've got them for the next round
@@ -166,14 +152,15 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	String path_info =
             (String)req.getAttribute(Constants.Attribute.PathInfo);
 	String query_string =
-            (String)req.getAttribute(Constants.Attribute.QueryString);
+	    (String)req.getAttribute(Constants.Attribute.QueryString);
 	
 	HttpServletRequestFacade reqFacade =
 	    (HttpServletRequestFacade)request;
 	HttpServletResponseFacade resFacade =
 	    (HttpServletResponseFacade)response;
-	Request realRequest = reqFacade.getRealRequest();
+        Request realRequest = reqFacade.getRealRequest();
 	Response realResponse = resFacade.getRealResponse();
+        String originalQueryString = realRequest.getQueryString();
 
 	// XXX
 	// not sure why we're pre-pending context.getPath() here
@@ -199,14 +186,37 @@ public class RequestDispatcherImpl implements RequestDispatcher {
                 lookupResult.getPathInfo());
 	}
 
-	if (queryString != null) {
+        // join the query strings of the destination request
+        // with the originaing request in that order.
+
+        String aggregatedQueryString = this.queryString;
+
+        if (realRequest.getQueryString() != null &&
+            realRequest.getQueryString().trim().length() > 0) {
+            if (aggregatedQueryString == null) {
+                aggregatedQueryString = realRequest.getQueryString();
+            } else {
+                aggregatedQueryString += "&" + realRequest.getQueryString();
+            }
+        }
+
+	if (aggregatedQueryString != null) {
 	    req.setAttribute(Constants.Attribute.QueryString,
-                queryString);
+                aggregatedQueryString);
 	}
+
+        // inline the aggregated query string for the scope
+        // of the include
+
+	reqFacade.getRealRequest().setQueryString(aggregatedQueryString);
 	
 	IncludedResponse iResponse = new IncludedResponse(realResponse);
 
 	lookupResult.getWrapper().handleRequest(reqFacade, iResponse);
+
+        // revert the query string to its original value
+
+        reqFacade.getRealRequest().setQueryString(originalQueryString);
 
 	if (request_uri != null) {
 	    req.setAttribute(Constants.Attribute.RequestURI, request_uri);
@@ -233,5 +243,33 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	} else {
 	    reqFacade.removeAttribute(Constants.Attribute.QueryString);
 	}
+    }
+
+    void setName(String name) {
+        this.name = name;
+	this.lookupResult =
+	    context.getContainer().lookupServletByName(this.name);
+    }
+
+    void setPath(String urlPath) {
+	int i = urlPath.indexOf("?");
+
+	if (i > -1) {
+	    try {
+		this.queryString =
+                    urlPath.substring(i + 1, urlPath.length());
+	    } catch (Exception e) {
+	    }
+
+	    urlPath = urlPath.substring(0, i);
+	}
+
+	this.urlPath = urlPath;
+	this.lookupResult =
+	    context.getContainer().lookupServlet(this.urlPath);
+    }
+
+    boolean isValid() {
+        return (this.lookupResult != null);
     }
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Container.java,v 1.1 1999/10/09 00:30:01 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:01 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Container.java,v 1.2 1999/11/03 20:38:51 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/11/03 20:38:51 $
  *
  * ====================================================================
  *
@@ -78,7 +78,6 @@ import java.util.*;
 public class Container {
 
     private Context context;
-    private ClassLoader classLoader;
     private ServletLoader servletLoader;
     private Hashtable servlets = new Hashtable();
     private Hashtable prefixMappedServlets = new Hashtable();
@@ -95,14 +94,6 @@ public class Container {
 
     Context getContext() {
 	return context;
-    }
-
-    ClassLoader getClassLoader() {
-        return this.classLoader;
-    }
-
-    void setClassLoader(ClassLoader classLoader) {
-        this.classLoader = classLoader;
     }
 
     ServletLoader getLoader() {
@@ -190,19 +181,35 @@ public class Container {
 	servlets.put(name, wrapper);
     }
 
-    boolean containsServlet(String name) {
-        ServletWrapper[] sw = getServlets(name);
+    /** True if we have a servlet with className.
+     */
+    boolean containsServlet(String className) {
+        ServletWrapper[] sw = getServlets(className);
 
         return (sw != null &&
 	    sw.length > 0);
     }
 
+    /** Check if we have a servlet with the specified name
+     */
     boolean containsServletByName(String name) {
 	return (servlets.containsKey(name));
     }
 
-    void removeServlet(String name) {
-        removeServlets(getServlets(name));
+    /** Remove all servlets with a specific class name
+     */
+    void removeServlet(String className) {
+        removeServlets(getServlets(className));
+    }
+
+    /** Remove the servlet with a specific name
+     */
+    void removeServletByName(String servletName) {
+	ServletWrapper wrapper=(ServletWrapper)servlets.get(servletName);
+	if( wrapper != null ) {
+	    ServletWrapper wa[]={wrapper};
+	    removeServlets( wa );
+	}
     }
 
     boolean containsJSP(String path) {
@@ -422,6 +429,8 @@ public class Container {
 	}
     }
 
+    /** Return servlets with a specified class name
+     */
     private ServletWrapper[] getServlets(String name) {
         Vector servletWrappers = new Vector();
 	Enumeration enum = servlets.keys();
