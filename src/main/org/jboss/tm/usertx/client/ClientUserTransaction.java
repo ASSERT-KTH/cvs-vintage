@@ -28,8 +28,7 @@ import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 
 import org.jboss.tm.TransactionPropagationContextFactory;
-
-import org.jboss.ejb.plugins.jrmp.interfaces.GenericProxy;
+import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
 
 import org.jboss.tm.usertx.interfaces.UserTransactionSession;
 import org.jboss.tm.usertx.interfaces.UserTransactionSessionFactory;
@@ -46,7 +45,7 @@ import org.jboss.tm.usertx.interfaces.UserTransactionSessionFactory;
  *  propagation contexts of the transactions started here.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 public class ClientUserTransaction
    implements UserTransaction,
@@ -81,7 +80,7 @@ public class ClientUserTransaction
    {
       // Tell the proxy that this is the factory for
       // transaction propagation contexts.
-      GenericProxy.setTPCFactory(this);
+      JRMPInvokerProxy.setTPCFactory(this);
    }
 
    // Public --------------------------------------------------------
