@@ -1,4 +1,5 @@
 /*
+ * $Id: StringManager.java,v 1.2 2001/03/23 21:55:55 melaquias Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -81,8 +82,12 @@ import java.util.*;
  * <p>Please see the documentation for java.util.ResourceBundle for
  * more information.
  *
+ * @version $Revision: 1.2 $ $Date: 2001/03/23 21:55:55 $
+ *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
+ * @author Mel Martinez [mmartinez@g1440.com]
+ * @see java.util.ResourceBundle
  */
 
 public class StringManager {
@@ -114,32 +119,45 @@ public class StringManager {
     private StringManager(String packageName,Locale loc) {
         String bundleName = packageName + ".LocalStrings";
         try {
-	    bundle = ResourceBundle.getBundle(bundleName,loc);
-	} catch( MissingResourceException ex ) {
-	    bundle= ResourceBundle.getBundle( bundleName, Locale.US);
-	}
+            bundle = ResourceBundle.getBundle(bundleName,loc);
+        } catch( MissingResourceException ex ) {
+            bundle= ResourceBundle.getBundle( bundleName, Locale.US);
+        }
     }
 
     /**
-     * Get a string from the underlying resource bundle.
-     *
-     * @param key
+        Get a string from the underlying resource bundle or return
+        null if the String is not found.
+     
+        @param key to desired resource String
+        @return resource String matching <i>key</i> from underlying
+                bundle or null if not found.
+        @throws IllegalArgumentException if <i>key</i> is null.        
      */
 
     public String getString(String key) {
-        if (key == null) {
-            String msg = "key is null";
+        if(key == null){
+            String msg = "key may not have a null value";
 
-            throw new NullPointerException(msg);
+            throw new IllegalArgumentException(msg);
         }
 
         String str = null;
 
-        try {
-	    str = bundle.getString(key);
-        } catch (MissingResourceException mre) {
-            str = "[cannot find message associated with key '" + key + "' due to " + mre + "]";
-	    // mre. print Stack Trace();
+        try{
+	        str = bundle.getString(key);
+        }catch(MissingResourceException mre){
+            //bad: shouldn't mask an exception the following way:
+            //   str = "[cannot find message associated with key '" + key + "' due to " + mre + "]";
+	        //     because it hides the fact that the String was missing
+	        //     from the calling code.
+	        //good: could just throw the exception (or wrap it in another)
+	        //      but that would probably cause much havoc on existing
+	        //      code.
+	        //better: consistent with container pattern to
+	        //      simply return null.  Calling code can then do
+	        //      a null check.
+	        str = null;
         }
 
         return str;
