@@ -60,7 +60,7 @@
        http://localhost:8080/myapp
 -->
 
-  <target name="init"
+  <target name="init">
     <!-- Property values defined here can be overridden by defining
          corresponding Java system properties on the Ant command line.  -->
     <property name="deploy.home"    value="${tomcat.home}/webapps/myapp"/>
@@ -82,7 +82,7 @@
     <mkdir dir="${deploy.home}"/>
     <copydir src="web" dest="${deploy.home}"/>
     <mkdir dir="${deploy.home}/WEB-INF"/>
-    <copyfile src="etc/web.xml" dest=${deploy.home}/WEB-INF/web.xml"/>
+    <copyfile src="etc/web.xml" dest="${deploy.home}/WEB-INF/web.xml"/>
     <mkdir dir="${deploy.home}/WEB-INF/classes"/>
     <mkdir dir="${deploy.home}/WEB-INF/lib"/>
     <copydir src="lib" dest="${deploy.home}/lib"/>
