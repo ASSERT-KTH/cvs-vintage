@@ -17,7 +17,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.114 2002/09/13 03:01:49 chirino Exp $ -->
+<!-- $Id: build.xml,v 1.115 2002/09/13 17:53:49 loubyansky Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -89,6 +89,7 @@
       <path refid="gnu.getopt.classpath"/>
       <path refid="oswego.concurrent.classpath"/>
       <path refid="junit.junit.classpath"/>
+      <path refid="mysql.mysql.classpath"/>
     </path>
 
     <!-- ======= -->
@@ -105,7 +106,8 @@
       <path refid="jboss.naming.classpath"/>
       <path refid="jboss.management.classpath"/>
       <path refid="jboss.transaction.classpath"/>
-    </path>
+      <path refid="jboss.connector.classpath"/>
+    </path> 
 
     <!-- ===== -->
     <!-- Tasks -->
