@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.28 2001/10/08 05:27:18 larryi Exp $
+/* $Id: ApacheConfig.java,v 1.29 2001/12/17 02:30:48 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -149,7 +149,7 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Mel Martinez
-	@version $Revision: 1.28 $ $Date: 2001/10/08 05:27:18 $
+	@version $Revision: 1.29 $ $Date: 2001/12/17 02:30:48 $
  */
 public class ApacheConfig  extends BaseJkConfig { 
     
@@ -555,6 +555,11 @@ public class ApacheConfig  extends BaseJkConfig {
     protected boolean addMapping( String fullPath, PrintWriter mod_jk ) {
         if( debug > 0 )
             log( "Adding map for " + fullPath );
+        if( fullPath.endsWith("/*") ) {
+            mod_jk.println(indent + "JkMount "
+                    + fullPath.substring(0, fullPath.length() - 2)
+                    + "  " + jkWorker );
+        }
 	mod_jk.println(indent + "JkMount " + fullPath + "  " + jkWorker );
 	return true;
     }

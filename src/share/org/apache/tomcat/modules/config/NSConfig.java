@@ -133,7 +133,7 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Gal Shachor
-	@version $Revision: 1.7 $
+	@version $Revision: 1.8 $
  */
 public class NSConfig  extends BaseJkConfig { 
 
@@ -297,7 +297,9 @@ public class NSConfig  extends BaseJkConfig {
         objfile.println("#######################################################");		    
         objfile.println("# Protecting the WEB-INF and META-INF directories.");
         objfile.println("#######################################################");		    
+        objfile.println("PathCheck fn=\"deny-existence\" path=\"*/WEB-INF\""); 
         objfile.println("PathCheck fn=\"deny-existence\" path=\"*/WEB-INF/*\""); 
+        objfile.println("PathCheck fn=\"deny-existence\" path=\"*/META-INF\""); 
         objfile.println("PathCheck fn=\"deny-existence\" path=\"*/META-INF/*\""); 
         objfile.println();
 
@@ -312,6 +314,17 @@ public class NSConfig  extends BaseJkConfig {
         objfile.println("Service fn=\"jk_service\" worker=\""+ jkWorker + "\" path=\"/*\"");
         objfile.println("</Object>");
         objfile.println();
+
+        if( !forwardAll ) {
+            objfile.println("#######################################################");		    
+            objfile.println("# New object to execute URLs containing \";jsessionid=\"");
+            objfile.println("#######################################################");		    
+            objfile.println("<Object ppath=\"*;jsessionid=*\">");
+            objfile.println("ObjectType fn=force-type type=text/html");
+            objfile.println("Service fn=\"jk_service\" worker=\""+ jkWorker + "\" path=\"/*\"");
+            objfile.println("</Object>");
+            objfile.println();
+        }
     }
 
     // -------------------- Forward all mode --------------------
@@ -389,6 +402,11 @@ public class NSConfig  extends BaseJkConfig {
     protected boolean addMapping( String fullPath, PrintWriter objfile ) {
         if( debug > 0 )
             log( "Adding map for " + fullPath );
+        if( fullPath.endsWith("/*") ) {
+            objfile.println("NameTrans fn=\"assign-name\" from=\""
+                    + fullPath.substring(0, fullPath.length() - 2)
+                    + "\" name=\"" + objectName + "\""); 
+        }
         objfile.println("NameTrans fn=\"assign-name\" from=\"" +
                         fullPath + "\" name=\"" + objectName + "\""); 
 	return true;
