@@ -70,8 +70,8 @@ import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.QueryPeer;
-import org.tigris.scarab.om.IssueTemplate;
-import org.tigris.scarab.om.IssueTemplatePeer;
+import org.tigris.scarab.om.IssueTemplateInfo;
+import org.tigris.scarab.om.IssueTemplateInfoPeer;
 import org.tigris.scarab.om.Depend;
 import org.tigris.scarab.om.DependPeer;
 import org.tigris.scarab.om.ScarabModulePeer;
@@ -132,9 +132,9 @@ public class ScarabRequestTool
     private Query query = null;
 
     /**
-     * An IssueTemplate object for use within the Scarab API.
+     * An IssueTemplateInfo object for use within the Scarab API.
      */
-    private IssueTemplate template = null;
+    private IssueTemplateInfo templateInfo = null;
 
     /**
      * A ModuleEntity object for use within the Scarab API.
@@ -242,11 +242,11 @@ public class ScarabRequestTool
     }
 
     /**
-     * A IssueTemplate object for use within the Scarab API.
+     * A IssueTemplateInfo object for use within the Scarab API.
      */
-    public void setIssueTemplate (IssueTemplate template)
+    public void setIssueTemplateInfo (IssueTemplateInfo templateInfo)
     {
-        this.template = template;
+        this.templateInfo = templateInfo;
     }
 
     /**
@@ -407,26 +407,26 @@ try{
     }
 
     /**
-     * A IssueTemplate object for use within the Scarab API.
+     * A IssueTemplateInfo object for use within the Scarab API.
      */
-    public IssueTemplate getIssueTemplate()
+    public IssueTemplateInfo getIssueTemplateInfo()
      throws Exception
     {
         try
         {
-            if (template == null)
+            if (templateInfo == null)
             {
-                String templateId = data.getParameters()
-                    .getString("templateId"); 
+                String issueId = data.getParameters()
+                    .getString("issue_id"); 
 
-                if ( templateId == null || templateId.length() == 0 )
+                if ( issueId == null || issueId.length() == 0 )
                 {
-                    template = IssueTemplate.getInstance();
+                    templateInfo = IssueTemplateInfo.getInstance();
                 }
                 else 
                 {
-                    template = IssueTemplatePeer
-                        .retrieveByPK(new NumberKey(templateId));
+                    templateInfo = IssueTemplateInfoPeer
+                        .retrieveByPK(new NumberKey(issueId));
                 }
             }        
         }        
@@ -434,7 +434,7 @@ try{
         {
             e.printStackTrace();
         }
-        return template;
+        return templateInfo;
     }
 
     /**
