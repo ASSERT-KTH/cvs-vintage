@@ -415,47 +415,46 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
 		getView().clearSelection();
 		// if the last selection for the current folder is null, then we show the
-		// first message in the table and scroll to it.
+		// first/last message in the table and scroll to it.
 		if (folder.getLastSelection() == null) {
-			// if there are entries in the table
-			if (getView().getRowCount() > 0) {
-				// changing the selection to the first row
-				getView().changeSelection(0, 0, true, false);
-				// ColumbaLogger.log.info("getView().ValueAt "+ getView().getValueAt(0,0));
-				// ColumbaLogger.log.info("valueAt name: "+getView().getValueAt(0,0).getClass().getName());
-				// getting the node
-				MessageNode selectedNode =
-					(MessageNode) getView().getValueAt(0, 0);
-				// and getting the uid for this node
-				Object[] lastSelUids = new Object[1];
-				lastSelUids[0] = selectedNode.getUid();
-				// scrolling to the first row
-				getView().scrollRectToVisible(
-					getView().getCellRect(0, 0, false));
-				getView().requestFocus();
-				FolderCommandReference[] refNew = new FolderCommandReference[1];
-				refNew[0] = new FolderCommandReference(folder, lastSelUids);
-				// view the message under the new node
-				MainInterface.processor.addOp(
-					new ViewMessageCommand(mailFrameController, refNew));
-			}
+			// changing the selection to the first/last row based on ascending state
+			
+			Object uid = null;
+			if ( ascending == true )
+				uid = view.selectFirstRow();
+			else 
+				uid = view.selectLastRow();
+				
+			Object[] uids = new Object[1];
+			uids[0] = uid;
+
+			FolderCommandReference[] refNew = new FolderCommandReference[1];
+			refNew[0] = new FolderCommandReference(folder, uids);
+
+			// view the message under the new node
+			MainInterface.processor.addOp(
+				new ViewMessageCommand(mailFrameController, refNew));
+
 		} else {
 			// if a lastSelection for this folder is set
-			//ColumbaLogger.log.info("lastSelection: "+folder.getLastSelection());
+			
 			// getting the last selected uid
 			Object[] lastSelUids = new Object[1];
 			lastSelUids[0] = folder.getLastSelection();
-			//ColumbaLogger.log.info("lastSelUid: "+lastSelUids[0]);
+			
 			// selecting the message
 			setSelected(lastSelUids);
 			int selRow = getView().getSelectedRow();
-			// ColumbaLogger.log.info("selRow: "+selRow);
+			
 			// scroll to the position of the selection
 			getView().scrollRectToVisible(
 				getView().getCellRect(selRow, 0, false));
 			getView().requestFocus();
+			
+			// create command reference
 			FolderCommandReference[] refNew = new FolderCommandReference[1];
 			refNew[0] = new FolderCommandReference(folder, lastSelUids);
+			
 			// view the message under the new node
 			MainInterface.processor.addOp(
 				new ViewMessageCommand(mailFrameController, refNew));
@@ -623,7 +622,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
 	 * @see org.columba.core.gui.focus.FocusOwner#undo()
 	 */
 	public void undo() {
-		// TODO Auto-generated method stub
+		// todo is not supported
 
 	}
 

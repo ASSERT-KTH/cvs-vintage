@@ -26,9 +26,6 @@ public class TableUpdater {
 	public static void tableChanged(TableModelChangedEvent ev) throws Exception {
 		for (Iterator it = list.iterator(); it.hasNext();) {
 						AbstractMailFrameController frame = (AbstractMailFrameController) it.next();
-		// for (Enumeration e = list.elements(); e.hasMoreElements();) {
-			// AbstractMailFrameController frame =
-				// (AbstractMailFrameController) e.nextElement();
 
 			(
 				(

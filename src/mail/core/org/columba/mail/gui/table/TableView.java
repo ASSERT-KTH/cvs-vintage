@@ -18,7 +18,6 @@ package org.columba.mail.gui.table;
 
 import java.util.List;
 
-import javax.swing.event.MouseInputListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.TreePath;
@@ -256,7 +255,7 @@ public class TableView extends TreeTable {
 						position);
 				}
 			}
-			
+
 		}
 
 	}
@@ -305,8 +304,6 @@ public class TableView extends TreeTable {
 		}
 	}
 
-	
-
 	public MessageNode getSelectedNode() {
 
 		MessageNode node =
@@ -316,7 +313,6 @@ public class TableView extends TreeTable {
 
 	}
 
-	
 	public MessageNode[] getSelectedNodes() {
 		int[] rows = null;
 		MessageNode[] nodes = null;
@@ -336,7 +332,66 @@ public class TableView extends TreeTable {
 		return headerTableModel.getMessageNode(uid);
 	}
 
-	protected MouseInputListener createMouseInputListener() {
+	/**
+	 * Select first row and make it visible.
+	 * 
+	 * @return 	uid of selected row
+	 */
+	public Object selectFirstRow() {
+		Object uid = null;
+		
+		//	if there are entries in the table
+		if (getRowCount() > 0) {
+
+			// changing the selection to the first row
+			changeSelection(0, 0, true, false);
+
+			// getting the node
+			MessageNode selectedNode = (MessageNode) getValueAt(0, 0);
+			
+			// and getting the uid for this node
+			uid = selectedNode.getUid();
+
+			// scrolling to the first row
+			scrollRectToVisible(getCellRect(0, 0, false));
+			requestFocus();
+			
+			return uid;
+		}
+		
 		return null;
 	}
+
+	/**
+	 * Select last row and make it visible
+	 * 
+	 * @return 	uid of selected row
+	 */
+	public Object selectLastRow() {
+		Object uid = null;
+		
+		//	if there are entries in the table
+		if (getRowCount() > 0) {
+
+			// changing the selection to the first row
+			changeSelection(0, getRowCount() - 1, true, false);
+
+			// getting the node
+			MessageNode selectedNode = (MessageNode) getValueAt(0, 0);
+			
+			// and getting the uid for this node
+			uid = selectedNode.getUid();
+
+			// scrolling to the first row
+			scrollRectToVisible(getCellRect(0, getRowCount() - 1, false));
+			requestFocus();
+			
+			return uid;
+		}
+		
+		return null;
+	}
+
+	
+
 }
