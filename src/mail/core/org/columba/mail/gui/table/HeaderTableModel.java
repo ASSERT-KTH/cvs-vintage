@@ -30,7 +30,6 @@ import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.treetable.CustomTreeTableCellRenderer;
 import org.columba.core.gui.util.treetable.Tree;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.gui.table.util.TableModelFilteredView;
 import org.columba.mail.gui.table.util.TableModelPlugin;
@@ -99,55 +98,14 @@ public class HeaderTableModel extends AbstractTableModel {
 		selectedMessageNode = node;
 	}
 
-	protected void removeNode(MessageNode messageNode) {
-		getTreeModel().removeNodeFromParent(messageNode);
-	}
-
 	public void markHeader(Object[] uids, int subMode) {
 		for (int i = 0; i < uids.length; i++) {
-
 			MessageNode node = (MessageNode) uidList.get(uids[i]);
-
 			if (node != null) {
-
-				HeaderInterface header = node.getHeader();
-				switch (subMode) {
-					case MarkMessageCommand.MARK_AS_READ :
-						{
-							header.getFlags().setSeen(true);
-							header.getFlags().setRecent(false);
-							break;
-						}
-					case MarkMessageCommand.MARK_AS_FLAGGED :
-						{
-							header.getFlags().setFlagged(true);
-							break;
-						}
-					case MarkMessageCommand.MARK_AS_EXPUNGED :
-						{
-							header.getFlags().setDeleted(true);
-							break;
-						}
-					case MarkMessageCommand.MARK_AS_ANSWERED :
-						{
-							header.getFlags().setAnswered(true);
-							break;
-						}
-				}
-
-				if (uids.length < 100)
-					getTreeModel().nodeChanged(node);
-			} else {
-				System.out.println("unable to find message");
+				getTreeModel().nodeChanged(node);
 			}
 		}
-
 		fireTableDataChanged();
-		/*
-		if (uids.length >= 100)
-			update();
-		*/
-
 	}
 
 	public DefaultTreeModel getTreeModel() {
@@ -156,23 +114,15 @@ public class HeaderTableModel extends AbstractTableModel {
 
 	public void removeHeaderList(Object[] uids) {
 		if (uids != null) {
-			if (uids.length > 100) { // recreate whole tablemodel
-				for (int i = 0; i < uids.length; i++) {
-					//headerList.remove(uids[i]);
-					uidList.remove(uids[i]);
-				}
-
-				//update();
-			} else { // single operation per message
-				for (int i = 0; i < uids.length; i++) {
-					//headerList.remove(uids[i]);
-					MessageNode node = (MessageNode) uidList.get(uids[i]);
-					if (node != null && node.getParent() != null)
-						removeNode(node);
+			for (int i = 0; i < uids.length; i++) {
+				MessageNode node = (MessageNode) uidList.get(uids[i]);
+				if (node != null) {
+					uidList.remove(node);
+					getTreeModel().removeNodeFromParent(node);
 				}
 			}
+			fireTableDataChanged();
 		}
-		fireTableDataChanged();
 	}
 
 	public void addHeaderList(HeaderInterface[] headerList) throws Exception {
@@ -223,6 +173,7 @@ public class HeaderTableModel extends AbstractTableModel {
 					int index =
 						getTableModelSorter().getInsertionSortIndex(node);
 					getTreeModel().insertNodeInto(node, getRootNode(), index);
+					uidList.put(uid, node);
 					//hashtable.put( message.getUID(), node );
 				}
 			}
@@ -231,14 +182,6 @@ public class HeaderTableModel extends AbstractTableModel {
 			ex.printStackTrace();
 		}
 	}
-
-	/*
-	public TreeNode[] getPathToRoot(TreeNode aNode, int depth) {
-	
-		TreeNode[] nodes = super.getPathToRoot(aNode, depth);
-		return nodes;
-	}
-	*/
 
 	public TableModelFilteredView getTableModelFilteredView() {
 		return (TableModelFilteredView) tableModelPlugins.get(0);
@@ -270,6 +213,7 @@ public class HeaderTableModel extends AbstractTableModel {
 		}
 
 		try {
+
 			boolean result =
 				getTableModelFilteredView().manipulateModel(
 					TableModelPlugin.STRUCTURE_CHANGE);
@@ -293,9 +237,11 @@ public class HeaderTableModel extends AbstractTableModel {
 		}
 
 		tree.setRootNode(root);
+		getTreeModel().nodeStructureChanged(root);
 		fireTableDataChanged();
-		//tree.revalidate();
-		//tree.repaint();
+		
+		
+
 	}
 
 	public void setHeaderList(HeaderList list) {
@@ -304,34 +250,6 @@ public class HeaderTableModel extends AbstractTableModel {
 	/***************************** treemodel interface ********************************/ //
 	// The TreeModel interface
 	//
-
-	/*
-	public int getChildCount(Object node) {
-	
-		DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
-		int count = treeNode.getChildCount();
-		return count;
-	}
-	
-	public Object getChild(Object node, int i) {
-	
-		DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
-		DefaultMutableTreeNode child =
-			(DefaultMutableTreeNode) treeNode.getChildAt(i);
-		return child;
-	}
-	
-	public boolean isLeaf(Object node) {
-		//Message message = (Message) node;
-		DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
-		boolean result;
-		if (treeNode.getChildCount() == 0)
-			result = true;
-		else
-			result = false;
-		return result;
-	}
-		*/
 
 	public int getColumnCount() {
 		int count = 0;
@@ -350,7 +268,7 @@ public class HeaderTableModel extends AbstractTableModel {
 
 	public int getColumnNumber(String name) {
 		for (int i = 0; i < getColumnCount(); i++) {
-                        //System.out.println("column name: "+ getColumnName(i) );
+			//System.out.println("column name: "+ getColumnName(i) );
 			if (name.indexOf(getColumnName(i)) != -1)
 				return i;
 		}
@@ -391,15 +309,6 @@ public class HeaderTableModel extends AbstractTableModel {
 		//if ( col == 0 ) return tree;
 	}
 
-	/*
-	public Object getValueAt(Object node, int col) {
-	
-		MessageNode treeNode = (MessageNode) node;
-		return treeNode;
-	
-	}
-	*/
-
 	public boolean isCellEditable(int row, int col) {
 		String name = getColumnName(col);
 		if (name.equalsIgnoreCase("Subject"))
@@ -407,8 +316,15 @@ public class HeaderTableModel extends AbstractTableModel {
 
 		return false;
 	}
-        
+
 	public MessageNode getMessageNode(Object uid) {
 		return (MessageNode) uidList.get(uid);
 	}
+	/**
+	 * @return
+	 */
+	public Hashtable getUidList() {
+		return uidList;
+	}
+
 }

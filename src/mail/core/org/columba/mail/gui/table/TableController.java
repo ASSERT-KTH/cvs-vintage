@@ -122,9 +122,8 @@ public class TableController {
 		headerItemActionListener =
 			new HeaderItemActionListener(this, headerTableItem);
 		filterActionListener = new FilterActionListener(this);
-                // create a new markAsReadTimer
+		// create a new markAsReadTimer
 		markAsReadTimer = new MarkAsReadTimer(this);
-
 
 		getHeaderTableModel().getTableModelSorter().setSortingColumn(
 			headerTableItem.get("selected"));
@@ -373,7 +372,7 @@ public class TableController {
 
 					/*
 					HeaderInterface[] headerList = event.getHeaderList();
-
+					
 					getHeaderTableModel()
 								.setHeaderList(headerList);
 					*/
@@ -396,19 +395,37 @@ public class TableController {
 					getHeaderTableModel().markHeader(
 						event.getUids(),
 						event.getMarkVariant());
-					 ColumbaLogger.log.debug("tableChangedEvent.Mark");
-					 // fixme: i don't know if this is the right point to do this
-					 // here we reselect the current marked message
-					 // getting the last selected uid
-					 Object[] lastSelUids = new Object[1];
-					 lastSelUids[0] = ((Folder)folder).getLastSelection();
-					 // selecting the message
-					 setSelected(lastSelUids);
-					 int selRow = getView().getSelectedRow();
-					 // scroll to the position of the selection
-					 getView().scrollRectToVisible(getView().getCellRect(selRow, 0, false));
-					 getView().requestFocus();
 
+					// for some reasons this re-selection doesn't work
+					// sometimes, which also affects the gui-updates
+					//
+					// As long as we don't clean things up, I just
+					// added a try-catched block to not make the 
+					// whole thing fail, because of the selection 
+					// update
+					 
+					try {
+
+						ColumbaLogger.log.debug("tableChangedEvent.Mark");
+						// fixme: i don't know if this is the right point to do this
+						// here we reselect the current marked message
+						// getting the last selected uid
+						Object[] lastSelUids = new Object[1];
+						lastSelUids[0] = ((Folder) folder).getLastSelection();
+						// selecting the message
+						if (lastSelUids == null)
+							break;
+
+						setSelected(lastSelUids);
+						int selRow = getView().getSelectedRow();
+						// scroll to the position of the selection
+						getView().scrollRectToVisible(
+							getView().getCellRect(selRow, 0, false));
+						getView().requestFocus();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					
 					break;
 				}
 		}
@@ -480,21 +497,24 @@ public class TableController {
 			// if there are entries in the table
 			if (getView().getRowCount() > 0) {
 				// changing the selection to the first row
-				getView().changeSelection(0,0, true, false);
+				getView().changeSelection(0, 0, true, false);
 				// ColumbaLogger.log.info("getView().ValueAt "+ getView().getValueAt(0,0));
 				// ColumbaLogger.log.info("valueAt name: "+getView().getValueAt(0,0).getClass().getName());
 				// getting the node
-				MessageNode selectedNode = (MessageNode) getView().getValueAt(0,0);
+				MessageNode selectedNode =
+					(MessageNode) getView().getValueAt(0, 0);
 				// and getting the uid for this node
 				Object[] lastSelUids = new Object[1];
 				lastSelUids[0] = selectedNode.getUid();
 				// scrolling to the first row
-				getView().scrollRectToVisible(getView().getCellRect(0,0,false));
+				getView().scrollRectToVisible(
+					getView().getCellRect(0, 0, false));
 				getView().requestFocus();
 				FolderCommandReference[] refNew = new FolderCommandReference[1];
-				refNew[0] = new FolderCommandReference( folder, lastSelUids);
+				refNew[0] = new FolderCommandReference(folder, lastSelUids);
 				// view the message under the new node
-				MainInterface.processor.addOp(new ViewMessageCommand(mailFrameController, refNew));
+				MainInterface.processor.addOp(
+					new ViewMessageCommand(mailFrameController, refNew));
 			}
 		} else {
 			// if a lastSelection for this folder is set
@@ -508,12 +528,14 @@ public class TableController {
 			int selRow = getView().getSelectedRow();
 			// ColumbaLogger.log.info("selRow: "+selRow);
 			// scroll to the position of the selection
-			getView().scrollRectToVisible(getView().getCellRect(selRow, 0, false));
+			getView().scrollRectToVisible(
+				getView().getCellRect(selRow, 0, false));
 			getView().requestFocus();
 			FolderCommandReference[] refNew = new FolderCommandReference[1];
-			refNew[0] = new FolderCommandReference( folder, lastSelUids);
+			refNew[0] = new FolderCommandReference(folder, lastSelUids);
 			// view the message under the new node
-			MainInterface.processor.addOp(new ViewMessageCommand(mailFrameController, refNew));
+			MainInterface.processor.addOp(
+				new ViewMessageCommand(mailFrameController, refNew));
 		}
 
 	}

@@ -258,28 +258,10 @@ public class TableModelFilteredView extends TableModelPlugin {
 								MessageNode childNode =
 									new MessageNode(header, uid);
 								rootNode.add(childNode);
+								getHeaderTableModel().getUidList().put(uid, childNode);
 							}
 						}
-						/*
-						for (int i = 0; i < headerList.count(); i++) {
 						
-							header = headerList.getHeader(i);
-						
-							boolean result = addItem(header);
-						
-							//ystem.out.println("item: "+i+" - result: "+result);
-						
-							if (result) {
-						
-								Object uid = headerList.getUid(i);
-								MessageNode childNode =
-									new MessageNode(header, uid);
-								rootNode.add(childNode);
-							}
-						
-						}
-						*/
-						// System.out.println("finished filtering");
 
 						return true;
 
