@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 1999, 2000, 2001 Slava Pestov
+ * Copyright (C) 1999, 2003 Slava Pestov
  * Portions copyright (C) 2002 mike dillon
  *
  * This program is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ import org.gjt.sp.util.Log;
  * the methods in the {@link GUIUtilities} class instead.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.29 2003/02/08 18:53:02 spestov Exp $
+ * @version $Id: Macros.java,v 1.30 2003/03/27 04:03:07 spestov Exp $
  */
 public class Macros
 {
@@ -417,8 +417,6 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 		//{{{ invoke() method
 		public void invoke(View view)
 		{
-			lastMacro = this;
-
 			if(view == null)
 				handler.runMacro(null,this);
 			else
@@ -592,20 +590,6 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 		}
 	} //}}}
 
-	//{{{ runLastMacro() method
-	/**
-	 * Runs the most recently run or recorded macro.
-	 * @param view The view
-	 * @since jEdit 2.7pre2
-	 */
-	public static void runLastMacro(View view)
-	{
-		if(lastMacro == null)
-			view.getToolkit().beep();
-		else
-			lastMacro.invoke(view);
-	} //}}}
-
 	//{{{ Private members
 
 	//{{{ Static variables
@@ -617,7 +601,6 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 	private static ActionSet macroActionSet;
 	private static Vector macroHierarchy;
 	private static Hashtable macroHash;
-	private static Macro lastMacro;
 	//}}}
 
 	//{{{ Class initializer
@@ -710,7 +693,6 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 	{
 		Handler handler = getHandler("beanshell");
 		String path = buffer.getPath();
-		lastMacro = handler.createMacro(path,path);
 
 		view.setMacroRecorder(new Recorder(view,buffer,temporary));
 
