@@ -10,12 +10,12 @@ $page.setTitle("User Administration")
 <h3>Edit User</h3>
 
 <form name="EditUserForm" action="$link.setPage("admin,EditUser.vm")" method="post">
-  <input type="hidden" name="action" value="admin.EditUser" />
+  <input type="hidden" name="action" value="admin.ManageUser" />
   <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,EditUser.vm" />
   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageUserSearch.vm" />
   <input type="hidden" name="state" value="execedituser">
   <input type="hidden" name="lastAction" value="">
-  <input type="hidden" name="username" value="$data.Parameters.getString("username"))">
+  <input type="hidden" name="username" value="$data.Parameters.getString("username")">
 
 #set ($lastAction = $data.Parameters.getString("lastAction"))
 
@@ -30,19 +30,11 @@ $page.setTitle("User Administration")
 #elseif ($user.FirstName)
   #set ($regGroup = $intake.Register.mapTo($user))
 #else
-  #if (($lastAction) && ($lastAction =="addeduser"))
-    #set ($regGroup = $intake.Register.Default)
-    #set ($firstNameData = "")
-    #set ($lastNameData = "")
-    #set ($emailData = "")
-    #set ($passwordData = "")
-  #else
-    #set ($regGroup = $intake.Register.Default)
-    #set ($firstNameData = $regGroup.FirstName)
-    #set ($lastNameData = $regGroup.LastName)
-    #set ($emailData = $regGroup.Email)
-    #set ($passwordData = $regGroup.Password)
-  #end
+  #set ($regGroup = $intake.Register.Default)
+  #set ($firstNameData = $regGroup.FirstName)
+  #set ($lastNameData = $regGroup.LastName)
+  #set ($emailData = $regGroup.Email)
+  #set ($passwordData = $regGroup.Password)
 #end
 
 <div class="axial">
@@ -102,3 +94,4 @@ $intake.declareGroups()
 
 </form>
 </div>
+
