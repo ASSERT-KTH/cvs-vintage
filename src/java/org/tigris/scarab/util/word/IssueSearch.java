@@ -1826,9 +1826,6 @@ public class IssueSearch
      * Get a List of Issues that match the criteria given by this
      * SearchIssue's searchWords and the quick search attribute values.
      *
-     * FIXME: I am slower than a snail on crutches and more resource
-     * hungry than a starving elephant.
-     *
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
