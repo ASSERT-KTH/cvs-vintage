@@ -1985,6 +1985,25 @@ try{
         data.getUser().setTemp("userListParams", params);
     }
 
+    // --------------------
+    // template timing methods
+    private long startTime;
+    private long lapTime;
+    public void startTimer()
+    {
+        startTime = System.currentTimeMillis();
+        lapTime = startTime;
+    }
+
+    public String reportTimer(String mesg)
+    {
+        long endTime = System.currentTimeMillis();
+        String s = mesg + ".  Time for " + data.getTarget() + ": Lap/Split= "
+            + (endTime-lapTime) + "ms; Cumulative= " + 
+            (endTime-startTime) + "ms";
+        lapTime = endTime;
+        return s;
+    }
 
     // ****************** Recyclable implementation ************************
 
