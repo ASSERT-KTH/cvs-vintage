@@ -15,7 +15,7 @@ import org.jboss.ejb.DeploymentException;
  *
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.12 $
+ *   @version $Revision: 1.13 $
  */
 public class ConfigurationMetaData extends MetaData {
 
@@ -34,7 +34,7 @@ public class ConfigurationMetaData extends MetaData {
 	public static final byte A_COMMIT_OPTION = 0;
 	public static final byte B_COMMIT_OPTION = 1;
 	public static final byte C_COMMIT_OPTION = 2;
-	/** D_COMMIT_OPTION is a lazy load option. It synchronizes every 30 seconds */
+	/** D_COMMIT_OPTION is a lazy load option. By default it synchronizes every 30 seconds */
 	public static final byte D_COMMIT_OPTION = 3;
 	public static final String[] commitOptionStrings = { "A", "B", "C", "D"};
 
@@ -46,6 +46,7 @@ public class ConfigurationMetaData extends MetaData {
     private String persistenceManager;
     private String transactionManager;
     private byte commitOption;
+    private long optionDRefreshRate = 30000;
     private boolean callLogging;
     private boolean readOnlyGetMethods;
 
@@ -82,14 +83,16 @@ public class ConfigurationMetaData extends MetaData {
 
 	public String getTransactionManager() { return transactionManager; }
 
-    public Element getContainerInvokerConf() { return containerInvokerConf; }
-	public Element getContainerPoolConf() { return containerPoolConf; }
+        public Element getContainerInvokerConf() { return containerInvokerConf; }
+        public Element getContainerPoolConf() { return containerPoolConf; }
 	public Element getContainerCacheConf() { return containerCacheConf; }
 	public Element getContainerInterceptorsConf() { return containerInterceptorsConf; }
 
 	public boolean getCallLogging() { return callLogging; }
 
 	public byte getCommitOption() { return commitOption; }
+
+        public long getOptionDRefreshRate() { return optionDRefreshRate; }
 
 	public boolean getReadOnlyGetMethods() { return readOnlyGetMethods; }
 
@@ -125,10 +128,14 @@ public class ConfigurationMetaData extends MetaData {
 		// set the role mapping manager
 		roleMappingManager = getElementContent(getOptionalChild(element, "role-mapping-manager"), roleMappingManager);
 
-    // set the commit option
+                // set the commit option
 		String commit = getElementContent(getOptionalChild(element, "commit-option"), commitOptionToString(commitOption));
 
 		commitOption = stringToCommitOption(commit);
+
+                //get the refresh rate for option D
+		String refresh = getElementContent(getOptionalChild(element, "optiond-refresh-rate"), Long.toString(optionDRefreshRate));
+		optionDRefreshRate = stringToRefreshRate(refresh);
 
 		// the classes which can understand the following are dynamically loaded during deployment :
 		// We save the Elements for them to use later
@@ -177,6 +184,15 @@ public class ConfigurationMetaData extends MetaData {
                  return i;
 
          throw new DeploymentException("Invalid commit option: '" + commitOption + "'");
+	}
+
+        private static long stringToRefreshRate(String refreshRate) throws DeploymentException {
+	    try{
+		return Long.parseLong(refreshRate);
+	    } catch ( Exception e){
+	        throw new DeploymentException("Invalid optiond-refresh-rate \"" + refreshRate + "\". Should be a number"); 
+	    }
+
 	}
 
     // Inner classes -------------------------------------------------
