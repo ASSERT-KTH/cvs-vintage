@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JikesJavaCompiler.java,v 1.5 2000/06/15 00:26:43 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/06/15 00:26:43 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JikesJavaCompiler.java,v 1.6 2000/09/01 17:09:49 pierred Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/09/01 17:09:49 $
  *
  * ====================================================================
  *
@@ -78,6 +78,14 @@ public class JikesJavaCompiler implements JavaCompiler {
     static final int OUTPUT_BUFFER_SIZE = 1024;
     static final int BUFFER_SIZE = 512;
 
+    /*
+     * Contains extra classpath for Jikes use from Microsoft systems:
+     * Microsoft does not report it's internal classpath in 
+     * System.getProperty(java.class.path) which results in jikes to fail.  
+     * (Internal classpath with other JVMs contains for instance rt.jar).
+     */
+     static StringBuffer MicrosoftClasspath = null;
+
     String encoding;
     String classpath;
     String compilerPath = "jikes";
@@ -127,14 +135,29 @@ public class JikesJavaCompiler implements JavaCompiler {
 	Process p;
 	int exitValue = -1;
 
-	String[] compilerCmd = new String[] {
-	  compilerPath,
+        // Used to dynamically load classpath if using Microsoft 
+        // virtual machine
+        if (MicrosoftClasspath==null) {
+            MicrosoftClasspath = new StringBuffer(200);
+            if (System.getProperty("java.vendor").startsWith("Microsoft")) {
+                //Get Microsoft classpath
+                String javaHome = System.getProperty("java.home") + 
+                                  "\\Packages";
+                File libDir=new File(javaHome);
+                String[] zips=libDir.list();
+                for(int i=0;i<zips.length;i++) {
+                    MicrosoftClasspath.append(";" + javaHome + "\\" + zips[i]);
+                }                       
+            } 
+        }
+
+        String[] compilerCmd = new String[] {
+          "\"" + compilerPath + "\"",
           //XXX - add encoding once Jikes supports it
-          "-classpath", classpath,
-          "-d", outdir,
-          // Only report errors, to be able to test on output in addition to exit code
+          "-classpath", "\"" + classpath + MicrosoftClasspath + "\"",
+          "-d", "\"" + outdir + "\"",
           "-nowarn",
-          source
+          "\"" + source + "\""
         };
 
         ByteArrayOutputStream tmpErr = new ByteArrayOutputStream(OUTPUT_BUFFER_SIZE);
