@@ -79,12 +79,19 @@
   <property name="jtc.http11.home" location="${jakarta-tomcat-connectors}/http11"/>
   <property name="jtc.http11.lib" location="${jtc.http11.home}/build/lib"/>
 
+  <!-- A binary copy of commons-logging.jar is checked in j-t-c. 
+       It can be overriden by gump or if you want to build jakarta-commons -->
+  <!--
   <property name="commons-logging.home"
             location="${jakarta-commons}/logging"/>
   <property name="commons-logging.lib"
             location="${commons-logging.home}/dist"/>
   <property name="commons-logging.jar"
             location="${commons-logging.lib}/commons-logging.jar"/>
+  -->
+
+  <property name="commons-logging.jar" 
+            location="${jakarta-tomcat-connectors}/lib/commons-logging.jar"/>
 
   <!-- Binaries checked in ( servlet.jar is not likely to change,
       the 2.2 spec is final -->
@@ -246,9 +253,6 @@
     <copy tofile="${tomcat.build}/lib/common/servlet.jar"
           file="${servlet22.jar}"/>
 
-    <copy tofile="${tomcat.build}/lib/common/tomcat-util.jar"
-          file="${tomcat-util.jar}"/>
-
     <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.sh" eol="lf"/>
     <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.bat" eol="crlf"/>
 
@@ -262,6 +266,8 @@
   <!-- Local Tomcat utilities -->
 
   <target name="tomcat_util" depends="prepare">
+    <ant dir="${jakarta-tomcat-connectors}/util" />
+
     <javac destdir="${tomcat.build}/classes"
            debug="${debug}"
            optimize="${optimize}"
@@ -285,16 +291,23 @@
       </fileset>
     </copy>
 
-    <jar jarfile="${tomcat.build}/lib/common/core_util.jar"
-         basedir="${tomcat.build}/classes">
-      <include name="org/apache/tomcat/util/hooks/**"/>
-      <include name="org/apache/tomcat/util/log/**"/>
+    <jar jarfile="${tomcat.build}/lib/common/core_util.jar" >
+      <fileset dir="${tomcat.build}/classes">
+          <include name="org/apache/tomcat/util/hooks/**"/>
+      </fileset>
+      <fileset dir="${jakarta-tomcat-connectors}/util/build/classes">
+          <include name="org/apache/tomcat/util/log/**"/>
+      </fileset>
     </jar>
 
-    <jar jarfile="${tomcat.build}/lib/container/tomcat_util.jar"
-         basedir="${tomcat.build}/classes">
-      <include name="org/apache/tomcat/util/**"/>
-      <exclude name="org/apache/tomcat/util/test/**"/>
+    <jar jarfile="${tomcat.build}/lib/container/tomcat_util.jar" >
+      <fileset dir="${tomcat.build}/classes">
+        <include name="org/apache/tomcat/util/**"/>
+        <exclude name="org/apache/tomcat/util/test/**"/>
+      </fileset>
+      <fileset dir="${jakarta-tomcat-connectors}/util/build/classes">
+        <include name="org/apache/tomcat/util/**"/>
+      </fileset>
     </jar>
   </target>
 
