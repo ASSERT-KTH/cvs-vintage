@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.130 2002/12/14 06:28:41 stormy_sky Exp $ -->
+<!-- $Id: build.xml,v 1.131 2003/01/16 07:03:12 jboynes Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -176,8 +176,16 @@
 	   javacchome="${sun.javacc.lib}"/>
 
     <javacc
-      target="${build.gen-src}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jj" 
+      target="${build.gen-src}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jj"
 	   javacchome="${sun.javacc.lib}"/>
+
+    <!-- New EJB-QL Parser -->
+    <mkdir dir="${build.gen-src}/org/jboss/cmp/ejbql"/>
+    <jjtree target="${source.java}/org/jboss/cmp/ejbql/EJBQL20Parser.jjt"
+            outputdirectory="${build.gen-src}/org/jboss/cmp/ejbql"
+            javacchome="${sun.javacc.lib}" />
+    <javacc target="${build.gen-src}/org/jboss/cmp/ejbql/EJBQL20Parser.jj"
+            javacchome="${sun.javacc.lib}"/>
 
   </target>
 
