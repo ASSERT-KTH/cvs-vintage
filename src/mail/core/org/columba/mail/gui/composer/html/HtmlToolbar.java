@@ -21,6 +21,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import org.columba.core.gui.toolbar.ToggleToolbarButton;
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ActionPluginHandler;
@@ -43,18 +44,13 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.text.html.HTML;
 
-
 /**
- *
- *
  * JPanel with useful HTML related actions.
  *
  * @author fdietz
- *
  */
 public class HtmlToolbar implements ActionListener, Observer, ContainerListener {
     private ComposerController controller;
@@ -115,15 +111,15 @@ public class HtmlToolbar implements ActionListener, Observer, ContainerListener 
         }
 
         // init components
-        JLabel paraLabel = new JLabel(MailResourceLoader.getString("dialog",
-                    "composer", "style"));
+        LabelWithMnemonic paraLabel = new LabelWithMnemonic(
+                MailResourceLoader.getString("dialog", "composer", "style"));
         paragraphComboBox = new JComboBox(ParagraphMenu.STYLES);
         paragraphComboBox.setActionCommand("PARA");
         paragraphComboBox.addActionListener(this);
         paragraphComboBox.setFocusable(false);
 
-        JLabel sizeLabel = new JLabel(MailResourceLoader.getString("dialog",
-                    "composer", "size"));
+        LabelWithMnemonic sizeLabel = new LabelWithMnemonic(
+                MailResourceLoader.getString("dialog", "composer", "size"));
         sizeComboBox = new JComboBox(FontSizeMenu.SIZES);
         sizeComboBox.setActionCommand("SIZE");
         sizeComboBox.addActionListener(this);
