@@ -61,6 +61,7 @@ package org.apache.tomcat.modules.loggers;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.hooks.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -70,10 +71,25 @@ import java.util.*;
  *  output )
  */
 public class LogEvents extends BaseInterceptor {
+    boolean enabled=false;
     
     public LogEvents() {
     }
 
+    public void setEnabled( boolean b ) {
+	enabled=b;
+    }
+    
+    public int registerHooks( Hooks hooks, ContextManager cm, Context ctx ) {
+	if( enabled || cm.getDebug() > 5 ) {
+	    enabled=true;
+	    log( "Adding LogEvents, cm.debug=" + cm.getDebug() + " "
+		 + enabled);
+	    hooks.addModule( this );
+	}
+	return DECLINED;
+    }
+    
     // -------------------- Request notifications --------------------
     public int requestMap(Request request ) {
 	log( "requestMap " + request);
@@ -209,6 +225,7 @@ public class LogEvents extends BaseInterceptor {
 				BaseInterceptor i )
 	throws TomcatException
     {
+	if( ! enabled ) return;
 	if( ctx==null)
 	    log( "addInterceptor " + i );
 	else {
