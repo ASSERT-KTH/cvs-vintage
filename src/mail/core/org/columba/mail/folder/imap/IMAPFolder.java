@@ -307,7 +307,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 			if (localUids.size() - status.getMessages() + newMessages < 0) {
 
 				LOG.severe("Folder " + getName()
-						+ "is out of sync -> recreating the cache!");
+						+ " is out of sync -> recreating the cache!");
 				getHeaderListStorage().reset();
 
 				headerList = super.getHeaderList();
@@ -457,7 +457,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 		}
 
-		// inform listerners if MessageFolderInfo has changed
+		// inform listeners if MessageFolderInfo has changed
 		if (deletedMessages > 0 || newMessages > 0) {
 			fireFolderPropertyChanged();
 		}
