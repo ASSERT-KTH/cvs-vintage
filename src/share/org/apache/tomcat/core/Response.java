@@ -117,7 +117,6 @@ public class Response {
     protected String contentType = DEFAULT_CONTENT_TYPE;
     protected String contentLanguage = null;
     protected String characterEncoding = DEFAULT_CHAR_ENCODING;
-    protected int contentLength = -1;
     protected Locale locale = DEFAULT_LOCALE;
 
     // -------------------- Constructor --------------------
@@ -252,7 +251,6 @@ public class Response {
 	    contentType = DEFAULT_CONTENT_TYPE;
 	    locale = DEFAULT_LOCALE;
 	    characterEncoding = DEFAULT_CHAR_ENCODING;
-	    contentLength = -1;
 	    status = 200;
 	    headers.clear();
 	}
@@ -317,17 +315,17 @@ public class Response {
 	    setContentType( value );
 	    return true;
 	}
-	if( name.equalsIgnoreCase( "Content-Length" ) ) {
-	    try {
-		int cL=Integer.parseInt( value );
-		setContentLength( cL );
-		return true;
-	    } catch( NumberFormatException ex ) {
-		// Do nothing - the spec doesn't have any "throws" 
-		// and the user might know what he's doing
-		return false;
-	    }
-	}
+// 	if( name.equalsIgnoreCase( "Content-Length" ) ) {
+// 	    try {
+// 		int cL=Integer.parseInt( value );
+// 		setContentLength( cL );
+// 		return true;
+// 	    } catch( NumberFormatException ex ) {
+// 		// Do nothing - the spec doesn't have any "throws" 
+// 		// and the user might know what he's doing
+// 		return false;
+// 	    }
+// 	}
 	if( name.equalsIgnoreCase( "Content-Language" ) ) {
 	    // XXX XXX Need to construct Locale or something else
 	}
@@ -460,12 +458,22 @@ public class Response {
     
     public void setContentLength(int contentLength) {
         if( included ) return;
-	this.contentLength = contentLength;
 	headers.setValue("Content-Length").setInt(contentLength);
     }
 
+    /** @deprecated. Not used in any piece of code, will fail for long values,
+	it's not an acurate value of the length ( just the header ).
+    */
     public int getContentLength() {
-	return contentLength;
+	String value=headers.getHeader( "Content-Length" );
+	if( value == null )
+	    return -1;
+	try {
+	    int cL=Integer.parseInt( value );
+	    return cL;
+	} catch( Exception ex ) {
+	    return -1;
+	}
     }
 
     // -------------------- Extend --------------------
@@ -490,7 +498,6 @@ public class Response {
 	contentLanguage = null;
         locale = DEFAULT_LOCALE;
 	characterEncoding = DEFAULT_CHAR_ENCODING;
-	contentLength = -1;
 	status = 200;
 	usingWriter = false;
 	usingStream = false;
