@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.19 2001/05/24 23:44:21 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.20 2001/05/31 01:30:36 jmcnally Exp $ -->
 
 <app-data>
 <database>
@@ -143,6 +143,10 @@
         Type.
     -->
     <column name="ATTRIBUTE_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"></column>
+    <!--
+        A permission related to this attribute.
+    -->
+    <column name="PERMISSION" required="false" type="VARCHAR" size="255"/>
     <!--
         A required option for this attribute to be active.
     -->
@@ -832,10 +836,9 @@
     name. Then, all you need to do is regenerate the OR code to use the new 
     table name.
 -->
-<table name="SCARAB_USER" javaName="ScarabUser" skipSql="true"
-      baseClass="org.apache.turbine.om.security.TurbineUser"
-      basePeer="org.apache.turbine.om.security.peer.TurbineUserPeer"
-      idMethod="idbroker">
+<table name="SCARAB_USER" javaName="ScarabUser" alias="TurbineUser" 
+      baseClass="TurbineTorqueUser"
+      basePeer="org.apache.turbine.om.security.peer.TurbineUserPeer">
     <!--
         Unique identifier.
     -->

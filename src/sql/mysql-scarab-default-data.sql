@@ -48,14 +48,17 @@ insert into SCARAB_ATTRIBUTE_TYPE(ATTRIBUTE_TYPE_ID, ATTRIBUTE_CLASS_ID, ATTRIBU
 
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Description */
         values(1, 'Description', 12);
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Assigned to */
-        values(2, 'Assigned To', 8);
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
+       ATTRIBUTE_TYPE_ID, PERMISSION) /* Assigned to */
+       values(2, 'Assigned To', 8, 'edit_issues');
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Status */
         values(3, 'Status', 5);
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* resolution */
-        values(4, 'Resolution', 5);
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Platform */
-        values(5, 'Platform', 5);
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
+       ATTRIBUTE_TYPE_ID, REQUIRED_OPTION_ID) /* resolution */
+        values(4, 'Resolution', 5, 5);
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
+       ATTRIBUTE_TYPE_ID) /* Platform */
+       values(5, 'Platform', 5);
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Operating System */
         values(6, 'Operating System', 5);
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Priority select-one*/
@@ -77,7 +80,6 @@ insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /*
 /*
  *
  */
-
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /* Unconfirmed */
         values(1, 3, 'unconfirmed', 1);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /* New */
@@ -336,7 +338,7 @@ insert into SCARAB_ATTACHMENT_TYPE(ATTACHMENT_TYPE_ID, ATTACHMENT_TYPE_NAME)
  * root module
  */
 insert into SCARAB_MODULE(MODULE_ID, MODULE_NAME, MODULE_DESCRIPTION, MODULE_URL)
-        values(0, "ROOT", "Built-in root module, parent for all top-level modules(projects)", "/");
+        values(0, "global", "Built-in root module, parent for all top-level modules(projects)", "/");
 
 /*
  * populate the root module with all attributes.
@@ -452,6 +454,13 @@ INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,88,NULL,1,1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,89,NULL,1,2);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,90,NULL,1,3);
 
+
+# Assign the user 'turbine' a system-wide role 'turbine_root'
+INSERT INTO TURBINE_USER_GROUP_ROLE ( USER_ID, GROUP_ID, ROLE_ID ) 
+SELECT TURBINE_USER.USER_ID, SCARAB_MODULE.MODULE_ID, TURBINE_ROLE.ROLE_ID from 
+TURBINE_USER, SCARAB_MODULE, TURBINE_ROLE 
+WHERE TURBINE_USER.LOGIN_NAME = 'turbine@collab.net' AND 
+SCARAB_MODULE.MODULE_NAME = 'global' AND TURBINE_ROLE.ROLE_NAME = 'turbine_root';
 
 
 
