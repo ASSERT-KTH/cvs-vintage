@@ -46,4 +46,4 @@ fi
 CLASSPATH="$CLASSPATH:../lib/jdbc2_0-stdext.jar:../lib/jboss-jaas.jar"
 
 echo $CLASSPATH
-java -server -classpath $CLASSPATH -Dtomcat.home=$TOMCAT_HOME org.jboss.Main
+java -server -classpath $CLASSPATH -Dtomcat.home=$TOMCAT_HOME org.jboss.Main $@
