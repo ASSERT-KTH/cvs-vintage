@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Mark.java,v 1.3 2000/04/24 22:53:12 mandar Exp $
- * $Revision: 1.3 $
- * $Date: 2000/04/24 22:53:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Mark.java,v 1.4 2000/05/03 00:09:59 mandar Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/05/03 00:09:59 $
  *
  * ====================================================================
  * 
@@ -161,7 +161,7 @@ public final class Mark {
     {
 
 	// store current state in stack
-	includeStack.push(new IncludeState(cursor, line, col, fileid, name, baseDir, 
+	includeStack.push(new IncludeState(cursor, line, col, fileid, fileName, baseDir, 
 					   encoding, stream) );
 
 	// set new variables
