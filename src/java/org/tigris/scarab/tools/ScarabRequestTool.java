@@ -78,6 +78,7 @@ import org.tigris.scarab.om.IssueTemplateInfoPeer;
 import org.tigris.scarab.om.Depend;
 import org.tigris.scarab.om.DependPeer;
 import org.tigris.scarab.om.ScopePeer;
+import org.tigris.scarab.om.FrequencyPeer;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeGroup;
 import org.tigris.scarab.om.AttributeGroupPeer;
@@ -168,6 +169,11 @@ public class ScarabRequestTool
      * The issue that is currently being entered.
      */
     private Issue reportingIssue = null;
+
+    /**
+     * The most recent query.
+     */
+    private String currentQuery = null;
 
     /**
      * A ModuleEntity object
@@ -793,6 +799,31 @@ try{
     }
 
     /**
+     * The most recent query entered.
+     *
+     * @return an <code>Issue</code> value
+     */
+    public String getCurrentQuery()
+        throws Exception
+    {
+        if ( currentQuery == null ) 
+        {
+            System.out.println("use default");
+        }
+        else 
+        {
+            currentQuery = (String)((ScarabUser)data.getUser())
+                .getTemp(ScarabConstants.CURRENT_QUERY);
+        }
+        return currentQuery;
+    }
+
+    public void setCurrentQuery(String query)
+    {
+        currentQuery = query;
+    }
+
+    /**
      * Sets the current ModuleEntity
      */
     public void setCurrentModule(ModuleEntity me)
@@ -933,6 +964,16 @@ try{
     {
         return ScopePeer.getAllScopes();
     }
+
+    /**
+     * Get all frequencies.
+     */
+    public List getFrequencies()
+        throws Exception
+    {
+        return FrequencyPeer.getFrequencies();
+    }
+
     /**
      * Get a new SearchIssue object. 
      *
@@ -944,30 +985,47 @@ try{
         return new IssueSearch(getCurrentModule(), getCurrentIssueType());
     }
 
-    public Intake getConditionalIntake(String parameter)
+    public Intake parseQuery(String query)
         throws Exception
     {
-        Intake intake = null;
-        String param = data.getParameters().getString(parameter);
-        if ( param == null ) 
-        {            
-            intake = getIntakeTool();
-        }
-        else 
-        {
-            intake = new Intake();
-            StringValueParser parser = new StringValueParser();
-            parser.parse(param, '&', '=', true);
-            intake.init(parser);
-        }
-
+        Intake intake = new Intake();
+        StringValueParser parser = new StringValueParser();
+        parser.parse(query, '&', '=', true);
+        intake.init(parser);
         return intake;
     }
 
     public List getCurrentSearchResults()
         throws Exception
     {
-        Intake intake = getConditionalIntake(ScarabConstants.CURRENT_QUERY);
+        ScarabUser user = (ScarabUser)data.getUser();
+        Intake intake = new Intake();
+        if (user.getTemp(ScarabConstants.CURRENT_QUERY) == null)
+        {
+           // No query stored in session
+           // Check for default query.
+           Query query = user.getDefaultQuery(getCurrentModule(),
+                                              getCurrentIssueType());
+           if (query == null)
+           {
+               data.setMessage("No search has been performed in "
+                               + "this session, and you have no"
+                               + " default queries for this module"
+                               + " and issue type. Go to QueryList"
+                               + " to create a default query.");
+           }
+           else
+           {
+               String defaultQuery = query.getValue();
+               intake = parseQuery(defaultQuery);
+           } 
+        }
+        else
+        {
+           String currentQuery = user.getTemp(ScarabConstants.CURRENT_QUERY)
+                                     .toString();
+           intake = parseQuery(currentQuery);
+        }
         
         IssueSearch search = getSearch();
         Group searchGroup = intake.get("SearchIssue", 
