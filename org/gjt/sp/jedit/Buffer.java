@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.37 2001/11/24 02:27:08 spestov Exp $
+ * @version $Id: Buffer.java,v 1.38 2001/11/28 08:30:08 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -686,6 +686,11 @@ public class Buffer implements EBComponent
 						setFlag(NEW_FILE,false);
 						setFlag(UNTITLED,false);
 						setFlag(DIRTY,false);
+
+						// this ensures that undo can clear
+						// the dirty flag properly when all
+						// edits up to a save are undone
+						undoMgr.bufferSaved();
 					}
 					finally
 					{
@@ -957,6 +962,10 @@ public class Buffer implements EBComponent
 		{
 			setFlag(DIRTY,false);
 			setFlag(AUTOSAVE_DIRTY,false);
+
+			// this ensures that undo can clear the dirty flag properly
+			// when all edits up to a save are undone
+			undoMgr.bufferSaved();
 		}
 
 		if(d != old_d)

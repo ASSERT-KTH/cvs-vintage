@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.11 2001/11/24 02:27:08 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.12 2001/11/28 08:30:08 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
@@ -71,8 +71,12 @@ public class BrowserView extends JPanel
 		tree.setShowsRootHandles(true);
 		tree.setVisibleRowCount(12);
 
+		JScrollPane parentScroller = new JScrollPane(parentDirectories);
+		parentScroller.setMinimumSize(new Dimension(0,0));
+		JScrollPane treeScroller = new JScrollPane(tree);
+		treeScroller.setMinimumSize(new Dimension(0,0));
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-			new JScrollPane(parentDirectories),new JScrollPane(tree));
+			parentScroller,treeScroller);
 		splitPane.setBorder(null);
 
 		tmpExpanded = new Hashtable();
@@ -519,14 +523,10 @@ public class BrowserView extends JPanel
 					evt.consume();
 					break;
 				case KeyEvent.VK_LEFT:
-					if(getMinSelectionRow() == -1
-						|| getMinSelectionRow() == 0)
-					{
-						String directory = browser.getDirectory();
-						browser.setDirectory(VFSManager.getVFSForPath(
-							directory).getParentOfPath(directory));
-						evt.consume();
-					}
+					String directory = browser.getDirectory();
+					browser.setDirectory(MiscUtilities
+						.getParentOfPath(directory));
+					evt.consume();
 					break;
 				}
 			}
@@ -543,7 +543,7 @@ public class BrowserView extends JPanel
 				case '-':
 					View view = browser.getView();
 					Buffer buffer = view.getBuffer();
-					browser.setDirectory(buffer.getVFS().getParentOfPath(
+					browser.setDirectory(MiscUtilities.getParentOfPath(
 						buffer.getPath()));
 					break;
 				default:
