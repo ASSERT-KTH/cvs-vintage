@@ -22,4 +22,6 @@ insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (40, 'S
 insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (41, 'SCARAB_FREQUENCY', 100, 10);
 insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (42, 'SCARAB_ATTRIBUTE_GROUP', 200, 10);
 insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (43, 'SCARAB_REPORT', 100, 10);
+insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (44, 'SCARAB_MIT_LIST', 100, 10);
+insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (45, 'SCARAB_MIT_LISTITEM', 100, 10);
 insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (999, 'ID_TABLE', 1000, 1);
