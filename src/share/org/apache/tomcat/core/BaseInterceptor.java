@@ -89,6 +89,15 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
 	return 0;
     }
 
+    public int authenticate(Request request, Response response) {
+	return 0;
+    }
+
+    public int authorize(Request request, Response response) {
+	return 0;
+    }
+
+
     public int preService(Request request, Response response) {
 	return 0;
     }

@@ -191,6 +191,8 @@ public interface Request  {
 
     String getRemoteUser() ;
 
+    void setRemoteUser(String s) ;
+
     boolean isSecure() ;
 	
     Principal getUserPrincipal() ;

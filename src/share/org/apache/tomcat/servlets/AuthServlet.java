@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.7 2000/02/16 00:30:29 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/02/16 00:30:29 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -62,72 +58,31 @@
  */ 
 
 
-package org.apache.tomcat.core;
-import javax.servlet.Servlet;
-import java.util.*;
+package org.apache.tomcat.servlets;
+
+import org.apache.tomcat.util.*;
+import org.apache.tomcat.core.*;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
 
 /**
- * For request processing - before calling service() ( or any LifecycleInterceptors )
+ * Will authenticate the request for non-form auth
+ * ( sort of "default form auth" );
  *
- * @author costin@dnt.ro
  */
-public interface RequestInterceptor {
-    public static final int OK=0;
-
-    /** Will return the methods fow which this interceptor is interested
-     *  in notification.
-     */
-    public Enumeration getMethods();
+public class AuthServlet extends HttpServlet {
     
-    /** Will detect the context path for a request.
-     *  It need to set: context, contextPath, lookupPath
-     */
-    public int contextMap(Request request);
+    public void service(HttpServletRequest request,
+			HttpServletResponse response)
+	throws ServletException, IOException
+    {
+	Request req=((HttpServletRequestFacade)request).getRealRequest();
 
-    /** Handle mapping inside a context
-     */
-    public int requestMap(Request request);
-
-    /** Will extract the user ID from the request, and check the password.
-     *  It will set the user only if the user/password are correct, or user
-     *  will be null.
-     */
-    public int authenticate(Request request, Response response);
-
-    /** Will check if the user is authorized, by checking if it is in one
-     *  of the roles defined in security constraints.
-     *
-     *  This will also work for "isUserInRole()".
-     *
-     *  If the user is not authorized, it will return an error code ( 401 ),
-     *  and will set the response fields for an internal redirect.
-     *  ContextManager will take care of handling that.
-     *  
-     */
-    public int authorize(Request request, Response response);
-
-    /** Called before service method is invoked.
-     */
-    public int preService(Request request, Response response);
-
-    /** Called before the first body write, and before sending
-     *  the headers. The interceptor have a chance to change the
-     *  output headers.
-     */
-    public int beforeBody( Request request, Response response);
-        
-    /** Called before the output buffer is commited
-     */
-    public int beforeCommit( Request request, Response response);
-
-    /** Called after the output stream is closed ( either by servlet
-     *  or automatically at end of service )
-     */
-    public int afterBody( Request request, Response response);
-
-    /** Called after service method ends. Log is a particular case
-     */
-    public int postService(Request request, Response response);
-
+	String realm=req.getContext().getRealmName();
+	if(realm==null) realm="default";
+	response.setHeader( "WWW-Authenticate", "Basic \"" + realm + "\"");
+	response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+    }
 }
-

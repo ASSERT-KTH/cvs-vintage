@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.17 2000/02/15 17:35:38 costin Exp $
- * $Revision: 1.17 $
- * $Date: 2000/02/15 17:35:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.18 2000/02/16 00:30:29 costin Exp $
+ * $Revision: 1.18 $
+ * $Date: 2000/02/16 00:30:29 $
  *
  * ====================================================================
  *
@@ -255,6 +255,9 @@ public class RequestImpl  implements Request {
 
     public String getPathInfo() {
         return pathInfo;
+    }
+    public void setRemoteUser(String s) {
+	remoteUser=s;
     }
 
     public String getRemoteUser() {

@@ -525,6 +525,15 @@ public class ContextManager {
 	    // XXX Hardcoded - it will be changed in the next step.( costin )
 	    processRequest( rrequest );
 
+	    authenticate( rrequest, rresponse );
+
+	    int err=authorize( rrequest, rresponse );
+	    if( err != 0 ) {
+		// unauthorized access, redirect to login page.
+		// XXX authorize will set request
+	    }
+	    
+	    
 	    if( rrequest.getWrapper() == null ) {
 		log("ERROR: mapper returned no wrapper ");
 		log(rrequest.toString() );
@@ -571,6 +580,22 @@ public class ContextManager {
 
 	return 0;
     }
+
+    int authenticate( Request req, Response res ) {
+	for( int i=0; i< requestInterceptors.size(); i++ ) {
+	    ((RequestInterceptor)requestInterceptors.elementAt(i)).authenticate( req, res );
+	}
+	return 0;
+    }
+
+    int authorize( Request req, Response res ) {
+	for( int i=0; i< requestInterceptors.size(); i++ ) {
+	    int err = ((RequestInterceptor)requestInterceptors.elementAt(i)).authorize( req, res );
+	    if ( err != 0 ) return err;
+	}
+	return 0;
+    }
+
 
     int doBeforeBody( Request req, Response res ) {
 	for( int i=0; i< requestInterceptors.size(); i++ ) {

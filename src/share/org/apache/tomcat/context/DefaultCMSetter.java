@@ -89,7 +89,9 @@ public class DefaultCMSetter extends BaseInterceptor {
      *
      *  - Set up defaults for context interceptors and session if nothing is set
      */
-    public void addContext(ContextManager cm, Context ctx) {
+    public void addContext(ContextManager cm, Context ctx)
+	throws TomcatException
+    {
 	setEngineHeader( ctx );
 
 	if( ctx.getWorkDir() == null)
@@ -100,6 +102,11 @@ public class DefaultCMSetter extends BaseInterceptor {
 	    ctx.setSessionManager(new org.apache.tomcat.session.StandardSessionManager());
 
 	//  Alternative: org.apache.tomcat.session.ServerSessionManager.getManager();
+	ServletWrapper authWrapper=new ServletWrapper();
+	authWrapper.setContext( ctx );
+	authWrapper.setServletClass( "org.apache.tomcat.servlets.AuthServlet" );
+	authWrapper.setServletName( "authServlet");
+	ctx.addServlet( authWrapper );
 
 	// XXX Loader properties - need to be set on loader!!
 	//ctx.setServletLoader( new org.apache.tomcat.loader.ServletClassLoaderImpl());
