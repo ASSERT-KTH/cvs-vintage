@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Collections;
 import org.apache.torque.om.Persistent;
+import org.apache.torque.om.ObjectKey;
 import org.apache.torque.TorqueException;
 import org.apache.torque.TorqueRuntimeException;
+import org.tigris.scarab.services.security.ScarabSecurity;
 
 /** 
  * You should add additional methods to this class to meet the
@@ -72,6 +74,54 @@ public  class MITList
             && getFirstItem().isSingleModuleIssueType();
     }
 
+    public boolean isSingleModule()
+        throws TorqueException
+    {
+        List ids = getModuleIds();
+        return ids.size() == 1;
+    }
+
+    public Module getModule()
+        throws Exception
+    {
+        if (!isSingleModule()) 
+        {
+            throw new IllegalStateException("method should not be called on" +
+                " a list including more than one module.");
+        }
+        return getModule(getFirstItem());
+    }
+
+    private IssueType getIssueType(MITListItem item)
+        throws Exception
+    {
+        IssueType it = null;
+        if (item.getIssueTypeId() == null) 
+        {
+            //it = getScarabUser().getCurrentIssueType();
+        }
+        else 
+        {
+            it = item.getIssueType();
+        }
+        return it;
+    }
+
+    private Module getModule(MITListItem item)
+        throws Exception
+    {
+        Module module = null;
+        if (item.getModuleId() == null) 
+        {
+            //module = getScarabUser().getCurrentModule();
+        }
+        else 
+        {
+            module = item.getModule();
+        }
+        return module;
+    }
+
     public List getCommonAttributes()
         throws Exception
     {
@@ -84,8 +134,8 @@ public  class MITList
         List matchingAttributes = new ArrayList();
         MITListItem item = getFirstItem();
         
-        List rmas = item.getModule()
-            .getRModuleAttributes(item.getIssueType());
+        List rmas = getModule(item)
+            .getRModuleAttributes(getIssueType(item));
         Iterator i = rmas.iterator();
         while (i.hasNext()) 
         {
@@ -117,9 +167,9 @@ public  class MITList
         while (items.hasNext()) 
         {
             MITListItem compareItem = (MITListItem)items.next();
-            RModuleAttribute modAttr = compareItem.getModule()
+            RModuleAttribute modAttr = getModule(compareItem)
                         .getRModuleAttribute(attribute, 
-                                             compareItem.getIssueType());
+                                             getIssueType(compareItem));
             if (modAttr == null || !modAttr.getActive())
             {
                 common = false;
@@ -142,8 +192,8 @@ public  class MITList
         List matchingAttributes = new ArrayList();
         MITListItem item = getFirstItem();
         
-        List rmas = item.getModule()
-            .getRModuleAttributes(item.getIssueType());
+        List rmas = getModule(item)
+            .getRModuleAttributes(getIssueType(item));
         Iterator i = rmas.iterator();
         while (i.hasNext()) 
         {
@@ -170,8 +220,8 @@ public  class MITList
         List matchingAttributes = new ArrayList();
         MITListItem item = getFirstItem();
         
-        List rmas = item.getModule()
-            .getRModuleAttributes(item.getIssueType());
+        List rmas = getModule(item)
+            .getRModuleAttributes(getIssueType(item));
         Iterator i = rmas.iterator();
         while (i.hasNext()) 
         {
@@ -202,8 +252,8 @@ public  class MITList
         
         List matchingAttributes = new ArrayList();
         MITListItem item = getFirstItem();
-        List rmas = item.getModule()
-            .getRModuleAttributes(item.getIssueType(), true, Module.USER);
+        List rmas = getModule(item)
+            .getRModuleAttributes(getIssueType(item), true, Module.USER);
         Iterator i = rmas.iterator();
         while (i.hasNext()) 
         {
@@ -229,8 +279,8 @@ public  class MITList
         
         List matchingRMOs = new ArrayList();
         MITListItem item = getFirstItem();
-        List rmos = item.getModule()
-            .getLeafRModuleOptions(attribute, item.getIssueType());
+        List rmos = getModule(item)
+            .getLeafRModuleOptions(attribute, getIssueType(item));
         Iterator i = rmos.iterator();
         while (i.hasNext()) 
         {
@@ -255,8 +305,8 @@ public  class MITList
         
         List matchingRMOs = new ArrayList();
         MITListItem item = getFirstItem();
-        List rmos = item.getModule()
-            .getOptionTree(attribute, item.getIssueType());
+        List rmos = getModule(item)
+            .getOptionTree(attribute, getIssueType(item));
         Iterator i = rmos.iterator();
         while (i.hasNext()) 
         {
@@ -284,8 +334,8 @@ public  class MITList
         while (items.hasNext()) 
         {
             MITListItem item = (MITListItem)items.next();
-            IssueType issueType = item.getIssueType();
-            List rmos = item.getModule()
+            IssueType issueType = getIssueType(item);
+            List rmos = getModule(item)
                 .getRModuleOption(option, issueType).getDescendants(issueType);
             Iterator i = rmos.iterator();
             while (i.hasNext()) 
@@ -319,9 +369,8 @@ public  class MITList
         while (items.hasNext()) 
         {
             MITListItem compareItem = (MITListItem)items.next();
-            RModuleOption modOpt = compareItem.getModule()
-                .getRModuleOption(option, compareItem.getIssueType());
-            System.out.println("Comparing " + compareItem.getIssueType().getName() + "; " + modOpt);
+            RModuleOption modOpt = getModule(compareItem)
+                .getRModuleOption(option, getIssueType(compareItem));
             if (modOpt == null || !modOpt.getActive())
             {
                 common = false;
@@ -332,7 +381,7 @@ public  class MITList
     }
 
     public List getModuleIds()
-        throws Exception
+        throws TorqueException
     {
         if (size() < 1) 
         {
@@ -340,13 +389,16 @@ public  class MITList
                 " an empty list.");
         }
 
-        List items = getMITListItems();
+        List items = wrappedGetMITListItems();
         ArrayList ids = new ArrayList(items.size());
         Iterator i = items.iterator();
         while (i.hasNext()) 
         {
-            MITListItem item = (MITListItem)i.next();
-            ids.add(item.getModuleId());
+            ObjectKey id = ((MITListItem)i.next()).getModuleId();
+            if (!ids.contains(id)) 
+            {
+                ids.add(id);
+            }
         }
         return ids;
     }
@@ -360,15 +412,25 @@ public  class MITList
                 " an empty list.");
         }
 
-        List items = getMITListItems();
+        List items = wrappedGetMITListItems();
         ArrayList ids = new ArrayList(items.size());
         Iterator i = items.iterator();
         while (i.hasNext()) 
         {
-            MITListItem item = (MITListItem)i.next();
-            ids.add(item.getIssueTypeId());
+            ObjectKey id = ((MITListItem)i.next()).getIssueTypeId();
+            if (!ids.contains(id)) 
+            {
+                ids.add(id);
+            }
         }
         return ids;
+    }
+
+
+    public void addMITListItem(MITListItem item)
+        throws TorqueException
+    {
+        super.addMITListItem(item);
     }
 
     private List wrappedGetMITListItems()
@@ -376,13 +438,61 @@ public  class MITList
         List items = null;
         try
         {
-            items = getMITListItems();
+            Iterator rawItems = getMITListItems().iterator();
+            while (rawItems.hasNext()) 
+            {
+                MITListItem item = (MITListItem)rawItems.next();
+                if (!item.isSingleModule()) 
+                {
+                    Module[] modules = getScarabUser()
+                        .getModules(ScarabSecurity.ISSUE__SEARCH);
+                    for (int i=0; i< modules.length; i++) 
+                    {
+                        Module module = modules[i];
+                        if (item.isSingleIssueType()) 
+                        {
+                            MITListItem newItem = 
+                                MITListItemManager.getInstance();
+                            newItem.setModuleId(module.getModuleId());
+                            newItem.setIssueTypeId(item.getIssueTypeId());
+                            newItem.setListId(getListId());
+                            items.add(newItem);
+                        }
+                        else 
+                        {
+                            addIssueTypes(module, items);
+                        }
+                    }                    
+                }
+                else if (!item.isSingleIssueType()) 
+                {
+                    addIssueTypes(item.getModule(), items);
+                }
+                else 
+                {
+                    items.add(item);
+                }
+            }            
         }
-        catch (TorqueException e)
+        catch (Exception e)
         {
             throw new TorqueRuntimeException(e);
         }
         return items;
     }
 
+    private void addIssueTypes(Module module, List items)
+        throws Exception
+    {
+        Iterator rmits = module.getRModuleIssueTypes().iterator();
+        while (rmits.hasNext()) 
+        {
+            MITListItem newItem = MITListItemManager.getInstance();
+            newItem.setModuleId(module.getModuleId());
+            newItem.setIssueTypeId(
+                ((RModuleIssueType)rmits.next()).getIssueTypeId() );
+            newItem.setListId(getListId());
+            items.add(newItem);
+        }                            
+    }
 }
