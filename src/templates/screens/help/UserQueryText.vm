@@ -31,40 +31,34 @@
   <p> 
   <h3><a name="top" id="top"></a>$l10n.TextQueries</h3>
 
-<div>$l10n.UQT1S1</div>
-<div>$l10n.UQT1S2</div>
-<div>$l10n.UQT2</div>
-<div>$l10n.UQT3</div>
-<div>$l10n.UQT4</div>
-<div>$l10n.UQT5</div>
-<div><strong>$l10n.UQT6</strong></div>
-<div>$l10n.UQT7</div>
-<div>$l10n.UQT8</div>
-<div>$l10n.UQT9S1<pre>$l10n.UQT9S2</pre></div>
+<h3>$l10n.UQT1</h3>
+<p>$l10n.UQT2</p>
+<h3>$l10n.UQT3</h3>
+<p>$l10n.UQT4 <em>$l10n.UQT4S2</em> $l10n.UQT4S3</p>
+<p>$l10n.UQT5 <em>$l10n.UQT5S2</em></p>
+<p>$l10n.UQT6</p>
+<h3>$l10n.UQT7</h3>
+<p>$l10n.UQT8 <em>$l10n.UQT8S2</em> $l10n.UQT8S3</p>
+<h3>$l10n.UQT9</h3>
+<p>$l10n.UQT10 <em>$l10n.UQT10S2</em></p>
 
-<div>$l10n.UQT10</div>
-<div>$l10n.UQT11</div>
-<div><strong>$l10n.UQT12S1</strong>$l10n.UQT12S2<pre>$l10n.UQT12S3</pre></div>
-<div>$l10n.UQT13</div>
-<div><strong>$l10n.UQT14S1</strong>$l10n.UQT14S2<pre>$l10n.UQT14S3</pre></div>
-<div><strong>$l10n.UQT15S1</strong>$l10n.UQT15S2</div>
-<div><strong>OR</strong> $l10n.UQT16</div>
-<div><strong>AND</strong> $l10n.UQT17</div>
-<div><strong>+</strong> $l10n.UQT18S1<pre>$l10n.UQT18S2</pre></div>
-<div><strong>NOT</strong> $l10n.UQT19S1<pre>$l10n.UQT19S2</pre></div>
-<div>$l10n.UQT20S1<pre>$l10n.UQT20S2</pre></div>
 
-<div><strong>-</strong>  $l10n.UQT21S1<pre>$l10n.UQT21S2</pre></div>
-<div><strong>$l10n.UQT22S1</strong>$l10n.UQT22S2<pre>$l10n.UQT22S3</pre></div>
-<div>$l10n.UQT23</div>
+<h3>$l10n.UQT11</h3>
+<p>$l10n.UQT12</p>
+<p><strong>OR</strong> $l10n.UQT13</p>
+<p><strong>AND</strong> $l10n.UQT14</p>
+<p><strong>+</strong> $l10n.UQT15</p>
+<p><strong>NOT</strong> $l10n.UQT16</p>
+<p><strong>-</strong> $l10n.UQT17</p>
 
-<div><strong>$l10n.UQT24S1</strong>$l10n.UQT24S2</div>
-      <div>+ - &amp;&amp; || ! ( ) { } [ ] ^ " ~ * ? : \</div>
+<h3>$l10n.UQT18</h3>
+<p>$l10n.UQT19 <em>$l10n.UQT19S2</em> $l10n.UQT19S3</p>
 
-<div>$l10n.UQT25S1<pre>\(1\+1\)\:2</pre>$l10n.UQT25S2<pre>"(1-1):2"</pre></div>
-<div>$l10n.UQT26</div>
-<div><small>$l10n.UQT27<small></div>
-
+<h3>$l10n.UQT20</h3>
+<p>$l10n.UQT21</p>
+<p>$l10n.UQT22</p>
+<p>$l10n.UQT23</p>
+<p><small>$l10n.UQT24<small></p>
   
 <div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div> 
  
