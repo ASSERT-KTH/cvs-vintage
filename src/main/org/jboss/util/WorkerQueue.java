@@ -12,7 +12,7 @@ package org.jboss.util;
  *
  * @see Executable
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class WorkerQueue
 {
@@ -20,7 +20,7 @@ public class WorkerQueue
 
 	// Attributes ----------------------------------------------------
 	/* The thread that runs the Executable jobs */
-	private Thread m_queueThread;
+	protected Thread m_queueThread;
 	/* The job that will be executed by the worker thread */
 	private JobItem m_currentJob;
 
