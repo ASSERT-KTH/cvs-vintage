@@ -32,6 +32,7 @@ import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.UnreachableStatementException;
 import org.jboss.util.jmx.JMXExceptionDecoder;
 import org.jboss.util.naming.Util;
+import java.util.Map;
 
 
 
@@ -72,6 +73,12 @@ public class EJBSubsystemInvocationHandler
    public Object invoke(ServerInterceptorChain.InterceptorIterator i, InvocationRequest invocationRequest) throws Throwable
    {
       Invocation invocation = (Invocation)invocationRequest.getParameter();
+      Map requestPayload = invocationRequest.getRequestPayload();
+      if (requestPayload != null)
+      {
+         invocation.setValue(RemotingAdapter.REMOTING_CONTEXT, requestPayload);
+      } // end of if ()
+
       Thread currentThread = Thread.currentThread();
       ClassLoader oldCl = currentThread.getContextClassLoader();
       try
@@ -79,9 +86,9 @@ public class EJBSubsystemInvocationHandler
          ObjectName mbean = (ObjectName) Registry.lookup(invocation.getObjectName());
 
          return  getServer().invoke(mbean,
-                                      "invoke",
-                                      new Object[] { invocation },
-                                      Invocation.INVOKE_SIGNATURE);
+                                    "invoke",
+                                    new Object[] { invocation },
+                                    Invocation.INVOKE_SIGNATURE);
 
       }
       catch (Exception e)

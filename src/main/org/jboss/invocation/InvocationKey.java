@@ -114,6 +114,7 @@ public final class InvocationKey implements Serializable {
    public final static InvocationKey TX_TIMEOUT = new InvocationKey("TX_TIMEOUT");
    public final static InvocationKey METHOD_TO_TX_SUPPORT_MAP = new InvocationKey("METHOD_TO_TX_SUPPORT_MAP");
    public final static InvocationKey LOCATOR = new InvocationKey("LOCATOR");
+   public final static InvocationKey REMOTING_CONTEXT = new InvocationKey("REMOTING_CONTEXT");
 
 
    private final transient String name;

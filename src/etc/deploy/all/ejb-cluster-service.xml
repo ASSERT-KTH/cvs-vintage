@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server>
+<!-- $Id: ejb-cluster-service.xml,v 1.1 2003/05/09 20:49:13 d_jencks Exp $ -->
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!-- EJB services with generic clustering.                                 -->
+<!-- Use only one of this or ejb-service.xml                               -->
+<!-- ===================================================================== -->
+
+<server>
+
+
+
+  <!-- Load all jars from the JBOSS_DIST/server/<config>/lib directory. This
+    can be restricted to specific jars by specifying them in the archives
+    attribute.
+   -->
+  <classpath codebase="lib" archives="*"/>
+  <classpath codebase="lib" archives="jbossha.jar"/>
+
+  <!-- ==================================================================== -->
+  <!-- Class Loading for rmi for ejbs                                       -->
+  <!-- ==================================================================== -->
+
+  <mbean code="org.jboss.web.WebService"
+	 name="jboss:service=WebService">
+    <attribute name="Port">8083</attribute>
+    <!-- Should resources and non-EJB classes be downloadable -->
+    <attribute name="DownloadServerClasses">true</attribute>
+  </mbean>
+
+
+
+  <!-- ==================================================================== -->
+  <!-- The deployers...                                                     -->
+  <!-- ==================================================================== -->
+
+  <!-- EJB deployer, remove to disable EJB behavior-->
+  <mbean code="org.jboss.ejb.EJBDeployer" name="jboss.ejb:service=EJBDeployer">
+    <attribute name="VerifyDeployments">true</attribute>
+    <attribute name="ValidateDTDs">false</attribute>
+    <attribute name="MetricsEnabled">false</attribute>
+    <attribute name="VerifierVerbose">true</attribute>
+
+    <!--
+        StrictVerifier: Setting this to 'true' will cause all deployments
+        to fail when the Verifier detected a problem with the contained
+        Beans.
+    -->
+    <attribute name="StrictVerifier">true</attribute>
+
+    <depends>jboss.tm:service=TransactionManagerService</depends>
+    <depends>jboss:service=WebService</depends>
+  </mbean>
+  
+
+  <!-- ==================================================================== -->
+  <!-- Monitoring and Management                                            -->
+  <!-- ==================================================================== -->
+
+  <!-- Uncomment to enable JMX monitoring of the bean cache
+  <mbean code="org.jboss.monitor.BeanCacheMonitor" 
+         name="jboss.monitor:name=BeanCacheMonitor"/>
+  -->
+
+  <!-- Uncomment to enable JMX monitoring of the entity bean locking
+  <mbean code="org.jboss.monitor.EntityLockMonitor" 
+         name="jboss.monitor:name=EntityLockMonitor"/>
+  -->
+
+  <!-- ==================================================================== -->
+  <!-- EJB Invokers                                                         -->
+  <!-- ==================================================================== -->
+
+  <!--local invoker.  Can probably be replaced with a generic local invoker-->
+  <mbean code="org.jboss.invocation.local.LocalInvoker" 
+         name="jboss:service=invoker,type=local">
+  </mbean>
+
+  <!-- remoting framework invokers -->
+
+  <!--remoting framework socket transport-->
+
+  <mbean code="org.jboss.invocation.remoting.EJBSubsystemInvocationHandler"
+         name="jboss.ejb:service=RemotingToEJBAdapter">
+  </mbean>
+
+  <mbean code="org.jboss.invocation.remoting.RemotingAdapter"
+         name="jboss.ejb:service=RemotingAdapter">
+    <depends optional-attribute-name="NextInterceptorName">jboss.cluster:service=ClientClusterChooserInterceptor</depends>
+  </mbean>
+
+  <mbean code="org.jboss.remoting.ServerInterceptorChain"
+         name="jboss.ejb:service=EJBServerInterceptorChain,transport=Socket">
+    <attribute name="Subsystem">EJB</attribute>
+    <depends optional-attribute-name="ConnectorName">jboss.remoting:service=Connector,transport=Socket</depends>
+    <depends-list optional-attribute-name="InterceptorNames">
+      <depends-list-element>jboss.tm:service=XAWorkInterceptor</depends-list-element>
+      <depends-list-element>jboss.cluster:service=ClusteredRemotingServerInterceptor</depends-list-element>
+      <depends-list-element>jboss.ejb:service=RemotingToEJBAdapter</depends-list-element>
+    </depends-list>
+  </mbean>
+
+
+
+
+</server>

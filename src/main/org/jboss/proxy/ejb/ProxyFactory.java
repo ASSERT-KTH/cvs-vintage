@@ -69,7 +69,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -286,7 +286,7 @@ public class ProxyFactory
    {
       try
       {
-         InvocationContext context = setupInvocationContext(homeInvoker);
+         InvocationContext context = setupInvocationContext(homeInvoker, true);
 
          context.setValue(InvocationKey.EJB_METADATA, ejbMetaData);
 
@@ -309,7 +309,7 @@ public class ProxyFactory
              ((SessionMetaData)container.getBeanMetaData()).isStateless())
          {
             // Create a stack from the description (in the future) for now we hardcode it
-            context = setupInvocationContext(beanInvoker);
+            context = setupInvocationContext(beanInvoker, false);
 
             client = new ClientContainer(context);
 
@@ -385,7 +385,7 @@ public class ProxyFactory
     */
    public Object getStatefulSessionEJBObject(Object id)
    {
-      InvocationContext context = setupInvocationContext(beanInvoker);
+      InvocationContext context = setupInvocationContext(beanInvoker, false);
 
       context.setCacheId(id);
 
@@ -413,7 +413,7 @@ public class ProxyFactory
     */
    public Object getEntityEJBObject(Object id)
    {
-      InvocationContext context =  setupInvocationContext(beanInvoker);
+      InvocationContext context =  setupInvocationContext(beanInvoker, false);
 
       context.setCacheId(id);
 
@@ -448,7 +448,7 @@ public class ProxyFactory
 
       while(idEnum.hasNext())
       {
-         InvocationContext context = setupInvocationContext(beanInvoker);
+         InvocationContext context = setupInvocationContext(beanInvoker, false);
 
          context.setCacheId(idEnum.next());
 
@@ -482,7 +482,7 @@ public class ProxyFactory
     * @param invoker an <code>Invoker</code> value
     * @return an <code>InvocationContext</code> value
     */
-   private InvocationContext setupInvocationContext(Invoker invoker)
+   protected InvocationContext setupInvocationContext(Invoker invoker, boolean isHome)
    {
       InvocationContext context = new InvocationContext();
 
@@ -507,7 +507,6 @@ public class ProxyFactory
          } // end of try-catch
 
       } // end of if ()
-
 
       context.setMethodHashToTxSupportMap(container.getMethodHashToTxSupportMap());
       if (context.getMethodHashToTxSupportMap().isEmpty())

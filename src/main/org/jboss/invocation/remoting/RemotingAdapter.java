@@ -121,10 +121,24 @@ public class RemotingAdapter
    public InvocationResponse invoke(Invocation invocation) throws Throwable
    {
       InvokerLocator locator = (InvokerLocator)invocation.getInvocationContext().getValue(InvocationKey.LOCATOR);
-      Map sendParams = (Map)invocation.getValue(REMOTING_CONTEXT);
+      Map contextRequestPayload = (Map)invocation.getInvocationContext().getValue(InvocationKey.REMOTING_CONTEXT);
+      Map requestPayload = (Map)invocation.getValue(REMOTING_CONTEXT);
+      if (requestPayload == null)
+      {
+         requestPayload = contextRequestPayload;
+      } // end of if ()
+      else
+      {
+         if (contextRequestPayload != null)
+         {
+            requestPayload.putAll(contextRequestPayload);
+         } // end of if ()
+      } // end of else
+
+
       Object result = next.invoke(
          new InvocationRequest("", "EJB", new MarshalledInvocation(invocation),
-                               sendParams, null, locator));
+                               requestPayload, null, locator));
       return (InvocationResponse)result;
    }
 

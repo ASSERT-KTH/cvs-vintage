@@ -20,7 +20,7 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class EntityMetaData extends BeanMetaData
 {
@@ -29,7 +29,7 @@ public class EntityMetaData extends BeanMetaData
    public static final String DEFAULT_ENTITY_INVOKER_PROXY_BINDING =
       "entity-remoting-socket-invoker";
    public static final String DEFAULT_CLUSTERED_ENTITY_INVOKER_PROXY_BINDING =
-      "clustered-entity-rmi-invoker";
+      "clustered-entity-socket-invoker";
 
    private boolean cmp;
    private String primaryKeyClass;

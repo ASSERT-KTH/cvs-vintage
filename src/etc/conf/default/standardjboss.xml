@@ -5,7 +5,7 @@
 <!--  Standard JBoss Configuration                                         -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.63 2003/05/02 19:20:23 d_jencks Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.64 2003/05/09 20:49:13 d_jencks Exp $ -->
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
   <invoker-proxy-bindings>
@@ -40,7 +40,7 @@
     <invoker-proxy-binding>
       <name>entity-remoting-rmi-invoker</name>
       <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
-      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=rmi</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -68,7 +68,7 @@
     <invoker-proxy-binding>
       <name>entity-remoting-soap-invoker</name>
       <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
-      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=SOAP</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -94,37 +94,10 @@
       </proxy-factory-config>
     </invoker-proxy-binding>
     <invoker-proxy-binding>
-      <name>entity-rmi-invoker</name>
-      <invoker-mbean>jboss:service=invoker,type=jrmp</invoker-mbean>
+      <name>clustered-entity-socket-invoker</name>
+      <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
       <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
-      <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
-      <proxy-factory-config>
-        <client-interceptors>
-          <home>
-            <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
-            <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
-          </home>
-          <bean>
-            <interceptor>org.jboss.proxy.ejb.EntityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
-            <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
-          </bean>
-          <list-entity>
-            <interceptor>org.jboss.proxy.ejb.EntityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
-            <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
-          </list-entity>
-        </client-interceptors>
-      </proxy-factory-config>
-    </invoker-proxy-binding>
-    <invoker-proxy-binding>
-      <name>clustered-entity-rmi-invoker</name>
-      <invoker-mbean>jboss:service=invoker,type=jrmpha</invoker-mbean>
-      <proxy-factory>org.jboss.proxy.ejb.ProxyFactoryHA</proxy-factory>
+      <proxy-factory>org.jboss.proxy.ejb.ProxyFactoryHA2</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
           <home>
@@ -173,7 +146,7 @@
     <invoker-proxy-binding>
       <name>stateless-remoting-rmi-invoker</name>
       <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
-      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=rmi</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -195,7 +168,7 @@
     <invoker-proxy-binding>
       <name>stateless-remoting-soap-invoker</name>
       <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
-      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=SOAP</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -215,31 +188,10 @@
       </proxy-factory-config>
     </invoker-proxy-binding>
     <invoker-proxy-binding>
-      <name>stateless-rmi-invoker</name>
-      <invoker-mbean>jboss:service=invoker,type=jrmp</invoker-mbean>
+      <name>clustered-stateless-socket-invoker</name>
+      <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
       <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
-      <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
-      <proxy-factory-config>
-        <client-interceptors>
-          <home>
-            <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
-            <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
-          </home>
-          <bean>
-            <interceptor>org.jboss.proxy.ejb.StatelessSessionInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
-            <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
-          </bean>
-        </client-interceptors>
-      </proxy-factory-config>
-    </invoker-proxy-binding>
-    <invoker-proxy-binding>
-      <name>clustered-stateless-rmi-invoker</name>
-      <invoker-mbean>jboss:service=invoker,type=jrmpha</invoker-mbean>
-      <proxy-factory>org.jboss.proxy.ejb.ProxyFactoryHA</proxy-factory>
+      <proxy-factory>org.jboss.proxy.ejb.ProxyFactoryHA2</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
           <home>
@@ -282,7 +234,7 @@
     <invoker-proxy-binding>
       <name>stateful-remoting-rmi-invoker</name>
       <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
-      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=rmi</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -304,7 +256,7 @@
     <invoker-proxy-binding>
       <name>stateful-remoting-soap-invoker</name>
       <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
-      <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
+      <connector-mbean>jboss.remoting:service=Connector,transport=SOAP</connector-mbean>
       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
@@ -324,31 +276,10 @@
       </proxy-factory-config>
     </invoker-proxy-binding>
     <invoker-proxy-binding>
-      <name>stateful-rmi-invoker</name>
-      <invoker-mbean>jboss:service=invoker,type=jrmp</invoker-mbean>
+      <name>clustered-stateful-socket-invoker</name>
+      <invoker-mbean>jboss.ejb:service=RemotingAdapter</invoker-mbean>
       <connector-mbean>jboss.remoting:service=Connector,transport=Socket</connector-mbean>
-      <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
-      <proxy-factory-config>
-        <client-interceptors>
-          <home>
-            <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
-            <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
-          </home>
-          <bean>
-            <interceptor>org.jboss.proxy.ejb.StatefulSessionInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
-            <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
-          </bean>
-        </client-interceptors>
-      </proxy-factory-config>
-    </invoker-proxy-binding>
-    <invoker-proxy-binding>
-      <name>clustered-stateful-rmi-invoker</name>
-      <invoker-mbean>jboss:service=invoker,type=jrmpha</invoker-mbean>
-      <proxy-factory>org.jboss.proxy.ejb.ProxyFactoryHA</proxy-factory>
+      <proxy-factory>org.jboss.proxy.ejb.ProxyFactoryHA2</proxy-factory>
       <proxy-factory-config>
         <client-interceptors>
           <home>
@@ -410,77 +341,9 @@
         </MDBConfig>
       </proxy-factory-config>
     </invoker-proxy-binding>
-    <!-- the trunk invoker bindings -->
-    <invoker-proxy-binding>
-      <name>entity-trunk-invoker</name>
-      <invoker-mbean>jboss:service=invoker,type=trunk</invoker-mbean>
-      <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
-      <proxy-factory-config>
-        <client-interceptors>
-          <home>
-            <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
-            <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
-          </home>
-          <bean>
-            <interceptor>org.jboss.proxy.ejb.EntityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
-            <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
-          </bean>
-          <list-entity>
-            <interceptor>org.jboss.proxy.ejb.EntityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
-            <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
-          </list-entity>
-        </client-interceptors>
-      </proxy-factory-config>
-    </invoker-proxy-binding>
-    <invoker-proxy-binding>
-      <name>stateless-trunk-invoker</name>
-      <invoker-mbean>jboss:service=invoker,type=trunk</invoker-mbean>
-      <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
-      <proxy-factory-config>
-        <client-interceptors>
-          <home>
-            <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
-            <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
-          </home>
-          <bean>
-            <interceptor>org.jboss.proxy.ejb.StatelessSessionInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
-            <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
-          </bean>
-        </client-interceptors>
-      </proxy-factory-config>
-    </invoker-proxy-binding>
-    <invoker-proxy-binding>
-      <name>stateful-trunk-invoker</name>
-      <invoker-mbean>jboss:service=invoker,type=trunk</invoker-mbean>
-      <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
-      <proxy-factory-config>
-        <client-interceptors>
-          <home>
-            <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
-            <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
-          </home>
-          <bean>
-            <interceptor>org.jboss.proxy.ejb.StatefulSessionInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
-            <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
-            <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
-          </bean>
-        </client-interceptors>
-      </proxy-factory-config>
-    </invoker-proxy-binding>
   </invoker-proxy-bindings>
+
+
   <container-configurations>
     <container-configuration>
       <container-name>Standard CMP EntityBean</container-name>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.80 2003/05/02 19:20:23 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.81 2003/05/09 20:49:13 d_jencks Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -100,16 +100,6 @@
   -->
 
 
-  <!-- ==================================================================== -->
-  <!-- Class Loading                                                        -->
-  <!-- ==================================================================== -->
-
-  <mbean code="org.jboss.web.WebService"
-	 name="jboss:service=WebService">
-    <attribute name="Port">8083</attribute>
-    <!-- Should resources and non-EJB classes be downloadable -->
-    <attribute name="DownloadServerClasses">true</attribute>
-  </mbean>
 
 
   <!-- ==================================================================== -->
@@ -190,133 +180,11 @@
   </mbean>
 
 
-  <!-- ==================================================================== -->
-  <!-- The deployers...                                                     -->
-  <!-- ==================================================================== -->
-
-  <!-- EJB deployer, remove to disable EJB behavior-->
-  <mbean code="org.jboss.ejb.EJBDeployer" name="jboss.ejb:service=EJBDeployer">
-    <attribute name="VerifyDeployments">true</attribute>
-    <attribute name="ValidateDTDs">false</attribute>
-    <attribute name="MetricsEnabled">false</attribute>
-    <attribute name="VerifierVerbose">true</attribute>
-
-    <!--
-        StrictVerifier: Setting this to 'true' will cause all deployments
-        to fail when the Verifier detected a problem with the contained
-        Beans.
-    -->
-    <attribute name="StrictVerifier">true</attribute>
-
-    <depends>jboss.tm:service=TransactionManagerService</depends>
-    <depends>jboss:service=WebService</depends>
-  </mbean>
   
   <!-- EAR deployer, remove if you are not using Web layers -->
   <mbean code="org.jboss.deployment.EARDeployer" name="jboss.j2ee:service=EARDeployer">
   </mbean>
   
-
-  <!-- ==================================================================== -->
-  <!-- Monitoring and Management                                            -->
-  <!-- ==================================================================== -->
-
-  <!-- Uncomment to enable JMX monitoring of the bean cache
-  <mbean code="org.jboss.monitor.BeanCacheMonitor" 
-         name="jboss.monitor:name=BeanCacheMonitor"/>
-  -->
-
-  <!-- Uncomment to enable JMX monitoring of the entity bean locking
-  <mbean code="org.jboss.monitor.EntityLockMonitor" 
-         name="jboss.monitor:name=EntityLockMonitor"/>
-  -->
-
-  <!-- ==================================================================== -->
-  <!-- EJB Invokers                                                         -->
-  <!-- ==================================================================== -->
-
-  <!-- remoting framework invokers -->
-
-  <!--remoting framework socket transport-->
-
-  <mbean code="org.jboss.invocation.remoting.EJBSubsystemInvocationHandler"
-         name="jboss.ejb:service=SubsystemInvocationHandler">
-  </mbean>
-
-  <mbean code="org.jboss.invocation.remoting.RemotingAdapter"
-         name="jboss.ejb:service=RemotingAdapter">
-    <depends optional-attribute-name="NextInterceptorName">jboss.tm:service=DTXAResourceInterceptor</depends>
-  </mbean>
-
-  <mbean code="org.jboss.remoting.ServerInterceptorChain"
-         name="jboss.ejb:service=EJBServerInterceptorChain,transport=Socket">
-    <attribute name="Subsystem">EJB</attribute>
-    <depends optional-attribute-name="ConnectorName">jboss.remoting:service=Connector,transport=Socket</depends>
-    <depends-list optional-attribute-name="InterceptorNames">
-      <depends-list-element>jboss.tm:service=XAWorkInterceptor</depends-list-element>
-      <depends-list-element>jboss.ejb:service=SubsystemInvocationHandler</depends-list-element>
-    </depends-list>
-  </mbean>
-
-
-
-
-  <!-- RMI/JRMP invoker -->
-  <mbean code="org.jboss.invocation.jrmp.server.JRMPInvoker" 
-         name="jboss:service=invoker,type=jrmp">
-    <!--
-    <attribute name="RMIObjectPort">4444</attribute>
-    <attribute name="RMIClientSocketFactory">custom</attribute>
-    <attribute name="RMIServerSocketFactory">custom</attribute>
-    <attribute name="RMIServerSocketAddr">custom</attribute>
-    <attribute name="SecurityDomain">ssl-domain-name</attribute>
-    -->
-
-    <depends>jboss.tm:service=TransactionManagerService</depends>
-  </mbean>
-  
-  <mbean code="org.jboss.invocation.pooled.server.PooledInvoker"
-         name="jboss:service=invoker,type=pooled">
-    <depends>jboss.tm:service=TransactionManagerService</depends>
-  </mbean>
-
-  <mbean code="org.jboss.invocation.local.LocalInvoker" 
-         name="jboss:service=invoker,type=local">
-
-    <depends>jboss.tm:service=TransactionManagerService</depends>
-  </mbean>
-
-  <!-- Trunk invoker -->
-  <mbean code="org.jboss.resource.work.BaseWorkManager" 
-         name="jboss:service=WorkManager,type=TrunkInvoker">
-    <depends optional-attribute-name="TransactionManager">jboss.tm:service=TransactionManagerService</depends>
-    <attribute name="MinThreads">0</attribute>
-    <attribute name="MaxThreads">50</attribute>
-    <attribute name="KeepAliveTime">10000</attribute>
-  </mbean>
-
-  <mbean code="org.jboss.invocation.trunk.server.TrunkInvoker" 
-         name="jboss:service=invoker,type=trunk">
-    <attribute name="EnableTcpNoDelay">true</attribute>
-    <attribute name="ServerBindPort">4445</attribute>
-    <depends optional-attribute-name="WorkManager">jboss:service=WorkManager,type=TrunkInvoker</depends>
-    <depends optional-attribute-name="TransactionManagerService">jboss.tm:service=TransactionManagerService</depends>
-    <!--
-    <attribute name="ServerBindAddress">192.168.1.1</attribute>
-    <attribute name="ClientConnectAddress">192.168.1.1</attribute>
-    <attribute name="ClientConnectPort">4445</attribute>
-    -->
-  </mbean>
-
-  <!-- ==================================================================== -->
-  <!-- Target of remote commit/rollback/prepare/recover calls               -->
-  <!-- ==================================================================== -->
-
-  <mbean code="org.jboss.invocation.XATerminatorContainer"
-	 name="jboss.invoker:service=XATerminatorContainer">
-    <depends optional-attribute-name="TransactionManagerService">jboss.tm:service=TransactionManagerService</depends>
-  </mbean>
-
 
   <!-- ==================================================================== -->
   <!-- Deployment Scanning                                                  -->
