@@ -56,7 +56,7 @@ public class TreeController
 
 	public JScrollPane scrollPane;
 
-	private Folder oldSelected;
+	private FolderTreeNode oldSelection;
 
 	private FolderTreeMenu menu;
 
@@ -71,6 +71,8 @@ public class TreeController
 	private TreeView view;
 
 	private MailFrameController mailFrameController;
+	
+	
 
 	public TreeController(
 		MailFrameController mailFrameController,
@@ -197,10 +199,16 @@ public class TreeController
 
 	public void selectFolder() {
 
+		if ( view.getLastSelectedPathComponent() == null ) return;
+		
+		if (  !getSelected().equals(oldSelection))
+		{
 		MainInterface.processor.addOp(
 			new ViewHeaderListCommand(
 				getMailFrameController(),
 				treeSelectionManager.getSelection()));
+			oldSelection = getSelected();
+		}
 
 	}
 
