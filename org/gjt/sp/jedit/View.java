@@ -74,7 +74,7 @@ import org.gjt.sp.jedit.textarea.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.64 2003/03/17 00:20:08 spestov Exp $
+ * @version $Id: View.java,v 1.65 2003/03/17 03:05:49 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -733,6 +733,30 @@ public class View extends JFrame implements EBComponent
 	public void setBuffer(Buffer buffer)
 	{
 		editPane.setBuffer(buffer);
+	} //}}}
+
+	//{{{ goToBuffer() method
+	/**
+	 * If this buffer is open in one of the view's edit panes, sets focus
+	 * to that edit pane. Otherwise, opens the buffer in the currently
+	 * active edit pane.
+	 * @param buffer The buffer
+	 * @since jEdit 4.2pre1
+	 */
+	public EditPane goToBuffer(Buffer buffer)
+	{
+		EditPane[] editPanes = getEditPanes();
+		for(int i = 0; i < editPanes.length; i++)
+		{
+			EditPane ep = editPanes[i];
+			if(ep.getBuffer() == buffer)
+			{
+				ep.focusOnTextArea();
+				return ep;
+			}
+		}
+		setBuffer(buffer);
+		return editPane;
 	} //}}}
 
 	//{{{ getTextArea() method

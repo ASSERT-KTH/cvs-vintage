@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.23 2003/01/20 02:02:28 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.24 2003/03/17 03:05:50 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent
 {
@@ -272,7 +272,7 @@ public class HyperSearchResults extends JPanel implements EBComponent
 			if(buffer == null)
 				return;
 
-			view.setBuffer(buffer);
+			view.goToBuffer(buffer);
 
 			// fuck me dead
 			SwingUtilities.invokeLater(new Runnable()
@@ -298,8 +298,8 @@ public class HyperSearchResults extends JPanel implements EBComponent
 					int start = result.startPos.getOffset();
 					int end = result.endPos.getOffset();
 					Selection s = new Selection.Range(start,end);
-					view.setBuffer(buffer);
-					JEditTextArea textArea = view.getTextArea();
+					EditPane pane = view.goToBuffer(buffer);
+					JEditTextArea textArea = pane.getTextArea();
 					if(textArea.isMultipleSelectionEnabled())
 						textArea.addToSelection(s);
 					else

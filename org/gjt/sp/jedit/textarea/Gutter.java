@@ -45,7 +45,7 @@ import org.gjt.sp.jedit.*;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.31 2003/03/17 00:20:10 spestov Exp $
+ * @version $Id: Gutter.java,v 1.32 2003/03/17 03:05:50 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -765,7 +765,7 @@ public class Gutter extends JComponent implements SwingConstants
 				FoldVisibilityManager foldVisibilityManager
 					= textArea.getFoldVisibilityManager();
 
-				//{{{ Clicking on fold triangle does various things
+				//{{{ Clicking on folds does various things
 				if(buffer.isFoldStart(line))
 				{
 					StringBuffer property = new StringBuffer(
@@ -794,6 +794,11 @@ public class Gutter extends JComponent implements SwingConstants
 						foldVisibilityManager
 							.expandFold(line,true);
 						textArea.selectFold(line);
+					}
+					else if(action.equals("narrowToFold"))
+					{
+						int[] lines = buffer.getFoldAtLine(line);
+						foldVisibilityManager.narrow(lines[0],lines[1]);
 					}
 					else if(foldVisibilityManager
 						.isLineVisible(line + 1))
@@ -841,6 +846,7 @@ public class Gutter extends JComponent implements SwingConstants
 									textArea.selectToMatchingBracket();
 								else
 									textArea.goToMatchingBracket();
+								return;
 							}
 						}
 					}
