@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.54 2005/01/09 14:58:39 linus Exp $
+// $Id: StateDiagramGraphModel.java,v 1.55 2005/01/13 20:21:28 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -409,6 +409,18 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
 	      || ModelFacade.isATransition(edge))) {
 	    return false;
 	}
+        
+        // it's not allowed to move a transition
+        // so that it will go from a composite to its substate 
+        // nor vice versa. See issue 2865.
+        Object otherSideNode = ModelFacade.getSource(edge);
+        if (otherSideNode == oldNode) 
+            otherSideNode = ModelFacade.getTarget(edge);
+        if (ModelFacade.isACompositeState(newNode)
+                && Model.getStateMachinesHelper().getAllSubStates(newNode)
+                                                    .contains(otherSideNode)) {
+            return false;
+        }
 
         return true;
     }
