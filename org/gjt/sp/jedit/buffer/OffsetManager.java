@@ -37,7 +37,7 @@ import org.gjt.sp.util.IntegerArray;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.6 2001/10/22 11:50:57 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.7 2001/10/24 06:30:34 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -198,7 +198,7 @@ public class OffsetManager
 				lineInfo[startLine + i] =
 					(((offset + endOffsets.get(i) + 1)
 					| (0xffL << VISIBLE_SHIFT))
-					& ~(FOLD_LEVEL_VALID | CONTEXT_VALID));
+					& ~(FOLD_LEVEL_VALID_MASK | CONTEXT_VALID_MASK));
 			}
 		} //}}}
 
@@ -207,7 +207,7 @@ public class OffsetManager
 		{
 			lineInfo[i] = (((getLineEndOffset(i) + length)
 				| (0xffL << VISIBLE_SHIFT))
-				& ~(FOLD_LEVEL_VALID | CONTEXT_VALID));
+				& ~(FOLD_LEVEL_VALID_MASK | CONTEXT_VALID_MASK));
 		} //}}}
 
 		// TODO: positions
