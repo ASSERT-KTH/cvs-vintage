@@ -1,4 +1,4 @@
-// $Id: Init.java,v 1.36 2005/01/17 22:31:06 linus Exp $
+// $Id: Init.java,v 1.37 2005/01/27 21:42:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -255,30 +255,38 @@ public class Init {
     private static CompoundCritic crCompoundConstructorNeeded =
         new CompoundCritic(crMissingClassName, crConstructorNeeded);
 
-    /** static initializer, register all appropriate critics */
+    /**
+     * static initializer, register all appropriate critics.
+     */
     public static void init() {
-	java.lang.Class modelCls = (Class) ModelFacade.MODEL;
-	java.lang.Class packageCls = (Class) ModelFacade.PACKAGE;
-	java.lang.Class modelElementCls = (Class) ModelFacade.MODELELEMENT;
-	java.lang.Class classCls = (Class) ModelFacade.CLASS;
-	java.lang.Class classifierCls = (Class) ModelFacade.CLASSIFIER;
-	java.lang.Class interfaceCls = (Class) ModelFacade.INTERFACE;
-	java.lang.Class attrCls = (Class) ModelFacade.ATTRIBUTE;
-	java.lang.Class paramCls = (Class) ModelFacade.PARAMETER;
-	java.lang.Class operCls = (Class) ModelFacade.OPERATION;
-	java.lang.Class assocCls = (Class) ModelFacade.ASSOCIATION;
-	java.lang.Class assocEndCls = (Class) ModelFacade.ASSOCIATION_END;
-	java.lang.Class assocClassCls = (Class) ModelFacade.ASSOCIATION_CLASS;
-	java.lang.Class namespaceCls = (Class) ModelFacade.NAMESPACE;
+	java.lang.Class modelCls = (Class) ModelFacade.getModelToken();
+	java.lang.Class packageCls = (Class) ModelFacade.getPackageToken();
+	java.lang.Class modelElementCls =
+	    (Class) ModelFacade.getModelElementToken();
+	java.lang.Class classCls = (Class) ModelFacade.getClassToken();
+	java.lang.Class classifierCls =
+	    (Class) ModelFacade.getClassifierToken();
+	java.lang.Class interfaceCls = (Class) ModelFacade.getInterfaceToken();
+	java.lang.Class attrCls = (Class) ModelFacade.getAttributeToken();
+	java.lang.Class paramCls = (Class) ModelFacade.getParameterToken();
+	java.lang.Class operCls = (Class) ModelFacade.getOperationToken();
+	java.lang.Class assocCls = (Class) ModelFacade.getAssociationToken();
+	java.lang.Class assocEndCls =
+	    (Class) ModelFacade.getAssociationEndToken();
+	java.lang.Class assocClassCls =
+	    (Class) ModelFacade.getAssociationClassToken();
+	java.lang.Class namespaceCls = (Class) ModelFacade.getNamespaceToken();
 	java.lang.Class genElementCls =
-	    (Class) ModelFacade.GENERALIZABLE_ELEMENT;
-	java.lang.Class genCls = (Class) ModelFacade.GENERALIZATION;
-	java.lang.Class datatypeCls = (Class) ModelFacade.DATATYPE;
-	java.lang.Class useCaseCls = (Class) ModelFacade.USE_CASE;
-	java.lang.Class actorCls = (Class) ModelFacade.ACTOR;
-	java.lang.Class stateVertexCls = (Class) ModelFacade.STATEVERTEX;
-	java.lang.Class stateCls = (Class) ModelFacade.STATE;
-	java.lang.Class compositieStateCls = (Class) ModelFacade.COMPOSITESTATE;
+	    (Class) ModelFacade.getGeneralizableElementToken();
+	java.lang.Class genCls = (Class) ModelFacade.getGeneralizationToken();
+	java.lang.Class datatypeCls = (Class) ModelFacade.getDatatypeToken();
+	java.lang.Class useCaseCls = (Class) ModelFacade.getUseCaseToken();
+	java.lang.Class actorCls = (Class) ModelFacade.getActorToken();
+	java.lang.Class stateVertexCls =
+	    (Class) ModelFacade.getStateVertexToken();
+	java.lang.Class stateCls = (Class) ModelFacade.getStateToken();
+	java.lang.Class compositieStateCls =
+	    (Class) ModelFacade.getCompositeStateToken();
 	// java.lang.Class stateDiagramCls   = UMLStateDiagram.class;
 	// java.lang.Class useCaseDiagramCls = UMLUseCaseDiagram.class;
 
@@ -352,8 +360,10 @@ public class Init {
 	Agency.register(crTooManyStates, compositieStateCls);
 	java.lang.Class classDiagramCls   = UMLClassDiagram.class;
 	Agency.register(crTooManyClasses, classDiagramCls);
-	java.lang.Class pseudostateCls = (Class) ModelFacade.PSEUDOSTATE;
-	java.lang.Class transitionCls = (Class) ModelFacade.TRANSITION;
+	java.lang.Class pseudostateCls =
+	    (Class) ModelFacade.getPseudostateToken();
+	java.lang.Class transitionCls =
+	    (Class) ModelFacade.getTransitionToken();
 	Agency.register(noTrans1, stateVertexCls);
 	Agency.register(noTrans2, stateVertexCls);
 	Agency.register(crMultipleInitialStates, pseudostateCls);

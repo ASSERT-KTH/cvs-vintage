@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.79 2005/01/20 23:20:40 linus Exp $
+// $Id: FigAssociation.java,v 1.80 2005/01/27 21:42:28 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -355,19 +355,25 @@ public class FigAssociation extends FigEdgeModelElement {
 	ArrowHead arrow = ArrowHeadNone.TheInstance;
 
 	if (nav) {
-	    if (ModelFacade.NONE_AGGREGATIONKIND.equals(ak) || (ak == null)) {
+	    if (ModelFacade.getNoneAggregationKindToken().equals(ak)
+	            || (ak == null)) {
 		arrow = new ArrowHeadGreater();
-            } else if (ModelFacade.AGGREGATE_AGGREGATIONKIND.equals(ak)) {
+            } else if (ModelFacade.getAggregateAggregationKindToken()
+                    .equals(ak)) {
 		arrow = NAV_AGGREGATE;
-            } else if (ModelFacade.COMPOSITE_AGGREGATIONKIND.equals(ak)) {
+            } else if (ModelFacade.getCompositeAggregationKindToken()
+                    .equals(ak)) {
 		arrow = NAV_COMP;
             }
 	} else {
-	    if (ModelFacade.NONE_AGGREGATIONKIND.equals(ak) || (ak == null)) {
+	    if (ModelFacade.getNoneAggregationKindToken().equals(ak)
+	            || (ak == null)) {
 		arrow = ArrowHeadNone.TheInstance;
-	    } else if (ModelFacade.AGGREGATE_AGGREGATIONKIND.equals(ak)) {
+	    } else if (ModelFacade.getAggregateAggregationKindToken()
+	            .equals(ak)) {
 		arrow = ArrowHeadDiamond.WhiteDiamond;
-	    } else if (ModelFacade.COMPOSITE_AGGREGATIONKIND.equals(ak)) {
+	    } else if (ModelFacade.getCompositeAggregationKindToken()
+	            .equals(ak)) {
 		arrow = ArrowHeadDiamond.BlackDiamond;
 	    }
 	}

@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.55 2005/01/11 13:03:16 bobtarling Exp $
+// $Id: TabProps.java,v 1.56 2005/01/27 21:42:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,13 +21,6 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-
-// 27 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Added MExtendImpl to
-// the list of classes in run().
-
-// 4 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Preloaded
-// PropPanelDiagram for each of the standard diagrams in initPanels to
-// eliminate messages when trying to find the panel.
 
 package org.argouml.uml.ui;
 
@@ -159,7 +152,8 @@ public class TabProps
     }
 
     /**
-     * Set the orientation of the property panel
+     * Set the orientation of the property panel.
+     *
      * @param orientation the new orientation for this property panel
      */
     public void setOrientation(Orientation orientation) {
@@ -180,7 +174,7 @@ public class TabProps
      */
     protected void initPanels() {
 
-        panels.put(ModelFacade.CLASS/*MClassImpl.class*/, new PropPanelClass());
+        panels.put(ModelFacade.getClassToken(), new PropPanelClass());
         panels.put(ArgoDiagram.class, new PropPanelDiagram());
 
         // Put all the diagram PropPanels here explicitly. They would eventually
@@ -213,7 +207,7 @@ public class TabProps
         //important: MStateImpl corresponds to PropPanelSimpleState
         //               not to PropPanelState!!
         //otherwise, spawing will not be successful!!
-        panels.put(ModelFacade.STATEIMPL/*MStateImpl.class*/,
+        panels.put(ModelFacade.getStateImplToken(),
                 new PropPanelSimpleState());
     }
 
@@ -351,19 +345,22 @@ public class TabProps
         int lastDot = targetClassName.lastIndexOf(".");
 
         //remove "ru.novosoft.uml"
-        if (lastDot > 0)
+        if (lastDot > 0) {
             base = targetClassName.substring(16, lastDot + 1);
-        else
+        } else {
             base = targetClassName.substring(16);
+        }
 
-        if (lastDot > 0)
+        if (lastDot > 0) {
             targetClassName = targetClassName.substring(lastDot + 1);
+        }
 
         if (targetClassName.startsWith("M"))
             targetClassName = targetClassName.substring(1); //remove M
-        if (targetClassName.endsWith("Impl"))
+        if (targetClassName.endsWith("Impl")) {
             targetClassName =
                 targetClassName.substring(0, targetClassName.length() - 4);
+        }
         //remove Impl
 
         // This doesn't work for panel property tabs - they are being put in the

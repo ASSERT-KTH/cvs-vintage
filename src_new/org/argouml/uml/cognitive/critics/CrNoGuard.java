@@ -1,4 +1,4 @@
-// $Id: CrNoGuard.java,v 1.10 2005/01/09 14:58:36 linus Exp $
+// $Id: CrNoGuard.java,v 1.11 2005/01/27 21:42:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrNoGuard.java,v 1.10 2005/01/09 14:58:36 linus Exp $
 package org.argouml.uml.cognitive.critics;
 
 import org.argouml.cognitive.Designer;
@@ -54,20 +53,27 @@ public class CrNoGuard extends CrUML {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isATransition(dm))) return NO_PROBLEM;
-	Object sv = ModelFacade.getSource(dm);
-	if (!(ModelFacade.isAPseudostate(sv))) return NO_PROBLEM;
-	if (!ModelFacade.
-	    equalsPseudostateKind(ModelFacade.getPseudostateKind(sv),
-				  ModelFacade.BRANCH_PSEUDOSTATEKIND))
+	if (!(ModelFacade.isATransition(dm))) {
 	    return NO_PROBLEM;
+	}
+	Object sv = ModelFacade.getSource(dm);
+	if (!(ModelFacade.isAPseudostate(sv))) {
+	    return NO_PROBLEM;
+	}
+	if (!ModelFacade.equalsPseudostateKind(
+	        ModelFacade.getPseudostateKind(sv),
+	        ModelFacade.getBranchPseudostateKindToken())) {
+	    return NO_PROBLEM;
+	}
 	Object g = /*(MGuard)*/ ModelFacade.getGuard(dm);
 	boolean noGuard = (g == null
             || ModelFacade.getExpression(g) == null
             || ModelFacade.getBody(ModelFacade.getExpression(g)) == null
             || ((String) ModelFacade.getBody(ModelFacade.getExpression(g)))
                                                     .length() == 0);
-	if (noGuard) return PROBLEM_FOUND;
+	if (noGuard) {
+	    return PROBLEM_FOUND;
+	}
 	return NO_PROBLEM;
     }
 

@@ -1,4 +1,4 @@
-// $Id: TestUmlNamespace.java,v 1.8 2005/01/17 22:31:02 linus Exp $
+// $Id: TestUmlNamespace.java,v 1.9 2005/01/27 21:42:31 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ public class TestUmlNamespace extends GenericUmlObjectTestFixture {
      * @param arg0 test name
      */
     public TestUmlNamespace(String arg0) {
-	super(arg0, ModelFacade.NAMESPACE);
+	super(arg0, ModelFacade.getNamespaceToken());
 	validateTestClassIsGeneric(this);
     }
 
@@ -45,7 +45,8 @@ public class TestUmlNamespace extends GenericUmlObjectTestFixture {
      * Test creating a Namespace.
      */
     public void testNamespace() {
-	Object o = Model.getUmlFactory().buildNode(ModelFacade.NAMESPACE);
+	Object o =
+	    Model.getUmlFactory().buildNode(ModelFacade.getNamespaceToken());
 	assertNotNull("Didn't create object", o);
 	assertTrue("Should be a base", ModelFacade.isABase(o));
 	assertTrue("Should be a namespace", ModelFacade.isANamespace(o));
@@ -57,8 +58,8 @@ public class TestUmlNamespace extends GenericUmlObjectTestFixture {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        setTruth(ModelFacade.MODELELEMENT, true);
-        setTruth(ModelFacade.NAMESPACE, true);
+        setTruth(ModelFacade.getModelElementToken(), true);
+        setTruth(ModelFacade.getNamespaceToken(), true);
     }
 
 }

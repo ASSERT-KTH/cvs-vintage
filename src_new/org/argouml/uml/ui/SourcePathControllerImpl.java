@@ -1,4 +1,4 @@
-// $Id: SourcePathControllerImpl.java,v 1.8 2005/01/20 23:20:37 linus Exp $
+// $Id: SourcePathControllerImpl.java,v 1.9 2005/01/27 21:42:26 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -112,7 +112,7 @@ public class SourcePathControllerImpl implements SourcePathController {
         Object model = p.getRoot();
         Collection elems =
             Model.getModelManagementHelper().getAllModelElementsOfKindWithModel(
-                model, ModelFacade.MODELELEMENT);
+                model, ModelFacade.getModelElementToken());
 
         ArrayList mElemsWithSrcPath = new ArrayList();
 

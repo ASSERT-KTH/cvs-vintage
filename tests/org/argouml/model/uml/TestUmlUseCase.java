@@ -1,4 +1,4 @@
-// $Id: TestUmlUseCase.java,v 1.8 2005/01/17 22:31:02 linus Exp $
+// $Id: TestUmlUseCase.java,v 1.9 2005/01/27 21:42:31 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ public class TestUmlUseCase extends GenericUmlObjectTestFixture {
      * @param arg0 test name
      */
     public TestUmlUseCase(String arg0) {
-	super(arg0, ModelFacade.USE_CASE);
+	super(arg0, ModelFacade.getUseCaseToken());
 	validateTestClassIsGeneric(this);
     }
 
@@ -45,7 +45,8 @@ public class TestUmlUseCase extends GenericUmlObjectTestFixture {
      * Test creating a usecase.
      */
     public void testUseCase() {
-	Object o = Model.getUmlFactory().buildNode(ModelFacade.USE_CASE);
+	Object o =
+	    Model.getUmlFactory().buildNode(ModelFacade.getUseCaseToken());
 	assertNotNull("Didn't create object", o);
 	assertTrue("Should be a base", ModelFacade.isABase(o));
 	assertTrue("Should be a use case", ModelFacade.isAUseCase(o));
@@ -57,11 +58,11 @@ public class TestUmlUseCase extends GenericUmlObjectTestFixture {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        setTruth(ModelFacade.MODELELEMENT, true);
-        setTruth(ModelFacade.GENERALIZABLE_ELEMENT, true);
-        setTruth(ModelFacade.NAMESPACE, true);
-        setTruth(ModelFacade.CLASSIFIER, true);
-        setTruth(ModelFacade.USE_CASE, true);
+        setTruth(ModelFacade.getModelElementToken(), true);
+        setTruth(ModelFacade.getGeneralizableElementToken(), true);
+        setTruth(ModelFacade.getNamespaceToken(), true);
+        setTruth(ModelFacade.getClassifierToken(), true);
+        setTruth(ModelFacade.getUseCaseToken(), true);
     }
 
 }

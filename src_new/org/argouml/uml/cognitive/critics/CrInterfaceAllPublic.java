@@ -1,4 +1,4 @@
-// $Id: CrInterfaceAllPublic.java,v 1.12 2005/01/09 14:58:36 linus Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.13 2005/01/27 21:42:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrInterfaceAllPublic.java,v 1.12 2005/01/09 14:58:36 linus Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.13 2005/01/27 21:42:25 linus Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
@@ -31,10 +31,12 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
 
-/** Well-formedness rule [3] for MInterface. See page 32 of UML 1.1
+/**
+ * Well-formedness rule [3] for MInterface. See page 32 of UML 1.1
  *
  * @author jrobbins
- *  Semantics. OMG document ad/97-08-04. */
+ *  Semantics. OMG document ad/97-08-04.
+ */
 public class CrInterfaceAllPublic extends CrUML {
 
     /**
@@ -53,17 +55,24 @@ public class CrInterfaceAllPublic extends CrUML {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isAInterface(dm))) return NO_PROBLEM;
+	if (!(ModelFacade.isAInterface(dm))) {
+	    return NO_PROBLEM;
+	}
 	Object inf = /*(MInterface)*/ dm;
 	Collection bf = ModelFacade.getFeatures(inf);
-	if (bf == null) return NO_PROBLEM;
+	if (bf == null) {
+	    return NO_PROBLEM;
+	}
 	Iterator features = bf.iterator();
 	while (features.hasNext()) {
 	    Object f = /*(MFeature)*/ features.next();
-	    if (ModelFacade.getVisibility(f) == null) return NO_PROBLEM;
+	    if (ModelFacade.getVisibility(f) == null) {
+	        return NO_PROBLEM;
+	    }
 	    if (!ModelFacade.getVisibility(f)
-                .equals(ModelFacade.PUBLIC_VISIBILITYKIND))
-		return PROBLEM_FOUND;
+                .equals(ModelFacade.getPublicVisibilityKindToken())) {
+	        return PROBLEM_FOUND;
+	    }
 	}
 	return NO_PROBLEM;
     }

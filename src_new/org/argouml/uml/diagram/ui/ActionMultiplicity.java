@@ -1,4 +1,4 @@
-// $Id: ActionMultiplicity.java,v 1.6 2005/01/20 23:20:40 linus Exp $
+// $Id: ActionMultiplicity.java,v 1.7 2005/01/27 21:42:28 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,24 +51,24 @@ public class ActionMultiplicity extends UMLAction {
 
     // multiplicity
     private static UMLAction srcMultOne =
-	new ActionMultiplicity(ModelFacade.M1_1_MULTIPLICITY, "src");
+	new ActionMultiplicity(ModelFacade.getM11MultiplicityToken(), "src");
     private static UMLAction destMultOne =
-	new ActionMultiplicity(ModelFacade.M1_1_MULTIPLICITY, "dest");
+	new ActionMultiplicity(ModelFacade.getM11MultiplicityToken(), "dest");
 
     private static UMLAction srcMultZeroToOne =
-	new ActionMultiplicity(ModelFacade.M0_1_MULTIPLICITY, "src");
+	new ActionMultiplicity(ModelFacade.getM01MultiplicityToken(), "src");
     private static UMLAction destMultZeroToOne =
-	new ActionMultiplicity(ModelFacade.M0_1_MULTIPLICITY, "dest");
+	new ActionMultiplicity(ModelFacade.getM01MultiplicityToken(), "dest");
 
     private static UMLAction srcMultZeroToMany =
-	new ActionMultiplicity(ModelFacade.M0_N_MULTIPLICITY, "src");
+	new ActionMultiplicity(ModelFacade.getM0NMultiplicityToken(), "src");
     private static UMLAction destMultZeroToMany =
-	new ActionMultiplicity(ModelFacade.M0_N_MULTIPLICITY, "dest");
+	new ActionMultiplicity(ModelFacade.getM0NMultiplicityToken(), "dest");
 
     private static UMLAction srcMultOneToMany =
-	new ActionMultiplicity(ModelFacade.M1_N_MULTIPLICITY, "src");
+	new ActionMultiplicity(ModelFacade.getM1NMultiplicityToken(), "src");
     private static UMLAction destMultOneToMany =
-	new ActionMultiplicity(ModelFacade.M1_N_MULTIPLICITY, "dest");
+	new ActionMultiplicity(ModelFacade.getM1NMultiplicityToken(), "dest");
 
 
     ////////////////////////////////////////////////////////////////
@@ -105,8 +105,7 @@ public class ActionMultiplicity extends UMLAction {
 	    Object ascEnd = null;
 	    if (str.equals("src")) {
 		ascEnd = iter.next();
-            }
-	    else {
+            } else {
                 while (iter.hasNext()) {
                     ascEnd = iter.next();
                 }

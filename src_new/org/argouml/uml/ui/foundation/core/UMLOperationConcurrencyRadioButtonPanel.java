@@ -1,4 +1,4 @@
-// $Id: UMLOperationConcurrencyRadioButtonPanel.java,v 1.3 2005/01/09 14:59:09 linus Exp $
+// $Id: UMLOperationConcurrencyRadioButtonPanel.java,v 1.4 2005/01/27 21:42:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLOperationConcurrencyRadioButtonPanel.java,v 1.3 2005/01/09 14:59:09 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
@@ -72,12 +71,15 @@ public class UMLOperationConcurrencyRadioButtonPanel extends
             Object target = /* (MModelElement) */getTarget();
             Object kind = ModelFacade.getConcurrency(target);
             if (kind == null
-                    || kind.equals(ModelFacade.SEQUENTIAL_CONCURRENCYKIND)) {
+                    || kind.equals(
+                            ModelFacade.getSequentialConcurrencyKindToken())) {
                 setSelected(ActionSetOperationConcurrencyKind
                         .SEQUENTIAL_COMMAND);
-            } else if (kind.equals(ModelFacade.GUARDED_CONCURRENCYKIND)) {
+            } else if (kind.equals(
+                    ModelFacade.getGuardedConcurrencyKindToken())) {
                 setSelected(ActionSetOperationConcurrencyKind.GUARDED_COMMAND);
-            } else if (kind.equals(ModelFacade.CONCURRENT_CONCURRENCYKIND)) {
+            } else if (kind.equals(
+                    ModelFacade.getConcurrentConcurrencyKindToken())) {
                 setSelected(ActionSetOperationConcurrencyKind
                         .CONCURRENT_COMMAND);
             } else {

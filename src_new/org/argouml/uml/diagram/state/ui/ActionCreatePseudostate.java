@@ -1,4 +1,4 @@
-// $Id: ActionCreatePseudostate.java,v 1.14 2005/01/20 23:20:30 linus Exp $
+// $Id: ActionCreatePseudostate.java,v 1.15 2005/01/27 21:42:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,8 +41,9 @@ public class ActionCreatePseudostate extends CmdCreateNode {
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    /** Construct a new Cmd with the given classes for the NetNode
-     *  and its FigNode.
+    /**
+     * Construct a new Cmd with the given classes for the NetNode
+     * and its FigNode.
      *
      * @param kind the pseudostatekind
      * @param name the name of this kind of pseudostate
@@ -54,14 +55,15 @@ public class ActionCreatePseudostate extends CmdCreateNode {
             throw new IllegalArgumentException();
 	}
 
-	setArg("className", ModelFacade.PSEUDOSTATE);
+	setArg("className", ModelFacade.getPseudostateToken());
 	setArg("kind", kind);
     }
 
     ////////////////////////////////////////////////////////////////
     // Cmd API
 
-    /** Actually instanciate the NetNode and FigNode objects and
+    /**
+     * Actually instanciate the NetNode and FigNode objects and
      * set the global next mode to ModePlace
      * TODO: should call super, reduce code volume!
      *

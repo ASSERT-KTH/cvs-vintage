@@ -1,4 +1,4 @@
-// $Id: UMLParameterDirectionKindRadioButtonPanel.java,v 1.3 2005/01/09 14:59:09 linus Exp $
+// $Id: UMLParameterDirectionKindRadioButtonPanel.java,v 1.4 2005/01/27 21:42:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLParameterDirectionKindRadioButtonPanel.java,v 1.3 2005/01/09 14:59:09 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
@@ -32,7 +31,7 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
 /**
- * A panel for the parameterdiretion (in, inout...) of a parameter
+ * A panel for the parameterdiretion (in, inout...) of a parameter.
  *
  * @author mkl
  */
@@ -74,11 +73,14 @@ public class UMLParameterDirectionKindRadioButtonPanel extends
             Object target = /* (MModelElement) */getTarget();
             Object kind = ModelFacade.getKind(target);
             if (kind == null
-                    || kind.equals(ModelFacade.IN_PARAMETERDIRECTIONKIND)) {
+                    || kind.equals(
+                            ModelFacade.getInParameterDirectionKindToken())) {
                 setSelected(ActionSetParameterDirectionKind.IN_COMMAND);
-            } else if (kind.equals(ModelFacade.INOUT_PARAMETERDIRECTIONKIND)) {
+            } else if (kind.equals(
+                    ModelFacade.getInOutParameterDirectionKindToken())) {
                 setSelected(ActionSetParameterDirectionKind.INOUT_COMMAND);
-            } else if (kind.equals(ModelFacade.OUT_PARAMETERDIRECTIONKIND)) {
+            } else if (kind.equals(
+                    ModelFacade.getOutParameterDirectionKindToken())) {
                 setSelected(ActionSetParameterDirectionKind.OUT_COMMAND);
             } else {
                 setSelected(ActionSetParameterDirectionKind.RETURN_COMMAND);

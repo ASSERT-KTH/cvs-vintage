@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.88 2005/01/23 21:08:58 mvw Exp $
+// $Id: FigInterface.java,v 1.89 2005/01/27 21:42:28 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -440,8 +440,9 @@ public class FigInterface extends FigNodeModelElement
         int i = 0;
         Editor ce = Globals.curEditor();
         Selection sel = ce.getSelectionManager().findSelectionFor(this);
-        if (sel instanceof SelectionClass)
-             ((SelectionClass) sel).hideButtons();
+        if (sel instanceof SelectionClass) {
+            ((SelectionClass) sel).hideButtons();
+        }
         unhighlight();
         //display op properties if necessary:
         Rectangle r = new Rectangle(me.getX() - 1, me.getY() - 1, 2, 2);
@@ -546,7 +547,7 @@ public class FigInterface extends FigNodeModelElement
 	        && (ModelFacade.isAComponent(encloser.getOwner()))) {
             Object component = /*(MComponent)*/ encloser.getOwner();
             Object in = /*(MInterface)*/ getOwner();
-            Model.getCoreHelper().setImplementationLocation(resident, 
+            Model.getCoreHelper().setImplementationLocation(resident,
                     component);
             Model.getCoreHelper().setResident(resident, in);
         } else {
@@ -641,9 +642,9 @@ public class FigInterface extends FigNodeModelElement
 
         return ft2;
     }
-    
+
     /**
-     * USED BY PGML.tee
+     * USED BY PGML.tee.
      * @return the class name and bounds together with compartment
      * visibility.
      */
@@ -897,7 +898,7 @@ public class FigInterface extends FigNodeModelElement
         	oper.setText(Notation.generate(this, behavioralFeature));
         	oper.setOwner(behavioralFeature);
         	// underline, if static
-        	oper.setUnderline(ModelFacade.CLASSIFIER_SCOPEKIND
+        	oper.setUnderline(ModelFacade.getClassifierScopeKindToken()
         			  .equals(ModelFacade
         				  .getOwnerScope(behavioralFeature)));
         	// italics, if abstract

@@ -1,4 +1,4 @@
-// $Id: CrInvalidJoin.java,v 1.10 2005/01/09 14:58:36 linus Exp $
+// $Id: CrInvalidJoin.java,v 1.11 2005/01/27 21:42:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,18 +53,25 @@ public class CrInvalidJoin extends CrUML {
      * java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isAPseudostate(dm))) return NO_PROBLEM;
+	if (!(ModelFacade.isAPseudostate(dm))) {
+	    return NO_PROBLEM;
+	}
 	Object k = ModelFacade.getPseudostateKind(dm);
 	if (!ModelFacade.
 	    equalsPseudostateKind(k,
-				  ModelFacade.JOIN_PSEUDOSTATEKIND))
+				  ModelFacade.getJoinPseudostateKindToken())) {
 	    return NO_PROBLEM;
+	}
 	Collection outgoing = ModelFacade.getOutgoings(dm);
 	Collection incoming = ModelFacade.getIncomings(dm);
 	int nOutgoing = outgoing == null ? 0 : outgoing.size();
 	int nIncoming = incoming == null ? 0 : incoming.size();
-	if (nOutgoing > 1) return PROBLEM_FOUND;
-	if (nIncoming == 1) return PROBLEM_FOUND;
+	if (nOutgoing > 1) {
+	    return PROBLEM_FOUND;
+	}
+	if (nIncoming == 1) {
+	    return PROBLEM_FOUND;
+	}
 	return NO_PROBLEM;
     }
 

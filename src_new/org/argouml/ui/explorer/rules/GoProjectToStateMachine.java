@@ -1,4 +1,4 @@
-// $Id: GoProjectToStateMachine.java,v 1.13 2005/01/02 16:43:41 linus Exp $
+// $Id: GoProjectToStateMachine.java,v 1.14 2005/01/27 21:42:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,7 @@ public class GoProjectToStateMachine extends AbstractPerspectiveRule {
 	    while (it.hasNext()) {
 		col.addAll(Model.getModelManagementHelper()
 			   .getAllModelElementsOfKind(it.next(),
-					ModelFacade.STATEMACHINE));
+					ModelFacade.getStateMachineToken()));
 	    }
 	}
 	return col;

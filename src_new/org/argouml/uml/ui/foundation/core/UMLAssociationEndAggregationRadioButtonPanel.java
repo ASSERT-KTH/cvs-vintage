@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndAggregationRadioButtonPanel.java,v 1.9 2005/01/09 14:59:09 linus Exp $
+// $Id: UMLAssociationEndAggregationRadioButtonPanel.java,v 1.10 2005/01/27 21:42:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,19 +71,26 @@ public class UMLAssociationEndAggregationRadioButtonPanel
         if (getTarget() != null) {
             Object target = /*(MAssociationEnd)*/ getTarget();
             Object/*MAggregationKind*/kind = ModelFacade.getAggregation(target);
-            if (kind == null || kind.equals(ModelFacade.NONE_AGGREGATIONKIND)) {
+            if (kind == null
+                    || kind.equals(ModelFacade.getNoneAggregationKindToken())) {
                 setSelected(ActionSetAssociationEndAggregation.NONE_COMMAND);
-            } else
-		if (kind.equals(ModelFacade.AGGREGATE_AGGREGATIONKIND)) {
+            } else {
+		if (kind.equals(
+		        ModelFacade.getAggregateAggregationKindToken())) {
 		    setSelected(ActionSetAssociationEndAggregation
 		            .AGGREGATE_COMMAND);
-		} else
-		    if (kind.equals(ModelFacade.COMPOSITE_AGGREGATIONKIND)) {
+		} else {
+		    if (kind.equals(
+		            ModelFacade.getCompositeAggregationKindToken())) {
 			setSelected(ActionSetAssociationEndAggregation
 			        .COMPOSITE_COMMAND);
-		    } else
-			setSelected(ActionSetAssociationEndAggregation
+		    } else {
+		        setSelected(ActionSetAssociationEndAggregation
+
 			        .NONE_COMMAND);
+		    }
+		}
+            }
         }
     }
 

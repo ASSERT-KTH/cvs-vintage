@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.52 2005/01/20 23:20:36 linus Exp $
+// $Id: PropPanelStimulus.java,v 1.53 2005/01/27 21:42:30 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
                 ConfigLoader.getTabPropsOrientation());
 
         Object[] namesToWatch = {
-	    ModelFacade.ACTION,
+	    ModelFacade.getActionToken(),
 	};
         setNameEventListening(namesToWatch);
 
@@ -182,7 +182,9 @@ public class PropPanelStimulus extends PropPanelModelElement {
                 //((MStimulus)stimulus).getFactory().createLink();
                 if (link != null) {
                     Model.getCommonBehaviorHelper().addStimulus(link, stimulus);
-                    Model.getCommonBehaviorHelper().setCommunicationLink(stimulus, /*(MLink)*/link);
+                    Model.getCommonBehaviorHelper().setCommunicationLink(
+                            stimulus,
+                            link);
                 }
             }
             Object oldAssoc = ModelFacade.getAssociation(link);

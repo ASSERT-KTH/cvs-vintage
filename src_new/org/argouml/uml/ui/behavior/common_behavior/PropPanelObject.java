@@ -1,4 +1,4 @@
-// $Id: PropPanelObject.java,v 1.47 2005/01/09 14:59:07 linus Exp $
+// $Id: PropPanelObject.java,v 1.48 2005/01/27 21:42:30 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +68,7 @@ public class PropPanelObject extends PropPanelInstance {
 	addSeperator();
 
 	AbstractActionAddModelElement action =
-	    new ActionAddInstanceClassifier(ModelFacade.CLASS);
+	    new ActionAddInstanceClassifier(ModelFacade.getClassToken());
 	JScrollPane classifierScroll = new JScrollPane(
             new UMLMutableLinkedList(
 	    new UMLInstanceClassifierListModel(),

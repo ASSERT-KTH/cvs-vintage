@@ -1,4 +1,4 @@
-// $Id: ActionSetChangeability.java,v 1.8 2005/01/20 23:20:25 linus Exp $
+// $Id: ActionSetChangeability.java,v 1.9 2005/01/27 21:42:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,11 +79,11 @@ public class ActionSetChangeability extends UMLAction {
                 Object m = /*(MAssociationEnd)*/ target;
                 Object/*MChangeableKind*/ kind = null;
                 if (actionCommand.equals(CHANGEABLE_COMMAND)) {
-                    kind = ModelFacade.CHANGEABLE_CHANGEABLEKIND;
+                    kind = ModelFacade.getChangeableChangeableKindToken();
                 } else if (actionCommand.equals(ADDONLY_COMMAND)) {
-                    kind = ModelFacade.ADD_ONLY_CHANGEABLEKIND;
+                    kind = ModelFacade.getAddOnlyChangeableKindToken();
                 } else {
-                    kind = ModelFacade.FROZEN_CHANGEABLEKIND;
+                    kind = ModelFacade.getFrozenChangeableKindToken();
                 }
                 Model.getCoreHelper().setChangeability(m, kind);
             }

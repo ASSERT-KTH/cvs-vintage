@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.62 2005/01/24 22:39:34 mvw Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.63 2005/01/27 21:42:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -260,7 +260,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
     private Action getActionClassifierRole() {
         if (actionClassifierRole == null) {
             actionClassifierRole = new RadioAction(new CmdCreateNode(
-                    ModelFacade.CLASSIFIER_ROLE, "ClassifierRole"));
+                    ModelFacade.getClassifierRoleToken(), "ClassifierRole"));
         }
         return actionClassifierRole;
     }
@@ -272,7 +272,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         if (actionAssociation == null) {
             actionAssociation = new RadioAction(
                     new ActionAddAssociationRole(
-                        ModelFacade.NONE_AGGREGATIONKIND,
+                        ModelFacade.getNoneAggregationKindToken(),
                         false,
                         "Association"));
         }
@@ -285,7 +285,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         if (actionComposition == null) {
             actionComposition = new RadioAction(
                     new ActionAddAssociationRole(
-                        ModelFacade.COMPOSITE_AGGREGATIONKIND,
+                        ModelFacade.getCompositeAggregationKindToken(),
                         false,
                         "Composition"));
         }
@@ -300,7 +300,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
                     new CmdSetMode(
                         ModeCreatePolyEdge.class,
                         "edgeClass",
-                        ModelFacade.DEPENDENCY,
+                        ModelFacade.getDependencyToken(),
                         "Dependency"));
         }
         return actionDepend;
@@ -314,7 +314,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
                     new CmdSetMode(
                         ModeCreatePolyEdge.class,
                         "edgeClass",
-                        ModelFacade.GENERALIZATION,
+                        ModelFacade.getGeneralizationToken(),
                         "Generalization"));
         }
         return actionGeneralize;
@@ -327,7 +327,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         if (actionUniAggregation == null) {
             actionUniAggregation = new RadioAction(
                     new ActionAddAssociationRole(
-                        ModelFacade.AGGREGATE_AGGREGATIONKIND,
+                        ModelFacade.getAggregateAggregationKindToken(),
                         true,
                         "UniAggregation"));
         }
@@ -340,7 +340,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         if (actionUniAssociation  == null) {
             actionUniAssociation = new RadioAction(
                     new ActionAddAssociationRole(
-                        ModelFacade.NONE_AGGREGATIONKIND,
+                        ModelFacade.getNoneAggregationKindToken(),
                         true,
                         "UniAssociation"));
         }
@@ -353,7 +353,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         if (actionUniComposition == null) {
             actionUniComposition = new RadioAction(
                     new ActionAddAssociationRole(
-                        ModelFacade.COMPOSITE_AGGREGATIONKIND,
+                        ModelFacade.getCompositeAggregationKindToken(),
                         true,
                         "UniComposition"));
         }
@@ -367,7 +367,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
         if (actionAggregation == null) {
             actionAggregation = new RadioAction(
                     new ActionAddAssociationRole(
-                        ModelFacade.AGGREGATE_AGGREGATIONKIND,
+                        ModelFacade.getAggregateAggregationKindToken(),
                         false,
                         "Aggregation"));
         }

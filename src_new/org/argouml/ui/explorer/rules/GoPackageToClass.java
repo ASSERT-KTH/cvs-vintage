@@ -1,4 +1,4 @@
-// $Id: GoPackageToClass.java,v 1.3 2005/01/02 16:43:41 linus Exp $
+// $Id: GoPackageToClass.java,v 1.4 2005/01/27 21:42:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ public class GoPackageToClass extends AbstractPerspectiveRule {
     public Collection getChildren(Object parent) {
 	if (ModelFacade.isAPackage(parent)) {
 	    return Model.getModelManagementHelper()
-                .getAllModelElementsOfKind(parent, ModelFacade.CLASS);
+                .getAllModelElementsOfKind(parent, ModelFacade.getClassToken());
 	}
 	return null;
     }

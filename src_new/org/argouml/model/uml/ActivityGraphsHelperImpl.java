@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsHelperImpl.java,v 1.4 2005/01/20 23:20:36 linus Exp $
+// $Id: ActivityGraphsHelperImpl.java,v 1.5 2005/01/27 21:42:31 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,7 +90,8 @@ class ActivityGraphsHelperImpl implements ActivityGraphsHelper {
         if (ns != null) {
             Collection c =
                 nsmodel.getModelManagementHelper()
-                	.getAllModelElementsOfKind(ns, ModelFacade.CLASSIFIER);
+                	.getAllModelElementsOfKind(ns,
+                	        ModelFacade.getClassifierToken());
             Iterator i = c.iterator();
             while (i.hasNext()) {
                 MModelElement classifier = (MModelElement) i.next();
@@ -176,9 +177,12 @@ class ActivityGraphsHelperImpl implements ActivityGraphsHelper {
     public void addInState(Object classifierInState, Object state) {
         if (classifierInState instanceof MClassifierInState
                 && state instanceof MState) {
-            ((MClassifierInState) classifierInState).addInState((MState) state);
+            ((MClassifierInState) classifierInState)
+            	.addInState((MState) state);
         } else {
-            throw new IllegalArgumentException("classifierInState: " + classifierInState + " or state: " + state);
+            throw new IllegalArgumentException(
+                    "classifierInState: " + classifierInState
+                    + " or state: " + state);
         }
     }
 }

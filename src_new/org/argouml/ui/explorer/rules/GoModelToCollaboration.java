@@ -1,4 +1,4 @@
-// $Id: GoModelToCollaboration.java,v 1.13 2005/01/02 16:43:41 linus Exp $
+// $Id: GoModelToCollaboration.java,v 1.14 2005/01/27 21:42:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,8 +54,10 @@ public class GoModelToCollaboration extends AbstractPerspectiveRule {
      */
     public Collection getChildren(Object parent) {
 	if (ModelFacade.isAModel(parent)) {
-            Collection col = Model.getModelManagementHelper()
-		.getAllModelElementsOfKind(parent, ModelFacade.COLLABORATION);
+            Collection col =
+                Model.getModelManagementHelper().getAllModelElementsOfKind(
+                        parent,
+                        ModelFacade.getCollaborationToken());
             List returnList = new ArrayList();
             Iterator it = col.iterator();
             while (it.hasNext()) {

@@ -1,4 +1,4 @@
-// $Id: TestUmlModelElement.java,v 1.8 2005/01/17 22:31:02 linus Exp $
+// $Id: TestUmlModelElement.java,v 1.9 2005/01/27 21:42:31 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ public class TestUmlModelElement extends GenericUmlObjectTestFixture {
      * @param arg0 test name
      */
     public TestUmlModelElement(String arg0) {
-	super(arg0, ModelFacade.MODELELEMENT);
+	super(arg0, ModelFacade.getModelElementToken());
 	validateTestClassIsGeneric(this);
     }
 
@@ -45,7 +45,7 @@ public class TestUmlModelElement extends GenericUmlObjectTestFixture {
      * Test the creation of a ModelElement.
      */
     public void testModelElement() {
-	Object me = Model.getUmlFactory().buildNode(ModelFacade.OBJECT);
+	Object me = Model.getUmlFactory().buildNode(ModelFacade.getObjectToken());
 	assertNotNull("Didn't create object", me);
 	assertTrue("Should be a base", ModelFacade.isABase(me));
 	assertTrue("Should be a model element",
@@ -58,7 +58,7 @@ public class TestUmlModelElement extends GenericUmlObjectTestFixture {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        setTruth(ModelFacade.MODELELEMENT, true);
+        setTruth(ModelFacade.getModelElementToken(), true);
     }
 
 }

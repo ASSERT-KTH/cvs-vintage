@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndOrderingCheckBox.java,v 1.10 2005/01/09 14:59:09 linus Exp $
+// $Id: UMLAssociationEndOrderingCheckBox.java,v 1.11 2005/01/27 21:42:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,8 +49,9 @@ public class UMLAssociationEndOrderingCheckBox extends UMLCheckBox2 {
     public void buildModel() {
         if (getTarget() != null) {
             Object associationEnd = /*(MAssociationEnd)*/ getTarget();
-            setSelected(ModelFacade.ORDERED_ORDERINGKIND.equals(ModelFacade
-                    .getOrdering(associationEnd)));
+            setSelected(
+                    ModelFacade.getOrderedOrderingKindToken().equals(
+                            ModelFacade.getOrdering(associationEnd)));
         }
     }
 }

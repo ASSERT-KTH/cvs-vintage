@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.19 2005/01/20 23:20:40 linus Exp $
+// $Id: GeneratorPHP4.java,v 1.20 2005/01/27 21:42:31 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -194,7 +194,7 @@ public class GeneratorPHP4
         if (iLanguageMajorVersion > 4) {
             /* scope */
             Object ownerScope = ModelFacade.getOwnerScope(modelElement);
-            if (ModelFacade.CLASSIFIER_SCOPEKIND.equals(ownerScope)) {
+            if (ModelFacade.getClassifierScopeKindToken().equals(ownerScope)) {
                 sOperation += "static ";
             }
 
@@ -296,7 +296,7 @@ public class GeneratorPHP4
         if (iLanguageMajorVersion > 4) {
             /* scope */
             Object ownerScope = ModelFacade.getOwnerScope(modelElement);
-            if (ModelFacade.CLASSIFIER_SCOPEKIND.equals(ownerScope)) {
+            if (ModelFacade.getClassifierScopeKindToken().equals(ownerScope)) {
                 sAttribute += "static ";
             }
         } else {
@@ -371,9 +371,9 @@ public class GeneratorPHP4
                 // TODO: Implent this in ModelFacade
                 /* if OUT or INOUT, then pass by reference */
                 if (ModelFacade.getKind(modelElement).equals(
-                        ModelFacade.INOUT_PARAMETERDIRECTIONKIND)
+                        ModelFacade.getInOutParameterDirectionKindToken())
                         || ModelFacade.getKind(modelElement).equals(
-                            ModelFacade.OUT_PARAMETERDIRECTIONKIND)) {
+                            ModelFacade.getOutParameterDirectionKindToken())) {
                     sParameter += "&";
                 }
             }
@@ -738,12 +738,12 @@ public class GeneratorPHP4
         }
 
         if (iLanguageMajorVersion > 4) {
-            if (ModelFacade.PUBLIC_VISIBILITYKIND.equals(modelElement)) {
+            if (ModelFacade.getPublicVisibilityKindToken().equals(modelElement)) {
                 return "public";
-            } else if (ModelFacade.PROTECTED_VISIBILITYKIND
+            } else if (ModelFacade.getProtectedVisibilityKindToken()
                     .equals(modelElement)) {
                 return "protected";
-            } else if (ModelFacade.PRIVATE_VISIBILITYKIND
+            } else if (ModelFacade.getPrivateVisibilityKindToken()
                     .equals(modelElement)) {
                 return "private";
             }

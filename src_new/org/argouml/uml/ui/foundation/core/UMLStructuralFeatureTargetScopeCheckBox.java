@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureTargetScopeCheckBox.java,v 1.12 2005/01/20 23:20:24 linus Exp $
+// $Id: UMLStructuralFeatureTargetScopeCheckBox.java,v 1.13 2005/01/27 21:42:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,9 +52,9 @@ public class UMLStructuralFeatureTargetScopeCheckBox extends UMLCheckBox2 {
         // repair action for possible NP after load
         if (ModelFacade.getTargetScope(getTarget()) == null) {
             Model.getCoreHelper().setTargetScope(getTarget(),
-                    ModelFacade.INSTANCE_SCOPEKIND);
+                    ModelFacade.getInstanceScopeKindToken());
         }
         setSelected(ModelFacade.getTargetScope(getTarget()).equals(
-                ModelFacade.CLASSIFIER_SCOPEKIND));
+                ModelFacade.getClassifierScopeKindToken()));
     }
 }

@@ -1,4 +1,4 @@
-// $Id: TestUmlActor.java,v 1.8 2005/01/17 22:31:02 linus Exp $
+// $Id: TestUmlActor.java,v 1.9 2005/01/27 21:42:31 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ public class TestUmlActor extends GenericUmlObjectTestFixture {
      * @param arg0 test name
      */
     public TestUmlActor(String arg0) {
-	super(arg0, ModelFacade.ACTOR);
+	super(arg0, ModelFacade.getActorToken());
 	validateTestClassIsGeneric(this);
     }
 
@@ -45,7 +45,7 @@ public class TestUmlActor extends GenericUmlObjectTestFixture {
      * Test the creation of an actor.
      */
     public void testActor() {
-	Object o = Model.getUmlFactory().buildNode(ModelFacade.ACTOR);
+	Object o = Model.getUmlFactory().buildNode(ModelFacade.getActorToken());
 	assertNotNull("Didn't create object", o);
 	assertTrue("Should be a base", ModelFacade.isABase(o));
 	assertTrue("Should be a actor", ModelFacade.isAActor(o));
@@ -57,11 +57,11 @@ public class TestUmlActor extends GenericUmlObjectTestFixture {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        setTruth(ModelFacade.MODELELEMENT, true);
-        setTruth(ModelFacade.GENERALIZABLE_ELEMENT, true);
-        setTruth(ModelFacade.CLASSIFIER, true);
-        setTruth(ModelFacade.NAMESPACE, true);
-        setTruth(ModelFacade.ACTOR, true);
+        setTruth(ModelFacade.getModelElementToken(), true);
+        setTruth(ModelFacade.getGeneralizableElementToken(), true);
+        setTruth(ModelFacade.getClassifierToken(), true);
+        setTruth(ModelFacade.getNamespaceToken(), true);
+        setTruth(ModelFacade.getActorToken(), true);
     }
 
 }

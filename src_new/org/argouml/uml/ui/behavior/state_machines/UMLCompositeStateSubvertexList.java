@@ -1,4 +1,4 @@
-// $Id: UMLCompositeStateSubvertexList.java,v 1.12 2005/01/09 14:59:07 linus Exp $
+// $Id: UMLCompositeStateSubvertexList.java,v 1.13 2005/01/27 21:42:29 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,25 +50,25 @@ public class UMLCompositeStateSubvertexList extends UMLMutableLinkedList {
             JMenu pMenu = new JMenu();
             pMenu.setText(Translator.localize("button.new-pseudostate"));
             pMenu.add(new ActionNewPseudoState(
-                    ModelFacade.BRANCH_PSEUDOSTATEKIND,
+                    ModelFacade.getBranchPseudostateKindToken(),
                     "label.pseudostate.choice"));
             pMenu.add(new ActionNewPseudoState(
-                    ModelFacade.INITIAL_PSEUDOSTATEKIND,
+                    ModelFacade.getInitialPseudostateKindToken(),
                     "label.pseudostate.initial"));
             pMenu.add(new ActionNewPseudoState(
-                    ModelFacade.DEEPHISTORY_PSEUDOSTATEKIND,
+                    ModelFacade.getDeepHistoryPseudostateKindToken(),
                     "label.pseudostate.deephistory"));
             pMenu.add(new ActionNewPseudoState(
-                    ModelFacade.JUNCTION_PSEUDOSTATEKIND,
+                    ModelFacade.getJunctionPseudostateKindToken(),
                     "label.pseudostate.junction"));
             pMenu.add(new ActionNewPseudoState(
-                    ModelFacade.SHALLOWHISTORY_PSEUDOSTATEKIND,
+                    ModelFacade.getShallowHistoryPseudostateKindToken(),
                     "label.pseudostate.shallowhistory"));
             pMenu.add(new ActionNewPseudoState(
-                    ModelFacade.FORK_PSEUDOSTATEKIND,
+                    ModelFacade.getForkPseudostateKindToken(),
                     "label.pseudostate.fork"));
             pMenu.add(new ActionNewPseudoState(
-                    ModelFacade.JOIN_PSEUDOSTATEKIND,
+                    ModelFacade.getJoinPseudostateKindToken(),
                     "label.pseudostate.join"));
 
             JMenu newMenu = new JMenu();

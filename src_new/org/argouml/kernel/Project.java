@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.144 2005/01/20 23:20:41 linus Exp $
+// $Id: Project.java,v 1.145 2005/01/27 21:42:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -639,7 +639,8 @@ public class Project implements java.io.Serializable, TargetListener {
 
         Collection allClassifiers =
             Model.getModelManagementHelper()
-	        .getAllModelElementsOfKind(ns, ModelFacade.CLASSIFIER);
+	        .getAllModelElementsOfKind(ns,
+	                ModelFacade.getClassifierToken());
 
         Object[] classifiers = allClassifiers.toArray();
         Object classifier = null;

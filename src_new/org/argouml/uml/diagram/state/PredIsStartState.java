@@ -1,4 +1,4 @@
-// $Id: PredIsStartState.java,v 1.9 2005/01/09 14:58:39 linus Exp $
+// $Id: PredIsStartState.java,v 1.10 2005/01/27 21:42:30 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import org.argouml.model.ModelFacade;
 public class PredIsStartState implements Predicate {
 
     /**
-     * theInstance is the singleton
+     * theInstance is the singleton.
      */
     private static PredIsStartState theInstance = new PredIsStartState();
 
@@ -46,7 +46,7 @@ public class PredIsStartState implements Predicate {
      */
     public boolean predicate(Object obj) {
 	return (org.argouml.model.ModelFacade.isAPseudostate(obj))
-	    && (ModelFacade.INITIAL_PSEUDOSTATEKIND.equals(
+	    && (ModelFacade.getInitialPseudostateKindToken().equals(
                 ModelFacade.getKind(obj)));
     }
 

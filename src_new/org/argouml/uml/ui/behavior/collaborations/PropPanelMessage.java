@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.60 2005/01/10 19:17:02 mvw Exp $
+// $Id: PropPanelMessage.java,v 1.61 2005/01/27 21:42:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,9 +57,9 @@ public class PropPanelMessage extends PropPanelModelElement {
 	super("Message", ConfigLoader.getTabPropsOrientation());
 
 	Object[] namesToWatch = {
-	    ModelFacade.STEREOTYPE,
-	    ModelFacade.CLASSIFIER_ROLE,
-	    ModelFacade.ACTION,
+	    ModelFacade.getStereotypeToken(),
+	    ModelFacade.getClassifierRoleToken(),
+	    ModelFacade.getActionToken(),
 	};
 	setNameEventListening(namesToWatch);
 

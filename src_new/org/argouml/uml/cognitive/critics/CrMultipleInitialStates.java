@@ -1,4 +1,4 @@
-// $Id: CrMultipleInitialStates.java,v 1.13 2005/01/09 21:10:39 linus Exp $
+// $Id: CrMultipleInitialStates.java,v 1.14 2005/01/27 21:42:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,14 +26,13 @@ package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.apache.log4j.Logger;
-
-import org.tigris.gef.util.VectorSet;
-
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
-import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.model.ModelFacade;
+import org.argouml.uml.cognitive.UMLToDoItem;
+import org.tigris.gef.util.VectorSet;
 
 /**
  * A critic to detect when a state has no outgoing transitions.
@@ -41,7 +40,9 @@ import org.argouml.model.ModelFacade;
  * @author jrobbins
  */
 public class CrMultipleInitialStates extends CrUML {
-
+    /**
+     * Logger.
+     */
     private static final Logger LOG =
         Logger.getLogger(CrMultipleInitialStates.class);
 
@@ -65,9 +66,9 @@ public class CrMultipleInitialStates extends CrUML {
             return NO_PROBLEM;
         }
         Object k = ModelFacade.getPseudostateKind(dm);
-        if (!ModelFacade.
-            equalsPseudostateKind(k,
-				  ModelFacade.INITIAL_PSEUDOSTATEKIND)) {
+        if (!ModelFacade.equalsPseudostateKind(
+                k,
+                ModelFacade.getInitialPseudostateKindToken())) {
 	    return NO_PROBLEM;
         }
 
@@ -86,7 +87,7 @@ public class CrMultipleInitialStates extends CrUML {
                 && ModelFacade.
                 	equalsPseudostateKind(
                 	        ModelFacade.getPseudostateKind(sv),
-                	        ModelFacade.INITIAL_PSEUDOSTATEKIND)) {
+                	        ModelFacade.getInitialPseudostateKindToken())) {
                 initialStateCount++;
             }
         }
@@ -123,7 +124,7 @@ public class CrMultipleInitialStates extends CrUML {
             if (ModelFacade.isAPseudostate(sv)
                 && ModelFacade.equalsPseudostateKind(
                         ModelFacade.getPseudostateKind(sv),
-                        ModelFacade.INITIAL_PSEUDOSTATEKIND)) {
+                        ModelFacade.getInitialPseudostateKindToken())) {
                 offs.addElement(sv);
 	    }
         }

@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementVisibility.java,v 1.11 2005/01/20 23:20:24 linus Exp $
+// $Id: ActionSetModelElementVisibility.java,v 1.12 2005/01/27 21:42:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,11 +80,11 @@ public class ActionSetModelElementVisibility extends UMLAction {
                 Object m = /*(MModelElement)*/ target;
                 Object kind = null;
                 if (actionCommand.equals(PUBLIC_COMMAND)) {
-                    kind = ModelFacade.PUBLIC_VISIBILITYKIND;
+                    kind = ModelFacade.getPublicVisibilityKindToken();
                 } else if (actionCommand.equals(PROTECTED_COMMAND)) {
-                    kind = ModelFacade.PROTECTED_VISIBILITYKIND;
+                    kind = ModelFacade.getProtectedVisibilityKindToken();
                 } else {
-                    kind = ModelFacade.PRIVATE_VISIBILITYKIND;
+                    kind = ModelFacade.getPrivateVisibilityKindToken();
                 }
                 Model.getCoreHelper().setVisibility(m, kind);
 

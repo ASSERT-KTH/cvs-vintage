@@ -1,4 +1,4 @@
-// $Id: ActionAddObject.java,v 1.9 2005/01/20 23:20:40 linus Exp $
+// $Id: ActionAddObject.java,v 1.10 2005/01/27 21:42:31 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ public class ActionAddObject extends CmdCreateNode {
      * The constructor.
      */
     public ActionAddObject() {
-        super(ModelFacade.OBJECT, false, "Object");
+        super(ModelFacade.getObjectToken(), false, "Object");
     }
 
     /**
