@@ -833,4 +833,11 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener, Ro
 		return findChildWithUID( accountItem.getSpecialFoldersItem().getInteger("trash"), true );
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.RootFolder#getInbox()
+	 */
+	public FolderTreeNode getInboxFolder() {
+		return (IMAPFolder) this.findChildWithName("INBOX", false);
+	}
+
 }

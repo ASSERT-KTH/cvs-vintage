@@ -548,5 +548,12 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 	public boolean supportsAddMessage() {
 		return true;
 	}
+	
+	public boolean isInboxFolder() {
+		return false;
+	}
 
+	public boolean isTrashFolder() {
+		return false;
+	}
 }

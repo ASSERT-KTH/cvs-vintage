@@ -36,6 +36,7 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.MailboxInterface;
 import org.columba.mail.folder.RemoteFolder;
+import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.headercache.RemoteHeaderCache;
 import org.columba.mail.imap.IMAPStore;
@@ -833,6 +834,28 @@ public class IMAPFolder extends RemoteFolder {
 				getImapPath()))
 			.getInputStream();
 		//;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.Folder#isInboxFolder()
+	 */
+	public boolean isInboxFolder() {
+		RootFolder root = (RootFolder)getRootFolder();
+		if( root != null)
+			return root.getInboxFolder() == this;
+		else
+			return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.Folder#isTrashFolder()
+	 */
+	public boolean isTrashFolder() {
+		RootFolder root = (RootFolder)getRootFolder();
+		if( root != null)
+			return root.getTrashFolder() == this;
+		else
+			return false;
 	}
 
 }

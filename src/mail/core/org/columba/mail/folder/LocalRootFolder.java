@@ -55,4 +55,11 @@ public class LocalRootFolder extends FolderTreeNode implements RootFolder {
 		return findChildWithUID(105,false);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.RootFolder#getInbox()
+	 */
+	public FolderTreeNode getInboxFolder() {
+		return findChildWithUID(101,false);
+	}
+
 }

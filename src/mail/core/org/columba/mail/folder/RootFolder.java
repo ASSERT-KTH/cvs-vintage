@@ -19,5 +19,7 @@ package org.columba.mail.folder;
 public interface RootFolder {
 	
 	public FolderTreeNode getTrashFolder();
+	
+	public FolderTreeNode getInboxFolder();
 
 }

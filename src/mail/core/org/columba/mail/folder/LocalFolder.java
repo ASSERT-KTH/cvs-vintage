@@ -527,4 +527,18 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	public void setFlags(Object uid, Flags flags) throws Exception {
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.Folder#isInboxFolder()
+	 */
+	public boolean isInboxFolder() {
+		return getUid() == 101;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.Folder#isTrashFolder()
+	 */
+	public boolean isTrashFolder() {
+		return getUid() == 105;
+	}
+
 }

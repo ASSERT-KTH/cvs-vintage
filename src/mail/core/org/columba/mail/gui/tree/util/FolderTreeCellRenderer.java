@@ -152,14 +152,13 @@ public class FolderTreeCellRenderer
 
 				
 				// overwrite special folders with custom icons
-				// TODO: add same for IMAP folders
-				if (folder.getUid() == 101) {
+				if (folder.isInboxFolder()) {
 					// inbox
 					setIcon(inboxIcon);
 				} else if (folder.getUid() == 103) {
 					// outbox
 					setIcon(outboxIcon);
-				} else if (folder.getUid() == 105) {
+				} else if (folder.isTrashFolder()) {
 					// trash
 					setIcon(trashIcon);
 				}

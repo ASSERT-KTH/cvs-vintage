@@ -8,7 +8,7 @@ Bugs:
 - including latest user manual (fdietz)
 - added context-help for almost all dialogs (fdietz)
 - all mail dialogs are now ui guideline conform (fdietz)
-- new startup logo (muruc)
+- new startup logo (marc)
 - fixed jwizz focus problems, disabled left steps pane, using
   white header as default now (javaprog)
 - removed all not yet implemented features (fdietz)
@@ -30,6 +30,7 @@ Bugs:
 - use system beep as default sound notification (fdietz)
 - font settings weren't applied correctly (fdietz)
 - nullpointer exception when selection root folders (tstich)
+- IMAP special folders have special icons (tstich)
 
 Known Problems:
 - Verifying of Evolution signed messages doesn't work - probably caused
