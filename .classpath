@@ -2,5 +2,5 @@
 <classpath>
     <classpathentry kind="src" path=""/>
     <classpathentry kind="lib" path="/usr/java/j2sdk1.4.0/jre/lib/rt.jar"/>
-    <classpathentry kind="output" path="bin"/>
+    <classpathentry kind="output" path=""/>
 </classpath>
