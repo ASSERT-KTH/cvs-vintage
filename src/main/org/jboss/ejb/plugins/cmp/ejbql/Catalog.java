@@ -7,8 +7,10 @@
  
 package org.jboss.ejb.plugins.cmp.ejbql;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridge;
 
@@ -16,7 +18,7 @@ import org.jboss.ejb.plugins.cmp.bridge.EntityBridge;
  * This class maintains a map of all entitie bridges in an application by name.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */                            
 public class Catalog {
    private final Map entityByAbstractSchemaName = new HashMap();
@@ -38,5 +40,17 @@ public class Catalog {
 
    public EntityBridge getEntityByEJBName(String ejbName) {
       return (EntityBridge) entityByEJBName.get(ejbName);
+   }
+
+   public int getEntityCount() {
+      return entityByEJBName.size();
+   }
+
+   public Set getEJBNames() {
+      return Collections.unmodifiableSet(entityByEJBName.keySet());
+   }
+
+   public Set getAbstractSchemaNames() {
+      return Collections.unmodifiableSet(entityByAbstractSchemaName.keySet());
    }
 }
