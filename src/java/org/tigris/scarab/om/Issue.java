@@ -92,7 +92,7 @@ import org.apache.commons.lang.Strings;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.162 2002/06/24 21:42:18 jon Exp $
+ * @version $Id: Issue.java,v 1.163 2002/07/02 19:47:20 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1651,23 +1651,6 @@ public class Issue
          + " VALUES (" + id + ",'" + key + "',2,1)" ;
         BasePeer.executeStatement(sql, dbCon);
     }
-
-
-    /**
-     * Performs a search over an issue's attribute values.
-     * FIXME! remove
-     *
-     * @param keywords a <code>String[]</code> value
-     * @param useAnd, an AND search if true, otherwise OR
-     * @return a <code>List</code> value
-     */
-    public static List searchKeywords(String[] keywords, boolean useAnd)
-        throws Exception
-    {
-        Criteria c = new Criteria(0);
-        return IssuePeer.doSelect(c);
-    }
-
 
     /**
      * Returns list of issue template types.
