@@ -81,12 +81,22 @@ import org.apache.tomcat.util.log.*;
 public final class ErrorHandler extends BaseInterceptor {
     private Context rootContext=null;
     boolean showDebugInfo=true;
+    int defaultRedirectStatus=301;
     
     public ErrorHandler() {
     }
 
     public void setShowDebugInfo( boolean b ) {
 	showDebugInfo=b;
+    }
+
+    public void setDefaultRedirectStatus( String s ) {
+        if( "302".equals(s) )
+            defaultRedirectStatus=302;
+        else if( "301".equals(s) )
+            defaultRedirectStatus=301;
+        else
+            defaultRedirectStatus=301;
     }
 
     public void engineInit(ContextManager cm ) {
@@ -143,7 +153,9 @@ public final class ErrorHandler extends BaseInterceptor {
 
 	// Default status handlers
         // Assume existing error pages are valid.  Don't overwrite with default.
-	ctx.addServlet( new RedirectHandler(this));
+        RedirectHandler rh = new RedirectHandler(this);
+        rh.setDefaultRedirectStatus(defaultRedirectStatus);
+	ctx.addServlet( rh );
         if (ctx.getErrorPage("302") == null)
             ctx.addErrorPage( "302", "tomcat.redirectHandler");
         if (ctx.getErrorPage("301") == null)
@@ -765,11 +777,16 @@ class RedirectHandler extends Handler {
     static StringManager sm=StringManager.
 	getManager("org.apache.tomcat.resources");
     int sbNote=0;
+    int defaultRedirectStatus=301;
 
     RedirectHandler(BaseInterceptor bi) {
 	//setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.redirectHandler";
 	setModule( bi );
+    }
+
+    public void setDefaultRedirectStatus( int status ) {
+        defaultRedirectStatus=status;
     }
 
     // We don't want interceptors called for redirect
@@ -783,7 +800,7 @@ class RedirectHandler extends Handler {
 
 	if( res.getStatus() != 301 &&
 	    res.getStatus() != 302 ) {
-	    res.setStatus( 301 );
+	    res.setStatus( defaultRedirectStatus );
 	}
 	
 	location = makeAbsolute(req, location);
