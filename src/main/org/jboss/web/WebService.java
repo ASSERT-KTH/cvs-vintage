@@ -24,7 +24,7 @@ import org.jboss.util.ServiceMBeanSupport;
 
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class WebService
    extends ServiceMBeanSupport
@@ -35,7 +35,7 @@ public class WebService
    // Attributes ----------------------------------------------------
    WebServer server;
 	
-	Log log = Log.createLog(getName());
+   Log log = Log.createLog(this.getClass().getName() + "#" + getName());
    
    // Static --------------------------------------------------------
 
