@@ -118,7 +118,7 @@
   #end
   #foreach ($option in $module.getOptionTree($attr, $scarabR.CurrentIssueType))
     #set ($selected = false)
-    #if ($values && !$values.toString().equals(""))   
+    #if ($values && $values.length() > 0)
        #if ($multiple.toString().equals("true"))
          #foreach ($value in $values)
             #if ($value.equals($option.OptionId))
