@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
  * ejb-jar.xml file's ejb-relation elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class JDBCRelationshipRoleMetaData {
 	/**
@@ -84,7 +84,7 @@ public final class JDBCRelationshipRoleMetaData {
 			for(Iterator i = entity.getCMPFields().iterator(); i.hasNext(); ) {
 				JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
 				if(cmpField.isPrimaryKeyMember()) {
-					cmpField = new JDBCCMPFieldMetaData(entity, cmpField, entity.getName() + "_" + cmpField.getFieldName(), false);
+					cmpField = new JDBCCMPFieldMetaData(entity, cmpField, getCMRFieldName() + "_" + cmpField.getFieldName(), false);
 					tableKeyFields.put(cmpField.getFieldName(), cmpField);
 				}
 			}
@@ -95,7 +95,7 @@ public final class JDBCRelationshipRoleMetaData {
 			for(Iterator i = relatedEntity.getCMPFields().iterator(); i.hasNext(); ) {
 				JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
 				if(cmpField.isPrimaryKeyMember()) {
-					cmpField = new JDBCCMPFieldMetaData(entity, cmpField, relatedEntity.getName() + "_" + cmpField.getFieldName(), false);
+					cmpField = new JDBCCMPFieldMetaData(entity, cmpField, getCMRFieldName() + "_" + cmpField.getFieldName(), false);
 					foreignKeyFields.put(cmpField.getFieldName(), cmpField);
 				}
 			}
@@ -123,7 +123,7 @@ public final class JDBCRelationshipRoleMetaData {
 			for(Iterator i = entity.getCMPFields().iterator(); i.hasNext(); ) {
 				JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
 				if(cmpField.isPrimaryKeyMember()) {
-					cmpField = new JDBCCMPFieldMetaData(entity, cmpField, entity.getName() + "_" + cmpField.getFieldName(), false);
+					cmpField = new JDBCCMPFieldMetaData(entity, cmpField, getCMRFieldName() + cmpField.getFieldName(), false);
 					tableKeyFields.put(cmpField.getFieldName(), cmpField);
 				}
 			}
@@ -134,7 +134,7 @@ public final class JDBCRelationshipRoleMetaData {
 			for(Iterator i = relatedEntity.getCMPFields().iterator(); i.hasNext(); ) {
 				JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
 				if(cmpField.isPrimaryKeyMember()) {
-					cmpField = new JDBCCMPFieldMetaData(entity, cmpField, relatedEntity.getName() + "_" + cmpField.getFieldName(), false);
+					cmpField = new JDBCCMPFieldMetaData(entity, cmpField, getCMRFieldName() + "_" + cmpField.getFieldName(), false);
 					foreignKeyFields.put(cmpField.getFieldName(), cmpField);
 				}
 			}
@@ -193,6 +193,24 @@ public final class JDBCRelationshipRoleMetaData {
 		return !multiplicityOne;
 	}
 	
+	/**
+	 * Is this field single valued, that means it does not return a collection.
+	 * A relationship role is single valued if the related role has a multiplicity of one.
+	 * @return true if this role does not return a collection 
+	 */
+	public boolean isSingleValued() {
+		return getRelatedRole().isMultiplicityOne();
+	}
+	
+	/**
+	 * Is this field collection valued, that means it returns a collection.
+	 * A relationship role is collection valued if the related role has a multiplicity of many.
+	 * @return true if this role returns a collection 
+	 */
+	public boolean isCollectionValued() {
+		return getRelatedRole().isMultiplicityMany();
+	}
+
 	/**
 	 * Should this entity be deleted when related entity is deleted.
 	 */
@@ -258,7 +276,7 @@ public final class JDBCRelationshipRoleMetaData {
 		for(Iterator i = relatedEntity.getCMPFields().iterator(); i.hasNext(); ) {
 			JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
 			if(cmpField.isPrimaryKeyMember()) {
-				cmpField = new JDBCCMPFieldMetaData(entity, cmpField, relatedEntity.getName() + "_" + cmpField.getFieldName(), false);
+				cmpField = new JDBCCMPFieldMetaData(entity, cmpField, getCMRFieldName() + "_" + cmpField.getFieldName(), false);
 				foreignKeyFields.put(cmpField.getFieldName(), cmpField);
 			}
 		}
@@ -299,7 +317,7 @@ public final class JDBCRelationshipRoleMetaData {
 		for(Iterator i = entity.getCMPFields().iterator(); i.hasNext(); ) {
 			JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
 			if(cmpField.isPrimaryKeyMember()) {
-				cmpField = new JDBCCMPFieldMetaData(entity, cmpField, entity.getName() + "_" + cmpField.getFieldName(), false);
+				cmpField = new JDBCCMPFieldMetaData(entity, cmpField, getCMRFieldName() + "_" + cmpField.getFieldName(), false);
 				tableKeyFields.put(cmpField.getFieldName(), cmpField);
 			}
 		}
