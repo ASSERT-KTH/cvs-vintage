@@ -34,6 +34,12 @@ JBOSSCP=${JBOSSCP:-"$JBOSS_HOME/bin/shutdown.jar"}
 #define the script to use to start jboss
 JBOSSSH=${JBOSSSH:-"$JBOSS_HOME/bin/run.sh"}
 
+if [ -n "$JBOSS_CONSOLE" -a ! -d "$JBOSS_CONSOLE" ]; then
+  echo "WARNING: location for saving console log invalid: $JBOSS_CONSOLE"
+  echo "WARNING: ignoring it and using /dev/null"
+  JBOSS_CONSOLE="/dev/null"
+fi
+
 #define what will be done with the console log
 JBOSS_CONSOLE=${JBOSS_CONSOLE:-"/dev/null"}
 
