@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/deployment/Attic/ConnectorConfig.java,v 1.1 1999/10/09 00:20:54 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/deployment/Attic/ConnectorConfig.java,v 1.2 1999/10/30 00:29:37 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/30 00:29:37 $
  *
  * ====================================================================
  *
@@ -72,7 +72,7 @@ import java.util.Enumeration;
  * @author James Todd [gonzo@eng.sun.com]
  */
 
-class ConnectorConfig {
+public class ConnectorConfig {
     private String className = "";
     private Hashtable parameters = new Hashtable();
 

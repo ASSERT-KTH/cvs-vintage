@@ -31,8 +31,27 @@ file for complete configuration information:
             defaultSessionTimeOut="30" isWARExpanded="true"
             isWARValidated="false" isInvokerEnabled="true"
             isWorkDirPersistent="false"/>
-        <Connector className="tomcat">
-            <Parameter name="foo" value="bar"/>
+        
+        <!-- Old TcpEndpoint-based HttpServer. Will be deprecated soon! -->
+        <Connector className="org.apache.tomcat.server.HttpServerConnector">
+        </Connector>
+
+        <!-- New HttpServer.  -->
+        <Connector className="org.apache.tomcat.service.TcpEndpointConnector">
+            <Parameter name="handler" value="org.apache.tomcat.service.http.HttpConnectionHandler"/>
+            <Parameter name="port" value="8081"/>
+        </Connector>
+
+        <!-- AJP11 - works with the old/stable JServ module -->
+        <Connector className="org.apache.tomcat.service.TcpEndpointConnector">
+            <Parameter name="handler" value="org.apache.tomcat.service.Ajp11ConnectionHandler"/>
+            <Parameter name="port" value="8007"/>
+        </Connector>
+
+        <!-- New Ajp23, you need to compile the new/experimental module -->
+        <Connector className="org.apache.tomcat.service.TcpEndpointConnector">
+            <Parameter name="handler" value="org.apache.tomcat.service.connector.Ajp23ConnectionHandler"/>
+            <Parameter name="port" value="8008"/>
         </Connector>
     </ContextManager>
 </Server>

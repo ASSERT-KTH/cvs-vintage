@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.4 1999/10/25 22:49:03 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/25 22:49:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.5 1999/10/30 00:29:31 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/10/30 00:29:31 $
  *
  * ====================================================================
  *
@@ -171,6 +171,29 @@ public class Startup {
 		    contextManagerConfig.getPort(), inetAddress,
 		    contextManagerConfig.getHostName(), contextManager);
 
+		Enumeration conE=contextManagerConfig.getConnectorConfigs();
+		while( conE.hasMoreElements() ) {
+		    ConnectorConfig conC=(ConnectorConfig) conE.nextElement();
+		    String cn=conC.getClassName();
+		    ServerConnector conn=null;
+
+		    try {
+			Class c=Class.forName( cn );
+			conn=(ServerConnector)c.newInstance();
+		    } catch(Exception ex) {
+			ex.printStackTrace();
+			// XXX 
+		    }
+		    Enumeration props=conC.getParameterKeys();
+		    while( props.hasMoreElements() ) {
+			String k=(String)props.nextElement();
+			String v=(String)conC.getParameter( k );
+			conn.setProperty( k, v );
+		    }
+
+		    server.addConnector( conn );
+		}
+		
 		// XXX
 		// instead of HTTPServer it should be EndpointManager,
 		//   ContextManager, Handler, etc

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpServer.java,v 1.3 1999/10/15 03:20:33 harishp Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/15 03:20:33 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpServer.java,v 1.4 1999/10/30 00:29:25 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/10/30 00:29:25 $
  *
  * ====================================================================
  *
@@ -276,6 +276,16 @@ public class HttpServer implements Server {
     public synchronized void addConnector( ServerConnector con ) {
 	this.connector[connector_count]=con;
 	connector_count++;
+    }
+
+    public synchronized void addConnector( String classN ) {
+	try {
+	    Class c=Class.forName( classN );
+	    ServerConnector conn=(ServerConnector)c.newInstance();
+	    addConnector( conn );
+	} catch(Exception ex) {
+	    ex.printStackTrace();
+	}
     }
 
 
