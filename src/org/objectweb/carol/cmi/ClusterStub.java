@@ -22,7 +22,6 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.io.ObjectStreamException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -54,12 +53,6 @@ public class ClusterStub implements Externalizable {
     private transient long randomSeed;
 
     /**
-     * The class of the regular stubs stored in this ClusterStub.
-     * It is transient but always defined thanks to readResolve()
-     */
-    private transient Class regularStubClass = null;
-
-    /**
      * An ArrayList, for random choices. Zeroed when stubMap is changed. It is rebuild
      * when accessed (through getList()).
      */
@@ -73,7 +66,6 @@ public class ClusterStub implements Externalizable {
 
     /**
      * for Externalizable
-     * TODO check where it is used
      */
     public ClusterStub() {
     }
@@ -88,7 +80,6 @@ public class ClusterStub implements Externalizable {
         stubMap = new HashMap();
         stubMap.put(serverId, stub);
         randomSeed = SecureRandom.getLong();
-        regularStubClass = stub.getClass();
     }
 
     /**
@@ -100,8 +91,12 @@ public class ClusterStub implements Externalizable {
         first = stub;
         stubMap = new HashMap();
         stubMap.put(new Object(), stub);
-        randomSeed = SecureRandom.getLong(); // XXX Loose time creating a random seed ?
-        regularStubClass = stub.getClass();
+        randomSeed = SecureRandom.getLong();
+    }
+
+    public boolean isValidRemote(Remote r) {
+        return this.getClass().getName().equals(
+            ClusterObject.getClusterStubClass(r.getClass()).getName());
     }
 
     /**
@@ -113,8 +108,7 @@ public class ClusterStub implements Externalizable {
      * in the stub.
      */
     protected boolean setStub(ClusterId serverId, Remote stub) {
-        //TODO is it right ? Should not check classes instead ?
-        if (!stub.getClass().getName().equals(regularStubClass.getName())) {
+        if (!isValidRemote(stub)) {
             return false;
         }
         synchronized (this) {
@@ -132,7 +126,7 @@ public class ClusterStub implements Externalizable {
      * in the stub.
      */
     protected boolean setStub(Remote stub) {
-        if (!stub.getClass().getName().equals(regularStubClass.getName())) {
+        if (!isValidRemote(stub)) {
             return false;
         }
         synchronized (this) {
@@ -186,39 +180,17 @@ public class ClusterStub implements Externalizable {
     }
 
     /**
-     * Called when a StubList is deserialized.
-     * Setup the transient fields.
-     * TODO remove, and merge in readObject.
-     */
-    private Object readResolve() throws ObjectStreamException {
-        try {
-            if (Trace.CSTUB)
-                Trace.out("CSTUB: readResolve()");
-            getList();
-        } catch (RemoteException e) {
-            throw new java.io.InvalidObjectException(e.getMessage());
-        }
-        SecureRandom.setSeed(randomSeed ^ System.currentTimeMillis());
-        return this;
-    }
-
-    /**
      * Always get the list through this function : thread safe.
      */
-    private ArrayList getList() throws RemoteException {
+    private ArrayList getList() {
         if (list != null)
             return list;
         synchronized (this) {
             if (list != null)
                 return list;
             ArrayList l = new ArrayList(stubMap.values());
-            regularStubClass = l.get(0).getClass();
             return list = l;
         }
-    }
-
-    public Class getRegularStubClass() {
-        return regularStubClass;
     }
 
     public StubListRandomChooser getRandomChooser() throws RemoteException {
@@ -262,7 +234,7 @@ public class ClusterStub implements Externalizable {
             Iterator it = stubMap.entrySet().iterator();
             int l = stubMap.size();
             out.writeInt(l);
-            for (int i=0; i<l; i++) {
+            for (int i = 0; i < l; i++) {
                 Map.Entry e = (Entry) it.next();
                 ClusterId id = (ClusterId) e.getKey();
                 id.write(out);
@@ -275,21 +247,26 @@ public class ClusterStub implements Externalizable {
     /** (non-Javadoc)
      * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
      */
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+    public void readExternal(ObjectInput in)
+        throws IOException, ClassNotFoundException {
         try {
             cfg = (ClusterConfig) in.readObject();
-            int l = in.readInt(); 
+            int l = in.readInt();
             HashMap m = new HashMap(l);
-            for (int i=0; i<l; i++) {
-                ClusterId k = ClusterId.read(in);
+            ArrayList lst = new ArrayList(l);
+            for (int i = 0; i < l; i++) {
+                ClusterId id = ClusterId.read(in);
                 Object o = in.readObject();
-                m.put(k, o);
+                m.put(id, o);
+                lst.add(o);
             }
             stubMap = m;
-            randomSeed = in.readLong();
+            list = lst;
+            SecureRandom.setSeed(
+                randomSeed = in.readLong() ^ System.currentTimeMillis());
         } catch (ClassCastException ce) {
             throw new IOException("invalid serialized stub : " + ce.toString());
         }
-        
+
     }
 }

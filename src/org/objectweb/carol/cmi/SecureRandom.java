@@ -18,6 +18,9 @@
  */
 package org.objectweb.carol.cmi;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 class SecureRandom {
     private static java.security.SecureRandom sr = null;
 
@@ -26,15 +29,19 @@ class SecureRandom {
             return sr;
         sr = new java.security.SecureRandom();
         sr.setSeed(System.currentTimeMillis());
+        try {
+            sr.setSeed(InetAddress.getLocalHost().getAddress());
+        } catch (UnknownHostException e) {
+            //One of the rare cases where there is nothing to do
+        }
         return sr;
     }
 
-    public static void doSlowSeed() {
-        java.security.SecureRandom sr = getSR();
-        sr.setSeed(sr.generateSeed(20));
+    public static void setSeed(long rs) {
+        getSR().setSeed(rs);
     }
 
-    public static void setSeed(long rs) {
+    public static void setSeed(byte[] rs) {
         getSR().setSeed(rs);
     }
 

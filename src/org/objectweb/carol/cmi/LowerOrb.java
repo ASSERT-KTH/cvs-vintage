@@ -42,6 +42,10 @@ public class LowerOrb {
     private static ObjID id = new ObjID(REG_ID);
     private static PortableRemoteObjectDelegate rmi = new JrmpPRODelegate();
 
+    public static Remote toStub(Remote obj) throws NoSuchObjectException {
+        return rmi.toStub(obj);
+    }
+
     public static void exportObject(Remote obj) throws RemoteException {
         rmi.exportObject(obj);
     }

@@ -161,13 +161,7 @@ class GlobalExports {
             table.put(key, cs);
         } else if (!cs.setStub(serverId, stub))
             if (Trace.DES)
-                Trace.out(
-                    "DES: Warning: "
-                        + key
-                        + " registered in the cluster both as "
-                        + stub.getClass().getName()
-                        + " and "
-                        + cs.getRegularStubClass().getName());
+                Trace.out("DES: Warning: Object registered in the cluster as two distinct types");
     }
 
     public synchronized void remove(ClusterId serverId, Serializable key) {

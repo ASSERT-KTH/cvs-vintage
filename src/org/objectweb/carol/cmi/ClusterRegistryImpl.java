@@ -45,7 +45,6 @@ public final class ClusterRegistryImpl implements ClusterRegistry {
         ClusterRegistry stub =
             (ClusterRegistry) LowerOrb.exportRegistry(creg, port);
         ClusterRegistryKiller k = new ClusterRegistryKiller(creg, port);
-        SecureRandom.doSlowSeed();
         return k;
     }
 

@@ -104,6 +104,7 @@ public class ClusterIdFactory {
             d >>= 8;
         }
         localId = new ClusterId(localIdArray);
+        SecureRandom.setSeed(localIdArray);
     }
 
     /**
