@@ -35,7 +35,7 @@ import org.jboss.util.SerializableEnumeration;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.25 $
+*   @version $Revision: 1.26 $
 */
 public class EntityContainer
 extends Container

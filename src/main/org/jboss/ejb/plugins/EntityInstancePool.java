@@ -18,7 +18,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public class EntityInstancePool
    extends AbstractInstancePool

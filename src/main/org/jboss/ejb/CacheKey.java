@@ -19,7 +19,7 @@ package org.jboss.ejb;
 *
 *   @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.2 $
+*   @version $Revision: 1.3 $
 */
 public class CacheKey
     implements java.io.Externalizable

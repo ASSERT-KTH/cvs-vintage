@@ -35,7 +35,7 @@ import org.jboss.ejb.EntityPersistenceStore;
 *      
 *	@see <related>
 *	@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.6 $
+*	@version $Revision: 1.7 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {

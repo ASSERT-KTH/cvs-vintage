@@ -42,7 +42,7 @@ import org.jboss.metadata.EntityMetaData;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.8 $
+*   @version $Revision: 1.9 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor

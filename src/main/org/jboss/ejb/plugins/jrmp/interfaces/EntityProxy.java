@@ -21,7 +21,7 @@ import org.jboss.ejb.CacheKey;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *	@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.17 $
+*   @version $Revision: 1.18 $
 */
 public class EntityProxy
 extends GenericProxy

@@ -37,7 +37,7 @@ import org.jboss.metadata.EntityMetaData;
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:andreas.schaefer@madplanet.com">Andy Schaefer</a>
-*	@version $Revision: 1.10 $
+*	@version $Revision: 1.11 $
 */
 public class NoPassivationEntityInstanceCache
 implements EntityInstanceCache

@@ -60,7 +60,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.7 $
+ *	@version $Revision: 1.8 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager

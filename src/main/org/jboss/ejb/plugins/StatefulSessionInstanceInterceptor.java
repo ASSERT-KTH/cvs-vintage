@@ -32,7 +32,7 @@ import javax.ejb.EJBException;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.4 $
+*   @version $Revision: 1.5 $
 */
 public class StatefulSessionInstanceInterceptor
 extends AbstractInterceptor

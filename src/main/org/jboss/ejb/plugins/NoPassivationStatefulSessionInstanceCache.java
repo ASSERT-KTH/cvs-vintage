@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.9 $
+*	@version $Revision: 1.10 $
 */
 public class NoPassivationStatefulSessionInstanceCache
 implements InstanceCache
