@@ -76,6 +76,8 @@ import java.security.*;
  */
 public class StaticInterceptor extends BaseInterceptor {
     int realFileNote=-1;
+    boolean useAcceptLanguage=true;
+    String charset=null;
 
     public StaticInterceptor() {
     }
@@ -92,6 +94,14 @@ public class StaticInterceptor extends BaseInterceptor {
 
     public void setListings(boolean listings) {
 	this.listings = listings;
+    }
+
+    public void setUseAcceptLanguage(boolean use) {
+        useAcceptLanguage=use;
+    }
+
+    public void setUseCharset(String charset) {
+        this.charset=charset;
     }
 
     public void engineInit(ContextManager cm) throws TomcatException {
@@ -120,6 +130,8 @@ public class StaticInterceptor extends BaseInterceptor {
 	dirHandler.setNoteId( realFileNote );
 	dirHandler.setContext( ctx );
 	dirHandler.setModule( this );
+        dirHandler.setUseAcceptLanguage(useAcceptLanguage);
+        dirHandler.setCharset(charset);
 	if (listings)
 	    ctx.addServlet( dirHandler );
     }
@@ -396,7 +408,10 @@ final class DirHandler extends Handler  {
     int realFileNote;
     int sbNote=0;
     Context context;
-    
+    Locale defLocale=null;
+    String defCharset=null;
+    StringManager defSM=null;
+
     DirHandler() {
 	//	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.dirHandler";
@@ -409,16 +424,49 @@ final class DirHandler extends Handler  {
     public void setContext(Context ctx) {
 	this.context=ctx;
     }
+
+    public void setUseAcceptLanguage(boolean use) {
+        if( use ) {
+            defLocale=null;
+            defSM=null;
+        } else {
+            defLocale=Locale.getDefault();
+            defSM=StringManager.
+                    getManager("org.apache.tomcat.resources",defLocale);
+        }
+    }
+
+    public void setCharset(String charset) {
+        defCharset=charset;
+    }
     
     public void doService(Request req, Response res)
 	throws Exception
     {
-	// this is how get locale is implemented. Ugly, but it's in
-	// the next round of optimizations
-	String acceptL=req.getMimeHeaders().getHeader( "Accept-Language");
-	Locale locale=AcceptLanguage.getLocale(acceptL);;
-	StringManager sm=StringManager.
-	    getManager("org.apache.tomcat.resources",locale);
+        Locale locale;
+        StringManager sm;
+        String charset=null;
+
+        // if default locale not specified, use Accept-Language header
+        if( defLocale == null) {
+            // this is how get locale is implemented. Ugly, but it's in
+            // the next round of optimizations
+            String acceptL=req.getMimeHeaders().getHeader( "Accept-Language");
+            locale=AcceptLanguage.getLocale(acceptL);
+            sm=StringManager.
+                getManager("org.apache.tomcat.resources",locale);
+        } else {
+            locale=defLocale;
+            sm=defSM;
+        }
+
+        if( defCharset != null ) {
+            if( "locale".equals(defCharset))
+                charset=LocaleToCharsetMap.getCharset(locale);
+            else
+                charset=defCharset;
+        }
+
 	DateFormat dateFormat =
 	    new SimpleDateFormat(datePattern,locale );
 
@@ -468,7 +516,12 @@ final class DirHandler extends Handler  {
 	}
 
 	if (! inInclude) {
-	    res.setContentType("text/html");
+           if (charset == null || charset.equalsIgnoreCase("ISO-8859-1"))
+               res.setContentType("text/html");
+           else {
+               res.setContentType("text/html; charset=" + charset);
+               res.setUsingWriter(true);
+           }
 	    buf.write("<html>\r\n");
 	    buf.write("<head>\r\n");
 	    buf.write("<title>");
