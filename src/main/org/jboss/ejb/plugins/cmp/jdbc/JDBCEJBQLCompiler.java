@@ -70,7 +70,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  *
  * TODO: collecting join paths needs rewrite
  */
@@ -706,10 +706,11 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       // add all the collection member path tables
       if(!ctermCollectionMemberJoinPaths.isEmpty())
       {
-         for(Iterator iter = ctermCollectionMemberJoinPaths.keySet().iterator(); iter.hasNext();)
+         for(Iterator iter = ctermCollectionMemberJoinPaths.entrySet().iterator(); iter.hasNext();)
          {
-            String childAlias = (String) iter.next();
-            ASTPath path = (ASTPath) ctermCollectionMemberJoinPaths.get(childAlias);
+            Map.Entry entry = (Map.Entry)iter.next();
+            String childAlias = (String)entry.getKey();
+            ASTPath path = (ASTPath)entry.getValue();
 
             // join the memeber path
             createThetaJoin(path, path.size() - 1, joinedAliases, childAlias, buf);
@@ -990,7 +991,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
             Object pathEl = path.fieldList.get(i);
             if(pathEl instanceof JDBCCMRFieldBridge)
             {
-               addCollectionMemberJoinPath(alias, path);
+               addJoinPath(path);
                break;
             }
          }
