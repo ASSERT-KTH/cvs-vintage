@@ -12,12 +12,14 @@ import org.apache.tomcat.util.log.*;
 import java.security.*;
 import java.util.*;
 
-// XXX XXX This started as a hack to integrate with J2EE,
-// need a major rewrite
-
 /**
- *  Use this class to embed tomcat in your application.
+ *
+ *  Wrapper around ContextManager. Use this class to embed tomcat in your
+ *  application if you want to use "API"-based configuration ( instead
+ *  or in addition to server.xml ).
+ *
  *  The order is important:
+ * 
  *  1. set properties like workDir and debug
  *  2. add all interceptors including your application-specific
  *  3. add the endpoints 
@@ -37,19 +39,18 @@ import java.util.*;
  * @author costin@eng.sun.com
  */
 public class EmbededTomcat { 
-    ContextManager contextM = new ContextManager();
-    Object application;
+    // the "real" server
+    protected ContextManager contextM = new ContextManager();
+
+    // your application
+    protected Object application;
 
     // null == not set up
-    Vector requestInt=null;
-    Vector connectors=new Vector();
+    protected Vector requestInt=null;
+    protected Vector connectors=new Vector();
 
-    String workDir;
-
-    Log loghelper = new Log("tc_log", this);
-    
     // configurable properties
-    int debug=0;
+    protected int debug=0;
     
     public EmbededTomcat() {
     }
@@ -64,24 +65,24 @@ public class EmbededTomcat {
      */
     public void setDebug( int debug ) {
 	this.debug=debug;
+	contextM.setDebug( debug );
     }
+
+
+    // -------------------- Application Modules --------------------
 
     /** This is an adapter object that provides callbacks into the
      *  application.
-     *  For tomcat, it will be a BaseInterceptor.
-     * 	See the top level documentation
      */
-    public void addApplicationAdapter( Object adapter )
+    public void addApplicationAdapter( BaseInterceptor adapter )
 	throws TomcatException
     {
 	if(requestInt==null)  initDefaultInterceptors();
-
-	// In our case the adapter must be BaseInterceptor.
-	if ( adapter instanceof BaseInterceptor ) {
-	    addInterceptor( (BaseInterceptor)adapter);
-	}
+	addInterceptor(adapter);
     }
 
+    /** Keep a reference to the application in which we are embeded
+     */
     public void setApplication( Object app ) {
 	application=app;
     }
@@ -91,15 +92,10 @@ public class EmbededTomcat {
     public Object getApplication() {
 	return application;
     }
-    
-    public void setWorkDir( String dir ) {
-	workDir=dir;
-    }
-    
-    // -------------------- Endpoints --------------------
+
+    // -------------------- Helpers for http connectors --------------------
     
     /** Add a HTTP listener.
-     *  You must add all the endpoints before calling start().
      */
     public void addEndpoint( int port, InetAddress addr , String hostname)
 	throws TomcatException
@@ -108,8 +104,22 @@ public class EmbededTomcat {
 			 " " + hostname );
 
 	Http10Interceptor sc=new Http10Interceptor();
-	sc.setServer( contextM );
-	sc.setDebug( debug );
+	sc.setPort( port ) ;
+	if( addr != null ) sc.setAddress( addr );
+	if( hostname != null ) sc.setHostName( hostname );
+	
+	contextM.addInterceptor(  sc );
+    }
+
+    /** Add AJP12 listener.
+     */
+    public void addAjpEndpoint( int port, InetAddress addr , String hostname)
+	throws TomcatException
+    {
+	if(debug>0) log( "addAjp12Connector " + port + " " + addr +
+			 " " + hostname );
+
+	Ajp12Interceptor sc=new Ajp12Interceptor();
 	sc.setPort( port ) ;
 	if( addr != null ) sc.setAddress( addr );
 	if( hostname != null ) sc.setHostName( hostname );
@@ -127,7 +137,6 @@ public class EmbededTomcat {
 			 hostname );
 	
 	Http10Interceptor sc=new Http10Interceptor();
-	sc.setServer( contextM );
 	sc.setPort( port ) ;
 	if( addr != null ) sc.setAddress(  addr );
 	if( hostname != null ) sc.setHostName( hostname );
@@ -142,12 +151,13 @@ public class EmbededTomcat {
 
     boolean initialized=false;
     
-    /** Add and init a context
+    /** Add and init a context. Must be called after all modules are added.
      */
-    public Context addContext( String ctxPath, URL docRoot )
+    public Context addContext(  String ctxPath, URL docRoot, String hosts[] )
 	throws TomcatException
     {
-	if(debug>0) log( "add context \"" + ctxPath + "\" " + docRoot );
+	if(debug>0) log( "add context \"" + hosts[0] + ":" + ctxPath + "\" " +
+			 docRoot );
 	if( ! initialized ) {
 	    initContextManager();
 	}
@@ -163,11 +173,15 @@ public class EmbededTomcat {
 	    ctx.setDebug( debug );
 	    ctx.setContextManager( contextM );
 	    ctx.setPath( ctxPath );
-	    // XXX if virtual host set it.
 	    ctx.setDocBase( docRoot.getFile());
+	    if( hosts!=null && hosts.length>0 ) {
+		ctx.setHost( hosts[0] );
+		for( int i=1; i>hosts.length; i++) {
+		    ctx.addHostAlias( hosts[i]);
+		}
+	    }
+
 	    contextM.addContext( ctx );
-	    // 	    if( facadeM == null ) facadeM=ctx.getFacadeManager();
-	    // 	    return ctx.getFacade();
 	    return ctx;
 	} catch( Exception ex ) {
 	    log("exception adding context " + ctxPath + "/" + docRoot, ex);
@@ -175,12 +189,9 @@ public class EmbededTomcat {
 	return null;
     }
 
-    /** Find the context mounted at /cpath.
-	Right now virtual hosts are not supported in
-	embeded tomcat.
-    */
-    public Object getServletContext( String host,
-				     String cpath )
+    /** Find the context mounted at /cpath for a virtual host.
+     */
+    public Context getContext( String host, String cpath )
     {
 	// We don't support virtual hosts in embeded tomcat
 	// ( it's not difficult, but can be done later )
@@ -188,8 +199,20 @@ public class EmbededTomcat {
 	while( ctxE.hasMoreElements() ) {
 	    Context ctx=(Context)ctxE.nextElement();
 	    // XXX check host too !
-	    if( ctx.getPath().equals( cpath ))
-		return ctx.getFacade();
+	    if( ctx.getPath().equals( cpath )) {
+		// find if the host matches
+		if( ctx.getHost()==null ) 
+		    return ctx;
+		if( host==null )
+		    return ctx;
+		if( ctx.getHost().equals( host ))
+		    return ctx;
+		Enumeration aliases=ctx.getHostAliases();
+		while( aliases.hasMoreElements()){
+		    if( host.equals( (String)aliases.nextElement()))
+			return ctx;
+		}
+	    }
 	}
 	return null;
     }
@@ -198,22 +221,18 @@ public class EmbededTomcat {
     public void addInterceptor( BaseInterceptor ri ) {
 	if( requestInt == null ) requestInt=new Vector();
 	requestInt.addElement( ri );
-	if( ri instanceof BaseInterceptor )
-	    ((BaseInterceptor)ri).setDebug( debug );
+	ri.setDebug( debug );
     }
 
-    private void initContextManager()
+    protected void initContextManager()
 	throws TomcatException 
     {
 	if(requestInt==null)  initDefaultInterceptors();
-	contextM.setDebug( debug );
 	
 	for( int i=0; i< requestInt.size() ; i++ ) {
 	    contextM.addInterceptor( (BaseInterceptor)
 				     requestInt.elementAt( i ) );
 	}
-
-	contextM.setWorkDir( workDir );
 
 	try {
 	    contextM.init();
@@ -223,105 +242,45 @@ public class EmbededTomcat {
 	if(debug>0) log( "ContextManager initialized" );
 	initialized=true;
     }
+
+    // no AutoSetup !
+
+    protected String moduleSet1[] = {
+	"org.apache.tomcat.context.DefaultCMSetter",
+	"org.apache.tomcat.facade.WebXmlReader",
+	"org.apache.tomcat.context.PolicyInterceptor",
+	"org.apache.tomcat.context.LoaderInterceptor12",
+	"org.apache.tomcat.context.ErrorHandler",
+	"org.apache.tomcat.context.WorkDirInterceptor",
+	"org.apache.tomcat.modules.session.SessionId",
+	"org.apache.tomcat.request.SimpleMapper1",
+	"org.apache.tomcat.request.InvokerInterceptor",
+	"org.apache.tomcat.facade.JspInterceptor",
+	"org.apache.tomcat.request.StaticInterceptor",
+	"org.apache.tomcat.modules.session.SimpleSessionStore",
+	"org.apache.tomcat.facade.LoadOnStartupInterceptor",
+	"org.apache.tomcat.facade.Servlet22Interceptor",
+	"org.apache.tomcat.request.AccessInterceptor",
+	"org.apache.tomcat.request.CredentialsInterceptor",
+	"org.apache.tomcat.request.Jdk12Interceptor"
+    };
     
-    private void initDefaultInterceptors() {
-	// no AutoSetup !
-	// set workdir, engine header, auth Servlet, error servlet, loader
-	//	addInterceptor( new LogEvents() );
-	
-	DefaultCMSetter defaultCMI=new DefaultCMSetter();
-	addInterceptor( defaultCMI );
-
-	BaseInterceptor webXmlI=
-	    createModule("org.apache.tomcat.facade.WebXmlReader");
-	addInterceptor( webXmlI );
-
-	PolicyInterceptor polI=new PolicyInterceptor();
-	addInterceptor( polI );
-	polI.setDebug(0);
-        
-	LoaderInterceptor12 loadI=new LoaderInterceptor12();
-	addInterceptor( loadI );
-
-	ErrorHandler errH=new ErrorHandler();
-	addInterceptor( errH );
-
-	WorkDirInterceptor wdI=new WorkDirInterceptor();
-	addInterceptor( wdI );
-
-	SessionId sessI=new SessionId();
-	addInterceptor( sessI );
-
-	SimpleMapper1 mapI=new SimpleMapper1();
-	addInterceptor( mapI );
-
-	InvokerInterceptor invI=new InvokerInterceptor();
-	addInterceptor( invI );
-	
-	BaseInterceptor jspI=createModule("org.apache.tomcat.facade.JspInterceptor");
-	addInterceptor( jspI );
-
-	StaticInterceptor staticI=new StaticInterceptor();
-	addInterceptor( staticI );
-
-	addInterceptor( new SimpleSessionStore());
-	
-	BaseInterceptor loadOnSI= createModule("org.apache.tomcat.facade.LoadOnStartupInterceptor");
-	addInterceptor( loadOnSI );
-
-	BaseInterceptor s22=createModule("org.apache.tomcat.facade.Servlet22Interceptor");
-	addInterceptor( s22 );
-
-	addInterceptor( new AccessInterceptor() );
-
-	addInterceptor( new CredentialsInterceptor() );
-
-	// set context class loader
-	Jdk12Interceptor jdk12I=new Jdk12Interceptor();
-	addInterceptor( jdk12I );
-
+    protected void initDefaultInterceptors() {
+	addModules( moduleSet1 );
     }
-    
+
+    protected void addModules(String set[] ) {
+	for( int i=0; i<set.length; i++ ) {
+	    addInterceptor( createModule( set[i] ));
+	}
+    }
 
     // -------------------- Utils --------------------
     public void log( String s ) {
-	loghelper.log( s );
+	contextM.log( s );
     }
     public void log( String s, Throwable t ) {
-	loghelper.log( s, t );
-    }
-    public void log( String s, int level ) {
-	loghelper.log( s, level );
-    }
-    public void log( String s, Throwable t, int level ) {
-	loghelper.log( s, t, level );
-    }
-
-    /** Sample - you can use it to tomcat
-     */
-    public static void main( String args[] ) {
-	try {
-	    File pwdF=new File(".");
-	    String pwd=pwdF.getCanonicalPath();
-
-	    EmbededTomcat tc=new EmbededTomcat();
-	    tc.setWorkDir( pwd + "/work"); // relative to pwd
-
-	    Context sctx=tc.addContext("", new URL
-				       ( "file", null, pwd + "/webapps/ROOT"));
-	    sctx.init();
-
-	    sctx=tc.addContext("/examples", new URL
-		("file", null, pwd + "/webapps/examples"));
-	    sctx.init();
-
-	    tc.addEndpoint( 8080, null, null);
-	    tc.getContextManager().start();
-	} catch (Throwable t ) {
-	    // this stack trace is ok, i guess, since it's just a
-	    // sample main
-	    t.printStackTrace();
-	}
+	contextM.log( s, t );
     }
 
     private BaseInterceptor createModule( String classN ) {
