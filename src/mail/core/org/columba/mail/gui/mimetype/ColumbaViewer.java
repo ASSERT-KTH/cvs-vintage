@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.mimetype;
 
 import java.io.File;
@@ -24,7 +25,7 @@ import javax.swing.JOptionPane;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.parser.MimeRouter;
 
-public class ColumbaViewer extends DefaultViewer {
+public class ColumbaViewer extends AbstractViewer {
 
 	public Process openWith(MimeHeader header, File tempFile) {
 

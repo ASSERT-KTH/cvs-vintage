@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.mimetype;
 
 import java.io.BufferedReader;
@@ -24,7 +25,7 @@ import java.net.URL;
 
 import org.columba.mail.message.MimeHeader;
 
-public class WindowsViewer extends DefaultViewer
+public class WindowsViewer extends AbstractViewer
 {
 
     public Process openWith( MimeHeader header, File tempFile )

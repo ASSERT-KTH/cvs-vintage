@@ -29,7 +29,7 @@ public class MimeTypeViewer
 
     public Process openWith( MimeHeader header, File tempFile )
     {
-	DefaultViewer viewer;
+	AbstractViewer viewer;
         if ( OSInfo.isWin32Platform() ) {
             viewer = new WindowsViewer();
         }else{
@@ -40,7 +40,7 @@ public class MimeTypeViewer
 
     public Process open( MimeHeader header, File tempFile )
     {
-        DefaultViewer viewer;
+        AbstractViewer viewer;
 	if ( OSInfo.isWin32Platform() ) {
             viewer = new WindowsViewer();
         }else{
@@ -51,7 +51,7 @@ public class MimeTypeViewer
 
     public Process openURL( URL url )
     {
-        DefaultViewer viewer;
+        AbstractViewer viewer;
 	if ( OSInfo.isWin32Platform() ) {
             viewer = new WindowsViewer();
         }else{
@@ -62,7 +62,7 @@ public class MimeTypeViewer
 
     public Process openWithURL( URL url )
     {
-        DefaultViewer viewer;
+        AbstractViewer viewer;
 	if ( OSInfo.isWin32Platform() ) {
             viewer = new WindowsViewer();
         }else{
