@@ -1,4 +1,4 @@
-// $Id: Trash.java,v 1.16 2003/09/10 22:37:25 linus Exp $
+// $Id: Trash.java,v 1.17 2003/09/10 22:39:11 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,8 @@ import org.argouml.model.ModelFacade;
  * break when the trash is empty.  E.g., Class X's superclass is in
  * the trash, you must fix this before you empty the trash. 
  */
+// TODO: Move to the Model component.
+// Problem: there are public static attributes so it is hard to make a proxy
 public class Trash {
     protected static Logger cat = 
         Logger.getLogger(Trash.class);
