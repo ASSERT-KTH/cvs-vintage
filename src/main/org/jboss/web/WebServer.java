@@ -22,8 +22,8 @@ import org.jboss.logging.Logger;
  *   or by adding a file dynaserver.properties in the same location as the dynaserver.jar file (recommended).
  *   It can also be configured by calling any methods programmatically prior to startup.
  *
- *   @author $Author: oberg $
- *   @version $Revision: 1.3 $
+ *   @author $Author: osh $
+ *   @version $Revision: 1.4 $
  */
 public class WebServer
 	implements Runnable
@@ -170,7 +170,8 @@ public class WebServer
                     break;
                  } catch (Exception e)
                  {
-                    Logger.exception(e);
+                    if (!(e instanceof ClassNotFoundException))
+                       Logger.exception(e);
                  }
               }
               
