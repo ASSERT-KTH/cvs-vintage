@@ -58,7 +58,7 @@ import org.tigris.scarab.om.ScarabUserManager;
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.20 $ $Date: 2003/02/04 11:26:00 $
+ * @version $Revision: 1.21 $ $Date: 2003/02/13 21:35:41 $
  */
 public class UserAttribute extends AttributeValue
 {
@@ -88,7 +88,10 @@ public class UserAttribute extends AttributeValue
             {
                 ScarabUser user = ScarabUserManager
                     .getInstance(username, getIssue().getIdDomain());
-                setUserIdOnly(user.getUserId());
+                if (user != null)
+                {
+                    setUserIdOnly(user.getUserId());
+                }
             }
             else
             {
