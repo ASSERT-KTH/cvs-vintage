@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <Server>
+    <!-- Configuration file for JDK1.2 
+         Note that security is enabled by default! -->
+
     <!-- Debug low-level events in XmlMapper startup -->
     <xmlmapper:debug level="0" />
 
@@ -113,19 +116,14 @@
         <ContextInterceptor 
             className="org.apache.tomcat.context.WebXmlReader" />
 
-        <!-- Uncomment out if you have JDK1.2 and want to implement
+        <!-- Comment out if you have JDK1.2 and want to implement
 	     the Java SecurityManager
+        -->
         <ContextInterceptor 
             className="org.apache.tomcat.context.PolicyInterceptor" />
-        -->
 
-        <!-- For JDK1.2 and URLClassLoader 
         <ContextInterceptor 
             className="org.apache.tomcat.context.LoaderInterceptor12" />
-        -->
-
-        <ContextInterceptor 
-            className="org.apache.tomcat.context.LoaderInterceptor11" />
 
         <ContextInterceptor 
             className="org.apache.tomcat.context.DefaultCMSetter" />
@@ -146,6 +144,12 @@
           -->
         <RequestInterceptor 
             className="org.apache.tomcat.request.SimpleMapper1" 
+            debug="0" />
+
+        <!-- fix the context class loader, other JDK1.2 specific code
+          -->
+        <RequestInterceptor 
+            className="org.apache.tomcat.request.Jdk12Interceptor" 
             debug="0" />
 
         <!-- Non-standard invoker, for backward compat. ( /servlet/* )
