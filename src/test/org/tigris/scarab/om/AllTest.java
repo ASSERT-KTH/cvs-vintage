@@ -54,7 +54,7 @@ import junit.framework.TestSuite;
  * Used for running all of the tests at once.
  *
  * @author <a href="mailto:tmcnerney@truis.com">Tim McNerney</a>
- * @version $Id: AllTest.java,v 1.3 2001/09/29 20:12:31 jon Exp $
+ * @version $Id: AllTest.java,v 1.4 2001/10/15 02:37:31 mumbly Exp $
  */
 public class AllTest extends BaseTestCase
 {
@@ -78,6 +78,7 @@ public class AllTest extends BaseTestCase
         suite.addTest(AttributeOptionTest.suite());
         suite.addTest(IssueTest.suite());
         suite.addTest(QueryTest.suite());
+        suite.addTest(ActivityTest.suite());
         return suite;
     }
 

@@ -55,7 +55,7 @@ import org.tigris.scarab.om.Issue;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.4 2001/08/31 18:10:58 jon Exp $
+ * @version $Id: IssueTest.java,v 1.5 2001/10/15 02:37:31 mumbly Exp $
  */
 public class IssueTest extends BaseTestCase
 {
@@ -89,7 +89,7 @@ public class IssueTest extends BaseTestCase
         System.out.println ("testGetAllAttributeValuesMap()");
         HashMap map = issue.getAllAttributeValuesMap();
         System.out.println ("getAllAttributeValuesMap().size(): " + map.size());
-        assertEquals (map.size(), 10);  
+        assertEquals (map.size(), 11);  
     }
 
     private void testGetUniqueId(Issue issue) throws Exception

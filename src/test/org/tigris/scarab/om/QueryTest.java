@@ -57,13 +57,10 @@ import java.util.List;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: QueryTest.java,v 1.2 2001/10/05 19:01:04 jon Exp $
+ * @version $Id: QueryTest.java,v 1.3 2001/10/15 02:37:31 mumbly Exp $
  */
 public class QueryTest extends BaseTestCase
 {
-    private ScarabUser user0 = null;
-    private ScarabUser user1 = null;
-    private ScarabUser user2 = null;
     private Query query = null;
     private Query query1 = null;
 
@@ -84,9 +81,6 @@ public class QueryTest extends BaseTestCase
     protected void runTest()
             throws Throwable
     {
-        user0 = (ScarabUser) ScarabUserImplPeer.retrieveByPK(new NumberKey(0));
-        user1 = (ScarabUser) ScarabUserImplPeer.retrieveByPK(new NumberKey(2));
-        user2 = (ScarabUser) ScarabUserImplPeer.retrieveByPK(new NumberKey(3));
         query = Query.getInstance();
         query1 = Query.getInstance();
 
@@ -128,7 +122,7 @@ public class QueryTest extends BaseTestCase
         query1.setValue("&searchId=2&searchisp=asc");
         query1.setDescription("Description for test query 2");
         query1.setModuleId(getModule().getModuleId());
-        query1.saveAndSendEmail(user1, getModule(), null);
+        query1.saveAndSendEmail(getUser1(), getModule(), null);
         //
         // Make sure the query was persisted correctly.
         //
@@ -181,7 +175,7 @@ public class QueryTest extends BaseTestCase
         //
         try
         {
-            query.approve(user2, true);
+            query.approve(getUser2(), true);
         }
         catch (ScarabException ex)
         {
@@ -189,7 +183,7 @@ public class QueryTest extends BaseTestCase
         }
         assert(caught);
         caught = false;
-        query.approve(user1, true);
+        query.approve(getUser1(), true);
         assert(query.getApproved());
     }
 
@@ -204,7 +198,7 @@ public class QueryTest extends BaseTestCase
         //
         try
         {
-            query.delete(user2);
+            query.delete(getUser2());
         }
         catch (ScarabException ex)
         {
@@ -213,7 +207,7 @@ public class QueryTest extends BaseTestCase
         Query retQuery = (Query) QueryPeer.retrieveByPK(query.getQueryId());
         assert(!retQuery.getDeleted());
         assert(caught);
-        query.delete(user1);
+        query.delete(getUser1());
         retQuery = (Query) QueryPeer.retrieveByPK(query.getQueryId());
         assert(retQuery.getDeleted());
     }

@@ -54,6 +54,10 @@ import org.apache.torque.om.NumberKey;
 import junit.framework.TestCase;
 
 import org.tigris.scarab.om.ScarabModulePeer;
+import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.Activity;
+import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.*;
 import org.tigris.scarab.services.module.ModuleEntity;
 
 /**
@@ -62,7 +66,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.5 2001/10/05 19:01:04 jon Exp $
+ * @version $Id: BaseTestCase.java,v 1.6 2001/10/15 02:37:31 mumbly Exp $
  */
 public class BaseTestCase extends TestCase
 {
@@ -70,6 +74,11 @@ public class BaseTestCase extends TestCase
     private static final String TR_PROPS = "/WEB-INF/conf/TurbineResourcesTest.properties";
 
     private static ModuleEntity module = null;
+    private ScarabUser user0 = null;
+    private ScarabUser user1 = null;
+    private ScarabUser user2 = null;
+    private Issue issue0 = null;
+	private Attribute platformAttribute = null;
 
     private static boolean initialized = false;
 
@@ -97,7 +106,7 @@ public class BaseTestCase extends TestCase
             {
                 System.out.println (
                     "config.dir System property was not defined");
-				System.exit(-1);
+                System.exit(-1);
             }
         }
     }
@@ -133,6 +142,68 @@ public class BaseTestCase extends TestCase
     {
         return this.module;
     }
+
+    protected ScarabUser getUser0()
+        throws Exception
+    {
+        if (user0 == null)
+        {
+            user0 = (ScarabUser) ScarabUserImplPeer.retrieveByPK(new NumberKey(0));
+        }
+        return user0;
+    }
+
+    protected ScarabUser getUser1()
+        throws Exception
+    {
+        if (user1 == null)
+        {
+            user1 = (ScarabUser) ScarabUserImplPeer.retrieveByPK(new NumberKey(2));
+        }
+        return user1;
+    }
+
+    protected ScarabUser getUser2()
+        throws Exception
+    {
+        if (user2 == null)
+        {
+            user2 = (ScarabUser) ScarabUserImplPeer.retrieveByPK(new NumberKey(3));
+        }
+        return user2;
+    }
+
+    protected Issue getIssue0()
+        throws Exception
+    {
+        if (issue0 == null)
+        {
+            issue0 = IssuePeer.retrieveByPK(new NumberKey(1));
+        }
+        return issue0;
+    }
+
+    protected Attribute getPlatformAttribute()
+        throws Exception
+    {
+        if (platformAttribute == null)
+        {
+            platformAttribute  = AttributePeer.retrieveByPK(new NumberKey(5));
+        }
+        return platformAttribute;
+    }
+
+	protected Transaction getEditTransaction()
+        throws Exception
+    {
+		Attachment attach = new Attachment();
+		attach.setTextFields(getUser1(), getIssue0(), Attachment.MODIFICATION__PK);
+        attach.setName("commenttest");
+		attach.save();
+		Transaction trans = new Transaction();
+		trans.create(TransactionTypePeer.EDIT_ISSUE__PK, getUser1(), attach);
+		return trans;
+	}
 
     /**
      * Concatenates the file name parts together appropriately.
