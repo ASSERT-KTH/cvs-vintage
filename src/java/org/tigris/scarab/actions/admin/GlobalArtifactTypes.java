@@ -69,7 +69,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.21 2002/09/24 01:22:38 elicia Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.22 2002/09/24 02:28:56 elicia Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -136,31 +136,30 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
+        IntakeTool intake = getIntakeTool(context);
+
         if (((ScarabUser)data.getUser())
             .hasPermission(ScarabSecurity.DOMAIN__ADMIN,
                            scarabR.getCurrentModule()))
         {
-            Object[] keys = data.getParameters().getKeys();
-            String key;
-            String id;
             IssueType issueType;
-
-            for (int i =0; i<keys.length; i++)
+            List issueTypes = IssueTypePeer.getAllIssueTypes(true);
+            for (int i =0; i<issueTypes.size(); i++)
             {
-                key = keys[i].toString();
-                if (key.startsWith("action_"))
-                {
-                   id = key.substring(7);
-                   issueType = (IssueType) IssueTypePeer
-                      .retrieveByPK(new NumberKey(id));
-                   issueType.setDeleted(true);
-                   issueType.setLocked(false);
-                   issueType.save();
+               issueType = (IssueType)issueTypes.get(i);
+               Group group = intake.get("IssueType", 
+                             issueType.getQueryKey(), false);
+               Field deleted = group.get("Deleted");
+               boolean oldValue = issueType.getDeleted();
+               deleted.setProperty(issueType);
+               issueType.save();
+               if (deleted.toString().equals("true") && !oldValue)
+               {
                    issueType.deleteModuleMappings(user);
                    //issueType.deleteIssueTypeMappings(user);
-                 }
-             }
-             scarabR.setConfirmMessage(l10n.get("GlobalIssueTypesDeleted"));
+               }
+            }
+            scarabR.setConfirmMessage(l10n.get("GlobalIssueTypesDeleted"));
          }
          else
          {
