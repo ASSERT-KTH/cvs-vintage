@@ -28,14 +28,24 @@ ID_CODE, not the primary key column.
 -->
 
 <scarab>
-    <user>
-        <firstname>Jon</firstname>
-        <lastname>Stevens</lastname>
-        <email>jon@latchkey.com</email>
-    </user>
     <module id="6" parent="3">
         <name>Source</name>
+        <owner-id>jon@latchkey.com</owner-id>
+        <url>/Turbine/Source</url>
+        <domain>/Turbine/Source</domain>
+        <description>Source</description>
         <code>TBNS</code>
+
+        <user>
+          <firstname>Jon</firstname>
+          <lastname>Stevens</lastname>
+          <email>jon@latchkey.com</email>
+          <username>jon@latchkey.com</username>
+          <role>Observer</role>
+          <role>Partner</role>
+          <role>Developer</role>
+        </user>
+
         <issue id="101">
             <artifact-type>Defect</artifact-type>
 

@@ -7,7 +7,7 @@
   <!ELEMENT url (#PCDATA)>
   <!ELEMENT domain (#PCDATA)>
 
-<!ELEMENT user (firstname, lastname, email, role*)>
+<!ELEMENT user (firstname, lastname, email, username, role?)>
 
 <!ELEMENT issue (artifact-type, transaction+, dependency*, attachment*)>
 <!ATTLIST issue id CDATA #REQUIRED>
@@ -15,12 +15,11 @@
 <!ELEMENT dependency (type, (child | parent))>
 
 <!ELEMENT attachment (name, type, (path | data), mimetype, created-date, modified-date, created-by, modified-by)>
+  <!ELEMENT modified-date (#PCDATA)>
+  <!ATTLIST modified-date format CDATA #REQUIRED>
 
-<!ELEMENT modified-date (#PCDATA)>
-<!ATTLIST modified-date format CDATA #REQUIRED>
-
-<!ELEMENT created-date (#PCDATA)>
-<!ATTLIST created-date format CDATA #REQUIRED>
+  <!ELEMENT created-date (#PCDATA)>
+  <!ATTLIST created-date format CDATA #REQUIRED>
 
 <!ELEMENT transaction (type, committed-by, created-date, attachment*, activity+)>
 <!ATTLIST transaction id CDATA #REQUIRED>
@@ -32,6 +31,7 @@
 <!ELEMENT firstname (#PCDATA)>
 <!ELEMENT lastname (#PCDATA)>
 <!ELEMENT email (#PCDATA)>
+<!ELEMENT username (#PCDATA)>
 <!ELEMENT role (#PCDATA)>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT code (#PCDATA)>
