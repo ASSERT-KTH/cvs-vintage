@@ -25,8 +25,13 @@
     <property name="build.dir.default" value="${basedir}/../target"/>
 
     <property name="turbine.dir" value="${basedir}/../../jakarta-turbine"/>
+    <property name="scarab.turbine.version" 
+            value="2.1-dev-unreleased"/>
+    <property name="scarab.turbine.final.name" 
+            value="turbine-${scarab.turbine.version}"/>
     <property name="turbine.latest.jar" 
-            value="turbine-2.1-dev-unreleased.jar"/>
+            value="${scarab.turbine.final.name}.jar"/>
+            
     <property name="torque.zip" value="torque.zip"/>
     <property name="src.dir" value="${basedir}/../src"/>
     <property name="src.conf.dir" value="${src.dir}/conf"/>
@@ -148,7 +153,10 @@
     <!-- ================================================================== -->
     <target name="check-for-turbine">
         <available property="turbine.cvs.available" 
-            file="${turbine.dir}/build/build-turbine.xml"/>
+            file="${turbine.dir}/build/build.xml"/>
+        <echo>
+        ${turbine.cvs.available}
+        </echo>
     </target>
 
     <target name="prepare-turbine" depends="check-for-turbine" 
@@ -182,11 +190,11 @@
         <echo message="|     Rebuilding Turbine CVS Version       |"/>
         <echo message="|                                          |"/>
         <echo message="+------------------------------------------+"/>
-        <ant antfile="build-turbine.xml" 
+        <ant antfile="build.xml" 
                 dir="${turbine.dir}/build" target="jar">
-            <property name="version" value="2.1-dev-unreleased"/>
+            <property name="version" value="${scarab.turbine.version}"/>
             <property name="project" value="turbine"/>
-            <property name="final.name" value="turbine-2.1-dev-unreleased"/>
+            <property name="final.name" value="${scarab.turbine.final.name}"/>
             <property name="src.dir" value="${turbine.dir}/src"/>
         </ant>
         <copy file="${turbine.dir}/bin/${turbine.latest.jar}" overwrite="true"
