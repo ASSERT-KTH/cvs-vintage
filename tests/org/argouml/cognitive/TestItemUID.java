@@ -1,4 +1,4 @@
-// $Id: TestItemUID.java,v 1.10 2004/08/26 23:03:17 bobtarling Exp $
+// $Id: TestItemUID.java,v 1.11 2004/09/02 20:55:32 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -129,7 +129,7 @@ public class TestItemUID extends TestCase {
         FigDeepHistoryState figdeephistorystate = new FigDeepHistoryState();
         FigFinalState figfinalstate = new FigFinalState();
         FigForkState figforkstate = new FigForkState();
-        FigHistoryState fighistorystate = new FigHistoryState();
+        //FigHistoryState fighistorystate = new FigHistoryState();
         FigInitialState figinitialstate = new FigInitialState();
         FigJoinState figjoinstate = new FigJoinState();
         FigShallowHistoryState figshallowhistorystate =
@@ -174,7 +174,7 @@ public class TestItemUID extends TestCase {
         checkAssignIDToObject(figdeephistorystate, true, true);
         checkAssignIDToObject(figfinalstate, true, true);
         checkAssignIDToObject(figforkstate, true, true);
-        checkAssignIDToObject(fighistorystate, true, true);
+        //checkAssignIDToObject(fighistorystate, true, true);
         checkAssignIDToObject(figinitialstate, true, true);
         checkAssignIDToObject(figjoinstate, true, true);
         checkAssignIDToObject(figshallowhistorystate, true, true);
