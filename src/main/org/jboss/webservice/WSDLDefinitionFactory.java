@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice;
 
-// $Id: WSDLDefinitionFactory.java,v 1.1 2004/05/12 22:09:56 tdiesler Exp $
+// $Id: WSDLDefinitionFactory.java,v 1.2 2004/05/13 20:53:22 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.xml.sax.InputSource;
@@ -18,6 +18,7 @@ import javax.wsdl.xml.WSDLLocator;
 import javax.wsdl.xml.WSDLReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.File;
 import java.net.URL;
 
 /**
@@ -48,41 +49,53 @@ public final class WSDLDefinitionFactory
    */
    public static class WSDLLocatorImpl implements WSDLLocator
    {
-      private URL wsdlFile;
+      private URL wsdlURL;
       private String latestImportURI;
 
       public WSDLLocatorImpl(URL wsdlFile)
       {
-         this.wsdlFile = wsdlFile;
+         this.wsdlURL = wsdlFile;
       }
 
       public InputSource getBaseInputSource()
       {
          try
          {
-            InputStream is = wsdlFile.openStream();
+            InputStream is = wsdlURL.openStream();
             if (is == null)
-               throw new IllegalArgumentException("Cannot obtain wsdl from: " + wsdlFile);
+               throw new IllegalArgumentException("Cannot obtain wsdl from: " + wsdlURL);
 
             return new InputSource(is);
          }
          catch (IOException e)
          {
-            throw new RuntimeException("Cannot access wsdl from: " + wsdlFile);
+            throw new RuntimeException("Cannot access wsdl from: " + wsdlURL);
          }
       }
 
       public String getBaseURI()
       {
-         return wsdlFile.toExternalForm();
+         return wsdlURL.toExternalForm();
       }
 
       public InputSource getImportInputSource(String parent, String relative)
       {
          log.debug("getImportInputSource [parent=" + parent + ",relative=" + relative + "]");
 
-         int index = wsdlFile.toExternalForm().lastIndexOf("/");
-         String wsdlImport = wsdlFile.toExternalForm().substring(0, index) + "/" + relative;
+         String parentDir = parent.substring(0, parent.lastIndexOf("/"));
+
+         // remove references to current dir
+         while(relative.startsWith("./"))
+            relative = relative.substring(2);
+
+         // remove references to parentdir
+         while(relative.startsWith("../"))
+         {
+            parentDir = parentDir.substring(0, parentDir.lastIndexOf("/"));
+            relative = relative.substring(3);
+         }
+
+         String wsdlImport = parentDir + "/" + relative;
 
          try
          {
