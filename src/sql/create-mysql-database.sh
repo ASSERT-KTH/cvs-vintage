@@ -28,25 +28,26 @@ if [ -f "${DB_SETTINGS}" ] ; then
     . "./${DB_SETTINGS}"
 fi
 
-# Database connection settings can be defined in the $DB_SETTINGS file
+# Defaults database settings can be defined in the $DB_SETTINGS file
+# and overridden on the command line
 if [ "$1" != '' ] ; then
     USER="$1"
-else
+elif [ "$USER" = '' ] ; then
     USER=`whoami`
 fi
 if [ "$2" != '' ] ; then
     PASS="$2"
-else
+elif [ "$PASS" = '' ] ; then
     PASS=''
 fi
 if [ "$3" != '' ] ; then
     DB_NAME="$3"
-else
+elif [ "$DB_NAME" = '' ] ; then
     DB_NAME='scarab'
 fi
 if [ "$4" != '' ] ; then
     LOAD_ORDER="$4"
-else
+elif [ "$LOAD_ORDER" = '' ] ; then
     LOAD_ORDER="${POPULATION_SCRIPT_DIR}/LoadOrder.lst"
 fi
 
