@@ -86,9 +86,11 @@ public class DependClassLoader12 extends DependClassLoader {
 			return loadClassInternal( lname, lresolve );
 		    }
 		});
-	} catch( Exception ex ) {
+	} catch( PrivilegedActionException pex ) {
+	    Exception ex=pex.getException();
 	    if( ex instanceof ClassNotFoundException )
 		throw (ClassNotFoundException)ex;
+	    // unknown - better display it 
 	    ex.printStackTrace();
 	    throw new ClassNotFoundException( name );
 	}
