@@ -6,23 +6,25 @@
  */
 package org.jboss.monitor;
 
-import java.util.Map;
-import java.util.Iterator;
-import java.util.ArrayList;
+
+
 import java.net.URL;
-
-import javax.management.MBeanServer;
-import javax.management.MBeanRegistration;
-import javax.management.ObjectName;
-import javax.management.ObjectInstance;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import javax.management.JMException;
-
+import javax.management.MBeanRegistration;
+import javax.management.MBeanServer;
+import javax.management.ObjectInstance;
+import javax.management.ObjectName;
+import org.jboss.ejb.Container;
 import org.jboss.ejb.EJBDeployer;
 import org.jboss.ejb.EJBDeployerMBean;
 import org.jboss.ejb.EjbModule;
-import org.jboss.ejb.InstanceCache;
-import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
+import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.logging.Logger;
 import org.jboss.monitor.client.BeanCacheSnapshot;
@@ -31,7 +33,8 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  *
  * @see Monitorable
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.8 $
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.9 $
  */
 public class BeanCacheMonitor
    implements BeanCacheMonitorMBean, MBeanRegistration
@@ -73,36 +76,47 @@ public class BeanCacheMonitor
     */
    public BeanCacheSnapshot[] getSnapshots()
    {
-      Iterator ejbModules = null;
-      // Get map of deployed applications
-      try
+      try 
       {
-         //This should be a query over object names for the containers.
-         ejbModules = (Iterator)m_mbeanServer.invoke(EJBDeployerMBean.OBJECT_NAME, "getDeployedApplications", new Object[]
-         {}, new String[]
-         {});
+         Collection snapshots = listSnapshots();
+         BeanCacheSnapshot[] snapshotArray = new BeanCacheSnapshot[snapshots.size()];
+         return (BeanCacheSnapshot[])snapshots.toArray(snapshotArray);
       }
-      catch (JMException x)
+      catch (JMException e)
       {
-         log.error("getDeployedApplications failed", x);
-         return null;
-      }
-      
+         log.error("Problem getting bean cache snapshots", e);
+         return null;  
+      } // end of try-catch      
+   }
+
+   /**
+    * The <code>listSnapshots</code> method returns a collection
+    * of BeanSnapshots showing the 
+    *
+    * @return a <code>Collection</code> value
+    * @exception JMException if an error occurs
+    */
+   public Collection listSnapshots() throws JMException
+   {
       ArrayList cacheSnapshots = new ArrayList();
+
+      Collection ejbModules = m_mbeanServer.queryNames(EjbModule.EJB_MODULE_QUERY_NAME, null);
       
       // For each application, getContainers()
-      while (ejbModules.hasNext())
+      for (Iterator i = ejbModules.iterator(); i.hasNext(); )
       {
-         EjbModule app = (EjbModule)ejbModules.next();
-         String name = app.getName();
+         ObjectName ejbModule = (ObjectName) i.next();
+         String name = ejbModule.getKeyProperty("jndiName");
          
          // Loop on each container of the application
-         //Since we are just totaling everything, do a query on container object names.
-         for (Iterator containers = app.getContainers().iterator(); containers.hasNext();)
+         //Since we are just totaling everything, do a query on container object names
+
+         Collection containers = (Collection)m_mbeanServer.getAttribute(ejbModule, "Containers");
+         for (Iterator cs = containers.iterator(); cs.hasNext();)
          {
             // Get the cache for each container
             InstanceCache cache = null;
-            Object container = containers.next();
+            Object container = cs.next();
             if (container instanceof EntityContainer)
             {
                cache = ((EntityContainer)container).getInstanceCache();
@@ -122,9 +136,8 @@ public class BeanCacheMonitor
                cacheSnapshots.add(snapshot);
             }
          }
-      }
-      
-      return (BeanCacheSnapshot[])cacheSnapshots.toArray(new BeanCacheSnapshot[0]);
+      }      
+      return cacheSnapshots;
    }
    
    // Inner classes -------------------------------------------------

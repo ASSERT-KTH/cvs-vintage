@@ -53,6 +53,8 @@ import org.w3c.dom.Element;
 import javax.naming.NamingException;
 import javax.transaction.TransactionManager;
 
+import org.jboss.util.jmx.ObjectNameFactory;
+
 /**
  * An Application represents a collection of beans that are deployed as a
  * unit.
@@ -64,7 +66,8 @@ import javax.transaction.TransactionManager;
  * @see EJBDeployer
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.2 $
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.3 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -72,6 +75,11 @@ public class EjbModule
    extends ServiceMBeanSupport
    implements EjbModuleMBean
 {
+
+   public static final String BASE_EJB_MODULE_NAME ="jboss.j2ee:service=EjbModule";
+
+   public static final ObjectName EJB_MODULE_QUERY_NAME = ObjectNameFactory.create(BASE_EJB_MODULE_NAME + ",*");
+
    public static String DEFAULT_STATELESS_CONFIGURATION = "Default Stateless SessionBean";
    public static String DEFAULT_STATEFUL_CONFIGURATION = "Default Stateful SessionBean";
    public static String DEFAULT_ENTITY_BMP_CONFIGURATION = "Default BMP EntityBean";

@@ -38,7 +38,8 @@ import org.jboss.util.jmx.ObjectNameFactory;
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
- * @version $Revision: 1.16 $
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.17 $
  */
 public class JNDIView 
    extends ServiceMBeanSupport 
@@ -69,8 +70,7 @@ public class JNDIView
       */
       try
       {
-         ejbModules = server.queryNames(
-            ObjectNameFactory.create("jboss.j2ee:service=EjbModule,*"), null);
+         ejbModules = server.queryNames(EjbModule.EJB_MODULE_QUERY_NAME, null);
       }
       catch(Throwable e)
       {
@@ -172,7 +172,7 @@ public class JNDIView
     **/
    public String listXML() {
       StringBuffer buffer = new StringBuffer();
-      Iterator ejbModules = null;
+      Set ejbModules = null;
       Context context = null;
       ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
 
@@ -181,11 +181,7 @@ public class JNDIView
       */
       try
       {
-         ejbModules = (Iterator) server.invoke(
-            EJBDeployerMBean.OBJECT_NAME,
-            "getDeployedApplications",
-            new Object[] { },
-            new String[] { });
+         ejbModules = server.queryNames(EjbModule.EJB_MODULE_QUERY_NAME, null);
       }
       catch(Exception e)
       {
@@ -205,47 +201,58 @@ public class JNDIView
       buffer.append( "<jndi>" );
       buffer.append( '\n' );
       // List each application JNDI namespace
-      while(ejbModules.hasNext())
+      for (Iterator i = ejbModules.iterator(); i.hasNext(); )
       {
-         EjbModule app = (EjbModule) ejbModules.next();
-         Iterator iter = app.getContainers().iterator();
+         ObjectName app = (ObjectName) i.next();
          buffer.append( "<ejbmodule>" );
          buffer.append( '\n' );
-         buffer.append( "<file>" + app.getName() + "</file>" );
+         buffer.append( "<file>" + app.getKeyProperty("url") + "</file>" );
          buffer.append( '\n' );
-         while(iter.hasNext())
+         try 
          {
-            Container con = (Container)iter.next();
-            /* Set the thread class loader to that of the container as
-               the class loader is used by the java: context object
-               factory to partition the container namespaces.
-            */
-            Thread.currentThread().setContextClassLoader(con.getClassLoader());
-            String bean = con.getBeanMetaData().getEjbName();
-            buffer.append( "<context>" );
-            buffer.append( '\n' );
-            buffer.append( "<name>java:comp</name>" );
-            buffer.append( '\n' );
-            buffer.append( "<attribute name=\"bean\">" + bean + "</attribute>" );
-            buffer.append( '\n' );
-            try
+            Collection containers = (Collection)server.getAttribute(app, "Containers");
+            for (Iterator iter = containers.iterator(); iter.hasNext();)
             {
-               context = new InitialContext();
-               context = (Context)context.lookup("java:comp");
+               Container con = (Container)iter.next();
+               /* Set the thread class loader to that of the container as
+                  the class loader is used by the java: context object
+                  factory to partition the container namespaces.
+               */
+               Thread.currentThread().setContextClassLoader(con.getClassLoader());
+               String bean = con.getBeanMetaData().getEjbName();
+               buffer.append( "<context>" );
+               buffer.append( '\n' );
+               buffer.append( "<name>java:comp</name>" );
+               buffer.append( '\n' );
+               buffer.append( "<attribute name=\"bean\">" + bean + "</attribute>" );
+               buffer.append( '\n' );
+               try
+               {
+                  context = new InitialContext();
+                  context = (Context)context.lookup("java:comp");
+               }
+               catch(NamingException e)
+               {
+                  buffer.append( "<error>" );
+                  buffer.append( '\n' );
+                  buffer.append( "<message>" + "Failed on lookup, " + e.toString( true ) + "</message>" );
+                  buffer.append( '\n' );
+                  buffer.append( "</error>" );
+                  buffer.append( '\n' );
+                  continue;
+               }
+               listXML( context, buffer );
+               buffer.append( "</context>" );
+               buffer.append( '\n' );
             }
-            catch(NamingException e)
-            {
-               buffer.append( "<error>" );
-               buffer.append( '\n' );
-               buffer.append( "<message>" + "Failed on lookup, " + e.toString( true ) + "</message>" );
-               buffer.append( '\n' );
-               buffer.append( "</error>" );
-               buffer.append( '\n' );
-               continue;
-            }
-            listXML( context, buffer );
-            buffer.append( "</context>" );
-            buffer.append( '\n' );
+         }
+         catch(Throwable e)
+         {
+            log.error("getConainers failed", e);
+            buffer.append("<pre>");
+            buffer.append("Failed to get ejbs in module\n");
+            formatException(buffer, e);
+            buffer.append("</pre>");
          }
          buffer.append( "</ejbmodule>" );
          buffer.append( '\n' );

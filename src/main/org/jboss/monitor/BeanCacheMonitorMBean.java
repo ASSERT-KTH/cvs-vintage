@@ -7,6 +7,8 @@
 
 package org.jboss.monitor;
 
+import java.util.Collection;
+import javax.management.JMException;
 import org.jboss.monitor.client.BeanCacheSnapshot;
 
 /**
@@ -14,7 +16,7 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  * 
  * @see Monitorable
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public interface BeanCacheMonitorMBean
 {
@@ -25,4 +27,12 @@ public interface BeanCacheMonitorMBean
     * otherwise an array (possibly of size 0) with the cache data.
     */
    BeanCacheSnapshot[] getSnapshots();
+
+   /**
+    * Describe <code>listSnapshots</code> method here.
+    * Returns as a collection, throws JMException on problem
+    *
+    * @return a <code>Collection</code> value
+    */
+   Collection listSnapshots() throws JMException;
 }

@@ -8,10 +8,6 @@
 package org.jboss.ejb;
 
 
-
-
-
-
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -85,7 +81,8 @@ import org.jboss.util.jmx.ObjectNameFactory;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.78 $
+* @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+* @version $Revision: 1.79 $
 ** <p><b>Revisions:</b>
 *
 * <p><b>2001/07/26 bill burke:</b>
@@ -105,6 +102,9 @@ import org.jboss.util.jmx.ObjectNameFactory;
 public abstract class Container implements MBeanRegistration, DynamicMBean
 {
    // Constants -----------------------------------------------------
+   public final static String BASE_EJB_CONTAINER_NAME = "jboss.j2ee:service=EJB";
+
+   public final static ObjectName EJB_CONTAINER_QUERY_NAME = ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + ",*");
    
    // Attributes ----------------------------------------------------
    
@@ -335,9 +335,9 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    }
    
    /**
-    * Returns the application for this container.
+    * Describe <code>getEjbModule</code> method here.
     *
-    * @return
+    * @return the <code>EjbModule</code> parent for this Container
     */
    public EjbModule getEjbModule()
    {
@@ -462,7 +462,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       } // end of if ()
       if (jmxName == null) 
       {
-         jmxName = ObjectNameFactory.create("jboss.j2ee:service=EJB,jndiName="+jndiName);
+         jmxName = ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + ",jndiName=" + jndiName);
       } // end of if ()
       return jmxName;
    }
