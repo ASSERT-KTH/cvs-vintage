@@ -8,34 +8,34 @@ Usage: #enterHelp($link "#middle" "label")
 
 #if( $link.setPage("help,Introduction.vm").isAllowed() ) 
  
-<div>#enterHelp($link "" "Get help with Scarab?")</div>
+<div>#enterHelp($link "" "$l10n.ScarabHelp")</div>
 #end
 #if( $link.setPage("help,UserIssues.vm").isAllowed() ) 
  
-<div>#enterHelp($link "" "Enter and manage issues?")</div>
+<div>#enterHelp($link "" "$l10n.EntryHelp")</div>
 #end
 #if( $link.setPage("help,UserQuery.vm").isAllowed() ) 
  
-<div>#enterHelp($link "" "Search for issues?")</div>
+<div>#enterHelp($link "" "$l10n.SearchHelp")</div>
 #end
 
 #if( $link.setPage("help,UserReports.vm").isAllowed() ) 
  
-<div>#enterHelp($link "" "Learn more about reports?")</div>
+<div>#enterHelp($link "" "$l10n.ReportsHelp")</div>
 #end
 
 #if( $link.setPage("help,ScarabBestPractices.vm").isAllowed() ) 
  
-<div>#enterHelp($link "" "Find out more about using Scarab?")</div>
+<div>#enterHelp($link "" "$l10n.UsingScarabHelp")</div>
 #end
 #if( $link.setPage("help,ScarabFaq.vm").isAllowed() ) 
  
-<div>#enterHelp($link "" "Get to the FAQ?")</div>
+<div>#enterHelp($link "" "$l10n.FAQHelp")</div>
 #end
 
 #if( $link.setPage("help,ScarabGlossary.vm").isAllowed() ) 
  
-<div>#enterHelp($link "" "Find out about Scarab terminology?")</div>
+<div>#enterHelp($link "" "$l10n.GlossaryHelp")</div>
 #end
 
 #* link template
