@@ -52,7 +52,7 @@ public class AdvancedPanel extends DefaultWizardPanel {
 		panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 20, 30));
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		MultiLineLabel label = new MultiLineLabel(MailResourceLoader.getString("dialog", "accountwizard", "wizard_enter_the_name_by_which_you_like_to_refer_to_this_account")); //$NON-NLS-1$
+		MultiLineLabel label = new MultiLineLabel(MailResourceLoader.getString("dialog", "accountwizard", "enter_account_name")); //$NON-NLS-1$
 
 		panel.add(label);
 
