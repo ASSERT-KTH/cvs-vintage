@@ -109,12 +109,12 @@ public class ApacheConfig  { // implements XXX
 	    
 	    // XXX read it from ContextManager
 	    pw.println("ApJServDefaultPort 8007");
-
 	    pw.println();
-	    pw.println("AddType test/jsp .jsp");
-	    pw.println("AddHandler jserv-servlet .jsp");
 
-	    
+	    pw.println("AddType text/jsp .jsp");
+	    pw.println("AddHandler jserv-servlet .jsp");
+	    pw.println();
+
 	    // Set up contexts 
 	    
 	    Enumeration enum = cm.getContextNames();
@@ -122,24 +122,27 @@ public class ApacheConfig  { // implements XXX
 		String path=(String)enum.nextElement();
 		Context context = cm.getContext(path);
 		if( path.length() > 1) {
+
 		    // It's not the root context
 		    // assert path.startsWith( "/" )
 
-		    // Static files will be served by Apache
-		    pw.println("Alias " + path + " " + 
-                               FileUtil.patch(tomcatHome + "/webapps" + path));
+		    // Calculate the absolute path of the document base
+		    String docBase = context.getDocBase();
+		    if (!FileUtil.isAbsolute(docBase))
+			docBase = tomcatHome + "/" + docBase;
+		    docBase = FileUtil.patch(docBase);
 
-		    pw.println("<Directory \"" +
-			       FileUtil.patch(tomcatHome + "/webapps" + path) +
-			       "\">");
+		    // Static files will be served by Apache
+		    pw.println("Alias " + path + " \"" + docBase + "\"");
+		    pw.println("<Directory \"" + docBase + "\">");
 		    pw.println("    Options Indexes FollowSymLinks");
 		    pw.println("</Directory>");
 		    
-		    // Dynamic /servet pages go to tomcat
+		    // Dynamic /servet pages go to Tomcat
 		    pw.println("ApJServMount " + path +"/servlet" + " " + path);
 
-		    // Deny WEB-INF
-		    pw.println("<Location " + path + "/WEB-INF/ >");
+		    // Deny serving any files from WEB-INF
+		    pw.println("<Location \"" + path + "/WEB-INF/\">");
 		    pw.println("    AllowOverride None");
 		    pw.println("    deny from all");
 		    pw.println("</Location>");
@@ -187,7 +190,8 @@ public class ApacheConfig  { // implements XXX
 	} catch( Exception ex ) {
 	    //	    ex.printStackTrace();
 	    //throw new TomcatException( "Error generating Apache config", ex );
-	    System.out.println("Failed to generate automatic apache configuration " + ex.toString());
+	    System.out.println("Error generating automatic apache configuration " + ex);
+	    ex.printStackTrace(System.out);
 	}
 	    
     }
