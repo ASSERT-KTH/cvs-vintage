@@ -89,6 +89,20 @@
  <action name="Spellcheck" class="org.columba.mail.gui.composer.action.SpellcheckAction"/>
  <action name="ViewAccountInfoPanel" class="org.columba.mail.gui.composer.action.ViewAccountInfoPanelAction" />
  
+ <!-- composer html support -->
+ <action name="BoldFormatAction" class="org.columba.mail.gui.composer.html.action.BoldFormatAction" />
+ <action name="ItalicFormatAction" class="org.columba.mail.gui.composer.html.action.ItalicFormatAction" />
+ <action name="UnderlineFormatAction" class="org.columba.mail.gui.composer.html.action.UnderlineFormatAction" />
+ <action name="StrikeoutFormatAction" class="org.columba.mail.gui.composer.html.action.StrikeoutFormatAction" />
+ <action name="TeleTyperFormatAction" class="org.columba.mail.gui.composer.html.action.TeleTyperFormatAction" />
+ <action name="LeftJustifyAction" class="org.columba.mail.gui.composer.html.action.LeftJustifyAction" />
+ <action name="CenterJustifyAction" class="org.columba.mail.gui.composer.html.action.CenterJustifyAction" />
+ <action name="RightJustifyAction" class="org.columba.mail.gui.composer.html.action.RightJustifyAction" />
+ <action name="EnableHtmlAction" class="org.columba.mail.gui.composer.html.action.EnableHtmlAction" />
+ <action name="FontSizeMenu" class="org.columba.mail.gui.composer.html.action.FontSizeMenu" />
+ <action name="JustifyMenu" class="org.columba.mail.gui.composer.html.action.JustifyMenu" />
+ <action name="ParagraphMenu" class="org.columba.mail.gui.composer.html.action.ParagraphMenu" />
+ 
  <!-- attachment -->
  <action name="OpenAttachment" class="org.columba.mail.gui.attachment.action.OpenAction"/>
  <action name="OpenAttachmentWith" class="org.columba.mail.gui.attachment.action.OpenWithAction"/>

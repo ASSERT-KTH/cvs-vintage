@@ -33,6 +33,12 @@ public class CheckBoxAction extends FrameAction {
 
 	private JCheckBoxMenuItem checkBoxMenuItem;
 
+	public CheckBoxAction(
+		AbstractFrameController frameController,
+		String name) {
+		super(frameController, name);
+	}
+	
 	/**
 	 * @param frameController
 	 * @param name
@@ -42,6 +48,8 @@ public class CheckBoxAction extends FrameAction {
 	 * @param big_icon
 	 * @param mnemonic
 	 * @param keyStroke
+	 * 
+	 * @deprecated
 	 */
 	public CheckBoxAction(
 		AbstractFrameController frameController,
@@ -73,6 +81,8 @@ public class CheckBoxAction extends FrameAction {
 	 * @param big_icon
 	 * @param mnemonic
 	 * @param keyStroke
+	 * 
+	 * @deprecated
 	 */
 	public CheckBoxAction(
 		AbstractFrameController frameController,

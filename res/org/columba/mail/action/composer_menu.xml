@@ -30,6 +30,23 @@
 		<extensionpoint name="bottom" />
 	</menu>
 	
+	<menu name="menu_format">
+		<menuitem checkboxaction="EnableHtmlAction" />
+		<menu name="menu_format_style">
+			<menuitem checkboxaction="TeleTyperFormatAction" />
+			<separator/>
+			<menuitem checkboxaction="BoldFormatAction" />
+			<menuitem checkboxaction="ItalicFormatAction" />
+			<menuitem checkboxaction="UnderlineFormatAction" />
+			<menuitem checkboxaction="StrikeoutFormatAction" />
+		</menu>
+		<separator/>
+		<menuitem imenu="FontSizeMenu" />
+		<separator />
+		<menuitem imenu="ParagraphMenu" />
+		<menuitem imenu="JustifyMenu" />
+	</menu>
+	
 	<menu name="menu_message">
 		<menuitem action="AttachFile"/>	 
 		<menuitem action="Spellcheck"/>	
