@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public final class JDBCCMPFieldMetaData {
    /**
@@ -272,8 +272,18 @@ public final class JDBCCMPFieldMetaData {
 
       this.entity = entity;
 
+      // unknown primary key
+      this.unknownPkField = defaultValues.isUnknownPkField();
+
       // Field name
-      fieldName = defaultValues.getFieldName();
+      // if field-name is specified for unknown-pk, it's set here
+      String unknownFieldName =
+         MetaData.getOptionalChildContent( element, "field-name" );
+      if( unknownPkField && unknownFieldName != null ) {
+         fieldName = unknownFieldName;
+      } else {
+         fieldName = defaultValues.getFieldName();
+      }
 
       // Field type
       // AL: must be set for unknow-pk
@@ -353,9 +363,6 @@ public final class JDBCCMPFieldMetaData {
          propertyOverrides.add(new JDBCCMPFieldPropertyMetaData(
                   this, (Element)iterator.next()));
       }
-
-      // unknown primary key
-      this.unknownPkField = defaultValues.isUnknownPkField();
 
       // is the field auto-increment?
       autoIncrement =
