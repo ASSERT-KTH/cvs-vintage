@@ -38,7 +38,6 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -251,7 +250,7 @@ public class LuceneSearchEngine
 					{
 						subresult = new BooleanQuery();
 						((BooleanQuery) subresult).add(
-							new TermQuery(new Term("qall", "hit")),
+							new WildcardQuery(new Term("uid", "*")),
 							true,
 							false);
 						((BooleanQuery) subresult).add(termQuery, false, true);
@@ -332,8 +331,6 @@ public class LuceneSearchEngine
 		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
 		messageDoc.add(Field.Keyword("uid", message.getUID().toString()));
-
-		messageDoc.add(Field.Keyword("qall", "hit"));
 
 		if (message.getMimePartTree() == null) {
 			String source = message.getSource();
