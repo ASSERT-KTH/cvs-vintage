@@ -84,10 +84,27 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.19 2002/04/13 02:39:33 jmcnally Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.20 2002/04/30 22:26:53 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
+    /**
+     * Updates attribute group info.
+     */
+    public void doSaveinfo ( RunData data, TemplateContext context )
+        throws Exception
+    {
+        // Set properties for group info
+        IntakeTool intake = getIntakeTool(context);
+        String groupId = data.getParameters().getString("groupId");
+        AttributeGroup ag = AttributeGroupManager
+                            .getInstance(new NumberKey(groupId), false);
+        Group agGroup = intake.get("AttributeGroup", 
+                                    ag.getQueryKey(), false);
+        agGroup.setProperties(ag);
+        ag.save();
+    }
+
     /**
      * Changes the properties of existing AttributeGroups and their attributes.
      */
@@ -132,13 +149,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 raagGroup.setProperties(raag);
                 raag.save();
             }
-
-            // Set properties for group info
-            Group agGroup = intake.get("AttributeGroup", 
-                                        ag.getQueryKey(), false);
-            agGroup.setProperties(ag);
-            ag.save();
-            ScarabCache.clear();
+            //ScarabCache.clear();
         } 
 
     }
