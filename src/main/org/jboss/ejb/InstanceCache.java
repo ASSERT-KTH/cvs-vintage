@@ -14,7 +14,7 @@ import javax.ejb.NoSuchEntityException;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public interface InstanceCache
    extends ContainerPlugin
@@ -49,13 +49,7 @@ public interface InstanceCache
     */
    public void insert(EnterpriseContext ctx);
 
-   /**
-    *   Release an instance after usage.
-    *
-    * @param   ctx  
-    */
-   public void release(EnterpriseContext ctx);
-
+   
    /**
     *   Remove an instance corresponding to the given id after removal
     *
