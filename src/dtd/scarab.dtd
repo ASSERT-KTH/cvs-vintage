@@ -1,1 +1,38 @@
-<!ELEMENT scarab (module+)><!ELEMENT module (fullname, code, issue+)><!ATTLIST module id CDATA #REQUIRED><!ELEMENT issue (artifact-type, issue-attribute+, dependency*, attachment*, transaction?)><!ATTLIST issue id CDATA #REQUIRED><!ELEMENT attribute (name, value)><!ELEMENT dependency (type, (child | parent))><!ELEMENT attachment (name, type, path, mimetype, modified-date, created-by, modified-by)><!ELEMENT transaction (type, activity+)><!ATTLIST transaction id CDATA #REQUIRED><!ELEMENT activity (old-value, new-value, activity-attribute, description)><!ELEMENT fullname (#PCDATA)><!ELEMENT code (#PCDATA)><!ELEMENT artifact-type (#PCDATA)><!ELEMENT type (#PCDATA)><!ELEMENT name (#PCDATA)><!ELEMENT value (#PCDATA)><!ELEMENT child (#PCDATA)><!ELEMENT parent (#PCDATA)><!ELEMENT path (#PCDATA)><!ELEMENT mimetype (#PCDATA)><!ELEMENT modified-date (#PCDATA)><!ELEMENT created-by (#PCDATA)><!ELEMENT modified-by (#PCDATA)><!ELEMENT old-value (#PCDATA)><!ELEMENT new-value (#PCDATA)><!ELEMENT activity-attribute (#PCDATA)><!ELEMENT description (#PCDATA)>
+<!ELEMENT scarab (module+)>
+
+<!ELEMENT module (fullname, code, issue+)>
+<!ATTLIST module id CDATA #REQUIRED>
+
+<!ELEMENT issue (artifact-type, issue-attribute+, dependency*, attachment*, transaction?)>
+<!ATTLIST issue id CDATA #REQUIRED>
+
+<!ELEMENT attribute (name, value)>
+
+<!ELEMENT dependency (type, (child | parent))>
+
+<!ELEMENT attachment (name, type, path, mimetype, modified-date, created-by, modified-by)>
+
+<!ELEMENT transaction (type, activity+)>
+<!ATTLIST transaction id CDATA #REQUIRED>
+
+<!ELEMENT activity (old-value, new-value, activity-attribute, description)>
+
+<!ELEMENT fullname (#PCDATA)>
+<!ELEMENT code (#PCDATA)>
+<!ELEMENT artifact-type (#PCDATA)>
+<!ELEMENT type (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT value (#PCDATA)>
+<!ELEMENT child (#PCDATA)>
+<!ELEMENT parent (#PCDATA)>
+<!ELEMENT path (#PCDATA)>
+<!ELEMENT mimetype (#PCDATA)>
+<!ELEMENT modified-date (#PCDATA)>
+<!ELEMENT created-by (#PCDATA)>
+<!ELEMENT modified-by (#PCDATA)>
+<!ELEMENT old-value (#PCDATA)>
+<!ELEMENT new-value (#PCDATA)>
+<!ELEMENT activity-attribute (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+
+
