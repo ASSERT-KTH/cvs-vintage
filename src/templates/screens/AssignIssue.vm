@@ -5,7 +5,7 @@
 #set ($module = $user.CurrentModule)
 #set ($issue = $scarabR.Issue)
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
-#if ( !$data.Parameters.getString("action") || $data.Parameters.getString("action") != "AssignIssue" )
+#if ( $data.Parameters.getString("action") && $data.Parameters.getString("action") == "AssignIssue" )
    #set ( $reentry = true )
 #end
   <div id="AssignIssue.vm">
@@ -13,10 +13,9 @@
    <h1>Assign Issue (2.1.3)</h1>
 
 #if ($reentry)
-    <p class="message">
-        Add a comment that will be sent to affected users and
-        click Submit to save your changes.
-    </p>
+    <p><strong class="alert">
+        Remember to add note and submit, when ready to save changes.
+    </strong></p>
 #end
 
    <form action="$actionLink" method="get">
@@ -33,13 +32,13 @@
      <tr>
       <td>
 
-#if ($reentry)
+#if (!$reentry)
     #foreach ( $userAssignee in $issue.EligibleAssignees )
        <input type="hidden" name="removedusers" value="$userAssignee.UserName" />
     #end
 #end
        <select name="newaddusers" size="8" multiple="multiple">
-#if ($reentry)
+#if (!$reentry)
     #foreach ( $userAssignee in $issue.EligibleAssignees )
        <option value="$userAssignee.UserName">$userAssignee.UserName</option>
     #end
@@ -54,14 +53,14 @@
       </td>
       <td>
 
-#if ($reentry)
+#if (!$reentry)
     #foreach ( $assignee in $issue.AssigneeAttributeValues )
        <input type="hidden" name="addedusers" value="$assignee.Value" />
     #end
 #end
       <select name="newremoveusers" size="8" multiple="multiple">
 
-#if ($reentry)
+#if (!$reentry)
     #foreach ( $assignee in $issue.AssigneeAttributeValues )
        <option value="$assignee.Value">$assignee.Value</option>
     #end

@@ -91,7 +91,7 @@ import org.tigris.scarab.util.ScarabLink;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: AssignIssue.java,v 1.7 2001/08/15 06:37:55 jon Exp $
+    @version $Id: AssignIssue.java,v 1.8 2001/08/18 00:04:06 jmcnally Exp $
 */
 public class AssignIssue extends TemplateAction
 {
@@ -126,9 +126,6 @@ public class AssignIssue extends TemplateAction
         // re-populate removedusers
         addToParameters(data, ELIGIBLE_USERS, eligibleUserIds);
         context.put("actionLink", actionLink);
-
-        data.setMessage(
-            "Remember to add note and submit, when ready to save changes.");  
     }
 
     public void doRemove( RunData data, TemplateContext context ) 
@@ -154,9 +151,6 @@ public class AssignIssue extends TemplateAction
         data.getParameters().remove(ASSIGNEES);
         addToParameters(data, ASSIGNEES, assigneeIds);
         context.put("actionLink", actionLink);
-
-        data.setMessage(
-            "Remember to add note and submit, when ready to save changes.");
     }
 
     private ScarabLink getActionLink(RunData data, String[] eligibleUsers, 
@@ -287,6 +281,7 @@ public class AssignIssue extends TemplateAction
                 while ( iter.hasNext() ) 
                 {
                     AttributeValue oldAV = (AttributeValue)iter.next();
+                    oldAV.startTransaction(transaction, attachment);
                     boolean deleted = true;
                     for ( int i=0; i<newUserLength; i++ ) 
                     {
@@ -299,12 +294,6 @@ public class AssignIssue extends TemplateAction
                     }
                     oldAV.setDeleted(deleted);
 
-                    // Save activity record
-                    Activity activity = new Activity();
-                    String desc = "Unassigned Issue";
-                    activity.create(issue, oldAV.getAttribute(),
-                                    desc, transaction, attachment, 
-                                    oldAV.getValue(), "");
                 }
                 // add new values
                 for ( int i=0; i<newUserLength; i++ ) 
@@ -317,15 +306,10 @@ public class AssignIssue extends TemplateAction
                         ScarabUser user = (ScarabUser)users.get(0);
                         AttributeValue av = AttributeValue.getNewInstance(
                             AttributePeer.ASSIGNED_TO__PK, issue);
+                        av.startTransaction(transaction, attachment);
                         av.setUserId(user.getUserId());
                         av.setValue(user.getUserName());
                         assignees.add(av);
-                        // Save activity record
-                        Activity activity = new Activity();
-                        String desc = "Assigned Issue";
-                        activity.create(issue, av.getAttribute(),
-                                        desc, transaction, attachment, 
-                                        "", user.getUserName());
                     }
                 }
                 issue.save();
@@ -349,6 +333,23 @@ public class AssignIssue extends TemplateAction
             context.put("actionLink", 
                         getActionLink(data, eligibleUsers, assignees) );
         }
+    }
+
+    /**
+        This manages clicking the Cancel button
+    */
+    public void doCancel( RunData data, TemplateContext context ) throws Exception
+    {
+        String template = Turbine.getConfiguration()
+            .getString("template.homepage", "Start.vm");
+        setTarget(data, template);
+    }
+    /**
+        calls doCancel()
+    */
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
+    {
+        doCancel(data, context);
     }
 }
 
