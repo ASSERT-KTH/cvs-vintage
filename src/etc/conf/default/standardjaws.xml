@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jaws>
-    <datasource>Hypersonic</datasource>
+    <datasource>java:/DefaultDS</datasource>
     <type-mapping>Hypersonic SQL</type-mapping>
 
     <default-entity>
