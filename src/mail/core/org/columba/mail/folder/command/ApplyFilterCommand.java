@@ -15,9 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.columba.core.command.Command;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
@@ -37,8 +34,6 @@ import org.columba.mail.folder.MessageFolder;
  *  
  */
 public class ApplyFilterCommand extends Command {
-	private List commandList;
-
 	/**
 	 * Constructor for ApplyFilterCommand.
 	 * 
@@ -47,7 +42,6 @@ public class ApplyFilterCommand extends Command {
 	 */
 	public ApplyFilterCommand(DefaultCommandReference reference) {
 		super(reference);
-		commandList = new ArrayList();
 	}
 
 	/**
@@ -102,9 +96,6 @@ public class ApplyFilterCommand extends Command {
 				//MainInterface.processor.addOp(command);
 
 				command.execute(worker);
-
-				commandList.add(command);
-
 			}
 		}
 	}
