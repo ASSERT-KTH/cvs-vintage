@@ -1,0 +1,153 @@
+<project name="Tomcat" default="main" basedir=".">
+  <property name="build.compiler" value="classic"/>
+
+  <!-- XXX need to re-think the directory structure -->
+  <property name="tomcat.build" value="${user.home}/ws/build/tomcat"/>
+  <property name="tomcat.home" value="${user.home}/ws/dist/tomcat"/>
+  <property name="tools.home" value="${user.home}/ws/jakarta-tools"/>
+  
+  <property name="src_dir" value="${user.home}/ws" />
+  <property name="out_dir" value="/home/ftp/pub/tomcat" />
+  <property name="tomcat_src" value="${src_dir}/jakarta-tomcat" />
+
+  <!-- XXX define it in params or have "default" Project properties ??? -->
+  <property name="DSTAMP" value="19991119" />
+
+
+
+  <!-- #################### getSources - from taz #################### -->
+  <target name="getSources">
+    <get src="http://jakarta.apache.org/builds/tomcat/standalone/nightly/tomcat-src-${DSTAMP}.zip" dest="${tomcat_src}/tomcat-src.zip"/>
+    <expand src="${tomcat_src}/tomcat-src.zip" dest="${tomcat_src}" />
+    <get src="http://jakarta.apache.org/builds/tomcat/standalone/nightly/tools-src.zip" dest="${tomcat_src}/tools-src.zip"/>
+    <expand src="${tomcat_src}/tools-src.zip" dest="${tools.home}" />
+  </target>
+
+  <!-- #################### prepare - create directories and copy static files #################### -->
+  <target name="prepare" >
+    <mkdir dir="${tomcat.build}"/>
+    <mkdir dir="${tomcat.build}/classes"/>
+    <mkdir dir="${tomcat.build}/etc"/>
+    <mkdir dir="${tomcat.build}/src"/>
+    <mkdir dir="${tomcat.build}/lib"/>
+
+    <echo message="TOMCAT SRC= ${tomcat_src}" />
+    <copydir src="${tomcat_src}/src/webpages" dest="${tomcat.build}/webpages"/>
+    <copydir src="${tomcat_src}/src/examples" dest="${tomcat.build}/examples"/>
+    <copydir src="${tomcat_src}/src/share/javax" dest="${tomcat.build}/src/javax"/>
+    <copyfile src="${tools.home}/projectx-tr2.jar" dest="${tomcat.build}/lib/xml.jar"/>
+
+    <copydir src="${tomcat_src}/src/shell" dest="${tomcat.build}" />
+
+    <!-- XXX clean this up ! -->
+    <copyfile src="${tomcat_src}/src/share/org/apache/tomcat/shell/deployment/server.xml"
+           dest="${tomcat.build}/server.xml"/>
+    <!-- XXX Where should it be ? -->
+    <copyfile src="${tomcat_src}/src/share/org/apache/tomcat/shell/deployment/server.xml"
+            dest="${tomcat.build}/etc/server.xml"/>
+    <copyfile src="${tomcat_src}/src/share/org/apache/tomcat/shell/deployment/server.dtd"
+     dest="${tomcat.build}/etc/server.dtd"/>
+    <copyfile src="${tomcat_src}/src/share/org/apache/tomcat/deployment/web.xml"
+     dest="${tomcat.build}/etc/web.xml"/>
+    <copyfile src="${tomcat_src}/src/share/org/apache/tomcat/deployment/web.dtd"
+     dest="${tomcat.build}/etc/web.dtd"/>
+
+    <copyfile src="${tomcat_src}/LICENSE" dest="${tomcat.build}/LICENSE"/>
+    <copyfile src="${tomcat_src}/src/etc/readme" dest="${tomcat.build}/README"/>
+    <copyfile src="${tomcat_src}/src/etc/faq" dest="${tomcat.build}/FAQ"/>
+
+    <copyfile src="${tomcat_src}/src/etc/SimpleStartup.java"
+              dest="${tomcat.build}/etc/SimpleStartup.java"/>
+  </target>
+
+  <!-- #################### Main #################### -->
+  <target name="main" depends="prepare">
+    <javac srcdir="${tomcat_src}/src/share" destdir="${tomcat.build}/classes"
+     classpath="${tomcat.build}/lib/xml.jar" debug="on"/>
+    <javac srcdir="${tomcat_src}/src/examples/WEB-INF/classes"
+     destdir="${tomcat.build}/examples/WEB-INF/classes"
+     classpath="${tomcat.build}/classes"/>
+    <javac srcdir="${tomcat_src}/src/webpages/WEB-INF/classes"
+     destdir="${tomcat.build}/webpages/WEB-INF/classes"
+     classpath="${tomcat.build}/classes"/>
+
+    <javac srcdir="${tomcat_src}/src/examples/jsp/plugin/applet"
+     destdir="${tomcat.build}/examples/jsp/plugin/applet"/>
+
+    <rmic base="${tomcat.build}/classes"
+     class="org.apache.tomcat.shell.AdminImpl"/>
+  </target>
+
+
+  <!-- #################### Dist - create jars and the final dir struct #################### -->
+  <target name="dist" depends="main">
+    <!-- cut & paste of "prepare", with tomcat.home instead of tomcat_build 
+         XXX create "parametrized" targets
+         XXX do we need all the files in tomcat_build ??
+      -->
+    <mkdir dir="${tomcat.home}" />
+    <mkdir dir="${tomcat.home}/lib" />
+    <mkdir dir="${tomcat.home}/etc" />
+    <mkdir dir="${tomcat.home}/src" />
+    <mkdir dir="${tomcat.home}/examples" />
+    <mkdir dir="${tomcat.home}/webpages" />
+
+    <copydir src="${tomcat_src}/src/share/javax" dest="${tomcat.home}/src/javax"/>
+
+    <copyfile src="${tools.home}/ant.jar" dest="${tomcat.home}/lib/ant.jar"/>
+    <copyfile src="${tools.home}/tools/projectx-tr2.jar" dest="${tomcat.home}/lib/xml.jar"/>
+
+    <copydir src="${tomcat_src}/src/shell" dest="${tomcat.home}" />
+
+    <!-- XXX clean this up ! -->
+    <copyfile src="${tomcat_src}/src/share/org/apache/tomcat/shell/deployment/server.xml"
+           dest="${tomcat.home}/server.xml"/>
+    <!-- XXX Where should it be ? -->
+    <copyfile src="${tomcat_src}/src/share/org/apache/tomcat/shell/deployment/server.xml"
+            dest="${tomcat.home}/etc/server.xml"/>
+    <copyfile src="${tomcat_src}/src/share/org/apache/tomcat/shell/deployment/server.dtd"
+     dest="${tomcat.home}/etc/server.dtd"/>
+    <copyfile src="${tomcat_src}/src/share/org/apache/tomcat/deployment/web.xml"
+     dest="${tomcat.home}/etc/web.xml"/>
+    <copyfile src="${tomcat_src}/src/share/org/apache/tomcat/deployment/web.dtd"
+     dest="${tomcat.home}/etc/web.dtd"/>
+
+    <copyfile src="${tomcat_src}/src/etc/license.txt" dest="${tomcat.home}/LICENSE"/>
+    <copyfile src="${tomcat_src}/src/etc/readme" dest="${tomcat.home}/README"/>
+    <copyfile src="${tomcat_src}/src/etc/faq" dest="${tomcat.home}/FAQ"/>
+    <copyfile src="${tomcat_src}/src/etc/SimpleStartup.java"
+              dest="${tomcat.home}/etc/SimpleStartup.java"/>
+
+    <copydir src="${tomcat.build}/webpages" dest="${tomcat.home}/webpages"/>
+    <copydir src="${tomcat.build}/examples" dest="${tomcat.home}/examples"/>
+
+    <!-- XXX add manifest for autorun! -->
+    <jar jarfile="${tomcat.home}/webserver.jar"
+        basedir="${tomcat.build}/classes"
+        items="org/apache/tomcat"/> 
+    <jar jarfile="${tomcat.home}/lib/servlet.jar"
+        basedir="${tomcat.build}/classes"
+        items="javax/servlet"/>
+    <jar jarfile="${tomcat.home}/lib/jasper.jar"
+        basedir="${tomcat.build}/classes"
+        items="org/apache/jasper"/>
+  </target>
+
+  <!-- #################### Build the "final" distributable #################### -->
+  <target name="package" depends="dist">
+    <jar jarfile="${out_dir}/tomcat-${DSTAMP}.zip"
+        basedir="${tomcat.home}/.."
+        items="tomcat" />
+  </target>
+
+
+  <!-- #################### Clean #################### -->
+  <target name="clean">
+    <deltree dir="${tomcat.build}"/>
+    <deltree dir="${tomcat.home}"/>
+  </target>
+
+  <!-- #################### getSources + prep + package #################### -->
+  <target name="nightly" depends="clean,getSources,prep,dist,package"/>
+  
+</project>
