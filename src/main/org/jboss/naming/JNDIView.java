@@ -8,28 +8,39 @@ package org.jboss.naming;
 
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.Properties;
+import java.util.Iterator;
 import javax.management.*;
 import javax.naming.*;
 
 import org.jnp.server.Main;
 
+import org.jboss.ejb.Application;
+import org.jboss.ejb.Container;
+import org.jboss.ejb.ContainerFactoryMBean;
 import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
 /** A simple utlity mbean that allows one to recursively list the default
 JBoss InitialContext.
 
+Deploy by adding:
+<mbean code="org.jboss.naming.JNDIView" name="DefaultDomain:service=JNDIView" />
+to the jboss.jcml file.
+
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@author Vladimir Blagojevic <vladimir@xisnext.2y.net>
+@version $Revision: 1.2 $
 */
 public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
 {
     // Constants -----------------------------------------------------
 
     // Attributes ----------------------------------------------------
-
+    private MBeanServer server;
     // Static --------------------------------------------------------
 
     // Constructors --------------------------------------------------
@@ -39,26 +50,112 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
 
     // Public --------------------------------------------------------
 
+    /** List deployed application java:comp namespaces, the java:
+        namespace as well as the global InitialContext JNDI namespace.
+    @param verbose, if true, list the class of each object in addition to its name
+    */
     public String list(boolean verbose)
     {
         StringBuffer buffer = new StringBuffer();
+        Iterator applications = null;
+        Context context = null;
+        ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
+
+        /* Get all deployed applications so that we can list their
+           java: namespaces which are ClassLoader local
+        */
         try
         {
-            InitialContext ctx = new InitialContext();
-            list(ctx, " ", buffer, verbose);
+            applications = (Iterator) server.invoke(
+            new ObjectName(ContainerFactoryMBean.OBJECT_NAME),
+            "getDeployedApplications",
+            new Object[] { },
+            new String[] { });
+        }
+        catch(Exception e)
+        {
+            log.exception(e);
+            buffer.append("Failed to getDeployedApplications\n");
+            formatException(buffer, e);
+            buffer.insert(0, "<pre>");
+            buffer.append("</pre>");
+            return buffer.toString();
+        }
+
+        // List each application JNDI namespace
+        while(applications.hasNext())
+        {
+            Application app = (Application) applications.next();
+            Iterator iter = app.getContainers().iterator();
+            buffer.append("<h1>Application: " + app.getName() + "</h1>\n");
+            while(iter.hasNext())
+            {
+                Container con = (Container)iter.next();
+                /* Set the thread class loader to that of the container as
+                   the class loader is used by the java: context object
+                   factory to partition the container namespaces.
+                */
+                Thread.currentThread().setContextClassLoader(con.getClassLoader());
+                String bean = con.getBeanMetaData().getEjbName();
+                buffer.append("<h2>java:comp namespace of the " + bean + " bean:</h2>\n");
+
+                try
+                {
+	            context = new InitialContext();
+                    context = (Context)context.lookup("java:comp");
+                }
+                catch(NamingException e)
+                {
+                    buffer.append("Failed on lookup, "+e.toString(true));
+                    formatException(buffer, e);
+                    continue;
+                }
+                buffer.append("<pre>\n");
+                list(context, " ", buffer, verbose);
+                buffer.append("</pre>\n");
+            }
+        }
+
+        // List the java: namespace
+        Thread.currentThread().setContextClassLoader(currentLoader);
+        try
+        {
+            context = new InitialContext();
+            context = (Context) context.lookup("java:");
+            buffer.append("<h1>java: Namespace</h1>\n");
+            buffer.append("<pre>\n");
+            list(context, " ", buffer, verbose);
+            buffer.append("</pre>\n");
         }
         catch(NamingException e)
         {
             log.exception(e);
+            buffer.append("Failed to get InitialContext, "+e.toString(true));
+            formatException(buffer, e);
         }
-        buffer.insert(0, "<pre>");
-        buffer.append("</pre>");
+
+        // List the global JNDI namespace
+        try
+        {
+            context = new InitialContext();
+            buffer.append("<h1>Global JNDI Namespace</h1>\n");
+            buffer.append("<pre>\n");
+            list(context, " ", buffer, verbose);
+            buffer.append("</pre>\n");
+        }
+        catch(NamingException e)
+        {
+            log.exception(e);
+            buffer.append("Failed to get InitialContext, "+e.toString(true));
+            formatException(buffer, e);
+        }
         return buffer.toString();
     }
 
     public ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
     {
+        this.server = server;
         return new ObjectName(OBJECT_NAME);
     }
 
@@ -118,7 +215,7 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
                         }
                         else
                         {
-                            buffer.append("NonContext: "+value);
+                            buffer.append(indent + " |   NonContext: "+value);
                             buffer.append('\n');
                         }
                     }
@@ -133,10 +230,19 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
         }
         catch(NamingException ne)
         {
-            buffer.append("error while listing context "+ctx.toString () + ": " + ne.getMessage());
-            buffer.append('\n');
-            log.exception(ne);
+            buffer.append("error while listing context "+ctx.toString () + ": " + ne.toString(true));
+            formatException(buffer, ne);
         }
+    }
+
+    private void formatException(StringBuffer buffer, Throwable t)
+    {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        buffer.append("<pre>\n");
+        t.printStackTrace(pw);
+        buffer.append(sw.toString());
+        buffer.append("</pre>\n");
     }
 }
 
