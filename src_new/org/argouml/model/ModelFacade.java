@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.248 2005/01/14 19:28:16 mvw Exp $
+// $Id: ModelFacade.java,v 1.249 2005/01/17 20:37:59 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3730,6 +3730,18 @@ public class ModelFacade {
 	return illegalArgumentObject(handle);
     }
 
+    /**
+     * Get the occurrences of an operation.
+     * @param handle the Opration
+     * @return the collection of occurrences
+     */
+    public static Collection getOccurrences(Object handle) {
+        if (handle instanceof MOperation) {
+            return ((MOperation) handle).getOccurrences();
+        }
+        return illegalArgumentCollection(handle);
+    }
+    
     /**
      * Get the list of operations.
      *
