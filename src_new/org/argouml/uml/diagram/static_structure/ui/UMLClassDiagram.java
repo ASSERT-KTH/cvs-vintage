@@ -24,7 +24,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.26 2003/03/01 19:58:06 bobtarling Exp $
+// $Id: UMLClassDiagram.java,v 1.27 2003/04/01 14:09:56 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -107,20 +107,6 @@ public class UMLClassDiagram extends UMLDiagram {
     // contructors
     protected static int _ClassDiagramSerial = 1;
 
-    /**
-     * Creates a new diagramname.
-     * @return String
-     */
-    protected static String getNewDiagramName() {
-        String name = null;
-        name = "Class Diagram " + _ClassDiagramSerial;
-        _ClassDiagramSerial++;
-        if (!ProjectManager.getManager().getCurrentProject().isValidDiagramName(name)) {
-            name = getNewDiagramName();
-        }
-        return name;
-    }
-
     public UMLClassDiagram() {
         super();
     }
@@ -188,4 +174,17 @@ public class UMLClassDiagram extends UMLDiagram {
         return toolBox;
     }
     
+    /**
+     * Creates a new diagramname.
+     * @return String
+     */
+    protected static String getNewDiagramName() {
+        String name = null;
+        name = "Class Diagram " + _ClassDiagramSerial;
+        _ClassDiagramSerial++;
+        if (!ProjectManager.getManager().getCurrentProject().isValidDiagramName(name)) {
+            name = getNewDiagramName();
+        }
+        return name;
+    }
 } /* end class UMLClassDiagram */

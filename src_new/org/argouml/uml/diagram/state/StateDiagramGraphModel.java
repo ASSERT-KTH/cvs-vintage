@@ -24,7 +24,7 @@
 // File: StateDiagramGraphModel.java
 // Classes: StateDiagramGraphModel
 // Original Author: your email address here
-// $Id: StateDiagramGraphModel.java,v 1.18 2003/01/28 22:26:47 alexb Exp $
+// $Id: StateDiagramGraphModel.java,v 1.19 2003/04/01 14:09:56 bobtarling Exp $
 package org.argouml.uml.diagram.state;
 
 import java.beans.PropertyChangeEvent;
@@ -239,15 +239,8 @@ implements VetoableChangeListener {
     return true;
   }
 
-
-  /** Contruct and add a new edge of a kind determined by the ports */
-  public Object connect(Object fromPort, Object toPort) {
-      throw new UnsupportedOperationException("should not enter here!");
-  }
-
   /** Contruct and add a new edge of the given kind */
-  public Object connect(Object fromPort, Object toPort,
-			java.lang.Class edgeClass) {
+  public Object connect(Object fromPort, Object toPort, java.lang.Class edgeClass) {
     //    try {
     if (!(fromPort instanceof MStateVertex)) {
       cat.error("internal error not from sv");
