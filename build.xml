@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.121 2002/10/07 10:27:28 peter_f Exp $ -->
+<!-- $Id: build.xml,v 1.122 2002/10/15 20:01:53 patriot1burke Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -386,6 +386,7 @@
 	<include name="org/jboss/invocation/trunk/client/**/*.class"/>
         <include name="org/jboss/invocation/jrmp/interfaces/JRMPInvokerProxy.class"/>
         <include name="org/jboss/invocation/jrmp/server/*Stub.class"/>
+        <include name="org/jboss/invocation/pooled/interfaces/*"/>
         <include name="org/jboss/ejb/CacheKey.class"/>
         <include name="org/jboss/ejb/ListCacheKey.class"/>
         <include name="org/jboss/ejb/plugins/lock/ApplicationDeadlockException.class"/>
