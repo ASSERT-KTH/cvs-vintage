@@ -57,7 +57,7 @@ import org.w3c.dom.Element;
  *
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
- *	@version $Revision: 1.9 $
+ *	@version $Revision: 1.10 $
  */
 public class Installer
 {
@@ -269,7 +269,7 @@ public class Installer
                         webContext = name.substring(Math.max(0, name.lastIndexOf("/")));
 
                      // make sure the context starts with a slash
-                     if (webContext.startsWith("/"))
+                     if (!webContext.startsWith("/"))
                         webContext = "/"+webContext;
                      
                      log.info("inflate and install WEB module "+name);
