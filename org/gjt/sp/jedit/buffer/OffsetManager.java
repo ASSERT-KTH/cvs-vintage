@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.32 2003/02/14 23:09:51 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.33 2003/02/23 04:05:21 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -498,7 +498,8 @@ public class OffsetManager
 	{
 		lineInfo[line] = ((lineInfo[line] & ~(END_MASK
 			| FOLD_LEVEL_VALID_MASK | CONTEXT_VALID_MASK)) | end);
-		// what is the point of this
+		// what is the point of this -- DO NOT UNCOMMENT THIS IT
+		// CAUSES A PERFORMANCE LOSS; nextLineRequested becomes true
 		//lineContext[line] = null;
 	} //}}}
 

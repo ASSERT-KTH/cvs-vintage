@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.Mode;
 /**
  * A set of parser rules.
  * @author mike dillon
- * @version $Id: ParserRuleSet.java,v 1.19 2003/01/12 03:08:25 spestov Exp $
+ * @version $Id: ParserRuleSet.java,v 1.20 2003/02/23 04:05:21 spestov Exp $
  */
 public class ParserRuleSet
 {
@@ -221,7 +221,8 @@ public class ParserRuleSet
 	//{{{ toString() method
 	public String toString()
 	{
-		return getClass().getName() + "[" + mode.getName() + "::"
+		return getClass().getName() + "[" + (mode == null ? ""
+			: mode.getName()) + "::"
 			+ name + "]";
 	} //}}}
 

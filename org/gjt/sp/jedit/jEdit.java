@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.110 2003/02/21 20:12:18 spestov Exp $
+ * @version $Id: jEdit.java,v 1.111 2003/02/23 04:05:21 spestov Exp $
  */
 public class jEdit
 {
@@ -66,7 +66,7 @@ public class jEdit
 	public static String getBuild()
 	{
 		// (major).(minor).(<99 = preX, 99 = final).(bug fix)
-		return "04.01.11.00";
+		return "04.01.99.00";
 	} //}}}
 
 	//{{{ main() method
@@ -1363,7 +1363,6 @@ public class jEdit
 	 * @param view The view to open the file in
 	 * @param parent The parent directory of the file
 	 * @param path The path name of the file
-	 * @param readOnly True if the file should be read only
 	 * @param newFile True if the file should not be loaded from disk
 	 *
 	 * @since jEdit 3.2pre10
@@ -2491,7 +2490,6 @@ public class jEdit
 	private static Vector pluginErrors;
 	private static Vector jars;
 	private static Vector modes;
-	private static Vector recent;
 	private static boolean saveCaret;
 	private static InputHandler inputHandler;
 	private static JEditMetalTheme theme;

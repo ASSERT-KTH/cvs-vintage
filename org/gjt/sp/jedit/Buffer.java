@@ -64,7 +64,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.125 2003/02/18 22:32:05 spestov Exp $
+ * @version $Id: Buffer.java,v 1.126 2003/02/23 04:05:21 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2065,9 +2065,6 @@ public class Buffer implements EBComponent
 			{
 				getLineText(i,seg);
 
-				TokenMarker.LineContext prevContext = (i == 0 ? null
-					: offsetMgr.getLineContext(i - 1));
-
 				TokenMarker.LineContext context = offsetMgr.getLineContext(i);
 				ParserRule oldRule;
 				ParserRuleSet oldRules;
@@ -2082,6 +2079,16 @@ public class Buffer implements EBComponent
 					oldRule = context.inRule;
 					oldRules = context.rules;
 				}
+
+				// this should be null if the line in question does
+				// not have a valid context because we don't want
+				// to inherit the inRule and rules attributes from
+				// an invalid line.
+				TokenMarker.LineContext prevContext = (
+					(i == 0 || !offsetMgr.isLineContextValid(i - 1))
+					? null
+					: offsetMgr.getLineContext(i - 1)
+				);
 
 				context = tokenMarker.markTokens(prevContext,
 					(i == lineIndex ? tokenHandler
