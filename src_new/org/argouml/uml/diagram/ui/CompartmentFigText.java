@@ -1,4 +1,4 @@
-// $Id: CompartmentFigText.java,v 1.20 2004/11/11 09:47:02 bobtarling Exp $
+// $Id: CompartmentFigText.java,v 1.21 2004/11/15 14:01:35 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -172,6 +172,20 @@ public class CompartmentFigText extends FigText {
     }
 
 
+    /**
+     * @see org.tigris.gef.presentation.Fig#getLineWidth()
+     */
+    public int getLineWidth() {
+    	return 0;
+    }
+    
+    /**
+     * @see org.tigris.gef.presentation.Fig#setLineWidth(int)
+     */
+    public void setLineWidth(int w) {
+    	super.setLineWidth(0);
+    }
+    
     /**
      * Mark whether this item is to be highlighted.<p>
      *
