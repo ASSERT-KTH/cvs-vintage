@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.54 2003/02/21 16:12:32 alexb Exp $
+// $Id: Modeller.java,v 1.55 2003/02/21 16:39:38 alexb Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -492,7 +492,9 @@ public class Modeller
       }
           
       // if we want to create a UML attribute:
-      if(noAssociations || ModelFacade.isADataType(mClassifier)){
+      if(noAssociations ||
+         ModelFacade.isADataType(mClassifier) ||
+         ModelFacade.getNamespace(mClassifier) == getPackage("java.lang")){
       
             Object mAttribute = getAttribute(name, initializer, mClassifier);
 
