@@ -70,11 +70,29 @@ import java.text.*;
  * @author Costin Manolache
  */
 public final class Parameters extends MultiMap {
+    // Transition: we'll use the same Hashtable( String->String[] )
+    // for the beginning. When we are sure all accesses happen through
+    // this class - we can switch to MultiMap
+    private Hashtable paramHashStringArray=new Hashtable();
+    private boolean didQueryParameters=false;
+    private boolean didReadFormData=false;
+    private boolean didMerge=false;
+    
+    MessageBytes queryMB;
+    MimeHeaders  headers;
+    
     public static final int INITIAL_SIZE=4;
 
-    private boolean isSet=false;
-    private boolean isFormBased=false;
-    
+    // Garbage-less parameter merging.
+    // In a sub-request with parameters, the new parameters
+    // will be stored in child. When a getParameter happens,
+    // the 2 are merged togheter. The child will be altered
+    // to contain the merged values - the parent is allways the
+    // original request.
+    private Parameters child=null;
+    private Parameters parent=null;
+    private Parameters currentChild=null;
+
     /**
      * 
      */
@@ -82,30 +100,282 @@ public final class Parameters extends MultiMap {
 	super( INITIAL_SIZE );
     }
 
-    public void recycle() {
-	super.recycle();
-	isSet=false;
-	isFormBased=false;
+    public void setQuery( MessageBytes queryMB ) {
+	this.queryMB=queryMB;
     }
 
-    /**
+    public void setHeaders( MimeHeaders headers ) {
+	this.headers=headers;
+    }
+
+    public void recycle() {
+	super.recycle();
+	paramHashStringArray.clear();
+	didQueryParameters=false;
+	didReadFormData=false;
+	currentChild=null;
+	didMerge=false;
+    }
+    
+    // -------------------- Sub-request support --------------------
+
+    public Parameters getCurrentSet() {
+	if( currentChild==null )
+	    return this;
+	return currentChild;
+    }
+    
+    /** Create ( or reuse ) a child that will be used during a sub-request.
+	All future changes ( setting query string, adding parameters )
+	will affect the child ( the parent request is never changed ).
+	Both setters and getters will return the data from the deepest
+	child, merged with data from parents.
+    */
+    public void push() {
+	// We maintain a linked list, that will grow to the size of the
+	// longest include chain.
+	// The list has 2 points of interest:
+	// - request.parameters() is the original request and head,
+	// - request.parameters().currentChild() is the current set.
+	// The ->child and parent<- links are preserved ( currentChild is not
+	// the last in the list )
+	
+	// create a new element in the linked list
+	// note that we reuse the child, if any - pop will not
+	// set child to null !
+	if( currentChild.child==null ) {
+	    currentChild.child=new Parameters();
+	    currentChild.child.parent=currentChild;
+	} // it is not null if this object already had a child
+	// i.e. a deeper include() ( we keep it )
+
+	// the head will be the new element.
+	currentChild=currentChild.child;
+    }
+
+    /** Discard the last child. This happens when we return from a
+	sub-request and the parameters are locally modified.
      */
-    public boolean isEvaluated() {
-	return isSet;
+    public void pop() {
+	if( currentChild==null ) {
+	    throw new RuntimeException( "Attempt to pop without a push" );
+	}
+	currentChild.recycle();
+	currentChild=currentChild.parent;
+	// don't remove the top.
     }
     
-    public void setEvaluated( boolean b ) {
-	isSet=b;
+    // -------------------- Data access --------------------
+    // Access to the current name/values, no side effect ( processing ).
+    // You must explicitely call handleQueryParameters and the post methods.
+    
+    // This is the original data representation ( hash of String->String[])
+
+    public String[] getParameterValues(String name) {
+	handleQueryParameters();
+	// sub-request
+	if( currentChild!=null ) {
+	    currentChild.merge();
+	    return (String[])currentChild.paramHashStringArray.get(name);
+	}
+
+	// no "facade"
+	String values[]=(String[])paramHashStringArray.get(name);
+	return values;
+    }
+ 
+    public Enumeration getParameterNames() {
+	handleQueryParameters();
+	// Slow - the original code
+	if( currentChild!=null ) {
+	    currentChild.merge();
+	    return currentChild.paramHashStringArray.keys();
+	}
+
+	// merge in child
+        return paramHashStringArray.keys();
+    }
+
+    /** Combine the parameters from parent with our local ones
+     */
+    private void merge() {
+	// recursive
+
+	// Local parameters first - they take precedence as in spec.
+	handleQueryParameters();
+
+	// we already merged with the parent
+	if( didMerge ) return;
+
+	// we are the top level
+	if( parent==null ) return;
+
+	// Add the parent props to the child ( lower precedence )
+	Hashtable parentProps=parent.paramHashStringArray;
+	merge2( paramHashStringArray , parentProps);
+	didMerge=true;
+    }
+
+
+    // Shortcut.
+    public String getParameter(String name ) {
+	String[] values = getParameterValues(name);
+        if (values != null) {
+	    if( values.length==0 ) return "";
+	    //System.out.println("XXX " + name + "=" + values[0] );
+            return values[0];
+        } else {
+	    //	    System.out.println("XXX " + name + "=null" );
+	    return null;
+        }
+    }
+    // -------------------- Processing --------------------
+
+    /** Process the query string into parameters
+     */
+    public void handleQueryParameters() {
+	if( didQueryParameters ) return;
+	
+	didQueryParameters=true;
+	String qString=queryMB.toString();
+	if(qString!=null) {
+	    processFormData( qString );
+	}
+    }
+
+    public void processParameters(String data) {
+	processFormData( data );
     }
     
-    // XXX need better name
-    public boolean hasFormData() {
-	return isFormBased;
-    }
-    public void setFormData(boolean b ) {
-	isFormBased=b;
+    // XXX ENCODING !!
+    public void processData(byte data[]) {
+	didReadFormData = true;
+	// make sure the request line query is processed
+	handleQueryParameters();
+	
+	try {
+	    String postedBody = new String(data, 0, data.length,
+					   "8859_1");
+	    // XXX encoding !!!
+
+	    processFormData( postedBody );
+	    
+	    //Hashtable postParameters=new Hashtable();
+	    //Parameters.processFormData( postedBody, postParameters);
+	    //	    Parameters.merge2(paramHashStringArray,  postParameters);
+
+	} catch( UnsupportedEncodingException ex ) {
+	    //	    return postParameters;
+	}
     }
     
+    /**
+     * Process the headers and return if body data is needed. This
+     * class doesn't deal with reading.
+     *
+     *  Future enahancements: reuse/access the read buffer. Chunks.
+     *  Additional encodings.
+     */
+    public int needContent() {
+	if( didReadFormData )
+	    return 0;
+
+	MessageBytes contentTypeMB=headers.getValue("content-type");
+	if( contentTypeMB == null || contentTypeMB.isNull() )
+	    return 0;
+	
+	String contentType= contentTypeMB.toString();
+	
+	if (contentType != null &&
+            contentType.startsWith("application/x-www-form-urlencoded")) {
+
+	    MessageBytes clB=headers.getValue("content-length");
+	    int contentLength = (clB==null || clB.isNull() ) ? -1 :
+		clB.getInt();
+	    if( contentLength >0 ) return contentLength;
+	}
+	return 0;
+	
+    }
+
+
+    // --------------------
+    
+    /** Combine 2 hashtables into a new one.
+     *  ( two will be added to one ).
+     *  Used to combine child parameters ( RequestDispatcher's query )
+     *  with parent parameters ( original query or parent dispatcher )
+     */
+    private static void merge2(Hashtable one, Hashtable two ) {
+        Enumeration e = two.keys();
+
+	while (e.hasMoreElements()) {
+	    String name = (String) e.nextElement();
+	    String[] oneValue = (String[]) one.get(name);
+	    String[] twoValue = (String[]) two.get(name);
+	    String[] combinedValue;
+
+	    if (twoValue == null) {
+		continue;
+	    } else {
+		if( oneValue==null ) {
+		    combinedValue = new String[twoValue.length];
+		    System.arraycopy(twoValue, 0, combinedValue,
+				     0, twoValue.length);
+		} else {
+		    combinedValue = new String[oneValue.length +
+					       twoValue.length];
+		    System.arraycopy(oneValue, 0, combinedValue, 0,
+				     oneValue.length);
+		    System.arraycopy(twoValue, 0, combinedValue,
+				     oneValue.length, twoValue.length);
+		}
+		one.put(name, combinedValue);
+	    }
+	}
+    }
+
+    // XXX XXX Optimize
+    private void processFormData(String data) {
+        // there's got to be a faster way of doing this.
+	if( data==null ) return; // no parameters
+	
+        StringTokenizer tok = new StringTokenizer(data, "&", false);
+        while (tok.hasMoreTokens()) {
+            String pair = tok.nextToken();
+	    int pos = pair.indexOf('=');
+	    if (pos != -1) {
+		String key = CharChunk.unescapeURL(pair.substring(0, pos));
+		String value = CharChunk.unescapeURL(pair.substring(pos+1,
+							     pair.length()));
+		String values[];
+		if (paramHashStringArray.containsKey(key)) {
+		    String oldValues[] = (String[])paramHashStringArray.
+			get(key);
+		    values = new String[oldValues.length + 1];
+		    for (int i = 0; i < oldValues.length; i++) {
+			values[i] = oldValues[i];
+		    }
+		    values[oldValues.length] = value;
+		} else {
+		    values = new String[1];
+		    values[0] = value;
+		}
+		paramHashStringArray.put(key, values);
+	    } else {
+		// we don't have a valid chunk of form data, ignore
+	    }
+        }
+    }
+
+    // -------------------- Parameter parsing --------------------
+
+    // This code is not used right now - it's the optimized version
+    // of the above. 
+    
+    /**
+     * 
+     */
     public void processParameters( byte bytes[], int start, int len ) {
 	int end=start+len;
 	int pos=start;
@@ -180,163 +450,4 @@ public final class Parameters extends MultiMap {
 	}
     }
 
-
-    public void mergeParameters( Parameters extra ) {
-	
-    }
-
-
-    // XXX Generic code moved from RequestUtil - will be replaced
-    // with more efficient code.
-        /** Combine 2 hashtables into a new one.
-     *  XXX Will move to the MimeHeaders equivalent for params.
-     */
-    public static Hashtable mergeParameters(Hashtable one, Hashtable two) {
-	// Try some shortcuts
-	if (one.size() == 0) {
-	    return two;
-	}
-
-	if (two.size() == 0) {
-	    return one;
-	}
-
-	Hashtable combined = (Hashtable) one.clone();
-
-        Enumeration e = two.keys();
-
-	while (e.hasMoreElements()) {
-	    String name = (String) e.nextElement();
-	    String[] oneValue = (String[]) one.get(name);
-	    String[] twoValue = (String[]) two.get(name);
-	    String[] combinedValue;
-
-	    if (oneValue == null) {
-		combinedValue = twoValue;
-	    }
-
-	    else {
-		combinedValue = new String[oneValue.length + twoValue.length];
-
-	        System.arraycopy(oneValue, 0, combinedValue, 0,
-                    oneValue.length);
-	        System.arraycopy(twoValue, 0, combinedValue,
-                    oneValue.length, twoValue.length);
-	    }
-
-	    combined.put(name, combinedValue);
-	}
-
-	return combined;
-    }
-    
-    public static void processFormData(String data, Hashtable parameters) {
-        // XXX
-        // there's got to be a faster way of doing this.
-	if( data==null ) return; // no parameters
-        StringTokenizer tok = new StringTokenizer(data, "&", false);
-        while (tok.hasMoreTokens()) {
-            String pair = tok.nextToken();
-	    int pos = pair.indexOf('=');
-	    if (pos != -1) {
-		String key = unUrlDecode(pair.substring(0, pos));
-		String value = unUrlDecode(pair.substring(pos+1,
-							  pair.length()));
-		String values[];
-		if (parameters.containsKey(key)) {
-		    String oldValues[] = (String[])parameters.get(key);
-		    values = new String[oldValues.length + 1];
-		    for (int i = 0; i < oldValues.length; i++) {
-			values[i] = oldValues[i];
-		    }
-		    values[oldValues.length] = value;
-		} else {
-		    values = new String[1];
-		    values[0] = value;
-		}
-		parameters.put(key, values);
-	    } else {
-		// we don't have a valid chunk of form data, ignore
-	    }
-        }
-    }
-
-    // from RequestUtil
-    public static Hashtable processFormData(byte data[]   ) {
-	Hashtable postParameters =  new Hashtable();
-
-	try {
-	    String postedBody = new String(data, 0, data.length,
-					   "8859_1");
-	    
-	    Parameters.processFormData( postedBody, postParameters);
-	    return postParameters;
-	} catch( UnsupportedEncodingException ex ) {
-	    return postParameters;
-	}
-    }
-
-    /** Decode a URL-encoded string. Inefficient.
-     */
-    private static String unUrlDecode(String data) {
-	//	System.out.println("DECODING : " +data );
-	StringBuffer buf = new StringBuffer();
-	for (int i = 0; i < data.length(); i++) {
-	    char c = data.charAt(i);
-	    switch (c) {
-	    case '+':
-		buf.append(' ');
-		break;
-	    case '%':
-		// XXX XXX 
-		try {
-		    buf.append((char) Integer.parseInt(data.substring(i+1,
-                        i+3), 16));
-		    i += 2;
-		} catch (NumberFormatException e) {
-                    String msg = "Decode error ";
-		    // XXX no need to add sm just for that
-		    // sm.getString("serverRequest.urlDecode.nfe", data);
-
-		    throw new IllegalArgumentException(msg);
-		} catch (StringIndexOutOfBoundsException e) {
-		    String rest  = data.substring(i);
-		    buf.append(rest);
-		    if (rest.length()==2)
-			i++;
-		}
-		
-		break;
-	    default:
-		buf.append(c);
-		break;
-	    }
-	}
-	return buf.toString();
-    }           
-
-    // XXX Ugly, most be rewritten
-    /** Process the POST data from a request.
-     */
-    public static int formContentLength( String contentType,
-					 int contentLength )
-    {
-
-	if (contentType != null) {
-            if (contentType.indexOf(";")>0)
-                contentType=contentType.substring(0,contentType.indexOf(";"));
-            contentType = contentType.toLowerCase().trim();
-        }
-
-	if (contentType != null &&
-            contentType.startsWith("application/x-www-form-urlencoded")) {
-	    
-	    if( contentLength >0 ) return contentLength;
-	}
-	return 0;
-    }
-
-    
-
-    
 }
