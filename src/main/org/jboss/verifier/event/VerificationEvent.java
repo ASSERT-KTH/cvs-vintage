@@ -19,7 +19,7 @@ package org.jboss.verifier.event;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: VerificationEvent.java,v 1.6 2000/10/18 13:23:16 juha Exp $
+ * $Id: VerificationEvent.java,v 1.7 2000/11/14 20:37:17 juha Exp $
  */
 
 
@@ -36,7 +36,7 @@ import org.jboss.verifier.Section;
 /**
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since  	JDK 1.3
  */
 public class VerificationEvent extends EventObject {
@@ -141,7 +141,7 @@ public class VerificationEvent extends EventObject {
         StringBuffer buf = new StringBuffer(512);
         String linebreak = System.getProperty("line.separator");
         
-        buf.append(linebreak + "Class  : " + beanName + linebreak);
+        buf.append(linebreak + "Bean   : " + beanName + linebreak);
         
         if (method != null) {
             String returnType = getShortClassName(method.getReturnType());
