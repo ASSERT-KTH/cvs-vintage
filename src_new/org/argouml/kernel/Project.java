@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.56 2003/04/28 08:18:50 kataka Exp $
+// $Id: Project.java,v 1.57 2003/04/28 16:49:55 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -932,7 +932,10 @@ public class Project implements java.io.Serializable {
         setNeedsSave(false);
     }
 
-    protected void postLoad() {
+    /**
+     * @deprecated 28 Apr 2003 (ver 0.13.5). Will be protected in future.
+     */
+    public void postLoad() {
         for (int i = 0; i < _diagrams.size(); i++)
              ((Diagram)_diagrams.elementAt(i)).postLoad();
         // issue 1725: the root is not set, which leads to problems with displaying prop panels
