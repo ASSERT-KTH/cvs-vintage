@@ -22,10 +22,11 @@ import org.jboss.util.ServiceMBeanSupport;
 
 /**
  *   <description> 
+ * JMX MBean implementation for SpyderMQ.
  *      
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @author Vincent Sheffer (vsheffer@telkel.com)
+ *   @version $Revision: 1.2 $
  */
 public class SpyderMQService
    extends ServiceMBeanSupport

@@ -9,10 +9,11 @@ package org.jboss.spydermq;
 
 /**
  *   <description> 
+ * MBean interface for the SpyderMQ JMX service.
  *      
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @author Vincent Sheffer (vincent.sheffer@telkel.com)
+ *   @version $Revision: 1.2 $
  */
 public interface SpyderMQServiceMBean
    extends org.jboss.util.ServiceMBean
