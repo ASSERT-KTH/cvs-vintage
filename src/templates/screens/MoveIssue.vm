@@ -5,7 +5,6 @@
 #set ($selectAction = $moveIssueGroup.Action.Value)
 #set ($issueModule= $scarabR.CurrentModule)
 #set ($issueList = $data.Parameters.getStrings("issue_ids"))
-#set ($moduleList = $user.getCopyToModules($issueModule, $selectAction))
 
 #if (!$issueList)
 
@@ -47,7 +46,7 @@
 #set ($pageNum = $scarabR.AdjustedPageNum)
 #set ($sortPolarity = $data.Parameters.getInt("sortPolarity", 1))
 #set ($searchString = $data.Parameters.getString("searchString", ""))
-#set ($paginated = ($resultsPerPage > 0 && $moduleList.size() > $resultsPerPage))
+
 #if ($searchString && $searchString.length() > 0)
     #set ($moduleList = $user.getCopyToModules($issueModule, "$selectAction", "$searchString"))
     #if ( $moduleList.isEmpty())
