@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * Class with several useful miscellaneous functions.
  *
  * @author Slava Pestov
- * @version $Id: MiscUtilities.java,v 1.7 2001/11/14 09:35:20 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.8 2001/11/16 05:32:11 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -84,8 +84,18 @@ public class MiscUtilities
 	{
 		path = canonPath(path);
 
-		if(new File(path).isAbsolute())
-			return path;
+		File file = new File(path);
+		if(file.isAbsolute())
+		{
+			try
+			{
+				return file.getCanonicalPath();
+			}
+			catch(IOException io)
+			{
+				return path;
+			}
+		}
 
 		if(parent == null)
 			parent = System.getProperty("user.dir");
@@ -102,9 +112,18 @@ public class MiscUtilities
 		}
 
 		if(parent.endsWith(File.separator))
-			return parent + path;
+			path = parent + path;
 		else
-			return parent + File.separator + path;
+			path = parent + File.separator + path;
+
+		try
+		{
+			return new File(path).getCanonicalPath();
+		}
+		catch(IOException io)
+		{
+			return path;
+		}
 	} //}}}
 
 	//{{{ constructPath() method

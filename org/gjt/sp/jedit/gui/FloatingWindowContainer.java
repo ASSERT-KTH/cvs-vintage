@@ -29,7 +29,7 @@ import org.gjt.sp.jedit.*;
 /**
  * A container for dockable windows. This class should never be used
  * directly.
- * @version $Id: FloatingWindowContainer.java,v 1.4 2001/11/14 09:35:20 spestov Exp $
+ * @version $Id: FloatingWindowContainer.java,v 1.5 2001/11/16 05:32:11 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FloatingWindowContainer extends JFrame implements DockableWindowContainer
@@ -44,7 +44,7 @@ public class FloatingWindowContainer extends JFrame implements DockableWindowCon
 	public void register(DockableWindowManager.Entry entry)
 	{
 		this.entry = entry;
-		setTitle(jEdit.getProperty(entry.title));
+		setTitle(entry.title);
 
 		getContentPane().add(BorderLayout.CENTER,entry.win);
 

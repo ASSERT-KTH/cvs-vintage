@@ -38,7 +38,7 @@ import org.gjt.sp.util.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.5 2001/11/14 09:35:20 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.6 2001/11/16 05:32:11 spestov Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 implements WorkThreadProgressListener
@@ -73,13 +73,17 @@ implements WorkThreadProgressListener
 		panel.setLayout(new BoxLayout(panel,BoxLayout.X_AXIS));
 		panel.setBorder(new EmptyBorder(12,0,0,0));
 
-		panel.add(new JLabel(jEdit.getProperty("vfs.browser.dialog.filename")));
+		JLabel label = new JLabel(jEdit.getProperty("vfs.browser.dialog.filename"));
+		panel.add(label);
 		panel.add(Box.createHorizontalStrut(12));
 
-		filenameField = new JTextField(20);
+		filenameField = new JTextField();
 		filenameField.setText(name);
 		filenameField.addKeyListener(new KeyHandler());
 		filenameField.selectAll();
+		label.setDisplayedMnemonic(jEdit.getProperty(
+			"vfs.browser.dialog.filename.mnemonic").charAt(0));
+		label.setLabelFor(filenameField);
 		Dimension dim = filenameField.getPreferredSize();
 		dim.width = Integer.MAX_VALUE;
 		filenameField.setMaximumSize(dim);
@@ -229,7 +233,8 @@ implements WorkThreadProgressListener
 				int requestCount = threadPool.getRequestCount();
 				if(requestCount == 0)
 				{
-					status.setText(" ");
+					status.setText(jEdit.getProperty(
+						"view.status.io.done"));
 				}
 				else if(requestCount == 1)
 				{
