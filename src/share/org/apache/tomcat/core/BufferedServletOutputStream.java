@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.11 2000/04/26 17:24:05 craigmcc Exp $
- * $Revision: 1.11 $
- * $Date: 2000/04/26 17:24:05 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.12 2000/05/30 06:16:45 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/05/30 06:16:45 $
  *
  * ====================================================================
  * 
@@ -101,7 +101,6 @@ public class BufferedServletOutputStream extends ServletOutputStream {
     protected int bufferSize = DEFAULT_BUFFER_SIZE;
     protected int bufferCount = 0;
     protected int totalCount = 0;
-    protected boolean committed = false;
     protected boolean closed = false;
     ResponseImpl resA;
     
@@ -234,10 +233,10 @@ public class BufferedServletOutputStream extends ServletOutputStream {
     public void reallyFlush() throws IOException {
 	// 	System.out.println("x " + bufferCount+ " " + closed);
 	try {
-	    if (!committed) {
+	    if (!resA.isBufferCommitted()) {
 		//	        response.writeHeaders(out);
 		sendHeaders();
-	        committed = true;
+	        resA.setBufferCommitted(true);
 	    }
 
 	    if (bufferCount > 0) {
@@ -264,9 +263,9 @@ public class BufferedServletOutputStream extends ServletOutputStream {
 	return totalCount > 0 ? true : false;
     }
 
-    public boolean isCommitted() {
-	return this.committed;
-    }
+//     public boolean isCommitted() {
+// 	return res.isCommited();
+//     }
     
     public int getBufferSize() {
 	return buffer.length;
@@ -294,7 +293,7 @@ public class BufferedServletOutputStream extends ServletOutputStream {
     public void reset() throws IllegalStateException {
 
 	// If buffer is already commited, throw IllegalStateException.
-	if (isCommitted()) {
+	if (resA.isBufferCommitted()) {
 	    String msg = sm.getString("servletOutputStreamImpl.reset.ise"); 
 	    throw new IllegalStateException(msg);
 	}
@@ -310,7 +309,6 @@ public class BufferedServletOutputStream extends ServletOutputStream {
 	// 	System.out.println("Recycle BOS " );
 	bufferCount = 0;
 	totalCount = 0;
-	committed = false;
 	closed = false;
     }
 

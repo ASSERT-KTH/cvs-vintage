@@ -95,7 +95,7 @@ public class RequestUtil {
 	if (contentType != null &&
             contentType.startsWith("application/x-www-form-urlencoded")) {
 	    try {
-		ServletInputStream is=request.getInputStream();
+		ServletInputStream is=request.getFacade().getInputStream();
                 Hashtable postParameters =  HttpUtils.parsePostData(contentLength, is);
 		return postParameters;
 	    }

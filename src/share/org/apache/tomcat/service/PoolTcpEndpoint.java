@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.4 2000/05/26 23:06:37 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/05/26 23:06:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.5 2000/05/30 06:16:48 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/05/30 06:16:48 $
  *
  * ====================================================================
  *
@@ -114,6 +114,7 @@ public class PoolTcpEndpoint extends TcpEndpoint  { // implements Endpoint {
 
     ThreadPoolRunnable listener;
     boolean running = true;
+    static final int debug=0;
 
     ThreadPool tp;
 
@@ -121,6 +122,10 @@ public class PoolTcpEndpoint extends TcpEndpoint  { // implements Endpoint {
 	tp = new ThreadPool();
     }
 
+    void log( String s ) {
+	System.out.println("PoolTcpEndpoint: " + s );
+    }
+    
     // -------------------- Configuration --------------------
 
     public void setPoolOn(boolean isPool) {
@@ -305,9 +310,6 @@ public class PoolTcpEndpoint extends TcpEndpoint  { // implements Endpoint {
 }
 
 // -------------------- Threads --------------------
-// XXX add a more efficient model - use thread pools, use a Queue, etc
-
-// Keep the thread model in one place !
 
 /*
  * I switched the threading model here.
@@ -327,56 +329,64 @@ class TcpWorkerThread implements ThreadPoolRunnable {
        We also want to use per/thread data and avoid sync wherever possible.
     */
     PoolTcpEndpoint endpoint;
-    Vector connectionCache;
-
+    SimplePool connectionCache;
+    static final boolean usePool=true;
+    
     public TcpWorkerThread(PoolTcpEndpoint endpoint) {
-	    this.endpoint = endpoint;
-	    connectionCache = new Vector(endpoint.getMaxThreads());
+	this.endpoint = endpoint;
+	if( usePool ) {
+	    connectionCache = new SimplePool(endpoint.getMaxThreads());
 	    for(int i = 0 ; i < endpoint.getMaxThreads()/2 ; i++) {
-	        connectionCache.addElement(new TcpConnection());
+		connectionCache.put(new TcpConnection());
 	    }
+	}
     }
 
     public Object[] getInitData() {
-	return endpoint.getConnectionHandler().init();
+	if( usePool ) {
+	    return endpoint.getConnectionHandler().init();
+	} else {
+	    // no synchronization overhead, but 2 array access 
+	    Object obj[]=new Object[2];
+	    obj[1]= endpoint.getConnectionHandler().init();
+	    obj[0]=new TcpConnection();
+	    return obj;
+	}
     }
     
     public void runIt(Object perThrData[]) {
+	TcpConnection con=null;
+	if( ! usePool ) {
+	    // extract the original.
+	    con=(TcpConnection) perThrData[0];
+	    perThrData = (Object []) perThrData[1];
+	}
+	
 	// Create per-thread cache
 	while(endpoint.running) {
-		
-		//		System.out.println("XXX accept socket");
-	        Socket s = endpoint.acceptSocket();
-		//		System.out.print("Ac");
-		//		System.out.println("XXX accepted " + s );
-	        if(null != s) {
-	            // Continue accepting on another thread...
-		    //		    System.out.print("Ar");
-	            endpoint.tp.runIt(this);
-		    //  System.out.print("Ri");
-	            TcpConnection con = null;
-	            try {
-                	// XXX set socket options
-                	// 	s.setSoLinger( true, 100);
-                	//	s.setSoTimeout( 1000 );
-			try {
-			    con = (TcpConnection)connectionCache.lastElement();
-			    connectionCache.removeElementAt(connectionCache.size() - 1);
-			} catch(Throwable t) {
-			    con = new TcpConnection();
-			}
+	    Socket s = endpoint.acceptSocket();
 
-                	con.setEndpoint(endpoint);
-                	con.setSocket(s);
-                	endpoint.getConnectionHandler().processConnection(con, perThrData);
+	    if(null != s) {
+		// Continue accepting on another thread...
+		
+		endpoint.tp.runIt(this);
+		
+		try {
+		    if( usePool ) {
+			con=(TcpConnection)connectionCache.get();
+			if( con == null ) 
+			    con = new TcpConnection();
+		    }
+		    
+		    con.setEndpoint(endpoint);
+		    con.setSocket(s);
+		    endpoint.getConnectionHandler().processConnection(con, perThrData);
                 } finally {
                     con.recycle();
-                    connectionCache.addElement(con);
+                    if( usePool && con != null ) connectionCache.put(con);
                 }
-		    //		System.out.println("XXX done " + s  );
                 break;
-	        }
 	    }
-	    //	    System.out.println("End thread "   );
+	}
     }
 }

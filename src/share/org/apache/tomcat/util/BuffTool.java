@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/BuffTool.java,v 1.5 2000/04/21 20:45:11 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/04/21 20:45:11 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/BuffTool.java,v 1.6 2000/05/30 06:16:54 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/05/30 06:16:54 $
  *
  * ====================================================================
  *
@@ -128,5 +128,86 @@ public class BuffTool {
 	System.out.println();
     }
 
+    // Various byte[] utils, used in parsing request and protocols
+
+    /** Find a character, no side effects.
+     *  @returns index of char if found, -1 if not
+     */
+    public static int findChar( byte buf[], int start, int end, char c ) {
+	byte b=(byte)c;
+	int offset = start;
+	while (offset < end) {
+	    if (buf[offset] == b) {
+		return offset;
+	    }
+	    offset++;
+	}
+	return -1;
+    }
+
+    /** Find a character, no side effects.
+     *  @returns index of char if found, -1 if not
+     */
+    public static int findChars( byte buf[], int start, int end, byte c[] ) {
+	int clen=c.length;
+	int offset = start;
+	while (offset < end) {
+	    for( int i=0; i<clen; i++ ) 
+		if (buf[offset] == c[i]) {
+		    return offset;
+		}
+	    offset++;
+	}
+	return -1;
+    }
+
+    /** Find the first character != c 
+     *  @returns index of char if found, -1 if not
+     */
+    public static int findNotChars( byte buf[], int start, int end, byte c[] ) {
+	int clen=c.length;
+	int offset = start;
+	boolean found;
+		
+	while (offset < end) {
+	    found=true;
+	    for( int i=0; i<clen; i++ ) {
+		if (buf[offset] == c[i]) {
+		    found=false;
+		    break;
+		}
+	    }
+	    if( found ) { // buf[offset] != c[0..len]
+		return offset;
+	    }
+	    offset++;
+	}
+	return -1;
+    }
+
+
+    /** Read a line from input to buf.
+     *  Hope that in is buffered !!
+     *  @returns The number of bytes read, of -1 if end of stream
+     */
+    public static int readLine(InputStream in, byte[] b, int off, int len)
+	throws IOException
+    {
+
+	if (len <= 0) {
+	    return 0;
+	}
+	int count = 0;
+	int c;
+
+	while ((c = in.read()) != -1) {
+	    b[off++] = (byte)c;
+	    count++;
+	    if (c == '\n' || count == len) {
+		break;
+	    }
+	}
+	return count > 0 ? count : -1;
+    }
 
 }

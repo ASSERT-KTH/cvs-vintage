@@ -1,8 +1,8 @@
 
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorResponse.java,v 1.3 2000/05/25 14:18:23 shachor Exp $
- * $Revision: 1.3 $
- * $Date: 2000/05/25 14:18:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorResponse.java,v 1.4 2000/05/30 06:16:48 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/05/30 06:16:48 $
  *
  * ====================================================================
  *
@@ -96,11 +96,10 @@ public class Ajp13ConnectorResponse extends ResponseImpl
     public static final int SC_RESP_WWW_AUTHENTICATE    = 0xA00B;
     
     MsgConnector con;
-    Ajp13OutputStream rout;
 
     public Ajp13ConnectorResponse() 
     {
-	}
+    }
 
     // XXX if more headers that MAX_SIZE, send 2 packets!   
     public void endHeaders() throws IOException 
@@ -211,49 +210,27 @@ public class Ajp13ConnectorResponse extends ResponseImpl
     public void recycle() 
     {
         super.recycle();
-        if(rout!=null) {
-            rout.recycle();
-        }
-        out = rout;
     }
     
     public void setConnector(MsgConnector con) 
     {
         this.con = con;
-        rout = new Ajp13OutputStream(con);
-        rout.setResponse(this);
-        this.out = rout;
     }
         
-	class Ajp13OutputStream extends BufferedServletOutputStream  
-	{     
-    	MsgConnector con;
-    
-    	// XXX clean up
-    	Ajp13OutputStream(MsgConnector con) 
-    	{
-        	this.con = con;
-    	}
-
-    	public void doWrite(  byte b[], int off, int len) throws IOException 
-    	{
-        	int sent = 0;
-        	while(sent < len) {
-        		int to_send = len - sent;
-        		to_send = to_send > MAX_SEND_SIZE ? MAX_SEND_SIZE : to_send;
-        		
-	        	MsgBuffer buf = con.getMsgBuffer();
-	        	buf.reset();
-	        	buf.appendByte(Ajp13ConnectorResponse.JK_AJP13_SEND_BODY_CHUNK);	        	
-	        	buf.appendBytes(b, off + sent, to_send);	        
-	        	con.send(buf);
-	        	sent += to_send;
-	        }
-    	}
-
-    	protected void endResponse() throws IOException 
-    	{
-    	}
-}
+    public void doWrite(  byte b[], int off, int len) throws IOException 
+    {
+	int sent = 0;
+	while(sent < len) {
+	    int to_send = len - sent;
+	    to_send = to_send > MAX_SEND_SIZE ? MAX_SEND_SIZE : to_send;
+	    
+	    MsgBuffer buf = con.getMsgBuffer();
+	    buf.reset();
+	    buf.appendByte(Ajp13ConnectorResponse.JK_AJP13_SEND_BODY_CHUNK);	        	
+	    buf.appendBytes(b, off + sent, to_send);	        
+	    con.send(buf);
+	    sent += to_send;
+	}
+    }
     
 }

@@ -1,6 +1,6 @@
 /*
  * ====================================================================
- * 
+ *
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -56,112 +56,31 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-
-
-package org.apache.tomcat.facade;
+package org.apache.tomcat.util;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
+import org.apache.tomcat.core.Constants;
 import java.io.*;
-import javax.servlet.ServletOutputStream;
+import java.net.*;
+import java.util.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.text.*;
 
-/**
- * 
- */
-final class ServletOutputStreamFacade extends ServletOutputStream {
-    // Use the strings from core
-    protected StringManager sm = StringManager.getManager("org.apache.tomcat.core");
+public class RecycleBufferedInputStream extends BufferedInputStream {
+    public RecycleBufferedInputStream( InputStream is ) {
+	super( is );
+    }
 
-    // encoding
-    private Writer writer=null;
+    public void setInputStream( InputStream is ) {
+	this.count=0;
+	this.in=is;
+    }
+
+    public void recycle() {
+	this.in=null;
+	this.count=0;
+    }
+
     
-    protected boolean closed = false;
-
-    Response resA;
-    ByteBuffer bb;
-    
-    /** Encoding - first time print() is used.
-	IMPORTANT: print() is _bad_, if you want to write Strings and mix
-	bytes you'd better use a real writer ( it's faster ).
-	But _don't_ use the servlet writer - since you'll not be able to write
-	bytes.
-    */
-    String enc;
-    /** True if we already called getEncoding() - cache result */
-    boolean gotEnc=false;
-    
-    protected ServletOutputStreamFacade( Response resA) {
-	this.resA=resA;
-	bb=resA.getOutputBuffer();
-    }
-
-    // -------------------- Write methods --------------------
-    
-    public void write(int i) throws IOException {
-	bb.write(i);
-    }
-
-    public void write(byte[] b) throws IOException {
-	write(b,0,b.length);
-    }
-    
-    public void write(byte[] b, int off, int len) throws IOException {
-	bb.write( b, off, len );
-    }
-
-    // -------------------- Servlet Output Stream methods --------------------
-    
-    /** Alternate implementation for print, using String.getBytes(enc).
-	It seems to be a bit faster for small strings, but it's 10..20% slower
-	for larger texts ( nor very large - 5..10k )
-
-	That seems to be mostly because of byte b[] - the writer has an
-	internal ( and fixed ) buffer.
-
-	Please use getWriter() if you want to send strings.
-    */
-    public void print(String s) throws IOException {
-	if (s==null) s="null";
-	byte b[]=null;
-	if( !gotEnc ) {
-	    enc = resA.getCharacterEncoding();
-	    gotEnc=true;
-	    if ( Constants.DEFAULT_CHAR_ENCODING.equals(enc) )
-		enc=null;
-	}
-	if( enc==null) 
-	    b=s.getBytes();
-	else 
-	    try {
-		b=s.getBytes( enc );
-	    } catch (java.io.UnsupportedEncodingException ex) {
-		b=s.getBytes();
-		enc=null;
-	    } 
-	
-	write( b );
-    } 
-
-    /** Will send the buffer to the client.
-     */
-    public void flush() throws IOException {
-	bb.flush(); // send it now !
-    }
-
-    public void close() throws IOException {
-	bb.flush(); // send it now !
-	closed = true;
-    }
-
-    /** Reuse the object instance, avoid GC
-     *  Called from BSOS
-     */
-    void recycle() {
-	writer=null;
-	closed = false;
-	enc=null;
-	gotEnc=false;
-    }
-
 }
-

@@ -152,6 +152,7 @@ public class RequestImpl  implements Request {
     protected String remoteAddr;
     protected String remoteHost;
     protected String localHost;
+    protected ByteBuffer bBuffer;
 
     protected static StringManager sm =
         StringManager.getManager("org.apache.tomcat.core");
@@ -636,6 +637,7 @@ public class RequestImpl  implements Request {
         remoteAddr="127.0.0.1";
         remoteHost="localhost";
         localHost="localhost";
+	if( bBuffer != null ) bBuffer.recycle();
         for( int i=0; i<ACCOUNTS; i++ ) accTable[i]=0;
         for( int i=0; i<ContextManager.MAX_NOTES; i++ ) notes[i]=null;
     }
@@ -652,6 +654,15 @@ public class RequestImpl  implements Request {
         return headers.names();
     }
 
+    public ByteBuffer getInputBuffer() {
+	return bBuffer;
+    }
+
+    public void setInputBuffer(ByteBuffer buf) {
+	bBuffer=buf;
+    }
+
+    
     public ServletInputStream getInputStream() throws IOException {
     	return in;
     }

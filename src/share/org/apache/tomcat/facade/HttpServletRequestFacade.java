@@ -86,6 +86,8 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     private Request request;
 
     HttpSessionFacade sessionFacade;
+    ServletInputStreamFacade isFacade=null;
+    BufferedReader reader;
     
     private boolean usingStream = false;
     private boolean usingReader = false;
@@ -102,6 +104,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	usingReader=false;
 	usingStream=false;
 	if( sessionFacade!=null) sessionFacade.recycle();
+	if( isFacade != null ) isFacade.recycle();
     }
 
     /** Not public - is called only from FacadeManager
@@ -185,6 +188,15 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	    throw new IllegalStateException(msg);
 	}
 	usingStream = true;
+
+	if( isFacade!=null) return isFacade;
+	if( request.getInputBuffer() != null ) {
+	    isFacade=new ServletInputStreamFacade();
+	    isFacade.setRequest( request );
+	    return isFacade;
+	}
+
+	// old mechanism
 	return request.getInputStream();
     }
 
@@ -262,7 +274,30 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	    throw new IllegalStateException(msg);
 	}
 	usingReader = true;
-	return request.getReader();
+
+	// old mechanism
+	if( isFacade==null && request.getInputBuffer() == null )
+	    return request.getReader();
+
+	// New mechanism, based on exposed Buffers
+	if(  isFacade == null ) {
+	    isFacade=new ServletInputStreamFacade();
+	}
+
+	isFacade.setRequest( request );
+	if( reader != null ) return reader; // method already called 
+
+	// from RequestUtil.
+	// XXX  provide recycleable objects
+	String encoding = request.getCharacterEncoding();
+        if (encoding == null) {
+            encoding = Constants.DEFAULT_CHAR_ENCODING;
+        }
+	
+	InputStreamReader r =
+            new InputStreamReader(isFacade, encoding);
+	reader= new BufferedReader(r);
+	return reader;
     }
     
     public String getRemoteAddr() {

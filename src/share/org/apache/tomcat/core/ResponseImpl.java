@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.28 2000/05/24 01:58:14 costin Exp $
- * $Revision: 1.28 $
- * $Date: 2000/05/24 01:58:14 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.29 2000/05/30 06:16:46 costin Exp $
+ * $Revision: 1.29 $
+ * $Date: 2000/05/30 06:16:46 $
  *
  * ====================================================================
  *
@@ -100,11 +100,12 @@ public class ResponseImpl implements Response {
 
     protected BufferedServletOutputStream out;
     protected PrintWriter writer;
+    protected ByteBuffer bBuffer;
 
     protected boolean usingStream = false;
     protected boolean usingWriter = false;
     protected boolean started = false;
-    protected boolean committed = false;
+    protected boolean commited = false;
     
     boolean notIncluded=true;
 
@@ -117,8 +118,13 @@ public class ResponseImpl implements Response {
     }
 
     public HttpServletResponse getFacade() {
-        if( responseFacade==null )
-	    responseFacade = request.getContext().getFacadeManager().createHttpServletResponseFacade(this);
+        if( responseFacade==null ) {
+	    Context ctx= request.getContext();
+	    if( ctx == null ) {
+		ctx=request.getContextManager().getContext("");
+	    }
+	    responseFacade = ctx.getFacadeManager().createHttpServletResponseFacade(this);
+	}
 	return responseFacade;
     }
 
@@ -167,18 +173,13 @@ public class ResponseImpl implements Response {
 	sessionId=null;
 	writer=null;
 	started = false;
-	committed = false;
+	commited = false;
 	notIncluded=true;
 	// adapter
 	body=null;
 	if( out != null ) out.recycle();
-
-
-	out.recycle(); //=new BufferedServletOutputStream();
-	//	out.setResponse(this);
-
+	if( bBuffer != null ) bBuffer.recycle();
 	headers.clear();
-	//headers = new MimeHeaders();
     }
 
     public void finish() throws IOException {
@@ -186,6 +187,11 @@ public class ResponseImpl implements Response {
 	    if (usingWriter && (writer != null)) {
 	        writer.flush();
 		writer.close();
+	    }
+	    if( bBuffer != null) {
+		bBuffer.flush();
+		request.getContextManager().doAfterBody(request, this);
+		return;
 	    }
 	    out.reallyFlush();
 	    request.getContextManager().doAfterBody(request, this);
@@ -225,35 +231,49 @@ public class ResponseImpl implements Response {
 	usingWriter=writer;
 	out.setUsingWriter (true);
     }
-    
+
     public PrintWriter getWriter() throws IOException {
+	return getWriter( out );
+    }
+
+    public PrintWriter getWriter(ServletOutputStream outs) throws IOException {
 	if(writer!=null) return writer;
 	// it already did all the checkings
 	
 	started = true;
 
 	
-	// XXX - EBCDIC issue here?
-	String encoding = getCharacterEncoding();
-	if ((encoding == null) || Constants.DEFAULT_CHAR_ENCODING.equals(encoding) )
-	    writer = new ServletWriterFacade( new OutputStreamWriter(out), this);
-	else
-	    try {
-		writer = new ServletWriterFacade( new OutputStreamWriter(out, encoding), this);
-	    } catch (java.io.UnsupportedEncodingException ex) {
-		// if we don't do that, the runtime exception will propagate
-		// and we'll try to send an error page - but surprise, we
-		// still can't get the Writer to send the error page...
-		writer = new ServletWriterFacade( new OutputStreamWriter(out), this);
-		
-		// Deal with strange encodings - webmaster should see a message
-		// and install encoding classes - n new, unknown language was discovered,
-		// and they read our site!
-		System.out.println("Unsuported encoding: " + encoding );
-	    }
+	writer = new ServletWriterFacade( getConverter(outs), this);
 	return writer;
     }
 
+    public Writer getConverter( ServletOutputStream outs ) throws IOException {
+	String encoding = getCharacterEncoding();
+
+	if (encoding == null) {
+	    // use default platform encoding - is this correct ? 
+	    return  new OutputStreamWriter(outs);
+        }  else {
+	    try {
+		return  new OutputStreamWriter(outs, encoding);
+	    } catch (java.io.UnsupportedEncodingException ex) {
+		// XXX log it
+		System.out.println("Unsuported encoding: " + encoding );
+
+		return new OutputStreamWriter(outs);
+	    }
+	}
+    }
+
+    public ByteBuffer getOutputBuffer() {
+	return bBuffer;
+    }
+
+    public void setOutputBuffer(ByteBuffer buf) {
+	bBuffer=buf;
+	if( buf!= null) buf.setParent( this );
+    }
+    
     /** Either implement ServletOutputStream or return BufferedServletOutputStream(this)
 	and implement doWrite();
 	@deprecated 
@@ -316,17 +336,24 @@ public class ResponseImpl implements Response {
     }
 
     public int getBufferSize() {
+	if( bBuffer != null ) return bBuffer.getBufferSize();
 	return out.getBufferSize();
     }
 
     public void setBufferSize(int size) throws IllegalStateException {
-
 	// Force the PrintWriter to flush the data to the OutputStream.
 	if (usingWriter == true && writer != null ) writer.flush();
 
+	if( bBuffer != null ) {
+	    if( bBuffer.isContentWritten() ) {
+		throw new IllegalStateException ( sm.getString("servletOutputStreamImpl.setbuffer.ise"));
+	    }
+	    bBuffer.setBufferSize(size);
+	    return;
+	}
+	
 	if (out.isContentWritten() == true) {
-	    String msg = sm.getString("servletOutputStreamImpl.setbuffer.ise");
-	    throw new IllegalStateException (msg);
+	    throw new IllegalStateException ( sm.getString("servletOutputStreamImpl.setbuffer.ise"));
 	}
 	out.setBufferSize(size);
     }
@@ -335,9 +362,14 @@ public class ResponseImpl implements Response {
      * Methodname "isCommitted" already taken by Response class.
      */
     public boolean isBufferCommitted() {
-	return out.isCommitted();
+	return commited;
+	//	return out.isCommitted();
     }
 
+    public void setBufferCommitted( boolean v ) {
+	this.commited=v;
+    }
+    
     public void reset() throws IllegalStateException {
 	// Force the PrintWriter to flush its data to the output
         // stream before resetting the output stream
@@ -384,6 +416,14 @@ public class ResponseImpl implements Response {
      *  interceptors to fix headers.
      */
     public void endHeaders() throws IOException {
+	notifyEndHeaders();
+    }
+
+    /** Signal that we're done with the headers, and body will follow.
+     *  Any implementation needs to notify ContextManager, to allow
+     *  interceptors to fix headers.
+     */
+    public void notifyEndHeaders() throws IOException {
 	if(request.getProtocol()==null) // HTTP/0.9 
 	    return;
 

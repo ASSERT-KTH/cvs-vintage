@@ -799,7 +799,8 @@ public class ContextManager {
 	    if( ctx.getDebug() > 0 ) ctx.log( "Calling auth servlet " + errorServlet );
 	}
 	req.setAttribute("javax.servlet.error.status_code",new Integer( code));
-	
+
+	//	System.out.println("XXX " + req + " " + res + " " + ctx );
 	callInternalError( req, res, ctx, errorServlet, errorPath );
     }
 

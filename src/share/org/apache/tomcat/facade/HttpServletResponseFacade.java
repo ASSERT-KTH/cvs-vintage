@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.3 2000/05/26 17:32:10 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/05/26 17:32:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.4 2000/05/30 06:16:47 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/05/30 06:16:47 $
  *
  * ====================================================================
  *
@@ -88,7 +88,9 @@ final class HttpServletResponseFacade  implements HttpServletResponse
     private Response response;
     private boolean usingStream = false;
     private boolean usingWriter = false;
-
+    ServletOutputStreamFacade osFacade=null;
+    PrintWriter writer = null; // XXX will go away when we add the convertor
+    
     /** Package
      */
     HttpServletResponseFacade(Response response) {
@@ -98,6 +100,8 @@ final class HttpServletResponseFacade  implements HttpServletResponse
     void recycle() {
 	usingStream = false;
 	usingWriter= false;
+	writer=null;
+	if( osFacade != null ) osFacade.recycle();
     }
     
     // -------------------- Public methods -------------------- 
@@ -154,6 +158,14 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	}
 	usingStream=true;
 	response.setUsingStream( true );
+
+	if( osFacade!=null) return osFacade;
+	if( response.getOutputBuffer() != null ) {
+	    osFacade=new ServletOutputStreamFacade(response);
+	    return osFacade;
+	}
+
+	// old mechanism
 	return response.getOutputStream();
 	// response.getBufferedOutputStream().getServletOutputStreamFacade();
     }
@@ -165,8 +177,18 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	}
 	usingWriter= true ;
 	response.setUsingWriter( true );
-	return response.getWriter();
-	//	return new ServletWriterFacade( coreW, this);
+
+	// old mechanism
+	if( osFacade==null && response.getOutputBuffer() == null )
+	    return response.getWriter();
+
+	if(  osFacade == null ) {
+	    osFacade=new ServletOutputStreamFacade(response);
+	}
+
+	if( writer != null ) return writer;
+	writer=((ResponseImpl)response).getWriter( osFacade );
+	return writer;
     }
 
     public void sendError(int sc) throws IOException {

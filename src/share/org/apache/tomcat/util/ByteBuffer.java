@@ -80,16 +80,23 @@ import java.io.*;
  * @author Costin Manolache
  */
 public class ByteBuffer {
+    // everything happens inside one thread !!!
 
     BufferEvent bufferEvent=new BufferEvent(this);
 
-    BufferListener listeners[];
+    BufferListener listeners[]=new BufferListener[10];
+    int listenerCount=0;
     
-    int defaultBufferSize = 2048;
+    protected static final int DEFAULT_BUFFER_SIZE = 8*1024;
+    int defaultBufferSize = DEFAULT_BUFFER_SIZE;
+    int bytesWritten = 0;
 
     /** The buffer
      */
     public byte buf[];
+
+    public int start;
+    public int end;
     
     /**
      * The index one greater than the index of the last valid byte in 
@@ -97,41 +104,80 @@ public class ByteBuffer {
      */
     public int count;
     // count==-1 for end of stream
-
+    
+    Object parent; // Who "owns" this buffer
+    
     /**
      * The current position in the buffer. This is the index of the next 
      * character to be read from the buf. 
      */
     public int pos;
 
+    final static int debug=0;
+    
     public ByteBuffer() {
+	buf=new byte[defaultBufferSize];
+    }
+
+    public void recycle() {
+	bytesWritten=0;
+	count=0;
+    }
+
+    public Object getParent() {
+	return parent;
+    }
+
+    public void setParent( Object o ) {
+	parent=o;
+    }
+    
+    public void addBufferListener( BufferListener l ) {
+	listeners[listenerCount]=l;
+	listenerCount++;
     }
     
     public void doWrite( byte buf[], int off, int count ) {
-	
+	bufferEvent.setByteBuffer( buf );
+	bufferEvent.setOffset( off );
+	bufferEvent.setLength( count );
+	for( int i=0; i< listenerCount; i++ )
+	    listeners[i].bufferFull( bufferEvent );
     }
 
     public int doRead( byte buf[], int off, int count ) {
-	return 0;
+	if( debug > 1 ) log("doRead " + off + " " + count);
+	bufferEvent.setByteBuffer( buf );
+	bufferEvent.setOffset( off );
+	bufferEvent.setLength( count );
+	for( int i=0; i< listenerCount; i++ )
+	    listeners[i].bufferEmpty( bufferEvent );
+	return bufferEvent.getLength();
     }
     
     // -------------------- Adding to the buffer -------------------- 
     // Like BufferedOutputStream, without sync
 
     public void write(int b) throws IOException {
+	if( debug>0 ) log( "write(b)");
+	if( debug>1 )System.out.write( b );
 	if (count >= buf.length) {
-	    flushBuffer();
+	    flush();
 	}
 	buf[count++] = (byte)b;
+	bytesWritten++;
     }
 
-    public synchronized void write(byte b[], int off, int len) throws IOException {
+    public void write(byte b[], int off, int len) throws IOException {
+	if( debug>0 ) log( "write(b[])" );
+	if( debug>1 ) System.out.write( b, off, len );
 	int avail=buf.length - count;
 
 	// fit in buffer, great.
 	if( len <= avail ) {
 	    System.arraycopy(b, off, buf, count, len);
 	    count += len;
+	    bytesWritten += len;
 	    return;
 	}
 
@@ -149,21 +195,23 @@ public class ByteBuffer {
 	    */
 	    System.arraycopy(b, off, buf, count, avail);
 	    count += avail;
-	    flushBuffer(); // count will be 0
+	    flush(); // count will be 0
 
 	    System.arraycopy(b, off+avail, buf, count, len - avail);
 	    count+= len - avail;
+	    bytesWritten += len - avail;
 	    return;
 	}
 
 	// len > buf.length + avail
-	flushBuffer();
+	flush();
 	doWrite( b, off, len );
 
 	return;
     }
 
-    private void flushBuffer() {
+    public void flush() {
+	if( debug > 0 ) log("Flush");
 	if (count > 0) {
 	    doWrite(buf, 0, count);
 	    count = 0;
@@ -220,7 +268,7 @@ public class ByteBuffer {
 	
 	// copy the remaining
 	int cnt = (avail < len - n ) ? avail : len - n ;
-	System.arraycopy(buf, pos, b, off+len, cnt);
+	System.arraycopy(buf, pos, b, off+n, cnt);
 	pos += cnt;
 	n+=cnt;
 
@@ -230,8 +278,31 @@ public class ByteBuffer {
     private  void fill() {
 	pos=0;
 	count = doRead( buf, 0, buf.length );
+	if( count==0) count=-1; // end of stream
     }
 
 
+    // --------------------  BufferedOutputStream compatibility
+
+    public boolean isContentWritten() {
+	return bytesWritten!=0;
+    }
+    
+    public void setBufferSize(int size) {
+	if( size > buf.length ) {
+	    buf=new byte[size];
+	}
+    }
+
+    public int getBufferSize() {
+	return buf.length;
+    }
+
+
+    // -------------------- Utils
+
+    void log( String s ) {
+	System.out.println("ByteBuffer: " + s );
+    }
     
 }

@@ -201,6 +201,13 @@ public interface Response {
     public void setSessionId(String sId );
     
     public String getSessionId( );
+
+    // -------------------- Buffers --------------------
+
+    public ByteBuffer getOutputBuffer();
+
+    public void  setOutputBuffer(ByteBuffer buf);
+
     
     // -------------------- Internal methods --------------------
     /** One-to-one with Facade.

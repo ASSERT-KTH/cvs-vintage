@@ -103,6 +103,8 @@ public interface Request  {
 
     public int getServerPort() ;
 
+    public void setServerPort( int i );
+
     public String getRemoteAddr() ;
 
     public void setRemoteAddr(String remote) ;
@@ -258,7 +260,7 @@ public interface Request  {
     public ServletInputStream getInputStream() 	throws IOException;
 
     public  int doRead( byte b[], int off, int len ) throws IOException;
-    
+
     // -------------------- Internal methods --------------------
     /** Support for "pools"
      */
@@ -300,6 +302,11 @@ public interface Request  {
      *  @deprecated - use Container instead
      */
     public void setWrapper(ServletWrapper handler) ;
+    // -------------------- Buffers --------------------
+
+    public ByteBuffer getInputBuffer();
+
+    public void setInputBuffer(ByteBuffer buf);
 
     // -------------------- Notes --------------------
     /** Add a per/request internal attribute.

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.15 2000/05/26 17:32:16 costin Exp $
- * $Revision: 1.15 $
- * $Date: 2000/05/26 17:32:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.16 2000/05/30 06:16:51 costin Exp $
+ * $Revision: 1.16 $
+ * $Date: 2000/05/30 06:16:51 $
  *
  * ====================================================================
  *
@@ -71,24 +71,6 @@ import java.net.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-
-class RecycleBufferedInputStream extends BufferedInputStream {
-    RecycleBufferedInputStream( InputStream is ) {
-	super( is );
-    }
-
-    void setInputStream( InputStream is ) {
-	this.count=0;
-	this.in=is;
-    }
-
-    void recycle() {
-	this.in=null;
-	this.count=0;
-    }
-
-    
-}
 
 public class HttpRequestAdapter extends RequestImpl {
     private Socket socket;
