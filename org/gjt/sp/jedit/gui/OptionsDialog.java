@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.21 2002/12/29 19:01:25 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.22 2002/12/29 21:09:32 spestov Exp $
  */
 public abstract class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -184,9 +184,9 @@ public abstract class OptionsDialog extends EnhancedDialog
 			Math.max(currentSize.width,requestedSize.width),
 			Math.max(currentSize.height,requestedSize.height)
 		);
-		if(newSize.width < 300)
+		if(newSize.width < 400)
 			newSize.width = 400;
-		if(newSize.height < 200)
+		if(newSize.height < 300)
 			newSize.height = 300;
 		setSize(newSize);
 		validate();

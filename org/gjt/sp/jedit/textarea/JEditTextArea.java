@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.159 2002/12/28 05:04:02 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.160 2002/12/29 21:09:33 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -2130,9 +2130,13 @@ forward_scan:		do
 			}
 			else
 			{
-				caretScreenLine = chunkCache.getScreenLineOfOffset(newCaretLine,
+				int newCaretScreenLine = chunkCache.getScreenLineOfOffset(newCaretLine,
 					newCaret - buffer.getLineStartOffset(newCaretLine));
-				invalidateLineRange(caretLine,newCaretLine);
+				if(caretScreenLine == -1)
+					invalidateScreenLineRange(newCaretScreenLine,newCaretScreenLine);
+				else
+					invalidateScreenLineRange(caretScreenLine,newCaretScreenLine);
+				caretScreenLine = newCaretScreenLine;
 			}
 
 			caret = newCaret;
@@ -5841,7 +5845,6 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		} //}}}
 	} //}}}
 
-	public static boolean FOOLISH = false;
 	//{{{ BufferChangeHandler class
 	/**
 	 * Note that in this class we take great care to defer complicated
@@ -6137,10 +6140,21 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			int virtStartLine = physicalToVirtual(startLine);
 			if(virtStartLine < getFirstLine())
 			{
-				int pos = buffer.getLineStartOffset(
-					virtualToPhysical(getFirstLine()
-					+ (physicalToVirtual(startLine + numLines)
-					- virtStartLine)));
+				int pos;
+
+				int virtLine = getFirstLine() + physicalToVirtual(
+					Math.max(0,startLine + numLines))
+					- virtStartLine;
+				if(virtLine < 0)
+					pos = 0;
+				else if(virtLine >= getVirtualLineCount())
+					pos = getBufferLength();
+				else
+				{
+					pos = buffer.getLineStartOffset(
+						virtualToPhysical(virtLine));
+				}
+
 				holdPosition = buffer.createPosition(pos);
 			}
 		} //}}}
