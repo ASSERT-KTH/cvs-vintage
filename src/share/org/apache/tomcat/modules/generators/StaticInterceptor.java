@@ -167,6 +167,15 @@ public class StaticInterceptor extends BaseInterceptor {
 	    return 0;
 	}
 
+	// consistent with Apache
+	if( ! requestURI.endsWith("/") ) {
+	    String redirectURI= requestURI + "/";
+	    req.setAttribute("javax.servlet.error.message",
+			     redirectURI);
+	    if( debug > 0) log( "Redirect " + redirectURI );
+	    return 301;
+	}
+	
 	// Send redirect to the welcome file.
 	// This is consistent with other web servers and avoids
 	// gray areas in the spec - if the welcome file is a jsp,
@@ -179,7 +188,7 @@ public class StaticInterceptor extends BaseInterceptor {
 	req.setAttribute("javax.servlet.error.message",
 			 redirectURI);
 	if( debug > 0) log( "Redirect " + redirectURI );
-	return 302;
+	return 301;
     }
 
     private static String concatPath( String s1, String s2 ) {

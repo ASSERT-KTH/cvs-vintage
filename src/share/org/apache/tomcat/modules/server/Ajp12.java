@@ -142,7 +142,8 @@ class Ajp12 {
 		    
 		    //Server hostname
 		    req.serverName().setString(readString(ajpin, null) );
-
+		    //System.out.println("XXX hostname: " + req.serverName());
+		    
 		    //Apache document root
 		    dummy = readString(ajpin, null);               
 		    req.pathInfo().setString( readString(ajpin, null));               		    //Apache parsed path-translated XXX Bug in mod_jserv !!!!!
@@ -155,7 +156,9 @@ class Ajp12 {
                     else req.setRemoteUser( readString(ajpin, null));
 		    req.setAuthType(readString(ajpin, null));
 		    //remote port
-		    dummy = readString(ajpin, null);                 
+		    dummy = readString(ajpin, null);
+		    //		    System.out.println("XXX rport " + dummy );
+		    
 		    req.method().setString( readString(ajpin, null));
 		    req.requestURI().setString( readString(ajpin, ""));
 
@@ -172,13 +175,20 @@ class Ajp12 {
 
 		    int serverPort=80;
 		    try {
-			serverPort= Integer.parseInt(readString(ajpin,"80"));
+			String p=readString(ajpin, null);
+			//System.out.println("XXX p " + p);
+			if(p==null ) p="80";
+			serverPort= Integer.parseInt(p);
 		    } catch (Exception any) {
+			any.printStackTrace();
 		    }
 		    req.setServerPort( serverPort );
+		    // System.out.println("XXX port: " + req.getServerPort());
 
 		    //server protocol
-		    dummy = readString(ajpin, "");  
+		    String proto=readString(ajpin,null);
+		    if( proto==null ) proto="HTTP/1.0";
+		    req.protocol().setString (proto);  
 		    //server signature
 		    dummy = readString(ajpin, "");
 		    //server software
@@ -223,6 +233,9 @@ class Ajp12 {
 		case 3: // Header
 		    token1 = readString(ajpin, null);
 		    token2 = readString(ajpin, "");
+// 		    if( "Host".equalsIgnoreCase( token1 )) {
+// 			System.out.println("XXX Host: " + token2);
+// 		    }
 		    req.getMimeHeaders().addValue(token1).setString(token2);
 		    break;
 

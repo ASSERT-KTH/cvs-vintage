@@ -87,6 +87,7 @@ public class GTest  {
     
     HttpClient httpClient=new HttpClient();
     DefaultMatcher matcher=new DefaultMatcher();
+    Body comment=null;
     
     String description="No description";
 
@@ -175,6 +176,11 @@ public class GTest  {
     public void addDefaultMatcher( DefaultMatcher m ) {
 	matcher=m;
     }
+
+    public Body createComment() {
+	comment=new Body();
+	return comment;
+    }
     // -------------------- Getters --------------------
 
     public HttpClient getHttpClient() {
@@ -183,6 +189,10 @@ public class GTest  {
     
     public DefaultMatcher getMatcher() {
 	return matcher;
+    }
+
+    public String getComment() {
+	return comment.getText();
     }
     
     // -------------------- Local properties --------------------

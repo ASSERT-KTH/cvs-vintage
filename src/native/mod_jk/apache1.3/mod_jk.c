@@ -351,8 +351,30 @@ static int init_ws_service(apache_private_data_t *private_data,
     s->remote_host  = NULL_FOR_EMPTY(s->remote_host);
 
     s->remote_addr  = NULL_FOR_EMPTY(r->connection->remote_ip);
-    s->server_name  = (char *)(r->hostname ? r->hostname : r->server->server_hostname);
-    s->server_port  = r->server->port;
+    /* Wrong:    s->server_name  = (char *)ap_get_server_name( r ); */
+    s->server_name= (char *)(r->hostname ? r->hostname : 
+			     r->server->server_hostname);
+    
+    
+    s->server_port= htons( r->connection->local_addr.sin_port );
+    /* Wrong: s->server_port  = r->server->port; */
+
+    
+    /*    Winners:  htons( r->connection->local_addr.sin_port )
+	            	  (r->hostname ? r->hostname : 
+			                 r->server->server_hostname),
+    */
+    /* printf( "Port %u %u %u %s %s %s %d %d \n", 
+	    ap_get_server_port( r ), 
+	    htons( r->connection->local_addr.sin_port ),
+	    ntohs( r->connection->local_addr.sin_port ),
+	    ap_get_server_name( r ),
+	    (r->hostname ? r->hostname : r->server->server_hostname),
+	    r->hostname,
+	    r->connection->base_server->port,
+	    r->server->port
+	    );
+    */
     s->server_software = (char *)ap_get_server_version();
 
     s->method       = (char *)r->method;

@@ -26,9 +26,12 @@ Target:
 <br>
 
 Debug: <input type="checkbox" name="debug" value="10"><br>
-Port: <input type="input" name="port" value="8080"><br>
-Host: <input type="input" name="host" value="127.0.0.1"><br>
-Expected protocol: <input type="input" name="server.proto" value="HTTP/1.0">
+Port: <input type="input" name="port" value="<%= request.getServerPort() %>">
+<br>
+Host: <input type="input" name="host" value="<%= request.getServerName() %>">
+<br>
+Expected protocol: <input type="input" name="server.proto" 
+			  value="<%= request.getProtocol() %>">
  ( use when testing Apache - tomcat3.x returns HTTP/1.0 ) <br>
 <input type="submit">
 </form>
@@ -76,6 +79,9 @@ TEST: <%= failures.getMatcher().getTestDescription() %>
 <pre>
   <%= failures.getHttpClient().getFullRequest() %>
 </pre>
+<b>Comments: </b>
+  <%= failures.getComment() %>
+<br>
 <b>Message: </b>
 <pre>
   <%= failures.getMatcher().getMessage() %>

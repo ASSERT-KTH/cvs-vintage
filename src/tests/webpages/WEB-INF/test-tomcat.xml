@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.10 $" />  
+     <property name="revision" value="$Revision: 1.11 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -36,6 +36,8 @@
 	      classname="org.apache.tomcat.util.test.Body" />
      <taskdef name="defaultMatcher" 
 	      classname="org.apache.tomcat.util.test.DefaultMatcher" />
+     <taskdef name="comment" 
+	      classname="org.apache.tomcat.util.test.Body" />
 
      <taskdef name="gtestDefaults" 
 	      classname="org.apache.tomcat.util.test.TestDefaults" />
@@ -78,11 +80,10 @@
 
   <target name="file-tomcat" depends="init,file">
     
-    <!-- return code is 301 for Apache, 302 for tomcat -->
-    <gtest  description="Welcome File Test1 - directory access"
+    <gtest  description="Get a directory - expect redirect"
            request="GET /test/welcome HTTP/1.0"
            expectHeaders="Location:/welcome/" 
-           returnCode="${http.protocol} 30" /> 
+           returnCode="${http.protocol} 301" /> 
 
     <!-- Difference in behavior between Apache and tomcat 
          XXX IMHO the tomcat behavior is OK, but it would be a good idea
@@ -96,16 +97,11 @@
        bug, but we should fix it anyway      -->
     <gtest  description="Welcome File Test3"
            request="GET /test/welcome/ HTTP/1.0"
-           returnCode="${http.protocol} 302" />
+           returnCode="${http.protocol} 301" />
 <!--           goldenFile="${gdir}/movedwelcome.txt" />-->
    </target>
   
    <target name="file-apache" depends="init,file">
-    <gtest  description="Welcome File Test1"
-           request="GET /test/welcome HTTP/1.0"
-           expectHeaders="Location:/welcome/" 
-           returnCode="${http.protocol} 301" />
-
     <gtest  description="Welcome File Test2"
            request="GET /test/binaries HTTP/1.0"
            returnCode="${http.protocol} 301" />
@@ -658,10 +654,15 @@
              responseMatch="Servlet: Servlet1"
             />
 
-      <gtest  description="/foo/bar/index.bop : 1.0 : 200"
-             request="GET /test/foo/bar/index.bop HTTP/1.0"
-             responseMatch="Servlet: Servlet1"
-            />
+      <gtest request="GET /test/foo/bar/index.bop HTTP/1.0"
+             responseMatch="Servlet: Servlet1" >
+      <comment>
+Test if web.xml mappings are respected - /foo/bar is mapped to servlet1.
+Apache will probably fail ( special configuration is required to 
+do all mapping - this is a known problem, to be resolved by integrating
+mod_webapp into mod_jk )
+      </comment>
+      </gtest>
 
       <gtest  description="/baz : 1.0 : 200"
              request="GET /test/baz HTTP/1.0"

@@ -63,6 +63,7 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
+//XXX rename it to Text
 
 /**
  *  Part of GTest. Simple representation of a request/response body.
