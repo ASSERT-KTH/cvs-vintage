@@ -22,11 +22,12 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JeremiePRODelegate.java,v 1.15 2005/03/04 10:01:36 benoitf Exp $
+ * $Id: JeremiePRODelegate.java,v 1.16 2005/03/10 10:09:18 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
@@ -165,6 +166,13 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
         try {
             Method exportO = unicastClass.getMethod("toStub", new Class[] {Remote.class});
             return (Remote) exportO.invoke(unicastClass, (new Object[] {obj}));
+        } catch (InvocationTargetException e) {
+            Throwable t = e.getTargetException();
+            if (t instanceof NoSuchObjectException) {
+                throw (NoSuchObjectException) t;
+            } else {
+                throw new NoSuchObjectException(t.toString());
+            }
         } catch (Exception e) {
             throw new NoSuchObjectException(e.toString());
         }
