@@ -95,7 +95,7 @@ public abstract class CachedFolder extends LocalFolder {
 		// remove all unnecessary headerfields which doesn't
 		// need to be cached
 		// -> saves much memory
-		ColumbaHeader strippedHeader = ColumbaHeader.stripHeaders(h);
+		ColumbaHeader strippedHeader = CachedHeaderfieldOwner.stripHeaders(h);
 
 		// free memory
 		h = null;

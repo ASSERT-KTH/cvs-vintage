@@ -20,10 +20,6 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import org.columba.core.config.TableItem;
-import org.columba.core.config.HeaderItem;
-import org.columba.mail.config.MailConfig;
-
 /**
  * represents a Rfc822-compliant header
  * every headeritem is saved in a hashtable-structure
@@ -43,21 +39,6 @@ import org.columba.mail.config.MailConfig;
  */
 
 public class ColumbaHeader extends Rfc822Header implements HeaderInterface {
-
-	protected static String[] INTERNAL_HEADERFIELDS =
-		{
-			"columba.flags.seen",
-			"columba.flags.recent",
-			"columba.flags.answered",
-			"columba.flags.flagged",
-			"columba.flags.expunged",
-			"columba.flags.draft",
-			"columba.priority",
-			"columba.from",
-			"columba.host",
-			"columba.date",
-			"columba.attachment",
-			"columba.size" };
 
 	public ColumbaHeader() {
 		super();
@@ -108,42 +89,6 @@ public class ColumbaHeader extends Rfc822Header implements HeaderInterface {
 			}
 
 		}
-	}
-
-	/**
-	 * 
-	 * create new header which only contains headerfields
-	 * needed by Columba (meaning they also get cached)
-	 * 
-	 * @param h
-	 * @return
-	 */
-	public static ColumbaHeader stripHeaders(ColumbaHeader h) {
-		ColumbaHeader strippedHeader = new ColumbaHeader();
-
-		// copy all user-defined headerfields 
-
-		TableItem v = MailConfig.getMainFrameOptionsConfig().getTableItem();
-		String column;
-		for (int j = 0; j < v.count(); j++) {
-			HeaderItem headerItem = v.getHeaderItem(j);
-			column = (String) headerItem.get("name");
-
-			Object item = h.get(column);
-
-			strippedHeader.set(column, item);
-
-		}
-
-		// copy all internally used headerfields
-		
-		for ( int i=0; i<INTERNAL_HEADERFIELDS.length; i++)
-		{
-			strippedHeader.set(INTERNAL_HEADERFIELDS[i], h.get(INTERNAL_HEADERFIELDS[i]));
-		}
-	
-		
-		return strippedHeader;
 	}
 
 }

@@ -15,20 +15,21 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.Enumeration;
 
-import org.columba.core.config.HeaderItem;
-import org.columba.core.config.TableItem;
-import org.columba.core.util.BooleanCompressor;
-import org.columba.mail.config.MailConfig;
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.FolderInconsistentException;
+import org.columba.mail.folder.LocalFolder;
+import org.columba.mail.folder.MessageFolderInfo;
+import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.HeaderList;
+import org.columba.mail.parser.Rfc822Parser;
 
 /**
  * @author freddy
@@ -40,173 +41,248 @@ import org.columba.mail.message.HeaderInterface;
  */
 public class LocalHeaderCache extends AbstractHeaderCache {
 
-	private static final int NULL = 0;
-	private static final int STRING = 1;
-	private static final int DATE = 2;
-	private static final int BOOLEAN = 3;
-	private static final int INTEGER = 4;
-
-	private String[] columnNames;
-
-	private static final String[] standardCols =
-		{ "Status", "Attachment", "Flagged", "Priority", "Flagged" };
-
-	private static final List standardList = Arrays.asList(standardCols);
-
 	public LocalHeaderCache(CachedFolder folder) {
 		super(folder);
 
-		columnNames = null;
 	}
 
-	protected void loadHeader(ObjectInputStream p, HeaderInterface h)
+	public HeaderList getHeaderList(WorkerStatusController worker)
 		throws Exception {
-		try {
-			Integer uid = new Integer(p.readInt());
-			h.set("columba.uid", uid);
+		boolean needToRelease = false;
+		// if there exists a ".header" cache-file
+		//  try to load the cache	
+		if (!isHeaderCacheLoaded()) {
 
-			int compressedFlags = p.readInt();
-			h.set(
-				"columba.flags.seen",
-				BooleanCompressor.decompress(compressedFlags, 0));
-			h.set(
-				"columba.flags.answered",
-				BooleanCompressor.decompress(compressedFlags, 1));
-			h.set(
-				"columba.flags.flagged",
-				BooleanCompressor.decompress(compressedFlags, 2));
-			h.set(
-				"columba.flags.expunged",
-				BooleanCompressor.decompress(compressedFlags, 3));
-			h.set(
-				"columba.flags.draft",
-				BooleanCompressor.decompress(compressedFlags, 4));
-			h.set(
-				"columba.flags.recent",
-				BooleanCompressor.decompress(compressedFlags, 5));
-			h.set(
-				"columba.attachment",
-				BooleanCompressor.decompress(compressedFlags, 6));
-
-			h.set("columba.date", new Date(p.readLong()));
-
-			h.set("columba.size", new Integer(p.readInt()));
-
-			h.set("columba.from", p.readUTF());
-
-			h.set("columba.priority", new Integer(p.readInt()));
-
-			h.set("columba.host", p.readUTF());
-
-			loadColumnNames();
-
-			int classCode;
-			for (int j = 0; j < columnNames.length; j++) {
-				classCode = p.readInt();
-
-				switch (classCode) {
-					case NULL :
-						{
-							break;
-						}
-					case STRING :
-						{
-							h.set(columnNames[j], p.readUTF());
-							break;
-						}
-
-					case INTEGER :
-						{
-							h.set(columnNames[j], new Integer(p.readInt()));
-							break;
-						}
-
-					case BOOLEAN :
-						{
-							h.set(columnNames[j], new Boolean(p.readBoolean()));
-							break;
-						}
-
-					case DATE :
-						{
-							h.set(columnNames[j], new Date(p.readLong()));
-							break;
-						}
+			if (headerFile.exists()) {
+				try {
+					load(worker);
+				} catch (Exception e) {
+					sync(worker);
 				}
+			} else {
+				sync(worker);
 			}
-		} catch (IOException e) {
+			setHeaderCacheLoaded(true);
+		}
+
+		return headerList;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.headercache.AbstractHeaderCache#needToSync(int)
+	 */
+	public boolean needToSync(int capacity) {
+		int mcount =
+			((LocalFolder) folder).getDataStorageInstance().getMessageCount();
+		if (capacity != mcount)
+			return true;
+
+		return false;
+	}
+
+	/**
+		 * @param worker
+		 * @throws Exception
+		 */
+	public void load(WorkerStatusController worker) throws Exception {
+
+		if (MainInterface.DEBUG) {
+			ColumbaLogger.log.info("loading header-cache=" + headerFile);
+		}
+
+		ObjectInputStream ois = openInputStream();
+
+		int capacity = ois.readInt();
+		if (MainInterface.DEBUG) {
+			ColumbaLogger.log.info("capacity=" + capacity);
+		}
+		boolean needToRelease = false;
+
+		if (needToSync(capacity)) {
+			if (MainInterface.DEBUG) {
+				ColumbaLogger.log.info(
+					"need to recreateHeaderList() because capacity is not matching");
+			}
+
 			throw new FolderInconsistentException();
 		}
 
+		headerList = new HeaderList(capacity);
+
+		//System.out.println("Number of Messages : " + capacity);
+
+		if (worker != null)
+			worker.setDisplayText("Loading headers from cache...");
+
+		if (worker != null)
+			worker.setProgressBarMaximum(capacity);
+
+		worker.setProgressBarValue(0);
+
+		int nextUid = -1;
+
+		// exists/unread/recent should be set to 0
+		folder.setMessageFolderInfo(new MessageFolderInfo());
+
+		for (int i = 0; i < capacity; i++) {
+
+			if ((worker != null) && (i % 100 == 0))
+				worker.setProgressBarValue(i);
+
+			//ColumbaHeader h = message.getHeader();
+			HeaderInterface h = createHeaderInstance();
+
+			/*
+			// read current number of message
+			ois.readInt();
+			*/
+			
+			Integer uid = new Integer(ois.readInt());
+			h.set("columba.uid", uid);
+
+			loadHeader(ois, h);
+
+			//System.out.println("message=" + h.get("subject"));
+
+			headerList.add(h, (Integer) h.get("columba.uid"));
+
+			if (h.get("columba.flags.recent").equals(Boolean.TRUE))
+				folder.getMessageFolderInfo().incRecent();
+			if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+				folder.getMessageFolderInfo().incUnseen();
+			folder.getMessageFolderInfo().incExists();
+
+			int aktUid = ((Integer) h.get("columba.uid")).intValue();
+			if (nextUid < aktUid)
+				nextUid = aktUid;
+
+		}
+
+		nextUid++;
+		if (MainInterface.DEBUG) {
+			ColumbaLogger.log.debug("next UID for new messages =" + nextUid);
+		}
+		((LocalFolder) folder).setNextMessageUid(nextUid);
+		//worker.setDisplayText(null);
+		
+		worker.setProgressBarValue(capacity);
+		
+		closeInputStream();
+		
+	
 	}
 
-	protected void loadColumnNames() {
-		if (columnNames == null) {
+	/**
+	 * @param worker
+	 * @throws Exception
+	 */
+	public void save(WorkerStatusController worker) throws Exception {
 
-			TableItem v = MailConfig.getMainFrameOptionsConfig().getTableItem();
-			String column;
+		// we didn't load any header to save
+		if (!isHeaderCacheLoaded())
+			return;
 
-			ArrayList cols = new ArrayList(v.count());
+		if (MainInterface.DEBUG) {
+			ColumbaLogger.log.info("saveing header-cache=" + headerFile);
+		}
+		// this has to called only if the uid becomes higher than Integer allows
+		//cleanUpIndex();
 
-			for (int j = 0; j < v.count(); j++) {
-				HeaderItem headerItem = v.getHeaderItem(j);
-				String name = (String) headerItem.get("name");
-				if (!standardList.contains(name)) {
-					cols.add(name);
+		//System.out.println("saving headerfile: "+ headerFile.toString() );
+
+		ObjectOutputStream p = openOutputStream();
+
+		//int count = getMessageFileCount();
+		int count = headerList.count();
+		if (MainInterface.DEBUG) {
+			ColumbaLogger.log.info("capacity=" + count);
+		}
+		p.writeInt(count);
+
+		ColumbaHeader h;
+		//Message message;
+
+		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
+			Object uid = e.nextElement();
+
+			h = (ColumbaHeader) headerList.getHeader(uid);
+
+			p.writeInt(((Integer) h.get("columba.uid")).intValue());
+
+			saveHeader(p, h);
+		}
+		
+		closeOutputStream();
+	}
+
+	/**
+		 * @param worker
+		 * @throws Exception
+		 */
+	public void sync(WorkerStatusController worker) throws Exception {
+		if (worker != null) {
+			worker.setDisplayText("Syncing headercache...");
+		}
+		DataStorageInterface ds =
+			((LocalFolder) folder).getDataStorageInstance();
+
+		Object[] uids = ds.getMessageUids();
+
+		headerList = new HeaderList(uids.length);
+
+		// parse all message files to recreate the header cache
+
+		Rfc822Parser parser = new Rfc822Parser();
+		ColumbaHeader header;
+		MessageFolderInfo messageFolderInfo = folder.getMessageFolderInfo();
+
+		folder.setChanged(true);
+
+		if (worker != null)
+			worker.setProgressBarMaximum(uids.length);
+
+		for (int i = 0; i < uids.length; i++) {
+			try {
+				String source = ds.loadMessage(uids[i]);
+				if (source.length() == 0) {
+					ds.removeMessage(uids[i]);
+					continue;
 				}
-			}
 
-			columnNames = new String[cols.size()];
-			cols.toArray(columnNames);
-		}
-	}
+				header = parser.parseHeader(source);
 
-	protected void saveHeader(ObjectOutputStream p, HeaderInterface h)
-		throws Exception {
-		p.writeInt(((Integer) h.get("columba.uid")).intValue());
+				ColumbaHeader h = CachedHeaderfieldOwner.stripHeaders(header);
 
-		p.writeInt(
-			BooleanCompressor.compress(
-				new Boolean[] {
-					(Boolean) h.get("columba.flags.seen"),
-					(Boolean) h.get("columba.flags.answered"),
-					(Boolean) h.get("columba.flags.flagged"),
-					(Boolean) h.get("columba.flags.expunged"),
-					(Boolean) h.get("columba.flags.draft"),
-					(Boolean) h.get("columba.flags.recent"),
-					(Boolean) h.get("columba.attachment")}));
+				parser.addColumbaHeaderFields(h);
 
-		p.writeLong(((Date) h.get("columba.date")).getTime());
+				int size = source.length() >> 10; // Size in KB
+				h.set("columba.size", new Integer(size));
 
-		p.writeInt(((Integer) h.get("columba.size")).intValue());
+				h.set("columba.uid", uids[i]);
 
-		p.writeUTF((String) h.get("columba.from"));
+				if (h.get("columba.flags.recent").equals(Boolean.TRUE))
+					messageFolderInfo.incRecent();
+				if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+					messageFolderInfo.incUnseen();
 
-		p.writeInt(((Integer) h.get("columba.priority")).intValue());
+				messageFolderInfo.incExists();
 
-		p.writeUTF((String) h.get("columba.host"));
+				headerList.add(h, uids[i]);
 
-		loadColumnNames();
+				header = null;
+				source = null;
 
-		Object o;
-		for (int j = 0; j < columnNames.length; j++) {
-			o = h.get(columnNames[j]);
-			if (o == null) {
-				p.writeInt(NULL);
-			} else if (o instanceof String) {
-				p.writeInt(STRING);
-				p.writeUTF((String) o);
-			} else if (o instanceof Integer) {
-				p.writeInt(INTEGER);
-				p.writeInt(((Integer) o).intValue());
-			} else if (o instanceof Boolean) {
-				p.writeInt(BOOLEAN);
-				p.writeBoolean(((Boolean) o).booleanValue());
-			} else if (o instanceof Date) {
-				p.writeInt(DATE);
-				p.writeLong(((Date) o).getTime());
+				if (worker != null && i % 100 == 0) {
+					worker.setProgressBarValue(i);
+				}
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				ColumbaLogger.log.error(
+					"Error syncing HeaderCache :" + ex.getLocalizedMessage());
 			}
 
 		}
 	}
+
 }

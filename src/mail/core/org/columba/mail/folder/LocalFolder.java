@@ -40,7 +40,7 @@ import org.columba.mail.parser.Rfc822Parser;
  * search-engine "plugged in" to make it work.
  * 
  * This class is abstract becaused we use 
- * <class>CachedFolder</class> instead which
+ * <class>CachedLocalFolder</class> instead which
  * contains a header-cache facility which 
  * Columba needs to be able to quickly show
  * a message summary, etc.

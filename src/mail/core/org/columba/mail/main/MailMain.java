@@ -17,6 +17,7 @@ import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.QuotedPrintableDecoder;
 import org.columba.mail.coder.QuotedPrintableEncoder;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.folder.headercache.CachedHeaderfieldOwner;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.plugin.FilterActionPluginHandler;
 import org.columba.mail.plugin.FilterPluginHandler;
@@ -51,7 +52,6 @@ public class MailMain extends DefaultMain {
 	public void initConfiguration() {
 		new MailConfig();
 
-		
 
 		new CoderRouter();
 		new QuotedPrintableDecoder();
@@ -117,6 +117,8 @@ public class MailMain extends DefaultMain {
 		
 		MainInterface.backgroundTaskManager.register(new SaveAllFoldersPlugin());
 		MainInterface.backgroundTaskManager.register(new SavePOP3CachePlugin());
+		
+		new CachedHeaderfieldOwner();
 	}
 
 }

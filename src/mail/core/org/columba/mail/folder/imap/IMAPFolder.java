@@ -18,11 +18,15 @@
 //
 package org.columba.mail.folder.imap;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.util.ListTools;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.ImapItem;
@@ -42,8 +46,6 @@ import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.Message;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
-import java.util.List;
-import java.util.Iterator;
 
 public class IMAPFolder extends RemoteFolder {
 
@@ -230,6 +232,10 @@ public class IMAPFolder extends RemoteFolder {
 		throws Exception {
 
 		headerList = cache.getHeaderList(worker);
+		// if this is the first time we download
+		// a headerlist -> we need to save headercache
+		if (headerList.count() == 0)
+			changed = true;
 
 		worker.setDisplayText("Fetching UID list...");
 
@@ -301,6 +307,7 @@ public class IMAPFolder extends RemoteFolder {
 
 			info.incExists();
 		}
+
 	}
 
 	/**
@@ -325,13 +332,30 @@ public class IMAPFolder extends RemoteFolder {
 	 */
 	public List synchronize(HeaderList headerList, List newList)
 		throws Exception {
+
+		LinkedList headerUids = new LinkedList();
+		Enumeration keys = headerList.keys();
+		while (keys.hasMoreElements()) {
+			headerUids.add(keys.nextElement());
+		}
+		LinkedList newUids = new LinkedList(newList);
+
+		ListTools.substract(newUids, headerUids);
+
+		ListTools.substract(headerUids, new ArrayList(newList));
+		Iterator it = headerUids.iterator();
+		while (it.hasNext()) {
+			headerList.remove(it.next());
+		}
+		return newUids;
+		/*
 		List result = new Vector();
-
+		
 		// delete old headers
-
+		
 		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
 			String str = (String) e.nextElement();
-
+		
 			if (existsRemotely(str, 0, newList)) {
 				// mail exists on server
 				//  -> keep it
@@ -343,16 +367,17 @@ public class IMAPFolder extends RemoteFolder {
 		}
 		for (Iterator it = newList.iterator(); it.hasNext();) {
 			String str = (String) it.next();
-		// for (int i = 0; i < newList.size(); i++) {
+			// for (int i = 0; i < newList.size(); i++) {
 			// String str = (String) newList.get(i);
-
+		
 			if (existsLocally(str, headerList) == false) {
 				// new message on server
 				result.add(str);
 			}
 		}
-
+		
 		return result;
+		*/
 	}
 
 	/**
@@ -363,14 +388,11 @@ public class IMAPFolder extends RemoteFolder {
 	 * @return boolean
 	 * @throws Exception
 	 */
-	protected boolean existsRemotely(
-		String uid,
-		int startIndex,
-		List uidList)
+	protected boolean existsRemotely(String uid, int startIndex, List uidList)
 		throws Exception {
 		for (Iterator it = uidList.iterator(); it.hasNext();) {
 			String serverUID = (String) it.next();
-		// for (int i = startIndex; i < uidList.size(); i++) {
+			// for (int i = startIndex; i < uidList.size(); i++) {
 			// String serverUID = (String) uidList.get(i);
 
 			//System.out.println("server message uid: "+ serverUID );
@@ -448,6 +470,9 @@ public class IMAPFolder extends RemoteFolder {
 			worker,
 			getImapPath());
 
+		//			mailbox was modified
+		changed = true;
+
 	}
 
 	/**
@@ -467,6 +492,9 @@ public class IMAPFolder extends RemoteFolder {
 		throws Exception {
 
 		getStore().append(getImapPath(), source, worker);
+
+		// mailbox was modified
+		changed = true;
 
 		return null;
 	}
@@ -557,6 +585,9 @@ public class IMAPFolder extends RemoteFolder {
 			markMessage(uids[i], variant, worker);
 		}
 
+		//		mailbox was modified
+		changed = true;
+
 	}
 
 	/**
@@ -612,6 +643,9 @@ public class IMAPFolder extends RemoteFolder {
 				}
 			}
 		}
+
+		//		mailbox was modified
+		changed = true;
 	}
 
 	/**
