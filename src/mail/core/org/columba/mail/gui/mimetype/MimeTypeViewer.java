@@ -13,28 +13,24 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.mimetype;
 
 import java.io.File;
 import java.net.URL;
 
+import org.columba.core.util.OSInfo;
+
 import org.columba.mail.message.MimeHeader;
 
 public class MimeTypeViewer
 {
-    private String osName = System.getProperty("os.name");
-
     public MimeTypeViewer(){}
-
-    protected boolean isWindowsPlatform()
-    {
-	return osName.startsWith("Windows");
-    }
 
     public Process openWith( MimeHeader header, File tempFile )
     {
 	DefaultViewer viewer;
-        if ( isWindowsPlatform() ) {
+        if ( OSInfo.isWin32Platform() ) {
             viewer = new WindowsViewer();
         }else{
             viewer = new ColumbaViewer();
@@ -45,7 +41,7 @@ public class MimeTypeViewer
     public Process open( MimeHeader header, File tempFile )
     {
         DefaultViewer viewer;
-	if ( isWindowsPlatform() ) {
+	if ( isWin32Platform() ) {
             viewer = new WindowsViewer();
         }else{
             viewer = new ColumbaViewer();
@@ -56,7 +52,7 @@ public class MimeTypeViewer
     public Process openURL( URL url )
     {
         DefaultViewer viewer;
-	if ( isWindowsPlatform() ) {
+	if ( isWin32Platform() ) {
             viewer = new WindowsViewer();
         }else{
             viewer = new ColumbaViewer();
@@ -67,7 +63,7 @@ public class MimeTypeViewer
     public Process openWithURL( URL url )
     {
         DefaultViewer viewer;
-	if ( isWindowsPlatform() ) {
+	if ( isWin32Platform() ) {
             viewer = new WindowsViewer();
         }else{
             viewer = new ColumbaViewer();
