@@ -75,7 +75,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.41 2005/01/10 20:29:23 dabbous Exp $
+ * @version $Id: ModifyModule.java,v 1.42 2005/01/10 21:29:45 dabbous Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -200,7 +200,7 @@ public class ModifyModule extends RequireLoginFirstAction
                 }
 
                 ParameterParser pp = data.getParameters();
-                String name = GlobalParameter.ISSUE_ALLOW_EMPTY_REASON;
+                String name = GlobalParameter.ISSUE_REASON_REQUIRED;
                 boolean allowEmptyReason = pp.getBoolean(name,false);
                 GlobalParameterManager.setBoolean(name, me,allowEmptyReason);
          

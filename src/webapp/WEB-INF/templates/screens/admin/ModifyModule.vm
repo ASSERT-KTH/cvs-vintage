@@ -149,8 +149,8 @@
  <tr>
   <th nowrap="nowrap">Reason-field required</th>
   <td> 
-   #set ($name = $scarabG.ParameterName.ISSUE_ALLOW_EMPTY_REASON)
-   #set ($selected = $scarabG.isIssueAllowEmptyReason($editModule))
+   #set ($name = $scarabG.ParameterName.ISSUE_REASON_REQUIRED)
+   #set ($selected = $scarabG.isIssueReasonRequired($editModule))
    <input type="checkbox" name="$name" #checked($selected)/> 
      Issue updates need valid Reason field
   </td> 

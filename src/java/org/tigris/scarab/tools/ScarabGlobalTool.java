@@ -102,7 +102,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.68 2005/01/10 20:29:23 dabbous Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.69 2005/01/10 21:29:46 dabbous Exp $
  */
 public class ScarabGlobalTool
     implements ApplicationTool
@@ -723,14 +723,14 @@ public class ScarabGlobalTool
      *
      * @return the configured site logo
      */
-    public boolean isIssueAllowEmptyReason(Module module)
+    public boolean isIssueReasonRequired(Module module)
     {
         boolean result=false;
         try
         {
             Module me = module;
             String gp = GlobalParameterManager.getString(
-                                     GlobalParameter.ISSUE_ALLOW_EMPTY_REASON,
+                                     GlobalParameter.ISSUE_REASON_REQUIRED,
                                      me); 
             try
             {
@@ -743,14 +743,14 @@ public class ScarabGlobalTool
                     }
 
                     gp = GlobalParameterManager.getString(
-                         GlobalParameter.ISSUE_ALLOW_EMPTY_REASON,
-                         module);
+                         GlobalParameter.ISSUE_REASON_REQUIRED,
+                         parent);
                     me = parent;
                 }
             }
             catch (Exception e)
             {
-                // swallow exception
+                LOG.warn("Internal error while retrieving data from GLOBAL_PRAMETER_TABLE: ["+e.getMessage()+"]");
             }
 
             

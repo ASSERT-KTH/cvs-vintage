@@ -52,7 +52,7 @@ import org.apache.torque.om.Persistent;
  * This class represents a Global Parameter.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: GlobalParameter.java,v 1.7 2005/01/10 20:29:23 dabbous Exp $
+ * @version $Id: GlobalParameter.java,v 1.8 2005/01/10 21:29:46 dabbous Exp $
  */
 public  class GlobalParameter 
     extends org.tigris.scarab.om.BaseGlobalParameter
@@ -64,7 +64,7 @@ public  class GlobalParameter
         "email-include-issue-details"; 
     public static final String EMAIL_ALLOW_MODULE_OVERRIDE = 
         "email-allow-module-overrides";
-    public static final String ISSUE_ALLOW_EMPTY_REASON = 
-        "issue-allow-empty-reason";
+    public static final String ISSUE_REASON_REQUIRED = 
+        "issue-reason-required";
     
 }
