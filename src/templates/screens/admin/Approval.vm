@@ -5,13 +5,13 @@
 <form action="$link.setPage("admin,Approval.vm")" method="post">
 <input type="hidden" name="action" value="admin.Approval" />
 
-#set ($module = $scarabR.CurrentModule)
-#if ($module.UnapprovedQueries.isEmpty() && $module.UnapprovedTemplates.isEmpty() && $securityAdmin.getPendingGroupUserRoles($module).isEmpty())
+#if (!$scarabR.hasItemsToApprove())
 
   <p class="alert">$l10n.NoItemsToApprove</p>
 
 #else
 
+#set ($module = $scarabR.CurrentModule)
 #if (!$module.UnapprovedQueries.isEmpty() || !$module.UnapprovedTemplates.isEmpty())
 
  <div class="functnbar">
@@ -32,7 +32,7 @@
    <th>Action</th>
   </tr>
 
-#foreach( $query in $module.UnapprovedQueries )
+#foreach($query in $module.UnapprovedQueries)
 
   #indexedRows($velocityCount)
 
@@ -45,7 +45,7 @@
   <td><a href="mailTo:$createdUser.Email">$!createdUser.Name</a></td>
   <td><a href="$query.getEditLink($link.toString())">$query.Name</a></td>
   <td>#if ($query.Description) $query.Description #else &#160; #end</td>
-  <td>#textAreaSmall("query_comment_$query.QueryId" "" )</td>
+  <td>#textAreaSmall("query_comment_$query.QueryId" "")</td>
   <td><select name="query_action_$query.QueryId">
    <option value="none">No action</option>
    <option value="comment">Comment only</option>
