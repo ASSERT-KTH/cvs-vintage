@@ -99,6 +99,11 @@ import org.gjt.sp.jedit.menu.EnhancedMenu;
  * be added to the sub-menu by listing <code>-</code> in the property.</li>
  * </ul>
  *
+ * If you want the plugin's menu items to be determined at runtime, define a
+ * property <code>plugin.<i>class name</i>.menu.code</code> to be BeanShell
+ * code that evaluates to an implementation of
+ * {@link org.gjt.sp.jedit.menu.DynamicMenuProvider}.<p>
+ *
  * To add your plugin to the file system browser's <b>Plugins</b> menu, define
  * one of these two properties:
  *
@@ -174,7 +179,7 @@ import org.gjt.sp.jedit.menu.EnhancedMenu;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: EditPlugin.java,v 1.29 2003/05/02 21:12:43 spestov Exp $
+ * @version $Id: EditPlugin.java,v 1.30 2003/05/02 23:14:17 spestov Exp $
  * @since jEdit 2.1pre1
  */
 public abstract class EditPlugin
@@ -290,7 +295,9 @@ public abstract class EditPlugin
 			return GUIUtilities.loadMenuItem(menuItemName);
 
 		String menuProperty = "plugin." + getClassName() + ".menu";
-		if(jEdit.getProperty(menuProperty) != null)
+		String codeProperty = "plugin." + getClassName() + ".menu.code";
+		if(jEdit.getProperty(menuProperty) != null
+			|| jEdit.getProperty(codeProperty) != null)
 		{
 			String pluginName = jEdit.getProperty("plugin." +
 				getClassName() + ".name");

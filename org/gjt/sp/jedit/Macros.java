@@ -52,7 +52,7 @@ import org.gjt.sp.util.Log;
  * the methods in the {@link GUIUtilities} class instead.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.32 2003/05/01 02:21:26 spestov Exp $
+ * @version $Id: Macros.java,v 1.33 2003/05/02 23:14:17 spestov Exp $
  */
 public class Macros
 {
@@ -266,7 +266,7 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 			loadMacros(macroHierarchy,"",new File(userMacroPath));
 		}
 
-		EditBus.send(new MacrosChanged(null));
+		EditBus.send(new DynamicMenuChanged("macros"));
 	} //}}}
 
 	//{{{ registerHandler() method

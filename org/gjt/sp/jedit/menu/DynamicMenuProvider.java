@@ -32,7 +32,7 @@ import javax.swing.JMenu;
  *
  * @since jEdit 4.2pre2
  * @author Slava Pestov
- * @version $Id: DynamicMenuProvider.java,v 1.1 2003/05/02 21:12:44 spestov Exp $
+ * @version $Id: DynamicMenuProvider.java,v 1.2 2003/05/02 23:14:17 spestov Exp $
  */
 public interface DynamicMenuProvider
 {
@@ -40,7 +40,7 @@ public interface DynamicMenuProvider
 	 * Returns true if the menu should be updated each time it is shown.
 	 * Otherwise, it will only be updated when the menu is first created,
 	 * and if the menu receives a {@link
-	 * org.gjt.sp.jedit.msg.DynamicMenuUpdate} message.
+	 * org.gjt.sp.jedit.msg.DynamicMenuChanged} message.
 	 */
 	boolean updateEveryTime();
 

@@ -96,7 +96,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.14 2003/05/01 22:43:28 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.15 2003/05/02 23:14:17 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -587,6 +587,7 @@ public class PluginJAR
 		classLoader.activate();
 
 		EditBus.send(new PluginUpdate(this,PluginUpdate.LOADED));
+		EditBus.send(new DynamicMenuUpdate("plugins"));
 	} //}}}
 
 	//{{{ uninit() method
