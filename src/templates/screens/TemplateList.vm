@@ -65,8 +65,9 @@
 
 #foreach ($template in $allTemplates)
 #indexedRows($velocityCount)
+#set ($isCreatedBy = $template.isCreatingUser($user))
 #if ( ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
-   ||   ($template.CreatedBy.UserId.equals($user.UserId)))
+   ||   ($isCreatedBy))
   #set ($hasDelete = "true")
   <td><input type="checkbox" name="delete_$template.IssueId" /></td>
 #else
@@ -74,7 +75,7 @@
 #end
   <td>
     #if (($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
-         || ($template.CreatedBy.UserId.equals($user.UserId)))
+         || ($isCreatedBy))
       #set ($editLink = $link.setPathInfo("templateId", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
       <a href="$editLink">$template.TemplateInfo.Name</a>
     #else
