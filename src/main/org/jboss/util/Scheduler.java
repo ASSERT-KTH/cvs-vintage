@@ -317,6 +317,8 @@ public class Scheduler
                      }
                   }
                   lStartDate = new Date( mStartDate.getTime() + ( lSkipRepeats * mActualSchedulePeriod ) );
+               } else {
+                  lStartDate = mStartDate;
                }
             }
             log.debug( "Schedule initial call to: " + lStartDate + ", remaining repetitions: " + mRemainingRepetitions );
