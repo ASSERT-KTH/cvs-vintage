@@ -19,7 +19,7 @@ import javax.ejb.SessionContext;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -88,15 +88,27 @@ public class StatefulSessionEnterpriseContext
       extends EJBContextImpl
       implements SessionContext
    {
-      public EJBObject getEJBObject()
-      {
-         return ejbObject;
-      }
+		public EJBObject getEJBObject()
+		{
+			if (ejbObject == null) {
+				
+				try {
+					
+					ejbObject = ((StatefulSessionContainer)con).getContainerInvoker().getStatefulSessionEJBObject(id); 
+				}
+				catch (RemoteException re) {
+					// ...
+					throw new IllegalStateException();
+				}
+			} 	
+			
+			return ejbObject;
+      	}
       
-      public Object getPrimaryKey()
-      {
+      	public Object getPrimaryKey()
+      	{
          return id;
-      }
-   }
+      	}
+   	}
 }
 
