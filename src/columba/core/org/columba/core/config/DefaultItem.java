@@ -419,4 +419,27 @@ public class DefaultItem {
 		return newNode;
 	}
 	*/
+	
+	/** {@inheritDoc} */
+	public boolean equals(Object obj) {
+		boolean equal = false;		
+		if ( (obj != null) && (obj instanceof DefaultItem) ) {
+			DefaultItem other = (DefaultItem) obj;			
+			if ( (root == other.root) ||
+			    ((root != null) && root.equals(other.root))) {
+				equal = true;
+			}
+		}		
+		return equal;
+	}
+
+	/** {@inheritDoc} */
+	public int hashCode() {
+		int hashCode = 43;
+		if (root != null) {
+			hashCode += root.hashCode() * 97;
+		}
+		return hashCode;
+	}
+
 }
