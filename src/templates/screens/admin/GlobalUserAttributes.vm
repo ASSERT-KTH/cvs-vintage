@@ -21,9 +21,9 @@ $page.setTitle("User Attributes")
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
 
 
-		<div class="functnbar">
-<input type="submit" value="Done" />&#160;<input type="submit" value="Cancel" />&#160;
-		</div>
+	<div class="functnbar">
+<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;<input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
+	</div>
 		
 		
 		<h3>User attributes</h3>
@@ -75,17 +75,17 @@ $page.setTitle("User Attributes")
 		</table>
 
 <div class="functnbar3">
-<input type="submit" value="save"  name="eventSubmit_doSave" />&#160;
-<input type="submit" value="create new"  name="eventSubmit_doCreatenew" />&#160;
-<input type="submit" value="copy selected" />&#160;
-<input type="submit" value="delete selected"  name="eventSubmit_doSave" />&#160;
+<input type="submit" value="Save"  name="eventSubmit_doSave" />&#160;
+<input type="submit" value="Create new"  name="eventSubmit_doCreatenew" />&#160;
+<input type="submit" value="Copy selected" />&#160;
+<input type="submit" value="Delete selected"  name="eventSubmit_doSave" />&#160;
 </div>
 
-<div class="functnbar2">
-
-<input type="submit" value="Done" />&#160;<input type="submit" value="Cancel" />&#160;
-
-</div>       
+	<div class="functnbar2">
+<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
+<input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
+	</div>
+		
 
 $intake.declareGroups()
 </form>

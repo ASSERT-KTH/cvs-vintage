@@ -40,23 +40,25 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 </tr>
 #set ($allAttributes = $scarabG.AllAttributes)
 #foreach( $attribute in $allAttributes )
-#set ($attgroup = $intake.Attribute.mapTo($attribute))
-#indexedRows($velocityCount)
-<td>#booleanCheckbox ($attgroup.Deleted)</td>
-<td>
+  #if (!$attribute.isUserAttribute()) 
+    #set ($attgroup = $intake.Attribute.mapTo($attribute))
+    #indexedRows($velocityCount)
+  <td>#booleanCheckbox ($attgroup.Deleted)</td>
+  <td>
     #set ($attType = $attribute.AttributeType)
     #foreach ( $atype in $attribute.AllAttributeTypes )
       #if($attType.AttributeTypeId == $atype.AttributeTypeId)
         $atype.Name
       #end
     #end
-</td>
-<td>$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").setLabel("$attribute.Name")</td>
-<td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
-#set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
-<td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
-<td>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
-</tr>
+  </td>
+  <td>$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").setLabel("$attribute.Name")</td>
+  <td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
+  #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
+  <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
+  <td>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
+  </tr>
+  #end
 #end
 </table>
 
