@@ -78,7 +78,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -154,7 +154,10 @@ public class EjbModule
     */
    private void addContainer(Container con)
    {
-      containers.put(con.getBeanMetaData().getEjbName(), con);
+      String ejbName = con.getBeanMetaData().getEjbName();
+      if(containers.containsKey(ejbName))
+         log.warn("Duplicate ejb-name. Container for " + ejbName + " already exists.");
+      containers.put(ejbName, con);
       con.setEjbModule(this);
    }
 
