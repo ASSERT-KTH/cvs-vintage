@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxNavigator.java,v 1.10 2004/09/14 20:12:16 mvw Exp $
+// $Id: UMLComboBoxNavigator.java,v 1.11 2005/02/21 20:48:15 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +68,7 @@ public class UMLComboBoxNavigator extends JPanel implements ActionListener {
         theComboBox = box;
         theButton.setPreferredSize(
             new Dimension(icon.getIconWidth() + 6, icon.getIconHeight() + 6));
-        theButton.setToolTipText(container.localize(tooltip));
+        theButton.setToolTipText(tooltip);
         theButton.addActionListener(this);
         box.addActionListener(this);
         add(theComboBox, BorderLayout.CENTER);

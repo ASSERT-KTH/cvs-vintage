@@ -1,4 +1,4 @@
-// $Id: UMLUserInterfaceContainer.java,v 1.12 2005/01/09 14:59:04 linus Exp $
+// $Id: UMLUserInterfaceContainer.java,v 1.13 2005/02/21 20:48:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,12 +80,4 @@ public interface UMLUserInterfaceContainer {
      */
     public String formatNamespace(/*MNamespace*/Object ns);
 
-    /**
-     * Returns a localized string corresponding to the key.
-     *
-     * @param key key for resource bundle, typically english literal
-     * @return localized string for key based on system settings and
-     * configuration file
-     */
-    public String localize(String key);
 }
