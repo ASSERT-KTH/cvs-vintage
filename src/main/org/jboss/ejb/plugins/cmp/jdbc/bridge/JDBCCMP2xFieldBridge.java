@@ -33,7 +33,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */                            
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
 
@@ -90,10 +90,6 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
             throw new EJBException("Could not load field value: " +
                getFieldName());
          }
-
-         // notify the optimistic lock
-         // not used
-         // getManager().fieldStateEventCallback(ctx, CMPMessage.LOADED, this, fieldState.value);
       }
 
       // notify optimistic lock
@@ -108,19 +104,15 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
       // short-circuit to avoid repetive comparisons
       // if it is not currently loaded or it is already dirty or 
       // if it has changed
-      fieldState.isDirty = !fieldState.isLoaded || fieldState.isDirty || 
-            changed(fieldState.value, value);
+      // but keep version field clean to avoid race conditions and appearing
+      // twice in UPDATE SET clause when entity is shared between transactions
+      fieldState.isDirty =
+         (!fieldState.isLoaded || fieldState.isDirty || changed(fieldState.value, value))
+         && (getManager().getEntityBridge().getVersionField() != this);
 
       // notify optimistic lock, but only if the bean is created
-      if(ctx.getId() != null) {
-         if(fieldState.isLoaded()) {
-            getManager().fieldStateEventCallback(ctx, CMPMessage.CHANGED, this, fieldState.value);
-         }
-         else {
-            // not used
-            //getManager().fieldStateEventCallback(ctx, CMPMessage.LOADED, this, value);
-         }
-      }
+      if(ctx.getId() != null && fieldState.isLoaded())
+         getManager().fieldStateEventCallback(ctx, CMPMessage.CHANGED, this, fieldState.value);
 
       // we are loading the field right now so it isLoaded
       fieldState.isLoaded = true;
