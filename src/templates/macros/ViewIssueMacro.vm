@@ -4,8 +4,9 @@
 
 <div class="functnbar">
 <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
-<input type="submit" value="Move" name="eventSubmit_doGotoothertemplate"  />&#160;
-<input type="submit" value="Copy" name="eventSubmit_doGotoothertemplate"  />&#160;issue
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
+<input type="submit" value="Move" name="eventSubmit_doMove"  />&#160;
+<input type="submit" value="Copy" name="eventSubmit_doCopy"  />&#160;issue
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="MoveIssue.vm" />
 </div>
 
@@ -473,9 +474,11 @@
     <p><a href="$historyLink">Show complete history</a></p>
   #end
 #end
-<div class="functnbar3">
-     <input type="submit" value="Move Issue" name="eventSubmit_doGotoothertemplate" />
-     <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="MoveIssue.vm" />
+<div class="functnbar2">
+<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
+<input type="submit" value="Move" name="eventSubmit_doMove"  />&#160;
+<input type="submit" value="Copy" name="eventSubmit_doCopy"  />&#160;issue
 </div>
 
 #end
