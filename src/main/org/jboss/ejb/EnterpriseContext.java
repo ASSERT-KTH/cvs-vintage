@@ -30,6 +30,7 @@ import javax.transaction.HeuristicRollbackException;
 
 import org.jboss.logging.Logger;
 import org.jboss.metadata.SecurityRoleRefMetaData;
+import org.jboss.security.SimplePrincipal;
 
 /**
  *  The EnterpriseContext is used to associate EJB instances with metadata about it.
@@ -41,7 +42,7 @@ import org.jboss.metadata.SecurityRoleRefMetaData;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
- *  @version $Revision: 1.30 $
+ *  @version $Revision: 1.31 $
  */
 public abstract class EnterpriseContext
 {
@@ -323,7 +324,7 @@ public abstract class EnterpriseContext
              Logger.warning("WARNING: no match found for security role " + id + " in the deployment descriptor.");
              
          HashSet set = new HashSet();
-         set.add( id );
+         set.add( new SimplePrincipal(id) );
          
          return con.getRealmMapping().doesUserHaveRole( principal, set );
        }
