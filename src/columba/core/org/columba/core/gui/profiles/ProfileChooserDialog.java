@@ -18,13 +18,38 @@
 
 package org.columba.core.gui.profiles;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -49,7 +74,7 @@ import org.columba.core.xml.XmlElement;
  * @author fdietz
  */
 public class ProfileChooserDialog extends JDialog
-implements ActionListener, ListSelectionListener {
+implements ActionListener, ListSelectionListener, MouseListener {
     private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
     
     protected JButton okButton;
@@ -232,6 +257,7 @@ implements ActionListener, ListSelectionListener {
         
         list = new JList(model);
         list.addListSelectionListener(this);
+        list.addMouseListener(this);
         
         String selected = ProfileManager.getInstance().getSelectedProfile();
         if (selected != null) {
@@ -311,4 +337,23 @@ implements ActionListener, ListSelectionListener {
     public boolean isDontAskedSelected() {
         return checkBox.isSelected();
     }
+
+	public void mouseClicked(MouseEvent arg0) {
+		if(arg0.getClickCount() >= 2 ) {
+			actionPerformed(new ActionEvent(list, 0, "OK"));
+		}
+	}
+
+	public void mouseEntered(MouseEvent arg0) {
+	}
+
+	public void mouseExited(MouseEvent arg0) {
+	}
+
+	public void mousePressed(MouseEvent arg0) {
+	}
+
+	public void mouseReleased(MouseEvent arg0) {
+	}
+
 }
