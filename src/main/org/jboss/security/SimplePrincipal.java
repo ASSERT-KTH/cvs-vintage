@@ -25,18 +25,20 @@ public class SimplePrincipal implements Principal, java.io.Serializable
     this.name = name;
   }
 
-  /** Compare this SimplePrincipal's name against another SimplePrincipal
-      name or null if this.getName() is null.
-  @return true if name == another == null || name equals
-      another.toString();
+  /** Compare this SimplePrincipal's name against another Principal
+  @return true if name equals another.getName();
    */
   public boolean equals(Object another)
   {
-    if (name == null)
-      return (another == null);  
-    if ((another == null) || !(another instanceof SimplePrincipal))
+    if( !(another instanceof Principal) )
       return false;
-    return name.equals( another.toString() );
+    String anotherName = ((Principal)another).getName();
+    boolean equals = false;
+    if( name == null )
+      equals = anotherName == null;
+    else
+      equals = name.equals(anotherName);
+    return equals;
   }
 
   public int hashCode()
