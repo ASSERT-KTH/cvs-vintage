@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.command;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.SwingWorker;
 
 public class Worker extends SwingWorker implements WorkerStatusController {
@@ -87,14 +89,15 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 			if (!cancelled() && (operationMode == Command.FIRST_EXECUTION))
 				boss.getUndoManager().addToUndo(op);
 		} catch (CommandCancelledException e) {
-			ColumbaLogger.log.debug("Command cancelled");
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.debug("Command cancelled");
+                        }
 		} catch (Exception e) {
 			// Must create a ExceptionProcessor
 			e.printStackTrace();
 
 			ExceptionDialog dialog = new ExceptionDialog();
 			dialog.showDialog(e);
-
 		}
 
 		returnLocks(operationMode);
@@ -103,7 +106,6 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 	}
 
 	public void finished() {
-
 		try {
 			op.finish();
 
@@ -121,7 +123,6 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 		this.taskManager = t;
 
 		taskManager.register(this);
-
 	}
 
 	public void unregister() {
@@ -235,5 +236,4 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 	public AbstractFrameController getFrameController() {
 		return op.getFrameController();
 	}
-
 }
