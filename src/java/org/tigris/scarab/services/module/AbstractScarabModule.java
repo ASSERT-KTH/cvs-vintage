@@ -117,7 +117,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.32 2002/02/13 19:59:20 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.33 2002/02/14 23:46:44 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -270,12 +270,13 @@ public abstract class AbstractScarabModule
     public AttributeGroup createNewGroup (IssueType issueType)
         throws Exception
     {
-        List groups = getAttributeGroups(issueType);
+        List groups = getAttributeGroups(issueType, false);
         AttributeGroup ag = new AttributeGroup();
 
         // Make default group name 'attribute group x' where x is size + 1
         ag.setName("attribute group " + Integer.toString(groups.size()+1));
         ag.setOrder(groups.size() +2);
+        ag.setActive(true);
         ag.setModuleId(getModuleId());
         ag.setIssueTypeId(issueType.getIssueTypeId());
         ag.save();
@@ -1340,7 +1341,6 @@ try{
         AttributeGroup ag2 = createNewGroup(issueType);
         ag2.setOrder(3);
         ag2.save();
-         
     }
 
 
