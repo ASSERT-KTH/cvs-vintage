@@ -97,73 +97,32 @@ public class ServerSessionManager implements SessionManager {
 	reaper.start();
     }
 
-    /** Called from Request.getSession to create a new session 
-     */
-    public HttpSession getSession(Request request, Response response,
-        boolean create) {
-	ServerSession sSession=getServerSession( request, response, create);
-	if( sSession!=null ) sSession.accessed();
-	if( sSession ==null) return null;
+    public void accessed( Context ctx, Request req, String id ) {
+	ApplicationSession apS=(ApplicationSession)findSession( ctx, id);
+	if( apS==null) return;
 	
-	return sSession.getApplicationSession(request.getContext(), create);
-    }
-
-    public void accessed( HttpSession session ) {
-	ApplicationSession apS=(ApplicationSession)session;
 	ServerSession servS=apS.getServerSession();
 	servS.accessed();
 	apS.accessed();
+
+	// cache it - no need to compute it again
+	req.setSession( apS );
+    }
+
+    public HttpSession createSession(Context ctx) {
+	String sessionId = SessionIdGenerator.generateId();
+	ServerSession session = new ServerSession(sessionId);
+	sessions.put(sessionId, session);
+	return session.getApplicationSession( ctx, true );
+    }
+
+    public HttpSession findSession(Context ctx, String id) {
+	ServerSession sSession=(ServerSession)sessions.get(id);
+	if(sSession==null) return null;
 	
+	return sSession.getApplicationSession(ctx, false);
     }
     
-    ServerSession getServerSession(Request request, Response response,
-        boolean create) {
-	// Look for session id -- cookies only right now
-
-	String sessionId = null;
-	ServerSession session = null;
-
-	// XXX need to check if request.getRequestdSessionId() returns something,
-	// since the connector might have set it.
-	
-	//	Enumeration enum = request.getCookies().elements();
-	Cookie cookies[]=request.getCookies(); // assert !=null
-	
-	//while (enum.hasMoreElements()) {
-	for( int i=0; i<cookies.length; i++ ) {
-	    Cookie cookie = cookies[i]; // (Cookie)enum.nextElement();
-
-	    if (cookie.getName().equals(
-                Constants.SESSION_COOKIE_NAME)) {
-		sessionId = cookie.getValue();
-
-		if (sessionId != null) {
-		    request.setRequestedSessionId(sessionId);
-		    session = (ServerSession)sessions.get(sessionId);
-		}
-	    }
-	}
-
-	if (session == null && create) {
-	    if (sessionId == null) {
-		sessionId = SessionIdGenerator.generateId();
-		Cookie cookie = new Cookie(
-                    Constants.SESSION_COOKIE_NAME, sessionId);
-
-		cookie.setMaxAge(-1);
-		cookie.setPath("/");
-		cookie.setVersion(1);
-
-		response.addSystemCookie(cookie);
-	    }
-
-	    session = new ServerSession(sessionId);
-	    sessions.put(sessionId, session);
-	}
-
-	return session;
-    }
-
     // XXX
     // sync'd for safty -- no other thread should be getting something
     // from this while we are reaping. This isn't the most optimal

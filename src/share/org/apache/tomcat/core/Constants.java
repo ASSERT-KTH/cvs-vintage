@@ -80,7 +80,9 @@ public class Constants {
     public static final String ATTRIB_WORKDIR1 = "sun.servlet.workdir";
     public static final String ATTRIB_WORKDIR = "javax.servlet.context.tempdir";
 
-
+    public static final String SESSION_COOKIE_NAME = "JSESSIONID";
+    public static final String SESSION_PARAMETER_NAME = "jsessionid";
+    
     public static final String Package = "org.apache.tomcat.core";
     public static final int RequestURIMatchRecursion = 5;
     public static final String WORK_DIR = "work";

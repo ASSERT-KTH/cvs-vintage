@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.14 2000/01/08 21:31:39 rubys Exp $
- * $Revision: 1.14 $
- * $Date: 2000/01/08 21:31:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.15 2000/01/09 22:32:42 costin Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/01/09 22:32:42 $
  *
  * ====================================================================
  *
@@ -96,7 +96,6 @@ public class Request  {
     protected String pathInfo;
 
     protected Hashtable parameters = new Hashtable();
-    protected String reqSessionId;
     protected int contentLength = -1;
     protected String contentType = null;
     protected String charEncoding = null;
@@ -109,12 +108,18 @@ public class Request  {
     protected HttpServletRequestFacade requestFacade;
     protected Context context;
     protected Hashtable attributes = new Hashtable();
-    protected HttpSession serverSession;
 
     protected boolean didReadFormData;
     protected boolean didParameters;
     protected boolean didCookies;
     // end "Request" variables
+
+    // Session
+    // set by interceptors - the session id
+    protected String reqSessionId;
+    // cache- avoid calling SessionManager for each getSession()
+    protected HttpSession serverSession;
+
 
     // LookupResult - used by sub-requests and
     // set by interceptors
@@ -300,6 +305,10 @@ public class Request  {
         return reqSessionId;
     }
 
+    public void setRequestedSessionId(String reqSessionId) {
+	this.reqSessionId = reqSessionId;
+    }
+
     public String getServletPath() {
         return servletPath;
     }
@@ -393,42 +402,39 @@ public class Request  {
 //     }
 
     public HttpSession getSession(boolean create) {
-	if( serverSession==null ) {
-	    if( ! create )
-		return null;
-	    else {
-// 		serverSession =
-// 		    ServerSessionManager.getManager()
-// 		    .getServerSession(this, response, create);
-// 		serverSession.accessed();
-		SessionManager sM=getContext().getSessionManager();
-		serverSession =sM.getSession(this, response, create);
- 		
-	    }
-	}
+	// use the cached value 
+	if( serverSession!=null )
+	    return serverSession;
 
-	// assert serverSession!=null
-// 	ApplicationSession appSession = null;
-// 	return  serverSession.getApplicationSession(context, create);
-	return serverSession;
-
-
+	SessionManager sM=context.getSessionManager();
 	
-	//  if (reqSessionId != null) {
-//  	    //Session session = context.getSession(reqSessionId);
-//  	    //if (session == null) {
-//  	    //session = context.createSession(reqSessionId);
-//  	    //}
-//  	    //return session;
-//  	    System.out.println("DANGER, SESSIONS ARE NOT WORKING");
-//  	} else {
-//  	    if (create) {
-//  		Session session = serverSession.createSession(response);
-//  		return session;
-//  	    } else {
-//  		return null;
-//  	    }
-//  	}
+	// if the interceptors found a request id, use it
+	if( reqSessionId != null ) {
+	    // we have a session !
+	    serverSession=sM.findSession( context, reqSessionId );
+	    if( serverSession!=null) return serverSession;
+	}
+	
+	if( ! create )
+	    return null;
+
+	// no session exists, create flag
+	serverSession =sM.createSession( context );
+	reqSessionId = serverSession.getId();
+
+	// XXX XXX will be changed - post-request Interceptors
+	// ( to be defined) will set the session id in response,
+	// SessionManager is just a repository and doesn't deal with
+	// request internals.
+	// hardcoded - will change!
+	Cookie cookie = new Cookie(Constants.SESSION_COOKIE_NAME,
+				   reqSessionId);
+	cookie.setMaxAge(-1);
+	cookie.setPath("/");
+	cookie.setVersion(1);
+	response.addSystemCookie(cookie);
+
+	return serverSession;
     }
 
     // -------------------- LookupResult 
@@ -589,10 +595,6 @@ public class Request  {
      */
     public void replaceQueryString(String inQueryString) {
         this.queryString = inQueryString;
-    }
-
-    public void setRequestedSessionId(String reqSessionId) {
-	this.reqSessionId = reqSessionId;
     }
 
     public void setSession(HttpSession serverSession) {

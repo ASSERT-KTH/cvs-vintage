@@ -68,22 +68,55 @@ import javax.servlet.http.*;
 
 /**
  * 
+ * @author Craig R. McClanahan
  * @author costin@dnt.ro
  */
 public interface SessionManager {
 
     /**
-     * Called by Request.getSession() to create/get a new session object.
-     * May also be called by RequestInterceptors to find the session that
-     * needs to be marked as accessed
+     * Construct and return a new session object, based on the default
+     * settings specified by this Manager's properties.  The session
+     * id will be assigned by this method, and available via the getId()
+     * method of the returned session.  If a new session cannot be created
+     * for any reason, return <code>null</code>.
+     *
+     * @param ctx The session will be created for the specified context
+     * @exception IllegalStateException if a new session cannot be
+     *  instantiated for any reason
      */
-    public HttpSession getSession(Request request, Response response,boolean create);
+    public HttpSession createSession(Context ctx);
+
 
     /** Will mark the session lastAccess time.
-     *  Will be called for each request by a SessionInterceptor
+     *  Will be called for each request that has a valid sessionId
+     *
+     *  A simple SessionManager will just use the id, a complex
+     * manager may use the ctx and req to do additional work.
+     *
+     * @param ctx the context where the request belong
+     * @param req the request having the id
+     * @param id 
      */
-    public void accessed(HttpSession session);
+    public void accessed(Context ctx, Request req, String id);
+    //  we can pass only Request, as it contains both, but it's better to
+    // show explicitely what this method uses. 
+    
 
+    /**
+     * Return the active Session, associated with this Manager, with the
+     * specified session id (if any); otherwise return <code>null</code>.
+     *
+     * @param id The session id for the session to be returned
+     * @param ctx The session needs to belong to the context 
+     *
+     * @exception ClassNotFoundException if a deserialization error occurs
+     *  while processing this request
+     * @exception IllegalStateException if a new session cannot be
+     *  instantiated for any reason
+     */
+    public HttpSession findSession(Context ctx, String id);
+
+    
     /** Used by context when stoped, need to remove all sessions used by that context
      */
     public void removeSessions( Context ctx );

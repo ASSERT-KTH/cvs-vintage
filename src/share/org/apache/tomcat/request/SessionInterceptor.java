@@ -69,6 +69,12 @@ import java.util.*;
 import javax.servlet.http.*;
 
 /**
+ * Will process the request and determine the session Id, and set it
+ * in the Request.
+ * It also marks the session as accessed.
+ *
+ * This implementation only handles Cookies sessions, please extend or
+ * add new interceptors for other methods.
  * 
  */
 public class SessionInterceptor implements RequestInterceptor {
@@ -78,18 +84,30 @@ public class SessionInterceptor implements RequestInterceptor {
 	
     public int handleRequest(Request request ) {
 	// look for session id -- cookies only right now
+	String sessionId = null;
 
-	SessionManager sM=request.getContext().getSessionManager();
-	HttpSession session= sM.getSession(request, request.getResponse(), false);
+	Cookie cookies[]=request.getCookies(); // assert !=null
+	
+	for( int i=0; i<cookies.length; i++ ) {
+	    Cookie cookie = cookies[i]; 
 
-	// ServerSession session =
-	// 	    sessionManager.getServerSession(request, request.getResponse(), false);
+	    if (cookie.getName().equals(
+					org.apache.tomcat.core.Constants.SESSION_COOKIE_NAME)) {
+		sessionId = cookie.getValue();
 
-	if (session != null) {
-	    sM.accessed( session );
+		if (sessionId != null) {
+		    request.setRequestedSessionId(sessionId);
+		}
+	    }
 	}
 
-	request.setSession(session);  // may be null
+	if (sessionId != null) {
+	    Context ctx=request.getContext();
+	    SessionManager sM=ctx.getSessionManager();
+
+	    sM.accessed( ctx, request, sessionId );
+	}
+
 	return 0;
     }
 }

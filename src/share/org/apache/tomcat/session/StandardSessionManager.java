@@ -134,63 +134,30 @@ public final class StandardSessionManager
      *
      * @param session The session to be marked
      */
-    public void accessed(HttpSession session) {
-
+    public void accessed(Context ctx, Request req, String id) {
+	HttpSession session=findSession(ctx, id);
+	if( session == null) return;
 	if (session instanceof Session)
 	    ((Session) session).access();
 
+	// cache the HttpSession - avoid another find
+	req.setSession( session );
     }
 
-
-    /**
-     * Create a new session object, or get an existing one, associated with
-     * the current request.  This method may also be called by
-     * RequestInterceptors to find the session that needs to be marked
-     * as accessed.  If no such session can be found and create is
-     * <code>false</code>, return <code>null</code>.
-     *
-     * @param request The request being processed
-     * @param response The response being created
-     * @param create Create the session if necessary
-     */
-    public HttpSession getSession(Request request, Response response,
-				  boolean create) {
-
-	// Look up the requested session in this request
-	// XXX - Looks at cookies only right now
-	// XXX - Check if request.getRequestedSessionId() returns something
-	//       that might have been set by a connector
-	Cookie cookies[] = request.getCookies();
-	String sessionId = SessionUtil.parseSessionId(cookies);
-	if (sessionId != null)
-	    request.setRequestedSessionId(sessionId);
-	Session session = null;
+    // XXX should we throw exception or just return null ??
+    public HttpSession findSession( Context ctx, String id ) {
 	try {
-	    session = manager.findSession(sessionId);
+	    Session session = manager.findSession(id);
+	    if(session!=null)
+		return session.getSession();
 	} catch (IOException e) {
-	    return (null);
 	}
-
-	// Create a new session if necessary and requested
-	if ((session == null) && create) {
-	    session = manager.createSession();
-	    sessionId = session.getId();
-	    // XXX - Cannot use manager.createCookie() because that would
-	    //       require a Tomcat.Next style Request argument
-	    Cookie cookie = new Cookie
-		(org.apache.tomcat.util.Constants.SESSION.COOKIE_NAME,
-		 sessionId);
-	    // XXX - cookie.setDomain() ???
-	    cookie.setMaxAge(-1);
-	    cookie.setPath("/");	// XXX - request.getContextPath() ???
-	    cookie.setVersion(1);
-	    response.addSystemCookie(cookie);
-	}
-
-	return ((HttpSession) session);
-
+	return (null);
     }
 
+    public HttpSession createSession(Context ctx) {
+	return  manager.createSession().getSession();
+    }
 
     /**
      * Remove all sessions because our associated Context is being shut down.
@@ -199,6 +166,10 @@ public final class StandardSessionManager
      */
     public void removeSessions(Context ctx) {
 
+	// XXX XXX a manager may be shared by multiple
+	// contexts, we just want to remove the sessions of ctx!
+	// The manager will still run after that ( i.e. keep database
+	// connection open 
 	if (manager instanceof Lifecycle) {
 	    try {
 		((Lifecycle) manager).stop();
