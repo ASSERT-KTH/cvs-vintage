@@ -19,7 +19,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class EntityInstancePool
    extends AbstractInstancePool
@@ -46,7 +46,7 @@ public class EntityInstancePool
    public synchronized void free(EnterpriseContext ctx)
    {
       // Reset instance
-      ((EntityEnterpriseContext)ctx).setSynchronized(false);
+      ((EntityEnterpriseContext)ctx).setValid(false);
       ((EntityEnterpriseContext)ctx).setInvoked(false);
       
       super.free(ctx);
