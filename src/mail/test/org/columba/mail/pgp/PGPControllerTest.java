@@ -37,7 +37,7 @@ public class PGPControllerTest extends TestCase {
 				+ "=P9GA\n"
 				+ "-----END PGP SIGNATURE-----";
 		String pgpMessage = "eine Testmessage";
-		PGPController pgpContr = new PGPController();
+		PGPController pgpContr =PGPController.getInstance();
 		PGPItem item = new PGPItem(xmle);
 		int retVal = pgpContr.verifySignature(pgpMessage, sigData, item);
 		assertEquals(0,retVal);
@@ -48,7 +48,7 @@ public class PGPControllerTest extends TestCase {
 	public void testSign() {
 		String testData = "eine Testmessage";
 		// new PGPController
-		PGPController pgpContr = new PGPController();
+		PGPController pgpContr = PGPController.getInstance();
 		// new Item with null, this is while the passphrase is in other situations in the configFile, here we set it per Hand
 		PGPItem item = new PGPItem(xmle);
 		// test passphrase. You must have a test pgp-key with this passphrase
