@@ -54,6 +54,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.apache.log4j.Category;
+
 // Turbine classes
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
@@ -95,7 +97,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.69 2001/11/10 02:25:07 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.70 2001/11/13 06:20:31 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -191,6 +193,7 @@ public class ScarabModule
             }
             catch (Exception e)
             {
+                Category.getInstance(getClass().getName()).error(e);
                 return null;
             }
             Iterator itr = parents.iterator();
