@@ -194,7 +194,7 @@ public class Main {
 
 				frame.advance();
 
-				MainInterface.frameModelManager = new FrameModelManager();
+				//MainInterface.frameModelManager = new FrameModelManager();
 
 				addressbook.initGui();
 
