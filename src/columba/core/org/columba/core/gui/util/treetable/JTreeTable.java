@@ -66,10 +66,11 @@ public class JTreeTable extends JTable {
 		// Install the tree  renderer and editor.
 		setDefaultRenderer(TreeTableModel.class, tree);
 
+		
 		setDefaultEditor(
 			TreeTableModel.class,
 			new TreeTableCellEditor(this, tree));
-
+		
 		// No grid.
 		setShowGrid(false);
 

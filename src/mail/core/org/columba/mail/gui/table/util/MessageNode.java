@@ -30,38 +30,16 @@ import org.columba.mail.message.HeaderInterface;
  */
 
 public class MessageNode extends DefaultMutableTreeNode {
-	private Object uid;
-	private String parsedSubject;
+	
+	protected  Object uid;
 
-	//private HeaderInterface header;
-
-	private boolean dummy;
-
-	//private Vector children;
-
-	//private ITreeNode parent;
-	//private MessageNode nextNode, childNode, parentNode;
-
+	protected boolean hasRecentChildren;
+	 
 	public MessageNode(Object header, Object uid) {
 		super(header);
 
-		//dummy = false;
-		//this.header = (HeaderInterface) header;
 		this.uid = uid;
 	}
-
-	/*
-	public void enableDummy( boolean b )
-	{
-	dummy = b;
-	}
-	public boolean isDummy()
-	{
-	return dummy;
-	}
-	
-	
-	*/
 
 	public Vector getVector() {
 		return children;
@@ -78,24 +56,32 @@ public class MessageNode extends DefaultMutableTreeNode {
 		return (HeaderInterface) getUserObject();
 	}
 
-	public void setParsedSubject(String s) {
-		parsedSubject = s;
-	}
-
-	public String getParsedSubject() {
-		return parsedSubject;
-	}
-
 	public static Object[] toUidArray(Object[] nodes) {
 		if (nodes[0] instanceof MessageNode) {
 			Object[] newUidList = new Object[nodes.length];
 			for (int i = 0; i < nodes.length; i++) {
-				newUidList[i] = ((MessageNode)nodes[i]).getUid();
+				newUidList[i] = ((MessageNode) nodes[i]).getUid();
 				//System.out.println("node=" + newUidList[i]);
 			}
 			return newUidList;
 		} else
 			return nodes;
+	}
+
+	/**
+	 * Returns the hasRecentChildren.
+	 * @return boolean
+	 */
+	public boolean isHasRecentChildren() {
+		return hasRecentChildren;
+	}
+
+	/**
+	 * Sets the hasRecentChildren.
+	 * @param hasRecentChildren The hasRecentChildren to set
+	 */
+	public void setHasRecentChildren(boolean hasRecentChildren) {
+		this.hasRecentChildren = hasRecentChildren;
 	}
 
 }

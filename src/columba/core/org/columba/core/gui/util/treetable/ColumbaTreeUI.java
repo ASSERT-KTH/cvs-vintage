@@ -67,6 +67,7 @@ public class ColumbaTreeUI extends MetalTreeUI {
 
 		Graphics2D graphics = (Graphics2D) g;
 
+		
 		g.setColor(MetalLookAndFeel.getControlDarkShadow());
 
 		drawDashedVerticalLine(g, x, top, bottom);

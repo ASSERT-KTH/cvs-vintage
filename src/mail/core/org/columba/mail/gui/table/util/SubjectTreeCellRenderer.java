@@ -14,6 +14,7 @@
 
 package org.columba.mail.gui.table.util;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 
@@ -38,11 +39,14 @@ import org.columba.mail.message.HeaderInterface;
 public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 	private ImageIcon image1;
 	private ImageIcon image2;
-	private Font plainFont, boldFont, font;
+	private Font plainFont, boldFont, underlinedFont;
 
 	private TableView headerTable;
 
 	private JTree tree1;
+
+	private Color background;
+	private Color foreground;
 
 	public SubjectTreeCellRenderer(JTree tree) {
 		super();
@@ -57,8 +61,9 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 		boldFont = boldFont.deriveFont(Font.BOLD);
 
 		plainFont = UIManager.getFont("Label.font");
-		
-		font = plainFont;
+
+		underlinedFont = UIManager.getFont("Tree.font");
+		underlinedFont = underlinedFont.deriveFont(Font.ITALIC);
 
 	}
 
@@ -71,7 +76,6 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 		int row,
 		boolean hasFocus) {
 
-		
 		super.getTreeCellRendererComponent(
 			tree,
 			value,
@@ -80,8 +84,7 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 			leaf,
 			row,
 			hasFocus);
-		
-		
+
 		/*
 		TreePath path = tree1.getPathForRow(row);
 		if (path == null)
@@ -91,14 +94,12 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 		//MessageNode messageNode = (MessageNode) path.getLastPathComponent();
 		MessageNode messageNode = (MessageNode) value;
 
-		
-		if ( messageNode.getUserObject().equals("root") )
-			{
-				setText("...");
-				setIcon(null);
-				return this;
-			}
-		
+		if (messageNode.getUserObject().equals("root")) {
+			setText("...");
+			setIcon(null);
+			return this;
+		}
+
 		HeaderInterface header = messageNode.getHeader();
 		if (header == null) {
 			System.out.println("header is null");
@@ -107,10 +108,12 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 
 		if (header.getFlags() != null) {
 			if (header.getFlags().getRecent()) {
-				font = boldFont;
-				setFont(boldFont);
-			} else {
-				font = plainFont;
+				if (getFont().equals(boldFont) == false)
+					setFont(boldFont);
+			} else if (messageNode.isHasRecentChildren()) {
+				if (getFont().equals(underlinedFont) == false)
+					setFont(underlinedFont);
+			} else if (getFont().equals(plainFont) == false) {
 				setFont(plainFont);
 			}
 		}
@@ -125,11 +128,38 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 
 		return this;
 	}
+	
+
 	/**
-	 * @see java.awt.MenuContainer#getFont()
+	 * Returns the background.
+	 * @return Color
 	 */
-	public Font getFont() {
-		return font;
+	public Color getBackground() {
+		return background;
+	}
+
+	/**
+	 * Returns the foreground.
+	 * @return Color
+	 */
+	public Color getForeground() {
+		return foreground;
+	}
+
+	/**
+	 * Sets the background.
+	 * @param background The background to set
+	 */
+	public void setBackground(Color background) {
+		this.background = background;
+	}
+
+	/**
+	 * Sets the foreground.
+	 * @param foreground The foreground to set
+	 */
+	public void setForeground(Color foreground) {
+		this.foreground = foreground;
 	}
 
 }

@@ -19,10 +19,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.gui.table.HeaderTableModel;
 import org.columba.mail.message.HeaderInterface;
 
@@ -39,7 +40,7 @@ public class TableModelThreadedView extends TableModelPlugin {
 
 	private boolean enabled;
 
-	private Hashtable hashtable;
+	private HashMap hashtable;
 	private int idCount = 0;
 
 	private Collator collator;
@@ -255,7 +256,7 @@ public class TableModelThreadedView extends TableModelPlugin {
 		if (rootNode == null)
 			return;
 
-		hashtable = new Hashtable();
+		hashtable = new HashMap();
 
 		// save every message-id in hashtable for later reference
 		for (Enumeration enum = rootNode.children(); enum.hasMoreElements();) {
@@ -272,10 +273,12 @@ public class TableModelThreadedView extends TableModelPlugin {
 			header.set("Message-ID", id);
 			hashtable.put(id, node);
 
+			/*
 			String subject = (String) header.get("Subject");
 			//System.out.println("subject: "+ subject);
 			subject = parseSubject(subject);
 			node.setParsedSubject(subject);
+			*/
 		}
 
 		/* for each element in the message-header-reference or in-reply-to headerfield:
@@ -390,21 +393,54 @@ public class TableModelThreadedView extends TableModelPlugin {
 		return parent;
 	}
 
+	/**
+	 * 
+	 * sort all children after date
+	 * 
+	 * @param node	root MessageNode
+	 */
 	protected void sort(MessageNode node) {
 		for (int i = 0; i < node.getChildCount(); i++) {
 			MessageNode child = (MessageNode) node.getChildAt(i);
 
 			//if ( ( child.isLeaf() == false ) && ( !child.getParent().equals( node ) ) )
 			if (child.isLeaf() == false) {
+				// has children
 				Vector v = child.getVector();
 				Collections.sort(
 					v,
 					new MessageHeaderComparator(
 						getHeaderTableModel().getColumnNumber("Date"),
 						true));
+					
+				// check if there are messages marked as recent
+				//  -> in case underline parent node
+				
+				boolean contains = containsRecentChildren(child);
+				child.setHasRecentChildren(contains);
 			}
 		}
 
+	}
+	
+	protected boolean containsRecentChildren( MessageNode parent )
+	{
+		for (int i = 0; i < parent.getChildCount(); i++) {
+			MessageNode child = (MessageNode) parent.getChildAt(i);
+			
+			if ( child.getHeader().getFlags().getRecent() )
+			{
+				// recent found
+				
+				ColumbaLogger.log.debug("found recent message");
+				return true;
+			}
+			else
+			containsRecentChildren(child);
+			
+		}
+		
+		return false;
 	}
 
 	public boolean manipulateModel(int mode) {

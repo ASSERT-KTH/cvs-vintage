@@ -33,7 +33,7 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 	private Color background;
 	private Color foreground;
 
-	private Font plainFont, boldFont;
+	private Font plainFont, boldFont, underlinedFont;
 
 	private JTree tree;
 
@@ -94,6 +94,9 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 		boldFont = boldFont.deriveFont(Font.BOLD);
 
 		plainFont = UIManager.getFont("Tree.font");
+		
+		underlinedFont = UIManager.getFont("Tree.font");
+		underlinedFont = underlinedFont.deriveFont( Font.ITALIC );
 	}
 
 	/**
@@ -152,7 +155,12 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 			if (header.getFlags().getRecent()) {
 				if (getFont().equals(boldFont) == false)
 					setFont(boldFont);
-			} else if (getFont().equals(plainFont) == false) {
+			} else if ( messageNode.isHasRecentChildren() )
+			{
+				if ( getFont().equals(underlinedFont) == false )
+					setFont(underlinedFont);
+			}
+			else if (getFont().equals(plainFont) == false) {
 				setFont(plainFont);
 			}
 		}
