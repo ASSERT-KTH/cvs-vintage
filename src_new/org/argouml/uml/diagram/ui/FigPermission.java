@@ -1,4 +1,4 @@
-// $Id: FigPermission.java,v 1.4 2003/09/14 17:07:31 alexb Exp $
+// $Id: FigPermission.java,v 1.5 2004/08/03 01:52:27 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,14 +29,8 @@
 package org.argouml.uml.diagram.ui;
 
 import org.tigris.gef.base.Layer;
-import org.tigris.gef.presentation.ArrowHeadGreater;
 
 public class FigPermission extends FigDependency {
-
-    ////////////////////////////////////////////////////////////////
-    // constructors
-    protected ArrowHeadGreater endArrow;
-
     public FigPermission() {
         super();
     }
