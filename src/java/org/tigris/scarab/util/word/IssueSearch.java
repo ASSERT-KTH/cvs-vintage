@@ -776,9 +776,17 @@ public class IssueSearch
                              FederatedId maxFid)
         throws Exception
     {
+        if ( minFid != null && minFid.getDomain() == null ) 
+        {
+            minFid.setDomain(getModule().getDomain());
+        }
         if ( minFid != null && minFid.getPrefix() == null ) 
         {
             minFid.setPrefix(getModule().getCode());
+        }
+        if ( maxFid != null && maxFid.getDomain() == null ) 
+        {
+            maxFid.setDomain(getModule().getDomain());
         }
         if ( maxFid != null && maxFid.getPrefix() == null ) 
         {
