@@ -87,7 +87,7 @@ $page.setTitle("Admin Approval")
          #else 
             <tr class="b">
          #end
-         <td><input type="checkbox" /></td>
+         <td><input type="checkbox" name="template_id_$template.IssueTemplateId" /></td>
 
          <td>$format.getDate($scarabG.DateFormat, $template.CreatedDate)</td>
 
