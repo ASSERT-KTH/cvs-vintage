@@ -80,7 +80,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.14 2001/11/28 21:04:37 dr Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.15 2001/12/04 15:55:03 dr Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -259,74 +259,5 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     }
     
     
-    /** Returns a User object retrieved by specifying the username.
-     *
-     * @param username the username of the user to retrieve
-     * @returns the specified user, if found, or null otherwise
-     * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-     */
-    public ScarabUser getUserByUsername(String username) throws Exception
-    {
-        ScarabUser user = null;
-        
-        try
-        {
-            user = (ScarabUser)TurbineSecurity.getUser(username);
-        }
-        catch (UnknownEntityException uee)
-        {        
-        }
-        catch (DataBackendException dbe)
-        {          
-        }
-        
-        return (user);
-    }
-    
-    /** Returns a Role object retrieved by specifying the name of the role.
-     *
-     * @param name the name of the role to retrieve
-     * @returns the specified Role, if found, or null otherwise
-     * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-     */
-    public Role getRoleByName(String name) throws Exception
-    {
-        Role role = null;
-        role = (Role)TurbineSecurity.getRole(name);   
-        
-        return (role);
-    }
-    
-    /** 
-     * Gets a list of all Groups
-     */
-    public Group[] getGroups() throws Exception
-    {
-        return TurbineSecurity.getAllGroups().getGroupsArray();
-    }
-    
-    /** 
-     * Gets a list of all Permissions
-     */
-    public Permission[] getPermissions() throws Exception
-    {
-        return (TurbineSecurity.getAllPermissions().getPermissionsArray());
-    }
-    
-    /** 
-     * Gets a list of all Roles.
-     */
-    public Role[] getRoles() throws Exception
-    {
-        return TurbineSecurity.getAllRoles().getRolesArray();
-    }
-    
-    /**
-     * Gets an ACL object for a user
-     */
-    public AccessControlList getACL(ScarabUser user) throws Exception
-    {
-        return TurbineSecurity.getACL(user);
-    }    
 }
 

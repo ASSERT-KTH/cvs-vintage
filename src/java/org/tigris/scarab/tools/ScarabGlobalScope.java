@@ -69,7 +69,7 @@ import org.apache.fulcrum.security.util.AccessControlList;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalScope.java,v 1.9 2001/11/28 21:04:10 dr Exp $
+ * @version $Id: ScarabGlobalScope.java,v 1.10 2001/12/04 15:55:03 dr Exp $
  */
 public interface ScarabGlobalScope extends ApplicationTool
 {
@@ -97,40 +97,5 @@ public interface ScarabGlobalScope extends ApplicationTool
      */
     public List getSearchUsers(String searchField, String searchCriteria, 
                                String orderByField, String ascOrDesc)
-        throws Exception;
-    /**
-     * Get a user based on the given username.
-     */
-    public ScarabUser getUserByUsername(String username)
-        throws Exception;
-
-    /**
-     * Get a role based on the given name.
-     */
-    public Role getRoleByName(String name)
-        throws Exception;
-        
-    /** 
-     * Gets a list of all Groups
-     */
-    public Group[] getGroups()
-        throws Exception;
-
-    /** 
-     * Gets a list of all Permissions
-     */
-    public Permission[] getPermissions()
-        throws Exception;
-
-    /** 
-     * Gets a list of all Roles
-     */
-    public Role[] getRoles()
-        throws Exception;
-
-    /**
-     * Gets an ACL object for a user
-     */
-    public AccessControlList getACL(ScarabUser user)
         throws Exception;
 }
