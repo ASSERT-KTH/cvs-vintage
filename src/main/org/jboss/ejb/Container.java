@@ -24,6 +24,8 @@ import javax.management.MBeanException;
 import javax.management.ObjectName;
 import javax.naming.*;
 import javax.transaction.TransactionManager;
+import javax.transaction.Transaction;
+
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.deployment.WebserviceClientDeployer;
@@ -35,6 +37,7 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.InvocationStatistics;
+import org.jboss.invocation.LocalEJBInvocation;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
@@ -73,19 +76,19 @@ import org.jboss.mx.util.ObjectNameConverter;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.132 $
+ * @version $Revision: 1.133 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public abstract class Container
-   extends ServiceMBeanSupport
-   implements ContainerMBean
+        extends ServiceMBeanSupport
+        implements ContainerMBean
 {
    public final static String BASE_EJB_CONTAINER_NAME =
-         "jboss.j2ee:service=EJB";
+           "jboss.j2ee:service=EJB";
 
    public final static ObjectName EJB_CONTAINER_QUERY_NAME =
-         ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + ",*");
+           ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + ",*");
 
    /** This is the application that this container is a part of */
    protected EjbModule ejbModule;
@@ -151,7 +154,7 @@ public abstract class Container
 
    /** ??? */
    protected LocalProxyFactory localProxyFactory =
-      new BaseLocalProxyFactory();
+           new BaseLocalProxyFactory();
 
    /** This is a cache for method permissions */
    private HashMap methodPermissionsCache = new HashMap();
@@ -191,11 +194,14 @@ public abstract class Container
    /**
     * Initialize <tt>TimedObject</tt> method references.
     */
-   static {
-      try {
-         EJB_TIMEOUT = TimedObject.class.getMethod( "ejbTimeout", new Class[] { Timer.class } );
+   static
+   {
+      try
+      {
+         EJB_TIMEOUT = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
          e.printStackTrace();
          throw new ExceptionInInitializerError(e);
       }
@@ -224,7 +230,7 @@ public abstract class Container
       return remoteInterface;
    }
 
-   /** 
+   /**
     * this actually should be called remotehome, but for interface compliance purposes
     * we keep it like that
     */
@@ -303,7 +309,7 @@ public abstract class Container
 
    public EJBProxyFactory getProxyFactory()
    {
-      return (EJBProxyFactory)proxyFactoryTL.get();
+      return (EJBProxyFactory) proxyFactoryTL.get();
    }
 
    public void setProxyFactory(Object factory)
@@ -313,7 +319,7 @@ public abstract class Container
 
    public EJBProxyFactory lookupProxyFactory(String binding)
    {
-      return (EJBProxyFactory)proxyFactories.get(binding);
+      return (EJBProxyFactory) proxyFactories.get(binding);
    }
 
    /**
@@ -331,7 +337,7 @@ public abstract class Container
     *
     * @param di The new DeploymentInfo to be used
     */
-   public final void setDeploymentInfo( DeploymentInfo di )
+   public final void setDeploymentInfo(DeploymentInfo di)
    {
       this.di = di;
    }
@@ -368,6 +374,7 @@ public abstract class Container
    {
       return createCount;
    }
+
    /**
     * Gets the number of remove invocations that have been made
     * @jmx:managed-attribute
@@ -434,6 +441,7 @@ public abstract class Container
    {
       return webClassLoader;
    }
+
    /** Set the class loader for dynamic class loading via http.
     */
    public void setWebClassLoader(final ClassLoader webClassLoader)
@@ -474,7 +482,7 @@ public abstract class Container
 
       if (methodPermissionsCache.containsKey(m))
       {
-         permissions = (Set) methodPermissionsCache.get( m );
+         permissions = (Set) methodPermissionsCache.get(m);
       }
       else
       {
@@ -508,7 +516,8 @@ public abstract class Container
     *
     * @see java.lang.Class#newInstance
     */
-   public Object createBeanClassInstance() throws Exception {
+   public Object createBeanClassInstance() throws Exception
+   {
       return getBeanClass().newInstance();
    }
 
@@ -518,27 +527,27 @@ public abstract class Container
     * @param   codebase a possibly empty, but non null String with
     *                   a sequence of URLs separated by spaces
     * /
-   public void setCodebase(final String codebase)
-   {
-      if (codebase != null)
-         this.codebase = codebase;
-   }
-   */
+    public void setCodebase(final String codebase)
+    {
+    if (codebase != null)
+    this.codebase = codebase;
+    }
+    */
    /**
     * Gets the codebase of this container.
     *
     * @return    this container's codebase String, a sequence of URLs
     *            separated by spaces
     * /
-   public String getCodebase()
-   {
-      return codebase;
-   }
-   */
+    public String getCodebase()
+    {
+    return codebase;
+    }
+    */
    /** Build a JMX name using the pattern jboss.j2ee:service=EJB,jndiName=[jndiName]
-      where the [jndiName] is either the bean remote home JNDI binding, or
-      the local home JNDI binding if the bean has no remote interfaces.
-   */
+    where the [jndiName] is either the bean remote home JNDI binding, or
+    the local home JNDI binding if the bean has no remote interfaces.
+    */
    public ObjectName getJmxName()
    {
       if (jmxName == null)
@@ -554,16 +563,16 @@ public abstract class Container
          {
             throw new IllegalStateException("Container jndiName is null");
          }
- 
+
          // The name must be escaped since the jndiName may be arbitrary
          String name = BASE_EJB_CONTAINER_NAME + ",jndiName=" + jndiName;
          try
          {
             jmxName = ObjectNameConverter.convert(name);
          }
-         catch(MalformedObjectNameException e)
+         catch (MalformedObjectNameException e)
          {
-            throw new RuntimeException("Failed to create ObjectName, msg="+e.getMessage());
+            throw new RuntimeException("Failed to create ObjectName, msg=" + e.getMessage());
          }
       }
       return jmxName;
@@ -582,30 +591,34 @@ public abstract class Container
     *
     * @jmx:managed-operation
     **/
-   public TimerService getTimerService( Object pKey )
-      throws IllegalStateException
+   public TimerService getTimerService(Object pKey)
+           throws IllegalStateException
    {
-      if( this instanceof StatefulSessionContainer ) {
-         throw new IllegalStateException( "Statefull Session Beans are not allowed to access Timer Service" );
+      if (this instanceof StatefulSessionContainer)
+      {
+         throw new IllegalStateException("Statefull Session Beans are not allowed to access Timer Service");
       }
       TimerService timerService = (TimerService) timerServices.get(
-         ( pKey == null ? "null" : pKey )
-         );
-      if( timerService == null ) {
-         try {
+              (pKey == null ? "null" : pKey)
+      );
+      if (timerService == null)
+      {
+         try
+         {
             timerService = (TimerService) server.invoke(
-               new ObjectName( "jboss:service=EJBTimerService" ),
-               "createTimerService",
-               new Object[] { getJmxName().toString(), this, pKey },
-               new String[] { String.class.getName(), Container.class.getName(), Object.class.getName() }
-               );
+                    new ObjectName("jboss:service=EJBTimerService"),
+                    "createTimerService",
+                    new Object[]{getJmxName().toString(), this, pKey},
+                    new String[]{String.class.getName(), Container.class.getName(), Object.class.getName()}
+            );
             timerServices.put(
-               ( pKey == null ? "null" : pKey ),
-               timerService
-               );
+                    (pKey == null ? "null" : pKey),
+                    timerService
+            );
          }
-         catch( Exception e ) {
-            throw new RuntimeException( "Could not create timer service: " + e );
+         catch (Exception e)
+         {
+            throw new RuntimeException("Could not create timer service: " + e);
          }
       }
       return timerService;
@@ -614,11 +627,13 @@ public abstract class Container
    /**
     * Stops all the timers created by beans of this container
     **/
-   public void stopTimers() {
+   public void stopTimers()
+   {
       Iterator i = timerServices.values().iterator();
-      while( i.hasNext() ) {
+      while (i.hasNext())
+      {
          TimerService timerService = (TimerService) i.next();
-         ( (ContainerTimerService) timerService ).stopService();
+         ((ContainerTimerService) timerService).stopService();
          i.remove();
       }
    }
@@ -629,52 +644,55 @@ public abstract class Container
     *
     * @param pTimer Timer causing this event
     **/
-   public void handleEjbTimeout( Timer pTimer ) {
+   public void handleEjbTimeout(Timer pTimer)
+   {
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader( getClassLoader() );
+      Thread.currentThread().setContextClassLoader(getClassLoader());
 
-      Object id = ((ContainerTimer)pTimer).getKey();
+      Object id = ((ContainerTimer) pTimer).getKey();
       try
       {
-         Invocation invocation = new Invocation(
-            id,
-            EJB_TIMEOUT,
-            new Class[] { Timer.class },
-            ( getTransactionManager() == null ?
-              null:
-              getTransactionManager().getTransaction()
-              ),
-            SecurityAssociation.getPrincipal(),
-            SecurityAssociation.getCredential()
-            );
-         invocation.setArguments( new Object[] { pTimer } );
-         invocation.setType( InvocationType.LOCAL );
+         LocalEJBInvocation invocation = new LocalEJBInvocation(
+                 id,
+                 EJB_TIMEOUT,
+                 new Object[]{pTimer},
+                 null,
+                 SecurityAssociation.getPrincipal(),
+                 SecurityAssociation.getCredential()
+         );
+         invocation.setType(InvocationType.LOCAL);
 
-         invoke( invocation );
+         invoke(invocation);
+         if (getTransactionManager().getTransaction() != null)
+         {
+            Transaction tx = getTransactionManager().getTransaction();
+            log.error("TRANSACTION IS STILL ALIVE!!!!!" + tx.getStatus());
+         }
       }
-      catch( Exception e ) {
+      catch (Exception e)
+      {
          e.printStackTrace();
-         throw new RuntimeException( "call ejbTimeout() failed: " + e );
+         throw new RuntimeException("call ejbTimeout() failed: " + e);
       }
-      /*AS TODO: Manage the exceptions properly
-        catch (AccessException ae)
-        {
-        throw new AccessLocalException( ae.getMessage(), ae );
-        }
-        catch (NoSuchObjectException nsoe)
-        {
-        throw new NoSuchObjectLocalException( nsoe.getMessage(), nsoe );
-        }
-        catch (TransactionRequiredException tre)
-        {
-        throw new TransactionRequiredLocalException( tre.getMessage() );
-        }
-        catch (TransactionRolledbackException trbe)
-        {
-        throw new TransactionRolledbackLocalException(
-        trbe.getMessage(), trbe );
-        }
-      */
+              /*AS TODO: Manage the exceptions properly
+                catch (AccessException ae)
+                {
+                throw new AccessLocalException( ae.getMessage(), ae );
+                }
+                catch (NoSuchObjectException nsoe)
+                {
+                throw new NoSuchObjectLocalException( nsoe.getMessage(), nsoe );
+                }
+                catch (TransactionRequiredException tre)
+                {
+                throw new TransactionRequiredLocalException( tre.getMessage() );
+                }
+                catch (TransactionRolledbackException trbe)
+                {
+                throw new TransactionRolledbackLocalException(
+                trbe.getMessage(), trbe );
+                }
+              */
       finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
@@ -704,10 +722,10 @@ public abstract class Container
       if (metaData.getLocal() != null)
          localInterface = classLoader.loadClass(metaData.getLocal());
 
-      localProxyFactory.setContainer( this );
+      localProxyFactory.setContainer(this);
       localProxyFactory.create();
       if (localHomeInterface != null)
-         ejbModule.addLocalHome(this, localProxyFactory.getEJBLocalHome() );
+         ejbModule.addLocalHome(this, localProxyFactory.getEJBLocalHome());
    }
 
    /**
@@ -750,7 +768,7 @@ public abstract class Container
    protected void destroyService() throws Exception
    {
       localProxyFactory.destroy();
-      ejbModule.removeLocalHome( this );
+      ejbModule.removeLocalHome(this);
       this.classLoader = null;
       // this.webClassLoader = null; disposed by EjbModule
       this.localClassLoader = null;
@@ -788,7 +806,7 @@ public abstract class Container
     * @throws Exception
     */
    public abstract Object internalInvokeHome(Invocation mi)
-      throws Exception;
+           throws Exception;
 
    /**
     * This method is called when a method call comes
@@ -804,7 +822,7 @@ public abstract class Container
     * @throws Exception
     */
    public abstract Object internalInvoke(Invocation mi)
-      throws Exception;
+           throws Exception;
 
    abstract Interceptor createContainerInterceptor();
 
@@ -818,7 +836,7 @@ public abstract class Container
     * @throws Exception
     */
    public Object invoke(Invocation mi)
-      throws Exception
+           throws Exception
    {
       Thread currentThread = Thread.currentThread();
       ClassLoader callerClassLoader = currentThread.getContextClassLoader();
@@ -837,41 +855,41 @@ public abstract class Container
          // stat gathering: concurrent calls
          this.invokeStats.callIn();
 
-         if(type == InvocationType.REMOTE ||
-               type == InvocationType.LOCAL ||
-                  // web service calls come in as "ordinary" application invocations
-                  type == InvocationType.SERVICE_ENDPOINT)
+         if (type == InvocationType.REMOTE ||
+                 type == InvocationType.LOCAL ||
+                 // web service calls come in as "ordinary" application invocations
+                 type == InvocationType.SERVICE_ENDPOINT)
          {
             if (mi instanceof MarshalledInvocation)
             {
                ((MarshalledInvocation) mi).setMethodMap(
-                     marshalledInvocationMapping);
+                       marshalledInvocationMapping);
 
                if (log.isTraceEnabled())
                {
-                  log.trace("METHOD REMOTE INVOKE "+
-                        mi.getObjectName()+"||"+
-                        mi.getMethod().getName()+"||");
+                  log.trace("METHOD REMOTE INVOKE " +
+                          mi.getObjectName() + "||" +
+                          mi.getMethod().getName() + "||");
                }
             }
             m = mi.getMethod();
             return internalInvoke(mi);
          }
-         else if(type == InvocationType.HOME ||
-               type == InvocationType.LOCALHOME)
+         else if (type == InvocationType.HOME ||
+                 type == InvocationType.LOCALHOME)
          {
             if (mi instanceof MarshalledInvocation)
             {
 
                ((MarshalledInvocation) mi).setMethodMap(
-                     marshalledInvocationMapping);
+                       marshalledInvocationMapping);
 
                if (log.isTraceEnabled())
                {
                   log.trace("METHOD HOME INVOKE " +
-                        mi.getObjectName() + "||"+
-                        mi.getMethod().getName() + "||"+
-                        mi.getArguments().toString());
+                          mi.getObjectName() + "||" +
+                          mi.getMethod().getName() + "||" +
+                          mi.getArguments().toString());
                }
             }
             m = mi.getMethod();
@@ -880,12 +898,12 @@ public abstract class Container
          else
          {
             throw new MBeanException(new IllegalArgumentException(
-                     "Unknown invocation type: " + type));
+                    "Unknown invocation type: " + type));
          }
       }
       finally
       {
-         if( m != null )
+         if (m != null)
          {
             long end = System.currentTimeMillis();
             long elapsed = end - start;
@@ -913,8 +931,8 @@ public abstract class Container
 
       if (debug)
       {
-         log.debug("Begin java:comp/env for EJB: "+beanMetaData.getEjbName());
-         log.debug("TCL: "+Thread.currentThread().getContextClassLoader());
+         log.debug("Begin java:comp/env for EJB: " + beanMetaData.getEjbName());
+         log.debug("TCL: " + Thread.currentThread().getContextClassLoader());
       }
 
       // Since the BCL is already associated with this thread we can start
@@ -925,13 +943,13 @@ public abstract class Container
       // Bind environment properties
       {
          Iterator enum = beanMetaData.getEnvironmentEntries();
-         while(enum.hasNext())
+         while (enum.hasNext())
          {
-            EnvEntryMetaData entry = (EnvEntryMetaData)enum.next();
+            EnvEntryMetaData entry = (EnvEntryMetaData) enum.next();
             if (debug)
             {
-               log.debug("Binding env-entry: "+entry.getName()+" of type: "+
-                         entry.getType()+" to value:"+entry.getValue());
+               log.debug("Binding env-entry: " + entry.getName() + " of type: " +
+                       entry.getType() + " to value:" + entry.getValue());
             }
 
             EnvEntryMetaData.bindEnvEntry(envCtx, entry);
@@ -941,11 +959,11 @@ public abstract class Container
       // Bind EJB references
       {
          Iterator enum = beanMetaData.getEjbReferences();
-         while(enum.hasNext())
+         while (enum.hasNext())
          {
-            EjbRefMetaData ref = (EjbRefMetaData)enum.next();
+            EjbRefMetaData ref = (EjbRefMetaData) enum.next();
             if (debug)
-               log.debug("Binding an EJBReference "+ref.getName());
+               log.debug("Binding an EJBReference " + ref.getName());
 
             if (ref.getLink() != null)
             {
@@ -954,19 +972,19 @@ public abstract class Container
                String jndiName = EjbUtil.findEjbLink(server, di, linkName);
                if (debug)
                {
-                  log.debug("Binding "+ref.getName()+
-                        " to ejb-link: "+linkName+" -> "+jndiName);
+                  log.debug("Binding " + ref.getName() +
+                          " to ejb-link: " + linkName + " -> " + jndiName);
                }
-               if( jndiName == null )
+               if (jndiName == null)
                {
-                  String msg = "Failed to resolve ejb-link: "+linkName
-                     +" make by ejb-name: "+ref.getName();
+                  String msg = "Failed to resolve ejb-link: " + linkName
+                          + " make by ejb-name: " + ref.getName();
                   throw new DeploymentException(msg);
                }
 
                Util.bind(envCtx,
-                     ref.getName(),
-                     new LinkRef(jndiName));
+                       ref.getName(),
+                       new LinkRef(jndiName));
 
             }
             else
@@ -976,7 +994,7 @@ public abstract class Container
                Reference reference = null;
                while (it.hasNext())
                {
-                  String invokerBinding = (String)it.next();
+                  String invokerBinding = (String) it.next();
                   // Check for an invoker level jndi-name
                   String name = ref.getInvokerBinding(invokerBinding);
                   // Check for an global jndi-name
@@ -985,35 +1003,35 @@ public abstract class Container
                   if (name == null)
                   {
                      throw new DeploymentException
-                        ("ejb-ref "+ref.getName()+
-                         ", expected either ejb-link in ejb-jar.xml or " +
-                         "jndi-name in jboss.xml");
+                             ("ejb-ref " + ref.getName() +
+                             ", expected either ejb-link in ejb-jar.xml or " +
+                             "jndi-name in jboss.xml");
                   }
 
                   StringRefAddr addr = new StringRefAddr(invokerBinding, name);
                   log.debug("adding " + invokerBinding + ":" + name +
-                        " to Reference");
+                          " to Reference");
 
                   if (reference == null)
                   {
                      reference = new Reference("javax.naming.LinkRef",
-                           ENCThreadLocalKey.class.getName(),
-                           null);
+                             ENCThreadLocalKey.class.getName(),
+                             null);
                   }
                   reference.add(addr);
                }
 
-               // If there were invoker bindings create bind the reference 
+               // If there were invoker bindings create bind the reference
                if (reference != null)
                {
                   if (ref.getJndiName() != null)
                   {
                      // Add default for the bean level ejb-ref/jndi-name
                      StringRefAddr addr =
-                           new StringRefAddr("default", ref.getJndiName());
+                             new StringRefAddr("default", ref.getJndiName());
                      reference.add(addr);
                   }
-                  if ( reference.size() == 1 && reference.get("default") == null )
+                  if (reference.size() == 1 && reference.get("default") == null)
                   {
                      /* There is only one invoker binding and its not default so
                      create a default binding to allow the link to have a value
@@ -1031,13 +1049,13 @@ public abstract class Container
                   // Bind the bean level ejb-ref/jndi-name
                   if (ref.getJndiName() == null)
                   {
-                     throw new DeploymentException("ejb-ref " + ref.getName()+
-                         ", expected either ejb-link in ejb-jar.xml " +
-                         "or jndi-name in jboss.xml");
+                     throw new DeploymentException("ejb-ref " + ref.getName() +
+                             ", expected either ejb-link in ejb-jar.xml " +
+                             "or jndi-name in jboss.xml");
                   }
                   Util.bind(envCtx,
-                        ref.getName(),
-                        new LinkRef(ref.getJndiName()));
+                          ref.getName(),
+                          new LinkRef(ref.getJndiName()));
                }
             }
          }
@@ -1048,36 +1066,36 @@ public abstract class Container
          Iterator enum = beanMetaData.getEjbLocalReferences();
          // unique key name
          String localJndiName = beanMetaData.getLocalJndiName();
-         while(enum.hasNext())
+         while (enum.hasNext())
          {
-            EjbLocalRefMetaData ref = (EjbLocalRefMetaData)enum.next();
+            EjbLocalRefMetaData ref = (EjbLocalRefMetaData) enum.next();
             String refName = ref.getName();
-            log.debug("Binding an EJBLocalReference "+ref.getName());
+            log.debug("Binding an EJBLocalReference " + ref.getName());
 
             if (ref.getLink() != null)
             {
                // Internal link
-               log.debug("Binding "+refName+" to bean source: "+ref.getLink());
+               log.debug("Binding " + refName + " to bean source: " + ref.getLink());
 
                String jndiName = EjbUtil.findLocalEjbLink(server, di,
-                  ref.getLink());
+                       ref.getLink());
 
                Util.bind(envCtx,
-                     ref.getName(),
-                     new LinkRef(jndiName));
+                       ref.getName(),
+                       new LinkRef(jndiName));
             }
             else
-            { 
-                // Bind the bean level ejb-local-ref/local-jndi-name
-                if (ref.getJndiName() == null)
-                {
-                    throw new DeploymentException("ejb-local-ref " + ref.getName()+
-                                ", expected either ejb-link in ejb-jar.xml " +
-                                "or local-jndi-name in jboss.xml");
-                }
-                Util.bind(envCtx,
-                          ref.getName(),
-                          new LinkRef(ref.getJndiName()));
+            {
+               // Bind the bean level ejb-local-ref/local-jndi-name
+               if (ref.getJndiName() == null)
+               {
+                  throw new DeploymentException("ejb-local-ref " + ref.getName() +
+                          ", expected either ejb-link in ejb-jar.xml " +
+                          "or local-jndi-name in jboss.xml");
+               }
+               Util.bind(envCtx,
+                       ref.getName(),
+                       new LinkRef(ref.getJndiName()));
             }
          }
       }
@@ -1088,11 +1106,11 @@ public abstract class Container
 
          // let's play guess the cast game ;)  New metadata should fix this.
          ApplicationMetaData application =
-               beanMetaData.getApplicationMetaData();
+                 beanMetaData.getApplicationMetaData();
 
-         while(enum.hasNext())
+         while (enum.hasNext())
          {
-            ResourceRefMetaData ref = (ResourceRefMetaData)enum.next();
+            ResourceRefMetaData ref = (ResourceRefMetaData) enum.next();
 
             String resourceName = ref.getResourceName();
             String finalName = application.getResourceByName(resourceName);
@@ -1121,7 +1139,8 @@ public abstract class Container
                      if (debug)
                         log.debug("failed to lookup DefaultDS; ignoring", e);
                   }
-                  finally {
+                  finally
+                  {
                      dsCtx.close();
                   }
                }
@@ -1131,7 +1150,7 @@ public abstract class Container
                if (finalName == null)
                {
                   log.warn("No resource manager found for " +
-                        ref.getResourceName());
+                          ref.getResourceName());
                   continue;
                }
             }
@@ -1142,7 +1161,7 @@ public abstract class Container
                if (debug)
                {
                   log.debug("Binding URL: " + ref.getRefName() +
-                        " to JDNI ENC as: " + finalName);
+                          " to JDNI ENC as: " + finalName);
                }
                Util.bind(envCtx, ref.getRefName(), new URL(finalName));
             }
@@ -1151,8 +1170,8 @@ public abstract class Container
                // Resource Manager bindings, should validate the type...
                if (debug)
                {
-                  log.debug("Binding resource manager: "+ref.getRefName()+
-                            " to JDNI ENC as: " +finalName);
+                  log.debug("Binding resource manager: " + ref.getRefName() +
+                          " to JDNI ENC as: " + finalName);
                }
                Util.bind(envCtx, ref.getRefName(), new LinkRef(finalName));
             }
@@ -1162,17 +1181,17 @@ public abstract class Container
       // Bind resource env references
       {
          Iterator enum = beanMetaData.getResourceEnvReferences();
-         while( enum.hasNext() )
+         while (enum.hasNext())
          {
             ResourceEnvRefMetaData resRef =
-                  (ResourceEnvRefMetaData) enum.next();
+                    (ResourceEnvRefMetaData) enum.next();
             String encName = resRef.getRefName();
             String jndiName = resRef.getJndiName();
             // Should validate the type...
             if (debug)
             {
                log.debug("Binding env resource: " + encName +
-                     " to JDNI ENC as: " +jndiName);
+                       " to JDNI ENC as: " + jndiName);
             }
             Util.bind(envCtx, encName, new LinkRef(jndiName));
          }
@@ -1183,25 +1202,25 @@ public abstract class Container
       // security manager can be made without knowing the global jndi name.
 
       String securityDomain =
-            metaData.getContainerConfiguration().getSecurityDomain();
-      if( securityDomain == null )
+              metaData.getContainerConfiguration().getSecurityDomain();
+      if (securityDomain == null)
          securityDomain = metaData.getApplicationMetaData().getSecurityDomain();
-      if( securityDomain != null )
+      if (securityDomain != null)
       {
          if (debug)
          {
-            log.debug("Binding securityDomain: "+securityDomain+
-                      " to JDNI ENC as: security/security-domain");
+            log.debug("Binding securityDomain: " + securityDomain +
+                    " to JDNI ENC as: security/security-domain");
          }
 
          Util.bind(
-               envCtx,
-               "security/security-domain",
-               new LinkRef(securityDomain));
+                 envCtx,
+                 "security/security-domain",
+                 new LinkRef(securityDomain));
          Util.bind(
-               envCtx,
-               "security/subject",
-               new LinkRef(securityDomain+"/subject"));
+                 envCtx,
+                 "security/subject",
+                 new LinkRef(securityDomain + "/subject"));
       }
 
       // Bind the webservice service-refs to the ENC.
@@ -1212,7 +1231,7 @@ public abstract class Container
       }
 
       if (debug)
-         log.debug("End java:comp/env for EJB: "+beanMetaData.getEjbName());
+         log.debug("End java:comp/env for EJB: " + beanMetaData.getEjbName());
    }
 
    /**
@@ -1224,9 +1243,9 @@ public abstract class Container
     */
    private void teardownEnvironment() throws Exception
    {
-      Context ctx = (Context)new InitialContext().lookup("java:comp");
+      Context ctx = (Context) new InitialContext().lookup("java:comp");
       ctx.unbind("env");
-      log.debug("Removed bindings from java:comp/env for EJB: "+getBeanMetaData().getEjbName());
+      log.debug("Removed bindings from java:comp/env for EJB: " + getBeanMetaData().getEjbName());
    }
 
 
@@ -1238,44 +1257,65 @@ public abstract class Container
     * and only differ slightly.
     */
    protected abstract class AbstractContainerInterceptor
-      implements Interceptor
+           implements Interceptor
    {
       protected final Logger log = Logger.getLogger(this.getClass());
 
-      public void setContainer(Container con) {}
+      public void setContainer(Container con)
+      {
+      }
 
-      public void setNext(Interceptor interceptor) {}
+      public void setNext(Interceptor interceptor)
+      {
+      }
 
-      public Interceptor getNext() { return null; }
+      public Interceptor getNext()
+      {
+         return null;
+      }
 
-      public void create() {}
+      public void create()
+      {
+      }
 
-      public void start() {}
+      public void start()
+      {
+      }
 
-      public void stop() {}
+      public void stop()
+      {
+      }
 
-      public void destroy() {}
+      public void destroy()
+      {
+      }
 
       protected void rethrow(Exception e)
-         throws Exception
+              throws Exception
       {
-         if (e instanceof IllegalAccessException) {
+         if (e instanceof IllegalAccessException)
+         {
             // Throw this as a bean exception...(?)
             throw new EJBException(e);
          }
-         else if(e instanceof InvocationTargetException) {
-            Throwable t = ((InvocationTargetException)e).getTargetException();
+         else if (e instanceof InvocationTargetException)
+         {
+            Throwable t = ((InvocationTargetException) e).getTargetException();
 
-            if (t instanceof EJBException) {
-               throw (EJBException)t;
+            if (t instanceof EJBException)
+            {
+               throw (EJBException) t;
             }
-            else if (t instanceof Exception) {
-               throw (Exception)t;
+            else if (t instanceof Exception)
+            {
+               throw (Exception) t;
             }
-            else if (t instanceof Error) {
-               throw (Error)t;
+            else if (t instanceof Error)
+            {
+               throw (Error) t;
             }
-            else {
+            else
+            {
                throw new NestedError("Unexpected Throwable", t);
             }
          }
@@ -1301,6 +1341,7 @@ public abstract class Container
 
    }
 }
+
 /*
 vim:ts=3:sw=3:et
 */
