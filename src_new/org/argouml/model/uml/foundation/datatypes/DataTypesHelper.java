@@ -1,4 +1,4 @@
-// $Id: DataTypesHelper.java,v 1.9 2004/02/29 12:35:41 linus Exp $
+// $Id: DataTypesHelper.java,v 1.10 2004/03/31 22:22:58 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.util.Iterator;
 
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
+import ru.novosoft.uml.foundation.data_types.MMultiplicity;
 import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
 
 /**
@@ -119,6 +120,20 @@ public class DataTypesHelper {
         }
         
         return MPseudostateKind.BRANCH.equals(kind);
+    }
+
+    /**
+     * Converts a Multiplicity to a String.
+     *
+     * @param multiplicity The Multiplicity to convert.
+     * @return The String representation of multiplicity.
+     * @throws IllegalArgumentException if multiplicity is not a Multiplicity.
+     */
+    public String multiplicityToString(Object multiplicity) {
+	if (!(multiplicity instanceof MMultiplicity))
+	    throw new IllegalArgumentException("Unrecognized object: " + multiplicity);
+
+	return ((MMultiplicity) multiplicity).toString();
     }
 }
 
