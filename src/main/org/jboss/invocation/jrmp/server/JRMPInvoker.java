@@ -56,7 +56,7 @@ import org.jboss.system.Registry;
  * from RMI/JRMP into the JMX base.
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2002/01/13: Sacha Labourey</b>
@@ -377,15 +377,18 @@ public class JRMPInvoker
 
          if (e instanceof RuntimeOperationsException)
             e = ((RuntimeOperationsException)e).getTargetException();
-         
-	 log.error("operation failed", e);
-	 throw e;
+
+         // Only log errors if trace is enabled
+         if( log.isTraceEnabled() )
+            log.trace("operation failed", e);
+         throw e;
       }
-      finally {
+      finally
+      {
          Thread.currentThread().setContextClassLoader(oldCl);
       }      
    }
-   
+
    // Package protected ---------------------------------------------
    
    // Protected -----------------------------------------------------
