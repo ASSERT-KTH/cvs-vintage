@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <!-- $Id: serverxml.html,v 1.5 2001/10/02 02:52:39 larryi Exp $ -->
+  <!-- $Id: serverxml.html,v 1.6 2001/10/08 05:30:02 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="style.css">
@@ -594,19 +594,19 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
   </tr>
   <tr valign="top">
     <td>forwardAll</td>
-    <td>If true, forward all requests to Tomcat. This helps insure that all the
-      behavior configured in the web.xml file functions correctly.  If false,
-      let Apache serve static resources. Warning: When false, some configuration
+    <td>If <code>true</code>, forward all requests to Tomcat. This helps insure that all the
+      behavior configured in the web.xml file functions correctly.  If <code>false</code>,
+      let Apache serve static resources. Warning: When <code>false</code>, some configuration
       in the web.xml may not be duplicated in Apache.  Review the mod_jk
       configuration file to see the actual configuration being set in Apache.</td>
     <td>true</td>
   </tr>
   <tr valign="top">
     <td>noRoot</td>
-    <td>If true, the root context is not mapped to Tomcat. If false and
-	  forwardAll is true, all requests to the root context are mapped to Tomcat.
-	  If false and forwardAll is false, only JSP and servlets requests to the
-	  root context are mapped to Tomcat. When false, to correctly serve
+    <td>If <code>true</code>, the root context is not mapped to Tomcat. If <code>false</code> and
+	  forwardAll is <code>true</code>, all requests to the root context are mapped to Tomcat.
+	  If <code>false</code> and forwardAll is <code>false</code>, only JSP and servlets requests to the
+	  root context are mapped to Tomcat. When <code>false</code>, to correctly serve
 	  Tomcat's root context in the default host you must also modify the
 	  DocumentRoot setting in Apache's httpd.conf file to point to Tomcat's root
 	  context directory. Otherwise some content, such as Apache's index.html,
@@ -721,7 +721,7 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
   </tr>
   <tr valign="top">
     <td>flat</td>
-    <td>Each dir will be treated as a webapp in the same host. If false,
+    <td>Each dir will be treated as a webapp in the same host. If <code>false</code>,
       each dir will be treated as a host name and its subdirs as
       webapplication. You can add apps to multiple virtual hosts. </td>
     <td>true</td>
@@ -1117,18 +1117,18 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
   </tr>
   <tr valign="top">
     <td>forwardAll</td>
-    <td>If true, forward all requests to Tomcat. This helps insure that all the
-      behavior configured in the web.xml file functions correctly.  If false,
-      let IIS serve static resources. Warning: When false, some configuration
+    <td>If <code>true</code>, forward all requests to Tomcat. This helps insure that all the
+      behavior configured in the web.xml file functions correctly.  If <code>false</code>,
+      let IIS serve static resources. Warning: When <code>false</code>, some configuration
       in the web.xml may not be duplicated in IIS.  Review the configuration
       files to see the actual configuration being set in IIS.</td>
     <td>true</td>
   </tr>
   <tr valign="top">
     <td>noRoot</td>
-    <td>If true, the root context is not mapped to Tomcat. If false and
-	  forwardAll is true, all requests to the root context are mapped to Tomcat.
-	  If false and forwardAll is false, only JSP and servlets requests to the
+    <td>If true, the root context is not mapped to Tomcat. If <code>false</code> and
+	  forwardAll is <code>true</code>, all requests to the root context are mapped to Tomcat.
+	  If <code>false</code> and forwardAll is <code>false</code>, only JSP and servlets requests to the
 	  root context are mapped to Tomcat. </td>
     <td>true</td>
   </tr>
@@ -1347,18 +1347,18 @@ to the <code>&lt;ContextManager ... &gt;</code> element in the
   </tr>
   <tr valign="top">
     <td>forwardAll</td>
-    <td>If true, forward all requests to Tomcat. This helps insure that all the
-      behavior configured in the web.xml file functions correctly.  If false,
-      let Apache serve static resources. Warning: When false, some configuration
+    <td>If <code>true</code>, forward all requests to Tomcat. This helps insure that all the
+      behavior configured in the web.xml file functions correctly.  If <code>false</code>,
+      let Apache serve static resources. Warning: When <code>false</code>, some configuration
       in the web.xml may not be duplicated in Apache.  Review the tomcat-apache.conf
       configuration file to see the actual configuration being set in Apache.</td>
     <td>true</td>
   </tr>
   <tr valign="top">
     <td>noRoot</td>
-    <td>If true, the root context is not mapped to Tomcat. If false and
-	  forwardAll is true, all requests to the root context are mapped to Tomcat.
-	  If false and forwardAll is false, only JSP and servlets requests to the
+    <td>If <code>true</code>, the root context is not mapped to Tomcat. If <code>false</code> and
+	  forwardAll is <code>true</code>, all requests to the root context are mapped to Tomcat.
+	  If <code>false</code> and forwardAll is <code>false</code>, only JSP and servlets requests to the
 	  root context are mapped to Tomcat. If a root context is assigned to a virtual host,
 	  then the DocumentRoot is automatically included in the configuration for
 	  that virtual host.</td>
@@ -1696,11 +1696,110 @@ than 5.</p>
 
 <h3><a name="NSConfig">NSConfig</a></h3>
 
-<hr size="5">
+<p><b>Type:</b> Configuration</p>
 
-<!-- ======================================== -->
+<h4>Description</h4>
 
-<h3><a name="PathSetter">PathSetter</a></h3>
+<p>Generate configuration files for nsapi_redirect.dll to be used for connecting
+Netscape Web Server to Tomcat.  An <code>obj.conf</code> will be written to
+<code>conf/auto</code> relative to TOMCAT_HOME.  The contents of this
+<code>obj.conf</code> will need to be merged with the <code>obj.conf</code>
+file being used for the disired server.</p>
+
+<p>For additional information on connecting Tomcat to Netscape, see the
+<a href="tomcat-netscape-howto.html">Tomcat Netscape HowTo</a> document.</p>
+
+<p><b>Important Note:</b> The configuration files are not written as part of a
+normal startup of Tomcat.  To generate the configuration files on demand,
+append:
+<pre>    jkconf</pre>
+or
+<pre>    -jkconf</pre>
+to the startup command.  Tomcat will initialize, write the configuration files,
+and then shutdown. This may be done while Tomcat 3.3 is running. To generate
+the configuration files during normal startup, add:
+<pre>    jkconf=&quot;true&quot;</pre>
+to the <code>&lt;ContextManager ... &gt;</code> element in the
+<code>server.xml</code> file.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>configHome</td>
+    <td>Default parent directory for the following paths. Ignored whenever any
+      of the following paths is absolute.</td>
+    <td>TOMCAT_HOME</td>
+  </tr>
+  <tr valign="top">
+    <td>nsapiJk</td>
+    <td>Path to Netscape mod_jk plugin file.</td>
+    <td>Windows: bin/nsapi_redirect.dll<br>
+      Netware: bin/nsapi_rd.nlm<br>
+      Unix and all others: bin/nsapi_redirector.so</td>
+  </tr>
+  <tr valign="top">
+    <td>objConfig</td>
+    <td>Path to use for writing the Netscape obj.conf configuration file.</td>
+    <td>conf/auto/obj.conf</td>
+  </tr>
+  <tr valign="top">
+    <td>objectName</td>
+    <td>Name of the Object to execute the requests.</td>
+    <td>servlet</td>
+  </tr>
+  <tr valign="top">
+    <td>workersConfig</td>
+    <td>Path to workers configuration file.</td>
+    <td>conf/jk/workers.properties</td>
+  </tr>
+  <tr valign="top">
+    <td>jkLog</td>
+    <td>Path to log file to be used by <code>nsapi_redirect.dll</code>.</td>
+    <td>logs/nsapi_redirect.log</td>
+  </tr>
+  <tr valign="top">
+    <td>jkDebug</td>
+    <td>JK Loglevel setting.  May be debug, info, error, or emerg.</td>
+    <td>emerg</td>
+  </tr>
+  <tr valign="top">
+    <td>jkWorker</td>
+    <td>The desired worker. Must be set to one of the workers defined in the
+      workers.properties file. "ajp12", "ajp13" or "inprocess" are the workers
+      found in the default workers.properties file.</td>
+    <td>Defaults to "ajp13" if an Ajp13Interceptor is in use, otherwise it
+      defaults to "ajp12".</td>
+  </tr>
+  <tr valign="top">
+    <td>forwardAll</td>
+    <td>If <code>true</code>, forward all requests to Tomcat. This helps insure that all the
+      behavior configured in the web.xml file functions correctly.  If <code>false</code>,
+      let Netscape serve static resources. Warning: When <code>false</code>, some configuration
+      in the web.xml may not be duplicated in Netscape.  Review the configuration
+      files to see the actual configuration being set in Nescape.</td>
+    <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>noRoot</td>
+    <td>If true, the root context is not mapped to Tomcat. If <code>false</code> and
+	  forwardAll is <code>true</code>, all requests to the root context are mapped to Tomcat.
+	  If <code>false</code> and forwardAll is <code>false</code>, only JSP and servlets requests to the
+	  root context are mapped to Tomcat. </td>
+    <td>true</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;NSConfig forwardAll=&quot;true&quot; noRoot=&quot;false&quot; objectName="tomcat" /&gt;
+</pre>
 
 <hr size="5">
 
@@ -1758,6 +1857,35 @@ preferred method.</p>
 
 <h3><a name="ReloadInterceptor">ReloadInterceptor</a></h3>
 
+<p><b>Type:</b> Mappers</p>
+
+<h4>Description</h4>
+
+<p>Handles reloading of servlets and contexts.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>fullReload</td>
+    <td>Enables restarting of the context whenever a change is detected. This is
+      the cleanest form of reload.  If <code>false</code>, it only reloads the
+      servlets.</td>
+    <td>true</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;ReloadInterceptor fullReload=&quot;true&quot; /&gt;
+</pre>
+
 <hr size="5">
 
 <!-- ======================================== -->
@@ -1796,6 +1924,46 @@ preferred method.</p>
 <!-- ======================================== -->
 
 <h3><a name="SessionId">SessionId</a></h3>
+
+<p><b>Type:</b> Session</p>
+
+<h4>Description</h4>
+
+<p>Handles associating sessions with requests and responses..</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>cookiesFirst</td>
+    <td>Enables checking cookies first for determining if a request has an
+      associated session, followed by checking for &quot;;jsessionid&quot; in
+      the URL.  If <code>false</code>, &quot;;jsessionid&quot; is checked for first.</td>
+    <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>noCookies</td>
+    <td>If true, no session cookies are added to the response.  Instead you
+      must use HttpServletResponse.encodeURL() to embed  URL's in the response
+      that contain the session id.  If <code>false</code>, the session id will be added
+      to the response as a cookie.  You may still use HttpServletResponse.encodeURL()
+      if you want your sessions to work with browsers that have cookies turned
+      off.</td>
+    <td>false</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;SessionId cookiesFirst=&quot;true&quot; noCookies=&quot;false&quot; /&gt;
+&lt;SessionId noCookies=&quot;true&quot; /&gt;
+</pre>
 
 <hr size="5">
 
@@ -1932,6 +2100,23 @@ module.</p>
 <!-- ======================================== -->
 
 <h3><a name="Servlet22Interceptor">Servlet22Interceptor</a></h3>
+
+<p><b>Type:</b> Servlet 2.2 Facade</p>
+
+<h4>Description</h4>
+
+<p>Handles some miscellaneous tasks the help implement behavior related to the
+Servlet 2.2 specification.</p>
+
+<h4>Parameters</h4>
+
+<p>This module has no user settable parameters.</p>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;Servlet22Interceptor /&gt;
+</pre>
 
 <hr size="5">
 
@@ -2096,7 +2281,7 @@ specified in the <code>server.xml</code> file.</p>
 <h4>Example(s)</h4>
 
 <pre>
-
+&lt;WebXmlReader validate=&quot;false&quot; /&gt;
 </pre>
 
 <hr size="5">
@@ -2150,7 +2335,7 @@ specified in the <code>server.xml</code> file.</p>
 <h4>Example(s)</h4>
 
 <pre>
-
+&lt;WorkDirSetup cleanWorkDir="false" workDirBase=&quot;work&quot; /&gt;
 </pre>
 
 <hr size="5">
