@@ -1,0 +1,100 @@
+<project name="jasper34" default="main" basedir=".">
+  
+  <property name="tomcat.src" location="../.." />
+  <property name="build.dir" location="${tomcat.src}/build" />
+  <property name="jasper.build" location="${build.dir}/jasper34" />
+  <property name="jasper.src" location="." />
+  
+  
+  <path id="classpath">
+    <pathelement location="${build.tests}" />
+  </path>
+
+  <!-- ==================== ==================== -->
+
+  <target name="prepare" 
+	  description="Prepare the build dir, copy static files">
+    
+  </target>
+
+  <target name="runtime11" 
+	  description="Build runtime for JSP1.1 impl.">
+    <mkdir dir="${jasper.build}" />
+    <mkdir dir="${jasper.build}/classes" />
+    
+    <javac destdir="${jasper.build}/classes"
+	   debug="${debug}" 
+	   optimize="${optimize}" 
+	   srcdir="${jasper.src}/runtime11"
+	   deprecation="off" >
+      <classpath>
+	<pathelement location="${tomcat.src}/bin/servlet22.jar" />
+      </classpath>
+      <include name="**"/>
+    </javac>
+
+  </target>
+
+  <target name="runtime12" 
+	  description="Build runtime for JSP1.2 impl.">
+    <mkdir dir="${jasper.build}" />
+    <mkdir dir="${jasper.build}/classes" />
+    
+    <javac destdir="${jasper.build}/classes"
+	   debug="${debug}" 
+	   optimize="${optimize}" 
+	   srcdir="${jasper.src}/runtime12"
+	   deprecation="off" >
+      <classpath>
+	<pathelement location="${tomcat.src}/bin/servlet23.jar" />
+      </classpath>
+      <include name="**"/>
+    </javac>
+
+  </target>
+
+  <target name="main" depends="runtime11,runtime12"/>
+
+  <target name="util" >
+    <javac destdir="${jasper.build}/classes"
+	   debug="${debug}" 
+	   optimize="${optimize}" 
+	   srcdir="${jasper.src}/util"
+	   deprecation="off" >
+      <classpath>
+      </classpath>
+      <include name="**"/>
+    </javac>
+    <jar jarfile="${jasper.build}/jasper_util.jar" 
+	 basedir="${jasper.build}/classes"> 
+      <include name="org/apache/jasper34/util/**"/>    
+    </jar>
+
+  </target>
+
+
+
+  <target name="clean" >
+    <delete dir="${jasper.build}"/>
+  </target>
+
+
+  <target name="runtime11-2" 
+	  description="Experimental: using 1.2 runtime in 1.1">
+    <mkdir dir="${jasper.build}" />
+    <mkdir dir="${jasper.build}/classes" />
+    
+    <javac destdir="${jasper.build}/classes"
+	   debug="${debug}" 
+	   optimize="${optimize}" 
+	   srcdir="${jasper.src}/runtime12"
+	   deprecation="off" >
+      <classpath>
+	<pathelement location="${tomcat.src}/bin/servlet22.jar" />
+      </classpath>
+      <include name="**"/>
+      <exclude name="**/ServletResponseWrapperInclude.java" />
+    </javac>
+  </target>
+
+</project>
