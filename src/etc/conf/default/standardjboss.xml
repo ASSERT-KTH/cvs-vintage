@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.32 2002/01/14 01:59:48 patriot1burke Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.33 2002/01/15 23:30:34 dsundstrom Exp $ -->
 
 <jboss>
    <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -26,7 +26,6 @@
 	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
-	    <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCReadAheadInterceptor</interceptor>
 	 </container-interceptors>
 	 <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
 	 <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
@@ -120,7 +119,6 @@
 	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
-	    <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCReadAheadInterceptor</interceptor>
 	 </container-interceptors>
 	 <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
 	 <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
