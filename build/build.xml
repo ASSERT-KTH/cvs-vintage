@@ -708,6 +708,70 @@
     </target>
     <target name="clean-all" depends="prepare-build-dir">
         <delete dir="${build.dir}"/>
+        <delete>
+            <fileset dir="..">
+                <include name="${final.name}*"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Package (creates a .zip and .tar.gz)                               -->
+    <!-- ================================================================== -->
+    <target name="package" depends="package-zip,package-tgz">
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Packages the distribution with ZIP                                 -->
+    <!-- ================================================================== -->
+    <target name="package-zip" depends="dist">
+        <delete file="../${final.name}.zip"/>
+        <zip zipfile="../${final.name}.zip" 
+             basedir="../" includes="**/${final.name}/**"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Packages the distribution with TAR-GZIP                            -->
+    <!-- ================================================================== -->
+    <target name="package-tgz" depends="dist">
+        <delete file="../${final.name}.tar"/>
+        <delete file="../${final.name}.tar.gz"/>
+        <tar longfile="gnu" tarfile="../${final.name}.tar" 
+             basedir="../" includes="**/${final.name}/**"/>
+        <gzip zipfile="../${final.name}.tar.gz" 
+                  src="../${final.name}.tar"/>
+        <delete file="../${final.name}.tar"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Creates the Binary distribution directory                          -->
+    <!-- ================================================================== -->
+    <target name="dist" depends="clean-all,compile,javadocs">
+        <delete dir="${build.src.scarab}"/>
+
+        <jar 
+          jarfile="${build.project.webinf.lib}/${final.name}.jar"
+          basedir="${build.dest.scarab}"
+          excludes="**/package.html"/>
+
+        <delete dir="${build.dest.scarab}"/>
+
+        <mkdir dir="${final.dir}"/>
+        <copy todir="${final.dir}">
+            <fileset dir="${build.dir}">
+                <exclude name="**/appData.ser"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${final.dir}">
+            <fileset dir="../">
+                <include name="LICENSE.txt"/>
+                <include name="README.txt"/>
+                <include name="WIN32.txt"/>
+            </fileset>
+        </copy>
+
+        <chmod dir="${final.dir}" perm="ug+rx" includes="**/*.sh" />
     </target>
 
 <!-- ============================================================= -->
@@ -730,72 +794,6 @@
         <move file="${src.java.dir.scarab}/${project}-default-all-data.xml"
             tofile="${src.sql.dir}/${project}-default-all-data.xml"/>
     </target>
-
-    <!-- ================================================================== -->
-    <!-- Package                                                            -->
-    <!-- ================================================================== -->
-    <!--
-    <target name="package" depends="javadocs">
-        <mkdir dir="${final.dir}"/>
-        <mkdir dir="${final.dir}/src/java"/>
-
-        <copy todir="${final.dir}/src/java">
-            <fileset dir="${build.dir}/src"/>
-        </copy>
-
-        <copy todir="${final.dir}/build">
-            <fileset dir="../build"/>
-        </copy>
-
-        <copy todir="${final.dir}/lib">
-            <fileset dir="../lib"/>
-        </copy>
-
-        <copy file="${build.dir}/${final.name}.jar" 
-            tofile="${final.dir}/${final.name}.jar"/>
-    </target>
-    -->
-
-    <!-- ================================================================== -->
-    <!-- Packages the distribution with ZIP                                 -->
-    <!-- ================================================================== -->
-    <!--
-    <target name="package-zip" depends="package">
-        <delete file="../${Name}-${version}.zip"/>
-        <zip zipfile="../${Name}-${version}.zip" 
-             basedir="../" includes="**/${final.name}/**"/>
-    </target>
-    -->
-
-    <!-- ================================================================== -->
-    <!-- Packages the distribution with TAR-GZIP                            -->
-    <!-- ================================================================== -->
-    <!--
-    <target name="package-tgz" depends="package">
-        <delete file="../${Name}-${version}.tar"/>
-        <delete file="../${Name}-${version}.tar.gz"/>
-        <tar tarfile="../${Name}-${version}.tar" 
-             basedir="../" includes="**/${final.name}/**"/>
-        <gzip zipfile="../${Name}-${version}.tar.gz" 
-                  src="../${Name}-${version}.tar"/>
-    </target>
-    -->
-
-    <!-- ================================================================== -->
-    <!-- Packages the distribution with ZIP and TAG-GZIP                    -->
-    <!-- ================================================================== -->
-    <!--
-    <target name="package-all" depends="package-zip, package-tgz">
-    </target>
-    -->
-
-    <!-- ================================================================== -->
-    <!-- Same as package-all. It is just here for compatibility.            -->
-    <!-- ================================================================== -->
-    <!--
-    <target name="dist" depends="package-all">
-    </target>
-    -->
 
 </project>
 
