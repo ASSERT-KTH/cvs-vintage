@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.69 2003/05/01 13:11:21 jhraigniac Exp $
+// $Id: Main.java,v 1.70 2003/05/04 14:10:27 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,6 +47,7 @@ import org.argouml.cognitive.Designer;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.ui.Actions;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.SplashScreen;
@@ -396,6 +397,9 @@ public class Main {
 
                 MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
 
+                // Initialize the UMLActions
+                Actions.getInstance();
+                
                 // initialize the correct theme
                 LookAndFeelMgr.SINGLETON.setCurrentTheme(themeMemory);
 

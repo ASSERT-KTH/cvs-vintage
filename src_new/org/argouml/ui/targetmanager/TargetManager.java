@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.11 2003/05/04 08:23:07 kataka Exp $
+// $Id: TargetManager.java,v 1.12 2003/05/04 14:10:27 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,6 @@ import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
-import org.argouml.ui.Actions;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.tigris.gef.presentation.Fig;
 
@@ -296,9 +295,7 @@ public final class TargetManager {
                 _modelTarget = determineModelTarget(_newTarget);
                 fireTargetSet(targets);
                 _targets = new Object[] { o };
-                _newTarget = null;
-                Actions.updateAllEnabled();
-
+                _newTarget = null;         
             }
             endTargetTransaction();
         }
@@ -344,7 +341,6 @@ public final class TargetManager {
                 _modelTarget = null;
                 _figTarget = null;
             }
-            Actions.updateAllEnabled();
             endTargetTransaction();
         }
     }
