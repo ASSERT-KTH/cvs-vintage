@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * Class with several useful miscellaneous functions.
  *
  * @author Slava Pestov
- * @version $Id: MiscUtilities.java,v 1.9 2001/11/23 09:08:48 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.10 2001/11/30 12:07:51 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -585,7 +585,7 @@ loop:		for(int i = 0; i < str.length(); i++)
 	/**
 	 * @deprecated Call <code>compareStrings()</code> instead
 	 */
-	public int compareVersions(String v1, String v2)
+	public static int compareVersions(String v1, String v2)
 	{
 		return compareStrings(v1,v2,false);
 	} //}}}
