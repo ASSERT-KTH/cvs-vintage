@@ -37,7 +37,7 @@ $attachment.Data
 #end
 #end
 #end
-#if ($actSetAttach)
+#if ($actSetAttach && $actSetAttach.toString().length() > 0)
 
 $l10n.Comment
 $actSetAttach
