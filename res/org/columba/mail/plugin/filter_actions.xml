@@ -7,4 +7,5 @@
  <action name="Delete Message" main_class="org.columba.mail.filter.plugins.DeleteMessageAction" gui_class="org.columba.mail.gui.config.filter.plugins.DefaultActionRow" />
  <action name="Mark Message" main_class="org.columba.mail.filter.plugins.MarkMessageAsReadAction" gui_class="org.columba.mail.gui.config.filter.plugins.MarkActionRow" />
  <action name="Color Message" main_class="org.columba.mail.filter.plugins.ColorMessageFilterAction" gui_class="org.columba.mail.gui.config.filter.plugins.ColorActionConfig" />
+ <action name="Score Message" main_class="org.columba.mail.filter.plugins.ScoreMessageFilterAction" gui_class="org.columba.mail.gui.config.filter.plugins.DefaultActionRow" />
 </actionlist>
