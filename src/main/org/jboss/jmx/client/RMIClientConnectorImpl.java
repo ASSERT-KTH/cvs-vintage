@@ -486,6 +486,7 @@ public class RMIClientConnectorImpl
 		}
 		catch( RemoteException re ) {
 			//AS Not a good style but for now
+         re.printStackTrace();
 			return null;
 		}
 	}

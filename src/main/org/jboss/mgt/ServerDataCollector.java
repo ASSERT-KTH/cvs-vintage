@@ -8,7 +8,8 @@ package org.jboss.mgt;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.Hashtable;
+import java.util.Map;
 
 import javax.management.MalformedObjectNameException;
 import javax.management.MBeanServer;
@@ -30,26 +31,25 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  * @author Marc Fleury
  **/
-public class JBossServer
+public class ServerDataCollector
    extends ServiceMBeanSupport
-   implements JBossServerMBean
+   implements ServerDataCollectorMBean
 {
 
    // -------------------------------------------------------------------------
    // Constants
    // -------------------------------------------------------------------------  
 
-   public static String JNDI_NAME = "j2eeserver:domain";
-   public static String JMX_NAME = "j2eeserver";
+   public static String JNDI_NAME = "servercollector:domain";
+   public static String JMX_NAME = "servercollector";
 
    // -------------------------------------------------------------------------
    // Members
    // -------------------------------------------------------------------------  
 
    private MBeanServer mServer;
-   private JBossServer mJBossServer;
    private String mName;
-   private Collection mApplications = new ArrayList();
+   private Map mApplications = new Hashtable();
 
    // -------------------------------------------------------------------------
    // Constructors
@@ -60,7 +60,7 @@ public class JBossServer
     *
     * @param pName Name of the MBean
     **/
-   public JBossServer()
+   public ServerDataCollector()
    {
       mName = null;
    }
@@ -70,7 +70,7 @@ public class JBossServer
     *
     * @param pName Name of the MBean
     **/
-   public JBossServer( String pName )
+   public ServerDataCollector( String pName )
    {
       mName = pName;
    }
@@ -102,53 +102,34 @@ public class JBossServer
       return "JBoss Server MBean";
    }
    
-   public JBossApplication getApplication(
+   public Application getApplication(
       String pApplicationId
    ) {
       // Loop through the applications and find the application
       if( pApplicationId != null ) {
-         Iterator i = getApplications().iterator();
-         while( i.hasNext() ) {
-            JBossApplication lTest = (JBossApplication) i.next();
-            if( pApplicationId.equals( lTest.getId() ) ) {
-               return lTest;
-            }
-         }
+         return (Application) mApplications.get( pApplicationId );
       }
       return null;
    }
    
    public Collection getApplications() {
-      return mApplications;
+      return new ArrayList( mApplications.values() );
    }
    
-   public JBossApplication saveApplication(
-      JBossApplication pApplication
+   public void saveApplication(
+      String pApplicationId,
+      Application pApplication
    ) {
-      JBossApplication lApplication = null;
-      if( lApplication != null ) {
-         lApplication = getApplication( pApplication.getId() );
-         if( lApplication == null ) {
-            // No application found -> add
-            mApplications.add( lApplication );
-         }
-         else {
-            // Application found -> replace
-            mApplications.remove( lApplication );
-            mApplications.add( pApplication );
-         }
+      if( pApplicationId != null ) {
+         mApplications.put( pApplicationId, pApplication ); 
       }
-      return pApplication;
    }
    
    public void removeApplication(
       String pApplicationId
    ) {
       if( pApplicationId != null ) {
-         JBossApplication lApplication = getApplication( pApplicationId );
-         if( lApplication != null ) {
-            mApplications.remove( lApplication );
-         }
+         mApplications.remove( pApplicationId );
       }
    }
    
@@ -159,13 +140,13 @@ public class JBossServer
    protected void initService()
         throws Exception
    {
-      mJBossServer = new JBossServer( mName );
+//      mJBossServer = new JBossServer( mName );
    }
    
    protected void startService()
         throws Exception
    {
-      bind( mJBossServer );
+      bind( this );
 //      refresh();
    }
    
@@ -182,7 +163,7 @@ public class JBossServer
    // Helper methods to bind/unbind the Management class
    // -------------------------------------------------------------------------
 
-	private void bind( JBossServer pServer )
+	private void bind( ServerDataCollector pServer )
       throws
          NamingException
    {
@@ -209,7 +190,7 @@ public class JBossServer
 		// use the helper class to bind the javax.mail.Session object in JNDI
 		StringRefAddr lAddress = new StringRefAddr( "nns", lJNDIName );
 		Reference lReference = new Reference(
-         JBossServer.class.getName(),
+         ServerDataCollector.class.getName(),
          lAddress,
          NonSerializableFactory.class.getName(),
          null

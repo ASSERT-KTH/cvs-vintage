@@ -41,6 +41,9 @@ import javax.management.ObjectName;
 import javax.management.RuntimeMBeanException;
 import javax.management.RuntimeErrorException;
 
+import org.jboss.mgt.Application;
+import org.jboss.mgt.Module;
+import org.jboss.mgt.ServerDataCollector;
 import org.jboss.logging.Log;
 import org.jboss.util.MBeanProxy;
 import org.jboss.util.ServiceMBeanSupport;
@@ -67,7 +70,7 @@ import org.w3c.dom.Element;
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 *   @author Toby Allsopp (toby.allsopp@peace.com)
-*   @version $Revision: 1.21 $
+*   @version $Revision: 1.22 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -178,10 +181,24 @@ implements J2eeDeployerMBean
    {
       URL url = new URL (_url);
       
+      ObjectName lCollector = null;
+      try {
+         lCollector = new ObjectName( "Management", "service", "Collector" );
+      }
+      catch( Exception e ) {
+      }
+      
       // undeploy first if it is a redeploy
       try
       {
          undeploy (_url);
+         // Remove application data by its id
+         server.invoke(
+            lCollector,
+            "removeApplication",
+            new Object[] { _url },
+            new String[] { "java.lang.String" }
+         );
       }
       catch (Exception _e)
       {}
@@ -195,6 +212,25 @@ implements J2eeDeployerMBean
 	  {
 		  startApplication (d);
 		  log.log ("J2EE application: " + _url + " is deployed.");
+        try {
+            // Now the application is deployed add it to the server data collector
+            Application lApplication = convert2Application( _url, d );
+            server.invoke(
+               lCollector,
+               "saveApplication",
+               new Object[] {
+                  _url,
+                  lApplication
+               },
+               new String[] {
+                  "java.lang.String",
+                  lApplication.getClass().getName()
+               }
+            );
+        }
+        catch( Exception e ) {
+           log.log ("Report of deployment of J2EE application: " + _url + " could not be reported.");
+        }
       } 
       catch (Exception _e)
       {
@@ -648,5 +684,56 @@ implements J2eeDeployerMBean
 
       // set it as the context class loader for the deployment thread
       Thread.currentThread().setContextClassLoader(appCl);
+   }
+   
+   /**
+    * Converts a given Deployment to a Management Application
+    *
+    * @param pId Application Id
+    * @param pDeployment Deployment to be converted
+    *
+    * @return Converted Applicaiton
+    **/
+   public Application convert2Application(
+      String pId,
+      Deployment pDeployment
+   ) {
+      Collection lModules = new ArrayList();
+      // Go through web applications
+      Iterator i = pDeployment.webModules.iterator();
+      Collection lItems = new ArrayList();
+      while( i.hasNext() ) {
+         Deployment.Module lModule = (Deployment.Module) i.next();
+         lItems.add( lModule.webContext );
+      }
+      // Add Web Module
+      lModules.add(
+         new Module(
+            "WebModule:FixeLater",
+            "DD:FixeLater",
+            lItems
+         )
+      );
+      // Go through ejb applications
+      i = pDeployment.webModules.iterator();
+      lItems = new ArrayList();
+      while( i.hasNext() ) {
+         Deployment.Module lModule = (Deployment.Module) i.next();
+         lItems.add( ( (URL) lModule.localUrls.firstElement() ).getFile() );
+      }
+      // Add EJB Module
+      lModules.add(
+         new Module(
+            "EJBModule:FixeLater",
+            "DD:FixeLater",
+            lItems
+         )
+      );
+      // Create Applications
+      return new Application(
+         pId,
+         "DD:FixeLater",
+         lModules
+      );
    }
 }

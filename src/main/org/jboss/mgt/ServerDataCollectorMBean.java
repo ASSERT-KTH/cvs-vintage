@@ -16,7 +16,7 @@ import org.jboss.util.ServiceMBean;
  *
  * @author Marc Fleury
  **/
-public interface JBossServerMBean
+public interface ServerDataCollectorMBean
    extends ServiceMBean
 {
    // -------------------------------------------------------------------------
@@ -36,13 +36,13 @@ public interface JBossServerMBean
     *
     * @return Application if found or null if not
     **/
-   public JBossApplication getApplication(
+   public Application getApplication(
       String pApplicationId
    );
 
    /**
     * @return All the registered applications where the element is of type
-    *         {@link org.jboss.mgt.JBossApplication JBossApplicaton}.
+    *         {@link org.jboss.mpg.Application Application}.
     **/
    public Collection getApplications();
 
@@ -54,8 +54,9 @@ public interface JBossServerMBean
     *
     * @return Saved Application which maybe contains updated values
     **/
-   public JBossApplication saveApplication(
-      JBossApplication pApplication
+   public void saveApplication(
+      String pApplicationId,
+      Application pApplication
    );
 
    /**

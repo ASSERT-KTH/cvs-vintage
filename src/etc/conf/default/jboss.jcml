@@ -391,7 +391,7 @@
   <!-- ==================================================================== -->
   <!-- JBoss Server Management                                              -->
   <!-- ==================================================================== -->
-  <mbean code="org.jboss.mgt.JBossServer" name="Management:service=Service"/>
+  <mbean code="org.jboss.mgt.ServerDataCollector" name="Management:service=Collector"/>
 
   <!-- ==================================================================== -->
   <!-- Uncomment to enable JMX monitoring of the bean cache

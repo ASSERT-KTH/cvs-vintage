@@ -6,6 +6,7 @@
  */
 package org.jboss.mgt;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -14,36 +15,34 @@ import java.util.Collection;
  *
  * @author Marc Fleury
  **/
-public class JBossApplication {
+public class Module
+   implements Serializable
+{
    // -------------------------------------------------------------------------
    // Members
    // -------------------------------------------------------------------------  
 
-   private String mApplicationId;
+   private String mModuleId;
    private String mDeploymentDescriptor;
-   private Collection mModules;
+   private Collection mItems;
 
    // -------------------------------------------------------------------------
    // Constructors
    // -------------------------------------------------------------------------
 
    /**
-    * @param pApplicationId Id of these Application which must be unique within
-    *                       the node/server.
-    * @param pDeploymentDescriptor Deployment Descriptor of this application
-    *                              which maybe is not set.
-    * @param pModules Collection of modules deployed with the given application
-    *                 each item is of type {@link org.jboss.mgt.JBossModule
-    *                 JBossModule}.
+    * @param pModuleId Id of these module which must be unique within the application.
+    * @param pDeploymentDescriptor Deployment Descriptor of this module
+    * @param pItems Collection of Entities
     **/
-   public JBossApplication(
-      String pApplicationId,
+   public Module(
+      String pModuleId,
       String pDeploymentDescriptor,
-      Collection pModules
+      Collection pItems
    ) {
-      mApplicationId = pApplicationId;
+      mModuleId = pModuleId;
       setDeploymentDescriptor( pDeploymentDescriptor );
-      mModules = pModules;
+      mItems = pItems;
    }
 
    // -------------------------------------------------------------------------
@@ -51,16 +50,16 @@ public class JBossApplication {
    // -------------------------------------------------------------------------  
 
    /**
-    * @return Id of these Application
+    * @return Id of these Module
     **/
    public String getId() {
-      return mApplicationId;
+      return mModuleId;
    }
    
    /**
     * Returns the deployment descriptor
     *
-    * @return Deployment Descriptor of this application which maybe is not set.
+    * @return Deployment Descriptor of this module.
     **/
    public String getDeploymentDescriptor() {
       return mDeploymentDescriptor;
@@ -77,28 +76,34 @@ public class JBossApplication {
    }
    
    /**
-    * Adds a new Module
+    * Adds a new Item
     *
-    * @param pModule Module to be added
+    * @param pItem Item to be added
     **/
-   public void addModule( JBossModule pModule ) {
-      mModules.add( pModule );
+   public void addItem( Object pItem ) {
+      mItems.add( pItem );
    }
       
    /**
-    * Removes a Module
+    * Removes a Item
     *
-    * @param pModule Module to be removed
+    * @param pItem Item to be removed
     **/
-   public void removeModule( JBossModule pModule ) {
-      mModules.remove( pModule );
+   public void removeItem( Object pItem ) {
+      mItems.remove( pItem );
    }
 
    /**
-    * @return Collection of Modules deployed with this application. Each
-    *         item is of type {@link org.jboss.mgt.JBossModule JBossModule}.
+    * @return Collection of Items deployed with this application. Each
+    *         item is of type {@link java.lang.Object Object}.
     **/
-   public Collection getModules() {
-      return mModules;
+   public Collection getItems() {
+      return mItems;
+   }
+
+   public String toString() {
+      return "Module [ " + getId() +
+         ", deployment descriptor : " + getDeploymentDescriptor() +
+         ", items: " + getItems() + " ]";
    }
 }
