@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.197 2004/07/20 21:54:49 d00mst Exp $
+// $Id: ModelFacade.java,v 1.198 2004/07/21 13:14:13 mkl Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3395,13 +3395,20 @@ public class ModelFacade {
      * Returns a collection with all residents belonging to the given
      * node.
      *
-     * @param handle is the node
+     * @param handle is the node, nodeinstance, componentinstance
      * @return Collection
      */
     public static Collection getResidents(Object handle) {
         if (isANode(handle)) {
             return ((MNode) handle).getResidents();
         }
+        if (isANodeInstance(handle)) {
+            return ((MNodeInstance) handle).getResidents();
+        }
+        if (isAComponentInstance(handle)) {
+            return ((MComponentInstance) handle).getResidents();
+        }
+            
 	return illegalArgumentCollection(handle);
     }
 
