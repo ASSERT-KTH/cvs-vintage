@@ -13,7 +13,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.AddMessageCommand;
 import org.columba.mail.gui.composer.ComposerController;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy

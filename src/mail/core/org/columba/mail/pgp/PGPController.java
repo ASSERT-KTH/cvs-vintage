@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
 
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.gui.util.PGPPassphraseDialog;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 import org.columba.core.logging.ColumbaLogger;
 
 public class PGPController {

@@ -38,7 +38,7 @@ import org.columba.mail.pop3.FetchNewMessagesCommand;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.smtp.SendAllMessagesCommand;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public class FrameActionListener implements ActionListener {
 

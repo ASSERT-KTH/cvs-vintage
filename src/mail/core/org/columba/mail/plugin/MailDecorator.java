@@ -4,7 +4,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy

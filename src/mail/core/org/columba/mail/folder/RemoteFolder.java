@@ -17,7 +17,7 @@ package org.columba.mail.folder;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.plugin.RemoteFilterPluginHandler;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public abstract class RemoteFolder extends Folder {
 

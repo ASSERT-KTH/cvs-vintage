@@ -26,7 +26,7 @@ import java.util.Vector;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.coder.Base64Decoder;
 import org.columba.mail.coder.Base64Encoder;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public class SMTPProtocol {
 	public final static int SMTP = 0;

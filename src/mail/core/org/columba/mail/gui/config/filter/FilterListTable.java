@@ -23,7 +23,7 @@ import org.columba.mail.filter.FilterList;
 import org.columba.mail.gui.config.filter.util.FilterHeaderRenderer;
 import org.columba.mail.gui.config.filter.util.StringFilterRenderer;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 class FilterListTable extends JTable {
 	private FilterListDataModel model;

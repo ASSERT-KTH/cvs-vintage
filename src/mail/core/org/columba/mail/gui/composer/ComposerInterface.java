@@ -29,7 +29,7 @@ import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.gui.composer.util.UndoDocument;
 import org.columba.mail.gui.tree.TreeView;
 import org.columba.mail.pgp.PGPController;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public class ComposerInterface
 {

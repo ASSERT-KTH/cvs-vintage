@@ -24,7 +24,7 @@ import org.columba.mail.filter.plugins.AbstractFilterAction;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
 import org.columba.mail.plugin.FilterActionPluginHandler;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public class Filter extends DefaultItem {
 

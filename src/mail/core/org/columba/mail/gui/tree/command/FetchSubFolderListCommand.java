@@ -7,7 +7,7 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy

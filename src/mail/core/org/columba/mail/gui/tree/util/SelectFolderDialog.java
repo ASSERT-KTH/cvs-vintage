@@ -34,7 +34,7 @@ import javax.swing.event.TreeSelectionListener;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public class SelectFolderDialog
 	implements ActionListener, TreeSelectionListener {

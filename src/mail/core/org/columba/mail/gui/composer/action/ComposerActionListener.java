@@ -37,7 +37,7 @@ import org.columba.mail.gui.composer.command.SaveMessageCommand;
 import org.columba.mail.gui.composer.util.ExternalEditor;
 import org.columba.mail.smtp.SendMessageCommand;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public class ComposerActionListener implements ActionListener {
 	private ComposerInterface composerInterface;

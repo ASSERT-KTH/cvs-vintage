@@ -22,7 +22,7 @@ import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.command.CreateSubFolderCommand;
 import org.columba.mail.gui.tree.util.EditFolderDialog;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public class FolderTreeActionListener implements ActionListener {
 

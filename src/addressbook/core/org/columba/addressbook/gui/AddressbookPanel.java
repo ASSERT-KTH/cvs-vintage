@@ -41,7 +41,7 @@ import org.columba.addressbook.gui.util.AddressbookDNDListView;
 import org.columba.addressbook.gui.util.AddressbookListModel;
 import org.columba.core.gui.util.CTabbedPane;
 import org.columba.mail.gui.composer.ComposerInterface;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 
 /**

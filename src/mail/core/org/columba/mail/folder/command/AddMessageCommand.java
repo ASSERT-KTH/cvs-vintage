@@ -8,7 +8,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.HeaderInterface;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy

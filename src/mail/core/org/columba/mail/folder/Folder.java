@@ -37,7 +37,7 @@ import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 import org.columba.mail.plugin.LocalFilterPluginHandler;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 /**
  *    Abstract Basic Folder class. Is subclasses by every folder

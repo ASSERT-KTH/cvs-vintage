@@ -41,7 +41,7 @@ import org.columba.mail.gui.config.filter.plugins.DefaultActionRow;
 import org.columba.mail.gui.config.filter.plugins.MarkActionRow;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
 import org.columba.mail.plugin.FilterActionPluginHandler;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 
 public class ActionList extends JPanel implements ActionListener {

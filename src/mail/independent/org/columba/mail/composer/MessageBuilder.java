@@ -32,7 +32,7 @@ import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.parser.BodyTextParser;
 import org.columba.mail.parser.Rfc822Parser;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 /**
  * 

@@ -37,7 +37,7 @@ import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public class VirtualFolder extends Folder {
 

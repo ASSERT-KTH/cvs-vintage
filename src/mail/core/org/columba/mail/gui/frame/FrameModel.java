@@ -12,7 +12,7 @@ import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.mh.CachedMHFolder;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.table.TableChangedEvent;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy

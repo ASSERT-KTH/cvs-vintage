@@ -56,7 +56,7 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.config.accountwizard.AccountWizard;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public class ConfigFrame
 	implements ActionListener, ListSelectionListener //, TreeSelectionListener

@@ -29,7 +29,7 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.Message;
 import org.columba.mail.pop3.protocol.POP3Protocol;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public class POP3Server {
 

@@ -28,7 +28,7 @@ import org.columba.core.gui.util.wizard.DefaultWizardPanel;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public class ImportWizard implements ActionListener
 {

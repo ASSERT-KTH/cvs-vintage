@@ -41,7 +41,7 @@ import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.gui.tree.FolderSelectionListener;
 import org.columba.mail.message.HeaderList;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 /**
  * This class shows the messageheaderlist

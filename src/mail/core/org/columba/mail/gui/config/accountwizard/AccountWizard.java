@@ -33,7 +33,7 @@ import org.columba.mail.config.SmtpItem;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.config.account.AccountDialog;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public class AccountWizard implements ActionListener {
 	private WelcomePanel welcomePanel;

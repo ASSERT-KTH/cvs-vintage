@@ -104,7 +104,7 @@ public class FrameView extends JFrame {
 		this.getContentPane().setLayout(new BorderLayout());
 		JPanel panel = (JPanel) this.getContentPane();
 
-		setTitle("Columba v" + org.columba.main.MainInterface.version);
+		setTitle("Columba v" + org.columba.core.main.MainInterface.version);
 
 		this.getContentPane().add(statusBar, BorderLayout.SOUTH);
 

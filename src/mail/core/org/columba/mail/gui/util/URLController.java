@@ -25,7 +25,7 @@ import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public class URLController implements ActionListener {
 

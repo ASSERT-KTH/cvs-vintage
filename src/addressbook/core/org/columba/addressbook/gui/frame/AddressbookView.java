@@ -29,7 +29,7 @@ import org.columba.addressbook.gui.tree.AddressbookTree;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 
 public class AddressbookView extends JFrame

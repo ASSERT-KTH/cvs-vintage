@@ -110,7 +110,7 @@ public class MessageComposer {
 
 		header.set(
 			"X-Mailer",
-			"Columba v" + org.columba.main.MainInterface.version);
+			"Columba v" + org.columba.core.main.MainInterface.version);
 
 		// shortFrom
 		String shortFrom = controller.getModel().getHeaderField("From");

@@ -36,7 +36,7 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.action.ComposerActionListener;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.util.AddressCollector;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 /**
  * @author frd

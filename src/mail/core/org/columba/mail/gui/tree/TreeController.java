@@ -34,7 +34,7 @@ import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
 import org.columba.mail.gui.tree.menu.FolderTreeMenu;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 /**
  * this class shows the the folder hierarchy

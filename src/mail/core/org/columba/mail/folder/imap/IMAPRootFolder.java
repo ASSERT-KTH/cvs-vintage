@@ -40,7 +40,7 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public class IMAPRootFolder extends Folder //implements ActionListener 
 {

@@ -25,7 +25,7 @@ import org.columba.mail.gui.config.account.util.AccountHeaderRenderer;
 import org.columba.mail.gui.config.account.util.NameRenderer;
 import org.columba.mail.gui.config.account.util.StringAccountRenderer;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 class AccountListTable extends JTable
 {

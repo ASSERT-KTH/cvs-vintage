@@ -28,7 +28,7 @@ import org.columba.mail.gui.attachment.command.OpenWithAttachmentCommand;
 import org.columba.mail.gui.attachment.command.SaveAttachmentCommand;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 /**
  * Title:

@@ -26,7 +26,7 @@ import org.columba.core.plugin.DefaultPlugin;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.gui.config.filter.ActionList;
 import org.columba.mail.plugin.FilterActionPluginHandler;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public class DefaultActionRow extends DefaultPlugin {
 	

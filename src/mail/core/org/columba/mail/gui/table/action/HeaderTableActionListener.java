@@ -47,7 +47,7 @@ import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.message.Message;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 public class HeaderTableActionListener implements ActionListener {
 

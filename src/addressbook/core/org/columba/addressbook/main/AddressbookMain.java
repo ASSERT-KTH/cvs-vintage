@@ -15,7 +15,7 @@
 package org.columba.addressbook.main;
 
 import org.columba.core.command.TaskManager;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 import org.columba.addressbook.gui.frame.AddressbookView;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 

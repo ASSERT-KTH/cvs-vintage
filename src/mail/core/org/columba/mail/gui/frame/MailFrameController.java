@@ -16,7 +16,7 @@ import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
-import org.columba.main.MainInterface;
+import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy
