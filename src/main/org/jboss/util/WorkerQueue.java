@@ -11,22 +11,18 @@ package org.jboss.util;
  * by a single thread.
  *
  * @see Executable
+ * 
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class WorkerQueue
 {
-   // Constants -----------------------------------------------------
-
-   // Attributes ----------------------------------------------------
-   /* The thread that runs the Executable jobs */
+   /** The thread that runs the Executable jobs */
    protected Thread m_queueThread;
-   /* The job that will be executed by the worker thread */
+   
+   /** The job that will be executed by the worker thread */
    private JobItem m_currentJob;
 
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
    /**
     * Creates a new worker queue with default thread name of "Worker Thread"
     */
@@ -34,6 +30,7 @@ public class WorkerQueue
    {
       this("Worker Thread");
    }
+
    /**
     * Creates a new worker queue with the specified thread name
     */
@@ -41,17 +38,17 @@ public class WorkerQueue
    {
       m_queueThread = new Thread(createQueueLoop(), threadName);
    }
+   
    /**
     * Creates a new worker queue with the specified thread name
-    and daemon mode flag
-   */
+    * and daemon mode flag
+    */
    public WorkerQueue(String threadName, boolean isDaemon) 
    {
       m_queueThread = new Thread(createQueueLoop(), threadName);
       m_queueThread.setDaemon(isDaemon);
    }
 
-   // Public --------------------------------------------------------
    /**
     * Starts the worker queue.
     * @see #stop
@@ -60,6 +57,7 @@ public class WorkerQueue
    {
       if (m_queueThread != null) {m_queueThread.start();}
    }
+
    /**
     * Stops nicely the worker queue. <br> 
     * After this call trying to put a new job will result in a 
@@ -74,6 +72,7 @@ public class WorkerQueue
    {
       if (m_queueThread != null) {m_queueThread.interrupt();}
    }
+   
    /**
     * Called by a thread that is not the WorkerQueue thread, this method 
     * queues the job and, if necessary, wakes up this worker queue that is 
@@ -82,16 +81,23 @@ public class WorkerQueue
    public synchronized void putJob(Executable job)
    {
       // Preconditions
-      if (m_queueThread == null || !m_queueThread.isAlive()) {throw new IllegalStateException("Can't put job, thread is not alive or not present");}
-      if (isInterrupted()) {throw new IllegalStateException("Can't put job, thread was interrupted");}
+      if (m_queueThread == null || !m_queueThread.isAlive()) {
+         throw new IllegalStateException("Can't put job, thread is not alive or not present");
+      }
+      
+      if (isInterrupted()) {
+         throw new IllegalStateException("Can't put job, thread was interrupted");
+      }
         
       putJobImpl(job);
    }
+   
    /**
     * Returns whether the worker thread has been interrupted. <br>
     * When this method returns true, it is not possible to put new jobs in the
     * queue and the already present jobs are executed and removed from the 
     * queue, then the thread exits.
+    * 
     * @see #stop
     */
    protected boolean isInterrupted() 
@@ -99,25 +105,22 @@ public class WorkerQueue
       return m_queueThread.isInterrupted();
    }
 
-   // Z implementation ----------------------------------------------
-
-   // Y overrides ---------------------------------------------------
-
-   // Package protected ---------------------------------------------
-
-   // Protected -----------------------------------------------------
    /**
     * Called by this class, this method checks if the queue is empty; 
     * if it is, then waits, else returns the current job.
+    * 
     * @see #putJob
     */
    protected synchronized Executable getJob() throws InterruptedException
    {
       // Preconditions
-      if (m_queueThread == null || !m_queueThread.isAlive()) {throw new IllegalStateException();}
+      if (m_queueThread == null || !m_queueThread.isAlive()) {
+         throw new IllegalStateException();
+      }
         
       return getJobImpl();
    }
+   
    /**
     * Never call this method, only override in subclasses to perform
     * job getting in a specific way, normally tied to the data structure 
@@ -134,6 +137,7 @@ public class WorkerQueue
       m_currentJob = m_currentJob.m_next;
       return item.m_job;
    }
+   
    /**
     * Never call this method, only override in subclasses to perform
     * job adding in a specific way, normally tied to the data structure
@@ -165,30 +169,24 @@ public class WorkerQueue
     */
    protected void clear() 
    {
-      //      System.out.println(m_queueThread.getName() + " has ended.");
       m_queueThread = null;
       m_currentJob = null;
    }
+   
    /**
     * Creates the loop that will get the next job and process it. <br>
     * Override in subclasses to create a custom loop.
     */
-   protected Runnable createQueueLoop() {return new QueueLoop();}
-   /**
-    * Logs exceptions that happens during the execution of a job.
-    * Default implementation simply printStackTrace the exception.
-    */
-   protected void logJobException(Exception x) {x.printStackTrace();}
-
-   // Private -------------------------------------------------------
-
-   // Inner classes -------------------------------------------------
+   protected Runnable createQueueLoop() {
+      return new QueueLoop();
+   }
    
    /**
     * Class that loops getting the next job to be executed and then 
     * executing it, in the worker thread.
     */
-   protected class QueueLoop implements Runnable 
+   protected class QueueLoop
+      implements Runnable 
    {
       public void run() 
       {
@@ -208,16 +206,22 @@ public class WorkerQueue
                      getJob().execute();
                   }
                }
-               catch (InterruptedException ex) 
+               catch (InterruptedException e) 
                {
-                  try {flush();}
+                  try {
+                     flush();
+                  }
                   catch (Exception ignored) {}
                   break;
                }
-               catch (Exception x) {logJobException(x);}
+               catch (Exception e) {
+                  ThrowableHandler.add(ThrowableHandler.Type.ERROR, e);
+               }
             }
          }
-         finally {clear();}
+         finally {
+            clear();
+         }
       }
       
       protected void flush() throws Exception
