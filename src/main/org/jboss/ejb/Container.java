@@ -93,7 +93,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.99 $
+ * @version $Revision: 1.100 $
  */
 public abstract class Container
    extends ServiceMBeanSupport
@@ -594,7 +594,19 @@ public abstract class Container
              MBeanException,
              ReflectionException
    {
-      return null;
+      if ("ClassLoader".equals(attribute))
+      {
+	 return getClassLoader();
+      }
+      if ("BeanClass".equals(attribute))
+      {
+	 return getBeanClass();
+      }
+      if ("BeanMetaData".equals(attribute))
+      {
+	 return getBeanMetaData();
+      }
+      throw new AttributeNotFoundException("invalid attribute: " + attribute);
    }
    
    public void setAttribute(Attribute attribute)
@@ -796,7 +808,13 @@ public abstract class Container
       
       MBeanConstructorInfo[] ctorInfo = new  MBeanConstructorInfo[] {};
       
-      MBeanAttributeInfo[] attrInfo = new MBeanAttributeInfo[] {};
+      MBeanAttributeInfo[] attrInfo = new MBeanAttributeInfo[] {
+	 new MBeanAttributeInfo("ClassLoader",
+				"java.lang.ClassLoader",
+				"Return the contained object's classloader",
+				true,
+				false,
+				false)};
       
       MBeanOperationInfo[] opInfo = {
          new MBeanOperationInfo("home",
