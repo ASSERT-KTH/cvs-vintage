@@ -3,9 +3,13 @@
 <div class="tabs">
  <table cellpadding="3" cellspacing="0" border="0">
   <tr>
-    <td><a href="$link.setPage("home,ModuleQuery.vm")">Module query</a></td>
+   #if ($link.setPage("home,ModuleQuery.vm").setAction("SetHomePage").isAllowed())
+    <td><a href="$link">Module query</a></td>
+   #end
     <th>Enter new...</th>
-	<td><a href="$link.setPage("home,XModuleList.vm")">Build cross module query</a></td>
+   #if ($link.setPage("home,XModuleList.vm").setAction("SetHomePage").isAllowed())
+	<td><a href="$link">Build cross module query</a></td>
+   #end
   </tr>
  </table>
 </div>

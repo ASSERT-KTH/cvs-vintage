@@ -89,7 +89,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.73 2002/07/09 16:05:24 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.74 2002/07/10 00:58:21 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -784,7 +784,7 @@ public class ScarabUserImpl
     }
                 
     /**
-     * The template/tab to show for the home page.
+     * @see ScarabUser#getHomePage()
      */
     public String getHomePage()
         throws Exception
@@ -793,7 +793,16 @@ public class ScarabUserImpl
     }
     
     /**
-     * The template/tab to show for the home page.
+     * @see ScarabUser#getHomePage(Module)
+     */
+    public String getHomePage(Module module)
+        throws Exception
+    {
+        return internalUser.getHomePage(module);
+    }
+
+    /**
+     * @see ScarabUser#setHomePage(String)
      */
     public void setHomePage(String homePage)
         throws Exception

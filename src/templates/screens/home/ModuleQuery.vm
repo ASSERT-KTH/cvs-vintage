@@ -1,11 +1,18 @@
 <div id="home-modulequery" class="app">
 
+
+
+
 <div class="tabs">
   <table cellpadding="3" cellspacing="0" border="0">
 	<tr>
 	  <th>Module query</th>
-      <td><a href="$link.setPage("home,EnterNew.vm")">Enter new...</a></td>
-	  <td><a href="$link.setPage("home,XModuleList.vm")">Build cross module query</a></td>
+   #if ($link.setPage("home,EnterNew.vm").setAction("SetHomePage").isAllowed())
+      <td><a href="$link">Enter new...</a></td>
+   #end
+   #if ($link.setPage("home,XModuleList.vm").setAction("SetHomePage").isAllowed())
+	<td><a href="$link">Build cross module query</a></td>
+   #end
 	</tr>
   </table>
 </div>

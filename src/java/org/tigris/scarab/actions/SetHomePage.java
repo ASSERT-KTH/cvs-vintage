@@ -1,4 +1,4 @@
-package org.tigris.scarab.screens;
+package org.tigris.scarab.actions;
 
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
@@ -46,68 +46,26 @@ package org.tigris.scarab.screens;
  * individuals on behalf of Collab.Net.
  */ 
 
-
 // Turbine Stuff 
-import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.tool.TemplateLink;
+import org.apache.turbine.RunData;
 
-// Scarab Stuff
-import org.tigris.scarab.util.ScarabLink;
-import org.tigris.scarab.om.ModuleManager;
-import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
-import org.apache.torque.om.NumberKey;    
+import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 /**
- * This class adds a special link tool that should only be used
- * in SelectModule.vm
- *
- * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SelectModule.java,v 1.6 2002/07/10 00:58:21 jmcnally Exp $
- */
-public class SelectModule extends Default
+   Sets the home page to the current target
+    
+    @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+    @version $Id: SetHomePage.java,v 1.1 2002/07/10 00:58:21 jmcnally Exp $
+*/
+public class SetHomePage extends ScarabTemplateAction
 {
     /**
-     * builds up the context for display of variables on the page.
-     */
-    public void doBuildTemplate( RunData data, TemplateContext context )
-        throws Exception 
+       Sets the home page to the current target
+    */
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
     {
-        super.doBuildTemplate(data, context);
-        context.put("modulelink", new ModuleSwitchingLink(data));
-    }
-
-    public static class ModuleSwitchingLink extends ScarabLink
-    {
-        private RunData data;
-
-        private ModuleSwitchingLink(RunData data)
-        {
-            super();
-            this.data = data;
-            init((Object)data);
-        }
-        
-        /**
-         * override super method and make it public
-         */
-        public TemplateLink setPage(String moduleId)
-        {
-            String homePage = null;
-            try
-            {
-                Module module = ModuleManager
-                    .getInstance(new NumberKey(moduleId));
-                homePage = ((ScarabUser)data.getUser()).getHomePage(module);
-            }
-            catch (Exception e)
-            {
-                log.error("Could not determine homepage", e);
-                homePage = "Index.vm";
-            }
-            return super.setPage( homePage, moduleId);
-        }
+        ((ScarabUser)data.getUser()).setHomePage(data.getTarget());
     }
 }
-

@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.34 2002/07/02 15:34:37 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.35 2002/07/10 00:58:21 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -93,6 +93,9 @@ public abstract class AbstractScarabUser
     /** Method name used as part of a cache key */
     private static final String GET_DEFAULT_QUERY_USER = 
         "getDefaultQueryUser";
+
+    private static final String[] homePageArray = {"home,EnterNew.vm", 
+        "home,ModuleQuery.vm", "home,XModuleList.vm", "Index.vm"};
 
     /** 
      * counter used as part of a key to store an Issue the user is 
@@ -637,11 +640,19 @@ public abstract class AbstractScarabUser
         enterIssueRedirect = templateCode;
     }
 
-
     /**
-     * The template/tab to show for the home page.
+     * @see ScarabUser#getHomePage()
      */
     public String getHomePage()
+        throws Exception
+    {
+        return getHomePage(getCurrentModule());
+    }
+
+    /**
+     * @see ScarabUser#getHomePage(Module)
+     */
+    public String getHomePage(Module module)
         throws Exception
     {
         if (homePage == null)
@@ -650,17 +661,38 @@ public abstract class AbstractScarabUser
             if (up != null)
             {
                 homePage = up.getHomePage();
+                if (homePage != null) 
+                {
+                    checkHomePage(module);
+                }
             }
-            if (homePage == null) 
+            for (int i=0; homePage == null; i++) 
             {
-                homePage = "home,EnterNew.vm";
+                homePage = homePageArray[i];
+                checkHomePage(module);
             }
         } 
         return homePage;
     }
+
+
+    /**
+     * This method is used in getHomePage() and expects the homePage to 
+     * be non-null.
+     */
+    private void checkHomePage(Module module)
+    {
+        String perm = ScarabSecurity
+            .getScreenPermission(homePage.replace(',','.'));
+        if (perm != null && !hasPermission(perm, module)) 
+        {
+            homePage = null;
+        }
+    }
+
     
     /**
-     * The template/tab to show for the home page.
+     * @see ScarabUser#setHomePage(String)
      */
     public void setHomePage(String homePage)
         throws Exception

@@ -5,12 +5,17 @@
 <div class="tabs">
   <table cellpadding="3" cellspacing="0" border="0">
     <tr>
-    <td><a href="$link.setPage("home,ModuleQuery.vm")">Module query</a></td>
-	<td><a href="$link.setPage("home,EnterNew.vm")">Enter new...</a></td>
+   #if ($link.setPage("home,ModuleQuery.vm").setAction("SetHomePage").isAllowed())
+    <td><a href="$link">Module query</a></td>
+   #end
+   #if ($link.setPage("home,EnterNew.vm").setAction("SetHomePage").isAllowed())
+      <td><a href="$link">Enter new...</a></td>
+   #end
 	<th>Build cross module query</th>
 	</tr>
   </table>
 </div>
+
 
 <form method="post" action="$link.setPage("home,XModuleList.vm")">
 <input type="hidden" name="action" value="DefineXModuleList" />
