@@ -43,8 +43,8 @@ $page.setTitle("Attribute Editor")
        #end
     #end
         <tr class="a">
-         <td><input type="checkbox" name="$intakeUserAttr.Selected.Key" $checked /></td>
-         ##<td><input type="checkbox" name="selected_$attribute.AttributeId" $checked /></td>
+         ##<td><input type="checkbox" name="$intakeUserAttr.Selected.Key" $checked /></td>
+         <td><input type="checkbox" name="selected_$attribute.AttributeId" $checked /></td>
 
          <td>$attribute.Name</td>
 
