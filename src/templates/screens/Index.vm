@@ -4,7 +4,14 @@ $page.setTitle("Scarab functions index")
 
 <h3>Welcome to Scarab</h3>
 
+<table cellpadding="0" cellspacing="4" border="0">
+<tr>
+
 #if (! $data.User.hasLoggedIn())
+
+<td>
+<p><strong>Step 1:</strong></p>
+
 <p>
 Most functions in Scarab require you to <a
 href="$link.setPage("Login.vm")">Login</a> first. In the future, we will
@@ -12,27 +19,79 @@ provide a list of functions that do not require you to login first, but
 for now, your safest bet is to login first.
 </p>
 
-#elseif (!$scarabR.CurrentModule)
+<p>
+If you are not a registered user, please <a
+href="$link.setPage("Register.vm")">create an account</a>.
+</p>
+</td>
 
 <p>
-Now that you have logged in, we suggest that you first <a
-href="$link.setPage("SelectModule.vm").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE","Index.vm")"><strong>Select
-A Module</strong></a> that you would like to work within. If there are
-no modules that you have access to, please ask the Administrator to
-assign you to a module.
 </p>
+
+#elseif (!$scarabR.CurrentModule)
+
+
+<td>
+<p><strong>Step 2:</strong></p>
+<p>
+<img src="$data.Request.ContextPath/images/module.gif" alt="What is a
+module?" width="260" height="105" /></p> Select a <a
+href="$link.setPage("SelectModule.vm").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE","Index.vm")"><strong>module</strong></a>.
+A module is the unit of work space representing a unique set of
+"artifact types" (issues). Each new module also has the following unique
+details:
+
+<ul>
+<li><small>a set of users</small></li>
+<li><small>a set of roles</small></li>
+<li><small>a set of permissions per role, per artifact type</small></li>
+</ul>
+
+<p>Scarab uses the generic term "module" instead of the more common
+term, "project", in order to avoid defining the application as simply a
+"per project-issue management tool".</p>
+
+<p>If you are a registered user, but do not have access to any modules,
+contact the administrator.
+</p>
+</td>
 
 #else
 
+<td>
+<p><strong>Step 3:</strong></p>
 <p>
-Congratulations young Jedi! You are able to follow directions
-carefully. We will now grant you with the ability to select an Artifact
-Type from the left hand side navigation. Once you have done that, you
-will see a list of options in the menu that you can select from. You can
-also change your currently selected module by clicking on the module
-name in the upper right hand corner of the navigation.
-</p>
+<img src="$data.Request.ContextPath/images/artifact_type.gif" alt="What is an artifact type?" width="260"
+height="105" /></p> Select an <strong>artifact type</strong> from the
+left side navigation. An artifact type encapsulates a unique set of
+attributes and attribute options:
+
+<ul>
+<li><small>a customizable set of attributes</small></li>
+<li><small>a customizable set of options (per attribute)</small></li>
+<li><small>a unique set of permissions per role</small></li>
+</ul>
+
+<p>Once a user selects an artifact type, Scarab's navigation will
+indicate their selection state by dropping down a list of functions
+within that artifact type, giving authorized user's access to
+functionality such as:</p>
+
+<ul>
+<li><small>enter a new issue</small></li>
+<li><small>query the database</small></li>
+<li><small>run reports on database activity</small></li>
+</ul>
+
+<p>The user's input remains confined to the selected artifact type until
+they select another artifact type from the left side-bar navigation, or
+from the artifact type index.</p>
+
+</td>
 
 #end
+
+</tr>
+</table>
 
 </div>
