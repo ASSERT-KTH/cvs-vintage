@@ -50,17 +50,18 @@ import org.apache.turbine.Turbine;
 import org.apache.fulcrum.BaseService;
 import org.apache.fulcrum.InitializationException;
 import org.apache.torque.Torque;
+import org.apache.torque.TorqueException;
+import org.tigris.scarab.om.*;
+import org.tigris.scarab.util.Log;
 
 /**
  * Turbine does not yet have a way to initialize components directly, and
  * use of fulcrum's DatabaseService causes fulcrum to try to treat all the
  * Managers as services.  So this service is used to initialize Torque.
- * It is not used directly by scarab's application code.  And can be removed
- * along with its Scarab.properties entries once another method of
- * initializing components is available.
+ * It also creates an instance of each scarab om object to avoid deadlock.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: TorqueService.java,v 1.2 2002/10/24 22:59:30 jon Exp $
+ * @version $Id: TorqueService.java,v 1.3 2003/07/10 22:45:52 jmcnally Exp $
  */
 public class TorqueService
     extends BaseService
@@ -74,6 +75,9 @@ public class TorqueService
         try
         {
             Torque.init(Turbine.getConfiguration());
+            Log.get("org.apache.fulcrum").info("  Loading om instances via managers...");
+            loadOM();
+            Log.get("org.apache.fulcrum").info("  Done loading om instances.");
         }
         catch (Exception e)
         {
@@ -82,6 +86,69 @@ public class TorqueService
 
         // indicate that the service initialized correctly
         setInit(true);
+    }
+
+    /**
+     * This method loads all the classes in the org.tigris.scarab.om
+     * package.  The torque classes of Foo and FooPeer contain a circular
+     * relationship so loading the class of Foo requires a FooPeer instance
+     * and creating a FooPeer instance requires the Foo class to be loaded.
+     * It is possible to deadlock if multiple threads attempt to load Foo 
+     * simultaneously.  A full analysis of possible deadlock scenarios has not
+     * been done, so to be as safe as possible we create one instance of each
+     * om object via the Manager.getInstance() method; this makes sure the
+     * Managers are initialized as well.  It may be possible to
+     * reduce this to only calling Class.forName on each class.
+     */ 
+    protected void loadOM()
+        throws Exception
+    {
+        ActivityManager.getInstance();
+        ActivitySetManager.getInstance();
+        ActivitySetTypeManager.getInstance();
+        AttachmentManager.getInstance();
+        AttachmentTypeManager.getInstance();
+        AttributeClassManager.getInstance();
+        AttributeGroupManager.getInstance();
+        AttributeManager.getInstance();
+        AttributeOptionManager.getInstance();
+        AttributeTypeManager.getInstance();
+        // AttributeValue class is abstract
+        AttributeValueManager.getManager();
+        Class.forName("org.tigris.scarab.om.AttributeValue");
+        DependManager.getInstance();
+        DependTypeManager.getInstance();
+        FrequencyManager.getInstance();
+        GlobalParameterManager.getInstance();
+        // Issue class does not have public no-arg ctor
+        IssueManager.getManager();
+        Class.forName("org.tigris.scarab.om.Issue");
+        IssueTemplateInfoManager.getInstance();
+        IssueTypeManager.getInstance();
+        IssueVoteManager.getInstance();
+        MITListItemManager.getInstance();
+        MITListManager.getInstance();
+        ModificationManager.getInstance();
+        ModuleManager.getInstance();
+        OptionRelationshipManager.getInstance();
+        PendingGroupUserRoleManager.getInstance();
+        QueryManager.getInstance();
+        RAttributeAttributeGroupManager.getInstance();
+        ReportManager.getInstance();
+        RIssueTypeAttributeManager.getInstance();
+        RIssueTypeOptionManager.getInstance();
+        RModuleAttributeManager.getInstance();
+        RModuleIssueTypeManager.getInstance();
+        RModuleOptionManager.getInstance();
+        RModuleUserAttributeManager.getInstance();
+        // ROptionOption class does not have public no-arg ctor
+        ROptionOptionManager.getManager();
+        Class.forName("org.tigris.scarab.om.ROptionOption");
+        RQueryUserManager.getInstance();
+        ScarabUserManager.getInstance();
+        ScopeManager.getInstance();
+        UserPreferenceManager.getInstance();
+        UserVoteManager.getInstance();
     }
 
     /**

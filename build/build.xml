@@ -269,6 +269,7 @@
         <filter token="USER_SERVICE" value="${scarab.user.service}"/>
         <filter token="MODULE_SERVICE" value="${scarab.module.service}"/>
         <filter token="LOCALIZATION_SERVICE" value="${scarab.localization.service}"/>
+        <filter token="TORQUE_SERVICE" value="${scarab.torque.service}"/>
         <filter token="DATABASE_INIT_SERVICE" value="${scarab.dbinit.service}"/>
         <filter token="SCARAB_AUTOMATIC_ROLE_APPROVAL" value="${scarab.automatic.role.approval}"/>
         <filter token="SCARAB_SITE_NAME" value="${scarab.site.name}"/>
