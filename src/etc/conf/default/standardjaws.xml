@@ -10,7 +10,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjaws.xml,v 1.24 2001/11/25 04:08:57 dsundstrom Exp $ -->
+<!-- $Id: standardjaws.xml,v 1.25 2001/11/27 00:15:30 peter_f Exp $ -->
 
 <jaws>
    <datasource>java:/DefaultDS</datasource>
@@ -454,70 +454,6 @@
 	    <java-type>java.lang.Object</java-type>
 	    <jdbc-type>JAVA_OBJECT</jdbc-type>
 	    <sql-type>OID</sql-type>
-	 </mapping>
-      </type-mapping-definition>
-
-      <type-mapping-definition>
-	 <name>InstantDB</name>
-	 <mapping>
-	    <java-type>java.lang.Integer</java-type>
-	    <jdbc-type>INTEGER</jdbc-type>
-	    <sql-type>INTEGER</sql-type>
-	 </mapping>
-	 <mapping>
-	    <java-type>java.lang.Short</java-type>
-	    <jdbc-type>INTEGER</jdbc-type>
-	    <sql-type>INTEGER</sql-type>
-	 </mapping>
-	 <mapping>
-	    <java-type>java.lang.String</java-type>
-	    <jdbc-type>VARCHAR</jdbc-type>
-	    <sql-type>VARCHAR(256)</sql-type>
-	 </mapping>
-	 <mapping>
-	    <java-type>java.lang.Boolean</java-type>
-	    <jdbc-type>VARCHAR</jdbc-type>
-	    <sql-type>VARCHAR(5)</sql-type>
-	 </mapping>
-	 <mapping>
-	    <java-type>java.lang.Float</java-type>
-	    <jdbc-type>FLOAT</jdbc-type>
-	    <sql-type>FLOAT</sql-type>
-	 </mapping>
-	 <mapping>
-	    <java-type>java.lang.Double</java-type>
-	    <jdbc-type>DOUBLE</jdbc-type>
-	    <sql-type>DOUBLE</sql-type>
-	 </mapping>
-	 <mapping>
-	    <java-type>java.lang.Character</java-type>
-	    <jdbc-type>CHAR</jdbc-type>
-	    <sql-type>SMALLCHAR</sql-type>
-	 </mapping>
-	 <mapping>
-	    <java-type>java.lang.Byte</java-type>
-	    <jdbc-type>TINYINT</jdbc-type>
-	    <sql-type>TINYINT</sql-type>
-	 </mapping>
-	 <mapping>
-	    <java-type>java.util.Date</java-type>
-	    <jdbc-type>DATE</jdbc-type>
-	    <sql-type>DATE</sql-type>
-	 </mapping>
-	 <mapping>
-	    <java-type>java.lang.Long</java-type>
-	    <jdbc-type>BIGINT</jdbc-type>
-	    <sql-type>LONG</sql-type>
-	 </mapping>
-	 <mapping>
-	    <java-type>java.lang.Object</java-type>
-	    <jdbc-type>LONGVARBINARY</jdbc-type>
-	    <sql-type>LONGVARBINARY</sql-type>
-	 </mapping>
-	 <mapping>
-	    <java-type>java.sql.Timestamp</java-type>
-	    <jdbc-type>DATE</jdbc-type>
-	    <sql-type>DATE</sql-type>
 	 </mapping>
       </type-mapping-definition>
 
