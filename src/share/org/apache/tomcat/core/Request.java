@@ -584,7 +584,7 @@ public class Request {
 	// Call all authorization callbacks. 
 	for( int i=0; i< reqI.length; i++ ) {
 	    status = reqI[i].authorize( this, response, checkRoles );
-	    if ( status != 0 ) {
+	    if ( status != BaseInterceptor.DECLINED ) {
 		break;
 	    }
 	}
