@@ -466,7 +466,7 @@ public  class Report
                 // if selected add all the attributes otherwise we still need
                 // to check for a partial list
                 List rmos = module
-                    .getLeafRModuleOptions(rma.getAttribute());
+                    .getLeafRModuleOptions(rma.getAttribute(), getIssueType());
                 if ( isRMASelected ) 
                 {
                     for ( int j=0; j<rmos.size(); j++ ) 
@@ -667,7 +667,8 @@ public  class Report
             if ( rma.getAttribute().isOptionAttribute()) 
             {            
                 allOptions.add( new ReportOptionModel(rma) );
-                List rmos = module.getLeafRModuleOptions(rma.getAttribute());
+                List rmos = module.getLeafRModuleOptions(rma.getAttribute(), 
+                                                         getIssueType());
 
                 for ( int j=0; j<rmos.size(); j++ ) 
                 {
@@ -807,7 +808,8 @@ public  class Report
                  rma.getAttribute().isOptionAttribute()) 
             {            
                 options.add( new ReportOptionModel(rma) );
-                List rmos = module.getLeafRModuleOptions(rma.getAttribute());
+                List rmos = module.getLeafRModuleOptions(rma.getAttribute(),
+                                                         getIssueType());
 
                 for ( int j=0; j<rmos.size(); j++ ) 
                 {

@@ -96,7 +96,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.65 2001/11/02 19:44:41 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.66 2001/11/08 02:12:52 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -733,16 +733,17 @@ public class ScarabModule
         return getAttributes(new Criteria());
     }
 
-    public List getRModuleOptions(Attribute attribute)
+    public List getRModuleOptions(Attribute attribute, IssueType issueType)
         throws Exception
     {
-        return getRModuleOptions(attribute, true);
+        return getRModuleOptions(attribute, issueType, true);
     }
 
-    public List getRModuleOptions(Attribute attribute, boolean activeOnly)
+    public List getRModuleOptions(Attribute attribute, IssueType issueType,
+                                  boolean activeOnly)
         throws Exception
     {
-        List allRModuleOptions = getAllRModuleOptions(attribute);
+        List allRModuleOptions = getAllRModuleOptions(attribute, issueType);
 
         if ( activeOnly )
         {
@@ -765,10 +766,10 @@ public class ScarabModule
         }
     }
 
-    private List getAllRModuleOptions(Attribute attribute)
+    private List getAllRModuleOptions(Attribute attribute, IssueType issueType)
         throws Exception
     {
-        List options = attribute.getAttributeOptions(false);
+        List options = attribute.getAttributeOptions(true);
         NumberKey[] optIds = null;
         if (options == null)
         {
@@ -783,10 +784,12 @@ public class ScarabModule
             optIds[i] = ((AttributeOption)options.get(i)).getOptionId();
         }
 
-        Criteria crit = new Criteria(2);
+        Criteria crit = new Criteria();
+        crit.add(RModuleOptionPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
+        crit.add(RModuleOptionPeer.MODULE_ID, getModuleId());
         crit.addIn(RModuleOptionPeer.OPTION_ID, optIds);
-        crit.addAscendingOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
-        crit.addAscendingOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
+        //crit.addAscendingOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
+        //crit.addAscendingOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
 
         List rModOpts = null;
         ScarabModule module = this;
@@ -807,13 +810,13 @@ public class ScarabModule
      * RModuleOption table to do the join. returns null if there
      * is any error.
      */
-    public List getAttributeOptions (Attribute attribute)
+    public List getAttributeOptions (Attribute attribute, IssueType issueType)
         throws Exception
     {
         List attributeOptions = null;
         try
         {
-            List rModuleOptions = getOptionTree(attribute, false);
+            List rModuleOptions = getOptionTree(attribute, issueType, false);
             attributeOptions = new ArrayList(rModuleOptions.size());
             for ( int i=0; i<rModuleOptions.size(); i++ )
             {
@@ -827,12 +830,12 @@ public class ScarabModule
         return attributeOptions;
     }
 
-    public List getLeafRModuleOptions(Attribute attribute)
+    public List getLeafRModuleOptions(Attribute attribute, IssueType issuetype)
         throws Exception
     {
         try
         {
-        return getLeafRModuleOptions(attribute, true);
+            return getLeafRModuleOptions(attribute, issuetype, true);
         }
         catch (Exception e)
         {
@@ -841,10 +844,12 @@ public class ScarabModule
         return null;
     }
 
-    public List getLeafRModuleOptions(Attribute attribute, boolean activeOnly)
+    public List getLeafRModuleOptions(Attribute attribute, 
+                                      IssueType issueType,
+                                      boolean activeOnly)
         throws Exception
     {
-        List rModOpts = getRModuleOptions(attribute, activeOnly);
+        List rModOpts = getRModuleOptions(attribute, issueType, activeOnly);
 
         // put options in a map for searching
         Map optionsMap = new HashMap((int)(rModOpts.size()*1.5));
@@ -886,10 +891,10 @@ public class ScarabModule
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    public List getOptionTree(Attribute attribute)
+    public List getOptionTree(Attribute attribute, IssueType issueType)
         throws Exception
     {
-        return getOptionTree(attribute, true);
+        return getOptionTree(attribute, issueType, true);
     }
 
     /**
@@ -901,12 +906,13 @@ public class ScarabModule
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    public List getOptionTree(Attribute attribute, boolean activeOnly)
+    public List getOptionTree(Attribute attribute, IssueType issueType,
+                              boolean activeOnly)
         throws Exception
     {
         List moduleOptions = null;
 try{
-        moduleOptions = getRModuleOptions(attribute, activeOnly);
+        moduleOptions = getRModuleOptions(attribute, issueType, activeOnly);
         int size = moduleOptions.size();
         List[] ancestors = new List[size];
 
@@ -1043,7 +1049,6 @@ try{
     public void save() 
         throws TurbineSecurityException
     {
-                        System.out.println("saving");
         // if new, make sure the code has a value.
         try
         {
