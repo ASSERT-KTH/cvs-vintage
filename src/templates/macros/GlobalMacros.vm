@@ -94,7 +94,7 @@
   #if ($size.length() == 0)
   <option value="">Choose...</option>
   #end
-  #foreach ($option in $module.getOptionTree($attr))
+  #foreach ($option in $module.getOptionTree($attr, $scarabR.CurrentIssueType))
     #set ($selected = "")
     #if ($attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value)
       #set ($selected = " selected")
