@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.49 2005/01/11 13:03:16 bobtarling Exp $
+// $Id: UMLComboBoxModel2.java,v 1.50 2005/01/19 21:38:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -169,7 +169,11 @@ public abstract class UMLComboBoxModel2
     /**
      * If the property that this comboboxmodel depicts is changed by the NSUML
      * model, this method will make sure that it is changed in the comboboxmodel
-     * too.
+     * too.<p>
+     * 
+     * TODO: MVW I tested this for the PropPanelCallEvent. 
+     * It also works without this function. Why do we need this?
+     * 
      * @see ru.novosoft.uml.MElementListener#propertySet(MElementEvent)
      */
     public void propertySet(MElementEvent e) {
@@ -281,10 +285,9 @@ public abstract class UMLComboBoxModel2
     }
 
     /**
-     * Utility method to get the target. Sets the _target if the
-     * _target is null via the method setTarget().
+     * Utility method to get the target. 
      *
-     * @return MModelElement
+     * @return  the ModelElement
      */
     protected Object getTarget() {
         return comboBoxTarget;
