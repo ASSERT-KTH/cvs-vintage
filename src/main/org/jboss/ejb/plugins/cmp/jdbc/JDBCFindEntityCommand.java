@@ -10,9 +10,7 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 import java.lang.reflect.Method;
 
 import java.util.Collection;
-import java.util.ArrayList;
 
-import java.rmi.RemoteException;
 
 import javax.ejb.FinderException;
 import javax.ejb.ObjectNotFoundException;
@@ -31,7 +29,7 @@ import org.jboss.ejb.plugins.cmp.FindEntitiesCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCFindEntityCommand implements FindEntityCommand {
    private JDBCBeanExistsCommand beanExistsCommand;

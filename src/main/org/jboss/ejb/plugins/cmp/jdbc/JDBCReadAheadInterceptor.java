@@ -6,15 +6,7 @@
 */
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import javax.ejb.EJBException;
-import javax.transaction.Synchronization;
-import javax.transaction.SystemException;
-import javax.transaction.Transaction;
 import org.jboss.ejb.CacheKey;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
@@ -34,7 +26,7 @@ import org.jboss.util.FinderResults;
  * then invokes the given method on the container for all of them, gathers results and returns them.
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCReadAheadInterceptor extends AbstractInterceptor {
    // Constants -----------------------------------------------------

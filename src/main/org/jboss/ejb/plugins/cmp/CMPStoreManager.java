@@ -10,13 +10,10 @@ import java.lang.reflect.Method;
 
 import java.rmi.RemoteException;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.ejb.CreateException;
-import javax.ejb.DuplicateKeyException;
-import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 
 import org.jboss.ejb.Container;
@@ -24,7 +21,6 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore2;
 import org.jboss.ejb.EntityEnterpriseContext;
 
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCCommandFactory;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.FinderResults;
@@ -62,7 +58,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */                            
 public abstract class CMPStoreManager 
    implements EntityPersistenceStore2

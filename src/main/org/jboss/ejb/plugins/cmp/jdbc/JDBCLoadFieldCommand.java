@@ -7,7 +7,6 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import java.lang.reflect.Method;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,7 +17,6 @@ import java.sql.ResultSet;
 import javax.ejb.EJBException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.cmp.CMPStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 
 /**
@@ -31,7 +29,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * fields.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCLoadFieldCommand
    extends JDBCQueryCommand

@@ -16,10 +16,8 @@ import java.util.Iterator;
 
 import javax.ejb.EJBException;
 
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCApplicationMetaData; 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData; 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldPropertyMetaData; 
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData; 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData; 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCValueClassMetaData; 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCValuePropertyMetaData; 
@@ -29,7 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCValuePropertyMetaData;
  * this class is to flatten the JDBCValueClassMetaData into columns.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCTypeFactory {
    // the type mapping to use with the specified database

@@ -7,12 +7,8 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import java.lang.reflect.Method;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
 
-import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.DeploymentException;
  
 import org.jboss.ejb.plugins.cmp.CommandFactory;
@@ -42,7 +38,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCCommandFactory implements CommandFactory
 {

@@ -11,7 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.jboss.ejb.EntityEnterpriseContext;
 
 /**
  * JDBCBeanExistsCommand is a JDBC query that checks if an id exists
@@ -21,7 +20,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCBeanExistsCommand extends JDBCQueryCommand
 {

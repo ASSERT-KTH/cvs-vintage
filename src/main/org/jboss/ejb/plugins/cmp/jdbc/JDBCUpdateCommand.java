@@ -8,7 +8,6 @@
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 /**
  * Template Method [Gamma et. al, 1995] which defines the basic process of 
@@ -17,7 +16,7 @@ import java.sql.SQLException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public abstract class JDBCUpdateCommand extends JDBCCommand {
    // Constructors --------------------------------------------------

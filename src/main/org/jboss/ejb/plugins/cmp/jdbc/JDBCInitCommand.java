@@ -7,20 +7,11 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import java.util.Iterator;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.DatabaseMetaData;
 
 
 import org.jboss.ejb.plugins.cmp.InitCommand;
 
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 
 /**
  * JDBCInitCommand does nothing.
@@ -31,7 +22,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCInitCommand implements InitCommand {
    

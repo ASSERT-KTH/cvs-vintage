@@ -9,7 +9,6 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 import org.jboss.logging.Logger;
 
@@ -24,7 +23,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public abstract class JDBCCommand {
    // Attributes ----------------------------------------------------

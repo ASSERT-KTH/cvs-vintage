@@ -7,7 +7,6 @@
 package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
 import java.lang.reflect.Method;
-import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -44,7 +43,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */                            
 public class JDBCCMRFieldBridge implements CMRFieldBridge {
    // ------ Invocation messages ------

@@ -8,7 +8,6 @@
 package org.jboss.ejb.plugins.cmp;
 
 import java.rmi.RemoteException;
-import java.util.Map;
 import org.jboss.util.FinderResults;
 
 /**
@@ -24,7 +23,7 @@ import org.jboss.util.FinderResults;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface LoadEntitiesCommand
 {

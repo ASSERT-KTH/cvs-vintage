@@ -7,11 +7,6 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import java.sql.PreparedStatement;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
 import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.plugins.cmp.ejbql.Assembly;
 import org.jboss.ejb.plugins.cmp.ejbql.Parser;
@@ -29,7 +24,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * clause. This code has been cleaned up to improve readability.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCEJBQLFinderCommand extends JDBCFinderCommand {
 

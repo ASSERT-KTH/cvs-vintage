@@ -9,7 +9,6 @@ package org.jboss.ejb.plugins.cmp;
 
 import java.lang.reflect.Method;
 import org.jboss.ejb.EntityEnterpriseContext;
-import javax.ejb.FinderException;
 
 /**
  * FindEntityCommand handles finders that return a single bean.
@@ -22,7 +21,7 @@ import javax.ejb.FinderException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public interface FindEntityCommand
 {

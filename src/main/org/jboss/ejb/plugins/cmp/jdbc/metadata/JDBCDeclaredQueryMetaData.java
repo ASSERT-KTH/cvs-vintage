@@ -8,11 +8,7 @@ package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.lang.reflect.Method;
 
-import java.util.Collection;
-import java.util.Set;
 
-import javax.ejb.EJBObject;
-import javax.ejb.EJBLocalObject;
 
 import org.jboss.ejb.DeploymentException;
 import org.jboss.metadata.MetaData;
@@ -24,7 +20,7 @@ import org.w3c.dom.Element;
  * Imutable class contains information about a declated query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
    /**

@@ -7,12 +7,8 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import java.lang.reflect.Method;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Iterator;
 
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
@@ -20,8 +16,6 @@ import java.rmi.ServerException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.cmp.LoadEntitiesCommand;
 import org.jboss.util.FinderResults;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 
@@ -29,7 +23,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * JDBCReadAheadCommand
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCReadAheadCommand
    extends JDBCQueryCommand

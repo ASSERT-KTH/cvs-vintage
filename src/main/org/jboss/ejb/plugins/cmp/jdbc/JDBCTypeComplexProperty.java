@@ -6,7 +6,6 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import javax.ejb.EJBException;
 import java.lang.reflect.Method;
 
 /**
@@ -21,7 +20,7 @@ import java.lang.reflect.Method;
  * the Java Bean.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCTypeComplexProperty {
    private final String propertyName;

@@ -7,14 +7,13 @@
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.lang.reflect.Method;
-import org.w3c.dom.Element;
 
 /**
  * Imutable class which holds information about a raw sql query.
  * A raw sql query allows you to do anything sql allows you to do.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public final class JDBCRawSqlQueryMetaData implements JDBCQueryMetaData {
    private final Method method;

@@ -7,10 +7,8 @@
  
 package org.jboss.ejb.plugins.cmp;
 
-import java.util.Collection;
 import java.lang.reflect.Method;
 import org.jboss.ejb.EntityEnterpriseContext;
-import javax.ejb.FinderException;
 import org.jboss.util.FinderResults;
 
 /**
@@ -24,7 +22,7 @@ import org.jboss.util.FinderResults;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public interface FindEntitiesCommand
 {

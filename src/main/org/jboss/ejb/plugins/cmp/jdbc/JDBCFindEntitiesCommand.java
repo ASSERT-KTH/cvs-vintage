@@ -9,13 +9,11 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.lang.reflect.Method;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import java.rmi.RemoteException;
 
 import javax.ejb.FinderException;
 
@@ -40,7 +38,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
    private final Map knownFinderCommands = new HashMap();

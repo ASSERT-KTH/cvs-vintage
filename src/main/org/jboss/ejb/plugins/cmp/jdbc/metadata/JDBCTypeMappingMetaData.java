@@ -6,7 +6,6 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import org.jboss.ejb.DeploymentException;
@@ -18,7 +17,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public final class JDBCTypeMappingMetaData {
    

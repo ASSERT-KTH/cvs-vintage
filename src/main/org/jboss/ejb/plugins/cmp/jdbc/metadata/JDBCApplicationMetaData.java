@@ -13,9 +13,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 import org.jboss.ejb.DeploymentException;
 
 import org.jboss.metadata.ApplicationMetaData;
@@ -23,7 +20,6 @@ import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.RelationMetaData;
-import org.jboss.metadata.XmlLoadable;
 import org.w3c.dom.Element;
 
 /**
@@ -31,7 +27,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public final class JDBCApplicationMetaData
 {

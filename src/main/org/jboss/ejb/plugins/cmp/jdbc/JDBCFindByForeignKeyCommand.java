@@ -7,13 +7,11 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import java.rmi.ServerException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashSet;
 import java.util.Set;
 import javax.ejb.EJBException;
-import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 
 /**
@@ -21,7 +19,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * entity's table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCFindByForeignKeyCommand extends JDBCQueryCommand {
    // Constructors --------------------------------------------------

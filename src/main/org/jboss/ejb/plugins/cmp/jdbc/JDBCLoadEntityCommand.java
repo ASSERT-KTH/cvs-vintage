@@ -7,10 +7,8 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import java.lang.reflect.Method;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
@@ -19,10 +17,8 @@ import java.rmi.ServerException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import javax.ejb.EJBException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.cmp.CMPStoreManager;
 import org.jboss.ejb.plugins.cmp.LoadEntityCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 
@@ -39,7 +35,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCLoadEntityCommand
    extends JDBCQueryCommand

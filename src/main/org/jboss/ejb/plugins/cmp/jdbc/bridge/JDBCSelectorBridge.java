@@ -17,10 +17,9 @@ package org.jboss.ejb.plugins.cmp.jdbc.bridge;
  *      One for each entity bean ejbSelect method.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */                            
 import java.lang.reflect.Method;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -28,9 +27,7 @@ import java.util.Set;
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
 import javax.ejb.ObjectNotFoundException;
-import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.plugins.cmp.bridge.SelectorBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCEJBQLFinderCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 

@@ -8,12 +8,9 @@
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.rmi.RemoteException;
-import java.rmi.ServerException;
 
-import javax.ejb.EntityBean;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.cmp.CMPStoreManager;
 import org.jboss.ejb.plugins.cmp.InitEntityCommand;
 
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
@@ -22,7 +19,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
  * CMPStoreManager JDBCActivateEntityCommand
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
  
 public class JDBCInitEntityCommand implements InitEntityCommand {

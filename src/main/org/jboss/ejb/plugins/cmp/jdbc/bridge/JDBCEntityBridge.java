@@ -9,7 +9,6 @@ package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +32,6 @@ import org.jboss.ejb.plugins.cmp.bridge.SelectorBridge;
 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
 import org.jboss.logging.Logger;
@@ -52,7 +50,7 @@ import org.jboss.proxy.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    protected JDBCEntityMetaData metadata;

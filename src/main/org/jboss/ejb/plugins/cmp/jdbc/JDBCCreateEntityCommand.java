@@ -10,20 +10,15 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 import java.lang.reflect.Method;
 
 import java.rmi.RemoteException;
-import java.rmi.ServerException;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.ejb.CreateException;
 import javax.ejb.DuplicateKeyException;
 
-import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.cmp.CMPStoreManager;
 import org.jboss.ejb.plugins.cmp.CreateEntityCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 
@@ -37,7 +32,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCCreateEntityCommand
    extends JDBCUpdateCommand

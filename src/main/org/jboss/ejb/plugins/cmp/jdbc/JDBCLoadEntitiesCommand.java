@@ -7,18 +7,13 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import java.lang.reflect.Method;
 
-import java.util.Map;
-import java.util.Iterator;
 
 import java.rmi.RemoteException;
-import java.rmi.ServerException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.LoadEntitiesCommand;
 import org.jboss.util.FinderResults;
 
@@ -32,7 +27,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCLoadEntitiesCommand
    extends JDBCLoadEntityCommand

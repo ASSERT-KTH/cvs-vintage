@@ -7,25 +7,18 @@
  
 package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
-import java.lang.reflect.Field;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
-import javax.ejb.EJBException;
 
-import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.EntityEnterpriseContext;
 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 
 import org.jboss.ejb.plugins.cmp.bridge.CMPFieldBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 
-import org.jboss.logging.Logger;
 
 /**
  * JDBCCMPFieldBridge represents one CMP field. This implementations of 
@@ -40,7 +33,7 @@ import org.jboss.logging.Logger;
  *      One for each entity bean cmp field.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public interface JDBCCMPFieldBridge extends CMPFieldBridge {
 

@@ -9,7 +9,6 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 
 /**
@@ -19,7 +18,7 @@ import java.sql.SQLException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public abstract class JDBCQueryCommand extends JDBCCommand
 {

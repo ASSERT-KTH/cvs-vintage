@@ -6,13 +6,7 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.jboss.ejb.DeploymentException;
@@ -25,7 +19,7 @@ import org.w3c.dom.Element;
  * It loads its data from standardjbosscmp-jdbc.xml and jbosscmp-jdbc.xml
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public final class JDBCReadAheadMetaData {
 

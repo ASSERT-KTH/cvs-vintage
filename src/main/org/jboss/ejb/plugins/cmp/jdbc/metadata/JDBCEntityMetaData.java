@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import javax.sql.DataSource;
 import org.jboss.ejb.DeploymentException;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.MetaData;
@@ -27,7 +26,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public final class JDBCEntityMetaData {
    /**
