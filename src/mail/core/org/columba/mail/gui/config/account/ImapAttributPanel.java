@@ -46,8 +46,9 @@ public class ImapAttributPanel extends JPanel {
 
 	private JCheckBox secureCheckBox;
 	private JCheckBox storePasswordCheckBox;
-
-	private JCheckBox automaticallyApplyFilterCheckBox;
+	/* TODO: reactivate it
+	 private JCheckBox automaticallyApplyFilterCheckBox;
+	 */
 
 	private JCheckBox intervalCheckingCheckBox;
 	private JPanel jPanel1;
@@ -75,9 +76,10 @@ public class ImapAttributPanel extends JPanel {
 			if ( item.isSavePassword() )
 			    storePasswordCheckBox.setSelected(true);
 			    */
-
+			/* TODO: reactivate it
 			automaticallyApplyFilterCheckBox.setSelected(
 				item.getBoolean("automatically_apply_filter"));
+				*/
 		} else {
 
 			/*
@@ -86,11 +88,16 @@ public class ImapAttributPanel extends JPanel {
 			else
 			    item.setSavePassword("false");
 			    */
-
+			/* TODO: reactivate it
 			item.set(
 				"automatically_apply_filter",
 				automaticallyApplyFilterCheckBox.isSelected());
-
+				*/
+			// TODO: delete this if the automatically_apply_filter action is reactivated
+			item.set(
+				"automatically_apply_filter",
+				false);
+			// end Todo
 		}
 
 	}
@@ -199,7 +206,7 @@ public class ImapAttributPanel extends JPanel {
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		layout.setConstraints(cleanupPanel, c);
 		add(cleanupPanel);
-
+		/* TODO: ractivate it
 		automaticallyApplyFilterCheckBox =
 			new JCheckBox(
 				MailResourceLoader.getString(
@@ -218,6 +225,7 @@ public class ImapAttributPanel extends JPanel {
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		layout.setConstraints(automaticallyApplyFilterCheckBox, c);
 		add(automaticallyApplyFilterCheckBox);
+		*/
 	}
 
 }
