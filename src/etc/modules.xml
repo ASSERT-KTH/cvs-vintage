@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+<!--
+This is automatically generated from the tomcat sources, using Alexandria's 
+XMLDoclet. It is ( will be/can be ) used by configuration tools. One use is 
+in ServerXmlReader to use a simpler syntax.
+    -->
+<module name="PoolTcpConnector" javaClass="org.apache.tomcat.modules.server.PoolTcpConnector">
+<category name="server"/>
+<doc>Not yet</doc>
+<attribute name="pools">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="maxThreads">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="maxSpareThreads">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="minSpareThreads">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="backlog">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="port">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="address">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="hostName">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="socketFactory">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="keystore">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="keyspass">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="secure">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="attribute">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="JNIConnectionHandler" javaClass="org.apache.tomcat.modules.server.JNIConnectionHandler">
+<category name="server"/>
+<doc>Not yet</doc>
+<attribute name="nativeLibrary">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="endpoint">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="WorkDirSetup" javaClass="org.apache.tomcat.modules.config.WorkDirSetup">
+<category name="config"/>
+<doc>Not yet</doc>
+<attribute name="cleanWorkDir">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="workDirBase">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="useWebInf">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="oldStyle">
+<doc>Not yet</doc>
+</attribute>
+<addContext/>
+</module>
+
+
+<module name="RelativePathFix" javaClass="org.apache.tomcat.modules.config.RelativePathFix">
+<category name="config"/>
+<doc>Not yet</doc>
+<addContext/>
+</module>
+
+
+<module name="PathSetter" javaClass="org.apache.tomcat.modules.config.PathSetter">
+<category name="config"/>
+<doc>Not yet</doc>
+<addContext/>
+</module>
+
+
+<module name="ApacheConfig" javaClass="org.apache.tomcat.modules.config.ApacheConfig">
+<category name="config"/>
+<doc>Not yet</doc>
+</module>
+
+
+<module name="PolicyLoader" javaClass="org.apache.tomcat.modules.config.PolicyLoader">
+<category name="config"/>
+<doc>Not yet</doc>
+<attribute name="securityManagerClass">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="policyFile">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="DefaultCMSetter" javaClass="org.apache.tomcat.modules.config.DefaultCMSetter">
+<category name="config"/>
+<doc>Not yet</doc>
+<addContext/>
+</module>
+
+
+<module name="PermissionAdd" javaClass="org.apache.tomcat.modules.config.PermissionAdd">
+<category name="config"/>
+<doc>Not yet</doc>
+<attribute name="name">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="AutoSetup" javaClass="org.apache.tomcat.modules.config.AutoSetup">
+<category name="config"/>
+<doc>Not yet</doc>
+</module>
+
+<module name="AutoWebApp" 
+        javaClass="org.apache.tomcat.modules.config.AutoWebApp">
+<category name="config"/>
+<doc>Not yet</doc>
+</module>
+
+<module name="Http10Interceptor" 
+        javaClass="org.apache.tomcat.modules.server.Http10Interceptor">
+<category name="config"/>
+<doc>Not yet</doc>
+</module>
+
+
+<module name="NSConfig" javaClass="org.apache.tomcat.modules.config.NSConfig">
+<category name="config"/>
+<doc>Not yet</doc>
+</module>
+
+
+<module name="IISConfig" javaClass="org.apache.tomcat.modules.config.IISConfig">
+<category name="config"/>
+<doc>Not yet</doc>
+</module>
+
+
+<module name="AutoDeploy" javaClass="org.apache.tomcat.modules.config.AutoDeploy">
+<category name="config"/>
+<doc>Not yet</doc>
+<attribute name="source">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="target">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="flat">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="redeploy">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="ServerXmlReader" javaClass="org.apache.tomcat.modules.config.ServerXmlReader">
+<category name="config"/>
+<doc>Not yet</doc>
+<attribute name="config">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="home">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="tagRules">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="ServerXmlInterceptor" javaClass="org.apache.tomcat.modules.config.ServerXmlInterceptor">
+<category name="config"/>
+<doc>Not yet</doc>
+<attribute name="config">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="home">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="AutoLoad" javaClass="org.apache.tomcat.modules.config.AutoLoad">
+<category name="config"/>
+<doc>Not yet</doc>
+<attribute name="dir">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="host">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="flat">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="LoaderInterceptor11" javaClass="org.apache.tomcat.modules.config.LoaderInterceptor11">
+<category name="config"/>
+<doc>Not yet</doc>
+<attribute name="useApplicationLoader">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="useNoParent">
+<doc>Not yet</doc>
+</attribute>
+<addContext/>
+</module>
+
+
+<module name="ContextXmlReader" javaClass="org.apache.tomcat.modules.config.ContextXmlReader">
+<category name="config"/>
+<doc>Not yet</doc>
+<attribute name="config">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="home">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="contextRules">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="WebAppsConfig" javaClass="org.apache.tomcat.modules.config.WebAppsConfig">
+<category name="config"/>
+<doc>Not yet</doc>
+<attribute name="dir">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="hostXmlDir">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="LogSetter" javaClass="org.apache.tomcat.modules.config.LogSetter">
+<category name="config"/>
+<doc>Not yet</doc>
+<attribute name="name">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="path">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="verbosityLevel">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="servletLogger">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="SimpleSessionStore" javaClass="org.apache.tomcat.modules.session.SimpleSessionStore">
+<category name="session"/>
+<doc>Not yet</doc>
+<attribute name="checkInterval">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="maxActiveSessions">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="randomClass">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="SessionId" javaClass="org.apache.tomcat.modules.session.SessionId">
+<category name="session"/>
+<doc>Not yet</doc>
+<attribute name="cookiesFirst">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="noCookies">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="AccountingInterceptor" javaClass="org.apache.tomcat.modules.loggers.AccountingInterceptor">
+<category name="loggers"/>
+<doc>Not yet</doc>
+<attribute name="trace">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="LogEvents" javaClass="org.apache.tomcat.modules.loggers.LogEvents">
+<category name="loggers"/>
+<doc>Not yet</doc>
+<addContext/>
+</module>
+
+
+<module name="SimpleRealm" javaClass="org.apache.tomcat.modules.aaa.SimpleRealm">
+<category name="aaa"/>
+<doc>Not yet</doc>
+<attribute name="filename">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="JDBCRealm" javaClass="org.apache.tomcat.modules.aaa.JDBCRealm">
+<category name="aaa"/>
+<doc>Not yet</doc>
+<attribute name="driverName">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="connectionURL">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="connectionName">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="connectionPassword">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="userTable">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="userNameCol">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="userCredCol">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="userRoleTable">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="roleNameCol">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="digest">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="CredentialsInterceptor" javaClass="org.apache.tomcat.modules.aaa.CredentialsInterceptor">
+<category name="aaa"/>
+<doc>Not yet</doc>
+</module>
+
+
+<module name="AccessInterceptor" javaClass="org.apache.tomcat.modules.aaa.AccessInterceptor">
+<category name="aaa"/>
+<doc>Not yet</doc>
+</module>
+
+
+<module name="InvokerInterceptor" javaClass="org.apache.tomcat.modules.generators.InvokerInterceptor">
+<category name="generators"/>
+<doc>Not yet</doc>
+</module>
+
+
+<module name="ErrorHandler" javaClass="org.apache.tomcat.modules.generators.ErrorHandler">
+<category name="generators"/>
+<doc>Not yet</doc>
+<attribute name="showDebugInfo">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="Jdk12Interceptor" javaClass="org.apache.tomcat.modules.generators.Jdk12Interceptor">
+<category name="generators"/>
+<doc>Not yet</doc>
+</module>
+
+
+<module name="StaticInterceptor" javaClass="org.apache.tomcat.modules.generators.StaticInterceptor">
+<category name="generators"/>
+<doc>Not yet</doc>
+<attribute name="listings">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="ReloadInterceptor" javaClass="org.apache.tomcat.modules.mappers.ReloadInterceptor">
+<category name="mappers"/>
+<doc>Not yet</doc>
+<attribute name="fullReload">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="SimpleMapper1" javaClass="org.apache.tomcat.modules.mappers.SimpleMapper1">
+<category name="mappers"/>
+<doc>Not yet</doc>
+<attribute name="mapCache">
+<doc>Not yet</doc>
+</attribute>
+<addContext/>
+</module>
+
+
+<module name="WebXmlReader" javaClass="org.apache.tomcat.facade.WebXmlReader">
+<category name="facade"/>
+<doc>Not yet</doc>
+<attribute name="validate">
+<doc>Not yet</doc>
+</attribute>
+</module>
+
+
+<module name="JspInterceptor" javaClass="org.apache.tomcat.facade.JspInterceptor">
+<category name="facade"/>
+<doc>Not yet</doc>
+<attribute name="keepGenerated">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="largeFile">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="mappedFile">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="sendErrToClient">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="iEClassId">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="classPath">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="scratchdir">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="jspCompilerPath">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="jspCompilerPlugin">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="classDebugInfo">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="property">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="useJspServlet">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="jspServlet">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="javaCompiler">
+<doc>Not yet</doc>
+</attribute>
+<addContext/>
+</module>
+
+
+<module name="Servlet22Interceptor" javaClass="org.apache.tomcat.facade.Servlet22Interceptor">
+<category name="facade"/>
+<doc>Not yet</doc>
+<addContext/>
+</module>
+
+
+<module name="LoadOnStartupInterceptor" javaClass="org.apache.tomcat.facade.LoadOnStartupInterceptor">
+<category name="facade"/>
+<doc>Not yet</doc>
+</module>
+
+
+</modules>
