@@ -106,44 +106,6 @@ public class HandleRoleRequests extends RequireLoginFirstAction
         setTarget(data, nextTemplate);
     }
 
-    public void doApproveroles(RunData data, TemplateContext context)
-        throws Exception
-    {
-        String template = getCurrentTemplate(data, null);
-        String nextTemplate = getNextTemplate(data, template);
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        Module module = scarabR.getCurrentModule();
-        if (((ScarabUser)data.getUser())
-            .hasPermission(ScarabSecurity.USER__APPROVE_ROLES, module)) 
-        {
-        SecurityAdminTool scarabA = getSecurityAdminTool(context);
-        List pendings = scarabA.getPendingGroupUserRoles(module);
-        Iterator i = pendings.iterator();
-        while (i.hasNext()) 
-        {
-            PendingGroupUserRole pending = (PendingGroupUserRole)i.next();
-            ScarabUser user = 
-                ScarabUserManager.getInstance(pending.getUserId());
-            String role = data.getParameters().getString(user.getUserName());
-            if (role != null && role.length() > 0) 
-            {
-                if (!role.equals("defer") && !role.equals("deny")) 
-                {
-                    TurbineSecurity.grant(user, (Group)module, 
-                                          TurbineSecurity.getRole(role));
-                    pending.delete();
-                }
-                else if (role.equals("deny"))
-                {
-                    pending.delete();
-                }
-            }
-        }
-            
-        }        
-        setTarget(data, nextTemplate);
-    }
-
     /**
      * Helper method to retrieve the ScarabRequestTool from the Context
      */

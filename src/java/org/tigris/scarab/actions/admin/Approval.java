@@ -46,6 +46,9 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.List;
+import java.util.Iterator;
+
 // Turbine Stuff 
 import org.apache.fulcrum.template.DefaultTemplateContext;
 import org.apache.torque.om.NumberKey; 
@@ -55,6 +58,8 @@ import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.ParameterParser;
+import org.apache.fulcrum.security.TurbineSecurity;
+
 
 // Scarab Stuff
 import org.tigris.scarab.om.Query;
@@ -62,7 +67,8 @@ import org.tigris.scarab.om.QueryPeer;
 import org.tigris.scarab.om.Transaction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImplPeer;
-import org.tigris.scarab.om.ScarabUserImplPeer;
+import org.tigris.scarab.om.ScarabUserManager;
+import org.tigris.scarab.om.PendingGroupUserRole;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
@@ -73,14 +79,17 @@ import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.SecurityAdminTool;
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
+import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: Approval.java,v 1.16 2002/04/13 02:39:33 jmcnally Exp $
+    @version $Id: Approval.java,v 1.17 2002/04/18 00:27:34 jmcnally Exp $
 */
-public class Approval extends TemplateAction
+public class Approval extends RequireLoginFirstAction
 {
 
     private static final String EMAIL_ERROR = "Your changes were saved, " +
@@ -219,5 +228,53 @@ public class Approval extends TemplateAction
                 }
             }
         }
+    }
+
+    public void doApproveroles(RunData data, TemplateContext context)
+        throws Exception
+    {
+        String template = getCurrentTemplate(data, null);
+        String nextTemplate = getNextTemplate(data, template);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Module module = scarabR.getCurrentModule();
+        if (((ScarabUser)data.getUser())
+            .hasPermission(ScarabSecurity.USER__APPROVE_ROLES, module)) 
+        {
+            SecurityAdminTool scarabA = getSecurityAdminTool(context);
+            List pendings = scarabA.getPendingGroupUserRoles(module);
+            Iterator i = pendings.iterator();
+            while (i.hasNext()) 
+            {
+                PendingGroupUserRole pending = (PendingGroupUserRole)i.next();
+                ScarabUser user = 
+                    ScarabUserManager.getInstance(pending.getUserId());
+                String role = data.getParameters()
+                    .getString(user.getUserName());
+                if (role != null && role.length() > 0) 
+                {
+                    if (!role.equals("defer") && !role.equals("deny")) 
+                    {
+                        TurbineSecurity.grant( user, 
+                            (org.apache.fulcrum.security.entity.Group)module, 
+                            TurbineSecurity.getRole(role) );
+                        pending.delete();
+                    }
+                    else if (role.equals("deny"))
+                    {
+                        pending.delete();
+                    }
+                }
+            }
+        }        
+        setTarget(data, nextTemplate);
+    }
+
+    /**
+     * Helper method to retrieve the ScarabRequestTool from the Context
+     */
+    private SecurityAdminTool getSecurityAdminTool(TemplateContext context)
+    {
+        return (SecurityAdminTool)context
+            .get(ScarabConstants.SECURITY_ADMIN_TOOL);
     }
 }
