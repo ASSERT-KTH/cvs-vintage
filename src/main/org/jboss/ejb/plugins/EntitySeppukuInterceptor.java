@@ -46,7 +46,7 @@ import org.w3c.dom.Element;
  * message through a JMS topic if the change successfully commits
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class EntitySeppukuInterceptor
    extends AbstractInterceptor
@@ -70,7 +70,6 @@ public class EntitySeppukuInterceptor
    protected String topicName = null;
    protected boolean transacted = true;
    protected int acknowledgeMode = TopicSession.AUTO_ACKNOWLEDGE;
-   protected Element config = null;
 
    // Static --------------------------------------------------------
  
@@ -81,11 +80,6 @@ public class EntitySeppukuInterceptor
    public void setContainer(Container container)
    {
       this.container = (EntityContainer)container;
-   }
-
-   public void setConfiguration(Element config)
-   {
-      this.config = config;
    }
 
    public void readConfiguration()

@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public abstract class AbstractInterceptor
    implements Interceptor
@@ -32,6 +32,8 @@ public abstract class AbstractInterceptor
    /** Logging instance */
    protected Logger log = Logger.getLogger(this.getClass());
 
+   protected Element config;
+
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
@@ -42,7 +44,7 @@ public abstract class AbstractInterceptor
    
    public void setConfiguration(Element config) 
    { 
-      // complete 
+      this.config = config;
    }
 
 

@@ -51,7 +51,7 @@ import org.w3c.dom.Element;
  * FIXME: make this an MBean instead.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class EntitySeppukuInvalidatorInterceptor
    extends AbstractInterceptor
@@ -76,7 +76,6 @@ public class EntitySeppukuInvalidatorInterceptor
    protected String topicName = null;
    protected boolean transacted = true;
    protected int acknowledgeMode = TopicSession.AUTO_ACKNOWLEDGE;
-   protected Element config = null;
 
    // Static --------------------------------------------------------
  
@@ -111,11 +110,6 @@ public class EntitySeppukuInvalidatorInterceptor
    public void setContainer(Container container)
    {
       this.container = (EntityContainer)container;
-   }
-
-   public void setConfiguration(Element config)
-   {
-      this.config = config;
    }
 
    protected void readConfiguration()
