@@ -66,6 +66,15 @@ package org.apache.tomcat.core;
  */
 
 public class Constants {
+    public static final String TOMCAT_NAME = "Tomcat Web Server";
+    public static final String TOMCAT_VERSION = "3.0";
+
+    public static final String JSP_NAME = "JSP";
+    public static final String JSP_VERSION = "1.1";
+	
+    public static final String SERVLET_NAME = "Servlet";
+    public static final int SERVLET_MAJOR = 2;
+    public static final int SERVLET_MINOR = 2;
 
     public static final String Package = "org.apache.tomcat.core";
     public static final int RequestURIMatchRecursion = 5;
@@ -91,27 +100,6 @@ public class Constants {
         public static String[] LIB_PATHS = {
             LibDir
         };
-
-        public static final String EngineHeader =
-            Tomcat.Name + "/" + Tomcat.Version + " (" + JSP.Name + " " +
-	    JSP.Version + "; " + Servlet.Name + " " + Servlet.Version;
-
-        public static class Servlet {
-            public static final String Name = "Servlet";
-	    public static final String Version = "2.2";
-            public static final int MajorVersion = 2;
-            public static final int MinorVersion = 2;
-	}
-
-        public static class JSP {
-	    public static final String Name = "JSP";
-	    public static final String Version = "1.1";
-	}
-
-        public static class Tomcat {
-	    public static final String Name = "Tomcat Web Server";
-	    public static final String Version = "3.0";
-	}
 
         public static class Attribute {
 	    public static class WorkDir {
@@ -207,13 +195,5 @@ public class Constants {
 
     public static class Header {
         public static final String AcceptLanguage = "Accept-Language";
-    }
- 
-    public static class Request {
-        public static final String HTTP = "http";
-        public static final String HTTPS = "https";
-        public static final String FILE = "file";
-        public static final String WAR = "war";
-        public static final String JAR = "jar";
     }
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/DefaultServlet.java,v 1.6 1999/11/08 03:58:38 akv Exp $
- * $Revision: 1.6 $
- * $Date: 1999/11/08 03:58:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/DefaultServlet.java,v 1.7 2000/01/08 15:34:28 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/01/08 15:34:28 $
  *
  * ====================================================================
  *
@@ -119,15 +119,14 @@ public class DefaultServlet extends HttpServlet {
         URL url = getServletContext().getResource(pathInfo);
 
 	if (url != null) {
-	    if (url.getProtocol().equals(Constants.Request.WAR) &&
+	    if (url.getProtocol().equals("war") &&
 	        context.isWARExpanded()) {
 		String s = context.getWARDir().toString() + pathInfo;
 
 		url = URLUtil.resolve(s);
 	    }
 
-	    if (url.getProtocol().equalsIgnoreCase(
-	        Constants.Request.FILE)) {
+	    if (url.getProtocol().equalsIgnoreCase("file")) {
 		// serve file
 
 		File f = new File(url.getFile());
@@ -147,8 +146,7 @@ public class DefaultServlet extends HttpServlet {
 		    response.sendError(response.SC_NOT_FOUND,
                         "File Not Found: " + requestURI);
 		}
-	    } else if (url.getProtocol().equalsIgnoreCase(
-	        Constants.Request.WAR)) {
+	    } else if (url.getProtocol().equalsIgnoreCase("war")) {
 	        // get content from war
 
 	        String documentBase = context.getDocumentBase().toString();
@@ -187,8 +185,7 @@ public class DefaultServlet extends HttpServlet {
 	String absPath = file.getAbsolutePath();
         String docBase = "";
 
-	if (context.getDocumentBase().getProtocol().equalsIgnoreCase(
-	    Constants.Request.WAR) &&
+	if (context.getDocumentBase().getProtocol().equalsIgnoreCase("war") &&
 	    context.isWARExpanded()) {
 	    String s = context.getWARDir().getAbsolutePath();
 
@@ -542,8 +539,7 @@ public class DefaultServlet extends HttpServlet {
 	String[] fileNames = file.list();
         String docBase = "";
 
-        if (context.getDocumentBase().getProtocol().equalsIgnoreCase(
-            Constants.Request.WAR) &&
+        if (context.getDocumentBase().getProtocol().equalsIgnoreCase("war") &&
 	    context.isWARExpanded()) {
 	    String s = context.getWARDir().getAbsolutePath();
 
@@ -723,9 +719,9 @@ public class DefaultServlet extends HttpServlet {
 	buf.append("<tr><td colspan=3 bgcolor=#ffffff>&nbsp;</td></tr>");
 	buf.append("<tr><td colspan=3 bgcolor=#cccccc>");
 	buf.append("<font size=-1>");
-	buf.append(Constants.Context.Tomcat.Name);
+	buf.append(Constants.TOMCAT_NAME);
 	buf.append(" v");
-	buf.append(Constants.Context.Tomcat.Version);
+	buf.append(Constants.TOMCAT_VERSION);
 	buf.append("</font></td></tr></table>");
 
 	if (! inInclude) {

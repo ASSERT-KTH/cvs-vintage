@@ -136,11 +136,11 @@ implements ServletContext {
     }
 
     public int getMajorVersion() {
-        return Constants.Context.Servlet.MajorVersion;
+        return Constants.SERVLET_MAJOR;
     }
 
     public int getMinorVersion() {
-        return Constants.Context.Servlet.MinorVersion;
+        return Constants.SERVLET_MINOR;
     }
 
     public String getMimeType(String filename) {
@@ -156,8 +156,7 @@ implements ServletContext {
             URL url = getResource(path);
 
             if (url != null) {
-                if (url.getProtocol().equalsIgnoreCase(
-		    Constants.Request.WAR)) {
+                if (url.getProtocol().equalsIgnoreCase("war")) {
 		    if (context.isWARExpanded()) {
 		        String spec = url.getFile();
 
@@ -172,8 +171,7 @@ implements ServletContext {
 			    warURL = new URL(spec.substring(0, separator++));
 			}
 
-			if (warURL.getProtocol().equalsIgnoreCase(
-			    Constants.Request.FILE)) {
+			if (warURL.getProtocol().equalsIgnoreCase("file")) {
 			    String s = context.getWorkDir() +"/" +
 			        Constants.Context.WARExpandDir + path;
 			    File f = new File(s);
@@ -183,20 +181,17 @@ implements ServletContext {
 			    // troubles on jdk1.1.x/win
 
 			    realPath = FileUtil.patch(absPath);
-			} else if (url.getProtocol().equalsIgnoreCase(
-			    Constants.Request.HTTP)) {
+			} else if (url.getProtocol().equalsIgnoreCase("http")) {
 			    // XXX
 			    // need to support http docBase'd context
 			}
 		    } else {
                         // realPath is null
 		    }
-		} else if (url.getProtocol().equalsIgnoreCase(
-		    Constants.Request.HTTP)) {
+		} else if (url.getProtocol().equalsIgnoreCase("http")) {
                     // XXX
                     // need to support http docBase'd context
-                } else if (url.getProtocol().equalsIgnoreCase(
-		    Constants.Request.FILE)) {
+                } else if (url.getProtocol().equalsIgnoreCase("file")) {
 		    // take care of File.getAbsolutePath() troubles on
 		    // jdk1.1.x/win
 
@@ -266,8 +261,7 @@ implements ServletContext {
 
 	if (path.equals("")) {
 	    url = docBase;
-	} else if (docBase.getProtocol().equalsIgnoreCase(
-	    Constants.Request.WAR)) {
+	} else if (docBase.getProtocol().equalsIgnoreCase("war")) {
 	    if (context.isWARExpanded()) {
 		File f = new File(context.getWARDir().toString());
 		String absPath = f.getAbsolutePath();

@@ -152,7 +152,10 @@ public class Context {
 	    // no longer use core.properties - the configuration comes from
 	    // server.xml or web.xml - no more properties.
 	    StringBuffer sb=new StringBuffer();
-	    sb.append(Constants.Context.EngineHeader);
+	    sb.append(Constants.TOMCAT_NAME).append("/").append(Constants.TOMCAT_VERSION);
+	    sb.append(" (").append(Constants.JSP_NAME).append(" ").append(Constants.JSP_VERSION);
+	    sb.append("; ").append(Constants.SERVLET_NAME).append(" ");
+	    sb.append(Constants.SERVLET_MAJOR).append(".").append(Constants.SERVLET_MINOR);
 	    sb.append( "; Java " );
 	    sb.append(System.getProperty("java.version")).append("; ");
 	    sb.append(System.getProperty("os.name") + " ");
@@ -397,8 +400,7 @@ public class Context {
 
 	URL servletBase = this.docBase;
 
-	if (docBase.getProtocol().equalsIgnoreCase(
-	    Constants.Request.WAR)) {
+	if (docBase.getProtocol().equalsIgnoreCase("war")) {
 	    if (isWARExpanded()) {
 	        this.warDir = new File(getWorkDir(),
 		    Constants.Context.WARExpandDir);
@@ -453,8 +455,7 @@ public class Context {
 
 	String s = docBase.toString();
 
-	if (docBase.getProtocol().equalsIgnoreCase(
-	    Constants.Request.WAR)) {
+	if (docBase.getProtocol().equalsIgnoreCase("war")) {
 	    if (s.endsWith("/")) {
 	        s = s.substring(0, s.length() - 1);
 	    }

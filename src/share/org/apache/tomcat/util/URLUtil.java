@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLUtil.java,v 1.3 1999/10/22 01:47:13 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/22 01:47:13 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLUtil.java,v 1.4 2000/01/08 15:34:29 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/01/08 15:34:29 $
  *
  * ====================================================================
  *
@@ -122,8 +122,7 @@ public class URLUtil {
 	    resolve = new URL("file", "", path);
 	}
 
-        if (! resolve.getProtocol().equalsIgnoreCase(
-                org.apache.tomcat.core.Constants.Request.WAR) &&
+        if (! resolve.getProtocol().equalsIgnoreCase("war") &&
             resolve.getFile().toLowerCase().endsWith(
                 "." + Constants.MIME.WAR)) {
             URL u = new URL(Constants.MIME.WAR + ":" +
