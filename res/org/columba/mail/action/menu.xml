@@ -78,7 +78,9 @@
 	  <menuitem action="CreateVFolderOnSubject"/>
 	  <menuitem action="CreateVFolderOnFrom"/>
 	  <menuitem action="CreateVFolderOnTo"/>
-	 </menu>	
+	 </menu>
+	 <separator/>
+	 <menuitem action="MailImport"/>
 	</menu>
 	
 	

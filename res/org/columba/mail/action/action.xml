@@ -33,12 +33,6 @@
  <action name="PrevMessage" class="org.columba.mail.gui.table.action.PrevMessageAction"/>
  <action name="NextUnreadMessage" class="org.columba.mail.gui.table.action.NextUnreadMessageAction"/>
  <action name="PrevUnreadMessage" class="org.columba.mail.gui.table.action.PrevUnreadMessageAction"/>
- <action name="CreateFilterOnSubject" class="org.columba.mail.gui.table.action.CreateFilterOnSubjectAction"/>
- <action name="CreateFilterOnFrom" class="org.columba.mail.gui.table.action.CreateFilterOnFromAction"/>
- <action name="CreateFilterOnTo" class="org.columba.mail.gui.table.action.CreateFilterOnToAction"/>
- <action name="CreateVFolderOnSubject" class="org.columba.mail.gui.table.action.CreateVFolderOnSubjectAction"/>
- <action name="CreateVFolderOnFrom" class="org.columba.mail.gui.table.action.CreateVFolderOnFromAction"/>
- <action name="CreateVFolderOnTo" class="org.columba.mail.gui.table.action.CreateVFolderOnToAction"/>
  <action name="AddSenderToAddressbook" class="org.columba.mail.gui.table.action.AddSenderToAddressbookAction"/>
  <action name="AddAllSendersToAddressbook" class="org.columba.mail.gui.table.action.AddAllSendersToAddressbookAction"/>
  
@@ -53,6 +47,15 @@
  <action name="RenameFolder" class="org.columba.mail.gui.tree.action.RenameFolderAction"/>
  <action name="SubscribeFolder" class="org.columba.mail.gui.tree.action.SubscribeFolderAction"/>
  
+ <!-- utilities menu -->
+ <action name="CreateFilterOnSubject" class="org.columba.mail.gui.table.action.CreateFilterOnSubjectAction"/>
+ <action name="CreateFilterOnFrom" class="org.columba.mail.gui.table.action.CreateFilterOnFromAction"/>
+ <action name="CreateFilterOnTo" class="org.columba.mail.gui.table.action.CreateFilterOnToAction"/>
+ <action name="CreateVFolderOnSubject" class="org.columba.mail.gui.table.action.CreateVFolderOnSubjectAction"/>
+ <action name="CreateVFolderOnFrom" class="org.columba.mail.gui.table.action.CreateVFolderOnFromAction"/>
+ <action name="CreateVFolderOnTo" class="org.columba.mail.gui.table.action.CreateVFolderOnToAction"/>
+ 
+ <action name="MailImport" class="org.columba.mail.gui.action.ImportAction"/>
  
  
 </actionlist>

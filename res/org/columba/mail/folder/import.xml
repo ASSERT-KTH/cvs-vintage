@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE folderlist SYSTEM "import.dtd"> -->
+
+<importlist>
+ <importer name="mh" class="org.columba.mail.folder.mailboximport.MHImporter"/>
+ <importer name="mbox" class="org.columba.mail.folder.mailboximport.MBOXImporter"/>
+</importlist>
