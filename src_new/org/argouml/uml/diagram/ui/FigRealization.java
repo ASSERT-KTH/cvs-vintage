@@ -24,7 +24,7 @@
 // File: FigRealization.java
 // Classes: FigRealization
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigRealization.java,v 1.1 2000/09/04 12:50:18 1sturm Exp $
+// $Id: FigRealization.java,v 1.2 2002/07/26 06:59:12 mkl Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -41,9 +41,11 @@ public class FigRealization extends FigEdgeModelElement {
   ////////////////////////////////////////////////////////////////
   // constructors
 
+  ArrowHeadTriangle endArrow;
+
   public FigRealization() {
     addPathItem(_stereo, new PathConvPercent(this, 50, 10));
-    ArrowHeadTriangle endArrow = new ArrowHeadTriangle();
+    endArrow = new ArrowHeadTriangle();
     endArrow.setFillColor(Color.white);
     setDestArrowHead(endArrow);
     setBetweenNearestPoints(true);
@@ -72,6 +74,11 @@ public class FigRealization extends FigEdgeModelElement {
   protected void modelChanged() {
     // do not set _name
       //updateStereotypeText();
+  }
+
+  public void paint(Graphics g) {
+        endArrow.setLineColor(getLineColor());
+        super.paint(g);
   }
 
 } /* end class FigRealization */

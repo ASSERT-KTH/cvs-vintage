@@ -24,7 +24,7 @@
 // File: FigDependency.java
 // Classes: FigDependency
 // Original Author: ics 125b course, spring 1998
-// $Id: FigDependency.java,v 1.1 2000/09/04 12:50:18 1sturm Exp $
+// $Id: FigDependency.java,v 1.2 2002/07/26 06:59:12 mkl Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -40,10 +40,11 @@ public class FigDependency extends FigEdgeModelElement {
 
   ////////////////////////////////////////////////////////////////
   // constructors
+  protected ArrowHeadGreater endArrow;
 
   public FigDependency() {
     addPathItem(_stereo, new PathConvPercent(this, 50, 10));
-    ArrowHeadGreater endArrow = new ArrowHeadGreater();
+    endArrow = new ArrowHeadGreater();
     endArrow.setFillColor(Color.red);
     setDestArrowHead(endArrow);
     setBetweenNearestPoints(true);
@@ -76,6 +77,10 @@ public class FigDependency extends FigEdgeModelElement {
     updateStereotypeText();
   }
 
+  public void paint(Graphics g) {
+        endArrow.setLineColor(getLineColor());
+        super.paint(g);
+  }
 
 } /* end class FigDependency */
 
