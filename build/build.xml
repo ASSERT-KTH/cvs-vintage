@@ -153,7 +153,8 @@
 
         <!-- things to go into the web-inf directory -->
         <filter token="TEMPLATE_PATH" value="${template.path}"/>
-        <filter token="PIPELINE_DEFAULT" value="${scarab.default.pipeline}"/>
+        <filter token="PIPELINE_DESCRIPTOR"
+            value="${scarab.default.pipeline.descriptor}"/>
         <filter token="DATABASE_PROP_NAME" value="${scarab.database.prop.name}"/>
         <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
         <filter token="DATABASE_HOST" value="${scarab.database.host}"/>
