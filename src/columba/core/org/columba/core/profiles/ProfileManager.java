@@ -112,6 +112,8 @@ public class ProfileManager {
 	public Profile getProfileForName(String name) {
 
 		XmlElement profile = getXmlElementForName(name);
+		if ( profile == null ) return null;
+		
 		String n = profile.getAttribute("name");
 
 		location = new File(profile.getAttribute("location"));
