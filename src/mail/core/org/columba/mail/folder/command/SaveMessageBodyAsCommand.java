@@ -53,6 +53,7 @@ import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
+import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -394,7 +395,6 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 							       List attachments,
 							       boolean inclAllHeaders,
 							       File file) {
-		DocumentParser parser = new DocumentParser();
 
 		// decode message body with respect to charset
 		String decodedBody = getDecodedMessageBody(bodyPart);
@@ -407,13 +407,14 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 		if (!bodyPart.getHeader().getContentSubtype().equals("html")) {
 			try {
 				// substitute special characters like:  <,>,&,\t,\n		
-				body = parser.substituteSpecialCharacters(decodedBody);
+				body = HtmlParser.substituteSpecialCharacters(decodedBody);
 
 				// parse for urls / email adr. and substite with HTML-code
-				body = parser.substituteURL(body);
-				body = parser.substituteEmailAddress(body);
+				body = HtmlParser.substituteURL(body);
+				body = HtmlParser.substituteEmailAddress(body);
 
 				// mark quotings with special font
+				DocumentParser parser = new DocumentParser();
 				body = parser.markQuotings(body);
 				
 			} catch (Exception e) {
@@ -432,7 +433,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 
 		} else {
 			// use body as is
-			body = parser.validateHTMLString(decodedBody); 
+			body = HtmlParser.validateHTMLString(decodedBody); 
 		}
 
 		// headers
@@ -484,7 +485,6 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 	 */
 	private String insertHtmlHeaderTable(String body,
 									     String[][] headers) {
-		DocumentParser parser = new DocumentParser();
 
 		// create header table
 		StringBuffer buf = new StringBuffer();
@@ -499,9 +499,9 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 			// process header value
 			String val = headers[1][i];
 			try {
-				val = parser.substituteSpecialCharactersInHeaderfields(val);
-				val = parser.substituteURL(val);
-				val = parser.substituteEmailAddress(val);
+				val = HtmlParser.substituteSpecialCharactersInHeaderfields(val);
+				val = HtmlParser.substituteURL(val);
+				val = HtmlParser.substituteEmailAddress(val);
 			} catch (Exception e) {
 				ColumbaLogger.log.error("Error parsing header value", e);
 			}
@@ -544,7 +544,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 							   	   List attachments, 
 							   	   boolean inclAllHeaders, 
 							   	   File file) {
-		DocumentParser parser = new DocumentParser();
+		//DocumentParser parser = new DocumentParser();
 		
 		// decode message body with respect to charset
 		String decodedBody = getDecodedMessageBody(bodyPart);
@@ -552,8 +552,9 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 		String body;
 		if (bodyPart.getHeader().getContentSubtype().equals("html")) {
 			// strip tags
-			body = parser.stripHTMLTags(decodedBody, true);
-			body = parser.restoreSpecialCharacters(body);
+			//body = parser.stripHTMLTags(decodedBody, true);
+			//body = parser.restoreSpecialCharacters(body);
+			body = HtmlParser.htmlToText(decodedBody);
 		} else {
 			// use body as is
 			body = decodedBody;

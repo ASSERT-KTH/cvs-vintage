@@ -32,6 +32,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.parser.text.HtmlParser;
 
 /**
  * @author freddy
@@ -61,8 +62,9 @@ public class HeaderViewer extends JTextPane {
 	// contains headerfields which are to be displayed
 	Vector keys;
 
-	//	parser to transform text to html
-	DocumentParser parser;
+	// *20030623, karlpeder* Replaced by HtmlParser
+	////	parser to transform text to html
+	//DocumentParser parser;
 
 	public HeaderViewer() {
 		setMargin(new Insets(5, 5, 5, 5));
@@ -78,8 +80,9 @@ public class HeaderViewer extends JTextPane {
 		ColumbaLogger.log.debug(baseUrl.toString());
 		((HTMLDocument) getDocument()).setBase(baseUrl);
 
-		// initialse parser
-		parser = new DocumentParser();
+		// *20030623, karlpeder* Replaced by HtmlParser
+		//// initialse parser
+		//parser = new DocumentParser();
 
 		// add headerfields which are about to show up
 		initHeaderFields();
@@ -183,11 +186,11 @@ public class HeaderViewer extends JTextPane {
 			String str = (String) header.get(key);
 
 			// substitute special characters like:
-			//  <,>,&,\t,\n
-			str = parser.substituteSpecialCharactersInHeaderfields(str);
+			//  <,>,&,\t,\n,"
+			str = HtmlParser.substituteSpecialCharactersInHeaderfields(str);
 
 			// parse for email addresses and substite with HTML-code
-			str = parser.substituteEmailAddress(str);
+			str = HtmlParser.substituteEmailAddress(str);
 
 			// append HTML-code
 			buf.append(" " + str + "</TD>");

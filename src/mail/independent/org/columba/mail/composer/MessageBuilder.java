@@ -29,12 +29,12 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.Message;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
-import org.columba.mail.parser.BodyTextParser;
 import org.columba.mail.parser.Rfc822Parser;
+import org.columba.mail.parser.text.BodyTextParser;
+import org.columba.mail.parser.text.HtmlParser;
 
 /**
  * 
@@ -376,7 +376,7 @@ public class MessageBuilder {
 		 */
 		MimeHeader header = message.getBodyPart().getHeader();
 		if (header.getContentSubtype().equals("html")) {
-			bodyText = BodyTextParser.htmlToText(bodyText);
+			bodyText = HtmlParser.htmlToText(bodyText);
 		}
 
 		String quotedBodyText = BodyTextParser.quote(bodyText);
@@ -543,7 +543,7 @@ public class MessageBuilder {
 				 * message body part is html
 				 */
 				if (mimeHeader.getContentSubtype().equals("html")) {
-					model.setBodyText(BodyTextParser.htmlToText(str));
+					model.setBodyText(HtmlParser.htmlToText(str));
 				} else {
 					model.setBodyText(str);
 				}

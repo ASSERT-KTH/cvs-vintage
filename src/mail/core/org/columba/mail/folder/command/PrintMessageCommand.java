@@ -50,11 +50,11 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentModel;
-import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.Message;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
+import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -365,9 +365,7 @@ public class PrintMessageCommand extends FolderCommand {
 		String decodedBody = getDecodedMessageBody(bodyPart);
 
 		// try to fix broken html-strings
-		DocumentParser parser = new DocumentParser();
-		String validated = parser.validateHTMLString(decodedBody);
-		//ColumbaLogger.log.debug("validated bodytext:\n" + validated);
+		String validated = HtmlParser.validateHTMLString(decodedBody);
 
 		try {
 			// create temporary file and save validated body

@@ -30,6 +30,7 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.TempFileStore;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.message.util.DocumentParser;
+import org.columba.mail.parser.text.HtmlParser;
 
 /**
  * @author freddy
@@ -103,7 +104,7 @@ public class BodyTextViewer extends JTextPane {
 				// this is a HTML message
 
 				// try to fix broken html-strings
-				String validated = parser.validateHTMLString(bodyText);
+				String validated = HtmlParser.validateHTMLString(bodyText);
 				ColumbaLogger.log.debug("validated bodytext:\n" + validated);
 
 				// create temporary file
@@ -140,12 +141,12 @@ public class BodyTextViewer extends JTextPane {
 			try {
 				// substitute special characters like:
 				//  <,>,&,\t,\n		
-				String r = parser.substituteSpecialCharacters(bodyText);
+				String r = HtmlParser.substituteSpecialCharacters(bodyText);
 
 				// parse for urls and substite with HTML-code
-				r = parser.substituteURL(r);
+				r = HtmlParser.substituteURL(r);
 				// parse for email addresses and substite with HTML-code
-				r = parser.substituteEmailAddress(r);
+				r = HtmlParser.substituteEmailAddress(r);
 
 				// parse for quotings and color the darkgray
 				r = parser.markQuotings(r);
