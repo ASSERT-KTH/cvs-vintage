@@ -22,7 +22,7 @@
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
   <tr>
-   <th width="120">$l10n.Name</th>
+   <th width="120">* $l10n.Name</th>
    <td>
        <input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /> 
        #fieldErrorMsg($queryGroup.Name "")

@@ -81,7 +81,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.103 2003/01/30 21:17:58 elicia Exp $
+ * @version $Id: Search.java,v 1.104 2003/02/04 01:01:19 elicia Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -188,20 +188,32 @@ public class Search extends RequireLoginFirstAction
         }
     }
 
-    public void doEditqueryinfo( RunData data, TemplateContext context )
+    public boolean doEditqueryinfo( RunData data, TemplateContext context )
         throws Exception
     {
+        boolean success = false;
         IntakeTool intake = getIntakeTool(context);        
         Query query = getScarabRequestTool(context).getQuery();
         Group queryGroup = intake.get("Query", 
                                       query.getQueryKey());
-        queryGroup.setProperties(query);
-        query.saveAndSendEmail((ScarabUser)data.getUser(), 
-                 getScarabRequestTool(context).getCurrentModule(), context);
+        queryGroup.get("Name").setRequired(true);
+        if (intake.isAllValid()) 
+        {
+            queryGroup.setProperties(query);
+            query.saveAndSendEmail((ScarabUser)data.getUser(), 
+                     getScarabRequestTool(context).getCurrentModule(), context);
+            success = true;
+        }
+        else
+        {
+            getScarabRequestTool(context).setAlertMessage(getLocalizationTool(context).get(ERROR_MESSAGE));
+        }
+        return success;
     }
+    
 
     /**
-        Edits the stored story.
+        Edits the stored query.
     */
     public void doEditstoredquery(RunData data, TemplateContext context)
          throws Exception
@@ -440,9 +452,12 @@ public class Search extends RequireLoginFirstAction
     public void doDone(RunData data, TemplateContext context)  
         throws Exception
     {
-        doEditqueryinfo(data, context);
+        boolean success = doEditqueryinfo(data, context);
         doEditstoredquery(data, context);
-        doCancel(data, context);
+        if (success)
+        {
+            doCancel(data, context);
+        }
     }
 
     public static String getQueryString(RunData data) throws Exception
