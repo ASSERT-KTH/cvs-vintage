@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE book SYSTEM "../docbook-setup/docbookx/docbookx.dtd" [
-<!-- $Id: cookbook.in,v 1.5 2003/08/13 19:22:24 linus Exp $ -->
+<!-- $Id: cookbook.in,v 1.6 2003/08/24 01:04:40 linus Exp $ -->
 
 <!ENTITY building SYSTEM "building.xml">
 <!ENTITY requirements SYSTEM "require.xml">
@@ -1152,6 +1152,9 @@ ArgoUML itself breaks down into several components. The graphic does not reflect
     <warning>
       <para>
 This chapter is currently under rework with new component organization.
+</para>
+      <para>
+Things that are not actually in place are: TargetManager
 </para>
     </warning>
 <para>...</para>
