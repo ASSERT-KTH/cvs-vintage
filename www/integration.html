@@ -1,0 +1,170 @@
+<html>
+<head>
+<title>Scarab/SourceCast Integration</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+<body bgcolor="#FFFFFF" TEXT="#000000">
+
+<p><font size="6">Scarab/SourceCast Integration</font></p>
+<p>
+By: Jon S. Stevens<br/>
+$Id: integration.html,v 1.1 2001/04/18 01:05:06 jon Exp $
+</p>
+
+<p><font size="4">Introduction</font></p>
+
+<p>Scarab has a design goal of needing to run both standalone as well as
+integrated into CollabNet's SourceCast platform. <strong>The key areas
+that have been identified for integration are in the areas of Users,
+Projects and Security.</strong> In order to gain the most amount of
+features with the least amount of code, Scarab will be designed to work
+against well defined interfaces that abstract the implementation details
+from the application details. This document will break down how each of
+the three areas will be dealt with.</p>
+
+<p><font size="4">Overall Design Goal</font></p>
+
+<p>The overall design goal is to allow Scarab to be easily integrated
+into other systems (primarily SourceCast) as well as run standalone.
+This means that in order to do this, we will need to write code that
+uses the Interface and Factory based OO design patterns. For example,
+with the Users aspect, we should define a &quot;User&quot; interface and
+then provide implementations of that interface that talk to the native
+systems that Scarab is integrated with. In order to do this, Scarab will
+rely on the interfaces that Turbine provides. This has the advantage of
+the fact that Turbine also provides default implementations of those
+interfaces. This means that the standalone part of the User area of 
+Scarab is already implemented. This is already true with regards to
+Projects and Security as well. When integrated into another system, such
+as Helm, a small wrapper class will need to be provided that will simply
+make the appropriate calls to Helm's methods.</p>
+
+<p><font size="4">Examples</font></p>
+
+<p> Below is an example of how the User interface would be implemented
+using both Helm's User model as well as Turbine's User model. By
+repeating this same design pattern across Security, Projects and Users,
+it will be possible to fairly easily support multiple standalone as well
+as integrated solutions.</p>
+<p></p>
+
+<pre>public interface User
+{
+    public String getFirstName();
+    public String getLastName();
+    ...
+}
+</pre>
+
+<pre>public class HelmUser implements User
+{
+    public String getFirstName()
+    {
+        return Helm.getFirstName();
+    }
+    public String getLastName()
+    {
+        return Helm.getLastName();
+    }
+}
+</pre>
+
+<pre>public class TurbineUser implements User
+{
+    public String getFirstName()
+    {
+        String tmp = null;
+        try
+        {
+            tmp = (String) getPerm (User.FIRST_NAME);
+            if ( tmp.length() == 0 )
+                tmp = null;
+        }
+        catch ( Exception e )
+        {
+        }
+        return tmp;
+    }
+    public String getLastName()
+    {
+        String tmp = null;
+        try
+        {
+            tmp = (String) getPerm (User.LAST_NAME);
+            if ( tmp.length() == 0 )
+                tmp = null;
+        }
+        catch ( Exception e )
+        {
+        }
+        return tmp;
+    }
+}
+</pre>
+
+<p>
+These classes are not used directly. Instead there is a class that
+implements the SecurityService interface in Turbine which will provide
+access to these classes and objects. Right now, Turbine has its
+implementation of the SecurityService interface and it is called
+&quot;DBSecurityService&quot;. For Helm, we will need to provide another
+implementation of this interface called &quot;HelmSecurityService&quot;.
+Turbine's configuration of its TurbineResources.properties file will
+determine whether or not DBSecurityService is used or
+HelmSecurityService.
+</p>
+
+<pre>
+public interface SecurityService
+{
+    public User getNewUser();
+    public Permission getNewPermission():
+}
+</pre>
+
+<pre>
+public class DBSecurityService extends BaseSecurityService
+{
+    public User getNewUser()
+    {
+        return (User) new TurbineUser();
+    }
+    public Permission getNewPermission()
+    {
+        return (Permission) new TurbinePermission();
+    }
+}
+</pre>
+
+<pre>
+public class HelmSecurityService extends BaseSecurityService
+{
+    public User getNewUser()
+    {
+        return (User) new HelmUser();
+    }
+    public Permissionv getNewPermission()
+    {
+        return (Permission) new HelmPermission();
+    }
+}
+</pre>
+
+<p>
+As far as validation of Permissions and Roles with an ACL system, all that
+needs to be done is to use the one provided with Turbine. Under the covers,
+this class simply makes references to the TurbineSecurity class which makes
+references to the SecurityService.
+</p>
+
+<p>
+When it comes down to implementing the Project related classes, those
+will most likely need to go into Scarab's CVS tree and not Turbine's. The
+reason for this is because Project management is generally application 
+specific. This means that we will need to develop a set of interfaces and 
+implementations of those interfaces, just like we have done with the various
+Security and User classes already.
+</p>
+
+</body>
+</html>
