@@ -8,8 +8,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 4.0//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_4_0.dtd">
 
-$Id: jboss_4_0.dtd,v 1.1 2004/04/17 13:28:15 tdiesler Exp $
-$Revision: 1.1 $
+$Id: jboss_4_0.dtd,v 1.2 2004/04/19 15:11:19 ejort Exp $
+$Revision: 1.2 $
 
 Overview of the architecture of jboss.xml
 
@@ -72,6 +72,7 @@ Overview of the architecture of jboss.xml
       <mdb-passwd>
       <mdb-client-id>
       <mdb-subscription-id>
+      <resource-adapter-name>
       <configuration-name>
       <security-proxy>
       <ejb-ref>
@@ -394,7 +395,7 @@ MaxMessages?, MDBConfig? , poa? , register-ejbs-in-jnp-context? , jnp-context?)>
   Used in: enterprise-beans
 -->
 <!ELEMENT message-driven (ejb-name , destination-jndi-name ,
- mdb-user?,  mdb-passwd? , mdb-client-id? , mdb-subscription-id? ,
+ mdb-user?,  mdb-passwd? , mdb-client-id? , mdb-subscription-id? , resource-adapter-name? ,
  configuration-name? , invoker-bindings?,
  security-proxy? , ejb-ref* ,  ejb-local-ref* , security-identity? , resource-ref* , resource-env-ref*, depends*)>
 
@@ -466,13 +467,25 @@ container or ejb depends.
 
 <!ELEMENT destination-jndi-name (#PCDATA)>
 
+<!-- The optional user for the jms connection that delivers messages -->
 <!ELEMENT mdb-user (#PCDATA)>
 
+<!-- The optional password for the jms connection that delivers messages -->
 <!ELEMENT mdb-passwd (#PCDATA)>
 
+<!-- The optional client-id for the jms connection that delivers messages -->
 <!ELEMENT mdb-client-id (#PCDATA)>
 
+<!-- The subscription name for topic delivery -->
 <!ELEMENT mdb-subscription-id (#PCDATA)>
+
+<!-- The name of the rar used in JCA 1.5 message inflow
+e.g.
+   <resource-adapter-name>jms-ra.rar</resource-adapter-name>
+or for embedded rars
+   <resource-adapter-name>myapp.ear#myconnector.rar</resource-adapter-name>
+-->
+<!ELEMENT resource-adapter-name (#PCDATA)>
 
 <!-- The security-proxy gives the class name of the security proxy implementation.
   This may be an instance of org.jboss.security.SecurityProxy, or an
