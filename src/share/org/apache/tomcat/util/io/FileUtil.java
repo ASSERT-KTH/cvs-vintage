@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.5 2001/08/11 02:52:45 larryi Exp $
- * $Revision: 1.5 $
- * $Date: 2001/08/11 02:52:45 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.6 2001/08/16 00:19:20 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2001/08/16 00:19:20 $
  *
  * ====================================================================
  *
@@ -380,7 +380,13 @@ public class FileUtil {
 	
 	while ((ze = zis.getNextEntry()) != null) {
 	    try {
-		File f = new File(dir, ze.getName());
+
+		// Bug 2033
+		File f;
+		if( File.separatorChar == '\\' ) // NT
+		    f = new File( dir, ze.getName().replace('/','\\') );
+		else
+		    f = new File( dir, ze.getName() );
 		// create intermediary directories - sometimes zip don't add them
 		File dirF=new File(f.getParent());
 		dirF.mkdirs();
