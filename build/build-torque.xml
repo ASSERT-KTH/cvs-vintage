@@ -24,6 +24,11 @@
   <property name="torque.lib.dir" value="${lib.dir}"/>
   <property name="torque.jar" value="torque-gen-3.1.jar"/>
 
+  <property name="databaseSchema" value="default"/>
+  <property name="databaseUser" value="${scarab.database.user}"/>
+  <property name="databaseName" value="${scarab.database.name}"/>
+  <property name="databaseHost" value="${scarab.database.host}"/>
+
   <!--
     Build the classpath. Specifically point to each file we're including to avoid
     version conflicts in the case of the torque.lib.dir being something like lib.repo.
