@@ -22,10 +22,12 @@ import org.jboss.ejb.DeploymentException;
 
 /**
  *   <description> 
- *      
+ *     
+ *   MessageDriven Bean added 
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.10 $
+ *   @author Peter Antman (peter.antman@tim.se)
+ *   @version $Revision: 1.11 $
  */
 public class ApplicationMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -122,6 +124,19 @@ public class ApplicationMetaData extends MetaData {
          beans.add(sessionMetaData);
        }
        
+       // MDB
+       iterator = getChildrenByTagName(enterpriseBeans, "message-driven");
+       while (iterator.hasNext()) {
+         Element currentMessageDriven = (Element)iterator.next();
+         MessageDrivenMetaData messageDrivenMetaData = new MessageDrivenMetaData(this);
+         try {
+          messageDrivenMetaData.importEjbJarXml(currentMessageDriven);
+         } catch (DeploymentException e) {
+          throw new DeploymentException("Error in ejb-jar.xml for Message Driven Bean " + messageDrivenMetaData.getEjbName() + ": " + e.getMessage());
+         }
+         beans.add(messageDrivenMetaData);
+       }
+
        // read the assembly descriptor (optional)
        Element assemblyDescriptor = getOptionalChild(element, "assembly-descriptor");
        
@@ -283,6 +298,16 @@ public class ApplicationMetaData extends MetaData {
               beanMetaData.importJbossXml(bean);
           }
           
+	  iterator = getChildrenByTagName(entBeans, "message-driven");
+          while (iterator.hasNext()) {
+              Element bean = (Element) iterator.next();
+              ejbName = getElementContent(getUniqueChild(bean, "ejb-name"));
+              BeanMetaData beanMetaData = getBeanByEjbName(ejbName);
+              if (beanMetaData == null) {
+                 throw new DeploymentException("found in jboss.xml but not in ejb-jar.xml");
+              }
+              beanMetaData.importJbossXml(bean);
+          }
          } catch (DeploymentException e) {
           throw new DeploymentException("Error in jboss.xml for Bean " + ejbName + ": " + e.getMessage());
          }

@@ -24,7 +24,8 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.12 $
+ *   @author Peter Antman (peter.antman@tim.se)
+ *   @version $Revision: 1.13 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -35,9 +36,10 @@ public abstract class BeanMetaData extends MetaData {
 	// from ejb-jar.xml
 	private String ejbName;
 	private String homeClass;
-	private String remoteClass;
+    private String remoteClass;
     private String ejbClass;
     protected boolean session;
+    protected boolean messageDriven = false;
 	
 	private HashMap ejbReferences = new HashMap();
 	private ArrayList environmentEntries = new ArrayList();
@@ -63,7 +65,9 @@ public abstract class BeanMetaData extends MetaData {
     // Public --------------------------------------------------------
     public boolean isSession() { return session; }
 
-	public boolean isEntity() { return !session; }
+    public boolean isMessageDriven() { return messageDriven; }
+
+	public boolean isEntity() { return !session && !messageDriven; }
                                             	
 	public String getHome() { return homeClass; }
 	
@@ -169,8 +173,11 @@ public abstract class BeanMetaData extends MetaData {
 		ejbName = getElementContent(getUniqueChild(element, "ejb-name"));
 
 		// set the classes
-		homeClass = getElementContent(getUniqueChild(element, "home"));
-		remoteClass = getElementContent(getUniqueChild(element, "remote"));
+		// Not for MessageDriven
+		if (!messageDriven) {
+		    homeClass = getElementContent(getUniqueChild(element, "home"));
+		    remoteClass = getElementContent(getUniqueChild(element, "remote"));
+		}
 		ejbClass = getElementContent(getUniqueChild(element, "ejb-class"));
 		
 		// set the environment entries

@@ -15,7 +15,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class ConfigurationMetaData extends MetaData {
     
@@ -24,12 +24,13 @@ public class ConfigurationMetaData extends MetaData {
 	public static final String BMP_13 = "Standard BMP EntityBean";
 	public static final String STATELESS_13 = "Standard Stateless SessionBean";
 	public static final String STATEFUL_13 = "Standard Stateful SessionBean";
-	
+	public static final String MESSAGE_DRIVEN_13 = "Standard Message Driven Bean";
     public static final String CMP_12 = "jdk1.2.2 CMP EntityBean";
 	public static final String BMP_12 = "jdk1.2.2 BMP EntityBean";
 	public static final String STATELESS_12 = "jdk1.2.2 Stateless SessionBean";
 	public static final String STATEFUL_12 = "jdk1.2.2 Stateful SessionBean";
-	
+	public static final String MESSAGE_DRIVEN_12 = "jdk1.2.2 Message Driven Bean";
+
 	public static final byte A_COMMIT_OPTION = 0;
 	public static final byte B_COMMIT_OPTION = 1;
 	public static final byte C_COMMIT_OPTION = 2;
