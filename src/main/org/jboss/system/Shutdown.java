@@ -7,9 +7,11 @@
 package org.jboss.system;
 
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.List;
+import java.util.ListIterator;
 
 import javax.management.ObjectName;
 import javax.management.MBeanServer;
@@ -25,7 +27,7 @@ import org.apache.log4j.Category;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class Shutdown
    implements MBeanRegistration, ShutdownMBean
@@ -39,7 +41,7 @@ public class Shutdown
 	
    /** The MBean server we are attached to. */
    private MBeanServer server;
-	
+
    // Public  -------------------------------------------------------
 	
    /**
@@ -126,35 +128,125 @@ public class Shutdown
    {
       try
       {
-         // Stop services
-         server.invoke(new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
-                       "stop", new Object[0] , new String[0]);
-		
-         // Destroy services
-         server.invoke(new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
-                       "destroy", new Object[0] , new String[0]);
+        // get the deployed objects from ServiceController
+		ObjectName[] deployed = (ObjectName[]) server.invoke(
+            	new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+                "getDeployed", new Object[0] , new String[0] );
 
-         // unload all MBeans except one called JMImplementation:type=MBeanServerDelegate
-         ObjectName delegateName = null;
-         Set allMBeans = server.queryNames(null,null);
-         for(Iterator i = allMBeans.iterator();i.hasNext();)	{
-			ObjectName name = (ObjectName) i.next();
-            if(name.getCanonicalName().equals("JMImplementation:type=MBeanServerDelegate") == false )	{
-				log.info("Unloading MBean : " + name.getCanonicalName());
-            	server.unregisterMBean(name);
-            } else {
-				delegateName = name;
+        List servicesCopy = Arrays.asList(deployed);
+     	ListIterator enum = servicesCopy.listIterator();
+        ListIterator beanEnum = servicesCopy.listIterator();
+        ObjectName name = null;
+        String[] sig = { "javax.management.ObjectName" };
+
+        // filo ( first in last out )
+/*
+        while (enum.hasNext())
+      	{
+			enum.next();
+
+            // filter out some services here ?
+
+		}
+
+*/
+		// Stop / Destroy / Unload all MBeans from ServiceController
+
+        // Stop
+        while (enum.hasNext())
+		//while (enum.hasPrevious())
+		{
+            name = (ObjectName)enum.next();
+            //name = (ObjectName)enum.previous();
+	       	Object[] args = { name };
+			log.info("**********************Looking at MBean : " + name.getCanonicalName());
+	        // Stop services
+            if(! name.getCanonicalName().equals("JMX:name=Connector,type=RMI")
+            && ! name.getCanonicalName().equals("Adaptor:name=html")
+            && ! name.getCanonicalName().equals("JBOSS-SYSTEM:service=Naming")
+              )
+            {
+               log.info("**********************Stopping   MBean : " + name.getCanonicalName());
+	           server.invoke(new ObjectName("JBOSS-SYSTEM:spine=ServiceController"), "stop", args , sig);
+
+               // Destroy services
+
+               // Unload services
+
             }
+		}
+
+        // Destroy
+        while (enum.hasPrevious())
+        //while (enum.hasNext())
+		{
+            name = (ObjectName)enum.previous();
+			//name = (ObjectName)enum.next();
+	       	Object[] args = { name };
+            log.info("**********************Looking at MBean : " + name.getCanonicalName());
+			// Destroy services
+            if(! name.getCanonicalName().equals("JMX:name=Connector,type=RMI")
+            && ! name.getCanonicalName().equals("Adaptor:name=html")
+            && ! name.getCanonicalName().equals("JBOSS-SYSTEM:service=Naming")
+              )
+            {
+            	log.info("**********************Destroying MBean : " + name.getCanonicalName());
+            	server.invoke(new ObjectName("JBOSS-SYSTEM:spine=ServiceController"), "destroy", args , sig);
+			}
+
+		}
+
+
+        // Unload
+
+        /*	There are inconsistence in names returned from ServiceController
+        * 	[Shutdown,INFO] Undeploying MBean : :name=JBossMQProvider,service=JMSProviderLoader
+        * 	that prevents Us from using Service Controller for unload right now !!! ...
+        */
+        /*
+        // Unload MBeans from ServiceController
+        while (enum.hasNext())
+      	{
+         	name = (ObjectName)enum.next();
+	       	if( ! name.getCanonicalName().equals("JMImplementation:type=MBeanServerDelegate
+           	{
+            	Object[] args = { name };
+                log.info("Undeploying MBean : " + name.getCanonicalName());
+	            // Unload services
+	       		server.invoke(new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+                    		"undeploy", args , sig);
+	        }
          }
-		 // this will throw an RuntimeOperationsException
-         //log.info("Unloading MBean : " + delegateName.getCanonicalName());
-         //server.unregisterMBean(delegateName);
+		*/
+
+		// Unload all MBeans from MBean Server
+        Set allMBeans = server.queryNames(null,null);
+        Iterator i = allMBeans.iterator();
+		// write the Mbeans Out
+        /*
+         while(i.hasNext())	{
+			name = (ObjectName) i.next();
+    		log.info("**********************Looking at MBean : " + name.getCanonicalName());
+         }
+         */
+        ///*
+         while(i.hasNext())	{
+			name = (ObjectName) i.next();
+    		log.info("**********************Looking at MBean : " + name.getCanonicalName());
+			if(! name.getCanonicalName().equals("JMImplementation:type=MBeanServerDelegate")
+            && ! name.getCanonicalName().equals("JMX:name=Connector,type=RMI")
+            && ! name.getCanonicalName().equals("Adaptor:name=html")
+            && ! name.getCanonicalName().equals("JBOSS-SYSTEM:service=Naming")
+              )
+            {
+				log.info("**********************Unloading  MBean : " + name.getCanonicalName());
+				server.unregisterMBean(name);
+	         }
+        }
+        //*/
       }
       catch (RuntimeMBeanException rmbe) {
          rmbe.getTargetException().printStackTrace();
-      }
-      catch (RuntimeOperationsException roe) {
-         roe.getTargetException().printStackTrace();
       }
       catch (Exception e) {
          log.error("failed to destroy services", e);
