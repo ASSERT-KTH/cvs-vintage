@@ -1,4 +1,4 @@
-/* $Id: HelloWorldExample.java,v 1.2 2000/04/02 00:09:38 costin Exp $
+/* $Id: HelloWorldExample.java,v 1.3 2000/07/05 15:44:31 nacho Exp $
  *
  */
 
@@ -16,12 +16,12 @@ import javax.servlet.http.*;
 
 public class HelloWorldExample extends HttpServlet {
 
-    ResourceBundle rb = ResourceBundle.getBundle("LocalStrings");
 
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
         throws IOException, ServletException
     {
+        ResourceBundle rb = ResourceBundle.getBundle("LocalStrings",request.getLocale());
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
