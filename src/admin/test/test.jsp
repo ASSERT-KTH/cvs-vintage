@@ -8,7 +8,6 @@
            prefix="ant" %>
 
 This page will show the result of executing the sanity test suite. 
-You can see the context log <a href="/test/context_log.txt">here</a>
 
 <%@ include file="sanity-form.jsp" %>
 
@@ -19,9 +18,6 @@ You can see the context log <a href="/test/context_log.txt">here</a>
 <% out.flush(); 
    if( request.getParameter("target") == null ) return;
 %>
-<adm:admin ctxPath="/test" 
-	   action="setLogger" 
-	   value="webapps/test/context_log.txt" />
 
 <ant:gtest />
 
