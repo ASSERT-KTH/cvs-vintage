@@ -18,7 +18,7 @@
 
 # File: Makefile in uci/graphedit/demo
 # Oringinal Author: jrobbins@ics.uci.edu
-# $Id: Makefile,v 1.3 1998/04/21 02:54:48 jrobbins Exp $
+# $Id: Makefile,v 1.4 1998/06/24 14:30:04 jrobbins Exp $
 
 include ../../Makefile.config
 
@@ -43,8 +43,7 @@ CLASSES = \
 	SampleNode2.class \
 	SamplePalette.class \
 	SamplePort.class \
-	SamplePort2.class \
-	ScrollingApplet.class
+	SamplePort2.class 
 
 all: $(GEN) $(CLASSES)
 
