@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.38 2002/01/16 09:21:51 spestov Exp $
+ * @version $Id: jEdit.java,v 1.39 2002/01/20 09:10:40 spestov Exp $
  */
 public class jEdit
 {
@@ -1776,13 +1776,22 @@ public class jEdit
 				return;
 		}
 
+		Buffer current = view.getBuffer();
+
 		Buffer buffer = buffersFirst;
 		while(buffer != null)
 		{
 			if(buffer.isDirty())
+			{
+				if(buffer.isNewFile())
+					view.setBuffer(buffer);
 				buffer.save(view,null,true);
+			}
+
 			buffer = buffer.next;
 		}
+
+		view.setBuffer(current);
 	} //}}}
 
 	//{{{ reloadAllBuffers() method
