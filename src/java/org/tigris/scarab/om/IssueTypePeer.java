@@ -97,6 +97,17 @@ public class IssueTypePeer
         return getAllIssueTypes(includeDeleted, "name", "asc");
     } 
 
+    public static List getDefaultIssueTypes()
+        throws Exception
+    {
+        Criteria c = new Criteria();
+        c.add(IssueTypePeer.PARENT_ID, 0);
+        c.add(IssueTypePeer.DELETED, 0);
+        c.add(IssueTypePeer.ISDEFAULT, 1);
+        c.add(IssueTypePeer.ISSUE_TYPE_ID, 0, Criteria.NOT_EQUAL);
+        return IssueTypePeer.doSelect(c);
+    }
+
     private static Criteria addSortOrder(Criteria crit, 
                     String sortColumn, String sortPolarity)
     {

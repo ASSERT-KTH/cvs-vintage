@@ -130,7 +130,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.54 2002/09/20 02:48:20 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.55 2002/09/23 23:58:15 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1752,6 +1752,10 @@ try{
         rmo2.save();
     }
 
+    /**
+     * Adds an issue type to a module
+     * Copies properties from the global issue type's settings
+     */
     public void addIssueType(IssueType issueType)
         throws Exception
     {
@@ -1759,8 +1763,8 @@ try{
         RModuleIssueType rmit = new RModuleIssueType();
         rmit.setModuleId(getModuleId());
         rmit.setIssueTypeId(issueType.getIssueTypeId());
-        rmit.setActive(false);
-        rmit.setDisplay(false);
+        rmit.setActive(true);
+        rmit.setDisplay(true);
         rmit.setOrder(getRModuleIssueTypes().size() + 1);
         rmit.save();
 
@@ -1949,8 +1953,9 @@ try{
     }
 
     /**
-     * sets up attributes and issue types for this module based on.
-     * the parent module
+     * for a new module: inherit issue types from parent module and 
+     * from the issue types marked as default
+     * parent configuration takes precedence over default
      */
     protected void setInitialAttributesAndIssueTypes()
         throws Exception
@@ -1958,9 +1963,30 @@ try{
         isInitializing = true;
         // Add defaults for issue types and attributes 
         // from parent module
-        NumberKey newModuleId = getModuleId();
         Module parentModule = ModuleManager.getInstance(getParentId());
-        log().debug("[ASM] parent name=" + parentModule.getRealName());
+        inheritFromParent(parentModule);
+        List parentIssueTypes = parentModule.getIssueTypes(false);
+
+        List defaultIssueTypes = IssueTypePeer.getDefaultIssueTypes();
+        for (int i=0; i< defaultIssueTypes.size(); i++)
+        {
+            IssueType defaultIssueType = (IssueType)defaultIssueTypes.get(i);
+            if (!parentIssueTypes.contains(defaultIssueType))
+            {
+                addIssueType(defaultIssueType);
+            } 
+        } 
+        isInitializing = false;
+    }
+    
+    /**
+     * sets up attributes and issue types for this module based on.
+     * the parent module
+     */
+    protected void inheritFromParent(Module parentModule)
+        throws Exception
+    {
+        NumberKey newModuleId = getModuleId();
         AttributeGroup ag1;
         AttributeGroup ag2;
         RModuleAttribute rma1 = null;
@@ -2068,7 +2094,6 @@ try{
                 }
             }
         }
-        isInitializing = false;
     }
 
     /**
