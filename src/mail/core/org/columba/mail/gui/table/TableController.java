@@ -468,19 +468,18 @@ public class TableController
 		if (uids.length > 1)
 			return;
 
-		// FIXME
-		/*
-		MainInterface
-			.frameController
+		
+		
+			getMailFrameController()
 			.attachmentController
 			.getAttachmentSelectionManager()
 			.setFolder(treeNode);
-		MainInterface
-			.frameController
+		
+			getMailFrameController()
 			.attachmentController
 			.getAttachmentSelectionManager()
 			.setUids(uids);
-		*/
+		
 		
 		MainInterface.processor.addOp(
 			new ViewMessageCommand(mailFrameController, reference));
