@@ -18,11 +18,8 @@ package org.jboss.verifier.strategy;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * This package and its source code is available at www.gjt.org
- * $Id: EJBVerifier11.java,v 1.1 2000/05/29 18:26:30 juha Exp $
- *
- * You can reach the author by sending email to jpl@gjt.org or
- * directly to jplindfo@helsinki.fi.
+ * This package and its source code is available at www.jboss.org
+ * $Id: EJBVerifier11.java,v 1.2 2000/06/01 22:29:43 juha Exp $
  */
 
 
@@ -30,6 +27,7 @@ package org.jboss.verifier.strategy;
 import java.util.Iterator;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.lang.reflect.Method;
 
 
 // non-standard class dependencies
@@ -52,8 +50,8 @@ import com.dreambean.ejx.ejb.Entity;
  *
  * @see     << OTHER RELATED CLASSES >>
  *
- * @author 	Juha Lindfors
- * @version $Revision: 1.1 $
+ * @author 	Juha Lindfors (jplindfo@helsinki.fi
+ * @version $Revision: 1.2 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier11 implements VerificationStrategy {
@@ -61,9 +59,8 @@ public class EJBVerifier11 implements VerificationStrategy {
     private VerificationContext context      = null;
     private VerificationEventFactory factory = null;
     private ClassLoader classloader          = null;
-        
-        
-        
+            
+    
     /*
      *  Constructor
      */
@@ -86,17 +83,33 @@ public class EJBVerifier11 implements VerificationStrategy {
     
     public void checkSession(Session session) {
 
+        boolean sessionDescriptorVerified = true; //  false;
+        
         boolean beanVerified   = false;
         boolean homeVerified   = false;
         boolean remoteVerified = false;
-                
-                
-        beanVerified   = verifySessionBean(session.getEjbClass());   
+        /*
+         * [TODO] use state pattern instead, this collection of bools is going
+         *        to grow, and managing them will become messy
+         */
+        
+        //sessionDescriptorVerified = verifySessionDescriptor();
+        
+        /*
+         * Also, the descriptors should most likely be checked in one place, 
+         * instead of sprinkling their check code across the bean class
+         * checkers..
+         */
+         
+         
+        beanVerified   = verifySessionBean(session);   
         homeVerified   = verifySessionHome(session.getHome());
         remoteVerified = verifySessionRemote(session.getRemote());
 
 
-        if ( beanVerified && homeVerified && remoteVerified ) {
+        if ( beanVerified && homeVerified && remoteVerified &&
+             sessionDescriptorVerified) {
+                 
             /*
              * Verification for this session bean done. Fire the event
              * to tell listeneres everything is ok.
@@ -181,23 +194,90 @@ public class EJBVerifier11 implements VerificationStrategy {
         return true;
     }
     
-    private boolean verifySessionBean(String name) {
+    private boolean verifySessionBean(Session session) {
 
+        /*
+         * Indicates whether we issued warnings or not during verification.
+         * This boolean is returned to the caller.
+         */
         boolean status = true;
         
+        String  name   = session.getEjbClass();
+        
+        
         try {
-            Class home = classloader.loadClass(name);
+            Class bean = classloader.loadClass(name);
 
-            if (!hasSessionBeanInterface(home)) {
+            
+            /*
+             * A session bean MUST implement javax.ejb.SessionBean interface.
+             *
+             * Spec 6.5.1
+             */
+            if (!hasSessionBeanInterface(bean)) {
                 
-                VerificationEvent event = 
-                        factory.createSpecViolationEvent(context, SECTION_6_5_1, name);
-                
-                context.fireBeanChecked(event);
-                
+                fireSpecViolationEvent(SECTION_6_5_1, name);
+                                   
                 status = false;
             }
             
+
+            /*
+             * Only a stateful container-managed transaction demarcation
+             * session bean MAY implement the SessionSynchronization interface.
+             *
+             * A stateless Session bean MUST NOT implement the 
+             * SessionSynchronization interface.
+             *
+             * Spec 6.5.3
+             */
+            if (hasSessionSynchronizationInterface(bean))
+                
+                if (!isStateful(session)) {
+                    fireSpecViolationEvent(SECTION_6_5_3_a, name);
+                    
+                    status = false;
+                }
+                
+                if (!isContainerManagedTx(session)) {
+                    fireSpecViolationEvent(SECTION_6_5_3_b, name);
+                    
+                    status = false;
+                }
+            
+            
+            /*
+             * A session bean MUST implement AT LEAST one ejbCreate method.
+             *
+             * Spec 6.5.5
+             */
+            if (!hasEJBCreateMethod(bean)) {
+                
+                fireSpecViolationEvent(SECTION_6_5_5, name);
+                
+                status = false;
+                
+                /*
+                 * [TODO] the ejbCreate signature in bean class must match the
+                 *        create methods signature in home interface
+                 */
+            }
+
+            
+            /*
+             * A session with bean-managed transaction demarcation CANNOT
+             * implement the SessionSynchronization interface.
+             *
+             * Spec 6.6.1 (table 2)
+             */
+            if (hasSessionSynchronizationInterface(bean) && isBeanManagedTx(session)) {
+
+                fireSpecViolationEvent(SECTION_6_6_1, name);
+                
+                status = false;
+            }     
+
+                      
         }
         catch (ClassNotFoundException e) {
             
@@ -211,6 +291,37 @@ public class EJBVerifier11 implements VerificationStrategy {
         
         return status;
     }
+    
+
+    
+    /*
+     * Searches for an instance of a ejbCreate method from the class
+     */
+    private boolean hasEJBCreateMethod(Class c) {
+    
+        try {
+            // [NOTE] Making the implicit assumption that the ejbCreate method
+            //        has to be public. Didn't find the section in the spec that
+            //        explicitly stated this, yet.
+            Method[] methods = c.getMethods();
+         
+            for (int i = 0; i < methods.length; ++i) {
+            
+                String name = methods[i].getName();
+                
+                if (name.equals(EJB_CREATE_METHOD))
+                    return true;
+            }
+        }
+        catch (SecurityException e) {
+            System.err.println(e);
+            // [TODO]   Can be thrown by the getMethods() call if access is
+            //          denied --> createVerifierWarningEvent
+        }
+        
+        return false;
+    }
+    
     
     
     /*
@@ -229,18 +340,120 @@ public class EJBVerifier11 implements VerificationStrategy {
         return false;
     }
 
-
+    
+    
     /*
-     * String constants
+     * Finds javax.ejb.SessionSynchronization interface from the class
+     */
+    private boolean hasSessionSynchronizationInterface(Class c) {
+        
+        Class[] interfaces = c.getInterfaces();
+        
+        for (int i = 0; i < interfaces.length; ++i) {
+            
+            if ((SESSIONSYNCHRONIZATION_INTERFACE).equals(interfaces[i].getName()))
+                return true;
+        }
+        
+        return false;
+    }
+
+    
+    
+    private boolean isStateful(Session session) {
+
+        if (STATEFUL_SESSION.equals(session.getSessionType()))
+            return true;
+            
+        return false;
+    }
+
+    
+    
+    private boolean isBeanManagedTx(Session session) {
+
+        if (BEAN_MANAGED_TX.equals(session.getTransactionType()))
+            return true;
+            
+        return false;
+    }
+    
+
+    private boolean isContainerManagedTx(Session session) {
+        
+        if (CONTAINER_MANAGED_TX.equals(session.getTransactionType()))
+            return true;
+            
+        return false;
+    }
+    
+    
+    
+    private void fireSpecViolationEvent(String section, String name) {
+
+        VerificationEvent event = 
+                factory.createSpecViolationEvent(context, section, name);
+                
+        context.fireBeanChecked(event);
+    }
+    
+    
+    
+
+    /* 
+     ****************************************************************
+     *
+     *      String constants
+     *
+     ****************************************************************
      */
     private final static String SESSIONBEAN_INTERFACE =
         "javax.ejb.SessionBean";
+        
+    private final static String SESSIONSYNCHRONIZATION_INTERFACE =
+        "javax.ejb.SessionSynchronization";
+        
+    private final static String EJB_CREATE_METHOD     =
+        "ejbCreate";
 
+        
+        
+    /*
+     * Specification entries
+     */
     public final static String SECTION_6_5_1         =
         "Section 6.5.1 Required Sessionbean interface";        
     
+    public final static String SECTION_6_5_3_a       =
+        "Section 6.5.3 The optional SessionSynchronization interface (stateful)";
+        
+    public final static String SECTION_6_5_3_b       =
+        "Section 6.5.3 The optional SessionSynchronization interface (stateless)";
+                
+    public final static String SECTION_6_5_5         =
+        "Section 6.5.5 Session bean's ejbCreate(...) methods";
+        
+    public final static String SECTION_6_6_1         =
+        "Section 6.6.1 Operations allowed in the methods of a stateful session bean class";    
+    
+    
+    /*
+     * Ejb-jar DTD
+     */
     public final static String DTD_EJB_CLASS         =
         "Deployment descriptor DTD: ejb-class";
+
+    public final static String BEAN_MANAGED_TX       = 
+        "Bean";
+    
+    public final static String CONTAINER_MANAGED_TX  = 
+        "Container";
+
+    public final static String STATEFUL_SESSION      =
+        "Stateful";
+
+    public final static String STATELESS_SESSION     =
+        "Stateless";
         
 }
 

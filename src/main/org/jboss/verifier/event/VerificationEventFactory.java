@@ -18,11 +18,8 @@ package org.jboss.verifier.event;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * This package and its source code is available at www.gjt.org
- * $Id: VerificationEventFactory.java,v 1.1 2000/05/29 18:26:31 juha Exp $
- *
- * You can reach the author by sending email to jpl@gjt.org or
- * directly to jplindfo@helsinki.fi.
+ * This package and its source code is available at www.jboss.org
+ * $Id: VerificationEventFactory.java,v 1.2 2000/06/01 22:29:43 juha Exp $
  */
 
  
@@ -51,8 +48,8 @@ import org.jboss.verifier.strategy.EJBVerifier11;
  *
  * @see     << OTHER RELATED CLASSES >>
  *
- * @author 	Juha Lindfors
- * @version $Revision: 1.1 $
+ * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
+ * @version $Revision: 1.2 $
  * @since  	JDK 1.3
  */
 public class VerificationEventFactory {
@@ -75,6 +72,22 @@ public class VerificationEventFactory {
         
         if (EJBVerifier11.SECTION_6_5_1.equals(section))
             buildNoSessionBeanEvent(event, name);
+
+            
+        else if (EJBVerifier11.SECTION_6_5_3_a.equals(section))
+            buildStatelessSessionCannotSynchEvent(event, name);
+            
+        else if (EJBVerifier11.SECTION_6_5_3_b.equals(section))
+            buildBeanManagedTxSessionCannotSynchEvent(event, name);
+        
+        
+        else if (EJBVerifier11.SECTION_6_5_5.equals(section))
+            buildNoEJBCreateMethodEvent(event, name);
+        
+        
+        else if (EJBVerifier11.SECTION_6_6_1.equals(section))
+            buildBeanManagedTxBeanCannotSynchEvent(event, name);
+            
             
         else if (EJBVerifier11.DTD_EJB_CLASS.equals(section))
             buildEJBClassNotFoundEvent(event, name);
@@ -115,6 +128,30 @@ public class VerificationEventFactory {
         event.setMessage(SESSION_DOES_NOT_IMPLEMENT_SESSIONBEAN);
         event.setVerbose(SPEC_SECTION_6_5_1);
     }
+
+    private void buildStatelessSessionCannotSynchEvent(VerificationEvent event, String name) {
+        
+    //    event.setMessage();
+    //    event.setVerbose();
+    }
+    
+    private void buildBeanManagedTxSessionCannotSynchEvent(VerificationEvent event, String name) {
+        
+    //    event.setMessage();
+    //    event.setVerbose();
+    }
+    
+    private void buildNoEJBCreateMethodEvent(VerificationEvent event, String name) {
+        
+        event.setMessage(SESSION_DOES_NOT_DEFINE_EJBCREATE);
+        event.setVerbose(SPEC_SECTION_6_5_5);
+    }
+    
+    private void buildBeanManagedTxBeanCannotSynchEvent(VerificationEvent event, String name) {
+        
+    //    event.setMessage();
+    //    event.setVerbose();
+    }
     
     private void buildEJBClassNotFoundEvent(VerificationEvent event, String name) {
         
@@ -126,7 +163,7 @@ public class VerificationEventFactory {
     
     
     private final static String SESSION_DOES_NOT_IMPLEMENT_SESSIONBEAN =
-        "Session bean does not implement the required SessionBean interface.";
+        "Session bean does not implement the required SessionBean interface.";        
         
     private final static String SPEC_SECTION_6_5_1 = 
     
@@ -136,8 +173,24 @@ public class VerificationEventFactory {
         
         "\n" +
         
-        "All session beans must implement the SessionBean interface";
+        "All session beans must implement the SessionBean interface.";
 
+        
+    private final static String SESSION_DOES_NOT_DEFINE_EJBCREATE     =
+        "Session bean does not define the required ejbCreate method.";
+
+    private final static String SPEC_SECTION_6_5_5 =
+
+        VerificationContext.VERSION_1_1         + " " +
+        "Section 6.5.5"                         + " " +
+        "Session bean's ejbCreate(...) methods" + " " +
+        
+        "\n" +
+        
+        "Each session bean class must have at least one ejbCreate method. " +
+        "The number and signatures of a session bean's create methods are " +
+        "specific to each session bean class.";
+        
         
     private final static String EJB_CLASS_ELEMENT_NOT_FOUND =
         "The enterprise bean's class was not found.";
