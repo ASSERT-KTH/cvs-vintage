@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.64 2003/06/23 10:27:33 mkl Exp $
+// $Id: ModelFacade.java,v 1.65 2003/06/23 10:56:15 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1461,6 +1461,17 @@ public class ModelFacade {
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
     
+    /** returns the receptions of a signal
+     * @param handle
+     * @return receptions
+     */
+    public static Collection getReceptions(Object handle) {
+        if (handle instanceof MSignal) {
+            return ((MSignal)handle).getReceptions();
+        }
+        throw new IllegalArgumentException("Unrecognized handle: + handle");
+    }
+
     /**
      * Returns the recurense iteration expression of an action
      * @param handle
