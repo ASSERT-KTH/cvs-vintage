@@ -69,6 +69,12 @@ TURBINE_ROLE, TURBINE_PERMISSION
 WHERE TURBINE_PERMISSION.PERMISSION_NAME = 'Issue | Enter' AND 
 TURBINE_ROLE.ROLE_NAME = 'Developer';
 
+# Notes: need to add role/permission mappings for:
+# partner - issue|attach
+# project owner - module|edit,vote|manage,query|approve,template|approve
+# root - domain|edit
+# observer - issue|enter
+
 # Assign the user 'turbine@collab.net' a system-wide role 'turbine_root'
 
 INSERT INTO TURBINE_USER_GROUP_ROLE ( USER_ID, GROUP_ID, ROLE_ID ) 
