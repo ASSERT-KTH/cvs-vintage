@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.35 2003/05/12 00:23:34 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.36 2003/05/12 00:35:07 spestov Exp $
  */
 public class DisplayManager
 {
@@ -109,7 +109,7 @@ public class DisplayManager
 	} //}}}
 
 	//{{{ _notifyScreenLineChanges() method
-	private static void _notifyScreenLineChanges(Buffer buffer)
+	static void _notifyScreenLineChanges(Buffer buffer)
 	{
 		Iterator iter = ((List)bufferMap.get(buffer)).iterator();
 		while(iter.hasNext())

@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.253 2003/05/11 23:17:51 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.254 2003/05/12 00:35:07 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6083,7 +6083,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 					if(displayManager.isLineVisible(i))
 						displayManager.getScreenLineCount(i);
 				}
-				displayManager.notifyScreenLineChanges();
+				DisplayManager._notifyScreenLineChanges(buffer);
 
 				if(delayedMultilineUpdate)
 				{
