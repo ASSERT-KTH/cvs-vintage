@@ -85,7 +85,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.81 2003/02/26 01:24:28 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.82 2003/02/26 23:39:47 jon Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -312,7 +312,7 @@ public class AssignIssue extends BaseModifyIssue
                                                    assigner, oldAttVal, attachment);
                 }
             }
-            if (!emailNotify(activitySet, context, issue))
+            if (activitySet != null && !emailNotify(activitySet, context, issue))
             {
                 scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
             }
