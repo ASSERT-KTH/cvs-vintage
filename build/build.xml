@@ -851,6 +851,13 @@
         </classpath>
 
         </javac>
+
+        <copy todir="${build.dest.scarab}/org" filtering="no">
+            <fileset dir="${src.test.dir}/org">
+                <include name="**/*.xml"/>
+            </fileset>
+        </copy>
+
     </target>
 
     <!-- ================================================================== -->

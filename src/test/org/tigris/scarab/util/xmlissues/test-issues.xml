@@ -1,0 +1,1102 @@
+<?xml version="1.0" standalone="no"?>
+<scarab-issues>
+  <import-type>create-different-db</import-type>
+
+  <import-type>create-different-db</import-type>
+  <module>
+    <id>5</id>
+    <parent-id>1</parent-id>
+    <name>Source</name>
+        
+    <owner>turbine@tigris.org</owner>
+    
+    <description>Source</description>
+    <url>/PacmanJVM/source/</url>
+    <domain></domain>
+    <code>PACS</code>
+  </module>
+
+<issues>
+  
+    <issue>
+      <id>2</id>
+      <artifact-type>Defect</artifact-type>
+      <activity-sets>
+      
+        <activity-set>
+          <id>1</id>
+          <type>Create Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-04-24 14:18:20 PDT</timestamp>
+          </created-date>
+          <activities>
+                      
+            <activity>
+              <id>4</id>
+              <attribute>Summary</attribute>
+                                                                                                  
+              <new-value>first issue that will be imported</new-value>
+              
+                            
+              <description>Summary set to 'first issue that will be impor...'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>5</id>
+              <attribute>Platform</attribute>
+                                                                      
+              <new-option>All</new-option>
+                                          
+              <new-value>All</new-value>
+              
+                            
+              <description>Platform set to 'All'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>6</id>
+              <attribute>Operating system</attribute>
+                                                                      
+              <new-option>windows 3.1</new-option>
+                                          
+              <new-value>windows 3.1</new-value>
+              
+                            
+              <description>Operating system set to 'windows 3.1'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>7</id>
+              <attribute>Description</attribute>
+                                                                                                  
+              <new-value>This issue was originally entered by hand</new-value>
+              
+                            
+              <description>Description set to 'This issue was originally ente...'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>8</id>
+              <attribute>Status</attribute>
+                                                                      
+              <new-option>Unconfirmed</new-option>
+                                          
+              <new-value>Unconfirmed</new-value>
+              
+                            
+              <description>Status set to 'Unconfirmed'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>9</id>
+              <attribute>Resolution</attribute>
+                                                                      
+              <new-option>Fixed</new-option>
+                                          
+              <new-value>Fixed</new-value>
+              
+                            
+              <description>Resolution set to 'Fixed'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>10</id>
+              <attribute>Priority</attribute>
+                                                                      
+              <new-option>High</new-option>
+                                          
+              <new-value>High</new-value>
+              
+                            
+              <description>Priority set to 'High'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>11</id>
+              <attribute>Vote</attribute>
+                                                                      
+              <new-option>High</new-option>
+                                          
+              <new-value>High</new-value>
+              
+                            
+              <description>Vote set to 'High'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>12</id>
+              <attribute>Severity</attribute>
+                                                                      
+              <new-option>Blocker</new-option>
+                                          
+              <new-value>Blocker</new-value>
+              
+                            
+              <description>Severity set to 'Blocker'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>13</id>
+              <attribute>Functional area</attribute>
+                                                                      
+              <new-option>UI</new-option>
+                                          
+              <new-value>UI</new-value>
+              
+                            
+              <description>Functional area set to 'UI'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>14</id>
+              <attribute>Null Attribute</attribute>
+                                                                                                  
+                            
+              <description>issue created</description>
+                            
+                              
+            </activity>
+                    
+          </activities>
+                      
+          <attachment>
+            <id>31465</id>
+            <name>reason</name>
+            <type>MODIFICATION</type>
+                                    
+            <data>the first issue contains a reason</data>
+                                          
+            <mimetype>text/plain</mimetype>
+            <created-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-04-24 14:18:22 PDT</timestamp>
+            </created-date>
+            <modified-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-04-24 14:18:22 PDT</timestamp>
+            </modified-date>
+            <created-by>turbine@tigris.org</created-by>
+            
+            <deleted>false</deleted>
+          </attachment>
+  
+        </activity-set>
+      
+        <activity-set>
+          <id>7</id>
+          <type>Edit Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-04-25 12:42:23 PDT</timestamp>
+          </created-date>
+          <activities>
+                      
+            <activity>
+              <id>277568</id>
+              <attribute>Null Attribute</attribute>
+                                                                                                  
+              <new-value>blocking</new-value>
+              
+                            
+              <dependency>
+                <id>8</id>
+                <parent>tst2</parent>
+                <child>tst3</child>
+                <type>blocking</type>
+                <deleted>false</deleted>
+              </dependency>
+              
+              <description>Issue tst2 blocks issue tst3</description>
+                            
+                              
+            </activity>
+                                          
+          </activities>
+                      
+          <attachment>
+            <id>31474</id>
+            <name>modification</name>
+            <type>MODIFICATION</type>
+                                    
+            <data>adding 3 as a blocking dependency</data>
+                                          
+            <mimetype>text/plain</mimetype>
+            <created-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-04-25 12:42:23 PDT</timestamp>
+            </created-date>
+            <modified-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-04-25 12:42:23 PDT</timestamp>
+            </modified-date>
+            <created-by>turbine@tigris.org</created-by>
+            
+            <deleted>false</deleted>
+          </attachment>
+  
+        </activity-set>
+      
+      </activity-sets>
+    </issue>
+    
+    <issue>
+      <id>3</id>
+      <artifact-type>Defect</artifact-type>
+      <activity-sets>
+      
+        <activity-set>
+          <id>2</id>
+          <type>Create Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-04-24 14:24:35 PDT</timestamp>
+          </created-date>
+          <activities>
+                      
+            <activity>
+              <id>15</id>
+              <attribute>Summary</attribute>
+                                                                                                  
+              <new-value>second issue for import test</new-value>
+              
+                            
+              <description>Summary set to 'second issue for import test'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>16</id>
+              <attribute>Platform</attribute>
+                                                                      
+              <new-option>DEC</new-option>
+                                          
+              <new-value>DEC</new-value>
+              
+                            
+              <description>Platform set to 'DEC'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>17</id>
+              <attribute>Operating system</attribute>
+                                                                      
+              <new-option>windows 95</new-option>
+                                          
+              <new-value>windows 95</new-value>
+              
+                            
+              <description>Operating system set to 'windows 95'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>18</id>
+              <attribute>Description</attribute>
+                                                                                                  
+              <new-value>number 2</new-value>
+              
+                            
+              <description>Description set to 'number 2'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>19</id>
+              <attribute>Status</attribute>
+                                                                      
+              <new-option>New</new-option>
+                                          
+              <new-value>New</new-value>
+              
+                            
+              <description>Status set to 'New'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>20</id>
+              <attribute>Resolution</attribute>
+                                                                      
+              <new-option>Invalid</new-option>
+                                          
+              <new-value>Invalid</new-value>
+              
+                            
+              <description>Resolution set to 'Invalid'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>21</id>
+              <attribute>Priority</attribute>
+                                                                      
+              <new-option>Medium</new-option>
+                                          
+              <new-value>Medium</new-value>
+              
+                            
+              <description>Priority set to 'Medium'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>22</id>
+              <attribute>Vote</attribute>
+                                                                      
+              <new-option>Medium</new-option>
+                                          
+              <new-value>Medium</new-value>
+              
+                            
+              <description>Vote set to 'Medium'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>23</id>
+              <attribute>Severity</attribute>
+                                                                      
+              <new-option>Critical</new-option>
+                                          
+              <new-value>Critical</new-value>
+              
+                            
+              <description>Severity set to 'Critical'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>24</id>
+              <attribute>Functional area</attribute>
+                                                                      
+              <new-option>Setup</new-option>
+                                          
+              <new-value>Setup</new-value>
+              
+                            
+              <description>Functional area set to 'Setup'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>25</id>
+              <attribute>Null Attribute</attribute>
+                                                                                                  
+                            
+              <description>issue created</description>
+                            
+                              
+            </activity>
+                    
+          </activities>
+                      
+        </activity-set>
+      
+        <activity-set>
+          <id>7</id>
+          <type>Edit Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-04-25 12:42:23 PDT</timestamp>
+          </created-date>
+          <activities>
+                                            
+            <activity>
+              <id>277569</id>
+              <attribute>Null Attribute</attribute>
+                                                                                                  
+              <new-value>blocking</new-value>
+              
+                            
+              <dependency>
+                <id>8</id>
+                <parent>tst2</parent>
+                <child>tst3</child>
+                <type>blocking</type>
+                <deleted>false</deleted>
+              </dependency>
+              
+              <description>Issue tst2 blocks issue tst3</description>
+                            
+                              
+            </activity>
+                    
+          </activities>
+                      
+          <attachment>
+            <id>31474</id>
+            <name>modification</name>
+            <type>MODIFICATION</type>
+                                    
+            <data>adding 3 as a blocking dependency</data>
+                                          
+            <mimetype>text/plain</mimetype>
+            <created-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-04-25 12:42:23 PDT</timestamp>
+            </created-date>
+            <modified-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-04-25 12:42:23 PDT</timestamp>
+            </modified-date>
+            <created-by>turbine@tigris.org</created-by>
+            
+            <deleted>false</deleted>
+          </attachment>
+  
+        </activity-set>
+      
+      </activity-sets>
+    </issue>
+    
+    <issue>
+      <id>4</id>
+      <artifact-type>Defect</artifact-type>
+      <activity-sets>
+      
+        <activity-set>
+          <id>3</id>
+          <type>Create Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-04-24 14:25:38 PDT</timestamp>
+          </created-date>
+          <activities>
+                      
+            <activity>
+              <id>26</id>
+              <attribute>Summary</attribute>
+                                                                                                  
+              <new-value>third one for import test</new-value>
+              
+                            
+              <description>Summary set to 'third one for import test'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>27</id>
+              <attribute>Platform</attribute>
+                                                                      
+              <new-option>HP</new-option>
+                                          
+              <new-value>HP</new-value>
+              
+                            
+              <description>Platform set to 'HP'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>28</id>
+              <attribute>Operating system</attribute>
+                                                                      
+              <new-option>windows 98</new-option>
+                                          
+              <new-value>windows 98</new-value>
+              
+                            
+              <description>Operating system set to 'windows 98'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>29</id>
+              <attribute>Description</attribute>
+                                                                                                  
+              <new-value>sa;ldkfjas;lkfd</new-value>
+              
+                            
+              <description>Description set to 'sa;ldkfjas;lkfd'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>30</id>
+              <attribute>Status</attribute>
+                                                                      
+              <new-option>Assigned</new-option>
+                                          
+              <new-value>Assigned</new-value>
+              
+                            
+              <description>Status set to 'Assigned'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>31</id>
+              <attribute>Resolution</attribute>
+                                                                      
+              <new-option>Wontfix</new-option>
+                                          
+              <new-value>Wontfix</new-value>
+              
+                            
+              <description>Resolution set to 'Wontfix'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>32</id>
+              <attribute>Priority</attribute>
+                                                                      
+              <new-option>Low</new-option>
+                                          
+              <new-value>Low</new-value>
+              
+                            
+              <description>Priority set to 'Low'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>33</id>
+              <attribute>Vote</attribute>
+                                                                      
+              <new-option>Low</new-option>
+                                          
+              <new-value>Low</new-value>
+              
+                            
+              <description>Vote set to 'Low'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>34</id>
+              <attribute>Severity</attribute>
+                                                                      
+              <new-option>Major</new-option>
+                                          
+              <new-value>Major</new-value>
+              
+                            
+              <description>Severity set to 'Major'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>35</id>
+              <attribute>Functional area</attribute>
+                                                                      
+              <new-option>Help</new-option>
+                                          
+              <new-value>Help</new-value>
+              
+                            
+              <description>Functional area set to 'Help'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>36</id>
+              <attribute>Null Attribute</attribute>
+                                                                                                  
+                            
+              <description>issue created</description>
+                            
+                              
+            </activity>
+                    
+          </activities>
+                      
+          <attachment>
+            <id>31466</id>
+            <name>reason</name>
+            <type>MODIFICATION</type>
+                                    
+            <data>dslkfja</data>
+                                          
+            <mimetype>text/plain</mimetype>
+            <created-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-04-24 14:25:38 PDT</timestamp>
+            </created-date>
+            <modified-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-04-24 14:25:38 PDT</timestamp>
+            </modified-date>
+            <created-by>turbine@tigris.org</created-by>
+            
+            <deleted>false</deleted>
+          </attachment>
+  
+        </activity-set>
+      
+      </activity-sets>
+    </issue>
+    
+    <issue>
+      <id>5</id>
+      <artifact-type>Defect</artifact-type>
+      <activity-sets>
+      
+        <activity-set>
+          <id>4</id>
+          <type>Create Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-04-24 14:26:57 PDT</timestamp>
+          </created-date>
+          <activities>
+                      
+            <activity>
+              <id>37</id>
+              <attribute>Summary</attribute>
+                                                                                                  
+              <new-value>fourth for import</new-value>
+              
+                            
+              <description>Summary set to 'fourth for import'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>38</id>
+              <attribute>Platform</attribute>
+                                                                      
+              <new-option>Macintosh</new-option>
+                                          
+              <new-value>Macintosh</new-value>
+              
+                            
+              <description>Platform set to 'Macintosh'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>39</id>
+              <attribute>Operating system</attribute>
+                                                                      
+              <new-option>windows ME</new-option>
+                                          
+              <new-value>windows ME</new-value>
+              
+                            
+              <description>Operating system set to 'windows ME'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>40</id>
+              <attribute>Description</attribute>
+                                                                                                  
+              <new-value>dskdskd4</new-value>
+              
+                            
+              <description>Description set to 'dskdskd4'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>41</id>
+              <attribute>Status</attribute>
+                                                                      
+              <new-option>Reopened</new-option>
+                                          
+              <new-value>Reopened</new-value>
+              
+                            
+              <description>Status set to 'Reopened'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>42</id>
+              <attribute>Resolution</attribute>
+                                                                      
+              <new-option>Later</new-option>
+                                          
+              <new-value>Later</new-value>
+              
+                            
+              <description>Resolution set to 'Later'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>43</id>
+              <attribute>Priority</attribute>
+                                                                      
+              <new-option>Undecided</new-option>
+                                          
+              <new-value>Undecided</new-value>
+              
+                            
+              <description>Priority set to 'Undecided'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>44</id>
+              <attribute>Vote</attribute>
+                                                                      
+              <new-option>Undecided</new-option>
+                                          
+              <new-value>Undecided</new-value>
+              
+                            
+              <description>Vote set to 'Undecided'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>45</id>
+              <attribute>Severity</attribute>
+                                                                      
+              <new-option>Normal</new-option>
+                                          
+              <new-value>Normal</new-value>
+              
+                            
+              <description>Severity set to 'Normal'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>46</id>
+              <attribute>Functional area</attribute>
+                                                                      
+              <new-option>UI</new-option>
+                                          
+              <new-value>UI</new-value>
+              
+                            
+              <description>Functional area set to 'UI'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>47</id>
+              <attribute>Null Attribute</attribute>
+                                                                                                  
+                            
+              <description>issue created</description>
+                            
+                              
+            </activity>
+                    
+          </activities>
+                      
+        </activity-set>
+      
+        <activity-set>
+          <id>6</id>
+          <type>Move Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-04-24 14:28:18 PDT</timestamp>
+          </created-date>
+          <activities>
+                                            
+            <activity>
+              <id>277449</id>
+              <attribute>Null Attribute</attribute>
+                                                                                    
+              <old-value>tst5</old-value>
+                            
+              <new-value>tst6</new-value>
+              
+                            
+              <description>copied to issue tst6 in module Global &gt; test1/Defect</description>
+                            
+                              
+            </activity>
+                    
+          </activities>
+                      
+          <attachment>
+            <id>31467</id>
+            <name>Copied issue note</name>
+            <type>MODIFICATION</type>
+                                    
+            <data>copied fourth import issue which would be tst5. All attributes were copied.</data>
+                                          
+            <mimetype>text/plain</mimetype>
+            <created-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-04-24 14:28:18 PDT</timestamp>
+            </created-date>
+            <modified-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-04-24 14:28:18 PDT</timestamp>
+            </modified-date>
+            <created-by>turbine@tigris.org</created-by>
+            
+            <deleted>false</deleted>
+          </attachment>
+  
+        </activity-set>
+      
+      </activity-sets>
+    </issue>
+    
+    <issue>
+      <id>6</id>
+      <artifact-type>Defect</artifact-type>
+      <activity-sets>
+      
+        <activity-set>
+          <id>5</id>
+          <type>Create Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-04-24 14:28:17 PDT</timestamp>
+          </created-date>
+          <activities>
+                      
+            <activity>
+              <id>48</id>
+              <attribute>Vote</attribute>
+                                                                      
+              <new-option>Undecided</new-option>
+                                          
+              <new-value>Undecided</new-value>
+              
+                            
+              <description>Vote set to 'Undecided'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>49</id>
+              <attribute>Priority</attribute>
+                                                                      
+              <new-option>Undecided</new-option>
+                                          
+              <new-value>Undecided</new-value>
+              
+                            
+              <description>Priority set to 'Undecided'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>50</id>
+              <attribute>Functional area</attribute>
+                                                                      
+              <new-option>UI</new-option>
+                                          
+              <new-value>UI</new-value>
+              
+                            
+              <description>Functional area set to 'UI'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>51</id>
+              <attribute>Status</attribute>
+                                                                      
+              <new-option>Reopened</new-option>
+                                          
+              <new-value>Reopened</new-value>
+              
+                            
+              <description>Status set to 'Reopened'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>52</id>
+              <attribute>Summary</attribute>
+                                                                                                  
+              <new-value>fourth for import</new-value>
+              
+                            
+              <description>Summary set to 'fourth for import'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>53</id>
+              <attribute>Platform</attribute>
+                                                                      
+              <new-option>Macintosh</new-option>
+                                          
+              <new-value>Macintosh</new-value>
+              
+                            
+              <description>Platform set to 'Macintosh'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>54</id>
+              <attribute>Operating system</attribute>
+                                                                      
+              <new-option>windows ME</new-option>
+                                          
+              <new-value>windows ME</new-value>
+              
+                            
+              <description>Operating system set to 'windows ME'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>55</id>
+              <attribute>Resolution</attribute>
+                                                                      
+              <new-option>Later</new-option>
+                                          
+              <new-value>Later</new-value>
+              
+                            
+              <description>Resolution set to 'Later'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>56</id>
+              <attribute>Severity</attribute>
+                                                                      
+              <new-option>Normal</new-option>
+                                          
+              <new-value>Normal</new-value>
+              
+                            
+              <description>Severity set to 'Normal'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>57</id>
+              <attribute>Description</attribute>
+                                                                                                  
+              <new-value>dskdskd4</new-value>
+              
+                            
+              <description>Description set to 'dskdskd4'</description>
+                            
+                              
+            </activity>
+                    
+          </activities>
+                      
+        </activity-set>
+      
+        <activity-set>
+          <id>6</id>
+          <type>Move Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-04-24 14:28:18 PDT</timestamp>
+          </created-date>
+          <activities>
+                      
+            <activity>
+              <id>58</id>
+              <attribute>Null Attribute</attribute>
+                                                                                    
+              <old-value>tst5</old-value>
+                            
+              <new-value>tst6</new-value>
+              
+                            
+              <description>copied from issue tst5 in module Global &gt; test1/Defect</description>
+                            
+                              
+            </activity>
+                                          
+          </activities>
+                      
+          <attachment>
+            <id>31467</id>
+            <name>Copied issue note</name>
+            <type>MODIFICATION</type>
+                                    
+            <data>copied fourth import issue which would be tst5. All attributes were copied.</data>
+                                          
+            <mimetype>text/plain</mimetype>
+            <created-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-04-24 14:28:18 PDT</timestamp>
+            </created-date>
+            <modified-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-04-24 14:28:18 PDT</timestamp>
+            </modified-date>
+            <created-by>turbine@tigris.org</created-by>
+            
+            <deleted>false</deleted>
+          </attachment>
+  
+        </activity-set>
+      
+      </activity-sets>
+    </issue>
+    </issues>
+
+</scarab-issues>

@@ -63,7 +63,7 @@ import org.apache.torque.util.Criteria;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.25 2003/04/15 20:25:47 elicia Exp $
+ * @version $Id: IssueTest.java,v 1.26 2003/04/28 22:33:55 jmcnally Exp $
  */
 public class IssueTest extends BaseTestCase
 {
@@ -240,9 +240,9 @@ public class IssueTest extends BaseTestCase
         log("Testing IssuePeer count methods");
         int count = IssuePeer.count(new Criteria());
         assertTrue("IssuePeer.count(new Criteria()) returned " + 
-                   count + ". Expected 2",  (count == 2));
+                   count + ". Expected 2",  (count == 7));
         count = IssuePeer.countDistinct(new Criteria());
         assertTrue("IssuePeer.countDistinct(new Criteria()) returned " + 
-                   count + ". Expected 2",  (count == 2));
+                   count + ". Expected 2",  (count == 7));
     }
 }
