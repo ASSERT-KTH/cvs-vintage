@@ -16,9 +16,7 @@ import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -32,7 +30,7 @@ import java.util.Set;
  * Entities are stored in an ArrayList to ensure specific ordering.
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
  * <p><b>Revisions:</b>
  *
@@ -113,7 +111,14 @@ public class GlobalTxEntityMap
       {
          return;
       }
-      Set entitySet = (Set)entitiesSetMap.get(tx);
+
+      // reset tx associations
+      // logically it should be at the end of the method when the synchronization is complete.
+      // but in case of BMP, a finder could be called in ejbStore and if tx associations are not cleared before
+      // ejbStore, we will get StackOverflowError.
+      entitiesFifoMap.set(tx, null);
+      entitiesSetMap.set(tx, null);
+
       // This is an independent point of entry. We need to make sure the
       // thread is associated with the right context class loader
       final Thread currentThread = Thread.currentThread();
@@ -181,8 +186,6 @@ public class GlobalTxEntityMap
       finally
       {
          currentThread.setContextClassLoader(oldCl);
-         entities.clear();
-         entitySet.clear();
       }
    }
 
