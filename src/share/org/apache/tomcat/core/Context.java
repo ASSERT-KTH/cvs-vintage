@@ -478,7 +478,18 @@ public final class Context {
 	Can be called only from tomcat.core.ContextManager.
 	( package access )
     */
-    void setState( int state ) {
+    void setState( int state )
+	throws TomcatException
+    {
+	if(this.state==STATE_NEW && state==STATE_ADDED ) {
+	    BaseInterceptor cI[]=getContainer().getInterceptors();
+	    for( int i=0; i< cI.length; i++ ) {
+		// set all local interceptors 
+		cI[i].setContextManager( contextM );
+		cI[i].engineInit( contextM );
+		cI[i].addContext( contextM, this );
+	    }
+	}
 	this.state=state;
     }
 
@@ -503,40 +514,18 @@ public final class Context {
 	    log( "Already initialized " );
 	    return;
 	}
+
 	// make sure we see all interceptors added so far
 	getContainer().resetInterceptorCache(Container.H_engineInit);
 
-	// initialize all local-interceptors
-	BaseInterceptor cI[]=getContainer().getInterceptors();
-	for( int i=0; i<cI.length ; i++ ) {
-	    if( this !=cI[i].getContext()) continue;
-	    cI[i].setContextManager( contextM );
-	    try {
-		for( int j=0; j<cI.length ; j++ ) {
-		    cI[j].addInterceptor( contextM, this, cI[i] );
-		}
-
-		cI[i].engineInit( contextM );
-	    } catch( TomcatException ex ) {
-		log( "Error initializing " + cI[i] + " for " + this );
-	    }
-	}
-
-	
 	// no action if ContextManager is not initialized
 	if( contextM==null ||
 	    contextM.getState() == ContextManager.STATE_NEW ) {
-	    log( "ContextManager is not yet initialized ");
+	    log( "ERROR: ContextManager is not yet initialized ");
 	    return;
 	}
 
-	if( state==STATE_NEW ) {
-	    // this context was not added yet
-	    // throw new TomcatException("Context not added yet " + this );
-	    contextM.addContext( this );
-	}
-	
-	cI=getContainer().getInterceptors();
+	BaseInterceptor cI[]=getContainer().getInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].contextInit( this );
 	}
@@ -587,7 +576,7 @@ public final class Context {
 	if( "/".equals(path) )
 	    path="";
 	this.path = path;
-	loghelper.setLogPrefix("Ctx("+ path +") ");
+	loghelper.setLogPrefix("Ctx("+ getId() +") ");
     }
 
     /**
@@ -1069,8 +1058,7 @@ public final class Context {
      */
     public final  void logServlet( String msg , Throwable t ) {
 	if (loghelperServlet == null) {
-	    String pr= getId();
-	    loghelperServlet = Log.getLog("org/apache/tomcat/facade", pr );
+	    loghelperServlet = loghelper;
 	}
 	if (t == null)
 	    loghelperServlet.log(msg);	// uses level INFORMATION
@@ -1082,7 +1070,7 @@ public final class Context {
 	loghelper=logger;
     }
 
-    public final  void setServletLog(Logger logger) {
+    public final  void setServletLog(Log logger) {
 	loghelperServlet=logger;
     }
 
@@ -1164,28 +1152,43 @@ public final class Context {
     /** Add a per-context interceptor. The hooks defined will
      *  be used only for requests that are matched in this context.
      *  contextMap hook is not called ( since the context is not
-     *	known at that time
+     *	known at that time.
+     *  
+     *  This method will only store the interceptor. No action
+     *  takes place before the context is added ( since contextM
+     *  may be unknown ).
      */
     public final  void addInterceptor( BaseInterceptor ri )
 	throws TomcatException
     {
-	// the interceptor can be added before or after the
-	// context is added.
-	if( contextM!=null ) {
-	    // make sure the interceptor is properly initialized
-	    ri.setContextManager( contextM );
-
-	    BaseInterceptor existingI[]=defaultContainer.getInterceptors();
-	    for( int i=0; i<existingI.length; i++ ) {
-		existingI[i].addInterceptor( contextM, this, ri );
-	    }
-
-	    // if we are already added, make sure engine init is called
-	    ri.engineInit( contextM );
-	}
-
+	ri.setContext( this );
 	defaultContainer.addInterceptor(ri);
 
+	ri.addInterceptor( contextM, this , ri ); 
+	BaseInterceptor existingI[]=defaultContainer.getInterceptors();
+	for( int i=0; i<existingI.length; i++ ) {
+	    if( existingI[i] != ri )
+		existingI[i].addInterceptor( contextM, this, ri );
+	    // contextM  can be null
+	}
+	
+	if( getState() == STATE_NEW ) return;
+	// we are at least ADDED - that means the CM is initialized
+	ri.setContextManager( contextM );
+
+	ri.engineInit( contextM );
+	ri.addContext( contextM, this ); // it'll not know about other
+	// contexts - in future we may add a mechanism to let it know
+	// about the hierarchy.
+
+	if( getState() == STATE_ADDED ) return;
+
+	// we are initialized
+	ri.contextInit( this );
+
+	if( contextM.getState() == ContextManager.STATE_START ) {
+	    ri.engineStart(contextM );
+	}
     }
 
 }
