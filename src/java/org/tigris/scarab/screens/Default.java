@@ -69,7 +69,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.27 2001/10/26 23:09:24 jmcnally Exp $
+ * @version $Id: Default.java,v 1.28 2001/11/09 21:59:59 jon Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -98,7 +98,7 @@ public class Default extends TemplateSecureScreen
     public static boolean checkAuthorized(RunData data)
         throws Exception
     {
-        String template = ScarabPage.getScreenTemplate(data);
+        String template = data.getTarget();
         if (template != null)
         {
             template = template.replace('/','.');
@@ -112,8 +112,11 @@ public class Default extends TemplateSecureScreen
             ModuleEntity currentModule = scarabR.getCurrentModule();
             IssueType currentIssueType = scarabR.getCurrentIssueType();
             ScarabUser user = (ScarabUser)data.getUser();
+            System.out.println ("template: " + template);
+            System.out.println ("currentIssueType: " + currentIssueType);
             if (perm != null)
             {
+            System.out.println ("perm: " + perm);
                 if (! user.hasLoggedIn() 
                     && !user.hasPermission(perm, currentModule))
                 {
@@ -123,9 +126,7 @@ public class Default extends TemplateSecureScreen
                     setTargetLogin(data);
                     return false;
                 }
-                else if (currentModule == null 
-                    && template.indexOf("Global") == -1
-                    && !template.equals("Login.vm"))
+                else if (currentModule == null)
                 {
                     data.setMessage("Please select the Module " +
                                     "that you would like to work " +
@@ -133,9 +134,7 @@ public class Default extends TemplateSecureScreen
                     setTargetSelectModule(data);
                     return false;
                 }
-                else if (currentIssueType == null 
-                   && template.indexOf("Global") == -1
-                    && !template.equals("Login.vm"))
+                else if (currentIssueType == null)
                 {
                     data.setMessage("Please select the Issue Type " +
                                     "that you would like to work " +
@@ -163,12 +162,10 @@ public class Default extends TemplateSecureScreen
 
     private static void setTargetSelectModule(RunData data)
     {
-        // Note: we need to replace '/' with ',' so that 
-        //       the hidden input field will have the right
-        //       value for ParameterParser to parse.
-        getTemplateContext(data).put( ScarabConstants.NEXT_TEMPLATE,
-                                      ScarabPage.getScreenTemplate(data)
-                                          .replace('/',',') );
+        getTemplateContext(data)
+            .put( ScarabConstants.NEXT_TEMPLATE,
+                          data.getParameters()
+                          .getString(ScarabConstants.NEXT_TEMPLATE) );
 
         setTarget(data, Turbine.getConfiguration()
                 .getString("scarab.CurrentModuleTemplate", "SelectModule.vm"));        
@@ -176,12 +173,10 @@ public class Default extends TemplateSecureScreen
 
     private static void setTargetSelectIssueType(RunData data)
     {
-        // Note: we need to replace '/' with ',' so that 
-        //       the hidden input field will have the right
-        //       value for ParameterParser to parse.
-        getTemplateContext(data).put( ScarabConstants.NEXT_TEMPLATE,
-                                      ScarabPage.getScreenTemplate(data)
-                                          .replace('/',',') );
+        getTemplateContext(data)
+            .put( ScarabConstants.NEXT_TEMPLATE,
+                          data.getParameters()
+                          .getString(ScarabConstants.NEXT_TEMPLATE) );
 
         setTarget(data, Turbine.getConfiguration()
                 .getString("scarab.CurrentArtifactTypeTemplate", "SelectModule.vm"));        
