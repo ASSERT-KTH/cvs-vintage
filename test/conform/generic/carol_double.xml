@@ -135,7 +135,6 @@
 
     <copy file="${test.ext}/${trace.properties.file.name}" tofile="${test.tmp.server}/trace.properties" />  
     <copy file="${test.ext}/${server.properties.file.name}" tofile="${test.tmp.server}/carol.properties" />  
-    <copy file="${test.ext}/${trace.properties.file.name}" tofile="${test.tmp.server}/trace.properties" /> 
  
     <antcall target="_rebuild.tmp.dir1"/>
     <antcall target="_rebuild.tmp.dir2"/>
