@@ -1,4 +1,4 @@
-// $Id: ActionSaveGraphics.java,v 1.14 2003/09/04 20:11:44 thierrylach Exp $
+// $Id: ActionSaveGraphics.java,v 1.15 2003/11/01 22:31:01 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,6 +48,11 @@ import org.tigris.gef.base.CmdSavePS;
 import org.tigris.gef.base.CmdSaveSVG;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.util.Util;
+import java.util.*;
+import java.io.*;
+import java.awt.Rectangle;
+import org.tigris.gef.base.*;
+import org.tigris.gef.persistence.*;
 
 
 /** Wraps a CmdSaveGIF or CmdSave(E)PS to allow selection of an output file. 
@@ -158,7 +163,29 @@ public class ActionSaveGraphics extends UMLAction {
 			if (FileFilters.PSFilter._suffix.equals(extension))
 			    cmd = new CmdSavePS();
 			else if (FileFilters.EPSFilter._suffix.equals(extension))
-			    cmd = new CmdSaveEPS();
+                            // override gef default to cope with scaling.
+			    cmd = new CmdSaveEPS(){
+                                
+                                protected void saveGraphics(OutputStream s, Editor ce,
+                                Rectangle drawingArea)
+                                throws IOException {
+                                    
+                                      double scale=ce.getScale();
+                                      int x=(int)(drawingArea.x * scale);
+                                      int y=(int)(drawingArea.y * scale);
+                                      int h=(int)(drawingArea.height * scale);
+                                      int w=(int)(drawingArea.width * scale);
+                                    drawingArea = new Rectangle(x,y,w,h);
+                                    
+                                    PostscriptWriter ps = new PostscriptWriter(s, drawingArea);
+                                    
+                                      ps.scale(scale,scale);
+                                      
+                                    ce.print(ps);
+                                    ps.dispose();
+                                }
+                                
+                            };
 			else if (FileFilters.GIFFilter._suffix.equals(extension))
 			    cmd = new CmdSaveGIF();
 			else if (FileFilters.SVGFilter._suffix.equals(extension))
