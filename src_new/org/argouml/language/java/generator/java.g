@@ -1,4 +1,4 @@
-// $Id: java.g,v 1.2 2002/03/11 09:54:17 sz9 Exp $
+// $Id: java.g,v 1.3 2002/04/11 21:34:42 thn Exp $
 
 header {
 	package org.argouml.language.java.generator;
@@ -63,7 +63,7 @@ header {
  *
  * Version tracking now done with following ID:
  *
- * $Id: java.g,v 1.2 2002/03/11 09:54:17 sz9 Exp $
+ * $Id: java.g,v 1.3 2002/04/11 21:34:42 thn Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
@@ -470,7 +470,7 @@ varInitializer returns [CompositeCodePiece cp=null]
 				new SimpleCodePiece(t1));}
 		initializer
 		{cp.add(new SimpleCodePiece(
-			"@", 
+			new StringBuffer("@"), 
 			t1.getLine(),
 			t1.getColumn()+1,
 			t1.getColumn()+2));}
