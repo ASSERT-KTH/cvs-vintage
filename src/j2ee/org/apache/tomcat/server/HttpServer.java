@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/j2ee/org/apache/tomcat/server/Attic/HttpServer.java,v 1.5 2000/04/08 11:58:20 rubys Exp $
- * $Revision: 1.5 $
- * $Date: 2000/04/08 11:58:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/j2ee/org/apache/tomcat/server/Attic/HttpServer.java,v 1.6 2000/04/13 15:23:42 rubys Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/04/13 15:23:42 $
  *
  * ====================================================================
  *
@@ -360,7 +360,7 @@ public class HttpServer {
     public String getServerHeader() {
 	// XXX XXX Ugly, but we want to remove the properties stuff
 	// which is worse
-	if(serverHeader==null) serverHeader="Tomcat Web Server 3.1 RC1";
+	if(serverHeader==null) serverHeader="Tomcat Web Server 3.2 dev";
         return serverHeader;
     }
 
