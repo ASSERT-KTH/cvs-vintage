@@ -45,7 +45,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.18 $
+ *  @version $Revision: 1.19 $
  */
 class TxCapsule implements TimeoutTarget
 {
@@ -1415,45 +1415,49 @@ class TxCapsule implements TimeoutTarget
    }
 
     private Xid createXid() {
-        String name = System.getProperty("jboss.xa.xidclass", "org.jboss.tm.XidImpl");
-        if(xidConstructor == null) {
-            try {
-                Class cls = Class.forName(name);
-                xidConstructor = cls.getConstructor(new Class[]{Integer.TYPE, byte[].class, byte[].class});
-            } catch(Exception e) {
-                System.out.println("Unable to load Xid class '"+name+"'");
-            }
-        }
-        try {
-            Object xid = xidConstructor.newInstance(new Object[]{new Integer(XidImpl.getJbossFormatId()),
-                                                                 XidImpl.getGlobalIdString(XidImpl.getNextId()),
-                                                                 XidImpl.noBranchQualifier});
-            return (Xid)xid;
-        } catch(Exception e) {
-            System.out.println("Unable to create an Xid (reverting to default impl): "+e);
-            return new XidImpl(XidImpl.getJbossFormatId(), XidImpl.getGlobalIdString(XidImpl.getNextId()), XidImpl.noBranchQualifier);
-        }
+       if (xidConstructor == null) {
+          String name = System.getProperty("jboss.xa.xidclass", "org.jboss.tm.XidImpl");
+
+          try {
+             Class cls = Class.forName(name);
+             xidConstructor = cls.getConstructor(new Class[]{Integer.TYPE, byte[].class, byte[].class});
+          } catch (Exception e) {
+             System.out.println("Unable to load Xid class '"+name+"'");
+          }
+       }
+
+       try {
+          Object xid = xidConstructor.newInstance(new Object[]{new Integer(XidImpl.getJbossFormatId()),
+                                                               XidImpl.getGlobalIdString(XidImpl.getNextId()),
+                                                               XidImpl.noBranchQualifier});
+          return (Xid)xid;
+       } catch (Exception e) {
+          System.out.println("Unable to create an Xid (reverting to default impl): "+e);
+          return new XidImpl(XidImpl.getJbossFormatId(), XidImpl.getGlobalIdString(XidImpl.getNextId()), XidImpl.noBranchQualifier);
+       }
     }
 
     private Xid createXid(Xid lastBranch) {
-        String name = System.getProperty("jboss.xa.xidclass", "org.jboss.tm.XidImpl");
-        if(xidConstructor == null) {
-            try {
-                Class cls = Class.forName(name);
-                xidConstructor = cls.getConstructor(new Class[]{Integer.TYPE, byte[].class, byte[].class});
-            } catch(Exception e) {
-                System.out.println("Unable to load Xid class '"+name+"'");
-            }
-        }
-        try {
-            Object xid = xidConstructor.newInstance(new Object[]{new Integer(XidImpl.getJbossFormatId()),
-                                                                 XidImpl.getGlobalIdString(XidImpl.getNextId()),
-                                                                 XidImpl.getNextBranchQualifier(lastBranch.getBranchQualifier())});
-            return (Xid)xid;
-        } catch(Exception e) {
-            System.out.println("Unable to create an Xid (reverting to default impl): "+e);
-            return new XidImpl(XidImpl.getJbossFormatId(), XidImpl.getGlobalIdString(XidImpl.getNextId()), XidImpl.noBranchQualifier);
-        }
+       if (xidConstructor == null) {
+          String name = System.getProperty("jboss.xa.xidclass", "org.jboss.tm.XidImpl");
+
+          try {
+             Class cls = Class.forName(name);
+             xidConstructor = cls.getConstructor(new Class[]{Integer.TYPE, byte[].class, byte[].class});
+          } catch (Exception e) {
+             System.out.println("Unable to load Xid class '"+name+"'");
+          }
+       }
+
+       try {
+          Object xid = xidConstructor.newInstance(new Object[]{new Integer(XidImpl.getJbossFormatId()),
+                                                               XidImpl.getGlobalIdString(XidImpl.getNextId()),
+                                                               XidImpl.getNextBranchQualifier(lastBranch.getBranchQualifier())});
+          return (Xid)xid;
+       } catch (Exception e) {
+          System.out.println("Unable to create an Xid (reverting to default impl): "+e);
+          return new XidImpl(XidImpl.getJbossFormatId(), XidImpl.getGlobalIdString(XidImpl.getNextId()), XidImpl.noBranchQualifier);
+       }
     }
 
    // Inner classes -------------------------------------------------
