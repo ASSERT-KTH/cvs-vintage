@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.27 2004/08/13 19:42:08 mvw Exp $
+// $Id: FigTransition.java,v 1.28 2004/08/15 18:43:21 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,6 +52,12 @@ import ru.novosoft.uml.MElementEvent;
 public class FigTransition extends FigEdgeModelElement {
     
     private ArrowHeadGreater endArrow = new ArrowHeadGreater();
+    
+    /**
+     * If <code>dashed</code> is true, then the transition represents 
+     * "object flow". 
+     * If the line is solid, then it represents "control flow".
+     */
     private boolean dashed = false; 
     
     ////////////////////////////////////////////////////////////////
