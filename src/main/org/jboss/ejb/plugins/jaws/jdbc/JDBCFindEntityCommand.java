@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.rmi.RemoteException;
 
 import javax.ejb.FinderException;
+import javax.ejb.ObjectNotFoundException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JPMFindEntityCommand;
@@ -28,7 +29,7 @@ import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCFindEntityCommand implements JPMFindEntityCommand
 {
@@ -64,7 +65,7 @@ public class JDBCFindEntityCommand implements JPMFindEntityCommand
          
          if (result.size() == 0)
          {
-            throw new FinderException("No such entity!");
+            throw new ObjectNotFoundException("No such entity!");
          } else
          {
             return result.get(0);
