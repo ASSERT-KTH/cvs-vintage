@@ -74,7 +74,7 @@ import org.tigris.scarab.om.MITListManager;
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.9 2003/02/04 11:26:02 jon Exp $
+ * @version $Id: FreshenUserValve.java,v 1.10 2003/02/07 03:18:29 jon Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
@@ -107,8 +107,16 @@ public class FreshenUserValve
         throws IOException, TurbineException
     {
         ScarabUser user = (ScarabUser)data.getUser();
-        setCurrentModule(user, data);
-        setCurrentIssueType(user, data);
+        try
+        {
+            setCurrentModule(user, data);
+            setCurrentIssueType(user, data);
+        }
+        catch(Exception e)
+        {
+            // Ignore on purpose because if things
+            // are screwed up, we don't need to know about it.
+        }
 
         // set the thread key 
         ParameterParser parameters = data.getParameters();
@@ -175,7 +183,7 @@ public class FreshenUserValve
             {
                 module = ModuleManager.getInstance(new NumberKey(key));
             }
-            catch (TorqueException e)
+            catch (Exception e)
             {
                 throw new TurbineException(e);
             }
@@ -211,7 +219,7 @@ public class FreshenUserValve
             {
                 issueType = IssueTypeManager.getInstance(new NumberKey(key));
             }
-            catch (TorqueException e)
+            catch (Exception e)
             {
                 throw new TurbineException(e);
             }
