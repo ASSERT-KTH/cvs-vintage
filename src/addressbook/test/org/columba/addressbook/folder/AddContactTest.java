@@ -45,7 +45,7 @@ public class AddContactTest extends AbstractFolderTestCase {
 
 		Object uid = getSourceFolder().add(c);
 
-		assertEquals("nextUid", 1, AddressbookTreeNode.getNextFolderUid());
+		assertEquals("nextUid", 1, getSourceFolder().getNextMessageUid());
 
 	}
 
@@ -56,7 +56,7 @@ public class AddContactTest extends AbstractFolderTestCase {
 
 		Object uid = getSourceFolder().add(c);
 
-		assertEquals("nextUid", 2, AddressbookTreeNode.getNextFolderUid());
+		assertEquals("nextUid", 1, getSourceFolder().getNextMessageUid());
 
 		c = new Contact();
 
@@ -64,7 +64,7 @@ public class AddContactTest extends AbstractFolderTestCase {
 
 		uid = getSourceFolder().add(c);
 
-		assertEquals("nextUid", 3, AddressbookTreeNode.getNextFolderUid());
+		assertEquals("nextUid", 2, getSourceFolder().getNextMessageUid());
 
 		c = new Contact();
 
@@ -72,7 +72,7 @@ public class AddContactTest extends AbstractFolderTestCase {
 
 		uid = getSourceFolder().add(c);
 
-		assertEquals("nextUid", 4, AddressbookTreeNode.getNextFolderUid());
+		assertEquals("nextUid", 3, getSourceFolder().getNextMessageUid());
 
 	}
 
