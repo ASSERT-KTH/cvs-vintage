@@ -386,7 +386,7 @@ public class RequestImpl  implements Request {
 	String checkRoles[]=new String[1];
 	checkRoles[0]=role;
 	int status=contextM.doAuthorize(this, response, checkRoles);
-	return status==200;
+	return status==0;
     }
 
     public String getServletPath() {

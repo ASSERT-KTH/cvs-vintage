@@ -5,10 +5,12 @@
          work  -->
     <property name="ant.home" value="../jakarta-ant" />
     <property name="build.compiler" value="classic"/>
-    <property name="servlet.jar" value="../jakarta-servletapi/lib/servlet.jar"/>
+    <property name="servlet.jar" 
+              value="../jakarta-servletapi/lib/servlet.jar"/>
     <property name="tomcat.build" value="../build/tomcat"/>
     <property name="tomcat.home" value="../dist/tomcat"/>
     <property name="j2ee.home" value="../../j2ee/build/unix"/>
+    <property name="optimize" value="true" />
   </target>
 
   <!-- ==================== Copy static files ==================== -->
@@ -33,12 +35,14 @@
     <copyfile src="build.xml" dest="${tomcat.build}/conf/build.xml"/>
     <mkdir dir="${tomcat.build}/lib/test"/>
     <mkdir dir="${tomcat.build}/lib/test/Golden"/>
-    <copydir src="src/tests/share/tests/jsp/Golden" dest="${tomcat.build}/lib/test/Golden"/>
+    <copydir src="src/tests/share/tests/jsp/Golden" 
+             dest="${tomcat.build}/lib/test/Golden"/>
 
     <!-- include ant, it is used for testing and will be used for
          configuration and few other tasks -->
     <copydir src="${ant.home}/bin" dest="${tomcat.build}/bin"/>
-    <copyfile src="${ant.home}/lib/ant.jar" dest="${tomcat.build}/lib/ant.jar"/>
+    <copyfile src="${ant.home}/lib/ant.jar" 
+              dest="${tomcat.build}/lib/ant.jar"/>
     <copyfile src="${servlet.jar}" dest="${tomcat.build}/lib/servlet.jar"/>
     <copyfile src="LICENSE" dest="${tomcat.build}/LICENSE"/>
 
@@ -63,6 +67,7 @@
     <javac srcdir="src/share" destdir="${tomcat.build}/classes"
            classpath="${servlet.jar}" 
            debug="on" 
+           optimize="${optimize}"
            deprecation="off" >
            <exclude name="**/Jdk12Interceptor.java" 
                     unless="jdk12.present"/>
@@ -89,6 +94,7 @@
   <!-- Build J2EE integration code -->
   <target name="j2ee" depends="tomcat">
       <javac srcdir="src/j2ee" 
+          optimize="${optimize}"
           destdir="${tomcat.build}/classes"
           classpath="${servlet.jar};${j2ee.home}/lib/classes;${j2ee.home}/lib/j2ee.jar" 
           debug="on" />
@@ -104,15 +110,18 @@
     <mkdir dir="${tomcat.build}/webapps/examples"/>
     <copydir src="src/examples" dest="${tomcat.build}/webapps/examples"/>
     <javac srcdir="src/examples/WEB-INF/classes"
+           optimize="${optimize}"
            destdir="${tomcat.build}/webapps/examples/WEB-INF/classes"
            classpath="${tomcat.build}/classes;${servlet.jar}"/>
     <javac srcdir="src/examples/jsp/plugin/applet"
+           optimize="${optimize}"
            destdir="${tomcat.build}/webapps/examples/jsp/plugin/applet"/>
 
     <!-- Root context -->
     <mkdir dir="${tomcat.build}/webapps/ROOT"/>
     <copydir src="src/webpages" dest="${tomcat.build}/webapps/ROOT"/>
     <javac srcdir="src/webpages/WEB-INF/classes"
+           optimize="${optimize}"
            destdir="${tomcat.build}/webapps/ROOT/WEB-INF/classes"
            classpath="${tomcat.build}/classes;${servlet.jar}"/>
 
@@ -120,6 +129,7 @@
     <mkdir dir="${tomcat.build}/webapps/admin"/>
     <copydir src="src/admin" dest="${tomcat.build}/webapps/admin"/>
     <javac srcdir="src/admin/WEB-INF/classes"
+           optimize="${optimize}"
            destdir="${tomcat.build}/webapps/admin/WEB-INF/classes"
            classpath="${tomcat.build}/classes;${servlet.jar}"/>
 
@@ -127,12 +137,13 @@
     <mkdir dir="${tomcat.build}/webapps/test"/>
     <copydir src="src/tests/webpages" dest="${tomcat.build}/webapps/test"/>
     <javac srcdir="src/tests/webpages/WEB-INF/classes"
+           optimize="${optimize}"
            destdir="${tomcat.build}/webapps/test/WEB-INF/classes"
            classpath="${tomcat.build}/classes;${servlet.jar}"/>
   </target>
 
 
-  <!-- ==================== Copy the files to distribution format ==================== -->
+  <!-- ==================== Copy the files to distribution format ======== -->
   <target name="dist" depends="main,webapps">
 
     <mkdir dir="${tomcat.home}"/>
@@ -141,8 +152,13 @@
 
     <!-- create tomcat jar files -->
     <jar jarfile="${tomcat.home}/lib/webserver.jar"
-         basedir="${tomcat.home}/classes"
-         includes="org/apache/tomcat/**"/> 
+         basedir="${tomcat.build}/classes" >
+         <include name="org/apache/tomcat/**" />
+         <exclude name="org/apache/tomcat/deployment/**" />
+         <exclude name="org/apache/tomcat/j2ee/**" />
+         <exclude name="org/apache/tomcat/util/XMLParser.class" />
+         <exclude name="org/apache/tomcat/util/XMLTree.class" />
+    </jar> 
     <jar jarfile="${tomcat.home}/lib/jasper.jar"
          basedir="${tomcat.home}/classes"
          includes="org/apache/jasper/**"/>
@@ -192,12 +208,22 @@
     <chmod perm="+x" src="${tomcat.home}/bin/shutdown.sh"/>
     <chmod perm="+x" src="${tomcat.home}/bin/test-tomcat.sh"/>
   </target>
- 
+
+  <target name="j2ee-dist" depends="j2ee"> 
+    <jar jarfile="${tomcat.home}/lib/tomcat-j2ee.jar"
+         basedir="${tomcat.build}/classes" >
+         <include name="org/apache/tomcat/deployment/**" />
+         <include name="org/apache/tomcat/j2ee/**" />
+         <include name="org/apache/tomcat/util/XMLParser.class" />
+         <include name="org/apache/tomcat/util/XMLTree.class" />
+    </jar> 
+  </target>
   <!-- =================================================================== -->
   <!-- Packages the distribution with ZIP                                  -->
   <!-- =================================================================== -->
   <target name="dist-zip" depends="dist">
-    <zip zipfile="${Name}-${version}.zip" basedir="${tomcat.home}" includes="**"/>
+    <zip zipfile="${Name}-${version}.zip" basedir="${tomcat.home}" 
+         includes="**"/>
   </target>
 
   

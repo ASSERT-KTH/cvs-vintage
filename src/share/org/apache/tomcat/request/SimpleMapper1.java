@@ -402,8 +402,8 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    // For exact matching - can't have path info ( or it's 
 	    // a prefix map )
 	    //path.substring( ctxPLen + sLen , pathLen);
-	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
-	    if( debug>0 ) log( "Adjust for path map " + s + " " + pathI + container.getPath());
+	    if( debug>0 ) log( "Adjust for path map " +
+			       s + " " + pathI + container.getPath());
 	    break; // keep the path
 	case Container.EXTENSION_MAP:
 	    /*  adjust paths */

@@ -152,20 +152,20 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	    String cpath=ctx.getPath();
 	    
 	    // Workaround for common error - ctx path included
-	    if( ! page.startsWith( cpath ) )
-		page= cpath + page;
-	    else
-		if( ! "/".equals(cpath))
+	    if( page.startsWith( cpath ) ) {
+		if( ! ("".equals(cpath) || "/".equals(cpath)) )
 		    ctx.log("FORM: WARNING, login page starts with " +
-			    "context path " + page);
-	    
+			    "context path " + page + " " + cpath );
+	    } else
+		page= cpath + page;
 
-	    if( ! errorPage.startsWith( cpath ) )
-		errorPage= cpath + errorPage;
-	    else
-		if( ! "/".equals(cpath))
+
+	    if( errorPage.startsWith( cpath ) ) {
+		if( ! ("/".equals(cpath) || "".equals( cpath )) )
 		    ctx.log("FORM: WARNING, error page starts with " +
 			    "context path " + errorPage);
+	    } else
+		errorPage= cpath + errorPage;
 
 	    // Adjust login and error paths - avoid computations in handlers
 	    ctx.setFormLoginPage( page );
