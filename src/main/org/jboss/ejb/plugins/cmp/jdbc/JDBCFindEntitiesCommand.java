@@ -39,7 +39,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
    private final Map knownFinderCommands = new HashMap();
@@ -64,7 +64,7 @@ public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
       for (int i = 0; i < customMethods.length; i++) {
          Method m = customMethods[i];
          String  methodName = m.getName();
-         if(methodName.startsWith("ejbFindBy")) {
+         if(methodName.startsWith("ejbFind")) {
             String interfaceName = "f" +  methodName.substring(4);
 
             if(homeClass != null) {
