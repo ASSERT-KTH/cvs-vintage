@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.50 2004/08/06 20:04:52 mvw Exp $
+// $Id: UMLActivityDiagram.java,v 1.51 2004/08/10 19:31:14 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,10 +54,7 @@ import org.tigris.gef.base.ModeCreatePolyEdge;
  * valuable as well.<p>
  */
 public class UMLActivityDiagram extends UMLDiagram {
-    /**
-     * @deprecated by Linus Tolke as of 0.15.4. Use your own logger in your
-     * class. This will be removed.
-     */
+
     private static final Logger LOG = Logger.
                                     getLogger(UMLActivityDiagram.class);
 
