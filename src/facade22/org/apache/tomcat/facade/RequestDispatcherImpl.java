@@ -233,11 +233,19 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	// merge query string as specified in specs - before, it may affect
 	// the way the request is handled by special interceptors
 	if( queryString != null ) {
-	    realRequest.queryString().setString(queryString);
-	    // Append queryString to the request parameters -
-	    // the original request is changed.
+	    // Process existing parameters, if not already done so
+	    // ( otherwise we'll process some twice )
+	    realRequest.parameters().handleQueryParameters();
+	    // Set the query string - the sum of the old one and new one.
+	    String oldQS=realRequest.queryString().toString();
+	    String newQS=(oldQS==null ) ? queryString : oldQS + "&" +
+		queryString;
+	    realRequest.queryString().setString(newQS);
+
+	    // Process the additional parsm. We don't know if the old
+	    // params were processed ( so we need to make sure they are,
+	    // i.e. a known state ).
 	    realRequest.parameters().processParameters( queryString ); 
-	    //	    addQueryString( realRequest, queryString );
 	}
 	
 	// run the new request through the context manager
