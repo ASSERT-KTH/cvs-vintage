@@ -5,10 +5,12 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: ServiceObjectFactory.java,v 1.1 2004/04/27 15:55:43 tdiesler Exp $
+// $Id: ServiceObjectFactory.java,v 1.2 2004/04/30 07:40:51 tdiesler Exp $
 package org.jboss.webservice;
 
-// $Id: ServiceObjectFactory.java,v 1.1 2004/04/27 15:55:43 tdiesler Exp $
+// $Id: ServiceObjectFactory.java,v 1.2 2004/04/30 07:40:51 tdiesler Exp $
+
+import org.jboss.logging.Logger;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -19,6 +21,7 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.ServiceException;
 import javax.xml.rpc.Service;
 import java.io.InputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Hashtable;
@@ -34,6 +37,9 @@ import java.util.Hashtable;
  */
 public class ServiceObjectFactory implements ObjectFactory
 {
+   // provide logging
+   private static final Logger log = Logger.getLogger(ServiceObjectFactory.class);
+
    /**
     * Creates an object using the location or reference information specified.
     * <p>
@@ -69,10 +75,10 @@ public class ServiceObjectFactory implements ObjectFactory
          QName serviceName = new QName(namespace, localpart);
 
          // construct the service from a URL to a WSDL document
+         URL wsdlUrl = null;
          if (ref.get(ServiceReferenceable.WSDL_OVERRIDE_URL) != null)
          {
-            URL wsdlUrl = new URL((String) ref.get(ServiceReferenceable.WSDL_OVERRIDE_URL).getContent());
-            jaxrpcService = new JaxRpcClientService(wsdlUrl, serviceName);
+            wsdlUrl = new URL((String) ref.get(ServiceReferenceable.WSDL_OVERRIDE_URL).getContent());
          }
          else
          {
@@ -83,9 +89,15 @@ public class ServiceObjectFactory implements ObjectFactory
             // create the service
             ClassLoader contextCL = Thread.currentThread().getContextClassLoader();
             URLClassLoader localCl = new URLClassLoader(new URL[]{deployment}, contextCL);
-            InputStream wsdlInputStream = localCl.getResourceAsStream(wsdlFile);
-            jaxrpcService = new JaxRpcClientService(wsdlInputStream, serviceName);
+            wsdlUrl = localCl.getResource(wsdlFile);
          }
+
+         log.debug("javax.rpc.xml.Service [serviceName=" + serviceName + ",url=" + wsdlUrl + "]");
+         InputStream wsdlInputStream = wsdlUrl.openStream();
+         if (wsdlInputStream == null)
+            throw new IOException("Cannot access WSDL at: " + wsdlUrl);
+
+         jaxrpcService = new JaxRpcClientService(wsdlInputStream, serviceName);
       }
 
       if (jaxrpcService == null)
