@@ -8,16 +8,14 @@ package org.jboss.metadata;
 
 import java.net.URL;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.InputStreamReader;
 import java.io.InputStream;
 import java.util.Hashtable;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
+import org.dom4j.io.DOMReader;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -40,7 +38,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  *
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  *
  * Revisions:
  *
@@ -71,6 +69,15 @@ public class XmlFileLoader
       defaultValidateDTDs = validate;
    }
 
+   /** A utility method to convert a W3C DOM document into a dom4j document
+    * @param a org.w3c.dom.Document
+    * @return org.dom4j.Document
+    */ 
+   public static org.dom4j.Document convertDoc(org.w3c.dom.Document domDocument)
+   {
+      DOMReader xmlReader = new DOMReader();
+      return xmlReader.read(domDocument);
+   }
 
    // Constructors --------------------------------------------------
    public XmlFileLoader()
