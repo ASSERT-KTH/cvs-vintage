@@ -1090,6 +1090,10 @@ public class ContextManager {
 	else
 	    ri=req.getContext().getContainer().
 		getInterceptors( Container.H_handleError );
+	if( ri==null ) {
+	    log( "handleError with no error handlers " + req + " " + req.getContext());
+	    return;
+	}
 	for( int i=0; i< ri.length; i++ ) {
 	    status=ri[i].handleError( req, res, t );
 	    if( status!=0 ) return;

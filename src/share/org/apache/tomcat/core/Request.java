@@ -72,6 +72,7 @@ import org.apache.tomcat.util.buf.*;
 
 import java.security.Principal;
 import java.io.IOException;
+import java.io.CharConversionException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -430,6 +431,10 @@ public class Request {
 		handleQueryParameters();
 
 		params.processParameters( formData, 0, available );
+	    } catch(java.io.CharConversionException cex ) {
+		contextM.log("CharConversionException processing parameters: "
+			     + this + " "  + cex.toString());
+		
 	    } catch(IOException ex ) {
 		ex.printStackTrace();
 		// XXX should we throw exception or log ?
