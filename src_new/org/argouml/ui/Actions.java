@@ -1,4 +1,4 @@
-// $Id: Actions.java,v 1.62 2003/10/11 11:17:41 alexb Exp $
+// $Id: Actions.java,v 1.63 2003/11/30 22:05:41 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,6 +38,7 @@ import javax.swing.JPanel;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.Poster;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.cognitive.ToDoList;
 import org.argouml.cognitive.critics.ui.CriticBrowserDialog;
 import org.argouml.cognitive.ui.*;
 import org.argouml.kernel.Project;
@@ -421,10 +422,18 @@ class ActionAutoCritique extends UMLAction {
 	super("action.toggle-auto-critique", NO_ICON);
     }
 
+    /**
+     * Stops critiquing and the TodoList validity checking thread in ToDoList.
+     */
     public void actionPerformed(ActionEvent ae) {
+        
+        // stop/start creating more critics
 	Designer d = Designer.TheDesigner;
 	boolean b = d.getAutoCritique();
 	d.setAutoCritique(!b);
+        
+        // stop/start cleaning up invalid TodoItems.
+        ToDoList.getInstance().setPaused(!ToDoList.getInstance().isPaused());
     }
 
 } /* end class ActionAutoCritique */
