@@ -20,6 +20,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.gui.table.TableChangedEvent;
 
 /**
  * @author frd
@@ -30,6 +31,7 @@ import org.columba.mail.folder.imap.IMAPRootFolder;
 public class CheckForNewMessagesCommand extends FolderCommand {
 
 	FolderCommandAdapter adapter;
+	IMAPFolder inboxFolder;
 
 	/**
 	 * @param references
@@ -63,7 +65,7 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 
 		boolean newMessages = false;
 
-		IMAPFolder inboxFolder = (IMAPFolder) srcFolder.getChild("Inbox");
+		inboxFolder = (IMAPFolder) srcFolder.getChild("Inbox");
 		
 		int recent = inboxFolder.getMessageFolderInfo().getRecent();
 		
@@ -97,6 +99,14 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 			}
 		}
 
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.command.Command#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+		TableChangedEvent ev =
+			new TableChangedEvent(TableChangedEvent.UPDATE, inboxFolder);
 	}
 
 }
