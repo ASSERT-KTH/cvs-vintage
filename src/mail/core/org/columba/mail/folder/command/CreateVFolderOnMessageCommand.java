@@ -23,7 +23,6 @@ import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.logging.ColumbaLogger;
-
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterCriteria;
@@ -31,9 +30,8 @@ import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.virtual.VirtualFolder;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.config.filter.ConfigFrame;
 import org.columba.mail.main.MailInterface;
-
 import org.columba.ristretto.message.Header;
 
 
@@ -89,7 +87,8 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
         MailInterface.treeModel.nodeStructureChanged(parentFolder);
 
         if (vfolder != null) {
-            vfolder.showFilterDialog((AbstractMailFrameController) getFrameMediator());
+            //vfolder.showFilterDialog((AbstractMailFrameController) getFrameMediator());
+            new ConfigFrame(vfolder);
         }
     }
 

@@ -40,6 +40,7 @@ public abstract class RemoteFolder extends Folder {
     public RemoteFolder(FolderItem item, String path) {
         super(item, path);
 
+        // TODO: move this to Folder constructor
         XmlElement filterListElement = node.getElement(FilterList.XML_NAME);
 
         if (filterListElement == null) {

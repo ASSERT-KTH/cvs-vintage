@@ -25,6 +25,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.HeaderListStorage;
 import org.columba.mail.folder.MailboxInterface;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
@@ -399,5 +400,12 @@ public class TempFolder extends Folder {
      */
     public Object addMessage(InputStream in) throws Exception {
         return addMessage(in, null);
+    }
+    /**
+     * @see org.columba.mail.folder.Folder#getHeaderListStorage()
+     */
+    public HeaderListStorage getHeaderListStorage() {
+        
+        return null;
     }
 }

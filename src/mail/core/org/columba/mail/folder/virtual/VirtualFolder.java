@@ -17,12 +17,19 @@
 //All Rights Reserved.
 package org.columba.mail.folder.virtual;
 
-import org.columba.addressbook.config.AdapterNode;
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Vector;
 
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+
+import org.columba.addressbook.config.AdapterNode;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
@@ -30,6 +37,7 @@ import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.HeaderListStorage;
 import org.columba.mail.folder.MailboxInterface;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.gui.config.search.SearchFrame;
@@ -38,22 +46,11 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
-
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
-
-import java.io.InputStream;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 
 
 public class VirtualFolder extends Folder {
@@ -730,6 +727,20 @@ public class VirtualFolder extends Folder {
  */
     public Object addMessage(InputStream in, Attributes attributes)
         throws Exception {
+        return null;
+    }
+    /**
+     * @see org.columba.mail.folder.Folder#getHeaderListStorage()
+     */
+    public HeaderListStorage getHeaderListStorage() {
+       
+        return null;
+    }
+    /**
+     * @see org.columba.mail.folder.Folder#getSearchEngineInstance()
+     */
+    public DefaultSearchEngine getSearchEngineInstance() {
+       
         return null;
     }
 }

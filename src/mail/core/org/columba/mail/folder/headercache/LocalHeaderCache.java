@@ -54,7 +54,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
     private final int WEEK = 1000 * 60 * 60 * 24 * 7;
     private boolean configurationChanged;
 
-    public LocalHeaderCache(CachedFolder folder) {
+    public LocalHeaderCache(LocalFolder folder) {
         super(folder);
 
         configurationChanged = false;

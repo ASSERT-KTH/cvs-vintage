@@ -17,22 +17,20 @@
 //All Rights Reserved.
 package org.columba.mail.folder.outbox;
 
+import java.io.InputStream;
+import java.util.List;
+
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.headercache.AbstractHeaderCache;
-import org.columba.mail.folder.headercache.CachedFolder;
 import org.columba.mail.folder.headercache.LocalHeaderCache;
 import org.columba.mail.folder.mh.CachedMHFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.SendableHeader;
-
 import org.columba.ristretto.message.Attributes;
-
-import java.io.InputStream;
-
-import java.util.List;
 
 
 /**
@@ -60,11 +58,11 @@ public class OutboxFolder extends CachedMHFolder {
     }
 
     public AbstractHeaderCache getHeaderCacheInstance() {
-        if (headerCache == null) {
-            headerCache = new OutboxHeaderCache(this);
+        if (cache == null) {
+            cache = new OutboxHeaderCache(this);
         }
 
-        return headerCache;
+        return cache;
     }
 
     public SendableMessage getSendableMessage(Object uid)
@@ -146,7 +144,7 @@ public class OutboxFolder extends CachedMHFolder {
     }
 
     class OutboxHeaderCache extends LocalHeaderCache {
-        public OutboxHeaderCache(CachedFolder folder) {
+        public OutboxHeaderCache(LocalFolder folder) {
             super(folder);
         }
 

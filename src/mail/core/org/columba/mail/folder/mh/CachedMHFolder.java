@@ -17,7 +17,11 @@ package org.columba.mail.folder.mh;
 
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.DataStorageInterface;
-import org.columba.mail.folder.headercache.CachedFolder;
+import org.columba.mail.folder.HeaderListStorage;
+import org.columba.mail.folder.LocalFolder;
+import org.columba.mail.folder.headercache.LocalHeaderListStorage;
+import org.columba.mail.folder.search.DefaultSearchEngine;
+import org.columba.mail.folder.search.LuceneQueryEngine;
 
 
 /**
@@ -28,7 +32,7 @@ import org.columba.mail.folder.headercache.CachedFolder;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class CachedMHFolder extends CachedFolder {
+public class CachedMHFolder extends LocalFolder {
     public CachedMHFolder(FolderItem item, String path) {
         super(item, path);
     }
@@ -50,5 +54,36 @@ public class CachedMHFolder extends CachedFolder {
         }
 
         return dataStorage;
+    }
+
+    /**
+     * @see org.columba.mail.folder.Folder#getHeaderListStorage()
+     */
+    public HeaderListStorage getHeaderListStorage() {
+        if (headerListStorage == null) {
+            headerListStorage = new LocalHeaderListStorage(this);
+        }
+
+        return headerListStorage;
+    }
+
+    /** ******************** searching/filtering ********************** */
+    /**
+     * @return instance of search-engine implementation
+     */
+    public DefaultSearchEngine getSearchEngineInstance() {
+        // only use lucene backend if specified in tree.xml
+        if (searchEngine == null) {
+            boolean enableLucene = getFolderItem().getBoolean("property",
+                    "enable_lucene", false);
+
+            searchEngine = new DefaultSearchEngine(this);
+
+            if (enableLucene) {
+                searchEngine.setNonDefaultEngine(new LuceneQueryEngine(this));
+            }
+        }
+
+        return searchEngine;
     }
 }
