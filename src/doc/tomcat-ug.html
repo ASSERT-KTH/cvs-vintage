@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <!-- $Id: tomcat-ug.html,v 1.23 2001/12/31 23:43:28 larryi Exp $ -->
+    <!-- $Id: tomcat-ug.html,v 1.24 2002/03/12 04:14:49 larryi Exp $ -->
     <!-- Copyright 1999-2001 Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -642,9 +642,27 @@ task as an argument.</p>
   <tr><td>&nbsp;</td><td>ajpid&nbsp;<i>&lt;file&gt;</i><br>
       or<br>secretFile&nbsp;<i>&lt;file&gt;</i></td>
     <td>Specify the defaults file written by the
-      <a href="serverxml.html#Ajp12Connector">Ajp12Connector</a> module.  It
+      <a href="serverxml.html#Ajp12Connector">Ajp12Connector</a> or
+      <a href="serverxml.html#Ajp13Connector">Ajp13Connector</a> module. It
       contains default values for <code>port</code>, <code>host</code>, and
-      <code>pass</code> arguments.  The default value is TOMCAT_HOME/conf/ajp12.id.</td></tr>
+      <code>pass</code> arguments.  The default value is
+      <code>TOMCAT_HOME/conf/ajp12.id</code> or <code>TOMCAT_HOME/conf/ajp13.id</code>
+      if <code>ajp12</code> or <code>ajp13</code> is specified, respectively.
+      If neither <code>ajp12</code> or <code>ajp13</code> is specified, the
+      ajpid file defaults first to <code>TOMCAT_HOME/conf/ajp13.id</code>, and
+      if not found, defaults to <code>TOMCAT_HOME/conf/ajp12.id</code>.</td></tr>
+  <tr><td>&nbsp;</td><td>ajp12</td><td>Specifies that the ajp12 protocol should
+      be used for shutdown. It implies the format of the ajpid file as that
+      written by the Ajp12Connector.</td></tr>
+  <tr><td>&nbsp;</td><td>ajp13</td><td>Specifies that the ajp13 protocol should
+      be used for shutdown. It implies the format of the ajpid file as that
+      written by the Ajp13Connector.</td></tr>
+  <tr><td>&nbsp;</td><td>ajpid12&nbsp;<i>&lt;file&gt;</i><br><b>[Tomcat 3.3.1]</b></td>
+    <td>Equivalent to specifying <code>ajpid&nbsp;<i>&lt;file&gt;</i></code>
+      and <code>ajp12</code>.</td></tr>
+  <tr><td>&nbsp;</td><td>ajpid13&nbsp;<i>&lt;file&gt;</i><br><b>[Tomcat 3.3.1]</b></td>
+    <td>Equivalent to specifying <code>ajpid&nbsp;<i>&lt;file&gt;</i></code>
+      and <code>ajp13</code>.</td></tr>
   <tr><td>&nbsp;</td><td>help</td><td>Display usage information.</td></tr>
   <tr><td>&nbsp;</td><td>home&nbsp;<i>&lt;dir&gt;</i><br>
       or<br>h&nbsp;<i>&lt;dir&gt;</i></td>
@@ -678,6 +696,38 @@ task as an argument.</p>
   <tr><td>jspc</td><td>&nbsp;</td>
     <td>Pre-compiles JSP pages using the org.apache.tomcat.startup.Jspc class.</td></tr>
   <tr><td>&nbsp;</td><td>&nbsp;</td><td><i>arguments not yet documented</i></td></tr>
+</table>
+
+<p>The <code>start</code>, <code>run</code>, and <code>estart</code> tasks
+assume a command line argument that doesn't match one of the predefined
+arguments is a ContextManager property name and the next command line argument
+is its value.  Thus a command such as:</p>
+
+<pre>bin/startup.sh myprop myvalue</pre>
+
+<p>would define a ContextManager property named &quot;myprop&quot; with a
+String value of &quot;myvalue&quot;.  ContextManager properties can used for
+parameter substitution in the <code>server.xml</code> file.  Set the
+<a href="serverxml.html#substitution">Variable substitution</a> section of
+the Server.xml document for details.  There are also some ContextManager
+properties supported by certain modules.  These are listed in the following
+table.</p>
+
+<table border="1">
+  <tr><th bgcolor="#c0c0c0">Module</th>
+    <th bgcolor="#c0c0c0">Context Property</th>
+    <th bgcolor="#c0c0c0">Description</th></tr>
+  <tr><td><a href="serverxml.html#Ajp12Connector">Ajp12Connector</a></td>
+    <td>ajpid12</td>
+    <td>Overrides the <code>ajpidFile</code> attribute to specify the file
+      in which to record Ajp12 connector info and password.</td></tr>
+  <tr><td><a href="serverxml.html#Ajp13Connector">Ajp13Connector</a></td>
+    <td>ajpid13</td>
+    <td>Overrides the <code>ajpidFile</code> attribute to specify the file
+      in which to record Ajp13 connector info and password.</td></tr>
+  <tr><td><a href="serverxml.html#LoaderInterceptor11">LoaderInterceptor11</a></td>
+    <td>additionalJars</td>
+    <td>List of jars to be added to each web application.</td></tr>
 </table>
 
 <p></p>

@@ -4,7 +4,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <!-- $Id: serverxml.html,v 1.21 2002/02/24 03:47:16 larryi Exp $ -->
+  <!-- $Id: serverxml.html,v 1.22 2002/03/12 04:14:49 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
   <link rel="stylesheet" href="style.css">
@@ -444,7 +444,10 @@ shutting down Tomcat.</p>
   </tr>
   <tr valign="top">
     <td>ajpidFile</td>
-    <td>File in which to record Ajp12 connector info and password.</td>
+    <td>File in which to record Ajp12 connector info and password. In
+      Tomcat 3.3.1 this setting can be overridden by a ContextManager property
+      named &quot;ajpid12&quot;.  Such a property would normally be set using
+      command line arguments.</td>
     <td>conf/ajp12.id</td>
   </tr>
   <tr valign="top">
@@ -544,7 +547,7 @@ based web server connectors.</p>
 
 <p>In Tomcat 3.3.1, some attributes were added for supporting password protected
 shutdown using Ajp13. This feature is actived by setting the
-<code>shutDownEnabled</code> to <code>true</code>, or setting a password using
+<code>shutdownEnable</code> to <code>true</code>, or setting a password using
 the <code>secret</code> or <code>useSecret</code> attributes. Also, if a
 password is set, authentication of Ajp13 connections can also be performed.
 This feature requires the <code>authenticateRequests</code> attribute be set
@@ -563,7 +566,10 @@ available through the jakarta-tomcat-connectors project.</p>
   </tr>
   <tr valign="top">
     <td>ajpidFile<br><b>[Tomcat 3.3.1]</td>
-    <td>File in which to record Ajp13 connector info and password.</td>
+    <td>File in which to record Ajp13 connector info and password.  This
+      setting can be overridden by a ContextManager property named
+      &quot;ajpid13&quot;.  Such a property would normally be set using a
+      command line argument.</td>
     <td>conf/ajp13.id</td>
   </tr>
   <tr valign="top">
@@ -590,7 +596,9 @@ available through the jakarta-tomcat-connectors project.</p>
     <td><i>not specified</i></td>
   </tr>
   <tr valign="top">
-    <td>shutDownEnable</td>
+    <td>shutDownEnable<br>
+        <br>
+        shutdownEnable<br><b>[Tomcat 3.3.1]</b></td>
     <td>Enable shutdown signal via this connector.  This attribute is
         automatically set <code>true</code> if a password is set using the
         <code>secret</code> or <code>useSecret</code> attributes.</td>
@@ -1861,8 +1869,9 @@ as IBM's <code>Jikes</code> Java compiler.</p>
   </tr>
   <tr valign="top">
     <td></td>
-    <td><b>Options for Jasper JSP servlet</b> - These are not used if
-      <code>useJspServlet</code> is <code>false</code>.</td>
+    <td><b>Options for Jasper JSP servlet</b> - The attributes other than
+      <code>useJspServlet</code> are ignored if <code>useJspServlet</code>
+      is <code>false</code>.</td>
     <td></td>
   </tr>
   <tr valign="top">
