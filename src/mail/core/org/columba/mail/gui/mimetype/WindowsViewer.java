@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.OSInfo;
 import org.columba.mail.message.MimeHeader;
 
@@ -103,18 +104,20 @@ public class WindowsViewer extends AbstractViewer {
 				 * Changing cmd line from "cmd.exe /C ..." to "cmd.exe /C start ..."
 				 * So program execution is not blocked until viewer terminates.
 				 * NB: WinNT, Win95, Win98, WinME not considered (not able to try it out)
+				 * 
+				 * *20030713, karlpeder* fixing bug #763211 by moving first " in filename
+				 * and adding extra parameter to the "start" command = title of
+				 * dos window (which is not shown here - but is necessary).
 				 */
 				
-				String[] cmd = new String[4]; //new String[3];
-				cmd[0] = "cmd.exe";
-				cmd[1] = "/C";
-				cmd[2] = "start";
-				cmd[3] = //cmd[2] =
-					filename.charAt(0) + "\"" + filename.substring(1) + "\"";
+				String[] cmd = new String[] {
+						"cmd.exe", "/C", "start", "\"dummy\"", "\"" + filename + "\""
+						};
 
 				Runtime rt = Runtime.getRuntime();
-				System.out.println("Executing " + 
-						cmd[0] + " " + cmd[1] + " " + cmd[2] + " " + cmd[3]);
+				ColumbaLogger.log.info("Executing " + 
+						cmd[0] + " " + cmd[1] + " " + cmd[2] + " " + 
+						cmd[3] + " " + cmd[4]);
 				proc = rt.exec(cmd);
 			}
                         
