@@ -1,4 +1,4 @@
-// $Id: PropPanelStateVertex.java,v 1.17 2004/08/02 21:35:42 mvw Exp $
+// $Id: PropPanelStateVertex.java,v 1.18 2004/08/11 18:33:39 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,10 @@ import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 
+/**
+ * The properties tab panel for StateVertex and family.
+ *
+ */
 public abstract class PropPanelStateVertex extends PropPanelModelElement {
 
     ////////////////////////////////////////////////////////////////
@@ -81,7 +85,7 @@ public abstract class PropPanelStateVertex extends PropPanelModelElement {
     protected static ImageIcon _callStateIcon = ResourceLoaderWrapper
             .lookupIconResource("CallState");
     
-    protected static ImageIcon _objectFlowStateIcon = ResourceLoaderWrapper
+    protected static ImageIcon objectFlowStateIcon = ResourceLoaderWrapper
             .lookupIconResource("ObjectFlowState");
     
     protected static ImageIcon _subactivityStateIcon = ResourceLoaderWrapper
@@ -101,9 +105,9 @@ public abstract class PropPanelStateVertex extends PropPanelModelElement {
     /**
      * Constructor for PropPanelStateVertex.
      * 
-     * @param name
-     * @param icon
-     * @param orientation
+     * @param name the name of the tabpanel shown at the top
+     * @param icon the icon of the tabpanel shown at the top
+     * @param orientation the orientation
      */
     public PropPanelStateVertex(String name, ImageIcon icon,
             Orientation orientation) {
