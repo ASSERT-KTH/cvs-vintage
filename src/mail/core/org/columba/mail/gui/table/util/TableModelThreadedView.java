@@ -52,12 +52,10 @@ public class TableModelThreadedView extends TableModelPlugin {
 		collator = Collator.getInstance();
 	}
 
-	public void toggleView() {
-		boolean result = isEnabled();
-		if (result)
-			setEnabled(false);
-		else
-			setEnabled(true);
+	public void toggleView( boolean b ) {
+		
+		setEnabled(b);
+		
 
 		getHeaderTableModel().update();
 	}

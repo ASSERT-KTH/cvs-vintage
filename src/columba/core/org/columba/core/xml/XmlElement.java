@@ -25,6 +25,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Log: XmlElement.java,v $
+// Revision 1.2  2003/01/06 20:47:50  fdietz
+// [intern]added default values to config-methods, added enable_threaded_view property for folders
+//
 // Revision 1.1  2002/12/29 17:44:37  fdietz
 // [intern]source tree cleanup
 //
@@ -125,6 +128,16 @@ public class XmlElement {
 	 */
 	public String getAttribute(String Name) {
 		return ((String) Attributes.get(Name));
+	}
+	
+	public String getAttribute(String name, String defaultValue)
+	{
+		if ( getAttribute(name) == null )
+		{
+			addAttribute(name, defaultValue);
+		}
+	
+		return getAttribute(name);
 	}
 	/**
 	 * **FIXME** This function needs documentation

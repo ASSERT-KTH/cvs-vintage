@@ -716,7 +716,7 @@ public class HeaderTableActionListener implements ActionListener {
 
 			addSenderAction.setEnabled(false);
 			addAllSendersAction.setEnabled(false);
-			
+
 			viewSourceAction.setEnabled(false);
 			printAction.setEnabled(false);
 
@@ -1176,18 +1176,24 @@ public class HeaderTableActionListener implements ActionListener {
 		} else if (command.equals(addSenderAction.getActionCommand())) {
 
 			FolderCommandReference[] r =
-							(FolderCommandReference[]) tableController
-								.getTableSelectionManager()
-								.getSelection();
-			MainInterface.processor.addOp( new AddSenderToAddressbookCommand(tableController.getMailFrameController(), r) );
-						
+				(FolderCommandReference[]) tableController
+					.getTableSelectionManager()
+					.getSelection();
+			MainInterface.processor.addOp(
+				new AddSenderToAddressbookCommand(
+					tableController.getMailFrameController(),
+					r));
+
 		} else if (command.equals(addAllSendersAction.getActionCommand())) {
 			FolderCommandReference[] r =
-							(FolderCommandReference[]) tableController
-								.getTableSelectionManager()
-								.getSelection();
-			MainInterface.processor.addOp( new AddAllSendersToAddressbookCommand(tableController.getMailFrameController(), r) );
-						
+				(FolderCommandReference[]) tableController
+					.getTableSelectionManager()
+					.getSelection();
+			MainInterface.processor.addOp(
+				new AddAllSendersToAddressbookCommand(
+					tableController.getMailFrameController(),
+					r));
+
 		} else if (command.equals(viewSourceAction.getActionCommand())) {
 
 			FolderCommandReference[] r =
@@ -1213,14 +1219,14 @@ public class HeaderTableActionListener implements ActionListener {
 		}
 		/*
 		  else if (command.equals(filterSubjectAction.getActionCommand())) {
-
+		
 			try {
-
+		
 				Folder folder = getFolder();
 				Object[] uids = getUids();
-
+		
 				for (int i = 0; i < uids.length; i++) {
-
+		
 					HeaderInterface header = folder.getMessageHeader(uids[i]);
 					String pattern =
 						(String) header.get("Subject");
@@ -1231,14 +1237,14 @@ public class HeaderTableActionListener implements ActionListener {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-
+		
 		} else if (command.equals(filterFromAction.getActionCommand())) {
 			try {
 				Folder folder = getFolder();
 				Object[] uids = getUids();
-
+		
 				for (int i = 0; i < uids.length; i++) {
-
+		
 					Message message = folder.getMessage(uids[i]);
 					String pattern = (String) message.getHeader().get("From");
 					AdapterNode parentNode = folder.getNode();
@@ -1247,14 +1253,14 @@ public class HeaderTableActionListener implements ActionListener {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-
+		
 		} else if (command.equals(filterToAction.getActionCommand())) {
 			Folder folder = getFolder();
 			Object[] uids = getUids();
-
+		
 			try {
 				for (int i = 0; i < uids.length; i++) {
-
+		
 					Message message = folder.getMessage(uids[i]);
 					String pattern = (String) message.getHeader().get("To");
 					AdapterNode parentNode = folder.getNode();
@@ -1263,15 +1269,15 @@ public class HeaderTableActionListener implements ActionListener {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-
+		
 		} else if (command.equals(vFolderSubjectAction.getActionCommand())) {
 			Folder folder = getFolder();
 			Object uids[] = getUids();
-
+		
 			try {
 				for (int i = 0; i < uids.length; i++) {
 					Message message = folder.getMessage(uids[i]);
-
+		
 					createVFolder(message, "Subject");
 				}
 			} catch (Exception ex) {
@@ -1280,11 +1286,11 @@ public class HeaderTableActionListener implements ActionListener {
 		} else if (command.equals(vFolderFromAction.getActionCommand())) {
 			Folder folder = getFolder();
 			Object uids[] = getUids();
-
+		
 			try {
 				for (int i = 0; i < uids.length; i++) {
 					Message message = folder.getMessage(uids[i]);
-
+		
 					createVFolder(message, "From");
 				}
 			} catch (Exception ex) {
@@ -1293,29 +1299,42 @@ public class HeaderTableActionListener implements ActionListener {
 		} else if (command.equals(vFolderToAction.getActionCommand())) {
 			Folder folder = getFolder();
 			Object uids[] = getUids();
-
+		
 			try {
 				for (int i = 0; i < uids.length; i++) {
 					Message message = folder.getMessage(uids[i]);
-
+		
 					createVFolder(message, "To");
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-	
+		
 		}*/
-		 else if (command.equals(viewThreadedAction.getActionCommand())) {
+		else if (command.equals(viewThreadedAction.getActionCommand())) {
 
+			boolean isEnabled=false;// = viewThreadedAction.is
+			
+			/*
+			boolean isEnabled =
+				tableController
+					.getHeaderTableModel()
+					.getTableModelThreadedView()
+					.isEnabled();
+			*/
+			
+			/*
 			tableController
 				.getHeaderTableModel()
 				.getTableModelThreadedView()
 				.toggleView();
+			*/
+			
+			Folder folder = (Folder) getFolder();
+			folder.getFolderItem().set("property","enable_threaded_view", isEnabled);
+			
 
-			if (tableController
-				.getHeaderTableModel()
-				.getTableModelThreadedView()
-				.isEnabled())
+			if (isEnabled)
 				tableController.getView().enableThreadedView(true);
 			else
 				tableController.getView().enableThreadedView(false);

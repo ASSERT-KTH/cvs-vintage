@@ -34,23 +34,53 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 	private HeaderList headerList;
 	private Folder folder;
 
-	public ViewHeaderListCommand( FrameController frame, DefaultCommandReference[] references ) {
-		super( frame, references );
-		
+	public ViewHeaderListCommand(
+		FrameController frame,
+		DefaultCommandReference[] references) {
+		super(frame, references);
+
 		priority = Command.REALTIME_PRIORITY;
-		commandType = Command.NO_UNDO_OPERATION;				
+		commandType = Command.NO_UNDO_OPERATION;
 	}
-		
+
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		((MailFrameController)frameController).tableController.getHeaderTableModel().setHeaderList(headerList);
-		
-		((MailFrameController)frameController).tableController.getView().clearSelection();
-		((MailFrameController)frameController).tableController.getActionListener().changeMessageActions();
-		
+		((MailFrameController) frameController)
+			.tableController
+			.getHeaderTableModel()
+			.setHeaderList(headerList);
+
+		boolean enableThreadedView =
+			folder.getFolderItem().getBoolean(
+				"property",
+				"enable_threaded_view",
+				false);
+
+
+		((MailFrameController) frameController)
+			.tableController.getHeaderTableModel().getTableModelThreadedView().toggleView( enableThreadedView );
+			
+			
+		((MailFrameController) frameController)
+			.tableController
+			.getView()
+			.enableThreadedView(enableThreadedView);
+
+		((MailFrameController) frameController)
+			.tableController
+			.getView()
+			.clearSelection();
+		((MailFrameController) frameController)
+			.tableController
+			.getActionListener()
+			.changeMessageActions();
+
 		MainInterface.treeModel.nodeChanged(folder);
+
+		//((MailFrameController)frameController).treeController.getView().makeVisible(folder.getSelectionTreePath());
+
 	}
 
 	/**
@@ -58,8 +88,8 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 	 */
 	public void execute(Worker worker) throws Exception {
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-		
-		folder = (Folder)r[0].getFolder();
+
+		folder = (Folder) r[0].getFolder();
 		headerList = (folder).getHeaderList(worker);
 	}
 }

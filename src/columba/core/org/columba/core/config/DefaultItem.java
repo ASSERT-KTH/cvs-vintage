@@ -37,18 +37,16 @@ public class DefaultItem {
 	public XmlElement getChildElement(int index) {
 		return getRoot().getElement(index);
 	}
-	
-	public int getChildCount()
-	{
+
+	public int getChildCount() {
 		return getRoot().count();
 	}
 
 	public XmlElement getChildElement(String pathToElement, int index) {
 		return getRoot().getElement(pathToElement).getElement(index);
 	}
-	
-	public boolean contains( String key)
-	{
+
+	public boolean contains(String key) {
 		return getRoot().getAttributes().containsKey(key);
 	}
 
@@ -60,6 +58,13 @@ public class DefaultItem {
 		return getElement(pathToElement).getAttribute(key);
 	}
 
+	/*
+	public String get(String pathToElement, String key, String defaultValue) {
+		XmlElement parent = getElement(pathToElement);
+	
+		return parent.getAttribute(key, defaultValue);
+	}
+	*/
 	public void set(String key, String newValue) {
 		getRoot().addAttribute(key, newValue);
 	}
@@ -76,10 +81,36 @@ public class DefaultItem {
 		return Integer.parseInt(value);
 	}
 
+	public int getInteger(String key, int defaultValue) {
+		String value = get(key);
+		
+		if ( value == null )
+		{
+			value = new Integer(defaultValue).toString();
+			set(key, value);
+			
+		}
+
+		return Integer.parseInt(value);
+	}
+
 	public int getInteger(String pathToElement, String key) {
 		String value = get(pathToElement, key);
 
 		return Integer.parseInt(value);
+	}
+
+	public int getInteger(String pathToElement, String key, int defaultValue) {
+		String value = get(pathToElement, key);
+
+		if (value == null) {
+			value = new Integer(defaultValue).toString();
+			set(pathToElement, key, value);
+			
+		}
+
+		return Integer.parseInt(value);
+
 	}
 
 	public void set(String key, int value) {
@@ -88,6 +119,20 @@ public class DefaultItem {
 
 	public void set(String pathToElement, String key, int value) {
 		set(pathToElement, key, Integer.toString(value));
+	}
+
+	public boolean getBoolean(String key, boolean defaultValue) {
+		String value = get(key);
+		
+		if ( value == null )
+		{
+			value = new Boolean(defaultValue).toString();
+			set(key,value);
+			
+		}
+		
+
+		return new Boolean(value).booleanValue();
 	}
 
 	public boolean getBoolean(String key) {
@@ -102,12 +147,31 @@ public class DefaultItem {
 		return new Boolean(value).booleanValue();
 	}
 
+	public boolean getBoolean(
+		String pathToElement,
+		String key,
+		boolean defaultValue) {
+
+		String value = get(pathToElement, key);
+
+		if (value == null) {
+			value = new Boolean(defaultValue).toString();
+			set(pathToElement, key, value);
+			
+		}
+
+		return new Boolean(value).booleanValue();
+	}
+
 	public void set(String key, boolean value) {
 		set(key, value ? Boolean.TRUE.toString() : Boolean.FALSE.toString());
 	}
 
 	public void set(String pathToElement, String key, boolean value) {
-		set(pathToElement, key, value ? Boolean.TRUE.toString() : Boolean.FALSE.toString());
+		set(
+			pathToElement,
+			key,
+			value ? Boolean.TRUE.toString() : Boolean.FALSE.toString());
 	}
 
 	/*
