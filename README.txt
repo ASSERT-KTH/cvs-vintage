@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.47 2002/09/23 01:37:16 jmcnally Exp $
+$Id: README.txt,v 1.48 2002/09/26 20:34:38 jon Exp $
 
 Welcome to Scarab!
 
@@ -20,7 +20,7 @@ system running.
 | R E Q U I R E M E N T S                                               |
 -------------------------------------------------------------------------
 
-SDK 1.2 or higher        --> <http://java.sun.com/>
+SDK 1.3 or higher        --> <http://java.sun.com/>
 Make sure that you download the SDK and not the JRE!
 
 Ant 1.4 or higher        --> <http://jakarta.apache.org/ant/>
