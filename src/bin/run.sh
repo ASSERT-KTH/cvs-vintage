@@ -8,6 +8,15 @@ JBOSS_CLASSPATH=$JBOSS_CLASSPATH:run.jar
 # and all libraries that are used by them here
 JBOSS_CLASSPATH=$JBOSS_CLASSPATH
 
+# Check for SUN(tm) JVM w/ HotSpot support
+#
+HOTSPOT=`java -version 2>&1 | grep HotSpot`"x"
+if [ "$HOTSPOT" != "x" ]; then
+       HOTSPOT="-server"
+else
+       HOTSPOT=""
+fi
+
 # Add the XML parser jars and set the JAXP factory names
 # Crimson parser JAXP setup(default)
 JBOSS_CLASSPATH=$JBOSS_CLASSPATH:../lib/crimson.jar
@@ -15,5 +24,5 @@ JAXP=-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.crimson.jaxp.Document
 JAXP="$JAXP -Djavax.xml.parsers.SAXParserFactory=org.apache.crimson.jaxp.SAXParserFactoryImpl"
 
 echo JBOSS_CLASSPATH=$JBOSS_CLASSPATH
-java -server $JAXP -classpath $JBOSS_CLASSPATH org.jboss.Main $@
+java $HOTSPOT $JAXP -classpath $JBOSS_CLASSPATH org.jboss.Main $@
 
