@@ -626,7 +626,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 
     }
 
-    private static final byte[] HTTP = new byte[] { 'h','t','t','p',':'};
-    private static final byte[] HTTPS = new byte[] { 'h','t','t','p','s',':'};
+    private static final byte[] HTTP = new byte[] { (byte)'h',(byte)'t',(byte)'t',(byte)'p',(byte)':'};
+    private static final byte[] HTTPS = new byte[] { (byte)'h',(byte)'t',(byte)'t',(byte)'p',(byte)'s',(byte)':'};
 }
 
