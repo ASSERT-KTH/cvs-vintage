@@ -9,7 +9,7 @@
   <menu name="menu_utilities" extensionpoint="bottom">
    <menu name="Hello World SubMenu">
    
-  	<menuitem action="org.columba.example.HelloWorldAction$HelloWorld"/>
+  	<menuitem action="HelloWorld"/>
   	
   	<separator/>
   	</menu>

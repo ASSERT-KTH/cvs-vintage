@@ -105,6 +105,8 @@ public class AnalyzeMessageCommand extends FolderCommand {
 
 			worker.setProgressBarMaximum(uids.length);
 			for (int i = 0; i < uids.length; i++) {
+				if ( worker.cancelled() ) return;
+				
 				AnalyzeMessageCommand.addHeader(srcFolder, uids[i], worker);
 				worker.setProgressBarValue(i);
 			}

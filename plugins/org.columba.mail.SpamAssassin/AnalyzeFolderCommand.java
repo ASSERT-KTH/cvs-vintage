@@ -52,11 +52,12 @@ public class AnalyzeFolderCommand extends FolderCommand {
 		srcFolder = (Folder) adapter.getSourceFolderReferences()[0].getFolder();
 
 		worker.setDisplayText(
-			"Applying analyzer to" + srcFolder.getName() + "...");
+			"Applying analyzer to " + srcFolder.getName() + "...");
 
 		Object[] uids = srcFolder.getUids();
 
 		for (int i = 0; i < uids.length; i++) {
+			if ( worker.cancelled() ) return;
 			AnalyzeMessageCommand.addHeader(srcFolder, uids[i], worker);
 		}
 

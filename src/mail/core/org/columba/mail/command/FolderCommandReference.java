@@ -40,6 +40,7 @@ public class FolderCommandReference extends DefaultCommandReference {
 	private ColumbaMessage message;
 	private int markVariant;
 	private String folderName;
+	private int colorValue;
 	
 	private File destFile;
 	
@@ -185,6 +186,20 @@ public class FolderCommandReference extends DefaultCommandReference {
 	 */
 	public void setDestFile(File destFile) {
 		this.destFile = destFile;
+	}
+
+	/**
+	 * @return Returns the colorValue.
+	 */
+	public int getColorValue() {
+		return colorValue;
+	}
+
+	/**
+	 * @param colorValue The colorValue to set.
+	 */
+	public void setColorValue(int colorValue) {
+		this.colorValue = colorValue;
 	}
 
 }

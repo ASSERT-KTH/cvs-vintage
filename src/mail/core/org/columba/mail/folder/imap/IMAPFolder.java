@@ -918,6 +918,11 @@ public class IMAPFolder extends RemoteFolder {
 		ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
 
 		header.getAttributes().put(key, value);
+
+		// set folder changed flag
+		// -> if not, the header cache wouldn't notice that something
+		// -> has changed. And wouldn't save the changes.
+		setChanged(true);
 	}
 
 }

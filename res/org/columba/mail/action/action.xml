@@ -55,6 +55,7 @@
  <action name="PreviousUnreadMessage" class="org.columba.mail.gui.table.action.PreviousUnreadMessageAction"/>
  <action name="AddSenderToAddressbook" class="org.columba.mail.gui.table.action.AddSenderToAddressbookAction"/>
  <action name="AddAllSendersToAddressbook" class="org.columba.mail.gui.table.action.AddAllSendersToAddressbookAction"/>
+ <action name="ColorMessageMenu" class="org.columba.mail.gui.table.action.ColorMessageMenu"/>
  
  <!-- tree menu -->
  <action name="ApplyFilter" class="org.columba.mail.gui.tree.action.ApplyFilterAction"/>

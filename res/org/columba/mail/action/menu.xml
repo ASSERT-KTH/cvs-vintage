@@ -109,6 +109,8 @@
 		 <menuitem action="MarkAsUnexpunged"/>
 		 <menuitem action="MarkAsNotSpam"/>
 		</menu>
+		<separator/>
+		<menuitem imenu="ColorMessageMenu"/>
 	</menu>
 	
 	
