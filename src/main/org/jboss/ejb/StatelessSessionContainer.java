@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.10 $
+*   @version $Revision: 1.11 $
 */
 public class StatelessSessionContainer
     extends Container
@@ -438,8 +438,10 @@ public class StatelessSessionContainer
 	                    else throw (Error)ex;
 		          }
             } else // we have a method that needs to be done by a bean instance
-            {
-                // Invoke and handle exceptions
+            {    
+			    // MF FIXME we don't need to wire the Transaction to the context?
+				
+				// Invoke and handle exceptions
       		    try 
                 {
             	    return m.invoke(mi.getEnterpriseContext().getInstance(), mi.getArguments());
