@@ -20,7 +20,8 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:marc.fleurY@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.7 $
+ * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
+ * @version $Revision: 1.8 $
  */
 public interface InfoMBean
 {
@@ -52,7 +53,12 @@ public interface InfoMBean
     * Display the java.lang.Package info for the pkgName
     */
    String displayPackageInfo(String pkgName);
-   
+   /** Display the ClassLoader, ProtectionDomain and Package information for
+    the specified class.
+    @return a simple html report of this information
+    */
+   String displayInfoForClass(String className);
+
    /**
     * Return a Map of System.getProperties() with a toString implementation
     * that provides an html table of the key/value pairs

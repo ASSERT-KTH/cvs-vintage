@@ -26,7 +26,7 @@ import javax.management.ObjectName;
  * @see <related>
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.16 $ <p>
+ * @version $Revision: 1.17 $ <p>
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -408,6 +408,42 @@ public class ServiceLibraries
       throw new ClassNotFoundException(name);
    }
 
+   /** Iterates through the current class loaders and tries to find the
+    given class name.
+    @return the Class object for name if found, null otherwise.
+    */
+   public Class findClass(String name)
+   {
+      Class clazz = null;
+      Set classLoaders2;      
+      synchronized (this)
+      {
+         classLoaders2 = classLoaders;
+      }
+      /* We have to find the class as a resource as we don't want to invoke
+         loadClass(name) and cause the side-effect of loading new classes.
+      */
+      String classRsrcName = name.replace('.', '/') + ".class";
+      for(Iterator iter = classLoaders2.iterator(); iter.hasNext();)
+      {
+         UnifiedClassLoader cl = (UnifiedClassLoader)iter.next();
+         URL classURL = cl.getResource(classRsrcName);
+         if( classURL != null )
+         {
+            try
+            {
+               // Since the class was found we can load it which should be a noop
+               clazz = cl.loadClass(name);
+            }
+            catch(ClassNotFoundException e)
+            {
+               log.debug("Failed to load class: "+name, e);
+            }
+         }
+      }
+      return clazz;
+   }
+
    /** Obtain a listing of the URL for all UnifiedClassLoaders associated with
     *the ServiceLibraries
     */
@@ -435,6 +471,14 @@ public class ServiceLibraries
       URL[] urls = new URL[classpath.size()];
       classpath.toArray(urls);
       return urls;
+   }
+
+   public ClassLoader[] getClassLoaders()
+   {
+      Set tmpClassLoaders = classLoaders;
+      ClassLoader[] loaders = new ClassLoader[tmpClassLoaders.size()];
+      tmpClassLoaders.toArray(loaders);
+      return loaders;
    }
 
    /** 

@@ -27,7 +27,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class Info
    implements InfoMBean, MBeanRegistration
@@ -179,6 +179,67 @@ public class Info
          return "<h2>Package:"+pkgName+" Not Found!</h2>";
 
       StringBuffer info = new StringBuffer("<h2>Package: "+pkgName+"</h2>");
+      displayPackageInfo(pkg, info);
+      return info.toString();
+   }
+   /** Display the ClassLoader, ProtectionDomain and Package information for
+    the specified class.
+    @return a simple html report of this information
+    */
+   public String displayInfoForClass(String className)
+   {
+      ServiceLibraries libraries = ServiceLibraries.getLibraries();
+      Class clazz = libraries.findClass(className);
+      if( clazz == null )
+         return "<h2>Class:"+className+" Not Found!</h2>";
+      Package pkg = clazz.getPackage();
+      if( pkg == null )
+         return "<h2>Class:"+className+" has no Package info</h2>";
+
+      StringBuffer info = new StringBuffer("<h1>Class: "+pkg.getName()+"</h1>");
+      ClassLoader cl = clazz.getClassLoader();
+      info.append("<h2>ClassLoader: "+cl+"</h2>\n");
+      info.append("<h3>ProtectionDomain</h3>\n");
+      info.append("<pre>\n"+clazz.getProtectionDomain()+"</pre>\n");
+      info.append("<h2>Package: "+pkg.getName()+"</h2>");
+      displayPackageInfo(pkg, info);
+      return info.toString();
+   }
+
+   /** This does not work as expected because the thread context class loader
+    *is not used to determine which class loader the package list is obtained
+    *from.
+    */
+   public String displayAllPackageInfo()
+   {
+      ClassLoader entryCL = Thread.currentThread().getContextClassLoader();
+      ServiceLibraries libraries = ServiceLibraries.getLibraries();
+      ClassLoader[] classLoaders = libraries.getClassLoaders();
+      StringBuffer info = new StringBuffer();
+      for(int c = 0; c < classLoaders.length; c ++)
+      {
+         ClassLoader cl = classLoaders[c];
+         Thread.currentThread().setContextClassLoader(cl);
+         try
+         {
+            info.append("<h1>ClassLoader: "+cl+"</h1>\n");
+            Package[] pkgs = Package.getPackages();
+            for(int p = 0; p < pkgs.length; p ++)
+            {
+               Package pkg = pkgs[p];
+               info.append("<h2>Package: "+pkg.getName()+"</h2>\n");
+               displayPackageInfo(pkg, info);
+            }
+         }
+         catch(Throwable e)
+         {
+         }
+      }
+      Thread.currentThread().setContextClassLoader(entryCL);
+      return info.toString();
+   }
+   private void displayPackageInfo(Package pkg, StringBuffer info)
+   {
       info.append("<pre>\n");
       info.append("SpecificationTitle: "+pkg.getSpecificationTitle());
       info.append("\nSpecificationVersion: "+pkg.getSpecificationVersion());
@@ -188,7 +249,6 @@ public class Info
       info.append("\nImplementationVendor: "+pkg.getImplementationVendor());
       info.append("\nisSealed: "+pkg.isSealed());
       info.append("</pre>\n");
-      return info.toString();
    }
 
    /** Return a Map of System.getProperties() with a toString implementation
@@ -252,4 +312,5 @@ public class Info
       
       return rc.toString();
    }
+
 }
