@@ -38,7 +38,7 @@ import org.jboss.metadata.MethodMetaData;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.12 $
+*   @version $Revision: 1.13 $
 */
 public class TxInterceptor
 extends AbstractInterceptor
@@ -139,8 +139,8 @@ extends AbstractInterceptor
         // New transaction is the new transaction this might start
        Transaction newTransaction = null;
        
-//       System.out.println("Current transaction in MI is "+mi.getTransaction()); 
-//       System.out.println("Current method "+mi.getMethod());           
+//       Logger.log("Current transaction in MI is "+mi.getTransaction()); 
+//       Logger.log("Current method "+mi.getMethod());           
        byte transType = getTransactionMethod(mi.getMethod(), remoteInvocation);
 
 // DEBUG  	printMethod(mi.getMethod(), transType);
@@ -373,7 +373,7 @@ extends AbstractInterceptor
        if(b != null) return b.byteValue();
          
        BeanMetaData bmd = container.getBeanMetaData();
-       System.out.println("Found metadata for bean '"+bmd.getEjbName()+"'"+" method is "+m.getName());
+       Logger.log("Found metadata for bean '"+bmd.getEjbName()+"'"+" method is "+m.getName());
        byte result = bmd.getMethodTransactionType(m.getName(), m.getParameterTypes(), remoteInvocation);
        
        // provide default if method is not found in descriptor 

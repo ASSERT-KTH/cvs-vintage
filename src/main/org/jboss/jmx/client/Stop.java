@@ -13,13 +13,14 @@ import javax.management.ObjectInstance;
 import javax.naming.InitialContext;
 
 import org.jboss.jmx.interfaces.JMXAdaptor;
+import org.jboss.logging.Logger;
 
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class Stop
 {
@@ -31,9 +32,9 @@ public class Stop
 	public static void main(String[] args)
 		throws Exception
 	{
-		System.out.println("Stopping server");		
+		Logger.log("Stopping server");		
 		new Stop().stop();
-		System.out.println("Server has been successfully stopped");		
+		Logger.log("Server has been successfully stopped");		
 	}
 
    // Constructors --------------------------------------------------

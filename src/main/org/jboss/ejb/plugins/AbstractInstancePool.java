@@ -22,6 +22,8 @@ import org.w3c.dom.Element;
 import org.jboss.ejb.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
+import org.jboss.logging.Logger;
+
 
 
 /**
@@ -29,7 +31,7 @@ import org.jboss.metadata.XmlLoadable;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public abstract class AbstractInstancePool
    implements InstancePool, XmlLoadable
@@ -92,7 +94,7 @@ public abstract class AbstractInstancePool
    public synchronized EnterpriseContext get()
       throws RemoteException
    {
-//      System.out.println("Get instance "+this);
+//      Logger.log("Get instance "+this);
       
       if (!pool.empty())
       {
@@ -124,7 +126,7 @@ public abstract class AbstractInstancePool
    public synchronized void free(EnterpriseContext ctx)
    {
       // Pool it
-//      System.out.println("Free instance:"+ctx.getId()+"#"+ctx.getTransaction());
+//      Logger.log("Free instance:"+ctx.getId()+"#"+ctx.getTransaction());
       
       if (pool.size() < maxSize)
       {
@@ -143,7 +145,7 @@ public abstract class AbstractInstancePool
          ctx.discard();
       } catch (RemoteException e)
       {
-         e.printStackTrace();
+         // DEBUG Logger.exception(e);
       }
    }
    

@@ -26,7 +26,7 @@ import javax.management.loading.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class Main
 {
@@ -184,7 +184,7 @@ public class Main
 	                  err.println("Shutting done");
 	               }
 	            });
-		         System.out.println("Shutdown hook added");
+		         System.out.println ("Shutdown hook added");
 	         } catch (Throwable e)
 	         {
 	            System.out.println("Could not add shutdown hook");

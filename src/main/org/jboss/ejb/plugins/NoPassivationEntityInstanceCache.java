@@ -35,7 +35,7 @@ import org.jboss.metadata.EntityMetaData;
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.7 $
+*	@version $Revision: 1.8 $
 */
 public class NoPassivationEntityInstanceCache
 implements InstanceCache
@@ -132,7 +132,7 @@ implements InstanceCache
                 info = (InstanceInfo)ctx.getCacheContext();
                 if (!info.isLocked())
                 break;
-                //DEBUG            System.out.println("Cache is waiting for "+id+"("+info.isLocked()+","+ctx.getTransaction()+")");
+                //DEBUG            Logger.log("Cache is waiting for "+id+"("+info.isLocked()+","+ctx.getTransaction()+")");
                 
                 // Check if same tx; reentrant call
                 try                                          
@@ -235,7 +235,7 @@ implements InstanceCache
         }
         
         // At this point we own the instance with the given identity
-        //      System.out.println("Got entity:"+ctx.getId());
+        //      Logger.log("Got entity:"+ctx.getId());
         return ctx;
     }
     
@@ -256,7 +256,7 @@ implements InstanceCache
         synchronized(ctx)
         {
             ((InstanceInfo)((EntityEnterpriseContext)ctx).getCacheContext()).unlock();
-            //         System.out.println("Release entity:"+ctx.getId());
+            //         Logger.log("Release entity:"+ctx.getId());
             if (!((InstanceInfo)((EntityEnterpriseContext)ctx).getCacheContext()).isLocked())
                 ctx.notifyAll();
         }

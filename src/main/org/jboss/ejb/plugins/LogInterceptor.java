@@ -25,13 +25,15 @@ import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.MethodInvocation;
 
 import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
+
 
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class LogInterceptor
    extends AbstractInterceptor
@@ -105,7 +107,7 @@ public class LogInterceptor
          if (e instanceof RemoteException ||
 				 e instanceof RuntimeException)
 			{
-				e.printStackTrace();
+				Logger.log(e.getMessage());
 			}
 			
          throw e;
@@ -154,7 +156,9 @@ public class LogInterceptor
          return getNext().invoke(mi);
       } catch (Exception e)
       {
-         log.exception(e);
+         //DEBUG log.exception(e);
+         if (e.getMessage() != null)
+         log.log(e.getMessage());
          throw e;
       } finally
       {

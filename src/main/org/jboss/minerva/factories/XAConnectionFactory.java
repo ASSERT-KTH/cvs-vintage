@@ -14,6 +14,7 @@ import javax.transaction.*;
 import javax.transaction.xa.*;
 import org.jboss.minerva.pools.*;
 import org.jboss.minerva.xa.*;
+import org.jboss.logging.Logger;
 
 /**
  * Object factory for JDBC 2.0 standard extension XAConnections.  You pool the
@@ -22,7 +23,7 @@ import org.jboss.minerva.xa.*;
  * and any work done isn't associated with the java.sql.Connection anyway.
  * <P><B>Note:</B> This implementation requires that the TransactionManager
  * be bound to a JNDI name.</P>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionFactory extends PoolObjectFactory {
@@ -61,7 +62,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
                         tm.getTransaction().delistResource(con.getXAResource(), status);
                     }
                 } catch(Exception e) {
-                    e.printStackTrace();
+                    Logger.exception(e);
                     throw new RuntimeException("Unable to deregister with TransactionManager: "+e);
                 }
                 con.removeConnectionEventListener(listener);
@@ -161,7 +162,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
             else
                 return source.getXAConnection();
         } catch(SQLException e) {
-            e.printStackTrace();
+            Logger.exception(e);
         }
         return null;
     }
@@ -184,7 +185,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
                 if(log != null) log.println("No transaction right now.");
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            Logger.exception(e);
             throw new RuntimeException("Unable to register with TransactionManager: "+e);
         }
         if(con instanceof XAConnectionImpl)

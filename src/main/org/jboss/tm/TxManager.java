@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.9 $
+ *	@version $Revision: 1.10 $
  */
 public class TxManager
    implements TransactionManager
@@ -54,7 +54,7 @@ public class TxManager
    public void begin()
       throws NotSupportedException,SystemException
    {
-//      System.out.println("begin tx");
+//      Logger.log("begin tx");
 
 		// create tx capsule
 		TxCapsule txCap = new TxCapsule(this, timeOut);
@@ -74,7 +74,7 @@ public class TxManager
                    java.lang.IllegalStateException,
                    SystemException
    {
-//      System.out.println("commit tx");
+//      Logger.log("commit tx");
 
 		try {
 
@@ -125,7 +125,7 @@ public class TxManager
    public Transaction suspend()
                     throws SystemException
    {
-//      System.out.println("suspend tx");
+//      Logger.log("suspend tx");
 
 	   // Useless
 
@@ -139,7 +139,7 @@ public class TxManager
                      java.lang.SecurityException,
                      SystemException
    {
-//      System.out.println("rollback tx");
+//      Logger.log("rollback tx");
       getTransaction().rollback();
    }
 
@@ -147,7 +147,7 @@ public class TxManager
                      throws java.lang.IllegalStateException,
                             SystemException
    {
-//      System.out.println("set rollback only tx");
+//      Logger.log("set rollback only tx");
       getTransaction().setRollbackOnly();
    }
 
@@ -189,9 +189,9 @@ public class TxManager
 			javax.naming.InitialContext context = new javax.naming.InitialContext();
 
 			//One tx in naming
-			System.out.println("Calling get manager from JNDI");
+			Logger.log("Calling get manager from JNDI");
 			TxManager manager = (TxManager) context.lookup("TransactionManager");
-			System.out.println("Returning TM "+manager.hashCode());
+			Logger.log("Returning TM "+manager.hashCode());
 
 			return manager;
 

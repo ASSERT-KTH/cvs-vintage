@@ -32,6 +32,8 @@ import org.jboss.ejb.plugins.jaws.PkFieldInfo;
 import org.jboss.ejb.plugins.jaws.deployment.JawsEntity;
 import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
 import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
+
 
 /**
  * Abstract superclass for all JAWS Commands that use JDBC directly.
@@ -41,7 +43,7 @@ import org.jboss.logging.Log;
  *
  * @see <related>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public abstract class JDBCCommand
 {
@@ -97,7 +99,7 @@ public abstract class JDBCCommand
                stmt.close();
             } catch (SQLException e)
             {
-               e.printStackTrace();
+               Logger.exception(e);
             }
          }
          if (con != null)
@@ -107,7 +109,7 @@ public abstract class JDBCCommand
                con.close();
             } catch (SQLException e)
             {
-               e.printStackTrace();
+               Logger.exception(e);
             }
          }
       }
@@ -233,7 +235,7 @@ public abstract class JDBCCommand
       } catch (Exception e)
       {
          // JF: Dubious - better to throw a meaningful exception
-         e.printStackTrace();
+         Logger.exception(e);
          return Types.OTHER;
       }
    }
@@ -368,7 +370,7 @@ public abstract class JDBCCommand
             jdbcTypeNames.put(fieldValue, fieldName);
          } catch (IllegalAccessException e) {
             // Should never happen
-            e.printStackTrace();
+            Logger.exception(e);
          }
       }
    }

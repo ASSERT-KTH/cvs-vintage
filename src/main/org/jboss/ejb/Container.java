@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.22 $
+ *   @version $Revision: 1.23 $
  */
 public abstract class Container
 {
@@ -396,7 +396,7 @@ public abstract class Container
              {
 
                 EjbRefMetaData ref = (EjbRefMetaData)enum.next();
-                System.out.println("Binding an EJBReference "+ref.getName());
+                Logger.log("Binding an EJBReference "+ref.getName());
 
                 if (ref.getLink() != null)
                 {
@@ -486,7 +486,7 @@ public abstract class Container
           }
         } catch (NamingException e)
         {
-            e.printStackTrace();
+            Logger.exception(e);;
             e.getRootCause().printStackTrace();
             throw new DeploymentException("Could not set up environment", e);
         }

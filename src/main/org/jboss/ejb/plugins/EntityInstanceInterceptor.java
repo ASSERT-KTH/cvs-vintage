@@ -40,7 +40,7 @@ import org.jboss.util.FastKey;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -84,7 +84,7 @@ public class EntityInstanceInterceptor
             container.getInstancePool().free(mi.getEnterpriseContext());
          } else
          {
-//            System.out.println("Entity was created; not returned to pool");
+//            Logger.log("Entity was created; not returned to pool");
             ((EntityContainer)getContainer()).getInstanceCache().release(mi.getEnterpriseContext());
          }
       }
@@ -126,7 +126,7 @@ public class EntityInstanceInterceptor
          throw e;
        } finally
       {
-//         System.out.println("Release instance for "+id);
+//         Logger.log("Release instance for "+id);
          EnterpriseContext ctx = mi.getEnterpriseContext();
          if (ctx != null)
          {

@@ -27,7 +27,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -139,7 +139,7 @@ public class ConfigurationService
 			}
 		} catch (Throwable e)
 		{
-			e.printStackTrace();
+			Log.getLog().exception(e);
 			throw (Exception)e;
 		}
 	}

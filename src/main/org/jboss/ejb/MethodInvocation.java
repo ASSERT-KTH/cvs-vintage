@@ -26,7 +26,7 @@ import javax.transaction.Transaction;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class MethodInvocation
 {
@@ -72,7 +72,7 @@ public class MethodInvocation
 	public void setTransaction(Transaction tx)
 	{
 		
-		//System.out.println("Setting a transaction on Method invocation"+hashCode()+" "+m.getName()+" with "+tx);
+		//Logger.log("Setting a transaction on Method invocation"+hashCode()+" "+m.getName()+" with "+tx);
 		this.tx = tx;
 		
 	}

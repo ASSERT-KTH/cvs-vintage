@@ -13,13 +13,15 @@ import java.util.*;
 import com.dreambean.awt.editors.TagsEditor;
 
 import org.jboss.ejb.plugins.jaws.deployment.*;
+import org.jboss.logging.Logger;
+
 
 /**
  *   Editor for selecting resource manager type
  *      
  *   @see DDEditor
- *   @author $Author: oberg $
- *   @version $Revision: 1.3 $
+ *   @author $Author: fleury $
+ *   @version $Revision: 1.4 $
  */
 public class TypeMappingEditor
    extends TagsEditor
@@ -57,7 +59,7 @@ public class TypeMappingEditor
          values = tags;
       } catch (Exception e)
       {
-         e.printStackTrace();
+         Logger.exception(e);
       }
    }
    

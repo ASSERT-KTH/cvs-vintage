@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 
 import javax.management.*;
 
+import org.jboss.logging.Logger;
 import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
@@ -24,7 +25,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class TomcatService
    extends ServiceMBeanSupport
@@ -76,7 +77,7 @@ public class TomcatService
                {
                     log.log("failed");
                     log.log("Tomcat wasn't found. Be sure to have your CLASSPATH correctly set");
-                    //e.printStackTrace();
+                    //Logger.exception(e);
                     return;
                } 
                
@@ -88,7 +89,7 @@ public class TomcatService
                Object tomcatArgs[] = new Object[1];
                tomcatArgs[0] = args;
                
-               System.out.println("Starting Tomcat...");
+               Logger.log("Starting Tomcat...");
                mainMethod.invoke(null,tomcatArgs); 
                
             } catch (Exception e)

@@ -18,6 +18,8 @@ import org.jboss.ejb.plugins.jaws.deployment.JawsEnterpriseBeans;
 import org.jboss.ejb.plugins.jaws.deployment.JawsEjbReference;
 import org.jboss.ejb.plugins.jaws.deployment.JawsEntity;
 import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
+import org.jboss.logging.Logger;
+
 
 /**
  * This is a wrapper class that holds all the
@@ -29,7 +31,7 @@ import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class CMPFieldInfo 
 {
@@ -181,7 +183,7 @@ public class CMPFieldInfo
       } catch (Exception e)
       {
          // Dubious - better to throw a meaningful exception
-         e.printStackTrace();
+         Logger.exception(e);
          return Types.OTHER;
       }
    }

@@ -22,7 +22,7 @@ import org.jboss.util.FastKey;
 *	@see EnterpriseContext
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.6 $
+*	@version $Revision: 1.7 $
 */
 public class EntityEnterpriseContext
 extends EnterpriseContext
@@ -101,11 +101,7 @@ extends EnterpriseContext
     
     public void setInvoked(boolean invoked) 
     { 
-       /*
-       System.out.println("&&&&&&&&&&& in setInvoked("+invoked+")");
-       Exception e = new Exception();
-       e.printStackTrace();
-       */
+       
        this.invoked = invoked; 
     }
     
@@ -116,10 +112,7 @@ extends EnterpriseContext
     
     public void setValid(boolean valid) 
     { 
-       /*System.out.println("&&&&&&&&&&& in setSynchronized("+synched+")");
-       Exception e = new Exception();
-       e.printStackTrace();
-       */
+       
        this.valid = valid; 
     }
     

@@ -48,6 +48,8 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.ejb.StatefulSessionPersistenceManager;
 import org.jboss.ejb.StatefulSessionEnterpriseContext;
+import org.jboss.logging.Logger;
+
 
 /**
  *	StatefulSessionFilePersistenceManager
@@ -58,7 +60,7 @@ import org.jboss.ejb.StatefulSessionEnterpriseContext;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -104,7 +106,7 @@ public class StatefulSessionFilePersistenceManager
          
        dir.mkdirs();
        
-       System.out.println("Storing sessions for "+ejbName+" in:"+dir);
+       Logger.log("Storing sessions for "+ejbName+" in:"+dir);
       
        // Clear dir of old files
        File[] sessions = dir.listFiles();
@@ -112,7 +114,7 @@ public class StatefulSessionFilePersistenceManager
        {
          sessions[i].delete();
        }
-       System.out.println(sessions.length + " old sessions removed");
+       Logger.log(sessions.length + " old sessions removed");
    }
    
    public void start()

@@ -9,6 +9,7 @@ package org.jboss.web;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import org.jboss.logging.Logger;
 
 /**
  *   A mini webserver that should be embedded in another application. It can server any file that is available from
@@ -21,8 +22,8 @@ import java.util.*;
  *   or by adding a file dynaserver.properties in the same location as the dynaserver.jar file (recommended).
  *   It can also be configured by calling any methods programmatically prior to startup.
  *
- *   @author $Author: oberg $
- *   @version $Revision: 1.1 $
+ *   @author $Author: fleury $
+ *   @version $Revision: 1.2 $
  */
 public class WebServer
 	implements Runnable
@@ -123,7 +124,7 @@ public class WebServer
          if (server == null) return; // Stopped by normal means
          
          debug("DynaServer stopped: " + e.getMessage());
-         e.printStackTrace();
+         Logger.exception(e);
          debug("Restarting DynaServer");
          try
          {
@@ -169,7 +170,7 @@ public class WebServer
                     break;
                  } catch (Exception e)
                  {
-                    e.printStackTrace();
+                    Logger.exception(e);
                  }
               }
               
@@ -192,7 +193,7 @@ public class WebServer
                        break;
                  } catch (Exception e)
                  {
-                    e.printStackTrace();
+                    Logger.exception(e);
                  }
               }
               
@@ -255,7 +256,7 @@ public class WebServer
    protected void debug(String msg)
    {
       if (isDebug())
-         System.out.println(msg);
+         Logger.log(msg);
    }
    
    protected void listen()

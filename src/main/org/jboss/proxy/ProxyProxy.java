@@ -10,7 +10,7 @@ import javax.ejb.Handle;
 
 import javax.ejb.EJBObject;
 
-
+import org.jboss.logging.Logger;
 
 public class ProxyProxy implements Serializable, EJBObject
 
@@ -67,7 +67,7 @@ public class ProxyProxy implements Serializable, EJBObject
 
     {
 
-      e.printStackTrace();
+      Logger.exception(e);
 
       return null;
 

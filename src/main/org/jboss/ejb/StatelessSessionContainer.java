@@ -19,6 +19,8 @@ import javax.ejb.EJBHome;
 import javax.ejb.EJBMetaData;
 import javax.ejb.CreateException;
 import javax.ejb.RemoveException;
+import org.jboss.logging.Logger;
+
 
 /**
 *   StatelessSessionContainer
@@ -26,7 +28,7 @@ import javax.ejb.RemoveException;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.9 $
+*   @version $Revision: 1.10 $
 */
 public class StatelessSessionContainer
     extends Container
@@ -339,7 +341,7 @@ public class StatelessSessionContainer
         for (int i = 0; i < m.length; i++)
         {
             // Implemented by container
-//          System.out.println("Mapping "+m[i].getName());
+//          Logger.log("Mapping "+m[i].getName());
             map.put(m[i], getClass().getMethod(m[i].getName()+"Home", m[i].getParameterTypes()));
         }
         
@@ -357,21 +359,21 @@ public class StatelessSessionContainer
             {
                 // Implemented by bean
                 map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
-                //System.out.println("Mapped "+m[i].getName()+" "+m[i].hashCode()+"to "+map.get(m[i]));
+                //Logger.log("Mapped "+m[i].getName()+" "+m[i].hashCode()+"to "+map.get(m[i]));
             }
             else
             {
                 try
                 {
                     // Implemented by container
-                    //System.out.println("Mapped Container method "+m[i].getName() +" HASH "+m[i].hashCode());
+                    //Logger.log("Mapped Container method "+m[i].getName() +" HASH "+m[i].hashCode());
                     map.put(m[i], getClass().getMethod(m[i].getName(), new Class[] { MethodInvocation.class }));
                     
                     
                 } catch (NoSuchMethodException e)
                 {
-                    e.printStackTrace();
-                    System.out.println(m[i].getName() + " in bean has not been mapped");
+                    // DEBUG Logger.exception(e);
+                    Logger.log(m[i].getName() + " in bean has not been mapped");
                     
                 }
             }

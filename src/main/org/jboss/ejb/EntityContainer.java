@@ -36,7 +36,7 @@ import org.jboss.util.SerializableEnumeration;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.22 $
+*   @version $Revision: 1.23 $
 */
 public class EntityContainer
 extends Container
@@ -394,28 +394,14 @@ implements ContainerInvokerContainer, InstancePoolContainer
         
         } else
         {
-            System.out.println("Single FINDER");
             
             // Single entity finder
             Object id = getPersistenceManager().findEntity(mi.getMethod(), 
                 mi.getArguments(), 
                 (EntityEnterpriseContext)mi.getEnterpriseContext());    
             
-            System.out.println("I Found it "+id.toString());
-            
-            
-            EJBObject ejbObject = null;
-            try {
-                ejbObject = (EJBObject)containerInvoker.getEntityEJBObject(new FastKey(id));
-                if (ejbObject != null) System.out.println("OBJECT IS OK ABOUT TO RETURN");
-                return ejbObject;
-            }
-            catch (Exception e) {
-                   e.printStackTrace();
-                   return null;
-           }
             //create the EJBObject
-            //return (EJBObject)containerInvoker.getEntityEJBObject(new FastKey(id));
+            return (EJBObject)containerInvoker.getEntityEJBObject(new FastKey(id));
         }
     }
     
@@ -522,7 +508,9 @@ implements ContainerInvokerContainer, InstancePoolContainer
                 }
             }
         }
-        catch (Exception e) { e.printStackTrace();}
+        catch (Exception e) { 
+        // DEBUG Logger.exception(e);
+        }
         
         // We are done keep the home map
         homeMapping = map;

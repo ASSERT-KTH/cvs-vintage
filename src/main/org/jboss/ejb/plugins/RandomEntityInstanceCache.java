@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.3 $
+*	@version $Revision: 1.4 $
 */
 public class RandomEntityInstanceCache
 extends NoPassivationEntityInstanceCache
@@ -80,7 +80,7 @@ extends NoPassivationEntityInstanceCache
             // Passivation loop
             while(running)
             {
-                //            System.out.println("Clearing cache");
+                //            Logger.log("Clearing cache");
                 // Passivate old. Lock cache first
                 synchronized(RandomEntityInstanceCache.this)
                 {
@@ -141,7 +141,7 @@ extends NoPassivationEntityInstanceCache
                         
                         }
                         
-                        //            System.out.println("Passivation done");
+                        //            Logger.log("Passivation done");
                         // Sleep
                         try
                         {

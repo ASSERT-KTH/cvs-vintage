@@ -14,6 +14,7 @@ import javax.naming.*;
 import javax.naming.spi.*;
 import org.jboss.minerva.factories.JDBCConnectionFactory;
 import org.jboss.minerva.pools.ObjectPool;
+import org.jboss.logging.Logger;
 
 /**
  * DataSource for non-transactional JDBC pools.  This handles configuration
@@ -24,7 +25,7 @@ import org.jboss.minerva.pools.ObjectPool;
  * and JDBCConnectionFactory.
  * @see org.jboss.minerva.pools.ObjectPool
  * @see org.jboss.minerva.factories.JDBCConnectionFactory
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class JDBCPoolDataSource implements DataSource, Referenceable, ObjectFactory {
@@ -145,7 +146,7 @@ public class JDBCPoolDataSource implements DataSource, Referenceable, ObjectFact
         try {
             setJNDIName(null);
         } catch(NamingException e) {
-            e.printStackTrace();
+            Logger.exception(e);
         }
         sources.remove(pool.getName());
         pool.shutDown();

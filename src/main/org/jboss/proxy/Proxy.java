@@ -1,6 +1,6 @@
 package org.jboss.proxy;
 
-
+import org.jboss.logging.Logger;
 
 public class Proxy
 

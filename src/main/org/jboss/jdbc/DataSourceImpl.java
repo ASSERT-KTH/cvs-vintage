@@ -30,6 +30,7 @@ import javax.naming.NameNotFoundException;
 import javax.sql.DataSource;
 
 import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
 import org.jboss.util.ServiceMBeanSupport;
 
 import org.jboss.proxy.Proxy;
@@ -41,7 +42,7 @@ import org.jboss.proxy.InvocationHandler;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class DataSourceImpl
    extends ServiceMBeanSupport
@@ -272,7 +273,7 @@ class ConnectionProxy
       try
       {
          con.close();
-      } catch (Throwable e) { e.printStackTrace(); }
+      } catch (Throwable e) { Logger.exception(e); }
       con = null;
    }
 }

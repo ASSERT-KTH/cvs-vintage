@@ -33,7 +33,7 @@ import org.jboss.util.FastKey;
 *      
 *	@see <related>
 *	@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.3 $
+*	@version $Revision: 1.4 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {
@@ -196,7 +196,7 @@ implements EntityPersistenceManager {
     
     public void storeEntity(EntityEnterpriseContext ctx)
     throws RemoteException {
-        //      System.out.println("Store entity");
+        //      Logger.log("Store entity");
         try {
             
             // Prepare the instance for storage

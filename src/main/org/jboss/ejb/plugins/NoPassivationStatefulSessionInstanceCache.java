@@ -23,6 +23,7 @@ import org.jboss.ejb.InstancePoolContainer;
 import org.jboss.ejb.StatefulSessionPersistenceManager;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatefulSessionEnterpriseContext;
+import org.jboss.logging.Logger;
 
 
 /**
@@ -31,7 +32,7 @@ import org.jboss.ejb.StatefulSessionEnterpriseContext;
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.7 $
+*	@version $Revision: 1.8 $
 */
 public class NoPassivationStatefulSessionInstanceCache
 implements InstanceCache
@@ -83,7 +84,7 @@ implements InstanceCache
     {
        InstanceInfo info = null;
        
-        System.out.println("I AM LOOKING FOR THE ID "+id);
+        Logger.log("I AM LOOKING FOR THE ID "+id);
        // Do we have the context in cache?
        StatefulSessionEnterpriseContext ctx = 
          (StatefulSessionEnterpriseContext)active.get(id);

@@ -15,7 +15,7 @@ import test.jboss.minerva.factories.*;
  * Master test Suite for jBoss.  Create new addXXXTests methods for different
  * modules, and then use them to add all the tests you want to run for that
  * module.  Pass this class to the JUnit UI to run all the tests.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JBossTestSuite extends TestSuite {
     public JBossTestSuite() {
@@ -52,7 +52,7 @@ public class JBossTestSuite extends TestSuite {
                 addTest((Test)con.newInstance(new Object[]{name}));
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            Logger.exception(e);
         }
     }
 

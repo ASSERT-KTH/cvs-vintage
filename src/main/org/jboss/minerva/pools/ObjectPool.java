@@ -8,7 +8,7 @@ package org.jboss.minerva.pools;
 
 import java.io.*;
 import java.util.*;
-
+import org.jboss.logging.Logger;
 /**
  * A generic object pool.  You must provide a PoolObjectFactory (or the class
  * of a Java Bean) so the pool knows what kind of objects to create.  It has
@@ -25,7 +25,7 @@ import java.util.*;
  *   <LI>Shut it down</LI>
  * </OL>
  * @see org.jboss.minerva.pools.PooledObject
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ObjectPool implements PoolEventListener {
@@ -727,7 +727,7 @@ class BeanFactory extends PoolObjectFactory {
         try {
             return beanClass.newInstance();
         } catch(Exception e) {
-            System.out.println("Unable to create instance of "+beanClass.getName()+": "+e);
+            Logger.log("Unable to create instance of "+beanClass.getName()+": "+e);
         }
         return null;
     }

@@ -15,11 +15,13 @@ import javax.sql.DataSource;
 import org.jboss.logging.LogWriter;
 import org.jboss.minerva.datasource.JDBCPoolDataSource;
 import org.jboss.util.*;
+import org.jboss.logging.Logger;
+
 
 /**
  * Service that loads a JDBC 1 connection pool.  The constructors are called by
  * the JMX engine based on your MLET tags.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDataSourceLoaderMBean {
@@ -42,7 +44,7 @@ public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDat
         try {
             source.setLogWriter(new LogWriter(log));
         }catch(java.sql.SQLException e) {
-            e.printStackTrace();
+            Logger.exception(e);
         }
         source.initialize();
     }
@@ -139,7 +141,7 @@ public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDat
                 setter.invoke(source, new Object[]{arg});
             } catch(Exception e) {
                 log.error("Unable to set pool property '"+property+"' to '"+value+"': "+e);
-                e.printStackTrace();
+                Logger.exception(e);
             }
         }
     }

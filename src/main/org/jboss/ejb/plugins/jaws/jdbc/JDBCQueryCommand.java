@@ -10,6 +10,8 @@ package org.jboss.ejb.plugins.jaws.jdbc;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.jboss.logging.Logger;
+
 
 /**
  * Abstract superclass for all JAWS Commands that issue JDBC queries
@@ -17,7 +19,7 @@ import java.sql.SQLException;
  * Provides a Template Method implementation for
  * <code>executeStatementAndHandleResult</code>.
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public abstract class JDBCQueryCommand extends JDBCCommand
 {
@@ -54,7 +56,7 @@ public abstract class JDBCQueryCommand extends JDBCCommand
                rs.close();
             } catch (SQLException e)
             {
-               e.printStackTrace();
+               Logger.exception(e);
             }
          }
       }

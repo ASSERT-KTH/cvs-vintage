@@ -27,13 +27,15 @@ import com.dreambean.awt.GenericCustomizer;
 import com.dreambean.ejx.xml.XMLManager;
 import com.dreambean.ejx.xml.XmlExternalizable;
 import com.dreambean.ejx.Util;
+import org.jboss.logging.Logger;
+
 
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class jBossEnterpriseBeans
    extends com.dreambean.ejx.ejb.EnterpriseBeans
@@ -107,7 +109,7 @@ public class jBossEnterpriseBeans
                   bean.importXml((Element)n);
                } catch (IllegalArgumentException e)
                {
-                  e.printStackTrace();
+                  Logger.exception(e);;
                   // Does not exist anymore...
                }
             } else if (name.equals("session"))
@@ -120,7 +122,7 @@ public class jBossEnterpriseBeans
                   bean.importXml((Element)n);
                } catch (IllegalArgumentException e)
                {
-                  e.printStackTrace();
+                  Logger.exception(e);;
                   // Does not exist anymore...
                }
             } 

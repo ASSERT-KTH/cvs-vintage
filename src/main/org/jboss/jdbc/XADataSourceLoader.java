@@ -15,14 +15,18 @@ import javax.naming.*;
 import javax.sql.XADataSource;
 import org.jboss.logging.LogWriter;
 import org.jboss.minerva.datasource.XAPoolDataSource;
+
+// MF FIXME NO WILDCARD IMPORTS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 import org.jboss.util.*;
+import org.jboss.logging.Logger;
 
 /**
  * Service that loads a JDBC 2 std. extension-compliant connection pool.  This
  * pool generates connections that are registered with the current Transaction
  * and support two-phase commit.  The constructors are called by the JMX engine
  * based on your MLET tags.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XADataSourceLoader extends ServiceMBeanSupport
@@ -42,7 +46,7 @@ public class XADataSourceLoader extends ServiceMBeanSupport
 //            vendorSource.setLogWriter(writer);
 //            source.setLogWriter(writer);
         } catch(Exception e) {
-            e.printStackTrace();
+            Logger.exception(e);
             throw new RuntimeException("Unable to initialize XA database pool '"+poolName+"': "+e);
         }
         source.setDataSource(vendorSource);
@@ -295,7 +299,7 @@ public class XADataSourceLoader extends ServiceMBeanSupport
                 setter.invoke(source, new Object[]{arg});
             } catch(Exception e) {
                 log.error("Unable to set pool property '"+property+"' to '"+value+"': "+e);
-                e.printStackTrace();
+                Logger.exception(e);
             }
         }
     }

@@ -43,7 +43,7 @@ import com.dreambean.codegen.Main;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class ActivationContainerInvoker
    implements ContainerInvoker
@@ -116,7 +116,7 @@ public class ActivationContainerInvoker
             return (EJBObject)c.newInstance(new Object[] { new StatelessSessionProxy((Name)names.get(con), this) });
          } catch (Exception e)
          {
-            e.printStackTrace();
+            Logger.exception(e);
             return null;
          }
       } */

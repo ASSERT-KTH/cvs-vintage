@@ -28,7 +28,7 @@ import com.dreambean.ejx.Util;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class JawsEnterpriseBeans
    extends com.dreambean.ejx.ejb.EnterpriseBeans
@@ -82,7 +82,7 @@ public class JawsEnterpriseBeans
                   bean.importXml((Element)n);
                } catch (IllegalArgumentException e)
                {
-//                  e.printStackTrace();
+//                  Logger.exception(e);
                   // Does not exist anymore...
                }
             } 

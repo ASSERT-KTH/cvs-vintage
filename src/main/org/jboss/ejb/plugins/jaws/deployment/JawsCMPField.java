@@ -16,6 +16,8 @@ import org.w3c.dom.*;
 
 import com.dreambean.awt.*;
 import com.dreambean.ejx.xml.*;
+import org.jboss.logging.Logger;
+
 
 /**
  *   <description>
@@ -23,7 +25,7 @@ import com.dreambean.ejx.xml.*;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class JawsCMPField
    extends com.dreambean.ejx.ejb.CMPField
@@ -211,7 +213,7 @@ public class JawsCMPField
             try {
                 sql = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMapping()).getSqlTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
             } catch(NullPointerException e) {
-                System.out.println("Caught SQL NPE on JawsCMPField!");
+                Logger.log("Caught SQL NPE on JawsCMPField!");
             }
             if (sql != null)
                setSqlType(sql);
@@ -220,7 +222,7 @@ public class JawsCMPField
             try {
                 jdbc = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMapping()).getJdbcTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
             } catch(NullPointerException e) {
-                System.out.println("Caught JDBC NPE on JawsCMPField!");
+                Logger.log("Caught JDBC NPE on JawsCMPField!");
             }
 
 			if (jdbc != null)

@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  * 	@author <a href="mailto:marc.fleury@telkel.com>Marc Fleury</a>
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class StatefulHandleImpl
    implements Handle
@@ -65,7 +65,7 @@ public class StatefulHandleImpl
          ContainerRemote container = (ContainerRemote) new InitialContext().lookup("invokers/"+name);
          
           // Create a new MethodInvocation for distribution
-          System.out.println("I am about to invoke and getEJBOBject is "+getEJBObjectMethod.getName() +" My ID is "+id);
+          //System.out.println("I am about to invoke and getEJBOBject is "+getEJBObjectMethod.getName() +" My ID is "+id);
           RemoteMethodInvocation rmi = new RemoteMethodInvocation(null, getEJBObjectMethod, new Object[] {id});
              
           // MF FIXME: WE DEFINITLY NEED THE SECURITY ON SUCH A CALL...

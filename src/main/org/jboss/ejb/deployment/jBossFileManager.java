@@ -24,6 +24,7 @@ import com.dreambean.ejx.xml.XmlExternalizable;
 import com.dreambean.ejx.Util;
 import com.dreambean.ejx.FileManager;
 import com.dreambean.ejx.FileManagerFactory;
+import org.jboss.logging.Logger;
 
 /**
  *   <description>
@@ -31,7 +32,7 @@ import com.dreambean.ejx.FileManagerFactory;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public class jBossFileManager
    extends BeanContextServicesSupport
@@ -236,7 +237,7 @@ public class jBossFileManager
 			ejbJar.importXml(doc.getDocumentElement());
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			Logger.exception(e);;
 		}
 
       add(ejbJar);
@@ -365,7 +366,7 @@ public class jBossFileManager
          xm = (XMLManager)((BeanContextServices)getBeanContext()).getService(this,this,XMLManager.class,null,this);
       } catch (Exception e)
       {
-         e.printStackTrace();
+         Logger.exception(e);;
       }
    }
 

@@ -153,7 +153,7 @@ class ProxyCompiler {
 		java.io.OutputStream cf = new java.io.FileOutputStream(fname);
 		cf.write(code);
 		cf.close();
-		System.out.println("wrote "+fname);
+		Logger.log("wrote "+fname);
 	    } catch(java.io.IOException ee) { }
 	    //* ---- ---- */
 

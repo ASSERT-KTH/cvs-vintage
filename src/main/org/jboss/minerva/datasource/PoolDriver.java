@@ -9,6 +9,7 @@ package org.jboss.minerva.datasource;
 import java.sql.*;
 import java.util.Properties;
 import javax.sql.*;
+import org.jboss.logging.Logger;
 
 /**
  * JDBC Driver to access pooled JDBC connections.  Supports both JDBC 1.0
@@ -25,7 +26,7 @@ import javax.sql.*;
  * <CODE>Class.forName("org.minerva.datasource.PoolDriver");</CODE></P>
  * @see org.jboss.minerva.datasource.JDBCPoolDataSource
  * @see org.jboss.minerva.datasource.XAPoolDataSource
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class PoolDriver implements Driver {
@@ -37,8 +38,8 @@ public class PoolDriver implements Driver {
         try {
             DriverManager.registerDriver(PoolDriver.instance());
         } catch(SQLException e) {
-            System.out.println("Unable to register Minerva DB pool driver!");
-            e.printStackTrace();
+            Logger.log("Unable to register Minerva DB pool driver!");
+            Logger.exception(e);
         }
     }
 
@@ -77,7 +78,7 @@ public class PoolDriver implements Driver {
             DataSource source = JDBCPoolDataSource.getDataSource(name);
             con = source.getConnection();
         } catch(Exception e) {
-            e.printStackTrace();
+            Logger.exception(e);
         }
         return con;
     }
@@ -88,7 +89,7 @@ public class PoolDriver implements Driver {
             DataSource source = XAPoolDataSource.getDataSource(name);
             con = source.getConnection();
         } catch(Exception e) {
-            e.printStackTrace();
+            Logger.exception(e);
         }
         return con;
     }

@@ -22,6 +22,8 @@ import org.jboss.ejb.plugins.jrmp13.interfaces.HomeProxy;
 import org.jboss.ejb.plugins.jrmp13.interfaces.StatelessSessionProxy;
 import org.jboss.ejb.plugins.jrmp13.interfaces.StatefulSessionProxy;
 import org.jboss.ejb.plugins.jrmp13.interfaces.EntityProxy;
+import org.jboss.logging.Logger;
+
 
 /**
  *	<description> 
@@ -29,7 +31,7 @@ import org.jboss.ejb.plugins.jrmp13.interfaces.EntityProxy;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public final class JRMPContainerInvoker
    extends org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker
@@ -41,7 +43,7 @@ public final class JRMPContainerInvoker
             // We add the Handle methods to the Home
             Class handleClass;
             try { handleClass = Class.forName("javax.ejb.Handle");} 
-                catch (Exception e) {e.printStackTrace();handleClass = null;}
+                catch (Exception e) {Logger.exception(e);handleClass = null;}
             
             this.home = (EJBHome)Proxy.newProxyInstance(((ContainerInvokerContainer)container).getHomeClass().getClassLoader(),
                 new Class[] { ((ContainerInvokerContainer)container).getHomeClass(), handleClass },

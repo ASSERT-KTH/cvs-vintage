@@ -21,7 +21,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  * 		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.14 $
+ *      @version $Revision: 1.15 $
  */
 public class StatefulSessionProxy
    extends GenericProxy
@@ -91,7 +91,6 @@ public class StatefulSessionProxy
       }
       else if (m.equals(eq))
       {
-          System.out.println("SFSP:equals");
          return invoke(proxy, isIdentical, args);
       }
       
@@ -108,7 +107,6 @@ public class StatefulSessionProxy
      
       else if (m.equals(getPrimaryKey))
       {
-          System.out.println("SSP:getPrimaryKey");
          // MF FIXME 
          // The spec says that SSB PrimaryKeys should not be returned and the call should throw an exception
          // However we need to expose the field *somehow* so we can check for "isIdentical"
@@ -126,7 +124,6 @@ public class StatefulSessionProxy
       }
       else if (m.equals(isIdentical))
       {
-          System.out.println("SSP:isIdentical");
            // MF FIXME
          // See above, this is not correct but works for now (do jboss1.0 PKHolder hack in here)
          return new Boolean(((EJBObject)args[0]).getPrimaryKey().equals(id));

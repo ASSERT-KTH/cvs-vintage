@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 *      @see <related>
 *      @author Rickard Öberg (rickard.oberg@telkel.com)
 *		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*      @version $Revision: 1.16 $
+*      @version $Revision: 1.17 $
 */
 public class HomeProxy
 extends GenericProxy
@@ -99,21 +99,18 @@ extends GenericProxy
         // Implement local methods
         if (m.equals(toStr))
         {
-            System.out.println("HomeProxy:toStr");
             return name+"Home";
         }
         else if (m.equals(eq))
         {
             // equality of the proxy home is based on names...
             
-            System.out.println("HomeProxy:eq");
             return new Boolean(invoke(proxy,toStr, args).equals(name+"Home"));
         }
         
         else if (m.equals(hash))
         {
             
-            System.out.println("HomeProxy:hash");
             return new Integer(this.hashCode());
         }
         
@@ -121,7 +118,6 @@ extends GenericProxy
         else if (m.equals(getHomeHandle))
         {
             
-            System.out.println("HomeProxy:getHomeHandle");
             return new HomeHandleImpl(name);
         }
         
@@ -129,7 +125,6 @@ extends GenericProxy
         else if (m.equals(getEJBMetaData))
         {
             
-            System.out.println("HomeProxy:getEJBMetaData");
             return ejbMetaData;
         }
         
@@ -137,7 +132,6 @@ extends GenericProxy
         else if (m.equals(removeByHandle))
         {
             
-            System.out.println("HomeProxy:removeByHandle");
             // First get the EJBObject
             EJBObject object = ((Handle) args[0]).getEJBObject();
             
@@ -152,7 +146,6 @@ extends GenericProxy
         else if (m.equals(removeByPrimaryKey))
         {
             
-            System.out.println("HomeProxy:removeByPK");
             if (optimize && isLocal())
             {
                 return container.invoke(
@@ -198,7 +191,6 @@ extends GenericProxy
         else
         {
             
-            System.out.println("HomeProxy:"+m.getName());
             // Delegate to container
             // Optimize if calling another bean in same EJB-application
             if (optimize && isLocal())

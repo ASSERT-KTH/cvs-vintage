@@ -26,7 +26,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public abstract class ContainerConfiguration
    extends BeanContextServicesSupport
@@ -116,7 +116,7 @@ public abstract class ContainerConfiguration
          }
       } catch (Throwable e)
       {
-//         System.out.println(e);
+//         Logger.log(e);
       }
    }
    public String getInstancePool() { return instancePool; }
@@ -144,7 +144,7 @@ public abstract class ContainerConfiguration
          }
       } catch (Throwable e)
       {
-//         System.out.println(e);
+//         Logger.log(e);
       }
    }
    

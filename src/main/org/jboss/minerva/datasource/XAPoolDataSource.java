@@ -14,6 +14,7 @@ import javax.naming.*;
 import javax.naming.spi.*;
 import org.jboss.minerva.factories.XAConnectionFactory;
 import org.jboss.minerva.pools.ObjectPool;
+import org.jboss.logging.Logger;
 
 /**
  * DataSource for transactional JDBC pools.  This handles configuration
@@ -24,7 +25,7 @@ import org.jboss.minerva.pools.ObjectPool;
  * and XAConnectionFactory.
  * @see org.jboss.minerva.pools.ObjectPool
  * @see org.jboss.minerva.factories.XAConnectionFactory
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactory {
@@ -59,7 +60,7 @@ public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactor
         try {
             factory = new XAConnectionFactory();
         } catch(NamingException e) {
-            e.printStackTrace();
+            Logger.exception(e);
         }
         PoolDriver.instance();
     }
@@ -150,7 +151,7 @@ public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactor
         try {
             setJNDIName(null);
         } catch(NamingException e) {
-            e.printStackTrace();
+            Logger.exception(e);
         }
         sources.remove(pool.getName());
         pool.shutDown();

@@ -8,13 +8,14 @@
 package org.jboss.web;
 
 import java.util.Stack;
+import org.jboss.logging.Logger;
 
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class ThreadPool
 {
@@ -118,7 +119,7 @@ public class ThreadPool
 						runner.run();
 					} catch (Exception e)
 					{
-						e.printStackTrace();
+						//DEBUG Logger.exception(e);
 					}
 					// Clear work
 					runner = null;

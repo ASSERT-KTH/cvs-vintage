@@ -18,7 +18,7 @@ import javax.management.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class FileLogging
    implements FileLoggingMBean, MBeanRegistration, NotificationListener
@@ -111,7 +111,7 @@ public class FileLogging
          
       } catch (Throwable e)
       {
-         e.printStackTrace();
+         Logger.exception(e);
       }
       return new ObjectName(OBJECT_NAME);
    }

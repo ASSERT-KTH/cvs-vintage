@@ -20,6 +20,8 @@ import org.jboss.ejb.DeploymentException;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
+import org.jboss.logging.Logger;
+
 
 /**
  *	Singleton pool for session beans. This lets you have
@@ -27,7 +29,7 @@ import org.w3c.dom.Element;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class SingletonStatelessSessionInstancePool
    implements InstancePool, XmlLoadable
@@ -135,7 +137,7 @@ public class SingletonStatelessSessionInstancePool
          ctx.discard();
       } catch (RemoteException e)
       {
-         e.printStackTrace();
+         // DEBUG Logger.exception(e);
       }
       
       // Notify waiters

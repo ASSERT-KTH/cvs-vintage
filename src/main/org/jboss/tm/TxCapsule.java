@@ -23,6 +23,7 @@ import javax.transaction.InvalidTransactionException;
 import javax.transaction.xa.Xid;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.XAException;
+import org.jboss.logging.Logger;
 
 /**
  *  TxCapsule
@@ -31,7 +32,7 @@ import javax.transaction.xa.XAException;
  *
  *	@see <related>
  *	@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 public class TxCapsule
 {
@@ -125,7 +126,7 @@ public class TxCapsule
             {
                if(e.errorCode != XAException.XA_HEURCOM)
                {
-                   e.printStackTrace();
+                   Logger.exception(e);
                   // Rollback
                   setRollbackOnly();
                   break;
@@ -151,7 +152,7 @@ public class TxCapsule
                   try {
                      ((XAResource)resources.elementAt(i)).forget(xid);
                   } catch(XAException another) {}
-                  e.printStackTrace();
+                  Logger.exception(e);
                   // TODO: what to do here?
                }
             }
@@ -196,7 +197,7 @@ public class TxCapsule
 //            resources.removeElement(xaRes);
             return true;
         } catch(XAException e) {
-            e.printStackTrace();
+            Logger.exception(e);
             return false;
         }
    }
@@ -216,7 +217,7 @@ public class TxCapsule
             resources.addElement(xaRes);
             return true;
         } catch(XAException e) {
-            e.printStackTrace();
+            Logger.exception(e);
             return false;
         }
    }

@@ -24,13 +24,15 @@ import com.dreambean.ejx.xml.XmlExternalizable;
 import com.dreambean.ejx.Util;
 import com.dreambean.ejx.FileManager;
 import com.dreambean.ejx.FileManagerFactory;
+import org.jboss.logging.Logger;
+
 
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class JawsFileManager
    extends BeanContextServicesSupport
@@ -217,7 +219,7 @@ public class JawsFileManager
             ejbJar.importXml(doc.getDocumentElement());
          } catch (Exception e)
          {
-            e.printStackTrace();
+            Logger.exception(e);
          }
       }
    }
@@ -345,7 +347,7 @@ public class JawsFileManager
          xm = (XMLManager)((BeanContextServices)getBeanContext()).getService(this,this,XMLManager.class,null,this);
       } catch (Exception e)
       {
-         e.printStackTrace();
+         Logger.exception(e);
       }
    }
    

@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.14 $
+ *   @version $Revision: 1.15 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -375,18 +375,11 @@ public class StatefulSessionContainer
     */
     public EJBObject getEJBObject(MethodInvocation mi) 
         throws java.rmi.RemoteException  {
-            
-       try {
-           
+          
         // All we need is an EJBObject for this Id, the first argument is the Id
         return containerInvoker.getStatefulSessionEJBObject(mi.getArguments()[0]);        
     
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-     }
+    }
         
 
    // EJBHome implementation ----------------------------------------
@@ -428,7 +421,7 @@ public class StatefulSessionContainer
                 map.put(m[i], getClass().getMethod(m[i].getName()+"Home", new Class[] { MethodInvocation.class }));
             } catch (NoSuchMethodException e)
             {
-                System.out.println(m[i].getName() + " in bean has not been mapped");
+                Logger.log(m[i].getName() + " in bean has not been mapped");
             }
         }
         
@@ -445,9 +438,9 @@ public class StatefulSessionContainer
         }
         catch (NoSuchMethodException e) {
                     
-            System.out.println("Couldn't find getEJBObject method on container");
+            Logger.log("Couldn't find getEJBObject method on container");
         }
-        catch (Exception e) { e.printStackTrace();}
+        catch (Exception e) { Logger.exception(e);}
         
         homeMapping = map;
     }
@@ -475,7 +468,7 @@ public class StatefulSessionContainer
             }
          } catch (NoSuchMethodException e)
          {
-            System.out.println(m[i].getName() + " in bean has not been mapped");
+            Logger.log(m[i].getName() + " in bean has not been mapped");
          }
       }
       
@@ -509,16 +502,13 @@ public class StatefulSessionContainer
          Method m = (Method)homeMapping.get(mi.getMethod());
          // Invoke and handle exceptions
          
-         System.out.println("SSC:invokeHome:mi is "+mi.getMethod().getName()+" map is "+m.getName());
+         Logger.log("SSC:invokeHome:mi is "+mi.getMethod().getName()+" map is "+m.getName());
          try
-         {
-             //Exception e = new Exception();
-             //e.printStackTrace();
-             
+         {          
             return m.invoke(StatefulSessionContainer.this, new Object[] { mi });
          } catch (InvocationTargetException e)
          {
-             e.printStackTrace();
+             Logger.log(e.getMessage());
             Throwable ex = e.getTargetException();
             if (ex instanceof Exception)
                throw (Exception)ex;
@@ -533,7 +523,7 @@ public class StatefulSessionContainer
          // Get method
          Method m = (Method)beanMapping.get(mi.getMethod());
          
-         System.out.println("SSC:invoke:mi is "+mi.getMethod().getName()+" map is "+m.getName());
+         Logger.log("SSC:invoke:mi is "+mi.getMethod().getName()+" map is "+m.getName());
          // Select instance to invoke (container or bean)
          if (m.getDeclaringClass().equals(StatefulSessionContainer.this.getClass()))
          {

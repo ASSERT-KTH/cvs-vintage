@@ -11,6 +11,7 @@ import java.sql.*;
 import java.util.Properties;
 import org.jboss.minerva.pools.*;
 import org.jboss.minerva.jdbc.*;
+import org.jboss.logging.Logger;
 
 /**
  * Object factory that creates java.sql.Connections.  This is meant for use
@@ -18,7 +19,7 @@ import org.jboss.minerva.jdbc.*;
  * you're interested in creating transactional-aware connections, see
  * XAConnectionFactory, which complies with the JDBC 2.0 standard extension.
  * @see org.jboss.minerva.factories.XAConnectionFactory
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class JDBCConnectionFactory extends PoolObjectFactory {
@@ -99,7 +100,7 @@ public class JDBCConnectionFactory extends PoolObjectFactory {
             else
                 return DriverManager.getConnection(url);
         } catch(SQLException e) {
-            e.printStackTrace();
+            Logger.exception(e);
         }
         return null;
     }

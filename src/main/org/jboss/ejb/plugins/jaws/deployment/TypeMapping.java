@@ -26,13 +26,15 @@ import com.dreambean.ejx.xml.XMLManager;
 import com.dreambean.ejx.xml.XmlExternalizable;
 import com.dreambean.ejx.Util;
 import com.dreambean.ejx.ejb.EjbReference;
+import org.jboss.logging.Logger;
+
 
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class TypeMapping
    extends BeanContextServicesSupport
@@ -93,7 +95,7 @@ public class TypeMapping
 			}
 		} catch (Exception e)
       {
-         e.printStackTrace();
+         Logger.exception(e);
       }
       
       // Check other types
@@ -144,7 +146,7 @@ public class TypeMapping
          }
       } catch (Exception e)
       {
-         e.printStackTrace();
+         Logger.exception(e);
       }
       
       // Check other types

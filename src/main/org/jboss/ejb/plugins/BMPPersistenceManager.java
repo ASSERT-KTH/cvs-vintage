@@ -22,6 +22,8 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.logging.Logger;
+
 
 /**
  *	<description> 
@@ -29,7 +31,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class BMPPersistenceManager
    implements EntityPersistenceManager
@@ -209,7 +211,7 @@ public class BMPPersistenceManager
    public void storeEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {
-//      System.out.println("Store entity");
+//      Logger.log("Store entity");
       try
       {
          ejbStore.invoke(ctx.getInstance(), new Object[0]);
@@ -256,7 +258,7 @@ public class BMPPersistenceManager
         callMethod = getFinderMethod(con.getBeanClass(), finderMethod, args);
       } catch (NoSuchMethodException me) {
         // debug
-        me.printStackTrace();
+        //Logger.exception(me);
         throw new RemoteException("couldn't find finder method in bean class. " + me.toString());
       }
 
@@ -266,7 +268,7 @@ public class BMPPersistenceManager
         result = callMethod.invoke(ctx.getInstance(), args);
       } catch (Exception e) {
         // debug
-        e.printStackTrace();
+        // DEBUG Logger.exception(e);
         throw new RemoteException("exception occured while invoking finder method:" + e.toString());
       }
       
