@@ -539,7 +539,7 @@ final class JasperLiaison {
 		handler.setErrorException(ex);
 		handler.setState(Handler.STATE_DISABLED);
 		// until the jsp cahnges, when it'll be enabled again
-		return 0;
+		return 500;
 	    }
 
 	    dep.setExpired( false );
