@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.30 2002/05/19 04:32:33 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.31 2002/05/21 08:44:56 spestov Exp $
  */
 public class TextUtilities
 {
@@ -222,7 +222,7 @@ public class TextUtilities
 		// Nothing found
 		return -1;
 	} //}}}
-	
+
 	//{{{ findMatchingBracketFuzzy() method
 	/**
 	 * Works exactly like the findMatchingBracket(Bufferm int, int) method,
@@ -245,7 +245,7 @@ public class TextUtilities
 			return result;	
 		}
 	} //}}}
-		
+
 	//{{{ findWordStart() method
 	/**
 	 * Locates the start of the word at the specified position.
@@ -398,12 +398,12 @@ loop:		for(int i = pos; i < line.length(); i++)
 	 * @since jEdit 2.7pre1
 	 */
 	public static boolean regionMatches(boolean ignoreCase, Segment text,
-					    int offset, char[] match)
+		int offset, char[] match)
 	{
 		int length = offset + match.length;
-		char[] textArray = text.array;
 		if(length > text.offset + text.count)
 			return false;
+		char[] textArray = text.array;
 		for(int i = offset, j = 0; i < length; i++, j++)
 		{
 			char c1 = textArray[i];
