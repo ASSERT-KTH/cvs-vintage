@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.11 2003/01/29 12:24:29 mkl Exp $
+// $Id: ModelFacade.java,v 1.12 2003/02/01 09:35:27 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -272,6 +272,9 @@ public class ModelFacade {
 	if (handle instanceof MGeneralizableElement) {
 	    return ((MGeneralizableElement)handle).isLeaf();
 	}
+    if (handle instanceof MOperation) {
+        return ((MOperation)handle).isLeaf();
+    }
 	// ...
 	throw new IllegalArgumentException("Unrecognized object " + handle);
     }
