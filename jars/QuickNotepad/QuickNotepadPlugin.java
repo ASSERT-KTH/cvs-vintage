@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: QuickNotepadPlugin.java,v 1.2 2001/11/09 20:26:17 jgellene Exp $
+ * $Id: QuickNotepadPlugin.java,v 1.3 2001/11/10 11:25:47 jgellene Exp $
  */
 
 import java.util.Vector;
@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.gui.*;
  *
  * @author John Gellene
  */
-public class QuickNotepadPlugin extends EBPlugin
+public class QuickNotepadPlugin extends EditPlugin
 {
     public static final String NAME = "quicknotepad";
 	public static final String MENU = "quicknotepad.menu";
