@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.config.themes;
 
 import java.awt.BorderLayout;
@@ -32,9 +33,12 @@ import javax.swing.JTextField;
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
 import org.columba.core.gui.util.FontSelectionDialog;
+import org.columba.core.util.GlobalResourceLoader;
 
 public class FontPanel extends JPanel implements ActionListener
 {
+        private static final String RESOURCE_PATH = "org.columba.mail.i18n.dialog";
+        
 	private JLabel mainFontLabel;
 	private JTextField mainFontTextField;
 	private JButton mainFontButton;
@@ -69,7 +73,7 @@ public class FontPanel extends JPanel implements ActionListener
 		mainFont = item.getMainFont();
 		textFont = item.getTextFont();
 
-		if (b == true)
+		if (b)
 		{
 			mainFontTextField.setFont(mainFont);
 			mainFontTextField.setText(mainFont.getFontName());
@@ -112,7 +116,10 @@ public class FontPanel extends JPanel implements ActionListener
 		c.gridwidth = 1;
 		c.weightx = 0.0;
 
-		mainFontLabel = new JLabel("MainFont:");
+		mainFontLabel = new JLabel(GlobalResourceLoader.getString(
+                                            RESOURCE_PATH,
+                                            "general",
+                                            "main_font"));
 		fontPanel.add(mainFontLabel);
 		layout.setConstraints( mainFontLabel, c );
 		fontPanel.add( mainFontLabel );
@@ -130,7 +137,10 @@ public class FontPanel extends JPanel implements ActionListener
 
 		//mainFontPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
 
-		mainFontButton = new JButton("Choose MainFont..");
+		mainFontButton = new JButton(GlobalResourceLoader.getString(
+                                            RESOURCE_PATH,
+                                            "general",
+                                            "choose"));
 		mainFontButton.setActionCommand("MAINFONT");
 		mainFontButton.addActionListener(this);
 		c.gridx = 2;
@@ -152,7 +162,10 @@ public class FontPanel extends JPanel implements ActionListener
 		//textFontPanel.setAlignmentX(0);
 		 * */
 
-		textFontLabel = new JLabel("TextFont:");
+		textFontLabel = new JLabel(GlobalResourceLoader.getString(
+                                            RESOURCE_PATH,
+                                            "general",
+                                            "text_font"));
 		c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 1;
@@ -176,7 +189,10 @@ public class FontPanel extends JPanel implements ActionListener
 
 		//textFontPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
 
-		textFontButton = new JButton("Choose TextFont..");
+		textFontButton = new JButton(GlobalResourceLoader.getString(
+                                            RESOURCE_PATH,
+                                            "general",
+                                            "choose"));
 		textFontButton.setActionCommand("TEXTFONT");
 		textFontButton.addActionListener(this);
 		c.gridx = 2;
@@ -207,7 +223,6 @@ public class FontPanel extends JPanel implements ActionListener
 				mainFont = fontDialog.getSelectedFont();
 				mainFontTextField.setFont(mainFont);
 				mainFontTextField.setText(mainFont.getFontName());
-
 			}
 
 		}
@@ -221,9 +236,7 @@ public class FontPanel extends JPanel implements ActionListener
 				textFont = fontDialog.getSelectedFont();
 				textFontTextField.setFont(textFont);
 				textFontTextField.setText(textFont.getFontName());
-
 			}
-
 		}
 	}
 }
