@@ -1,4 +1,4 @@
-// $Id: BaseTestGeneratorCpp.java,v 1.5 2005/01/02 16:43:59 linus Exp $
+// $Id: BaseTestGeneratorCpp.java,v 1.6 2005/01/07 00:02:08 euluis Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,12 +71,17 @@ class BaseTestGeneratorCpp extends TestCase {
         Object me = getAClass();
         Collection propertyChangeListeners = ProjectManager.getManager()
             .getCurrentProject().findFigsForMember(me);
-        Object model = ProjectManager.getManager().getCurrentProject()
-            .getModel();
         Object voidType = ProjectManager.getManager().getCurrentProject()
             .findType("void");
-        setFooMethod(Model.getUmlFactory().getCore().buildOperation(me, 
-                model, voidType, "foo", propertyChangeListeners));
+        setFooMethod(Model.getUmlFactory().getCore().buildOperation(me,
+                getModel(), voidType, "foo", propertyChangeListeners));
+    }
+    
+    /**
+     * @return the model
+     */
+    protected Object getModel() {
+        return ProjectManager.getManager().getCurrentProject().getModel();
     }
 
     /**
