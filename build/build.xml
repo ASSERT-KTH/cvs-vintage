@@ -654,7 +654,7 @@
     <!-- ================================================================== -->
     <!-- Create database if not bypassed in "db-type-check"                 -->
     <!-- ================================================================== -->
-    <target name="create-db-schema" depends="db-type-check,sql" 
+    <target name="create-db-schema" depends="db-type-check,sql,prepare" 
             if="auto.create.db">
 
         <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
