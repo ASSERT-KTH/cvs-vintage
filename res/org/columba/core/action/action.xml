@@ -17,6 +17,7 @@
  <action name="SelectAll" singleton="true" class="org.columba.core.gui.action.SelectAllAction"/>
  <action name="PrintSetup" class="org.columba.core.gui.action.PrintSetupAction"/> 
  <action name="Print" class="org.columba.core.gui.action.PrintAction"/> 
+ <action name="WorkOffline" class="org.columba.core.gui.action.WorkOfflineAction"/> 
  <action name="Close" class="org.columba.core.gui.action.CloseAction"/> 
  <action name="Exit" class="org.columba.core.gui.action.ExitAction"/> 
  <action name="Undo" singleton="true" class="org.columba.core.gui.action.UndoAction"/> 

@@ -21,27 +21,28 @@ import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.toolbar.ToolbarButton;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+/**
+ * A status bar intended to be displayed at the bottom of each window.
+ */
 public class StatusBar extends JComponent implements TaskManagerListener,
-    ActionListener, WorkerStatusChangeListener {
+    ActionListener, WorkerStatusChangeListener, ChangeListener {
+    
+    protected static Icon onlineIcon = ImageLoader.getImageIcon("online.png");
+    protected static Icon offlineIcon = ImageLoader.getImageIcon("offline.png");
     
     private JLabel label;
     private JProgressBar progressBar;
@@ -53,7 +54,6 @@ public class StatusBar extends JComponent implements TaskManagerListener,
     private TaskManager taskManager;
     private ImageSequenceTimer imageSequenceTimer;
     private JButton onlineButton;
-    private boolean online = true;
 
     /** Timer to use when clearing status bar text after a certain timeout */
     private Timer clearTextTimer;
@@ -61,6 +61,7 @@ public class StatusBar extends JComponent implements TaskManagerListener,
     public StatusBar(TaskManager tm) {
         taskManager = tm;
         tm.addTaskManagerListener(this);
+        MainInterface.connectionState.addChangeListener(this);
 
         imageSequenceTimer = new ImageSequenceTimer(tm);
 
@@ -69,12 +70,12 @@ public class StatusBar extends JComponent implements TaskManagerListener,
         label = new JLabel("");
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        onlineButton = new ToolbarButton(ImageLoader.getImageIcon("online.png"));
-        onlineButton.setToolTipText("You are in ONLINE state");
+        onlineButton = new ToolbarButton();
         onlineButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         onlineButton.setRolloverEnabled(true);
         onlineButton.setActionCommand("ONLINE");
         onlineButton.addActionListener(this);
+        stateChanged(null);
 
         progressBar = new JProgressBar(0, 100);
 
@@ -143,7 +144,7 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 
         onlinePanel.add(onlineButton, BorderLayout.CENTER);
 
-        //rightPanel.add(onlinePanel, BorderLayout.EAST);
+        rightPanel.add(onlinePanel, BorderLayout.EAST);
         add(rightPanel, BorderLayout.EAST);
 
         // init timer
@@ -299,46 +300,11 @@ public class StatusBar extends JComponent implements TaskManagerListener,
         String command = e.getActionCommand();
 
         if (command.equals("ONLINE")) {
-            if (online == false) {
-                onlineButton.setIcon(ImageLoader.getImageIcon("online.png"));
-                onlineButton.setToolTipText("You are in ONLINE state");
-                online = true;
-            } else {
-                onlineButton.setIcon(ImageLoader.getImageIcon("offline.png"));
-                onlineButton.setToolTipText("You are in OFFLINE state");
-                online = false;
-            }
-        }
-        else if ( command.equals("TASKMANAGER"))
-        {
+            MainInterface.connectionState.setOnline(
+                    !MainInterface.connectionState.isOnline());
+        } else if (command.equals("TASKMANAGER")) {
             TaskManagerDialog.createInstance();
-        }
-        
-
-        /*
-        if (command.equals(left.getActionCommand())) {
-                displayedWorkerIndex--;
-                if (displayedWorkerIndex == 0) {
-                        left.setEnabled(false);
-                }
-                if( displayedWorkerIndex < workerListSize-1 ) {
-                        right.setEnabled( true );
-                }
-
-                displayWorker(displayedWorkerIndex);
-
-        } else if (command.equals(right.getActionCommand())) {
-                displayedWorkerIndex++;
-                if (displayedWorkerIndex == workerListSize - 1) {
-                        right.setEnabled(false);
-                }
-                if( displayedWorkerIndex > 0 ) {
-                        left.setEnabled( true );
-                }
-                displayWorker(displayedWorkerIndex);
-        } else
-        */
-        if (command.equals("CANCEL_ACTION")) {
+        } else if (command.equals("CANCEL_ACTION")) {
             displayedWorker.cancel();
         }
     }
@@ -382,5 +348,17 @@ public class StatusBar extends JComponent implements TaskManagerListener,
      */
     public TaskManager getTaskManager() {
         return taskManager;
+    }
+    
+    public void stateChanged(ChangeEvent e) {
+        if (MainInterface.connectionState.isOnline()) {
+            onlineButton.setIcon(onlineIcon);
+            //TODO: i18n
+            onlineButton.setToolTipText("You are in ONLINE state");
+        } else {
+            onlineButton.setIcon(offlineIcon);
+            //TODO: i18n
+            onlineButton.setToolTipText("You are in OFFLINE state");
+        }
     }
 }

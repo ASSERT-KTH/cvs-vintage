@@ -58,6 +58,9 @@ public class MainInterface {
 
     /** Focus manager needed for cut/copy/paste/etc. */
     public static FocusManager focusManager;
+    
+    /** Encapsulates the system's connection state */
+    public static ConnectionState connectionState;
 
     /** No need to create instances of this class. */
     private MainInterface() {}

@@ -15,6 +15,7 @@
 		<menuitem action="PrintSetup"/>	
 		<separator/>
 		<extensionpoint name="bottom" />
+                <menuitem checkboxaction="WorkOffline"/>
 		<menuitem action="Close"/>			
 		<menuitem action="Exit"/>			
 	</menu>

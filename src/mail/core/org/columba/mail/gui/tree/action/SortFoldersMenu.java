@@ -95,10 +95,10 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
 
         FolderComparator comparator = null;
         if (element != null) {
-
             DefaultItem item = new DefaultItem(element);
             boolean ascending = item.getBoolean("ascending", true);
-            activeComparator = item.get("comparator").toUpperCase();
+            activeComparator = 
+                item.getRoot().getAttribute("comparator", "").toUpperCase();
 
             if (activeComparator.equals(ALPHABETIC_ACTION)) {
                 comparator = new FolderComparator(ascending);

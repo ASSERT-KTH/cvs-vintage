@@ -18,6 +18,10 @@ package org.columba.core.main;
 
 import java.io.File;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.EventListenerList;
+
 import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.command.DefaultCommandProcessor;
@@ -35,12 +39,14 @@ import org.columba.core.session.SessionController;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.main.MailMain;
 
+/**
+ * Columba's main class used to start the application.
+ */
 public class Main {
     private static boolean showStartUpFrame = true;
     private Main() {}
     
     public static void main(String[] args) {
-    
         ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
         try {
             cmdLineParser.parseCmdLine(args);
@@ -60,10 +66,17 @@ public class Main {
         
         SessionController.passToRunningSessionAndExit(args);
 
-        StartUpFrame frame = new StartUpFrame();
+        StartUpFrame frame = null;
         if(showStartUpFrame) {
+            frame = new StartUpFrame();
             frame.setVisible(true);
         }
+        
+        MainInterface.connectionState = new ConnectionStateImpl();
+        
+        System.setProperty("java.protocol.handler.pkgs",
+            System.getProperty("java.protocol.handler.pkgs", "") +
+            "|org.columba.core.url");
         
         AddressbookMain addressbook = new AddressbookMain();
         addressbook.initConfiguration();
@@ -110,7 +123,9 @@ public class Main {
         
         ColumbaServer.getColumbaServer().handleCommandLineParameters(args);
 
-        frame.setVisible(false);
+        if (frame != null) {
+            frame.setVisible(false);
+        }
 
         if (MainInterface.frameModel.getOpenFrames().length == 0) {
             MainInterface.frameModel.openStoredViews();
@@ -119,5 +134,44 @@ public class Main {
     
     public static void setShowStartUpFrame(boolean show) {
         showStartUpFrame = show;
+    }
+    
+    /**
+     * Default implementation for ConnectionState.
+     */
+    protected static class ConnectionStateImpl implements ConnectionState {
+        protected boolean online = false;
+        protected EventListenerList listenerList = new EventListenerList();
+        protected ChangeEvent e;
+        
+        protected ConnectionStateImpl() {
+             e = new ChangeEvent(this);
+        }
+        
+        public void addChangeListener(ChangeListener l) {
+            listenerList.add(ChangeListener.class, l);
+        }
+        
+        public synchronized boolean isOnline() {
+            return online;
+        }
+        
+        public void removeChangeListener(ChangeListener l) {
+            listenerList.remove(ChangeListener.class, l);
+        }
+        
+        public synchronized void setOnline(boolean b) {
+            if (online != b) {
+                online = b;
+                Object[] listeners = listenerList.getListenerList();
+                // Process the listeners last to first, notifying
+                // those that are interested in this event
+                for (int i = listeners.length - 2; i >= 0; i -= 2) {
+                    if (listeners[i] == ChangeListener.class) {
+                        ((ChangeListener) listeners[i + 1]).stateChanged(e);
+                    }
+                }
+            }
+        }
     }
 }
