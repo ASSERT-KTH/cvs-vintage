@@ -36,10 +36,12 @@ INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME)
     VALUES (12, 'Issue | Search');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
     VALUES (13, 'Issue | View');
+INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
+    VALUES (14, 'Domain | Admin');
 
 /*
  * Create an account 'turbine@collab.net' for system administartor
- * Remeber to set a good password for this user in a production system!
+ * Remember to set a good password for this user in a production system!
  */
 INSERT INTO TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, CONFIRM_VALUE) 
     VALUES (0, 'turbine@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'turbine', 'turbine', 'CONFIRMED');
@@ -137,7 +139,7 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
 
 /*
  *  QA ROLE
- *  Developer has all project permissions of observer.
+ *  QA has all project permissions of developer.
  */
 insert into xxxx_populate_RolePermission
 	       select  ToRole.ROLE_ID, ToCopy.PERMISSION_ID
