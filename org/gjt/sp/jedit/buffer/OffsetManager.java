@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2001, 2002 Slava Pestov
+ * Copyright (C) 2001, 2003 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.58 2003/04/21 03:21:36 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.59 2003/04/21 23:30:38 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager

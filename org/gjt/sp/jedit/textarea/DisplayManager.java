@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.29 2003/04/21 04:10:01 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.30 2003/04/21 23:30:38 spestov Exp $
  */
 public class DisplayManager
 {
@@ -828,6 +828,7 @@ public class DisplayManager
 			{
 				scrollLine = newScrollLine;
 				physicalLine += amount;
+				ensurePhysicalLineIsVisible();
 			}
 
 			offsetMgr.addAnchor(this);
@@ -870,6 +871,7 @@ public class DisplayManager
 			{
 				scrollLine = newScrollLine;
 				physicalLine -= amount;
+				ensurePhysicalLineIsVisible();
 			}
 
 			offsetMgr.addAnchor(this);

@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.157 2003/04/21 03:21:35 spestov Exp $
+ * @version $Id: Buffer.java,v 1.158 2003/04/21 23:30:36 spestov Exp $
  */
 public class Buffer
 {
@@ -2047,10 +2047,6 @@ public class Buffer
 			if(lineIndex < 0 || lineIndex >= offsetMgr.getLineCount())
 				throw new ArrayIndexOutOfBoundsException(lineIndex);
 
-			/*
-			 * Scan backwards, looking for a line with
-			 * a valid line context.
-			 */
 			int firstInvalidLineContext = offsetMgr.getFirstInvalidLineContext();
 			int start;
 			if(textMode || firstInvalidLineContext == -1)
@@ -2118,9 +2114,9 @@ public class Buffer
 			}
 
 			int lineCount = offsetMgr.getLineCount();
-			if(lineCount == lineIndex)
+			if(lineCount - 1 == lineIndex)
 				offsetMgr.setFirstInvalidLineContext(-1);
-			else if(nextLineRequested && lineCount - lineIndex > 1)
+			else if(nextLineRequested)
 				offsetMgr.setFirstInvalidLineContext(lineIndex + 1);
 			else
 			{
@@ -2875,7 +2871,8 @@ loop:		for(int i = 0; i < seg.count; i++)
 				throw new ArrayIndexOutOfBoundsException(line);
 
 			int firstInvalidFoldLevel = offsetMgr.getFirstInvalidFoldLevel();
-			if(firstInvalidFoldLevel == -1 || line < firstInvalidFoldLevel)
+			if(firstInvalidFoldLevel == -1 || line < firstInvalidFoldLevel
+				|| foldHandler instanceof DummyFoldHandler)
 			{
 				return offsetMgr.getFoldLevel(line);
 			}

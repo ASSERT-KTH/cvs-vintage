@@ -23,7 +23,6 @@
 package org.gjt.sp.jedit.browser;
 
 //{{{ Imports
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.*;
 import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.jEdit;
@@ -33,7 +32,7 @@ import org.gjt.sp.util.*;
 /**
  * A browser I/O request.
  * @author Slava Pestov
- * @version $Id: BrowserIORequest.java,v 1.15 2003/01/12 03:08:23 spestov Exp $
+ * @version $Id: BrowserIORequest.java,v 1.16 2003/04/21 23:30:37 spestov Exp $
  */
 class BrowserIORequest extends WorkRequest
 {
@@ -67,11 +66,10 @@ class BrowserIORequest extends WorkRequest
 	 * @param path1 The first path name to operate on
 	 * @param path2 The second path name to operate on
 	 * @param node Only used for type == LIST_DIRECTORY
-	 * @param loadingRoot Is this the root node?
 	 */
 	public BrowserIORequest(int type, VFSBrowser browser,
 		Object session, VFS vfs, String path1, String path2,
-		DefaultMutableTreeNode node, boolean loadingRoot)
+		Object node)
 	{
 		this.type = type;
 		this.browser = browser;
@@ -80,7 +78,6 @@ class BrowserIORequest extends WorkRequest
 		this.path1 = path1;
 		this.path2 = path2;
 		this.node = node;
-		this.loadingRoot = loadingRoot;
 	} //}}}
 
 	//{{{ run() method
@@ -143,7 +140,7 @@ class BrowserIORequest extends WorkRequest
 	private VFS vfs;
 	private String path1;
 	private String path2;
-	private DefaultMutableTreeNode node;
+	private Object node;
 	private boolean loadingRoot;
 	//}}}
 
@@ -191,7 +188,7 @@ class BrowserIORequest extends WorkRequest
 
 		setAbortable(false);
 
-		browser.directoryLoaded(node,loadingRoot,canonPath,directory);
+		browser.directoryLoaded(node,canonPath,directory);
 	} //}}}
 
 	//{{{ delete() method
