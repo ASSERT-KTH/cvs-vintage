@@ -60,6 +60,9 @@ import org.waffel.jscf.JSCFStatement;
  */
 public class PGPMessageFilter extends AbstractFilter {
 
+    private static final java.util.logging.Logger LOG = 
+      java.util.logging.Logger.getLogger("org.columba.mail.gui.message.filter");
+
     private ColumbaHeader header;
 
     private MimeTree mimePartTree;
@@ -121,7 +124,7 @@ public class PGPMessageFilter extends AbstractFilter {
             verify(folder, uid);
 
         } else if (firstPartMimeType.getSubtype().equals("encrypted")) {
-
+            LOG.fine("Mimepart type encrypted found");
             decrypt(folder, uid);
 
         } else {
@@ -146,12 +149,15 @@ public class PGPMessageFilter extends AbstractFilter {
      */
     private void decrypt(MessageFolder folder, Object uid) throws Exception,
             IOException {
+                
+        LOG.fine("start decrypting");
         PGPItem pgpItem = null;
         // we need the pgpItem, to extract the path to gpg
         pgpItem = MailInterface.config.getAccountList().getDefaultAccount()
                 .getPGPItem();
-        pgpItem.set("id", new BasicHeader(header.getHeader()).getTo()[0]
-                .getMailAddress());
+         // this is wrong! we need the default id.
+        //pgpItem.set("id", new BasicHeader(header.getHeader()).getTo()[0]
+        //        .getMailAddress());
 
         MimePart encryptedMultipart = mimePartTree.getRootMimeNode();
 
@@ -170,20 +176,27 @@ public class PGPMessageFilter extends AbstractFilter {
         try {
             JSCFController controller = JSCFController.getInstance();
             JSCFConnection con = controller.getConnection();
+            LOG.fine("new JSCConnection");
             JSCFStatement stmt = con.createStatement();
+            LOG.fine("new Statement");
             PGPPassChecker passCheck = PGPPassChecker.getInstance();
             boolean check = passCheck.checkPassphrase(con);
+            LOG.fine("after pass check, check is "+check);
             if (!check) {
                 pgpMode = SecurityInformationController.DECRYPTION_FAILURE;
                 // TODO make i18n!
                 pgpMessage = "wrong passphrase";
                 return;
             }
+            LOG.fine("encrypted is != null?: "+(encryptedPart != null));
             JSCFResultSet res = stmt.executeDecrypt(encryptedPart);
+            LOG.fine("after calling decrypting");
             if (res.isError()) {
+                LOG.fine("the result set contains errors ");
                 pgpMode = SecurityInformationController.DECRYPTION_FAILURE;
                 pgpMessage = StreamUtils.readInString(res.getErrorStream())
                         .toString();
+                LOG.fine("error message: "+pgpMessage);
                 return;
             } else {
                 decryptedStream = res.getResultStream();
@@ -191,7 +204,7 @@ public class PGPMessageFilter extends AbstractFilter {
             }
         } catch (JSCFException e) {
             e.printStackTrace();
-
+            LOG.severe(e.getMessage());
             pgpMode = SecurityInformationController.DECRYPTION_FAILURE;
             pgpMessage = e.getMessage();
 
@@ -202,7 +215,7 @@ public class PGPMessageFilter extends AbstractFilter {
             // TODO should be removed if we only use Streams!
             String decryptedBodyPart = StreamUtils
                     .readInString(decryptedStream).toString();
-
+            LOG.fine("the decrypted Body part: "+decryptedBodyPart);
             // construct new Message from decrypted string
             message = new ColumbaMessage(MessageParser
                     .parse(new CharSequenceSource(decryptedBodyPart)));
