@@ -14,14 +14,14 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Member;
 
 import java.io.Serializable;
-
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 /**
  * Routines for converting between strongly-typed interfaces and
  * generic InvocationHandler objects.
  *
- * @version <tt>$Revision: 1.6 $</tt>
+ * @version <tt>$Revision: 1.7 $</tt>
  * @author Unknown
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -67,11 +67,11 @@ public final class Proxies
     *   // x1 == x2
     * MyInterface x3 = (MyInterface) Proxies.newTarget(i);
     *   // x1 != x3, but calls to x3 are forwarded via i to x1
-    * </code>    
+    * </code>
     */
    public static ProxyTarget newTarget(ClassLoader parent,
-                                       InvocationHandler invocationHandler,
-                                       Class targetTypes[])
+      InvocationHandler invocationHandler,
+      Class targetTypes[])
       throws Exception
    {
       return Impl.getImpl(targetTypes).newTarget(invocationHandler, parent);
@@ -118,13 +118,13 @@ public final class Proxies
     * </code>
     */
    public static ProxyInvocationHandler newInvocationHandler(Object target,
-                                                             Class targetType)
+      Class targetType)
    {
       return Impl.getImpl(targetType).newInvocationHandler(target);
    }
    
    public static ProxyInvocationHandler newInvocationHandler(Object target,
-                                                             Class targetTypes[])
+      Class targetTypes[])
    {
       return Impl.getImpl(targetTypes).newInvocationHandler(target);
    }
@@ -181,14 +181,14 @@ public final class Proxies
     * @see #newInvocationHandler
     */
    public static InvocationHandler getInvocationHandler(Object target,
-                                                        Class targetTypes[])
+      Class targetTypes[])
    {
       if (target instanceof ProxyTarget)
       {
          ProxyTarget tproxy = (ProxyTarget)target;
          InvocationHandler invocationHandler = tproxy.getInvocationHandler();
          if (targetTypes == null ||
-         Impl.sameTypes(tproxy.getTargetTypes(), targetTypes))
+            Impl.sameTypes(tproxy.getTargetTypes(), targetTypes))
          {
             return invocationHandler;
          }
@@ -198,14 +198,14 @@ public final class Proxies
    }
    
    public static InvocationHandler getInvocationHandler(Object target,
-                                                        Class targetType)
+      Class targetType)
    {
       // (should this be optimized?)
       if (targetType == null)
       {
          return getInvocationHandler(target, (Class[])null);
       }
-
+      
       return getInvocationHandler(target, new Class[] { targetType });
    }
    
@@ -230,7 +230,7 @@ public final class Proxies
    {
       return Impl.getImpl(targetTypes).copyMethods();
    }
-
+   
    public static void forgetProxyForClass(Class clazz)
    {
       Impl.forgetProxyForClass(clazz);
@@ -268,7 +268,7 @@ public final class Proxies
          {
             methodLists[i] = checkTargetType(targetTypes[i]);
          }
-
+         
          checkSuperclass();
          this.methods = combineMethodLists(methodLists);
       }
@@ -278,7 +278,8 @@ public final class Proxies
          Impl impl = (Impl) impls.get(targetType);
          if (impl == null)
          {
-            impl = new Impl(new Class[] { targetType });
+            impl = new Impl(new Class[]
+            { targetType });
             impls.put(targetType, impl);
          }
          return impl;
@@ -304,7 +305,8 @@ public final class Proxies
          
          // now link it into the table
          targetTypes = copyAndUniquify(targetTypes);
-         Impl impl1 = getImpl(new Class[] { targetTypes[0] });
+         Impl impl1 = getImpl(new Class[]
+         { targetTypes[0] });
          Impl impl = new Impl(targetTypes);
          impl.more = impl1.more;
          impl1.more = impl;
@@ -312,13 +314,13 @@ public final class Proxies
       }
       
       /**
-       * The <code>forgetProxyForClass</code> method removes the impl from the 
-       * class-impl map.  This releases the UnifiedClassloader used to load the 
+       * The <code>forgetProxyForClass</code> method removes the impl from the
+       * class-impl map.  This releases the UnifiedClassloader used to load the
        * class we are constructing the proxy for.
        *
        * This may not work if the original class[] contained many classes, but
        * seems OK with one class + Serializable, which is what is used by the cmp2
-       * engine.  At present the cmp2 engine is the only caller of this method 
+       * engine.  At present the cmp2 engine is the only caller of this method
        * (through Proxy).
        *
        * @param clazz a <code>Class</code> value
@@ -327,8 +329,8 @@ public final class Proxies
       {
          impls.remove(clazz);
       }
-
-
+      
+      
       // do the arrays have the same elements?
       // (duplication and reordering are ignored)
       static boolean sameTypes(Class tt1[], Class tt2[])
@@ -360,7 +362,7 @@ public final class Proxies
                      ++seen2;
                   }
                }
-
+               
                if (seen2 == 0)
                {
                   // c does not occur in tt2
@@ -410,26 +412,26 @@ public final class Proxies
          if (targetType.isArray())
          {
             throw new IllegalArgumentException
-               ("cannot subclass an array type: " + targetType.getName());
+            ("cannot subclass an array type: " + targetType.getName());
          }
-
+         
          if (targetType.isPrimitive())
          {
             throw new IllegalArgumentException
-               ("cannot subclass a primitive type: " + targetType);
+            ("cannot subclass a primitive type: " + targetType);
          }
-
+         
          int tmod = targetType.getModifiers();
          if (Modifier.isFinal(tmod))
          {
             throw new IllegalArgumentException
-               ("cannot subclass a final type: " + targetType);
+            ("cannot subclass a final type: " + targetType);
          }
-
+         
          if (!Modifier.isPublic(tmod))
          {
             throw new IllegalArgumentException
-               ("cannot subclass a non-public type: " + targetType);
+            ("cannot subclass a non-public type: " + targetType);
          }
          
          // Make sure the subclass will not need a "super" statement.
@@ -440,10 +442,11 @@ public final class Proxies
                if (superclass.isAssignableFrom(targetType))
                {
                   superclass = targetType;
-               } 
-               else {
+               }
+               else
+               {
                   throw new IllegalArgumentException
-                     ("inconsistent superclass: " + targetType);
+                  ("inconsistent superclass: " + targetType);
                }
             }
          }
@@ -459,7 +462,7 @@ public final class Proxies
                methodList[nm++] = m;    // (reuse the method array)
             }
          }
-
+         
          while (nm < methodList.length)
          {
             methodList[nm++] = null;     // (pad the reused method array)
@@ -476,15 +479,15 @@ public final class Proxies
             Constructor c = constructors[i];
             int mod = c.getModifiers();
             if (Modifier.isPublic(mod)
-                && c.getParameterTypes().length == 0)
+               && c.getParameterTypes().length == 0)
             {
                return;  // OK
             }
          }
-
+         
          throw new IllegalArgumentException
             ("cannot subclass without nullary constructor: "
-             +superclass.getName());
+            +superclass.getName());
       }
       
       /**
@@ -494,33 +497,33 @@ public final class Proxies
       static boolean eligibleForInvocationHandler(Method m)
       {
          int mod = m.getModifiers();
-
+         
          if (Modifier.isStatic(mod) || Modifier.isFinal(mod))
          {
             // can't override these
             return false;
          }
-
+         
          if (!Modifier.isAbstract(mod))
          {
             // do not support methods with "super"
             return false;
          }
-
+         
          return true;
       }
-
+      
       /**
        * Are the 2 methods equal in terms of conflicting with each other.
        * i.e. String toString() and Map toString() are equal since only one
        * toString() can be defined in a class.
        */
-      static boolean areEqual(Method m1, Method m2) {
-         
+      static boolean areEqual(Method m1, Method m2)
+      {         
          // Check method names.
          if( ! m1.getName().equals(m2.getName()) )
             return false;
-            
+         
          // Check parameters
          Class a1[] = m1.getParameterTypes();
          Class a2[] = m2.getParameterTypes();
@@ -529,7 +532,7 @@ public final class Proxies
          for( int i=0; i < a1.length; i++)
             if( !a1[i].equals(a1[i]) )
                return false;
-               
+         
          return true;
       }
       
@@ -541,70 +544,77 @@ public final class Proxies
       {
          int nm = 0;
          for (int i = 0; i < methodLists.length; i++)
+         {
             nm += methodLists[i].length;
+         }
          Method methods[] = new Method[nm];
 
          // Merge the methods into a single array.
          nm=0;
          for (int i = 0; i < methodLists.length; i++)
-            for (int j = 0; j < methodLists[i].length; j++) 
+            for (int j = 0; j < methodLists[i].length; j++)
                methods[nm++]=methodLists[i][j];
          
          // Remove duplicate methods. (set them to null)
-         for( int i=0; i < methods.length; i++ ) {
+         for( int i=0; i < methods.length; i++ )
+         {
             if( methods[i] == null )
                continue;
-            for( int j=i+1; j < methods.length; j++ ) {
+            for( int j=i+1; j < methods.length; j++ )
+            {
                if( methods[j] == null )
                   continue;
-               if( areEqual(methods[i], methods[j]) ) {
+               if( areEqual(methods[i], methods[j]) )
+               {
                   methods[j]=null;
                   nm--;
                }
-            }         
+            }
          }
          
          // shorten and copy the array
-         Method methodsCopy[] = new Method[nm];
-         nm=0;
+         ArrayList tmp = new ArrayList();
          for (int i = 0; i < methods.length; i++)
+         {
             if( methods[i] != null )
-               methodsCopy[nm++] = methods[i];
-         
+               tmp.add(methods[i]);
+         }
+         Method methodsCopy[] = new Method[tmp.size()];
+         tmp.toArray(methodsCopy);
          return methodsCopy;
       }
-      
+
       Method[] copyMethods()
       {
          return (Method[])methods.clone();
       }
-
+      
       Class[] copyTargetTypes()
       {
          return (Class[])targetTypes.clone();
       }
       
       ProxyTarget newTarget(InvocationHandler invocationHandler,
-                            ClassLoader parent)
+         ClassLoader parent)
          throws Exception
       {
          if (proxyConstructor == null)
          {
             // make the proxy constructor
-            ProxyCompiler pc = new ProxyCompiler(parent, 
-                                                 superclass,
-                                                 targetTypes, 
-                                                 methods,
-                                                 null);
-
+            ProxyCompiler pc = new ProxyCompiler(parent,
+            superclass,
+            targetTypes,
+            methods,
+            null);
+            
             Class type[] = { InvocationHandler.class };
             proxyConstructor = pc.getProxyType().getConstructor(type);
          }
-
+         
          Object args[] = { invocationHandler };
          return (ProxyTarget)proxyConstructor.newInstance(args);
       }
-      
+
       ProxyInvocationHandler newInvocationHandler(final Object target)
       {
          if (proxyString == null)
@@ -616,7 +626,7 @@ public final class Proxies
             }
             proxyString = s;
          }
-
+         
          return new ProxyInvocationHandler()
          {
             // (ISSUE: Should this be made subclassable?)
@@ -636,8 +646,8 @@ public final class Proxies
             }
             
             public Object invoke(Object dummy,
-                                 Method method,
-                                 Object values[])
+               Method method,
+               Object values[])
                throws Throwable
             {
                return Impl.this.invoke(target, method, values);
@@ -645,13 +655,13 @@ public final class Proxies
          };
       }
       
-      /** 
+      /**
        * The heart of a ProxyInvocationHandler.
        */
       Object invoke(Object target, Member method, Object values[])
          throws Throwable
       {
-         // Note:  
+         // Note:
          //
          // We will not invoke the method unless we are expecting it.
          // Thus, we cannot blindly call Method.invoke, but must first
@@ -689,7 +699,7 @@ public final class Proxies
                }
             }
             
-         } 
+         }
          catch (InvocationTargetException e)
          {
             throw e.getTargetException();
