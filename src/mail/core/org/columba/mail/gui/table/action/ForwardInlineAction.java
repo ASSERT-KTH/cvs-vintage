@@ -30,10 +30,9 @@ import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
- * @author frd
+ * Forward Message Inline Action.
  *
- * To change this generated comment go to 
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author fdietz
  */
 public class ForwardInlineAction
 	extends FrameAction

@@ -17,6 +17,7 @@
 package org.columba.mail.gui.config.general;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +27,7 @@ import java.io.File;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -33,8 +35,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JSpinner;
 import javax.swing.KeyStroke;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
@@ -60,7 +63,8 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 	JButton helpButton;
 
 	JCheckBox markCheckBox;
-	JTextField markTextField;
+	JSpinner markSpinner;
+
 	JCheckBox preferHtmlCheckBox;
 	JCheckBox enableSmiliesCheckBox;
 	JCheckBox quotedColorCheckBox;
@@ -77,8 +81,6 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 	JLabel forwardLabel;
 	JComboBox forwardComboBox;
-	
-	
 
 	public MailOptionsDialog(JFrame frame) {
 		super(
@@ -90,8 +92,6 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 		layoutComponents();
 
-		
-
 		updateComponents(true);
 
 		pack();
@@ -101,22 +101,59 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		setVisible(true);
 	}
 
-	
-
 	public void updateComponents(boolean b) {
 
 		if (b) {
 
-			XmlElement markasread =
-				MailConfig.get("options").getElement("/options/markasread");
+			XmlElement options =
+				MailConfig.get("options").getElement("/options");
+
+			XmlElement gui = options.getElement("gui");
+
+			XmlElement messageviewer = gui.getElement("messageviewer");
+			if (messageviewer == null) {
+				messageviewer = gui.addSubElement("messageviewer");
+			}
+
+			XmlElement markasread = options.getElement("markasread");
 
 			String delay = markasread.getAttribute("delay", "2");
+			String enable = markasread.getAttribute("enabled", "true");
+			if (enable.equals("true"))
+				markCheckBox.setSelected(true);
+			else
+				markCheckBox.setSelected(false);
 
-			markTextField.setText(delay);
+			markSpinner.setValue(new Integer(delay));
 
-			XmlElement html =
-				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
-					"/options/html");
+			XmlElement smilies = messageviewer.getElement("smilies");
+			if (smilies == null) {
+				smilies = messageviewer.addSubElement("smilies");
+			}
+
+			String enableSmilies = smilies.getAttribute("enabled", "true");
+			if (enableSmilies.equals("true"))
+				enableSmiliesCheckBox.setSelected(true);
+			else
+				enableSmiliesCheckBox.setSelected(false);
+
+			XmlElement quote = messageviewer.getElement("quote");
+			if (quote == null) {
+				quote = messageviewer.addSubElement("quote");
+			}
+
+			String enabled = quote.getAttribute("enabled", "true");
+			// default color value in html-slang = #949494
+			String color = quote.getAttribute("color", "0");
+			if (enabled.equals("true"))
+				quotedColorCheckBox.setSelected(true);
+			else
+				quotedColorCheckBox.setSelected(false);
+
+			int c = Integer.parseInt(color);
+			quotedColorButton.setBackground(new Color(c));
+
+			XmlElement html = options.getElement("html");
 
 			boolean preferhtml =
 				new Boolean(html.getAttribute("prefer")).booleanValue();
@@ -150,6 +187,30 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 			toolbarComboBox.setSelectedIndex(state);
 
+			XmlElement composerOptions =
+				MailConfig.getComposerOptionsConfig().getRoot().getElement(
+					"/options");
+			XmlElement subject = composerOptions.getElement("subject");
+			if (subject == null) {
+				subject = composerOptions.addSubElement("subject");
+			}
+
+			String askSubject = subject.getAttribute("ask_if_empty", "true");
+			if (askSubject.equals("true"))
+				emptySubjectCheckBox.setSelected(true);
+			else
+				emptySubjectCheckBox.setSelected(false);
+
+			XmlElement forward = composerOptions.getElement("forward");
+			if (forward == null) {
+				forward = composerOptions.addSubElement("forward");
+			}
+			
+			String forwardStyle = forward.getAttribute("style", "attachment");
+			if ( forwardStyle.equals("attachment"))
+				forwardComboBox.setSelectedIndex(0);
+			else
+				forwardComboBox.setSelectedIndex(1);
 			// composer
 			String path =
 				MailConfig.getComposerOptionsConfig().getSpellcheckItem().get(
@@ -158,17 +219,51 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 		} else {
 
-			
-			XmlElement markasread =
-				MailConfig.get("options").getElement("/options/markasread");
+			XmlElement options =
+				MailConfig.get("options").getElement("/options");
 
-			// changing the attribute also notifies all Observers
-			markasread.addAttribute("delay", markTextField.getText());
-			
-			
-			XmlElement html =
-				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
-					"/options/html");
+			XmlElement gui = options.getElement("gui");
+
+			XmlElement messageviewer = gui.getElement("messageviewer");
+
+			XmlElement markasread = options.getElement("markasread");
+
+			markasread.addAttribute(
+				"delay",
+				((Integer) markSpinner.getValue()).toString());
+
+			if (markCheckBox.isSelected())
+				markasread.addAttribute("enabled", "true");
+			else
+				markasread.addAttribute("enabled", "false");
+
+			// notify configuration changes listeners	
+			// @see org.columba.mail.gui.table.util.MarkAsReadTimer		
+			markasread.notifyObservers();
+
+			XmlElement smilies = messageviewer.getElement("smilies");
+			if (enableSmiliesCheckBox.isSelected())
+				smilies.addAttribute("enabled", "true");
+			else
+				smilies.addAttribute("enabled", "false");
+
+			// send notification event
+			// @see org.columba.mail.gui.message.BodyTextViewer
+			smilies.notifyObservers();
+
+			XmlElement quote = messageviewer.getElement("quote");
+			Color color = quotedColorButton.getBackground();
+			quote.addAttribute("color", new Integer(color.getRGB()).toString());
+			if (quotedColorCheckBox.isSelected())
+				quote.addAttribute("enabled", "true");
+			else
+				quote.addAttribute("enabled", "false");
+
+			// send notifaction event
+			// @see org.columba.mail.gui.message.BodyTextViewer
+			quote.notifyObservers();
+
+			XmlElement html = options.getElement("html");
 
 			if (preferHtmlCheckBox.isSelected())
 				html.addAttribute("prefer", Boolean.TRUE.toString());
@@ -202,10 +297,31 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 			}
 
-			// get language configuration
-			XmlElement locale =
-				Config.get("options").getElement("/options/locale");
+			XmlElement composerOptions =
+				MailConfig.getComposerOptionsConfig().getRoot().getElement(
+					"/options");
 
+			XmlElement subject = composerOptions.getElement("subject");
+			if (emptySubjectCheckBox.isSelected())
+				subject.addAttribute("ask_if_empty", "true");
+			else
+				subject.addAttribute("ask_if_empty", "false");
+
+			// notify listeners
+			// @see org.columba.mail.gui.composer.SubjectController
+			subject.notifyObservers();
+
+
+			XmlElement forward = composerOptions.getElement("forward");
+			if ( forwardComboBox.getSelectedIndex() == 0)
+				forward.addAttribute("style", "attachment");
+			else
+				forward.addAttribute("style", "inline");
+			
+			// notify listeners
+			// @see org.columba.mail.gui.table.action.ForwardAction	
+			forward.notifyObservers();
+			
 			// composer
 			MailConfig.getComposerOptionsConfig().getSpellcheckItem().set(
 				"executable",
@@ -224,7 +340,8 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 					"general",
 					"mark_messages_read"));
 
-		markTextField = new JTextField(3);
+		markSpinner = new JSpinner();
+		markSpinner.setModel(new SpinnerNumberModel(1, 0, 99, 1));
 
 		//TODO:LOCALIZE
 		emptyTrashCheckBox = new JCheckBox("Empty trash on exit");
@@ -236,6 +353,8 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		//TODO:LOCALIZE
 		quotedColorCheckBox = new JCheckBox("Color quoted text");
 		quotedColorButton = new JButton("..");
+		quotedColorButton.setActionCommand("COLOR");
+		quotedColorButton.addActionListener(this);
 
 		preferHtmlCheckBox =
 			new JCheckBox(
@@ -288,7 +407,6 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 					"dialog",
 					"general",
 					"ask_on_empty_subject"));
-		emptySubjectCheckBox.setEnabled(false);
 
 		// TODO: LOCALIZE
 		forwardLabel = new JLabel("Forward message as");
@@ -351,7 +469,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		builder.append(quotedColorCheckBox, quotedColorButton);
 		builder.nextLine();
 
-		builder.append(markCheckBox, markTextField);
+		builder.append(markCheckBox, markSpinner);
 
 		builder.nextLine();
 
@@ -364,6 +482,8 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 		builder.append(forwardLabel, forwardComboBox);
 		builder.nextLine();
+
+		//layout.setRowGroups(new int[][]{ {1, 3, 5, 7, 9, 11, 13, 15} });
 
 		/*
 		builder.append(spellLabel, spellButton);
@@ -414,6 +534,16 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 				File file = fc.getSelectedFile();
 
 				spellButton.setText(file.getPath());
+			}
+		} else if (action.equals("COLOR")) {
+			//Set up color chooser for setting quoted color
+			Color newColor =
+				JColorChooser.showDialog(
+					this,
+					"Choose Quoted Text Color",
+					null);
+			if (newColor != null) {
+				quotedColorButton.setBackground(newColor);
 			}
 		}
 	}

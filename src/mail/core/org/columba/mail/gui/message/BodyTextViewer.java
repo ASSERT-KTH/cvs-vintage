@@ -18,9 +18,9 @@ package org.columba.mail.gui.message;
 import java.awt.Font;
 import java.awt.Insets;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JTextPane;
 import javax.swing.text.html.HTMLDocument;
@@ -31,6 +31,7 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.io.TempFileStore;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.parser.text.HtmlParser;
 
@@ -42,7 +43,7 @@ import org.columba.mail.parser.text.HtmlParser;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class BodyTextViewer extends JTextPane {
+public class BodyTextViewer extends JTextPane implements Observer {
 
 	// stylesheet is created dynamically because
 	// user configurable fonts are used
@@ -52,6 +53,11 @@ public class BodyTextViewer extends JTextPane {
 	private DocumentParser parser;
 
 	private HTMLEditorKit htmlEditorKit;
+
+	// enable/disable smilies configuration 
+	private XmlElement smilies;
+
+	private boolean enableSmilies;
 
 	public BodyTextViewer() {
 		setMargin(new Insets(5, 5, 5, 5));
@@ -65,6 +71,39 @@ public class BodyTextViewer extends JTextPane {
 		setContentType("text/html");
 
 		initStyleSheet();
+
+		XmlElement gui = MailConfig.get("options").getElement("/options/gui");
+		XmlElement messageviewer = gui.getElement("messageviewer");
+		if (messageviewer == null) {
+			messageviewer = gui.addSubElement("messageviewer");
+		}
+		smilies = messageviewer.getElement("smilies");
+		if (smilies == null) {
+			smilies = gui.addSubElement("smilies");
+		}
+
+		// register as configuration change listener
+		smilies.addObserver(this);
+
+		String enable = smilies.getAttribute("enabled", "true");
+		if (enable.equals("true"))
+			enableSmilies = true;
+		else
+			enableSmilies = false;
+
+		XmlElement quote = messageviewer.getElement("quote");
+		if (quote == null) {
+			quote = messageviewer.addSubElement("quote");
+		}
+
+		// register as configuration change listener
+		quote.addObserver(this);
+		
+		String enabled = quote.getAttribute("enabled", "true");
+		String color = quote.getAttribute("color", "0");
+		
+		// TODO use value in initStyleSheet()
+
 	}
 
 	/**
@@ -149,7 +188,8 @@ public class BodyTextViewer extends JTextPane {
 				r = parser.markQuotings(r);
 
 				// add smilies
-				r = parser.addSmilies(r);
+				if (enableSmilies == true)
+					r = parser.addSmilies(r);
 
 				// encapsulate bodytext in html-code
 				r = transformToHTML(new StringBuffer(r));
@@ -186,6 +226,20 @@ public class BodyTextViewer extends JTextPane {
 		// append
 		buf.append("</P></BODY></HTML>");
 		return buf.toString();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.gui.config.general.MailOptionsDialog
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable arg0, Object arg1) {
+		String enable = smilies.getAttribute("enabled", "true");
+		if (enable.equals("true"))
+			enableSmilies = true;
+		else
+			enableSmilies = false;
 	}
 
 }

@@ -70,12 +70,18 @@ public class MarkAsReadTimer
 		XmlElement markasread =
 			MailConfig.get("options").getElement("/options/markasread");
 
+		// listen for configuration changes
 		markasread.addObserver(this);
 
+		// get interval value
 		String delay = markasread.getAttribute("delay", "2");
 		this.maxValue = Integer.parseInt(delay);
 
-		timer = new Timer(ONE_SECOND * maxValue, this);
+		// enable timer
+		String enable = markasread.getAttribute("enabled", "true");
+		if (enable.equals("true")) {
+			timer = new Timer(ONE_SECOND * maxValue, this);
+		}
 
 	}
 
@@ -88,7 +94,7 @@ public class MarkAsReadTimer
 		maxValue = i;
 
 		timer = new Timer(ONE_SECOND * maxValue, this);
-		
+
 		timer.restart();
 	}
 
@@ -100,7 +106,8 @@ public class MarkAsReadTimer
 
 		ColumbaLogger.log.debug("MarkAsRead-timer stopped");
 
-		timer.stop();
+		if (timer != null)
+			timer.stop();
 	}
 
 	/**
@@ -114,7 +121,9 @@ public class MarkAsReadTimer
 
 		message = reference;
 		value = 0;
-		timer.restart();
+
+		if (timer != null)
+			timer.restart();
 	}
 
 	/**
@@ -127,8 +136,9 @@ public class MarkAsReadTimer
 		timer.stop();
 
 		FolderCommandReference[] r = new FolderCommandReference[] { message };
-		if ( r[0] == null ) return;
-		
+		if (r[0] == null)
+			return;
+
 		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
 
 		MarkMessageCommand c = new MarkMessageCommand(r);
@@ -155,14 +165,19 @@ public class MarkAsReadTimer
 	 */
 	public void update(Observable arg0, Object arg1) {
 		ColumbaLogger.log.debug("/options/markasread#delay has changed");
-		
+
 		// configuration has changed
 		XmlElement markasread =
 			MailConfig.get("options").getElement("/options/markasread");
 		String delay = markasread.getAttribute("delay", "2");
-		
-		// restart Timer with new value
-		setMaxValue(Integer.parseInt(delay));
+
+		// enable timer
+		String enable = markasread.getAttribute("enabled", "true");
+
+		if (enable.equals("true")) {
+			// restart Timer with new value
+			setMaxValue(Integer.parseInt(delay));
+		}
 
 	}
 

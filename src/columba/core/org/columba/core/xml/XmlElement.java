@@ -126,9 +126,6 @@ public class XmlElement extends Observable {
 	/**
 	 * Add attribute to this xml element.
 	 * 
-	 * Note that this method automatically notifies all listening
-	 * Observers.
-	 * 
 	 * @param name		name of key
 	 * @param value		new attribute value
 	 * @return			new attribute value
@@ -137,10 +134,6 @@ public class XmlElement extends Observable {
 	public Object addAttribute(String name, String value) {
 		if ((value != null) && (name != null)) {
 			Object returnValue = (attributes.put(name, value));
-			
-			// notify observers
-			setChanged();
-			notifyObservers();
 			
 			return returnValue;
 		}
@@ -545,6 +538,16 @@ public class XmlElement extends Observable {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * Notify all Observers.
+	 * 
+	 * @see java.util.Observable#notifyObservers()
+	 */
+	public void notifyObservers() {
+		setChanged();
+		super.notifyObservers();
 	}
 
 } // END public class XmlElement

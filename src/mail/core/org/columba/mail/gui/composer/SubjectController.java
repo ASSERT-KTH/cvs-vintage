@@ -16,9 +16,14 @@
 
 package org.columba.mail.gui.composer;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.util.SubjectDialog;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -30,15 +35,34 @@ import org.columba.mail.util.MailResourceLoader;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class SubjectController implements DocumentListener {
+public class SubjectController implements DocumentListener, Observer {
 
 	SubjectView view;
 	ComposerController controller;
+
+	private XmlElement subject;
+	private boolean ask;
 
 	public SubjectController(ComposerController controller) {
 		this.controller = controller;
 
 		view = new SubjectView(this);
+
+		XmlElement composerOptions =
+			MailConfig.getComposerOptionsConfig().getRoot().getElement(
+				"/options");
+		subject = composerOptions.getElement("subject");
+		if (subject == null) {
+			subject = composerOptions.addSubElement("subject");
+		}
+
+		subject.addObserver(this);
+
+		String askSubject = subject.getAttribute("ask_if_empty", "true");
+		if (askSubject.equals("true"))
+			ask = true;
+		else
+			ask = false;
 	}
 
 	public void installListener() {
@@ -56,23 +80,45 @@ public class SubjectController implements DocumentListener {
 	public boolean checkState() {
 		String subject = controller.getModel().getHeaderField("Subject");
 
-		if (subject.length() == 0) {
-			subject = new String(MailResourceLoader.getString("dialog","composer","composer_no_subject")); //$NON-NLS-1$
-			//SubjectDialog dialog = new SubjectDialog(composerInterface.composerFrame);
-			SubjectDialog dialog = new SubjectDialog();
-			dialog.showDialog(subject);
-			if (dialog.success())
-				subject = dialog.getSubject();
+		if (ask == true) {
+			if (subject.length() == 0) {
+				subject = new String(MailResourceLoader.getString("dialog", "composer", "composer_no_subject")); //$NON-NLS-1$
+				//SubjectDialog dialog = new SubjectDialog(composerInterface.composerFrame);
+				SubjectDialog dialog = new SubjectDialog();
+				dialog.showDialog(subject);
+				if (dialog.success())
+					subject = dialog.getSubject();
 
-			controller.getModel().setHeaderField("Subject", subject);
+				controller.getModel().setHeaderField("Subject", subject);
+			}
 		}
-		
+
 		return true;
 	}
 
 	/**************** DocumentListener implementation ***************/
 
-	public void insertUpdate(DocumentEvent e) {}
-	public void removeUpdate(DocumentEvent e) {}
-	public void changedUpdate(DocumentEvent e) {}
+	public void insertUpdate(DocumentEvent e) {
+	}
+	public void removeUpdate(DocumentEvent e) {
+	}
+	public void changedUpdate(DocumentEvent e) {
+	}
+
+	/* 
+	 * Gets fired if configuration has changed.
+	 * 
+	 * @see org.columba.mail.gui.config.general.MailOptionsDialog
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable arg0, Object arg1) {
+
+		String askSubject = subject.getAttribute("ask_if_empty", "true");
+		if (askSubject.equals("true"))
+			ask = true;
+		else
+			ask = false;
+	}
+
 }
