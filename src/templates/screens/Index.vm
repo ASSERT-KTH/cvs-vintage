@@ -24,10 +24,12 @@ href="$link.setPage("Register.vm")">create an account</a>.
 #elseif (!$scarabR.CurrentModule)
 
 <td>
+#*
 <p>
 <img src="$staticLink.setPath("/images/module.gif")" alt="What is a
 module?" width="260" height="105" />
 </p>
+*#
 
 <p>
 Select a <a
@@ -55,9 +57,14 @@ contact the administrator.
 #else
 
 <td>
+#*
 <p>
 <img src="$staticLink.setPath("/images/artifact_type.gif")" alt="What is an issue type?" width="260"
-height="105" /></p> Select an <strong>issue type</strong> from the
+height="105" /></p> 
+*#
+
+<p>
+Select an <a href="$link.setPage("SelectArtifactType.vm")">issue type</a> from the
 left side navigation. An issue type encapsulates a unique set of
 attributes and attribute options:
 </p>
