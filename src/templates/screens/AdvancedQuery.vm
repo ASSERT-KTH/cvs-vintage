@@ -1,5 +1,5 @@
-#set ( $query = $intake.AdvQuery.Default )
 #set ( $search = $scarabR.Search )
+#set ( $query = $intake.SearchIssue.mapTo($search) )
 #set ($attrValues = $search.ModuleAttributeValuesMap)
 
 <div class="app" id="advancedquery">
@@ -9,12 +9,13 @@
 
 <form action="$link.setPage("AdvancedQuery.vm")" method="get">
 <input type="hidden" name="nextTemplate" value="IssueList.vm" />
-<input type="hidden" name="action" value="AdvancedQuery" />
+<input type="hidden" name="action" value="Search" />
 
 <p class="functnbar">
-<input type="submit" value="submit" />&#160;
-<input type="submit" value="reset" />&#160;
-<input type="submit" value="save this query" />
+    <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;
+    <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160
+    <input type="submit" name="eventSubmit_doSave" 
+        value="Save this Query" />
 </p>
 
 <h3>Search the Scarab Knowledge Base</h3>
@@ -373,11 +374,13 @@
 </div>
 
 <p class="functnbar">
-<input type="submit" value="submit" />&#160;
-<input type="submit" value="reset" />&#160;
-<input type="submit" value="save this query" />
+    <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;
+    <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160
+    <input type="submit" name="eventSubmit_doSave" 
+        value="Save this Query" />
 </p>
-     
+   
+  
 $intake.declareGroups()
 </form>
 

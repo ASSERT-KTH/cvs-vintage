@@ -125,6 +125,10 @@
 <group name="SearchIssue" key="search" mapToObject="util.word.IssueSearch">
         <field name="SearchWords" key="sw" type="String"/>
         <field name="TextScope" key="ts" type="NumberKey" multiValued="true"/>
+        <field name="MinId" key="lid" type="String"/>
+        <field name="MaxId" key="hid" type="String"/>
+        <field name="MinDate" key="ld" type="String"/>
+        <field name="MaxDate" key="hd" type="String"/>
         <field name="ResultsPerPage" key="rpp" type="int"/>
 </group>
 
@@ -193,15 +197,6 @@
     <field name="TypeId" key="dti" type="NumberKey" >
         <rule name="mask" value="[0-9]+">badIdMessage</rule>
     </field>
-</group>
-
-<group name="AdvQuery" key="advsrch">
-        <field name="MinId" key="lid" type="String"/>
-        <field name="MaxId" key="hid" type="String"/>
-        <field name="MinDate" key="ld" type="String"/>
-        <field name="MaxDate" key="hd" type="String"/>
-        <field name="TextScope" key="ts" type="NumberKey" multiValued="true"/>
-        <field name="ResultsPerPage" key="rpp" type="int"/>
 </group>
 
 <group name="Query" key="query" mapToObject="om.Query">

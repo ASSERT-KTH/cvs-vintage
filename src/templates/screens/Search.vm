@@ -1,7 +1,7 @@
 #set ($user = $scarabR.User)
 #set ($module = $user.CurrentModule)
 
-      <div class="app" id="CustomSearch.vm">
+      <div class="app" id="search.vm">
        <h2>custom search (2.2.0.x)</h2>
         (go to <a href="advancedsearch.html">advanced search</a>)
 
@@ -20,7 +20,7 @@
 
 #set ( $search = $scarabR.Search )
 #set ( $searchGroup = $intake.SearchIssue.mapTo($search) )
-#set ( $searchTextAttributes = $search.QuickSearchTextAttributes )
+#set ( $searchTextAttributes = $search.QuickSearchTextAttributeValues )
 #set ( $searchValues = $search.QuickSearchOptionAttributeValues )
 
 #if ($searchTextAttributes.size() != 0)
