@@ -87,7 +87,7 @@ public class DependClassLoader extends ClassLoader {
     protected ClassLoader parent;
     protected ClassLoader parent2;
     
-    final static int debug=0;
+    final static int debug=10;
     DependManager dependM;
     protected Object pd;
     static Jdk11Compat jdkCompat=Jdk11Compat.getJdkCompat();
@@ -238,8 +238,11 @@ public class DependClassLoader extends ClassLoader {
 	    int idx=fileN.indexOf( "!" );
 	    if( idx>=0 )
 		fileN=fileN.substring( 0, idx) ;
-	    f=new File( fileN );
-	    if( debug > 0 ) log( "Jar dep "  +f );
+	    // Bojan Smojver <bojan@binarix.com>: remove jar:
+	    if( fileN.startsWith( "jar:" ))
+		fileN=fileN.substring( 4 );
+	    f=new File(fileN);
+	    if( debug > 0 ) log( "Jar dep "  +f + " " + f.exists() );
 	    if( ! f.exists()) f=null;
 	}
 
