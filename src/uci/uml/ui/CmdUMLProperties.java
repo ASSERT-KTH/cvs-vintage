@@ -26,7 +26,7 @@
 // File: CmdUMLProperties.java
 // Classes: CmdProperties
 // Original Author: agauthie@ics.uci.edu
-// $Id: CmdUMLProperties.java,v 1.3 1999/02/19 22:24:28 jrobbins Exp $
+// $Id: CmdUMLProperties.java,v 1.4 1999/03/25 00:59:38 jrobbins Exp $
 
 package uci.uml.ui;
 
@@ -35,6 +35,7 @@ import java.awt.Event;
 
 
 public class CmdUMLProperties extends Cmd {
+  public static CmdUMLProperties Properties = new CmdUMLProperties();
 
   public CmdUMLProperties() { super("Properties"); }
 

@@ -26,7 +26,7 @@
 // File: CrReservedName.java
 // Classes: CrReservedName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrReservedName.java,v 1.12 1999/03/17 03:19:22 jrobbins Exp $
+// $Id: CrReservedName.java,v 1.13 1999/03/25 00:59:34 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -38,6 +38,8 @@ import uci.util.*;
 import uci.uml.Foundation.Core.*;
 import uci.uml.Foundation.Data_Types.*;
 import uci.uml.Model_Management.*;
+import uci.uml.ui.ProjectBrowser;
+import uci.uml.ui.Project;
 
 
 public class CrReservedName extends CrUML {
@@ -206,6 +208,12 @@ public class CrReservedName extends CrUML {
     if (meName == null || meName.equals(Name.UNSPEC)) return NO_PROBLEM;
     String nameStr = meName.getBody();
     if (nameStr == null || nameStr.length() == 0) return NO_PROBLEM;
+
+    // Dont critique the built-in java types, they are supposed to
+    // have those "reserved" names.
+    Project p = ProjectBrowser.TheInstance.getProject();
+    Hashtable definedTypes = p.getDefinedTypes();
+    if (definedTypes.get(nameStr) == dm) return NO_PROBLEM;
 
     java.util.Enumeration enum = _umlReserved.elements();
     while (enum.hasMoreElements()) {
