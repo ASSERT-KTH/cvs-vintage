@@ -229,13 +229,6 @@
              </fileset>
         </copy>
 
-        <copy todir="${build.project.webinf}/conf" filtering="no">
-             <fileset dir="${antbase.dir}">
-                 <include name="build-database.xml"/>
-                 <include name="build-torque.xml"/>
-             </fileset>
-        </copy>
-
         <!-- ======================================== -->
         <!-- Ensure, that the custom.properties exist -->
         <!-- possibly creates an empty file           -->
@@ -372,6 +365,10 @@
         <filter token="DATABASE_TYPE" value="${scarab.database.type}"/>
         <copy file="${src.conf.dir}/torque.static.props" 
               tofile="${torque.dir.scarab}/build.static.properties"
+              filtering="true" overwrite="true"/>
+
+        <copy file="${src.conf.dir}/conf/build-torque.xml" 
+              tofile="build-torque.xml"
               filtering="true" overwrite="true"/>
 
         <echo>Now call the Torque Generator</echo>

@@ -437,15 +437,39 @@
         <j:set var="warWebappBuildDir" 
             value="${pom.getPluginContext('maven-war-plugin').getVariable('maven.war.webapp.dir')}"/>
         <ant:echo message="Copying files to webapp ${warWebappBuildDir}"/>
+
         <ant:copy todir="${warWebappBuildDir}/WEB-INF/conf">
             <ant:fileset dir="${maven.src.dir}/conf/conf" includes="**/*.*"/>
             <ant:filterset refid="scarab.filter"/>
         </ant:copy>
-        <ant:copy todir="${warWebappBuildDir}/WEB-INF/sql">
+
+        <ant:copy todir="${warWebappBuildDir}/database/src/sql">
             <ant:fileset dir="${maven.src.dir}/sql" includes="**/*.*"/>
             <ant:filterset refid="scarab.filter"/>
         </ant:copy>
+        <ant:copy todir="${warWebappBuildDir}/database/src/schema">
+            <ant:fileset dir="${maven.src.dir}/schema" includes="**/*.*"/>
+            <ant:filterset refid="scarab.filter"/>
+        </ant:copy>
+        <ant:copy todir="${warWebappBuildDir}/database/src">
+            <ant:fileset dir="${maven.src.dir}/conf" includes="torque.static.props"/>
+            <ant:filterset refid="scarab.filter"/>
+        </ant:copy>
+        
     </preGoal>
+
+    <postGoal name="war:webapp">
+        <ant:touch file="${warWebappBuildDir}/WEB-INF/conf/custom.properties"/>
+        <ant:taskdef
+            name="defaultCustom" 
+            classname="org.tigris.scarab.util.build.AntPropertyFileGenerator" 
+            classpath="${build.project.webinf}/classes"/>
+        <ant:defaultCustom
+            custom     = "${warWebappBuildDir}/WEB-INF/conf/defaultCustom.properties"
+            template   = "${custom.properties.tmpl}"
+            properties = "${user.home}/scarab.build.properties:${user.home}/build.properties:${root.dir}/build.properties:${root.dir}/project.properties" 
+        />
+    </postGoal>
     
     <preGoal name="site">
         <!-- Only run DocBook if it is enabled -->
@@ -464,7 +488,7 @@
         </j:if>
         <ant:delete>
             <ant:fileset dir="${basedir}">
-                <ant:include name="**/report.${torque.project}.*.generation"/>
+            <ant:include name="**/report.${torque.project}.*.generation"/>
             </ant:fileset>
             <ant:fileset dir="${basedir}" includes="junit*.properties">
             </ant:fileset>
