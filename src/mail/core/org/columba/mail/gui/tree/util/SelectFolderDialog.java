@@ -142,15 +142,24 @@ public class SelectFolderDialog extends JDialog
 	}
 
 	protected void initComponents() {
-		// get global sorting state 
-		SortedJTree t = ((TreeViewOwner)mediator).getTreeController().getView();
-		SortedTreeModelDecorator treemodel = (SortedTreeModelDecorator) t.getModel();
-		Comparator c = treemodel.getSortingComparator();
-		
-		tree = new SortedJTree(MailInterface.treeModel);
-		// apply sorting state 
-		SortedTreeModelDecorator m = (SortedTreeModelDecorator) tree.getModel();
-		m.setSortingComparator(c);
+//	  get global sorting state
+		SortedJTree t = ((TreeViewOwner) mediator).getTreeController()
+				.getView();
+		if (t.getModel() instanceof SortedTreeModelDecorator) {
+			// sorting is enabled
+			SortedTreeModelDecorator treemodel = (SortedTreeModelDecorator) t
+					.getModel();
+			Comparator c = treemodel.getSortingComparator();
+
+			tree = new SortedJTree(MailInterface.treeModel);
+			// apply sorting state
+			SortedTreeModelDecorator m = (SortedTreeModelDecorator) tree
+					.getModel();
+			m.setSortingComparator(c);
+		} else {
+			// sorting is disabled
+			tree = new SortedJTree(MailInterface.treeModel);
+		}
 		
 		tree.expandRow(0);
 		tree.expandRow(1);
