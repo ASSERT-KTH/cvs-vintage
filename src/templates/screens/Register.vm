@@ -1,42 +1,21 @@
-<!-- top nav bar -->
-  <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-    <TR>
-      <TD>
-        <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0">
-          <TR>
-            <TD nowrap class="NavHeader">SCARAB:</TD>
-            <TD nowrap class="NavHeaderOn" BGCOLOR="#cccccc"><A HREF="$link.setPage("Login.vm")">Return to Login</A></TD>
-          </TR>
-        </TABLE>
-      </TD>
-    </TR>
-    <TR>
-      <TD HEIGHT="1" BGCOLOR="#000000"><SPACER TYPE="block" HEIGHT="1"></TD>
-    </TR>
-</TABLE>
-<!-- end top nav bar -->
-
-<TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-	<TR>
-		<TD class="PlainTextHeader">Scarab: Registration</TD>
-	</TR>
-	<TR>
-		<TD class="Header" BGCOLOR="#999999">&nbsp;USER REGISTRATION</TD>
-	</TR>
-	<TR>
-		<TD class="PlainText">Please enter the required contact information below. Fields marked with a <SPAN class="StressedText">*</SPAN> are required.</TD>
-	</TR>
-</TABLE>
+<table border="0" cellpadding="3" cellspacing="0" width="100%">
+	<tr>
+		<td>Scarab: Registration</td>
+	</tr>
+	<tr>
+		<td>Please enter the required contact information below. Fields marked with a <font color="#FF0000">*</font> are required.</td>
+	</tr>
+</table>
 #if ($data.getMessage())
-    <TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-            <TR>
-                <TD class="MessageText">$data.getMessage()</TD>
-            </TR>
-    </TABLE>
+    <table border="0" cellpadding="3" cellspacing="0" width="100%">
+            <tr>
+                <td class="MessageText">$data.getMessage()</td>
+            </tr>
+    </table>
 #end
-<P>
+<p>
 
-<FORM name="RegisterForm" action="$link.setPage("Register.vm")" method="POST">
+<form name="RegisterForm" action="$link.setPage("register.vm")" method="POST">
 <input type="hidden" name="action" value="Register">
 <input type="hidden" name="nextTemplate" value="RegisterConfirm.vm">
 <input type="hidden" name="cancelTemplate" value="Login.vm">
@@ -44,109 +23,110 @@
 ## Attempt to populate the Scarab API User object on re-display
 $data.Parameters.setProperties($scarabR.getUser())
 
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD class="StressedText"><FONT COLOR="#FF0000">*</FONT></TD>
-		<TD class="InputHeader">&nbsp;First Name:</TD>
-		<TD><INPUT NAME="FirstName" value="$!scarabR.User.FirstName" TYPE="text" SIZE="25"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD class="StressedText"><FONT COLOR="#FF0000">*</FONT></TD>
-		<TD class="InputHeader">&nbsp;Last Name:</TD>
-		<TD><INPUT NAME="LastName" value="$!scarabR.User.LastName" TYPE="text" SIZE="25"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+		<td height="4" colspan="3"><spacer type="block" height="4"></td>
+	</tr>
+	<tr>
+		<td height="1" colspan="3" bgcolor="#cccccc"><spacer type="block" height="1"></td>
+	</tr>
+	<tr>
+		<td><font color="#FF0000">*</font></td>
+		<td>&nbsp;First Name:</td>
+		<td><input name="FirstName" value="$!scarabR.User.FirstName" type="text" size="25"></td>
+	</tr>
+	<tr>
+		<td height="4" colspan="3"><spacer type="block" height="4"></td>
+	</tr>
+	<tr>
+		<td height="1" colspan="3"><spacer type="block" height="1"></td>
+	</tr>
+	<tr>
+		<td height="4" colspan="3"><spacer type="block" height="4"></td>
+	</tr>
+	<tr>
+		<td><font color="#FF0000">*</font></td>
+		<td>&nbsp;Last Name:</td>
+		<td><input name="LastName" value="$!scarabR.User.LastName" type="text" size="25"></td>
+	</tr>
+	<tr>
+		<td height="4" colspan="3"><spacer type="block" height="4"></td>
+	</tr>
+	<tr>
+		<td height="1" colspan="3"><spacer type="block" height="1"></td>
+	</tr>
+	<tr>
+		<td height="4" colspan="3"><spacer type="block" height="4"></td>
+	</tr>
 
-	<TR>
-		<TD class="StressedText"><FONT COLOR="#FF0000">*</FONT></TD>
-		<TD class="InputHeader">&nbsp;Email Address:</TD>
-		<TD><INPUT NAME="Email" value="$!scarabR.User.Email" TYPE="text" SIZE="25">
-		</TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD>&nbsp;</TD>
-		<TD>&nbsp;</TD>
-		<TD class="PlainText">
-		<SPAN class="PlainTextHeader">Note:</SPAN> 
-		Enter your valid email address - including your "@serviceprovider" domain. For example if your AOL screen name is joe cool, your email address is joecool@aol.com.
-		</TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD class="StressedText"><FONT COLOR="#FF0000">*</FONT></TD>
-		<TD class="InputHeader">&nbsp;Password:</TD>
-		<TD><INPUT NAME="password" TYPE="password" SIZE="25"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD class="StressedText"><FONT COLOR="#FF0000">*</FONT></TD>
-		<TD class="InputHeader">&nbsp;Password Confirm:</TD>
-		<TD><INPUT NAME="password_confirm" TYPE="password" SIZE="25"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-	<TR>
-		<TD>&nbsp;</TD>
-		<TD>&nbsp;</TD>
-		<TD><INPUT TYPE="submit" NAME="eventSubmit_doCancel" VALUE="Cancel"> <INPUT TYPE="submit" NAME="eventSubmit_doRegister" VALUE="Register"></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
-	</TR>
-</TABLE>
+	<tr>
+		<td><font color="#FF0000">*</font></td>
+		<td>&nbsp;Email Address:</td>
+		<td><input name="Email" value="$!scarabR.User.Email" type="text" size="25">
+		</td>
+	</tr>
+	<tr>
+		<td height="4" colspan="3"><spacer type="block" height="4"></td>
+	</tr>
+	<tr>
+		<td height="1" colspan="3"><spacer type="block" height="1"></td>
+	</tr>
+	<tr>
+		<td height="4" colspan="3"><spacer type="block" height="4"></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>
+		Note: Enter your valid email address - including your
+		"@serviceprovider" domain.<br/>For example if your AOL screen name
+		is joe cool, your email address is joecool@aol.com.
+		</td>
+	</tr>
+	<tr>
+		<td height="4" colspan="3"><spacer type="block" height="4"></td>
+	</tr>
+	<tr>
+		<td height="1" colspan="3"><spacer type="block" height="1"></td>
+	</tr>
+	<tr>
+		<td height="4" colspan="3"><spacer type="block" height="4"></td>
+	</tr>
+	<tr>
+		<td><font color="#FF0000">*</font></td>
+		<td>&nbsp;Password:</td>
+		<td><input name="password" type="password" size="25"></td>
+	</tr>
+	<tr>
+		<td height="4" colspan="3"><spacer type="block" height="4"></td>
+	</tr>
+	<tr>
+		<td height="1" colspan="3"><spacer type="block" height="1"></td>
+	</tr>
+	<tr>
+		<td height="4" colspan="3"><spacer type="block" height="4"></td>
+	</tr>
+	<tr>
+		<td><font color="#FF0000">*</font></td>
+		<td>&nbsp;Password Confirm:</td>
+		<td><input name="password_confirm" type="password" size="25"></td>
+	</tr>
+	<tr>
+		<td height="4" colspan="3"><spacer type="block" height="4"></td>
+	</tr>
+	<tr>
+		<td height="1" colspan="3"><spacer type="block" height="1"></td>
+	</tr>
+	<tr>
+		<td height="4" colspan="3"><spacer type="block" height="4"></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td><input type="submit" name="eventSubmit_doCancel" value="Cancel"> <input type="submit" name="eventSubmit_doRegister" value="Register"></td>
+	</tr>
+	<tr>
+		<td height="4" colspan="3"><spacer type="block" height="4"></td>
+	</tr>
+</table>
 </form>

@@ -39,9 +39,17 @@ public abstract class AttributeValue
 
     public String toString()
     {
-        try{
+        try
+        {
+            return getAttribute().getName();
+        }
+        catch (Exception e)
+        {
+            return "";
+        }
+/*        try{
             return getAttribute().getName() + "->" + super.toString();
-        }catch (Exception e) {return "toString() threw Exception";}
+        }catch (Exception e) {return "toString() threw Exception";} */
     }
 
     /**

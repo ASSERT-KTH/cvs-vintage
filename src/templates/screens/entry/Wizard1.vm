@@ -20,7 +20,8 @@
 
 
 #foreach ( $attKey in $attrValues )
-  #set ( $attVal = $attrValues.get($attKey) )
+
+  #set ( $attVal = $attrValues.get($attKey.toString().toUpperCase()) )
   #if ( $attVal.isDedupeAttribute())
 
      ##set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
@@ -44,7 +45,7 @@
     #attrValueLeafSelect ($attVal $field "")
 
 <br><br>
-    #end
+  #end
 #end
 
 <p>
