@@ -22,6 +22,7 @@ import java.rmi.MarshalledObject;
 import org.jboss.invocation.Invocation;
 import org.jboss.logging.Logger;
 import java.util.LinkedList;
+import java.lang.reflect.Method;
 
 /**
  * This Thread object hold a single Socket connection to a client
@@ -53,6 +54,21 @@ public class ServerThread extends Thread
    protected boolean handlingResponse = false;
    protected boolean shutdown = false;
    protected static int id = 0;
+   protected static Method resetStream;
+
+   static
+   {
+      Method[] methods = ObjectInputStream.class.getDeclaredMethods();
+      for (int i = 0; i < methods.length; i++)
+      {
+         if (methods[i].getName().equals("resetStream")) 
+         {
+            resetStream = methods[i];
+            break;
+         }
+      }
+      resetStream.setAccessible(true);
+   }
 
    public ServerThread(Socket socket, PooledInvoker invoker, LRUPool clientpool, LinkedList threadpool, int timeout) throws Exception
    {
@@ -163,6 +179,7 @@ public class ServerThread extends Thread
       handlingResponse = true;
       // Ok, now read invocation and invoke
       Invocation invocation = (Invocation)in.readObject();
+      in.readObject(); // for stupid ObjectInputStream reset
       Object response = null;
       try
       {
@@ -173,10 +190,19 @@ public class ServerThread extends Thread
          response = ex;
       }
       out.writeObject(response);
+      out.reset();
+      // to make sure stream gets reset
+      // Stupid ObjectInputStream holds object graph
+      // can only be set by the client/server sending a TC_RESET
+      out.writeObject(Boolean.TRUE); 
       out.flush();
+      out.reset();
       handlingResponse = false;
    }
 
+   /**
+    * This is needed because Object*Streams leak
+    */
    protected void dorun()
    {
       running = true;
@@ -220,6 +246,7 @@ public class ServerThread extends Thread
          catch (Exception ex)
          {
             //System.out.println("exception found!");
+            //log.error("failed", ex);
             running = false;
          }
       }

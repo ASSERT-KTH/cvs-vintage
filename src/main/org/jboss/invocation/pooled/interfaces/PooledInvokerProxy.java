@@ -335,11 +335,18 @@ public class PooledInvokerProxy
       try
       {
          socket.out.writeObject(mi);
+         socket.out.reset();
+         socket.out.writeObject(Boolean.TRUE); // for stupid ObjectInputStream reset
          socket.out.flush();
+         socket.out.reset();
          end = System.currentTimeMillis() - start;
          writeTime += end;
          start = System.currentTimeMillis();
          response = (InvocationResponse)socket.in.readObject();
+         // to make sure stream gets reset
+         // Stupid ObjectInputStream holds object graph
+         // can only be set by the client/server sending a TC_RESET
+         socket.in.readObject();
          end = System.currentTimeMillis() - start;
          readTime += end;
       }
