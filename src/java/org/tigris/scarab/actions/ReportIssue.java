@@ -87,11 +87,11 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.53 2001/10/05 21:48:07 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.54 2001/10/05 23:43:29 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
-    public void doSubmitattributes( RunData data, TemplateContext context )
+    public void doCheckforduplicates( RunData data, TemplateContext context )
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -105,30 +105,37 @@ public class ReportIssue extends RequireLoginFirstAction
         if ( intake.isAllValid() ) 
         {
             // set the values entered so far
-            SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
-            Iterator iter = avMap.iterator();
-            while (iter.hasNext()) 
-            {
-                AttributeValue aval = (AttributeValue)avMap.get(iter.next());
-                Group group = intake.get("AttributeValue", 
-                                         aval.getQueryKey(),false);
-                if ( group != null ) 
-                {
-                    group.setProperties(aval);
-                }                
-            }
+            setAttributeValues(issue, intake);
 
-            reusedSearchStuff(data, context, "eventSubmit_doSubmitattributes", 
-                              0, "entry,Wizard3.vm");
+            // check for duplicates, if there are none skip the dedupe page
+            searchAndSetTemplate(data, context, 0, "entry,Wizard3.vm");
         }
 
         // we know we started at Wizard1 if we are here
         user.setReportingIssueStartPoint("entry,Wizard1.vm");
     }
 
-    private boolean reusedSearchStuff(RunData data, TemplateContext context, 
-                                      String event, int threshold, 
-                                      String nextTemplate)
+    /**
+     * Common code related to deduping.  A search for duplicate issues is
+     * performed and if the number of possible duplicates is greater than 
+     * the threshold, the results are placed in the ScarabRequestTool and 
+     * the screen is set to entry,Wizard2.vm so that they can be viewed.
+     *
+     * @param data a <code>RunData</code> value
+     * @param context a <code>TemplateContext</code> value
+     * @param threshold an <code>int</code> number of issues that determines
+     * whether "entry,Wizard2.vm" screen  or the screen given by
+     * nextTemplate is shown
+     * @param nextTemplate a <code>String</code> screen name to branch to
+     * if the number of duplicate issues is less than or equal to the threshold
+     * @return true if the number of possible duplicates is greater than the
+     * threshold
+     * @exception Exception if an error occurs
+     */
+    private boolean searchAndSetTemplate(RunData data, 
+                                         TemplateContext context, 
+                                         int threshold, 
+                                         String nextTemplate)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -146,7 +153,7 @@ public class ReportIssue extends RequireLoginFirstAction
         boolean beatThreshold = false;
         if ( matchingIssues.size() > threshold )
         {
-            context.put("issueList", matchingIssues);
+            scarabR.setIssueList(matchingIssues);
             template = "entry,Wizard2.vm";
             beatThreshold = true;
         }
@@ -159,6 +166,16 @@ public class ReportIssue extends RequireLoginFirstAction
         return beatThreshold;
     }
 
+    /**
+     * Checks the Module the issue is being entered into to see what
+     * attributes are required to have values. If a required field was present
+     * and the user did not enter anything, intake is notified that the
+     * field was required.
+     *
+     * @param issue an <code>Issue</code> value
+     * @param intake an <code>IntakeTool</code> value
+     * @exception Exception if an error occurs
+     */
     private void setRequiredFlags(Issue issue, IntakeTool intake)
         throws Exception
     {
@@ -170,7 +187,8 @@ public class ReportIssue extends RequireLoginFirstAction
         {
             AttributeValue aval = (AttributeValue)avMap.get(iter.next());
             
-            Group group = intake.get("AttributeValue", aval.getQueryKey(), false);
+            Group group = 
+                intake.get("AttributeValue", aval.getQueryKey(), false);
             if ( group != null ) 
             {            
                 Field field = null;
@@ -203,6 +221,31 @@ public class ReportIssue extends RequireLoginFirstAction
     }
 
     /**
+     * Add/Modify any attribute values that were just entered into intake.
+     *
+     * @param issue the <code>Issue</code> currently being editted 
+     * @param intake an <code>IntakeTool</code> containing the fields for the
+     * issue's attribute values.
+     * @exception Exception pass thru
+     */
+    private void setAttributeValues(Issue issue, IntakeTool intake)
+        throws Exception
+    {
+        SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
+        Iterator i = avMap.iterator();
+        while (i.hasNext()) 
+        {
+            AttributeValue aval = (AttributeValue)avMap.get(i.next());
+            Group group = 
+                intake.get("AttributeValue", aval.getQueryKey(), false);
+            if ( group != null ) 
+            {
+                group.setProperties(aval);
+            }                
+        }
+    }
+
+    /**
      * handles entering an issue
      */
     public void doEnterissue( RunData data, TemplateContext context )
@@ -211,28 +254,14 @@ public class ReportIssue extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
-
         Issue issue = user.getReportingIssue(scarabR.getCurrentModule());
-        SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
-        AttributeValue aval = null;
 
         // set any required flags
         setRequiredFlags(issue, intake);
 
         if (intake.isAllValid())
         {
-            Iterator i = avMap.iterator();
-            while (i.hasNext()) 
-            {
-                aval = (AttributeValue)avMap.get(i.next());
-                Group group = 
-                    intake.get("AttributeValue", aval.getQueryKey(), false);
-                if ( group != null ) 
-                {
-                    group.setProperties(aval);
-                }                
-            }
-            
+            setAttributeValues(issue, intake);
             if (issue.containsMinimumAttributeValues())
             {
                 // Save transaction record
@@ -241,10 +270,12 @@ public class ReportIssue extends RequireLoginFirstAction
                     .create(TransactionTypePeer.CREATE_ISSUE__PK, user, null);
 
                 // enter the values into the transaction
-                i = avMap.iterator();
+                SequencedHashtable avMap = 
+                    issue.getModuleAttributeValuesMap(); 
+                Iterator i = avMap.iterator();
                 while (i.hasNext()) 
                 {
-                    aval = (AttributeValue)avMap.get(i.next());
+                    AttributeValue aval = (AttributeValue)avMap.get(i.next());
                     aval.startTransaction(transaction);
                 }
                 
@@ -329,10 +360,11 @@ public class ReportIssue extends RequireLoginFirstAction
                     data.setMessage("Your comment for issue #" + 
                                     issue.getUniqueId() + 
                                     " has been added.");
+                    // if there was only one duplicate issue and we just added
+                    // a note to it, assume user is done
                     String nextTemplate = Turbine.getConfiguration()
                         .getString("template.homepage", "Start.vm");
-                    if (! reusedSearchStuff(data, context, 
-                             "eventSubmit_doAddnote",1, nextTemplate))
+                    if (! searchAndSetTemplate(data, context, 1, nextTemplate))
                     {
                         ((ScarabUser)data.getUser()).setReportingIssue(null);
                     }
@@ -341,8 +373,9 @@ public class ReportIssue extends RequireLoginFirstAction
         }
         else 
         {
-            reusedSearchStuff(data, context, "eventSubmit_doAddnote",
-                              0, "entry,Wizard2.vm");
+            // Comment was probably too long.  Repopulate the issue list, so
+            // the page can be shown again, and the user can fix the comment.
+            searchAndSetTemplate(data, context, 0, "entry,Wizard2.vm");
         }
     }
 
@@ -360,10 +393,11 @@ public class ReportIssue extends RequireLoginFirstAction
                 issue.addVote((ScarabUser)data.getUser());
                 data.setMessage("Your vote for issue #" + issue.getUniqueId() 
                                 + " has been accepted.");
+                // if there was only one duplicate issue and the user just
+                // voted for it, assume user is done
                 String nextTemplate = Turbine.getConfiguration()
                     .getString("template.homepage", "Start.vm");
-                if (! reusedSearchStuff(data, context, 
-                          "eventSubmit_doAddvote",1, nextTemplate))
+                if (! searchAndSetTemplate(data, context, 1, nextTemplate))
                 {
                     ((ScarabUser)data.getUser()).setReportingIssue(null);
                 }
@@ -372,14 +406,18 @@ public class ReportIssue extends RequireLoginFirstAction
             {
                 data.setMessage("Vote could not be added.  Reason given: "
                                 + e.getMessage() );
-                reusedSearchStuff(data, context, "eventSubmit_doAddvote",
-                                  0, "entry,Wizard2.vm");
+                // User attempted to vote when they were not allowed.  This
+                // should probably not be allowed in the ui, but right now
+                // it is and we should protect against url hacking anyway.
+                // Repopulate the data so the dedupe page can be shown again.
+                searchAndSetTemplate(data, context, 0, "entry,Wizard2.vm");
             }
         }
         else 
         {
-            reusedSearchStuff(data, context, "eventSubmit_doAddvote",
-                              0, "entry,Wizard2.vm");
+            // Not sure this case needs to be covered, but just to be safe
+            // repopulate the data so the dedupe page can be shown again.
+            searchAndSetTemplate(data, context, 0, "entry,Wizard2.vm");
         }
     }
 
@@ -394,6 +432,7 @@ public class ReportIssue extends RequireLoginFirstAction
     */
     public void doCancel(RunData data, TemplateContext context) throws Exception
     {
+        data.setMessage("The issue entry process was canceled.");
         String template = Turbine.getConfiguration()
             .getString("template.homepage", "Start.vm");
         setTarget(data, template);
