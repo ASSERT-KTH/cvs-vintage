@@ -1,4 +1,4 @@
-// $Id: ActionSetChangeability.java,v 1.2 2003/12/12 10:48:58 d00mst Exp $
+// $Id: ActionSetChangeability.java,v 1.3 2003/12/12 14:07:16 d00mst Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,8 +61,8 @@ public class ActionSetChangeability extends UMLChangeAction {
             JRadioButton source = (JRadioButton) e.getSource();
             String actionCommand = source.getActionCommand();
             Object target = ((UMLRadioButtonPanel) source.getParent()).getTarget();
-            if (ModelFacade.isAAssociationEnd(target) ||
-		ModelFacade.isAAttribute(target)) {
+            if (ModelFacade.isAAssociationEnd(target)
+		|| ModelFacade.isAAttribute(target)) {
                 Object m = /*(MAssociationEnd)*/ target;
                 Object/*MChangeableKind*/ kind = null;
                 if (actionCommand.equals(CHANGEABLE_COMMAND)) {
