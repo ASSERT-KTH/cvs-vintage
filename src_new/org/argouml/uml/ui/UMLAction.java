@@ -1,4 +1,4 @@
-// $Id: UMLAction.java,v 1.35 2004/12/30 17:13:22 mvw Exp $
+// $Id: UMLAction.java,v 1.36 2004/12/30 23:54:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,8 +34,6 @@ import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.ui.Actions;
-import org.argouml.ui.ProjectBrowser;
-import org.argouml.ui.StatusBar;
 
 /**
  * The prototype of all actions within ArgoUML.
@@ -147,8 +145,6 @@ public class UMLAction extends AbstractAction {
      */
     public void actionPerformed(ActionEvent e) {
         LOG.debug("pushed " + getValue(Action.NAME));
-        StatusBar sb = ProjectBrowser.getInstance().getStatusBar();
-        sb.doFakeProgress(stripJunk(getValue(Action.NAME).toString()), 100);
         Actions.updateAllEnabled();
     }
 
