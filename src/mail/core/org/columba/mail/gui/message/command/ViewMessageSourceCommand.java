@@ -13,9 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.message.command;
 
-import java.io.File;
+import java.io.*;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
@@ -39,9 +40,7 @@ import org.columba.ristretto.message.MimeHeader;
  * Window>Preferences>Java>Code Generation.
  */
 public class ViewMessageSourceCommand extends FolderCommand {
-
-	String source;
-	File tempFile;
+	protected File tempFile;
 
 	/**
 	 * Constructor for ViewMessageSourceCommand.
@@ -61,7 +60,6 @@ public class ViewMessageSourceCommand extends FolderCommand {
 		MimeTypeViewer viewer = new MimeTypeViewer();
 		MimeHeader header = new MimeHeader();
 		viewer.open(header, tempFile);
-
 	}
 
 	/**
@@ -81,15 +79,33 @@ public class ViewMessageSourceCommand extends FolderCommand {
 
 		Object[] destUids = new Object[uids.length];
 		Object uid = uids[0];
-		source = folder.getMessageSource(uid);
-
+		
+                InputStream in = null;
+                OutputStream out = null;
 		try {
-
+                        in = new BufferedInputStream(
+                                folder.getMessageSourceStream(uid));
 			tempFile = TempFileStore.createTempFile();
-			DiskIO.saveStringInFile(tempFile, source);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-
-		}
+			out = new BufferedOutputStream(
+                                new FileOutputStream(tempFile));
+                        byte[] buffer = new byte[1024];
+                        int read;
+                        while ((read = in.read(buffer, 0, buffer.length)) > 0) {
+                                out.write(buffer, 0, read);
+                        }
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} finally {
+                        if (in != null) {
+                                try {
+                                        in.close();
+                                } catch (IOException ioe) {}
+                        }
+                        if (out != null) {
+                                try {
+                                        out.close();
+                                } catch (IOException ioe) {}
+                        }
+                }
 	}
 }
