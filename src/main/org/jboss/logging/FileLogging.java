@@ -16,17 +16,19 @@ import java.util.TreeSet;
 import java.util.StringTokenizer;
 import javax.management.*;
 
+import org.jboss.util.ServiceMBeanSupport;
+
 /**
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class FileLogging
+   extends ServiceMBeanSupport
    implements FileLoggingMBean, MBeanRegistration, NotificationListener
 {
    // Constants -----------------------------------------------------
-   public static final String OBJECT_NAME = "DefaultDomain:service=Logging,type=File";
 
    // Attributes ----------------------------------------------------
    PrintStream out, err;
@@ -35,12 +37,13 @@ public class FileLogging
 
    boolean verbose = false;
 
-   Log log = new Log("File logging");
-
    String filter = "Information,Debug,Warning,Error";
-   String logName = "server.log";
+   String logName = "server";
    String sources;
    boolean append;
+   
+   ObjectName name;
+   MBeanServer server;
 
    // Static --------------------------------------------------------
 
@@ -82,16 +85,20 @@ public class FileLogging
       this.format = format;
       msgFmt = new MessageFormat(format);
    }
+   
    public String getFormat() { return format; }
 
    public void setLogName(String logName) throws FileNotFoundException
    {
-      if(!logName.equals(this.logName)) {
+      if(!logName.equals(this.logName)) 
+      {
          this.logName = logName;
 
          if (out != null)
+         {
             out = null;
-         openLogFile();
+            openLogFile();
+         }
       }
    }
    public String getLogName() { return logName; }
@@ -100,6 +107,8 @@ public class FileLogging
    public void handleNotification(Notification n,
                                   java.lang.Object handback)
    {
+      if (out == null) return; // Not started yet
+      
       if (sources == null || sources.length() == 0 || sources.indexOf(n.getUserData().toString()) != -1)
       {
          if (filter.indexOf(n.getType()) != -1)
@@ -110,48 +119,44 @@ public class FileLogging
       }
    }
 
-   // MBeanRegistration implementation ------------------------------
-   public ObjectName preRegister(MBeanServer server, ObjectName name)
+   // ServiceMBeanSupport implementation ----------------------------
+   public ObjectName getObjectName(MBeanServer server, ObjectName name)
+      throws javax.management.MalformedObjectNameException
+   {
+      this.server = server;
+      this.name = name == null ? new ObjectName(OBJECT_NAME) : name;
+      return this.name;
+   }
+   
+   public String getName()
+   {
+      return "File logging";
+   }
+   
+   public void initService()
       throws java.lang.Exception
    {
       String objectName;
 
-      objectName = OBJECT_NAME + ",sources=" + (sources == null ? "All" : sources);
-      try
-      {
-         openLogFile();
-         server.addNotificationListener(new ObjectName(server.getDefaultDomain(),"service","Log"),this,null,null);
-
-         log.log("Logging started");
-         return new ObjectName(objectName);
-
-      } catch (Throwable e)
-      {
-         Logger.exception(e);
-      }
-      return new ObjectName(objectName);
+      openLogFile();
+      server.addNotificationListener(new ObjectName(server.getDefaultDomain(),"service","Log"),this,null,null);
    }
 
-   public void postRegister(java.lang.Boolean registrationDone)
+   // Private -------------------------------------------------------
+   private void openLogFile() 
+      throws FileNotFoundException 
    {
-   }
-
-   public void preDeregister()
-      throws java.lang.Exception
-   {}
-
-   public void postDeregister() {}
-
-   // Private --------------------------------------------------
-   private void openLogFile() throws FileNotFoundException {
       URL properties = getClass().getResource("/log.properties");
       if(properties == null)
-         System.err.println("Unable to identify logging directory!");
+         throw new FileNotFoundException("Unable to identify logging directory!");
+         
       File parent = new File(properties.getFile()).getParentFile();
-      File logFile = new File(parent, logName);
-      try {
+      File logFile = new File(parent, logName+".log");
+      try 
+      {
          out = new PrintStream(new FileOutputStream(logFile.getCanonicalPath(), append));
-      } catch (IOException e) {
+      } catch (IOException e) 
+      {
          throw new FileNotFoundException(e.getMessage());
       }
    }
