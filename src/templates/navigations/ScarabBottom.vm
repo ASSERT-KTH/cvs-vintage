@@ -9,7 +9,7 @@
     $link.setPage("Login.vm").setLabel("Login")
 #end
 
-#if ($data.Parameters.getBoolean($scarabG.Constant.DEBUG))
+#if ($data.Parameters.getString($scarabG.Constant.DEBUG))
 <p><small>Debugging: [ {target=$data.Target} $data.Parameters ]</small></p>
 #end
 </td></tr>
