@@ -5,7 +5,7 @@
 <!--  Standard JBoss Configuration                                         -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.57 2003/03/19 16:18:06 mnewcomb Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.58 2003/03/23 06:12:08 dsundstrom Exp $ -->
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
   <invoker-proxy-bindings>
@@ -264,7 +264,7 @@
   </invoker-proxy-bindings>
   <container-configurations>
     <container-configuration>
-      <container-name>Standard CMP 2.x EntityBean</container-name>
+      <container-name>Standard CMP EntityBean</container-name>
       <call-logging>false</call-logging>
       <sync-on-commit-only>false</sync-on-commit-only>
       <container-interceptors>
@@ -279,7 +279,7 @@
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntitySynchronizationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.BaseEntityInterceptor</interceptor>
         @jca.connection.interceptor@
@@ -310,7 +310,7 @@
       <commit-option>B</commit-option>
     </container-configuration>
     <container-configuration>
-      <container-name>Clustered CMP 2.x EntityBean</container-name>
+      <container-name>Clustered CMP EntityBean</container-name>
       <call-logging>false</call-logging>
       <sync-on-commit-only>false</sync-on-commit-only>
       <container-interceptors>
@@ -326,7 +326,7 @@
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntitySynchronizationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.BaseEntityInterceptor</interceptor>
         @jca.connection.interceptor@
@@ -357,7 +357,7 @@
       <commit-option>B</commit-option>
     </container-configuration>
     <container-configuration>
-      <container-name>Standard CMP 2.x EntityBean with cache invalidation</container-name>
+      <container-name>Standard CMP EntityBean with cache invalidation</container-name>
       <call-logging>false</call-logging>
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
@@ -371,7 +371,7 @@
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntitySynchronizationInterceptor</interceptor>
         <interceptor>org.jboss.cache.invalidation.triggers.EntityBeanCacheBatchInvalidatorInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.BaseEntityInterceptor</interceptor>
@@ -403,7 +403,7 @@
       <commit-option>A</commit-option>
     </container-configuration>
     <container-configuration>
-      <container-name>Instance Per Transaction CMP 2.x EntityBean</container-name>
+      <container-name>Instance Per Transaction CMP EntityBean</container-name>
       <call-logging>false</call-logging>
       <sync-on-commit-only>false</sync-on-commit-only>
       <container-interceptors>
@@ -447,97 +447,6 @@
         <MaximumSize>100</MaximumSize>
       </container-pool-conf>
       <commit-option>B</commit-option>
-    </container-configuration>
-    <container-configuration>
-      <container-name>Standard CMP EntityBean</container-name>
-      <call-logging>false</call-logging>
-      <sync-on-commit-only>false</sync-on-commit-only>
-      <container-interceptors>
-        <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
-        <interceptor>org.jboss.security.AuthenticationInterceptor</interceptor>
-        <interceptor>org.jboss.security.RoleBasedAuthorizationInterceptor</interceptor>
-        <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
-        <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.BaseEntityInterceptor</interceptor>
-        @jca.connection.interceptor@
-        <interceptor>org.jboss.ejb.entity.CMPInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.CallbackInterceptor</interceptor>
-      </container-interceptors>
-      <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
-      <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-      <persistence-manager>@cmp1.persistencemanager@</persistence-manager>
-      <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-      <locking-policy>org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock</locking-policy>
-      <container-cache-conf>
-        <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
-        <cache-policy-conf>
-          <min-capacity>50</min-capacity>
-          <max-capacity>1000000</max-capacity>
-          <overager-period>300</overager-period>
-          <max-bean-age>600</max-bean-age>
-          <resizer-period>400</resizer-period>
-          <max-cache-miss-period>60</max-cache-miss-period>
-          <min-cache-miss-period>1</min-cache-miss-period>
-          <cache-load-factor>0.75</cache-load-factor>
-        </cache-policy-conf>
-      </container-cache-conf>
-      <container-pool-conf>
-        <MaximumSize>100</MaximumSize>
-      </container-pool-conf>
-      <commit-option>A</commit-option>
-    </container-configuration>
-    <container-configuration>
-      <container-name>Clustered CMP EntityBean</container-name>
-      <call-logging>false</call-logging>
-      <sync-on-commit-only>false</sync-on-commit-only>
-      <container-interceptors>
-        <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.CleanShutdownInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
-        <interceptor>org.jboss.security.AuthenticationInterceptor</interceptor>
-        <interceptor>org.jboss.security.RoleBasedAuthorizationInterceptor</interceptor>
-        <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
-        <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.BaseEntityInterceptor</interceptor>
-        @jca.connection.interceptor@
-        <interceptor>org.jboss.ejb.entity.CMPInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.CallbackInterceptor</interceptor>
-      </container-interceptors>
-      <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
-      <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-      <persistence-manager>@cmp1.persistencemanager@</persistence-manager>
-      <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-      <locking-policy>org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock</locking-policy>
-      <container-cache-conf>
-        <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
-        <cache-policy-conf>
-          <min-capacity>50</min-capacity>
-          <max-capacity>1000000</max-capacity>
-          <overager-period>300</overager-period>
-          <max-bean-age>600</max-bean-age>
-          <resizer-period>400</resizer-period>
-          <max-cache-miss-period>60</max-cache-miss-period>
-          <min-cache-miss-period>1</min-cache-miss-period>
-          <cache-load-factor>0.75</cache-load-factor>
-        </cache-policy-conf>
-      </container-cache-conf>
-      <container-pool-conf>
-        <MaximumSize>100</MaximumSize>
-      </container-pool-conf>
-      <commit-option>A</commit-option>
     </container-configuration>
     <container-configuration>
       <container-name>Standard Stateless SessionBean</container-name>
@@ -694,7 +603,7 @@
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntitySynchronizationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.BaseEntityInterceptor</interceptor>
         @jca.connection.interceptor@
         <interceptor>org.jboss.ejb.entity.BMPInterceptor</interceptor>
@@ -740,7 +649,7 @@
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntitySynchronizationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.BaseEntityInterceptor</interceptor>
         @jca.connection.interceptor@
         <interceptor>org.jboss.ejb.entity.BMPInterceptor</interceptor>
