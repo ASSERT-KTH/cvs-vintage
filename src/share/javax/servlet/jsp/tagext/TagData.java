@@ -1,5 +1,8 @@
 /*
- * $Id: TagData.java,v 1.2 1999/10/15 09:28:31 duncan Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/javax/servlet/jsp/tagext/Attic/TagData.java,v 1.3 1999/10/20 21:36:17 akv Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/20 21:36:17 $
+ *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1
@@ -54,12 +57,8 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- * ====================================================================
- *
- * This source code implements specifications defined by the Java
- * Community Process. In order to remain compliant with the specification
- * DO NOT add / change / or delete method signatures!
- */
+ */ 
+
 package javax.servlet.jsp.tagext;
 
 import java.util.Hashtable;
