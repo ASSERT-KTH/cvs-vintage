@@ -1,6 +1,6 @@
 <html>
 <head>
-  <!-- $Id: tomcat-iis-howto.html,v 1.4 2001/10/20 20:58:59 larryi Exp $ -->
+  <!-- $Id: tomcat-iis-howto.html,v 1.5 2001/10/21 15:43:06 larryi Exp $ -->
   <!-- Copyright 1999-2001, Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <link rel="stylesheet" href="style.css">
@@ -97,11 +97,12 @@ distribution.</p>
 <code>server.xml</code> file.  This module is responsible for writting the
 configuration files used for the IIS installation and operation.</p>
 
-<p>Unlike prior versions of Tomcat, the configuration files are not automatically
-written each time Tomcat 3.3 is started up.  Instead you must start Tomcat 3.3
-with &quot;jkconf&quot; specified.  Tomcat 3.3 will initialize, write the
-configuration files, and then exit.  This may be done, while an instance of
-Tomcat 3.3 is running.</p>
+<p>In Tomcat 3.3, configuration files are written on demand. You must start
+Tomcat 3.3 with the &quot;jkconf&quot; option specified. Tomcat 3.3 will
+initialize, write the configuration files, and then exit.  This may be done,
+while an instance of Tomcat 3.3 is running.  This differs from prior versions
+of Tomcat where the configuration files are written each time Tomcat is
+started.</p>
 
 <p>The IISConfig writes two configuration files.  The first is the registry
 configuration file, which by default will be
@@ -160,10 +161,10 @@ to add your own contexts. Adding a new context requires two operations:
 </ol>
 
 <p>Adding a context to the ISAPI redirector is simple, all you need to do is to
-start Tomcat 3.3 with &quot;jkconf&quot; specified again. After the
+start Tomcat 3.3 with &quot;jkconf&quot; option specified again. After the
 worker map file is rewritten, restart IIS/PWS.</p>
 
-<p>If you are using a manually modified worker map file, edit the fileyour
+<p>If you are using a manually modified worker map file, edit the file
 to add a line that looks like: </p>
 
 <p><tt>/context/*=worker_name</tt></p>
@@ -254,7 +255,7 @@ requires to replace the following line:</p>
 <p>As you can see the second configuration is more explicit, it actually instruct the
 redirector to redirect only requests to resources under <tt>/examples/servlet/</tt> and
 resources under <tt>/examples/ </tt>whose name ends with <tt>.jsp</tt>. This is
-similar to what is automically written to the <tt>uriworkermap.properties-auto</tt>
+similar to what is automatically written to the <tt>uriworkermap.properties-auto</tt>
 file for each context.</p>
 
 <p>You can even be more explicit and provide lines such as:</p>
@@ -320,7 +321,7 @@ then retry the step.</p>
 to an unmodified copy of the <code>conf/auto/uriworkermap.properties</code> file.
 Results may be misleading if <tt>worker_mount_file</tt> points to a modified
 version of the file.  It is also assumed that the &quot;/examples&quot;
-context works correcly if you access Tomcat directly.</p>
+context works correctly if you access Tomcat directly.</p>
 
 <h3>Win98</h3>
 
@@ -338,7 +339,7 @@ context works correcly if you access Tomcat directly.</p>
         Foundation\Jakarta Isapi Redirector\1.0&quot; key. Case isn't important, 
         but an incorrect letter will prevent the isapi_redirect.dll from finding 
         its registry settings.</li>
-      <li>Check the <tt>log_file</tt> setting for typos, name and data. Also insure 
+      <li>Check the <tt>log_file</tt> setting for typos, name and data. Also ensure 
         the directory in which the log file will appear already exists.</li>
     </ol>
     If the above are set correctly, the ISAPI redirector should be able to create 
@@ -414,7 +415,7 @@ context works correcly if you access Tomcat directly.</p>
         but an incorrect letter will prevent the isapi_redirect.dll from finding
         its registry settings.</li>
       <li>Check the <tt>log_file</tt> setting for typos, name and data.  Also
-        insure the directory in which the log file will appear already exists.</li>
+        ensure the directory in which the log file will appear already exists.</li>
     </ol>
     If the above are set correctly, the ISAPI redirector should be able to create
     the log file.</li>
