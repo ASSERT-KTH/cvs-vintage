@@ -34,7 +34,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge
 {
@@ -122,7 +122,7 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge
       }
 
       // has the value changes since setClean
-      return !stateFactory.isStateValid(getInstanceValue(ctx), getFieldState(ctx).originalValue);
+      return isLoaded(ctx) && !stateFactory.isStateValid(getInstanceValue(ctx), getFieldState(ctx).originalValue);
    }
 
    /**
@@ -166,7 +166,9 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge
       if(isReadTimedOut(ctx))
       {
          JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
-         jdbcCtx.setFieldState(jdbcContextIndex, new FieldState(jdbcCtx));
+         FieldState fieldState = (FieldState)jdbcCtx.getFieldState(jdbcContextIndex);
+         if(fieldState != null)
+            fieldState.reset();
       }
    }
 
@@ -211,6 +213,14 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge
       public void setCheckDirty()
       {
          entityState.setCheckDirty(tableIndex);
+      }
+
+      public void reset()
+      {
+         originalValue = null;
+         lastRead = -1;
+         entityState.resetFlags(tableIndex);
+         log.debug("reset field state");
       }
    }
 }
