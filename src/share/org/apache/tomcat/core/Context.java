@@ -273,6 +273,19 @@ public final class Context {
     // ( and we try to keep the object "passive" - it is already
     // full of properties, no need to make it to complicated.
 
+    /** Add a new container. Container define special properties for
+	a set of urls.
+    */
+    public final void addContainer( Container ct )
+	throws TomcatException
+    {
+	// Notify interceptors that a new container is added
+	BaseInterceptor cI[]=defaultContainer.getInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].addContainer( ct );
+	}
+    }
+    
     
     /**
      * Maps a named servlet to a particular path or extension.
@@ -283,6 +296,7 @@ public final class Context {
      *
      * If the mapping already exists it will be replaced by the new
      * mapping.
+     * @deprecated Use addContainer
      */
     public final  void addServletMapping(String path, String servletName)
 	throws TomcatException
@@ -334,7 +348,7 @@ public final class Context {
 	This is equivalent with adding a Container with the path,
 	method and transport. If the container will be matched,
 	the request will have to pass the security constraints.
-	
+	@deprecated Use addContainer
     */
     public final  void addSecurityConstraint( String path[], String methods[],
 				       String roles[], String transport)
@@ -388,8 +402,9 @@ public final class Context {
     }
 
     public final  void setFacade(Object obj) {
-        if(contextFacade!=null )
+        if(contextFacade!=null ) {
 	    log( "Changing facade " + contextFacade + " " +obj);
+	}
 	contextFacade=obj;
     }
 
@@ -436,6 +451,14 @@ public final class Context {
     void setState( int state )
 	throws TomcatException
     {
+	// call state callback
+	BaseInterceptor csI[]=getContainer().getInterceptors();
+	for( int i=0; i< csI.length; i++ ) {
+	    csI[i].contextState( this, state ); 
+	}
+
+	// transition from NEW to ADDED. The system is stable, we
+	// can init our own local modules
 	if(this.state==STATE_NEW && state==STATE_ADDED ) {
 	    // we are just beeing added
 	    BaseInterceptor cI[]=getContainer().getInterceptors();
@@ -915,13 +938,27 @@ public final class Context {
      * Add a servlet. Servlets are mapped by name.
      * This method is used to maintain the list of declared
      * servlets, that can be used for mappings.
+     * @deprecated. Use addHandler() 
      */
     public final  void addServlet(Handler wrapper)
+    	throws TomcatException
+    {
+	addHandler( wrapper );
+    }
+
+    /**
+     * Add a servlet. Servlets are mapped by name.
+     * This method is used to maintain the list of declared
+     * servlets, that can be used for mappings.
+     * @deprecated. Use addHandler() 
+     */
+    public final  void addHandler(Handler wrapper)
     	throws TomcatException
     {
 	//	wrapper.setContext( this );
 	wrapper.setState( Handler.STATE_ADDED );
 	String name=wrapper.getName();
+	wrapper.setContextManager( contextM );
 
         // check for duplicates
         if (getServletByName(name) != null) {
@@ -930,7 +967,25 @@ public final class Context {
         }
 	if( debug>5 ) log( "Adding servlet=" + name + "-> "
 			   + wrapper);
+	BaseInterceptor cI[]=defaultContainer.getInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].addHandler( wrapper );
+	}
+	
 	servlets.put(name, wrapper);
+    }
+
+    public void removeHandler( Handler handler )
+	throws TomcatException
+    {
+	if( handler==null ) return;
+	BaseInterceptor cI[]=defaultContainer.getInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].removeHandler( handler );
+	}
+
+	servlets.remove( handler.getName());
+	handler.setState( Handler.STATE_NEW );
     }
 
     /** Remove the servlet with a specific name
@@ -939,9 +994,7 @@ public final class Context {
 	throws TomcatException
     {
 	Handler h=getServletByName( servletName );
-	if( h!=null )
-	    h.setState( Handler.STATE_NEW );
-	servlets.remove( servletName );
+	removeHandler( h );
     }
 
     /**
