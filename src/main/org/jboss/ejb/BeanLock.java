@@ -10,7 +10,7 @@ package org.jboss.ejb;
 
 import javax.transaction.Transaction;
 
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 
 /**
  * BeanLock interface
@@ -18,7 +18,7 @@ import org.jboss.ejb.MethodInvocation;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  *
  * <p><b>Revisions:</b><br>
 *  <p><b>2001/07/29: marcf</b>
@@ -75,7 +75,7 @@ public interface BeanLock
     *
     *  @param mi The method invocation that needs a lock.
     */
-   public void schedule(MethodInvocation mi) 
+   public void schedule(Invocation mi) 
       throws Exception;
 		
    /**
