@@ -245,6 +245,7 @@ public  class AttributeGroup
          throws Exception
     {                
         String permission = null;
+        int dupeSequence = 0;
         if (isGlobal())
         {
             permission = (ScarabSecurity.DOMAIN__EDIT);
@@ -268,6 +269,7 @@ public  class AttributeGroup
                 if (isGlobal())
                 {
                     attrGroups = issueType.getAttributeGroups(false);
+                    dupeSequence =  issueType.getDedupeSequence();
                     // Delete issuetype-attribute mapping
                     Criteria crit  = new Criteria()
                         .addJoin(RIssueTypeAttributePeer.ATTRIBUTE_ID,
@@ -284,6 +286,7 @@ public  class AttributeGroup
                 else
                 {
                     attrGroups = module.getAttributeGroups(getIssueType(), false);
+                    dupeSequence =  module.getDedupeSequence(issueType);
                     // Delete module-attribute mapping
                     Criteria crit  = new Criteria()
                         .addJoin(RModuleAttributePeer.ATTRIBUTE_ID,
@@ -312,11 +315,13 @@ public  class AttributeGroup
                     .add(RAttributeAttributeGroupPeer.GROUP_ID, getAttributeGroupId());
                 RAttributeAttributeGroupPeer.doDelete(crit2);
 
+
                 // Delete the attribute group
                 int order = getOrder();
                 crit2 = new Criteria()
                     .add(AttributeGroupPeer.ATTRIBUTE_GROUP_ID, getAttributeGroupId());
                 AttributeGroupPeer.doDelete(crit2);
+                attrGroups.remove(this);
                 
                 // Adjust the orders for the other attribute groups
                 for (int i=0; i<attrGroups.size(); i++)
@@ -325,14 +330,20 @@ public  class AttributeGroup
                     int tempOrder = tempGroup.getOrder();
                     if (tempGroup.getOrder() > order)
                     { 
-                        tempGroup.setOrder(tempOrder - 1);
+                        if (tempOrder == dupeSequence + 1)
+                        {
+                            tempGroup.setOrder(tempOrder - 2);
+                        }
+                        else
+                        {
+                            tempGroup.setOrder(tempOrder - 1);
+                        }
                         tempGroup.save();
                     }
                 }
                     
-                attrGroups.remove(this);
-                ScarabCache.clear();
             } 
+            ScarabCache.clear();
         } 
         else
         {

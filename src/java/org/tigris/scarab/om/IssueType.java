@@ -65,7 +65,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.40 2003/02/06 20:04:14 elicia Exp $
+ * @version $Id: IssueType.java,v 1.41 2003/02/07 01:16:13 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -337,8 +337,8 @@ public  class IssueType
         List groups = getAttributeGroups(false);
         AttributeGroup ag = new AttributeGroup();
 
-        // Make default group name 'attribute group x' where x is size + 1
-        ag.setName("Attribute group " + Integer.toString(groups.size()+1));
+        // Make default group name 'new attribute group' 
+        ag.setName("Attribute group");
         ag.setActive(true);
         ag.setIssueTypeId(getIssueTypeId());
         if (groups.size() == 0)

@@ -126,7 +126,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.79 2003/02/06 23:33:38 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.80 2003/02/07 01:16:13 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -361,8 +361,8 @@ public abstract class AbstractScarabModule
         List groups = getAttributeGroups(issueType, false);
         AttributeGroup ag = new AttributeGroup();
 
-        // Make default group name 'attribute group x' where x is size + 1
-        ag.setName("Attribute group " + Integer.toString(groups.size()+1));
+        // Make default group name 'new attribute group' 
+        ag.setName("new attribute group");
         ag.setActive(true);
         ag.setModuleId(getModuleId());
         ag.setIssueTypeId(issueType.getIssueTypeId());
