@@ -3,6 +3,7 @@
 #set ( $currentIssue = $scarabR.getIssue($currentIssueId) )
 
 #if ($currentIssue)
+    #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 
   ## The issue details
 
@@ -19,7 +20,8 @@
           </TD>
         </tr>
 
-  #foreach ( $attVal in $currentIssue.OrderedModuleAttributeValues )
+    #foreach ( $attKey in $attrValues )
+        #set ( $attVal = $attrValues.get($attKey) )
 
         <tr><td>
 
