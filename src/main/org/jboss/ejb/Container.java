@@ -99,7 +99,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.92 $
+ * @version $Revision: 1.93 $
  */
 public abstract class Container
    extends ServiceMBeanSupport
@@ -641,111 +641,64 @@ public abstract class Container
                   "cannot invoke ejb methods on it");
          }
       
-         Object value = null;
-         Invocation mi = (Invocation)params[0];
-         /*
-         String jndiBinding = (String)mi.getValue(InterceptorKey.JNDI_NAME);
-         if (jndiBinding == null)
-         {
-            log.debug("JNDI Binding is null", new Throwabel());
-         }
-         Object proxyFactory = Registry.lookup(jndiBinding + "/proxyFactory");
-         if (proxyFactory == null) 
-               log.debug("***************** proxyFactory is null ********");
-         proxyFactoryTL.set(proxyFactory);
-         */
+         // We are have a valid (not-null) invocation because of 
+         // the instanceof check above
+         Invocation invocation = (Invocation)params[0];
 
-         // Must have a valid Invocation to continue
-         if (mi == null)
-         {
-            log.error("Method invocation object is null");
-            throw new IllegalArgumentException("Method invocation object " +
-                  "is null");
-         }
-      
+         // set the thread context class loader
+         // dain: do we need to reset the class loader at the end of the call?
          ClassLoader callerClassLoader = 
                Thread.currentThread().getContextClassLoader();
-         boolean trace = log.isTraceEnabled();
          try
          {
             Thread.currentThread().setContextClassLoader(this.classLoader);        
             // Check against home, remote, localHome, local, getHome, 
             // getRemote, getLocalHome, getLocal
-            Object type = mi.getType();
-            if(type == InvocationType.REMOTE) {
-               if (mi instanceof MarshalledInvocation)
+            Object type = invocation.getType();
+            if(type == InvocationType.REMOTE ||
+                  type == InvocationType.LOCAL) 
+            {
+               if (invocation instanceof MarshalledInvocation)
                {
-                  ((MarshalledInvocation) mi).setMethodMap(
+                  ((MarshalledInvocation) invocation).setMethodMap(
                         marshalledInvocationMapping);
                   
-                  if( trace )
+                  if (log.isTraceEnabled())
+                  {
                      log.trace("METHOD REMOTE INVOKE "+
-                           mi.getObjectName()+"||"+
-                           mi.getMethod().getName()+"||");
+                           invocation.getObjectName()+"||"+
+                           invocation.getMethod().getName()+"||");
+                  }
                }
                
-               value= invoke(mi);
+               return invoke(invocation);
             
             }
-            else if(type == InvocationType.LOCAL) 
+            else if(type == InvocationType.HOME ||
+                  type == InvocationType.LOCALHOME)
             {
-               throw new UnsupportedOperationException(
-                     "local is not supported yet");
-            }
-            else if(type == InvocationType.HOME) 
-            {
-               if (mi instanceof MarshalledInvocation)
+               if (invocation instanceof MarshalledInvocation)
                {
                   
-                  ((MarshalledInvocation) mi).setMethodMap(
+                  ((MarshalledInvocation) invocation).setMethodMap(
                         marshalledInvocationMapping);
                   
-                  if( trace )
-                     log.trace("METHOD HOME INVOKE "+
-                           mi.getObjectName()+"||"+
-                           mi.getMethod().getName()+"||"+
-                           mi.getArguments().toString());
-               
+                  if (log.isTraceEnabled())
+                  {
+                     log.trace("METHOD HOME INVOKE " +
+                           invocation.getObjectName() + "||"+
+                           invocation.getMethod().getName() + "||"+
+                           invocation.getArguments().toString());
+                  }
                }
                
-               value = invokeHome(mi);
+               return invokeHome(invocation);
             
-            }
-            else if(type == InvocationType.LOCALHOME)
-            {
-               throw new UnsupportedOperationException(
-                     "localHome is not supported yet");
-            }
-            else if(type == InvocationType.GETHOME) 
-            {
-               String className = this.getBeanMetaData().getHome();
-               if( className != null )
-               {
-                  Class clazz = this.classLoader.loadClass(className);
-                  value = clazz;
-               }
-            }
-            else if(type == InvocationType.GETREMOTE) 
-            {
-               String className2 = this.getBeanMetaData().getRemote();
-               if( className2 != null )
-               {
-                  Class clazz = this.classLoader.loadClass(className2);
-                  value = clazz;
-               }
-            } 
-            else if(type == InvocationType.GETLOCALHOME) 
-            {
-               value = this.localHomeInterface;
-            }
-            else if(type == InvocationType.GETLOCAL)
-            {
-               value = this.localInterface;
             }
             else 
             {
-               //throw new MBeanException(
-               //    new IllegalArgumentException("Unknown action: "));
+               throw new MBeanException(new IllegalArgumentException(
+                        "Unknown invocation type: " + type));
             }
          }
          catch (Exception e)
@@ -756,8 +709,6 @@ public abstract class Container
          {
             Thread.currentThread().setContextClassLoader(callerClassLoader);
          }
-      
-         return value;
       }
       else if (params == null || params.length == 0) 
       {
@@ -963,8 +914,6 @@ public abstract class Container
                      ref.getName(), 
                      new LinkRef(refContainer.getBeanMetaData().getJndiName()));
                
-               // bind(envCtx, ref.getName(), new Reference(ref.getHome(), new StringRefAddr("Container",ref.getLink()), getClass().getName()+".EjbReferenceFactory", null));
-               // bind(envCtx, ref.getName(), new LinkRef(ref.getLink()));
             }
             else
             {
@@ -1216,11 +1165,6 @@ public abstract class Container
 
             if (t instanceof EJBException) {
                throw (EJBException)t;
-            }
-            else if (t instanceof RuntimeException) {
-               // Transform runtime exception into what a bean 
-               // *should* have thrown
-               throw new EJBException((RuntimeException)t);
             }
             else if (t instanceof Exception) {
                throw (Exception)t;
