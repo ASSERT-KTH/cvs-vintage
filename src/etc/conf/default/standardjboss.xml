@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.19 2001/10/09 00:59:39 olegnitz Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.20 2001/10/16 22:15:36 patriot1burke Exp $ -->
 
 <jboss>
    <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -61,6 +61,92 @@
 	 <container-name>Standard CMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
 	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+	 <container-interceptors>
+	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+	    <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
+	 </container-interceptors>
+	 <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
+	 <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
+	 <persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
+	 <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+	 <locking-policy>org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock</locking-policy>
+	 <container-invoker-conf>
+	    <RMIObjectPort>4444</RMIObjectPort>
+	    <Optimized>True</Optimized>
+	 </container-invoker-conf>
+	 <container-cache-conf>
+	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
+	    <cache-policy-conf>
+	       <min-capacity>50</min-capacity>
+	       <max-capacity>1000</max-capacity>
+	       <overager-period>300</overager-period>
+	       <max-bean-age>600</max-bean-age>
+	       <resizer-period>400</resizer-period>
+	       <max-cache-miss-period>60</max-cache-miss-period>
+	       <min-cache-miss-period>1</min-cache-miss-period>
+	       <cache-load-factor>0.75</cache-load-factor>
+	    </cache-policy-conf>
+	 </container-cache-conf>
+	 <container-pool-conf>
+	    <MaximumSize>100</MaximumSize>
+	    <MinimumSize>10</MinimumSize>
+	 </container-pool-conf>
+	 <commit-option>A</commit-option>
+      </container-configuration>
+
+      <container-configuration>
+	 <container-name>Clustered CMP 2.x EntityBean</container-name>
+	 <call-logging>false</call-logging>
+	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvokerHA</container-invoker>
+	 <container-interceptors>
+	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+	    <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCReadAheadInterceptor</interceptor>
+	 </container-interceptors>
+	 <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
+	 <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
+	 <persistence-manager>org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager</persistence-manager>
+	 <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+	 <locking-policy>org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock</locking-policy>
+	 <container-invoker-conf>
+	    <Optimized>True</Optimized>
+	    <RMIObjectPort>4444</RMIObjectPort>
+	 </container-invoker-conf>
+	 <container-cache-conf>
+	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
+	    <cache-policy-conf>
+	       <min-capacity>50</min-capacity>
+	       <max-capacity>1000</max-capacity>
+	       <overager-period>300</overager-period>
+	       <max-bean-age>600</max-bean-age>
+	       <resizer-period>400</resizer-period>
+	       <max-cache-miss-period>60</max-cache-miss-period>
+	       <min-cache-miss-period>1</min-cache-miss-period>
+	       <cache-load-factor>0.75</cache-load-factor>
+	    </cache-policy-conf>
+	 </container-cache-conf>
+	 <container-pool-conf>
+	    <MaximumSize>100</MaximumSize>
+	    <MinimumSize>10</MinimumSize>
+	 </container-pool-conf>
+	 <commit-option>B</commit-option>
+      </container-configuration>
+
+      <container-configuration>
+	 <container-name>Clustered CMP EntityBean</container-name>
+	 <call-logging>false</call-logging>
+	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvokerHA</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -316,6 +402,48 @@
 	 <container-name>Standard BMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
 	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+	 <container-interceptors>
+	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+	    <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
+	 </container-interceptors>
+	 <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
+	 <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
+	 <persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
+	 <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+	 <locking-policy>org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock</locking-policy>
+	 <container-invoker-conf>
+	    <RMIObjectPort>4444</RMIObjectPort>
+	    <Optimized>True</Optimized>
+	 </container-invoker-conf>
+	 <container-cache-conf>
+	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
+	    <cache-policy-conf>
+	       <min-capacity>50</min-capacity>
+	       <max-capacity>1000</max-capacity>
+	       <overager-period>300</overager-period>
+	       <max-bean-age>600</max-bean-age>
+	       <resizer-period>400</resizer-period>
+	       <max-cache-miss-period>60</max-cache-miss-period>
+	       <min-cache-miss-period>1</min-cache-miss-period>
+	       <cache-load-factor>0.75</cache-load-factor>
+	    </cache-policy-conf>
+	 </container-cache-conf>
+	 <container-pool-conf>
+	    <MaximumSize>100</MaximumSize>
+	    <MinimumSize>10</MinimumSize>
+	 </container-pool-conf>
+	 <commit-option>A</commit-option>
+      </container-configuration>
+
+      <container-configuration>
+	 <container-name>Clustered BMP EntityBean</container-name>
+	 <call-logging>false</call-logging>
+	 <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvokerHA</container-invoker>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
