@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.8 2003/02/03 19:02:35 thn Exp $
+// $Id: ParseState.java,v 1.9 2003/03/19 23:37:11 alexb Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -53,6 +53,8 @@ class ParseState
     /** Counter for anonymous innner classes */
     private int anonymousClassCounter;
 
+    /** represents the source file being parsed */
+    private Object component;
     /**
        Create a new parse state.
 
@@ -112,6 +114,20 @@ class ParseState
 	context = new ClassifierContext(context, mClassifier);
     }
 
+    /**
+     *
+     */
+    public void addComponent(Object component){
+        this.component = component;
+    }
+    
+    /**
+     *
+     */
+    public Object getComponent(){
+        return component;
+    }
+    
     /**
        Get the current context.
 

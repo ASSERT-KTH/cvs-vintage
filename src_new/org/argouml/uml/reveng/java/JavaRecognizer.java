@@ -74,7 +74,7 @@ import antlr.collections.impl.BitSet;
  *
  * Version tracking now done with following ID:
  *
- * $Id: JavaRecognizer.java,v 1.16 2003/02/24 15:04:41 thierrylach Exp $
+ * $Id: JavaRecognizer.java,v 1.17 2003/03/19 23:39:01 alexb Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
@@ -271,6 +271,10 @@ public JavaRecognizer(ParserSharedInputState state) {
 		
 		setModeller(modeller);
 		setLexer(lexer);
+                
+                if ( inputState.guessing==0 ) {
+				getModeller().addComponent();
+		}
 		
 		{
 		switch ( LA(1)) {
