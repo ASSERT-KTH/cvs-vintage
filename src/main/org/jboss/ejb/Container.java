@@ -48,6 +48,7 @@ import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.transaction.TransactionManager;
+import javax.transaction.UserTransaction;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.ejb.plugins.AbstractInstanceCache;
@@ -110,7 +111,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.113 $
+ * @version $Revision: 1.114 $
  *
  * @todo convert all the deployment/service lifecycle stuff to an
  * aspect/interceptor.  Make this whole stack into a model mbean.
@@ -231,6 +232,8 @@ public abstract class Container extends ServiceMBeanSupport
     * This is the TransactionManager
     */
    protected TransactionManager tm;
+
+   protected UserTransaction userTransaction;
 
    /**
     * This is the SecurityManager
@@ -439,6 +442,17 @@ public abstract class Container extends ServiceMBeanSupport
       return tm;
    }
 
+   /**
+    * The <code>getUserTransaction</code> method should be used only
+    * for BMT session enterprise contexts.
+    *
+    * @return an <code>UserTransaction</code> value
+    */
+   public UserTransaction getUserTransaction()
+   {
+      return userTransaction;
+   }
+
    public void setSecurityManager(AuthenticationManager sm)
    {
       this.sm = sm;
@@ -578,9 +592,10 @@ public abstract class Container extends ServiceMBeanSupport
    {
       if (methodToTxSupportMap == null)
       {
-         throw new IllegalStateException("getMethodHashToTxSupportMap called without methodToTxSupportMap set");
+         //throw new IllegalStateException("getMethodHashToTxSupportMap called without methodToTxSupportMap set");
+         return new HashMap();
          //return null;
-     } // end of if ()
+      } // end of if ()
 
       Map result = new HashMap(methodToTxSupportMap.size());
       for (Iterator i = methodToTxSupportMap.entrySet().iterator(); i.hasNext();)
@@ -688,7 +703,7 @@ public abstract class Container extends ServiceMBeanSupport
       if (jndiName == null)
       {
          throw new IllegalStateException("cannot get Container object " +
-               "name unless jndi name is set!");
+                                         "name unless jndi name is set!");
       }
 
       if (jmxName == null)
@@ -776,7 +791,7 @@ public abstract class Container extends ServiceMBeanSupport
       }
       TimerService timerService = (TimerService) timerServices.get(
          ( pKey == null ? "null" : pKey )
-      );
+         );
       if( timerService == null ) {
          try {
             timerService = (TimerService) server.invoke(
@@ -784,11 +799,11 @@ public abstract class Container extends ServiceMBeanSupport
                "createTimerService",
                new Object[] { getJmxName().toString(), this, pKey },
                new String[] { String.class.getName(), Container.class.getName(), Object.class.getName() }
-            );
+               );
             timerServices.put(
                ( pKey == null ? "null" : pKey ),
                timerService
-            );
+               );
          }
          catch( Exception e ) {
             throw new RuntimeException( "Could not create timer service: " + e );
@@ -826,40 +841,40 @@ public abstract class Container extends ServiceMBeanSupport
             EJB_TIMEOUT,
             new Class[] { Timer.class },
             ( getTransactionManager() == null ?
-                 null:
-                 getTransactionManager().getTransaction()
-            ),
+              null:
+              getTransactionManager().getTransaction()
+              ),
             SecurityAssociation.getPrincipal(),
             SecurityAssociation.getCredential()
-         );
+            );
          invocation.setArguments( new Object[] { pTimer } );
          invocation.setType( InvocationType.LOCAL );
 
          invoke( invocation );
       }
       catch( Exception e ) {
-          e.printStackTrace();
-          throw new RuntimeException( "call ejbTimeout() failed: " + e );
+         e.printStackTrace();
+         throw new RuntimeException( "call ejbTimeout() failed: " + e );
       }
-/*AS TODO: Manage the exceptions properly
-      catch (AccessException ae)
-      {
-         throw new AccessLocalException( ae.getMessage(), ae );
-      }
-      catch (NoSuchObjectException nsoe)
-      {
-         throw new NoSuchObjectLocalException( nsoe.getMessage(), nsoe );
-      }
-      catch (TransactionRequiredException tre)
-      {
-         throw new TransactionRequiredLocalException( tre.getMessage() );
-      }
-      catch (TransactionRolledbackException trbe)
-      {
-         throw new TransactionRolledbackLocalException(
-               trbe.getMessage(), trbe );
-      }
-*/
+      /*AS TODO: Manage the exceptions properly
+        catch (AccessException ae)
+        {
+        throw new AccessLocalException( ae.getMessage(), ae );
+        }
+        catch (NoSuchObjectException nsoe)
+        {
+        throw new NoSuchObjectLocalException( nsoe.getMessage(), nsoe );
+        }
+        catch (TransactionRequiredException tre)
+        {
+        throw new TransactionRequiredLocalException( tre.getMessage() );
+        }
+        catch (TransactionRolledbackException trbe)
+        {
+        throw new TransactionRolledbackLocalException(
+        trbe.getMessage(), trbe );
+        }
+      */
       finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
@@ -1056,13 +1071,13 @@ public abstract class Container extends ServiceMBeanSupport
       throws MBeanException, ReflectionException
    {
       if (params != null &&
-            params.length == 1 &&
-            (params[0] instanceof Invocation))
+          params.length == 1 &&
+          (params[0] instanceof Invocation))
       {
          if (!started)
          {
             throw new IllegalStateException("container is not started, you " +
-                  "cannot invoke ejb methods on it");
+                                            "cannot invoke ejb methods on it");
          }
 
          // We are have a valid (not-null) invocation because of
@@ -1072,7 +1087,7 @@ public abstract class Container extends ServiceMBeanSupport
          // set the thread context class loader
          // dain: do we need to reset the class loader at the end of the call?
          ClassLoader callerClassLoader =
-               Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().getContextClassLoader();
          try
          {
             Thread.currentThread().setContextClassLoader(this.classLoader);
@@ -1080,38 +1095,38 @@ public abstract class Container extends ServiceMBeanSupport
             // getRemote, getLocalHome, getLocal
             Object type = invocation.getType();
             if(type == InvocationType.REMOTE ||
-                  type == InvocationType.LOCAL)
+               type == InvocationType.LOCAL)
             {
                if (invocation instanceof MarshalledInvocation)
                {
                   ((MarshalledInvocation) invocation).setMethodMap(
-                        marshalledInvocationMapping);
+                     marshalledInvocationMapping);
 
                   if (log.isTraceEnabled())
                   {
                      log.trace("METHOD REMOTE INVOKE "+
-                           invocation.getObjectName()+"||"+
-                           invocation.getMethod().getName()+"||");
+                               invocation.getObjectName()+"||"+
+                               invocation.getMethod().getName()+"||");
                   }
                }
 
                return invoke(invocation);
             }
             else if(type == InvocationType.HOME ||
-                  type == InvocationType.LOCALHOME)
+                    type == InvocationType.LOCALHOME)
             {
                if (invocation instanceof MarshalledInvocation)
                {
 
                   ((MarshalledInvocation) invocation).setMethodMap(
-                        marshalledInvocationMapping);
+                     marshalledInvocationMapping);
 
                   if (log.isTraceEnabled())
                   {
                      log.trace("METHOD HOME INVOKE " +
-                           invocation.getObjectName() + "||"+
-                           invocation.getMethod().getName() + "||"+
-                           invocation.getArguments().toString());
+                               invocation.getObjectName() + "||"+
+                               invocation.getMethod().getName() + "||"+
+                               invocation.getArguments().toString());
                   }
                }
 
@@ -1120,7 +1135,7 @@ public abstract class Container extends ServiceMBeanSupport
             else
             {
                throw new MBeanException(new IllegalArgumentException(
-                        "Unknown invocation type: " + type));
+                                           "Unknown invocation type: " + type));
             }
          }
          catch (Exception e)
@@ -1155,7 +1170,7 @@ public abstract class Container extends ServiceMBeanSupport
             else
             {
                throw new IllegalArgumentException("unknown operation! " +
-                     ignored);
+                                                  ignored);
             }
 
             return null;
@@ -1163,7 +1178,7 @@ public abstract class Container extends ServiceMBeanSupport
          catch (Exception e)
          {
             throw new MBeanException(e,
-                  "Exception in service lifecyle operation: " + ignored);
+                                     "Exception in service lifecyle operation: " + ignored);
          }
       }
       else if (params != null && params.length == 2 && params[0] instanceof List && params[1] instanceof Boolean)
@@ -1174,7 +1189,7 @@ public abstract class Container extends ServiceMBeanSupport
       else
       {
          throw new IllegalArgumentException(
-               "Expected zero or single Invocation argument");
+            "Expected zero or single Invocation argument");
       }
    }
 
@@ -1199,20 +1214,20 @@ public abstract class Container extends ServiceMBeanSupport
    {
       MBeanParameterInfo[] miInfoParams = new MBeanParameterInfo[] {
          new MBeanParameterInfo(
-               "method",
-               Invocation.class.getName(),
-               "Invocation data")
+            "method",
+            Invocation.class.getName(),
+            "Invocation data")
       };
 
       MBeanParameterInfo[] miStatisticsParams = new MBeanParameterInfo[] {
          new MBeanParameterInfo(
-               "container",
-               List.class.getName(),
-               "Statitic Data Container"),
+            "container",
+            List.class.getName(),
+            "Statitic Data Container"),
          new MBeanParameterInfo(
-               "reset",
-               Boolean.TYPE.getName(),
-               "If true reset statisitcs data")
+            "reset",
+            Boolean.TYPE.getName(),
+            "If true reset statisitcs data")
       };
 
       MBeanParameterInfo[] noParams = new MBeanParameterInfo[] {};
@@ -1394,14 +1409,14 @@ public abstract class Container extends ServiceMBeanSupport
                // Internal link
                if (debug) {
                   log.debug("Binding "+ref.getName()+
-                        " to internal JNDI source: "+ref.getLink());
+                            " to internal JNDI source: "+ref.getLink());
                }
                String jndiName = EjbUtil.findEjbLink( server, di, ref.getLink() );
 
                Util.bind(
-                     envCtx,
-                     ref.getName(),
-                     new LinkRef(jndiName));
+                  envCtx,
+                  ref.getName(),
+                  new LinkRef(jndiName));
 
             }
             else
@@ -1423,13 +1438,13 @@ public abstract class Container extends ServiceMBeanSupport
 
                   StringRefAddr addr = new StringRefAddr(invokerBinding, name);
                   log.debug("adding " + invokerBinding + ":" + name +
-                        " to Reference");
+                            " to Reference");
 
                   if (reference == null)
                   {
                      reference = new Reference("javax.naming.LinkRef",
-                           ENCThreadLocalKey.class.getName(),
-                           null);
+                                               ENCThreadLocalKey.class.getName(),
+                                               null);
                   }
                   reference.add(addr);
                }
@@ -1439,7 +1454,7 @@ public abstract class Container extends ServiceMBeanSupport
                   {
                      // Add default
                      StringRefAddr addr =
-                           new StringRefAddr("default", ref.getJndiName());
+                        new StringRefAddr("default", ref.getJndiName());
                      reference.add(addr);
                   }
                   Util.bind(envCtx, ref.getName(), reference);
@@ -1449,13 +1464,13 @@ public abstract class Container extends ServiceMBeanSupport
                   if (ref.getJndiName() == null)
                   {
                      throw new DeploymentException("ejb-ref " + ref.getName()+
-                         ", expected either ejb-link in ejb-jar.xml " +
-                         "or jndi-name in jboss.xml");
+                                                   ", expected either ejb-link in ejb-jar.xml " +
+                                                   "or jndi-name in jboss.xml");
                   }
                   Util.bind(
-                        envCtx,
-                        ref.getName(),
-                        new LinkRef(ref.getJndiName()));
+                     envCtx,
+                     ref.getName(),
+                     new LinkRef(ref.getJndiName()));
                }
             }
          }
@@ -1478,16 +1493,16 @@ public abstract class Container extends ServiceMBeanSupport
                log.debug("Binding "+refName+" to bean source: "+ref.getLink());
 
                String jndiName = EjbUtil.findLocalEjbLink( server, di,
-                  ref.getLink() );
+                                                           ref.getLink() );
 
                Util.bind(envCtx,
-                     ref.getName(),
-                     new LinkRef(jndiName));
+                         ref.getName(),
+                         new LinkRef(jndiName));
             }
             else
             {
                throw new DeploymentException("Local references currently " +
-                     "require ejb-link" );
+                                             "require ejb-link" );
             }
          }
       }
@@ -1498,7 +1513,7 @@ public abstract class Container extends ServiceMBeanSupport
 
          // let's play guess the cast game ;)  New metadata should fix this.
          ApplicationMetaData application =
-               beanMetaData.getApplicationMetaData();
+            beanMetaData.getApplicationMetaData();
 
          while(enum.hasNext())
          {
@@ -1541,7 +1556,7 @@ public abstract class Container extends ServiceMBeanSupport
                if (finalName == null)
                {
                   log.warn("No resource manager found for " +
-                        ref.getResourceName());
+                           ref.getResourceName());
                   continue;
                }
             }
@@ -1551,7 +1566,7 @@ public abstract class Container extends ServiceMBeanSupport
                // URL bindings
                if (debug)
                   log.debug("Binding URL: " + finalName +
-                        " to JDNI ENC as: " + ref.getRefName());
+                            " to JDNI ENC as: " + ref.getRefName());
                Util.bind(envCtx, ref.getRefName(), new URL(finalName));
             }
             else
@@ -1573,13 +1588,13 @@ public abstract class Container extends ServiceMBeanSupport
          while( enum.hasNext() )
          {
             ResourceEnvRefMetaData resRef =
-                  (ResourceEnvRefMetaData) enum.next();
+               (ResourceEnvRefMetaData) enum.next();
             String encName = resRef.getRefName();
             String jndiName = resRef.getJndiName();
             // Should validate the type...
             if (debug)
                log.debug("Binding env resource: " + jndiName +
-                     " to JDNI ENC as: " +encName);
+                         " to JDNI ENC as: " +encName);
             Util.bind(envCtx, encName, new LinkRef(jndiName));
          }
       }
@@ -1589,7 +1604,7 @@ public abstract class Container extends ServiceMBeanSupport
       // security manager can be made without knowing the global jndi name.
 
       String securityDomain =
-            metaData.getContainerConfiguration().getSecurityDomain();
+         metaData.getContainerConfiguration().getSecurityDomain();
       if( securityDomain == null )
          securityDomain = metaData.getApplicationMetaData().getSecurityDomain();
       if( securityDomain != null )
@@ -1600,14 +1615,24 @@ public abstract class Container extends ServiceMBeanSupport
          }
 
          Util.bind(
-               envCtx,
-               "security/security-domain",
-               new LinkRef(securityDomain));
+            envCtx,
+            "security/security-domain",
+            new LinkRef(securityDomain));
          Util.bind(
-               envCtx,
-               "security/subject",
-               new LinkRef(securityDomain+"/subject"));
+            envCtx,
+            "security/subject",
+            new LinkRef(securityDomain+"/subject"));
       }
+
+      //if it's BMT, bind java:/comp/env/UserTransaction
+      if (metaData.isBeanManagedTx())
+      {
+         //why not non-serializable??
+         //Name name = new InitialContext().getNameParser("").parse(jndiName);
+         //NonSerializableFactory.rebind(name, this, true);
+         Util.bind(envCtx, "UserTransaction", "UserTransaction");
+      } // end of if ()
+
 
       if (debug)
          log.debug("End java:comp/env for EJB: "+beanMetaData.getEjbName());
@@ -1695,7 +1720,9 @@ public abstract class Container extends ServiceMBeanSupport
 
       // Set transaction manager
       InitialContext iniCtx = new InitialContext();
+      //both of these lookups suck.  The objects should be obtained via mbean dependencies.
       setTransactionManager( (TransactionManager) iniCtx.lookup( "java:/TransactionManager" ) );
+      userTransaction = (UserTransaction)iniCtx.lookup("UserTransaction");
 
       // Set security domain manager
       String securityDomain = getBeanMetaData().getApplicationMetaData().getSecurityDomain();
@@ -1763,7 +1790,7 @@ public abstract class Container extends ServiceMBeanSupport
          String invoker = (String)it.next();
          ApplicationMetaData amd = getBeanMetaData().getApplicationMetaData();
          InvokerProxyBindingMetaData imd = (InvokerProxyBindingMetaData)
-                           amd.getInvokerProxyBindingMetaDataByName(invoker);
+            amd.getInvokerProxyBindingMetaDataByName(invoker);
          Element proxyFactoryConfig = imd.getProxyFactoryConfig();
          String webCL = MetaData.getOptionalChildContent(proxyFactoryConfig,
                                                          "web-class-loader");
@@ -1932,7 +1959,7 @@ public abstract class Container extends ServiceMBeanSupport
 
 
    protected BeanLockManager createBeanLockManager(boolean reentrant, Element config,
-                                                         ClassLoader cl )
+                                                   ClassLoader cl )
       throws Exception
    {
       // The bean lock manager
@@ -1956,7 +1983,7 @@ public abstract class Container extends ServiceMBeanSupport
    }
 
    protected  InstancePool createInstancePool( ConfigurationMetaData conf,
-                                                   ClassLoader cl )
+                                               ClassLoader cl )
       throws Exception
    {
       // Set instance pool
@@ -1977,8 +2004,8 @@ public abstract class Container extends ServiceMBeanSupport
    }
 
    protected static InstanceCache createInstanceCache( ConfigurationMetaData conf,
-                                                     boolean jmsMonitoring,
-                                                     ClassLoader cl )
+                                                       boolean jmsMonitoring,
+                                                       ClassLoader cl )
       throws Exception
    {
       // Set instance cache
@@ -2011,7 +2038,7 @@ public abstract class Container extends ServiceMBeanSupport
     * and only differ slightly.
     */
    protected abstract class AbstractContainerInterceptor
-         extends AbstractInterceptor
+      extends AbstractInterceptor
    {
       protected void rethrow(Exception e)
          throws Exception

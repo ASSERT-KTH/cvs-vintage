@@ -40,7 +40,6 @@ import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.BeanMetaData;
-import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.security.SecurityAssociation;
 import org.jboss.util.MethodHashing;
 import org.jboss.util.naming.Util;
@@ -68,6 +67,8 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
 
    protected Container container;
 
+   private Interceptor next;
+
    /**
     * The JNDI name of the local home interface binding
     */
@@ -85,8 +86,6 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
    protected Map homeMethodInvokerMap;
 
    private final InvocationContext invocationContext = new InvocationContext();
-
-   private final Interceptor next = new TransactionInterceptor();
 
    // Static --------------------------------------------------------
 
@@ -109,17 +108,10 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
 
    public void start() throws Exception
    {
-      Map methodHashToTxSupportMap = container.getMethodHashToTxSupportMap();
-      if (methodHashToTxSupportMap == null || methodHashToTxSupportMap.isEmpty())
-      {
-         throw new IllegalStateException("methodToTxSupportMap not set on container: " + container);
-      } // end of if ()
-
-      invocationContext.setMethodHashToTxSupportMap(methodHashToTxSupportMap);
       //This is used only for logging in tx interceptor
       invocationContext.setObjectName(new Integer(container.getJmxName().hashCode()));
       Interceptor containerInterceptor = new ContainerInterceptor(container);
-      next.setNext(containerInterceptor);
+      next = containerInterceptor;
 
       BeanMetaData metaData = container.getBeanMetaData();
       EJBProxyFactoryContainer invokerContainer =
@@ -178,8 +170,7 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       catch(Exception ignore)
       {
       }
-      next.setNext(null);
-      invocationContext.setMethodHashToTxSupportMap(null);
+      next = null;
    }
 
    public void destroy()
@@ -306,11 +297,6 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
    public Object invoke(Object id, Method m, Object[] args, InvocationType type )
       throws Throwable
    {
-
-      if (invocationContext.getMethodHashToTxSupportMap() == null)
-      {
-         throw new IllegalStateException("No methodToTxSupportMap set!");
-      }
       // Set the right context classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(container.getClassLoader());

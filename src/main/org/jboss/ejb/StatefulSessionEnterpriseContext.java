@@ -6,19 +6,20 @@
  */
 package org.jboss.ejb;
 
+
+
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
+import java.io.Serializable;
 import java.rmi.RemoteException;
-
 import javax.ejb.EJBContext;
 import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBObject;
 import javax.ejb.EJBLocalObject;
+import javax.ejb.EJBObject;
 import javax.ejb.SessionBean;
 import javax.ejb.SessionContext;
+import javax.transaction.UserTransaction;
 
 
 /**
@@ -26,7 +27,7 @@ import javax.ejb.SessionContext;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -95,7 +96,7 @@ public class StatefulSessionEnterpriseContext
    public EJBLocalObject getEJBLocalObject() {
       return ejbLocalObject;
    }
-    
+
    public SessionContext getSessionContext()
    {
       return ctx;
@@ -112,7 +113,7 @@ public class StatefulSessionEnterpriseContext
    {
       // No state
    }
-    
+
    private void readObject(ObjectInputStream in)
       throws IOException, ClassNotFoundException
    {
@@ -132,7 +133,7 @@ public class StatefulSessionEnterpriseContext
 
          if (ejbObject == null) {
                ejbObject = (EJBObject) ((StatefulSessionContainer)con).getProxyFactory().getStatefulSessionEJBObject(id);
-         }  
+         }
 
          return ejbObject;
       }

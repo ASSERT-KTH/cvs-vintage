@@ -7,29 +7,16 @@
 package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import javax.ejb.EJBException;
-import javax.ejb.TransactionRequiredLocalException;
-import javax.ejb.TransactionRolledbackLocalException;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.RollbackException;
-import javax.transaction.Status;
-import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
-import javax.transaction.TransactionRequiredException;
-import javax.transaction.TransactionRolledbackException;
 import org.jboss.ejb.plugins.lock.ApplicationDeadlockException;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationResponse;
-import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.InvocationType;
 import org.jboss.metadata.BeanMetaData;
-import org.jboss.metadata.MetaData;
 
 /**
  *  This interceptor handles transactions for CMT beans.
@@ -40,9 +27,9 @@ import org.jboss.metadata.MetaData;
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *  @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- *  @version $Revision: 1.35 $
+ *  @version $Revision: 1.36 $
  */
-public final class TxInterceptorCMT extends AbstractInterceptor
+public  class TxInterceptorCMT extends AbstractInterceptor
 {
    public static int MAX_RETRIES = 5;
    public static Random random = new Random();
@@ -70,10 +57,10 @@ public final class TxInterceptorCMT extends AbstractInterceptor
             ApplicationDeadlockException deadlock = ApplicationDeadlockException.isADE(ex);
             if (deadlock != null)
             {
-               if (!deadlock.retryable() || 
-		   oldTransaction != null || 
-		   i + 1 >= MAX_RETRIES) 
-               {      
+               if (!deadlock.retryable() ||
+                   oldTransaction != null ||
+                   i + 1 >= MAX_RETRIES)
+               {
                   throw deadlock;
                }
                log.warn(deadlock.getMessage() + " retrying " + (i + 1));
@@ -105,7 +92,7 @@ public final class TxInterceptorCMT extends AbstractInterceptor
       TxSupport txSupport = (TxSupport)methodToTxSupportMap.get(m);
       if (txSupport == null)
       {
-	 txSupport = TxSupport.DEFAULT;   
+         txSupport = TxSupport.DEFAULT;
       } // end of if ()
 
       printMethod(m, txSupport);
@@ -129,24 +116,24 @@ public final class TxInterceptorCMT extends AbstractInterceptor
       Map methodToTxSupportMap = new HashMap();
       if (getContainer().getHomeClass() != null)
       {
-	 mapMethods(getContainer().getHomeClass(), bmd, InvocationType.HOME,  methodToTxSupportMap);
+         mapMethods(getContainer().getHomeClass(), bmd, InvocationType.HOME,  methodToTxSupportMap);
       } // end of if ()
-      
+
       if (getContainer().getRemoteClass() != null)
       {
-	 mapMethods(getContainer().getRemoteClass(), bmd, InvocationType.REMOTE, methodToTxSupportMap);
+         mapMethods(getContainer().getRemoteClass(), bmd, InvocationType.REMOTE, methodToTxSupportMap);
       } // end of if ()
-      
+
       if (getContainer().getLocalHomeClass() != null)
       {
-	 mapMethods(getContainer().getLocalHomeClass(), bmd, InvocationType.LOCALHOME, methodToTxSupportMap);
+         mapMethods(getContainer().getLocalHomeClass(), bmd, InvocationType.LOCALHOME, methodToTxSupportMap);
       } // end of if ()
-      
+
       if (getContainer().getLocalClass() != null)
       {
-	 mapMethods(getContainer().getLocalClass(), bmd, InvocationType.LOCAL, methodToTxSupportMap);
+         mapMethods(getContainer().getLocalClass(), bmd, InvocationType.LOCAL, methodToTxSupportMap);
       } // end of if ()
-      
+
       getContainer().setMethodToTxSupportMap(methodToTxSupportMap);
    }
 
@@ -167,11 +154,11 @@ public final class TxInterceptorCMT extends AbstractInterceptor
       Method[] methods = clazz.getMethods();
       for (int i = 0; i < methods.length; i++)
       {
-	 Method m = methods[i];
-	 TxSupport txSupport = bmd.getMethodTransactionType(m.getName(), m.getParameterTypes(),  type);
-	 methodToTxSupportMap.put(methods[i], txSupport);
+         Method m = methods[i];
+         TxSupport txSupport = bmd.getMethodTransactionType(m.getName(), m.getParameterTypes(),  type);
+         methodToTxSupportMap.put(methods[i], txSupport);
       } // end of for ()
-      
+
    }
 
    public void stop()
@@ -183,17 +170,17 @@ public final class TxInterceptorCMT extends AbstractInterceptor
    private void printMethod(Method m, TxSupport type)
    {
 
-      if(log.isTraceEnabled()) 
+      if(log.isTraceEnabled())
       {
-	 String methodName;
-	 if(m != null) 
-	 {
-	    methodName = m.getName();
-	 } 
-	 else
-	 {
-	    methodName ="<no method>";
-	 }
+         String methodName;
+         if(m != null)
+         {
+            methodName = m.getName();
+         }
+         else
+         {
+            methodName ="<no method>";
+         }
 
          log.trace(type.toString() +" for " + methodName);
       }

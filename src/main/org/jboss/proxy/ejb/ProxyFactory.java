@@ -72,7 +72,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -495,7 +495,7 @@ public class ProxyFactory
       context.setMethodHashToTxSupportMap(container.getMethodHashToTxSupportMap());
       if (context.getMethodHashToTxSupportMap().isEmpty())
       {
-         throw new IllegalStateException("txsupport map is empty!");
+         log.debug("txsupport map is empty! " + jndiBinding);
 
       } // end of if ()
       return context;

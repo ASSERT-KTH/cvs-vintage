@@ -32,11 +32,11 @@ import org.jboss.ejb.plugins.TxSupport;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a> 
- * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a> 
+ * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
+ * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  *
- * @version $Revision: 1.43 $
+ * @version $Revision: 1.44 $
  */
 public abstract class BeanMetaData
    extends MetaData
@@ -432,8 +432,19 @@ public abstract class BeanMetaData
       excludedMethods.add(method);
    }
 
+   /**
+    * The <code>getMethodTransactionType</code> method returns the
+    * appropriate TxSupport object for the transaction attribute for
+    * the specified method.  It is overridden for BMT session beans in
+    * a subclass.
+    *
+    * @param methodName a <code>String</code> value
+    * @param params a <code>Class[]</code> value
+    * @param iface an <code>InvocationType</code> value
+    * @return a <code>TxSupport</code> value
+    */
    public TxSupport getMethodTransactionType(String methodName, Class[] params,
-      InvocationType iface)
+                                             InvocationType iface)
    {
       // default value
       TxSupport result = TxSupport.DEFAULT;//TX_UNKNOWN;
@@ -598,13 +609,13 @@ public abstract class BeanMetaData
       if (isMessageDriven() == false)
       {
          homeClass = getElementContent(getOptionalChild(element,
-            "home"));
+                                                        "home"));
          remoteClass = getElementContent(getOptionalChild(element,
-            "remote"));
+                                                          "remote"));
          localHomeClass = getElementContent(getOptionalChild(element,
-            "local-home"));
+                                                             "local-home"));
          localClass = getElementContent(getOptionalChild(element,
-            "local"));
+                                                         "local"));
       }
       ejbClass = getElementContent(getUniqueChild(element, "ejb-class"));
 
@@ -641,7 +652,7 @@ public abstract class BeanMetaData
          EjbLocalRefMetaData ejbLocalRefMetaData = new EjbLocalRefMetaData();
          ejbLocalRefMetaData.importEjbJarXml(ejbLocalRef);
 
-         ejbLocalReferences.put(ejbLocalRefMetaData.getName(), 
+         ejbLocalReferences.put(ejbLocalRefMetaData.getName(),
                                 ejbLocalRefMetaData);
       }
 
@@ -659,7 +670,7 @@ public abstract class BeanMetaData
 
       // The security-identity element
       Element securityIdentityElement = getOptionalChild(element,
-         "security-identity");
+                                                         "security-identity");
       if( securityIdentityElement != null )
       {
          securityIdentity = new SecurityIdentityMetaData();
@@ -677,7 +688,7 @@ public abstract class BeanMetaData
          resourceRefMetaData.importEjbJarXml(resourceRef);
 
          resourceReferences.put( resourceRefMetaData.getRefName(),
-            resourceRefMetaData);
+                                 resourceRefMetaData);
       }
 
       // Parse the resource-env-ref elements
@@ -702,36 +713,36 @@ public abstract class BeanMetaData
       // set the JNDI name under with the local home interface should
       // be bound (optional)
       localJndiName = getElementContent( getOptionalChild(element,
-         "local-jndi-name") );
+                                                          "local-jndi-name") );
 
       // set the configuration (optional)
       configurationName = getElementContent(getOptionalChild(element,
-         "configuration-name"));
+                                                             "configuration-name"));
       if (configurationName != null &&
-         getApplicationMetaData().getConfigurationMetaDataByName(configurationName) == null)
+          getApplicationMetaData().getConfigurationMetaDataByName(configurationName) == null)
       {
          throw new DeploymentException("configuration '" +
-            configurationName + "' not found in standardjboss.xml or " +
-            "jboss.xml");
+                                       configurationName + "' not found in standardjboss.xml or " +
+                                       "jboss.xml");
       }
 
       // Get the security proxy
       securityProxy = getElementContent(getOptionalChild(element,
-         "security-proxy"), securityProxy);
+                                                         "security-proxy"), securityProxy);
 
       // update the resource references (optional)
       Iterator iterator = getChildrenByTagName(element, "resource-ref");
       while (iterator.hasNext()) {
          Element resourceRef = (Element)iterator.next();
          String resRefName = getElementContent(getUniqueChild(resourceRef,
-            "res-ref-name"));
+                                                              "res-ref-name"));
          ResourceRefMetaData resourceRefMetaData =
             (ResourceRefMetaData)resourceReferences.get(resRefName);
 
          if (resourceRefMetaData == null)
          {
             throw new DeploymentException("resource-ref " + resRefName +
-               " found in jboss.xml but not in ejb-jar.xml");
+                                          " found in jboss.xml but not in ejb-jar.xml");
          }
          resourceRefMetaData.importJbossXml(resourceRef);
       }
@@ -742,13 +753,13 @@ public abstract class BeanMetaData
       {
          Element resourceRef = (Element) iterator.next();
          String resRefName = getElementContent(getUniqueChild(resourceRef,
-            "resource-env-ref-name"));
+                                                              "resource-env-ref-name"));
          ResourceEnvRefMetaData refMetaData =
             (ResourceEnvRefMetaData) resourceEnvReferences.get(resRefName);
          if (refMetaData == null)
          {
             throw new DeploymentException("resource-env-ref " + resRefName +
-               " found in jboss.xml but not in ejb-jar.xml");
+                                          " found in jboss.xml but not in ejb-jar.xml");
          }
          refMetaData.importJbossXml(resourceRef);
       }
@@ -759,12 +770,12 @@ public abstract class BeanMetaData
       {
          Element ejbRef = (Element)iterator.next();
          String ejbRefName = getElementContent(getUniqueChild(ejbRef,
-            "ejb-ref-name"));
+                                                              "ejb-ref-name"));
          EjbRefMetaData ejbRefMetaData = getEjbRefByName(ejbRefName);
          if (ejbRefMetaData == null)
          {
             throw new DeploymentException("ejb-ref " + ejbRefName +
-               " found in jboss.xml but not in ejb-jar.xml");
+                                          " found in jboss.xml but not in ejb-jar.xml");
          }
          ejbRefMetaData.importJbossXml(ejbRef);
       }
@@ -780,10 +791,10 @@ public abstract class BeanMetaData
             MethodAttributes ma = new MethodAttributes();
             Element maNode = (Element)iterator.next();
             ma.pattern = getElementContent(getUniqueChild(maNode,
-               "method-name"));
+                                                          "method-name"));
             ma.readOnly = getOptionalChildBooleanContent(maNode, "read-only");
             ma.idempotent = getOptionalChildBooleanContent(maNode,
-               "idempotent");
+                                                           "idempotent");
             methodAttributes.add(ma);
          }
       }
@@ -801,7 +812,7 @@ public abstract class BeanMetaData
          {
             Element node = (Element)iterator.next();
             String invokerBindingName = getUniqueChildContent( node,
-               "invoker-proxy-binding-name" );
+                                                               "invoker-proxy-binding-name" );
 
             String jndiBinding = getOptionalChildContent(node, "jndi-name");
             if( jndiBinding == null )
@@ -821,7 +832,7 @@ public abstract class BeanMetaData
                if (ejbRefMetaData == null)
                {
                   throw new DeploymentException("ejb-ref " + ejbRefName
-                     + " found in jboss.xml but not in ejb-jar.xml");
+                                                + " found in jboss.xml but not in ejb-jar.xml");
                }
                ejbRefMetaData.importJbossXml(invokerBindingName, ejbRef);
             }
@@ -831,11 +842,11 @@ public abstract class BeanMetaData
       // Determine if the bean is to be deployed in the cluster (more
       // advanced config will be added in the future)
       String clusteredElt = getElementContent(getOptionalChild( element,
-         "clustered"), (clustered? "True" : "False") );
+                                                                "clustered"), (clustered? "True" : "False") );
       clustered = clusteredElt.equalsIgnoreCase ("True");
 
       Element clusterConfigElement = getOptionalChild(element,
-         "cluster-config");
+                                                      "cluster-config");
 
       this.clusterConfig = new ClusterConfigMetaData();
       clusterConfig.init(this);

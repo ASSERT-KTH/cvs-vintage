@@ -6,19 +6,21 @@
  */
 package org.jboss.metadata;
 
-import java.util.HashMap;
 
+
+import java.util.HashMap;
+import org.jboss.deployment.DeploymentException;
+import org.jboss.ejb.plugins.TxSupport;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import org.jboss.deployment.DeploymentException;
+import org.jboss.invocation.InvocationType;
 
 /**
  * The meta data information specific to session beans.
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class SessionMetaData
    extends BeanMetaData
@@ -60,6 +62,33 @@ public class SessionMetaData
    public boolean isStateless()
    {
       return !stateful;
+   }
+
+   /**
+    * The <code>getMethodTransactionType</code> method returns the
+    * appropriate TxSupport for BMT session beans or delegates to the
+    * superclass for CMT.
+    *
+    * @param methodName a <code>String</code> value
+    * @param params a <code>Class[]</code> value
+    * @param iface an <code>InvocationType</code> value
+    * @return a <code>TxSupport</code> value
+    */
+   public TxSupport getMethodTransactionType(String methodName, Class[] params,
+                                             InvocationType iface)
+   {
+      if (isBeanManagedTx())
+      {
+         if (isStateless())
+         {
+            return TxSupport.STATELESS_BMT;
+         } // end of if ()
+         else
+         {
+            return TxSupport.STATEFUL_BMT;
+         } // end of else
+      } // end of if ()
+      return super.getMethodTransactionType(methodName, params, iface);
    }
 
    public String getDefaultConfigurationName()
