@@ -67,7 +67,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceStore
@@ -930,7 +930,7 @@ public class JAWSPersistenceManager
          for (int i = 0; i < pkFields.size(); i++)
          {
             int jdbcType = getPkFieldJDBCType(i);
-            Object value = getCMPFieldValue(ctx.getInstance(), i);
+            Object value = getPkFieldValue(ctx.getId(), i);
             setParameter(stmt, idx++, jdbcType, value);
          }
          
