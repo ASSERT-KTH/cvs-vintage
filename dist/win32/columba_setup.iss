@@ -41,15 +41,15 @@ Source: lib\usermanual.jar; DestDir: {app}\lib\
 Source: lib\forms-1.0.3.jar; DestDir: {app}\lib\
 
 [Icons]
-Name: {group}\Columba; Filename: {app}\columba.exe; IconIndex: 0; WorkingDir: {app}
-Name: {userdesktop}\Columba; Filename: {app}\columba.exe; MinVersion: 4,4; Tasks: desktopicon; WorkingDir: {app}; IconIndex: 0
+Name: {group}\Columba; Filename: {app}\columba.exe; Parameters: {code:GetPathAttribute}; IconIndex: 0; WorkingDir: {app}
+Name: {userdesktop}\Columba; Filename: {app}\columba.exe; Parameters: {code:GetPathAttribute}; MinVersion: 4,4; Tasks: desktopicon; WorkingDir: {app}; IconIndex: 0
 Name: {group}\AUTHORS; Filename: notepad.exe; Parameters: AUTHORS; WorkingDir: {app}; IconIndex: 0
 Name: {group}\CHANGES; Filename: notepad.exe; Parameters: CHANGES; WorkingDir: {app}; IconIndex: 0
 Name: {group}\LICENSE; Filename: notepad.exe; Parameters: LICENSE; WorkingDir: {app}; IconIndex: 0
 Name: {group}\README; Filename: notepad.exe; Parameters: README; WorkingDir: {app}; IconIndex: 0
 
 [Run]
-Filename: {app}\columba.exe; Description: Launch Columba; Flags: nowait postinstall skipifsilent; WorkingDir: {app}
+Filename: {app}\columba.exe; Parameters: {code:GetPathAttribute}; Description: Launch Columba; Flags: nowait postinstall skipifsilent; WorkingDir: {app}
 
 [_ISTool]
 EnableISX=true
@@ -63,10 +63,130 @@ Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\FingerPrint; ValueType: string
 Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\FingerPrint; ValueType: string; ValueName: MakeDefault; ValueData: YES
 Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\Protocols\mailto; ValueType: string; ValueName: URL Protocol; ValueData: 
 Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\Protocols\mailto; ValueType: string; ValueName: ; ValueData: URL:MailTo-Protokoll
-Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\Protocols\mailto\shell\open\command; ValueType: string; ValueData: {app}\columba --mailurl %1
+Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\Protocols\mailto\shell\open\command; ValueType: string; ValueData: {app}\columba {code:GetPathAttribute} --mailurl %1
 
 
 [Code]
+var
+	UseCustomPath: String;	// '1' if a custom mail folder shall be used, else '0'
+	CustomPath: String;		// custom mail folder or empty string if UseCustomPath = false
+	PathPrompts, PathValues: TArrayOfString;
+
+
+//* Initialization *//
+function InitializeSetup(): Boolean;
+begin
+	// Try to find the settings that were stored last time, else use default values
+	UseCustomPath := GetPreviousData('UseCustomPath', '0');
+	CustomPath := GetPreviousData('CustomPath', '');
+
+	// setup prompts
+	SetArrayLength(PathPrompts, 2)
+	SetArrayLength(PathValues, 2)
+	PathPrompts[0] := 'Use default mail folder location (typically under C:\Documents and Settings\)';
+	PathPrompts[1] := 'Use custom mail folder location (location is specified in next step)';
+	if (UseCustomPath = '0') then
+	begin
+		PathValues[0] := '1';
+		PathValues[1] := '0';
+	end else begin
+		PathValues[0] := '0';
+		PathValues[1] := '1';
+	end;
+
+	// Let Setup run
+	Result := True;
+end;
+
+//* Register data for next time *//
+procedure RegisterPreviousData(PreviousDataKey: Integer);
+begin
+	// Store the settings so we can restore them next time
+	SetPreviousData(PreviousDataKey, 'UseCustomPath', UseCustomPath);
+	SetPreviousData(PreviousDataKey, 'CustomPath', CustomPath);
+end;
+
+//* Used to display custom dialog pages *//
+function ScriptDlgPages(CurPage: Integer; BackClicked: Boolean): Boolean;
+var
+	I, CurSubPage: Integer;
+	Next: Boolean;
+begin
+if (not BackClicked and (CurPage = wpSelectDir)) or (BackClicked and (CurPage = wpSelectProgramGroup)) then
+	begin
+		// Display two custom pages
+		if (not BackClicked) then
+			CurSubPage := 0
+		else
+			CurSubPage := 1;
+		ScriptDlgPageOpen();
+		ScriptDlgPageSetCaption('Select Mail Folder');	// common caption
+
+		// Loop while we are still on a custom page and Setup has not been terminated
+		while (CurSubPage >= 0) and (CurSubPage <= 1) and not Terminated do
+		begin
+			case CurSubPage of
+				0: begin
+					ScriptDlgPageSetSubCaption1('Where do you want to store your mails?');
+					ScriptDlgPageSetSubCaption2('A custom location will be specified in the next step');
+					Next := InputOptionArray(PathPrompts, PathValues, True, False);
+					UseCustomPath := PathValues[1];
+				end;
+				1: begin
+					ScriptDlgPageSetSubCaption1('Where do you want to store your mails?');
+					if (UseCustomPath = '0') then
+					begin
+						Next := OutputMsg('Note: Default mail folder location will be used', True);
+					end else begin
+						ScriptDlgPageSetSubCaption2('Select custom location for your mail folder');
+						Next := InputDir('', CustomPath);
+						while (Next and (CustomPath = '')) do
+						begin
+							MsgBox(SetupMessage(msgInvalidPath), mbError, MB_OK);
+							Next := InputDir('', CustomPath);
+						end;
+					end;
+				end;
+			end;
+			if Next then
+				CurSubPage := CurSubPage + 1
+			else
+				CurSubPage := CurSubPage - 1;
+		end;
+
+		// See NextButtonClick and BackButtonClick: return True if the click should be allowed
+		if not BackClicked then
+			Result := Next
+		else
+			Result := not Next;
+		// Close the wizard page. Do a FullRestore only if the click (see above) is not allowed
+		ScriptDlgPageClose(not Result);
+	end
+	else
+	begin
+		Result := True;
+	end;
+end;
+
+function NextButtonClick(CurPage: Integer): Boolean;
+begin
+  Result := ScriptDlgPages(CurPage, False);
+end;
+
+function BackButtonClick(CurPage: Integer): Boolean;
+begin
+  Result := ScriptDlgPages(CurPage, True);
+end;
+
+//* Returns path attribute, e.g. " --path xyz" (incl. leading space), or default param. for default location *//
+function getPathAttribute(default: String): String;
+begin
+	if (UseCustomPath = '1') then
+		Result := '--path "' + CustomPath + '"'
+	else
+		Result := default;
+end;
+
 //* Getting Java version from registry *//
 function getJavaVersion(): String;
 var
@@ -77,3 +197,5 @@ begin
      GetVersionNumbersString(javaVersion, javaVersion);
      Result := javaVersion;
 end;
+
+
