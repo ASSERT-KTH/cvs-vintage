@@ -443,9 +443,9 @@ primary key fields of the this entity.
 
 
 <!--
-Contains the known dependene value classes.
+Contains the known dependent value classes.
 -->
-<!ELEMENT dependent-value-classes (dependent-value-class+)>
+<!ELEMENT dependent-value-classes (dependent-value-class*)>
 
 
 <!--
