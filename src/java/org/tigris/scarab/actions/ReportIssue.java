@@ -47,6 +47,7 @@ package org.tigris.scarab.actions;
  */ 
 
 import java.util.*;
+import java.math.BigDecimal;
 
 // Velocity Stuff 
 import org.apache.turbine.services.velocity.*; 
@@ -61,24 +62,27 @@ import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.intake.model.Field;
 import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
+import org.apache.turbine.om.*;
 
 // Scarab Stuff
 import org.tigris.scarab.om.BaseScarabObject;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserPeer;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.util.*;
+import org.tigris.scarab.word.Vocabulary;
 
 /**
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.7 2001/04/12 00:21:19 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.8 2001/04/17 00:07:37 fedor Exp $
 */
 public class ReportIssue extends VelocityAction
 {
-    public void doSubmitattributes( RunData data, Context context ) 
+    public void doSubmitattributes( RunData data, Context context )
         throws Exception
     {
         //until we get the user and module set through normal application
@@ -99,31 +103,36 @@ public class ReportIssue extends VelocityAction
         if ( intake.isAllValid() ) 
         {
             // search for duplicate issues based on summary
-            StringTokenizer st = new StringTokenizer(summary.toString(), " ");
-            String[] keywords = new String[st.countTokens()];
-            int i=0;
-            while (st.hasMoreTokens()) 
-            {
-                keywords[i++] = st.nextToken();
-            }
+            Vocabulary voc = new Vocabulary(summary.toString());
+            issue.setVocabulary(voc);
+            BigDecimal[] matchingIssueIds = voc.getRelatedIssues();
+            // do not show more than 25 dupe guesses.
+            int matchingIssuesCount = matchingIssueIds.length;
+            if (matchingIssuesCount>25)
+                matchingIssuesCount=20;
+            //looks like we have to fetch them one by one to keep the order
+            Vector matchingIssues = new Vector(matchingIssuesCount);
 
-            List matchingIssues = Issue.searchKeywords(keywords, false);
+            for (int i=0; i<matchingIssuesCount; i++)
+                matchingIssues
+                    .add(IssuePeer
+                        .retrieveByPK(new NumberKey(matchingIssueIds[i])));
+
             String template = null;
-            if ( matchingIssues.size() > 0 ) 
+            if ( matchingIssues.size() > 0 )
             {
-                
                 context.put("issueList", matchingIssues);
                 template = "entry,Wizard2.vm";
             }
-            else 
-            {                 
+            else
+            {
                 template = "entry,Wizard3.vm";
             }
             setTemplate(data, template);
         }
     }
 
-    public void doEnterissue( RunData data, Context context ) 
+    public void doEnterissue( RunData data, Context context )
         throws Exception
     {
         //until we get the user and module set through normal application
@@ -131,7 +140,7 @@ public class ReportIssue extends VelocityAction
 
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
-        
+
         // Summary is always required.
         ScarabUser user = (ScarabUser)data.getUser();
         Issue issue = user.getReportingIssue();
@@ -140,6 +149,7 @@ public class ReportIssue extends VelocityAction
         Group group = intake.get("AttributeValue", aval.getQueryKey());
         Field summary = group.get("Value");
         summary.setRequired(true);
+        issue.setVocabulary(new Vocabulary(summary.toString()));
 
         if ( intake.isAllValid() ) 
         {

@@ -48,10 +48,12 @@ package org.tigris.scarab.word;
 
 // JDK classes
 import java.util.*;
+import java.math.BigDecimal;
 
 // Turbine classes
 import org.apache.turbine.util.db.Criteria;
 import org.apache.turbine.om.peer.*;
+import org.apache.turbine.om.*;
 
 //Village classes
 import com.workingdogs.village.*;
@@ -63,7 +65,7 @@ import org.tigris.scarab.om.*;
  * This class handles vocabulary information for a single issue
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor Karpelevitch</a>
- * @version $Id: Vocabulary.java,v 1.5 2001/04/12 09:45:47 fedor Exp $
+ * @version $Id: Vocabulary.java,v 1.6 2001/04/17 00:07:38 fedor Exp $
  */
 public class Vocabulary
 {
@@ -85,7 +87,7 @@ public class Vocabulary
 
     static
     {
-        Criteria crit = new Criteria().add(WordPeer.IGNORE, 1);
+        Criteria crit = new Criteria().add(WordPeer.IGNORED, true);
         ignoredWords = new HashSet();
         try
         {
@@ -131,7 +133,7 @@ public class Vocabulary
      */
     public void add(String text) throws Exception
     {
-        StringTokenizer st = new StringTokenizer(text);
+        StringTokenizer st = new StringTokenizer(text.toLowerCase());
         String tok;
         HashSet newEntries = new HashSet();
         while (st.hasMoreTokens())
@@ -162,8 +164,7 @@ public class Vocabulary
                 Entry entry = (Entry)words.get(word.getWord());
                 entry.setRating(word.getRating());
                 entry.setNew(false);
-                // this is ugly. any better way to do this?:
-                entry.setWordId(Integer.parseInt(word.getWordId().toString()));
+                entry.setWordId(word.getWordId());
                 foundWords.add(entry);
             }
         }
@@ -174,10 +175,10 @@ public class Vocabulary
      *  by relevance descending
      *
      */
-    public int[] getRelatedIssues() throws Exception
+    public BigDecimal[] getRelatedIssues() throws Exception
     {
         if (foundWords.size() == 0)
-            return new int[0]; /* if there are no words to search for let's
+            return new BigDecimal[0]; /* if there are no words to search for let's
                                     return an empty list. or should we
                                     throw instead? */
 
@@ -189,24 +190,33 @@ public class Vocabulary
         sb.append(issueQuery2);
 
         Vector issues = BasePeer.executeQuery(sb.toString());
-        int[] result = new int[issues.size()];
+        BigDecimal[] result = new BigDecimal[issues.size()];
         for(int i=0; i<issues.size(); i++)
-            result[i] = ((Record)issues.get(i)).getValue("ISSUE_ID").asInt();
+            result[i] = ((Record)issues.get(i)).getValue("ISSUE_ID").asBigDecimal();
         return result;
+    }
+
+    /**
+     *
+     *
+     */
+    public Collection getEntries()
+    {
+        return words.values();
     }
 
     /**
      *  this class represents a vocabulary entry
      *
      */
-    class Entry
+    public class Entry
     {
         private String word;
         private int count;
         private int firstPos;
         private int rating=-1; //new entries are less then all others.
         private boolean isNew=true;
-        private int wordId=-1;
+        private NumberKey wordId;
 
         public Entry(String word, int firstPos)
         {
@@ -230,7 +240,12 @@ public class Vocabulary
             this.isNew = isNew;
         }
 
-        public void setWordId(int wordId)
+        public boolean isNew()
+        {
+            return this.isNew;
+        }
+
+        public void setWordId(NumberKey wordId)
         {
             this.wordId = wordId;
         }
@@ -245,9 +260,19 @@ public class Vocabulary
             return this.count;
         }
 
-        public int getWordId()
+        public NumberKey getWordId()
         {
             return this.wordId;
+        }
+
+        public String getWord()
+        {
+            return this.word;
+        }
+
+        public int getFirstPos()
+        {
+            return this.firstPos;
         }
     }
 }

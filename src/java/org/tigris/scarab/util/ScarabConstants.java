@@ -51,7 +51,7 @@ package org.tigris.scarab.util;
     A place to put public final static strings.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.7 2001/04/03 20:52:54 jmcnally Exp $
+    @version $Id: ScarabConstants.java,v 1.8 2001/04/17 00:07:38 fedor Exp $
 */
 
 public interface ScarabConstants
@@ -98,5 +98,11 @@ public interface ScarabConstants
      * entered against a module in this instance's database.
      */
     public static final String INSTANCE_NAME = "scarab.instance.name";
+
+    /**
+     *  This is maximum rating for a word.
+     *
+     */
+    public static final int MAX_WORD_RATING = 100000;
 }    
 
