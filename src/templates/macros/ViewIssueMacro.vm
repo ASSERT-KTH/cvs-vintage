@@ -292,7 +292,7 @@
   #set ($comments = $currentIssue.getComments(false))
 #end
 
-#if (!$comments.size() > 0 || $canEdit)
+#if (!$comments.isEmpty() || $canEdit)
 <h3>Comments</h3>
   #foreach ($comment in $comments)
      #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
