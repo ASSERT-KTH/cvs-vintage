@@ -89,13 +89,15 @@ public class DependClassLoader extends ClassLoader {
     
     final static int debug=0;
     DependManager dependM;
+    protected Object pd;
     static Jdk11Compat jdkCompat=Jdk11Compat.getJdkCompat();
     
-    public DependClassLoader( DependManager depM, ClassLoader parent ) {
+    public DependClassLoader( DependManager depM, ClassLoader parent, Object pd ) {
 	super(); // will check permissions
 	this.parent=parent;
 	this.parent2=jdkCompat.getParentLoader( parent );
 	dependM=depM;
+	this.pd=pd;
     }
 
     // debug only
@@ -119,7 +121,13 @@ public class DependClassLoader extends ClassLoader {
     protected synchronized Class loadClass(String name, boolean resolve)
         throws ClassNotFoundException
     {
-        if( debug>0) log( "loadClass() " + name + " " + resolve);
+	return loadClassInternal( name, resolve );
+    }
+
+    protected Class loadClassInternal( String name, boolean resolve )
+	throws ClassNotFoundException
+    {
+	if( debug>0) log( "loadClass() " + name + " " + resolve);
 	// The class object that will be returned.
         Class c = null;
 
@@ -165,7 +173,7 @@ public class DependClassLoader extends ClassLoader {
 	if( data==null ) 
 	    throw new ClassNotFoundException( name + " lenght==0");
 
-	c=defineClass(data, 0, data.length);
+	c=defineClassCompat( name, data, 0, data.length, res );
 	dependency( c, res );
 	
 	if (resolve) resolveClass(c);
@@ -173,6 +181,12 @@ public class DependClassLoader extends ClassLoader {
 	return c;
     }
 
+    protected Class defineClassCompat( String name, byte data[], int s, int end, URL res )
+	throws ClassNotFoundException
+    {
+	return defineClass(data, s, end);
+    }
+    
     public URL getResource(String name) {
 	return parent.getResource(name);
     }
