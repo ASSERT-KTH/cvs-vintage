@@ -61,6 +61,7 @@ import org.columba.ristretto.imap.SequenceSet;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.MailboxInfo;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
@@ -416,17 +417,10 @@ public class IMAPFolder extends RemoteFolder {
 
 		}
 
-		// Check if MessageFolderInfo is up to date
-		messageFolderInfo.setExists(status.getMessages());
-		messageFolderInfo.setRecent(status.getRecent());
-		
-		// Somehow and error got introduced ->
-		// use this heuristic to solve the problem
-		if( messageFolderInfo.getUnseen() < 0) {
-			messageFolderInfo.setUnseen(0);
+		// inform listerners if MessageFolderInfo has changed
+		if( deletedMessages > 0 || newMessages > 0 ) {
+			fireFolderPropertyChanged();
 		}
-
-		fireFolderPropertyChanged();
 	}
 
 	public void synchronizeFlags() throws Exception, IOException,
@@ -450,15 +444,20 @@ public class IMAPFolder extends RemoteFolder {
 		List remoteJunkUids = Arrays.asList(getServer().search(junkKey, this));
 		
 		
-		// update the local flags		
+		// update the local flags and ensure that the MailboxInfo is correct
 		Enumeration uids = headerList.keys();
+		MailboxInfo testInfo = new MailboxInfo();
 		while( uids.hasMoreElements()) {
 			Object uid = uids.nextElement();
 			ColumbaHeader header = headerList.get(uid);
 			Flags flag = header.getFlags();
+			testInfo.incExists();
 			
 			flag.setSeen(Collections.binarySearch(remoteUnseenUids, uid) < 0);
-
+			if( !flag.getSeen() ) {
+				testInfo.incUnseen();
+			}
+			
 			flag.setDeleted(Collections.binarySearch(remoteDeletedUids, uid) >= 0);
 			
 			flag.setFlagged(Collections.binarySearch(remoteFlaggedUids, uid) >= 0);
@@ -467,6 +466,16 @@ public class IMAPFolder extends RemoteFolder {
 			
 			fireMessageFlagChanged(uid );
 		}
+		
+		// Ensure that the messageFolderInfo is up to date.
+		if( !messageFolderInfo.equals(testInfo) ) {
+			messageFolderInfo.setExists(testInfo.getExists());
+			messageFolderInfo.setUnseen(testInfo.getUnseen());
+			messageFolderInfo.setRecent(testInfo.getRecent());
+			
+			fireFolderPropertyChanged();
+		}
+		
 		
 	}
 	

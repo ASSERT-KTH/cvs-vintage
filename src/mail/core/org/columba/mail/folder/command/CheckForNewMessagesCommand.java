@@ -38,8 +38,6 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 
 	IMAPFolder inboxFolder;
 
-	boolean needGUIUpdate;
-
 	private Action action;
 
 	public CheckForNewMessagesCommand(Action action, DefaultCommandReference reference) {
@@ -81,12 +79,10 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 		// Call updageGUI() if anything has changed
 		if ((newRecent != recent) || (newTotal != total)
 				|| (newUnseen != unseen)) {
-			needGUIUpdate = true;
 
-			//updateGUI();
 			ImapItem item = srcFolder.getAccountItem().getImapItem();
 
-			if ((newRecent != recent) && (item.getBoolean("enable_sound"))) {
+			if ((newTotal != total) && (item.getBoolean("enable_sound"))) {
 				// the number of "recent" messages has changed, so play a sound
 				// of told to for new messages on server
 				//	re-enable this feature later, make it a general option

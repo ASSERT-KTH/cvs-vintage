@@ -1798,7 +1798,7 @@ public class IMAPServer implements IMAPListener {
 	 * @see org.columba.ristretto.imap.IMAPListener#recentChanged(java.lang.String, int)
 	 */
 	public void recentChanged(String arg0, int arg1) {
-		selectedStatus.setRecent(arg1);
+		//selectedStatus.setRecent(arg1);
 		
 		// We trigger an update only when the exists changed
 		// which should be equal with a Recent change.
