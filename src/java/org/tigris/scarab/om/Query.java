@@ -7,8 +7,9 @@ import org.apache.torque.om.Persistent;
 import org.apache.turbine.TemplateContext;
 import org.apache.torque.om.NumberKey;
 
-import org.tigris.scarab.security.ScarabSecurityPull;
-import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.security.ScarabSecurity;
+import org.tigris.scarab.security.SecurityFactory;
+import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabConstants;
 
 /** 
@@ -31,15 +32,12 @@ public class Query
         return new Query();
     }
 
-    public void save(  TemplateContext context, ScarabUser user )
+    public void save(  ScarabUser user, ModuleEntity module )
         throws Exception
     {
-        ScarabSecurityPull security = (ScarabSecurityPull)context
-            .get(ScarabConstants.SECURITY_TOOL);
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
-        if (security.hasPermission(ScarabSecurityPull.QUERY__APPROVE, 
-                                   scarabR.getCurrentModule()))
+        ScarabSecurity security = SecurityFactory.getInstance();
+        if (security.hasPermission(ScarabSecurity.QUERY__APPROVE, 
+                                   user, module))
         {
             setApproved(user.getUserId());
         } 

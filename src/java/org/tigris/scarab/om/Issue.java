@@ -63,7 +63,6 @@ import org.apache.torque.util.Criteria;
 import org.apache.commons.util.SequencedHashtable;
 import org.apache.torque.pool.DBConnection;
 import org.apache.torque.map.DatabaseMap;
-import org.apache.turbine.TemplateContext;
 
 // Scarab classes
 import org.tigris.scarab.services.module.ModuleEntity;
@@ -939,8 +938,7 @@ public class Issue
     /**
      * Checks if user has permission to enter issue.
      */
-    public boolean hasEnterPermission( ScarabUser user, ScarabModule module,
-                                       TemplateContext context)
+    public boolean hasEnterPermission( ScarabUser user, ScarabModule module)
         throws Exception
     {                
         boolean hasPerm = false;
@@ -958,8 +956,7 @@ public class Issue
     /**
      * Checks if user has permission to edit issue.
      */
-    public boolean hasEditPermission( ScarabUser user, ScarabModule module,
-                                      TemplateContext context)
+    public boolean hasEditPermission( ScarabUser user, ScarabModule module)
         throws Exception
     {                
         boolean hasPerm = false;
