@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- This is where you can add and configure your MBeans -->
+<!-- This is where you can add and configure your MBeans
+  ATTENTION: The order of the listing here is the same order as
+	the MBeans are loaded. Therefore if a MBean depends on another
+	MBean to be loaded and started it has to be listed after all
+	the MBeans it depends on.
+-->
 
 <server>
   <!-- Classloading -->
