@@ -566,6 +566,7 @@ private char[] replace(char toBeReplaced, char newChar, char[] array) {
  * setFileTypes method comment.
  */
 public void setFileTypes(String[] fileTypes) {
-	// implements interface method
+	// TODO could we remove it?
+	// do nothing
 }
 }
