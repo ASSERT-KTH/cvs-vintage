@@ -19,11 +19,13 @@ import org.columba.core.config.ViewItem;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.selection.SelectionManager;
 import org.columba.core.gui.statusbar.StatusBar;
+import org.columba.core.gui.view.AbstractViewController;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.gui.frame.TooltipMouseHandler;
 
+import java.awt.Container;
 import java.awt.event.MouseAdapter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,37 +42,9 @@ import java.util.logging.Logger;
  * @author Timo Stich (tstich@users.sourceforge.net)
  *
  */
-public abstract class AbstractFrameController implements FrameMediator {
+public abstract class AbstractFrameController extends AbstractViewController {
 
     private static final Logger LOG = Logger.getLogger("org.columba.core.gui.frame");
-
-    protected StatusBar statusBar;
-
-    /**
-     * Menuitems use this to display a string in the statusbar
-     */
-    protected MouseAdapter mouseTooltipHandler;
-
-    /**
-     * Saves view information like position, size and maximization state
-     */
-    protected ViewItem viewItem;
-
-    /**
-     *
-     * View this controller handles
-     */
-    protected AbstractFrameView view;
-
-    /**
-     * Selection handler
-     */
-    protected SelectionManager selectionManager;
-
-    /**
-     * ID of controller
-     */
-    protected String id;
 
     /**
      * Constructor for FrameController.
@@ -85,30 +59,8 @@ public abstract class AbstractFrameController implements FrameMediator {
      *
      */
     public AbstractFrameController(String id, ViewItem viewItem) {
-        this.id = id;
-        this.viewItem = viewItem;
-
-        // If no view spec. is given, use default
-        if (viewItem == null) {
-            this.viewItem = new ViewItem(createDefaultConfiguration(id));
-        }
-
-        // register statusbar at global taskmanager
-        statusBar = new StatusBar(MainInterface.processor.getTaskManager());
-
-        // add tooltip handler
-        mouseTooltipHandler = new TooltipMouseHandler(statusBar);
-
-        // init selection handler
-        selectionManager = new SelectionManager();
-    }
-
-    /**
-     *
-     * @see ThreePaneMailFrameController for an example of its usage
-     *
-     */
-    protected void initActions() {
+        
+        super(id, viewItem);
     }
 
     /**
@@ -150,34 +102,6 @@ public abstract class AbstractFrameController implements FrameMediator {
         return defaultView;
     }
 
-    /**
-     * - create all additional controllers
-     * - register SelectionHandlers
-     */
-    protected abstract void init();
-
-    /**
-     *
-     * @return        statusbar
-     */
-    public StatusBar getStatusBar() {
-        return statusBar;
-    }
-
-    /**
-     * Returns the mouseTooltipHandler.
-     *
-     * @return MouseAdapter
-     */
-    public MouseAdapter getMouseTooltipHandler() {
-        return mouseTooltipHandler;
-    }
-
-    /* *20030831, karlpeder* Not used, close method is used instead
-    public void saveAndClose() {
-            view.saveWindowPosition();
-    }
-    */
 
     /**
      * Save window properties and close the window.
@@ -189,8 +113,8 @@ public abstract class AbstractFrameController implements FrameMediator {
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Closing FrameController: " + this.getClass().getName());
         }
-        view.saveWindowPosition(); // ask view to store current pos and size
-        view.setVisible(false);
+        ((AbstractFrameView)view).saveWindowPosition(); // ask view to store current pos and size
+        ((AbstractFrameView)view).setVisible(false);
 
         /*
          * Tell frame model that frame is closing.
@@ -200,12 +124,6 @@ public abstract class AbstractFrameController implements FrameMediator {
         MainInterface.frameModel.close(this);
     }
 
-    /**
-     * Create view
-     *
-     * @return        view object
-     */
-    protected abstract AbstractFrameView createView();
 
     /**
      * Open new view.
@@ -221,21 +139,6 @@ public abstract class AbstractFrameController implements FrameMediator {
         // set the position afterwards
         // if not the maximization fails
         view.loadWindowPosition();
-    }
-
-    /**
-     * @return ViewItem
-     */
-    public ViewItem getViewItem() {
-        return viewItem;
-    }
-
-    /**
-     * Sets the item.
-     * @param item The item to set
-     */
-    public void setViewItem(ViewItem item) {
-        this.viewItem = item;
     }
 
     /**
@@ -259,6 +162,15 @@ public abstract class AbstractFrameController implements FrameMediator {
     }
 
     /**
+     * Returns the container that holds the view
+     *
+     * @return Container that displays the view
+     */
+    public Container getFrame() {
+        return getView();
+    }
+    
+    /**
      * @return FrameView
      */
     public AbstractFrameView getView() {
@@ -273,25 +185,14 @@ public abstract class AbstractFrameController implements FrameMediator {
             view = createView();
         }
 
-        return view;
+        return (AbstractFrameView)view;
     }
 
+    /**
+     * @return menu
+     */
     public Menu getMenu() {
         return getView().getMenu();
     }
 
-    /**
-     * @return SelectionManager
-     */
-    public SelectionManager getSelectionManager() {
-        return selectionManager;
-    }
-
-    /**
-     * Sets the selectionManager.
-     * @param selectionManager The selectionManager to set
-     */
-    public void setSelectionManager(SelectionManager selectionManager) {
-        this.selectionManager = selectionManager;
-    }
 }

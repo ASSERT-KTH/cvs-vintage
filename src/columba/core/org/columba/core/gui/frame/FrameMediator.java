@@ -20,7 +20,9 @@ package org.columba.core.gui.frame;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.selection.SelectionManager;
 import org.columba.core.gui.statusbar.StatusBar;
+import org.columba.core.gui.view.AbstractView;
 
+import java.awt.Container;
 import java.awt.event.MouseAdapter;
 
 
@@ -47,15 +49,34 @@ import java.awt.event.MouseAdapter;
  * @author fdietz
  */
 public interface FrameMediator {
-    public AbstractFrameView getView();
+    
+    // Replace with more generic methods below
+    //public AbstractFrameView getView();
+    
+    /**
+     * Provides access to the View at the basic interface level.
+     * Leaves 'getView()' method available for more specific
+     * implementation in classes.
+     */
+    public AbstractView getBaseView();
+    
+    /**
+     * Provides access to the container displaying the View.
+     * Container is needed (as JFrame) by methods in some classes
+     * that create JDialogs.
+     */
+    public Container getFrame();
 
+    /**
+     * Initialize and display the View. (Create if necessary).
+     */
     public void openView();
 
     /**
- * Save window properties and close the window. This includes telling the
- * frame model that this window/frame is closing, so it can be
- * "unregistered" correctly
- */
+     * Save window properties and close the window. This includes telling the
+     * frame model that this window/frame is closing, so it can be
+     * "unregistered" correctly
+     */
     public void close();
 
     public ViewItem getViewItem();
