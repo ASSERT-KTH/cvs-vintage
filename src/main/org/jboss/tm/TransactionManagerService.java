@@ -28,7 +28,7 @@ import javax.management.ObjectName;
 import javax.transaction.TransactionManager;
 
 import org.jboss.logging.Log;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 /**
  *  This is a JMX service which manages the TransactionManager.
@@ -38,7 +38,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *  @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  */
 public class TransactionManagerService
    extends ServiceMBeanSupport

@@ -13,10 +13,10 @@ package org.jboss.tm;
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public interface TransactionManagerServiceMBean
-   extends org.jboss.util.ServiceMBean
+   extends org.jboss.system.ServiceMBean
 {
    // Constants -----------------------------------------------------
    public static final String OBJECT_NAME = ":service=TransactionManager";

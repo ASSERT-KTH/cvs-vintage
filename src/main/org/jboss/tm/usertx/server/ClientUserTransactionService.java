@@ -18,7 +18,7 @@ import javax.naming.spi.ObjectFactory;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 import org.jboss.tm.usertx.client.ClientUserTransaction;
 import org.jboss.tm.usertx.interfaces.UserTransactionSessionFactory;
@@ -29,7 +29,7 @@ import org.jboss.tm.usertx.interfaces.UserTransactionSessionFactory;
  *  usage for standalone clients.
  *      
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 public class ClientUserTransactionService
    extends ServiceMBeanSupport
