@@ -34,6 +34,14 @@
            <rule mask="^$|[0-9]+">Please select a valid choice</rule>
         </field>
 </group>
+<group class="AttributeType" key="attt" mapToObject="om.AttributeType">
+        <field name="AttributeTypeId" key="atttid" type="NumberKey">
+           <rule mask="^$|[0-9]+">Please select a valid choice</rule>
+        </field>
+        <field name="AttributeTypeName" key="name" type="String">
+            <rule maxLength="255"/>
+        </field>
+</group>
 <group class="AttributeValue" key="attv" 
             mapToObject="om.AttributeValue">
         <field name="Id" key="id" type="ComboKey" mapToProperty="PrimaryKey">
