@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.118 2002/11/14 20:59:59 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.119 2002/11/25 20:30:48 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -100,6 +100,7 @@
     <foreign-key foreignTable="SCARAB_ATTACHMENT">
         <reference local="ATTACHMENT_ID" foreign="ATTACHMENT_ID"/>
     </foreign-key>
+
     <index name="IX_ATTRIBUTE_ISSUE_ENDDATE">
         <index-column name="ATTRIBUTE_ID"/>
         <index-column name="ISSUE_ID"/>
@@ -111,6 +112,19 @@
     </index>
     <index name="IX_TRANSACTION">
         <index-column name="TRANSACTION_ID"/>
+    </index>
+    <!-- 
+         This index is useful in reports.  My first guess was that including 
+         END_DATE in the index would be useful, but it appears to slow things 
+         down about 50% 
+    -->
+    <index name="IX_NEW_OPTION_ISSUE">
+        <index-column name="NEW_OPTION_ID"/>
+        <index-column name="ISSUE_ID"/>
+    </index>
+    <index name="IX_NEW_USER_ISSUE">
+        <index-column name="NEW_USER_ID"/>
+        <index-column name="ISSUE_ID"/>
     </index>
 </table>
 
