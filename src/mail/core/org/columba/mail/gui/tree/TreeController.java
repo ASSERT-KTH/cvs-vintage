@@ -18,8 +18,6 @@ package org.columba.mail.gui.tree;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.event.TreeExpansionEvent;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
@@ -41,23 +39,16 @@ import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
  * this class shows the the folder hierarchy
  */
 
-public class TreeController
-	implements TreeSelectionListener, TreeWillExpandListener //, TreeNodeChangeListener
-{
+public class TreeController implements TreeWillExpandListener {
 	private TreeView folderTree;
 	private boolean b = false;
 	private TreePath treePath;
-	//private JPopupMenu popup;
 
 	private FolderInfoPanel messageFolderInfoPanel;
-
-	//private FolderTreeActionListener actionListener;
 
 	public JScrollPane scrollPane;
 
 	private FolderTreeNode oldSelection;
-
-	//private FolderTreeMenu menu;
 
 	private FolderTreeMouseListener mouseListener;
 
@@ -82,34 +73,21 @@ public class TreeController
 
 		view = new TreeView(mailFrameController, model);
 
-		//actionListener = new FolderTreeActionListener(this);
-
 		treeSelectionManager = new TreeSelectionManager();
-		// FIXME
-		//mailFrameController.getSelectionManager().addSelectionHandler(new TreeSelectionHandler(view));
-		//view.addTreeSelectionListener(this);
 
-		//folderTreeActionListener = new FolderTreeActionListener(this);
 		view.addTreeWillExpandListener(this);
 
 		mouseListener = new FolderTreeMouseListener(this);
 
 		view.addMouseListener(mouseListener);
 
-		// FIXME
-
-		//FolderTreeDnd dnd = new FolderTreeDnd(this);
-
-		//scrollPane = new JScrollPane(getFolderTree().getTree());
-
-		//menu = new FolderTreeMenu(this);
-
 		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer(true);
 		view.setCellRenderer(renderer);
 
-		getView().addTreeSelectionListener(this);
-		
-		getView().setTransferHandler(new MessageTransferHandler( ((TableOwnerInterface)getMailFrameController()).getTableController()));
+		getView().setTransferHandler(
+			new MessageTransferHandler(
+				((TableOwnerInterface) getMailFrameController())
+					.getTableController()));
 
 	}
 
@@ -141,11 +119,6 @@ public class TreeController
 		return view;
 	}
 
-	/*
-	public FolderTreeActionListener getActionListener() {
-		return actionListener;
-	}
-	*/
 	public void setSelected(Folder folder) {
 		view.clearSelection();
 
@@ -156,42 +129,13 @@ public class TreeController
 		view.setAnchorSelectionPath(path);
 		view.expandPath(path);
 
-		//view.setSelectionRow( view.getRowForPath(path) );
-		// FIXME
-		//treeSelectionManager.fireFolderSelectionEvent(selectedFolder, folder);
-
 		this.selectedFolder = folder;
-
-		//selectedFolder = (FolderTreeNode) view.getLastSelectedPathComponent();
-
-		//getActionListener().changeActions();
 
 		MainInterface.processor.addOp(
 			new ViewHeaderListCommand(
 				getMailFrameController(),
 				treeSelectionManager.getSelection()));
 	}
-
-	/*
-	// this method is called when the user selects another folder
-	
-	public void valueChanged(TreeSelectionEvent e) {
-	
-		// BUGFIX but don't know why that bug occurs 
-		if (view.getLastSelectedPathComponent() == null)
-			return;
-	
-		treeSelectionManager.fireFolderSelectionEvent(
-			selectedFolder,
-			(FolderTreeNode) view.getLastSelectedPathComponent());
-	
-		selectedFolder = (FolderTreeNode) view.getLastSelectedPathComponent();
-	
-		getActionListener().changeActions();
-	
-		//if (selectedFolder == null) return;
-	}
-	*/
 
 	public void createPopupMenu() {
 		menu = new TreeMenu(mailFrameController);
@@ -205,23 +149,6 @@ public class TreeController
 	public FolderTreeNode getSelected() {
 		return selectedFolder;
 	}
-
-	/*
-	public void selectFolder() {
-		
-				if ( view.getLastSelectedPathComponent() == null ) return;
-				
-				if (  !getSelected().equals(oldSelection))
-				{
-				MainInterface.processor.addOp(
-					new ViewHeaderListCommand(
-						getMailFrameController(),
-						treeSelectionManager.getSelection()));
-					oldSelection = getSelected();
-				}
-		
-	}
-	*/
 
 	/**
 	 * Returns the treeSelectionManager.
@@ -237,21 +164,6 @@ public class TreeController
 	 */
 	public AbstractMailFrameController getMailFrameController() {
 		return mailFrameController;
-	}
-
-	/* (non-Javadoc)
-	 * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
-	 */
-	public void valueChanged(TreeSelectionEvent ev) {
-		TreePath path = ev.getPath();
-
-		if (path != null) {
-			FolderTreeNode node = (FolderTreeNode) path.getLastPathComponent();
-
-			// FIXME
-			//getTreeSelectionManager().fireFolderSelectionEvent(null, node);
-		}
-
 	}
 
 }
