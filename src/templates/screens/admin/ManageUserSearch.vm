@@ -1,28 +1,33 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.13 2002/02/28 17:33:07 jon Exp $
+@version $Id: ManageUserSearch.vm,v 1.14 2002/03/02 17:28:03 maartenc Exp $
 *#
 
 $page.setTitle("User search")
 
-#set ($user = $data.User)
-#set ($searchCommand = $data.Parameters.getString("searchCommand"))
-#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage"))
-#set ($pageNum = $data.Parameters.getInt("pageNum"))
-#set ($searchField = $data.Parameters.getString("searchField"))
+#set ($newSearch = $data.Parameters.getString("newSearch"))
 #set ($searchCriteria = "")
-#set ($searchCriteria = $data.Parameters.getString("searchCriteria"))
-#set ($orderByField = $data.Parameters.getString("orderbyField"))
-#set ($ascOrDesc = $data.Parameters.getString("ascOrDesc"))
 
-#if ($resultsPerPage == 0)
-  #set ($resultsPerPage = 25)
-#end
-
-#if ($pageNum == 0)
+#if ($newSearch.equals("true"))
+  #set ($resultsPerPage = "25")
   #set ($pageNum = 1)
+#else
+  #set ($searchField = $scarabR.getGlobalUserSearchParam("searchField"))
+  #set ($searchCriteria = $scarabR.getGlobalUserSearchParam("searchCriteria"))
+  #set ($orderByField = $scarabR.getGlobalUserSearchParam("orderByField"))
+  #set ($ascOrDesc = $scarabR.getGlobalUserSearchParam("ascOrDesc"))
+  #set ($resultsPerPage = $scarabR.getGlobalUserSearchParam("resultsPerPage"))
+  #if ($data.Parameters.getString("pageNum"))
+    #set ($pageNum = $data.Parameters.getString("pageNum"))
+  #else
+    #set ($pageNum = $scarabR.getGlobalUserSearchParam("pageNum"))
+  #end
+  #set ($fullList = $scarabR.GlobalUserSearch)
+  #set ($userList = $scarabR.getPaginatedList($fullList, $pageNum.toString(), $resultsPerPage.toString()))
+  #set ($totalPages = $scarabR.NbrPages)
 #end
+$scarabR.setGlobalUserSearchParam("pageNum",$pageNum.toString())
 
 <div id="ManageUserSearch" class="app">
 
@@ -35,6 +40,7 @@ $page.setTitle("User search")
 <form action="$link.setPage("admin,ManageUserSearch.vm")" method="post">
   <input type="hidden" name="action" value="admin.ManageUser" />
   <input type="hidden" name="searchCommand" value="search" />
+  <input type="hidden" name="pageNum" value="$pageNum" />
 
 <table cellspacing="0" cellpadding="2">
 <tr>
@@ -64,10 +70,10 @@ Order by: <select name="orderbyField">
 
 <p>
 Results per page: 
-<input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage == 25) checked #end /> 25 &nbsp;
-<input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage == 50) checked #end /> 50 &nbsp;
-<input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage == 75) checked #end /> 75 &nbsp;
-<input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage == 100) checked #end /> 100
+<input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage.equals("25")) checked #end /> 25 &nbsp;
+<input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.equals("50")) checked #end /> 50 &nbsp;
+<input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.equals("75")) checked #end /> 75 &nbsp;
+<input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.equals("100")) checked #end /> 100
 </p>
 
 <div class="functnbar2">
@@ -78,13 +84,12 @@ Results per page:
 </form>
 
 
-#if ($searchCommand.equals("search"))
+#if (!$newSearch.equals("true"))
 
 <h3>Search results</h3>
 
- #set ($userList = $scarabG.getSearchUsers($searchField,$searchCriteria,$orderByField,$ascOrDesc))
  #if ($userList.size() == 0)
-<p class="warn">There are no users matching the specified criteria.</p>
+   <p class="warn">There are no users matching the specified criteria.</p>
  #else
 
 <form name="ManageUserSearchForm" action="$link.setPage("admin,ManageUserSearch.vm")" method="post">
@@ -99,24 +104,22 @@ Results per page:
  </tr>
 
 ## this is the results list stuff
-#if ($userList.size() > $resultsPerPage)
+#if ($totalPages > 1)
  #set ($paginated = "true")
- #set ($userList = $scarabR.getPaginatedList($userList, $pageNum.toString(), $resultsPerPage.toString()))
- #set ($totalPages = $scarabR.NbrPages)
 #end
 
 ## PAGINATION
 #if ($paginated)
  <p class="paginate">
  #if($scarabR.PrevPage != 0)
-  #set ($prevLink = $link.setPathInfo("searchCommand", "search").setPathInfo("searchField", "$searchField").setPathInfo("searchCriteria", "$searchCriteria").setPathInfo("orderbyField", "$orderbyField").setPathInfo("ascOrDesc", "$ascOrDesc").setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPage("admin,ManageUserSearch.vm").toString())
+  #set ($prevLink = $link.setPathInfo("pageNum","$scarabR.PrevPage").setPage("admin,ManageUserSearch.vm").toString())
   <a href="$prevLink">&laquo;</a> previous |
  #end
 
  $pageNum of $totalPages
 
  #if ($scarabR.NextPage != 0)
-  #set ($nextLink = $link.setPathInfo("searchCommand", "search").setPathInfo("searchField", "$searchField").setPathInfo("searchCriteria", "$searchCriteria").setPathInfo("orderbyField", "$orderbyField").setPathInfo("ascOrDesc", "$ascOrDesc").setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.NextPage").setPage("admin,ManageUserSearch.vm").toString())
+  #set ($nextLink = $link.setPathInfo("pageNum","$scarabR.NextPage").setPage("admin,ManageUserSearch.vm").toString())
   | next <a href="$nextLink">&raquo;</a>
  #end
  </p>
@@ -137,20 +140,19 @@ Results per page:
 #if ($paginated)
  <p class="paginate">
  #if($scarabR.PrevPage != 0)
-  #set ($prevLink = $link.setPathInfo("searchCommand", "search").setPathInfo("searchField", "$searchField").setPathInfo("searchCriteria", "$searchCriteria").setPathInfo("orderbyField", "$orderbyField").setPathInfo("ascOrDesc", "$ascOrDesc").setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPage("admin,ManageUserSearch.vm").toString())
+  #set ($prevLink = $link.setPathInfo("pageNum","$scarabR.PrevPage").setPage("admin,ManageUserSearch.vm").toString())
   <a href="$prevLink">&laquo;</a> previous |
  #end
 
  $pageNum of $totalPages
 
  #if ($scarabR.NextPage != 0)
-  #set ($nextLink = $link.setPathInfo("searchCommand", "search").setPathInfo("searchField", "$searchField").setPathInfo("searchCriteria", "$searchCriteria").setPathInfo("orderbyField", "$orderbyField").setPathInfo("ascOrDesc", "$ascOrDesc").setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.NextPage").setPage("admin,ManageUserSearch.vm").toString())
+  #set ($nextLink = $link.setPathInfo("pageNum", "$scarabR.NextPage").setPage("admin,ManageUserSearch.vm").toString())
   | next <a href="$nextLink">&raquo;</a>
  #end
  </p>
 #end
 
-#if ($userList.size() > 0)
 <div class="functnbar2">
  <input type="submit" name="eventSubmit_doGotoedituser" value="Edit User" />&#160;
  <input type="submit" name="eventSubmit_doGotoeditroles" value="Edit Roles" />&#160;
@@ -158,7 +160,6 @@ Results per page:
 </div>
 #end
 
-#end
 
 #end
 </div>

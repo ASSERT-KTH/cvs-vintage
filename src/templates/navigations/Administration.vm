@@ -39,11 +39,11 @@
 #if ($link.isAllowed("admin,ManageUserSearch.vm") || $link.isAllowed("admin,AddUser.vm"))
   #if ($adminMenu.equals("1"))
     <div><small><strong>Users</strong></small>
-    <div><small>$link.setPage("admin,ManageUserSearch.vm").setLabel("User management")</small></div>
+    <div><small>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setLabel("User management")</small></div>
     <div><small>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add new user")</small></div>
     </div>
   #else
-    <div><small>$link.setPage("admin,ManageUserSearch.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "1").setLabel("Users")</small></div>
+    <div><small>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "1").setLabel("Users")</small></div>
   #end
 #end
 

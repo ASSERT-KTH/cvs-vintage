@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: AdminIndex.vm,v 1.15 2002/02/11 20:52:45 maartenc Exp $
+@version $Id: AdminIndex.vm,v 1.16 2002/03/02 17:28:02 maartenc Exp $
 *#
 
 <div id="adminIndex" class="app">
@@ -13,7 +13,7 @@
 <h3>Users</h3>
 
 <ul>
- <li> <a href="admin,ManageUserSearch.vm">User Management</a> </li>
+ <li> $link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setLabel("User Management") </li>
  <li> $link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add New User") </li>
 </ul>
 

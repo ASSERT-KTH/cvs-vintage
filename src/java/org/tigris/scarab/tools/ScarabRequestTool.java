@@ -53,6 +53,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Hashtable;
 
 // Turbine
 import org.apache.commons.util.StringUtils;
@@ -217,7 +218,7 @@ public class ScarabRequestTool
      * A ReportGenerator
      */
     private Report reportGenerator = null;
-
+    
     private int nbrPages = 0;
     private int prevPage = 0;
     private int nextPage = 0;
@@ -1694,6 +1695,7 @@ try{
     public List getPaginatedList( List fullList, String pgNbrStr, 
                                   String nbrItmsPerPageStr)
     {
+
         List pageResults = null;
         int pgNbr =0 ;
         int nbrItmsPerPage =0 ;
@@ -1827,6 +1829,88 @@ try{
         return hasPermission;
     }
 
+    /**
+     * When a user searches for other users (in the ManageUserSearch.vm
+     * template for example), the result of this search is stored into
+     * the temporary data for that user. This previous result can be 
+     * retrieved by this method.
+     *
+     * FIXME: shouldn't this be stored into the cache instead of the
+     * temporary data of the user?
+     *
+     * @return The list of users of the last user-search.
+     */
+    public List getGlobalUserSearch() 
+    {
+        List users = (List) data.getUser().getTemp("userList");
+        if (users == null) 
+        {
+            users = new ArrayList();
+        }
+        return users;
+    }
+    
+    /**
+     * Store the search result of other users for later use. The 
+     * result is stored into the temporary data of the current user.
+     *
+     * FIXME: use the cache instead?
+     *
+     * @param users The list of users that is a result of a query.
+     */
+    public void setGlobalUserSearch(List users) 
+    {
+        data.getUser().setTemp("userList", users);
+    }
+    
+    /**
+     * Return the parameter used for the user-search (like in the
+     * ManageUserSearch.vm template for example) returned by the
+     * getGlobalUserSearch() method. These parameters are stored
+     * into the temporary data of the current user.
+     *
+     * FIXME: use the cache instead?
+     *
+     * @param name The name of the parameter
+     * @return The value of the parameter used in the search for users.
+     */
+    public String getGlobalUserSearchParam(String name) 
+    {
+        Hashtable params = (Hashtable) data.getUser().getTemp("userListParams");
+        
+        if (params == null) 
+        {
+            return "";
+        }
+
+        return (String) params.get(name);
+    }
+    
+    /**
+     * Set the parameters used to retrieved the users in the List given
+     * to the setGlobalUserSearch(List) method. These parameters can be
+     * retrieved by the getGlobalUserSearchParam(String) for later use.
+     *
+     * FIXME: use the cache instead?
+     *
+     * @param name The name of the parameter
+     * @param value The value of the parameter
+     */
+    public void setGlobalUserSearchParam(String name, String value) 
+    {
+        Hashtable params = (Hashtable) data.getUser().getTemp("userListParams");
+        if (params == null) 
+        {
+            params = new Hashtable();
+        }
+
+        if ((name != null) && (value != null))
+        {
+            params.put(name, value);
+        }
+        data.getUser().setTemp("userListParams", params);
+    }
+
 
     // ****************** Recyclable implementation ************************
 
@@ -1841,4 +1925,5 @@ try{
         data = null;
         refresh();
     }
+    
 }
