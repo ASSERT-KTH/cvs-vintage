@@ -1,6 +1,12 @@
+/*
+ * JBoss, the OpenSource EJB server
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.proxy;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 
 /**
  * An invoker is a target of method calls, where the calls are expressed
@@ -28,15 +34,34 @@ import java.lang.reflect.*;
  * You can also filter or replicate method invocations.  You can even
  * execute the the invocations interpretively, without ever calling
  * the method on a "real" Java object.
- * <p>
- * @see java.lang.reflect.Method.invoke
- * @see Invoker.invoke
- * @see Proxies.newInvoker
- * @see Proxies.newTarget
+ *
+ * @see Method#invoke
+ * @see Invoker#invoke
+ * @see Proxies#newInvoker
+ * @see Proxies#newTarget
+ *
+ * @author Unknown
+ * @version $Revision: 1.2 $
  */
-public interface InvocationHandler {
-
-    public Object invoke(Object dummy, Method method, Object[] args)
-			throws Throwable;
-
+public interface InvocationHandler
+{
+   /**
+    * Processes a method invocation on a proxy instance and returns the
+    * result.
+    *
+    * @param dummy     ???
+    * @param method    The method instance corresponding to the interface
+    *                  method invoked on the proxy instance.
+    * @param args      An array of objects containing the values of the
+    *                  arguments passed in the method invocation on the proxy
+    *                  instance, or null if interface method takes no
+    *                  arguments.
+    * @return          The value to return from the method invocation on
+    *                  the proxy instance. 
+    *
+    * @throws Throwable    The exception to throw from the method invocation
+    *                      on the proxy instance.
+    */
+   Object invoke(Object dummy, Method method, Object[] args)
+      throws Throwable;
 }
