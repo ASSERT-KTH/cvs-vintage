@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.216 2002/11/14 18:07:50 elicia Exp $
+ * @version $Id: Issue.java,v 1.217 2002/11/18 21:53:34 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2850,13 +2850,13 @@ public class Issue
             }
         }
 
+        save();                
         if (attachment.getData() != null 
              && attachment.getData().length() > 0) 
         {
             addComment(activitySet, attachment, user);
         }
 
-        save();                
         return activitySet;
     }
 
@@ -2867,7 +2867,9 @@ public class Issue
      *
      * @throws Exception when the workflow has an error to report
      */
-    public ActivitySet setAttributeValues(ActivitySet activitySet, HashMap newAttVals, Attachment attachment,
+    public ActivitySet setAttributeValues(ActivitySet activitySet, 
+                                          HashMap newAttVals, 
+                                          Attachment attachment,
                                           ScarabUser user)
         throws Exception
     {
