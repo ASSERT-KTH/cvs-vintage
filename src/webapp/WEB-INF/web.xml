@@ -27,6 +27,8 @@
         <load-on-startup/>
 
     </servlet>
+
+    
 <!--
     <servlet>
         <servlet-name>
@@ -62,7 +64,14 @@
     </servlet-class>
     <load-on-startup>100</load-on-startup>
   </servlet>
-
+    <servlet>
+        <servlet-name>FeedServlet</servlet-name>
+        <servlet-class>org.tigris.scarab.feeds.FeedServlet</servlet-class>
+        <init-param>
+            <param-name>default.feed.type</param-name>
+            <param-value>rss_2.0</param-value>
+        </init-param>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>scarab</servlet-name>
@@ -104,6 +113,11 @@
     <servlet-name>AdminServlet</servlet-name>
     <url-pattern>/servlet/AdminServlet</url-pattern>
   </servlet-mapping>
+  
+    <servlet-mapping>
+         <servlet-name>FeedServlet</servlet-name>
+         <url-pattern>/feed</url-pattern>
+    </servlet-mapping>  
 
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
