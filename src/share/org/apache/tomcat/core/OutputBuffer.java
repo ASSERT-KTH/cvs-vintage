@@ -169,6 +169,7 @@ public final class OutputBuffer extends Writer
 	throws IOException
     {
 	if( debug > 2 ) log( "realWrite(b, " + off + ", " + cnt + ") " + resp);
+	if( closed ) return;
 	if( resp==null ) return;
 	// If this is the first write ( or flush )
 	if (!resp.isBufferCommitted()) {
