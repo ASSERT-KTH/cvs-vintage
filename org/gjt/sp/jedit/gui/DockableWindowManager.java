@@ -102,7 +102,7 @@ package org.gjt.sp.jedit.gui;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.91 2004/01/25 04:27:40 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.92 2004/01/25 05:30:52 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel implements EBComponent
@@ -1715,7 +1715,7 @@ public class DockableWindowManager extends JPanel implements EBComponent
 				topToolbars.setBounds(
 					leftButtonWidth + leftWidth,
 					topButtonHeight + topHeight,
-					_width - leftWidth - rightWidth
+					size.width - leftWidth - rightWidth
 					- leftButtonWidth - rightButtonWidth,
 					_topToolbars.height);
 			}
@@ -1724,12 +1724,12 @@ public class DockableWindowManager extends JPanel implements EBComponent
 			{
 				bottomToolbars.setBounds(
 					leftButtonWidth + leftWidth,
-					_height - bottomHeight
+					size.height - bottomHeight
 					- bottomButtonHeight
 					- _bottomToolbars.height
 					+ topButtonHeight
 					+ topHeight,
-					_width - leftWidth - rightWidth
+					size.width - leftWidth - rightWidth
 					- leftButtonWidth - rightButtonWidth,
 					_bottomToolbars.height);
 			} //}}}
