@@ -91,7 +91,7 @@ import org.tigris.scarab.om.Module;
  * initialized, there is no need to call the init() method.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssues.java,v 1.12 2003/04/02 04:59:15 elicia Exp $
+ * @version $Id: ImportIssues.java,v 1.13 2003/04/02 17:17:24 dlr Exp $
  */
 public class ImportIssues
 {
@@ -99,16 +99,14 @@ public class ImportIssues
 
 
     /** 
-     * Name of the TR.props file.
+     * Name of the properties file.
      */
-    private String TR_PROPS = 
-        "/WEB-INF/conf/TurbineResourcesTest.properties";
+    private String trProps = "/WEB-INF/conf/TurbineResourcesTest.properties";
 
     /** 
      * Name of the xmlimport.properties file used for configuration of log4j.
      */
-    private String CONFIG_PROPS = 
-            "/WEB-INF/conf/xmlimport.properties";
+    private String configProps = "/WEB-INF/conf/xmlimport.properties";
 
     private File configDir = null;
     private boolean sendEmail = false;
@@ -117,8 +115,8 @@ public class ImportIssues
     /**
      * Instance of scarabissues we ran the actual insert with.
      *
-     * Make it available post import so importer can get at info about what has
-     * just been imported.
+     * Make it available post import so importer can get at info about
+     * what has just been imported.
      */
     private ScarabIssues si = null;
 
@@ -155,22 +153,22 @@ public class ImportIssues
 
     public String getConfigFile()
     {
-        return this.CONFIG_PROPS;
+        return this.configProps;
     }
 
-    public void setConfigFile(String CONFIG_PROPS)
+    public void setConfigFile(String configProps)
     {
-        this.CONFIG_PROPS = CONFIG_PROPS;
+        this.configProps = configProps;
     }
 
     public String getTurbineResources()
     {
-        return this.TR_PROPS;
+        return this.trProps;
     }
 
-    public void setTurbineResources(String TR_PROPS)
+    public void setTurbineResources(String trProps)
     {
-        this.TR_PROPS = TR_PROPS;
+        this.trProps = trProps;
     }
 
     public void init()
