@@ -7,21 +7,34 @@
 package org.jboss.util;
 
 /**
- *   <description> 
+ * Defines a model for a service.
  *      
- *   @see <related>
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- *   @version $Revision: 1.3 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ * @version $Revision: 1.4 $
  */
 public interface Service
 {
-   public void init()
-      throws Exception;
-      
-   public void start()
-      throws Exception;
+   /**
+    * Initalize the service.
+    *
+    * @throws Exception    Service failed to initalize.
+    */
+   void init() throws Exception;
+
+   /**
+    * Start the service.
+    *
+    * @throws Exception    Service failed to start.
+    */
+   void start() throws Exception;
+
+   /**
+    * Stop the service.
+    */
+   void stop();
    
-   public void stop();
-   
-   public void destroy();
+   /**
+    * Destroy the service.
+    */
+   void destroy();
 }
