@@ -13,7 +13,7 @@
 			<persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
 			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
 			<container-invoker-conf>
-				<Optimized>False</Optimized>
+				<Optimized>True</Optimized>
 			</container-invoker-conf>
 			<container-cache-conf>
 				<cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
@@ -34,7 +34,7 @@
                         <persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
                         <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
                         <container-invoker-conf>
-                                <Optimized>False</Optimized>
+                                <Optimized>True</Optimized>
                         </container-invoker-conf>
                         <container-cache-conf>
                                 <cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
@@ -55,7 +55,7 @@
 			<persistence-manager></persistence-manager>
 			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
 			<container-invoker-conf>
-			<Optimized>False</Optimized>
+			<Optimized>True</Optimized>
 			</container-invoker-conf>
 			<container-pool-conf>
 			<MaximumSize>100</MaximumSize>
@@ -72,7 +72,7 @@
 			<persistence-manager></persistence-manager>
 			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
 			<container-invoker-conf>
-			<Optimized>False</Optimized>
+			<Optimized>True</Optimized>
 			</container-invoker-conf>
 			<container-pool-conf>
 			<MaximumSize>100</MaximumSize>
@@ -88,7 +88,7 @@
 			<persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
 			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
 			<container-invoker-conf>
-			<Optimized>False</Optimized>
+			<Optimized>True</Optimized>
 			</container-invoker-conf>
 			<container-cache-conf>
 				<cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
@@ -103,7 +103,7 @@
                         <persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
                         <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
                         <container-invoker-conf>
-                        <Optimized>False</Optimized>
+                        <Optimized>True</Optimized>
                         </container-invoker-conf>
                         <container-cache-conf>
                                 <cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
@@ -119,7 +119,7 @@
 		 	<persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
 		 	<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
 		 	<container-invoker-conf>
-		   		<Optimized>False</Optimized>
+		   		<Optimized>True</Optimized>
 		 	</container-invoker-conf>
 			<container-cache-conf>
 				<cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
@@ -140,7 +140,7 @@
                         <persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
                         <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
                         <container-invoker-conf>
-                                <Optimized>False</Optimized>
+                                <Optimized>True</Optimized>
                         </container-invoker-conf>
                         <container-cache-conf>
                                 <cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
