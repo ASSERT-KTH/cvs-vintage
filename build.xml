@@ -10,7 +10,7 @@ Have fun ... your Columba Team!
 	<property name="src" value="${basedir}"/>
 	<property name="build" value="build"/>
 	<property name="user.name" value="The Columba Team"/>
-	<!-- here we should use the cvs-verion info for automatic replace the version -->
+	<!-- here we should use the cvs-version info to automatically replace the version -->
 	<property name="version" value="1.0-M2"/>
 	<property name="dest" value="${basedir}/classes"/>
 	<property name="test-dest" value="${basedir}/test-classes"/>
