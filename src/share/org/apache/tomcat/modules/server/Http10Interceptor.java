@@ -127,6 +127,10 @@ public class Http10Interceptor extends PoolTcpConnector
         delaySocketClose=b;
     }
 
+    public void setProperty( String prop, String value ) {
+        setAttribute( prop, value );
+    }
+
     // -------------------- Handler implementation --------------------
     public void setServer( Object o ) {
 	this.cm=(ContextManager)o;
