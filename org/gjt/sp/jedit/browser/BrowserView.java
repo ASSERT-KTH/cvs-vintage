@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.52 2002/12/24 17:35:22 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.53 2002/12/31 02:48:03 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -745,7 +745,14 @@ class BrowserView extends JPanel
 								setSelectionPath(path);
 						}
 					}
-					if((evt.getModifiers() & MouseEvent.BUTTON2_MASK) != 0)
+
+					// isControlDown() -- damn MacOS workaround!
+					// maybe your dinky 500MHz "supercomputers"
+					// run Photoshop faster than a PC,
+					// but you can't even get modifier reporting
+					// working!
+					if((evt.getModifiers() & MouseEvent.BUTTON2_MASK) != 0
+						&& !evt.isControlDown())
 					{
 						setSelectionPath(path);
 						browser.filesActivated((evt.isShiftDown()

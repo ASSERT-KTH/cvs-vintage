@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
 /**
  * A VFS that lists local root filesystems.
  * @author Slava Pestov
- * @version $Id: FileRootsVFS.java,v 1.11 2002/12/25 20:44:55 spestov Exp $
+ * @version $Id: FileRootsVFS.java,v 1.12 2002/12/31 02:48:03 spestov Exp $
  */
 public class FileRootsVFS extends VFS
 {
@@ -105,7 +105,8 @@ public class FileRootsVFS extends VFS
 
 		int type;
 
-		if(file.isDirectory())
+		if(!path.startsWith("A:") && !path.startsWith("B:")
+			&& file.isDirectory())
 		{
 			type = VFS.DirectoryEntry.FILESYSTEM;
 

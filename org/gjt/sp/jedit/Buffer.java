@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.106 2002/12/24 17:35:22 spestov Exp $
+ * @version $Id: Buffer.java,v 1.107 2002/12/31 02:48:02 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -515,7 +515,8 @@ public class Buffer implements EBComponent
 		// because for a moment newModTime will be greater than
 		// oldModTime, due to the multithreading
 		// - only supported on local file system
-		if(!getFlag(IO) && !getFlag(LOADING) && file != null)
+		if(!getFlag(IO) && !getFlag(LOADING) && file != null
+			&& !getFlag(NEW_FILE))
 		{
 			boolean newReadOnly = (file.exists() && !file.canWrite());
 			if(newReadOnly != getFlag(READ_ONLY))

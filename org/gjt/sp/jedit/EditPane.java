@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
  * A panel containing a text area. Each edit pane can edit one buffer at
  * a time.
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.29 2002/12/24 17:35:22 spestov Exp $
+ * @version $Id: EditPane.java,v 1.30 2002/12/31 02:48:02 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -195,6 +195,32 @@ public class EditPane extends JPanel implements EBComponent
 	public JEditTextArea getTextArea()
 	{
 		return textArea;
+	} //}}}
+
+	//{{{ getBufferSwitcher() method
+	/**
+	 * Returns the buffer switcher combo box instance.
+	 * @since jEdit 4.1pre8
+	 */
+	public BufferSwitcher getBufferSwitcher()
+	{
+		return bufferSwitcher;
+	} //}}}
+
+	//{{{ showBufferSwitcher() method
+	/**
+	 * Shows the buffer switcher combo box.
+	 * @since jEdit 4.1pre8
+	 */
+	public void showBufferSwitcher()
+	{
+		if(bufferSwitcher == null)
+			getToolkit().beep();
+		else
+		{
+			bufferSwitcher.requestFocus();
+			bufferSwitcher.showPopup();
+		}
 	} //}}}
 
 	//{{{ saveCaretInfo() method
