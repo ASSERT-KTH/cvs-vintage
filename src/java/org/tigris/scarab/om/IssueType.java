@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.19 2002/05/14 18:35:31 elicia Exp $
+ * @version $Id: IssueType.java,v 1.20 2002/05/15 00:40:53 jon Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -107,14 +107,10 @@ public  class IssueType
     }
      */
 
-
-    /**
-     * Gets the id of the template that corresponds to the issue type.
-     */
-    public NumberKey getTemplateId()
+    public IssueType getTemplateIssueType()
         throws Exception
     {
-        NumberKey result = null;
+        IssueType result = null;
         Object obj = ScarabCache.get(this, GET_TEMPLATE_ID); 
         if ( obj == null ) 
         {        
@@ -127,17 +123,25 @@ public  class IssueType
             }
             else
             {
-                result = ((IssueType)results.get(0)).getIssueTypeId();
+                result = (IssueType)results.get(0);
             }
             ScarabCache.put(result, this, GET_TEMPLATE_ID);
         }
         else 
         {
-            result = (NumberKey)obj;
+            result = (IssueType)obj;
         }
         return result;
+    }
+
+    /**
+     * Gets the id of the template that corresponds to the issue type.
+     */
+    public NumberKey getTemplateId()
+        throws Exception
+    {
+        return getTemplateIssueType().getIssueTypeId();
     }        
-    
 
     /**
      * Get the IssueType using a issue type name
