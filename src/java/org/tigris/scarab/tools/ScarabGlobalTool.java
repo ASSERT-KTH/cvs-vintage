@@ -96,7 +96,7 @@ import org.apache.turbine.Turbine;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.44 2002/10/17 19:49:11 thierrylach Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.45 2002/10/18 23:58:08 elicia Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -226,7 +226,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public List getAllIssueTypes()
         throws Exception
     {
-        return IssueTypePeer.getAllIssueTypes(false, "name", "asc");
+        return IssueTypePeer.getAllIssueTypes(true, "name", "asc");
     }
     
     /**
@@ -235,7 +235,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public List getAllIssueTypes(String sortColumn, String sortPolarity)
         throws Exception
     {
-        return IssueTypePeer.getAllIssueTypes(false, sortColumn, sortPolarity);
+        return IssueTypePeer.getAllIssueTypes(true, sortColumn, sortPolarity);
     }
     
     /**

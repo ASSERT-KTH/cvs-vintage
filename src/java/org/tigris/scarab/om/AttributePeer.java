@@ -156,6 +156,50 @@ public class AttributePeer
     }
 
     /**
+     *  Gets a List of all of the Attribute objects filtered
+     *  on name or description
+     */
+    public static List getFilteredAttributes(String name, String description)
+        throws Exception
+    {
+        List result = null;
+        List allAttributes = getAttributes();
+        if (allAttributes == null || allAttributes.size() == 0) 
+        {
+            result = Collections.EMPTY_LIST;
+        }
+        else 
+        {
+            List attrIds = new ArrayList();
+            for (int i = 0; i < allAttributes.size(); i++)
+            {
+                attrIds.add(((Attribute)allAttributes.get(i)).getAttributeId());
+            }
+            Criteria crit = new Criteria();
+            crit.addIn(AttributePeer.ATTRIBUTE_ID, attrIds);
+            
+            if (name != null)
+            {
+                crit.add(AttributePeer.ATTRIBUTE_NAME, 
+                         addWildcards(name), Criteria.LIKE);
+            }
+            if (description != null)
+            {
+                crit.add(AttributePeer.DESCRIPTION,
+                         addWildcards(description), Criteria.LIKE);
+            }
+            result = AttributePeer.doSelect(crit);
+        }
+        return result;
+    }
+
+    private static Object addWildcards(String s)
+    {
+        return new StringBuffer(s.length() + 2)
+            .append('%').append(s).append('%').toString(); 
+    }
+
+    /**
      *  Gets a List of all of the Attribute objects in the database.
      *  Sorts on selected column.
      */

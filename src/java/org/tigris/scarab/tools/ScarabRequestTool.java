@@ -97,6 +97,7 @@ import org.tigris.scarab.om.DependManager;
 import org.tigris.scarab.om.ScopePeer;
 import org.tigris.scarab.om.FrequencyPeer;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributeValuePeer;
 import org.tigris.scarab.om.AttributeGroup;
@@ -1873,6 +1874,36 @@ System.out.println(currentQueryString);
                                getCurrentIssueType()));
     }
 
+    /**
+     * Return results of attribute search.
+     */
+    public List getAttributeSearchResults()  throws Exception
+    {
+        ScarabLocalizationTool l10n = getLocalizationTool();
+        String searchString = data.getParameters()
+               .getString("searchString"); 
+        String searchField = data.getParameters()
+               .getString("searchField"); 
+        Module module = getCurrentModule();  
+        if (searchField == null)
+        {
+            setInfoMessage(l10n.get("SearchFieldPrompt"));
+            return null ;
+        }
+        
+        String name = null;
+        String description = null;
+        if (searchField.equals("name"))
+        {
+            name = searchString;
+        }
+        else 
+        {
+            description = searchString;
+        }
+
+        return sortAttributes(AttributePeer.getFilteredAttributes(name, description));
+    }
 
     /**
      * Sort users on name or email.
@@ -1904,6 +1935,36 @@ System.out.println(currentQueryString);
         return userList;
     }
 
+
+    /**
+     * Sort attributes on name or description.
+     */
+    public List sortAttributes(List attList)  throws Exception
+    {
+        final String sortColumn = data.getParameters().getString("sortColumn");
+        final String sortPolarity = data.getParameters().getString("sortPolarity");
+        final int polarity = ("desc".equals(sortPolarity)) ? -1 : 1;   
+        Comparator c = new Comparator() 
+        {
+            public int compare(Object o1, Object o2) 
+            {
+                int i = 0;
+                if (sortColumn != null && sortColumn.equals("name"))
+                {
+                    i =  polarity * ((Attribute)o1).getName()
+                         .compareTo(((Attribute)o2).getName());
+                }
+                else
+                {
+                    i =  polarity * ((Attribute)o1).getDescription()
+                         .compareTo(((Attribute)o2).getDescription());
+                }
+                return i;
+             }
+        };
+        Collections.sort(attList, c);
+        return attList;
+    }
     /**
      * Return a subset of the passed-in list.
      */
