@@ -308,9 +308,8 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 	}
 
 	protected void layoutComponents() {
-		JPanel contentPane = new JPanel();
+		JPanel contentPane = new JPanel(new BorderLayout());
 		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout());
 
 		// Create a FormLayout instance. 
 		FormLayout layout =
@@ -370,7 +369,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(11, 11, 11, 11));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 17, 11, 11));
 
 		buttonPanel.add(okButton);
 
@@ -579,5 +578,4 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 	public Font getTextFont() {
 		return textFont;
 	}
-
 }
