@@ -60,10 +60,10 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 		
 ## PAGINATION
 #if( $paginated)
-  #paginate ()
+  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-#set ($sortAttrId = $data.Parameters.getString("sortAttrId",""))
+#set ($sortColumn = $data.Parameters.getString("sortColumn",""))
 #set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
 #if (!$sortPolarity || $sortPolarity.length() == 0)
     #set ($sortPolarity = "asc")
@@ -74,17 +74,17 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
   <th nowrap="nowrap">Select</th>
 
   <th>
-     #if (!$sortAttrId || $sortAttrId.length() == 0)
+     #if (!$sortColumn || $sortColumn.length() == 0)
         #if ($sortPolarity.equals("desc"))
-           #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "asc").addPathInfo("sortAttrId", ""))
+           #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "asc").addPathInfo("sortColumn", ""))
            <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
         #else
-           #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "desc").addPathInfo("sortAttrId", ""))
+           #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "desc").addPathInfo("sortColumn", ""))
            <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&#160;
         #end
      Issue ID
      #else
-        #set ($sortLink = $link.setPage("IssueList.vm").setPathInfo("sortAttrId","").setPathInfo("sortPolarity", $sortPolarity))
+        #set ($sortLink = $link.setPage("IssueList.vm").setPathInfo("sortColumn","").setPathInfo("sortPolarity", $sortPolarity))
         <a href="$sortLink">Issue ID</a>
      #end
   </th>
@@ -97,17 +97,17 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 #foreach ($rmua in $rmuas)
  #set ($userAttribute = $rmua.Attribute)
  <th>
-     #if ($sortAttrId.equals($userAttribute.AttributeId.toString()))
+     #if ($sortColumn.equals($userAttribute.AttributeId.toString()))
         #if ($sortPolarity.equals("desc"))
-           #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "asc").setPathInfo("sortAttrId", "$userAttribute.AttributeId"))
+           #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "asc").setPathInfo("sortColumn", "$userAttribute.AttributeId"))
            <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
         #else
-           #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "desc").setPathInfo("sortAttrId", "$userAttribute.AttributeId"))
+           #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "desc").setPathInfo("sortColumn", "$userAttribute.AttributeId"))
            <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
         #end
         $userAttribute.Name
      #else
-        #set ($sortLink = $link.setPage("IssueList.vm").setPathInfo("sortAttrId", "$userAttribute.AttributeId").setPathInfo("sortPolarity", "$sortPolarity"))
+        #set ($sortLink = $link.setPage("IssueList.vm").setPathInfo("sortColumn", "$userAttribute.AttributeId").setPathInfo("sortPolarity", "$sortPolarity"))
         <a href="$sortLink">$userAttribute.Name</a>
      #end
   </th>
@@ -152,7 +152,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 </div>
         
 #if ($paginated)
-  #paginate ($resultsPerPage $pageNum)
+  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
 

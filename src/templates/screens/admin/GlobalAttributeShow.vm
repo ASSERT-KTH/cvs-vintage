@@ -6,8 +6,34 @@ $page.setTitle("Global Attributes")
 This page is for selecting an Attribute to edit which is defined in a global scale.
 </p>
 
-#set ($allAttributes = $scarabG.AllAttributes)
+## SORTING
 
+#set ($sortColumn = $data.Parameters.getString("sortColumn",""))
+#set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
+#if (!$sortColumn || $sortColumn.length() == 0)
+   #set ($sortColumn = "name")
+#end
+#if (!$sortPolarity || $sortPolarity.length() == 0)
+   #set ($sortPolarity = "asc")
+#end
+#set ($allAttributes = $scarabG.getAllAttributes($sortColumn, $sortPolarity))
+
+#macro (sort $shortName $longName)
+     #if ($sortColumn.equals($shortName))
+        #if ($sortPolarity.equals("desc"))
+           #set ($arrowLink = $link.setPage("admin,GlobalAttributeShow.vm").setPathInfo("sortPolarity", "asc").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum",$pageNum.toString()))
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
+        #else
+           #set ($arrowLink = $link.setPage("admin,GlobalAttributeShow.vm").setPathInfo("sortPolarity", "desc").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum", $pageNum.toString()))
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&#160;
+        #end $longName
+     #else
+        #set ($sortLink = $link.setPage("admin,GlobalAttributeShow.vm").setPathInfo("sortColumn", "$shortName").setPathInfo("sortPolarity", "$sortPolarity").setPathInfo("pageNum", $pageNum.toString()))
+        <a href="$sortLink">$longName</a>
+     #end
+#end
+
+## PAGINATION
 ## if results exceed limit, get subset list
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",0))
 #set ($pageNum = $data.Parameters.getInt("pageNum",0))
@@ -25,6 +51,8 @@ This page is for selecting an Attribute to edit which is defined in a global sca
  #end
 #end
 
+
+## INPUT FORM
 <form action="$link.setPage("admin,GlobalAttributeShow.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
@@ -33,7 +61,8 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 <tr>
-<th>Global attributes</th>
+<th>
+Global attributes</th>
 <td><a href="$link.setPage("admin,GlobalUserAttributes.vm")">User attributes</a></td>
 </tr>
 </table>
@@ -45,7 +74,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 </div>       
 
 #if ($paginated)
-  #paginate ($resultsPerPage $pageNum)
+  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
 <h3>Global Attributes</h3>
@@ -53,11 +82,11 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th>&#160;</th>
-<th>Attribute name</th>
-<th>Description</th>
-<th>Input type</th>
-<th>Author</th>
-<th>Creation date</th>
+<th>#sort ("name" "Attribute name")</th>
+<th>#sort ("desc" "Description")</th>
+<th>#sort("type" "Input type")</th>
+<th>#sort ("user" "Author")</th>
+<th>#sort("date" "Creation date")</th>
 </tr>
 #foreach( $attribute in $allAttributes )
   #if (!$attribute.isUserAttribute()) 
@@ -90,7 +119,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 </div>
 
 #if ($paginated)
-  #paginate ($resultsPerPage $pageNum)
+  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
 <div class="functnbar2">

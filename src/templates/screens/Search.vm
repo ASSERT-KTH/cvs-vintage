@@ -97,7 +97,7 @@ $page.setTitle("Custom query")
   <tr>
     <th width="120">Sort by</th>
     <td>
-      <select name="sortAttrId">
+      <select name="sortColumn">
         <option value="">Choose..</option>
         #foreach ($attKey in $attrValues.sequence())
            #set ($attVal = $attrValues.get($attKey))
