@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.invocation.jrmp.interfaces;
 
 import java.io.IOException;
@@ -27,24 +28,21 @@ import org.jboss.security.SecurityAssociation;
 import org.jboss.tm.TransactionPropagationContextFactory;
 
 /**
-*
-* JRMPInvokerProxy, local to the proxy and is capable of delegating to local and JRMP implementations
-* 
-* @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.6 $
-*
-* <p><b>2001/11/19: marcf</b>
-* <ol>
-*   <li>Initial checkin
-* </ol>
-*/
+ * JRMPInvokerProxy, local to the proxy and is capable of delegating to local and JRMP implementations
+ * 
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @version $Revision: 1.7 $
+ *
+ * <p><b>2001/11/19: marcf</b>
+ * <ol>
+ *   <li>Initial checkin
+ * </ol>
+ */
 public class JRMPInvokerProxy
    implements Invoker, Externalizable
 {
-   // Constants -----------------------------------------------------
-   
    /** Serial Version Identifier. */
-   //   private static final long serialVersionUID = 1870461898442160570L;
+   // private static final long serialVersionUID = 1870461898442160570L;
    
    // Attributes ----------------------------------------------------
    
@@ -52,70 +50,72 @@ public class JRMPInvokerProxy
    protected Invoker remoteInvoker;
    
    /**
-   *  Factory for transaction propagation contexts.
-   *
-   *  @todo: marcf remove all transaction spill from here
-   * 
-   *  When set to a non-null value, it is used to get transaction
-   *  propagation contexts for remote method invocations.
-   *  If <code>null</code>, transactions are not propagated on
-   *  remote method invocations.
-   */
+    * Factory for transaction propagation contexts.
+    *
+    * @todo: marcf remove all transaction spill from here
+    * 
+    * When set to a non-null value, it is used to get transaction
+    * propagation contexts for remote method invocations.
+    * If <code>null</code>, transactions are not propagated on
+    * remote method invocations.
+    */
    protected static TransactionPropagationContextFactory tpcFactory = null;
    
-   // Get and set methods
-   
-   
    //  @todo: MOVE TO TRANSACTION
+   // 
    // TPC factory
-   public static void setTPCFactory(TransactionPropagationContextFactory tpcf) { tpcFactory = tpcf; }
-   
-   // Constructors --------------------------------------------------
-   public JRMPInvokerProxy() {
-      // For externalization to work
+   public static void setTPCFactory(TransactionPropagationContextFactory tpcf) {
+      tpcFactory = tpcf;
    }
    
    /**
-   *  Create a new Proxy.
-   *
-   *  @param container
-   *         The remote interface of the container invoker of the
-   *         container we proxy for.
-   */
-   public JRMPInvokerProxy(Invoker remoteInvoker) 
+    * Exposed for externalization.
+    */
+   public JRMPInvokerProxy() {
+      super();
+   }
+   
+   /**
+    * Create a new Proxy.
+    *
+    * @param container    The remote interface of the container invoker of the
+    *                     container we proxy for.
+    */
+   public JRMPInvokerProxy(final Invoker remoteInvoker) 
    {
       this.remoteInvoker = remoteInvoker;
    }
    
-   // Public --------------------------------------------------------
-   
-   // The name of of the server
-   public String getServerHostName() throws Exception {return remoteInvoker.getServerHostName();}
+   /**
+    * The name of of the server.
+    */
+   public String getServerHostName() throws Exception {
+      return remoteInvoker.getServerHostName();
+   }
    
    /**
-   *  
-   *  @Return the transaction propagation context of the transaction
-   *  associated with the current thread.
-   *  Returns <code>null</code> if the transaction manager was never
-   *  set, or if no transaction is associated with the current thread.
-   */
-   //  @todo: MOVE TO TRANSACTION
+    * ???
+    *
+    * @todo: MOVE TO TRANSACTION
+    *  
+    * @return the transaction propagation context of the transaction
+    *         associated with the current thread.
+    *         Returns <code>null</code> if the transaction manager was never
+    *         set, or if no transaction is associated with the current thread.
+    */
    public Object getTransactionPropagationContext()
-   throws SystemException
+      throws SystemException
    {
-      //  @todo: MOVE TO TRANSACTION
       return (tpcFactory == null) ? null : tpcFactory.getTransactionPropagationContext();
    }
    
-   
    /**
-   * The invocation on the delegate, calls the right invoker.  Remote if we are remote, local if we
-   * are local. 
-   */
+    * The invocation on the delegate, calls the right invoker.  Remote if we are remote, 
+    * local if we are local. 
+    */
    public Object invoke(Invocation invocation)
-   throws Exception
+      throws Exception
    {
-      
       // We are going to go through a Remote invocation, switch to a Marshalled Invocation
       MarshalledInvocation mi = new MarshalledInvocation(invocation);
          
@@ -123,10 +123,10 @@ public class JRMPInvokerProxy
       //  @todo: MOVE TO TRANSACTION
       mi.setTransactionPropagationContext(getTransactionPropagationContext());
          
-      try{ 
-            
+      try { 
          return ((MarshalledObject) remoteInvoker.invoke(mi)).get();
-      } catch (ServerException ex) {
+      }
+      catch (ServerException ex) {
          // Suns RMI implementation wraps NoSuchObjectException in
          // a ServerException. We cannot have that if we want
          // to comply with the spec, so we unwrap here.
@@ -137,31 +137,26 @@ public class JRMPInvokerProxy
    }
    
    /**
-   *  Externalize this instance.
-   *
-   *  If this instance lives in a different VM than its container
-   *  invoker, the remote interface of the container invoker is
-   *  not externalized.
-   */
+    * Externalize this instance.
+    *
+    * If this instance lives in a different VM than its container
+    * invoker, the remote interface of the container invoker is
+    * not externalized.
+    */
    public void writeExternal(final ObjectOutput out)
-   throws IOException
+      throws IOException
    { 
       out.writeObject(remoteInvoker);
    }
    
    /**
-   *  Un-externalize this instance.
-   *
-   *  We check timestamps of the interfaces to see if the instance is in the original VM of creation
-   */
+    * Un-externalize this instance.
+    *
+    * We check timestamps of the interfaces to see if the instance is in the original VM of creation
+    */
    public void readExternal(final ObjectInput in)
-   throws IOException, ClassNotFoundException
+      throws IOException, ClassNotFoundException
    {
       remoteInvoker = (Invoker) in.readObject();
    }
-   
-   // Private -------------------------------------------------------
-
-   
-   // Inner classes -------------------------------------------------
 }
