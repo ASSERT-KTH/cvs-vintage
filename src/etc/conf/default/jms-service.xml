@@ -4,6 +4,8 @@
 
 
  
+  <classpath codebase="lib/ext" archives="*"/>
+
 
   <!-- ==================================================================== -->
   <!-- JMS Stuff                                                       -->
@@ -33,8 +35,8 @@
   <mbean code="org.jboss.resource.ConnectionFactoryLoader"
          name="JCA:service=ConnectionFactoryLoader,name=JmsXA">
     <attribute name="JndiName">JmsXA</attribute>
-    <mbean-ref name="ResourceAdapterName">JCA:service=RARDeployment,name=JMS Adapter</mbean-ref>
-    <mbean-ref name="ConnectionManagerFactoryLoaderName">JCA:service=ConnectionManagerFactoryLoader,name=MinervaXACMFactory</mbean-ref>
+    <depends optional-attribute-name="ResourceAdapterName">JCA:service=RARDeployment,name=JMS Adapter</depends>
+    <depends optional-attribute-name="ConnectionManagerFactoryLoaderName">JCA:service=ConnectionManagerFactoryLoader,name=MinervaXACMFactory</depends>
     <attribute name="ManagedConnectionFactoryProperties">
        SessionDefaultType=javax.jms.Topic
        #UserName=guest
