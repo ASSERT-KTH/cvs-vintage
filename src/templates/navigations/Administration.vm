@@ -2,7 +2,7 @@
 
 #set ($adminMenu = $data.Parameters.getString($scarabG.Constant.CURRENT_ADMIN_MENU, ""))
 
-<div>
+<div class="focus">
 <strong>$link.setPage("admin,AdminIndex.vm").setLabel("Admin")</strong>
 
 #if ($link.isAllowed("admin,GlobalArtifactTypeShow.vm") || $link.isAllowed("admin,GlobalAttributeShow.vm"))
