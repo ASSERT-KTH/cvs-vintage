@@ -59,7 +59,7 @@ import java.util.List;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.1 2001/10/26 23:12:26 jmcnally Exp $
+ * @version $Id: ScarabSecurity.java,v 1.2 2001/11/01 18:13:34 jmcnally Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -78,53 +78,62 @@ public class ScarabSecurity
     /** 
      * Specifies that a User is valid as an assignee for an issue.
      */
-    public static final String ISSUE__EDIT = "Issue__Edit";
+    public static final String ISSUE__EDIT = 
+        getService().getPermissionImpl("Issue__Edit");
 
     /** 
      * Specifies that a User is allowed to enter an issue.
      */
-    public static final String ISSUE__ENTER = "Issue__Enter";
+    public static final String ISSUE__ENTER = 
+        getService().getPermissionImpl("Issue__Enter");
 
     /** 
      * Specifies that a User is allowed to view an issue.
      */
-    public static final String ISSUE__VIEW = "Issue__View";
+    public static final String ISSUE__VIEW = 
+        getService().getPermissionImpl("Issue__View");
 
     /** 
      * Specifies that a User is allowed to search for issues.
      */
-    public static final String ISSUE__SEARCH = "Issue__Search";
+    public static final String ISSUE__SEARCH = 
+        getService().getPermissionImpl("Issue__Search");
 
     /** 
      * Specifies that a User is allowed to approve a query.
      */
-    public static final String ITEM__APPROVE = "Item__Approve";
+    public static final String ITEM__APPROVE = 
+        getService().getPermissionImpl("Item__Approve");
 
     /** 
      * Specifies that a User is allowed to delete a query.
      */
-    public static final String ITEM__DELETE = "Item__Delete";
+    public static final String ITEM__DELETE = 
+        getService().getPermissionImpl("Item__Delete");
 
     /** 
      * Specifies that a User is allowed to edit preferences.
      */
-    public static final String USER__EDIT_PREFERENCES = 
-        "User__Edit_Preferences";
+    public static final String USER__EDIT_PREFERENCES =         
+        getService().getPermissionImpl("User__Edit_Preferences");
 
     /** 
      * Specifies that a User is allowed to edit a domain.
      */
-    public static final String DOMAIN__EDIT = "Domain__Edit";
+    public static final String DOMAIN__EDIT = 
+        getService().getPermissionImpl("Domain__Edit");
 
     /** 
      * Specifies that a User is allowed to modify a project.
      */
-    public static final String MODULE__EDIT = "Module__Edit";
+    public static final String MODULE__EDIT = 
+        getService().getPermissionImpl("Module__Edit");
 
     /** 
      * Specifies that a User is allowed to add a project.
      */
-    public static final String MODULE__ADD = "Module__Add";
+    public static final String MODULE__ADD = 
+        getService().getPermissionImpl("Module__Add");
 
     private ExtendedProperties props;
 
@@ -158,10 +167,12 @@ public class ScarabSecurity
         return getService().getScreenPermissionImpl(screen);
     }
 
-    public static String getPermission(String permConstant)
+    /*
+    public static String getPermission(String task)
     {
-        return getService().getPermissionImpl(permConstant);
+        return getService().getPermissionImpl(task);
     }
+    */
 
     public static ExtendedProperties getProps()
     {
