@@ -23,22 +23,22 @@ import org.jboss.logging.Logger;
  *
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  */
-public class TunkRequest
+public class TrunkRequest
 {
-   final static private Logger log = Logger.getLogger(TunkRequest.class);
+   final static private Logger log = Logger.getLogger(TrunkRequest.class);
 
    final static byte REQUEST_INVOKE = 1;
    final static byte REQUEST_GET_SERVER_HOST_NAME = 2;
 
    private static int lastRequestId = 0;
-   private static ClassLoader classLoader = TunkRequest.class.getClassLoader();
+   private static ClassLoader classLoader = TrunkRequest.class.getClassLoader();
 
    public byte operation;
    public Integer requestId;
    public Invocation invocation;
    
 
-   public TunkRequest()
+   public TrunkRequest()
    {
    }
 

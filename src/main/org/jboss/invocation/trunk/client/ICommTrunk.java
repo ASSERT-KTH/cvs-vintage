@@ -33,7 +33,7 @@ public interface ICommTrunk
     * Sends a request down the trunk, should block until we know the 
     * send will succeed.
     */
-   public void sendRequest(TunkRequest request) throws IOException;
+   public void sendRequest(TrunkRequest request) throws IOException;
 
    /**
     * Set the CommTrunkRamp that is CommTrunk will be using.

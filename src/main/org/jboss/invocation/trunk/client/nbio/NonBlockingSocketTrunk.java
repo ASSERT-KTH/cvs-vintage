@@ -20,7 +20,7 @@ import org.jboss.invocation.trunk.client.CommTrunkRamp;
 import org.jboss.invocation.trunk.client.Compression;
 import org.jboss.invocation.trunk.client.ICommTrunk;
 import org.jboss.invocation.trunk.client.TrunkResponse;
-import org.jboss.invocation.trunk.client.TunkRequest;
+import org.jboss.invocation.trunk.client.TrunkRequest;
 import org.jboss.logging.Logger;
 
 import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
@@ -157,7 +157,7 @@ public class NonBlockingSocketTrunk implements ICommTrunk
     * @return               Description of the Returned Value
     * @exception Exception  Description of Exception
     */
-   public void sendRequest(TunkRequest request) throws IOException
+   public void sendRequest(TrunkRequest request) throws IOException
    {
       if (log.isTraceEnabled())
          log.trace("Sending request: " + request);
@@ -445,7 +445,7 @@ public class NonBlockingSocketTrunk implements ICommTrunk
                            if (tracing)
                               log.trace("Frame read finished delivering new Request");
 
-                           TunkRequest newRequest = new TunkRequest();
+                           TrunkRequest newRequest = new TrunkRequest();
                            newRequest.deserialize(data);
                            trunkRamp.deliverTrunkRequest(newRequest);
                         }

@@ -10,12 +10,12 @@
 package org.jboss.invocation.trunk.client;
 
 /**
- * This interface should be implemented by object that want to receive TrunkRequests.
+ * This interface should be implemented by object that wants to receive TrunkRequests.
  *
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  */
-public interface ITrunkListner
+public interface ITrunkListener
 {
-   void requestEvent(ICommTrunk trunk, TunkRequest request);
+   void requestEvent(ICommTrunk trunk, TrunkRequest request);
    void exceptionEvent(ICommTrunk trunk, Exception e);
 }

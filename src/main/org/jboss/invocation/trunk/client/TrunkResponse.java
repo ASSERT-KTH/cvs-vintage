@@ -29,7 +29,8 @@ public class TrunkResponse
    final static byte RESULT_VOID = 1;
    final static byte RESULT_OBJECT = 2;
    final static byte RESULT_EXCEPTION = 3;
-   private static ClassLoader classLoader = TunkRequest.class.getClassLoader();
+   /** @todo is it really correct to use the TrunkRequest cl for the work in this class?*/
+   private static ClassLoader classLoader = TrunkRequest.class.getClassLoader();
 
    public Integer correlationRequestId;
    public MarshalledObject result;
@@ -38,7 +39,7 @@ public class TrunkResponse
    public TrunkResponse()
    {
    }
-   public TrunkResponse(TunkRequest request)
+   public TrunkResponse(TrunkRequest request)
    {
       correlationRequestId = request.requestId;
    }

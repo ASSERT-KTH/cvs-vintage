@@ -234,7 +234,7 @@ public class ConnectionManager
       }
    }
 
-   public void handleRequest(AbstractClient connection, TunkRequest request)
+   public void handleRequest(AbstractClient connection, TrunkRequest request)
    {
    }
 

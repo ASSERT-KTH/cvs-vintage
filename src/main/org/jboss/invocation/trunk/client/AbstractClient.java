@@ -20,13 +20,13 @@ import org.jboss.logging.Logger;
  * The base class for client connections to the server.  This class is sub-classed to provide
  * Blocking and Non Blocking client implemenations.
  * 
- * This class allows you to assign ITrunkListners to receive Invocations from the server.
+ * This class allows you to assign ITrunkListeners to receive Invocations from the server.
  * It also keeps track of the when the connection was last used so that a connection can 
  * be closed after a long period of inactivity.
  * 
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  */
-public abstract class AbstractClient implements ITrunkListner
+public abstract class AbstractClient implements ITrunkListener
 {
    private final static Logger log = Logger.getLogger(AbstractClient.class);
 
@@ -45,10 +45,10 @@ public abstract class AbstractClient implements ITrunkListner
    private boolean isValid = true;
 
    /**
-    * Clients can setup Request listners.
+    * Clients can setup Request listeners.
     */
-   HashMap requestListners = new HashMap();
-   int requestListnerCounter = 0;
+   HashMap requestListeners = new HashMap();
+   int requestListenerCounter = 0;
 
    protected WorkManager workManager;
 
@@ -80,15 +80,15 @@ public abstract class AbstractClient implements ITrunkListner
       stop();
       isValid = false;
       connectionManager.connectionClosed(this, e);
-      Iterator i = requestListners.values().iterator();
+      Iterator i = requestListeners.values().iterator();
       while (i.hasNext())
       {
-         ITrunkListner rl = (ITrunkListner) i.next();
+         ITrunkListener rl = (ITrunkListener) i.next();
          rl.exceptionEvent(trunk, e);
       }
    }
 
-   public void requestEvent(ICommTrunk trunk, TunkRequest request)
+   public void requestEvent(ICommTrunk trunk, TrunkRequest request)
    {
       connectionManager.handleRequest(this, request);
       lastUsed = System.currentTimeMillis();
@@ -99,11 +99,11 @@ public abstract class AbstractClient implements ITrunkListner
          log.debug("ObjectName not set in the Invocation.");
          return;
       }
-      ITrunkListner rl = (ITrunkListner) requestListners.get(rlID);
+      ITrunkListener rl = (ITrunkListener) requestListeners.get(rlID);
       rl.requestEvent(trunk, request);
    }
 
-   public TrunkResponse synchRequest(TunkRequest request)
+   public TrunkResponse synchRequest(TrunkRequest request)
       throws IOException, InterruptedException, ClassNotFoundException
    {
       lastUsed = System.currentTimeMillis();
@@ -150,25 +150,25 @@ public abstract class AbstractClient implements ITrunkListner
       }
    }
 
-   public Integer addRequestListner(ITrunkListner rl)
+   public Integer addRequestListener(ITrunkListener rl)
    {
-      Integer requestListnerID = new Integer(requestListnerCounter++);
-      synchronized (requestListners)
+      Integer requestListenerID = new Integer(requestListenerCounter++);
+      synchronized (requestListeners)
       {
-         HashMap t = (HashMap) requestListners.clone();
-         t.put(requestListnerID, rl);
-         requestListners = t;
+         HashMap t = (HashMap) requestListeners.clone();
+         t.put(requestListenerID, rl);
+         requestListeners = t;
       }
-      return requestListnerID;
+      return requestListenerID;
    }
 
-   public void removeRequestListner(Integer requestListnerID)
+   public void removeRequestListener(Integer requestListenerID)
    {
-      synchronized (requestListners)
+      synchronized (requestListeners)
       {
-         HashMap t = (HashMap) requestListners.clone();
-         t.remove(requestListnerID);
-         requestListners = t;
+         HashMap t = (HashMap) requestListeners.clone();
+         t.remove(requestListenerID);
+         requestListeners = t;
       }
    }
 

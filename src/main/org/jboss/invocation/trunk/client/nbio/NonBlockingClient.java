@@ -66,7 +66,7 @@ public class NonBlockingClient extends AbstractClient
       trunk = new NonBlockingSocketTrunk(socket, selectorManager.getSelector());
       CommTrunkRamp ramp = new CommTrunkRamp(trunk, workManager);
       trunk.setCommTrunkRamp(ramp);
-      ramp.setTrunkListner(this);
+      ramp.setTrunkListener(this);
       
       if (tracing)
          log.trace("Connection established.");

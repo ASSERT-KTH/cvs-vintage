@@ -53,7 +53,7 @@ public class BlockingClient extends AbstractClient
       trunk = new BlockingSocketTrunk(socket, threadGroup);
       CommTrunkRamp ramp = new CommTrunkRamp(trunk, workManager);
       trunk.setCommTrunkRamp(ramp);
-      ramp.setTrunkListner(this);
+      ramp.setTrunkListener(this);
       
       if (tracing)
          log.trace("Connection established.");

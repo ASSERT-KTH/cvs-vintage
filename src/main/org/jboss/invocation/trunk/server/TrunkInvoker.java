@@ -29,11 +29,11 @@ import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.PayloadKey;
 import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
 import org.jboss.invocation.trunk.client.ICommTrunk;
-import org.jboss.invocation.trunk.client.ITrunkListner;
+import org.jboss.invocation.trunk.client.ITrunkListener;
 import org.jboss.invocation.trunk.client.ServerAddress;
 import org.jboss.invocation.trunk.client.TrunkInvokerProxy;
 import org.jboss.invocation.trunk.client.TrunkResponse;
-import org.jboss.invocation.trunk.client.TunkRequest;
+import org.jboss.invocation.trunk.client.TrunkRequest;
 import org.jboss.invocation.trunk.server.bio.BlockingServer;
 import org.jboss.logging.Logger;
 import org.jboss.naming.Util;
@@ -50,7 +50,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
-public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkListner, TrunkInvokerMBean
+public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkListener, TrunkInvokerMBean
 {
 
    /**
@@ -257,7 +257,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
 
    ////////////////////////////////////////////////////////////////////////
    //
-   // The following methods implement the TrunkListner interface
+   // The following methods implement the ITrunkListener interface
    //
    ////////////////////////////////////////////////////////////////////////
 
@@ -266,7 +266,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
       log.debug(trunk.toString() + " disconnected: " + e);
    }
 
-   public void requestEvent(ICommTrunk trunk, TunkRequest request)
+   public void requestEvent(ICommTrunk trunk, TrunkRequest request)
    {
       if (log.isTraceEnabled())
          log.trace("Request: " + request);

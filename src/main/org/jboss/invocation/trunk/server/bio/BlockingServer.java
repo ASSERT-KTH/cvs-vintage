@@ -92,7 +92,7 @@ public final class BlockingServer implements java.lang.Runnable, IServer
    public void start() throws IOException
    {
       running = true;
-      new Thread(threadGroup, this, "OI Service Listner").start();
+      new Thread(threadGroup, this, "OI Service Listener").start();
    }
 
    public void stop() throws IOException
@@ -145,14 +145,14 @@ public final class BlockingServer implements java.lang.Runnable, IServer
             {
 
                if (log.isTraceEnabled())
-                  log.trace("Initializing RequestListner for socket: " + socket);
+                  log.trace("Initializing RequestListener for socket: " + socket);
 
                socket.setTcpNoDelay(enableTcpNoDelay);
 
                BlockingSocketTrunk trunk = new BlockingSocketTrunk(socket, threadGroup);
                CommTrunkRamp trunkRamp = new CommTrunkRamp(trunk, workManager);
                trunk.setCommTrunkRamp(trunkRamp);
-               trunkRamp.setTrunkListner(optimizedInvoker);
+               trunkRamp.setTrunkListener(optimizedInvoker);
                trunk.start();
 
             }

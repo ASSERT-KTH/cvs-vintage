@@ -23,7 +23,7 @@ import org.jboss.invocation.trunk.client.CommTrunkRamp;
 import org.jboss.invocation.trunk.client.Compression;
 import org.jboss.invocation.trunk.client.ICommTrunk;
 import org.jboss.invocation.trunk.client.TrunkResponse;
-import org.jboss.invocation.trunk.client.TunkRequest;
+import org.jboss.invocation.trunk.client.TrunkRequest;
 import org.jboss.logging.Logger;
 
 /**
@@ -143,7 +143,7 @@ public class BlockingSocketTrunk implements Runnable, ICommTrunk
     * @return               Description of the Returned Value
     * @exception Exception  Description of Exception
     */
-   public void sendRequest(TunkRequest request) throws IOException
+   public void sendRequest(TrunkRequest request) throws IOException
    {
       if (log.isTraceEnabled())
          log.trace("Sending request: " + request);
@@ -286,7 +286,7 @@ public class BlockingSocketTrunk implements Runnable, ICommTrunk
             if (code == REQUEST_MESSAGE || code == REQUEST_MESSAGE_COMPRESSED)
             {
                // Request received... pass it up
-               TunkRequest newRequest = new TunkRequest();
+               TrunkRequest newRequest = new TrunkRequest();
                newRequest.deserialize(data);
                trunkRamp.deliverTrunkRequest(newRequest);
             }

@@ -120,7 +120,7 @@ public final class NonBlockingServer implements IServer
             NonBlockingSocketTrunk trunk = new NonBlockingSocketTrunk(client, selectorManager.getSelector());
             CommTrunkRamp trunkRamp = new CommTrunkRamp(trunk, workManager);
             trunk.setCommTrunkRamp(trunkRamp);
-            trunkRamp.setTrunkListner(optimizedInvoker);
+            trunkRamp.setTrunkListener(optimizedInvoker);
             trunk.start();
 
          }

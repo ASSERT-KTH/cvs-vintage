@@ -36,19 +36,19 @@ public final class TrunkInvokerProxy implements java.io.Serializable, Invoker
 
    public String getServerHostName() throws Exception
    {
-      TunkRequest request = new TunkRequest();
+      TrunkRequest request = new TrunkRequest();
       request.setOpServerHostName();
       return (String) issue(request);
    }
 
    public Object invoke(Invocation invocation) throws Exception
    {
-      TunkRequest request = new TunkRequest();
+      TrunkRequest request = new TrunkRequest();
       request.setOpInvoke(invocation);
       return issue(request);
    }
 
-   public Object issue(TunkRequest request) throws Exception
+   public Object issue(TrunkRequest request) throws Exception
    {
       checkConnection();
       TrunkResponse response;
@@ -85,15 +85,15 @@ public final class TrunkInvokerProxy implements java.io.Serializable, Invoker
       }
    }
 
-   public Integer addRequestListner(ITrunkListner rl) throws RemoteException
+   public Integer addRequestListener(ITrunkListener rl) throws RemoteException
    {
       checkConnection();
-      return connection.addRequestListner(rl);
+      return connection.addRequestListener(rl);
    }
 
-   public void removeRequestListner(Integer requestListnerID) throws RemoteException
+   public void removeRequestListener(Integer requestListenerID) throws RemoteException
    {
       checkConnection();
-      connection.removeRequestListner(requestListnerID);
+      connection.removeRequestListener(requestListenerID);
    }
 }

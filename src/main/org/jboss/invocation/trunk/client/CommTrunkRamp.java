@@ -65,7 +65,7 @@ public final class CommTrunkRamp implements java.lang.Cloneable
     * The request listner is notified of new requests
     * and of asyncronous IO errors.
     */
-   ITrunkListner trunkListner;
+   ITrunkListener trunkListener;
 
    /**
     * The Trunk that this ramp is attached to.
@@ -124,7 +124,7 @@ public final class CommTrunkRamp implements java.lang.Cloneable
    /**
     * #Description of the Method
     */
-   private void registerResponseSlot(TunkRequest request, Slot responseSlot) throws IOException
+   private void registerResponseSlot(TrunkRequest request, Slot responseSlot) throws IOException
    {
       synchronized (responseSlotsMutex)
       {
@@ -138,12 +138,12 @@ public final class CommTrunkRamp implements java.lang.Cloneable
    /**
     * #Description of the Method
     */
-   public void setTrunkListner(ITrunkListner requestListner)
+   public void setTrunkListener(ITrunkListener requestListener)
    {
-      this.trunkListner = requestListner;
+      this.trunkListener = requestListener;
    }
 
-   public TrunkResponse synchRequest(TunkRequest request)
+   public TrunkResponse synchRequest(TrunkRequest request)
       throws IOException, InterruptedException, ClassNotFoundException
    {
 
@@ -159,7 +159,7 @@ public final class CommTrunkRamp implements java.lang.Cloneable
 
    public void exceptionEvent(Exception e)
    {
-      trunkListner.exceptionEvent(trunk, e);
+      trunkListener.exceptionEvent(trunk, e);
    }
 
 
@@ -205,7 +205,7 @@ public final class CommTrunkRamp implements java.lang.Cloneable
     * The Trunk should deliver requests to the Ramp via this 
     * method.
     */
-   public void deliverTrunkRequest(TunkRequest request) throws InterruptedException, WorkException
+   public void deliverTrunkRequest(TrunkRequest request) throws InterruptedException, WorkException
    {
       //Could use explicit ExecutionContext for tx etc.
       workManager.scheduleWork(new RequestRunner(request));
@@ -215,15 +215,15 @@ public final class CommTrunkRamp implements java.lang.Cloneable
 
    public class RequestRunner implements Work
    {
-      TunkRequest request;
-      RequestRunner(TunkRequest request)
+      TrunkRequest request;
+      RequestRunner(TrunkRequest request)
       {
          this.request = request;
       }
 
       public void run()
       {
-         trunkListner.requestEvent(trunk, request);
+         trunkListener.requestEvent(trunk, request);
       }
 
       public void release()
