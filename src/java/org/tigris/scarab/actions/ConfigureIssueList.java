@@ -46,18 +46,22 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.List;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
 import org.apache.torque.om.NumberKey;
+import org.apache.torque.util.Criteria;
 import org.apache.turbine.tool.IntakeTool;
+import org.apache.turbine.ParameterParser;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 
 // Scarab Stuff
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.RModuleUserAttribute;
 import org.tigris.scarab.om.RModuleUserAttributePeer;
 import org.tigris.scarab.om.ScarabUser;
@@ -70,7 +74,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.7 2001/09/12 20:55:56 elicia Exp $
+    @version $Id: ConfigureIssueList.java,v 1.8 2001/09/13 23:52:14 elicia Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -80,47 +84,55 @@ public class ConfigureIssueList extends RequireLoginFirstAction
     {
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
-        String userId = data.getParameters().getString("user_id");
         String moduleId = data.getParameters().getString("module_id");
+        String userId = data.getParameters().getString("user_id");
+
         ModuleEntity module = (ModuleEntity) ScarabModulePeer
                         .retrieveByPK(new NumberKey(moduleId));
         ScarabUser user = (ScarabUser) ScarabUserImplPeer
                           .retrieveByPK(new NumberKey(userId));
+
         RModuleUserAttribute mua = null;
 
-        Attribute[] activeAttributes  = module.getActiveAttributes();
-        for (int i=0; i < activeAttributes.length; i++)
+        // Delete current attribute selections for user
+        Criteria crit = new Criteria();
+        crit.add(RModuleUserAttributePeer.USER_ID, userId);
+        List currentAttributes = RModuleUserAttributePeer.doSelect(crit);
+        for (int i =0; i<currentAttributes.size(); i++)
         {
-            Attribute attribute = (Attribute)activeAttributes[i];
-            NumberKey attributeId =  attribute.getAttributeId();
-            String queryKey = moduleId + ":" + userId + ":" 
-                              + attribute.getAttributeId().toString();
-            Group group = intake.get("RModuleUserAttribute", queryKey, false);
-
-            // If the user selected the attribute, add or update the record.
-            if (group.get("Selected").toString().equals("on"))
+            try
             {
+                mua = RModuleUserAttributePeer
+                      .retrieveByPK(new NumberKey(moduleId), 
+                      new NumberKey(userId), new NumberKey(((RModuleUserAttribute)
+                      currentAttributes.get(i)).getAttributeId()));
+                mua.delete();
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
+        }
+
+        // Add user's new selection of attributes
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        for (int i =0; i<keys.length; i++)
+        {
+            String key = keys[i].toString();
+            if (key.startsWith("selected_"))
+            {
+                NumberKey attributeId =  new NumberKey(key.substring(9));
+                String queryKey = moduleId + ":" + userId + ":" 
+                                  + attributeId.toString();
+                Group group = intake.get("RModuleUserAttribute", queryKey, false);
+                
                 mua = user.getModuleUserAttribute
                          (new NumberKey(moduleId), attributeId);
                 Field order = group.get("Order");
                 order.setProperty(mua);
                 mua.save();
             }
-            // Otherwise, if user un-selected it, delete record.
-            else
-            {
-                try
-                {
-                    mua = RModuleUserAttributePeer
-                          .retrieveByPK(new NumberKey(moduleId), 
-                          new NumberKey(userId), new NumberKey(attributeId));
-                    mua.delete();
-                }
-                catch (Exception e)
-                {
-                    // ignored
-                }
-             }
         }
 
         String template = data.getParameters()
