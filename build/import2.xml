@@ -3,11 +3,16 @@
 <!-- Scarab XML Import -->
 <project name="import" default="import" basedir=".">
 
+  <!-- Allow the user to have multiple configuration files and
+       specify them using -Dscarab.build.configuration=filename -->
+  <property name="configuration.file" value="build.properties"/> 
+
   <!-- Give user a chance to override without editing this file
-      (and without typing -D each time it compiles it -->
+       (and without using -D arguments each time they build) -->
   <property file="${user.home}/scarab.build.properties" /> 
   <property file="${user.home}/build.properties" />
-  <property file="${basedir}/build.properties" />
+  <property file="${basedir}/${configuration.file}" />
+  <property file="${basedir}/default.${scarab.database.type}.properties" />
   <property file="${basedir}/default.properties" />
 
   <property name="ImportScarabIssues.class" value="org.tigris.scarab.util.xmlissues.ImportScarabIssues"/>
