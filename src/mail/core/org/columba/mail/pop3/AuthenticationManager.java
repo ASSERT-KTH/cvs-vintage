@@ -56,12 +56,32 @@ public class AuthenticationManager {
 	}
 	
 	public static int compare(int code1, int code2) {
-		if( code1 == code2) return 0;
-
-		if( code1 < SASL ) code1 -= SASL - 1;
-		if( code2 < SASL ) code2 -= SASL - 1;
+		// We compare three classes: plain, md5 and popbeforesmtp
+		int a = 1;
 		
-		if( code1 < code2 ) return -1;
+		if( code1 == SASL_DIGEST_MD5 || code1 == APOP) {
+			a = 2;
+		}
+		
+		if( code1 == POP_BEFORE_SMTP) {
+			a = 0;
+		}
+		
+		
+		int b = 1;
+		
+		if( code2 == SASL_DIGEST_MD5 || code2 == APOP) {
+			b = 2;
+		}
+		
+		if( code2 == POP_BEFORE_SMTP) {
+			b = 0;
+		}
+
+		
+		
+		if( a==b ) return 0;
+		if( a < b ) return -1;
 		else return 1;		
 	}
 	

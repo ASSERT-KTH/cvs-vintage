@@ -67,376 +67,415 @@ import org.columba.ristretto.smtp.SMTPProtocol;
  */
 public class SMTPServer {
 
-    private static final int CLOSED = 0;
+	private static final int CLOSED = 0;
 
-    private static final int CONNECTED = 1;
+	private static final int CONNECTED = 1;
 
-    private static final int AUTHENTICTED = 2;
+	private static final int AUTHENTICTED = 2;
 
-    private String[] capas;
+	private String[] capas;
 
-    protected SMTPProtocol protocol;
+	protected SMTPProtocol protocol;
 
-    protected AccountItem accountItem;
-    
-    protected Identity identity;
-    
-    protected String fromAddress;
+	protected AccountItem accountItem;
 
-    private int state;
-    
-    private boolean usingSSL;
+	protected Identity identity;
 
-    /**
-     * Constructor for SMTPServer.
-     */
-    public SMTPServer(AccountItem accountItem) {
-        super();
+	protected String fromAddress;
 
-        this.accountItem = accountItem;
+	private int state;
 
-        identity = accountItem.getIdentity();
-        state = CLOSED;
-        
-    }
+	private boolean usingSSL;
 
-    private void ensureConnected() throws IOException, SMTPException {
-    	if( state < CONNECTED) {
-            // initialise protocol layer
-            SmtpItem smtpItem = accountItem.getSmtpItem();
-            String host = smtpItem.get("host");
-    		
-            protocol = new SMTPProtocol(host, smtpItem.getInteger("port"));
+	/**
+	 * Constructor for SMTPServer.
+	 */
+	public SMTPServer(AccountItem accountItem) {
+		super();
 
-            // Start login procedure
-            protocol.openPort();
-            
-            initialize();
-    	}
-    }
+		this.accountItem = accountItem;
 
-    /**
-     * Open connection to SMTP server and login if needed.
-     * 
-     * @return true if connection was successful, false otherwise
-     */
-    public boolean openConnection() throws IOException, SMTPException,
-            CommandCancelledException {
-        String username;
-        char[] password;
-        boolean savePassword;
+		identity = accountItem.getIdentity();
+		state = CLOSED;
 
-        // Init Values
-        // user's email address
-        fromAddress = identity.getAddress().getMailAddress();
+	}
 
-        // POP3 server host name
-        SmtpItem smtpItem = accountItem.getSmtpItem();
+	private void ensureConnected() throws IOException, SMTPException {
+		if (state < CONNECTED) {
+			// initialise protocol layer
+			SmtpItem smtpItem = accountItem.getSmtpItem();
+			String host = smtpItem.get("host");
 
-        // Sent Folder
-        SpecialFoldersItem specialFoldersItem = accountItem
-                .getSpecialFoldersItem();
-        Integer i = new Integer(specialFoldersItem.get("sent"));
-        int sentFolder = i.intValue();
+			protocol = new SMTPProtocol(host, smtpItem.getInteger("port"));
 
-        usingSSL = smtpItem.getBoolean("enable_ssl");
-        int authMethod = getLoginMethod();
-        
-        boolean authenticated = (authMethod == AuthenticationManager.NONE);
+			// Start login procedure
+			protocol.openPort();
 
-        if (authMethod == AuthenticationManager.POP_BEFORE_SMTP) {
-            // no esmtp - use POP3-before-SMTP instead
-            try {
-                pop3Authentification();
-            } catch (POP3Exception e) {
-                throw new SMTPException(e);
-            }
+			initialize();
 
-            authenticated = true;
-        }
-        
-        ensureConnected();
+			state = CONNECTED;
+		}
+	}
 
-        if (smtpItem.getBoolean("enable_ssl")) {
-            if (isSupported("STARTTLS")) {
-                try {
-                    protocol.startTLS();
-                    usingSSL = true;
-                } catch (Exception e) {
-                    Object[] options = new String[] {
-                            MailResourceLoader.getString("", "global", "ok")
-                                    .replaceAll("&", ""),
-                            MailResourceLoader
-                                    .getString("", "global", "cancel")
-                                    .replaceAll("&", "")};
+	/**
+	 * Open connection to SMTP server and login if needed.
+	 * 
+	 * @return true if connection was successful, false otherwise
+	 */
+	public void openConnection() throws IOException, SMTPException,
+			CommandCancelledException {
+		String username;
+		char[] password;
+		boolean savePassword;
 
-                    int result = JOptionPane.showOptionDialog(null,
-                            MailResourceLoader.getString("dialog", "error",
-                                    "ssl_handshake_error")
-                                    + ": "
-                                    + e.getLocalizedMessage()
-                                    + "\n"
-                                    + MailResourceLoader.getString("dialog",
-                                            "error", "ssl_turn_off"),
-                            "Warning", JOptionPane.DEFAULT_OPTION,
-                            JOptionPane.WARNING_MESSAGE, null, options,
-                            options[0]);
+		// Init Values
+		// user's email address
+		fromAddress = identity.getAddress().getMailAddress();
 
-                    if (result == 1) { throw new CommandCancelledException(); }
+		// POP3 server host name
+		SmtpItem smtpItem = accountItem.getSmtpItem();
 
-                    // turn off SSL for the future
-                    smtpItem.set("enable_ssl", false);
+		// Sent Folder
+		SpecialFoldersItem specialFoldersItem = accountItem
+				.getSpecialFoldersItem();
+		Integer i = new Integer(specialFoldersItem.get("sent"));
+		int sentFolder = i.intValue();
 
-                    protocol.openPort();
+		usingSSL = smtpItem.getBoolean("enable_ssl");
+		int authMethod = getLoginMethod();
 
-                    initialize();
-                }
-            } else {
-                Object[] options = new String[] {
-                        MailResourceLoader.getString("", "global", "ok")
-                                .replaceAll("&", ""),
-                        MailResourceLoader.getString("", "global", "cancel")
-                                .replaceAll("&", "")};
-                int result = JOptionPane.showOptionDialog(null,
-                        MailResourceLoader.getString("dialog", "error",
-                                "ssl_not_supported")
-                                + "\n"
-                                + MailResourceLoader.getString("dialog",
-                                        "error", "ssl_turn_off"), "Warning",
-                        JOptionPane.DEFAULT_OPTION,
-                        JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+		boolean authenticated = (authMethod == AuthenticationManager.NONE);
 
-                if (result == 1) { throw new CommandCancelledException(); }
+		if (authMethod == AuthenticationManager.POP_BEFORE_SMTP) {
+			// no esmtp - use POP3-before-SMTP instead
+			try {
+				pop3Authentification();
+			} catch (POP3Exception e) {
+				throw new SMTPException(e);
+			}
 
-                // turn off SSL for the future
-                smtpItem.set("enable_ssl", false);
-            }
-        }
+			authenticated = true;
+		}
 
-        if (!authenticated) {
-            username = smtpItem.get("user");
-            password = smtpItem.getRoot().getAttribute("password", "")
-                    .toCharArray();
-            savePassword = accountItem.getSmtpItem()
-                    .getBoolean("save_password");
+		ensureConnected();
 
-            if (username.length() == 0) {
-                // there seems to be no username set in the smtp-options
-                //  -> use username from pop3 or imap options
-                if (accountItem.isPopAccount()) {
-                    PopItem pop3Item = accountItem.getPopItem();
-                    username = pop3Item.get("user");
-                } else {
-                    ImapItem imapItem = accountItem.getImapItem();
-                    username = imapItem.get("user");
-                }
-            }
+		if (smtpItem.getBoolean("enable_ssl")) {
+			if (isSupported("STARTTLS")) {
+				try {
+					protocol.startTLS();
+					usingSSL = true;
+				} catch (Exception e) {
+					Object[] options = new String[] {
+							MailResourceLoader.getString("", "global", "ok")
+									.replaceAll("&", ""),
+							MailResourceLoader
+									.getString("", "global", "cancel")
+									.replaceAll("&", "") };
 
-            PasswordDialog passDialog = new PasswordDialog();
+					int result = JOptionPane.showOptionDialog(null,
+							MailResourceLoader.getString("dialog", "error",
+									"ssl_handshake_error")
+									+ ": "
+									+ e.getLocalizedMessage()
+									+ "\n"
+									+ MailResourceLoader.getString("dialog",
+											"error", "ssl_turn_off"),
+							"Warning", JOptionPane.DEFAULT_OPTION,
+							JOptionPane.WARNING_MESSAGE, null, options,
+							options[0]);
 
-            // ask password from user
-            if (password.length == 0) {
-                passDialog.showDialog(username, accountItem.getSmtpItem().get(
-                        "host"), new String(password), savePassword);
-
-                if (passDialog.success()) {
-                    password = passDialog.getPassword();
-                    savePassword = passDialog.getSave();
-                } else {
-                    return false;
-                }
-            }
-
-            // try to authenticate
-            while (!authenticated) {
-                try {
-                    protocol.auth(AuthenticationManager.getSaslName(authMethod), username, password);
-                    authenticated = true;
-                } catch (AuthenticationException e) {
-					// Some error in the client/server communication
-					//  --> fall back to default login process
-					int result = JOptionPane.showConfirmDialog(MainInterface.frameModel.getActiveFrame(),
-						    new MultiLineLabel( e.getMessage() + "\n" + MailResourceLoader.getString("dialog", "error",
-							"authentication_fallback_to_default")), MailResourceLoader.getString("dialog", "error",
-							"authentication_process_error"), JOptionPane.OK_CANCEL_OPTION);
-					
-					if( result == JOptionPane.OK_OPTION ) {
-						authMethod = AuthenticationManager.SASL_PLAIN;
-						smtpItem.set("login_method", Integer.toString(authMethod));
-					}	else {
+					if (result == 1) {
 						throw new CommandCancelledException();
-					}					
-				} catch (SMTPException e) {
-                    passDialog.showDialog(username, smtpItem.get("host"),
-                            new String(password), savePassword);
+					}
 
-                    if (!passDialog.success()) {
-                        return false;
-                    } else {
-                        password = passDialog.getPassword();
-                        savePassword = passDialog.getSave();
-                    }
-                }
-            }
+					// turn off SSL for the future
+					smtpItem.set("enable_ssl", false);
 
-            // authentication was successful
-            // -> save name/password
-            smtpItem.set("user", username);
-            smtpItem.set("save_password", savePassword);
-            if (savePassword) {
-                smtpItem.set("password", new String(password));
-            }
-        }
+					protocol.openPort();
 
-        return true;
-    }
-
-    /**
-     * @param string
-     * @return
-     */
-    private boolean isSupported(String string) {
-        for (int i = 0; i < capas.length; i++) {
-            if (capas[i].startsWith(string)) { return true; }
-        }
-
-        return false;
-    }
-
-    /**
-     * @return
-     */
-    public List checkSupportedAuthenticationMethods() throws IOException, SMTPException {
-    	ensureConnected();
-    	
-    	List supportedMechanisms = new ArrayList();
-
-        for (int i = 0; i < capas.length; i++) {
-            if (capas[i].startsWith("AUTH")) {
-				List authMechanisms = AuthenticationFactory.getInstance().getSupportedMechanisms(capas[i]);
-				Iterator it = authMechanisms.iterator();
-				while( it.hasNext() ) {
-					supportedMechanisms.add(new Integer(AuthenticationManager.getSaslCode((String)it.next())));
+					initialize();
 				}
-				
+			} else {
+				Object[] options = new String[] {
+						MailResourceLoader.getString("", "global", "ok")
+								.replaceAll("&", ""),
+						MailResourceLoader.getString("", "global", "cancel")
+								.replaceAll("&", "") };
+				int result = JOptionPane.showOptionDialog(null,
+						MailResourceLoader.getString("dialog", "error",
+								"ssl_not_supported")
+								+ "\n"
+								+ MailResourceLoader.getString("dialog",
+										"error", "ssl_turn_off"), "Warning",
+						JOptionPane.DEFAULT_OPTION,
+						JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+
+				if (result == 1) {
+					throw new CommandCancelledException();
+				}
+
+				// turn off SSL for the future
+				smtpItem.set("enable_ssl", false);
+			}
+		}
+
+		if (!authenticated) {
+			username = smtpItem.get("user");
+			password = smtpItem.getRoot().getAttribute("password", "")
+					.toCharArray();
+			savePassword = accountItem.getSmtpItem()
+					.getBoolean("save_password");
+
+			if (username.length() == 0) {
+				// there seems to be no username set in the smtp-options
+				//  -> use username from pop3 or imap options
+				if (accountItem.isPopAccount()) {
+					PopItem pop3Item = accountItem.getPopItem();
+					username = pop3Item.get("user");
+				} else {
+					ImapItem imapItem = accountItem.getImapItem();
+					username = imapItem.get("user");
+				}
+			}
+
+			PasswordDialog passDialog = new PasswordDialog();
+
+			// ask password from user
+			if (password.length == 0) {
+				passDialog.showDialog(username, accountItem.getSmtpItem().get(
+						"host"), new String(password), savePassword);
+
+				if (passDialog.success()) {
+					password = passDialog.getPassword();
+					savePassword = passDialog.getSave();
+				} else {
+					throw new CommandCancelledException();
+				}
+			}
+
+			// try to authenticate
+			while (!authenticated) {
+				try {
+					try {
+						protocol.auth(AuthenticationManager
+								.getSaslName(authMethod), username, password);
+						authenticated = true;
+					} catch (AuthenticationException e) {
+						// If the cause is a IMAPExcpetion then only password
+						// wrong
+						// else bogus authentication mechanism
+						if (e.getCause() instanceof SMTPException)
+							throw (SMTPException) e.getCause();
+
+						// Some error in the client/server communication
+						//  --> fall back to default login process
+						int result = JOptionPane
+								.showConfirmDialog(
+										MainInterface.frameModel
+												.getActiveFrame(),
+										new MultiLineLabel(
+												e.getMessage()
+														+ "\n"
+														+ MailResourceLoader
+																.getString(
+																		"dialog",
+																		"error",
+																		"authentication_fallback_to_default")),
+										MailResourceLoader.getString("dialog",
+												"error",
+												"authentication_process_error"),
+										JOptionPane.OK_CANCEL_OPTION);
+
+						if (result == JOptionPane.OK_OPTION) {
+							authMethod = AuthenticationManager.SASL_PLAIN;
+							smtpItem.set("login_method", Integer
+									.toString(authMethod));
+						} else {
+							throw new CommandCancelledException();
+						}
+					}
+				} catch (SMTPException e) {
+					passDialog.showDialog(username, smtpItem.get("host"),
+							new String(password), savePassword);
+
+					if (!passDialog.success()) {
+						throw new CommandCancelledException();
+					} else {
+						password = passDialog.getPassword();
+						savePassword = passDialog.getSave();
+					}
+				}
+			}
+
+			// authentication was successful
+			// -> save name/password
+			smtpItem.set("user", username);
+			smtpItem.set("save_password", savePassword);
+			if (savePassword) {
+				smtpItem.set("password", new String(password));
+			}
+		}
+	}
+
+	/**
+	 * @param string
+	 * @return
+	 */
+	private boolean isSupported(String string) {
+		for (int i = 0; i < capas.length; i++) {
+			if (capas[i].startsWith(string)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return
+	 */
+	public List checkSupportedAuthenticationMethods() throws IOException,
+			SMTPException {
+		ensureConnected();
+
+		List supportedMechanisms = new ArrayList();
+
+		for (int i = 0; i < capas.length; i++) {
+			if (capas[i].startsWith("AUTH")) {
+				List authMechanisms = AuthenticationFactory.getInstance()
+						.getSupportedMechanisms(capas[i]);
+				Iterator it = authMechanisms.iterator();
+				while (it.hasNext()) {
+					supportedMechanisms.add(new Integer(AuthenticationManager
+							.getSaslCode((String) it.next())));
+				}
+
 				break;
-            }
-        }
+			}
+		}
 
+		return supportedMechanisms;
+	}
 
-        return supportedMechanisms;
-    }
- 
-    private void initialize() throws IOException, SMTPException {
-        try {
-            capas = protocol.ehlo(InetAddress.getLocalHost());
-        } catch (SMTPException e1) {
-            // EHLO not supported -> AUTH not supported
-            protocol.helo(InetAddress.getLocalHost());
-            capas = new String[] {};
-        }
-    }
+	private void initialize() throws IOException, SMTPException {
+		try {
+			capas = protocol.ehlo(InetAddress.getLocalHost());
+		} catch (SMTPException e1) {
+			// EHLO not supported -> AUTH not supported
+			protocol.helo(InetAddress.getLocalHost());
+			capas = new String[] {};
+		}
+	}
 
-    /**
-     * @param authType
-     * @return
-     */
-    private int getLoginMethod() throws IOException, SMTPException {
-        String authType = accountItem.getSmtpItem().get("login_method");
-        int method = 0;
-        
-       	try {
+	/**
+	 * @param authType
+	 * @return
+	 */
+	private int getLoginMethod() throws IOException, SMTPException {
+		String authType = accountItem.getSmtpItem().get("login_method");
+		int method = 0;
+
+		try {
 			method = Integer.parseInt(authType);
 		} catch (NumberFormatException e) {
 			//Fallback to Securest Login method
 		}
-		
-		if( method == 0 ) {
+
+		if (method == 0) {
 			List supported = checkSupportedAuthenticationMethods();
-			
-			if( usingSSL ) {
+
+			if (accountItem.isPopAccount()) {
+				supported
+						.add(new Integer(AuthenticationManager.POP_BEFORE_SMTP));
+			}
+
+			if (supported.size() == 0) {
+				// No Authentication available
+				return AuthenticationManager.NONE;
+			}
+
+			if (usingSSL) {
 				// NOTE if SSL is possible we just need the plain login
 				// since SSL does the encryption for us.
-				method = ((Integer)supported.get(0)).intValue();
+				method = ((Integer) supported.get(0)).intValue();
 			} else {
-				Collections.sort(supported, new AuthenticationSecurityComparator());
-				method = ((Integer)supported.get(supported.size()-1)).intValue();
+				Collections.sort(supported,
+						new AuthenticationSecurityComparator());
+				method = ((Integer) supported.get(supported.size() - 1))
+						.intValue();
 			}
 		}
-        
+
 		return method;
-    }
+	}
 
-    /**
-     * 
-     * close the connection to the SMTP server
-     *  
-     */
-    public void closeConnection() {
-        // Close Port
-        try {
-            protocol.quit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	/**
+	 * 
+	 * close the connection to the SMTP server
+	 *  
+	 */
+	public void closeConnection() {
+		// Close Port
+		try {
+			protocol.quit();
 
-    /**
-     * 
-     * POP-before-SMTP authentication makes use of the POP3 authentication
-     * mechanism, before sending mail.
-     * 
-     * Basically you authenticate with the POP3 server, which allows you to use
-     * the SMTP server for sending mail for a specific amount of time.
-     * 
-     * @throws Exception
-     */
-    protected void pop3Authentification() throws IOException, POP3Exception,
-            CommandCancelledException {
-        POP3Store.doPOPbeforeSMTP(accountItem.getPopItem());
-    }
+			state = CLOSED;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-    /**
-     * Send a message
-     * 
-     * For an complete example of creating a <class>SendableMessage </class>
-     * object see <class>MessageComposer </class>
-     * 
-     * @param message
-     * @param workerStatusController
-     * @throws Exception
-     */
-    public void sendMessage(SendableMessage message,
-            WorkerStatusController workerStatusController)
-            throws SMTPException, IOException {
-        // send from address and recipient list to SMTP server
-        // ->all addresses have to be normalized
-        protocol.mail(identity.getAddress());
+	/**
+	 * 
+	 * POP-before-SMTP authentication makes use of the POP3 authentication
+	 * mechanism, before sending mail.
+	 * 
+	 * Basically you authenticate with the POP3 server, which allows you to use
+	 * the SMTP server for sending mail for a specific amount of time.
+	 * 
+	 * @throws Exception
+	 */
+	protected void pop3Authentification() throws IOException, POP3Exception,
+			CommandCancelledException {
+		POP3Store.doPOPbeforeSMTP(accountItem.getPopItem());
+	}
 
-        Iterator recipients = message.getRecipients().iterator();
+	/**
+	 * Send a message
+	 * 
+	 * For an complete example of creating a <class>SendableMessage </class>
+	 * object see <class>MessageComposer </class>
+	 * 
+	 * @param message
+	 * @param workerStatusController
+	 * @throws Exception
+	 */
+	public void sendMessage(SendableMessage message,
+			WorkerStatusController workerStatusController)
+			throws SMTPException, IOException {
+		// send from address and recipient list to SMTP server
+		// ->all addresses have to be normalized
+		protocol.mail(identity.getAddress());
 
-        while (recipients.hasNext()) {
-            try {
-                protocol.rcpt(Address.parse((String) recipients.next()));
-            } catch (ParserException e1) {
-                // the mail address is in a bogus format
-            	//TODO: show error/warning? dialog. see below
-            	
-            } catch (SMTPException e1) {
-            	//TODO: present the user with the choice to end the send
-            	// progress by throwing a CommandCancelledException or
-            	// continue without sending to the this address
-            }
-        }
+		Iterator recipients = message.getRecipients().iterator();
 
-        // now send message source
-        protocol.data(new ProgressObservedInputStream( message.getSourceStream(), workerStatusController));
-    }
+		while (recipients.hasNext()) {
+			try {
+				protocol.rcpt(Address.parse((String) recipients.next()));
+			} catch (ParserException e1) {
+				throw new SMTPException(e1);
+			}
+		}
 
-    public String getName() {
-        SmtpItem smtpItem = accountItem.getSmtpItem();
-        String host = smtpItem.get("host");
+		// now send message source
+		protocol.data(new ProgressObservedInputStream(
+				message.getSourceStream(), workerStatusController));
+	}
 
-        return host;
-    }
+	public String getName() {
+		SmtpItem smtpItem = accountItem.getSmtpItem();
+		String host = smtpItem.get("host");
+
+		return host;
+	}
 }

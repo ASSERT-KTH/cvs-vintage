@@ -502,6 +502,10 @@ public class IMAPServer {
 						// in
 						authenticated = true;
 					} catch (AuthenticationException e) {
+						// If the cause is a IMAPExcpetion then only password wrong
+						// else bogus authentication mechanism
+						if( e.getCause() instanceof IMAPException) throw (IMAPException) e.getCause();
+						
 						// Some error in the client/server communication
 						//  --> fall back to default login process
 						int result = JOptionPane.showConfirmDialog(MainInterface.frameModel.getActiveFrame(),

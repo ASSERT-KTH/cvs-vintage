@@ -37,14 +37,12 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.config.PopItem;
 import org.columba.mail.gui.config.account.IncomingServerPanel;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler;
 import org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter;
 import org.columba.mail.util.MailResourceLoader;
-
 import org.columba.ristretto.auth.AuthenticationException;
 import org.columba.ristretto.auth.AuthenticationFactory;
 import org.columba.ristretto.pop3.MessageNotOnServerException;
@@ -344,7 +342,19 @@ public class POP3Store {
                     protocol.userPass(popItem.get("user"), password);
                     login = true;
                 } else if (loginMethod == AuthenticationManager.APOP) {
-                    protocol.apop(popItem.get("user"), password);
+                    try {
+						protocol.apop(popItem.get("user"), password);
+					} catch (POP3Exception e1) {
+						// some server have a bogus apop
+						// try user/pass to check if the password is
+						// correct
+						protocol.userPass(popItem.get("user"), password);
+						
+						LOG.warning(popItem.get("host") + " : bogus APOP implementation -> falling back to USER/PASS.");
+						
+						// user/pass worked -> this is indeed
+						// a bogus server.
+					}
                     login = true;
                 } else {
                     try {
@@ -353,6 +363,10 @@ public class POP3Store {
                             popItem.get("user"), password);
                         login = true;
                     } catch (AuthenticationException e) {
+						// If the cause is a IMAPExcpetion then only password wrong
+						// else bogus authentication mechanism
+						if( e.getCause() instanceof POP3Exception) throw (POP3Exception) e.getCause();
+                    	
                         // Some error in the client/server communication
                         //  --> fall back to default login process
                         int result = JOptionPane.showConfirmDialog(

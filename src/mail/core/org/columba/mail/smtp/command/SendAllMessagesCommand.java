@@ -21,7 +21,6 @@ import java.util.Vector;
 import javax.swing.Action;
 
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
@@ -91,7 +90,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 
 		int actAccountUid = -1;
 		List sentList = new Vector();
-		boolean open = false;
+
 		SMTPServer smtpServer = null;
 		MessageFolder sentFolder = null;
 
@@ -114,24 +113,11 @@ public class SendAllMessagesCommand extends FolderCommand {
 				// open connection to SMTP server
 				smtpServer = new SMTPServer(accountItem);
 
-				open = smtpServer.openConnection();
+				smtpServer.openConnection();
 			}
+			smtpServer.sendMessage(message, worker);
 
-			// if success, send message
-			if (open) {
-				/*
-				 * try { smtpServer.sendMessage(message, worker);
-				 * 
-				 * sentList.add(message.getHeader().get("columba.uid")); } catch
-				 * (SMTPException e) { JOptionPane.showMessageDialog(null,
-				 * e.getMessage(), "Error while sending",
-				 * JOptionPane.ERROR_MESSAGE); }
-				 */
-
-				smtpServer.sendMessage(message, worker);
-
-				sentList.add(message.getHeader().get("columba.uid"));
-			}
+			sentList.add(message.getHeader().get("columba.uid"));
 		}
 
 		// we are done - clear status text with a delay
