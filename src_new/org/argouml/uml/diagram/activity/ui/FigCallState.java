@@ -1,4 +1,4 @@
-// $Id: FigCallState.java,v 1.1 2004/08/02 21:35:37 mvw Exp $
+// $Id: FigCallState.java,v 1.2 2004/08/03 16:40:52 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,10 @@
 package org.argouml.uml.diagram.activity.ui;
 
 
+import java.beans.PropertyVetoException;
+
 import org.tigris.gef.graph.GraphModel;
+import org.tigris.gef.presentation.FigText;
 
 
 /** Class to display graphics for a UML CallState in a diagram. 
@@ -77,4 +80,15 @@ public class FigCallState extends FigActionState {
         return figClone;
     }
         
+    /**
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#textEdited(org.tigris.gef.presentation.FigText)
+     */
+    protected void textEdited(FigText ft) throws PropertyVetoException {
+        /*if (ft == getNameFig() && this.getOwner() != null) {
+            //TODO: Write this function in ParserDisplay. Uncomment then. 
+            ParserDisplay.SINGLETON.parseCallActionState(ft.getText(), 
+                    this.getOwner());
+        } else*/
+        super.textEdited(ft);
+    } 
 } /* end class FigCallState */
