@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.38 2003/10/12 08:55:24 linus Exp $
+// $Id: GenericArgoMenuBar.java,v 1.39 2003/10/24 18:28:06 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,6 +46,7 @@ import org.argouml.ui.ActionSaveConfiguration;
 import org.argouml.ui.ActionSettings;
 import org.argouml.ui.Actions;
 import org.argouml.ui.ArgoJMenu;
+import org.argouml.ui.ZoomSliderButton;
 import org.argouml.ui.cmd.CmdSetPreferredSize;
 import org.argouml.ui.targetmanager.NavigateTargetBackAction;
 import org.argouml.ui.targetmanager.NavigateTargetForwardAction;
@@ -666,6 +667,7 @@ public class GenericArgoMenuBar extends JMenuBar
             _viewToolbar = new ToolBar("View Toolbar");
             _viewToolbar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
             _viewToolbar.add((Actions.Find));
+            _viewToolbar.add(new ZoomSliderButton());
         }
         return _viewToolbar;
     }
