@@ -23,16 +23,10 @@ import java.util.Vector;
 import org.gjt.sp.jedit.gui.OptionsDialog;
 
 /**
- * The interface between jEdit and a plugin.<p>
- *
- * This class obsoletes the <code>Plugin</code> interface from jEdit 2.0
- * and earlier. Its main advantage over the old system is the more flexible
- * menu bar setup code, and the fact that it is a class, rather than an
- * interface, which means methods can be added without breaking existing
- * plugins.
+ * The interface between jEdit and a plugin.
  *
  * @author Slava Pestov
- * @version $Id: EditPlugin.java,v 1.1 2001/09/02 05:37:20 spestov Exp $
+ * @version $Id: EditPlugin.java,v 1.2 2001/09/16 09:06:55 spestov Exp $
  * @since jEdit 2.1pre1
  */
 public abstract class EditPlugin
@@ -139,6 +133,11 @@ public abstract class EditPlugin
 			return classLoader;
 		}
 
+		public ActionSet getActions()
+		{
+			return actions;
+		}
+
 		public void addPlugin(EditPlugin plugin)
 		{
 			plugin.jar = JAR.this;
@@ -178,6 +177,7 @@ public abstract class EditPlugin
 		private String path;
 		private JARClassLoader classLoader;
 		private Vector plugins;
+		/*package-private*/ ActionSet actions;
 	}
 
 	// private members

@@ -43,7 +43,7 @@ import org.gjt.sp.util.Log;
  * from jEdit's global properties.
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.3 2001/09/10 12:12:50 spestov Exp $
+ * @version $Id: Buffer.java,v 1.4 2001/09/16 09:06:55 spestov Exp $
  */
 public class Buffer extends PlainDocument implements EBComponent
 {
@@ -72,6 +72,12 @@ public class Buffer extends PlainDocument implements EBComponent
 	 * @since jEdit 3.2pre4
 	 */
 	public static final String ENCODING = "encoding";
+
+	/**
+	 * This property is set to 'true' if the file has a trailing newline.
+	 * @since jEdit 4.0pre1
+	 */
+	public static final String TRAILING_EOL = "trailingEOL";
 
 	/**
 	 * Reloads settings from the properties. This should be called

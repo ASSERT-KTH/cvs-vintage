@@ -31,7 +31,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.1 2001/09/02 05:38:15 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.2 2001/09/16 09:06:55 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -447,11 +447,18 @@ public class BufferIORequest extends WorkRequest
 		if(bufferLength != 0)
 		{
 			char ch = sbuf.charAt(bufferLength - 1);
-			if(length >= 2 && ch == 0x1a /* DOS ^Z */
-				&& sbuf.charAt(bufferLength - 2) == '\n')
-				sbuf.setLength(bufferLength - 2);
-			else if(ch == '\n')
+			if(ch == 0x1a /* DOS ^Z */)
 				sbuf.setLength(bufferLength - 1);
+		}
+
+		if(bufferLength != 0)
+		{
+			char ch = sbuf.charAt(bufferLength - 1);
+			if(ch == '\n')
+			{
+				buffer.putBooleanProperty(Buffer.TRAILING_EOL,true);
+				sbuf.setLength(bufferLength - 1);
+			}
 		}
 
 		// to avoid having to deal with read/write locks and such,
@@ -685,7 +692,12 @@ public class BufferIORequest extends WorkRequest
 				lineSegment);
 			out.write(lineSegment.array,lineSegment.offset,
 				lineSegment.count);
-			out.write(newline);
+
+			if(i != map.getElementCount()
+				|| buffer.getBooleanProperty(Buffer.TRAILING_EOL))
+			{
+				out.write(newline);
+			}
 
 			if(++i % PROGRESS_INTERVAL == 0)
 				setProgressValue(i / PROGRESS_INTERVAL);

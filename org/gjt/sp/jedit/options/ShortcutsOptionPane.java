@@ -30,7 +30,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Key binding editor.
  * @author Slava Pestov
- * @version $Id: ShortcutsOptionPane.java,v 1.1 2001/09/02 05:37:49 spestov Exp $
+ * @version $Id: ShortcutsOptionPane.java,v 1.2 2001/09/16 09:06:55 spestov Exp $
  */
 public class ShortcutsOptionPane extends AbstractOptionPane
 {
@@ -98,11 +98,11 @@ public class ShortcutsOptionPane extends AbstractOptionPane
 		for(int i = 0; i < actions.length; i++)
 		{
 			EditAction action = actions[i];
-			if(action.isPluginAction() != pluginActions)
-				continue;
+			//if(action.isPluginAction() != pluginActions)
+			//	continue;
 
 			String name = action.getName();
-			String label = jEdit.getProperty(name + ".label");
+			String label = action.getLabel();
 			// Skip certain actions this way (ENTER, TAB)
 			if(label == null)
 				continue;

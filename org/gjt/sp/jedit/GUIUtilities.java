@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.3 2001/09/10 08:46:23 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.4 2001/09/16 09:06:55 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -181,7 +181,7 @@ public class GUIUtilities
 		{
 			action = jEdit.getAction(name);
 
-			label = jEdit.getProperty(name.concat(".label"));
+			label = action.getLabel();
 			if(label == null)
 				label = name;
 		}
@@ -275,7 +275,7 @@ public class GUIUtilities
 		{
 			action = jEdit.getAction(name);
 
-			label = jEdit.getProperty(name.concat(".label"));
+			label = action.getLabel();
 			if(label == null)
 				label = name;
 			else

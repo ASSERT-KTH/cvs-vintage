@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.2 2001/09/10 08:46:23 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.3 2001/09/16 09:06:55 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements DockableWindow,
 	EBComponent
@@ -163,11 +163,11 @@ public class HyperSearchResults extends JPanel implements DockableWindow,
 		{
 			public void run()
 			{
-				if(resultTreeRoot.getChildCount() == 1)
+				for(int i = 0; i < resultTreeRoot.getChildCount(); i++)
 				{
 					resultTree.expandPath(new TreePath(
 						((DefaultMutableTreeNode)
-						resultTreeRoot.getChildAt(0))
+						resultTreeRoot.getChildAt(i))
 						.getPath()));
 				}
 			}
@@ -240,17 +240,50 @@ public class HyperSearchResults extends JPanel implements DockableWindow,
 
 	class ResultCellRenderer extends DefaultTreeCellRenderer
 	{
+		Font plainFont, boldFont;
+
+		ResultCellRenderer()
+		{
+			plainFont = UIManager.getFont("Tree.font");
+			boldFont = new Font(plainFont.getName(),Font.BOLD,
+				plainFont.getSize());
+		}
+
 		public Component getTreeCellRendererComponent(JTree tree,
 			Object value, boolean sel, boolean expanded,
 			boolean leaf, int row, boolean hasFocus)
 		{
 			Component comp = super.getTreeCellRendererComponent(tree,value,sel,
 				expanded,leaf,row,hasFocus);
-			if (!(comp instanceof JLabel))
-				return comp;
-			JLabel label = (JLabel)comp;
-			label.setIcon(null);
-			return label;
+			setIcon(null);
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
+			if(node.getUserObject() instanceof String)
+			{
+				// file name
+				ResultCellRenderer.this.setFont(boldFont);
+				int count = node.getChildCount();
+				if(count == 1)
+				{
+					setText(jEdit.getProperty("hypersearch-results"
+						+ ".file-caption1",new Object[] {
+						node.getUserObject()
+						}));
+				}
+				else
+				{
+					setText(jEdit.getProperty("hypersearch-results"
+						+ ".file-caption",new Object[] {
+						node.getUserObject(),
+						new Integer(count)
+						}));
+				}
+			}
+			else
+			{
+				ResultCellRenderer.this.setFont(plainFont);
+			}
+
+			return this;
 		}
 	}
 }

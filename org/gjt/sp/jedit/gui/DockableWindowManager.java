@@ -32,7 +32,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.1 2001/09/02 05:37:39 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.2 2001/09/16 09:06:55 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -236,6 +236,7 @@ public class DockableWindowManager extends JPanel
 		Log.log(Log.DEBUG,this,"Removing " + name + " from "
 			+ entry.container);
 
+		jEdit.setBooleanProperty(name + ".auto-open",false);
 		entry.container.saveDockableWindow(entry.win);
 		entry.container.removeDockableWindow(entry.win);
 		windows.remove(name);
@@ -285,10 +286,12 @@ public class DockableWindowManager extends JPanel
 	 */
 	public void close()
 	{
-		Enumeration enum = windows.elements();
+		Enumeration enum = windows.keys();
 		while(enum.hasMoreElements())
 		{
-			Entry entry = (Entry)enum.nextElement();
+			String name = (String)enum.nextElement();
+			Entry entry = (Entry)windows.get(name);
+			jEdit.setBooleanProperty(name + ".auto-open",true);
 			entry.container.saveDockableWindow(entry.win);
 			entry.container.removeDockableWindow(entry.win);
 		}
