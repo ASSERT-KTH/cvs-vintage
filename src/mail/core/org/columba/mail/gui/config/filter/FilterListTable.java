@@ -21,49 +21,22 @@ import javax.swing.table.TableColumn;
 
 import org.columba.core.config.Config;
 import org.columba.mail.filter.FilterList;
-import org.columba.mail.gui.config.filter.util.FilterHeaderRenderer;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.core.main.MainInterface;
 
 class FilterListTable extends JTable {
 	private FilterListDataModel model;
 	private Config config;
-	private FilterList filterList;
 
 	public FilterListTable(FilterList filterList, ConfigFrame frame) {
-		super();
-		this.filterList = filterList;
+		super(new FilterListDataModel(filterList));
 		config = MainInterface.config;
-
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-		model = new FilterListDataModel(filterList);
-		//update();
-
-		setModel(model);
-
 		setShowGrid(false);
 		setIntercellSpacing(new java.awt.Dimension(0, 0));
-
-		TableColumn tc =
-			getColumn(
-				MailResourceLoader.getString(
-					"dialog",
-					"filter",
-					"enabled_tableheader"));
-		tc.setHeaderRenderer(new FilterHeaderRenderer());
-		tc.setMaxWidth(80);
-		tc.setMinWidth(80);
-
-		tc =
-			getColumn(
-				MailResourceLoader.getString(
-					"dialog",
-					"filter",
-					"description_tableheader"));
-		tc.setHeaderRenderer(new FilterHeaderRenderer());
-
-		sizeColumnsToFit(AUTO_RESIZE_NEXT_COLUMN);
+                TableColumn tc = getColumnModel().getColumn(1);
+                tc.setMaxWidth(80);
+                tc.setMinWidth(80);
 	}
 
 	public void update() {
