@@ -36,7 +36,7 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf</b>
@@ -424,11 +424,15 @@ public class StatefulSessionInstanceInterceptor
          {
             try
             {
+               ctx.pushInMethodFlag(EnterpriseContext.IN_AFTER_BEGIN);
                afterBegin.invoke(ctx.getInstance(), new Object[0]);
             }
             catch (Exception e)
             {
                log.error("failed to invoke afterBegin", e);
+            }
+            finally{
+               ctx.popInMethodFlag();
             }
          }
       }
@@ -445,12 +449,15 @@ public class StatefulSessionInstanceInterceptor
          {
             try
             {
-               
+               ctx.pushInMethodFlag(EnterpriseContext.IN_BEFORE_COMPLETION);
                beforeCompletion.invoke(ctx.getInstance(), new Object[0]);
             }
             catch (Exception e)
             {
                log.error("failed to invoke beforeCompletion", e);
+            }
+            finally{
+               ctx.popInMethodFlag();
             }
          }
       }
@@ -474,23 +481,22 @@ public class StatefulSessionInstanceInterceptor
                
                try
                {
-                  
+                  ctx.pushInMethodFlag(EnterpriseContext.IN_AFTER_COMPLETION);
                   if (status == Status.STATUS_COMMITTED)
                   {
-                     afterCompletion.invoke(ctx.getInstance(),
-                     new Object[]
-                     { Boolean.TRUE });
+                     afterCompletion.invoke(ctx.getInstance(), new Object[]{Boolean.TRUE});
                   }
                   else
                   {
-                     afterCompletion.invoke(ctx.getInstance(),
-                     new Object[]
-                     { Boolean.FALSE });
+                     afterCompletion.invoke(ctx.getInstance(), new Object[]{Boolean.FALSE});
                   }
                }
                catch (Exception e)
                {
                   log.error("failed to invoke afterCompletion", e);
+               }
+               finally{
+                  ctx.popInMethodFlag();
                }
             }
          }
