@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.49 2003/03/28 02:47:54 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.50 2003/03/28 21:29:41 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -490,7 +490,7 @@ public class OffsetManager
 			Anchor anchor = anchors;
 			for(;;)
 			{
-				if(anchor == null || anchor.physicalLine <= startLine)
+				if(anchor == null || anchor.physicalLine < startLine)
 					break;
 
 				anchor.physicalLine += numLines;
