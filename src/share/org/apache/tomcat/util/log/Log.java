@@ -106,7 +106,7 @@ public class Log {
     public static final int INFORMATION = 3;
     public static final int DEBUG = 4;
     
-    
+
     // name of the logger ( each logger has a unique name,
     // used as a key internally )
     private String logname;
@@ -221,6 +221,11 @@ public class Log {
     public void flush() {
 	if( logger!=null )
 	    logger.flush();
+    }
+
+    public int getLevel() {
+	if( logger==null ) return Log.DEBUG;
+	return logger.getVerbosityLevel();
     }
     
     // -------------------- Extra configuration stuff --------------------

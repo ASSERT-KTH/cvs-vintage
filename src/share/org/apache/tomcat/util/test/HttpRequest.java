@@ -63,7 +63,7 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
-import org.apache.tomcat.util.Base64;
+import org.apache.tomcat.util.buf.Base64;
 
 /**
  *  Part of GTest - defines a Http request. This tool gives a lot 

@@ -1,4 +1,8 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/collections/Attic/LRUCache.java,v 1.1 2001/02/20 03:14:10 costin Exp $
+ * $Revision: 1.1 $
+ * $Date: 2001/02/20 03:14:10 $
+ *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -56,25 +60,125 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-package org.apache.tomcat.util;
+package org.apache.tomcat.util.collections;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.text.*;
+import java.util.Hashtable;
 
-public class RecycleBufferedInputStream extends BufferedInputStream {
-    public RecycleBufferedInputStream( InputStream is ) {
-	super( is );
+/**
+ * This class implements a Generic LRU Cache
+ *
+ *
+ * @author Ignacio J. Ortega
+ *
+ */
+
+public class LRUCache
+{
+    class CacheNode
+    {
+
+        CacheNode prev;
+        CacheNode next;
+        Object value;
+        Object key;
+
+        CacheNode()
+        {
+        }
     }
 
-    public void setInputStream( InputStream is ) {
-	this.count=0;
-	this.in=is;
+
+    public LRUCache(int i)
+    {
+        currentSize = 0;
+        cacheSize = i;
     }
 
-    public void recycle() {
-	this.in=null;
-	this.count=0;
+    public Object get(Object key)
+    {
+        if(nodes == null)
+            return null;
+        CacheNode node = (CacheNode)nodes.get(key);
+        if(node != null)
+        {
+            moveToHead(node);
+            return node.value;
+        }
+        else
+        {
+            return null;
+        }
     }
+
+    public void put(Object key, Object value)
+    {
+        if(nodes == null)
+            nodes = new Hashtable(cacheSize);
+        CacheNode node = (CacheNode)nodes.get(key);
+        if(node == null)
+        {
+            if(currentSize >= cacheSize)
+            {
+                if(last != null)
+                    nodes.remove(last.key);
+                removeLast();
+            }
+            else
+            {
+                currentSize++;
+            }
+            node = new CacheNode();
+        }
+        node.value = value;
+        node.key = key;
+        moveToHead(node);
+        nodes.put(key, node);
+    }
+
+    public void clear()
+    {
+        if(nodes != null)
+            nodes.clear();
+        first = null;
+        last = null;
+    }
+
+    private void removeLast()
+    {
+        if(last != null)
+        {
+            if(last.prev != null)
+                last.prev.next = null;
+            else
+                first = null;
+            last = last.prev;
+        }
+    }
+
+    private void moveToHead(CacheNode node)
+    {
+        if(node == first)
+            return;
+        if(node.prev != null)
+            node.prev.next = node.next;
+        if(node.next != null)
+            node.next.prev = node.prev;
+        if(last == node)
+            last = node.prev;
+        if(first != null)
+        {
+            node.next = first;
+            first.prev = node;
+        }
+        first = node;
+        node.prev = null;
+        if(last == null)
+            last = first;
+    }
+
+    private int cacheSize;
+    private Hashtable nodes;
+    private int currentSize;
+    private CacheNode first;
+    private CacheNode last;
 }

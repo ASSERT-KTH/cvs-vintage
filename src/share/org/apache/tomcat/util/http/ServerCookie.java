@@ -55,7 +55,8 @@
  */
 package org.apache.tomcat.util.http;
 
-import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.buf.DateTool;
 import java.text.*;
 import java.io.*;
 import java.util.*;

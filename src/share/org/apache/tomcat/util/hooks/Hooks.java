@@ -59,7 +59,6 @@
 
 package org.apache.tomcat.util.hooks;
 
-import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;

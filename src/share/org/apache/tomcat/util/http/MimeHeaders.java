@@ -56,10 +56,9 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
+package org.apache.tomcat.util.http;
 
-
-package org.apache.tomcat.util;
-
+import org.apache.tomcat.util.buf.MessageBytes;
 import java.io.*;
 import java.util.*;
 import java.text.*;

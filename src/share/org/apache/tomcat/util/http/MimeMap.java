@@ -56,9 +56,7 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-
-
-package org.apache.tomcat.util;
+package org.apache.tomcat.util.http;
 
 import java.net.*;
 import java.util.*;

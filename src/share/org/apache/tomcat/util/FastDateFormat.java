@@ -125,6 +125,7 @@ public class FastDateFormat extends DateFormat {
 	return toAppendTo;
     }
 
+    /*
     public static void main(String[] args) {
 	String format = "yyyy-MM-dd HH:mm:ss.SSS";
 	if (args.length > 0)
@@ -165,4 +166,5 @@ public class FastDateFormat extends DateFormat {
 	    System.out.println(sdf.format(d));
         }
     }
+    */
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/PrefixMapper.java,v 1.7 2001/01/14 20:39:12 larryi Exp $
- * $Revision: 1.7 $
- * $Date: 2001/01/14 20:39:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/PrefixMapper.java,v 1.8 2001/02/20 03:14:10 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2001/02/20 03:14:10 $
  *
  * ====================================================================
  *
@@ -65,6 +65,8 @@
 package org.apache.tomcat.util;
 
 import org.apache.tomcat.util.collections.*;
+import org.apache.tomcat.util.buf.*;
+import org.apache.tomcat.util.io.FileUtil;
 
 import java.net.URL;
 import java.io.File;

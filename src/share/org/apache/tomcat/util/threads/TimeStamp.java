@@ -58,7 +58,7 @@
  */ 
 package org.apache.tomcat.util.threads;
 
-import org.apache.tomcat.util.MessageBytes;
+import org.apache.tomcat.util.buf.MessageBytes;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

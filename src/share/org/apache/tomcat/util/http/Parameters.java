@@ -59,8 +59,10 @@
 
 package org.apache.tomcat.util.http;
 
-import  org.apache.tomcat.util.*;
-import  org.apache.tomcat.util.collections.*;
+import  org.apache.tomcat.util.buf.MessageBytes;
+import  org.apache.tomcat.util.buf.CharChunk;
+import  org.apache.tomcat.util.buf.ByteChunk;
+import  org.apache.tomcat.util.collections.MultiMap;
 import java.io.*;
 import java.util.*;
 import java.text.*;
