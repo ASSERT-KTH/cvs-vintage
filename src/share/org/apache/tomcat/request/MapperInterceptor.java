@@ -252,11 +252,11 @@ public class MapperInterceptor  implements  RequestInterceptor {
 
             while (stillSearching) {
                 if (wrapper != null &&
-                    wrapper.getPath() != null &&
+                    wrapper instanceof JspWrapper  &&
                     wrapper.getServletClass() == null) {
-                        req.setResourceName( wrapper.getPath() );
+                        req.setResourceName( ((JspWrapper)wrapper).getPath() );
                         wrapper = getMatch(context,
-					   wrapper.getPath() + (pathInfo == null ? "" : pathInfo),
+					   ((JspWrapper)wrapper).getPath() + (pathInfo == null ? "" : pathInfo),
 					   req);
                         req.setMappedPath(  req.getServletPath() );
 

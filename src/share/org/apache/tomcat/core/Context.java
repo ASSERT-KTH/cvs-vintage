@@ -715,16 +715,15 @@ public class Context {
     }
 
 
-    // -------------------- 
-    public void addJSP(String name, String path) {
-        addJSP(name, null, path);
-    }
-
+    // --------------------
+    
+    /** Add a jsp to the "pre-defined" list ( used by web.xml )
+     */
     public void addJSP(String name, String path, String description) {
         // XXX
         // check for duplicates!
 
-        ServletWrapper wrapper = new ServletWrapper(this);
+        JspWrapper wrapper = new JspWrapper(this);
 
 	wrapper.setServletName(name);
 	wrapper.setServletDescription(description);
@@ -780,12 +779,18 @@ public class Context {
 	    sw.length > 0);
     }
 
+    /** Will remove a JSP from the list of "declared" jsps.
+     *  Called only by deployment descriptor - to deal with
+     *  duplicated mappings -
+     *  XXX Find out if we really need that - it can be avoided!
+     */
     public void removeJSP(String path) {
 	Enumeration enum = servlets.keys();
 	while (enum.hasMoreElements()) {
 	    String key = (String)enum.nextElement();
 	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
-	    if (path.equals(sw.getPath()))
+	    if( (sw instanceof JspWrapper ) &&
+		path.equals( ((JspWrapper)sw).getPath()))
 	        removeServlet( sw );
 	}
     }
@@ -814,13 +819,14 @@ public class Context {
         ServletWrapper sw = (ServletWrapper)servlets.get(servletName);
 
 	if (sw == null) {
+	    System.out.println("Servlet not registered " + servletName );
 	    // XXX
 	    // this might be a bit aggressive
 
-	    if (! servletName.startsWith("/")) {
-	        addServlet(servletName, null, servletName);
+	    if ( servletName.startsWith("/")) {
+	        addJSP(servletName, servletName, null);
 	    } else {
-	        addJSP(servletName, servletName);
+	        addServlet(servletName, null, servletName);
 	    }
 
 	    sw = (ServletWrapper)servlets.get(servletName);
@@ -996,10 +1002,9 @@ public class Context {
 	    String key = (String)enum.nextElement();
 	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
 
-	    if (sw.getPath() != null &&
-	        sw.getPath().equals(path)) {
+	    if( (sw instanceof JspWrapper ) &&
+		path.equals( ((JspWrapper)sw).getPath()))
 	        servletWrappers.addElement(sw);
-	    }
 	}
 
 	ServletWrapper[] wrappers =
