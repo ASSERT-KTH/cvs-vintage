@@ -65,21 +65,12 @@ import ru.novosoft.uml.foundation.core.MComment;
  * // naming for extension points in convertValueToText.
  * </pre>
  *
- * $Id: DisplayTextTree.java,v 1.23 2003/04/14 23:51:32 alexb Exp $
+ * $Id: DisplayTextTree.java,v 1.24 2003/04/29 13:57:27 alexb Exp $
  */
 public class DisplayTextTree 
     extends JTree {
     
     protected static Category cat = Category.getInstance(DisplayTextTree.class);
-    
-    /** needs documenting */
-    public static final int DEPTH_LIMIT = 10;
-    /** needs documenting */
-    public static final int CHANGE = 1;
-    /** needs documenting */
-    public static final int ADD = 2;
-    /** needs documenting */
-    public static final int REMOVE = 3;
     
     /**
      * A Map helping the tree maintain a consistent expanded paths state.
