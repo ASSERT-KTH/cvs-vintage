@@ -1,4 +1,4 @@
-// $Id: TabToDo.java,v 1.25 2004/11/04 17:23:15 bobtarling Exp $
+// $Id: TabToDo.java,v 1.26 2004/12/27 20:16:51 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,6 @@ public class TabToDo extends TabSpawnable implements TabToDoTarget {
     private static UMLAction actionNewToDoItem = new ActionNewToDoItem();
     private static UMLAction actionResolve = new ActionResolve();
     private static UMLAction actionEmailExpert = new ActionEmailExpert();
-    //public static UMLAction _actionMoreInfo = Actions.MoreInfo;
     private static UMLAction actionSnooze = new ActionSnooze();
     //public static UMLAction _actionRecordFix = Actions.RecordFix;
     //public static UMLAction _actionReplayFix = Actions.ReplayFix;
@@ -69,7 +68,6 @@ public class TabToDo extends TabSpawnable implements TabToDoTarget {
     //JButton _newButton = new JButton("New");
     //JButton _resolveButton = new JButton("Resolve");
     //JButton _fixItButton = new JButton("FixIt");  //html
-    //JButton _moreInfoButton = new JButton("More Info"); //html
     //JButton _emailExpertButton = new JButton("Email Expert"); //html
     //JButton _snoozeButton = new JButton("Snooze");
     //JTextArea _description = new JTextArea();
@@ -87,7 +85,7 @@ public class TabToDo extends TabSpawnable implements TabToDoTarget {
 
     /**
      * The constructor.
-     * 
+     * Is only called thanks to its listing in the org/argouml/argo.ini file.
      */
     public TabToDo() {
         super("tab.todo-item");

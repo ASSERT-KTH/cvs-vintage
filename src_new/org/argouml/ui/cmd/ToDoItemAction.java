@@ -1,4 +1,4 @@
-// $Id: ToDoItemAction.java,v 1.2 2004/12/26 11:14:44 mvw Exp $
+// $Id: ToDoItemAction.java,v 1.3 2004/12/27 20:16:51 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,16 +33,12 @@ abstract class ToDoItemAction extends UMLAction {
 
     private Object rememberedTarget = null;
 
-    public ToDoItemAction(String name) { 
-        super(name, HAS_ICON); 
-    }
-
     public ToDoItemAction(String name, boolean hasIcon) {
 	super(name, hasIcon);
     }
     
     /**
-     * @return Returns the rememberedTarget.
+     * @return returns the rememberedTarget
      */
     protected Object getRememberedTarget() {
         return rememberedTarget;
@@ -61,6 +57,10 @@ abstract class ToDoItemAction extends UMLAction {
 	setEnabled(shouldBeEnabled(target));
     }
 
+    /**
+     * @param target the current target
+     * @return true if the action icon should be enabled (i.e. not downlighted)
+     */
     public boolean shouldBeEnabled(Object target) {
 	return target instanceof ToDoItem;
     }

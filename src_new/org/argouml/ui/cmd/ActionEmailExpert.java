@@ -1,4 +1,4 @@
-// $Id: ActionEmailExpert.java,v 1.2 2004/10/20 06:07:44 linus Exp $
+// $Id: ActionEmailExpert.java,v 1.3 2004/12/27 20:16:51 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ public class ActionEmailExpert extends ToDoItemAction {
      * The constructor.
      */
     public ActionEmailExpert() { 
-        super("action.send-email-to-expert"); 
+        super("action.send-email-to-expert", HAS_ICON); 
     }
 
     /**
