@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.49 2003/02/21 01:13:20 alexb Exp $
+// $Id: Modeller.java,v 1.50 2003/02/21 01:18:45 alexb Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -536,6 +536,7 @@ public class Modeller
             mAssociationEnd.setMultiplicity(multiplicity);
 
             mAssociationEnd.setType(mClassifier);
+            mAssociationEnd.setName(name);
 
             if((modifiers & JavaRecognizer.ACC_FINAL) > 0) {
                 mAssociationEnd.setChangeability(MChangeableKind.FROZEN);
