@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.49 2004/12/31 11:05:03 mvw Exp $
+// $Id: StateDiagramGraphModel.java,v 1.50 2005/01/02 10:08:34 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,10 +35,8 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.StateMachinesFactory;
-import org.argouml.model.uml.StateMachinesHelper;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 
@@ -166,7 +164,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
      */
     public Object getSourcePort(Object edge) {
         if (ModelFacade.isATransition(edge)) {
-	    return StateMachinesHelper.getHelper()
+	    return Model.getStateMachinesHelper()
 		.getSource(/* (MTransition) */edge);
 	}
         LOG.debug("TODO: getSourcePort of MTransition");
@@ -179,7 +177,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
      */
     public Object getDestPort(Object edge) {
         if (ModelFacade.isATransition(edge)) {
-	    return StateMachinesHelper.getHelper()
+	    return Model.getStateMachinesHelper()
 		.getDestination(/* (MTransition) */edge);
 	}
         LOG.debug("TODO: getDestPort of MTransition");
@@ -220,7 +218,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
             // it's not allowed to directly draw a transition 
             // from a composite state to one of it's substates.
             if (ModelFacade.isACompositeState(end0) 
-                    && StateMachinesHelper.getHelper().getAllSubStates(end0)
+                    && Model.getStateMachinesHelper().getAllSubStates(end0)
                                                         .contains(end1)) {
                 return false;
             }
@@ -254,7 +252,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
         //if (sv.getNamespace() == null)
         //_namespace.addOwnedElement(sv);
         // TODO: assumes not nested in another composite state
-        Object top = /* (MCompositeState) */StateMachinesHelper.getHelper()
+        Object top = /* (MCompositeState) */Model.getStateMachinesHelper()
                 .getTop(getMachine());
 
         ModelFacade.addSubvertex(top, sv);
@@ -338,7 +336,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
         if (edgeClass == (Class) ModelFacade.TRANSITION) {
             Object tr = null;
             Object comp = ModelFacade.getContainer(fromPort);
-            tr = StateMachinesFactory.getFactory()
+            tr = Model.getStateMachinesFactory()
                     .buildTransition(fromPort, toPort);
             if (canAddEdge(tr)) {
                 addEdge(tr);
@@ -350,11 +348,11 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
         } else
             if (edgeClass == CommentEdge.class) {
                 try {
-                    Object connection = UmlFactory.getFactory().buildConnection(
-                        edgeClass, fromPort, null, 
-                        toPort, null, null,
-                        ProjectManager.getManager()
-                            .getCurrentProject().getModel());
+                    Object connection = Model.getUmlFactory()
+                        .buildConnection(
+                                edgeClass, fromPort, null, 
+                                toPort, null, null,
+                                ProjectManager.getManager().getCurrentProject().getModel());
                     addEdge(connection);
                     return connection;
                 }

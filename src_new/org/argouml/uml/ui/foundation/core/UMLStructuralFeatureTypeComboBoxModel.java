@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.14 2004/12/21 18:05:51 bobtarling Exp $
+// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.15 2005/01/02 10:08:22 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,8 +33,8 @@ import java.util.TreeSet;
 
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.ModelManagementHelper;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
@@ -77,7 +77,7 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
 
 	while (it2.hasNext()) {
 	    Object obj = it2.next();
-	    Object path = ModelManagementHelper.getHelper().getPath(obj);
+	    Object path = Model.getModelManagementHelper().getPath(obj);
 	    if (!paths.contains(path)) {
 	        paths.add(path);
 	        elements.add(obj);
@@ -113,7 +113,7 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
 	    addAllUniqueModelElementsFrom(
 		elements,
 		paths,
-		ModelManagementHelper.getHelper().getAllModelElementsOfKind(
+		Model.getModelManagementHelper().getAllModelElementsOfKind(
 			model,
 			(Class) ModelFacade.CLASSIFIER));
         }
@@ -121,7 +121,7 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
 	addAllUniqueModelElementsFrom(
 	    elements,
 	    paths,
-	    ModelManagementHelper.getHelper().getAllModelElementsOfKind(
+	    Model.getModelManagementHelper().getAllModelElementsOfKind(
 		    p.getDefaultModel(),
 		    (Class) ModelFacade.CLASSIFIER));
 

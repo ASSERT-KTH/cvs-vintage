@@ -1,4 +1,4 @@
-// $Id: ActionNewDestroyAction.java,v 1.6 2004/11/01 19:55:17 mvw Exp $
+// $Id: ActionNewDestroyAction.java,v 1.7 2005/01/02 10:08:24 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ package org.argouml.uml.ui.behavior.common_behavior;
 import javax.swing.Action;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.uml.CommonBehaviorFactory;
+import org.argouml.model.Model;
 
 /**
  * @since Dec 15, 2002
@@ -52,7 +52,7 @@ public class ActionNewDestroyAction extends ActionNewAction {
      * @see org.argouml.uml.ui.behavior.common_behavior.ActionNewAction#createAction()
      */
     protected Object createAction() {
-        return CommonBehaviorFactory.getFactory().createDestroyAction();
+        return Model.getCommonBehaviorFactory().createDestroyAction();
     }
 
 

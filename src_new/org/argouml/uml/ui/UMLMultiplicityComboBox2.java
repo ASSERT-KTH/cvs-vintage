@@ -1,4 +1,4 @@
-// $Id: UMLMultiplicityComboBox2.java,v 1.7 2004/09/14 17:35:12 mvw Exp $
+// $Id: UMLMultiplicityComboBox2.java,v 1.8 2005/01/02 10:08:18 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,11 +22,11 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLMultiplicityComboBox2.java,v 1.7 2004/09/14 17:35:12 mvw Exp $
+// $Id: UMLMultiplicityComboBox2.java,v 1.8 2005/01/02 10:08:18 linus Exp $
 package org.argouml.uml.ui;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
 
 /**
  * An editable and searchable combobox to edit the multiplicity attribute of
@@ -58,7 +58,7 @@ public class UMLMultiplicityComboBox2 extends UMLSearchableComboBox {
         String text = (String) item;
         Object/*MMultiplicity*/ multi = null;
         try {
-            multi = UmlFactory.getFactory().getDataTypes()
+            multi = Model.getUmlFactory().getDataTypes()
                 .createMultiplicity(text); //new MMultiplicity(text);
         }
         catch (IllegalArgumentException e) {

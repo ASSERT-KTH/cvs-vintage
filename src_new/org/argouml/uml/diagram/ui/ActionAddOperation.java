@@ -1,4 +1,4 @@
-// $Id: ActionAddOperation.java,v 1.12 2004/12/30 12:34:05 mvw Exp $
+// $Id: ActionAddOperation.java,v 1.13 2005/01/02 10:08:17 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLAction;
@@ -83,7 +82,7 @@ public class ActionAddOperation extends UMLAction {
 	    .getCurrentProject().getModel();
 	Object voidType = ProjectManager.getManager()
 	    .getCurrentProject().findType("void");
-	Object oper = UmlFactory.getFactory().getCore()
+	Object oper = Model.getUmlFactory().getCore()
 	    .buildOperation(cls, model, voidType, propertyChangeListeners);
         TargetManager.getInstance().setTarget(oper);
 

@@ -1,4 +1,4 @@
-// $Id: CrConflictingComposites.java,v 1.12 2004/09/21 19:03:26 mvw Exp $
+// $Id: CrConflictingComposites.java,v 1.13 2005/01/02 10:08:15 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,16 +25,17 @@
 // File: CrConflictingComposites.java
 // Classes: CrConflictingComposites
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConflictingComposites.java,v 1.12 2004/09/21 19:03:26 mvw Exp $
+// $Id: CrConflictingComposites.java,v 1.13 2005/01/02 10:08:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlHelper;
 
 /** Well-formedness rule [2] for association end. See page 28 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
@@ -65,7 +66,7 @@ public class CrConflictingComposites extends CrUML {
 	Iterator assocEnds = conns.iterator();
 	while (assocEnds.hasNext()) {
             Object myEnd = assocEnds.next();
-	    if (UmlHelper.getHelper().getCore()
+	    if (Model.getUmlHelper().getCore()
                 .equalsAggregationKind(myEnd, "composite")) {
 		continue;
 	    }
@@ -74,7 +75,7 @@ public class CrConflictingComposites extends CrUML {
 	    }
 	    Object asc = ModelFacade.getAssociation(myEnd);
 	    if (asc != null
-		&& UmlHelper.getHelper().getCore().hasCompositeEnd(asc)) {
+		&& Model.getUmlHelper().getCore().hasCompositeEnd(asc)) {
 		compositeCount++;
             }
 	}

@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.56 2004/12/21 16:21:42 bobtarling Exp $
+// $Id: PropPanelMessage.java,v 1.57 2005/01/02 10:08:16 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,8 +31,8 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CommonBehaviorFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
@@ -134,7 +134,7 @@ public class PropPanelMessage extends PropPanelModelElement {
         public void actionPerformed(ActionEvent e) {
             Object target = TargetManager.getInstance().getModelTarget();
             if (org.argouml.model.ModelFacade.isAMessage(target)) {
-                CommonBehaviorFactory.getFactory().buildAction(target);
+                Model.getCommonBehaviorFactory().buildAction(target);
                 super.actionPerformed(e);
             }
         }

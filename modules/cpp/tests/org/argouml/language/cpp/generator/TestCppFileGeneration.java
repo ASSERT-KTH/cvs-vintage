@@ -1,4 +1,4 @@
-// $Id: TestCppFileGeneration.java,v 1.3 2004/12/28 19:07:23 mvw Exp $
+// $Id: TestCppFileGeneration.java,v 1.4 2005/01/02 10:08:36 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,9 +33,9 @@ import junit.framework.TestSuite;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.UUIDManager;
-import org.argouml.model.uml.ModelManagementFactory;
 
 /**
  * Tests for GeneratorCpp file generation functionalities, i.e., generateFile2 
@@ -89,7 +89,7 @@ public class TestCppFileGeneration extends BaseTestGeneratorCpp {
     protected void setUp() {
         super.setUp();
         String packageName = "pack";
-        Object aPackage = ModelManagementFactory.getFactory().
+        Object aPackage = Model.getModelManagementFactory().
             buildPackage(packageName, UUIDManager.getInstance().getNewUUID());
         ModelFacade.setNamespace(getAClass(), aPackage);
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelEvent.java,v 1.35 2004/12/28 04:42:08 bobtarling Exp $
+// $Id: PropPanelEvent.java,v 1.36 2005/01/02 10:07:53 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.uml.CoreFactory;
+import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.PropPanelButton2;
@@ -97,7 +97,7 @@ public abstract class PropPanelEvent extends PropPanelModelElement {
         Object model = ProjectManager.getManager().getCurrentProject().getModel();
         Object voidType = ProjectManager.getManager().getCurrentProject().findType("void");
         Collection propertyChangeListeners = ProjectManager.getManager().getCurrentProject().findFigsForMember(getTarget());
-        Object param = CoreFactory.getFactory().buildParameter(getTarget(), model, voidType, propertyChangeListeners);
+        Object param = Model.getCoreFactory().buildParameter(getTarget(), model, voidType, propertyChangeListeners);
         TargetManager.getInstance().setTarget(param);
     }
 

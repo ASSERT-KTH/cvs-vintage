@@ -1,4 +1,4 @@
-// $Id: ActionAddClassifierRoleBase.java,v 1.12 2004/11/01 19:55:10 mvw Exp $
+// $Id: ActionAddClassifierRoleBase.java,v 1.13 2005/01/02 10:08:16 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,15 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddClassifierRoleBase.java,v 1.12 2004/11/01 19:55:10 mvw Exp $
+// $Id: ActionAddClassifierRoleBase.java,v 1.13 2005/01/02 10:08:16 linus Exp $
 package org.argouml.uml.ui.behavior.collaborations;
 
 import java.util.Vector;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CollaborationsHelper;
+import org.argouml.model.uml.CollaborationsHelperImpl;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 
 /**
@@ -56,7 +57,7 @@ public class ActionAddClassifierRoleBase extends AbstractActionAddModelElement {
      */
     protected Vector getChoices() {
         Vector vec = new Vector();
-        vec.addAll(CollaborationsHelper.getHelper()
+        vec.addAll(Model.getCollaborationsHelper()
                 .getAllPossibleBases(getTarget()));
         return vec;
     }
@@ -83,7 +84,7 @@ public class ActionAddClassifierRoleBase extends AbstractActionAddModelElement {
      */
     protected void doIt(Vector selected) {
         Object role = /*(MClassifierRole)*/ getTarget();
-        CollaborationsHelper.getHelper().setBases(role, selected);
+        Model.getCollaborationsHelper().setBases(role, selected);
     }
         
 

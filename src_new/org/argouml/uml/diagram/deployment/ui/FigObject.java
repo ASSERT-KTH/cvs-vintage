@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.25 2004/10/12 07:31:47 mkl Exp $
+// $Id: FigObject.java,v 1.26 2005/01/02 10:08:28 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigObject.java
 // Classes: FigObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigObject.java,v 1.25 2004/10/12 07:31:47 mkl Exp $
+// $Id: FigObject.java,v 1.26 2005/01/02 10:08:28 linus Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -36,8 +36,8 @@ import java.beans.PropertyVetoException;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.generator.ParserDisplay;
 import org.tigris.gef.base.Selection;
@@ -55,7 +55,7 @@ public class FigObject extends FigNodeModelElement {
 
     private FigRect cover;
     private Object resident =
-	UmlFactory.getFactory().getCore().createElementResidence();
+	Model.getUmlFactory().getCore().createElementResidence();
 
 
     ////////////////////////////////////////////////////////////////

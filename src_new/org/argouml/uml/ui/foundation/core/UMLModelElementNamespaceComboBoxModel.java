@@ -1,4 +1,4 @@
-// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.19 2004/12/27 21:51:35 bobtarling Exp $
+// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.20 2005/01/02 10:08:20 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,8 @@
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CoreHelper;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
@@ -55,7 +55,7 @@ public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
      */
     protected boolean isValidElement(Object o) {
         return org.argouml.model.ModelFacade.isANamespace(o) 
-        && CoreHelper.getHelper().isValidNamespace(
+        && Model.getCoreHelper().isValidNamespace(
                 /*(MModelElement)*/ getTarget(), /*(MNamespace)*/ o);
     }
     
@@ -64,7 +64,7 @@ public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
      */
     protected void buildModelList() {
         Object model = ProjectManager.getManager().getCurrentProject().getRoot();
-        setElements(CoreHelper.getHelper()
+        setElements(Model.getCoreHelper()
 		    .getAllPossibleNamespaces(/*(MModelElement)*/ getTarget(), model));
     }
     

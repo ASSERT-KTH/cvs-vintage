@@ -1,4 +1,4 @@
-// $Id: TestTargetManager.java,v 1.13 2004/11/01 19:55:17 mvw Exp $
+// $Id: TestTargetManager.java,v 1.14 2005/01/02 10:08:26 linus Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,14 +29,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.uml.CoreFactory;
+import org.argouml.model.Model;
 import org.argouml.ui.ArgoDiagram;
-
 import org.tigris.gef.presentation.Fig;
-
-import junit.framework.TestCase;
 
 /**
  * @author gebruiker
@@ -541,7 +540,7 @@ public class TestTargetManager extends TestCase {
      * Test getModelTarget().
      */
     public void testGetModelTarget() {
-	Object owner = CoreFactory.getFactory().buildClass();
+	Object owner = Model.getCoreFactory().buildClass();
 	Fig fig = new Fig(); fig.setOwner(owner);
 	Object test = new Object();
 

@@ -1,4 +1,4 @@
-// $Id: TestUMLExtensionPointLocationDocument.java,v 1.11 2004/11/01 19:55:10 mvw Exp $
+// $Id: TestUMLExtensionPointLocationDocument.java,v 1.12 2005/01/02 10:08:17 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,12 +24,11 @@
 
 package org.argouml.uml.ui.behavior.use_cases;
 
+import javax.swing.text.BadLocationException;
+
 import junit.framework.TestCase;
 
-import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.UseCasesFactory;
-
-import javax.swing.text.BadLocationException;
+import org.argouml.model.Model;
 
 import ru.novosoft.uml.MFactoryImpl;
 import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
@@ -57,7 +56,7 @@ public class TestUMLExtensionPointLocationDocument extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        elem = UseCasesFactory.getFactory().createExtensionPoint();
+        elem = Model.getUseCasesFactory().createExtensionPoint();
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE); 
         model = new UMLExtensionPointLocationDocument();
@@ -69,7 +68,7 @@ public class TestUMLExtensionPointLocationDocument extends TestCase {
      */
     protected void tearDown() throws Exception {
         super.tearDown();
-        UmlFactory.getFactory().delete(elem);
+        Model.getUmlFactory().delete(elem);
         elem = null;
         MFactoryImpl.setEventPolicy(oldEventPolicy);
         model = null;

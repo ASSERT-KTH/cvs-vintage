@@ -1,4 +1,4 @@
-// $Id: PropPanelSubsystem.java,v 1.21 2004/12/28 04:42:08 bobtarling Exp $
+// $Id: PropPanelSubsystem.java,v 1.22 2005/01/02 10:08:15 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,8 +33,8 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.argouml.uml.ui.PropPanelButton2;
@@ -91,7 +91,7 @@ public class PropPanelSubsystem extends PropPanelPackage {
                 Collection propertyChangeListeners = ProjectManager.getManager().getCurrentProject().findFigsForMember(target);
                 Object model = ProjectManager.getManager().getCurrentProject().getModel();
                 Object voidType = ProjectManager.getManager().getCurrentProject().findType("void");
-                Object newOper = UmlFactory.getFactory().getCore()
+                Object newOper = Model.getUmlFactory().getCore()
                         .buildOperation(target, model, voidType, propertyChangeListeners);
                 TargetManager.getInstance().setTarget(newOper);
                 super.actionPerformed(e);

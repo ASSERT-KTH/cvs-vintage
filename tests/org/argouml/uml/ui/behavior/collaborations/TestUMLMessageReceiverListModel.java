@@ -1,4 +1,4 @@
-// $Id: TestUMLMessageReceiverListModel.java,v 1.10 2004/11/01 19:55:05 mvw Exp $
+// $Id: TestUMLMessageReceiverListModel.java,v 1.11 2005/01/02 10:08:10 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,7 @@ package org.argouml.uml.ui.behavior.collaborations;
 
 import junit.framework.TestCase;
 
-import org.argouml.model.uml.CollaborationsFactory;
-import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.MockUMLUserInterfaceContainer;
 
 import ru.novosoft.uml.MFactoryImpl;
@@ -57,7 +56,7 @@ public class TestUMLMessageReceiverListModel extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        elem = CollaborationsFactory.getFactory().createMessage();
+        elem = Model.getCollaborationsFactory().createMessage();
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         MockUMLUserInterfaceContainer cont = 
@@ -73,7 +72,7 @@ public class TestUMLMessageReceiverListModel extends TestCase {
      */
     protected void tearDown() throws Exception {
         super.tearDown();
-        UmlFactory.getFactory().delete(elem);
+        Model.getUmlFactory().delete(elem);
         MFactoryImpl.setEventPolicy(oldEventPolicy);
         model = null;
     }
@@ -83,7 +82,7 @@ public class TestUMLMessageReceiverListModel extends TestCase {
      */
     public void testSetReceiver() {
         MClassifierRole role = 
-            CollaborationsFactory.getFactory().createClassifierRole();
+            Model.getCollaborationsFactory().createClassifierRole();
         elem.setReceiver(role);
         assertEquals(1, model.getSize());
         assertEquals(role, model.getElementAt(0));
@@ -94,7 +93,7 @@ public class TestUMLMessageReceiverListModel extends TestCase {
      */
     public void testRemoveReceiver() {
         MClassifierRole role = 
-            CollaborationsFactory.getFactory().createClassifierRole();
+            Model.getCollaborationsFactory().createClassifierRole();
         elem.setReceiver(role);
         elem.setReceiver(null);
         assertEquals(0, model.getSize());

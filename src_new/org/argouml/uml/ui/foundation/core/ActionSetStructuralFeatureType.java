@@ -1,4 +1,4 @@
-// $Id: ActionSetStructuralFeatureType.java,v 1.12 2004/12/30 12:34:05 mvw Exp $
+// $Id: ActionSetStructuralFeatureType.java,v 1.13 2005/01/02 10:08:21 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,8 @@ package org.argouml.uml.ui.foundation.core;
 import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.ModelManagementHelper;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 /**
@@ -70,8 +70,8 @@ public class ActionSetStructuralFeatureType extends UMLAction {
         }
         if (newClassifier != oldClassifier && attr != null) {
             if (newClassifier != null) {
-                newClassifier = /*(MClassifier)*/ ModelManagementHelper
-                    .getHelper().getCorrespondingElement(
+                newClassifier = /*(MClassifier)*/ Model
+                    .getModelManagementHelper().getCorrespondingElement(
                                     newClassifier,
                                     ModelFacade.getModel(attr));
             }

@@ -1,4 +1,4 @@
-// $Id: ActionNewUseCaseExtensionPoint.java,v 1.8 2004/11/01 19:55:07 mvw Exp $
+// $Id: ActionNewUseCaseExtensionPoint.java,v 1.9 2005/01/02 10:08:15 linus Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,9 @@ package org.argouml.uml.ui.behavior.use_cases;
 
 import java.awt.event.ActionEvent;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UseCasesFactory;
+import org.argouml.model.uml.UseCasesFactoryImpl;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
 /**
@@ -57,7 +58,7 @@ public class ActionNewUseCaseExtensionPoint
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         if (ModelFacade.isAUseCase(getTarget())) {
-            UseCasesFactory.getFactory().buildExtensionPoint(getTarget());
+            Model.getUseCasesFactory().buildExtensionPoint(getTarget());
         }
     }
 }

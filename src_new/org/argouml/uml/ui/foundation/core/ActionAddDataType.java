@@ -1,4 +1,4 @@
-// $Id: ActionAddDataType.java,v 1.1 2004/12/20 23:15:10 mvw Exp $
+// $Id: ActionAddDataType.java,v 1.2 2005/01/02 10:08:21 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.Action;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CoreFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
@@ -69,7 +69,7 @@ public class ActionAddDataType extends AbstractActionNewModelElement {
         if (ModelFacade.isAClassifier(target)) 
             ns = ModelFacade.getNamespace(target);
         
-        Object newDt = CoreFactory.getFactory().buildDataType("", ns);
+        Object newDt = Model.getCoreFactory().buildDataType("", ns);
         TargetManager.getInstance().setTarget(newDt);
         super.actionPerformed(e);
     }

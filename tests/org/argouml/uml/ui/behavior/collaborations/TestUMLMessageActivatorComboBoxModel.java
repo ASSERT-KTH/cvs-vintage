@@ -1,4 +1,4 @@
-// $Id: TestUMLMessageActivatorComboBoxModel.java,v 1.11 2004/11/01 19:55:05 mvw Exp $
+// $Id: TestUMLMessageActivatorComboBoxModel.java,v 1.12 2005/01/02 10:08:10 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,9 +26,7 @@ package org.argouml.uml.ui.behavior.collaborations;
 
 import junit.framework.TestCase;
 
-import org.argouml.model.uml.CollaborationsFactory;
-import org.argouml.model.uml.ModelManagementFactory;
-import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetEvent;
 
 import ru.novosoft.uml.MFactoryImpl;
@@ -61,20 +59,20 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        elem = CollaborationsFactory.getFactory().createMessage();
+        elem = Model.getCollaborationsFactory().createMessage();
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);    
         activators = new MMessage[10];
-        MModel m = ModelManagementFactory.getFactory().createModel();
+        MModel m = Model.getModelManagementFactory().createModel();
         MInteraction inter = 
-            CollaborationsFactory.getFactory().createInteraction();
+            Model.getCollaborationsFactory().createInteraction();
         MCollaboration col = 
-            CollaborationsFactory.getFactory().createCollaboration();
+            Model.getCollaborationsFactory().createCollaboration();
         inter.setContext(col);
         col.setNamespace(m);
         inter.addMessage(elem);
         for (int i = 0; i < 10; i++) {
-            activators[i] = CollaborationsFactory.getFactory().createMessage();
+            activators[i] = Model.getCollaborationsFactory().createMessage();
             inter.addMessage(activators[i]);
         }  
         model = new UMLMessageActivatorComboBoxModel(); 
@@ -87,9 +85,9 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
      */
     protected void tearDown() throws Exception {
         super.tearDown();
-        UmlFactory.getFactory().delete(elem);
+        Model.getUmlFactory().delete(elem);
         for (int i = 0; i < 10; i++) {
-            UmlFactory.getFactory().delete(activators[i]);
+            Model.getUmlFactory().delete(activators[i]);
         }
         MFactoryImpl.setEventPolicy(oldEventPolicy);
         model = null;
@@ -125,7 +123,7 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
      * Test removing.
      */
     public void testRemoveBase() {
-        UmlFactory.getFactory().delete(activators[9]);
+        Model.getUmlFactory().delete(activators[9]);
         assertEquals(9, model.getSize());
         assertTrue(!model.contains(activators[9]));
     } 

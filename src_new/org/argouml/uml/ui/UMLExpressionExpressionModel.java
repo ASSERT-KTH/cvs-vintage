@@ -1,4 +1,4 @@
-// $Id: UMLExpressionExpressionModel.java,v 1.1 2004/11/27 21:56:25 mvw Exp $
+// $Id: UMLExpressionExpressionModel.java,v 1.2 2005/01/02 10:08:18 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,8 @@
 
 package org.argouml.uml.ui;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.DataTypesFactory;
 
 /**
  * The model for a UML Expression that is obtained from its "parent"
@@ -64,7 +64,7 @@ public class UMLExpressionExpressionModel extends UMLExpressionModel2 {
      * @see org.argouml.uml.ui.UMLExpressionModel2#newExpression()
      */
     public Object newExpression() {
-        return DataTypesFactory.getFactory().createBooleanExpression("", "");
+        return Model.getDataTypesFactory().createBooleanExpression("", "");
     }
 
 }

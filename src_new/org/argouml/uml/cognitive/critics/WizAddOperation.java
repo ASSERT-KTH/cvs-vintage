@@ -1,4 +1,4 @@
-// $Id: WizAddOperation.java,v 1.11 2004/12/28 19:33:19 mvw Exp $
+// $Id: WizAddOperation.java,v 1.12 2005/01/02 10:08:15 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import javax.swing.JPanel;
 import org.argouml.cognitive.ui.WizStepTextField;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.Model;
 
 /**
  * A wizard to add operations to a classifier.
@@ -68,7 +68,7 @@ public class WizAddOperation extends UMLWizard {
 	        .getCurrentProject().getModel();
 	    Object voidType = ProjectManager.getManager()
 	        .getCurrentProject().findType("void");
-	    UmlFactory.getFactory().getCore().buildOperation(me, model, 
+	    Model.getUmlFactory().getCore().buildOperation(me, model, 
 	            voidType, newName, propertyChangeListeners);
         }
     }

@@ -1,4 +1,4 @@
-// $Id: ActionAddExtensionPoint.java,v 1.7 2004/12/30 12:34:05 mvw Exp $
+// $Id: ActionAddExtensionPoint.java,v 1.8 2005/01/02 10:08:17 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,8 @@ package org.argouml.uml.diagram.ui;
 
 import java.awt.event.ActionEvent;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLAction;
 
@@ -119,7 +119,7 @@ public final class ActionAddExtensionPoint extends UMLAction {
         // invoke the superclass action method.
 
 	Object ep =
-            UmlFactory.getFactory().getUseCases()
+            Model.getUmlFactory().getUseCases()
             	.buildExtensionPoint(target);
 
         TargetManager.getInstance().setTarget(ep);

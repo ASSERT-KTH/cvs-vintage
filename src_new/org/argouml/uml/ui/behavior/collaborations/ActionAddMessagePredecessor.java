@@ -1,4 +1,4 @@
-// $Id: ActionAddMessagePredecessor.java,v 1.12 2004/11/01 19:55:09 mvw Exp $
+// $Id: ActionAddMessagePredecessor.java,v 1.13 2005/01/02 10:08:16 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,10 +26,11 @@
 package org.argouml.uml.ui.behavior.collaborations;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import java.util.Vector;
 
-import org.argouml.model.uml.CollaborationsHelper;
+import org.argouml.model.uml.CollaborationsHelperImpl;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 
 /**
@@ -56,7 +57,7 @@ public class ActionAddMessagePredecessor extends AbstractActionAddModelElement {
     protected Vector getChoices() {
         if (getTarget() == null) return new Vector();
         Vector vec = new Vector();
-        vec.addAll(CollaborationsHelper.getHelper()
+        vec.addAll(Model.getCollaborationsHelper()
                 .getAllPossiblePredecessors(getTarget()));
         return vec;
     }

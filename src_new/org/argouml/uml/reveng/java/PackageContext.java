@@ -1,4 +1,4 @@
-// $Id: PackageContext.java,v 1.22 2004/09/11 07:34:24 mvw Exp $
+// $Id: PackageContext.java,v 1.23 2005/01/02 10:08:26 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,10 +28,9 @@
 
 package org.argouml.uml.reveng.java;
 
-import org.argouml.uml.reveng.ImportClassLoader;
-
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
+import org.argouml.uml.reveng.ImportClassLoader;
 
 /**
    This context is a package.
@@ -80,7 +79,7 @@ class PackageContext extends Context
 		}
 		if (classifier.isInterface()) {
 		    mInterface =
-			UmlFactory.getFactory().getCore()
+			Model.getUmlFactory().getCore()
 			    .buildInterface(name, mPackage);
 		    ModelFacade.setTaggedValue(mInterface,
 					       ModelFacade.GENERATED_TAG,
@@ -104,7 +103,7 @@ class PackageContext extends Context
                     }
 		    if (classifier.isInterface()) {
 			mInterface =
-			    UmlFactory.getFactory().getCore()
+			    Model.getUmlFactory().getCore()
 			        .buildInterface(name, mPackage);
 			ModelFacade.setTaggedValue(mInterface,
 						   ModelFacade.GENERATED_TAG,
@@ -158,12 +157,12 @@ class PackageContext extends Context
 		}
 		if (classifier.isInterface()) {
 		    mClassifier =
-			UmlFactory.getFactory().getCore()
+			Model.getUmlFactory().getCore()
 			    .buildInterface(name, mPackage);
 		}
 		else {
 		    mClassifier =
-			UmlFactory.getFactory().getCore()
+			Model.getUmlFactory().getCore()
 			    .buildClass(name, mPackage);
 		}
 		ModelFacade.setTaggedValue(mClassifier,
@@ -188,11 +187,11 @@ class PackageContext extends Context
                     }
 		    if (classifier.isInterface()) {
 			mClassifier =
-			    UmlFactory.getFactory().getCore()
+			    Model.getUmlFactory().getCore()
 			        .buildInterface(name, mPackage);
 		    } else {
 			mClassifier =
-			    UmlFactory.getFactory().getCore()
+			    Model.getUmlFactory().getCore()
 			        .buildClass(name, mPackage);
 		    }
 		    ModelFacade.setTaggedValue(mClassifier,
@@ -224,7 +223,7 @@ class PackageContext extends Context
 		    || name.indexOf("[]") != -1)
 		{
 		    mClassifier =
-			UmlFactory.getFactory().getCore()
+			Model.getUmlFactory().getCore()
 			    .buildDataType(name, mPackage);
 		}
 	    }

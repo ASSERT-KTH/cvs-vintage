@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.89 2004/12/20 23:15:10 mvw Exp $
+// $Id: PropPanelModelElement.java,v 1.90 2005/01/02 10:08:21 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
-import org.argouml.model.uml.UmlHelper;
+import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanel;
 import org.argouml.uml.ui.UMLComboBox2;
@@ -182,7 +182,7 @@ public abstract class PropPanelModelElement extends PropPanel {
      */
     public void navigateUp() {
         TargetManager.getInstance().setTarget(
-                UmlHelper.getHelper().getOwner(getTarget()));
+                Model.getUmlHelper().getOwner(getTarget()));
     }
 
 

@@ -1,4 +1,4 @@
-// $Id: TestUmlActor.java,v 1.5 2004/09/24 20:17:24 mvw Exp $
+// $Id: TestUmlActor.java,v 1.6 2005/01/02 10:08:11 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.model.uml;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 
 
@@ -46,7 +47,7 @@ public class TestUmlActor extends GenericUmlObjectTestFixture
      * The legacy test for an actor.
      */
     public void testActorLegacy() {
-	UmlFactory.getFactory().setJmiProxyCreated(false);
+	Model.getUmlFactory().setJmiProxyCreated(false);
 	Object o = ModelFacade.create(Uml.ACTOR);
 	assertNotNull("Didn't create object", o);
 	assertTrue("Should be a base", ModelFacade.isABase(o));
@@ -58,7 +59,7 @@ public class TestUmlActor extends GenericUmlObjectTestFixture
      * Test the creation of an actor.
      */
     public void testActor() {
-	UmlFactory.getFactory().setJmiProxyCreated(true);
+	Model.getUmlFactory().setJmiProxyCreated(true);
 	Object o = ModelFacade.create(Uml.ACTOR);
 	assertNotNull("Didn't create object", o);
 	assertTrue("Should be a base", ModelFacade.isABase(o));

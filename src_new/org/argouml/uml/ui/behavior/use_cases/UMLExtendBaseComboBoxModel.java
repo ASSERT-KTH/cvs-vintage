@@ -1,4 +1,4 @@
-// $Id: UMLExtendBaseComboBoxModel.java,v 1.17 2004/11/01 19:55:07 mvw Exp $
+// $Id: UMLExtendBaseComboBoxModel.java,v 1.18 2005/01/02 10:08:15 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,8 @@
 
 package org.argouml.uml.ui.behavior.use_cases;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.ModelManagementHelper;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
@@ -54,7 +54,7 @@ public class UMLExtendBaseComboBoxModel extends UMLComboBoxModel2 {
     protected void buildModelList() {
         Object extend = /*(MExtend)*/ getTarget();
         if (extend == null) return;
-        setElements(ModelManagementHelper.getHelper()
+        setElements(Model.getModelManagementHelper()
                 .getAllModelElementsOfKind((Class) ModelFacade.USE_CASE));
         if (ModelFacade.getExtension(extend) != null) {
             removeElement(ModelFacade.getExtension(extend));

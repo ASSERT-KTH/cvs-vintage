@@ -1,4 +1,4 @@
-// $Id: TestUMLClassifierRoleAvailableFeaturesListModel.java,v 1.9 2004/11/01 19:55:05 mvw Exp $
+// $Id: TestUMLClassifierRoleAvailableFeaturesListModel.java,v 1.10 2005/01/02 10:08:10 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,7 @@
 
 package org.argouml.uml.ui.behavior.collaborations;
 
-import org.argouml.model.uml.CollaborationsFactory;
-import org.argouml.model.uml.CollaborationsHelper;
-import org.argouml.model.uml.CoreFactory;
-import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 
 import ru.novosoft.uml.MBase;
@@ -56,7 +53,7 @@ public class TestUMLClassifierRoleAvailableFeaturesListModel
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildElement()
      */
     protected void buildElement() {
-        setElem(CollaborationsFactory.getFactory().createClassifierRole());
+        setElem(Model.getCollaborationsFactory().createClassifierRole());
     }
 
     /**
@@ -72,7 +69,7 @@ public class TestUMLClassifierRoleAvailableFeaturesListModel
     protected MBase[] fillModel() {
         MFeature[] features = new MFeature[10];
         for (int i = 0; i < features.length; i++) {
-            features[i] = CoreFactory.getFactory().createOperation();
+            features[i] = Model.getCoreFactory().createOperation();
             base.addFeature(features[i]);
         }
         return features;
@@ -92,8 +89,8 @@ public class TestUMLClassifierRoleAvailableFeaturesListModel
      */
     protected void setUp() throws Exception {
         super.setUp();
-        base = CoreFactory.getFactory().createClass();
-        CollaborationsHelper.getHelper().addBase(getElem(), base);
+        base = Model.getCoreFactory().createClass();
+        Model.getCollaborationsHelper().addBase(getElem(), base);
     }
 
     /**
@@ -101,7 +98,7 @@ public class TestUMLClassifierRoleAvailableFeaturesListModel
      */
     protected void tearDown() throws Exception {
         super.tearDown();
-        UmlFactory.getFactory().delete(base);
+        Model.getUmlFactory().delete(base);
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: GUITestProjectBrowser.java,v 1.7 2004/12/21 10:57:27 mvw Exp $
+// $Id: GUITestProjectBrowser.java,v 1.8 2005/01/02 10:08:26 linus Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.ui;
 import junit.framework.TestCase;
 
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.uml.ModelManagementFactory;
+import org.argouml.model.Model;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 
 import ru.novosoft.uml.MFactoryImpl;
@@ -120,9 +120,9 @@ public class GUITestProjectBrowser extends TestCase {
     public void testSetTarget() {
 	MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
 	Object package1 = 
-	    ModelManagementFactory.getFactory().buildPackage("test1", null);
+	    Model.getModelManagementFactory().buildPackage("test1", null);
 	Object package2 = 
-	    ModelManagementFactory.getFactory().buildPackage("test2", null);
+	    Model.getModelManagementFactory().buildPackage("test2", null);
 	UMLClassDiagram diagram1 = new UMLClassDiagram(package1);
 	UMLClassDiagram diagram2 = new UMLClassDiagram(package2);
 

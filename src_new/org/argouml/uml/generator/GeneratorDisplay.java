@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.74 2004/11/07 20:31:38 mvw Exp $
+// $Id: GeneratorDisplay.java,v 1.75 2005/01/02 10:08:35 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +32,8 @@ import org.argouml.application.ArgoVersion;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.Notation;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlHelper;
 
 /**
  * Generator2 subclass to generate code for display in diagrams in
@@ -153,7 +153,7 @@ public class GeneratorDisplay extends Generator2 {
 	parameterStr.append("(").append(parameterListBuffer).append(")");
 
         // the returnparameters
-        coll = UmlHelper.getHelper().getCore().getReturnParameters(op);
+        coll = Model.getUmlHelper().getCore().getReturnParameters(op);
         StringBuffer returnParasSb = new StringBuffer();
         if (coll != null && coll.size() > 0) {
             returnParasSb.append(": ");

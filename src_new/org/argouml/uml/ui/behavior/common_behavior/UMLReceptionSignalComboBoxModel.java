@@ -1,4 +1,4 @@
-// $Id: UMLReceptionSignalComboBoxModel.java,v 1.17 2004/12/21 18:05:52 bobtarling Exp $
+// $Id: UMLReceptionSignalComboBoxModel.java,v 1.18 2005/01/02 10:08:24 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,8 @@
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.ModelManagementHelper;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
@@ -51,7 +51,7 @@ public class UMLReceptionSignalComboBoxModel extends UMLComboBoxModel2 {
         if (org.argouml.model.ModelFacade.isAReception(target)) {
             Object rec = /*(MReception)*/ target;
             removeAllElements();
-            setElements(ModelManagementHelper.getHelper()
+            setElements(Model.getModelManagementHelper()
                     .getAllModelElementsOfKind((Class) ModelFacade.SIGNAL));
             setSelectedItem(ModelFacade.getSignal(rec));      
         }

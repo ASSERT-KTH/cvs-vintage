@@ -1,4 +1,4 @@
-// $Id: TestStylePanel.java,v 1.6 2004/11/01 19:55:22 mvw Exp $
+// $Id: TestStylePanel.java,v 1.7 2005/01/02 10:08:26 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.ui;
 
 import junit.framework.TestCase;
 
-import org.argouml.model.uml.CoreFactory;
+import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.tigris.gef.presentation.FigText;
@@ -100,7 +100,7 @@ public class TestStylePanel extends TestCase {
         pane.targetSet(e);
         // new target is of type UMLClassDiagram, refresh should not be called
         assertTrue(!((MockStylePanel) pane).isRefreshCalled());
-        target = CoreFactory.getFactory().createClass();
+        target = Model.getCoreFactory().createClass();
         e = new TargetEvent(this,
 			    TargetEvent.TARGET_SET,
 			    new Object[] {

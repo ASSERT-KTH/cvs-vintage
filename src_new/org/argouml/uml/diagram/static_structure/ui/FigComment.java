@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.31 2004/12/21 20:24:56 mvw Exp $
+// $Id: FigComment.java,v 1.32 2005/01/02 10:08:23 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,8 +48,8 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.state.StateDiagramGraphModel;
@@ -177,7 +177,7 @@ public class FigComment
 
 	// Create a new Comment node.
         Object comment =
-	    UmlFactory.getFactory().getCore().createComment();
+	    Model.getUmlFactory().getCore().createComment();
         setOwner(comment); // Set it as the owner of the figure.
 	// Tell the annotated element, that it has a comment now.
         ModelFacade.addComment(element, comment);

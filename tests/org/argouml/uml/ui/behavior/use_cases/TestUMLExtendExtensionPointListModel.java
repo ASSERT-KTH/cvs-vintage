@@ -1,4 +1,4 @@
-// $Id: TestUMLExtendExtensionPointListModel.java,v 1.8 2004/11/01 19:55:10 mvw Exp $
+// $Id: TestUMLExtendExtensionPointListModel.java,v 1.9 2005/01/02 10:08:17 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // $header$
 package org.argouml.uml.ui.behavior.use_cases;
 
-import org.argouml.model.uml.UseCasesFactory;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 
 import ru.novosoft.uml.MBase;
@@ -51,7 +51,7 @@ public class TestUMLExtendExtensionPointListModel
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildElement()
      */
     protected void buildElement() {
-        setElem(UseCasesFactory.getFactory().createExtend());
+        setElem(Model.getUseCasesFactory().createExtend());
     }
 
     /**
@@ -67,7 +67,7 @@ public class TestUMLExtendExtensionPointListModel
     protected MBase[] fillModel() {
         MExtensionPoint[] points = new MExtensionPoint[10];
         for (int i = 0; i < 10; i++) {
-            points[i] = UseCasesFactory.getFactory().createExtensionPoint();
+            points[i] = Model.getUseCasesFactory().createExtensionPoint();
             ((MExtend) getElem()).addExtensionPoint(points[i]);
         }
         return points;

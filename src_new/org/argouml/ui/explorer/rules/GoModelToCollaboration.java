@@ -1,4 +1,4 @@
-// $Id: GoModelToCollaboration.java,v 1.11 2004/11/14 14:04:40 mvw Exp $
+// $Id: GoModelToCollaboration.java,v 1.12 2005/01/02 10:08:15 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,12 +31,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.ModelManagementHelper;
 
 /**
  * Rule for Model->Collaboration.
- * 
+ *
  * @since Oct 1, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
@@ -54,16 +54,15 @@ public class GoModelToCollaboration extends AbstractPerspectiveRule {
      */
     public Collection getChildren(Object parent) {
 	if (ModelFacade.isAModel(parent)) {
-            Collection col = ModelManagementHelper.getHelper()
-		.getAllModelElementsOfKind(parent,
-                    (Class) ModelFacade.COLLABORATION);
+            Collection col = Model.getModelManagementHelper()
+		.getAllModelElementsOfKind(parent, ModelFacade.COLLABORATION);
             List returnList = new ArrayList();
             Iterator it = col.iterator();
             while (it.hasNext()) {
                 Object collab = /*(MCollaboration)*/ it.next();
-                if (ModelFacade.getRepresentedClassifier(collab) == null 
-                        && ModelFacade.getRepresentedOperation(collab) == null) 
-                {
+                if (ModelFacade.getRepresentedClassifier(collab) == null
+                    && ModelFacade.getRepresentedOperation(collab) == null) {
+
                     returnList.add(collab);
                 }
             }

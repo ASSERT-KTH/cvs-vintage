@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementNameDocument.java,v 1.13 2004/11/01 19:55:11 mvw Exp $
+// $Id: TestUMLModelElementNameDocument.java,v 1.14 2005/01/02 10:08:22 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,14 +24,13 @@
 
 package org.argouml.uml.ui.foundation.core;
 
+import javax.swing.text.BadLocationException;
+
 import junit.framework.TestCase;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CoreFactory;
-import org.argouml.model.uml.ModelManagementFactory;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.ui.MockUMLUserInterfaceContainer;
-import javax.swing.text.BadLocationException;
 
 import ru.novosoft.uml.MFactoryImpl;
 import ru.novosoft.uml.model_management.MModel;
@@ -60,8 +59,8 @@ public class TestUMLModelElementNameDocument extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        ns = ModelManagementFactory.getFactory().createModel();
-        elem = CoreFactory.getFactory().buildClass(ns);
+        ns = Model.getModelManagementFactory().createModel();
+        elem = Model.getCoreFactory().buildClass(ns);
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         MockUMLUserInterfaceContainer cont = 
@@ -76,8 +75,8 @@ public class TestUMLModelElementNameDocument extends TestCase {
      */
     protected void tearDown() throws Exception {
         super.tearDown();
-        UmlFactory.getFactory().delete(ns);
-        UmlFactory.getFactory().delete(elem);
+        Model.getUmlFactory().delete(ns);
+        Model.getUmlFactory().delete(elem);
         elem = null;
         ns = null;
         MFactoryImpl.setEventPolicy(oldEventPolicy);

@@ -1,4 +1,4 @@
-// $Id: ExplorerPopup.java,v 1.11 2004/12/12 10:56:34 mvw Exp $
+// $Id: ExplorerPopup.java,v 1.12 2005/01/02 10:08:27 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,8 +34,8 @@ import javax.swing.JPopupMenu;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.StateMachinesHelper;
 import org.argouml.ui.ActionGoToDetails;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
@@ -47,7 +47,6 @@ import org.argouml.uml.ui.ActionAddPackage;
 import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.ActionSetSourcePath;
 import org.argouml.uml.ui.UMLAction;
-
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.ui.PopupGenerator;
 
@@ -135,7 +134,7 @@ public class ExplorerPopup extends JPopupMenu {
                     
                 final Object selectedStateMachine
                     = (stateVertexSelected)
-                    ? StateMachinesHelper.getHelper()
+                    ? Model.getStateMachinesHelper()
 		          .getStateMachine(selectedItem)
                     : null;
                 

@@ -1,4 +1,4 @@
-// $Id: ActionAddAttribute.java,v 1.12 2004/12/30 12:34:05 mvw Exp $
+// $Id: ActionAddAttribute.java,v 1.13 2005/01/02 10:08:17 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,8 +28,8 @@ import java.awt.event.ActionEvent;
 import java.util.Collection;
 
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLAction;
@@ -71,7 +71,7 @@ public class ActionAddAttribute extends UMLAction {
 	    .getCurrentProject().findType("int");
 	Object model = ProjectManager.getManager()
 	    .getCurrentProject().getModel();
-	Object attr = UmlFactory.getFactory().getCore().buildAttribute(
+	Object attr = Model.getUmlFactory().getCore().buildAttribute(
             cls, 
             model, 
             intType, 

@@ -1,4 +1,4 @@
-// $Id: OuterClassifierContext.java,v 1.18 2004/09/11 07:34:24 mvw Exp $
+// $Id: OuterClassifierContext.java,v 1.19 2005/01/02 10:08:26 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,8 +28,8 @@
 
 package org.argouml.uml.reveng.java;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.reveng.ImportClassLoader;
 
 /**
@@ -92,7 +92,7 @@ class OuterClassifierContext extends Context
 		}
 		if (classifier.isInterface()) {
 		    mInterface =
-			UmlFactory.getFactory().getCore()
+			Model.getUmlFactory().getCore()
 			    .buildInterface(name, mClassifier);
 		}
 		else {
@@ -120,7 +120,7 @@ class OuterClassifierContext extends Context
                     }
                     if (classifier.isInterface()) {
                         mInterface =
-			    UmlFactory.getFactory().getCore()
+			    Model.getUmlFactory().getCore()
 			        .buildInterface(name, mClassifier);
                     }
                     else {
@@ -172,12 +172,12 @@ class OuterClassifierContext extends Context
 		}
 		if (classifier.isInterface()) {
 		    iClassifier =
-			UmlFactory.getFactory().getCore()
+			Model.getUmlFactory().getCore()
 			    .buildInterface(name, mClassifier);
 		}
 		else {
 		    iClassifier =
-			UmlFactory.getFactory().getCore()
+			Model.getUmlFactory().getCore()
 			    .buildClass(name, mClassifier);
 		}
 	    }
@@ -201,12 +201,12 @@ class OuterClassifierContext extends Context
                     }
                     if (classifier.isInterface()) {
                         iClassifier =
-			    UmlFactory.getFactory().getCore()
+			    Model.getUmlFactory().getCore()
 			        .buildInterface(name, mClassifier);
                     }
                     else {
                         iClassifier =
-			    UmlFactory.getFactory().getCore()
+			    Model.getUmlFactory().getCore()
 			        .buildClass(name, mClassifier);
                     }
                     

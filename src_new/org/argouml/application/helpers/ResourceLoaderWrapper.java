@@ -1,5 +1,5 @@
-// $Id: ResourceLoaderWrapper.java,v 1.22 2004/11/14 21:43:35 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: ResourceLoaderWrapper.java,v 1.23 2005/01/02 10:08:26 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -31,9 +31,9 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 import org.apache.log4j.Logger;
+import org.argouml.model.DataTypesHelper;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.DataTypesHelper;
-import org.argouml.model.uml.UmlHelper;
 import org.argouml.uml.util.namespace.StringNamespace;
 import org.tigris.gef.util.ResourceLoader;
 
@@ -264,7 +264,7 @@ public final class ResourceLoaderWrapper {
         if (ModelFacade.isAPseudostate(value)) {
         
             Object kind = ModelFacade.getKind(value);
-            DataTypesHelper helper = UmlHelper.getHelper().getDataTypes();
+            DataTypesHelper helper = Model.getUmlHelper().getDataTypes();
             if (helper.equalsINITIALKind(kind)) {
                 icon = initialStateIcon;
             }

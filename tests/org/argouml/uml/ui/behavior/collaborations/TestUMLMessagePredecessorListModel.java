@@ -1,4 +1,4 @@
-// $Id: TestUMLMessagePredecessorListModel.java,v 1.9 2004/11/01 19:55:05 mvw Exp $
+// $Id: TestUMLMessagePredecessorListModel.java,v 1.10 2005/01/02 10:08:10 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.ui.behavior.collaborations;
 
-import org.argouml.model.uml.CollaborationsFactory;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 
 import ru.novosoft.uml.MBase;
@@ -49,7 +49,7 @@ public class TestUMLMessagePredecessorListModel
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildElement()
      */
     protected void buildElement() {
-        setElem(CollaborationsFactory.getFactory().createMessage());
+        setElem(Model.getCollaborationsFactory().createMessage());
     }
 
     /**
@@ -65,7 +65,7 @@ public class TestUMLMessagePredecessorListModel
     protected MBase[] fillModel() {
         MMessage[] pres = new MMessage[10];
         for (int i = 0; i < pres.length; i++) {
-            pres[i] = CollaborationsFactory.getFactory().createMessage();
+            pres[i] = Model.getCollaborationsFactory().createMessage();
             ((MMessage) getElem()).addPredecessor(pres[i]);
         }
         return pres;

@@ -1,4 +1,4 @@
-// $Id: ActionAddInstanceClassifier.java,v 1.6 2004/12/21 17:20:43 bobtarling Exp $
+// $Id: ActionAddInstanceClassifier.java,v 1.7 2005/01/02 10:08:24 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddInstanceClassifier.java,v 1.6 2004/12/21 17:20:43 bobtarling Exp $
+// $Id: ActionAddInstanceClassifier.java,v 1.7 2005/01/02 10:08:24 linus Exp $
 package org.argouml.uml.ui.behavior.common_behavior;
 
-import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
 import java.util.Vector;
 
-import org.argouml.model.uml.ModelManagementHelper;
+import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 
 
@@ -76,7 +76,7 @@ public class ActionAddInstanceClassifier extends AbstractActionAddModelElement {
     protected Vector getChoices() {
         Vector ret = new Vector();
         if (getTarget() != null) {
-            ret.addAll(ModelManagementHelper.getHelper()
+            ret.addAll(Model.getModelManagementHelper()
                     .getAllModelElementsOfKind(choiceClass));
         }
         return ret;

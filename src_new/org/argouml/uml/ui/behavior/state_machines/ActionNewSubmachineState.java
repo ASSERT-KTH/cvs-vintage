@@ -1,4 +1,4 @@
-// $Id: ActionNewSubmachineState.java,v 1.6 2004/11/01 19:55:04 mvw Exp $
+// $Id: ActionNewSubmachineState.java,v 1.7 2005/01/02 10:07:53 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.Action;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.uml.StateMachinesFactory;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
 /**
@@ -55,7 +55,7 @@ public class ActionNewSubmachineState extends AbstractActionNewModelElement {
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        StateMachinesFactory.getFactory().buildSubmachineState(getTarget());
+        Model.getStateMachinesFactory().buildSubmachineState(getTarget());
     }
 
     /**

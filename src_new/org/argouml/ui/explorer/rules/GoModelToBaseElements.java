@@ -1,4 +1,4 @@
-// $Id: GoModelToBaseElements.java,v 1.8 2004/11/01 19:55:07 mvw Exp $
+// $Id: GoModelToBaseElements.java,v 1.9 2005/01/02 10:08:15 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CoreHelper;
 
 /**
  * Rule for Package->Base Class.
@@ -44,13 +44,13 @@ public class GoModelToBaseElements extends AbstractPerspectiveRule {
     public String getRuleName() {
 	return Translator.localize ("misc.package.base-class");
     }
-  
+
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
-    public Collection getChildren(Object parent) { 
+    public Collection getChildren(Object parent) {
 	if (ModelFacade.isAPackage(parent)) {
-	    return CoreHelper.getHelper().getBaseClasses(parent);
+	    return Model.getCoreHelper().getBaseClasses(parent);
 	}
 	return null;
     }

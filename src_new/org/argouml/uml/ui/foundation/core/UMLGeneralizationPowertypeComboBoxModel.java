@@ -1,4 +1,4 @@
-// $Id: UMLGeneralizationPowertypeComboBoxModel.java,v 1.14 2004/12/21 18:05:51 bobtarling Exp $
+// $Id: UMLGeneralizationPowertypeComboBoxModel.java,v 1.15 2005/01/02 10:08:20 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,14 +25,14 @@
 // $header$
 package org.argouml.uml.ui.foundation.core;
 
-import org.argouml.model.ModelFacade;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.uml.ModelManagementHelper;
+import org.argouml.model.Model;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
@@ -71,11 +71,11 @@ public class UMLGeneralizationPowertypeComboBoxModel
         Iterator it = p.getUserDefinedModels().iterator();
         while (it.hasNext()) {
 	    Object model = /*(MModel)*/ it.next();
-	    elements.addAll(ModelManagementHelper.getHelper()
+	    elements.addAll(Model.getModelManagementHelper()
                 .getAllModelElementsOfKind(model, 
                         ModelFacade.CLASSIFIER));
         }
-        elements.addAll(ModelManagementHelper.getHelper()
+        elements.addAll(Model.getModelManagementHelper()
                 .getAllModelElementsOfKind(p.getDefaultModel(), 
                         ModelFacade.CLASSIFIER));
         setElements(elements);

@@ -1,4 +1,4 @@
-// $Id: AbstractUMLModelElementListModel2Test.java,v 1.10 2004/10/21 19:25:24 mvw Exp $
+// $Id: AbstractUMLModelElementListModel2Test.java,v 1.11 2005/01/02 10:08:32 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.uml.ui;
 
 import junit.framework.TestCase;
 
-import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.Model;
 
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.MFactoryImpl;
@@ -83,7 +83,7 @@ public abstract class AbstractUMLModelElementListModel2Test extends TestCase {
      */
     protected void tearDown() throws Exception {
         super.tearDown();
-        UmlFactory.getFactory().delete(elem);
+        Model.getUmlFactory().delete(elem);
         MFactoryImpl.setEventPolicy(oldEventPolicy);
         model = null;
     }

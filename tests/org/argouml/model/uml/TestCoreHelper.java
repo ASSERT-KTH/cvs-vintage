@@ -1,4 +1,4 @@
-// $Id: TestCoreHelper.java,v 1.3 2004/12/21 18:12:04 bobtarling Exp $
+// $Id: TestCoreHelper.java,v 1.4 2005/01/02 10:08:11 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.model.uml;
 
 import junit.framework.TestCase;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.util.CheckUMLModelHelper;
 
@@ -55,7 +56,7 @@ public class TestCoreHelper extends TestCase {
     public void testGetMetaModelName() {
 	CheckUMLModelHelper.metaModelNameCorrect(
 			 this,
-			 CoreFactory.getFactory(),
+			 Model.getCoreFactory(),
 			 TestCoreFactory.getAllModelElements());
     }
 
@@ -65,7 +66,7 @@ public class TestCoreHelper extends TestCase {
     public void testIsValidStereoType() {
         CheckUMLModelHelper.isValidStereoType(
                           this,
-                          CoreFactory.getFactory(),
+                          Model.getCoreFactory(),
                           TestCoreFactory.getAllModelElements());
     }
 
@@ -74,13 +75,13 @@ public class TestCoreHelper extends TestCase {
      */
     public void testIsSubType() {
     	assertTrue("Is not a subtype", 
-                       CoreHelper.getHelper().
+                       Model.getCoreHelper().
                        isSubType(ModelFacade.CLASSIFIER, ModelFacade.CLASS));
         assertTrue("Is not a parent type", 
-                        !CoreHelper.getHelper().
+                        !Model.getCoreHelper().
                         isSubType(ModelFacade.CLASS, ModelFacade.CLASSIFIER));
         assertTrue("Is not a parent type", 
-                        !CoreHelper.getHelper().
+                        !Model.getCoreHelper().
                         isSubType(ModelFacade.CLASS, 
                                   ModelFacade.AGGREGATIONKIND));
     }
@@ -92,14 +93,14 @@ public class TestCoreHelper extends TestCase {
 	// Create an element with an element without children.
 	MGeneralizableElement ge = new MClassifierImpl();
 
-	assertTrue(CoreHelper.getHelper().getChildren(ge).size() == 0);
+	assertTrue(Model.getCoreHelper().getChildren(ge).size() == 0);
 
 	// Add one child.
 	MGeneralization g1 = new MGeneralizationImpl();
 	g1.setParent(ge);
 	g1.setChild(new MClassifierImpl());
 
-	assertTrue(CoreHelper.getHelper().getChildren(ge).size() == 1);
+	assertTrue(Model.getCoreHelper().getChildren(ge).size() == 1);
 
 	// Add another child.
 	MGeneralization g2 = new MGeneralizationImpl();
@@ -107,13 +108,13 @@ public class TestCoreHelper extends TestCase {
 	MGeneralizableElement ge2 = new MClassifierImpl();
 	g2.setChild(ge2);
 
-	assertTrue(CoreHelper.getHelper().getChildren(ge).size() == 2);
+	assertTrue(Model.getCoreHelper().getChildren(ge).size() == 2);
 
 	// Add grandchild.
 	MGeneralization g3 = new MGeneralizationImpl();
 	g3.setParent(ge2);
 	g3.setChild(new MClassifierImpl());
 
-	assertTrue(CoreHelper.getHelper().getChildren(ge).size() == 3);
+	assertTrue(Model.getCoreHelper().getChildren(ge).size() == 3);
     }
 }

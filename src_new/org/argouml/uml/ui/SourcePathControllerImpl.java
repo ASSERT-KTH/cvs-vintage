@@ -1,4 +1,4 @@
-// $Id: SourcePathControllerImpl.java,v 1.3 2004/12/21 18:05:51 bobtarling Exp $
+// $Id: SourcePathControllerImpl.java,v 1.4 2005/01/02 10:08:18 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,12 +25,12 @@
 package org.argouml.uml.ui;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.ArrayList;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.ModelManagementHelper;
 
 /**
  * Implements the source path controller. 
@@ -107,7 +107,7 @@ public class SourcePathControllerImpl implements SourcePathController {
      */
     public Collection getAllModelElementsWithSourcePath() {
         Collection elems =
-            ModelManagementHelper.getHelper().getAllModelElementsOfKind(
+            Model.getModelManagementHelper().getAllModelElementsOfKind(
                 ModelFacade.MODELELEMENT);
         
         ArrayList mElemsWithSrcPath = new ArrayList();

@@ -1,4 +1,4 @@
-// $Id: ActionAddMessage.java,v 1.5 2004/12/30 12:34:05 mvw Exp $
+// $Id: ActionAddMessage.java,v 1.6 2005/01/02 10:08:17 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,8 @@ package org.argouml.uml.diagram.ui;
 
 import java.awt.event.ActionEvent;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLAction;
 import org.tigris.gef.base.Editor;
@@ -87,7 +87,7 @@ public class ActionAddMessage extends UMLAction {
      */
     private void addMessage(Object associationrole) {
         Object collaboration = ModelFacade.getNamespace(associationrole);
-        Object message = UmlFactory.getFactory().getCollaborations()
+        Object message = Model.getUmlFactory().getCollaborations()
                 .buildMessage(collaboration, associationrole);
         Editor e = Globals.curEditor();
         GraphModel gm = e.getGraphModel();

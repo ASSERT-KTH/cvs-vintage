@@ -1,4 +1,4 @@
-// $Id: ActionCollaborationDiagram.java,v 1.35 2004/12/26 11:14:45 mvw Exp $
+// $Id: ActionCollaborationDiagram.java,v 1.36 2005/01/02 10:08:17 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,13 +23,12 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
+import org.apache.log4j.Logger;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CollaborationsHelper;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
-import org.apache.log4j.Logger;
 
 /** Action to trigger creation of new collaboration diagram.
  *  @stereotype singleton
@@ -66,15 +65,15 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
         Object target = TargetManager.getInstance().getTarget();
         Object collaboration = null;
         if (ModelFacade.isAOperation(target)) {
-            collaboration = UmlFactory.getFactory().getCollaborations()
+            collaboration = Model.getUmlFactory().getCollaborations()
                             .buildCollaboration(namespace);
             ModelFacade.setRepresentedOperation(collaboration, target);
         } else if (ModelFacade.isAClassifier(target)) {
-            collaboration = UmlFactory.getFactory().getCollaborations()
+            collaboration = Model.getUmlFactory().getCollaborations()
                             .buildCollaboration(target);
             ModelFacade.setRepresentedClassifier(collaboration, target);
         } else if (ModelFacade.isAModel(target)) {
-            collaboration = UmlFactory.getFactory().getCollaborations()
+            collaboration = Model.getUmlFactory().getCollaborations()
                             .buildCollaboration(target);
         } else if (ModelFacade.isAInteraction(target)) {
             collaboration = ModelFacade.getContext(target);
@@ -88,7 +87,7 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
             collaboration = target;
         } else {
             collaboration =
-                UmlFactory.getFactory().getCollaborations().buildCollaboration(
+                Model.getUmlFactory().getCollaborations().buildCollaboration(
                     namespace);
         }
         UMLCollaborationDiagram d = new UMLCollaborationDiagram(collaboration);
@@ -106,7 +105,7 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
                 "The argument " + handle + "is not a namespace.");
         }
         Object/*MNamespace*/ ns = handle;
-        return CollaborationsHelper.getHelper()
+        return Model.getCollaborationsHelper()
                                     .isAddingCollaborationAllowed(ns);
     }
 

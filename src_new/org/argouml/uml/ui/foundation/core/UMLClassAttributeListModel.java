@@ -1,4 +1,4 @@
-// $Id: UMLClassAttributeListModel.java,v 1.6 2004/12/16 19:29:38 mvw Exp $
+// $Id: UMLClassAttributeListModel.java,v 1.7 2005/01/02 10:08:20 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,8 @@ package org.argouml.uml.ui.foundation.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CoreHelper;
 import org.argouml.uml.ui.UMLModelElementOrderedListModel2;
 
 /**
@@ -74,10 +74,10 @@ public class UMLClassAttributeListModel
         List cc = new ArrayList(c);
         cc.remove(mem1);
         cc.remove(mem2);
-        CoreHelper.getHelper().setAttributes(clss, cc);
+        Model.getCoreHelper().setAttributes(clss, cc);
         c.set(index1, mem2);
         c.set(index2, mem1);
-        CoreHelper.getHelper().setAttributes(clss, c);
+        Model.getCoreHelper().setAttributes(clss, c);
         buildModelList();
     }
 }

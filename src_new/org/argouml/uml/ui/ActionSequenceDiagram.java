@@ -1,4 +1,4 @@
-// $Id: ActionSequenceDiagram.java,v 1.30 2004/12/30 12:34:00 mvw Exp $
+// $Id: ActionSequenceDiagram.java,v 1.31 2005/01/02 10:08:18 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,8 @@ package org.argouml.uml.ui;
 import java.awt.event.ActionEvent;
 
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.explorer.ExplorerEventAdaptor;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
@@ -75,7 +75,7 @@ public class ActionSequenceDiagram extends UMLAction {
             owner = ModelFacade.getNamespace(target);
         }
         Object collaboration =
-            UmlFactory.getFactory().getCollaborations().buildCollaboration(
+            Model.getUmlFactory().getCollaborations().buildCollaboration(
                 owner,
                 target);
         UMLSequenceDiagram diagram = new UMLSequenceDiagram(collaboration);

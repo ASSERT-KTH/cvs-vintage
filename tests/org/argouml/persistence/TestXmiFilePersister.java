@@ -1,4 +1,4 @@
-// $Id: TestXmiFilePersister.java,v 1.3 2004/12/28 04:42:06 bobtarling Exp $
+// $Id: TestXmiFilePersister.java,v 1.4 2005/01/02 10:08:28 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,10 +31,8 @@ import junit.framework.TestCase;
 
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CoreFactory;
-
-import ru.novosoft.uml.foundation.core.MOperation;
 
 /**
  * Testclass for the XMIReader. Placeholder for all saving/loading tests
@@ -62,11 +60,11 @@ public class TestXmiFilePersister extends TestCase {
 
         try {
             Project p = ProjectManager.getManager().makeEmptyProject();
-            Object clazz = CoreFactory.getFactory().buildClass(p.getModel());
+            Object clazz = Model.getCoreFactory().buildClass(p.getModel());
             Collection propertyChangeListeners = ProjectManager.getManager().getCurrentProject().findFigsForMember(clazz);
             Object model = ProjectManager.getManager().getCurrentProject().getModel();
             Object voidType = ProjectManager.getManager().getCurrentProject().findType("void");
-            Object oper = CoreFactory.getFactory().buildOperation(clazz, model, voidType, propertyChangeListeners);
+            Object oper = Model.getCoreFactory().buildOperation(clazz, model, voidType, propertyChangeListeners);
             ModelFacade.setType(ModelFacade.getParameter(oper, 0), p.findType("String"));
             File file = new File("test.xmi");
             XmiFilePersister persister = new XmiFilePersister();

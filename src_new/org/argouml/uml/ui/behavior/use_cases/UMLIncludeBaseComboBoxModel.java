@@ -1,4 +1,4 @@
-// $Id: UMLIncludeBaseComboBoxModel.java,v 1.19 2004/12/21 18:05:52 bobtarling Exp $
+// $Id: UMLIncludeBaseComboBoxModel.java,v 1.20 2005/01/02 10:08:16 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,9 +26,9 @@ package org.argouml.uml.ui.behavior.use_cases;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.argouml.model.ModelFacade;
 
-import org.argouml.model.uml.ModelManagementHelper;
+import org.argouml.model.Model;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
@@ -57,7 +57,7 @@ public class UMLIncludeBaseComboBoxModel extends UMLComboBoxModel2 {
         if (inc == null) return;
         List list = new ArrayList();
         Object ns = ModelFacade.getNamespace(inc);
-        list.addAll(ModelManagementHelper.getHelper()
+        list.addAll(Model.getModelManagementHelper()
                 .getAllModelElementsOfKind(ns, ModelFacade.USE_CASE));
         list.remove(ModelFacade.getAddition(inc));
         addAll(list);

@@ -1,4 +1,4 @@
-// $Id: ActionNewReception.java,v 1.5 2004/11/01 19:55:17 mvw Exp $
+// $Id: ActionNewReception.java,v 1.6 2005/01/02 10:08:24 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.Action;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CommonBehaviorFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
@@ -66,7 +66,7 @@ public class ActionNewReception extends AbstractActionNewModelElement {
             throw new IllegalArgumentException(
                     "Argument classifier is null or not a classifier");
         Object reception = 
-            CommonBehaviorFactory.getFactory().buildReception(classifier);
+            Model.getCommonBehaviorFactory().buildReception(classifier);
         TargetManager.getInstance().setTarget(reception);
     }
 }

@@ -1,4 +1,4 @@
-// $Id: TestUMLCollaborationRepresentedClassifierListModel.java,v 1.11 2004/11/01 19:55:05 mvw Exp $
+// $Id: TestUMLCollaborationRepresentedClassifierListModel.java,v 1.12 2005/01/02 10:08:10 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,9 +26,7 @@ package org.argouml.uml.ui.behavior.collaborations;
 
 import junit.framework.TestCase;
 
-import org.argouml.model.uml.CollaborationsFactory;
-import org.argouml.model.uml.CoreFactory;
-import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.Model;
 
 import ru.novosoft.uml.MFactoryImpl;
 import ru.novosoft.uml.behavior.collaborations.MCollaboration;
@@ -59,7 +57,7 @@ public class TestUMLCollaborationRepresentedClassifierListModel
      */
     protected void setUp() throws Exception {
         super.setUp();
-        elem = CollaborationsFactory.getFactory().createCollaboration();
+        elem = Model.getCollaborationsFactory().createCollaboration();
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);       
         model = new UMLCollaborationRepresentedClassifierListModel();
@@ -71,7 +69,7 @@ public class TestUMLCollaborationRepresentedClassifierListModel
      */
     protected void tearDown() throws Exception {
         super.tearDown();
-        UmlFactory.getFactory().delete(elem);
+        Model.getUmlFactory().delete(elem);
         MFactoryImpl.setEventPolicy(oldEventPolicy);
         model = null;
     }
@@ -80,7 +78,7 @@ public class TestUMLCollaborationRepresentedClassifierListModel
      * Test setRepresentedClassifier().
      */
     public void testSetRepresentedOperation() {
-        MClassifier oper = CoreFactory.getFactory().createClassifier();
+        MClassifier oper = Model.getCoreFactory().createClassifier();
         elem.setRepresentedClassifier(oper);
         assertEquals(1, model.getSize());
         assertEquals(oper, model.getElementAt(0));
@@ -90,7 +88,7 @@ public class TestUMLCollaborationRepresentedClassifierListModel
      * Test removing the represented operation.
      */
     public void testRemoveRepresentedOperation() {
-	MClassifier oper = CoreFactory.getFactory().createClassifier();
+	MClassifier oper = Model.getCoreFactory().createClassifier();
         elem.setRepresentedClassifier(oper);
         elem.setRepresentedClassifier(null);
         assertEquals(0, model.getSize());

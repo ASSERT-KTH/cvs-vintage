@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.17 2004/12/21 18:05:52 bobtarling Exp $
+// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.18 2005/01/02 10:08:16 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,9 @@
 
 package org.argouml.uml.ui.behavior.collaborations;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CollaborationsHelper;
+import org.argouml.model.uml.CollaborationsHelperImpl;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
@@ -48,7 +49,7 @@ public class UMLAssociationRoleBaseComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#buildModelList()
      */
     protected void buildModelList() {
-        setElements(CollaborationsHelper.getHelper().getAllPossibleBases(
+        setElements(Model.getCollaborationsHelper().getAllPossibleBases(
                 /*(MAssociationRole)*/ getTarget())); 
     }
 
@@ -66,7 +67,7 @@ public class UMLAssociationRoleBaseComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object element) {
-        return CollaborationsHelper.getHelper().getAllPossibleBases(
+        return Model.getCollaborationsHelper().getAllPossibleBases(
                 /*(MAssociationRole)*/ getTarget()).contains(element);
     }
 

@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementStereotype.java,v 1.13 2004/12/30 12:34:05 mvw Exp $
+// $Id: ActionSetModelElementStereotype.java,v 1.14 2005/01/02 10:08:21 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,9 +27,8 @@ package org.argouml.uml.ui.foundation.core;
 import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.ExtensionMechanismsHelper;
-import org.argouml.model.uml.ModelManagementHelper;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 
@@ -76,11 +75,11 @@ public class ActionSetModelElementStereotype extends UMLAction {
         if (newStereo != oldStereo && target != null) {
 	    if (newStereo != null) {
 		newStereo = /*(MStereotype)*/
-		    ModelManagementHelper.getHelper().getCorrespondingElement(
+		    Model.getModelManagementHelper().getCorrespondingElement(
 				  newStereo,
 				  ModelFacade.getModel(target));
 	    }
-            ExtensionMechanismsHelper.getHelper()
+            Model.getExtensionMechanismsHelper()
                 .setStereoType(target, newStereo);
             super.actionPerformed(e);
         }

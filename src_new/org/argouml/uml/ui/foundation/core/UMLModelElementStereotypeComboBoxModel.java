@@ -1,4 +1,4 @@
-// $Id: UMLModelElementStereotypeComboBoxModel.java,v 1.22 2004/12/27 14:38:46 bobtarling Exp $
+// $Id: UMLModelElementStereotypeComboBoxModel.java,v 1.23 2005/01/02 10:08:21 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,9 +32,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.ExtensionMechanismsHelper;
-import org.argouml.model.uml.ModelManagementHelper;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
@@ -61,7 +60,7 @@ public class UMLModelElementStereotypeComboBoxModel extends UMLComboBoxModel2 {
      */
     protected boolean isValidElement(Object o) {
         return org.argouml.model.ModelFacade.isAStereotype(o) 
-            && ExtensionMechanismsHelper.getHelper().isValidStereoType(
+            && Model.getExtensionMechanismsHelper().isValidStereoType(
 		   /*(MModelElement)*/ getTarget(), /*(MStereotype)*/ o);
     }
 
@@ -79,7 +78,7 @@ public class UMLModelElementStereotypeComboBoxModel extends UMLComboBoxModel2 {
 
 	while (it2.hasNext()) {
 	    Object obj = it2.next();
-	    Object path = ModelManagementHelper.getHelper().getPath(obj);
+	    Object path = Model.getModelManagementHelper().getPath(obj);
 	    if (!paths.contains(path)) {
 	        paths.add(path);
 	        elements.add(obj);
@@ -116,9 +115,9 @@ public class UMLModelElementStereotypeComboBoxModel extends UMLComboBoxModel2 {
 	addAllUniqueModelElementsFrom(
 	    elements,
 	    paths,
-	    ExtensionMechanismsHelper.getHelper()
+	    Model.getExtensionMechanismsHelper()
 	        .getAllPossibleStereotypes(models, elem));
-        setElements( ExtensionMechanismsHelper.getHelper()
+        setElements( Model.getExtensionMechanismsHelper()
 	        .getAllPossibleStereotypes(models, elem));
     }   
 

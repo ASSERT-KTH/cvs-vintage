@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.62 2004/12/30 23:44:38 mvw Exp $
+// $Id: UMLDiagram.java,v 1.63 2005/01/02 10:08:17 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,13 +39,12 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
 import org.argouml.ui.targetmanager.TargetManager;
-import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.argouml.uml.UUIDHelper;
+import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.tigris.gef.base.ModeBroom;
 import org.tigris.gef.base.ModeCreateFigCircle;
 import org.tigris.gef.base.ModeCreateFigInk;
@@ -586,7 +585,7 @@ public abstract class UMLDiagram
      * @return true if the diagram needs to be removed
      */
     public boolean needsToBeRemoved() {
-        return UmlFactory.getFactory().isRemoved(namespace);
+        return Model.getUmlFactory().isRemoved(namespace);
     }
     
 } /* end class UMLDiagram */

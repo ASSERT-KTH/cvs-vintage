@@ -1,4 +1,4 @@
-// $Id: SelectionClassifierRole.java,v 1.11 2004/09/21 19:03:31 mvw Exp $
+// $Id: SelectionClassifierRole.java,v 1.12 2005/01/02 10:08:27 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,13 +31,11 @@ import java.awt.Rectangle;
 import javax.swing.Icon;
 
 import org.apache.log4j.Logger;
-
 import org.argouml.application.helpers.ResourceLoaderWrapper;
-import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode;
 import org.argouml.uml.diagram.ui.SelectionWButtons;
-
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.ModeManager;
@@ -215,7 +213,7 @@ public class SelectionClassifierRole extends SelectionWButtons {
      * @see org.argouml.uml.diagram.ui.SelectionWButtons#getNewNode(int)
      */
     protected Object getNewNode(int buttonCode) {
-	return UmlFactory.getFactory().
+	return Model.getUmlFactory().
             getCollaborations().createClassifierRole();
     }
 

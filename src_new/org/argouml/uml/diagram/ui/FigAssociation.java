@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.74 2004/12/10 18:44:03 mvw Exp $
+// $Id: FigAssociation.java,v 1.75 2005/01/02 10:08:17 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,6 @@ import org.argouml.application.api.Notation;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.ArgoJMenu;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.PathConvPercent;
@@ -246,12 +245,12 @@ public class FigAssociation extends FigEdgeModelElement {
 	    ModelFacade.setName(destAE, destRole.getText());
 	} else if (ft == srcMult) {
 	    Object srcAE = (conn.toArray())[0];
-	    Object multi = UmlFactory.getFactory().getDataTypes()
+	    Object multi = Model.getUmlFactory().getDataTypes()
 			   .createMultiplicity(srcMult.getText());
 	    ModelFacade.setMultiplicity(srcAE, multi);
 	} else if (ft == destMult) {
 	    Object destAE = (conn.toArray())[1];
-	    Object multi = UmlFactory.getFactory().getDataTypes()
+	    Object multi = Model.getUmlFactory().getDataTypes()
 			   .createMultiplicity(destMult.getText());
 	    ModelFacade.setMultiplicity(destAE, multi);
 	}

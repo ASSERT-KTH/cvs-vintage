@@ -1,4 +1,4 @@
-// $Id: SelectionUseCase.java,v 1.19 2004/08/07 15:39:54 mvw Exp $
+// $Id: SelectionUseCase.java,v 1.20 2005/01/02 10:08:26 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import javax.swing.Icon;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
-import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode;
 import org.argouml.uml.diagram.ui.SelectionWButtons;
@@ -245,9 +245,9 @@ public class SelectionUseCase extends SelectionWButtons {
     protected Object getNewNode(int buttonCode) {
         Object newNode = null;
         if (buttonCode == 10 || buttonCode == 11)
-            newNode = UmlFactory.getFactory().getUseCases().createUseCase();
+            newNode = Model.getUmlFactory().getUseCases().createUseCase();
         else
-            newNode = UmlFactory.getFactory().getUseCases().createActor();
+            newNode = Model.getUmlFactory().getUseCases().createActor();
         return newNode;
     }
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelNamespace.java,v 1.21 2004/11/04 17:23:18 bobtarling Exp $
+// $Id: PropPanelNamespace.java,v 1.22 2005/01/02 10:08:20 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,13 +27,11 @@ package org.argouml.uml.ui.foundation.core;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
-import org.argouml.model.ModelFacade;
 
-import org.argouml.model.uml.CoreFactory;
-import org.argouml.model.uml.ModelManagementFactory;
+import org.argouml.model.Model;
+import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLLinkedList;
-
 import org.tigris.swidgets.Orientation;
 
 /**
@@ -77,7 +75,7 @@ public abstract class PropPanelNamespace extends PropPanelModelElement {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isANamespace(target)) {
             Object ns = /*(MNamespace)*/ target;
-            Object ownedElem = CoreFactory.getFactory().buildClass();
+            Object ownedElem = Model.getCoreFactory().buildClass();
             ModelFacade.addOwnedElement(ns, ownedElem);
             TargetManager.getInstance().setTarget(ownedElem);
         }
@@ -90,7 +88,7 @@ public abstract class PropPanelNamespace extends PropPanelModelElement {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isANamespace(target)) {
             Object ns = /*(MNamespace)*/ target;
-            Object ownedElem = CoreFactory.getFactory().createInterface();
+            Object ownedElem = Model.getCoreFactory().createInterface();
             ModelFacade.addOwnedElement(ns, ownedElem);
             TargetManager.getInstance().setTarget(ownedElem);
         }
@@ -103,7 +101,7 @@ public abstract class PropPanelNamespace extends PropPanelModelElement {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isANamespace(target)) {
             Object ns = /*(MNamespace)*/ target;
-            Object ownedElem = ModelManagementFactory.getFactory()
+            Object ownedElem = Model.getModelManagementFactory()
                 .createPackage();
             ModelFacade.addOwnedElement(ns, ownedElem);
             TargetManager.getInstance().setTarget(ownedElem);

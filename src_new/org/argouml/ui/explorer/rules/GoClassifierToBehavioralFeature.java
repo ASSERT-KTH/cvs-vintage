@@ -1,4 +1,4 @@
-// $Id: GoClassifierToBehavioralFeature.java,v 1.1 2004/11/14 14:04:40 mvw Exp $
+// $Id: GoClassifierToBehavioralFeature.java,v 1.2 2005/01/02 10:08:15 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,11 +29,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CoreHelper;
 
 /**
- * Go rule to navigate from a classifier to the behavioral 
+ * Go rule to navigate from a classifier to the behavioral
  * features owned by that classifier.  <p>
  * Classifier->BehavioralFeature
  *
@@ -53,8 +53,8 @@ public class GoClassifierToBehavioralFeature extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-	if (ModelFacade.isAClassifier(parent)) {	    
-	    return CoreHelper.getHelper().getBehavioralFeatures(parent);
+	if (ModelFacade.isAClassifier(parent)) {
+	    return Model.getCoreHelper().getBehavioralFeatures(parent);
 	}
 	return null;
     }

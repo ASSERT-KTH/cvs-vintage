@@ -1,4 +1,4 @@
-// $Id: UMLConditionExpressionModel.java,v 1.3 2004/12/11 19:10:10 mvw Exp $
+// $Id: UMLConditionExpressionModel.java,v 1.4 2005/01/02 10:08:18 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,8 @@
 package org.argouml.uml.ui;
 
 import org.apache.log4j.Logger;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.DataTypesFactory;
 
 /**
  * 
@@ -71,7 +71,7 @@ public class UMLConditionExpressionModel extends UMLExpressionModel2 {
      */
     public Object newExpression() {
         LOG.debug("new boolean expression");
-        return DataTypesFactory.getFactory().createBooleanExpression("", "");
+        return Model.getDataTypesFactory().createBooleanExpression("", "");
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.31 2004/12/09 19:09:12 mvw Exp $
+// $Id: FigTransition.java,v 1.32 2005/01/02 10:08:27 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import org.argouml.application.api.Notation;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.StateMachinesHelper;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.argouml.uml.generator.ParserDisplay;
@@ -241,7 +240,7 @@ public class FigTransition extends FigEdgeModelElement {
      */
     protected Object getDestination() {
         if (getOwner() != null) {
-            return StateMachinesHelper.getHelper().getDestination(
+            return Model.getStateMachinesHelper().getDestination(
             /* (MTransition) */getOwner());
         }
         return null;
@@ -252,7 +251,7 @@ public class FigTransition extends FigEdgeModelElement {
      */
     protected Object getSource() {
         if (getOwner() != null) {
-            return StateMachinesHelper.getHelper().getSource(
+            return Model.getStateMachinesHelper().getSource(
             /* (MTransition) */getOwner());
         }
         return null;

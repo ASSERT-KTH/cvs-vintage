@@ -1,4 +1,4 @@
-// $Id: AbstractModelEventPump.java,v 1.3 2004/12/01 19:37:26 linus Exp $
+// $Id: AbstractModelEventPump.java,v 1.4 2005/01/02 10:08:16 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import java.beans.PropertyChangeListener;
  *
  * @author Linus Tolke
  */
-abstract class AbstractModelEventPump {
+public abstract class AbstractModelEventPump {
 
     /**
      * @see org.argouml.model.ModelEventPump#addModelEventListener(

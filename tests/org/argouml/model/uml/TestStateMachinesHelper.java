@@ -1,4 +1,4 @@
-// $Id: TestStateMachinesHelper.java,v 1.2 2004/11/21 14:34:51 linus Exp $
+// $Id: TestStateMachinesHelper.java,v 1.3 2005/01/02 10:08:11 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.model.uml;
 
 import junit.framework.TestCase;
 
+import org.argouml.model.Model;
 import org.argouml.util.CheckUMLModelHelper;
 
 /**
@@ -49,7 +50,7 @@ public class TestStateMachinesHelper extends TestCase {
     public void testGetMetaModelName() {
 	CheckUMLModelHelper.metaModelNameCorrect(
 			 this,
-			 StateMachinesFactory.getFactory(),
+			 Model.getStateMachinesFactory(),
 			 TestStateMachinesFactory.getAllModelElements());
     }
 
@@ -59,7 +60,7 @@ public class TestStateMachinesHelper extends TestCase {
     public void testIsValidStereoType() {
 	CheckUMLModelHelper.isValidStereoType(
 		      this,
-		      StateMachinesFactory.getFactory(),
+		      Model.getStateMachinesFactory(),
 		      TestStateMachinesFactory.getAllModelElements());
     }
 }

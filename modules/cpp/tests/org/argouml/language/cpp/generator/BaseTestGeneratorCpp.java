@@ -1,4 +1,4 @@
-// $Id: BaseTestGeneratorCpp.java,v 1.3 2004/12/28 19:08:36 mvw Exp $
+// $Id: BaseTestGeneratorCpp.java,v 1.4 2005/01/02 10:08:36 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,8 @@ import java.util.Collection;
 import junit.framework.TestCase;
 
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.uml.CoreFactory;
-import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.CoreFactory;
+import org.argouml.model.Model;
 
 /**
  * The Base class of all the TestCases for the GeneratorCpp class.
@@ -65,7 +65,7 @@ class BaseTestGeneratorCpp extends TestCase {
      */
     protected void setUp() {
         setGenerator(GeneratorCpp.getInstance());
-        setFactory(UmlFactory.getFactory().getCore());
+        setFactory(Model.getUmlFactory().getCore());
         setAClass(getFactory().buildClass("AClass"));
         
         Object me = getAClass();
@@ -75,7 +75,7 @@ class BaseTestGeneratorCpp extends TestCase {
             .getModel();
         Object voidType = ProjectManager.getManager().getCurrentProject()
             .findType("void");
-        setFooMethod(UmlFactory.getFactory().getCore().buildOperation(me, 
+        setFooMethod(Model.getUmlFactory().getCore().buildOperation(me, 
                 model, voidType, "foo", propertyChangeListeners));
     }
 

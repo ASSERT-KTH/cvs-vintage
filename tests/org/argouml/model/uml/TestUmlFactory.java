@@ -1,4 +1,4 @@
-// $Id: TestUmlFactory.java,v 1.2 2003/12/15 14:04:25 mkl Exp $
+// $Id: TestUmlFactory.java,v 1.3 2005/01/02 10:08:11 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,9 @@
 
 package org.argouml.model.uml;
 
+import org.argouml.model.Model;
+import org.argouml.model.UmlFactory;
+
 import junit.framework.TestCase;
 
 
@@ -47,7 +50,7 @@ public class TestUmlFactory extends TestCase {
      * deleted.
      */
     public void testDelete() {
-	UmlFactory fy = UmlFactory.getFactory();
+	UmlFactory fy = Model.getUmlFactory();
 
 	//	fy.delete(fy.getCore().
 	fy.delete(fy.getCore().createAbstraction());

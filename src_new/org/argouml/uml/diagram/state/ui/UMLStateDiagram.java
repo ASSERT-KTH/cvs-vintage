@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.63 2004/12/30 23:44:38 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.64 2005/01/02 10:08:27 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: UMLStateDiagram
 // Original Author: your email here
 
-// $Id: UMLStateDiagram.java,v 1.63 2004/12/30 23:44:38 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.64 2005/01/02 10:08:27 linus Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -35,17 +35,15 @@ import java.beans.PropertyVetoException;
 import javax.swing.Action;
 
 import org.apache.log4j.Logger;
-
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
 import org.argouml.uml.diagram.state.StateDiagramGraphModel;
 import org.argouml.uml.diagram.ui.RadioAction;
 import org.argouml.uml.diagram.ui.UMLDiagram;
-
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.base.LayerPerspectiveMutable;
 import org.tigris.gef.base.ModeCreatePolyEdge;
@@ -417,8 +415,8 @@ public class UMLStateDiagram extends UMLDiagram {
     public boolean needsToBeRemoved() {
         Object context = ModelFacade.getContext(theStateMachine);
         if (context == null) return true;
-        if (UmlFactory.getFactory().isRemoved(theStateMachine)) return true;
-        if (UmlFactory.getFactory().isRemoved(getNamespace())) return true;
+        if (Model.getUmlFactory().isRemoved(theStateMachine)) return true;
+        if (Model.getUmlFactory().isRemoved(getNamespace())) return true;
         return false;
     }
     

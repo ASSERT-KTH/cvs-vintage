@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAvailableContentsListModel.java,v 1.19 2004/12/20 10:46:33 mvw Exp $
+// $Id: UMLClassifierRoleAvailableContentsListModel.java,v 1.20 2005/01/02 10:08:16 linus Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,9 @@ package org.argouml.uml.ui.behavior.collaborations;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CollaborationsHelper;
+import org.argouml.model.uml.CollaborationsHelperImpl;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 import org.tigris.gef.presentation.Fig;
@@ -54,7 +55,7 @@ public class UMLClassifierRoleAvailableContentsListModel
      */
     protected void buildModelList() {
         setAllElements(
-            CollaborationsHelper.getHelper().allAvailableContents(
+            Model.getCollaborationsHelper().allAvailableContents(
 	       /*(MClassifierRole)*/ getTarget()));
     }
 

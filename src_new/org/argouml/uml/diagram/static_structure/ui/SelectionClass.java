@@ -1,4 +1,4 @@
-// $Id: SelectionClass.java,v 1.18 2004/08/07 15:39:55 mvw Exp $
+// $Id: SelectionClass.java,v 1.19 2005/01/02 10:08:23 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,14 +32,12 @@ import java.awt.event.MouseEvent;
 import javax.swing.Icon;
 
 import org.apache.log4j.Logger;
-
 import org.argouml.application.helpers.ResourceLoaderWrapper;
-import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.deployment.DeploymentDiagramGraphModel;
 import org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode;
 import org.argouml.uml.diagram.ui.SelectionWButtons;
-
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.ModeManager;
@@ -262,7 +260,7 @@ public class SelectionClass extends SelectionWButtons {
      * @see org.argouml.uml.diagram.ui.SelectionWButtons#getNewNode(int)
      */
     protected Object getNewNode(int buttonCode) {
-        return UmlFactory.getFactory().getCore().createClass();
+        return Model.getUmlFactory().getCore().createClass();
     }
 
     /**

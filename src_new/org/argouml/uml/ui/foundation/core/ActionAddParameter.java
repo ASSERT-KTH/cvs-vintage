@@ -1,4 +1,4 @@
-// $Id: ActionAddParameter.java,v 1.2 2004/12/28 04:42:09 bobtarling Exp $
+// $Id: ActionAddParameter.java,v 1.3 2005/01/02 10:08:21 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,8 +31,8 @@ import javax.swing.Action;
 
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CoreFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
@@ -66,7 +66,7 @@ class ActionAddParameter extends AbstractActionNewModelElement {
                 Object voidType = ProjectManager.getManager().getCurrentProject().findType("void");
                 Collection propertyChangeListeners = ProjectManager.getManager().getCurrentProject().findFigsForMember(feature);
                 TargetManager.getInstance().setTarget(
-                        CoreFactory.getFactory().buildParameter(feature, model, voidType, propertyChangeListeners));
+                        Model.getCoreFactory().buildParameter(feature, model, voidType, propertyChangeListeners));
                 super.actionPerformed(e);
             }
         }

@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxEntry.java,v 1.17 2004/09/15 19:17:05 mvw Exp $
+// $Id: UMLComboBoxEntry.java,v 1.18 2005/01/02 10:08:18 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,10 +23,12 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
-import org.argouml.uml.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
+import org.argouml.uml.Profile;
 
 /**
  * A combobox entry.
@@ -173,7 +175,7 @@ public class UMLComboBoxEntry implements Comparable {
                 }
             }
             if (ns == null) {
-                ns = UmlFactory.getFactory().getModelManagement()
+                ns = Model.getUmlFactory().getModelManagement()
                     .createPackage();
                 ModelFacade.setName(ns, phantomName);
                 ModelFacade.addOwnedElement(targetParentNS, ns);

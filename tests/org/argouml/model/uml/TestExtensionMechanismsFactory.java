@@ -1,4 +1,4 @@
-// $Id: TestExtensionMechanismsFactory.java,v 1.2 2004/11/21 14:28:10 linus Exp $
+// $Id: TestExtensionMechanismsFactory.java,v 1.3 2005/01/02 10:08:11 linus Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.model.uml;
 
 import junit.framework.TestCase;
 
+import org.argouml.model.Model;
 import org.argouml.util.CheckUMLModelHelper;
 
 /**
@@ -54,8 +55,8 @@ public class TestExtensionMechanismsFactory extends TestCase {
      * Test if the ExtensionMechanismsFactory is really a singleton.
      */
     public void testSingleton() {
-	Object o1 = ExtensionMechanismsFactory.getFactory();
-	Object o2 = ExtensionMechanismsFactory.getFactory();
+	Object o1 = Model.getExtensionMechanismsFactory();
+	Object o2 = Model.getExtensionMechanismsFactory();
 	assertTrue("Different singletons", o1 == o2);
     }
 
@@ -70,7 +71,7 @@ public class TestExtensionMechanismsFactory extends TestCase {
 
 	CheckUMLModelHelper.createAndRelease(
 		     this,
-		     ExtensionMechanismsFactory.getFactory(),
+		     Model.getExtensionMechanismsFactory(),
 		     objs);
 
     }
@@ -81,7 +82,7 @@ public class TestExtensionMechanismsFactory extends TestCase {
     public void testDeleteComplete() {
 	CheckUMLModelHelper.deleteComplete(
 		   this,
-		   ExtensionMechanismsFactory.getFactory(),
+		   Model.getExtensionMechanismsFactory(),
 		   allModelElements);
     }
 

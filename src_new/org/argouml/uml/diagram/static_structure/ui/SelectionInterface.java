@@ -1,4 +1,4 @@
-// $Id: SelectionInterface.java,v 1.22 2004/09/29 18:46:28 mvw Exp $
+// $Id: SelectionInterface.java,v 1.23 2005/01/02 10:08:23 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +32,8 @@ import javax.swing.Icon;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode;
 import org.argouml.uml.diagram.ui.SelectionWButtons;
 import org.tigris.gef.base.Editor;
@@ -194,7 +194,7 @@ public class SelectionInterface extends SelectionWButtons {
      * @see org.argouml.uml.diagram.ui.SelectionWButtons#getNewNode(int)
      */
     protected Object getNewNode(int buttonCode) {
-        return UmlFactory.getFactory().getCore().createClass();
+        return Model.getUmlFactory().getCore().createClass();
     }
 
 } /* end class SelectionInterface */

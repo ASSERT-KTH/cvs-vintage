@@ -1,4 +1,4 @@
-// $Id: ChildGenUML.java,v 1.16 2004/08/29 11:48:45 mvw Exp $
+// $Id: ChildGenUML.java,v 1.17 2005/01/02 10:08:15 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,19 +25,18 @@
 // File: ChildGenUML.java
 // Classes: ChildGenUML
 // Original Author: jrobbins
-// $Id: ChildGenUML.java,v 1.16 2004/08/29 11:48:45 mvw Exp $
+// $Id: ChildGenUML.java,v 1.17 2005/01/02 10:08:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
-import org.apache.log4j.Logger;
-
 import java.util.Enumeration;
 import java.util.Vector;
-import org.argouml.kernel.Project;
-import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlHelper;
 
+import org.apache.log4j.Logger;
+import org.argouml.kernel.Project;
+import org.argouml.model.Model;
+import org.argouml.model.ModelFacade;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.util.ChildGenerator;
 import org.tigris.gef.util.EnumerationComposite;
@@ -116,7 +115,7 @@ public class ChildGenUML implements ChildGenerator {
 	// // needed?
 	if (ModelFacade.isAStateMachine(o)) {
 	    EnumerationComposite res = new EnumerationComposite();
-	    Object top = UmlHelper.getHelper().getStateMachines().getTop(o);
+	    Object top = Model.getUmlHelper().getStateMachines().getTop(o);
 	    if (top != null) res.addSub(new EnumerationSingle(top));
 	    res.addSub(new Vector(ModelFacade.getTransitions(o)));
 	    return res;

@@ -1,4 +1,4 @@
-// $Id: ActionNewPseudoState.java,v 1.8 2004/12/05 19:31:04 mvw Exp $
+// $Id: ActionNewPseudoState.java,v 1.9 2005/01/02 10:07:53 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.Action;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.StateMachinesFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
@@ -69,7 +69,7 @@ public class ActionNewPseudoState extends AbstractActionNewModelElement {
         super.actionPerformed(e);
         Object target = TargetManager.getInstance().getModelTarget();
         Object ps = 
-            StateMachinesFactory.getFactory().buildPseudoState(target);
+            Model.getStateMachinesFactory().buildPseudoState(target);
         if (kind != null) {
             ModelFacade.setKind(ps, kind);
         }

@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.80 2004/12/09 19:09:11 mvw Exp $
+// $Id: FigInterface.java,v 1.81 2005/01/02 10:08:23 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,6 @@ import org.argouml.application.api.Notation;
 import org.argouml.language.helpers.NotationHelper;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
@@ -101,7 +100,7 @@ public class FigInterface extends FigNodeModelElement
      * variable (rather than local to the method).<p>
      */
     private Object resident =
-        UmlFactory.getFactory().getCore().createElementResidence();
+        Model.getUmlFactory().getCore().createElementResidence();
 
     /**
      * Text highlighted by mouse actions on the diagram.<p>

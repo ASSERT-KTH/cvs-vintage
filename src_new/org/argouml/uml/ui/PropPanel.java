@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.101 2004/12/21 18:05:51 bobtarling Exp $
+// $Id: PropPanel.java,v 1.102 2005/01/02 10:08:18 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,8 +46,8 @@ import javax.swing.event.EventListenerList;
 
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.CoreHelper;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.TabSpawnable;
@@ -594,12 +594,12 @@ public abstract class PropPanel
         */
         for (int i = 0; i < metaclasses.length; i++) {
             Object clazz = metaclasses[i];
-            if (CoreHelper.getHelper().isSubType(ModelFacade.NAMESPACE,
+            if (Model.getCoreHelper().isSubType(ModelFacade.NAMESPACE,
                                                  clazz)) {
                 UmlModelEventPump.getPump()
 		    .addClassModelEventListener(this, clazz, "ownedElement");
             }
-            if (CoreHelper.getHelper().isSubType(ModelFacade.MODELELEMENT,
+            if (Model.getCoreHelper().isSubType(ModelFacade.MODELELEMENT,
                                                  clazz)) {
                 UmlModelEventPump.getPump()
 		    .addClassModelEventListener(this, clazz, "name");

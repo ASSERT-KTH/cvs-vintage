@@ -1,4 +1,4 @@
-// $Id: ActionAddTopLevelPackage.java,v 1.13 2004/12/30 12:34:00 mvw Exp $
+// $Id: ActionAddTopLevelPackage.java,v 1.14 2005/01/02 10:08:18 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,8 +28,8 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlFactory;
 /** @stereotype singleton
  */
 public class ActionAddTopLevelPackage extends UMLAction {
@@ -66,7 +66,7 @@ public class ActionAddTopLevelPackage extends UMLAction {
         int numPacks = p.getUserDefinedModels().size();
         String nameStr = "package_" + (numPacks + 1);
         Object/*MModel*/ model =
-	    UmlFactory.getFactory().getModelManagement().createModel();
+	    Model.getUmlFactory().getModelManagement().createModel();
         ModelFacade.setName(model, nameStr);
         p.addMember(model);
         super.actionPerformed(ae);

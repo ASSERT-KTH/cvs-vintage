@@ -1,4 +1,4 @@
-// $Id: ActionGenerateProjectCode.java,v 1.20 2004/12/26 11:14:44 mvw Exp $
+// $Id: ActionGenerateProjectCode.java,v 1.21 2005/01/02 10:08:18 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,8 +30,8 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.ModelManagementHelper;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.ui.UMLDiagram;
@@ -86,7 +86,7 @@ public class ActionGenerateProjectCode extends UMLAction {
 	if (ns == null) return;
 	while (ModelFacade.getNamespace(ns) != null) 
 	    ns = ModelFacade.getNamespace(ns);
-	Collection elems = ModelManagementHelper.getHelper()
+	Collection elems = Model.getModelManagementHelper()
 	    .getAllModelElementsOfKind(ns, ModelFacade.CLASSIFIER);
 	//Project p = ProjectManager.getManager().getCurrentProject();
 	//Collection elems =
