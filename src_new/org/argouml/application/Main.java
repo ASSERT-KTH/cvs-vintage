@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.97 2004/05/18 10:11:12 mkl Exp $
+// $Id: Main.java,v 1.98 2004/06/07 19:19:36 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -391,7 +391,7 @@ public class Main {
         System.err.println("You can also set java settings which influence "
 			   + "the behaviour of ArgoUML:");
         System.err.println("  -Duser.language    [e.g. en]");
-        System.err.println("  -Duser.region      [e.g. US]");
+        System.err.println("  -Duser.country     [e.g. US]");
         System.err.println("  -Dforce.nativelaf  [force ArgoUML to use "
 			   + "the native look and feel. UNSUPPORTED]");
         System.err.println("\n\n");
