@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.26 2002/01/31 03:49:03 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.27 2002/01/31 04:29:13 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -85,12 +85,13 @@ Bug No.  Description
          the locale and character set encoding of the directory listings
          are derived.
 
-         Added a delaySocketClose attribute to Http10Interceptor.  The
-         default is false.  If set true, a Thread.sleep(0) is executed
-         before the socket is closed.  This was needed by Cactus when
-         run on a high powered Windows XP box.  The sleep(0) helps ensure
-         the test get a chance to receive its input before the socket
-         is closed.  Otherwise, "Socket reset by peer" errors occur.
+         Added a socketCloseDelay attribute to Http10Interceptor.  The
+         default is -1, disabled.  If set to 0, a Thread.yield() is executed
+         before the socket is closed.  If set greater than 0, it spins
+         for the specified amount of time in milliseconds.  This was needed
+         by Cactus when run some systems.  This helps insure the client end
+         of the socket gets a chance to read the returned response before the
+         socket is closed.  Otherwise, "Socket reset by peer" errors occur.
 
 	 Make the App-classloader configurable to allow using the 1.1
 	 loader even when running under Java2.  This should allow for better
@@ -109,6 +110,16 @@ Bug No.  Description
          support for isapi_redirect.dll's use with web servers other than
          Tomcat 3.3, such as Tomcat 3.2.x.
 
+         Added a useWebAppCL attribute to JspInterceptor.  When true,
+         Java compilation using "sun.tools.javac.Main" will run in the
+         web application's classloader.  When false (the default), Java
+         compilation using "sun.tools.javac.Main" runs in the container
+         classloader.  Using a value of true may help on certain HP-UX
+         systems.  In all other cases, useWebAppCL should be false.
+         Currently webWebAppCL="true" can not be used when running under a
+         security manager, otherwise security exceptions will prevent
+         JSPs from compiling.
+
 
 Server:
 
@@ -117,6 +128,13 @@ Bug No.  Description
          Fixed problem with JSP page names that match a Windows DOS device
          name, such as aux.jsp.  Instead of potentially hanging the thread
          that services the request, these requests now return "404 Not Found".
+
+1657     JSPs with tag names that contain '-' or '.' will now compile without
+         an "Invalid expression" error
+
+4382     tomcat.sh script no longer deletes the ajp12.id file which could
+         cause a problem shutting down if Tomcat was accidentally started
+         twice.
 
 5994     Fix seconds calculation problem in DateTool
 
@@ -144,6 +162,13 @@ Bug No.  Description
          Fixed bug with useJspServlet option in JspInterceptor.  If set to true
          untrusted web applications couldn't run the JspServlet because
          jasper.jar and tools.jar weren't accessible.
+
+4923     Default permissions were added in PolicyInterceptor to allow direct
+         read access to the webapp docBase and work directories.  This is
+         in addition to the permissions allowing access to the contents of
+         these directories.  These new permissions allows "exists()" to be
+         executed on those directories without a security exception when
+         running under a security manager.
 
 4955	 Fixed bug in the parsing of the query string to 
 	 RequestDispatcher.include/forward wasn't handling the case where only
