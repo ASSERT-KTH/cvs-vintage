@@ -292,6 +292,7 @@
     <jar jarfile="${tomcat.build}/lib/container/tomcat_util.jar"
          basedir="${tomcat.build}/classes">
       <include name="org/apache/tomcat/util/**"/>
+      <exclude name="org/apache/tomcat/util/test/**"/>
     </jar>
   </target>
 
@@ -589,6 +590,10 @@
     </copy>
     <copy tofile="${tomcat.build}/webapps/admin/WEB-INF/lib/ant.jar"
           file="${ant.lib}/ant.jar"/>
+    <jar jarfile="${tomcat.build}/webapps/admin/WEB-INF/lib/tomcat_util_test.jar"
+         basedir="${tomcat.build}/classes">
+      <include name="org/apache/tomcat/util/**"/>
+    </jar>
     <javac srcdir="src/admin/WEB-INF/classes"
            optimize="${optimize}"
            destdir="${tomcat.build}/webapps/admin/WEB-INF/classes"
