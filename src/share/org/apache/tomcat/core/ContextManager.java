@@ -3,7 +3,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -11,7 +11,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -19,15 +19,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -55,7 +55,7 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 
 package org.apache.tomcat.core;
@@ -91,7 +91,7 @@ import org.apache.tomcat.service.PoolTcpConnector;
  * Each will corespond to a separate servlet engine/container that will work
  * independent of each other in the same VM ( each having possible multiple
  * virtual hosts, etc). Both uses are not forbiden, but shouldn't be used
- * unless there is real need for that - and if that happen we should 
+ * unless there is real need for that - and if that happen we should
  * add interfaces to express the use cases.
  */
 
@@ -100,23 +100,24 @@ import org.apache.tomcat.service.PoolTcpConnector;
  * ContextManager is the entry point and "controler" of the servlet execution.
  * It maintains a list of WebApplications and a list of global event interceptors
  * that are set up to handle the actual execution.
- * 
+ *
  * The ContextManager is a helper that will direct the request processing flow
  * from its arrival from the server/protocl adapter ( in service() ).
  * It is also responsible for controlling the request processing steps, from
  * request parsing and mapping, auth, autorization, pre/post service, actual
  * invocation and logging.
- * 
- * It will also store properties that are global to the servlet container - 
- * like root directory, install dir, work dir. 
+ *
+ * It will also store properties that are global to the servlet container -
+ * like root directory, install dir, work dir.
  *
  *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
  * @author Harish Prabandham
  * @author costin@eng.sun.com
+ * @author Hans Bergsten [hans@gefionsoftware.com]
  */
-public class ContextManager { 
+public class ContextManager {
 
     /**
      * The string constants for this ContextManager.
@@ -128,7 +129,7 @@ public class ContextManager {
     */
     private Vector requestInterceptors = new Vector();
     private Vector contextInterceptors = new Vector();
-    
+
     // cache - faster access to interceptors, using [] instead of Vector
     ContextInterceptor cInterceptors[];
     RequestInterceptor rInterceptors[];
@@ -149,7 +150,7 @@ public class ContextManager {
     int debug=0;
 
     // Global properties for this tomcat instance:
-    
+
     /** Private workspace for this server
      */
     String workDir;
@@ -161,13 +162,13 @@ public class ContextManager {
     String home;
 
     /** The directory where tomcat is installed
-     */  
+     */
     String installDir;
 
     /** Default work dir, relative to home
      */
     public static final String DEFAULT_WORK_DIR="work";
-    
+
     /**
      * Construct a new ContextManager instance with default values.
      */
@@ -175,18 +176,18 @@ public class ContextManager {
     }
 
     // -------------------- setable properties: tomcat directories  ---
-    /** 
+    /**
      *  The home of the tomcat instance - you can have multiple
      *  users running tomcat, with a shared install directory.
      *  Every instance will have its own logs, webapps directory
      *  and local config, all relative to this directory.
      */
     public void setHome(String home) {
-	this.home=FileUtil.getCanonicalPath( home ); 
+	this.home=FileUtil.getCanonicalPath( home );
 	logInt( "Setting home to " + this.home );
     }
-    
-    /** 
+
+    /**
      *  The home of the tomcat instance - you can have multiple
      *  users running tomcat, with a shared install directory.
      *  Every instance will have its own logs, webapps directory
@@ -206,7 +207,7 @@ public class ContextManager {
 	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex)
 		{ex.printStackTrace();}
 	}
-	
+
 	if(home!=null) return home;
 
 	// If none defined, assume tomcat.home is used as base.
@@ -216,16 +217,16 @@ public class ContextManager {
 	if(home!=null) return home;
 
 	// try at least the system property
-	home=FileUtil.getCanonicalPath( System.getProperty("tomcat.home") );	
+	home=FileUtil.getCanonicalPath( System.getProperty("tomcat.home") );
 	if(home!=null) return home;
-	
+
 	home=FileUtil.getCanonicalPath( "." );
 	// try current dir - we should throw an exception
 	return home;
     }
 
     /** Get installation directory, where libraries and default files
-     *	are located.  If path specified is relative, 
+     *	are located.  If path specified is relative,
      *  evaluate it relative to the current working directory.
      */
     public String getInstallDir() {
@@ -239,7 +240,7 @@ public class ContextManager {
 	}
 
 	if(installDir!= null) return installDir;
-	
+
 	installDir=System.getProperty("tomcat.home");
 	if(installDir!= null) return installDir;
 
@@ -250,16 +251,16 @@ public class ContextManager {
     }
 
     /** Set installation directory, where libraries and default files
-     *	are located.  If path specified is relative, 
+     *	are located.  If path specified is relative,
      *  evaluate it relative to the current working directory.
      */
     public void setInstallDir( String tH ) {
 	installDir=tH;
     }
-    
+
     /**
      * WorkDir property - where all working files will be created
-     */ 
+     */
     public void setWorkDir( String wd ) {
 	if(debug>0) logInt("set work dir " + wd);
 	// make it absolute
@@ -274,13 +275,13 @@ public class ContextManager {
 
     /**
      * WorkDir property - where all working files will be created
-     */ 
+     */
     public String getWorkDir() {
 	if( workDir==null)
 	    workDir=getHome() + File.separator + DEFAULT_WORK_DIR;
 	return workDir;
     }
-    
+
     /**
      * Get the default Security Permissions for this server
      */
@@ -295,7 +296,7 @@ public class ContextManager {
 	this.permissions = permissions;
     }
 
-    
+
     // -------------------- Support functions --------------------
 
     /**
@@ -304,7 +305,7 @@ public class ContextManager {
      *  try to avoid any "magic" - you either set up everything ( using
      *  server.xml or alternatives) or you don't set up and then defaults
      *  will be used.
-     * 
+     *
      *  Set interceptors or call setDefaults before adding contexts.
      *
      *  This is mostly used to allow "0 config" case ( you just want the
@@ -318,7 +319,7 @@ public class ContextManager {
 		org.apache.tomcat.service.http.HttpConnectionHandler());
 	    addServerConnector(  sc );
 	}
-	
+
 	if( contextInterceptors.size()==0) {
 	    if(debug>5) logInt("Setting default context interceptors");
 	    addContextInterceptor(new LogEvents());
@@ -330,7 +331,7 @@ public class ContextManager {
 	    addContextInterceptor( new WebXmlReader());
 	    addContextInterceptor(new LoadOnStartupInterceptor());
 	}
-	
+
 	if( requestInterceptors.size()==0) {
 	    if(debug>5) logInt("Setting default request interceptors");
 	    addRequestInterceptor(new SessionInterceptor());
@@ -342,7 +343,7 @@ public class ContextManager {
 		org.apache.tomcat.session.StandardSessionInterceptor());
 	}
     }
-     
+
     /** Init() is called after the context manager is set up
      *  and configured. It will init all internal components
      *  to be ready for start.
@@ -358,7 +359,7 @@ public class ContextManager {
 			     System.getProperty( "java.class.path" ));
 
 	setAccount( ACC_INIT_START, System.currentTimeMillis());
-	
+
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].engineInit( this );
@@ -374,7 +375,7 @@ public class ContextManager {
 	    } catch (TomcatException ex ) {
 		if( context!=null ) {
 		    logInt( "ERROR initializing " + context.toString() );
-		    removeContext( context  );	    
+		    removeContext( context  );
 		    Throwable ex1=ex.getRootCause();
 		    if( ex1!=null ) ex.printStackTrace();
 		}
@@ -396,7 +397,7 @@ public class ContextManager {
 	    cI[i].engineShutdown( this );
 	}
     }
-    
+
     /**
      * Initializes this context to be able to accept requests. This action
      * will cause the context to load it's configuration information
@@ -420,7 +421,7 @@ public class ContextManager {
 	// XXX This is here by accident, it should be moved as part
 	// of a normal context interceptor that will handle all standard
 	// start/stop actions
-	
+
 	// shut down and servlets
 	Enumeration enum = ctx.getServletNames();
 	while (enum.hasMoreElements()) {
@@ -433,13 +434,13 @@ public class ContextManager {
 		ctx.log( "Error in destroy ", ex);
 	    }
 	}
-	
+
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].contextShutdown( ctx );
 	}
     }
-    
+
     /** Will start the connectors and begin serving requests.
      *  It must be called after init.
      */
@@ -461,13 +462,13 @@ public class ContextManager {
 	shutdown();
     }
 
-    // -------------------- Contexts -------------------- 
+    // -------------------- Contexts --------------------
     /** Return the list of contexts managed by this server
      */
     public Enumeration getContexts() {
 	return contextsV.elements();
     }
-    
+
     /**
      * Adds a new Context to the set managed by this ContextManager.
      *
@@ -497,12 +498,12 @@ public class ContextManager {
 	    contexts.put( ctx.getPath(), ctx );
 	contextsV.addElement( ctx );
     }
-    
+
     /** Shut down and removes a context from service
      */
     public void removeContext( Context context ) throws TomcatException {
 	if( context==null ) return;
-	
+
 	logInt( "Removing context " + context.toString());
 
 	ContextInterceptor cI[]=getContextInterceptors();
@@ -516,7 +517,7 @@ public class ContextManager {
 
     void doReload( Request req, Context context ) throws TomcatException {
 	if( context==null ) return;
-	
+
 	if( debug>0 ) logInt( "Reloading context " + context.toString());
 
 	ContextInterceptor cI[]=getContextInterceptors();
@@ -565,7 +566,7 @@ public class ContextManager {
     public Enumeration getConnectors() {
 	return connectors.elements();
     }
-    
+
     public void addRequestInterceptor( RequestInterceptor ri ) {
 	if(debug>0) logInt("Add requestInterceptor javaClass=\"" +
 			   ri.getClass().getName() + "\" ");
@@ -578,7 +579,7 @@ public class ContextManager {
 	That includes global ( context manager ) interceptors,
 	webapp ( Context ) interceptors and possibly interceptors
 	associated with containers ( urls inside the web app ).
-	
+
 	For performance reasons we use arrays and cache the result inside
 	containers.
 
@@ -641,16 +642,16 @@ public class ContextManager {
 	return cInterceptors;
     }
     // -------------------- Request processing / subRequest ------------------
-    // -------------------- Main request processing methods ------------------ 
+    // -------------------- Main request processing methods ------------------
 
     /** Prepare the req/resp pair for use in tomcat.
      *  Call it after you create the request/response objects
      */
     public void initRequest( Request req, Response resp ) {
 	// used to be done in service(), but there is no need to do it
-	// every time. 
+	// every time.
 	// We may add other special calls here.
-	// XXX Maybe make it a callback? 
+	// XXX Maybe make it a callback?
 	resp.setRequest( req );
 	req.setResponse( resp );
 	req.setContextManager( this );
@@ -705,7 +706,7 @@ public class ContextManager {
 		handleStatus( req, res, status );
 		return;
 	    }
-	    
+
 	    String roles[]=req.getRequiredRoles();
 	    if(roles != null )
 		status=doAuthorize( req, res, roles );
@@ -725,12 +726,12 @@ public class ContextManager {
 
     /** Will find the ServletWrapper for a servlet, assuming we already have
      *  the Context. This is also used by Dispatcher and getResource -
-     *  where the Context is already known. 
+     *  where the Context is already known.
      */
     public int processRequest( Request req ) {
 	if(debug>9) logInt("ProcessRequest: "+req.toString());
 	int status=0;
-	
+
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
 	    status=((RequestInterceptor)requestInterceptors.elementAt(i)).
 		contextMap( req );
@@ -744,7 +745,7 @@ public class ContextManager {
 	}
 
 	if(debug>9) logInt("After processing: "+req.toString());
-	
+
 	return 0;
     }
 
@@ -754,7 +755,7 @@ public class ContextManager {
     public int doAuthenticate( Request req, Response res ) {
 	int status=0;
 	RequestInterceptor reqI[]= getRequestInterceptors(req);
-	
+
 	for( int i=0; i< reqI.length; i++ ) {
 	    status=reqI[i].authenticate( req, res );
 	    if ( status != 0 ) {
@@ -772,7 +773,7 @@ public class ContextManager {
     public int doAuthorize( Request req, Response res, String roles[] ) {
 	int status=0;
 	RequestInterceptor reqI[]= getRequestInterceptors(req);
-	
+
 	for( int i=0; i< reqI.length; i++ ) {
 	    status = reqI[i].authorize( req, res, roles );
 	    if ( status != 0 ) {
@@ -789,7 +790,7 @@ public class ContextManager {
     */
     int doBeforeBody( Request req, Response res ) {
 	RequestInterceptor reqI[]= getRequestInterceptors(req);
-	
+
 	for( int i=0; i< reqI.length; i++ ) {
 	    reqI[i].beforeBody( req, res );
 	}
@@ -803,34 +804,34 @@ public class ContextManager {
     */
     int doBeforeCommit( Request req, Response res ) {
 	RequestInterceptor reqI[]= getRequestInterceptors(req);
-	
+
 	for( int i=0; i< reqI.length; i++ ) {
 	    reqI[i].beforeCommit( req, res );
 	}
 	return 0;
     }
-    
+
     int doPreService( Request req, Response res ) {
 	RequestInterceptor reqI[]= getRequestInterceptors(req);
-	
+
 	for( int i=0; i< reqI.length; i++ ) {
 	    reqI[i].preService( req, res );
 	}
 	return 0;
     }
-    
+
     int doPostService( Request req, Response res ) {
 	RequestInterceptor reqI[]= getRequestInterceptors(req);
-	
+
 	for( int i=0; i< reqI.length; i++ ) {
 	    reqI[i].postService( req, res );
 	}
 	return 0;
     }
-    
+
     int doNewSessionRequest( Request req, Response res ) {
 	RequestInterceptor reqI[]= getRequestInterceptors(req);
-	
+
 	for( int i=0; i< reqI.length; i++ ) {
 	    reqI[i].newSessionRequest( req, res );
 	}
@@ -843,7 +844,7 @@ public class ContextManager {
     */
     int doAfterBody( Request req, Response res ) {
 	RequestInterceptor reqI[]= getRequestInterceptors(req);
-	
+
 	for( int i=0; i< reqI.length; i++ ) {
 	    reqI[i].afterBody( req, res );
 	}
@@ -907,8 +908,8 @@ public class ContextManager {
 	//	lr.processQueryString();
 
 	//	lr.setContext( ctx );
-	
-	// XXX set query string too 
+
+	// XXX set query string too
 	return lr;
     }
 
@@ -919,8 +920,8 @@ public class ContextManager {
     public void handleStatus( Request req, Response res, int code ) {
 	String errorPath=null;
 	Handler errorServlet=null;
-	
-	res.reset();
+
+	res.resetBuffer();
 
 	if( code==0 )
 	    code=res.getStatus();
@@ -939,7 +940,7 @@ public class ContextManager {
 	}
 	if( debug>0 )
 	    ctx.log( "Handler " + errorServlet + " " + errorPath);
-	
+
 	if( errorServlet==null )
 	    errorServlet=ctx.getServletByName( "tomcat.statusHandler");
 
@@ -954,7 +955,7 @@ public class ContextManager {
     // should show up  to the user - it gives up information
     // about the internal system !
     // Developers can/should use the logs !!!
-    
+
     /** General error handling mechanism. It will try to find an error handler
      * or use the default handler.
      */
@@ -986,9 +987,9 @@ public class ContextManager {
 	    System.out.println("ERROR: can't find default error handler "+
 			       "or error in default error page");
 	    t.printStackTrace();
-	} 
+	}
 
-	
+
 	String errorPath=null;
 	Handler errorServlet=null;
 
@@ -1000,14 +1001,14 @@ public class ContextManager {
 	    errorPath = ctx.getErrorPage(name);
 	    clazz = clazz.getSuperclass();
 	}
-	
+
 	if( errorPath != null ) {
 	    errorServlet=getHandlerForPath( ctx, errorPath );
 	}
 
 	if( errorLoop( ctx, req ) || errorServlet==null) ;
 	    errorServlet = ctx.getServletByName("tomcat.exceptionHandler");
-	
+
 	req.setAttribute("javax.servlet.error.exception_type", t.getClass());
 	req.setAttribute("javax.servlet.error.message", t.getMessage());
 	req.setAttribute("tomcat.servlet.error.throwable", t);
@@ -1023,12 +1024,12 @@ public class ContextManager {
 	RequestImpl req1=new RequestImpl();
 	ResponseImpl res1=new ResponseImpl();
 	initRequest( req1, res1 );
-	
+
 	req1.setRequestURI( ctx.getPath() + path );
 	processRequest( req1 );
 	return req1.getWrapper();
     }
-    
+
     /** Handle the case of error handler generating an error or special status
      */
     private boolean errorLoop( Context ctx, Request req ) {
@@ -1040,15 +1041,15 @@ public class ContextManager {
 			 req.getAttribute("javax.servlet.error.status_code") +
 			 " " + req.
 			 getAttribute("javax.servlet.error.exception_type"));
-	    
+
 	    return true;
 	}
 	return false;
     }
-    
+
 
     // -------------------- Support for notes --------------------
-        
+
     /** Note id counters. Synchronized access is not necesarily needed
      *  ( the initialization is in one thread ), but anyway we do it
      */
@@ -1057,7 +1058,7 @@ public class ContextManager {
     /** Maximum number of notes supported
      */
     public static final int MAX_NOTES=32;
-    public static final int RESERVED=3; 
+    public static final int RESERVED=3;
 
     public static final int SERVER_NOTE=0;
     public static final int CONTAINER_NOTE=1;
@@ -1065,7 +1066,7 @@ public class ContextManager {
     public static final int HANDLER_NOTE=3;
 
     public static final int REQ_RE_NOTE=0;
-    
+
     String noteName[][]=new String[4][MAX_NOTES];
 
     /** used to allow interceptors to set specific per/request, per/container
@@ -1079,9 +1080,9 @@ public class ContextManager {
      *  We use indexed notes instead of attributes for performance -
      * this is internal to tomcat and most of the time in critical path
      */
-    
+
     /** Create a new note id. Interceptors will get an Id at init time for
-     *  all notes that it needs. 
+     *  all notes that it needs.
      *
      *  Throws exception if too many notes are set ( shouldn't happen in
      *  normal use ).
@@ -1098,7 +1099,7 @@ public class ContextManager {
 	    if( name.equals( noteName[noteType][i] ) )
 		return i;
 	}
-	
+
 	if( noteId[noteType] >= MAX_NOTES )
 	    throw new TomcatException( "Too many notes ");
 
@@ -1112,8 +1113,8 @@ public class ContextManager {
     public String getNoteName( int noteType, int noteId ) {
 	return noteName[noteType][noteId];
     }
-    
-    // -------------------- Per-server notes -------------------- 
+
+    // -------------------- Per-server notes --------------------
     Object notes[]=new Object[MAX_NOTES];
 
     public void setNote( int pos, Object value ) {
@@ -1127,7 +1128,7 @@ public class ContextManager {
     // -------------------- Logging and debug --------------------
     boolean firstLog = true;
     LogHelper loghelper = new LogHelper("tc_log", "ContextManager");
-    
+
     // Not used, except in server.xml, and usage is unclear -- should
     // we kill it? Looks very obsolete.
     public void addLogger(Logger l) {
@@ -1144,7 +1145,7 @@ public class ContextManager {
 		l.setPath( wd.getAbsolutePath() );
 	    }
 	    // create the files, ready to log.
-	} 
+	}
 	l.open();
     }
 
@@ -1157,7 +1158,7 @@ public class ContextManager {
     public int getDebug() {
 	return debug;
     }
-    
+
     public final void log(String msg) {
 	loghelper.log(msg);
     }
@@ -1169,7 +1170,7 @@ public class ContextManager {
     public final void doLog(String msg) {
 	loghelper.log(msg);
     }
-    
+
     public final void doLog(String msg, Throwable t) {
 	loghelper.log(msg, t);
     }
@@ -1183,7 +1184,7 @@ public class ContextManager {
 
     public static final int ACC_INIT_START=0;
     public static final int ACC_INIT_END=0;
-    
+
     public static final int ACCOUNTS=7;
     long accTable[]=new long[ACCOUNTS];
 
@@ -1210,7 +1211,7 @@ public class ContextManager {
      * Sets the port number on which this server listens.
      *
      * @param port The new port number
-     * @deprecated 
+     * @deprecated
      */
     public void setPort(int port) {
 	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
@@ -1219,7 +1220,7 @@ public class ContextManager {
 
     /**
      * Gets the port number on which this server listens.
-     * @deprecated 
+     * @deprecated
      */
     public int getPort() {
 	//	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
@@ -1231,7 +1232,7 @@ public class ContextManager {
      * Sets the virtual host name of this server.
      *
      * @param host The new virtual host name
-     * @deprecated 
+     * @deprecated
      */
     public void setHostName( String host) {
 	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
@@ -1240,7 +1241,7 @@ public class ContextManager {
 
     /**
      * Gets the virtual host name of this server.
-     * @deprecated 
+     * @deprecated
      */
     public String getHostName() {
 	//	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
@@ -1249,7 +1250,7 @@ public class ContextManager {
 	return hostname;
     }
     // -------------------- DEPRECATED --------------------
-    
+
     /**
      * The set of Contexts associated with this ContextManager,
      * keyed by context paths.
@@ -1281,7 +1282,7 @@ public class ContextManager {
 	//	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	return (Context)contexts.get(name);
     }
-    
+
     /**
      * Shut down and removes a context from service.
      *
@@ -1377,5 +1378,5 @@ public class ContextManager {
         }
         return f;
     }
-    
+
 }
