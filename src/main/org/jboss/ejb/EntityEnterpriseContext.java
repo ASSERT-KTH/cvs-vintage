@@ -26,7 +26,7 @@ import javax.ejb.EntityContext;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  *
  * <p><b>Revisions</b>
  * <p>20010703 marcf
@@ -183,14 +183,11 @@ public class EntityEnterpriseContext
             throw new IllegalStateException( "No remote interface defined." );
          
          if (ejbObject == null) {
-            try {
+            
                // Create a new CacheKey
                Object cacheKey = ((EntityCache)((EntityContainer)con).getInstanceCache()).createCacheKey(id);
-               ejbObject = ((EntityContainer)con).getContainerInvoker().getEntityEJBObject(cacheKey);
-            }
-            catch (RemoteException re) {
-               throw new IllegalStateException();
-            }
+               ejbObject = (EJBObject) ((EntityContainer)con).getContainerInvoker().getEntityEJBObject(cacheKey);
+            
          }
 			
          return ejbObject;
