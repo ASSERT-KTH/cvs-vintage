@@ -51,6 +51,7 @@ import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
+import org.apache.turbine.util.Log;
 
 import org.apache.fulcrum.security.entity.User;
 import org.apache.turbine.services.pull.ApplicationTool;
@@ -70,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.18 2001/08/09 07:59:52 jon Exp $
+    @version $Id: Login.java,v 1.19 2001/08/13 00:27:36 jon Exp $
 */
 public class Login extends TemplateAction
 {
@@ -123,6 +124,7 @@ public class Login extends TemplateAction
         catch ( TurbineSecurityException e )
         {
             data.setMessage("Invalid username or password.");
+            Log.error ("Login: ", e);
             return failAction(data);
         }
         
