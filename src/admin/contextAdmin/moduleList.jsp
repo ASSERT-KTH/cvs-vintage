@@ -1,4 +1,5 @@
 <html>
+<%@ page errorPage="adminError.jsp" %>
 <%@ taglib uri="http://jakarta.apache.org/taglibs/tomcat_admin-1.0" 
            prefix="adm" %>
 
