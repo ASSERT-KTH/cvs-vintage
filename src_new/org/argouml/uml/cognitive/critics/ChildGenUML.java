@@ -24,7 +24,7 @@
 // File: ChildGenUML.java
 // Classes: ChildGenUML
 // Original Author: jrobbins
-// $Id: ChildGenUML.java,v 1.4 2002/10/20 21:11:14 linus Exp $
+// $Id: ChildGenUML.java,v 1.5 2002/10/24 10:31:35 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -44,7 +44,7 @@ import org.argouml.kernel.*;
  *  of any given part of the UML model.  Basically, it goes from
  *  Project, to Models, to ModelElements.  Argo's critic Agency uses
  *  this to apply critics where appropriate.
- *
+ * @stereotype singleton
  * @see org.argouml.cognitive.critics.Agency */
 
 public class ChildGenUML implements ChildGenerator {
