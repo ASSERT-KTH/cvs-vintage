@@ -28,7 +28,7 @@
 // File: ChildGenRelated.java
 // Classes: ChildGenRelated
 // Original Author: jrobbins
-// $Id: ChildGenRelated.java,v 1.1 1998/11/03 21:32:02 jrobbins Exp $
+// $Id: ChildGenRelated.java,v 1.2 1998/11/03 22:45:45 jrobbins Exp $
 
 package uci.uml.ui;
 
@@ -52,7 +52,8 @@ public class ChildGenRelated implements ChildGenerator {
 
     if (o instanceof Package) {
       Vector ownedElements = ((Package)o).getOwnedElement();
-      if (ownedElements != null) return ownedElements.elements();
+      if (ownedElements != null)
+	return new Enum(ownedElements.elements(), EOElement.SINGLETON);
     }
 
     if (o instanceof Classifier) {
@@ -143,3 +144,11 @@ public class ChildGenRelated implements ChildGenerator {
   }
 } /* end class ChildGenRelated */
 
+
+class EOElement implements Functor {
+  public static EOElement SINGLETON = new EOElement();
+  public Object apply(Object x) {
+    if (!(x instanceof ElementOwnership)) return x;
+    return ((ElementOwnership)x).getModelElement();
+  }
+} /* end class EOElement */
