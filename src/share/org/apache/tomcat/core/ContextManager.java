@@ -285,7 +285,7 @@ public class ContextManager {
     public void setDefaults() {
 	if(connectors.size()==0) {
 	    if(debug>5) log("Setting default adapter");
-	    org.apache.tomcat.service.SimpleTcpConnector sc=new org.apache.tomcat.service.SimpleTcpConnector();
+	    org.apache.tomcat.service.PoolTcpConnector sc=new org.apache.tomcat.service.PoolTcpConnector();
 	    sc.setTcpConnectionHandler( new org.apache.tomcat.service.http.HttpConnectionHandler());
 	    addServerConnector(  sc );
 	}
@@ -505,7 +505,7 @@ public class ContextManager {
      */
     public synchronized void addServerConnector( ServerConnector con ) {
 	if(debug>0) log("Add connector javaClass=\"" + con.getClass().getName() + "\"");
-	con.setContextManager( this );
+	con.setServer( this );
 	connectors.addElement( con );
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpConnection.java,v 1.2 2000/02/17 10:37:41 shachor Exp $
- * $Revision: 1.2 $
- * $Date: 2000/02/17 10:37:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpConnection.java,v 1.3 2000/05/31 20:58:38 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/05/31 20:58:38 $
  *
  * ====================================================================
  *
@@ -80,14 +80,14 @@ public class TcpConnection  { // implements Endpoint {
 
     // -------------------- Properties --------------------
 
-    TcpEndpoint endpoint;
+    PoolTcpEndpoint endpoint;
     Socket socket;
 
-    public void setEndpoint(TcpEndpoint endpoint) {
+    public void setEndpoint(PoolTcpEndpoint endpoint) {
 	this.endpoint = endpoint;
     }
 
-    public TcpEndpoint getEndpoint() {
+    public PoolTcpEndpoint getEndpoint() {
 	return endpoint;
     }
 

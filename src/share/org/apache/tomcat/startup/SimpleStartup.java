@@ -12,8 +12,6 @@ import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.core.*;
 
 // Used to stop tomcat
-import org.apache.tomcat.service.TcpEndpointConnector;
-import org.apache.tomcat.service.connector.Ajp12ConnectionHandler;
 
 /**
  * Simple starter for Tomcat.

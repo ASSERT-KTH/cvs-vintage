@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServerConnector.java,v 1.2 2000/04/25 22:07:04 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/04/25 22:07:04 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServerConnector.java,v 1.3 2000/05/31 20:58:37 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/05/31 20:58:37 $
  *
  * ====================================================================
  *
@@ -95,7 +95,12 @@ public interface ServerConnector {
      */
     public void stop() throws Exception;
 
-    /** Set the entry point to tomcat
+    /** Set the entry point to tomcat. This object will be used by the
+     *  protocol implementation. 
      */
-    public void setContextManager( ContextManager cm );
+    public void setServer( Object cm );
+
+    /** Set a config property
+     */
+    public void setAttribute( String s, Object value );
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.7 2000/05/23 21:39:52 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/05/23 21:39:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.8 2000/05/31 20:58:39 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/05/31 20:58:39 $
  *
  * ====================================================================
  *
@@ -77,8 +77,8 @@ public class JNIConnectionHandler {
     public JNIConnectionHandler() {
     }
 
-    public void setContextManager(ContextManager contextM) {
-    	this.contextM=contextM;
+    public void setServer(Object contextM) {
+    	this.contextM=(ContextManager)contextM;
     }
 
     public void setNativeLibrary(String lib) {

@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpConnector.java,v 1.4 2000/05/26 17:32:14 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/05/26 17:32:14 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -89,7 +85,7 @@ import java.util.*;
  * @author costin@eng.sun.com
  * @author Gal Shachor [shachor@il.ibm.com]
  */
-public class PoolTcpConnector  extends TcpEndpointConnector  implements ServerConnector {
+public class PoolTcpConnector implements ServerConnector {
     // Attributes we accept ( to support the old model of
     // configuration, will be deprecated )
     public static final String VHOST_PORT="vhost_port";
@@ -122,7 +118,7 @@ public class PoolTcpConnector  extends TcpEndpointConnector  implements ServerCo
     TcpConnectionHandler con;
     
     Hashtable attributes = new Hashtable();
-    ContextManager cm;
+    Object cm;
 
     private InetAddress address;
     private int port;
@@ -132,8 +128,6 @@ public class PoolTcpConnector  extends TcpEndpointConnector  implements ServerCo
     private int maxThreads = -1;
     private int maxSpareThreads = -1;
     private int minSpareThreads = -1;
-
-    int vport;
 
     private ServerSocketFactory socketFactory;
     private ServerSocket serverSocket;
@@ -158,7 +152,7 @@ public class PoolTcpConnector  extends TcpEndpointConnector  implements ServerCo
 	    Object v=attributes.get( key );
 	    con.setAttribute( key, v );
 	}
-	
+
     	ep.setPort(port);
 	ep.setAddress( address );
     	ep.setPoolOn(usePools);
@@ -190,7 +184,7 @@ public class PoolTcpConnector  extends TcpEndpointConnector  implements ServerCo
     	ep.stopEndpoint();
     }
 
-    public void setContextManager( ContextManager ctx ) {
+    public void setServer( Object ctx ) {
 	    this.cm=ctx;
     }
 
@@ -207,7 +201,7 @@ public class PoolTcpConnector  extends TcpEndpointConnector  implements ServerCo
     }
 
     public void setPort(  String portS ) {
-	    this.port=string2Int( portS );
+	this.port=string2Int( portS );
     }
 
     public int getPort() {
@@ -249,7 +243,8 @@ public class PoolTcpConnector  extends TcpEndpointConnector  implements ServerCo
     	if(VHOST_NAME.equals(prop) ) {
 	    //vhost=(String)value;
 	} else if(VHOST_PORT.equals(prop) ) {
-	    vport=((Integer)value).intValue();
+	    System.out.println("Setting port to " + port );
+	    port=((Integer)value).intValue();
 	} else if(VHOST_ADDRESS.equals(prop)) {
 	    address=(InetAddress)value;
 	} else if(SERVER.equals(prop)) {

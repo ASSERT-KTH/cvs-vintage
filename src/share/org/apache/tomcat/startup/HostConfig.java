@@ -12,10 +12,6 @@ import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.core.*;
 import org.xml.sax.*;
 
-// Used to stop tomcat
-import org.apache.tomcat.service.TcpEndpointConnector;
-import org.apache.tomcat.service.connector.Ajp12ConnectionHandler;
-
 /** Used by Tomcat.java, need to be public for Reflection in JDK11
  */
 public class HostConfig {

@@ -129,6 +129,7 @@ public final class HttpAdapter implements BufferListener {
 	else
 	    in.setInputStream( socket.getInputStream() );
 	sout= socket.getOutputStream();
+	
         this.socket = socket;
     }
 

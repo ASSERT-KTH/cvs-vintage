@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.5 2000/05/30 06:16:48 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/05/30 06:16:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.6 2000/05/31 20:58:37 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/05/31 20:58:37 $
  *
  * ====================================================================
  *
@@ -92,7 +92,7 @@ import java.util.*;
  * @author Costin@eng.sun.com
  * @author Gal Shachor [shachor@il.ibm.com]
  */
-public class PoolTcpEndpoint extends TcpEndpoint  { // implements Endpoint {
+public class PoolTcpEndpoint  { // implements Endpoint {
 
     private StringManager sm = StringManager.getManager("org.apache.tomcat.service");
 

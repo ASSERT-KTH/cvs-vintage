@@ -13,7 +13,7 @@ import org.apache.tomcat.core.*;
 import org.xml.sax.*;
 
 // Used to stop tomcat
-import org.apache.tomcat.service.TcpEndpointConnector;
+import org.apache.tomcat.service.PoolTcpConnector;
 import org.apache.tomcat.service.connector.Ajp12ConnectionHandler;
 
 /**
@@ -256,8 +256,8 @@ public class Tomcat {
 	Enumeration enum=cm.getConnectors();
 	while( enum.hasMoreElements() ) {
 	    Object con=enum.nextElement();
-	    if( con instanceof  TcpEndpointConnector ) {
-		TcpEndpointConnector tcpCon=(TcpEndpointConnector) con;
+	    if( con instanceof  PoolTcpConnector ) {
+		PoolTcpConnector tcpCon=(PoolTcpConnector) con;
 		if( tcpCon.getTcpConnectionHandler()  instanceof Ajp12ConnectionHandler ) {
 		    portInt=tcpCon.getPort();
 		}

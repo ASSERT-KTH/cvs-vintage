@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpointConnector.java,v 1.1 2000/02/09 12:00:53 rubys Exp $
- * $Revision: 1.1 $
- * $Date: 2000/02/09 12:00:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpointConnector.java,v 1.2 2000/05/31 20:58:37 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/05/31 20:58:37 $
  *
  * ====================================================================
  *
@@ -85,7 +85,7 @@ public class JNIEndpointConnector  implements ServerConnector {
     static JNIEndpoint ep;
     JNIConnectionHandler con = new JNIConnectionHandler();
 
-    ContextManager cm;
+    Object cm;
     String handlerNativeLib;
 
     boolean running = true;
@@ -104,7 +104,7 @@ public class JNIEndpointConnector  implements ServerConnector {
             throw new Exception("Missing connector native library name");
         }
 
-        con.setContextManager(cm);
+        con.setServer(cm);
         con.setNativeLibrary(handlerNativeLib);
         ep.setConnectionHandler(con);
         ep.startEndpoint();
@@ -114,7 +114,7 @@ public class JNIEndpointConnector  implements ServerConnector {
         ep.stopEndpoint();
     }
 
-    public void setContextManager(ContextManager ctx) {
+    public void setServer(Object ctx) {
         this.cm=ctx;
     }
 
