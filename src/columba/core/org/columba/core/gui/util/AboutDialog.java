@@ -30,7 +30,6 @@ import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -43,106 +42,137 @@ import org.columba.mail.gui.util.AddressLabel;
 import org.columba.mail.gui.util.URLLabel;
 
 public class AboutDialog implements ActionListener {
-    
-    public static final String CMD_CLOSE = "CLOSE";
-    private static final String RESOURCE_BUNDLE_PATH = "org.columba.core.i18n.dialog";
-    
-    private JDialog dialog;
-    private boolean bool = false;
 
-    public AboutDialog( )
-    {
-	showDialog();
-    }
+	public static final String CMD_CLOSE = "CLOSE";
+	private static final String RESOURCE_BUNDLE_PATH =
+		"org.columba.core.i18n.dialog";
 
-    public void showDialog()
-    {
-	//LOCALIZE
-        dialog = DialogStore.getDialog(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "about", "title") + org.columba.core.main.MainInterface.version);
-	JPanel contentPane = (JPanel)dialog.getContentPane();
-	contentPane.setLayout(new BorderLayout(0,0));
-	contentPane.add(new JLabel(ImageLoader.getImageIcon("splash.gif")),BorderLayout.NORTH);
-        JPanel contactPanel = new JPanel(new GridBagLayout());
-	contactPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createEmptyBorder(10,12,0,11),
-				BorderFactory.createTitledBorder(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "about", "contact"))));
+	private JDialog dialog;
+	private boolean bool = false;
 
-        GridBagConstraints c = new GridBagConstraints();
-        JLabel authorLabel = new JLabel(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "about", "authors"));
-	//Font font = MainInterface.columbaTheme.getControlTextFont();
-	Font font = UIManager.getFont("Label.font");
-	if ( font != null )
-	{
-            font = font.deriveFont( Font.BOLD );
-            authorLabel.setFont( font );
+	public AboutDialog() {
+		showDialog();
 	}
-	c.gridx = 0;
-	c.gridy = 0;
-	c.anchor = GridBagConstraints.WEST;
-	contactPanel.add( authorLabel, c );
 
-	c.gridx = 1;
-	c.gridy = 0;
-	c.anchor = GridBagConstraints.WEST;
-	Component box = Box.createRigidArea( new Dimension( 10,10 ) );
-	contactPanel.add( box, c );
+	public void showDialog() {
+		//LOCALIZE
+		dialog =
+			DialogStore.getDialog(
+				GlobalResourceLoader.getString(
+					RESOURCE_BUNDLE_PATH,
+					"about",
+					"title")
+					+ org.columba.core.main.MainInterface.version);
+		JPanel contentPane = (JPanel) dialog.getContentPane();
+		contentPane.setLayout(new BorderLayout(0, 0));
+		JPanel imagePanel = new JPanel();
+		imagePanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		imagePanel.add(new JLabel(ImageLoader.getImageIcon("startup.png")));
+		contentPane.add(imagePanel, BorderLayout.NORTH);
+		JPanel contactPanel = new JPanel(new GridBagLayout());
+		contactPanel.setBorder(
+			BorderFactory.createCompoundBorder(
+				BorderFactory.createEmptyBorder(10, 12, 0, 11),
+				BorderFactory.createTitledBorder(
+					GlobalResourceLoader.getString(
+						RESOURCE_BUNDLE_PATH,
+						"about",
+						"contact"))));
 
-        AddressLabel a1 = new AddressLabel( "Frederik Dietz <fdietz@users.sourceforge.net>" );
-        c.gridx = 2;
-        c.gridy = 0;
-        c.anchor = GridBagConstraints.WEST;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        contactPanel.add( a1, c );
+		GridBagConstraints c = new GridBagConstraints();
+		JLabel authorLabel =
+			new JLabel(
+				GlobalResourceLoader.getString(
+					RESOURCE_BUNDLE_PATH,
+					"about",
+					"authors"));
+		//Font font = MainInterface.columbaTheme.getControlTextFont();
+		Font font = UIManager.getFont("Label.font");
+		if (font != null) {
+			font = font.deriveFont(Font.BOLD);
+			authorLabel.setFont(font);
+		}
+		c.gridx = 0;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.WEST;
+		contactPanel.add(authorLabel, c);
 
-        AddressLabel a2 = new AddressLabel( "Timo Stich <tstich@users.sourceforge.net>" );
-        c.gridx = 2;
-        c.gridy = 1;
-        c.anchor = GridBagConstraints.WEST;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        contactPanel.add( a2, c );
+		c.gridx = 1;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.WEST;
+		Component box = Box.createRigidArea(new Dimension(10, 10));
+		contactPanel.add(box, c);
 
-        JLabel websiteLabel = new JLabel(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "about", "website"));
-        if(font!=null)websiteLabel.setFont( font );
-        c.gridx = 0;
-        c.gridy = 2;
-        c.anchor = GridBagConstraints.WEST;
-        contactPanel.add( websiteLabel, c );
+		AddressLabel a1 =
+			new AddressLabel("Frederik Dietz <fdietz@users.sourceforge.net>");
+		c.gridx = 2;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		contactPanel.add(a1, c);
 
-        URLLabel websiteUrl = null; 
-	try{
-		websiteUrl = new URLLabel(new URL("http://columba.sourceforge.net"));
-	}catch(MalformedURLException mue){} //does not occur
-        c.gridx = 2;
-        c.gridy = 2;
-        c.anchor = GridBagConstraints.WEST;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        contactPanel.add( websiteUrl, c );
+		AddressLabel a2 =
+			new AddressLabel("Timo Stich <tstich@users.sourceforge.net>");
+		c.gridx = 2;
+		c.gridy = 1;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		contactPanel.add(a2, c);
 
-	contentPane.add(contactPanel,BorderLayout.CENTER);
-	JPanel buttonPanel = new JPanel(new BorderLayout(0,0));
-	buttonPanel.setBorder(BorderFactory.createEmptyBorder(17,12,11,11));
-	JButton closeButton = new JButton(GlobalResourceLoader.getString("global", "global", "close"));
-	closeButton.setActionCommand(CMD_CLOSE);
-	closeButton.addActionListener(this);
-	buttonPanel.add(closeButton,BorderLayout.EAST);
-	contentPane.add(buttonPanel,BorderLayout.SOUTH);
-	dialog.getRootPane().setDefaultButton(closeButton);
-	dialog.getRootPane().registerKeyboardAction(this,CMD_CLOSE,KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),JComponent.WHEN_IN_FOCUSED_WINDOW);
-        dialog.pack();
-	dialog.setLocationRelativeTo(null);
-        dialog.setVisible(true);
-    }
+		JLabel websiteLabel =
+			new JLabel(
+				GlobalResourceLoader.getString(
+					RESOURCE_BUNDLE_PATH,
+					"about",
+					"website"));
+		if (font != null)
+			websiteLabel.setFont(font);
+		c.gridx = 0;
+		c.gridy = 2;
+		c.anchor = GridBagConstraints.WEST;
+		contactPanel.add(websiteLabel, c);
 
-    public void actionPerformed(ActionEvent e)
-    {
-	if(CMD_CLOSE.equals(e.getActionCommand())){
-	    bool=true;
-	    dialog.dispose();
+		URLLabel websiteUrl = null;
+		try {
+			websiteUrl =
+				new URLLabel(new URL("http://columba.sourceforge.net"));
+		} catch (MalformedURLException mue) {
+		} //does not occur
+		c.gridx = 2;
+		c.gridy = 2;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		contactPanel.add(websiteUrl, c);
+
+		contentPane.add(contactPanel, BorderLayout.CENTER);
+		JPanel buttonPanel = new JPanel(new BorderLayout(0, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		ButtonWithMnemonic closeButton =
+			new ButtonWithMnemonic(
+				GlobalResourceLoader.getString("global", "global", "close"));
+		closeButton.setActionCommand(CMD_CLOSE);
+		closeButton.addActionListener(this);
+		buttonPanel.add(closeButton, BorderLayout.EAST);
+		contentPane.add(buttonPanel, BorderLayout.SOUTH);
+		dialog.getRootPane().setDefaultButton(closeButton);
+		dialog.getRootPane().registerKeyboardAction(
+			this,
+			CMD_CLOSE,
+			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+			JComponent.WHEN_IN_FOCUSED_WINDOW);
+		dialog.pack();
+		dialog.setLocationRelativeTo(null);
+		dialog.setVisible(true);
 	}
-    }
 
-    public boolean success()
-    {
-        return bool;
-    }
+	public void actionPerformed(ActionEvent e) {
+		if (CMD_CLOSE.equals(e.getActionCommand())) {
+			bool = true;
+			dialog.dispose();
+		}
+	}
+
+	public boolean success() {
+		return bool;
+	}
 }
