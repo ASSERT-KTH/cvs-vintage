@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.224 2004/12/12 18:49:48 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.225 2004/12/16 16:13:35 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -5910,10 +5910,12 @@ public class ModelFacade {
     }
 
     /**
-     * Sets the extension points of some use cases.
+     * Sets the parameters of a classifier, event, objectflowstate or 
+     * behavioralfeature.
      *
-     * @param handle the use case
-     * @param parameters is a Collection of extensionPoints
+     * @param handle the classifier, event, objectflowstate or 
+     * behavioralfeature
+     * @param parameters is a Collection of parameters
      */
     public static void setParameters(Object handle, Collection parameters) {
         if (handle instanceof MObjectFlowState) {
