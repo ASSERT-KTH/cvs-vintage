@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.17 2001/08/29 21:40:35 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.18 2001/08/30 03:17:12 mnf999 Exp $ -->
 
 <project default="main">
 
@@ -449,9 +449,10 @@
          manifest="${build.etc}/jboss.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/**"/>
-
         <!-- Exclude Main, it will go into run.jar -->
         <exclude name="org/jboss/Main*"/>
+		  <!-- Exclude JMX Connector stuff we will use the connector JSR for that -->
+		  <exclude name="org/jboss/jmx/**"/>
       </fileset>
 
       <fileset dir="${build.resources}">
@@ -462,6 +463,40 @@
       </fileset>
     </jar>
 
+	<!-- Build the boot and spine.jar -->
+	 <jar jarfile="${build.jars}/jboss-boot.jar"
+         basedir="${build.classes}">
+        <include name="org/jboss/system/URLClassLoader.class"/>
+		  <include name="org/jboss/system/URLClassLoaderMBean.class"/>
+        <include name="org/jboss/system/MBeanClassLoader.class"/>
+        <include name="org/jboss/system/MBeanClassLoaderMBean.class"/>
+		  <include name="org/jboss/system/ServiceLibraries.class"/>
+		  <include name="org/jboss/system/ServiceLibrariesMBean.class"/>
+		  <include name="org/jboss/deployment/DeploymentException.class"/>
+    </jar>
+	 <jar jarfile="${build.jars}/jboss-spine.jar"
+         basedir="${build.classes}">			
+		  <include name="org/jboss/logging/**"/>
+		  <include name="org/jboss/system/Service.class"/>
+		  <include name="org/jboss/system/ServiceMBean.class"/>
+		  <include name="org/jboss/system/ServiceMBeanSupport.class"/>
+		  <include name="org/jboss/system/ServiceController**.class"/>
+		  <include name="org/jboss/system/ServiceCreator**.class"/>
+		  <include name="org/jboss/system/ServiceConfigurator.class"/>
+		  <include name="org/jboss/system/ServiceControllerMBean.class"/>
+		  <include name="org/jboss/system/ConfigurationException.class"/>
+		  <include name="org/jboss/system/Info.class"/>
+		  <include name="org/jboss/system/InfoMBean.class"/>
+		  <include name="org/jboss/system/Shutdown*.class"/>
+		 
+		  <include name="org/jboss/deployment/ServiceDeployer.class"/>
+		  <include name="org/jboss/deployment/ServiceDeployerMBean.class"/>
+		  <include name="org/jboss/deployment/ServiceDeployer**.class"/>
+		  <include name="org/jboss/deployment/DeployerMBean.class"/>
+		  <include name="org/jboss/deployment/DeploymentException.class"/>
+    </jar>
+	 
+	 
     <!-- Build jboss-client.jar -->
     <jar jarfile="${build.jars}/jboss-client.jar"
          manifest="${build.etc}/jboss-client.mf">
@@ -503,6 +538,20 @@
         <include name="org/jboss/verifier/**"/>
       </fileset>
       <fileset dir="${build.resources}/org/jboss/verifier"/>
+    </jar>
+
+    <!-- Build jmx-connector.jsr -->
+    <unjar src="${thirdparty.root}/sun/jmx/lib/jmxtools.jar" 
+	   dest="${build.classes}"/>
+	 <jar jarfile="${build.jars}/jmx-connector.jsr"
+         manifest="${build.etc}/rmiconnector.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/jmx/**"/>
+		  <include name="com/sun/jdmk/**"/>
+		</fileset>
+		<fileset dir="${source.java}/org/jboss/jmx">
+			<include name="META-INF/**"/>
+		</fileset>
     </jar>
 
     <!-- Build rmiconnector.jar -->
@@ -559,8 +608,8 @@
         <include name="org/jboss/jmx/server/RMIConnectorImpl_Stub.class"/>
         <include name="org/jboss/jmx/server/ObjectHandler.class"/>
         <include name="org/jboss/jmx/client/ConnectorFactory*.class"/>
-        <include name="org/jboss/util/Service.class"/>
-        <include name="org/jboss/util/ServiceMBean*.class"/>
+        <include name="org/jboss/system/Service.class"/>
+        <include name="org/jboss/system/ServiceMBean*.class"/>
         <include name="org/jboss/logging/Log.class"/>
         <include name="org/jboss/logging/Log$$*.class"/>
         <include name="org/jboss/logging/LogToCategory.class"/>
@@ -701,6 +750,7 @@
     <copy todir="${release.lib.ext}" filtering="no">
       <fileset dir="${build.jars}">
          <include name="jboss.jar"/>
+			<include name="jboss-spine.jar"/>
       </fileset>
     </copy>
 
@@ -730,6 +780,20 @@
     <copy todir="${release.deploy.lib}" filtering="no">
       <fileset dir="${build.jars}">
          <include name="jms-ra.rar"/>
+      </fileset>
+    </copy>
+	 
+    <!-- Copy the mail service xml snippet  (deploy/lib) -->	 
+    <copy todir="${release.deploy.lib}" filtering="no">
+      <fileset dir="${build.etc}/conf/default">
+         <include name="mail-service.xml"/>
+      </fileset>
+    </copy>
+
+    <!-- Copy the mail service xml snippet  (deploy/lib) -->	 
+    <copy todir="${release.deploy.lib}" filtering="no">
+      <fileset dir="${build.jars}">
+         <include name="jmx-connector.jsr"/>
       </fileset>
     </copy>
 
@@ -771,6 +835,7 @@
     <copy todir="${release.conf}" filtering="no">
       <fileset dir="${build.etc}/conf">
          <include name="**/*"/>
+			<exclude name="mail-service.xml"/>
       </fileset>
     </copy>
 
@@ -798,13 +863,22 @@
       </fileset>
     </copy>
   </target>
-
+	  
   <target name="release-dependencies" depends="init">
-    <mkdir dir="${release.lib}"/>
+    
+	 <mkdir dir="${release.lib}"/>
     <copy todir="${release.lib}" filtering="no">
       <fileset dir="${sun.jmx.lib}">
         <include name="jmxri.jar"/>
       </fileset>
+		<fileset dir="${build.jars}">
+        <include name="jboss-boot.jar"/>
+      </fileset>
+      <fileset dir="${sun.jaxp.lib}">
+        <include name="*.jar"/>
+		  <exclude name="xalan.jar"/>
+      </fileset>
+		
     </copy>
 
     <mkdir dir="${release.lib.ext}"/>
@@ -812,11 +886,12 @@
       <fileset dir="${sun.jndi.lib}">
         <include name="jndi.jar"/>
       </fileset>
+		
+      <fileset dir="${sun.jaxp.lib}">
+        <include name="xalan.jar"/>
+	   </fileset>
       <fileset dir="${sun.jmx.lib}">
         <include name="jmxtools.jar"/>
-      </fileset>
-      <fileset dir="${sun.jaxp.lib}">
-        <include name="*.jar"/>
       </fileset>
       <fileset dir="${sun.jaf.lib}">
         <include name="activation.jar"/>
@@ -827,9 +902,6 @@
       <fileset dir="${sun.jts.lib}">
         <include name="jts.jar"/>
       </fileset>
-      <fileset dir="${apache.log4j.lib}">
-        <include name="log4j.jar"/>
-      </fileset>
       <fileset dir="${oswego.concurrent.lib}">
         <include name="concurrent.jar"/>
       </fileset>
@@ -838,6 +910,9 @@
       </fileset>
       <fileset dir="${javagroups.javagroups.lib}">
         <include name="JavaGroups.jar"/>
+      </fileset>
+	   <fileset dir="${apache.log4j.lib}">
+        <include name="log4j.jar"/>
       </fileset>
       <fileset dir="${sun.jsr77.lib}">
         <include name="jsr77.jar"/>
