@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * The default input handler. It maps sequences of keystrokes into actions
  * and inserts key typed events into the text area.
  * @author Slava Pestov
- * @version $Id: DefaultInputHandler.java,v 1.7 2001/12/03 01:17:45 spestov Exp $
+ * @version $Id: DefaultInputHandler.java,v 1.8 2002/01/02 04:49:58 spestov Exp $
  */
 public class DefaultInputHandler extends InputHandler
 {
@@ -339,13 +339,13 @@ public class DefaultInputHandler extends InputHandler
 					modifiers |= InputEvent.ALT_MASK;
 					break;
 				case 'C':
-					if(macOS)
+					if(OperatingSystem.isMacOS())
 						modifiers |= InputEvent.META_MASK;
 					else
 						modifiers |= InputEvent.CTRL_MASK;
 					break;
 				case 'M':
-					if(macOS)
+					if(OperatingSystem.isMacOS())
 						modifiers |= InputEvent.CTRL_MASK;
 					else
 						modifiers |= InputEvent.META_MASK;
@@ -398,11 +398,5 @@ public class DefaultInputHandler extends InputHandler
 	//{{{ Private members
 	private Hashtable bindings;
 	private Hashtable currentBindings;
-
-	private static boolean macOS;
-
-	static
-	{
-		macOS = (System.getProperty("os.name").indexOf("Mac") != -1);
-	} //}}}
+	//}}}
 }

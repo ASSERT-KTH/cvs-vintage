@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * Class with several useful miscellaneous functions.
  *
  * @author Slava Pestov
- * @version $Id: MiscUtilities.java,v 1.14 2001/12/25 08:07:14 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.15 2002/01/02 04:49:58 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -863,12 +863,7 @@ loop:		for(int i = 0; i < str.length(); i++)
 	 */
 	public static boolean isToolsJarAvailable()
 	{
-		String javaVersion = System.getProperty("java.version");
-		if(compareStrings(javaVersion,"1.2",false) < 0)
-			return true;
-
-		Log.log(Log.DEBUG, MiscUtilities.class, "JDK 1.2 or higher "
-			+ "detected, searching for tools.jar...");
+		Log.log(Log.DEBUG, MiscUtilities.class,"Searching for tools.jar...");
 
 		Vector paths = new Vector();
 

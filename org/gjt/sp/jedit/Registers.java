@@ -33,7 +33,7 @@ import org.gjt.sp.util.Log;
  * jEdit's registers are an extension of the clipboard metaphor.
  *
  * @author Slava Pestov
- * @version $Id: Registers.java,v 1.1 2001/09/02 05:37:26 spestov Exp $
+ * @version $Id: Registers.java,v 1.2 2002/01/02 04:49:58 spestov Exp $
  */
 public class Registers
 {
@@ -255,7 +255,7 @@ public class Registers
 	}
 
 	/**
-	 * Clears (i.e. it's value to null) the specified register.
+	 * Sets the value of the specified register to <code>null</code>.
 	 * @param name The register name
 	 */
 	public static void clearRegister(char name)

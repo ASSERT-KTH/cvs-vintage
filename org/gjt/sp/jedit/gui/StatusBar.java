@@ -46,7 +46,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.12 2001/12/21 07:02:14 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.13 2002/01/02 04:49:58 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -157,7 +157,7 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		memory.setPreferredSize(dim);
 
 		// Leave some room for OS X grow box
-		if(System.getProperty("os.name").indexOf("Mac") != -1)
+		if(OperatingSystem.isMacOS())
 			box.add(Box.createHorizontalStrut(18));
 
 		add(BorderLayout.EAST,box);

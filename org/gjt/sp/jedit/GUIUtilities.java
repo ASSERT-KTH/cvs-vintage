@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.18 2001/12/28 05:03:58 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.19 2002/01/02 04:49:58 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -848,20 +848,20 @@ public class GUIUtilities
 // 			+ ": setting geometry to " + required);
 		win.setBounds(required);
 
-		if(File.separatorChar == '/'
-			&& MiscUtilities.compareStrings(
-			System.getProperty("java.version"),
-			"1.2",false) < 0)
-		{
-			win.setBounds(required);
-			new UnixWorkaround(win,name,desired,required);
-		}
-		else
+		// if(File.separatorChar == '/'
+			// && MiscUtilities.compareStrings(
+			// System.getProperty("java.version"),
+			// "1.2",false) < 0)
+		// {
+			// win.setBounds(required);
+			// new UnixWorkaround(win,name,desired,required);
+		// }
+		// else
 			win.setBounds(desired);
 	} //}}}
 
 	//{{{ UnixWorkaround class
-	static class UnixWorkaround
+	/* static class UnixWorkaround
 	{
 		Window win;
 		String name;
@@ -958,7 +958,7 @@ public class GUIUtilities
 				win.removeWindowListener(this);
 			} //}}}
 		} //}}}
-	} //}}}
+	} */ //}}}
 
 	//{{{ saveGeometry() method
 	/**
@@ -1024,7 +1024,7 @@ public class GUIUtilities
 	 */
 	public static boolean isPopupTrigger(MouseEvent evt)
 	{
-		if(macOS)
+		if(OperatingSystem.isMacOS())
 			return evt.isControlDown();
 		else
 			return ((evt.getModifiers() & InputEvent.BUTTON3_MASK) != 0);
@@ -1123,13 +1123,7 @@ public class GUIUtilities
 
 	//{{{ Private members
 	private static SplashScreen splash;
-	private static boolean macOS;
 	private static Hashtable icons;
 
-	private GUIUtilities() {}
-
-	static
-	{
-		macOS = (System.getProperty("os.name").indexOf("Mac") != -1);
-	} //}}}
+	private GUIUtilities() {} //}}}
 }

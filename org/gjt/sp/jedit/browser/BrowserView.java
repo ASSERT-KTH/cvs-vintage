@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.20 2001/12/31 02:13:24 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.21 2002/01/02 04:49:58 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
@@ -284,6 +284,12 @@ public class BrowserView extends JPanel
 			false,false,false,0,false).getSize().height);
 
 		splitPane.setBorder(null);
+	} //}}}
+
+	//{{{ isLoading() method
+	public boolean isLoading()
+	{
+		return currentlyLoading.size() != 0;
 	} //}}}
 
 	//{{{ Private members
@@ -541,7 +547,7 @@ public class BrowserView extends JPanel
 					browser.setDirectory(System.getProperty("user.home"));
 					break;
 				case '/':
-					browser.setDirectory("roots:");
+					browser.rootDirectory();
 					break;
 				case '-':
 					View view = browser.getView();
