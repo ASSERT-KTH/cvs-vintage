@@ -24,7 +24,7 @@
 // File: FigStylePanelFig.java
 // Classes: FigStylePanelFig
 // Original Author: your email address here
-// $Id: StylePanelFig.java,v 1.5 2002/04/21 20:24:03 linus Exp $
+// $Id: StylePanelFig.java,v 1.6 2002/07/31 12:55:15 kataka Exp $
 
 // 13 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Problem with cursor
 // jumping around in the boundary box fixed (a problem with double refreshing
@@ -271,6 +271,9 @@ implements ItemListener, DocumentListener {
         else {
             _shadowField.setSelectedIndex(0);
         }
+        
+        // lets redraw the box
+        setTargetBBox();
     }
 
 
