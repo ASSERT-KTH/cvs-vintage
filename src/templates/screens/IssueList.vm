@@ -53,7 +53,7 @@ $page.Title
 <small>$l10n.format("IssueListCount", $totalCount)</small></h3>
 
 <div class="colbar">
-$format.getNow("yyyy MMMM dd hh:mm a")
+$format.getNow($scarabG.Constant.DATE_FORMAT)
 </div>
 
 <div class="colbar">
