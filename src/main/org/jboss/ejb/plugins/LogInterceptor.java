@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public class LogInterceptor
    extends AbstractInterceptor
@@ -143,6 +143,9 @@ public class LogInterceptor
             if (callLogging)
             {
                 Logger.warning(e.getMessage());
+                // The full stack trace is much more useful for debugging
+                // On the other hand, it may be turned off by the logger filter
+                Logger.debug(e);
             }
             
             throw e;
