@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.218 2004/06/04 00:18:34 spestov Exp $
+ * @version $Id: Buffer.java,v 1.219 2004/09/04 02:55:58 spestov Exp $
  */
 public class Buffer
 {
@@ -962,16 +962,6 @@ public class Buffer
 		{
 			readUnlock();
 		}
-	} //}}}
-
-	//{{{ invalidateCachedScreenLineCounts() method
-	/**
-	 * Invalidates all cached screen line count information.
-	 * @since jEdit 4.2pre7.
-	 */
-	public void invalidateCachedScreenLineCounts()
-	{
-		lineMgr.invalidateScreenLineCounts();
 	} //}}}
 
 	//}}}
@@ -3543,20 +3533,6 @@ loop:		for(int i = 0; i < seg.count; i++)
 	public String toString()
 	{
 		return name + " (" + directory + ")";
-	} //}}}
-
-	//}}}
-
-	//{{{ Methods that really shouldn't be public...
-
-	//{{{ _getLineManager() method
-	/**
-	 * Plugins and macros should not call this method.
-	 * @since jEdit 4.2pre3
-	 */
-	public LineManager _getLineManager()
-	{
-		return lineMgr;
 	} //}}}
 
 	//}}}
