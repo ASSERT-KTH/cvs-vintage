@@ -284,10 +284,6 @@
    #end
    </table>
 
-<div class="functnbar3">
- <input type="submit" name="eventSubmit_doAdd" value="$l10n.AddAssignee" />
-</div>
-
 #if ($paginated)
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 
@@ -306,11 +302,12 @@
 </div>
 #end
 
+<div class="functnbar3">
+ <input type="submit" name="eventSubmit_doAdd" value="$l10n.AddAssignee" />
+</div>
+
 #set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "IssueList.vm"))
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
-<div class="functnbar2">
-<input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />
-</div>
 
 ## keep track of state of the list, resultsPerPage should come after the
 ## chance to change it, because we will use the first value
