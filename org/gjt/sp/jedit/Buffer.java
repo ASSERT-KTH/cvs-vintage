@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.180 2003/06/04 04:31:03 spestov Exp $
+ * @version $Id: Buffer.java,v 1.181 2003/06/04 20:36:38 spestov Exp $
  */
 public class Buffer
 {
@@ -2099,8 +2099,6 @@ public class Buffer
 			seg = this.seg;
 		else
 			seg = new Segment();
-
-		writeLock();
 
 		if(lineIndex < 0 || lineIndex >= offsetMgr.getLineCount())
 			throw new ArrayIndexOutOfBoundsException(lineIndex);
