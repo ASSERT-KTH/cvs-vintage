@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.53 2002/10/24 22:59:26 jon Exp $
+  * @version $Id: Attribute.java,v 1.54 2002/12/17 16:17:09 jon Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -102,7 +102,6 @@ public class Attribute
     /** Method name used as part of a cache key */
     private static final String GET_ORDERED_ROPTIONOPTION_LIST = 
         "getOrderedROptionOptionList";
-
 
     private static final String SELECT_ONE = "select-one";
     
