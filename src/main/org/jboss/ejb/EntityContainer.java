@@ -44,7 +44,7 @@ import org.jboss.system.Registry;
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @version $Revision: 1.60 $
+* @version $Revision: 1.61 $
 *
 * <p><b>Revisions:</b>
 *
@@ -282,7 +282,7 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
          homeInterface = classLoader.loadClass(metaData.getHome());
       if (metaData.getRemote() != null)
          remoteInterface = classLoader.loadClass(metaData.getRemote());
-      
+
       // Call default init
       super.create();
       
@@ -853,15 +853,21 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    {
       try 
       {// Create method mappings for container invoker
-         Method [] m = homeInterface.getMethods();
-         for (int i = 0 ; i<m.length ; i++)
+         if (homeInterface != null)
          {
-            marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[i])), m[i]);
+            Method [] m = homeInterface.getMethods();
+            for (int i = 0 ; i<m.length ; i++)
+            {
+               marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[i])), m[i]);
+            }
          }
-         m = remoteInterface.getMethods();
-         for (int j = 0 ; j<m.length ; j++)
+         if (remoteInterface != null)
          {
-            marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[j])), m[j]);
+            Method [] m = remoteInterface.getMethods();
+            for (int j = 0 ; j<m.length ; j++)
+            {
+               marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[j])), m[j]);
+            }
          }
          
          // Get the getEJBObjectMethod
@@ -872,7 +878,6 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          log.error("getEJBObject failed", e);
       }
    }

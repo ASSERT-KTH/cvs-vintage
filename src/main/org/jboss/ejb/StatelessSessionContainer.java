@@ -32,7 +32,7 @@ import org.jboss.invocation.MarshalledInvocation;
 * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
-* @version $Revision: 1.30 $
+* @version $Revision: 1.31 $
 * <p><b>2001219 marc fleury</b>
 * <ul>
 * <li> move to the new invocation layer and Invocation object
@@ -493,15 +493,22 @@ implements ContainerInvokerContainer, InstancePoolContainer
    {
       try 
       {// Create method mappings for container invoker
-         Method [] m = homeInterface.getMethods();
-         for (int i = 0 ; i<m.length ; i++)
+         if (homeInterface != null) 
          {
-            marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[i])), m[i]);
+            Method [] m = homeInterface.getMethods();
+            for (int i = 0 ; i<m.length ; i++)
+            {
+               marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[i])), m[i]);
+            }
          }
-         m = remoteInterface.getMethods();
-         for (int j = 0 ; j<m.length ; j++)
+         
+         if (remoteInterface != null)
          {
-            marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[j])), m[j]);
+            Method [] m = remoteInterface.getMethods();
+            for (int j = 0 ; j<m.length ; j++)
+            {
+               marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[j])), m[j]);
+            }
          }
          
          // Get the getEJBObjectMethod
@@ -512,7 +519,6 @@ implements ContainerInvokerContainer, InstancePoolContainer
       }
       catch (Exception e)
       {
-         e.printStackTrace();
          log.error("could not load methods", e);
       }
    }
