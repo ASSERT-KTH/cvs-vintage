@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FilePathUtil.java,v 1.1 1999/10/09 00:20:55 duncan Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.1 1999/11/08 03:59:52 akv Exp $
  * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:55 $
+ * $Date: 1999/11/08 03:59:52 $
  *
  * ====================================================================
  *
@@ -64,20 +64,36 @@
 
 package org.apache.tomcat.util;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.*;
-import java.text.*;
+import java.io.File;
 
-/**
- * This class takes care of File.getAbsolutePath() and
+/*
+ * FileUtil contains utils for dealing with Files. Some of these are 
+ * already present in JDK 1.2 but since we can rely on that and need 
+ * to run on both JDK 1.1.x and JDK 1.2, we are replicating some of 
+ * that code here. 
+ *
+ * FileUtil also takes care of File.getAbsolutePath() and
  * File.getNamePath() troubles when running on JDK 1.1.x/Windows
  *
  * @author James Todd [gonzo@eng.sun.com]
+ * @author Anil K. Vijendran [akv@eng.sun.com]
  */
 
-public class
-FilePathUtil {
+public class FileUtil {
+
+    public static File[] listFiles(File dir) {
+
+	String[] ss = dir.list();
+	if (ss == null) 
+	    return null;
+	int n = ss.length;
+	File[] fs = new File[n];
+	for(int i = 0; i < n; i++) {
+	    fs[i] = new File(dir.getPath(), ss[i]);
+	}
+	return fs;
+    }
+
     public static String patch(String path) {
         String patchPath = path.trim();
 
