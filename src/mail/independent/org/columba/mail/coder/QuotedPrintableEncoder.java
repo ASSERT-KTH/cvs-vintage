@@ -161,6 +161,8 @@ public class QuotedPrintableEncoder extends Encoder {
 			} else {
 				lineLength = 0;
 			}
+			
+			read = bufferedIn.read( inBytes );
 		}
 
 		
