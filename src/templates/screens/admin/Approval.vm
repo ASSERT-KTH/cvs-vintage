@@ -1,5 +1,7 @@
 <div id="approval" class="app">
 
+<h3>Open submissions</h3>
+
 <form action="$link.setPage("admin,Approval.vm")" method="post">
 <input type="hidden" name="action" value="admin.Approval" />
 
@@ -11,7 +13,6 @@
 #else
 
 #if (!$module.UnapprovedQueries.isEmpty() || !$module.UnapprovedTemplates.isEmpty())
-<h3>Open submissions</h3>
 
  <div class="functnbar">
    <input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; 
