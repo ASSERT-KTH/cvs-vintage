@@ -43,9 +43,11 @@ import org.jboss.system.RealmMapping;
 public class DatabaseRealmMapping implements RealmMapping
 {
 
-	public boolean doesUserHaveRole( Principal principal, Set roleNames )
-	{
+  public boolean doesUserHaveRole( Principal principal, Set roleNames )
+  {
     Connection con = null;
+    if (roleNames == null)
+      return false;
     try
     {
       InitialContext initial = new InitialContext();
@@ -85,6 +87,6 @@ public class DatabaseRealmMapping implements RealmMapping
     }
   }
 
-	
+    
 }
 

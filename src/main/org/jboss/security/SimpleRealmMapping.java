@@ -31,9 +31,9 @@ import org.jboss.util.ServiceMBeanSupport;
 import org.jboss.system.RealmMapping;
 
 /**
- *	SimpleRealmMapping removes the level of indirection
- *	in the specification between roles and principals/groups
- *	for the standard "deploy without configuring"
+ *  SimpleRealmMapping removes the level of indirection
+ *  in the specification between roles and principals/groups
+ *  for the standard "deploy without configuring"
  *      
  *   @see EJBSecurityManager
  *   @author Daniel O'Connor docodan@nycap.rr.com
@@ -41,8 +41,10 @@ import org.jboss.system.RealmMapping;
 public class SimpleRealmMapping implements RealmMapping
 {
 
-	public boolean doesUserHaveRole( Principal principal, Set roleNames )
-	{
+  public boolean doesUserHaveRole( Principal principal, Set roleNames )
+  {
+    if (roleNames == null)
+      return true;
     Iterator iter = roleNames.iterator();
     while (iter.hasNext())
     {
@@ -51,7 +53,7 @@ public class SimpleRealmMapping implements RealmMapping
         return true;
     }
     return false;
-	}
-	
+  }
+    
 }
 
