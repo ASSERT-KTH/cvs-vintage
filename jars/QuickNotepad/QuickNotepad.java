@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: QuickNotepad.java,v 1.6 2003/05/29 19:02:55 spestov Exp $
+ * $Id: QuickNotepad.java,v 1.7 2004/04/19 04:24:49 spestov Exp $
  */
 
 // from Java:
@@ -166,9 +166,8 @@ public class QuickNotepad extends JPanel implements EBComponent, QuickNotepadAct
 		if(filename == null || filename.length() == 0) return;
 		try
 		{
-			DataOutputStream dos = new DataOutputStream(
-			new FileOutputStream(filename));
-			dos.writeBytes(textArea.getText());
+			FileWriter out = new FileWriter(filename);
+			dos.write(textArea.getText());
 			dos.close();
 		}
 		catch (IOException ioe)
@@ -206,12 +205,10 @@ public class QuickNotepad extends JPanel implements EBComponent, QuickNotepadAct
 	{
 		if(filename == null || filename.length() == 0) return;
 
-		FileInputStream fis = null;
 		BufferedReader bf = null;
 		try
 		{
-			fis = new FileInputStream(filename);
-			bf = new BufferedReader(new InputStreamReader(fis));
+			bf = new BufferedReader(new FileReader(filename));
 			StringBuffer sb = new StringBuffer(2048);
 			String str;
 			while((str = bf.readLine()) != null)
@@ -219,7 +216,6 @@ public class QuickNotepad extends JPanel implements EBComponent, QuickNotepadAct
 				sb.append(str).append('\n');
 			}
 			bf.close();
-			fis.close();
 			textArea.setText(sb.toString());
 		}
 		catch (FileNotFoundException fnf)
