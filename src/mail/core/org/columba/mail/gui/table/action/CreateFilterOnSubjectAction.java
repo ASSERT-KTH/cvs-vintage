@@ -1,9 +1,3 @@
-/*
- * Created on 11.03.2003
- *
- * To change this generated comment go to 
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
 //The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the 
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
@@ -19,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
@@ -103,11 +98,6 @@ public class CreateFilterOnSubjectAction
 	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
-
-		if (((TableSelectionChangedEvent) e).getUids().length > 0)
-			setEnabled(true);
-		else
-			setEnabled(false);
-
+		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}
 }
