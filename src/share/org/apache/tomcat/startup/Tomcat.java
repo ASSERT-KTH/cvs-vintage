@@ -149,7 +149,6 @@ public class Tomcat extends Log {
 
     public void setAttribute(String s,Object o) {
         attributes.put(s,o);
-//        System.out.println(s+":"+o);
     }
     public void executeWithAttributes() throws Exception {
        String[] args=(String[])attributes.get("args");

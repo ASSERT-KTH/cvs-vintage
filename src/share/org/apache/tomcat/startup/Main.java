@@ -172,7 +172,7 @@ public class Main {
 
         try {
             homeDir=IntrospectionUtils.guessHome("tomcat.home", "tomcat.jar");
-            System.out.println("Guessed home=" + homeDir);
+	    // System.out.println("Guessed home=" + homeDir);
 
 	    ClassLoader parentL=this.getClass().getClassLoader();
 	    //System.out.println("ParentL " + parentL );
@@ -208,6 +208,7 @@ public class Main {
             IntrospectionUtils.execute(  proxy, "executeWithAttributes" );
 	    return;
 	} catch( Exception ex ) {
+	    System.out.println("Guessed home=" + homeDir);
 	    ex.printStackTrace();
 	}
     }
