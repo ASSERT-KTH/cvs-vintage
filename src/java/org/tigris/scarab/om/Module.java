@@ -72,7 +72,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.68 2003/03/28 01:11:23 jon Exp $
+ * @version $Id: Module.java,v 1.69 2003/04/05 05:59:13 jmcnally Exp $
  */
 public interface Module
     extends Serializable
@@ -132,7 +132,8 @@ public interface Module
     ScarabPaginatedList getUsers(String name, String username,  
                                         MITList mitList,
                                         int offset, int resultSize, 
-                                        String sortColumn, String sortPolarity)
+                                        String sortColumn, String sortPolarity,
+                                        boolean includeCommitters)
         throws Exception;
 
     /**

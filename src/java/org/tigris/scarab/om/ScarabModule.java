@@ -100,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.127 2003/04/01 17:09:58 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.128 2003/04/05 05:59:13 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -197,7 +197,8 @@ public class ScarabModule
     public ScarabPaginatedList getUsers(String name, String username, 
                                         MITList mitList, 
                                         int offset, int resultSize,
-                                        final String sortColumn, String sortPolarity)
+                                        final String sortColumn, String sortPolarity,
+                                        boolean includeCommitters)
         throws Exception
     {
         final int polarity = sortPolarity.equals("asc") ? 1 : -1; 
@@ -226,6 +227,8 @@ public class ScarabModule
 
         try 
         {
+            // FIXME! need to handle the includeCommitters flag here, PotentialAssignees
+            // only returns users who could be assigned to an attribute
             potential = mitList.getPotentialAssignees();
         }
         catch ( Exception e) 

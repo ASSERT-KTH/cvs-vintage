@@ -2302,22 +2302,26 @@ e.printStackTrace();
      *  Full featured, paginated, sorted method for returning the results 
      *  of user search.  Returns all users (no search criteria). 
      */
-    public ScarabPaginatedList getUserSearchResults(MITList mitList, int pageNum, int resultsPerPage, 
-                                                 String sortColumn, String sortPolarity)
+    public ScarabPaginatedList getUserSearchResults(MITList mitList, 
+                                                    int pageNum, 
+                                                    int resultsPerPage, 
+                                                    String sortColumn, 
+                                                    String sortPolarity, 
+                                                    boolean includeCommitters)
         throws Exception
     {
         return userFilteredSearchResults(mitList, pageNum, resultsPerPage, 
-                                         sortColumn, sortPolarity, "", "");
-
+                                         sortColumn, sortPolarity, "", "", 
+                                         includeCommitters);
     }
 
     /**
      * Full featured, paginated, sorted version for returning results 
      * of a user search.
      */
-    public ScarabPaginatedList getUserFilteredSearchResults
-        (MITList mitList, int pageNum, int resultsPerPage, String sortColumn,
-         String sortPolarity)
+    public ScarabPaginatedList getUserFilteredSearchResults(MITList mitList, 
+        int pageNum, int resultsPerPage,  String sortColumn, 
+        String sortPolarity, boolean includeCommitters)
         throws Exception
     {
         ScarabLocalizationTool l10n = getLocalizationTool();
@@ -2334,7 +2338,7 @@ e.printStackTrace();
         
         return userFilteredSearchResults(mitList, pageNum, resultsPerPage, 
                                          sortColumn, sortPolarity, 
-                                         searchString, searchField);
+                                         searchString, searchField, includeCommitters);
 
     }
 
@@ -2344,7 +2348,8 @@ e.printStackTrace();
                                                           String sortColumn,
                                                           String sortPolarity, 
                                                           String searchString,
-                                                          String searchField)
+                                                          String searchField,
+                                                          boolean includeCommitters)
         throws Exception
     {
         ScarabPaginatedList list = null;
@@ -2365,7 +2370,8 @@ e.printStackTrace();
             list = getCurrentModule().getUsers(name, userName, mitList,
                                                (pageNum - 1) * resultsPerPage,
                                                resultsPerPage, sortColumn,
-                                               sortPolarity);
+                                               sortPolarity,
+                                               includeCommitters);
         } 
         catch (Exception e)
         {

@@ -555,6 +555,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 
 #macro (userList $mitList $includeAny $includeCommittedBy)
 #set ($userAttrs = $mitList.getCommonUserAttributes())
+#set ($modules = $mitList.Modules)
 
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn","username"))
@@ -587,13 +588,13 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 </div>
 
 #if ($searchString && $searchString.length() > 0)
-    #set ($searchResults = $scarabR.getUserFilteredSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity))
+    #set ($searchResults = $scarabR.getUserFilteredSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity, $includeCommittedBy))
     #if ( $searchResults.getList().isEmpty())
         <p class="alert">$l10n.NoUsersMatch</p>
-        #set ($searchResults = $scarabR.getUserSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity))
+        #set ($searchResults = $scarabR.getUserSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity, $includeCommittedBy))
     #end
 #else
-    #set ($searchResults = $scarabR.getUserSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity))
+    #set ($searchResults = $scarabR.getUserSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity, $includeCommittedBy))
 #end 
 
 #set ($searchResultsSize = $searchResults.getTotalListSize())
@@ -624,11 +625,11 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
     #if ($includeAny)
        <option value="any">$l10n.Any</option>
     #end
-    #if ($includeCommittedBy)
+    #if ($includeCommittedBy && $user.hasPermission($scarabG.Permission.ISSUE__ENTER, $modules))
        <option value="created_by">$l10n.CommittedBy</option>
     #end
      #foreach ($userAttr in $userAttrs)
-      #if ($user.hasPermission($userAttr.Permission, $mitList.Modules))
+      #if ($user.hasPermission($userAttr.Permission, $modules))
        <option value="$userAttr.AttributeId">$userAttr.Name</option>
       #end
      #end
