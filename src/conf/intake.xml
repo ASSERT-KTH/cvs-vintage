@@ -276,12 +276,8 @@
         <field name="MinId" key="lid" type="String"/>
         <field name="MaxId" key="hid" type="String"/>
         <field name="MinDate" key="ld" type="String">
-            <rule name="mask" 
-                value="[0-1]?[0-9]/[0-3]?[0-9]/[1-2]?[0-9]?[0-9][0-9]( [0-2]?[0-9]:[0-5][0-9])?">Invalid From Date</rule>
         </field>
         <field name="MaxDate" key="hd" type="String">
-            <rule name="mask" 
-                value="[0-1]?[0-9]/[0-3]?[0-9]/[1-2]?[0-9]?[0-9][0-9]( [0-2]?[0-9]:[0-5][0-9])?">Invalid To Date</rule>
         </field>
         <field name="StateChangeAttributeId" key="scai" type="NumberKey"/>
         <field name="StateChangeFromOptionId" key="scfoi" type="NumberKey"/>

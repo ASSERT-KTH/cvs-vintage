@@ -109,8 +109,8 @@ public class IssueSearch
     private static final String AV_ISSUE_ID;
     private static final String AV_OPTION_ID;
     private static final String AV_USER_ID;
-    private static final DateFormat DATETIME_FORMATTER;
-    private static final DateFormat DATE_FORMATTER;
+
+    private SimpleDateFormat formatter;
 
     private String searchWords;
     private NumberKey[] textScope;
@@ -131,7 +131,6 @@ public class IssueSearch
     private NumberKey sortAttributeId;
     private String sortPolarity;
      
-
     static 
     {
         PARENT_ID = ROptionOptionPeer.OPTION1_ID;
@@ -144,9 +143,6 @@ public class IssueSearch
             AttributeValuePeer.ISSUE_ID.indexOf('.')+1);
         AV_USER_ID = AttributeValuePeer.USER_ID.substring(
             AttributeValuePeer.USER_ID.indexOf('.')+1);
-
-        DATETIME_FORMATTER = new SimpleDateFormat("MM/dd/yy HH:mm");
-        DATE_FORMATTER = new SimpleDateFormat("MM/dd/yy");
     }
 
     public IssueSearch(Issue issue)
@@ -837,7 +833,15 @@ public class IssueSearch
         {
             if ( dateString.indexOf(':') == -1 )
             {
-                date = DATE_FORMATTER.parse(dateString);
+                String[] patterns = {"MM/dd/yy", "yyyy-MM-dd"};
+                date = parseDate(dateString, patterns);
+        
+                // one last try with the default locale format
+                if ( date == null ) 
+                {
+                    date = DateFormat.getDateInstance().parse(dateString);
+                }
+
                 // add 24 hours to max date so it is inclusive
                 if ( addTwentyFourHours ) 
                 {                
@@ -846,10 +850,61 @@ public class IssueSearch
             }
             else
             {
-                date = DATETIME_FORMATTER.parse(dateString);
+                String[] patterns = {"MM/dd/yy HH:mm", "yyyy-MM-dd HH:mm"};
+                date = parseDate(dateString, patterns);
+        
+                // one last try with the default locale format
+                if ( date == null ) 
+                {
+                    date = DateFormat.getDateTimeInstance().parse(dateString);
+                }
             }
         }
         
+        return date;
+    }
+
+    /**
+     * Attempts to parse a String as a Date given in MM/DD/YYYY form or a
+     * Date and Time given in 24 hour clock MM/DD/YYYY HH:mm.  Returns null
+     * if the String did not contain a suitable format
+     *
+     * @param dateString a <code>String</code> value
+     * @param addTwentyFourHours if no time is given in the date string and
+     * this flag is true, then 24 hours - 1 msec will be added to the date.
+     * @return a <code>Date</code> value
+     */
+    private Date parseDate(String s, String[] patterns)
+        throws ParseException
+    {
+        Date date = null;
+
+        if ( s == null ) 
+        {
+            throw new ParseException("Input string was null", -1);
+        }
+
+        if (formatter == null) 
+        {
+            formatter = new SimpleDateFormat();
+        }
+        
+        for ( int i=0; i<patterns.length; i++) 
+        {
+            formatter.applyPattern(patterns[i]);
+            try
+            {
+                date = formatter.parse(s);
+            }
+            catch (ParseException e)
+            {
+                // ignore
+            }
+            if ( date != null ) 
+            {
+                break;
+            }
+        }
         return date;
     }
 
