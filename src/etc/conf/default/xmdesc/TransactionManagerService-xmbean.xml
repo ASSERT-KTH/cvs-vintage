@@ -3,7 +3,7 @@
    "-//JBoss//DTD JBOSS XMBEAN 1.1//EN"
    "http://www.jboss.org/j2ee/dtd/jboss_xmbean_1_1.dtd">
 
-<!-- $Id: TransactionManagerService-xmbean.xml,v 1.5 2004/03/17 01:45:43 ejort Exp $ -->
+<!-- $Id: TransactionManagerService-xmbean.xml,v 1.6 2004/04/05 08:38:26 ejort Exp $ -->
 <mbean>
 	 <description>TransactionManager Service.</description>
 	 <class>org.jboss.tm.TransactionManagerService</class>
@@ -32,6 +32,11 @@
 	 	<description>Returns the TransactionManager managed by this service</description>
 	 	<name>TransactionManager</name>
 	 	<type>javax.transaction.TransactionManager</type>
+	 </attribute>
+	 <attribute access="read-only" getMethod="getXATerminator">
+	 	<description>Returns the XATerminator managed by this service</description>
+	 	<name>XATerminator</name>
+	 	<type>org.jboss.tm.JBossXATerminator</type>
 	 </attribute>
 	 <attribute access="read-only" getMethod="getTransactionCount">
 	 	<description>Counts the number of active transactions</description>
