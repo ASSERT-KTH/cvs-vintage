@@ -1,4 +1,4 @@
-// $Id: PropPanelTimeEvent.java,v 1.3 2003/06/30 18:00:37 linus Exp $
+// $Id: PropPanelTimeEvent.java,v 1.4 2004/06/01 19:32:05 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,8 +22,8 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: PropPanelCallEvent.java
-// Classes: PropPanelCallEvent
+// File: PropPanelTimeEvent
+// Classes: PropPanelTimeEvent
 // Original Author: oliver.heyden@gentleware.de
 
 package org.argouml.uml.ui.behavior.state_machines;
