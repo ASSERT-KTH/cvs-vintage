@@ -1,6 +1,28 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.35 2002/09/27 01:47:22 larryi Exp $
+# $Id: tomcat.sh,v 1.36 2003/03/06 16:29:31 hgomez Exp $
+
+# Environment Variable Prequisites
+#
+#   TOMCAT_HOME     May point at your Tomcat directory.
+#
+#   TOMCAT_OPTS     (Optional) Java runtime options used when the "start",
+#                   "stop", or "run" command is executed.
+#
+#   JAVA_HOME       Must point at your Java Development Kit installation.
+#
+#   JAVA_OPTS       (Optional) Java runtime options used when the "start",
+#                   "stop", or "run" command is executed.
+#
+#   JPDA_TRANSPORT  (Optional) JPDA transport used when the "jpda start"
+#                   command is executed. The default is "dt_socket".
+#
+#   JPDA_ADDRESS    (Optional) Java runtime options used when the "jpda start"
+#                   command is executed. The default is 8000.
+#
+#   TOMCAT_PID     (Optional) Path of the file which should contains the pid
+#                   of catalina startup java process, when start (fork) is used
+#
 
 # Shell script to start and stop the server
 
@@ -12,6 +34,18 @@
 #java -cp lib/tomcat.jar org.apache.tomcat.startup.Main $*
 #java -jar lib/tomcat.jar
 
+# OS specific support.  $var _must_ be set to either true or false.
+cygwin=false
+case "`uname`" in
+CYGWIN*) cygwin=true;;
+esac
+
+# For Cygwin, ensure paths are in UNIX format before anything is touched
+if $cygwin; then
+  [ -n "$JAVA_HOME" ] && JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+  [ -n "$TOMCAT_HOME" ] && TOMCAT_HOME=`cygpath --unix "$CATALINA_HOME"`
+  [ -n "$CLASSPATH" ] && CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
+fi
 
 # Read local properties 
 if [ -f $HOME/.tomcatrc ] ; then 
@@ -124,9 +158,31 @@ CLASSPATH=${TOMCAT_INSTALL}/lib/tomcat.jar:${TOMCAT_INSTALL}/lib/common/commons-
 # This is consistent with "java -jar tomcat.jar "
 export CLASSPATH
 
+## ------------------- JPDA SUPPORT --------------------------
+if [ "$1" = "jpda" ] ; then
+  if [ -z "$JPDA_TRANSPORT" ]; then
+    JPDA_TRANSPORT="dt_socket"
+  fi
+  if [ -z "$JPDA_ADDRESS" ]; then
+    JPDA_ADDRESS="8000"
+  fi
+  if [ -z "$JPDA_OPTS" ]; then
+    JPDA_OPTS="-Xdebug -Xrunjdwp:transport=$JPDA_TRANSPORT,address=$JPDA_ADDRESS,server=y,suspend=n"
+  fi
+  TOMCAT_OPTS="$TOMCAT_OPTS $JPDA_OPTS"
+  shift
+fi
+
 ## -------------------- Process options -------------------- 
 # add tomcat.policy - even if we don't use sandbox, it doesn't hurt
 TOMCAT_OPTS="$TOMCAT_OPTS -Djava.security.policy==${TOMCAT_HOME}/conf/tomcat.policy "
+
+# For Cygwin, switch paths to Windows format before running java
+if $cygwin; then
+  JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
+  TOMCAT_HOME=`cygpath --path --windows "$CATALINA_HOME"`
+  CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
+fi
 
 
 # We start the server up in the background for a couple of reasons:
@@ -153,12 +209,21 @@ elif [ "$1" = "start" ] ; then
     
   if [ "$1" = "-noout" ] ; then
     shift
-    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  $MAIN start $@ >${TOMCAT_HOME}/logs/stdout.log 2>&1 &
+    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  $MAIN start $@ >${TOMCAT_HOME}/logs/stdout.log 2>&1 &
+
+    if [ ! -z "$TOMCAT_PID" ]; then
+      echo $! > $TOMCAT_PID
+    fi      
+
   else
     echo Using classpath: ${CLASSPATH}
     echo Using JAVA_HOME: ${JAVA_HOME}
     echo Using TOMCAT_HOME: ${TOMCAT_HOME}
-    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  $MAIN start $@ &
+    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  $MAIN start $@ &
+    
+    if [ ! -z "$TOMCAT_PID" ]; then
+      echo $! > $TOMCAT_PID
+    fi      
   fi
 
 
@@ -183,7 +248,7 @@ elif [ "$1" = "stop" ] ; then
   echo Using classpath: ${CLASSPATH}
   echo Using JAVA_HOME: ${JAVA_HOME}
   echo Using TOMCAT_HOME: ${TOMCAT_HOME}
-  $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN stop $@
+  $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN stop $@
 
   if [ "$1" = "-force" ] ; then
     shift
@@ -195,26 +260,26 @@ elif [ "$1" = "run" ] ; then
   shift 
   # Backward compat
   if [ "$1" = "enableAdmin" ] ; then
-    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN enableAdmin $@ 
+    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN enableAdmin $@ 
   elif  [ "$1" = "-enableAdmin" ] ; then  
-    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN enableAdmin $@ 
+    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN enableAdmin $@ 
   else
     echo Using classpath: ${CLASSPATH}
     echo Using JAVA_HOME: ${JAVA_HOME}
     echo Using TOMCAT_HOME: ${TOMCAT_HOME}
-    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN start $@ 
+    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN start $@ 
   fi
 elif [ "$1" = "enableAdmin" ] ; then 
 
-  $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN enableAdmin $@
+  $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN enableAdmin $@
 
 elif [ "$1" = "estart" ] ; then 
 
-  $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN estart $@
+  $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN estart $@
 
 elif [ "$1" = "jspc" ] ; then 
     shift 
-    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN jspc $@
+    $JAVACMD $JAVA_OPTS $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN jspc $@
 
 elif [ "$1" = "jspcOrig" ] ; then 
     shift 
@@ -270,6 +335,7 @@ else
   echo "  start -wait      -   wait until tomcat is initialized before returning"
   echo "  start -help      -   more options"
   echo "                         (config, debug, estart, home, install, jkconf, sandbox)"
+  echo "  jpda start       - start tomcat under JPDA debugger"
   echo "  run              - start tomcat in the foreground"
   echo "  run -security    -   use a SecurityManager when starting"
   echo "  stop             - stop tomcat"
