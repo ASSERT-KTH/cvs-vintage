@@ -18,7 +18,7 @@ package org.jboss.cache.invalidation.bridges;
  * @see InvalidationManagerMBean
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>Revisions:</b>
  *
@@ -29,6 +29,7 @@ package org.jboss.cache.invalidation.bridges;
  */
 
 public interface JMSCacheInvalidationBridgeMBean
+   extends org.jboss.system.ServiceMBean
 {
    public static final int AUTO_ACKNOWLEDGE_MODE = 1;
    public static final int CLIENT_ACKNOWLEDGE_MODE = 2;
