@@ -28,7 +28,7 @@
 // File: SelectionResize.java
 // Classes: SelectionResize
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionResize.java,v 1.5 1998/07/02 02:53:03 jrobbins Exp $
+// $Id: SelectionResize.java,v 1.6 1998/07/17 22:54:13 jrobbins Exp $
 
 package uci.gef;
 
@@ -101,6 +101,7 @@ public class SelectionResize extends Selection {
     g.fillRect(cx - HAND_SIZE/2, cy + ch - HAND_SIZE/2, HAND_SIZE, HAND_SIZE);
     g.fillRect(cx + cw - HAND_SIZE/2, cy + ch - HAND_SIZE/2,
 	       HAND_SIZE, HAND_SIZE);
+    super.paint(g);
   }
 
   /** Change some attribute of the selected Fig when the user drags one of its

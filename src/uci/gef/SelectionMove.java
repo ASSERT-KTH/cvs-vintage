@@ -28,7 +28,7 @@
 // File: SelectionMove.java
 // Classes: SelectionMove
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionMove.java,v 1.4 1998/07/02 02:53:01 jrobbins Exp $
+// $Id: SelectionMove.java,v 1.5 1998/07/17 22:54:09 jrobbins Exp $
 
 package uci.gef;
 
@@ -61,6 +61,7 @@ public class SelectionMove extends Selection {
     g.fillRect(x + w, y - HAND_SIZE, HAND_SIZE, HAND_SIZE);
     g.fillRect(x - HAND_SIZE, y + h, HAND_SIZE, HAND_SIZE);
     g.fillRect(x + w, y + h, HAND_SIZE, HAND_SIZE);
+    super.paint(g);
   }
 
   /** SelectionMove is used when there are no handles, so dragHandle

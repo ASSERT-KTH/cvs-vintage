@@ -27,11 +27,12 @@
 // File: ToDoItem.java
 // Classes: ToDoItem
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoItem.java,v 1.7 1998/07/02 02:57:50 jrobbins Exp $
+// $Id: ToDoItem.java,v 1.8 1998/07/17 22:53:55 jrobbins Exp $
 
 package uci.argo.kernel;
 
 import java.util.*;
+import com.sun.java.swing.*;
 
 import uci.util.*;
 import uci.ui.Highlightable;
@@ -57,7 +58,7 @@ public class ToDoItem implements java.io.Serializable {
   public static final int HIGH_PRIORITY = 1;
   public static final int MED_PRIORITY = 2;
   public static final int LOW_PRIORITY = 3;
-  
+
   ////////////////////////////////////////////////////////////////
   // instance variables
 
@@ -78,6 +79,8 @@ public class ToDoItem implements java.io.Serializable {
 
   /** Which part of the design does this issue affect? */
   private Set _offenders;
+
+  private Icon _clarifier = null;
 
   private int _progress = (int) (Math.random()*100); // 0-100%
 
@@ -153,6 +156,14 @@ public class ToDoItem implements java.io.Serializable {
   /** Find the email address of the poster. */
   public String getExpertEmail() { return _poster.getExpertEmail(); }
 
+  /** Return a clarifier object that can graphical highlight this
+   *  error in a design diagram. By default return a DefaultClarifier*/
+  public Icon getClarifier() {
+    if (_clarifier != null) return _clarifier;
+    Icon posterClarifier = _poster.getClarifier();
+    if (posterClarifier != null) return posterClarifier;
+    return null;
+  }
 
   public boolean containsKnowledgeType(String type) {
     return getPoster().containsKnowledgeType(type);
@@ -235,3 +246,5 @@ public class ToDoItem implements java.io.Serializable {
   }
 
 } /* end class ToDoItem */
+
+

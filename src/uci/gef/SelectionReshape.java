@@ -28,7 +28,7 @@
 // File: SelectionReshape.java
 // Classes: SelectionReshape
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionReshape.java,v 1.8 1998/07/15 18:21:57 jrobbins Exp $
+// $Id: SelectionReshape.java,v 1.9 1998/07/17 22:54:12 jrobbins Exp $
 
 package uci.gef;
 
@@ -88,7 +88,7 @@ public class SelectionReshape extends Selection
       g.drawRect(xs[_selectedHandle] - HAND_SIZE/2 - 2,
 		 ys[_selectedHandle] - HAND_SIZE/2 - 2,
 		 HAND_SIZE + 3, HAND_SIZE + 3);
-
+    super.paint(g);
   }
 
   /** Change some attribute of the selected Fig when the user drags one of its

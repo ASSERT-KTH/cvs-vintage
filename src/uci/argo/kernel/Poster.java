@@ -27,11 +27,12 @@
 // File: Poster.java
 // Classes: Poster
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Poster.java,v 1.7 1998/07/02 02:57:49 jrobbins Exp $
+// $Id: Poster.java,v 1.8 1998/07/17 22:53:54 jrobbins Exp $
 
 package uci.argo.kernel;
 
 import java.util.*;
+import com.sun.java.swing.*;
 
 import uci.util.*;
 
@@ -71,7 +72,8 @@ public interface Poster {
   /** Customize the description string just before it is displayed. */
   String expand(String desc, Set offs);
 
-  
+  public Icon getClarifier();
+
   ////////////////////////////////////////////////////////////////
   // criticism control
 

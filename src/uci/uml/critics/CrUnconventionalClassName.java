@@ -27,11 +27,13 @@
 // File: CrUnconventionalClassName.java.java
 // Classes: CrUnconventionalClassName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalClassName.java,v 1.9 1998/07/15 18:17:17 jrobbins Exp $
+// $Id: CrUnconventionalClassName.java,v 1.10 1998/07/17 22:54:29 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
+import com.sun.java.swing.*;
+
 import uci.argo.kernel.*;
 import uci.util.*;
 import uci.uml.Foundation.Core.*;
@@ -62,6 +64,10 @@ public class CrUnconventionalClassName extends CrUML {
     char initialChar = nameStr.charAt(0);
     if (!Character.isUpperCase(initialChar)) return PROBLEM_FOUND;
     return NO_PROBLEM;
+  }
+
+  public Icon getClarifier() {
+    return ClClassName.TheInstance;
   }
 
 } /* end class CrUnconventionalClassName */

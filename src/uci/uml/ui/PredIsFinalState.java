@@ -24,46 +24,23 @@
 
 
 
-// File: CrFinalSubclassed.java.java
-// Classes: CrFinalSubclassed.java
-// Original Author: jrobbins@ics.uci.edu
-// $Id: CrFinalSubclassed.java,v 1.11 1998/07/17 22:54:20 jrobbins Exp $
 
-package uci.uml.critics;
+package uci.uml.ui;
 
-import java.util.*;
-import uci.argo.kernel.*;
 import uci.util.*;
-import uci.uml.Foundation.Core.*;
+import uci.uml.Behavioral_Elements.State_Machines.*;
+import uci.uml.Foundation.Data_Types.*;
 
-/** Well-formedness rule [2] for GeneralizableElement. See page 31 of UML 1.1
- *  Semantics. OMG document ad/97-08-04. */
+public class PredIsFinalState implements Predicate {
 
-public class CrFinalSubclassed extends CrUML {
+  public static PredIsFinalState TheInstance = new PredIsFinalState();
 
-  public CrFinalSubclassed() {
-    setHeadline("Remove final keyword or remove subclasses");
-    sd("In Java, the keyword 'final' indicates that a class is not intended "+
-       "to have subclasses.  This class is marked final and has "+
-       "subclasses.\n\n"+
-       "A well thought-out class inheritance hierarchy that conveys and "+
-       "supports intended extensions is an important part of achieving "+
-       "an understandable and maintainable design.\n\n"+
-       "To fix this, use the FixIt button, or manually select the class and "+
-       "change its base class, or select the base class and use the properties "+
-       "tab to remove the 'final' keyword.");
+  private PredIsFinalState() { }
 
-    addSupportedDecision(CrUML.decINHERITANCE);
+  public boolean predicate(Object obj) {
+    return (obj instanceof Pseudostate) &&
+      (PseudostateKind.FINAL.equals(((Pseudostate)obj).getKind()));
   }
 
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof GeneralizableElement)) return NO_PROBLEM;
-    GeneralizableElement ge = (GeneralizableElement) dm;
-    if (!ge.getIsLeaf()) return NO_PROBLEM;
-    Vector subs = ge.getSpecialization();
-    if (subs == null || subs.size() == 0) return NO_PROBLEM;
-    return PROBLEM_FOUND;
-  }
-
-} /* end class CrFinalSubclassed.java */
+} /* end class PredIsFinalState */
 

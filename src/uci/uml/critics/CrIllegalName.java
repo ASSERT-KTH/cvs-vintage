@@ -27,11 +27,13 @@
 // File: CrIllegalName.java.java
 // Classes: CrIllegalName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrIllegalName.java,v 1.5 1998/07/15 18:16:49 jrobbins Exp $
+// $Id: CrIllegalName.java,v 1.6 1998/07/17 22:54:21 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
+import com.sun.java.swing.*;
+
 import uci.argo.kernel.*;
 import uci.util.*;
 import uci.uml.Foundation.Core.*;
@@ -65,6 +67,10 @@ public class CrIllegalName extends CrUML {
 	return PROBLEM_FOUND;
     }
     return NO_PROBLEM;
+  }
+
+  public Icon getClarifier() {
+    return ClClassName.TheInstance;
   }
 
 } /* end class CrIllegalName */

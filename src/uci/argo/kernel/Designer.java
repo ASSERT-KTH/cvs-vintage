@@ -27,12 +27,13 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.10 1998/07/15 18:21:08 jrobbins Exp $
+// $Id: Designer.java,v 1.11 1998/07/17 22:53:52 jrobbins Exp $
 
 package uci.argo.kernel;
 
 import java.util.*;
 import java.awt.*;
+import com.sun.java.swing.*;
 
 import uci.util.*;
 
@@ -300,6 +301,7 @@ public class Designer implements Poster, Runnable, java.io.Serializable {
 
   public String expand(String desc, Set offs) { return desc; }
 
+  public Icon getClarifier() { return null; }
 
   /** Reply this Designer's ToDoList, a list of pending problems and
    *  issues that the designer might be interested in.

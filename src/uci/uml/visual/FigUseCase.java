@@ -27,7 +27,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.5 1998/07/15 18:18:09 jrobbins Exp $
+// $Id: FigUseCase.java,v 1.6 1998/07/17 22:54:55 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -87,6 +87,7 @@ public class FigUseCase extends FigNodeModelElement {
     _name.setTextFilled(false);
     _name.setFilled(false);
     _name.setLineWidth(0);
+    _name.setMultiLine(true);
 
     // add Figs to the FigNode in back-to-front order
     addFig(_bigPort);

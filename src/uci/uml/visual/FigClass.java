@@ -27,7 +27,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.19 1998/07/15 18:18:00 jrobbins Exp $
+// $Id: FigClass.java,v 1.20 1998/07/17 22:54:51 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -40,6 +40,7 @@ import com.sun.java.swing.plaf.metal.MetalLookAndFeel;
 
 import uci.gef.*;
 import uci.graph.*;
+import uci.argo.kernel.*;
 import uci.uml.ui.*;
 import uci.uml.generate.*;
 import uci.uml.Foundation.Core.*;
@@ -93,6 +94,10 @@ public class FigClass extends FigNodeModelElement  {
 //     _oper.addPropertyChangeListener(this);
   }
 
+  public FigText getOperationFig() { return _oper; }
+  public FigText getAttributeFig() { return _attr; }
+
+
   /* Override setBounds to keep shapes looking right */
   public void setBounds(int x, int y, int w, int h) {
     if (_name == null) return;
@@ -119,7 +124,6 @@ public class FigClass extends FigNodeModelElement  {
 
     calcBounds(); //_x = x; _y = y; _w = w; _h = h;
   }
-
 
   ////////////////////////////////////////////////////////////////
   // internal methods

@@ -27,7 +27,7 @@
 // File: RedrawManager.java
 // Classes: RedrawManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: RedrawManager.java,v 1.15 1998/07/15 18:21:55 jrobbins Exp $
+// $Id: RedrawManager.java,v 1.16 1998/07/17 22:54:07 jrobbins Exp $
 
 package uci.gef;
 
@@ -91,7 +91,7 @@ public class RedrawManager implements Runnable {
   public RedrawManager(Editor ed) {
     for (int i = 0; i < MAX_NUM_RECTS; ++i) _rects[i] = new Rectangle();
     _ed = ed;
-    _repairThread = new Thread(this, "RepairThread");
+    _repairThread = new Thread(this, "GEF-RedrawManagerThread");
     // Needs-More-Work: this causes a security violation in Netscape
     _repairThread.setDaemon(true);
     _repairThread.setPriority(Thread.MAX_PRIORITY);
@@ -228,7 +228,10 @@ public class RedrawManager implements Runnable {
   public void repairDamage() {
     Component c = _ed.getAwtComponent();
     if (c == null || !c.isVisible()) return;
-    Graphics g = _ed.getGraphics();
+    Graphics g = null;
+    //synchronized (Toolkit.getDefaultToolkit()) {
+    g = _ed.getGraphics();
+    //}
     if (_lockLevel == 0 && g != null)
       synchronized (LOCK) { if (_lockLevel == 0) paint(_ed, g); }
   }

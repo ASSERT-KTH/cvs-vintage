@@ -27,7 +27,7 @@
 // File: Fig.java
 // Classes: Fig
 // Original Author: ics125 spring 1996
-// $Id: Fig.java,v 1.11 1998/07/15 18:21:40 jrobbins Exp $
+// $Id: Fig.java,v 1.12 1998/07/17 22:54:00 jrobbins Exp $
 
 package uci.gef;
 
@@ -255,6 +255,11 @@ public class Fig implements java.io.Serializable, PropertyChangeListener  {
     _lineWidth = newLW;
   }
   public int getLineWidth() { return _lineWidth; }
+
+
+  public String getTipString(MouseEvent me) {
+    return toString();
+  }
 
 //   public void assignShadowColor(Color c) { _shadowColor = c; } //?
 //   public void setShadowColor(Color c) { _shadowColor = c; }

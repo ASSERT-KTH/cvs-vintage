@@ -27,7 +27,7 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.10 1998/07/15 18:17:14 jrobbins Exp $
+// $Id: CrUML.java,v 1.11 1998/07/17 22:54:28 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -62,6 +62,9 @@ public class CrUML extends Critic {
 
   public static final Decision decSTORAGE = new
   Decision("Storage", 5);
+
+  public static final Decision decBEHAVIOR = new
+  Decision("Behavior", 5);
 
   public static final Decision decINSTANCIATION = new
   Decision("Instantiation", 5);

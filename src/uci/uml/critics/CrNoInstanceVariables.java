@@ -29,11 +29,13 @@
 // File: CrNoInstanceVariables.java
 // Classes: CrNoInstanceVariables
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoInstanceVariables.java,v 1.9 1998/07/15 18:17:02 jrobbins Exp $
+// $Id: CrNoInstanceVariables.java,v 1.10 1998/07/17 22:54:25 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
+import com.sun.java.swing.*;
+
 import uci.argo.kernel.*;
 import uci.util.*;
 import uci.uml.Foundation.Core.*;
@@ -76,6 +78,10 @@ public class CrNoInstanceVariables extends CrUML {
     }
     //needs-more-work?: don't count static or constants?
     return PROBLEM_FOUND;
+  }
+
+  public Icon getClarifier() {
+    return ClAttributeCompartment.TheInstance;
   }
 
 } /* end class CrNoInstanceVariables */

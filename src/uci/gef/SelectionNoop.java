@@ -28,7 +28,7 @@
 // File: SelectionNoop.java
 // Classes: SelectionNoop
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionNoop.java,v 1.4 1998/07/02 02:53:02 jrobbins Exp $
+// $Id: SelectionNoop.java,v 1.5 1998/07/17 22:54:11 jrobbins Exp $
 
 package uci.gef;
 
@@ -59,6 +59,7 @@ public class SelectionNoop extends Selection {
     g.fillOval(x + w, y - HAND_SIZE, HAND_SIZE, HAND_SIZE);
     g.fillOval(x - HAND_SIZE, y + h, HAND_SIZE, HAND_SIZE);
     g.fillOval(x + w, y + h, HAND_SIZE, HAND_SIZE);
+    super.paint(g);
   }
 
   /** SelectionNoop is used when there are no handles, so dragHandle

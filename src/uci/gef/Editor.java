@@ -27,7 +27,7 @@
 // File: Editor.java
 // Classes: Editor
 // Original Author: ics125 spring 1996
-// $Id: Editor.java,v 1.15 1998/07/02 02:52:10 jrobbins Exp $
+// $Id: Editor.java,v 1.16 1998/07/17 22:53:58 jrobbins Exp $
 
 package uci.gef;
 
@@ -427,9 +427,10 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
   }
 
   public void setActiveTextEditor(FigTextEditor fte) {
-    if (_activeTextEditor != null)
-      _activeTextEditor.endEditing();
+    FigTextEditor oldTextEditor = _activeTextEditor;
     _activeTextEditor = fte;
+    if (oldTextEditor != null)
+      oldTextEditor.endEditing();
   }
   
   public void setCursor(Cursor c) {
@@ -591,12 +592,20 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
     RedrawManager.lock();
     Globals.curEditor(this);
     setUnderMouse(me);
+    if (_curFig != null) {
+      String tip = _curFig.getTipString(me);
+      if (tip != null && (_awt_component instanceof JComponent))
+	((JComponent)_awt_component).setToolTipText(tip);
+    }
+    else if (_awt_component instanceof JComponent)
+	((JComponent)_awt_component).setToolTipText("");
+
     _selectionManager.mouseMoved(me);
-    _modeManager.mouseMoved(me);  
+    _modeManager.mouseMoved(me);
     RedrawManager.unlock();
     if (nextEvent == null) _redrawer.repairDamage();
   }
-  
+
 
   /** Invoked when a key has been pressed and released. The KeyEvent
    *  has its keyChar ivar set to something, keyCode ivar is junk. */

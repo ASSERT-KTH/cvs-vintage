@@ -27,7 +27,7 @@
 // File: FigState.java
 // Classes: FigState
 // Original Author: your email address here
-// $Id: FigState.java,v 1.4 1998/07/15 18:18:07 jrobbins Exp $
+// $Id: FigState.java,v 1.5 1998/07/17 22:54:54 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -101,19 +101,20 @@ public class FigState extends FigNodeModelElement {
     int topSide = y;
     int heightP = h;
 
-    Rectangle _name_pref = _name.getBounds();
+    Rectangle name_pref = _name.getBounds();
 
 
-    int total_height = _name_pref.height;
+    int total_height = name_pref.height;
 
-    widthP = Math.max(widthP,_name_pref.width);
+    widthP = Math.max(widthP, name_pref.width);
     heightP = Math.max(heightP, total_height);
 
-   int extra_each = (heightP - total_height) / 3;
+//    int extra_each = (heightP - total_height) / 3;
 
     _name.setBounds(leftSide+10, topSide+(heightP-total_height)/2,
-		    widthP-20, _name_pref.height);
-    _bigPort.setBounds(leftSide+1, topSide+1, widthP-2, heightP-2);
+		    widthP-20,  name_pref.height);
+    _bigPort.setBounds(leftSide, topSide, widthP, heightP);
+    _cover.setBounds(leftSide, topSide, widthP, heightP);
 
     calcBounds(); //_x = x; _y = y; _w = w; _h = h;
   }
