@@ -1,4 +1,4 @@
-// $Id: TestUMLInteractionCollaborationListModel.java,v 1.12 2005/01/02 16:43:40 linus Exp $
+// $Id: TestUMLInteractionCollaborationListModel.java,v 1.13 2005/01/04 16:54:32 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,10 +27,9 @@ package org.argouml.uml.ui.behavior.collaborations;
 import junit.framework.TestCase;
 
 import org.argouml.model.Model;
+import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.MFactoryImpl;
-import ru.novosoft.uml.behavior.collaborations.MCollaboration;
-import ru.novosoft.uml.behavior.collaborations.MInteraction;
 
 /**
  * @since Oct 30, 2002
@@ -39,9 +38,9 @@ import ru.novosoft.uml.behavior.collaborations.MInteraction;
 public class TestUMLInteractionCollaborationListModel extends TestCase {
 
     private int oldEventPolicy;
-    private MInteraction elem;
+    private Object elem;
     private UMLInteractionContextListModel model;
-    
+
     /**
      * Constructor for TestUMLInteractionCollaborationListModel.
      *
@@ -50,7 +49,7 @@ public class TestUMLInteractionCollaborationListModel extends TestCase {
     public TestUMLInteractionCollaborationListModel(String arg0) {
         super(arg0);
     }
-    
+
     /**
      * @see junit.framework.TestCase#setUp()
      */
@@ -62,7 +61,7 @@ public class TestUMLInteractionCollaborationListModel extends TestCase {
         model = new UMLInteractionContextListModel();
         model.setTarget(elem);
     }
-    
+
     /**
      * @see junit.framework.TestCase#tearDown()
      */
@@ -72,28 +71,28 @@ public class TestUMLInteractionCollaborationListModel extends TestCase {
         MFactoryImpl.setEventPolicy(oldEventPolicy);
         model = null;
     }
-    
+
     /**
      * Test setContext().
      */
     public void testSetContext() {
-        MCollaboration col =
+        Object col =
 	    Model.getCollaborationsFactory().createCollaboration();
-        elem.setContext(col);
+        ModelFacade.setContext(elem, col);
         assertEquals(1, model.getSize());
         assertEquals(col, model.getElementAt(0));
     }
-    
+
     /**
      * Test setContext(null).
      */
     public void testRemoveContext() {
-        MCollaboration col =
+        Object col =
 	    Model.getCollaborationsFactory().createCollaboration();
-        elem.setContext(col);
-        elem.setContext(null);
+        ModelFacade.setContext(elem, col);
+        ModelFacade.setContext(elem, null);
         assertEquals(0, model.getSize());
         assertTrue(model.isEmpty());
-    } 
+    }
 
 }

@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactory.java,v 1.2 2005/01/03 18:21:23 linus Exp $
+// $Id: CollaborationsFactory.java,v 1.3 2005/01/04 16:54:38 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,21 +57,21 @@ public interface CollaborationsFactory {
      *
      * @return an initialized UML ClassifierRole instance.
      */
-    MClassifierRole createClassifierRole();
+    Object createClassifierRole();
 
     /**
      * Create an empty but initialized instance of a UML Collaboration.
      *
      * @return an initialized UML Collaboration instance.
      */
-    MCollaboration createCollaboration();
+    Object createCollaboration();
 
     /**
      * Create an empty but initialized instance of a UML Interaction.
      *
      * @return an initialized UML Interaction instance.
      */
-    MInteraction createInteraction();
+    Object createInteraction();
 
     /**
      * Create an empty but initialized instance of a UML Message.
