@@ -84,11 +84,11 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
-    This class is responsible for edit issue forms.
-    ScarabIssueAttributeValue
-    @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: Approval.java,v 1.22 2002/08/16 03:57:46 elicia Exp $
-*/
+ * This class is responsible for managing the approval process.
+ *
+ * @author <a href="mailto:elicia@collab.net">Elicia David</a>
+ * @version $Id: Approval.java,v 1.23 2002/08/22 19:02:43 jon Exp $
+ */
 public class Approval extends RequireLoginFirstAction
 {
 
@@ -96,6 +96,9 @@ public class Approval extends RequireLoginFirstAction
                                 "but could not send notification email due " + 
                                 "to a sendmail error.";
 
+    private static final String REJECT = "reject";
+    private static final String APPROVE = "approve";
+    
     public void doSubmit( RunData data, TemplateContext context )
         throws Exception
     {
@@ -134,7 +137,7 @@ public class Approval extends RequireLoginFirstAction
                artifact = "query";
                artifactName = query.getName();
 
-               if (action.equals("reject"))
+               if (action.equals(REJECT))
                {
                    try
                    {
@@ -146,7 +149,7 @@ public class Approval extends RequireLoginFirstAction
                    }
                    actionWord = "rejected";
                } 
-               else if (action.equals("approve"))
+               else if (action.equals(APPROVE))
                {
                    try
                    {
@@ -174,7 +177,7 @@ public class Approval extends RequireLoginFirstAction
                artifact = "issue entry template";
                artifactName = info.getName();
 
-               if (action.equals("reject"))
+               if (action.equals(REJECT))
                {
                    try
                    {
@@ -186,7 +189,7 @@ public class Approval extends RequireLoginFirstAction
                    }
                    actionWord = "rejected";
                } 
-               else if (action.equals("approve"))
+               else if (action.equals(APPROVE))
                {
                    try
                    {
@@ -250,14 +253,14 @@ public class Approval extends RequireLoginFirstAction
                     .getString(user.getUserName());
                 if (role != null && role.length() > 0) 
                 {
-                    if (!role.equals("defer") && !role.equals("deny")) 
+                    if (!role.equalsIgnoreCase("defer") && !role.equalsIgnoreCase("deny")) 
                     {
                         TurbineSecurity.grant( user, 
                             (org.apache.fulcrum.security.entity.Group)module, 
                             TurbineSecurity.getRole(role) );
                         pending.delete();
                     }
-                    else if (role.equals("deny"))
+                    else if (role.equalsIgnoreCase("deny"))
                     {
                         pending.delete();
                     }
