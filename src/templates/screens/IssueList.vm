@@ -41,12 +41,12 @@
 <input type="hidden" name="pageNum" value="$pageNum" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="IssueList.vm" />
 
-#set ($queryString = $data.Parameters.getString("queryString",""))
-#if (!$queryString.equals(""))
+#set ($queryString = $data.Parameters.getString("queryString"))
+#if ($queryString)
   <input type="hidden" name="queryString" value="$queryString" />
 #end
 
-#if ($searchType.equals("advanced") && !$queryString.equals(""))
+#if ($queryString && $searchType.equals("advanced"))
 <div class="functnbar">
 <input type="submit" value="$l10n.SaveQuery" name="eventSubmit_doRedirecttosavequery" />&#160;
 <input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />
@@ -227,7 +227,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 
 #end
 
-#if ($searchType.equals("advanced") && $queryString)
+#if ($queryString && $searchType.equals("advanced"))
 <div class="functnbar2">
 <input type="submit" value="$l10n.SaveQuery" name="eventSubmit_doRedirecttosavequery" />&#160;
 <input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />
