@@ -1,4 +1,4 @@
-// $Id: ClAttributeCompartment.java,v 1.13 2005/01/09 14:58:36 linus Exp $
+// $Id: ClAttributeCompartment.java,v 1.14 2005/01/11 15:12:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.cognitive.critics;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.ToDoItem;
@@ -82,10 +83,10 @@ public class ClAttributeCompartment implements Clarifier {
 		return;
 	    }
 
-	    FigGroup fg = fc.getAttributesFig();
-	    int left  = fg.getX() + 6;
-	    int height = fg.getY() + fg.getHeight() - 5;
-	    int right = fg.getX() + fg.getWidth() - 6;
+	    Rectangle fr = fc.getAttributesBounds();
+	    int left  = fr.x + 6;
+	    int height = fr.y + fr.height - 5;
+	    int right = fr.x + fr.width - 6;
 	    g.setColor(Color.red);
 	    int i = left;
 	    while (true) {
@@ -128,8 +129,8 @@ public class ClAttributeCompartment implements Clarifier {
 	}
 	AttributesCompartmentContainer fc =
 	    (AttributesCompartmentContainer) fig;
-	FigGroup fg = fc.getAttributesFig();
-	boolean res = fg.contains(x, y);
+	Rectangle fr = fc.getAttributesBounds();
+	boolean res = fr.contains(x, y);
 	fig = null;
 	return res;
     }

@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.84 2005/01/10 16:24:15 mvw Exp $
+// $Id: FigInterface.java,v 1.85 2005/01/11 15:12:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -288,6 +288,15 @@ public class FigInterface extends FigNodeModelElement
      */
     public FigGroup getOperationsFig() {
         return operVec;
+    }
+
+    /**
+     * Getter for operVec.
+     *
+     * @return operVec
+     */
+    public Rectangle getOperationsBounds() {
+        return operVec.getBounds();
     }
 
     /**

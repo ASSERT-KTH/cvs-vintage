@@ -1,4 +1,4 @@
-// $Id: ClOperationCompartment.java,v 1.11 2005/01/09 14:58:36 linus Exp $
+// $Id: ClOperationCompartment.java,v 1.12 2005/01/11 15:12:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.cognitive.critics;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.ui.Clarifier;
@@ -83,10 +84,10 @@ public class ClOperationCompartment implements Clarifier {
 		return;
 	    }
 
-	    FigGroup fg = fc.getOperationsFig();
-	    int left  = fg.getX() + 10;
-	    int height = fg.getY() + fg.getHeight() - 7;
-	    int right = fg.getX() + fg.getWidth() - 10;
+	    Rectangle fr = fc.getOperationsBounds();
+	    int left  = fr.x + 10;
+	    int height = fr.y + fr.height - 7;
+	    int right = fr.x + fr.width - 10;
 	    g.setColor(Color.red);
 	    int i = left;
 	    while (true) {
@@ -126,8 +127,8 @@ public class ClOperationCompartment implements Clarifier {
 	if (!(fig instanceof OperationsCompartmentContainer)) return false;
 	OperationsCompartmentContainer fc =
 	    (OperationsCompartmentContainer) fig;
-	FigGroup fg = fc.getOperationsFig();
-	boolean res = fg.contains(x, y);
+	Rectangle fr = fc.getOperationsBounds();
+	boolean res = fr.contains(x, y);
 	fig = null;
 	return res;
     }

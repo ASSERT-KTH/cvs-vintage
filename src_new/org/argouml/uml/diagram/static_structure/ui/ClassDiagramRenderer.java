@@ -1,4 +1,4 @@
-// $Id: ClassDiagramRenderer.java,v 1.31 2005/01/09 14:58:41 linus Exp $
+// $Id: ClassDiagramRenderer.java,v 1.32 2005/01/11 15:12:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -133,8 +133,10 @@ public class ClassDiagramRenderer
         } else if (ModelFacade.isAAssociationEnd(edge)) {
             FigAssociationEnd asend = new FigAssociationEnd(edge, lay);
             ModelFacade.getAssociation(edge);
-            FigNode associationFN = (FigNode) lay.presentationFor(ModelFacade.getAssociation(edge));
-            FigNode classifierFN = (FigNode) lay.presentationFor(ModelFacade.getType(edge));
+            FigNode associationFN = 
+                (FigNode) lay.presentationFor(ModelFacade.getAssociation(edge));
+            FigNode classifierFN = 
+                (FigNode) lay.presentationFor(ModelFacade.getType(edge));
 
             asend.setSourcePortFig(associationFN);
             asend.setSourceFigNode(associationFN);

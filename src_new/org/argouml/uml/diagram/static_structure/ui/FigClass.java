@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.126 2005/01/10 16:24:15 mvw Exp $
+// $Id: FigClass.java,v 1.127 2005/01/11 15:12:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -322,10 +322,24 @@ public class FigClass extends FigNodeModelElement
     }
 
     /**
+     * @return The bounds of the operations compartment.
+     */
+    public Rectangle getOperationsBounds() {
+        return ((FigGroup) getFigAt(OPERATIONS_POSN)).getBounds();
+    }
+
+    /**
+     * @return The bounds of the attributes compartment.
+     */
+    public Rectangle getAttributesBounds() {
+        return ((FigGroup) getFigAt(ATTRIBUTES_POSN)).getBounds();
+    }
+
+    /**
      * @return The vector of graphics for operations (if any).
      * First one is the rectangle for the entire operations box.
      */
-    public FigGroup getOperationsFig() {
+    private FigGroup getOperationsFig() {
         return (FigGroup) getFigAt(OPERATIONS_POSN);
     }
 
@@ -333,7 +347,7 @@ public class FigClass extends FigNodeModelElement
      * @return The vector of graphics for operations (if any).
      * First one is the rectangle for the entire operations box.
      */
-    public FigGroup getAttributesFig() {
+    private FigGroup getAttributesFig() {
         return (FigGroup) getFigAt(ATTRIBUTES_POSN);
     }
 

@@ -1,4 +1,4 @@
-// $Id: OperationsCompartmentContainer.java,v 1.4 2005/01/09 14:58:56 linus Exp $
+// $Id: OperationsCompartmentContainer.java,v 1.5 2005/01/11 15:12:35 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.diagram.ui;
 
-import org.tigris.gef.presentation.FigGroup;
+import java.awt.Rectangle;
 
 /**
  * An interface to be implemented by any Fig that contains
@@ -45,8 +45,7 @@ public interface OperationsCompartmentContainer {
     void setOperationsVisible(boolean visible);
 
     /**
-     * @return The vector of graphics for operations (if any).
-     * First one is the rectangle for the entire operations box.
+     * @return The bounds of the operations compartment
      */
-    FigGroup getOperationsFig();
+    Rectangle getOperationsBounds();
 }
