@@ -211,8 +211,10 @@ public class LuceneSearchEngine
 
 			criteria = filterRule.get(i);
 			mode = criteria.getCriteria();
-			field = criteria.getHeaderItemString().toLowerCase();
-
+			// FIXME
+			//field = criteria.getHeaderItemString().toLowerCase();
+			field = criteria.getHeaderItemString();
+			
 			TokenStream tokenStream =
 				analyzer.tokenStream(
 					field,
