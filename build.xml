@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.150 2004/01/30 05:49:40 starksm Exp $ -->
+<!-- $Id: build.xml,v 1.151 2004/01/30 23:06:26 starksm Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -490,6 +490,8 @@
     <jar jarfile="${build.lib}/jmx-invoker-adaptor-client.jar"
          manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
+        <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptor*"/>
+        <include name="org/jboss/jmx/adaptor/rmi/RMINotificationListener*"/>
         <include name="org/jboss/jmx/connector/invoker/client/**"/>
       </fileset>
     </jar>
