@@ -83,7 +83,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.27 2002/03/14 23:13:47 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.28 2002/04/04 22:53:46 jmcnally Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -438,5 +438,17 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     {
         Category.getInstance(category).debug(s);
     }
+
+    /**
+     * Prints a message to standard out.  Useful for "I am here" type 
+     * messages. 
+     *
+     * @param s message to log
+     */
+    public void print(String s)
+    {
+        System.out.println(s);
+    }
 }
+
 
