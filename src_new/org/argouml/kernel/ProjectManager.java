@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.23 2003/11/10 20:36:25 alexb Exp $
+// $Id: ProjectManager.java,v 1.24 2003/11/18 09:01:09 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,15 +47,18 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * This class manages the projects loaded in argouml. It is a
- * singleton. Classes in Argouml can ask this class for the current
+ * This class manages the projects loaded in argouml.
+ *
+ * Classes in Argouml can ask this class for the current
  * project and set the current project.  Since we only have one
  * project in ArgoUML at the moment, this class does not manage a list
  * of projects like one would expect. This could be a nice extension
  * for the future of argouml.  As soon as the current project is
  * changed, a property changed event is fired.
+ *
  * @since Nov 17, 2002
  * @author jaap.branderhorst@xs4all.nl
+ * @stereotype singleton
  */
 public final class ProjectManager {
 
