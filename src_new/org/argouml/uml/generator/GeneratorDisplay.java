@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.26 2002/08/23 12:21:49 kataka Exp $
+// $Id: GeneratorDisplay.java,v 1.27 2002/08/30 12:34:07 BobTarling Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -543,6 +543,22 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
   public String generateConstraint(MConstraint c) {
     return generateExpression(c);
   }
+
+  /**
+   * generate the name of an association role of the form:
+   *  / name : name of the base association
+   * @return the generated name
+   **/
+    public String generateAssociationRole(MAssociationRole assocRole){
+        //get the associationRole name
+        String text="/"+assocRole.getName()+":";		
+        //get the base association name
+        MAssociation assoc=assocRole.getBase();
+        if(assoc!=null){
+            text=text+assoc.getName();
+        }				
+        return text;
+    }
 
   ////////////////////////////////////////////////////////////////
   // internal methods?

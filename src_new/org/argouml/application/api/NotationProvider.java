@@ -24,7 +24,7 @@
 // File: NotationProvider.java
 // Interfaces: NotationProvider
 // Original Author: Thierry Lach
-// $Id: NotationProvider.java,v 1.3 2002/05/03 19:12:54 jeremybennett Exp $
+// $Id: NotationProvider.java,v 1.4 2002/08/30 12:38:53 BobTarling Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -33,7 +33,7 @@
 package org.argouml.application.api;
 
 // import org.argouml.application.events.*;
-import org.argouml.language.*;
+//import org.argouml.language.*;
 import org.argouml.uml.diagram.ui.*;
 
 import java.awt.*;
@@ -74,6 +74,7 @@ public interface NotationProvider {
   public String generateGuard(MGuard m);
   public String generateMessage(MMessage m);
   public String generateClassifierRef(MClassifier m);
+  public String generateAssociationRole(MAssociationRole m);
 
   /** Can the notation be parsed for this object?
    */
