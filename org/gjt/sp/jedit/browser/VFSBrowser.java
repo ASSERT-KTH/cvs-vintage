@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.71 2003/04/21 23:30:37 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.72 2003/04/21 23:38:03 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -473,7 +473,7 @@ public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusCompo
 			return;
 
 		updateFilenameFilter();
-		browserView.loadDirectory(path);
+		browserView.loadDirectory(null,path);
 		this.path = strippedPath;
 
 		VFSManager.runInAWTThread(new Runnable()
@@ -505,7 +505,7 @@ public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusCompo
 		VFSManager.getVFSForPath(path).reloadDirectory(path);
 
 		updateFilenameFilter();
-		browserView.loadDirectory(path);
+		browserView.loadDirectory(null,path);
 	} //}}}
 
 	//{{{ delete() method
