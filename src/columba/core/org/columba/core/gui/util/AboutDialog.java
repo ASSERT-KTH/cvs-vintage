@@ -50,12 +50,15 @@ import org.columba.mail.gui.util.AddressLabel;
 import org.columba.mail.gui.util.URLLabel;
 
 public class AboutDialog implements ActionListener {
-
+	public static final int MEMORY_UPDATE_THRESHOLD = 50; // 50k
+	
 	public static final String CMD_CLOSE = "CLOSE";
 	private static final String RESOURCE_BUNDLE_PATH = "org.columba.core.i18n.dialog";
+	private static MemoryMonitorThread memoryMonitorThread;
 
 	private JDialog dialog;
 	private JTabbedPane tabbedPane;
+	private MemoryPanel memoryPanel = null;
 	private boolean bool = false;
 
 	public AboutDialog() {
@@ -142,7 +145,7 @@ public class AboutDialog implements ActionListener {
 
 		//		contentPane.add(contactPanel, BorderLayout.CENTER);
 		tabbedPane.addTab("Authors", contactPanel);
-		tabbedPane.addTab("Memory", new MemoryPanel());
+		tabbedPane.addTab("Memory", (memoryPanel = new MemoryPanel()));
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 
 		JPanel buttonPanel = new JPanel(new BorderLayout(0, 0));
@@ -175,6 +178,9 @@ public class AboutDialog implements ActionListener {
 	}
 
 	private class MemoryPanel extends JPanel {
+		private int currentMemory = -1;
+		private int totalMemory = -1;
+
 		private JPanel centerPanel;
 		private JLabel currentMemoryKBLabel;
 		private JLabel currentMemoryLabel;
@@ -190,30 +196,33 @@ public class AboutDialog implements ActionListener {
 		private JLabel totalMemoryLabel;
 		private JFormattedTextField totalMemoryTextField;
 		private BoundedRangeModel model;
-		private MemoryMonitorThread memoryMonitorThread;
 
 		public MemoryPanel() {
 			initPanel();
 			initComponents();
 
-			memoryMonitorThread = new MemoryMonitorThread();
-			memoryMonitorThread.start();
+			if (memoryMonitorThread == null) {
+				memoryMonitorThread = new MemoryMonitorThread();
+				memoryMonitorThread.start();
+			}
 		}
 
 		public int getCurrentMemory() {
-			return Integer.parseInt(currentMemoryTextField.getText());
+			return currentMemory;
 		}
 
 		public void setCurrentMemory(int mem) {
+			currentMemory = mem;
 			currentMemoryTextField.setValue(new Integer(mem));
 			progressBar.setValue(mem);
 		}
 
 		public int getTotalMemory() {
-			return Integer.parseInt(totalMemoryTextField.getText());
+			return totalMemory;
 		}
 
 		public void setTotalMemory(int mem) {
+			totalMemory = mem;
 			totalMemoryTextField.setValue(new Integer(mem));
 			progressBar.setMaximum(mem);
 		}
@@ -347,40 +356,43 @@ public class AboutDialog implements ActionListener {
 
 			add(centerPanel, java.awt.BorderLayout.CENTER);
 		}
+	}
+	
+	private class MemoryMonitorThread extends Thread {
+		private boolean isRunning = true;
 
-		private class MemoryMonitorThread extends Thread {
-			private boolean isRunning = true;
+		public MemoryMonitorThread() {
+			setPriority(Thread.MIN_PRIORITY);
+		}
 
-			public MemoryMonitorThread() {
-				setPriority(Thread.MIN_PRIORITY);
-			}
+		public boolean isRunning() {
+			return isRunning;
+		}
 
-			public boolean isRunning() {
-				return isRunning;
-			}
+		public void setRunning(boolean b) {
+			isRunning = b;
+		}
 
-			public void setRunning(boolean b) {
-				isRunning = b;
-			}
+		public void run() {
+			while (isRunning) {
+				Runtime runtime = Runtime.getRuntime();
 
-			public void run() {
-				while (isRunning) {
-					Runtime runtime = Runtime.getRuntime();
+				int totalMem = (int) (runtime.totalMemory() / 1000);
+				int currMem = (int) (totalMem - (runtime.freeMemory() / 1000));
 
-					int totalMem = (int) (runtime.totalMemory() / 1000);
-					int currMem = (int) (totalMem - (runtime.freeMemory() / 1000));
-					setTotalMemory(totalMem);
-					setCurrentMemory(currMem);
+				if (memoryPanel.getTotalMemory() < (totalMem - MEMORY_UPDATE_THRESHOLD) || memoryPanel.getTotalMemory() > (totalMem + MEMORY_UPDATE_THRESHOLD))
+					memoryPanel.setTotalMemory(totalMem);
 
-					try {
-						Thread.sleep(750);
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}
+				if (memoryPanel.getCurrentMemory() < (currMem - MEMORY_UPDATE_THRESHOLD) || memoryPanel.getCurrentMemory() > (currMem + MEMORY_UPDATE_THRESHOLD))
+					memoryPanel.setCurrentMemory(currMem);
+
+				try {
+					Thread.sleep(750);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
-
 		}
 	}
 }
