@@ -132,7 +132,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.10 2002/03/15 23:28:14 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.11 2002/03/19 18:58:49 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1611,8 +1611,22 @@ try{
     public RModuleIssueType getRModuleIssueType(IssueType issueType)
         throws Exception
     {
-        SimpleKey[] keys = {getModuleId(), issueType.getIssueTypeId()};
-        return RModuleIssueTypeManager.getInstance(new ComboKey(keys));
+        RModuleIssueType rmit = null;
+        try
+        {
+            SimpleKey[] keys = {getModuleId(), issueType.getIssueTypeId()};
+            rmit = RModuleIssueTypeManager.getInstance(new ComboKey(keys));
+        }
+        catch (TorqueException e)
+        {
+            // ignore and return null, if the rmit does not exist
+            if (!"Failed to select one and only one row."
+                .equals(e.getMessage())) 
+            {
+                throw e;
+            }
+        }
+        return rmit;
     }
 
 
