@@ -38,7 +38,7 @@ import org.gjt.sp.util.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.25 2003/02/19 23:26:01 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.26 2003/02/20 01:55:12 spestov Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 {
@@ -433,35 +433,37 @@ public class VFSFileChooserDialog extends EnhancedDialog
 			{
 				public void run()
 				{
+					String currentText = filenameField.getText();
+					int caret = filenameField.getCaretPosition();
+					if(MiscUtilities.isAbsolutePath(currentText))
+						caret -= MiscUtilities.getParentOfPath(currentText).length();
+
 					BrowserView view = browser.getBrowserView();
 					view.selectNone();
 					view.getTree().doTypeSelect(
-						filenameField.getText(),
+						currentText,
 						false);
 					VFS.DirectoryEntry[] files =
 						view.getSelectedFiles();
 					if(files.length != 0)
 					{
-						int caret = filenameField
-							.getCaretPosition();
 						String path = files[0].path;
 						String name = files[0].name;
-						if(MiscUtilities.getParentOfPath(path)
-							.equals(browser.getDirectory()))
-						{
-							filenameField.setText(name);
-							filenameField.setCaretPosition(
-								name.length());
-							filenameField.moveCaretPosition(caret);
-						}
+						String parent = MiscUtilities.getParentOfPath(path);
+						if(parent.endsWith("/") || parent.endsWith(File.separator))
+							parent = parent.substring(0,parent.length() - 1);
+						String newText;
+						if(parent.equals(browser.getDirectory()))
+							newText = name;
 						else
-						{
-							filenameField.setText(path);
-							filenameField.setCaretPosition(
-								path.length());
-							filenameField.moveCaretPosition(caret
-								+ (path.length() - name.length()));
-						}
+							newText = path;
+						filenameField.setText(newText);
+						filenameField.setCaretPosition(
+							newText.length());
+						if(MiscUtilities.isAbsolutePath(newText))
+							caret += parent.length() + 1;
+						filenameField.moveCaretPosition(
+							caret);
 					}
 				}
 			});

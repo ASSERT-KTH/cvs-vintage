@@ -66,7 +66,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.34 2003/02/08 18:53:02 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.35 2003/02/20 01:55:12 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -102,6 +102,32 @@ public class MiscUtilities
 			return System.getProperty("user.home");
 		else
 			return path;
+	} //}}}
+
+	//{{{ isPathAbsolute() method
+	/**
+	 * Returns if the specified path name is an absolute path or URL.
+	 * @since jEdit 4.1pre11
+	 */
+	public static boolean isAbsolutePath(String path)
+	{
+		if(isURL(path))
+			return true;
+		else if(OperatingSystem.isDOSDerived())
+		{
+			if(path.length() >= 2 && path.charAt(1) == ':')
+				return true;
+			if(path.startsWith("\\\\"))
+				return true;
+		}
+		else if(OperatingSystem.isUnix())
+		{
+			// nice and simple
+			if(path.length() > 0 && path.charAt(0) == '/')
+				return true;
+		}
+
+		return false;
 	} //}}}
 
 	//{{{ constructPath() method
@@ -150,7 +176,7 @@ public class MiscUtilities
 
 		if(OperatingSystem.isDOSDerived() && path.startsWith("\\"))
 			parent = parent.substring(0,2);
-		
+
 		VFS vfs = VFSManager.getVFSForPath(parent);
 		return vfs.constructPath(parent,path);
 	} //}}}

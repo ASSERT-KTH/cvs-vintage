@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.185 2003/02/14 23:09:52 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.186 2003/02/20 01:55:12 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5093,11 +5093,14 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	{
 		chunkCache.invalidateAll();
 
-		// physFirstLine should not be invisible
+		/* // physFirstLine should not be invisible
 		while(!foldVisibilityManager.isLineVisible(physFirstLine)
 			&& physFirstLine != 0)
+		{
 			physFirstLine--;
+		} */
 
+		physFirstLine = virtualToPhysical(firstLine);
 		setFirstLine(physicalToVirtual(physFirstLine));
 
 		// update scroll bars because the number of virtual lines might

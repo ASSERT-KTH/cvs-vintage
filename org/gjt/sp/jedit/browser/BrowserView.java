@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.57 2003/02/18 22:03:19 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.58 2003/02/20 01:55:12 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -857,7 +857,9 @@ class BrowserView extends JPanel
 				if(obj instanceof VFS.DirectoryEntry)
 				{
 					VFS.DirectoryEntry file = (VFS.DirectoryEntry)obj;
-					if(file.name.regionMatches(ignoreCase,
+					String matchAgainst = (MiscUtilities.isAbsolutePath(str)
+						? file.path : file.name);
+					if(matchAgainst.regionMatches(ignoreCase,
 						0,str,0,str.length()))
 					{
 						setSelectionRow(i);
