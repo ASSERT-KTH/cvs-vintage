@@ -441,39 +441,49 @@ final class DirHandler extends Handler  {
 		}
 	}
 
+	OutputBuffer buf=res.getBuffer();
 	if( sbNote==0 ) {
-	    sbNote=req.getContextManager().getNoteId(ContextManager.REQUEST_NOTE,
-						     "RedirectHandler.buff");
+	    //sbNote=req.getContextManager().
+	    //    getNoteId(ContextManager.REQUEST_NOTE,
+	    // 		     "RedirectHandler.buff");
+	    sbNote=req.getContextManager().
+		getNoteId(ContextManager.REQUEST_NOTE,"uft8encoder");
 	}
 
 	// we can recycle it because
 	// we don't call toString();
-	StringBuffer buf=(StringBuffer)req.getNote( sbNote );
-	if( buf==null ) {
-	    buf = new StringBuffer();
-	    req.setNote( sbNote, buf );
+	// 	StringBuffer buf=(StringBuffer)req.getNote( sbNote );
+	// 	if( buf==null ) {
+	// 	    buf = new StringBuffer();
+	// 	    req.setNote( sbNote, buf );
+	// 	}
+
+	Encoder utfEncoder=(Encoder)req.getNote( sbNote );
+	if( utfEncoder==null ) {
+	    utfEncoder=new Encoder();
+	    utfEncoder.addSafeCharacter( '/' );
 	}
 
 	if (! inInclude) {
 	    res.setContentType("text/html");
-	    buf.append("<html>\r\n");
-	    buf.append("<head>\r\n");
-	    buf.append("<title>")
-		.append(sm.getString("defaultservlet.directorylistingfor"))
-		.append(requestURI);
-	    buf.append("</title>\r\n</head><body bgcolor=white>\r\n");
+	    buf.write("<html>\r\n");
+	    buf.write("<head>\r\n");
+	    buf.write("<title>");
+	    buf.write(sm.getString("defaultservlet.directorylistingfor"));
+	    buf.write(requestURI);
+	    buf.write("</title>\r\n</head><body bgcolor=white>\r\n");
 	}
 
-	buf.append("<table width=90% cellspacing=0 ");
-	buf.append("cellpadding=5 align=center>");
-	buf.append("<tr><td colspan=3><font size=+2><strong>");
-	buf.append(sm.getString("defaultservlet.directorylistingfor"))
-	    .append(requestURI);
-	buf.append("</strong></td></tr>\r\n");
+	buf.write("<table width=90% cellspacing=0 ");
+	buf.write("cellpadding=5 align=center>");
+	buf.write("<tr><td colspan=3><font size=+2><strong>");
+	buf.write(sm.getString("defaultservlet.directorylistingfor"));
+	buf.write(requestURI);
+	buf.write("</strong></td></tr>\r\n");
 
 	if (! pathInfo.equals("/")) {
-	    buf.append("<tr><td colspan=3 bgcolor=#ffffff>");
-	    //buf.append("<a href=\"../\">Up one directory");
+	    buf.write("<tr><td colspan=3 bgcolor=#ffffff>");
+	    //buf.write("<a href=\"../\">Up one directory");
 	    
 	    String toPath = requestURI;
 
@@ -487,9 +497,12 @@ final class DirHandler extends Handler  {
 		toPath = "/";
 	    }
 	    
-	    buf.append("<a href=\"" + toPath + "\"><tt>"+
-		       sm.getString("defaultservlet.upto")+ toPath);
-	    buf.append("</tt></a></td></tr>\r\n");
+	    buf.write("<a href=\"");
+	    utfEncoder.urlEncode( buf, toPath);
+	    buf.write( "\"><tt>" );
+	    buf.write( sm.getString("defaultservlet.upto"));
+	    buf.write( toPath);
+	    buf.write("</tt></a></td></tr>\r\n");
 	}
 
 	// Pre-calculate the request URI for efficiency
@@ -521,37 +534,37 @@ final class DirHandler extends Handler  {
 	    if (f.isDirectory()) {
 		if( dirsHead ) {
 		    dirsHead=false;
-		    buf.append("<tr><td colspan=3 bgcolor=#cccccc>");
-		    buf.append("<font size=+2><strong>").
-			append( sm.getString("defaultservlet.subdirectories")).
-			append( "</strong>\r\n");
-		    buf.append("</font></td></tr>\r\n");
+		    buf.write("<tr><td colspan=3 bgcolor=#cccccc>");
+		    buf.write("<font size=+2><strong>");
+		    buf.write( sm.getString("defaultservlet.subdirectories"));
+		    buf.write( "</strong>\r\n");
+		    buf.write("</font></td></tr>\r\n");
 		}
 
                 String fileN = f.getName();
 
-                buf.append("<tr");
+                buf.write("<tr");
 
-                if (shaderow) buf.append(" bgcolor=#eeeeee");
+                if (shaderow) buf.write(" bgcolor=#eeeeee");
 		shaderow=!shaderow;
 		
-                buf.append("><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-                buf.append("<tt><a href=\"")
-		    .append(slashedRequestURI)
-                    .append(fileN)
-		    .append("\">")
-		    .append(fileN)
-                    .append("/</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
-                    .append("</tt>\r\n");
-                buf.append("</td><td><tt>&nbsp;&nbsp;</tt></td>");
-                buf.append("<td align=right><tt>");
-		buf.append(dateFormat.format(new Date(f.lastModified())));
-                buf.append("</tt></td></tr>\r\n");
+                buf.write("><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+                buf.write("<tt><a href=\"");
+		utfEncoder.urlEncode( buf, slashedRequestURI);
+		utfEncoder.urlEncode( buf, fileN);
+		buf.write("\">");
+		buf.write(fileN);
+		buf.write("/</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+		buf.write("</tt>\r\n");
+                buf.write("</td><td><tt>&nbsp;&nbsp;</tt></td>");
+                buf.write("<td align=right><tt>");
+		buf.write(dateFormat.format(new Date(f.lastModified())));
+                buf.write("</tt></td></tr>\r\n");
 	    }
 	}
 
 	shaderow = false;
-	buf.append("<tr><td colspan=3 bgcolor=#ffffff>&nbsp;</td></tr>");
+	buf.write("<tr><td colspan=3 bgcolor=#ffffff>&nbsp;</td></tr>");
 	boolean fileHead=true;
 	
 	for (int i = 0; i < fileNames.length; i++) {
@@ -562,60 +575,65 @@ final class DirHandler extends Handler  {
 		
 		if( fileHead ) {
 		    fileHead=false;
-		    buf.append("<tr><td colspan=4 bgcolor=#cccccc>");
-		    buf.append("<font size=+2><strong>")
-			.append(sm.getString("defaultservlet.files"))
-			.append("</strong></font></td></tr>");
+		    buf.write("<tr><td colspan=4 bgcolor=#cccccc>");
+		    buf.write("<font size=+2><strong>");
+		    buf.write(sm.getString("defaultservlet.files"));
+		    buf.write("</strong></font></td></tr>");
 		}
 
-		buf.append("<tr");
+		buf.write("<tr");
 
-		if (shaderow) buf.append(" bgcolor=#eeeeee");
+		if (shaderow) buf.write(" bgcolor=#eeeeee");
 		shaderow = ! shaderow;
 		
-		buf.append("><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\r\n");
+		buf.write("><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\r\n");
 
-		buf.append("<tt><a href=\"")
-		    .append(slashedRequestURI)
-		    .append(fileN).append("\">")
-		    .append( fileN )
-		    .append( "</a>");
-		buf.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt>");
-		buf.append("</td>\r\n");
+		buf.write("<tt><a href=\"");
+		utfEncoder.urlEncode( buf, slashedRequestURI);
+		utfEncoder.urlEncode( buf, fileN);
+		buf.write("\">");
+		buf.write( fileN );
+		buf.write( "</a>");
+		buf.write("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt>");
+		buf.write("</td>\r\n");
 
-		buf.append("<td align=right><tt>");
+		buf.write("<td align=right><tt>");
 		displaySize( buf, (int)f.length());
-		buf.append("</tt></td>");
+		buf.write("</tt></td>");
 
-		buf.append("<td align=right><tt>");
-		buf.append(dateFormat.format(new Date(f.lastModified())));
-		buf.append("</tt></td></tr>\r\n");
+		buf.write("<td align=right><tt>");
+		buf.write(dateFormat.format(new Date(f.lastModified())));
+		buf.write("</tt></td></tr>\r\n");
 	    }
 	    
-	    buf.append("\r\n");
+	    buf.write("\r\n");
 	}
 	
-	buf.append("<tr><td colspan=3 bgcolor=#ffffff>&nbsp;</td></tr>");
-	buf.append("<tr><td colspan=3 bgcolor=#cccccc>");
-	buf.append("<font size=-1>");
-	buf.append(ContextManager.TOMCAT_NAME);
-	buf.append(" v");
-	buf.append(ContextManager.TOMCAT_VERSION);
-	buf.append("</font></td></tr></table>");
+	buf.write("<tr><td colspan=3 bgcolor=#ffffff>&nbsp;</td></tr>");
+	buf.write("<tr><td colspan=3 bgcolor=#cccccc>");
+	buf.write("<font size=-1>");
+	buf.write(ContextManager.TOMCAT_NAME);
+	buf.write(" v");
+	buf.write(ContextManager.TOMCAT_VERSION);
+	buf.write("</font></td></tr></table>");
 	
-	if (! inInclude)  buf.append("</body></html>\r\n");
+	if (! inInclude)  buf.write("</body></html>\r\n");
 
-	res.getBuffer().write(buf);
-	buf.setLength(0);
+    // 	res.getBuffer().write(buf);
+    // 	buf.setLength(0);
     }
 
-    void displaySize( StringBuffer buf, int filesize ) {
+    void displaySize( OutputBuffer buf, int filesize )
+	throws IOException
+    {
 	int leftside = filesize / 1024;
 	int rightside = (filesize % 1024) / 103;  // makes 1 digit
 	// To avoid 0.0 for non-zero file, we bump to 0.1
 	if (leftside == 0 && rightside == 0 && filesize != 0) 
 	    rightside = 1;
-	buf.append(leftside).append(".").append(rightside);
-	buf.append(" KB");
+	buf.write(leftside);
+	buf.write(".");
+	buf.write(rightside);
+	buf.write(" KB");
     }
 }
