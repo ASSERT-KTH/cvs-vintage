@@ -51,18 +51,18 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.1 2001/09/02 05:37:21 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.2 2001/09/09 03:17:09 spestov Exp $
  */
 public class GUIUtilities
 {
 	// some icons
 
-	public static final Icon NEW_BUFFER_ICON;
-	public static final Icon DIRTY_BUFFER_ICON;
-	public static final Icon READ_ONLY_BUFFER_ICON;
-	public static final Icon NORMAL_BUFFER_ICON;
-	public static final Icon EDITOR_WINDOW_ICON;
-	public static final Icon PLUGIN_WINDOW_ICON;
+	public static final Icon NEW_BUFFER_ICON = loadIcon("new.gif");
+	public static final Icon DIRTY_BUFFER_ICON = loadIcon("dirty.gif");
+	public static final Icon READ_ONLY_BUFFER_ICON = loadIcon("readonly.gif");
+	public static final Icon NORMAL_BUFFER_ICON = loadIcon("normal.gif");
+	public static final Icon EDITOR_WINDOW_ICON = loadIcon("jedit_icon1.gif");
+	public static final Icon PLUGIN_WINDOW_ICON = loadIcon("jedit_icon2.gif");
 
 	/**
 	 * Creates a menubar. Plugins should not need to call this method.
@@ -308,6 +308,9 @@ public class GUIUtilities
 	 */
 	public static Icon loadIcon(String iconName)
 	{
+		if(icons == null)
+			icons = new Hashtable();
+
 		// check if there is a cached version first
 		Icon icon = (Icon)icons.get(iconName);
 		if(icon != null)
@@ -1062,13 +1065,5 @@ public class GUIUtilities
 	static
 	{
 		macOS = (System.getProperty("os.name").indexOf("Mac") != -1);
-
-		icons = new Hashtable();
-		NEW_BUFFER_ICON = loadIcon("new.gif");
-		DIRTY_BUFFER_ICON = loadIcon("dirty.gif");
-		READ_ONLY_BUFFER_ICON = loadIcon("readonly.gif");
-		NORMAL_BUFFER_ICON = loadIcon("normal.gif");
-		EDITOR_WINDOW_ICON = loadIcon("jedit_icon1.gif");
-		PLUGIN_WINDOW_ICON = loadIcon("jedit_icon2.gif");
 	}
 }
