@@ -22,7 +22,8 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -64,11 +65,7 @@ public class PreviousMessageAction extends AbstractColumbaAction
         // uncomment to enable action
 
         /*
-        (
-                (
-                        AbstractMailFrameController) frameMediator)
-                                .registerTableSelectionListener(
-                this);
+        ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
         */
     }
 
@@ -76,7 +73,7 @@ public class PreviousMessageAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+        FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
 
         //		TODO: fix previous-message action
 
@@ -84,7 +81,7 @@ public class PreviousMessageAction extends AbstractColumbaAction
         if ( r.length>0 )
         {
                 FolderCommandReference ref = r[0];
-                TableController table = ((AbstractMailFrameController) getFrameController()).tableController;
+                TableController table = ((TableViewOwner) getFrameController()).getTableController();
                 MessageNode node = table.getView().getSelectedNode();
                 MessageNode previousNode = (MessageNode) node.getPreviousNode();
                 Object nextUid = previousNode.getUid();
@@ -93,7 +90,7 @@ public class PreviousMessageAction extends AbstractColumbaAction
                 uids[0] = nextUid;
                 ref.setUids(uids);
 
-                ((AbstractMailFrameController) getFrameController()).setTableSelection(r);
+                ((MailFrameMediator) getFrameController()).setTableSelection(r);
                 table.setSelected(uids);
 
                 MainInterface.processor.addOp(new ViewMessageCommand(getFrameController(), r));

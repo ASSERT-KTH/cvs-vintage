@@ -22,7 +22,6 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
@@ -61,7 +60,7 @@ public class OpenMessageWithMessageFrameAction extends AbstractColumbaAction
     public void actionPerformed(ActionEvent evt) {
         MessageFrameController c = new MessageFrameController();
 
-        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+        FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
 
         c.setTreeSelection(r);
 

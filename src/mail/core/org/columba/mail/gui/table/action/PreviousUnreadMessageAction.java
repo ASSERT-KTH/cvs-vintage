@@ -20,6 +20,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -55,11 +56,7 @@ public class PreviousUnreadMessageAction extends AbstractColumbaAction
         // uncomment to enable action
 
         /*
-        (
-                (
-                        AbstractMailFrameController) frameMediator)
-                                .registerTableSelectionListener(
-                this);
+        ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
         */
     }
 

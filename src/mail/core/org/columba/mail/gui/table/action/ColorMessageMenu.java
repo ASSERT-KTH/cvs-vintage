@@ -25,7 +25,7 @@ import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.ColorMessageCommand;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 import java.awt.Color;
@@ -40,6 +40,7 @@ import javax.swing.JMenuItem;
  *
  * @author fdietz
  */
+
 public class ColorMessageMenu extends IMenu implements ActionListener,
     SelectionListener {
     // TODO: add central place, which keeps a list of all possible
@@ -55,13 +56,13 @@ public class ColorMessageMenu extends IMenu implements ActionListener,
     /**
  * @param controller
  * @param caption
- */
+*/
     public ColorMessageMenu(FrameMediator controller) {
         super(controller, "Color Message");
 
         createSubMenu();
 
-        ((AbstractMailFrameController) controller).registerTableSelectionListener(this);
+        ((MailFrameMediator) controller).registerTableSelectionListener(this);
     }
 
     protected void createSubMenu() {
@@ -84,7 +85,7 @@ public class ColorMessageMenu extends IMenu implements ActionListener,
         String action = e.getActionCommand();
 
         // get current message list selection
-        FolderCommandReference[] r = ((AbstractMailFrameController) getController()).getTableSelection();
+        FolderCommandReference[] r = ((MailFrameMediator) getController()).getTableSelection();
 
         if (action.equals("NONE")) {
             // remove color
@@ -125,3 +126,4 @@ public class ColorMessageMenu extends IMenu implements ActionListener,
         }
     }
 }
+

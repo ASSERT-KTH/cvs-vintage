@@ -22,7 +22,6 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.spam.command.ScoreMessageCommand;
@@ -52,7 +51,7 @@ public class ScoreMessageAction extends AbstractColumbaAction
  * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
  */
     public void actionPerformed(ActionEvent arg0) {
-        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+        FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
         MainInterface.processor.addOp(new ScoreMessageCommand(r));
     }
 

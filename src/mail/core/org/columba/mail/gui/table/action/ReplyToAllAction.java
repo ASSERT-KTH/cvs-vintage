@@ -24,7 +24,6 @@ import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.composer.command.ReplyToAllCommand;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
@@ -64,7 +63,7 @@ public class ReplyToAllAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+        FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
         MainInterface.processor.addOp(new ReplyToAllCommand(r));
     }
 

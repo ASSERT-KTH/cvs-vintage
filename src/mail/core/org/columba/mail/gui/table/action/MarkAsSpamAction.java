@@ -25,7 +25,6 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.MarkMessageCommand;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
@@ -63,7 +62,7 @@ public class MarkAsSpamAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+        FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
         r[0].setMarkVariant(MarkMessageCommand.MARK_AS_SPAM);
 
         MarkMessageCommand c = new MarkMessageCommand(r);

@@ -24,7 +24,6 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
@@ -77,7 +76,7 @@ public class ThreadedViewAction extends AbstractSelectableAction
 
         JCheckBoxMenuItem item = (JCheckBoxMenuItem) e.getSource();
 
-        FolderCommandReference[] r = (FolderCommandReference[]) ((AbstractMailFrameController) frameMediator).getTreeSelection();
+        FolderCommandReference[] r = (FolderCommandReference[]) ((MailFrameMediator) frameMediator).getTreeSelection();
 
         Folder folder = (Folder) r[0].getFolder();
 

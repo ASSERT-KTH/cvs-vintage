@@ -28,7 +28,6 @@ import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
@@ -85,7 +84,7 @@ public class DeleteMessageAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+        FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
         r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 
         Folder folder = (Folder) r[0].getFolder();
@@ -105,7 +104,7 @@ public class DeleteMessageAction extends AbstractColumbaAction
             Folder destFolder = trash;
 
             FolderCommandReference[] result = new FolderCommandReference[2];
-            FolderCommandReference[] r1 = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+            FolderCommandReference[] r1 = ((MailFrameMediator) getFrameMediator()).getTableSelection();
             FolderCommandReference r2 = new FolderCommandReference(destFolder);
 
             result[0] = r1[0];
