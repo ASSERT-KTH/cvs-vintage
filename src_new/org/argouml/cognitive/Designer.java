@@ -26,7 +26,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.1 2000/09/04 12:50:27 1sturm Exp $
+// $Id: Designer.java,v 1.2 2000/11/29 07:45:14 carnold Exp $
 
 package org.argouml.cognitive;
 

@@ -24,7 +24,7 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrUML.java,v 1.2 2000/11/29 07:45:16 carnold Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -37,7 +37,7 @@ import org.argouml.kernel.*;
 import org.argouml.ui.*;
 import org.argouml.cognitive.*;
 import org.argouml.cognitive.critics.*;
-import org.argouml.ocl.OCLEvaluator;
+import org.tigris.gef.ocl.OCLEvaluator;
 
 /** "Abstract" Critic subclass that captures commonalities among all
  *  critics in the UML domain.  This class also defines and registers

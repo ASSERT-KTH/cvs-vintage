@@ -28,7 +28,7 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrEmptyPackage.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrEmptyPackage.java,v 1.2 2000/11/29 07:45:16 carnold Exp $
 
 package org.argouml.uml.cognitive.critics;
 
