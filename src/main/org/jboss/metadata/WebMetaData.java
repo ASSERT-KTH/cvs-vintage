@@ -22,6 +22,7 @@ import org.jboss.mx.loading.LoaderRepositoryFactory;
 import org.jboss.mx.loading.LoaderRepositoryFactory.LoaderRepositoryConfig;
 import org.jboss.mx.util.ObjectNameFactory;
 import org.jboss.webservice.metadata.ServiceRefMetaData;
+import org.jboss.security.RunAsIdentity;
 import org.w3c.dom.Element;
 
 /** A representation of the web.xml and jboss-web.xml deployment
@@ -32,7 +33,7 @@ import org.w3c.dom.Element;
  * @see org.jboss.web.AbstractWebContainer
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  */
 public class WebMetaData extends MetaData
 {
@@ -62,6 +63,10 @@ public class WebMetaData extends MetaData
    private HashMap serviceReferences = new HashMap();
    /** web.xml security-role-refs <String servlet-name, ArrayList<SecurityRoleRefMetaData>> */
    private HashMap securityRoleReferences = new HashMap();
+   /** The web.xml servlet/run-as <String servlet-name, String role> */
+   private HashMap runAsNames = new HashMap();
+   /** The jboss-web.xml servlet/run-as <String servlet-name, RunAsIdentity> */
+   private HashMap runAsIdentity = new HashMap();
    /** The web.xml distributable flag */
    private boolean distributable = false;
    /** The jboss-web.xml class-loading.java2ClassLoadingCompliance flag */
@@ -281,6 +286,35 @@ public class WebMetaData extends MetaData
    }
 
    /**
+    * 
+    * @param userName
+    * @return Set<String>
+    */ 
+   public Set getSecurityRoleNamesByPrincipal(String userName)
+   {
+      HashSet roleNames = new HashSet();
+      Iterator it = securityRoles.values().iterator();
+      while (it.hasNext())
+      {
+         SecurityRoleMetaData srMetaData = (SecurityRoleMetaData) it.next();
+         if (srMetaData.getPrincipals().contains(userName))
+            roleNames.add(srMetaData.getRoleName());
+      }
+      return roleNames;
+   }
+
+   /**
+    * 
+    * @param servletName - the servlet-name from the web.xml
+    * @return RunAsIdentity for the servet if one exists, null otherwise
+    */ 
+   public RunAsIdentity getRunAsIdentity(String servletName)
+   {
+      RunAsIdentity runAs = (RunAsIdentity) runAsIdentity.get(servletName);
+      return runAs;
+   }
+
+   /**
     * Get the security-role names from the web.xml descriptor
     * @return Set<String> of the security-role names from the web.xml
     */ 
@@ -436,7 +470,7 @@ public class WebMetaData extends MetaData
     */
    protected void importWebXml(Element webApp) throws DeploymentException
    {
-      // Parse the web-app/servlet/security-role-ref elements
+      // Parse the web-app/servlet/security-role-ref + run-as elements
       Iterator iterator = getChildrenByTagName(webApp, "servlet");
       while( iterator.hasNext() )
       {
@@ -452,6 +486,14 @@ public class WebMetaData extends MetaData
             roleNames.add(roleRef);
          }
          securityRoleReferences.put(servletName, roleNames);
+
+         // Check for a run-as/role-name
+         Element runAs = getOptionalChild(servlet, "run-as");
+         if( runAs != null )
+         {
+            String runAsName = getElementContent(getOptionalChild(runAs, "role-name"));
+            runAsNames.put(servletName, runAsName);
+         }
       }
 
       // Parse the web-app/servlet-mapping elements
@@ -729,7 +771,7 @@ public class WebMetaData extends MetaData
          SecurityRoleMetaData securityRoleMetaData = (SecurityRoleMetaData)securityRoles.get(roleName);
          if (securityRoleMetaData == null)
             throw new DeploymentException("Security role '" + roleName + "' defined in jboss-web.xml" +
-                    "is not defined in web.xml");
+                    " is not defined in web.xml");
 
          Iterator itPrincipalNames = getChildrenByTagName(securityRole, "principal-name");
          while (itPrincipalNames.hasNext())
@@ -897,5 +939,34 @@ public class WebMetaData extends MetaData
             }
          }
       }
+
+      // Parse the jboss-web/servlet elements
+      iterator = getChildrenByTagName(jbossWeb, "servlet");
+      while (iterator.hasNext())
+      {
+         Element servlet = (Element)iterator.next();
+         String servletName = getElementContent(getUniqueChild(servlet, "servlet-name"));
+         String principalName = getOptionalChildContent(servlet, "run-as-principal");
+         // Get the web.xml run-as primary role
+         String webXmlRunAs = (String) runAsNames.get(servletName);
+         if( principalName != null )
+         {
+            if( webXmlRunAs == null )
+            {
+               throw new DeploymentException("run-as-principal: " + principalName
+               + " found in jboss-web.xml but there was no run-as in web.xml");
+            }
+            // See if there are any additional roles for this principal
+            Set extraRoles = getSecurityRoleNamesByPrincipal(principalName);
+            RunAsIdentity runAs = new RunAsIdentity(webXmlRunAs, principalName, extraRoles);
+            runAsIdentity.put(servletName, runAs);
+         }
+         else if( webXmlRunAs != null )
+         {
+            RunAsIdentity runAs = new RunAsIdentity(webXmlRunAs, null);
+            runAsIdentity.put(servletName, runAs);            
+         }
+      }
+      
    }
 }
