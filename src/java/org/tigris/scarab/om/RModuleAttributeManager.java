@@ -53,13 +53,12 @@ import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ComboKey;
 import org.apache.torque.om.SimpleKey;
-import org.apache.torque.util.Criteria;
 
 /** 
  * This class manages RModuleAttribute objects.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleAttributeManager.java,v 1.12 2003/07/19 17:45:17 jmcnally Exp $
+ * @version $Id: RModuleAttributeManager.java,v 1.13 2003/08/04 12:50:34 mpoeschl Exp $
  */
 public class RModuleAttributeManager
     extends BaseRModuleAttributeManager

@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 /* ================================================================
- * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2003 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -58,10 +58,8 @@ import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
 
-import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.Module;
-import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.workflow.WorkflowFactory;
 
@@ -69,7 +67,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleOption
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleOption.java,v 1.40 2003/06/06 00:33:02 jmcnally Exp $
+ * @version $Id: RModuleOption.java,v 1.41 2003/08/04 12:50:34 mpoeschl Exp $
  */
 public class RModuleOption 
     extends BaseRModuleOption
