@@ -415,12 +415,14 @@
             #end
           </td>
           <td width="120">$act.Description 
+#*
              #if (!$act.OldValue.equals(""))
                   from '$act.OldValue'
              #end
              #if (!$act.NewValue.equals(""))
                   to '$act.NewValue'
              #end
+*#
           </td>
           <td> &nbsp;
              #if ($act.Attachment) 

@@ -92,7 +92,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.21 2001/08/16 05:47:38 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.22 2001/08/17 22:03:11 jmcnally Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -215,23 +215,8 @@ public class ModifyIssue extends TemplateAction
                     if (!newValue.equals("") && !oldValue.equals(newValue))
                     {
                         group.setProperties(aval);
+                        aval.startTransaction(transaction, attachment);
                         aval.save();
-
-                        // Generate description of modification
-                        StringBuffer descBuf = new StringBuffer("changed ");
-                        descBuf.append(aval.getAttribute().getName());
-/*
-                        descBuf.append(" from '");
-                        descBuf.append(oldValue).append("' to '");
-                        descBuf.append(newValue).append("'");
-*/
-                        String desc = descBuf.toString();
-
-                        // Save activity record
-                        Activity activity = new Activity();
-                        activity.create(issue, aval.getAttribute(),
-                                        desc, transaction, attachment, 
-                                        oldValue, newValue);
                     }
                 } 
             }
@@ -327,9 +312,8 @@ public class ModifyIssue extends TemplateAction
                     StringBuffer descBuf = new StringBuffer("added URL '");
                     descBuf.append(dataField.toString()).append("'");
                     String desc = descBuf.toString();
-                    activity.create(issue, null,
-                                    desc, transaction,
-                                     attachment, "", "");
+                    activity.create(issue, null, desc, transaction,
+                                    attachment, null, null, "", "");
                 }
                 intake.remove(group);
                 String template = data.getParameters()
@@ -381,9 +365,8 @@ public class ModifyIssue extends TemplateAction
                StringBuffer descBuf = new StringBuffer("deleted URL '");
                descBuf.append(attachment.getDataAsString()).append("'");
                String desc = descBuf.toString();
-               activity.create(issue, null,
-                               desc, transaction,
-                               attachment, "", "");
+               activity.create(issue, null, desc, transaction,
+                               attachment, null, null, "", "");
             } 
         }
         String template = data.getParameters()
@@ -493,7 +476,7 @@ public class ModifyIssue extends TemplateAction
                //descBuf.append(" to ").append(newValue);
                String desc = descBuf.toString();
                activity.create(issue, null, desc,
-                               transaction, null, "", "");
+                               transaction, null, null, null, "", "");
             }
         }
     }
@@ -573,7 +556,7 @@ public class ModifyIssue extends TemplateAction
             descBuf.append(issue.getUniqueId());
             String desc = descBuf.toString();
             activity.create(issue, null, desc,
-                            transaction, null, "", "");
+                            transaction, null, null, null, "", "");
         }
         else
         {
