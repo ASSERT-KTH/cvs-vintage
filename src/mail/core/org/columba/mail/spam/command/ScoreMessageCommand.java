@@ -61,6 +61,7 @@ public class ScoreMessageCommand extends FolderCommand {
 	private CloneStreamMaster master;
 
 	private MarkMessageCommand markAsSpamCommand;
+
 	private MarkMessageCommand markAsNotSpamCommand;
 
 	/**
@@ -81,8 +82,10 @@ public class ScoreMessageCommand extends FolderCommand {
 
 	public void updateGUI() throws Exception {
 		// update table
-		markAsSpamCommand.updateGUI();
-		markAsNotSpamCommand.updateGUI();
+		if (markAsSpamCommand != null)
+			markAsSpamCommand.updateGUI();
+		if (markAsNotSpamCommand != null)
+			markAsNotSpamCommand.updateGUI();
 	}
 
 	/**
@@ -128,11 +131,11 @@ public class ScoreMessageCommand extends FolderCommand {
 					// if message is spam
 					if (result) {
 						// mark message as spam
-						
+
 						spamList.add(uids[j]);
 					} else {
 						// mark message as *not* spam
-						
+
 						nonspamList.add(uids[j]);
 					}
 
@@ -210,12 +213,12 @@ public class ScoreMessageCommand extends FolderCommand {
 		// get stream
 		istream = master.getClone();
 		// calculate message score
-		boolean result = SpamController.getInstance().scoreMessage(
-				istream, map);
-		
+		boolean result = SpamController.getInstance()
+				.scoreMessage(istream, map);
+
 		// close stream
 		istream.close();
-		
+
 		// message belongs to which account?
 		AccountItem item = CommandHelper
 				.retrieveAccountItem(srcFolder, uids[j]);
@@ -228,10 +231,10 @@ public class ScoreMessageCommand extends FolderCommand {
 			// check if sender is already in addressbook
 			isInAddressbook = new AddressbookFilter().process(srcFolder,
 					uids[j]);
-			
+
 			result = result && !isInAddressbook;
-		} 
-		
+		}
+
 		return result;
 	}
 
@@ -259,14 +262,12 @@ public class ScoreMessageCommand extends FolderCommand {
 
 		// get another inputstream
 		InputStream istream = master.getClone();
-		
+
 		// add this message to frequency database
 		if (result)
-			SpamController.getInstance().trainMessageAsSpam(istream,
-					list);
+			SpamController.getInstance().trainMessageAsSpam(istream, list);
 		else
-			SpamController.getInstance().trainMessageAsHam(istream,
-					list);
+			SpamController.getInstance().trainMessageAsHam(istream, list);
 		// close stream
 		istream.close();
 	}

@@ -53,6 +53,16 @@ import org.macchiato.maps.ProbabilityMap;
 public class SpamController {
 
 	/**
+	 * Delete messages from DB, if DB size > THRESHOLD
+	 */
+	public final static int THRESHOLD = 200000;
+	
+	/**
+	 * Delete messages from DB after 7 days, if they don't 
+	 * affect the scoring process because of low occurences.
+	 */
+	public final static int AGE = 7;
+	/**
 	 * singleton pattern instance of this class
 	 */
 	private static SpamController instance;
@@ -272,8 +282,13 @@ public class SpamController {
 			return;
 		try {
 			// only save if changes exist
-			if (hasChanged)
+			if (hasChanged) {
+				// cleanup DB -> remove old tokens
+				db.cleanupDB(THRESHOLD);
+				
+				// save DB to disk
 				FrequencyIO.save(db, file);
+			}
 		} catch (Exception e) {
 			NotifyDialog d = new NotifyDialog();
 			d.showDialog(e);
