@@ -117,6 +117,7 @@ public class Tomcat {
 	    Tomcat tomcat=new Tomcat();
 	    tomcat.execute( args );
 	} catch(Exception ex ) {
+	    System.out.println("FATAL: " + ex );
 	    ex.printStackTrace();
 	}
 

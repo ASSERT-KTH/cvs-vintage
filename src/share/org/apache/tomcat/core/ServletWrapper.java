@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.31 2000/02/22 21:06:38 costin Exp $
- * $Revision: 1.31 $
- * $Date: 2000/02/22 21:06:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.32 2000/02/22 22:53:23 costin Exp $
+ * $Revision: 1.32 $
+ * $Date: 2000/02/22 22:53:23 $
  *
  * ====================================================================
  *
@@ -401,7 +401,13 @@ public class ServletWrapper {
 	    // 	    }
 	    // 	}
 	} catch( Throwable t ) {
-	    contextM.handleError( req, res, t, 0 );
+	    if( null!=req.getAttribute("tomcat.servlet.error.defaultHandler") ) {
+		// we are in handleRequest for the "default
+		System.out.println("ERROR: can't find default error handler or error in default error page");
+		t.printStackTrace();
+	    } else {
+		contextM.handleError( req, res, t, 0 );
+	    }
 	}
     }
 

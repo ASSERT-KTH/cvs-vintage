@@ -80,7 +80,15 @@ public class DefaultCMSetter extends BaseInterceptor {
 
     public DefaultCMSetter() {
     }
-	
+
+    public void engineInit(ContextManager cm) throws TomcatException {
+	// check if we are in the right directory
+	File f=new File( cm.getHome() + "/conf/web.xml");
+	if( ! f.exists() ) {
+	    throw new TomcatException( "Wrong home " + cm.getHome());
+	}
+    }
+    
     /** Called when a new context is added to the server.
      *
      *  - Check it and set defaults for WorkDir, EngineHeader and SessionManager.
@@ -127,6 +135,20 @@ public class DefaultCMSetter extends BaseInterceptor {
 	initURLs( ctx );
     }
 
+    public void contextInit( Context ctx)
+	throws TomcatException
+    {
+	// Validation for error  servlet
+	try {
+	    ServletWrapper errorWrapper=ctx.getServletByName( "tomcat.errorPage");
+	    errorWrapper.loadServlet();
+	} catch( Exception ex ) {
+	    System.out.println("Error loading default servlet ");
+	    // XXX remove this context from CM
+	    throw new TomcatException( "Error loading default error servlet ", ex );
+	}
+    }
+    
     private void initURLs(Context context) {
 	ServletLoader loader=context.getServletLoader();
 	if( loader==null) return;

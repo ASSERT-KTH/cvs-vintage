@@ -193,9 +193,19 @@ public class ContextManager {
 	
     	// init contexts
 	Enumeration enum = getContextNames();
+	Context context=null;
 	while (enum.hasMoreElements()) {
-            Context context = getContext((String)enum.nextElement());
-            initContext( context );
+	    context = getContext((String)enum.nextElement());
+	    try {
+		initContext( context );
+	    } catch (TomcatException ex ) {
+		if( context!=null ) {
+		    log( "ERROR initializing " + context.toString() );
+		    removeContext( context.getPath() );	    
+		    Throwable ex1=ex.getRootCause();
+		    if( ex1!=null ) ex.printStackTrace();
+		}
+	    }
 	}
 	//	log("Time to initialize: "+ (System.currentTimeMillis()-time), Logger.INFORMATION);
     }
@@ -299,11 +309,8 @@ public class ContextManager {
      * @param name Name of the Context to be removed
      */
     public void removeContext(String name) throws TomcatException {
-	if (name.equals("")){
-	    throw new IllegalArgumentException(name);
-	}
-
 	Context context = (Context)contexts.get(name);
+	log( "<l:removeContext path=\"" + context.getPath() + "\" />");
 
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
@@ -627,8 +634,11 @@ public class ContextManager {
 
 
 	// No error page or "Exception in exception handler", call internal servlet
-	if( path==null && errorServlet==null)
+	if( path==null && errorServlet==null) {
+	    // this is the default handler -  avoid loops
+	    req.setAttribute( "tomcat.servlet.error.defaultHandler", "true");
 	    errorServlet=ctx.getServletByName("tomcat.errorPage");
+	}
 
 	// Try a normal "error page"
 	if( errorServlet==null && path != null ) {
