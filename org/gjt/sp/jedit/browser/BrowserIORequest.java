@@ -35,7 +35,7 @@ import org.gjt.sp.util.WorkThread;
 /**
  * A browser I/O request.
  * @author Slava Pestov
- * @version $Id: BrowserIORequest.java,v 1.8 2002/01/28 04:20:54 spestov Exp $
+ * @version $Id: BrowserIORequest.java,v 1.9 2002/06/01 10:12:11 spestov Exp $
  */
 public class BrowserIORequest extends WorkRequest
 {
@@ -153,14 +153,13 @@ public class BrowserIORequest extends WorkRequest
 		String[] args = { path1 };
 		setStatus(jEdit.getProperty("vfs.status.listing-directory",args));
 
-		String canonPath = null;
+		String canonPath = path1;
 
 		try
 		{
 			setAbortable(true);
 
 			canonPath = vfs._canonPath(session,path1,browser);
-
 			directory = vfs._listDirectory(session,canonPath,browser);
 		}
 		catch(IOException io)
