@@ -62,16 +62,33 @@ import org.tigris.scarab.om.GlobalParameterManager;
 import org.tigris.scarab.util.Log;
 
 /**
- * 
+ * Transforms localization keys stored in the database into their
+ * respective localized values upon initial startup of Fulcrum.
+ *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DatabaseInitializer.java,v 1.9 2003/03/15 21:56:59 jon Exp $
+ * @version $Id: DatabaseInitializer.java,v 1.10 2003/04/03 04:07:39 dlr Exp $
  */
 public class DatabaseInitializer
     extends BaseService
 {
     private static final String PRE_L10N = "pre-l10n";
+    private static final String STARTED_L10N = "started";
     private static final String POST_L10N = "post-l10n";
     private static final String DB_L10N_STATE = "db-l10n-state";
+
+    /**
+     * The values returned by {@link #getInputData()}.
+     */
+    private static final String[][] BEAN_METHODS =
+    {
+        {"InitDbScarabBundle", "MITList", "Name"},
+        {"InitDbScarabBundle", "Attribute", "Name", "Description"},
+        {"InitDbScarabBundle", "AttributeOption", "Name"},
+        {"InitDbScarabBundle", "IssueType", "Name", "Description"},
+        {"InitDbScarabBundle", "AttributeGroup", "Name", "Description"},
+        {"InitDbScarabBundle", "RModuleAttribute", "DisplayValue"},
+        {"InitDbScarabBundle", "Scope", "Name"}
+    };
 
     /**
      * Initializes the service by setting up Torque.
@@ -83,7 +100,7 @@ public class DatabaseInitializer
         {
             String dbState =
                 GlobalParameterManager.getString(DB_L10N_STATE);
-            if (dbState.equals(PRE_L10N)) 
+            if (PRE_L10N.equals(dbState) || STARTED_L10N.equals(dbState))
             {
                 Locale defaultLocale = new Locale(
                     Localization.getDefaultLanguage(), 
@@ -92,7 +109,7 @@ public class DatabaseInitializer
                 long start = System.currentTimeMillis();
                 Log.get().info("New scarab database; localizing strings for '" +
                                defaultLocale.getDisplayName() + "'...");
-                GlobalParameterManager.setString(DB_L10N_STATE, "started");
+                GlobalParameterManager.setString(DB_L10N_STATE, STARTED_L10N);
                 initdb(defaultLocale);     
                 GlobalParameterManager.setString(DB_L10N_STATE, POST_L10N);
                 Log.get().info("Done localizing.  Time elapsed = " + 
@@ -111,16 +128,7 @@ public class DatabaseInitializer
 
     protected String[][] getInputData()
     {
-        String[][] methodNames = {
-            {"InitDbScarabBundle", "MITList", "Name"},
-            {"InitDbScarabBundle", "Attribute", "Name", "Description"},
-            {"InitDbScarabBundle", "AttributeOption", "Name"},
-            {"InitDbScarabBundle", "IssueType", "Name", "Description"},
-            {"InitDbScarabBundle", "AttributeGroup", "Name", "Description"},
-            {"InitDbScarabBundle", "RModuleAttribute", "DisplayValue"},
-            {"InitDbScarabBundle", "Scope", "Name"}
-        };
-        return methodNames;
+        return BEAN_METHODS;
     }
 
     private void initdb(Locale defaultLocale)
@@ -143,8 +151,9 @@ public class DatabaseInitializer
             if (!omlist.isEmpty()) 
             {
                 Class omClass = Class.forName(omClassName);
-                Method[] getters = new Method[row.length - 2];
-                Method[] setters = new Method[row.length - 2];
+                int nbrBeanMethods = row.length - 2;
+                Method[] getters = new Method[nbrBeanMethods];
+                Method[] setters = new Method[nbrBeanMethods];
                 for (int n=2; n<row.length; n++) 
                 {
                     getters[n-2] = omClass.getMethod("get"+row[n], null);
@@ -170,7 +179,8 @@ public class DatabaseInitializer
                         }
                         catch (MissingResourceException e)
                         {
-                            // ignore
+                            Log.get().debug("Missing database initialization "
+                                            + "resource: " + e.getMessage());
                         } 
                 
                         if (value != null) 
