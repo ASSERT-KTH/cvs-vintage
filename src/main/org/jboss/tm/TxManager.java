@@ -26,17 +26,16 @@ import javax.transaction.xa.Xid;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.XAException;
 
-
-import org.jboss.logging.Logger;
+import org.apache.log4j.Category;
 
 /**
- *  Our TransactionManager implementation.
+ * Our TransactionManager implementation.
  *
- *  @see <related>
- *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.31 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.32 $
  */
 public class TxManager
    implements TransactionManager,
@@ -47,11 +46,17 @@ public class TxManager
     
    // Attributes ----------------------------------------------------
 
+   /** Instance logger. */
+   private Category log = Category.getInstance(this.getClass());
+
+   /** True if debug messages should be logged. */
+   private boolean debug = log.isDebugEnabled();
+   
    /**
     *  Default timeout in milliseconds.
     *  Must be >= 1000!
     */
-   long timeOut = 5*60*1000; 
+   private long timeOut = 5*60*1000; 
     
    // Static --------------------------------------------------------
  
@@ -84,20 +89,19 @@ public class TxManager
     *  Begin a new transaction.
     *  The new transaction will be associated with the calling thread.
     */
-   public void begin()
-      throws NotSupportedException,
-             SystemException
+   public void begin() throws NotSupportedException, SystemException
    {
       ThreadInfo ti = getThreadInfo();
-
       TransactionImpl current = ti.tx;
 
       if (current != null) {
-         if (current.isDone())
+         if (current.isDone()) {
             ti.tx = null;
-         else
-            throw new NotSupportedException("Transaction already active, " +
-                                            "cannot nest transactions.");
+         }
+         else {
+            throw new NotSupportedException
+               ("Transaction already active, cannot nest transactions.");
+         }
       }
 
       long timeout = (ti.timeout == 0) ? timeOut : ti.timeout;
@@ -105,6 +109,10 @@ public class TxManager
       TransactionImpl tx = txCapsule.getTransactionImpl();
       ti.tx = tx;
       globalIdTx.put(tx.getGlobalId(), tx);
+
+      if (debug) {
+         log.debug("began tx: " + tx);
+      }
    }
 
    /**
@@ -114,7 +122,7 @@ public class TxManager
       throws RollbackException,
              HeuristicMixedException,
              HeuristicRollbackException,
-             java.lang.SecurityException,
+             SecurityException,
              IllegalStateException,
              SystemException
    {
@@ -124,8 +132,13 @@ public class TxManager
       if (current != null) {
          current.commit();
          ti.tx = null;
-      } else
+         if (debug) {
+            log.debug("commited tx: " + current);
+         }
+      }
+      else {
          throw new IllegalStateException("No transaction.");
+      }
    }
  
    /**
@@ -133,17 +146,18 @@ public class TxManager
     *  running thread, or <code>Status.STATUS_NO_TRANSACTION</code> if no
     *  active transaction is currently associated.
     */
-   public int getStatus()
-      throws SystemException
+   public int getStatus() throws SystemException
    {
       ThreadInfo ti = getThreadInfo();
       TransactionImpl current = ti.tx;
 
       if (current != null) {
-         if (current.isDone())
+         if (current.isDone()) {
             ti.tx = null;
-         else
+         }
+         else {
             return current.getStatus();
+         }
       }
       return Status.STATUS_NO_TRANSACTION;
    }
@@ -152,8 +166,7 @@ public class TxManager
     *  Return the transaction currently associated with the invoking thread,
     *  or <code>null</code> if no active transaction is currently associated.
     */
-   public Transaction getTransaction()
-      throws SystemException
+   public Transaction getTransaction() throws SystemException
    {
       ThreadInfo ti = getThreadInfo();
       TransactionImpl current = ti.tx;
@@ -176,22 +189,30 @@ public class TxManager
              IllegalStateException,
              SystemException
    {
-      if (transaction != null && !(transaction instanceof TransactionImpl))
+      if (transaction != null && !(transaction instanceof TransactionImpl)) {
          throw new RuntimeException("Not a TransactionImpl, but a " +
-                                    transaction.getClass().getName() + ".");
+                                    transaction.getClass().getName());
+      }
 
       ThreadInfo ti = getThreadInfo();
       TransactionImpl current = ti.tx;
         
       if (current != null) {
-         if (current.isDone())
+         if (current.isDone()) {
             current = ti.tx = null;
-         else
+         }
+         else {
             throw new IllegalStateException("Already associated with a tx");
+         }
       }
 
-      if (current != transaction)
+      if (current != transaction) {
          ti.tx = (TransactionImpl)transaction;
+      }
+
+      if (debug) {
+         log.debug("resumed tx: " + ti.tx);
+      }
    }
 
    /**
@@ -202,16 +223,21 @@ public class TxManager
     *  transaction. According to JTA1.0.1 specification section 3.2.3,
     *  that is the responsibility of the application server.
     */
-   public Transaction suspend()
-      throws SystemException
+   public Transaction suspend() throws SystemException
    {
       ThreadInfo ti = getThreadInfo();
       TransactionImpl current = ti.tx;
         
       if (current != null) {
          ti.tx = null;
-         if (current.isDone())
+
+         if (debug) {
+            log.debug("suspended tx: " + current);
+         }
+         
+         if (current.isDone()) {
             current = null;
+         }
       }
 
       return current;
@@ -221,9 +247,7 @@ public class TxManager
     *  Roll back the transaction associated with the currently running thread.
     */
    public void rollback()
-      throws IllegalStateException,
-             java.lang.SecurityException,
-             SystemException
+      throws IllegalStateException, SecurityException, SystemException
    { 
       ThreadInfo ti = getThreadInfo();
       TransactionImpl current = ti.tx;
@@ -231,6 +255,10 @@ public class TxManager
       if (current != null) {
          if (!current.isDone()) {
             current.rollback();
+
+            if (debug) {
+               log.debug("rolled back tx: " + current);
+            }
             return;
          }
          ti.tx = null;
@@ -243,8 +271,7 @@ public class TxManager
     *  so that the only possible outcome is a rollback.
     */
    public void setRollbackOnly()
-      throws IllegalStateException,
-             SystemException
+      throws IllegalStateException, SystemException
    {
       ThreadInfo ti = getThreadInfo();
       TransactionImpl current = ti.tx;
@@ -252,6 +279,10 @@ public class TxManager
       if (current != null) {
          if (!current.isDone()) {
             current.setRollbackOnly();
+            
+            if (debug) {
+               log.debug("tx marked for rollback only: " + current);
+            }
             return;
          }
          ti.tx = null;
@@ -267,6 +298,10 @@ public class TxManager
       throws SystemException
    {
       getThreadInfo().timeout = 1000 * seconds;
+
+      if (debug) {
+         log.debug("tx timeout is now: " + seconds + "s");
+      }
    }
     
    /**
@@ -277,6 +312,10 @@ public class TxManager
    public void setDefaultTransactionTimeout(int seconds)
    {
       timeOut = 1000 * seconds;
+
+      if (debug) {
+         log.debug("default tx timeout is now: " + seconds + "s");
+      }
    }
     
    /**
@@ -289,7 +328,7 @@ public class TxManager
       return (int)(timeOut / 1000);
    }
 
-   /*
+   /**
     *  The following 2 methods are here to provide association and
     *  disassociation of the thread.
     */
@@ -304,9 +343,10 @@ public class TxManager
     
    public void associateThread(Transaction transaction)
    {
-      if (transaction != null && !(transaction instanceof TransactionImpl))
+      if (transaction != null && !(transaction instanceof TransactionImpl)) {
          throw new RuntimeException("Not a TransactionImpl, but a " +
-                                    transaction.getClass().getName() + ".");
+                                    transaction.getClass().getName());
+      }
 
       // Associate with the thread
       setTxImpl((TransactionImpl)transaction);
@@ -333,11 +373,11 @@ public class TxManager
     */
    public Transaction importTransactionPropagationContext(Object tpc)
    {
-      if (tpc instanceof GlobalId)
+      if (tpc instanceof GlobalId) {
          return (Transaction)globalIdTx.get((GlobalId)tpc);
+      }
       else {
-         Logger.warning("Cannot import transaction propagation context: " +
-                        tpc.toString());
+         log.warn("Cannot import transaction propagation context: " + tpc);
          return null;
       }
    }
@@ -359,8 +399,9 @@ public class TxManager
    public Object getTransactionPropagationContext(Transaction tx)
    {
       // If no transaction or unknown transaction class, return null.
-      if (tx == null || !(tx instanceof TransactionImpl))
+      if (tx == null || !(tx instanceof TransactionImpl)) {
          return null;
+      }
 
       return ((TransactionImpl)tx).getGlobalId();
    }
@@ -439,5 +480,4 @@ public class TxManager
       long timeout = 0;
       TransactionImpl tx = null;
    }
-
 }

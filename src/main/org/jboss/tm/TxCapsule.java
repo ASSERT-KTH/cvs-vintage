@@ -7,9 +7,8 @@
 package org.jboss.tm;
 
 import java.lang.ref.SoftReference;
-
-import java.io.Serializable;
 import java.lang.reflect.Constructor;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Set;
@@ -31,38 +30,46 @@ import javax.transaction.xa.Xid;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.XAException;
 
-import org.jboss.logging.Logger;
+import org.apache.log4j.Category;
+
 import org.jboss.util.timeout.Timeout;
 import org.jboss.util.timeout.TimeoutTarget;
 import org.jboss.util.timeout.TimeoutFactory;
 
 /**
- *  TxCapsule holds all the information relevant to a transaction.
- *  Callbacks and synchronizations are held here.
+ * TxCapsule holds all the information relevant to a transaction.
+ * Callbacks and synchronizations are held here.
  *
- *  TODO: Implement persistent storage and recovery.
+ * <p>TODO: Implement persistent storage and recovery.
  *
- *  @see TxManager
- *  @see TransactionImpl
+ * @see TxManager
+ * @see TransactionImpl
  *
- *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- *
- *  @version $Revision: 1.29 $
+ * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
+ * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.30 $
  */
-class TxCapsule implements TimeoutTarget
+class TxCapsule
+   implements TimeoutTarget
 {
    // Constants -----------------------------------------------------
 
-   // Trace enabled flag
-   static private final boolean trace = false;
-
-   // Code meaning "no heuristics seen", must not be XAException.XA_HEURxxx
-   static private final int HEUR_NONE = XAException.XA_RETRY;
+   /**
+    * Code meaning "no heuristics seen",
+    * must not be XAException.XA_HEURxxx
+    */
+   private static final int HEUR_NONE = XAException.XA_RETRY;
 
    // Attributes ----------------------------------------------------
 
+   /** Instance logger. */
+   private Category log = Category.getInstance(this.getClass());
+
+   /** True if debug messages should be logged. */
+   private boolean debug = log.isDebugEnabled();
+   
    // Static --------------------------------------------------------
 
    /**
@@ -78,7 +85,7 @@ class TxCapsule implements TimeoutTarget
     *  They are referenced through soft references so that they will
     *  be garbage collected if the VM runs low on memory.
     */
-   static private LinkedList inactiveCapsules = new LinkedList();
+   private static LinkedList inactiveCapsules = new LinkedList();
 
    /**
     *  Get a new instance.
@@ -93,7 +100,7 @@ class TxCapsule implements TimeoutTarget
             SoftReference ref = (SoftReference)inactiveCapsules.removeFirst();
             txCapsule = (TxCapsule)ref.get();
             if (txCapsule != null)
-              break;
+               break;
          }
       }
       if (txCapsule == null)
@@ -139,8 +146,9 @@ class TxCapsule implements TimeoutTarget
       start = System.currentTimeMillis();
       this.timeout = TimeoutFactory.createTimeout(start+timeout, this);
 
-      if (trace)
-         Logger.debug("TxCapsule: Created new instance for tx=" + toString());
+      if (debug) {
+         log.debug("Created new instance for tx=" + toString());
+      }
    }
 
    /**
@@ -149,7 +157,7 @@ class TxCapsule implements TimeoutTarget
    private void reUse(long timeout)
    {
       if (!done)
-        throw new IllegalStateException();
+         throw new IllegalStateException();
 
       done = false;
       resourcesEnded = false;
@@ -165,8 +173,9 @@ class TxCapsule implements TimeoutTarget
       start = System.currentTimeMillis();
       this.timeout = TimeoutFactory.createTimeout(start+timeout, this);
 
-      if (trace)
-         Logger.debug("TxCapsule: Reused instance for tx=" + toString());
+      if (debug) {
+         log.debug("Reused instance for tx=" + toString());
+      }
    }
 
    // Public --------------------------------------------------------
@@ -179,54 +188,53 @@ class TxCapsule implements TimeoutTarget
       try {
          lock();
 
-         Logger.warning("Transaction " + toString() + " timed out." +
-                        " status=" + getStringStatus(status));
+         log.warn("Transaction " + toString() + " timed out." +
+                  " status=" + getStringStatus(status));
 
          if (this.timeout == null)
             return; // Don't race with timeout cancellation.
          this.timeout = null;
 
          switch (status) {
-         case Status.STATUS_ROLLEDBACK:
-         case Status.STATUS_COMMITTED:
-         case Status.STATUS_NO_TRANSACTION:
-            return; // Transaction done.
+          case Status.STATUS_ROLLEDBACK:
+          case Status.STATUS_COMMITTED:
+          case Status.STATUS_NO_TRANSACTION:
+             return; // Transaction done.
 
-         case Status.STATUS_ROLLING_BACK:
-            return; // Will be done shortly.
+          case Status.STATUS_ROLLING_BACK:
+             return; // Will be done shortly.
 
-         case Status.STATUS_COMMITTING:
-            // This is _very_ bad:
-            // We are in the second commit phase, and have decided
-            // to commit, but now we get a timeout and should rollback.
-            // So we end up with a mixed decision.
-            gotHeuristic(-1, XAException.XA_HEURMIX);
-            status = Status.STATUS_MARKED_ROLLBACK;
-            return; // commit will fail
+          case Status.STATUS_COMMITTING:
+             // This is _very_ bad:
+             // We are in the second commit phase, and have decided
+             // to commit, but now we get a timeout and should rollback.
+             // So we end up with a mixed decision.
+             gotHeuristic(-1, XAException.XA_HEURMIX);
+             status = Status.STATUS_MARKED_ROLLBACK;
+             return; // commit will fail
 
-         case Status.STATUS_PREPARED:
-            // This is bad:
-            // We are done with the first phase, and are persistifying
-            // our decision. Fortunately this case is currently never
-            // hit, as we do not release the lock between the two phases.
-         case Status.STATUS_ACTIVE:
-            status = Status.STATUS_MARKED_ROLLBACK;
-            // fall through..
-         case Status.STATUS_MARKED_ROLLBACK:
-            // don't rollback for now, this messes up with the TxInterceptor.
-            return;
+          case Status.STATUS_PREPARED:
+             // This is bad:
+             // We are done with the first phase, and are persistifying
+             // our decision. Fortunately this case is currently never
+             // hit, as we do not release the lock between the two phases.
+          case Status.STATUS_ACTIVE:
+             status = Status.STATUS_MARKED_ROLLBACK;
+             // fall through..
+          case Status.STATUS_MARKED_ROLLBACK:
+             // don't rollback for now, this messes up with the TxInterceptor.
+             return;
 
-         case Status.STATUS_PREPARING:
-            status = Status.STATUS_MARKED_ROLLBACK;
-            return; // commit will fail
+          case Status.STATUS_PREPARING:
+             status = Status.STATUS_MARKED_ROLLBACK;
+             return; // commit will fail
 
-         default:
-            Logger.warning("TxCapsule: Unknown status at timeout, tx=" +
-                           toString());
-            return;
+          default:
+             log.warn("Unknown status at timeout, tx=" + toString());
+             return;
          }
       } finally {
-        unlock();
+         unlock();
       }
    }
 
@@ -254,91 +262,95 @@ class TxCapsule implements TimeoutTarget
       throws RollbackException,
              HeuristicMixedException,
              HeuristicRollbackException,
-             java.lang.SecurityException,
-             java.lang.IllegalStateException,
+             SecurityException,
+             IllegalStateException,
              SystemException
    {
       try {
          lock();
 
-         if (trace)
-            Logger.debug("TxCapsule.commit(): Entered, tx=" + toString() +
-                         " status=" + getStringStatus(status));
+         if (debug) {
+            log.debug("Committing, tx=" + this +
+                      ", status=" + getStringStatus(status));
+         }
 
          switch (status) {
-         case Status.STATUS_PREPARING:
-            throw new IllegalStateException("Already started preparing.");
-         case Status.STATUS_PREPARED:
-            throw new IllegalStateException("Already prepared.");
-         case Status.STATUS_ROLLING_BACK:
-            throw new IllegalStateException("Already started rolling back.");
-         case Status.STATUS_ROLLEDBACK:
-            instanceDone();
-            checkHeuristics();
-            throw new IllegalStateException("Already rolled back.");
-         case Status.STATUS_COMMITTING:
-            throw new IllegalStateException("Already started committing.");
-         case Status.STATUS_COMMITTED:
-            instanceDone();
-            checkHeuristics();
-            throw new IllegalStateException("Already committed.");
-         case Status.STATUS_NO_TRANSACTION:
-            throw new IllegalStateException("No transaction.");
-         case Status.STATUS_UNKNOWN:
-            throw new IllegalStateException("Unknown state");
-         case Status.STATUS_MARKED_ROLLBACK:
-            doBeforeCompletion();
-            endResources();
-            rollbackResources();
-            doAfterCompletion();
-            cancelTimeout();
-            instanceDone();
-            checkHeuristics();
-            throw new RollbackException("Already marked for rollback");
-         case Status.STATUS_ACTIVE:
-            break;
-         default:
-            throw new IllegalStateException("Illegal status: " + status);
+          case Status.STATUS_PREPARING:
+             throw new IllegalStateException("Already started preparing.");
+          case Status.STATUS_PREPARED:
+             throw new IllegalStateException("Already prepared.");
+          case Status.STATUS_ROLLING_BACK:
+             throw new IllegalStateException("Already started rolling back.");
+          case Status.STATUS_ROLLEDBACK:
+             instanceDone();
+             checkHeuristics();
+             throw new IllegalStateException("Already rolled back.");
+          case Status.STATUS_COMMITTING:
+             throw new IllegalStateException("Already started committing.");
+          case Status.STATUS_COMMITTED:
+             instanceDone();
+             checkHeuristics();
+             throw new IllegalStateException("Already committed.");
+          case Status.STATUS_NO_TRANSACTION:
+             throw new IllegalStateException("No transaction.");
+          case Status.STATUS_UNKNOWN:
+             throw new IllegalStateException("Unknown state");
+          case Status.STATUS_MARKED_ROLLBACK:
+             doBeforeCompletion();
+             endResources();
+             rollbackResources();
+             doAfterCompletion();
+             cancelTimeout();
+             instanceDone();
+             checkHeuristics();
+             throw new RollbackException("Already marked for rollback");
+          case Status.STATUS_ACTIVE:
+             break;
+          default:
+             throw new IllegalStateException("Illegal status: " + status);
          }
 
          doBeforeCompletion();
 
-         if (trace)
-            Logger.debug("TxCapsule.commit(): Before completion done, " +
-                         "tx=" + toString() +
-                         " status=" + getStringStatus(status));
+         if (debug) {
+            log.debug("Before completion done, tx=" + this +
+                      ", status=" + getStringStatus(status));
+         }
 
          endResources();
 
          if (status == Status.STATUS_ACTIVE) {
             if (resourceCount == 0) {
                // Zero phase commit is really fast ;-)
-               if (trace)
-                  Logger.debug("TxCapsule.commit(): No resources.");
+               if (debug) {
+                  log.debug("Zero phase commit: No resources.");
+               }
                status = Status.STATUS_COMMITTED;
             } else if (resourceCount == 1) {
                // One phase commit
-               if (trace)
-                  Logger.debug("TxCapsule.commit(): One resource.");
+               if (debug) {
+                  log.debug("One phase commit: One resource.");
+               }
                commitResources(true);
             } else {
                // Two phase commit
-               if (trace)
-                  Logger.debug("TxCapsule.commit(): Many resources.");
+               if (debug) {
+                  log.debug("Two phase commit: Many resources.");
+               }
 
                if (!prepareResources()) {
                   boolean commitDecision =
-                          status == Status.STATUS_PREPARED &&
-                          (heuristicCode == HEUR_NONE ||
-                           heuristicCode == XAException.XA_HEURCOM);
+                     status == Status.STATUS_PREPARED &&
+                     (heuristicCode == HEUR_NONE ||
+                      heuristicCode == XAException.XA_HEURCOM);
 
                   // TODO: Save decision to stable storage for recovery
-                  // after system crash.
+                  //       after system crash.
 
                   if (commitDecision)
                      commitResources(false);
                } else
-                 status = Status.STATUS_COMMITTED; // all was read-only
+                  status = Status.STATUS_COMMITTED; // all was read-only
             }
          }
 
@@ -356,16 +368,16 @@ class TxCapsule implements TimeoutTarget
          instanceDone();
          checkHeuristics();
 
-         if (trace)
-            Logger.debug("TxCapsule.commit(): Transaction " + toString() +
-                         " committed OK.");
+         if (debug) {
+            log.debug("Committed OK, tx=" + this);
+         }
 
       } finally {
-        unlock();
+         unlock();
 
-        // This instance is now ready for reuse (when we release the lock).
-        if (done)
-           releaseInstance(this);
+         // This instance is now ready for reuse (when we release the lock).
+         if (done)
+            releaseInstance(this);
       }
    }
 
@@ -375,46 +387,45 @@ class TxCapsule implements TimeoutTarget
     *  instead.
     */
    void rollback()
-      throws java.lang.IllegalStateException,
-             java.lang.SecurityException,
-             SystemException
+      throws IllegalStateException, SecurityException, SystemException
    {
       try {
          lock();
 
-         if (trace)
-            Logger.debug("TxCapsule.rollback(): Entered, tx=" + toString() +
-                         " status=" + getStringStatus(status));
+         if (debug) {
+            log.debug("rollback(): Entered, tx=" + toString() +
+                      " status=" + getStringStatus(status));
+         }
 
          switch (status) {
-         case Status.STATUS_ACTIVE:
-         case Status.STATUS_MARKED_ROLLBACK:
-            doBeforeCompletion();
-            endResources();
-            rollbackResources();
-            cancelTimeout();
-            doAfterCompletion();
-            instanceDone();
-            // Cannot throw heuristic exception, so we just have to
-            // clear the heuristics without reporting.
-            heuristicCode = HEUR_NONE;
-            return;
-         case Status.STATUS_PREPARING:
-            // Set status to avoid race with prepareResources().
-            status = Status.STATUS_MARKED_ROLLBACK;
-            return; // commit() will do rollback.
-         default:
-            throw new IllegalStateException("Cannot rollback(), " +
-                                            "tx=" + toString() +
-                                            " status=" +
-                                            getStringStatus(status));
+          case Status.STATUS_ACTIVE:
+          case Status.STATUS_MARKED_ROLLBACK:
+             doBeforeCompletion();
+             endResources();
+             rollbackResources();
+             cancelTimeout();
+             doAfterCompletion();
+             instanceDone();
+             // Cannot throw heuristic exception, so we just have to
+             // clear the heuristics without reporting.
+             heuristicCode = HEUR_NONE;
+             return;
+          case Status.STATUS_PREPARING:
+             // Set status to avoid race with prepareResources().
+             status = Status.STATUS_MARKED_ROLLBACK;
+             return; // commit() will do rollback.
+          default:
+             throw new IllegalStateException("Cannot rollback(), " +
+                                             "tx=" + toString() +
+                                             " status=" +
+                                             getStringStatus(status));
          }
       } finally {
          unlock();
 
-        // This instance is now ready for reuse (when we release the lock).
-        if (done)
-           releaseInstance(this);
+         // This instance is now ready for reuse (when we release the lock).
+         if (done)
+            releaseInstance(this);
       }
    }
 
@@ -425,37 +436,37 @@ class TxCapsule implements TimeoutTarget
     *  instead.
     */
    void setRollbackOnly()
-      throws java.lang.IllegalStateException,
-             SystemException
+      throws IllegalStateException, SystemException
    {
       try {
          lock();
 
-         if (trace)
-            Logger.debug("TxCapsule.setRollbackOnly(): Entered, tx=" +
-                         toString() + " status=" + getStringStatus(status));
+         if (debug) {
+            log.debug("setRollbackOnly(): Entered, tx=" +
+                      toString() + " status=" + getStringStatus(status));
+         }
 
          switch (status) {
-         case Status.STATUS_ACTIVE:
-         case Status.STATUS_PREPARING:
-         case Status.STATUS_PREPARED:
-            status = Status.STATUS_MARKED_ROLLBACK;
-            // fall through..
-         case Status.STATUS_MARKED_ROLLBACK:
-         case Status.STATUS_ROLLING_BACK:
-            return;
-         case Status.STATUS_COMMITTING:
-            throw new IllegalStateException("Already started committing.");
-         case Status.STATUS_COMMITTED:
-            throw new IllegalStateException("Already committed.");
-         case Status.STATUS_ROLLEDBACK:
-            throw new IllegalStateException("Already rolled back.");
-         case Status.STATUS_NO_TRANSACTION:
-            throw new IllegalStateException("No transaction.");
-         case Status.STATUS_UNKNOWN:
-            throw new IllegalStateException("Unknown state");
-         default:
-            throw new IllegalStateException("Illegal status: " + status);
+          case Status.STATUS_ACTIVE:
+          case Status.STATUS_PREPARING:
+          case Status.STATUS_PREPARED:
+             status = Status.STATUS_MARKED_ROLLBACK;
+             // fall through..
+          case Status.STATUS_MARKED_ROLLBACK:
+          case Status.STATUS_ROLLING_BACK:
+             return;
+          case Status.STATUS_COMMITTING:
+             throw new IllegalStateException("Already started committing.");
+          case Status.STATUS_COMMITTED:
+             throw new IllegalStateException("Already committed.");
+          case Status.STATUS_ROLLEDBACK:
+             throw new IllegalStateException("Already rolled back.");
+          case Status.STATUS_NO_TRANSACTION:
+             throw new IllegalStateException("No transaction.");
+          case Status.STATUS_UNKNOWN:
+             throw new IllegalStateException("Unknown state");
+          default:
+             throw new IllegalStateException("Illegal status: " + status);
          }
       } finally {
          unlock();
@@ -473,8 +484,7 @@ class TxCapsule implements TimeoutTarget
     *  @returns True iff the resource was successfully delisted.
     */
    boolean delistResource(XAResource xaRes, int flag)
-      throws java.lang.IllegalStateException,
-             SystemException
+      throws IllegalStateException, SystemException
    {
       if (xaRes == null)
          throw new IllegalArgumentException("null xaRes");
@@ -486,46 +496,46 @@ class TxCapsule implements TimeoutTarget
       try {
          lock();
 
-         if (trace)
-            Logger.debug("TxCapsule.delistResource(): Entered, tx=" +
-                         toString() + " status=" + getStringStatus(status));
+         if (debug) {
+            log.debug("delistResource(): Entered, tx=" +
+                      toString() + " status=" + getStringStatus(status));
+         }
 
          int idx = findResource(xaRes);
 
          if (idx == -1)
-           throw new IllegalArgumentException("xaRes not enlisted");
+            throw new IllegalArgumentException("xaRes not enlisted");
 
          switch (status) {
-         case Status.STATUS_ACTIVE:
-         case Status.STATUS_MARKED_ROLLBACK:
-            break;
-         case Status.STATUS_PREPARING:
-            throw new IllegalStateException("Already started preparing.");
-         case Status.STATUS_ROLLING_BACK:
-            throw new IllegalStateException("Already started rolling back.");
-         case Status.STATUS_PREPARED:
-            throw new IllegalStateException("Already prepared.");
-         case Status.STATUS_COMMITTING:
-            throw new IllegalStateException("Already started committing.");
-         case Status.STATUS_COMMITTED:
-            throw new IllegalStateException("Already committed.");
-         case Status.STATUS_ROLLEDBACK:
-            throw new IllegalStateException("Already rolled back.");
-         case Status.STATUS_NO_TRANSACTION:
-            throw new IllegalStateException("No transaction.");
-         case Status.STATUS_UNKNOWN:
-            throw new IllegalStateException("Unknown state");
-         default:
-            throw new IllegalStateException("Illegal status: " + status);
+          case Status.STATUS_ACTIVE:
+          case Status.STATUS_MARKED_ROLLBACK:
+             break;
+          case Status.STATUS_PREPARING:
+             throw new IllegalStateException("Already started preparing.");
+          case Status.STATUS_ROLLING_BACK:
+             throw new IllegalStateException("Already started rolling back.");
+          case Status.STATUS_PREPARED:
+             throw new IllegalStateException("Already prepared.");
+          case Status.STATUS_COMMITTING:
+             throw new IllegalStateException("Already started committing.");
+          case Status.STATUS_COMMITTED:
+             throw new IllegalStateException("Already committed.");
+          case Status.STATUS_ROLLEDBACK:
+             throw new IllegalStateException("Already rolled back.");
+          case Status.STATUS_NO_TRANSACTION:
+             throw new IllegalStateException("No transaction.");
+          case Status.STATUS_UNKNOWN:
+             throw new IllegalStateException("Unknown state");
+          default:
+             throw new IllegalStateException("Illegal status: " + status);
          }
 
          try {
             endResource(idx, flag);
             return true;
-         } catch(XAException e) {
-            Logger.warning("XAException: tx=" + toString() + " errorCode=" +
-                           getStringXAErrorCode(e.errorCode));
-            Logger.exception(e);
+         } catch (XAException e) {
+            log.warn("XAException: tx=" + toString() + " errorCode=" +
+                     getStringXAErrorCode(e.errorCode), e);
             status = Status.STATUS_MARKED_ROLLBACK;
             return false;
          }
@@ -542,9 +552,7 @@ class TxCapsule implements TimeoutTarget
     *  @returns True iff the resource was successfully enlisted.
     */
    boolean enlistResource(XAResource xaRes)
-      throws RollbackException,
-             java.lang.IllegalStateException,
-             SystemException
+      throws RollbackException, IllegalStateException, SystemException
    {
       if (xaRes == null)
          throw new IllegalArgumentException("null xaRes");
@@ -552,32 +560,33 @@ class TxCapsule implements TimeoutTarget
       try {
          lock();
 
-         if (trace)
-            Logger.debug("TxCapsule.enlistResource(): Entered, tx=" +
-                         toString() + " status=" + getStringStatus(status));
+         if (debug) {
+            log.debug("enlistResource(): Entered, tx=" +
+                      toString() + " status=" + getStringStatus(status));
+         }
 
          switch (status) {
-         case Status.STATUS_ACTIVE:
-         case Status.STATUS_PREPARING:
-            break;
-         case Status.STATUS_PREPARED:
-            throw new IllegalStateException("Already prepared.");
-         case Status.STATUS_COMMITTING:
-            throw new IllegalStateException("Already started committing.");
-         case Status.STATUS_COMMITTED:
-            throw new IllegalStateException("Already committed.");
-         case Status.STATUS_MARKED_ROLLBACK:
-            throw new RollbackException("Already marked for rollback");
-         case Status.STATUS_ROLLING_BACK:
-            throw new RollbackException("Already started rolling back.");
-         case Status.STATUS_ROLLEDBACK:
-            throw new RollbackException("Already rolled back.");
-         case Status.STATUS_NO_TRANSACTION:
-            throw new IllegalStateException("No transaction.");
-         case Status.STATUS_UNKNOWN:
-            throw new IllegalStateException("Unknown state");
-         default:
-            throw new IllegalStateException("Illegal status: " + status);
+          case Status.STATUS_ACTIVE:
+          case Status.STATUS_PREPARING:
+             break;
+          case Status.STATUS_PREPARED:
+             throw new IllegalStateException("Already prepared.");
+          case Status.STATUS_COMMITTING:
+             throw new IllegalStateException("Already started committing.");
+          case Status.STATUS_COMMITTED:
+             throw new IllegalStateException("Already committed.");
+          case Status.STATUS_MARKED_ROLLBACK:
+             throw new RollbackException("Already marked for rollback");
+          case Status.STATUS_ROLLING_BACK:
+             throw new RollbackException("Already started rolling back.");
+          case Status.STATUS_ROLLEDBACK:
+             throw new RollbackException("Already rolled back.");
+          case Status.STATUS_NO_TRANSACTION:
+             throw new IllegalStateException("No transaction.");
+          case Status.STATUS_UNKNOWN:
+             throw new IllegalStateException("Unknown state");
+          default:
+             throw new IllegalStateException("Illegal status: " + status);
          }
 
          if (resourcesEnded)
@@ -594,29 +603,28 @@ class TxCapsule implements TimeoutTarget
                startResource(idx);
                return true;
             }
-/* This optimization hangs the Oracle XAResource
-   when you perform xaCon.start(Xid, TMJOIN)
-*/
-if (xidConstructor == null) {
-            for (int i = 0; i < resourceCount; ++i) {
-               if (resourceSameRM[i] == -1 && xaRes.isSameRM(resources[i])) {
-                  // The xaRes is new. We register the xaRes with the Xid
-                  // that the RM has previously seen from this transaction,
-                  // and note that it has the same RM.
-                  startResource(addResource(xaRes, resourceXids[i], i));
 
-                  return true;
+            // This optimization hangs the Oracle XAResource
+            // when you perform xaCon.start(Xid, TMJOIN)
+            if (xidConstructor == null) {
+               for (int i = 0; i < resourceCount; ++i) {
+                  if (resourceSameRM[i] == -1 && xaRes.isSameRM(resources[i])) {
+                     // The xaRes is new. We register the xaRes with the Xid
+                     // that the RM has previously seen from this transaction,
+                     // and note that it has the same RM.
+                     startResource(addResource(xaRes, resourceXids[i], i));
+
+                     return true;
+                  }
                }
             }
-}
 
             // New resource and new RM: Create a new transaction branch.
             startResource(addResource(xaRes, createXidBranch(), -1));
             return true;
-         } catch(XAException e) {
-            Logger.warning("XAException: tx=" + toString() + " errorCode=" +
-                           getStringXAErrorCode(e.errorCode));
-            Logger.exception(e);
+         } catch (XAException e) {
+            log.warn("XAException: tx=" + toString() + " errorCode=" +
+                     getStringXAErrorCode(e.errorCode), e);
             return false;
          }
       } finally {
@@ -627,8 +635,7 @@ if (xidConstructor == null) {
    /**
     *  Return the status of the transaction encapsulated here.
     */
-   int getStatus()
-      throws SystemException
+   int getStatus() throws SystemException
    {
       return status;
    }
@@ -638,9 +645,7 @@ if (xidConstructor == null) {
     *  encapsulated here.
     */
    void registerSynchronization(Synchronization s)
-      throws RollbackException,
-             java.lang.IllegalStateException,
-             SystemException
+      throws RollbackException, IllegalStateException, SystemException
    {
       if (s == null)
          throw new IllegalArgumentException("Null synchronization");
@@ -648,43 +653,45 @@ if (xidConstructor == null) {
       try {
          lock();
 
-         if (trace)
-            Logger.debug("TxCapsule.registerSynchronization(): Entered, " +
-                         "tx=" + toString() +
-                         " status=" + getStringStatus(status));
+         if (debug) {
+            log.debug("registerSynchronization(): Entered, " +
+                      "tx=" + toString() +
+                      " status=" + getStringStatus(status));
+         }
 
          switch (status) {
-         case Status.STATUS_ACTIVE:
-         case Status.STATUS_PREPARING:
-            break;
-         case Status.STATUS_PREPARED:
-            throw new IllegalStateException("Already prepared.");
-         case Status.STATUS_COMMITTING:
-            throw new IllegalStateException("Already started committing.");
-         case Status.STATUS_COMMITTED:
-            throw new IllegalStateException("Already committed.");
-         case Status.STATUS_MARKED_ROLLBACK:
-// OSH: EntitySynchronizationInterceptor bug is fixed long ago,
-// and since nobody seems to get the warning anymore it should
-// be safe to be JTA-conformant.
-// In case of trouble, try changing "true" below to "false".
-if (true)
-            throw new RollbackException("Already marked for rollback");
-else {
-            // Workaround for EntitySynchronizationInterceptor bug.
-            Logger.warning("TxCapsule: Violating JTA by adding synchronization to a transaction marked for rollback.");
-            break;
-}
-         case Status.STATUS_ROLLING_BACK:
-            throw new RollbackException("Already started rolling back.");
-         case Status.STATUS_ROLLEDBACK:
-            throw new RollbackException("Already rolled back.");
-         case Status.STATUS_NO_TRANSACTION:
-            throw new IllegalStateException("No transaction.");
-         case Status.STATUS_UNKNOWN:
-            throw new IllegalStateException("Unknown state");
-         default:
-            throw new IllegalStateException("Illegal status: " + status);
+          case Status.STATUS_ACTIVE:
+          case Status.STATUS_PREPARING:
+             break;
+          case Status.STATUS_PREPARED:
+             throw new IllegalStateException("Already prepared.");
+          case Status.STATUS_COMMITTING:
+             throw new IllegalStateException("Already started committing.");
+          case Status.STATUS_COMMITTED:
+             throw new IllegalStateException("Already committed.");
+          case Status.STATUS_MARKED_ROLLBACK:
+             // OSH: EntitySynchronizationInterceptor bug is fixed long ago,
+             // and since nobody seems to get the warning anymore it should
+             // be safe to be JTA-conformant.
+             // In case of trouble, try changing "true" below to "false".
+             if (true)
+                throw new RollbackException("Already marked for rollback");
+             else {
+                // Workaround for EntitySynchronizationInterceptor bug.
+                log.warn("Violating JTA by adding synchronization to a " +
+                         "transaction marked for rollback.");
+                break;
+             }
+          case Status.STATUS_ROLLING_BACK:
+             throw new RollbackException("Already started rolling back.");
+          case Status.STATUS_ROLLEDBACK:
+             throw new RollbackException("Already rolled back.");
+          case Status.STATUS_NO_TRANSACTION:
+             throw new IllegalStateException("No transaction.");
+          case Status.STATUS_UNKNOWN:
+             throw new IllegalStateException("Unknown state");
+          default:
+             throw new IllegalStateException("Illegal status: " + status);
          }
 
          if (syncCount == syncAllocSize) {
@@ -711,7 +718,6 @@ else {
     */
    private TransactionImpl transaction;
 
-
    /**
     *  The synchronizations to call back.
     */
@@ -726,7 +732,6 @@ else {
     *  Count of synchronizations for this transaction.
     */
    private int syncCount = 0;
-
 
    /**
     *  A list of the XARessources that have participated in this transaction.
@@ -820,8 +825,8 @@ else {
 
    /**
     *  The transaction manager for this transaction.
-   private static TxManager tm = TxManager.getInstance();
-    */
+    private static TxManager tm = TxManager.getInstance();
+   */
 
    /**
     *  Mutex for thread-safety. This should only be changed in the
@@ -834,35 +839,34 @@ else {
     */
    private boolean done = false;
 
-
    /**
     *  Return a string representation of the given status code.
     */
    private String getStringStatus(int status) {
       switch (status) {
-         case Status.STATUS_PREPARING:
-            return "STATUS_PREPARING";
-         case Status.STATUS_PREPARED:
-            return "STATUS_PREPARED";
-         case Status.STATUS_ROLLING_BACK:
-            return "STATUS_ROLLING_BACK";
-         case Status.STATUS_ROLLEDBACK:
-            return "STATUS_ROLLEDBACK";
-         case Status.STATUS_COMMITTING:
-            return "STATUS_COMMITING";
-         case Status.STATUS_COMMITTED:
-            return "STATUS_COMMITED";
-         case Status.STATUS_NO_TRANSACTION:
-            return "STATUS_NO_TRANSACTION";
-         case Status.STATUS_UNKNOWN:
-            return "STATUS_UNKNOWN";
-         case Status.STATUS_MARKED_ROLLBACK:
-            return "STATUS_MARKED_ROLLBACK";
-         case Status.STATUS_ACTIVE:
-            return "STATUS_ACTIVE";
+       case Status.STATUS_PREPARING:
+          return "STATUS_PREPARING";
+       case Status.STATUS_PREPARED:
+          return "STATUS_PREPARED";
+       case Status.STATUS_ROLLING_BACK:
+          return "STATUS_ROLLING_BACK";
+       case Status.STATUS_ROLLEDBACK:
+          return "STATUS_ROLLEDBACK";
+       case Status.STATUS_COMMITTING:
+          return "STATUS_COMMITING";
+       case Status.STATUS_COMMITTED:
+          return "STATUS_COMMITED";
+       case Status.STATUS_NO_TRANSACTION:
+          return "STATUS_NO_TRANSACTION";
+       case Status.STATUS_UNKNOWN:
+          return "STATUS_UNKNOWN";
+       case Status.STATUS_MARKED_ROLLBACK:
+          return "STATUS_MARKED_ROLLBACK";
+       case Status.STATUS_ACTIVE:
+          return "STATUS_ACTIVE";
 
-         default:
-            return "STATUS_UNKNOWN(" + status + ")";
+       default:
+          return "STATUS_UNKNOWN(" + status + ")";
       }
    }
 
@@ -871,59 +875,59 @@ else {
     */
    private String getStringXAErrorCode(int errorCode) {
       switch (errorCode) {
-         case XAException.XA_HEURCOM:
-            return "XA_HEURCOM";
-         case XAException.XA_HEURHAZ:
-            return "XA_HEURHAZ";
-         case XAException.XA_HEURMIX:
-            return "XA_HEURMIX";
-         case XAException.XA_HEURRB:
-            return "XA_HEURRB";
+       case XAException.XA_HEURCOM:
+          return "XA_HEURCOM";
+       case XAException.XA_HEURHAZ:
+          return "XA_HEURHAZ";
+       case XAException.XA_HEURMIX:
+          return "XA_HEURMIX";
+       case XAException.XA_HEURRB:
+          return "XA_HEURRB";
 
-         case XAException.XA_NOMIGRATE:
-            return "XA_NOMIGRATE";
+       case XAException.XA_NOMIGRATE:
+          return "XA_NOMIGRATE";
 
-         case XAException.XA_RBCOMMFAIL:
-            return "XA_RBCOMMFAIL";
-         case XAException.XA_RBDEADLOCK:
-            return "XA_RBDEADLOCK";
-         case XAException.XA_RBINTEGRITY:
-            return "XA_RBINTEGRITY";
-         case XAException.XA_RBOTHER:
-            return "XA_RBOTHER";
-         case XAException.XA_RBPROTO:
-            return "XA_RBPROTO";
-         case XAException.XA_RBROLLBACK:
-            return "XA_RBROLLBACK";
-         case XAException.XA_RBTIMEOUT:
-            return "XA_RBTIMEOUT";
-         case XAException.XA_RBTRANSIENT:
-            return "XA_RBTRANSIENT";
+       case XAException.XA_RBCOMMFAIL:
+          return "XA_RBCOMMFAIL";
+       case XAException.XA_RBDEADLOCK:
+          return "XA_RBDEADLOCK";
+       case XAException.XA_RBINTEGRITY:
+          return "XA_RBINTEGRITY";
+       case XAException.XA_RBOTHER:
+          return "XA_RBOTHER";
+       case XAException.XA_RBPROTO:
+          return "XA_RBPROTO";
+       case XAException.XA_RBROLLBACK:
+          return "XA_RBROLLBACK";
+       case XAException.XA_RBTIMEOUT:
+          return "XA_RBTIMEOUT";
+       case XAException.XA_RBTRANSIENT:
+          return "XA_RBTRANSIENT";
 
-         case XAException.XA_RDONLY:
-            return "XA_RDONLY";
-         case XAException.XA_RETRY:
-            return "XA_RETRY";
+       case XAException.XA_RDONLY:
+          return "XA_RDONLY";
+       case XAException.XA_RETRY:
+          return "XA_RETRY";
 
-         case XAException.XAER_ASYNC:
-            return "XAER_ASYNC";
-         case XAException.XAER_DUPID:
-            return "XAER_DUPID";
-         case XAException.XAER_INVAL:
-            return "XAER_INVAL";
-         case XAException.XAER_NOTA:
-            return "XAER_NOTA";
-         case XAException.XAER_OUTSIDE:
-            return "XAER_OUTSIDE";
-         case XAException.XAER_PROTO:
-            return "XAER_PROTO";
-         case XAException.XAER_RMERR:
-            return "XAER_RMERR";
-         case XAException.XAER_RMFAIL:
-            return "XAER_RMFAIL";
+       case XAException.XAER_ASYNC:
+          return "XAER_ASYNC";
+       case XAException.XAER_DUPID:
+          return "XAER_DUPID";
+       case XAException.XAER_INVAL:
+          return "XAER_INVAL";
+       case XAException.XAER_NOTA:
+          return "XAER_NOTA";
+       case XAException.XAER_OUTSIDE:
+          return "XAER_OUTSIDE";
+       case XAException.XAER_PROTO:
+          return "XAER_PROTO";
+       case XAException.XAER_RMERR:
+          return "XAER_RMERR";
+       case XAException.XAER_RMFAIL:
+          return "XAER_RMFAIL";
 
-         default:
-            return "XA_UNKNOWN(" + errorCode + ")";
+       default:
+          return "XA_UNKNOWN(" + errorCode + ")";
       }
    }
 
@@ -936,7 +940,7 @@ else {
          throw new IllegalStateException("Transaction has terminated");
 
       if (locked) {
-         Logger.warning("TxCapsule: Lock contention, tx=" + toString());
+         log.warn("Lock contention, tx=" + toString());
          //DEBUG Thread.currentThread().dumpStack();
 
          long myIncarnation = incarnationCount;
@@ -950,7 +954,7 @@ else {
             } catch (InterruptedException ex) {}
 
             if (done || myIncarnation != incarnationCount)
-              throw new IllegalStateException("Transaction has now terminated");
+               throw new IllegalStateException("Transaction has now terminated");
          }
       }
 
@@ -963,9 +967,8 @@ else {
    private synchronized void unlock()
    {
       if (!locked) {
-         Logger.warning("TxCapsule: Unlocking, but not locked, tx=" +
-                        toString());
-         Logger.exception(new Exception("[Stack trace]"));
+         log.warn("Unlocking, but not locked, tx=" + toString(), 
+                  new Throwable("[Stack trace]"));
       }
 
       locked = false;
@@ -983,10 +986,9 @@ else {
          unlock();
          try {
             timeout.cancel();
-         } catch (Exception e)
-            {
-                Logger.debug(e);
-            } finally {
+         } catch (Exception e) {
+            log.debug("failed to cancel timeout", e);
+         } finally {
             lock();
          }
          timeout = null;
@@ -996,16 +998,16 @@ else {
    /**
     *  Return index of XAResource, or <code>-1</code> if not found.
     */
-    private int findResource(XAResource xaRes) {
-       // A linear search may seem slow, but please note that
-       // the number of XA resources registered with a transaction
-       // are usually low.
-       for (int idx = 0; idx < resourceCount; ++idx)
-          if (xaRes == resources[idx])
-             return idx;
+   private int findResource(XAResource xaRes) {
+      // A linear search may seem slow, but please note that
+      // the number of XA resources registered with a transaction
+      // are usually low.
+      for (int idx = 0; idx < resourceCount; ++idx)
+         if (xaRes == resources[idx])
+            return idx;
 
-       return -1;
-    }
+      return -1;
+   }
 
    /**
     *  Add a resource, expanding tables if needed.
@@ -1065,20 +1067,21 @@ else {
 
       if (resourceSameRM[idx] == -1) {
          switch (resourceState[idx]) {
-            case RS_NEW:
-               flags = XAResource.TMNOFLAGS;
-               break;
-            case RS_SUSPENDED:
-               flags = XAResource.TMRESUME;
-               break;
+          case RS_NEW:
+             flags = XAResource.TMNOFLAGS;
+             break;
+          case RS_SUSPENDED:
+             flags = XAResource.TMRESUME;
+             break;
          }
       }
 
-      if (trace)
-         Logger.debug("TxCapsule.startResource(" +
-                      XidImpl.toString(resourceXids[idx]) +
-                      ") entered: " + resources[idx].toString() +
-                      " flags=" + flags);
+      if (debug) {
+         log.debug("startResource(" +
+                   XidImpl.toString(resourceXids[idx]) +
+                   ") entered: " + resources[idx].toString() +
+                   " flags=" + flags);
+      }
 
       unlock();
       // OSH FIXME: resourceState could be incorrect during this callout.
@@ -1088,8 +1091,9 @@ else {
          } catch(XAException e) {
             throw e;
          } catch (Throwable t) {
-            if (trace)
-               Logger.exception(t);
+            if (debug) {
+               log.debug("unhandled throwable", t);
+            }
             status = Status.STATUS_MARKED_ROLLBACK;
             return;
          }
@@ -1098,11 +1102,12 @@ else {
          resourceState[idx] = RS_ENLISTED;
       } finally {
          lock();
-         if (trace)
-            Logger.debug("TxCapsule.startResource(" +
-                         XidImpl.toString(resourceXids[idx]) +
-                         ") leaving: " + resources[idx].toString() +
-                         " flags=" + flags);
+         if (debug) {
+            log.debug("startResource(" +
+                      XidImpl.toString(resourceXids[idx]) +
+                      ") leaving: " + resources[idx].toString() +
+                      " flags=" + flags);
+         }
       }
    }
 
@@ -1117,11 +1122,13 @@ else {
    private void endResource(int idx, int flag)
       throws XAException
    {
-      if (trace)
-          Logger.debug("TxCapsule.endResource(" +
-                       XidImpl.toString(resourceXids[idx]) +
-                       ") entered: " + resources[idx].toString() +
-                       " flag=" + flag);
+      if (debug) {
+         log.debug("endResource(" +
+                   XidImpl.toString(resourceXids[idx]) +
+                   ") entered: " + resources[idx].toString() +
+                   " flag=" + flag);
+      }
+      
       unlock();
       // OSH FIXME: resourceState could be incorrect during this callout.
       try {
@@ -1130,8 +1137,9 @@ else {
          } catch(XAException e) {
             throw e;
          } catch (Throwable t) {
-            if (trace)
-               Logger.exception(t);
+            if (debug) {
+               log.debug("unhandled throwable", t);
+            }
             status = Status.STATUS_MARKED_ROLLBACK;
             // Resource may or may not be ended after illegal exception.
             // We just assume it ended.
@@ -1150,11 +1158,12 @@ else {
          }
       } finally {
          lock();
-         if (trace)
-             Logger.debug("TxCapsule.endResource(" +
-                          XidImpl.toString(resourceXids[idx]) +
-                          ") leaving: " + resources[idx].toString() +
-                          " flag=" + flag);
+         if (debug) {
+            log.debug("endResource(" +
+                      XidImpl.toString(resourceXids[idx]) +
+                      ") leaving: " + resources[idx].toString() +
+                      " flag=" + flag);
+         }
       }
    }
 
@@ -1181,15 +1190,15 @@ else {
                startResource(idx);
             }
             if (resourceState[idx] == RS_ENLISTED) {
-              if (trace)
-                  Logger.debug("endresources(" + idx + "): state=" +
-                               resourceState[idx]);
+               if (debug) {
+                  log.debug("endresources(" + idx + "): state=" +
+                            resourceState[idx]);
+               }
                endResource(idx, XAResource.TMSUCCESS);
             }
          } catch(XAException e) {
-            Logger.warning("XAException: tx=" + toString() + " errorCode=" +
-                           getStringXAErrorCode(e.errorCode));
-            Logger.exception(e);
+            log.warn("XAException: tx=" + toString() + " errorCode=" +
+                     getStringXAErrorCode(e.errorCode), e);
             status = Status.STATUS_MARKED_ROLLBACK;
          }
       }
@@ -1209,8 +1218,9 @@ else {
             try {
                sync[i].beforeCompletion();
             } catch (Throwable t) {
-               if (trace)
-                  Logger.exception(t);
+               if (debug) {
+                  log.debug("failed before completion", t);
+               }
                status = Status.STATUS_MARKED_ROLLBACK;
                break;
             }
@@ -1233,8 +1243,9 @@ else {
             try {
                sync[i].afterCompletion(status);
             } catch (Throwable t) {
-               if (trace)
-                  Logger.exception(t);
+               if (debug) {
+                  log.debug("failed after completion", t);
+               }
             }
          }
       } finally {
@@ -1258,32 +1269,32 @@ else {
    private void gotHeuristic(int resIdx, int code)
    {
       switch (code) {
-      case XAException.XA_HEURMIX:
-         heuristicCode = XAException.XA_HEURMIX;
-         break;
-      case XAException.XA_HEURRB:
-         if (heuristicCode == HEUR_NONE)
-            heuristicCode = XAException.XA_HEURRB;
-         else if (heuristicCode == XAException.XA_HEURCOM ||
-                  heuristicCode == XAException.XA_HEURHAZ)
-            heuristicCode = XAException.XA_HEURMIX;
-         break;
-      case XAException.XA_HEURCOM:
-         if (heuristicCode == HEUR_NONE)
-            heuristicCode = XAException.XA_HEURCOM;
-         else if (heuristicCode == XAException.XA_HEURRB ||
-                  heuristicCode == XAException.XA_HEURHAZ)
-            heuristicCode = XAException.XA_HEURMIX;
-         break;
-      case XAException.XA_HEURHAZ:
-         if (heuristicCode == HEUR_NONE)
-            heuristicCode = XAException.XA_HEURHAZ;
-         else if (heuristicCode == XAException.XA_HEURCOM ||
-                  heuristicCode == XAException.XA_HEURRB)
-            heuristicCode = XAException.XA_HEURMIX;
-         break;
-      default:
-         throw new IllegalArgumentException();
+       case XAException.XA_HEURMIX:
+          heuristicCode = XAException.XA_HEURMIX;
+          break;
+       case XAException.XA_HEURRB:
+          if (heuristicCode == HEUR_NONE)
+             heuristicCode = XAException.XA_HEURRB;
+          else if (heuristicCode == XAException.XA_HEURCOM ||
+                   heuristicCode == XAException.XA_HEURHAZ)
+             heuristicCode = XAException.XA_HEURMIX;
+          break;
+       case XAException.XA_HEURCOM:
+          if (heuristicCode == HEUR_NONE)
+             heuristicCode = XAException.XA_HEURCOM;
+          else if (heuristicCode == XAException.XA_HEURRB ||
+                   heuristicCode == XAException.XA_HEURHAZ)
+             heuristicCode = XAException.XA_HEURMIX;
+          break;
+       case XAException.XA_HEURHAZ:
+          if (heuristicCode == HEUR_NONE)
+             heuristicCode = XAException.XA_HEURHAZ;
+          else if (heuristicCode == XAException.XA_HEURCOM ||
+                   heuristicCode == XAException.XA_HEURRB)
+             heuristicCode = XAException.XA_HEURMIX;
+          break;
+       default:
+          throw new IllegalArgumentException();
       }
 
       if (resIdx != -1) {
@@ -1291,9 +1302,8 @@ else {
             unlock();
             resources[resIdx].forget(resourceXids[resIdx]);
          } catch (XAException e) {
-            Logger.warning("XAException at forget(): errorCode=" +
-                           getStringXAErrorCode(e.errorCode));
-            Logger.exception(e);
+            log.warn("XAException at forget(): errorCode=" +
+                     getStringXAErrorCode(e.errorCode), e);
          } finally {
             lock();
          }
@@ -1304,33 +1314,35 @@ else {
     *  Check for heuristics, clear and throw exception if any found.
     */
    private void checkHeuristics()
-     throws HeuristicMixedException,
-            HeuristicRollbackException
+      throws HeuristicMixedException, HeuristicRollbackException
    {
       switch (heuristicCode) {
-      case XAException.XA_HEURHAZ:
-      case XAException.XA_HEURMIX:
-         heuristicCode = HEUR_NONE;
-         if (trace)
-            Logger.debug("TxCapsule: Throwing HeuristicMixedException, " +
-                         "status=" + getStringStatus(status));
-         throw new HeuristicMixedException();
-      case XAException.XA_HEURRB:
-         heuristicCode = HEUR_NONE;
-         if (trace)
-            Logger.debug("TxCapsule: Throwing HeuristicRollbackException, " +
-                         "status=" + getStringStatus(status));
-         throw new HeuristicRollbackException();
-      case XAException.XA_HEURCOM:
-         heuristicCode = HEUR_NONE;
-         // Why isn't HeuristicCommitException used in JTA ?
-         // And why define something that is not used ?
-         // For now we just have to ignore this failure, even if it happened
-         // on rollback.
-         if (trace)
-            Logger.debug("TxCapsule: NOT Throwing HeuristicCommitException, " +
-                         "status=" + getStringStatus(status));
-         return;
+       case XAException.XA_HEURHAZ:
+       case XAException.XA_HEURMIX:
+          heuristicCode = HEUR_NONE;
+          if (debug) {
+             log.debug("Throwing HeuristicMixedException, " +
+                       "status=" + getStringStatus(status));
+          }
+          throw new HeuristicMixedException();
+       case XAException.XA_HEURRB:
+          heuristicCode = HEUR_NONE;
+          if (debug) {
+             log.debug("Throwing HeuristicRollbackException, " +
+                       "status=" + getStringStatus(status));
+          }
+          throw new HeuristicRollbackException();
+       case XAException.XA_HEURCOM:
+          heuristicCode = HEUR_NONE;
+          // Why isn't HeuristicCommitException used in JTA ?
+          // And why define something that is not used ?
+          // For now we just have to ignore this failure, even if it happened
+          // on rollback.
+          if (debug) {
+             log.debug("NOT Throwing HeuristicCommitException, " +
+                       "status=" + getStringStatus(status));
+          }
+          return;
       }
    }
 
@@ -1372,7 +1384,7 @@ else {
 
       // If using a special class, second constructor argument is now useless.
       if (xidConstructor != null)
-        xidConstructorArgs[1] = null; // This now needs initializing
+         xidConstructorArgs[1] = null; // This now needs initializing
    }
 
    /**
@@ -1398,7 +1410,7 @@ else {
             return false;
 
          if (resourceSameRM[i] != -1)
-           continue; // This RM already prepared.
+            continue; // This RM already prepared.
 
          XAResource resource = resources[i];
 
@@ -1426,29 +1438,29 @@ else {
             readOnly = false;
 
             switch (e.errorCode) {
-            case XAException.XA_HEURCOM:
-               // Heuristic commit is not that bad when preparing.
-               // But it means trouble if we have to rollback.
-               gotHeuristic(i, e.errorCode);
-               break;
-            case XAException.XA_HEURRB:
-            case XAException.XA_HEURMIX:
-            case XAException.XA_HEURHAZ:
-               gotHeuristic(i, e.errorCode);
-               if (status == Status.STATUS_PREPARING)
-                  status = Status.STATUS_MARKED_ROLLBACK;
-               break;
-            default:
-               Logger.warning("XAException: tx=" + toString() + " errorCode=" +
-                              getStringXAErrorCode(e.errorCode));
-               Logger.exception(e);
-               if (status == Status.STATUS_PREPARING)
-                  status = Status.STATUS_MARKED_ROLLBACK;
-               break;
+             case XAException.XA_HEURCOM:
+                // Heuristic commit is not that bad when preparing.
+                // But it means trouble if we have to rollback.
+                gotHeuristic(i, e.errorCode);
+                break;
+             case XAException.XA_HEURRB:
+             case XAException.XA_HEURMIX:
+             case XAException.XA_HEURHAZ:
+                gotHeuristic(i, e.errorCode);
+                if (status == Status.STATUS_PREPARING)
+                   status = Status.STATUS_MARKED_ROLLBACK;
+                break;
+             default:
+                log.warn("XAException: tx=" + toString() + " errorCode=" +
+                         getStringXAErrorCode(e.errorCode), e);
+                if (status == Status.STATUS_PREPARING)
+                   status = Status.STATUS_MARKED_ROLLBACK;
+                break;
             }
          } catch (Throwable t) {
-            if (trace)
-               Logger.exception(t);
+            if (debug) {
+               log.debug("unhandled throwable", t);
+            }
             if (status == Status.STATUS_PREPARING)
                status = Status.STATUS_MARKED_ROLLBACK;
          }
@@ -1469,15 +1481,16 @@ else {
       status = Status.STATUS_COMMITTING;
 
       for (int i = 0; i < resourceCount; i++) {
-         if (trace)
-            Logger.debug("TxCapsule.commitResources(): " +
-                         "resourceStates["+i+"]="+resourceState[i]);
+         if (debug) {
+            log.debug("Committing resources, resourceStates["+i+"]=" +
+                      resourceState[i]);
+         }
 
          if (!onePhase && resourceState[i] != RS_VOTE_OK)
-           continue; // Voted read-only at prepare phase.
+            continue; // Voted read-only at prepare phase.
 
          if (resourceSameRM[i] != -1)
-           continue; // This RM already committed.
+            continue; // This RM already committed.
 
          // Abort commit on state change.
          if (status != Status.STATUS_COMMITTING)
@@ -1492,17 +1505,16 @@ else {
             }
          } catch (XAException e) {
             switch (e.errorCode) {
-            case XAException.XA_HEURRB:
-            case XAException.XA_HEURCOM:
-            case XAException.XA_HEURMIX:
-            case XAException.XA_HEURHAZ:
-               gotHeuristic(i, e.errorCode);
-               break;
-            default:
-               Logger.warning("XAException: tx=" + toString() + " errorCode=" +
-                              getStringXAErrorCode(e.errorCode));
-               Logger.exception(e);
-               break;
+             case XAException.XA_HEURRB:
+             case XAException.XA_HEURCOM:
+             case XAException.XA_HEURMIX:
+             case XAException.XA_HEURHAZ:
+                gotHeuristic(i, e.errorCode);
+                break;
+             default:
+                log.warn("XAException: tx=" + toString() + " errorCode=" +
+                         getStringXAErrorCode(e.errorCode), e);
+                break;
             }
             try {
                // OSH: Why this?
@@ -1512,8 +1524,9 @@ else {
                resources[i].forget(resourceXids[i]);
             } catch (XAException forgetEx) {}
          } catch (Throwable t) {
-            if (trace)
-               Logger.exception(t);
+            if (debug) {
+               log.debug("unhandled throwable", t);
+            }
          }
       }
 
@@ -1531,7 +1544,7 @@ else {
 
       for (int i = 0; i < resourceCount; i++) {
          if (resourceState[i] == RS_VOTE_READONLY)
-           continue;
+            continue;
 
          try {
             unlock();
@@ -1542,20 +1555,19 @@ else {
             }
          } catch (XAException e) {
             switch (e.errorCode) {
-            case XAException.XA_HEURRB:
-               // Heuristic rollback is not that bad when rolling back.
-               gotHeuristic(i, e.errorCode);
-               break;
-            case XAException.XA_HEURCOM:
-            case XAException.XA_HEURMIX:
-            case XAException.XA_HEURHAZ:
-               gotHeuristic(i, e.errorCode);
-               break;
-            default:
-               Logger.warning("XAException: tx=" + toString() + " errorCode=" +
-                              getStringXAErrorCode(e.errorCode));
-               Logger.exception(e);
-               break;
+             case XAException.XA_HEURRB:
+                // Heuristic rollback is not that bad when rolling back.
+                gotHeuristic(i, e.errorCode);
+                break;
+             case XAException.XA_HEURCOM:
+             case XAException.XA_HEURMIX:
+             case XAException.XA_HEURHAZ:
+                gotHeuristic(i, e.errorCode);
+                break;
+             default:
+                log.warn("XAException: tx=" + toString() + " errorCode=" +
+                         getStringXAErrorCode(e.errorCode), e);
+                break;
             }
             try {
                // OSH: Why this?
@@ -1565,8 +1577,9 @@ else {
                resources[i].forget(resourceXids[i]);
             } catch (XAException forgetEx) {}
          } catch (Throwable t) {
-            if (trace)
-               Logger.exception(t);
+            if (debug) {
+               log.debug("unhandled throwable", t);
+            }
          }
       }
 
@@ -1584,12 +1597,12 @@ else {
       else {
          try {
             if (xidConstructorArgs[1] == null) {
-              // First branching of this global transaction id.
-              // Oracle XA driver needs the full length GID.
-              byte[] gidShort = xid.getGlobalTransactionId();
-              byte[] gid = new byte[Xid.MAXGTRIDSIZE];
-              System.arraycopy(gidShort, 0, gid, 0, gidShort.length);
-              xidConstructorArgs[1] = gid;
+               // First branching of this global transaction id.
+               // Oracle XA driver needs the full length GID.
+               byte[] gidShort = xid.getGlobalTransactionId();
+               byte[] gid = new byte[Xid.MAXGTRIDSIZE];
+               System.arraycopy(gidShort, 0, gid, 0, gidShort.length);
+               xidConstructorArgs[1] = gid;
             }
 
             // Oracle XA driver needs the full length BQID.
@@ -1600,8 +1613,7 @@ else {
 
             return (Xid)xidConstructor.newInstance(xidConstructorArgs);
          } catch (Exception e) {
-            System.out.println("Unable to create an Xid " +
-                               "(reverting to default impl): " + e);
+            log.warn("Unable to create an Xid (using default impl)", e);
             return new XidImpl(xid, branchId);
          }
       }
