@@ -28,7 +28,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *      
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.19 $
+ *   @version $Revision: 1.20 $
  *
  * Revisions:
  * 20010622 scott.stark: Report IntialContext env for problem tracing
@@ -161,7 +161,12 @@ public class NamingService
       if( providerURL != null )
          log.warn("Saw Context.PROVIDER_URL in server jndi.properties, url="+providerURL);
 
-      // Create "java:comp/env"
+      /* Bind an ObjectFactory to "java:comp" so that "java:comp/env" lookups
+       produce a unique context for each thread contexxt ClassLoader that
+       performs the lookup.
+      */
+      ClassLoader topLoader = Thread.currentThread().getContextClassLoader();
+      ENCFactory.setTopClassLoader(topLoader);
       RefAddr refAddr = new StringRefAddr("nns", "ENC");
       Reference envRef = new Reference("javax.naming.Context", refAddr, ENCFactory.class.getName(), null);
       Context ctx = (Context)iniCtx.lookup("java:");
