@@ -109,7 +109,9 @@ public class MailFrameView extends AbstractFrameView {
 
         mainSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 
-        mainSplitPane.add(new JScrollPane(tree), JSplitPane.LEFT);
+		JScrollPane treeScrollPane = new JScrollPane(tree);
+		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+        mainSplitPane.add(treeScrollPane, JSplitPane.LEFT);
 
         JPanel messagePanel = new JPanel();
         messagePanel.setLayout(new BorderLayout());
@@ -126,8 +128,9 @@ public class MailFrameView extends AbstractFrameView {
         tablePanel.add(filterToolbar, BorderLayout.NORTH);
 
         JScrollPane tableScrollPane = new JScrollPane(table);
+        tableScrollPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
         tableScrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
-
+		
         tableScrollPane.getViewport().setBackground(Color.white);
         tablePanel.add(tableScrollPane, BorderLayout.CENTER);
         rightSplitPane = new JSplitPane();

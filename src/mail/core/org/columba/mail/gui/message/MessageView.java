@@ -15,18 +15,18 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message;
 
-import org.columba.mail.gui.attachment.AttachmentView;
-import org.columba.mail.message.ColumbaHeader;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.MouseListener;
-
 import java.io.InputStream;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkListener;
+
+import org.columba.mail.gui.attachment.AttachmentView;
+import org.columba.mail.message.ColumbaHeader;
 
 
 public class MessageView extends JScrollPane {
@@ -53,8 +53,9 @@ public class MessageView extends JScrollPane {
         this.messageController = controller;
 
         getViewport().setBackground(Color.white);
-
+		setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         panel = new MessagePanel();
+        //panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         panel.setLayout(new BorderLayout());
 
         setViewportView(panel);
