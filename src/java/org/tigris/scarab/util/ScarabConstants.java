@@ -50,7 +50,7 @@ package org.tigris.scarab.util;
     A place to put public final static strings.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.2 2001/01/04 05:47:12 jon Exp $
+    @version $Id: ScarabConstants.java,v 1.3 2001/01/15 07:49:39 jon Exp $
 */
 
 public interface ScarabConstants
@@ -79,4 +79,10 @@ public interface ScarabConstants
      * that is currently being executed.
      */
     public static final String TEMPLATE = "template";
+    
+    /**
+     * Primary System Object
+     */
+    public static final String SCARAB_SYSTEM = "scarab";
+    
 }    
