@@ -17,7 +17,7 @@ $page.setTitle("Save Query")
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
-  <input type="submit" value="Save/submit" name="eventSubmit_doSavequery" />&#160;
+  <input type="submit" value="Save" name="eventSubmit_doSavequery" />&#160;
   <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />
   </td>
   </tr>
@@ -52,7 +52,7 @@ $page.setTitle("Save Query")
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
-  <input type="submit" value="Save/submit" name="eventSubmit_doSavequery" />&#160;
+  <input type="submit" value="Save" name="eventSubmit_doSavequery" />&#160;
   <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />
   </td>
  </tr>
