@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.60 2002/02/15 06:18:30 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.61 2002/02/16 01:33:25 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -108,20 +108,6 @@
       </fileset>
     </path>
 
-    <!-- JavaBeans Activation Framework (JAF) -->
-    <property name="sun.jaf.root" value="${project.thirdparty}/sun/jaf"/>
-    <property name="sun.jaf.lib" value="${sun.jaf.root}/lib"/>
-    <path id="sun.jaf.classpath">
-      <pathelement path="${sun.jaf.lib}/activation.jar"/>
-    </path>
-
-    <!-- JavaMail -->
-    <property name="sun.javamail.root" value="${project.thirdparty}/sun/javamail"/>
-    <property name="sun.javamail.lib" value="${sun.javamail.root}/lib"/>
-    <path id="sun.javamail.classpath">
-      <pathelement path="${sun.javamail.lib}/mail.jar"/>
-    </path>
-
     <!-- Java Transaction Service (JTS) -->
     <property name="sun.jts.root" value="${project.thirdparty}/sun/jts"/>
     <property name="sun.jts.lib" value="${sun.jts.root}/lib"/>
@@ -189,8 +175,6 @@
       <path refid="sun.jaxp.classpath"/>
       <path refid="sun.jaas.classpath"/>
       <path refid="sun.jsse.classpath"/>
-      <path refid="sun.jaf.classpath"/>
-      <path refid="sun.javamail.classpath"/>
       <path refid="sun.jts.classpath"/>
       <path refid="apache.log4j.classpath"/>
       <path refid="gjt.jpl-util.classpath"/>
@@ -250,12 +234,7 @@
     <property name="build.etc" value="${module.output}/etc"/>
     <property name="build.bin" value="${module.output}/bin"/>
     <property name="build.docs" value="${module.output}/docs"/>
-    <property name="build.ejbadaptor" value="${module.output}/ejbadaptor"/>
-    <property name="build.ejbadaptor.beans" value="${build.ejbadaptor}/beans"/>
-    <property name="build.ejbadaptor.metadata" value="${build.ejbadaptor}/metadata"/>
-    <property name="build.mejb" value="${module.output}/mejb"/>
-    <property name="build.mejb.beans" value="${build.mejb}/beans"/>
-    <property name="build.mejb.metadata" value="${build.mejb}/metadata"/>
+    <property name="build.beans" value="${module.output}/beans"/>
     <property name="build.resources" value="${module.output}/resources"/>
     <property name="build.reports" value="${module.output}/reports"/>
 
@@ -335,10 +314,9 @@
   <target name="compile-bean-sources" depends="init">
     <taskdef name="xdoclet" classname="xdoclet.ejb.EjbDocletTask"/>
 
-    <mkdir dir="${build.ejbadaptor.beans}"/>
-    <mkdir dir="${build.ejbadaptor.metadata}/META-INF"/>
+    <mkdir dir="${build.beans}/ejbadaptor"/>
     <xdoclet sourcepath="${source.java}"
-	     destdir="${build.ejbadaptor.beans}"
+	     destdir="${build.beans}/ejbadaptor"
 	     classpath="${xdoclet.task.classpath}"
 	     ejbspec="1.1"
 	     excludedtags="@version,@author">
@@ -350,16 +328,13 @@
       <remoteinterface/>
       <homeinterface/>
       <session/>
-      <deploymentdescriptor xmlencoding ="UTF-8"
-			    destdir="${build.ejbadaptor.metadata}/META-INF"/>
-      <jboss xmlencoding="UTF-8" 
-	     destdir="${build.ejbadaptor.metadata}/META-INF"/>
+      <deploymentdescriptor xmlencoding="UTF-8" destdir="${build.beans}/ejbadaptor/META-INF"/>
+      <jboss xmlencoding="UTF-8" destdir="${build.beans}/ejbadaptor/META-INF"/>
     </xdoclet>
 
-    <mkdir dir="${build.mejb.beans}"/>
-    <mkdir dir="${build.mejb.metadata}/META-INF"/>
+    <mkdir dir="${build.beans}/mejb"/>
     <xdoclet sourcepath="${source.java}"
-	     destdir="${build.mejb.beans}"
+	     destdir="${build.beans}/mejb"
 	     classpath="${xdoclet.task.classpath}"
 	     ejbspec="1.1"
 	     excludedtags="@version,@author">
@@ -371,10 +346,8 @@
       <remoteinterface/>
       <homeinterface/>
       <session/>
-      <deploymentdescriptor xmlencoding ="UTF-8"
-			    destdir="${build.mejb.metadata}/META-INF"/>
-      <jboss xmlencoding="UTF-8" 
-	     destdir="${build.mejb.metadata}/META-INF"/>
+      <deploymentdescriptor xmlencoding="UTF-8" destdir="${build.beans}/mejb/META-INF"/>
+      <jboss xmlencoding="UTF-8" destdir="${build.beans}/mejb/META-INF"/>
     </xdoclet>
   </target>
 
@@ -391,15 +364,13 @@
 	   includeAntRuntime="${javac.include.ant.runtime}"
 	   includeJavaRuntime="${javac.include.java.runtime}"
 	   failonerror="${javac.fail.onerror}">
-       <src path="${source.java}"/>
-       <src path="${build.ejbadaptor.beans}"/>
-       <src path="${build.mejb.beans}"/>
        <classpath refid="javac.classpath"/>
+
+       <src path="${source.java}"/>
+       <src path="${build.beans}"/>
+
        <include name="${javac.includes}"/>
        <exclude name="${javac.excludes}"/>
-
-       <!-- This is currently contains outdated package references. -->
-       <exclude name="test/**"/>
     </javac>
   </target>
 
@@ -481,8 +452,8 @@
   <target name="jars" depends="compile" description="Builds all jar files.">
     <mkdir dir="${build.lib}"/>
 
-    <!-- Build jboss.jar -->
-    <jar jarfile="${build.lib}/jboss.jar" manifest="${build.etc}/jboss.mf">
+    <!-- jboss.jar -->
+    <jar jarfile="${build.lib}/jboss.jar" manifest="${build.etc}/manifest/jboss.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/**"/>
         
@@ -510,7 +481,7 @@
     </jar>
 
     <!-- 
-       | Build jboss-boot.jar
+       | jboss-boot.jar
        |
        | This file is always local and contains the basic classed required
        | to start the server and setup network service loading.
@@ -535,7 +506,7 @@
       </fileset>
     </jar>
 
-    <!-- Build jboss-spine.jar -->
+    <!-- jboss-spine.jar -->
     <jar jarfile="${build.lib}/jboss-spine.jar">
       <fileset dir="${build.classes}">
         <include name="org/jboss/logging/**"/>
@@ -555,9 +526,9 @@
       </fileset>
     </jar>
 	 
-    <!-- Build jboss-client.jar -->
+    <!-- jboss-client.jar -->
     <jar jarfile="${build.lib}/jboss-client.jar"
-         manifest="${build.etc}/jboss-client.mf">
+         manifest="${build.etc}/manifest/jboss-client.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/deployment/DeploymentException.class"/>
         <include name="org/jboss/proxy/**"/>
@@ -582,30 +553,30 @@
       </fileset>
     </jar>
 
-    <!-- Build run.jar -->
-    <jar jarfile="${build.lib}/run.jar" manifest="${build.etc}/run.mf">
+    <!-- run.jar -->
+    <jar jarfile="${build.lib}/run.jar" manifest="${build.etc}/manifest/run.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/Main*"/>
       </fileset>
     </jar>
 
-    <!-- Build shutdown.jar -->
-    <jar jarfile="${build.lib}/shutdown.jar" manifest="${build.etc}/shutdown.mf">
+    <!-- shutdown.jar -->
+    <jar jarfile="${build.lib}/shutdown.jar" manifest="${build.etc}/manifest/shutdown.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/Shutdown*"/>
       </fileset>
     </jar>
 
-    <!-- Build verifier.jar -->
+    <!-- verifier.jar -->
     <jar jarfile="${build.lib}/verifier.jar"
-         manifest="${build.etc}/verifier.mf">
+         manifest="${build.etc}/manifest/verifier.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/verifier/**"/>
       </fileset>
       <fileset dir="${build.resources}/org/jboss/verifier"/>
     </jar>
 
-    <!-- Build jmx-rmi-adaptor.sar (should try to use jlink for this)--> 
+    <!-- jmx-rmi-adaptor.sar --> 
     <jar jarfile="${build.lib}/jmx-rmi-adaptor.sar">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/adaptor/rmi/**"/>
@@ -617,7 +588,7 @@
       </fileset>
     </jar>
 
-    <!-- Build jmx-ejb-adaptor.jar --> 
+    <!-- jmx-ejb-adaptor.jar --> 
     <jar jarfile="${build.lib}/jmx-ejb-adaptor.jar">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/ObjectHandler**"/>
@@ -625,26 +596,27 @@
         <include name="org/jboss/jmx/adaptor/interfaces/**"/>
         <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
       </fileset>
-      <fileset dir="${build.ejbadaptor.metadata}">
-        <include name="META-INF/*.xml"/>
+      <fileset dir="${build.beans}/ejbadaptor">
+        <include name="META-INF/**"/>
       </fileset>
     </jar>
 
-    <!-- Build ejb-management.jar --> 
+    <!-- ejb-management.jar --> 
+    <!-- (should try to use jlink for this) -->  
     <unjar src="${sun.jsr77.lib}/jsr77.jar" dest="${build.classes}"/> 
     <jar jarfile="${build.lib}/ejb-management.jar">
       <fileset dir="${build.classes}">
         <include name="org/jboss/management/mejb/**"/>
         <include name="javax/management/j2ee/Management*.class"/>
       </fileset>
-      <fileset dir="${build.mejb.metadata}">
-        <include name="META-INF/*.xml"/>
+      <fileset dir="${build.beans}/mejb">
+        <include name="META-INF/**"/>
       </fileset>
     </jar>
 
-    <!-- Build jmx-ejb-connector-client.jar (should try to use jlink for this)--> 
+    <!-- jmx-ejb-connector-client.jar -->
     <jar jarfile="${build.lib}/jmx-ejb-connector-client.jar"
-         manifest="${build.etc}/ejb-connector-client.mf">
+         manifest="${build.etc}/manifest/ejb-connector-client.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/ObjectHandler**"/>
         <include name="org/jboss/jmx/connector/notification/**"/>
@@ -655,9 +627,9 @@
       </fileset>
     </jar>
 
-    <!-- Build jmx-ejb-connector-server.sar (should try to use jlink for this)--> 
+    <!-- jmx-ejb-connector-server.sar --> 
     <jar jarfile="${build.lib}/jmx-ejb-connector-server.sar">
-         <!-- manifest="${build.etc}/ejb-connector-server.mf"> -->
+         <!-- manifest="${build.etc}/manifest/ejb-connector-server.mf"> -->
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/connector/notification/**"/>
         <include name="org/jboss/jmx/connector/ejb/**Stub.class"/>
@@ -667,10 +639,11 @@
       </fileset>
     </jar>
 
-    <!-- Build jmx-html-adaptor.sar (should try to use jlink for this)--> 
+    <!-- jmx-html-adaptor.sar -->
+    <!-- (should try to use jlink for this) -->  
     <unjar src="${sun.jmx.lib}/jmxtools.jar" dest="${build.classes}"/>
     <jar jarfile="${build.lib}/jmx-html-adaptor.sar">
-         <!-- manifest="${build.etc}/rmiconnector.mf"> -->
+         <!-- manifest="${build.etc}/manifest/rmiconnector.mf"> -->
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/interfaces/**"/>
         <include name="org/jboss/jmx/server/**"/>
@@ -681,9 +654,9 @@
       </fileset>
     </jar>
 
-    <!-- Build jmx-rmi-adaptor.jar -->
+    <!-- jmx-rmi-adaptor.jar -->
     <jar jarfile="${build.lib}/jmx-rmi-adaptor.jar"
-         manifest="${build.etc}/rmi-adaptor.mf">
+         manifest="${build.etc}/manifest/rmi-adaptor.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/adaptor/rmi/**"/>
         <include name="org/jboss/jmx/connector/RemoteMBeanServer**"/>
@@ -698,9 +671,63 @@
       </fileset>
     </jar>
 
-    <!-- Build deploy.jar -->
+    <!-- jmx-rmi-connector-client.jar -->
+    <jar jarfile="${build.lib}/jmx-rmi-connector-client.jar"
+         manifest="${build.etc}/manifest/rmi-connector-client.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/jmx/adaptor/rmi/*Stub.class"/>
+        <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptor*.class"/>
+        <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
+        <include name="org/jboss/jmx/connector/notification/RMI**"/>
+        <include name="org/jboss/jmx/connector/notification/JMSNotificationListener.class"/>
+        <include name="org/jboss/jmx/connector/rmi/**"/>
+        <include name="org/jboss/system/Service.class"/>
+        <include name="org/jboss/system/ServiceMBean*.class"/>
+        <include name="org/jboss/logging/**"/>
+      </fileset>
+    </jar>
+
+    <!-- jmx-connector-client-factory.jar -->
+    <jar jarfile="${build.lib}/jmx-connector-client-factory.jar"
+         manifest="${build.etc}/manifest/connector-client-factory.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/jmx/connector/ConnectorFactory*.class"/>
+        <include name="org/jboss/jmx/connector/TestClient*.class"/>
+        <include name="org/jboss/system/Service.class"/>
+        <include name="org/jboss/system/ServiceMBean*.class"/>
+        <include name="org/jboss/logging/**"/>
+      </fileset>
+    </jar>
+
+    <!-- jms-ra.rar -->
+    <jar jarfile="${build.lib}/jms-ra.jar">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/jms/ra/**"/>
+      </fileset>
+    </jar>
+    <jar jarfile="${build.lib}/jms-ra.rar">
+      <fileset dir="${build.lib}">
+        <include name="jms-ra.jar"/>
+      </fileset>
+      <fileset dir="${build.resources}/org/jboss/jms/ra/">
+        <include name="**"/>
+      </fileset>
+    </jar>
+
+    <!-- HACK jboss-security.jar -->
+    <jar jarfile="${build.lib}/jboss-security.jar">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/security/**"/>
+      </fileset>
+    </jar>
+
+    <!--
+       | JBoss/Testsuite Support
+     -->
+
+    <!-- deploy.jar -->
     <jar jarfile="${build.lib}/deploy.jar"
-         manifest="${build.etc}/deploy.mf">
+         manifest="${build.etc}/manifest/deploy.mf">
       <fileset dir="${build.classes}">
          <include name="org/jboss/deployment/**"/>
          <include name="org/jboss/jmx/service/Deployer.class"/>
@@ -719,81 +746,6 @@
       </fileset>
     </jar>
 
-    <!-- Build jmx-rmi-connector-client.jar -->
-    <jar jarfile="${build.lib}/jmx-rmi-connector-client.jar"
-         manifest="${build.etc}/rmi-connector-client.mf">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/jmx/adaptor/rmi/*Stub.class"/>
-        <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptor*.class"/>
-        <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
-        <!-- <include
-        name="org/jboss/jmx/connector/RemoteMBeanServerMBean.class"/> -->
-        <include name="org/jboss/jmx/connector/notification/RMI**"/>
-        <include name="org/jboss/jmx/connector/notification/JMSNotificationListener.class"/>
-        <include name="org/jboss/jmx/connector/rmi/**"/>
-        <include name="org/jboss/system/Service.class"/>
-        <include name="org/jboss/system/ServiceMBean*.class"/>
-        <include name="org/jboss/logging/**"/>
-      </fileset>
-    </jar>
-
-    <!-- Build jmx-connector-client-factory.jar -->
-    <jar jarfile="${build.lib}/jmx-connector-client-factory.jar"
-         manifest="${build.etc}/connector-client-factory.mf">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/jmx/connector/ConnectorFactory*.class"/>
-        <include name="org/jboss/jmx/connector/TestClient*.class"/>
-        <include name="org/jboss/system/Service.class"/>
-        <include name="org/jboss/system/ServiceMBean*.class"/>
-        <include name="org/jboss/logging/**"/>
-      </fileset>
-    </jar>
-
-    <!-- Build jms-ra.rar -->
-    <!-- First build the inside jar -->
-    <jar jarfile="${build.lib}/jms-ra.jar">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/jms/ra/**"/>
-      </fileset>
-    </jar>
-
-    <!-- Now build the rar containing the jar and the ra.xml -->
-    <jar jarfile="${build.lib}/jms-ra.rar">
-      <fileset dir="${build.lib}">
-        <include name="jms-ra.jar"/>
-      </fileset>
-      <fileset dir="${build.resources}/org/jboss/jms/ra/">
-        <include name="**"/>
-      </fileset>
-    </jar>
-
-    <!-- HACK Build jboss-security.jar -->
-    <jar jarfile="${build.lib}/jboss-security.jar">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/security/**"/>
-      </fileset>
-    </jar>
-
-    <!-- The following might not be needed any more -->
-
-    <!-- Build jboss-metadata.jar -->
-    <jar jarfile="${build.lib}/jboss-metadata.jar">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/metadata/**"/>
-        <include name="org/jboss/ejb/DeploymentException.class"/>
-      </fileset>
-      <fileset dir="${build.etc}/conf/default">
-        <include name="standardjboss.xml"/>
-      </fileset>
-    </jar>
-
-    <!-- Build jboss-deployer.jar -->
-    <jar jarfile="${build.lib}/jboss-deployer.jar">
-      <fileset dir="${build.classes}">
-         <include name="org/jboss/deployment/DeployerMBean*"/>
-         <include name="org/jboss/deployment/DeploymentException*"/>
-      </fileset>
-    </jar>
   </target>
 
 
