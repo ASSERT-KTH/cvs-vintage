@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--  HiLo Key Generator Factory Service Configuration                     -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+<server>
+  <!--
+     | Specify required libraries here.
+  -->
+  <classpath codebase="lib" archives="jboss.jar,keygenerators.jar"/>
+
+   <!--
+      | HiLoKeyGeneratorFactory
+   -->
+   <mbean
+      code="org.jboss.ejb.plugins.keygenerator.hilo.HiLoKeyGeneratorFactory"
+      name="jboss:service=KeyGeneratorFactory,type=HiLo">
+
+      <attribute name="FactoryName">java:/HiLoKeyGeneratorFactory</attribute>
+      <attribute name="DataSource">java:/DefaultDS</attribute>
+      <attribute name="TransactionManager">java:/TransactionManager</attribute>
+      <attribute name="TableName">JBOSS_SEQUENCE</attribute>
+      <attribute name="ColumnName">ID</attribute>
+      <attribute name="ColumnSQLType">INTEGER</attribute>
+      <attribute name="BlockSize">100</attribute>
+   </mbean>
+</server>
