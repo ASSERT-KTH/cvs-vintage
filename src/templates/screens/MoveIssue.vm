@@ -3,9 +3,13 @@
 #set ($user = $data.User)
 #set ($issueId = $data.Parameters.getString("id"))
 #set ($issue = $scarabR.getIssue($issueId))
+#set ($copyToModules = $user.getCopyToModules($scarabR.CurrentModule))
 #if (!$issueId || $issueId.length() == 0 || !$issue)
 
-<p class="alert">Sorry, the requested issue could not be found.</p>
+  <p><strong class="alert">Sorry, the requested issue could not be found.</strong></p>
+
+#elseif ($copyToModules.isEmpty())
+  <p><strong class="alert">Sorry, there are no modules available as destination modules for this issue.</strong></p>
 
 #else
 
@@ -52,7 +56,7 @@
 #fieldErrorMsg($moveIssueGroup.ModuleId "")
 <select name="$moveIssueGroup.ModuleId.Key">
  <option>Select module...</option>
- #foreach ($module in $user.getModules($scarabG.Permission.ISSUE__ENTER))
+ #foreach ($module in $copyToModules)
   #if ($module.ModuleId.equals($scarabR.CurrentModule.ModuleId))
     <option selected="selected" value="$module.ModuleId">$module.Name</option>
   #else
