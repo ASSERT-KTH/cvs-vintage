@@ -19,6 +19,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import org.columba.core.config.ViewItem;
+import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.selection.SelectionListener;
@@ -27,8 +28,11 @@ import org.columba.core.gui.util.DialogStore;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.folder.command.CopyMessageCommand;
+import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.action.GlobalActionCollection;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.composer.HeaderController;
@@ -37,8 +41,10 @@ import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.table.action.ViewMessageAction;
 import org.columba.mail.gui.tree.TreeController;
+import org.columba.mail.gui.tree.TreeView;
 import org.columba.mail.gui.tree.action.ViewHeaderListAction;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
 
@@ -71,15 +77,13 @@ public class MailFrameController extends AbstractFrameController {
 
 	public MailFrameController(ViewItem viewItem) {
 		this("Mail", viewItem);
-		
+
 		list.add(this);
 
 	}
 
 	public MailFrameController(String id, ViewItem viewItem) {
 		super(id, viewItem);
-
-		
 
 	}
 
@@ -180,10 +184,9 @@ public class MailFrameController extends AbstractFrameController {
 	}
 
 	public void close() {
-		
 
 		tableController.saveColumnConfig();
-		
+
 		super.close();
 
 	}
@@ -245,10 +248,83 @@ public class MailFrameController extends AbstractFrameController {
 	 * @see org.columba.core.gui.frame.AbstractFrameController#saveAndClose()
 	 */
 	public void saveAndClose() {
-		
 
 		tableController.saveColumnConfig();
 		super.saveAndClose();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.frame.AbstractFrameController#executeCopyAction()
+	 */
+	public void executeCopyAction() {
+		ColumbaLogger.log.debug("copy action");
+
+		TableView table = tableController.getView();
+
+		// add current selection to clipboard
+
+		// copy action
+		MainInterface.clipboardManager.setOperation(
+			ClipboardManager.COPY_ACTION);
+
+		MainInterface.clipboardManager.setMessageSelection(getTableSelection());
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.frame.AbstractFrameController#executeCutAction()
+	 */
+	public void executeCutAction() {
+		ColumbaLogger.log.debug("cut action");
+
+		TableView table = tableController.getView();
+
+		// add current selection to clipboard
+
+		// cut action
+		MainInterface.clipboardManager.setOperation(
+			ClipboardManager.CUT_ACTION);
+
+		MainInterface.clipboardManager.setMessageSelection(getTableSelection());
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.frame.AbstractFrameController#executePasteAction()
+	 */
+	public void executePasteAction() {
+		ColumbaLogger.log.debug("paste action");
+
+		TableView table = tableController.getView();
+		TreeView tree = treeController.getView();
+
+		//if ( (table.hasFocus()) || (tree.hasFocus()) ) {
+
+		FolderCommandReference[] ref = new FolderCommandReference[2];
+
+		FolderCommandReference[] source =
+			MainInterface.clipboardManager.getMessageSelection();
+		if (source == null)
+			return;
+
+		ref[0] = source[0];
+		
+		FolderCommandReference[] dest = getTableSelection();
+		ref[1] = dest[0];
+
+		FolderCommand c = null;
+
+		if (MainInterface.clipboardManager.isCutAction())
+			c = new MoveMessageCommand(ref);
+		else
+			c = new CopyMessageCommand(ref);
+
+		MainInterface.clipboardManager.clearMessageSelection();
+
+		MainInterface.processor.addOp(c);
+
+		//}
+
 	}
 
 }

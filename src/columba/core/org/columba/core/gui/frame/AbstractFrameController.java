@@ -172,5 +172,11 @@ public abstract class AbstractFrameController {
 	public void setSelectionManager(SelectionManager selectionManager) {
 		this.selectionManager = selectionManager;
 	}
+	
+	public void executeCutAction() {};
+	public void executeCopyAction() {};
+	public void executePasteAction() {};
+	
+	
 
 }

@@ -37,6 +37,8 @@
 			<menuitem action="PreviousUnreadMessage" />
 		</menu>
 		<separator/>
+		<menuitem imenu="CharacterEncodingMenu" />
+		<separator/>
 		<menuitem action="ViewMessageSource"/>
 	</menu>
 	

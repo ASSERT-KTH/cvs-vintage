@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.core.gui;
 
+import org.columba.mail.command.FolderCommandReference;
+
 /**
  * @author frd
  *
@@ -25,4 +27,41 @@ package org.columba.core.gui;
  */
 public class ClipboardManager {
 
+	protected FolderCommandReference[] messageSelection;
+	protected int cutAction;
+	
+	public static final int CUT_ACTION = 0;
+	public static final int COPY_ACTION = 1;
+	
+	
+	public ClipboardManager()
+	{
+	}
+	
+	public void setOperation( int op)
+	{
+		cutAction = op;
+	}
+	
+	public boolean isCutAction()
+	{
+		boolean b = cutAction == CUT_ACTION;
+		
+		return b;
+	}
+	
+	public void setMessageSelection( FolderCommandReference[] r)
+	{
+		this.messageSelection = r;
+	}
+	
+	public FolderCommandReference[] getMessageSelection()
+	{
+		return messageSelection;
+	}
+	
+	public void clearMessageSelection()
+	{
+		messageSelection = null;
+	}
 }

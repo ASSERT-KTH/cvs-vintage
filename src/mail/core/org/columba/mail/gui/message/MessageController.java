@@ -34,6 +34,8 @@ import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 
 import org.columba.core.config.Config;
+import org.columba.core.util.CharsetEvent;
+import org.columba.core.util.CharsetListener;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Decoder;
@@ -58,7 +60,7 @@ public class MessageController
 	implements
 		MessageSelectionListener,
 		HyperlinkListener,
-		MouseListener //implements CharsetListener
+		MouseListener, CharsetListener
 {
 
 	private Folder folder;
@@ -427,6 +429,14 @@ public class MessageController
 	 */
 	public MailFrameController getMailFrameController() {
 		return mailFrameController;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.util.CharsetListener#charsetChanged(org.columba.core.util.CharsetEvent)
+	 */
+	public void charsetChanged(CharsetEvent e) {
+		activeCharset = e.getValue();
+
 	}
 
 }

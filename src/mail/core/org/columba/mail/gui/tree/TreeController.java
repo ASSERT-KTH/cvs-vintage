@@ -80,7 +80,7 @@ TreeWillExpandListener //, TreeNodeChangeListener
 		this.model = model;
 		this.mailFrameController = mailFrameController;
 
-		view = new TreeView(model);
+		view = new TreeView(mailFrameController, model);
 
 		actionListener = new FolderTreeActionListener(this);
 

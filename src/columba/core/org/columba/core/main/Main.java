@@ -33,6 +33,7 @@ import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
+import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.frame.FrameModelManager;
 import org.columba.core.gui.menu.MenuPluginHandler;
@@ -159,6 +160,8 @@ public class Main {
 				ThemeSwitcher.setTheme();
 
 				doGuiInits();
+				
+				MainInterface.clipboardManager = new ClipboardManager();
 
 				new ImageLoader();
 

@@ -112,17 +112,18 @@ public class CharsetManager implements ActionListener{
 		selectedId = 0;	// Todo: Make the menu remember its last setting
 	}
 
-	public JMenu createMenu(MouseListener handler) {
-		JMenu subMenu, subsubMenu;
+	public void createMenu(JMenu subMenu, MouseListener handler) {
+		JMenu subsubMenu;
 		CharsetMenuItem menuItem;
 
 		int groupSize = Array.getLength(groups);
 		int charsetSize = Array.getLength(charsets);
 
+		/*
 		subMenu =
 			new CMenu(MailResourceLoader.getString("menu","mainframe", "menu_view_charset"));
 		subMenu.setIcon( ImageLoader.getImageIcon("stock_font_16.png"));
-
+		*/
 
 		selectedMenuItem = new CharsetMenuItem( 
 				MailResourceLoader.getString("menu","mainframe", "menu_view_charset_"+charsets[0]),
@@ -169,7 +170,6 @@ public class CharsetManager implements ActionListener{
 			}
 		}
 
-		return subMenu;
 	}
 
 	/**

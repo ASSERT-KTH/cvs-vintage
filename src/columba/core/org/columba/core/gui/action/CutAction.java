@@ -24,6 +24,9 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.table.TableView;
 import org.columba.mail.util.MailResourceLoader;
 
 public class CutAction extends FrameAction {
@@ -52,6 +55,14 @@ public class CutAction extends FrameAction {
 			'T',
 			KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK),
 			false);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		getFrameController().executeCutAction();
+		
 	}
 
 }

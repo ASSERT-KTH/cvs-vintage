@@ -20,6 +20,7 @@
 	
 	<menu name="menu_view" extensionpoint="bottom">
 		<menuitem checkboxaction="ViewAddressbook"/>
+		<menuitem imenu="CharacterEncodingMenu" />
 	</menu>
 	
 	<menu name="menu_message">

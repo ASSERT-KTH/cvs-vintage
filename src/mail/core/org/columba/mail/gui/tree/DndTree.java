@@ -57,6 +57,7 @@ import javax.swing.tree.TreePath;
 
 import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.tree.util.CArrowImage;
 import org.columba.mail.gui.tree.util.CTransferableTreePath;
 
@@ -78,6 +79,8 @@ public class DndTree
 	private Point _ptOffset = new Point();
 	// Where, in the drag image, the mouse was clicked
 
+	MailFrameController frameController;
+
 	// Constructors...
 	public DndTree() // Use the default JTree constructor so that we get a sample TreeModel built for us
 	{
@@ -97,8 +100,10 @@ public class DndTree
 
 	}
 
-	public DndTree(TreeModel model) {
+	public DndTree(MailFrameController frameController, TreeModel model) {
 		super(model);
+		this.frameController = frameController;
+
 		putClientProperty("JTree.lineStyle", "Angled"); // I like this look
 
 		// Make this JTree a drag source
@@ -298,17 +303,20 @@ public class DndTree
 				paintImmediately(_raGhost.getBounds());
 				// Rub out the last ghost image and cue line
 				// And remember where we are about to draw the new ghost image
-				_raGhost.setRect(
-					pt.x - _ptOffset.x,
-					pt.y - _ptOffset.y,
-					_imgGhost.getWidth(),
-					_imgGhost.getHeight());
-				g2.drawImage(
-					_imgGhost,
-					AffineTransform.getTranslateInstance(
-						_raGhost.getX(),
-						_raGhost.getY()),
-					null);
+				if (_imgGhost != null) {
+
+					_raGhost.setRect(
+						pt.x - _ptOffset.x,
+						pt.y - _ptOffset.y,
+						_imgGhost.getWidth(),
+						_imgGhost.getHeight());
+					g2.drawImage(
+						_imgGhost,
+						AffineTransform.getTranslateInstance(
+							_raGhost.getX(),
+							_raGhost.getY()),
+						null);
+				}
 			} else // Just rub out the last cue line
 				paintImmediately(_raCueLine.getBounds());
 

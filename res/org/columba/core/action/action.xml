@@ -7,8 +7,7 @@
  <action name="OpenNewAddressbookWindow" class="org.columba.core.gui.action.OpenNewAddressbookWindowAction"/>
  <action name="OpenNewMessageFrameWindow" class="org.columba.core.gui.action.OpenNewMessageFrameWindowAction"/>
  
- <action name="ReceiveMenu" class="org.columba.mail.pop3.FetchMessageSubMenu"/>
- <action name="ManageServerMenu" class="org.columba.mail.pop3.ManageServerSubMenu"/>
+ 
  <action name="Cut" class="org.columba.core.gui.action.CutAction"/>
  <action name="Copy" class="org.columba.core.gui.action.CopyAction"/>
  <action name="Paste" class="org.columba.core.gui.action.PasteAction"/>

@@ -20,6 +20,7 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
+import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.frame.FrameModelManager;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.shutdown.ShutdownManager;
@@ -57,6 +58,8 @@ public class MainInterface {
 	public static ShutdownManager shutdownManager;
 
 	public static FrameModelManager frameModelManager;
+	
+	public static ClipboardManager clipboardManager;
 
 	public MainInterface() {
 	}

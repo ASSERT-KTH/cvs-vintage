@@ -12,6 +12,9 @@
  <action name="SortMessagesMenu" class="org.columba.mail.gui.table.action.SortMessagesMenu"/>
  <action name="ThreadedView" class="org.columba.mail.gui.table.action.ThreadedViewAction"/>
  <action name="ViewMessageSource" class="org.columba.mail.gui.table.action.ViewMessageSourceAction"/>
+ <action name="ReceiveMenu" class="org.columba.mail.pop3.FetchMessageSubMenu"/>
+ <action name="ManageServerMenu" class="org.columba.mail.pop3.ManageServerSubMenu"/>
+ <action name="CharacterEncodingMenu" class="org.columba.mail.gui.util.CharacterEncodingSubMenu"/>
  
  <!-- message menu -->
  <action name="OpenMessageWithComposer" class="org.columba.mail.gui.table.action.OpenMessageWithComposerAction"/>
