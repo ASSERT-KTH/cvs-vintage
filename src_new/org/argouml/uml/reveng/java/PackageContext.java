@@ -1,4 +1,4 @@
-// $Id: PackageContext.java,v 1.4 2001/05/27 19:24:59 marcus Exp $
+// $Id: PackageContext.java,v 1.5 2001/05/30 16:24:52 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -155,7 +155,7 @@ class PackageContext extends Context
 	    }
 	}
 	if(mClassifier == null) {
-	    throw new ClassifierNotFoundException("name");
+	    throw new ClassifierNotFoundException(name);
 	}
 
 	return mClassifier;
