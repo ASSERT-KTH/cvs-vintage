@@ -22,7 +22,7 @@ $page.setTitle("Attribute Editor")
   <tr>
     <td><strong>Screen options:</strong></td>
     <td rowspan="2"><img src="$data.Request.ContextPath/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-    <td><strong>Atribute group options:</strong></td>
+    <td><strong>Attribute group options:</strong></td>
     <td rowspan="2"><img src="$data.Request.ContextPath/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
   </tr>
   <tr>
@@ -108,9 +108,6 @@ most recent artifact instance comments (otherwise, a link will appear to a seper
  </tr>
  #end
 
-<form method="get" action="$link.setPage("admin,ArtifactTypeEdit.vm")">
-  <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
-  <input type="hidden" name="nextTemplate" value="admin,ArtifactTypeEdit.vm" />
   #set ($agGroup = $intake.AttributeGroup.mapTo($group))
   #indexedRows($velocityCount)
   <td><input type="checkbox" name="delete_group_$group.AttributeGroupId" /></td>
@@ -130,7 +127,7 @@ most recent artifact instance comments (otherwise, a link will appear to a seper
   <tr>
     <td><strong>Screen options:</strong></td>
     <td rowspan="2"><img src="$data.Request.ContextPath/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-    <td><strong>Atribute group options:</strong></td>
+    <td><strong>Attribute group options:</strong></td>
     <td rowspan="2"><img src="$data.Request.ContextPath/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
   </tr>
   <tr>

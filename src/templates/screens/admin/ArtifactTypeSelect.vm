@@ -96,4 +96,6 @@ $page.setTitle("Artifact Type Select")
 </div>
         
 #end
+    </div>
+</form>
 </div>
