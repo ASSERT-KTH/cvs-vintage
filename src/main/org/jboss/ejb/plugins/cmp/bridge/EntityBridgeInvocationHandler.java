@@ -33,7 +33,7 @@ import org.jboss.proxy.InvocationHandler;
  *      One per cmp entity bean instance, including beans in pool.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */                            
 public class EntityBridgeInvocationHandler implements InvocationHandler {
    protected EntityContainer container;
@@ -44,10 +44,23 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
    protected Map cmrFieldMap;
    protected Map selectorMap;
    
-   public EntityBridgeInvocationHandler(EntityContainer container, EntityBridge entityBridge, Class beanClass) throws Exception {
+   /**
+    * Creates an invocation handler for the specified entity.
+    * @param container the container for this class handles invocations
+    * @param entityBridge the bridge that will be called in response to 
+    *    in invocation
+    * @param beanClass the implementation class for the ejb
+    * @throws Exception if a problem occures while setting up the method maps
+    */
+   public EntityBridgeInvocationHandler(
+         EntityContainer container,
+         EntityBridge entityBridge,
+         Class beanClass) throws Exception {
+
       this.container = container;
       this.entityBridge = entityBridge;
       this.beanClass = beanClass;
+
       Map abstractAccessors = getAbstractAccessors();
       setupCMPFieldMap(abstractAccessors);
       setupCMRFieldMap(abstractAccessors);
@@ -62,7 +75,9 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
       this.ctx = ctx;
    }
    
-   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+   public Object invoke(Object proxy, Method method, Object[] args)
+         throws Throwable {
+
       String methodName = method.getName();
       
       // is this a cmp field accessor
@@ -72,12 +87,15 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
             return cmpField.getInstanceValue(ctx);
          } else if(methodName.startsWith("set")) {
             if(cmpField.isReadOnly()) {
-               throw new EJBException("Field is read-only: " + cmpField.getFieldName());
+               throw new EJBException("Field is read-only: " +
+                     cmpField.getFieldName());
             }
             cmpField.setInstanceValue(ctx, args[0]);
             return null;
          }
-         Exception e = new EJBException("Unknown cmp field method: " + methodName);
+         Exception e = new EJBException("Unknown cmp field method: " +
+               methodName);
+
          e.printStackTrace();
          throw e;
       }
@@ -119,7 +137,9 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
       return abstractAccessors;
    }
    
-   protected void setupCMPFieldMap(Map abstractAccessors) throws DeploymentException {
+   protected void setupCMPFieldMap(Map abstractAccessors)
+         throws DeploymentException {
+
       CMPFieldBridge[] cmpFields = entityBridge.getCMPFields();
       cmpFieldMap = new HashMap(cmpFields.length * 2);
    
@@ -129,33 +149,45 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
       }
    }
 
-   protected void setupCMPFieldGetter(Map abstractAccessors, CMPFieldBridge cmpField)  throws DeploymentException {
+   protected void setupCMPFieldGetter(
+         Map abstractAccessors,
+         CMPFieldBridge cmpField)  throws DeploymentException {
+
       String fieldName = cmpField.getFieldName();
-      String getterName = "get" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+      String getterName = "get" + Character.toUpperCase(fieldName.charAt(0)) +
+            fieldName.substring(1);
    
       Method getterMethod = (Method)abstractAccessors.get(getterName);
       if(getterMethod != null) {
          cmpFieldMap.put(getterMethod, cmpField);
          abstractAccessors.remove(getterName);
       } else {
-         throw new DeploymentException("No getter found for cmp field: " + fieldName);
+         throw new DeploymentException("No getter found for cmp field: " +
+               fieldName);
       }
    }
    
-   protected void setupCMPFieldSetter(Map abstractAccessors, CMPFieldBridge cmpField)  throws DeploymentException {
+   protected void setupCMPFieldSetter(
+         Map abstractAccessors,
+         CMPFieldBridge cmpField)  throws DeploymentException {
+
       String fieldName = cmpField.getFieldName();
-      String setterName = "set" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+      String setterName = "set" + Character.toUpperCase(fieldName.charAt(0)) +
+            fieldName.substring(1);
    
       Method setterMethod = (Method)abstractAccessors.get(setterName);
       if(setterMethod != null) {
          cmpFieldMap.put(setterMethod, cmpField);
          abstractAccessors.remove(setterName);
       } else {
-         throw new DeploymentException("No setter found for cmp field: " + fieldName);
+         throw new DeploymentException("No setter found for cmp field: " +
+               fieldName);
       }
    }
    
-   protected void setupCMRFieldMap(Map abstractAccessors) throws DeploymentException {
+   protected void setupCMRFieldMap(Map abstractAccessors)
+         throws DeploymentException {
+
       CMRFieldBridge[] cmrFields = entityBridge.getCMRFields();
       cmrFieldMap = new HashMap(cmrFields.length * 2);
    
@@ -169,9 +201,13 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
       }
    }
 
-   protected void setupCMRFieldGetter(Map abstractAccessors, CMRFieldBridge cmrField) throws DeploymentException {
+   protected void setupCMRFieldGetter(
+         Map abstractAccessors,
+         CMRFieldBridge cmrField) throws DeploymentException {
+
       String fieldName = cmrField.getFieldName();
-      String getterName = "get" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+      String getterName = "get" + Character.toUpperCase(fieldName.charAt(0)) +
+            fieldName.substring(1);
    
       Method getterMethod = (Method)abstractAccessors.get(getterName);
       if(getterMethod != null) {
@@ -180,9 +216,13 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
       }
    }
    
-   protected void setupCMRFieldSetter(Map abstractAccessors, CMRFieldBridge cmrField) throws DeploymentException {
+   protected void setupCMRFieldSetter(
+         Map abstractAccessors,
+         CMRFieldBridge cmrField) throws DeploymentException {
+      
       String fieldName = cmrField.getFieldName();
-      String setterName = "set" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+      String setterName = "set" + Character.toUpperCase(fieldName.charAt(0)) +
+            fieldName.substring(1);
    
       Method setterMethod = (Method)abstractAccessors.get(setterName);
       if(setterMethod != null) {
