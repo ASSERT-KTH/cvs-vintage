@@ -8,13 +8,30 @@ $l10n.YouCanViewIssue
 
 $l10n.ModificationsMade
 
-#foreach( $activity in $activityList)
-#if ($activity.Attachment.Data)
-$activity.Attachment.Data  
+#set ($actAttData = $activity.Attachment.Data)
+#set ($firstTime = true)
+#foreach ($activity in $activityList)
+#if ($actAttData)
+$actAttData
+#elseif ($activity.Depend)
+## This is a hack, we are in a loop, so check to see if the
+## second activity Description (there are only two in this case)
+## is a duplicate of the first. The weird spacing is thanks to Velocity.
+    #if ($firstTime)
+        #set ($prevMessage = $activity.Description)
+
+$prevMessage
+        #set ($firstTime = false)
+    #else
+        #if (!$prevMessage.equals($activity.Description))
+
+$activity.Description
+        #end
+    #end
 #else
 $activity.Description
 
-#if ($attachment.Data)
+#if ($attachment.Data && ! $attachment.Data.toString().equals($activity.Description.toString()))
 $l10n.Comment
 $attachment.Data
 #end  
@@ -22,4 +39,3 @@ $attachment.Data
 #end
 
 #end
-
