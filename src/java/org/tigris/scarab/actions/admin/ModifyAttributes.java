@@ -55,6 +55,8 @@ import org.apache.turbine.util.*;
 import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
 import org.apache.turbine.om.StringKey;
+import org.apache.turbine.om.ObjectKey;
+import org.apache.turbine.om.NumberKey;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.pull.ApplicationTool;
@@ -69,7 +71,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyAttributes.java,v 1.2 2001/04/09 00:07:49 jon Exp $
+    @version $Id: ModifyAttributes.java,v 1.3 2001/04/09 02:46:42 jon Exp $
 */
 public class ModifyAttributes extends VelocityAction
 {
@@ -150,6 +152,51 @@ public class ModifyAttributes extends VelocityAction
     }
 
     /**
+     * Used on AttributeEdit.vm to change the attribute type for 
+     * an Attribute.
+     */
+    public void doModifyattributetype( RunData data, Context context )
+        throws Exception
+    {
+        IntakeTool intake = (IntakeTool)context
+           .get(ScarabConstants.INTAKE_TOOL);
+
+        if ( intake.isAllValid() )
+        {
+            Group attribute = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
+            String attributeID = attribute.get("Id").toString();
+            Group attributeType = intake.get("AttributeType", IntakeTool.DEFAULT_KEY);
+            String attributeTypeID = attributeType.get("AttributeTypeId").toString();
+
+            Attribute attr = Attribute.getInstance((ObjectKey)new NumberKey(attributeID));
+            attr.setTypeId(new NumberKey(attributeTypeID));
+            attr.save();
+        }
+    }
+
+    /**
+     * Used on AttributeEdit.vm to change the attribute name for
+     * an Attribute.
+     */
+    public void doModifyattributename( RunData data, Context context )
+        throws Exception
+    {
+        IntakeTool intake = (IntakeTool)context
+           .get(ScarabConstants.INTAKE_TOOL);
+
+        if ( intake.isAllValid() )
+        {
+            Group attribute = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
+            String attributeID = attribute.get("Id").toString();
+            String attributeName = attribute.get("Name").toString();
+
+            Attribute attr = Attribute.getInstance((ObjectKey)new NumberKey(attributeID));
+            attr.setName(attributeName);
+            attr.save();
+        }
+    }
+
+    /**
      * Used on AttributeEditOptions.vm to change the name of an existing
      * AttributeOption or add a new one if the name doesn't already exist.
      */
@@ -166,7 +213,7 @@ public class ModifyAttributes extends VelocityAction
 
         setTemplate(data, nextTemplate);
     }
-    
+
     /**
      * Used on AttributeEditOptions.vm to change the name of an existing
      * AttributeOption or add a new one if the name doesn't already exist.

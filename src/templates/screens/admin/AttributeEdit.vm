@@ -10,8 +10,10 @@ $page.setTitle("Attribute Editor")
 <p>This Attribute has the following Attribute Options (in order):</p>
 
 <blockquote><i>
+#set ( $comma = "" )
 #foreach ($option in $attOptions)
-$option.DisplayValue,
+$comma$option.DisplayValue
+#set ( $comma = ", " )
 #end
 </i></blockquote>
 #end
@@ -34,13 +36,15 @@ In order to modify this attribute, please choose from the options below:
 
   <p>
     <form action="$link.setPage("admin,AttributeEdit.vm")" method="POST">
+        <input type="hidden" name="action" value="admin.ModifyAttributes">
+
         #set ( $attgroup = $intake.Attribute.Default )
         <input type="hidden" name="$attgroup.CID" value="$attgroup.OID">
         <input type="hidden" name="$attgroup.Id.Key" value="$attribute.AttributeId">
-<!-- fix me! not sure what goes here for the type="text" below...-->
-        <input type="text" name="$attgroup.Name.Key" value="$attribute.Name">
+
+        <input type="text" name="$attgroup.get("Name").Key" value="$attribute.Name">
         <input type="submit" name="eventSubmit_doModifyattributename" value="Modify Name">
-        <input type="submit" name="eventSubmit_doDeleteattribute" value="Delete Attribute">
+        <!-- <input type="submit" name="eventSubmit_doDeleteattribute" value="Delete Attribute"> -->
     </form>
   </p>
 
