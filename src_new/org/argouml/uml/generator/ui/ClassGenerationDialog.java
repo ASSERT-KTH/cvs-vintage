@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.34 2004/10/28 05:46:05 linus Exp $
+// $Id: ClassGenerationDialog.java,v 1.35 2004/10/28 06:14:47 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -565,7 +565,11 @@ public class ClassGenerationDialog
                 }
                 return "(anon)";
             } else if (col >= 0 && col < getLanguagesCount()) {
-                return Boolean.valueOf(checked[col].contains(cls));
+                if (checked[col].contains(cls)) {
+                    return Boolean.TRUE;
+                } else {
+                    return Boolean.FALSE;
+                }
             } else {
                 return "CC-r:" + row + " c:" + col;
             }
