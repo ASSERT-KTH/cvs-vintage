@@ -82,7 +82,7 @@
 <td>Please enter a reason for the changes made above before saving.
    #fieldErrorMsg($attCommentGroup.DataAsString "")
    
-   <p>< #textAreaMedium() name="$attCommentGroup.DataAsString.Key"
+   <p><#textAreaMedium() name="$attCommentGroup.DataAsString.Key"
            >$!attCommentGroup.DataAsString.Value</textarea></p>
    <input type="hidden" name="$attCommentGroup.Name.Key" value="comment" />
 </td>
