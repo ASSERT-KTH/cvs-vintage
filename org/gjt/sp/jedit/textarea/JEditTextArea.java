@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.31 2001/11/23 09:08:49 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.32 2001/11/23 09:11:31 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3687,8 +3687,7 @@ loop:		for(int i = caretLine + 1; i < getLineCount(); i++)
 			getToolkit().beep();
 			return;
 		}
-		int maxLineLength = ((Integer)buffer.getProperty("maxLineLen"))
-			.intValue();
+		int maxLineLength = (buffer.getIntegerProperty("maxLineLen",0);
 		if(maxLineLength <= 0)
 		{
 			getToolkit().beep();
@@ -4582,8 +4581,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	//{{{ doWordWrap() method
 	private boolean doWordWrap(int line, boolean spaceInserted)
 	{
-		int maxLineLen = ((Integer)buffer.getProperty("maxLineLen"))
-			.intValue();
+		int maxLineLen = buffer.getIntegerProperty("maxLineLen",0);
 
 		if(maxLineLen <= 0)
 			return false;
