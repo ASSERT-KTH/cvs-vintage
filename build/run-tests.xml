@@ -47,10 +47,6 @@
     </java>
   </target>
 
-  <target name="test-all-old" depends="test-issue,
-                                   test-attribute,
-                                   test-query"/>
-
   <target name="test-issue" depends="compile">
     <echo>Running Issue tests...</echo>
 
@@ -115,6 +111,33 @@
       </classpath>
     </java>
   </target>
+
+  <target name="test-activity" depends="compile">
+    <echo>Running Activity tests...</echo>
+
+    <java     classname="${test.runner}" fork="yes" 
+            failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.om.ActivityTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="test-attachment" depends="compile">
+    <echo>Running Activity tests...</echo>
+
+    <java     classname="${test.runner}" fork="yes" 
+            failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.om.AttachmentTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
 
   <target name="test-scarabmodule" depends="compile">
     <echo>Running ScarabModule tests...</echo>
