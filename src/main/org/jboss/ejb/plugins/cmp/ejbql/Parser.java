@@ -63,7 +63,7 @@ public abstract class Parser {
 		if(completeMatches.size() > 1) {
 			throw new IllegalStateException("Multiple assemblies matched: "+set.size());
 		}
-		return (Assembly)completeMatches.iterator().next();;
+		return (Assembly)completeMatches.iterator().next();
 	}
 	
 	public void setAssembler(Assembler assembler) {
