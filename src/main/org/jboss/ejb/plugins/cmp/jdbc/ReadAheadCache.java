@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  * basis. The read ahead data for each entity is stored with a soft reference.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class ReadAheadCache {
    /**
@@ -134,13 +134,31 @@ public class ReadAheadCache {
       if(dereferencedResults.isEmpty()) {
          return;
       }
-      
-      // remove all lists from the dereferenced set that are still referenced
-      // in the listMap
-      iter =  listMap.values().iterator();
-      while(iter.hasNext()) {
-         EntityMapEntry entry = (EntityMapEntry)iter.next();
-         dereferencedResults.remove(entry.results);
+
+      //      
+      // Go through the dereferenced results set and look at the PKs for each
+      // dereferenced list.  If you find one key that references the
+      // dereferenced list, remove it from the dereferenced results set and
+      // move on to the next dereferenced results.
+      //
+      iter = dereferencedResults.iterator();
+      while (iter.hasNext()) {
+         List dereferencedList = (List) iter.next();
+
+         boolean listHasReference = false;
+         Iterator iter2 = dereferencedList.iterator();
+         while (!listHasReference &&
+                iter2.hasNext()) {
+            EntityMapEntry entry = (EntityMapEntry) listMap.get(iter2.next());
+            if(entry != null && entry.results == dereferencedList) {
+               listHasReference = true;
+            }
+         }
+
+         if(listHasReference) {
+           // this list does not have any references 
+           iter.remove();
+         }
       }
 
       // if we don't have any dereferenced results at this point we are done
