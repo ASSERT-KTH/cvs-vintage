@@ -77,8 +77,8 @@
         <field name="Deleted" key="del" type="boolean" />
 </group>
 
-<group class="Login" key="login">
-    <field name="Username" key="u" type="String">
+<group class="Login" key="login" mapToObject="om.ScarabUser">
+    <field name="Username" key="u" type="String" mapToProperty="Username">
         <rule minLength="1">Please enter a username</rule>
     </field>
     <field name="Password" key="p" type="String">
