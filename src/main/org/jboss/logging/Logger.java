@@ -17,7 +17,7 @@ import org.apache.log4j.Priority;
  * @see #trace(Object, Throwable)
 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class Logger
 {
@@ -25,6 +25,11 @@ public class Logger
 
    // Attributes ----------------------------------------------------
    private Category log;
+
+   /**
+    * The analysis handler
+    */
+   private static LogAnalysis analysis = null;
 
    // Static --------------------------------------------------------
 
@@ -76,6 +81,8 @@ public class Logger
    */
    public void trace(Object message)
    {
+      if (analysis != null)
+        analysis.add(log, TracePriority.TRACE);
       log.log(TracePriority.TRACE, message);
    }
    /** Issue a log msg and throwable with a priority of TRACE.
@@ -83,6 +90,8 @@ public class Logger
    */
    public void trace(Object message, Throwable t)
    {
+      if (analysis != null)
+        analysis.add(log, TracePriority.TRACE);
       log.log(TracePriority.TRACE, message, t);
    }
 
@@ -103,6 +112,8 @@ public class Logger
    */
    public void debug(Object message)
    {
+      if (analysis != null)
+        analysis.add(log, Priority.DEBUG);
       log.log(Priority.DEBUG, message);
    }
    /** Issue a log msg and throwable with a priority of DEBUG.
@@ -110,6 +121,8 @@ public class Logger
    */
    public void debug(Object message, Throwable t)
    {
+      if (analysis != null)
+        analysis.add(log, Priority.DEBUG);
       log.log(Priority.DEBUG, message, t);
    }
 
@@ -130,6 +143,8 @@ public class Logger
    */
    public void info(Object message)
    {
+      if (analysis != null)
+        analysis.add(log, Priority.INFO);
       log.log(Priority.INFO, message);
    }
    /** Issue a log msg and throwable with a priority of INFO.
@@ -137,6 +152,8 @@ public class Logger
    */
    public void info(Object message, Throwable t)
    {
+      if (analysis != null)
+        analysis.add(log, Priority.INFO);
       log.log(Priority.INFO, message, t);
    }
 
@@ -145,6 +162,8 @@ public class Logger
    */
    public void warn(Object message)
    {
+      if (analysis != null)
+        analysis.add(log, Priority.WARN);
       log.log(Priority.WARN, message);
    }
    /** Issue a log msg and throwable with a priority of WARN.
@@ -152,6 +171,8 @@ public class Logger
    */
    public void warn(Object message, Throwable t)
    {
+      if (analysis != null)
+        analysis.add(log, Priority.WARN);
       log.log(Priority.WARN, message, t);
    }
 
@@ -160,6 +181,8 @@ public class Logger
    */
    public void error(Object message)
    {
+      if (analysis != null)
+        analysis.add(log, Priority.ERROR);
       log.log(Priority.ERROR, message);
    }
    /** Issue a log msg and throwable with a priority of ERROR.
@@ -167,6 +190,8 @@ public class Logger
    */
    public void error(Object message, Throwable t)
    {
+      if (analysis != null)
+        analysis.add(log, Priority.ERROR);
       log.log(Priority.ERROR, message, t);
    }
 
@@ -175,6 +200,8 @@ public class Logger
    */
    public void fatal(Object message)
    {
+      if (analysis != null)
+        analysis.add(log, Priority.FATAL);
       log.log(Priority.FATAL, message);
    }
    /** Issue a log msg and throwable with a priority of FATAL.
@@ -182,6 +209,8 @@ public class Logger
    */
    public void fatal(Object message, Throwable t)
    {
+      if (analysis != null)
+        analysis.add(log, Priority.FATAL);
       log.log(Priority.FATAL, message, t);
    }
 
@@ -190,6 +219,8 @@ public class Logger
    */
    public void log(Priority p, Object message)
    {
+      if (analysis != null)
+        analysis.add(log, p);
       log.log(p, message);
    }
    /** Issue a log msg with the given priority.
@@ -197,6 +228,20 @@ public class Logger
    */
    public void log(Priority p, Object message, Throwable t)
    {
+      if (analysis != null)
+        analysis.add(log, p);
       log.log(p, message, t);
    }
+
+  // Package Private -----------------------------------------------
+
+  /**
+   * Set the analysis handler.
+   *
+   * @param value the analysis handler.
+   */
+  static void setAnalysis(LogAnalysis value)
+  {
+    analysis = value;
+  }
 }
