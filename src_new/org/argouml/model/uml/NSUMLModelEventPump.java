@@ -1,4 +1,4 @@
-// $Id: NSUMLModelEventPump.java,v 1.5 2005/02/26 00:58:01 bobtarling Exp $
+// $Id: NSUMLModelEventPump.java,v 1.6 2005/03/05 14:57:31 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -260,14 +260,18 @@ class NSUMLModelEventPump
     /**
      * Register an Action with the pump that is used to perform saving.
      * This action will be enabled by any change to the model.
-     * @param saveAction the action to enable on change to model.
+     * The param saveAction is the action to enable on change to model.
+     *
+     * @see org.argouml.model.ModelEventPump#setSaveAction(javax.swing.Action)
      */
-    public void setSaveAction(Action saveAction) {
-        this.saveAction = saveAction;
+    public void setSaveAction(Action theSaveAction) {
+        this.saveAction = theSaveAction;
     }
     
     /**
-     * Get the action that is registered with the pump that is used to perform saving.
+     * Get the action that is registered with the pump that is used 
+     * to perform saving.
+     * 
      * @return the relevant Action or null.
      */
     public Action getSaveAction() {
