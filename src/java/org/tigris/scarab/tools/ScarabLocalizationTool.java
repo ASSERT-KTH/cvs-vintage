@@ -88,7 +88,7 @@ public class ScarabLocalizationTool extends LocalizationTool
      * The Locale to be used, if the Resource could not be found in
      * one of the Locales specified in the Browser's language preferences.
      */
-    private static Locale LAST_RESORT = new Locale("en");
+    private static Locale LAST_RESORT = new Locale("en","");
 
     /**
      * The portion of a key denoting the default scope 
