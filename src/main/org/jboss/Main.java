@@ -32,7 +32,7 @@ import org.jboss.security.SecurityAssociation;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
  *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.33 $
+ *   @version $Revision: 1.34 $
  */
 public class Main
 {
@@ -87,7 +87,7 @@ public class Main
           URL loginConfig = Main.class.getClassLoader().getResource(confName+"/auth.conf");
           if( loginConfig != null )
           {
-              System.getProperty("java.security.auth.login.config", loginConfig.toExternalForm());
+              System.setProperty("java.security.auth.login.config", loginConfig.toExternalForm());
               System.out.println("Using JAAS LoginConfig: "+loginConfig.toExternalForm());
           }
           else
