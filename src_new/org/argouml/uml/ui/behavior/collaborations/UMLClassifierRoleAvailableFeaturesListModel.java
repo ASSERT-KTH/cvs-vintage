@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAvailableFeaturesListModel.java,v 1.17 2004/11/01 19:55:08 mvw Exp $
+// $Id: UMLClassifierRoleAvailableFeaturesListModel.java,v 1.18 2004/12/20 10:46:34 mvw Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,6 +57,8 @@ public class UMLClassifierRoleAvailableFeaturesListModel
     }
 
     /**
+     * TODO: Why this function that the other models do not need?
+     * 
      * @see
      * ru.novosoft.uml.MElementListener#roleAdded(ru.novosoft.uml.MElementEvent)
      */
@@ -79,6 +81,8 @@ public class UMLClassifierRoleAvailableFeaturesListModel
     }
 
     /**
+     * TODO: Why this function that the other models do not need?
+     * 
      * @see
      * org.argouml.uml.ui.UMLModelElementListModel2#setTarget(java.lang.Object)
      */
@@ -135,6 +139,8 @@ public class UMLClassifierRoleAvailableFeaturesListModel
     }
 
     /**
+     * TODO: Why this function that the other models do not need?
+     * 
      * @see ru.novosoft.uml.MElementListener#roleRemoved(ru.novosoft.uml.MElementEvent)
      */
     public void roleRemoved(MElementEvent e) {
