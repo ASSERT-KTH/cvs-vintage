@@ -123,7 +123,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.92 2003/04/17 01:36:41 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.93 2003/04/17 23:50:51 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -176,8 +176,6 @@ public abstract class AbstractScarabModule
 
     private List parentModules = null;
 
-    private String domain = null;
-
     /** set to true while the setInitialAttributesAndIssueTypes() method is in process */
     private boolean isInitializing = false;
 
@@ -187,24 +185,6 @@ public abstract class AbstractScarabModule
     protected void resetAncestors()
     {
         parentModules = null;
-    }
-
-    /**
-     * Get the value of domain.
-     * @return value of domain.
-     */
-    public String getDomain() 
-    {
-        return domain;
-    }
-    
-    /**
-     * Set the value of domain.
-     * @param v  Value to assign to domain.
-     */
-    public void setDomain(String  v) 
-    {
-        this.domain = v;
     }
 
     /**
