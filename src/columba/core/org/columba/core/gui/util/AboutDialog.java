@@ -16,23 +16,41 @@
 
 package org.columba.core.gui.util;
 
-import org.columba.core.main.MainInterface;
-import org.columba.core.util.GlobalResourceLoader;
-
-import org.columba.mail.gui.util.AddressLabel;
-import org.columba.mail.gui.util.URLLabel;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.text.NumberFormat;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
+import org.columba.core.main.MainInterface;
+import org.columba.core.util.GlobalResourceLoader;
+import org.columba.mail.gui.util.AddressLabel;
+import org.columba.mail.gui.util.URLLabel;
 
 public class AboutDialog extends JDialog implements ActionListener {
     public static final String CMD_CLOSE = "CLOSE";
@@ -145,7 +163,7 @@ public class AboutDialog extends JDialog implements ActionListener {
         contributorPanel.add(new JScrollPane(contributorList));
         
         tabbedPane.addTab("Contributors", contributorPanel);
-        if (true) {
+        if (MainInterface.DEBUG) {
                 tabbedPane.addTab("Memory", new MemoryPanel());
         }
         
