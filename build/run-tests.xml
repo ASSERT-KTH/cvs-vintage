@@ -65,7 +65,7 @@
 	</java>
   </target>
 
-  <target name="test-all" depends="test-all-om, test-all-util">
+  <target name="test-all" depends="test-all-util, test-all-om">
   </target>
 
   <target name="test-all-util" depends="compile">
