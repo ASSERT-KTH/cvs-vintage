@@ -66,7 +66,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.16 2001/05/24 02:39:21 jmcnally Exp $
+    @version $Id: ScarabUser.java,v 1.17 2001/05/31 01:44:51 jon Exp $
 */
 public class ScarabUser extends BaseScarabUser
 {    
@@ -164,9 +164,11 @@ public class ScarabUser extends BaseScarabUser
                 return true;
 
             // FIXME: once i figure out how to build an OR in a Criteria i won't need this.
+            // We check to see if the user is already confirmed because that should
+            // result in a True as well.
             criteria = new Criteria();
             criteria.add (ScarabUserPeer.getColumnName(User.USERNAME), username);
-            criteria.add (ScarabUserPeer.getColumnName(User.CONFIRM_VALUE), ScarabUserPeer.CONFIRM_DATA);
+            criteria.add (ScarabUserPeer.getColumnName(User.CONFIRM_VALUE), User.CONFIRM_DATA);
             criteria.setSingleRecord(true);
             result = ScarabUserPeer.doSelect(criteria);
             if (result.size() > 0)

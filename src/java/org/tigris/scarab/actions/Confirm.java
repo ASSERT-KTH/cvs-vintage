@@ -71,7 +71,7 @@ import org.tigris.scarab.util.*;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Confirm.java,v 1.6 2001/05/09 01:51:34 jmcnally Exp $
+    @version $Id: Confirm.java,v 1.7 2001/05/31 01:44:51 jon Exp $
 */
 public class Confirm extends VelocityAction
 {
@@ -86,7 +86,7 @@ public class Confirm extends VelocityAction
             ScarabConstants.NEXT_TEMPLATE, template );
 
         String username = data.getParameters().getString ( "Email", "" );
-        String confirm = data.getParameters().getString ( "Confirmed", "" );
+        String confirm = data.getParameters().getString ( "Confirm", "" );
 
         // check to see if the user's confirmation code is valid.
         if (ScarabUser.checkConfirmationCode(username, confirm))

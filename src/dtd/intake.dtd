@@ -1,6 +1,6 @@
 <!-- 
     Intake XML input constraints DTD 
-    $Id: intake.dtd,v 1.5 2001/05/18 21:22:01 jmcnally Exp $
+    $Id: intake.dtd,v 1.6 2001/05/31 01:44:51 jon Exp $
 -->
 
 <!ELEMENT input-data (group+)>
