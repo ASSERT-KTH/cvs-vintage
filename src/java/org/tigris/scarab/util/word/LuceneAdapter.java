@@ -66,6 +66,7 @@ import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttributeValuePeer;
 import org.tigris.scarab.om.AttachmentPeer;
+import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.Log;
 
@@ -83,7 +84,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.20 2002/11/11 18:07:09 jmcnally Exp $
+ * @version $Id: LuceneAdapter.java,v 1.21 2002/12/10 15:50:40 jmcnally Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
@@ -534,6 +535,10 @@ public class LuceneAdapter
                 AttributeValuePeer.VALUE_ID, 
                 new Long(i), Criteria.LESS_EQUAL);
             crit.add(low.and(high));
+            crit.add(AttributeValuePeer.DELETED, false);
+            // don't index issues that have been deleted
+            crit.addJoin(AttributeValuePeer.ISSUE_ID, IssuePeer.ISSUE_ID);
+            crit.add(IssuePeer.DELETED, false);
             avs = AttributeValuePeer.doSelect(crit);
             if (!avs.isEmpty()) 
             {
@@ -572,6 +577,10 @@ public class LuceneAdapter
                 AttachmentPeer.ATTACHMENT_ID, 
                 new Long(i), Criteria.LESS_EQUAL);
             crit.add(low.and(high));
+            crit.add(AttachmentPeer.DELETED, false);
+            // don't index issues that have been deleted
+            crit.addJoin(AttachmentPeer.ISSUE_ID, IssuePeer.ISSUE_ID);
+            crit.add(IssuePeer.DELETED, false);
             atts = AttachmentPeer.doSelect(crit);
             if (!atts.isEmpty()) 
             {
