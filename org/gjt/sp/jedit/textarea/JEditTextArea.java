@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.223 2003/04/03 04:39:30 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.224 2003/04/03 04:40:12 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5416,7 +5416,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	} //}}}
 
 	//{{{ getExtraEndVirt() method
-	private void getExtraEndVirt(int caret, int newCaret)
+	private int getExtraEndVirt(int caret, int newCaret)
 	{
 		Selection s = getSelectionAtOffset(caret);
 		if(s instanceof Selection.Rect)
