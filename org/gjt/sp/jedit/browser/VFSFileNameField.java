@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.OperatingSystem;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSFileNameField.java,v 1.20 2004/04/19 05:59:30 spestov Exp $
+ * @version $Id: VFSFileNameField.java,v 1.21 2004/04/19 21:17:54 spestov Exp $
  * @since jEdit 4.2pre1
  */
 class VFSFileNameField extends HistoryTextField
@@ -282,6 +282,8 @@ class VFSFileNameField extends HistoryTextField
 				delegate.actionPerformed(evt);
 
 				String path = getText();
+
+				BrowserView view = browser.getBrowserView();
 
 				view.selectNone();
 
