@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.15 2001/08/28 02:08:18 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.16 2001/08/28 02:09:56 user57 Exp $ -->
 
 <project default="main">
 
@@ -74,7 +74,7 @@
   <!-- Module name(s) & version -->
   <property name="module.name" value="server"/>
   <property name="module.Name" value="JBoss Server"/>
-  <property name="module.version" value="2.5alpha"/>
+  <property name="module.version" value="unused"/>
 
 
   <!-- ================================================================== -->
