@@ -58,6 +58,7 @@ import org.apache.fulcrum.intake.model.Field;
 
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributeType;
 import org.tigris.scarab.om.AttributeTypeManager;
 import org.tigris.scarab.om.ROptionOption;
@@ -75,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.46 2003/05/02 23:32:25 jon Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.47 2003/05/03 00:07:04 jon Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -95,11 +96,12 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         if (intake.isAllValid())
         {
             Attribute attr = scarabR.getAttribute();
+
             Group attrGroup = null;
             boolean isDupe = false;
             Field attributeName = null;
             Field description = null;
-            if (attr == null || attr.getAttributeId() == null)
+            if (attr.getAttributeId() == null)
             {
                 // new attribute
                 attrGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);

@@ -1,10 +1,12 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
 
+<div class="app" id="div3-0-2-0">
+
+#if ($deleting)
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
 <input type="hidden" name="attId" value="$attribute.AttributeId" />
-#if ($deleting)
    <div class="warningmessage">
    $l10n.ConfirmDeleteAttribute
    #if ($attribute.hasModuleMappings())
@@ -13,9 +15,9 @@
        $l10n.AttrMappedToIssueTypes
    #end
    <p><input type="submit" value="$l10n.ConfirmDelete"  name="eventSubmit_doDeleteattribute" /></p>
+
 #else
 
-<div class="app" id="div3-0-2-0">
 #if ($attribute.AttributeId)
    #set ($attgroup = $intake.Attribute.mapTo($attribute))
    #set ($createNew = false)
@@ -23,8 +25,6 @@
    #set ($attgroup = $intake.Attribute.Default)
    #set ($createNew = true)
 #end
-
-<div class="app" id="div3-0-2-0">
 
 <p>$l10n.GlobalAttributes </p>
 
