@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.196 2004/07/20 17:34:52 d00mst Exp $
+// $Id: ModelFacade.java,v 1.197 2004/07/20 21:54:49 d00mst Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4699,6 +4699,25 @@ public class ModelFacade {
             return;
         }
 	illegalArgument(handle, subvertex);
+    }
+
+    /**
+     * Removes a named tagged value from a model element, ie subsequent calls
+     * to getTaggedValue will return null for name, at least until a tagged
+     * value with that name has been added again.
+     *
+     * @param handle the model element to remove the tagged value from
+     * @param name the name of the tagged value
+     * @throws IllegalArgumentException if handle isn't a model element
+     */
+    public static void removeTaggedValue(Object handle, String name) {
+	if (handle instanceof MModelElement) {
+	    MModelElement me = (MModelElement) handle;
+	    me.removeTaggedValue(name);
+	    return;
+	}
+
+	illegalArgument(handle);
     }
 
     /**

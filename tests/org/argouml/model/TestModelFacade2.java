@@ -1,4 +1,4 @@
-// $Id: TestModelFacade2.java,v 1.2 2004/03/09 07:28:25 linus Exp $
+// $Id: TestModelFacade2.java,v 1.3 2004/07/20 21:54:49 d00mst Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,5 +79,21 @@ public class TestModelFacade2 extends TestCase {
 
 	Collection collection = container.getPartitions();
 	assertTrue(collection.contains(partition));
+    }
+
+    /**
+     * Test some Tagged Value functions.
+     */
+    public void testTaggedValue() {
+	UmlFactory fy = UmlFactory.getFactory();
+	Object cls = fy.getCore().buildClass();
+
+	assertNull(ModelFacade.getTaggedValue(cls, "fooValue"));
+	ModelFacade.setTaggedValue(cls, "fooValue", "foo");
+	assertEquals(ModelFacade.getValueOfTag(
+		ModelFacade.getTaggedValue(cls, "fooValue")), "foo");
+	ModelFacade.removeTaggedValue(cls, "fooValue");
+	ModelFacade.removeTaggedValue(cls, "nonExistingValue");
+	assertNull(ModelFacade.getTaggedValue(cls, "fooValue"));
     }
 }
