@@ -43,7 +43,7 @@ import javax.management.j2ee.TimeStatistic;
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @version $Revision: 1.6 $
+* @version $Revision: 1.7 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010718 andreas schaefer:</b>
@@ -118,7 +118,6 @@ public class EJBDataCollector
             // Only to test the Statistics Gathering
             if( lContainer instanceof EntityContainer ) {
                Map lStatistics = ( (EntityContainer) lContainer ).retrieveStatistic();
-               System.out.println( "Statistics: " + lStatistics );
             }
          }
          i = lApplications.keySet().iterator();
