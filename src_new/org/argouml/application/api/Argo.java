@@ -1,4 +1,4 @@
-// $Id: Argo.java,v 1.24 2003/10/12 16:44:13 linus Exp $
+// $Id: Argo.java,v 1.25 2003/10/31 20:05:06 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -185,6 +185,11 @@ public class Argo
      */
     public static final ConfigurationKey KEY_THEME_CLASS =
         Configuration.makeKey("screen", "themeClass");
+
+    /** Key to enable smooth edges of diagram text and lines (anti-aliasing).
+     */
+    public static final ConfigurationKey KEY_SMOOTH_EDGES =
+        Configuration.makeKey("screen", "diagram-antialiasing");
 
     /** Key for user email address
      */
