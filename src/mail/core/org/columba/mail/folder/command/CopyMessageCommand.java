@@ -17,6 +17,7 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -28,12 +29,13 @@ import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.TableChangedEvent;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Copy a set of messages from a source to a destination
+ * folder.
+ * <p>
+ * A dialog asks the user the destination folder.
+ * 
+ * @author fdietz
+ * 
  */
 public class CopyMessageCommand extends FolderCommand {
 
@@ -69,7 +71,7 @@ public class CopyMessageCommand extends FolderCommand {
 		Worker worker)
 		throws Exception {
 
-		srcFolder.innerCopy(destFolder, uids, worker);
+		srcFolder.innerCopy(destFolder, uids);
 
 	}
 
@@ -88,9 +90,9 @@ public class CopyMessageCommand extends FolderCommand {
 			Object uid = uids[i];
 			//ColumbaLogger.log.debug("copying UID=" + uid);
 
-			if (srcFolder.exists(uid, worker)) {
-				String source = srcFolder.getMessageSource(uid, worker);
-                destUids[i] = destFolder.addMessage(source, worker);
+			if (srcFolder.exists(uid)) {
+				String source = srcFolder.getMessageSource(uid);
+                destUids[i] = destFolder.addMessage(source);
 			}
 
 			worker.setProgressBarValue(i);
@@ -115,6 +117,9 @@ public class CopyMessageCommand extends FolderCommand {
 			Object[] uids = r[i].getUids();
 
 			Folder srcFolder = (Folder) r[i].getFolder();
+//			register for status events
+			((StatusObservableImpl)srcFolder.getObservable()).setWorker(worker);
+				 
 			// setting lastSelection for srcFolder to null
 			srcFolder.setLastSelection(null);
 

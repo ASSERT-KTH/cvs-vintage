@@ -44,7 +44,6 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.columba.core.backgroundtask.TaskInterface;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -275,8 +274,7 @@ public class LuceneSearchEngine
 	}
 
 	protected List queryEngine(
-		FilterRule filter,
-		WorkerStatusController worker)
+		FilterRule filter)
 		throws Exception {
 
 		Query query = getLuceneQuery(filter, analyzer);
@@ -285,7 +283,7 @@ public class LuceneSearchEngine
 
 		ListTools.substract(result, deleted);
 
-		if(!checkResult(result, worker)) {
+		if(!checkResult(result)) {
 			// Search again
 			result = search(query);
 			ListTools.substract(result, deleted);
@@ -330,10 +328,9 @@ public class LuceneSearchEngine
 
 	protected List queryEngine(
 		FilterRule filter,
-		Object[] uids,
-		WorkerStatusController worker)
+		Object[] uids)
 		throws Exception {
-		List result = queryEngine(filter, worker);
+		List result = queryEngine(filter);
 
 		ListTools.intersect(result, Arrays.asList(uids));
 		return result;
@@ -482,13 +479,13 @@ public class LuceneSearchEngine
 		return caps;
 	}
 
-	private boolean checkResult(List result, WorkerStatusController wc) {
+	private boolean checkResult(List result) {
 		ListIterator it = result.listIterator();
 		try {
 			while (it.hasNext()) {
-				if (!folder.exists(it.next(), wc)) {
+				if (!folder.exists(it.next())) {
 					result.clear();
-					sync(wc);
+					sync();
 					return false;
 				}
 			}
@@ -501,24 +498,26 @@ public class LuceneSearchEngine
 	/**
 	 * @see org.columba.mail.folder.AbstractSearchEngine#reset()
 	 */
-	public void reset(WorkerStatusController wc) throws Exception {
+	public void reset() throws Exception {
 		createIndex();
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.search.AbstractSearchEngine#sync(org.columba.mail.folder.DataStorageInterface, org.columba.core.command.WorkerStatusController)
 	 */
-	public void sync(WorkerStatusController wc) throws Exception {
+	public void sync() throws Exception {
 		//ColumbaLogger.log.error("Lucene Index inconsistent - recreation forced");
 
 		DataStorageInterface ds = ((LocalFolder)folder).getDataStorageInstance();
-		HeaderList hl = ((LocalFolder)folder).getHeaderList(wc);
+		HeaderList hl = ((LocalFolder)folder).getHeaderList();
 
-		wc.setDisplayText(MailResourceLoader.getString(
+
+		if ( getObservable() != null )
+		getObservable().setMessage(MailResourceLoader.getString(
                                 "statusbar",
                                 "message",
                                 "lucene_sync"));
-		wc.setProgressBarValue(0);
+		getObservable().setCurrent(0);
 
 		try {
 			createIndex();
@@ -526,7 +525,7 @@ public class LuceneSearchEngine
 				new IndexWriter(luceneIndexDir, analyzer, false);
 
 			int count = hl.count();
-			wc.setProgressBarMaximum(count);
+			getObservable().setCurrent(count);
 			
 			Object uid;
 			int i=0;
@@ -545,10 +544,10 @@ public class LuceneSearchEngine
 				writer.addDocument(doc);
 				
 				if (++i % 50 == 0)
-					wc.setProgressBarValue(i);
+				getObservable().setCurrent(i);
 			}
 
-			wc.setProgressBarValue(count);
+			getObservable().setCurrent(count);
 
 			writer.optimize();
 			writer.close();

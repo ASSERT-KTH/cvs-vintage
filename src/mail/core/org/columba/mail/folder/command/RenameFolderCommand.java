@@ -17,6 +17,7 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
@@ -24,12 +25,9 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Rename selected folder.
+ * 
+ * @author fdietz
  */
 public class RenameFolderCommand extends Command {
 
@@ -40,9 +38,7 @@ public class RenameFolderCommand extends Command {
 	 * @param frameController
 	 * @param references
 	 */
-	public RenameFolderCommand(
-		
-		DefaultCommandReference[] references) {
+	public RenameFolderCommand(DefaultCommandReference[] references) {
 		super(references);
 	}
 
@@ -59,6 +55,8 @@ public class RenameFolderCommand extends Command {
 	public void execute(Worker worker) throws Exception {
 		parentFolder =
 			((FolderCommandReference) getReferences()[0]).getFolder();
+
+
 		String name =
 			((FolderCommandReference) getReferences()[0]).getFolderName();
 

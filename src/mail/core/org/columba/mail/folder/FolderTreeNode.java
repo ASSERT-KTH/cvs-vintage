@@ -23,7 +23,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -46,9 +45,9 @@ public abstract class FolderTreeNode
 
 	protected final static ImageIcon collapsedIcon =
 		ImageLoader.getSmallImageIcon("folder-closed.png");
-		
-		protected final static ImageIcon expandedIcon =
-				ImageLoader.getSmallImageIcon("folder-open.png");
+
+	protected final static ImageIcon expandedIcon =
+		ImageLoader.getSmallImageIcon("folder-open.png");
 
 	protected FolderItem node;
 	protected Lock myLock;
@@ -60,7 +59,8 @@ public abstract class FolderTreeNode
 
 	public FolderTreeNode(FolderItem node) {
 		super();
-		if ( node != null ) setNode(node);
+		if (node != null)
+			setNode(node);
 		myLock = new Lock();
 	}
 
@@ -93,14 +93,14 @@ public abstract class FolderTreeNode
 		/*
 		TreeNode[] treeNodes = getPathToRoot(this, 0);
 		TreePath path = new TreePath(treeNodes[0]);
-
+		
 		for (int i = 1; i < treeNodes.length; i++) {
 			Folder folder = (Folder) treeNodes[i];
 			path.pathByAddingChild(folder);
 		}
 		return path;
-*/
-		return new TreePath(getPathToRoot(this,0));
+		*/
+		return new TreePath(getPathToRoot(this, 0));
 	}
 
 	public static XmlElement getDefaultProperties() {
@@ -173,50 +173,48 @@ public abstract class FolderTreeNode
 		return (String) this.getUserObject();
 	}
 
-	
 	public void insert(FolderTreeNode newFolder, int newIndex) {
-	
+
 		FolderTreeNode oldParent = (FolderTreeNode) newFolder.getParent();
 		int oldIndex = oldParent.getIndex(newFolder);
 		oldParent.remove(oldIndex);
-	
+
 		XmlElement oldParentNode = oldParent.getFolderItem().getRoot();
 		XmlElement newChildNode = newFolder.getFolderItem().getRoot();
 		oldParentNode.removeElement(newChildNode);
-	
+
 		newFolder.setParent(this);
 		children.insertElementAt(newFolder, newIndex);
-	
+
 		XmlElement newParentNode = getFolderItem().getRoot();
-	
+
 		int j = -1;
 		boolean inserted = false;
 		for (int i = 0; i < newParentNode.count(); i++) {
 			XmlElement n = newParentNode.getElement(i);
 			String name = n.getName();
-	
+
 			if (name.equals("folder")) {
 				j++;
 			}
-	
+
 			if (j == newIndex) {
 				newParentNode.insertElement(newChildNode, i);
 				inserted = true;
 				System.out.println("------> adapternode insert correctly");
 			}
 		}
-	
+
 		if (inserted == false) {
 			if (j + 1 == newIndex) {
 				newParentNode.append(newChildNode);
 				System.out.println("------> adapternode appended correctly");
 			}
 		}
-	
+
 		//oldParent.fireTreeNodeStructureUpdate();
 		//fireTreeNodeStructureUpdate();
 	}
-	
 
 	/*
 	public void removeFromParent() {
@@ -256,15 +254,16 @@ public abstract class FolderTreeNode
 		return node.getElement("property").getAttributes();
 	}
 
-	public abstract void createChildren(WorkerStatusController worker);
+	public abstract void createChildren();
 
-	public FolderTreeNode addFolder(String name, String type) throws Exception {
+	public FolderTreeNode addFolder(String name, String type)
+		throws Exception {
 		FolderPluginHandler handler =
-					(FolderPluginHandler) MainInterface.pluginManager.getHandler(
-						"org.columba.mail.folder");
-		
+			(FolderPluginHandler) MainInterface.pluginManager.getHandler(
+				"org.columba.mail.folder");
+
 		Class childClass = handler.getPluginClass(type);
-		
+
 		Method m_getDefaultProperties =
 			childClass.getMethod("getDefaultProperties", null);
 
@@ -289,7 +288,7 @@ public abstract class FolderTreeNode
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
+
 		return folder;
 		/*
 		Method m_getDefaultProperties =
@@ -445,32 +444,31 @@ public abstract class FolderTreeNode
 		return false;
 	}
 	*/
-	
-	
+
 	/**
 	 * 
 	 * FolderTreeNode wraps XmlElement
 	 * 
 	 * all treenode manipulation is passed to the corresponding XmlElement
 	 */
-	public void append(FolderTreeNode child)
-	{
-		ColumbaLogger.log.debug("child="+child);
-		
+	public void append(FolderTreeNode child) {
+		ColumbaLogger.log.debug("child=" + child);
+
 		// remove child from parent
 		child.removeFromParent();
 		// do the same for the XmlElement node
-		ColumbaLogger.log.debug("xmlelement="+child.getFolderItem().getRoot().getName());
-		
+		ColumbaLogger.log.debug(
+			"xmlelement=" + child.getFolderItem().getRoot().getName());
+
 		child.getFolderItem().getRoot().removeFromParent();
-		
+
 		// add child to this node
 		add(child);
 		// do the same for the XmlElement of child
 		getFolderItem().getRoot().addElement(child.getFolderItem().getRoot());
-		
+
 	}
-	
+
 	/*
 	public void insert( FolderTreeNode child, int index )
 	{

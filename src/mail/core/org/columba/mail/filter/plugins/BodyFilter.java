@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 
@@ -51,11 +50,10 @@ public class BodyFilter extends AbstractFilter {
 	public boolean process(
 		Object[] args,
 		Folder folder,
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception {
 
-		String body = folder.getMessageSource(uid, worker);
+		String body = folder.getMessageSource(uid);
 		int condition = FilterCriteria.getCriteria((String) args[0]);
 		String bodyText = (String) args[1];
 

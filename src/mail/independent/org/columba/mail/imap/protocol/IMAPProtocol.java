@@ -29,7 +29,7 @@ import java.util.Vector;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
-import org.columba.core.command.WorkerStatusController;
+import org.columba.core.command.StatusObservable;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.MessageFolderInfo;
 import org.columba.mail.imap.IMAPResponse;
@@ -37,13 +37,13 @@ import org.columba.mail.ssl.SSLProvider;
 
 /**
  *
- * @author frd
+ * 
  *
  * This is the implementation of the IMAP protocol as defined in
  * RFC2060 (http://www.rfc-editor.org). Every IMAP command has
  * its corresponding function. So, you *really* need to read the
  * RFC to understand it.
- *
+ * <p>
  * You should also take a look at the following classes:
  * - <code>IMAPInputStream</code> is a special inputstream which
  *   handles all IMAP related specialities
@@ -56,7 +56,13 @@ import org.columba.mail.ssl.SSLProvider;
  *    - <code>CommandFailedException</code>
  *    - <code>DisconnectedException</code>
  *    - <code>IMAPProtocolException</code>
- *
+ * 
+ * <p>
+ * Additionally you can register a StatusObservable class to get notified
+ * on progress updates. This is useful for updating a JProgressBar, etc.
+ * 
+ * 
+ * @author fdietz
  */
 public class IMAPProtocol {
 	/**
@@ -116,6 +122,8 @@ public class IMAPProtocol {
 	private String host;
 	private int port;
 	private boolean useSSL;
+	
+	private StatusObservable observable;
 
 	/**
 	 * default constructor
@@ -131,7 +139,7 @@ public class IMAPProtocol {
 	protected void initSSL() throws Exception {
 		sendString("STARTTLS", null);
 
-		IMAPResponse r = getResponse(null);
+		IMAPResponse r = getResponse();
 
 		// server doesn't seem to support STARTTLS extension
 		if (!r.isOK())
@@ -174,7 +182,7 @@ public class IMAPProtocol {
 
 			argumentWriter = new ArgumentWriter(this);
 
-			answer = in.readResponse(null);
+			answer = in.readResponse();
 
 			return;
 		}
@@ -214,7 +222,7 @@ public class IMAPProtocol {
 
 		argumentWriter = new ArgumentWriter(this);
 
-		answer = in.readResponse(null);
+		answer = in.readResponse();
 
 		if (answer.startsWith("*")) {
 			if (useSSL)
@@ -277,9 +285,9 @@ public class IMAPProtocol {
 	 * @return IMAPResponse
 	 * @throws Exception
 	 */
-	public IMAPResponse getResponse(WorkerStatusController worker)
+	public IMAPResponse getResponse()
 		throws Exception {
-		String answer = in.readResponse(worker);
+		String answer = in.readResponse();
 
 		return new IMAPResponse(answer);
 	}
@@ -311,63 +319,8 @@ public class IMAPProtocol {
 
 		while (!finished) {
 			try {
-				// we are passing "null" here, because we don't want
-				// any status information printed
-				imapResponse = getResponse(null);
-			} catch (IOException ex) {
-				// disconnect exception
-				ex.printStackTrace();
-
-				imapResponse = IMAPResponse.BYEResponse;
-			}
-
-			v.add(imapResponse);
-
-			if (imapResponse.getStatus() == IMAPResponse.STATUS_BYE)
-				finished = true;
-
-			if (imapResponse.isTagged()
-				&& imapResponse.getTag().equals(clientTag))
-				finished = true;
-		}
-
-		IMAPResponse[] r = new IMAPResponse[v.size()];
-		((Vector) v).copyInto(r);
-
-		return r;
-
-	}
-
-	/**
-	 * Method sendCommand.
-	 * @param command
-	 * @param args
-	 * @param worker
-	 * @return IMAPResponse[]
-	 * @throws Exception
-	 */
-	protected synchronized IMAPResponse[] sendCommand(
-		String command,
-		Arguments args,
-		WorkerStatusController worker)
-		throws Exception {
-		List v = new Vector();
-		boolean finished = false;
-		String clientTag = null;
-		IMAPResponse imapResponse = null;
-
-		try {
-			clientTag = sendString(command, args);
-		} catch (IOException ex) {
-			// disconnect exception
-			ex.printStackTrace();
-
-			v.add(IMAPResponse.BYEResponse);
-		}
-
-		while (!finished) {
-			try {
-				imapResponse = getResponse(worker);
+				
+				imapResponse = getResponse();
 			} catch (IOException ex) {
 				// disconnect exception
 				ex.printStackTrace();
@@ -404,8 +357,7 @@ public class IMAPProtocol {
 	protected synchronized IMAPResponse[] sendCommand(
 		String command,
 		Arguments args,
-		int count,
-		WorkerStatusController worker)
+		int count)
 		throws Exception {
 		List v = new Vector();
 		boolean finished = false;
@@ -421,16 +373,17 @@ public class IMAPProtocol {
 			v.add(IMAPResponse.BYEResponse);
 		}
 
-		worker.setProgressBarMaximum(count);
+		if ( getObservable() != null )
+		getObservable().setMax(count);
 
 		int counter = 0;
-		worker.setProgressBarValue(counter);
+		getObservable().setCurrent(counter);
 
 		while (!finished) {
 			try {
-				imapResponse = getResponse(worker);
+				imapResponse = getResponse();
 
-				worker.setProgressBarValue(++counter);
+				getObservable().setCurrent(++counter);
 			} catch (IOException ex) {
 				// disconnect exception
 				ex.printStackTrace();
@@ -735,32 +688,6 @@ public class IMAPProtocol {
 	 * @param item
 	 * @param messageSet
 	 * @param uid
-	 * @param worker
-	 * @return IMAPResponse[]
-	 * @throws Exception
-	 */
-	public IMAPResponse[] fetch(
-		String item,
-		String messageSet,
-		boolean uid,
-		WorkerStatusController worker)
-		throws Exception {
-		if (uid)
-			return sendCommand(
-				"UID FETCH " + messageSet + " (" + item + ")",
-				null,
-				worker);
-		else
-			return sendCommand(
-				"FETCH " + messageSet + " (" + item + ")",
-				null,
-				worker);
-	}
-	/**
-	 * Method fetch.
-	 * @param item
-	 * @param messageSet
-	 * @param uid
 	 * @param count
 	 * @param worker
 	 * @return IMAPResponse[]
@@ -770,21 +697,18 @@ public class IMAPProtocol {
 		String item,
 		String messageSet,
 		boolean uid,
-		int count,
-		WorkerStatusController worker)
+		int count)
 		throws Exception {
 		if (uid)
 			return sendCommand(
 				"UID FETCH " + messageSet + " (" + item + ")",
 				null,
-				count,
-				worker);
+				count);
 		else
 			return sendCommand(
 				"FETCH " + messageSet + " (" + item + ")",
 				null,
-				count,
-				worker);
+				count);
 	}
 
 	/**
@@ -797,12 +721,11 @@ public class IMAPProtocol {
 	 */
 	public IMAPResponse[] fetchUIDList(
 		String messageSet,
-		int count,
-		WorkerStatusController worker)
+		int count)
 		throws Exception {
 
 		IMAPResponse[] responses =
-			fetch("UID", messageSet, false, count, worker);
+			fetch("UID", messageSet, false, count);
 
 		notifyResponseHandler(responses);
 
@@ -823,12 +746,11 @@ public class IMAPProtocol {
 	 */
 	public IMAPResponse[] fetchFlagsList(
 		String messageSet,
-		int count,
-		WorkerStatusController worker)
+		int count)
 		throws Exception {
 
 		IMAPResponse[] responses =
-			fetch("FLAGS", messageSet, true, count, worker);
+			fetch("FLAGS", messageSet, true, count);
 
 		notifyResponseHandler(responses);
 
@@ -900,8 +822,7 @@ public class IMAPProtocol {
 	 */
 	public IMAPResponse[] fetchMimePart(
 		String messageSet,
-		Integer[] address,
-		WorkerStatusController worker)
+		Integer[] address)
 		throws Exception {
 
 		StringBuffer addressString =
@@ -915,7 +836,7 @@ public class IMAPProtocol {
 		// this is an alternative approach that does not
 		// implicitly set the \Seen flag
 		IMAPResponse[] responses =
-			fetch("BODY.PEEK[" + addressString + "]", messageSet, true, worker);
+			fetch("BODY.PEEK[" + addressString + "]", messageSet, true);
 
 		notifyResponseHandler(responses);
 
@@ -934,15 +855,14 @@ public class IMAPProtocol {
 	 * @throws Exception
 	 */
 	public IMAPResponse[] fetchMessageSource(
-		String messageSet,
-		WorkerStatusController worker)
+		String messageSet)
 		throws Exception {
 
 		// changed BODY to BODY.PEEK
 		// this is an alternative approach that does not
 		// implicitly set the \Seen flag
 		IMAPResponse[] responses =
-			fetch("BODY.PEEK[]", messageSet, true, worker);
+			fetch("BODY.PEEK[]", messageSet, true);
 
 		notifyResponseHandler(responses);
 
@@ -1117,6 +1037,20 @@ public class IMAPProtocol {
 		handleResult(r);
 
 		return responses;
+	}
+
+	/**
+	 * @return
+	 */
+	public StatusObservable getObservable() {
+		return observable;
+	}
+
+	/**
+	 * @param observable
+	 */
+	public void setObservable(StatusObservable observable) {
+		this.observable = observable;
 	}
 
 }

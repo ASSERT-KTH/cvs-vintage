@@ -14,10 +14,11 @@ import org.columba.mail.command.ImportFolderCommandReference;
 import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
 
 /**
- * @author frd
- *
- * To change this generated comment go to 
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Import messages to folder.
+ * <p>
+ * This command is used by the mail import wizard to import messages.
+ * 
+ * @author fdietz
  */
 public class ImportMessageCommand extends FolderCommand {
 

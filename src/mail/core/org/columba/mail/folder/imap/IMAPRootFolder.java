@@ -25,7 +25,6 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -218,10 +217,10 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 		}
 	}
 
-	public void createChildren(WorkerStatusController worker) {
+	public void createChildren() {
 		try {
 
-			ListInfo[] listInfo = getStore().lsub("", "*", worker);
+			ListInfo[] listInfo = getStore().lsub("", "*");
 
 			for (int i = 0; i < listInfo.length; i++) {
 				ListInfo info = listInfo[i];
@@ -667,8 +666,7 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 	 * @see org.columba.mail.folder.Folder#addMessage(org.columba.mail.message.AbstractMessage, org.columba.core.command.WorkerStatusController)
 	 */
 	public Object addMessage(
-		AbstractMessage message,
-		WorkerStatusController worker)
+		AbstractMessage message)
 		throws Exception {
 		return null;
 	}
@@ -676,7 +674,7 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 	/**
 	 * @see org.columba.mail.folder.Folder#addMessage(java.lang.String, org.columba.core.command.WorkerStatusController)
 	 */
-	public Object addMessage(String source, WorkerStatusController worker)
+	public Object addMessage(String source)
 		throws Exception {
 		return null;
 	}
@@ -684,7 +682,7 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 	/**
 	 * @see org.columba.mail.folder.Folder#exists(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public boolean exists(Object uid, WorkerStatusController worker)
+	public boolean exists(Object uid)
 		throws Exception {
 		return false;
 	}
@@ -692,14 +690,14 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 	/**
 	 * @see org.columba.mail.folder.Folder#expungeFolder(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public void expungeFolder(WorkerStatusController worker)
+	public void expungeFolder()
 		throws Exception {
 	}
 
 	/**
 	 * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.core.command.WorkerStatusController)
 	 */
-	public HeaderList getHeaderList(WorkerStatusController worker)
+	public HeaderList getHeaderList()
 		throws Exception {
 		return null;
 	}
@@ -708,8 +706,7 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 	 * @see org.columba.mail.folder.Folder#getMessageHeader(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
 	public ColumbaHeader getMessageHeader(
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception {
 		return null;
 	}
@@ -717,7 +714,7 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 	/**
 	 * @see org.columba.mail.folder.Folder#getMessageSource(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public String getMessageSource(Object uid, WorkerStatusController worker)
+	public String getMessageSource(Object uid)
 		throws Exception {
 		return null;
 	}
@@ -727,8 +724,7 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 	 */
 	public MimePart getMimePart(
 		Object uid,
-		Integer[] address,
-		WorkerStatusController worker)
+		Integer[] address)
 		throws Exception {
 		return null;
 	}
@@ -737,8 +733,7 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 	 * @see org.columba.mail.folder.Folder#getMimePartTree(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
 	public MimePartTree getMimePartTree(
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception {
 		return null;
 	}
@@ -748,15 +743,14 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 	 */
 	public void markMessage(
 		Object[] uids,
-		int variant,
-		WorkerStatusController worker)
+		int variant)
 		throws Exception {
 	}
 
 	/**
 	 * @see org.columba.mail.folder.Folder#removeMessage(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public void removeMessage(Object uid, WorkerStatusController worker)
+	public void removeMessage(Object uid)
 		throws Exception {
 	}
 
@@ -765,8 +759,7 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 	 */
 	public Object[] searchMessages(
 		Filter filter,
-		Object[] uids,
-		WorkerStatusController worker)
+		Object[] uids)
 		throws Exception {
 		return null;
 	}
@@ -775,8 +768,7 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter, org.columba.core.command.WorkerStatusController)
 	 */
 	public Object[] searchMessages(
-		Filter filter,
-		WorkerStatusController worker)
+		Filter filter)
 		throws Exception {
 		return null;
 	}

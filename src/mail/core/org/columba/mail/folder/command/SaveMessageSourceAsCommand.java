@@ -24,6 +24,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
@@ -71,7 +72,8 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
 				(FolderCommandReference[]) getReferences();
 		Object[] uids = r[0].getUids(); // uid for messages to save
 		Folder srcFolder = (Folder) r[0].getFolder();
-
+//		register for status events
+	 ((StatusObservableImpl)srcFolder.getObservable()).setWorker(worker);
 		JFileChooser fileChooser = new JFileChooser();
 
 		// Save message source for each selected message
@@ -81,7 +83,7 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
 			
 			// setup save dialog			
 			String subject = (String) srcFolder
-						.getMessageHeader(uid, worker)
+						.getMessageHeader(uid)
 						.get("Subject");
  			String defaultName = getValidFilename(subject, false);
 			if (defaultName.length() > 0) {
@@ -117,7 +119,7 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
 
 				if (confirm == JOptionPane.YES_OPTION) {
 					// save message source under selected filename
-					String source = srcFolder.getMessageSource(uid, worker);
+					String source = srcFolder.getMessageSource(uid);
 					try {
 						DiskIO.saveStringInFile(f, source);
 					} catch (Exception ex) {

@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.plugin.PluginInterface;
 import org.columba.mail.folder.Folder;
 
@@ -55,8 +54,7 @@ public abstract class AbstractFilter implements PluginInterface{
 	public abstract boolean process(
 		Object[] args,
 		Folder folder,
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception;
 
 }

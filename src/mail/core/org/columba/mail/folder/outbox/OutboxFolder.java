@@ -20,7 +20,6 @@ import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.FolderItem;
@@ -54,8 +53,7 @@ public class OutboxFolder extends CachedMHFolder {
 	}
 
 	public AbstractMessage getMessage(
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception {
 		if (aktMessage != null) {
 			if (aktMessage.getUID().equals(uid)) {
@@ -66,13 +64,13 @@ public class OutboxFolder extends CachedMHFolder {
 			}
 		}
 
-		String source = getMessageSource(uid, worker);
+		String source = getMessageSource(uid);
 
 		AbstractMessage message =
 			new Rfc822Parser().parse(source, null);
 		message.setUID(uid);
 
-		SendableHeader header = (SendableHeader) getHeaderList(worker).get(uid);
+		SendableHeader header = (SendableHeader) getHeaderList().get(uid);
 		SendableMessage sendableMessage = new SendableMessage();
 		sendableMessage.setHeader(header);
 		sendableMessage.setMimePartTree(message.getMimePartTree());
@@ -100,8 +98,7 @@ public class OutboxFolder extends CachedMHFolder {
 			sendListManager[1
 				- actSender].add(
 					(SendableMessage) getMessage(sendListManager[actSender]
-						.getNextUid(),
-					null));
+						.getNextUid()));
 		}
 
 		// swap
@@ -120,11 +117,11 @@ public class OutboxFolder extends CachedMHFolder {
 		isSending = false;
 	}
 
-	public void save(WorkerStatusController worker) throws Exception {
+	public void save() throws Exception {
 		// only save header-cache if folder data changed
-		if (getChanged() == true) {
+		if (hasChanged() == true) {
 
-			getHeaderCacheInstance().save(worker);
+			getHeaderCacheInstance().save();
 			setChanged(false);
 		}
 	}

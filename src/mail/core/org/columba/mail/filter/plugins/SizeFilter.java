@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.message.HeaderInterface;
@@ -57,13 +56,12 @@ public class SizeFilter extends AbstractFilter {
 	public boolean process(
 		Object[] args,
 		Folder folder,
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception {
 
 		boolean result = false;
 
-		HeaderInterface header = folder.getMessageHeader(uid, worker);
+		HeaderInterface header = folder.getMessageHeader(uid);
 		int condition = FilterCriteria.getCriteria((String) args[0]);
 		Integer size = transformSize((String) args[1]);
 

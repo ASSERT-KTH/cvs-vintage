@@ -19,7 +19,6 @@ package org.columba.mail.folder.search;
 import java.util.Arrays;
 import java.util.List;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.message.AbstractMessage;
@@ -65,13 +64,12 @@ public class LocalSearchEngine extends AbstractSearchEngine {
 	 * @see org.columba.mail.folder.search.AbstractSearchEngine#queryEngine(org.columba.mail.filter.FilterRule, org.columba.core.command.WorkerStatusController)
 	 */
 	protected List queryEngine(
-		FilterRule filter,
-		WorkerStatusController worker)
+		FilterRule filter)
 		throws Exception {
 			
-		Object[] uids = folder.getUids(worker);
+		Object[] uids = folder.getUids();
 		
-		return processCriteria(filter, Arrays.asList(uids), worker);
+		return processCriteria(filter, Arrays.asList(uids));
 	}
 
 	/* (non-Javadoc)
@@ -79,17 +77,16 @@ public class LocalSearchEngine extends AbstractSearchEngine {
 	 */
 	protected List queryEngine(
 		FilterRule filter,
-		Object[] uids,
-		WorkerStatusController worker)
+		Object[] uids)
 		throws Exception {
 			
-		return processCriteria(filter, Arrays.asList(uids), worker);
+		return processCriteria(filter, Arrays.asList(uids));
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.search.AbstractSearchEngine#sync(org.columba.core.command.WorkerStatusController)
 	 */
-	public void sync(WorkerStatusController wc) throws Exception {
+	public void sync() throws Exception {
 
 	}
 

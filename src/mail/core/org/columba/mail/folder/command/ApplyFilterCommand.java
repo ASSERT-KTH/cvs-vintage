@@ -18,6 +18,7 @@ package org.columba.mail.folder.command;
 import org.columba.core.command.Command;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
@@ -26,12 +27,11 @@ import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * 
+ * Apply all filters on this folder.
+ * 
+ * @author fdietz
+ * 
  */
 public class ApplyFilterCommand extends Command{
 
@@ -60,6 +60,9 @@ public class ApplyFilterCommand extends Command{
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
 		Folder srcFolder = (Folder) r[0].getFolder();
+//		register for status events
+		((StatusObservableImpl)srcFolder.getObservable()).setWorker(worker);
+			 
         worker.setDisplayText("Applying filter to "+srcFolder.getName()+"...");
 		FilterList list = srcFolder.getFilterList();
 		
@@ -69,7 +72,7 @@ public class ApplyFilterCommand extends Command{
 			worker.setProgressBarValue(i);
 			Filter filter = list.get(i);
 
-			Object[] result = srcFolder.searchMessages(filter, worker);
+			Object[] result = srcFolder.searchMessages(filter);
 			if ( result == null ) continue;
 			
 			if (result.length != 0) {

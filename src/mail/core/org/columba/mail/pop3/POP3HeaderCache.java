@@ -20,7 +20,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Enumeration;
 
-import org.columba.core.command.WorkerStatusController;
+import org.columba.core.command.StatusObservable;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.headercache.AbstractHeaderCache;
 import org.columba.mail.message.ColumbaHeader;
@@ -46,27 +46,32 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 		super(server.getConfigFile());
 	}
 
-	public void load(WorkerStatusController worker) throws Exception {
-                ColumbaLogger.log.info("loading header-cache=" + headerFile);
+	public StatusObservable getObservable() {
+		return server.getObservable();
+	}
+
+	public void load() throws Exception {
+		ColumbaLogger.log.info("loading header-cache=" + headerFile);
 		headerList = new HeaderList();
 
 		ObjectInputStream p = openInputStream();
 
 		int capacity = p.readInt();
-                ColumbaLogger.log.info("capacity=" + capacity);
+		ColumbaLogger.log.info("capacity=" + capacity);
 
-		if ( worker != null)
-		worker.setDisplayText(MailResourceLoader.getString(
-                                "statusbar",
-                                "message",
-                                "load_headers"));
+		if (getObservable() != null)
+			getObservable().setMessage(
+				MailResourceLoader.getString(
+					"statusbar",
+					"message",
+					"load_headers"));
 
-		if (worker != null)
-			worker.setProgressBarMaximum(capacity);
+		if (getObservable() != null)
+			getObservable().setMax(capacity);
 
 		for (int i = 1; i <= capacity; i++) {
-			if (worker != null)
-				worker.setProgressBarValue(i);
+			if (getObservable() != null)
+				getObservable().setCurrent(i);
 
 			ColumbaHeader h = new ColumbaHeader();
 
@@ -80,12 +85,12 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 		closeInputStream();
 	}
 
-	public void save(WorkerStatusController worker) throws Exception {
+	public void save() throws Exception {
 		// we didn't load any header to save
 		if (!isHeaderCacheLoaded())
 			return;
 
-                ColumbaLogger.log.info("saving header-cache=" + headerFile);
+		ColumbaLogger.log.info("saving header-cache=" + headerFile);
 
 		ObjectOutputStream p = openOutputStream();
 

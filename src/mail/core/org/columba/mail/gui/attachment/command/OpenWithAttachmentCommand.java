@@ -72,7 +72,7 @@ public class OpenWithAttachmentCommand extends FolderCommand {
 
 		Integer[] address = r[0].getAddress();
 
-		part = folder.getMimePart(uids[0], address, worker);
+		part = folder.getMimePart(uids[0], address);
 
 		Decoder decoder;
 		MimeHeader header;

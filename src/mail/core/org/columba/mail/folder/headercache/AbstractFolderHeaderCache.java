@@ -17,6 +17,7 @@ package org.columba.mail.folder.headercache;
 
 import java.io.File;
 
+import org.columba.core.command.StatusObservable;
 import org.columba.mail.folder.Folder;
 
 /**
@@ -28,7 +29,7 @@ import org.columba.mail.folder.Folder;
 public abstract class AbstractFolderHeaderCache extends AbstractHeaderCache {
 
 	protected Folder folder;
-	
+
 	/**
 	 * @param folder
 	 */
@@ -37,5 +38,8 @@ public abstract class AbstractFolderHeaderCache extends AbstractHeaderCache {
 		this.folder = folder;
 	}
 
+	public StatusObservable getObservable() {
+		return folder.getObservable();
+	}
 
 }

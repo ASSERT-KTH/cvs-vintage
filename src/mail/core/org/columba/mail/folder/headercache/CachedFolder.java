@@ -19,7 +19,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.Mutex;
 import org.columba.mail.coder.EncodedWordDecoder;
@@ -59,18 +58,17 @@ public abstract class CachedFolder extends LocalFolder {
 	 * @see org.columba.mail.folder.Folder#addMessage(org.columba.mail.message.AbstractMessage, org.columba.core.command.WorkerStatusController)
 	 */
 	public Object addMessage(
-		AbstractMessage message,
-		WorkerStatusController worker)
+		AbstractMessage message)
 		throws Exception {
 
 		if ( message == null ) return null;
 		
 		// get headerlist before adding a message
-		getHeaderList(worker);
+		getHeaderList();
 
 		// call addMessage of superclass LocalFolder
 		// to do the dirty work
-		Object newUid = super.addMessage(message, worker);
+		Object newUid = super.addMessage(message);
 		if ( newUid == null ) return null;
 		
 		// this message was already parsed and so we
@@ -129,20 +127,20 @@ public abstract class CachedFolder extends LocalFolder {
 	/**
 	 * @see org.columba.mail.folder.Folder#exists(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public boolean exists(Object uid, WorkerStatusController worker)
+	public boolean exists(Object uid)
 		throws Exception {
 
 		// check if message with UID exists
-		return getCachedHeaderList(worker).containsKey(uid);
+		return getCachedHeaderList().containsKey(uid);
 	}
 
 	/**
 	 * @see org.columba.mail.folder.Folder#expungeFolder(org.columba.core.command.WorkerStatusController)
 	 */
-	public void expungeFolder(WorkerStatusController worker) throws Exception {
+	public void expungeFolder() throws Exception {
 
 		// get list of all uids 
-		Object[] uids = getUids(worker);
+		Object[] uids = getUids();
 
 		for (int i = 0; i < uids.length; i++) {
 			Object uid = uids[i];
@@ -150,14 +148,14 @@ public abstract class CachedFolder extends LocalFolder {
 			if ( uid == null ) continue;
 			
 			// if message with uid doesn't exist -> skip
-			if (exists(uid, worker) == false) {
+			if (exists(uid) == false) {
 				ColumbaLogger.log.debug("uid " + uid + " doesn't exist");
 
 				continue;
 			}
 
 			// retrieve header of messages
-			ColumbaHeader h = getMessageHeader(uid, worker);
+			ColumbaHeader h = getMessageHeader(uid);
 			Boolean expunged = (Boolean) h.get("columba.flags.expunged");
 
 			if (expunged.equals(Boolean.TRUE)) {
@@ -166,7 +164,7 @@ public abstract class CachedFolder extends LocalFolder {
 				ColumbaLogger.log.debug("removing uid=" + uid);
 
 				// remove message
-				removeMessage(uid, worker);
+				removeMessage(uid);
 
 			}
 		}
@@ -197,17 +195,16 @@ public abstract class CachedFolder extends LocalFolder {
 	 * put here for this reason.
 	 * 
 	 * 
-	 * @param worker		<class>WorkerStatusController</class>
 	 * @return				<class>HeaderList</class>
 	 * @throws Exception	<class>Exception</class>
 	 */
-	protected HeaderList getCachedHeaderList(WorkerStatusController worker)
+	protected HeaderList getCachedHeaderList()
 		throws Exception {
 		HeaderList result;
 
 		try {
 			mutex.getMutex();
-			result = getHeaderCacheInstance().getHeaderList(worker);
+			result = getHeaderCacheInstance().getHeaderList();
 		} finally {
 			mutex.releaseMutex();
 		}
@@ -218,17 +215,16 @@ public abstract class CachedFolder extends LocalFolder {
 	/**
 	 * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.core.command.WorkerStatusController)
 	 */
-	public HeaderList getHeaderList(WorkerStatusController worker)
+	public HeaderList getHeaderList()
 		throws Exception {
-		return getCachedHeaderList(worker);
+		return getCachedHeaderList();
 	}
 
 	/**
 	 * @see org.columba.mail.folder.LocalFolder#getMessage(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
 	public AbstractMessage getMessage(
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception {
 
 		// check if message was already parsed before
@@ -243,11 +239,11 @@ public abstract class CachedFolder extends LocalFolder {
 		}
 
 		// get source of message as string
-		String source = getMessageSource(uid, worker);
+		String source = getMessageSource(uid);
 
 		// get header from cache
 		ColumbaHeader header =
-			(ColumbaHeader) getCachedHeaderList(worker).get(uid);
+			(ColumbaHeader) getCachedHeaderList().get(uid);
 
 		// generate message object from source
 		AbstractMessage message = new Rfc822Parser().parse(source, header);
@@ -275,8 +271,7 @@ public abstract class CachedFolder extends LocalFolder {
 	 * @see org.columba.mail.folder.Folder#getMessageHeader(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
 	public ColumbaHeader getMessageHeader(
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception {
 
 		if ((aktMessage != null) && (aktMessage.getUID().equals(uid))) {
@@ -285,14 +280,14 @@ public abstract class CachedFolder extends LocalFolder {
 			// try to compare the headerfield count of
 			// the actually parsed message with the cached
 			// headerfield count
-			AbstractMessage message = getMessage(uid, worker);
+			AbstractMessage message = getMessage(uid);
 
 			// number of headerfields
 			int size = message.getHeader().count();
 
 			// get header from cache
 			HeaderInterface h =
-				(ColumbaHeader) getCachedHeaderList(worker).get(uid);
+				(ColumbaHeader) getCachedHeaderList().get(uid);
 
 			// message doesn't exist (this shouldn't happen here)
 			if (h == null)
@@ -309,19 +304,19 @@ public abstract class CachedFolder extends LocalFolder {
 		} else
 			// message isn't cached
 			// -> just return header from cache
-			return (ColumbaHeader) getCachedHeaderList(worker).get(uid);
+			return (ColumbaHeader) getCachedHeaderList().get(uid);
 	}
 
 	/**
 	 * @see org.columba.mail.folder.Folder#getUids(org.columba.core.command.WorkerStatusController)
 	 */
-	public Object[] getUids(WorkerStatusController worker) throws Exception {
+	public Object[] getUids() throws Exception {
 
-		int count = getCachedHeaderList(worker).count();
+		int count = getCachedHeaderList().count();
 		//Object[] uids = new Object[count];
 		List list = new Vector(count);
 		int i = 0;
-		for (Enumeration e = getCachedHeaderList(worker).keys();
+		for (Enumeration e = getCachedHeaderList().keys();
 			e.hasMoreElements();
 			) {
 			//uids[i++] = e.nextElement();
@@ -339,20 +334,21 @@ public abstract class CachedFolder extends LocalFolder {
 	 */
 	public void innerCopy(
 		Folder destFolder,
-		Object[] uids,
-		WorkerStatusController worker)
+		Object[] uids)
 		throws Exception {
 		for (int i = 0; i < uids.length; i++) {
 
 			Object uid = uids[i];
 
-			if (exists(uid, worker)) {
-				AbstractMessage message = getMessage(uid, worker);
+			if (exists(uid)) {
+				AbstractMessage message = getMessage(uid);
 				if ( message != null )
-					destFolder.addMessage(message, worker);
+					destFolder.addMessage(message);
 			}
 
-			worker.setProgressBarValue(i);
+			if ( getObservable() != null ) 
+				getObservable().setCurrent(i);
+			//worker.setProgressBarValue(i);
 		}
 	}
 
@@ -364,10 +360,9 @@ public abstract class CachedFolder extends LocalFolder {
 	 */
 	protected void markMessage(
 		Object uid,
-		int variant,
-		WorkerStatusController worker)
+		int variant)
 		throws Exception {
-		ColumbaHeader h = (ColumbaHeader) getCachedHeaderList(worker).get(uid);
+		ColumbaHeader h = (ColumbaHeader) getCachedHeaderList().get(uid);
 
 		switch (variant) {
 			case MarkMessageCommand.MARK_AS_READ :
@@ -430,13 +425,12 @@ public abstract class CachedFolder extends LocalFolder {
 	 */
 	public void markMessage(
 		Object[] uids,
-		int variant,
-		WorkerStatusController worker)
+		int variant)
 		throws Exception {
 
 		for (int i = 0; i < uids.length; i++) {
-			if (exists(uids[i], worker)) {
-				markMessage(uids[i], variant, worker);
+			if (exists(uids[i])) {
+				markMessage(uids[i], variant);
 			}
 		}
 	}
@@ -444,9 +438,9 @@ public abstract class CachedFolder extends LocalFolder {
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.Folder#removeMessage(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public void removeMessage(Object uid, WorkerStatusController worker)
+	public void removeMessage(Object uid)
 		throws Exception {
-		ColumbaHeader header = (ColumbaHeader) getMessageHeader(uid, worker);
+		ColumbaHeader header = (ColumbaHeader) getMessageHeader(uid);
 		if ( header == null ) return;
 		
 		if (header.get("columba.flags.seen").equals(Boolean.FALSE))
@@ -455,22 +449,22 @@ public abstract class CachedFolder extends LocalFolder {
 			getMessageFolderInfo().decRecent();
 
 		getHeaderCacheInstance().remove(uid);
-		super.removeMessage(uid, worker);
+		super.removeMessage(uid);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.Folder#save(org.columba.core.command.WorkerStatusController)
 	 */
-	public void save(WorkerStatusController worker) throws Exception {
+	public void save() throws Exception {
 		// only save header-cache if folder data changed
-		if (getChanged() == true) {
+		if (hasChanged() == true) {
 
-			getHeaderCacheInstance().save(worker);
+			getHeaderCacheInstance().save();
 			setChanged(false);
 		}
 
 		// call Folder.save() to be sure that messagefolderinfo is saved
-		super.save(worker);
+		super.save();
 	}
 
 	/**

@@ -16,6 +16,7 @@
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
@@ -26,12 +27,12 @@ import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.TableChangedEvent;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Expunge folder.
+ * <p>
+ * Delete all messages from this folder, which are marked as expunged.
+ * 
+ * @author fdietz
+ * 
  */
 public class ExpungeFolderCommand extends FolderCommand {
 
@@ -99,10 +100,12 @@ public class ExpungeFolderCommand extends FolderCommand {
 		for (int i = 0; i < r.length; i++) {
 
 			Folder srcFolder = (Folder) r[i].getFolder();
-
+//			register for status events
+		 ((StatusObservableImpl)srcFolder.getObservable()).setWorker(worker);
+		 
 			worker.setDisplayText("Expunging "+srcFolder.getName()+"..");
 			
-			srcFolder.expungeFolder(worker);
+			srcFolder.expungeFolder();
 
 		}
 

@@ -17,6 +17,7 @@
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -28,12 +29,16 @@ import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.TableChangedEvent;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Mark selected messages with specific variant.
+ * <p>
+ * 
+ * Variant can be:
+ * - read/unread
+ * - flagged/unflagged
+ * - expunged/unexpunged
+ * - answered
+ * 
+ * @author fdietz
  */
 public class MarkMessageCommand extends FolderCommand {
 
@@ -57,7 +62,7 @@ public class MarkMessageCommand extends FolderCommand {
 	}
 
 	public void updateGUI() throws Exception {
-                ColumbaLogger.log.info("update Gui");
+		ColumbaLogger.log.info("update Gui");
 
 		FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
@@ -107,11 +112,14 @@ public class MarkMessageCommand extends FolderCommand {
 			Object[] uids = r[i].getUids();
 
 			Folder srcFolder = (Folder) r[i].getFolder();
+			//			register for status events
+			((StatusObservableImpl) srcFolder.getObservable()).setWorker(
+				worker);
 
 			int markVariant = r[i].getMarkVariant();
 			// saving last selected Massage to the folder
 			srcFolder.setLastSelection(uids[0]);
-			srcFolder.markMessage(uids, markVariant, worker);
+			srcFolder.markMessage(uids, markVariant);
 		}
 	}
 }

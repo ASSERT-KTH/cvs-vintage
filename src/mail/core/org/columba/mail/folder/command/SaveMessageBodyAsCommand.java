@@ -37,6 +37,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
@@ -103,7 +104,8 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 				(FolderCommandReference[]) getReferences();
 		Object[] uids = r[0].getUids(); // uid for messages to save
 		Folder srcFolder = (Folder) r[0].getFolder();
-
+//		register for status events
+	 ((StatusObservableImpl)srcFolder.getObservable()).setWorker(worker);
 		JFileChooser fileChooser = new JFileChooser();
 
 		// save each message
@@ -112,10 +114,10 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 			ColumbaLogger.log.debug("Saving UID=" + uid);
 
 			// get headers, body part and attachment for message
-			ColumbaHeader header = srcFolder.getMessageHeader(uid, worker);
+			ColumbaHeader header = srcFolder.getMessageHeader(uid);
 			MimePart bodyPart = getMessageBodyPart(uid, srcFolder, worker);
 			AttachmentModel attMod = new AttachmentModel();
-			attMod.setCollection(srcFolder.getMimePartTree(uid, worker));
+			attMod.setCollection(srcFolder.getMimePartTree(uid));
 			List attachments = attMod.getDisplayedMimeParts();
 
 			// determine type of body part
@@ -318,7 +320,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 
 		// Get body of message depending on user preferences
 		MimePartTree mimePartTree = 
-				srcFolder.getMimePartTree(uid, worker);
+				srcFolder.getMimePartTree(uid);
 
 		MimePart bodyPart = null;
 		if (preferhtml)
@@ -331,7 +333,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 			bodyPart.setBody(new String("<No Message-Text>"));
 		} else
 			bodyPart =
-				srcFolder.getMimePart(uid, bodyPart.getAddress(), worker);
+				srcFolder.getMimePart(uid, bodyPart.getAddress());
 		
 		// return the body part found (or constructed)
 		return bodyPart;

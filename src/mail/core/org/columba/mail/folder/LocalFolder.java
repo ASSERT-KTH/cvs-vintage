@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
@@ -137,8 +136,7 @@ public abstract class LocalFolder extends Folder {
 	 * 
 	 * @see org.columba.mail.folder.Folder#exists(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public boolean exists(Object uid, WorkerStatusController worker)
-		throws Exception {
+	public boolean exists(Object uid) throws Exception {
 		return getDataStorageInstance().exists(uid);
 	}
 
@@ -147,15 +145,13 @@ public abstract class LocalFolder extends Folder {
 	 * 
 	 * @see org.columba.mail.folder.Folder#addMessage(org.columba.mail.message.AbstractMessage, org.columba.core.command.WorkerStatusController)
 	 */
-	public Object addMessage(
-		AbstractMessage message,
-		WorkerStatusController worker)
-		throws Exception {
+	public Object addMessage(AbstractMessage message) throws Exception {
 
-		if ( message == null ) return null;
-		
+		if (message == null)
+			return null;
+
 		// load headerlist before adding a message
-		getHeaderList(worker);
+		getHeaderList();
 
 		// generate UID for new message
 		Object newUid = generateNextMessageUid();
@@ -167,8 +163,8 @@ public abstract class LocalFolder extends Folder {
 
 		// get message source
 		String source = message.getSource();
-		if( source == null) {
-			System.out.println( "source is null " + newUid );
+		if (source == null) {
+			System.out.println("source is null " + newUid);
 			return null;
 		}
 
@@ -194,8 +190,7 @@ public abstract class LocalFolder extends Folder {
 	/** 
 	 * @see org.columba.mail.folder.Folder#addMessage(java.lang.String, org.columba.core.command.WorkerStatusController)
 	 */
-	public Object addMessage(String source, WorkerStatusController worker)
-		throws Exception {
+	public Object addMessage(String source) throws Exception {
 
 		// init parser
 		Rfc822Parser parser = new Rfc822Parser();
@@ -217,14 +212,13 @@ public abstract class LocalFolder extends Folder {
 		// this folder was modified
 		changed = true;
 
-		return addMessage(m, worker);
+		return addMessage(m);
 	}
 
 	/**
 	 * @see org.columba.mail.folder.Folder#removeMessage(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public void removeMessage(Object uid, WorkerStatusController worker)
-		throws Exception {
+	public void removeMessage(Object uid) throws Exception {
 
 		// remove message from disk
 		getDataStorageInstance().removeMessage(uid);
@@ -245,14 +239,10 @@ public abstract class LocalFolder extends Folder {
 	 * 
 	 * 
 	 * @param uid			unique message ID
-	 * @param worker		<class>WorkerStatusController</class>
 	 * @return				a message object referring to this UID
 	 * @throws Exception	<class>Exception</class>
 	 */
-	public AbstractMessage getMessage(
-		Object uid,
-		WorkerStatusController worker)
-		throws Exception {
+	public AbstractMessage getMessage(Object uid) throws Exception {
 		if (aktMessage != null) {
 			if (aktMessage.getUID().equals(uid)) {
 				// this message is already cached
@@ -263,11 +253,10 @@ public abstract class LocalFolder extends Folder {
 			}
 		}
 
-		String source = getMessageSource(uid, worker);
+		String source = getMessageSource(uid);
 		//ColumbaHeader h = getMessageHeader(uid, worker);
 
-		AbstractMessage message =
-			new Rfc822Parser().parse(source, null);
+		AbstractMessage message = new Rfc822Parser().parse(source, null);
 		message.setUID(uid);
 		message.setSource(source);
 		//message.setHeader(h);
@@ -280,14 +269,11 @@ public abstract class LocalFolder extends Folder {
 	/**
 	 * @see org.columba.mail.folder.Folder#getMimePart(java.lang.Object, java.lang.Integer[], org.columba.core.command.WorkerStatusController)
 	 */
-	public MimePart getMimePart(
-		Object uid,
-		Integer[] address,
-		WorkerStatusController worker)
+	public MimePart getMimePart(Object uid, Integer[] address)
 		throws Exception {
 
 		// get message with UID
-		AbstractMessage message = getMessage(uid, worker);
+		AbstractMessage message = getMessage(uid);
 
 		// get mimepart of message
 		MimePart mimePart = message.getMimePartTree().getFromAddress(address);
@@ -298,13 +284,10 @@ public abstract class LocalFolder extends Folder {
 	/**
 	 * @see org.columba.mail.folder.Folder#getMessageHeader(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public ColumbaHeader getMessageHeader(
-		Object uid,
-		WorkerStatusController worker)
-		throws Exception {
+	public ColumbaHeader getMessageHeader(Object uid) throws Exception {
 
 		// get message with UID
-		AbstractMessage message = getMessage(uid, worker);
+		AbstractMessage message = getMessage(uid);
 
 		// get header of message
 		ColumbaHeader header = (ColumbaHeader) message.getHeader();
@@ -315,8 +298,7 @@ public abstract class LocalFolder extends Folder {
 	/**
 	 * @see org.columba.mail.folder.Folder#getMessageSource(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public String getMessageSource(Object uid, WorkerStatusController worker)
-		throws Exception {
+	public String getMessageSource(Object uid) throws Exception {
 
 		// get source of message
 		String source = getDataStorageInstance().loadMessage(uid);
@@ -327,13 +309,10 @@ public abstract class LocalFolder extends Folder {
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.Folder#getMimePartTree(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public MimePartTree getMimePartTree(
-		Object uid,
-		WorkerStatusController worker)
-		throws Exception {
+	public MimePartTree getMimePartTree(Object uid) throws Exception {
 
 		// get message with UID
-		AbstractMessage message = getMessage(uid, worker);
+		AbstractMessage message = getMessage(uid);
 
 		// get tree-like structure of mimeparts
 		MimePartTree mptree = message.getMimePartTree();
@@ -364,22 +343,16 @@ public abstract class LocalFolder extends Folder {
 	/**
 	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter, java.lang.Object[], org.columba.core.command.WorkerStatusController)
 	 */
-	public Object[] searchMessages(
-		Filter filter,
-		Object[] uids,
-		WorkerStatusController worker)
+	public Object[] searchMessages(Filter filter, Object[] uids)
 		throws Exception {
-		return getSearchEngineInstance().searchMessages(filter, uids, worker);
+		return getSearchEngineInstance().searchMessages(filter, uids);
 	}
 
 	/**
 	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter, org.columba.core.command.WorkerStatusController)
 	 */
-	public Object[] searchMessages(
-		Filter filter,
-		WorkerStatusController worker)
-		throws Exception {
-		return getSearchEngineInstance().searchMessages(filter, worker);
+	public Object[] searchMessages(Filter filter) throws Exception {
+		return getSearchEngineInstance().searchMessages(filter);
 	}
 
 	/**

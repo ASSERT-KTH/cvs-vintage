@@ -20,6 +20,7 @@ import java.util.LinkedList;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.logging.ColumbaLogger;
@@ -255,6 +256,9 @@ public class ViewMessageCommand extends FolderCommand {
 	public void execute(Worker wsc) throws Exception {
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 		srcFolder = (Folder) r[0].getFolder();
+//		register for status events
+		((StatusObservableImpl)srcFolder.getObservable()).setWorker(wsc);
+		
 		uid = r[0].getUids()[0];
 
 		bodyPart = null;
@@ -264,7 +268,7 @@ public class ViewMessageCommand extends FolderCommand {
 		// get attachment structure
 		try
 		{	
-			mimePartTree = srcFolder.getMimePartTree(uid, wsc);
+			mimePartTree = srcFolder.getMimePartTree(uid);
 		}
 		catch ( FileNotFoundException ex)
 		{
@@ -273,7 +277,7 @@ public class ViewMessageCommand extends FolderCommand {
 		}
 		
 		//	get RFC822-header
-		header = srcFolder.getMessageHeader(uid, wsc);
+		header = srcFolder.getMessageHeader(uid);
 
 		// if this message is signed/encrypted we have to use
 		// GnuPG to extract the decrypted bodypart
@@ -320,7 +324,7 @@ public class ViewMessageCommand extends FolderCommand {
 			} else {
 
 				bodyPart =
-					srcFolder.getMimePart(uid, bodyPart.getAddress(), wsc);
+					srcFolder.getMimePart(uid, bodyPart.getAddress());
 			}
 		}
 	}

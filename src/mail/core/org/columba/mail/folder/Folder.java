@@ -19,12 +19,12 @@
 package org.columba.mail.folder;
 
 import java.io.File;
-import java.util.Vector;
 
 import javax.swing.JDialog;
 import javax.swing.tree.TreeNode;
 
-import org.columba.core.command.WorkerStatusController;
+import org.columba.core.command.StatusObservable;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
@@ -50,9 +50,9 @@ import org.columba.mail.message.MimePartTree;
  * make it easy to write new folders in the future.
  * <p>
  * To make it very easy to add new local mailbox formats, we added a
- * slightly more complex class hierachy in <class>org.columba.mail.folder</class>,
- * <class>org.columba.mail.folder.headercache</class>. An implementation 
- * example can be found in <class>org.columba.mail.folder.mh</class>.
+ * slightly more complex class hierachy in org.columba.mail.folder,
+ * org.columba.mail.folder.headercache. An implementation 
+ * example can be found in org.columba.mail.folder.mh.
  * <p>
  * Please note, that you only need to implement <class>DataStorageInstance</class>
  * which should be trivial in most cases. Then create a class extending
@@ -105,6 +105,13 @@ public abstract class Folder extends FolderTreeNode {
 	
 
 	/**
+	 * Status information updates are handled in using StatusObservable.
+	 * <p>
+	 * Every command has to register its interest to this events before
+	 * accessing the folder. 
+	 */
+	protected StatusObservable observable;
+	/**
 	 * Standard constructor. 
 	 * 
 	 * @param node <class>AdapterNode</class> this connects the config
@@ -119,7 +126,9 @@ public abstract class Folder extends FolderTreeNode {
 		// children is already initialised by DefaultMutableTreeNode
 		//children = new Vector();
 
-		init();
+		messageFolderInfo = new MessageFolderInfo();
+
+		changed = false;
 
 		String dir = ConfigPath.getConfigDirectory() + "/mail/" + getUid();
 		if (DiskIO.ensureDirectory(dir))
@@ -127,6 +136,9 @@ public abstract class Folder extends FolderTreeNode {
 			
 		
 		loadMessageFolderInfo();
+		
+		observable = new StatusObservableImpl();
+		
 	}
 	
 	
@@ -140,13 +152,18 @@ public abstract class Folder extends FolderTreeNode {
 	public Folder(String name) {
 		super(null);
 
-		children = new Vector();
+		// FIXME: why is this needed?
+	    // children is already initialised by DefaultMutableTreeNode
+		//children = new Vector();
 
-		init();
+		messageFolderInfo = new MessageFolderInfo();
 
+		changed = false;
+				
 		String dir = ConfigPath.getConfigDirectory() + "/mail/" + name;
 		if (DiskIO.ensureDirectory(dir))
 			directoryFile = new File(dir);
+			
 
 	}
 
@@ -181,13 +198,11 @@ public abstract class Folder extends FolderTreeNode {
 	 * 
 	 * @param destFolder		the destination folder of the copy operation
 	 * @param uids				an array of UID's identifying the messages
-	 * @param worker
 	 * @throws Exception
 	 */
 	public void innerCopy(
 		Folder destFolder,
-		Object[] uids,
-		WorkerStatusController worker)
+		Object[] uids)
 		throws Exception {
 	}
 
@@ -217,20 +232,6 @@ public abstract class Folder extends FolderTreeNode {
 	}
 	
 
-
-	/**
-	 * Do some initialization work both constructors share
-	 * 
-	 */
-	protected void init() {
-
-		messageFolderInfo = new MessageFolderInfo();
-
-		changed = false;
-
-
-	}
-
 	/**
 	 * Returns the the folder where messages are saved
 	 * 
@@ -241,9 +242,9 @@ public abstract class Folder extends FolderTreeNode {
 	}
 
 	/**
-	 * @see org.columba.modules.mail.folder.FolderTreeNode#createChildren(WorkerStatusController)
+	 * @see org.columba.modules.mail.folder.FolderTreeNode#createChildren()
 	 */
-	public void createChildren(WorkerStatusController worker) {
+	public void createChildren() {
 	}
 
 	/**
@@ -268,18 +269,9 @@ public abstract class Folder extends FolderTreeNode {
 
 	/**
 	 * 
-	 * @param list	the new list of <class>Filter</class>
-	 */
-	public void setFilterList(FilterList list) {
-		filterList = list;
-	}
-
-	
-	/**
-	 * 
 	 * @return boolean		True, if folder data changed. False, otherwise.
 	 */
-	public boolean getChanged() {
+	protected boolean hasChanged() {
 		return changed;
 	}
 
@@ -303,24 +295,11 @@ public abstract class Folder extends FolderTreeNode {
 
 	
 	/**
-	 * 
-	 * @return boolean		True if folder has filters, false otherwise
-	 */
-	public boolean hasFilters() {
-		if (getFilterList() == null)
-			return false;
-
-		return getFilterList().count() > 0;
-	}
-
-	/**
 	 * Removes all messages which are marked as expunged
 	 * 	
-	 * @param worker
 	 * @throws Exception
 	 */
-	public abstract void expungeFolder(
-		WorkerStatusController worker)
+	public abstract void expungeFolder()
 		throws Exception;
 
 	/**
@@ -332,21 +311,18 @@ public abstract class Folder extends FolderTreeNode {
 	 * @throws Exception
 	 */
 	public abstract Object addMessage(
-		AbstractMessage message,
-		WorkerStatusController worker)
+		AbstractMessage message)
 		throws Exception;
 
 	/**
 	 * Add message to folder.
 	 * 
 	 * @param source
-	 * @param worker
 	 * @return Object
 	 * @throws Exception
 	 */
 	public abstract Object addMessage(
-		String source,
-		WorkerStatusController worker)
+		String source)
 		throws Exception;
 		
 	/**
@@ -356,17 +332,16 @@ public abstract class Folder extends FolderTreeNode {
 	 * @return boolean 		true, if message exists
 	 * @throws Exception
 	 */
-	public abstract boolean exists(Object uid, WorkerStatusController worker)
+	public abstract boolean exists(Object uid)
 		throws Exception;
 
 	/**
+	 * Return list of headers.
 	 * 
-	 * 
-	 * @param worker for accessing the <class>StatusBar</class>
 	 * @return HeaderList		list of headers 
 	 * @throws Exception
 	 */
-	public abstract HeaderList getHeaderList(WorkerStatusController worker)
+	public abstract HeaderList getHeaderList()
 		throws Exception;
 
 	/**
@@ -377,13 +352,11 @@ public abstract class Folder extends FolderTreeNode {
 	 * 
 	 * @param uid		array of UIDs 
 	 * @param variant	variant can be a value between 0 and 6
-	 * @param worker
 	 * @throws Exception
 	 */
 	public abstract void markMessage(
 		Object[] uids,
-		int variant,
-		WorkerStatusController worker)
+		int variant)
 		throws Exception;
 
 	/**
@@ -393,8 +366,7 @@ public abstract class Folder extends FolderTreeNode {
 	 * @throws Exception
 	 */
 	public abstract void removeMessage(
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception;
 
 	/**
@@ -404,27 +376,23 @@ public abstract class Folder extends FolderTreeNode {
 	 * 
 	 * @param uid			UID of message
 	 * @param address		array of Integer, addressing the MimePart
-	 * @param worker
 	 * @return MimePart		MimePart of message
 	 * @throws Exception
 	 */
 	public abstract MimePart getMimePart(
 		Object uid,
-		Integer[] address,
-		WorkerStatusController worker)
+		Integer[] address)
 		throws Exception;
 
 	/**
 	 * Return the source of the message.
 	 * 
 	 * @param uid		UID of message
-	 * @param worker
 	 * @return String		the source of the message
 	 * @throws Exception
 	 */
 	public abstract String getMessageSource(
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception;
 
 	/**
@@ -432,26 +400,22 @@ public abstract class Folder extends FolderTreeNode {
 	 * more details.
 	 * 
 	 * @param uid				UID of message
-	 * @param worker
 	 * @return MimePartTree		return mimepart structure
 	 * @throws Exception
 	 */
 	public abstract MimePartTree getMimePartTree(
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception;
 
 	/**
 	 * Return header of message
 	 * 
 	 * @param uid					UID of message
-	 * @param worker
 	 * @return ColumbaHeader		header of message
 	 * @throws Exception
 	 */
 	public abstract ColumbaHeader getMessageHeader(
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception;
 
 	
@@ -544,7 +508,7 @@ public abstract class Folder extends FolderTreeNode {
 	 * 
 	 * @return Object[]		array of all UIDs this folder contains
 	 */
-	public Object[] getUids(WorkerStatusController worker) throws Exception {
+	public Object[] getUids() throws Exception {
 		return null;
 	}
 	
@@ -555,27 +519,23 @@ public abstract class Folder extends FolderTreeNode {
 	 * 
 	 * @param filter		Filter criteria to use
 	 * @param uids			array of UIDs to do the search on
-	 * @param worker
 	 * @return Object[]		array of matched messages as UIDs
 	 * @throws Exception 
 	 */
 	public abstract Object[] searchMessages(
 		Filter filter,
-		Object[] uids,
-		WorkerStatusController worker)
+		Object[] uids)
 		throws Exception;
 
 	/**
 	 * Search for a set of messages in the complete folder.
 	 * 
 	 * @param filter		Filter criteria to use
-	 * @param worker
 	 * @return Object[]		array of matched messages as UIDs
 	 * @throws Exception
 	 */
 	public abstract Object[] searchMessages(
-		Filter filter,
-		WorkerStatusController worker)
+		Filter filter)
 		throws Exception;
 
 	/**
@@ -633,7 +593,7 @@ public abstract class Folder extends FolderTreeNode {
 	 * closing Columba
 	 *
 	 */
-	public void save(WorkerStatusController worker) throws Exception
+	public void save() throws Exception
 	{
 		saveMessageFolderInfo();
 	}
@@ -652,6 +612,13 @@ public abstract class Folder extends FolderTreeNode {
 	*/
 	public void setLastSelection(Object lastSel) {
 		this.lastSelection = lastSel;
+	}
+
+	/**
+	 * @return	observable containing status information
+	 */
+	public StatusObservable getObservable() {
+		return observable;
 	}
 
 }

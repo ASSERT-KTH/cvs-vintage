@@ -17,7 +17,6 @@ package org.columba.mail.filter.plugins;
 
 import java.util.Date;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
@@ -70,10 +69,9 @@ public class DateFilter extends AbstractFilter {
 	public boolean process(
 		Object[] args,
 		Folder folder,
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception {
-		HeaderInterface header = folder.getMessageHeader(uid, worker);
+		HeaderInterface header = folder.getMessageHeader(uid);
 
 		int condition = FilterCriteria.getCriteria((String) args[0]);
 		Date date = transformDate((String) args[1]);

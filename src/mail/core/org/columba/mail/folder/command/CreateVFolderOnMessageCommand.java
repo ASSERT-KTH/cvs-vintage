@@ -21,6 +21,7 @@
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.logging.ColumbaLogger;
@@ -112,9 +113,10 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
 		}
 		Object uid = uids[0];
 		parentFolder = (Folder) r[0].getFolder();
-		
+//		register for status events
+	 ((StatusObservableImpl)parentFolder.getObservable()).setWorker(worker);
 		// get value of Subject, From or To header
-		HeaderInterface header = parentFolder.getMessageHeader(uid, worker);
+		HeaderInterface header = parentFolder.getMessageHeader(uid);
 		String headerValue = (String) header.get(vfolderType);
 		
 		if (headerValue == null) {

@@ -68,9 +68,9 @@ public class ReplyToAllCommand extends FolderCommand {
 		Message message = new Message();
 
 		ColumbaHeader header =
-			(ColumbaHeader) folder.getMessageHeader(uids[0], worker);
+			(ColumbaHeader) folder.getMessageHeader(uids[0]);
 		message.setHeader(header);
-		MimePartTree mimePartTree = folder.getMimePartTree(uids[0], worker);
+		MimePartTree mimePartTree = folder.getMimePartTree(uids[0]);
 		message.setMimePartTree(mimePartTree);
 
 		XmlElement html =
@@ -92,7 +92,7 @@ public class ReplyToAllCommand extends FolderCommand {
 			bodyPart.setBody(new String("<No Message-Text>"));
 		} else
 			bodyPart =
-				folder.getMimePart(uids[0], bodyPart.getAddress(), worker);
+				folder.getMimePart(uids[0], bodyPart.getAddress());
 
 		message.setBodyPart(bodyPart);
 

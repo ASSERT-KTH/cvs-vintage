@@ -246,7 +246,7 @@ public class ArgumentWriter {
 		output.flush();
 
 		for (;;) {
-			IMAPResponse r = protocol.getResponse(null);
+			IMAPResponse r = protocol.getResponse();
 			if (r.isCONTINUATION())
 				break;
 		}

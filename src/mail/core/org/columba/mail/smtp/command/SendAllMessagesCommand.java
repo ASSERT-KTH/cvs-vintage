@@ -81,13 +81,13 @@ public class SendAllMessagesCommand extends FolderCommand {
 		outboxFolder = (OutboxFolder) r[0].getFolder();
 
 		// get UID list of messages
-		Object[] uids = outboxFolder.getUids(worker);
+		Object[] uids = outboxFolder.getUids();
 
 		// save every message in a list
 		for (int i = 0; i < uids.length; i++) {
-			if (outboxFolder.exists(uids[i], worker) == true) {
+			if (outboxFolder.exists(uids[i]) == true) {
 				SendableMessage message =
-					(SendableMessage) outboxFolder.getMessage(uids[i], worker);
+					(SendableMessage) outboxFolder.getMessage(uids[i]);
 				sendListManager.add(message);
 
 			}

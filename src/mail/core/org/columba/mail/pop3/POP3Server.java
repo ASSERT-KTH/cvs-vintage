@@ -65,7 +65,7 @@ public class POP3Server {
 	}
 
 	public void save() throws Exception {
-		headerCache.save(null);
+		headerCache.save();
 	}
 
 	public File getConfigFile() {
@@ -106,7 +106,7 @@ public class POP3Server {
 	protected boolean existsLocally(Object uid, HeaderList list)
 		throws Exception {
 
-		for (Enumeration e = headerCache.getHeaderList(null).keys();
+		for (Enumeration e = headerCache.getHeaderList().keys();
 			e.hasMoreElements();
 			) {
 			Object localUID = e.nextElement();
@@ -141,7 +141,7 @@ public class POP3Server {
 	public List synchronize(List newList) throws Exception {
 
 		LinkedList headerUids = new LinkedList();
-		Enumeration keys = headerCache.getHeaderList(null).keys();
+		Enumeration keys = headerCache.getHeaderList().keys();
 		while (keys.hasMoreElements()) {
 			headerUids.add(keys.nextElement());
 		}
@@ -152,7 +152,7 @@ public class POP3Server {
 		ListTools.substract(headerUids, new ArrayList(newList));
 		Iterator it = headerUids.iterator();
 		while (it.hasNext()) {
-			headerCache.getHeaderList(null).remove(it.next());
+			headerCache.getHeaderList().remove(it.next());
 		}
 
 		return newUids;
@@ -184,7 +184,7 @@ public class POP3Server {
 		header.set("columba.pop3uid", uid);
 		header.set("columba.flags.recent", Boolean.TRUE);
 
-		headerCache.getHeaderList(null).add(header, uid);
+		headerCache.getHeaderList().add(header, uid);
 
 		return message;
 	}

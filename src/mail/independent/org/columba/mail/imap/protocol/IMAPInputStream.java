@@ -19,15 +19,20 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.columba.core.command.WorkerStatusController;
+import org.columba.core.command.StatusObservable;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * 
+ * This InputStream handles all IMAP specific features like literals
+ * in an transparent way.
+ * <p>
+ * 
+ * See ArgumentWriter for more information.
+ * 
+ * Additionally you can register a StatusObserver, to get detailed
+ * progress information of longer tasks.
+ * 
+ * @author fdietz 
  */
 public class IMAPInputStream extends BufferedInputStream {
 
@@ -41,6 +46,8 @@ public class IMAPInputStream extends BufferedInputStream {
 
 	// position
 	private int idx = 0;
+	
+	private StatusObservable observable;
 
 	/**
 	 * @see java.io.FilterInputStream#FilterInputStream(InputStream)
@@ -61,13 +68,13 @@ public class IMAPInputStream extends BufferedInputStream {
 	 * Read a Response from the InputStream.
 	 * @return ByteArray that contains the Response
 	 */
-	public String readResponse(WorkerStatusController worker)
+	public String readResponse()
 		throws IOException {
 		buffer = new byte[128];
 		idx = 0;
 		sz = 128;
 
-		readResponseString(worker);
+		readResponseString();
 
 		return new String(buffer, 0, idx, "ISO8859_1");
 	}
@@ -82,7 +89,7 @@ public class IMAPInputStream extends BufferedInputStream {
 	 * @throws IOException
 	 * 
 	 */
-	private void readResponseString(WorkerStatusController worker)
+	private void readResponseString()
 		throws IOException {
 
 		int b = 0;
@@ -136,11 +143,11 @@ public class IMAPInputStream extends BufferedInputStream {
 			// read 'count' bytes
 			//  in our example this is 2750
 			if (count > 0) {
-				if (worker != null) {
+				if (getObservable() != null) {
 
-					worker.setProgressBarMaximum(count);
+					getObservable().setMax(count);
 
-					worker.setProgressBarValue(0);
+					getObservable().setCurrent(0);
 				}
 
 				// space left in buffer
@@ -161,14 +168,14 @@ public class IMAPInputStream extends BufferedInputStream {
 					count -= actual;
 					idx += actual;
 
-					if (worker != null) {
-						worker.setProgressBarValue(idx);
+					if (getObservable() != null) {
+						getObservable().setCurrent(idx);
 					}
 				}
 			}
 
 			// we don't stop until we find CRLF 
-			readResponseString(worker);
+			readResponseString();
 		}
 		return;
 	}
@@ -248,6 +255,20 @@ public class IMAPInputStream extends BufferedInputStream {
 		} else {
 			return -result;
 		}
+	}
+
+	/**
+	 * @return
+	 */
+	public StatusObservable getObservable() {
+		return observable;
+	}
+
+	/**
+	 * @param observable
+	 */
+	public void setObservable(StatusObservable observable) {
+		this.observable = observable;
 	}
 
 }

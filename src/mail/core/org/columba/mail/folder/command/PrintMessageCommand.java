@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
@@ -59,12 +60,9 @@ import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Print the selected message.
+ * 
+ * @author karlpeder
  */
 public class PrintMessageCommand extends FolderCommand {
 
@@ -178,15 +176,17 @@ public class PrintMessageCommand extends FolderCommand {
 		Object[] uids = r[0].getUids(); // uid for messages to print
 
 		Folder srcFolder = (Folder) r[0].getFolder();
+		//		register for status events
+		 ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
 		// Print each message
 		for (int j = 0; j < uids.length; j++) {
 			Object uid = uids[j];
-                        ColumbaLogger.log.debug("Printing UID=" + uid);
+			ColumbaLogger.log.debug("Printing UID=" + uid);
 
 			Message message = new Message();
-			ColumbaHeader header = srcFolder.getMessageHeader(uid, worker);
-			MimePartTree mimePartTree = srcFolder.getMimePartTree(uid, worker);
+			ColumbaHeader header = srcFolder.getMessageHeader(uid);
+			MimePartTree mimePartTree = srcFolder.getMimePartTree(uid);
 
 			// Does the user prefer html or plain text?
 			XmlElement html =
@@ -206,8 +206,7 @@ public class PrintMessageCommand extends FolderCommand {
 				bodyPart = new MimePart();
 				bodyPart.setBody(new String("<No Message-Text>"));
 			} else
-				bodyPart =
-					srcFolder.getMimePart(uid, bodyPart.getAddress(), worker);
+				bodyPart = srcFolder.getMimePart(uid, bodyPart.getAddress());
 
 			// Setup print document for message
 			cDocument messageDoc = new cDocument();
@@ -328,22 +327,25 @@ public class PrintMessageCommand extends FolderCommand {
 		XmlElement printer = null;
 		if (options != null)
 			printer = options.getElement("/printer");
-			
+
 		// no configuration available, create default config
 		if (printer == null) {
 			// create new local xml treenode
-                        ColumbaLogger.log.debug("printer config node not found - creating new");
+			ColumbaLogger.log.debug(
+				"printer config node not found - creating new");
 			printer = new XmlElement("printer");
 			printer.addAttribute("allow_scaling", "true");
 
 			// add to options if possible (so it will be saved)
 			if (options != null) {
-                                ColumbaLogger.log.debug("storing new printer config node");
+				ColumbaLogger.log.debug("storing new printer config node");
 				options.addElement(printer);
 			}
 		}
-                
-                return Boolean.valueOf(printer.getAttribute("allow_scaling", "true")).booleanValue();
+
+		return Boolean
+			.valueOf(printer.getAttribute("allow_scaling", "true"))
+			.booleanValue();
 	}
 
 	/**
@@ -372,7 +374,8 @@ public class PrintMessageCommand extends FolderCommand {
 			URL url = tempFile.toURL();
 
 			boolean allowScaling = isScalingAllowed();
-			cHTMLPart htmlBody = new cHTMLPart(allowScaling); // true ~ scaling allowed
+			cHTMLPart htmlBody = new cHTMLPart(allowScaling);
+			// true ~ scaling allowed
 			htmlBody.setTopMargin(new cCmUnit(1.0));
 			htmlBody.setHTML(url);
 			return htmlBody;
@@ -410,7 +413,9 @@ public class PrintMessageCommand extends FolderCommand {
 			// decode using specified charset
 			decodedBody = decoder.decode(bodyPart.getBody(), charsetToUse);
 		} catch (UnsupportedEncodingException ex) {
-                        ColumbaLogger.log.info("charset " + charsetToUse
+			ColumbaLogger.log.info(
+				"charset "
+					+ charsetToUse
 					+ " isn't supported, falling back to default...");
 			try {
 				// decode using default charset

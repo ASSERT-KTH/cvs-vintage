@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.message.HeaderInterface;
@@ -52,8 +51,7 @@ public class FlagsFilter extends AbstractFilter {
 	public boolean process(
 		Object[] args,
 		Folder folder,
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception {
 		
 		boolean result = false;
@@ -77,7 +75,7 @@ public class FlagsFilter extends AbstractFilter {
 			searchHeaderField = new String("columba.flags.seen");
 		}
 		
-		HeaderInterface header = folder.getMessageHeader(uid, worker);
+		HeaderInterface header = folder.getMessageHeader(uid);
 
 		Boolean flags = (Boolean) header.get(searchHeaderField);
 		if (flags == null) 

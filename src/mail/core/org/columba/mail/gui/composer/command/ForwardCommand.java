@@ -67,11 +67,11 @@ public class ForwardCommand extends FolderCommand {
 		Message message = new Message();
 
 		ColumbaHeader header =
-			(ColumbaHeader) folder.getMessageHeader(uids[0], worker);
+			(ColumbaHeader) folder.getMessageHeader(uids[0]);
 		message.setHeader(header);
-		MimePartTree mimePartTree = folder.getMimePartTree(uids[0], worker);
+		MimePartTree mimePartTree = folder.getMimePartTree(uids[0]);
 		message.setMimePartTree(mimePartTree);
-		String source = folder.getMessageSource(uids[0], worker);
+		String source = folder.getMessageSource(uids[0]);
 		message.setSource(source);
 
 		ComposerModel model = new ComposerModel();

@@ -19,6 +19,7 @@ import org.columba.core.command.Command;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.SelectiveGuiUpdateCommand;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.main.MainInterface;
@@ -74,7 +75,9 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
 		folder = (Folder) r[0].getFolder();
-
+//		register for status events
+		((StatusObservableImpl)folder.getObservable()).setWorker(worker);
+		
 		FolderItem item = folder.getFolderItem();
 		if (item.get("type").equals("IMAPFolder")) {
 			boolean applyFilter =
@@ -93,7 +96,7 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 					worker.setProgressBarValue(i);
 					Filter filter = list.get(i);
 
-					Object[] result = folder.searchMessages(filter, worker);
+					Object[] result = folder.searchMessages(filter);
 					if (result.length != 0) {
 						CompoundCommand command =
 							filter.getCommand(folder, result);
@@ -105,6 +108,6 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 			}
 		}
 
-		headerList = (folder).getHeaderList(worker);
+		headerList = (folder).getHeaderList();
 	}
 }

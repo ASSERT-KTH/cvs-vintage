@@ -58,7 +58,7 @@ public class MessageFrameController extends AbstractMailFrameController {
 		Folder inboxFolder = (Folder) MainInterface.treeModel.getFolder(101);
 		try {
 
-			Object[] uids = inboxFolder.getUids(null);
+			Object[] uids = inboxFolder.getUids();
 			if (uids.length > 0) {
 				Object uid = uids[0];
 

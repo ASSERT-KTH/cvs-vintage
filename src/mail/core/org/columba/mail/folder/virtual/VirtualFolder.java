@@ -104,18 +104,18 @@ public class VirtualFolder extends Folder {
 		return new SearchFrame(frameController, this);
 	}
 
-	public boolean exists(Object uid, WorkerStatusController worker)
+	public boolean exists(Object uid)
 		throws Exception {
 		return headerList.containsKey(uid);
 	}
 
-	public HeaderList getHeaderList(WorkerStatusController worker)
+	public HeaderList getHeaderList()
 		throws Exception {
 
 		headerList.clear();
 		getMessageFolderInfo().clear();
 
-		applySearch(worker);
+		applySearch();
 
 		return headerList;
 
@@ -231,7 +231,7 @@ public class VirtualFolder extends Folder {
 
 	}
 
-	protected void applySearch(WorkerStatusController worker)
+	protected void applySearch()
 		throws Exception {
 
 		int uid = getFolderItem().getInteger("property", "source_uid");
@@ -257,7 +257,7 @@ public class VirtualFolder extends Folder {
 
 		Filter f = new Filter(getFolderItem().getRoot().getElement("filter"));
 
-		applySearch(srcFolder, f, worker);
+		applySearch(srcFolder, f);
 
 		VirtualFolder folder =
 			(VirtualFolder) MainInterface.treeModel.getFolder(106);
@@ -266,20 +266,18 @@ public class VirtualFolder extends Folder {
 
 	protected void applySearch(
 		Folder parent,
-		Filter filter,
-		WorkerStatusController worker)
+		Filter filter)
 		throws Exception {
 
 		Folder folder = parent;
 
-		Object[] resultUids = folder.searchMessages(filter, worker);
+		Object[] resultUids = folder.searchMessages(filter);
 		if (resultUids != null) {
 
 			for (int i = 0; i < resultUids.length; i++) {
 				HeaderInterface header =
 					(HeaderInterface) folder.getMessageHeader(
-						resultUids[i],
-						worker);
+						resultUids[i]);
 				try {
 					if ( header != null )
 						add((ColumbaHeader) header, folder, resultUids[i]);
@@ -300,7 +298,7 @@ public class VirtualFolder extends Folder {
 				if (folder instanceof VirtualFolder)
 					continue;
 
-				applySearch(folder, filter, worker);
+				applySearch(folder, filter);
 			}
 		}
 
@@ -357,17 +355,17 @@ public class VirtualFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#expungeFolder(WorkerStatusController)
 	 */
-	public void expungeFolder(WorkerStatusController worker) throws Exception {
+	public void expungeFolder() throws Exception {
 
-		Object[] uids = getUids(worker);
+		Object[] uids = getUids();
 
 		for (int i = 0; i < uids.length; i++) {
 			Object uid = uids[i];
 
-			if (exists(uid, worker) == false)
+			if (exists(uid) == false)
 				continue;
 
-			ColumbaHeader h = getMessageHeader(uid, worker);
+			ColumbaHeader h = getMessageHeader(uid);
 			Boolean expunged = (Boolean) h.get("columba.flags.expunged");
 
 			//ColumbaLogger.log.debug("expunged=" + expunged);
@@ -378,7 +376,7 @@ public class VirtualFolder extends Folder {
 				//ColumbaLogger.log.info("moving message with UID " + uid + " to trash");
 
 				// remove message
-				removeMessage(uid, worker);
+				removeMessage(uid);
 
 			}
 		}
@@ -388,8 +386,7 @@ public class VirtualFolder extends Folder {
 	 * @see org.columba.modules.mail.folder.Folder#addMessage(AbstractMessage, WorkerStatusController)
 	 */
 	public Object addMessage(
-		AbstractMessage message,
-		WorkerStatusController worker)
+		AbstractMessage message)
 		throws Exception {
 		return null;
 	}
@@ -398,35 +395,29 @@ public class VirtualFolder extends Folder {
 	 * @see org.columba.modules.mail.folder.Folder#addMessage(String, WorkerStatusController)
 	 */
 
-	public Object addMessage(String source, WorkerStatusController worker)
+	public Object addMessage(String source)
 		throws Exception {
 		return null;
 	}
 
-	/**
-	 * @see org.columba.modules.mail.folder.Folder#exists(Object)
-	 */
-	public boolean exists(Object uid) throws Exception {
-		return false;
-	}
+	
 
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#markMessage(Object[], int, WorkerStatusController)
 	 */
 	public void markMessage(
 		Object[] uids,
-		int variant,
-		WorkerStatusController worker)
+		int variant)
 		throws Exception {
 	}
 
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#removeMessage(Object)
 	 */
-	public void removeMessage(Object uid, WorkerStatusController worker)
+	public void removeMessage(Object uid)
 		throws Exception {
 
-		ColumbaHeader header = (ColumbaHeader) getMessageHeader(uid, worker);
+		ColumbaHeader header = (ColumbaHeader) getMessageHeader(uid);
 
 		if (header.get("columba.flags.seen").equals(Boolean.FALSE))
 			getMessageFolderInfo().decUnseen();
@@ -441,8 +432,7 @@ public class VirtualFolder extends Folder {
 	 */
 	public MimePart getMimePart(
 		Object uid,
-		Integer[] address,
-		WorkerStatusController worker)
+		Integer[] address)
 		throws Exception {
 
 		return null;
@@ -452,7 +442,7 @@ public class VirtualFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#getMessageSource(Object, WorkerStatusController)
 	 */
-	public String getMessageSource(Object uid, WorkerStatusController worker)
+	public String getMessageSource(Object uid)
 		throws Exception {
 
 		return null;
@@ -462,8 +452,7 @@ public class VirtualFolder extends Folder {
 	 * @see org.columba.modules.mail.folder.Folder#getMimePartTree(Object, WorkerStatusController)
 	 */
 	public MimePartTree getMimePartTree(
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception {
 
 		return null;
@@ -473,8 +462,7 @@ public class VirtualFolder extends Folder {
 	 * @see org.columba.modules.mail.folder.Folder#getMessageHeader(Object, WorkerStatusController)
 	 */
 	public ColumbaHeader getMessageHeader(
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception {
 
 		return (ColumbaHeader) headerList.get(uid);
@@ -497,15 +485,13 @@ public class VirtualFolder extends Folder {
 	 */
 	public Object[] searchMessages(
 		Filter filter,
-		Object[] uids,
-		WorkerStatusController worker)
+		Object[] uids)
 		throws Exception {
 		return null;
 	}
 
 	public Object[] searchMessages(
-		Filter filter,
-		WorkerStatusController worker)
+		Filter filter)
 		throws Exception {
 		return null;
 	}

@@ -105,7 +105,7 @@ public class OpenAttachmentCommand extends FolderCommand {
 
 		Integer[] address = r[0].getAddress();
 
-		part = folder.getMimePart(uids[0], address, worker);
+		part = folder.getMimePart(uids[0], address);
 
 		Decoder decoder;
 		MimeHeader header;
@@ -120,8 +120,7 @@ public class OpenAttachmentCommand extends FolderCommand {
 			tempFolder = MainInterface.treeModel.getTempFolder();
 			tempMessageUid =
 				tempFolder.addMessage(//(AbstractMessage) part.getContent(),
-				(String) part.getContent(),
-	worker);
+				(String) part.getContent());
 
 			inline = true;
 		} else {

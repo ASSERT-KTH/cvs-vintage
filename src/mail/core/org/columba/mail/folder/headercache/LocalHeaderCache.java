@@ -19,7 +19,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Enumeration;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.FolderInconsistentException;
@@ -45,8 +44,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 	}
 
-	public HeaderList getHeaderList(WorkerStatusController worker)
-		throws Exception {
+	public HeaderList getHeaderList() throws Exception {
 		boolean needToRelease = false;
 		// if there exists a ".header" cache-file
 		//  try to load the cache	
@@ -54,12 +52,12 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 			if (headerFile.exists()) {
 				try {
-					load(worker);
+					load();
 				} catch (Exception e) {
-					sync(worker);
+					sync();
 				}
 			} else {
-				sync(worker);
+				sync();
 			}
 			setHeaderCacheLoaded(true);
 		}
@@ -83,9 +81,9 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		 * @param worker
 		 * @throws Exception
 		 */
-	public void load(WorkerStatusController worker) throws Exception {
+	public void load() throws Exception {
 
-                ColumbaLogger.log.info("loading header-cache=" + headerFile);
+		ColumbaLogger.log.info("loading header-cache=" + headerFile);
 
 		ObjectInputStream ois = openInputStream();
 
@@ -95,7 +93,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 		if (needToSync(capacity)) {
 			ColumbaLogger.log.info(
-					"need to recreateHeaderList() because capacity is not matching");
+				"need to recreateHeaderList() because capacity is not matching");
 
 			throw new FolderInconsistentException();
 		}
@@ -104,13 +102,14 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 		//System.out.println("Number of Messages : " + capacity);
 
-		if (worker != null)
-			worker.setDisplayText(folder.getName()+": Loading headers from cache...");
+		if (getObservable() != null)
+			getObservable().setMessage(
+				folder.getName() + ": Loading headers from cache...");
 
-		if (worker != null)
-			worker.setProgressBarMaximum(capacity);
+		if (getObservable() != null)
+			getObservable().setMax(capacity);
 
-		worker.setProgressBarValue(0);
+		getObservable().setCurrent(0);
 
 		int nextUid = -1;
 
@@ -119,8 +118,8 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 		for (int i = 0; i < capacity; i++) {
 
-			if ((worker != null) && (i % 100 == 0))
-				worker.setProgressBarValue(i);
+			if ((getObservable() != null) && (i % 100 == 0))
+				getObservable().setCurrent(i);
 
 			//ColumbaHeader h = message.getHeader();
 			HeaderInterface h = createHeaderInstance();
@@ -153,7 +152,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		((LocalFolder) folder).setNextMessageUid(nextUid);
 		//worker.setDisplayText(null);
 
-		worker.setProgressBarValue(capacity);
+		getObservable().setCurrent(capacity);
 
 		closeInputStream();
 
@@ -163,7 +162,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 	 * @param worker
 	 * @throws Exception
 	 */
-	public void save(WorkerStatusController worker) throws Exception {
+	public void save() throws Exception {
 
 		// we didn't load any header to save
 		if (!isHeaderCacheLoaded())
@@ -200,9 +199,10 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		 * @param worker
 		 * @throws Exception
 		 */
-	public void sync(WorkerStatusController worker) throws Exception {
-		if (worker != null) {
-			worker.setDisplayText(folder.getName()+": Syncing headercache...");
+	public void sync() throws Exception {
+		if (getObservable() != null) {
+			getObservable().setMessage(
+				folder.getName() + ": Syncing headercache...");
 		}
 		DataStorageInterface ds =
 			((LocalFolder) folder).getDataStorageInstance();
@@ -219,8 +219,8 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 		folder.setChanged(true);
 
-		if (worker != null)
-			worker.setProgressBarMaximum(uids.length);
+		if (getObservable() != null)
+			getObservable().setMax(uids.length);
 
 		for (int i = 0; i < uids.length; i++) {
 			try {
@@ -253,8 +253,8 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 				header = null;
 				source = null;
 
-				if (worker != null && i % 100 == 0) {
-					worker.setProgressBarValue(i);
+				if (getObservable() != null && i % 100 == 0) {
+					getObservable().setCurrent(i);
 				}
 
 			} catch (Exception ex) {

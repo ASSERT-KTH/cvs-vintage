@@ -21,6 +21,7 @@
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
@@ -99,9 +100,11 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
 		}
 		Object uid = uids[0];
 		Folder srcFolder = (Folder) r[0].getFolder();
+		// register for status events
+ 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 		
 		// get value of Subject, From or To header
-		HeaderInterface header = srcFolder.getMessageHeader(uid, worker);
+		HeaderInterface header = srcFolder.getMessageHeader(uid);
 		String headerValue = (String) header.get(filterType);
 		
 		if (headerValue == null) {

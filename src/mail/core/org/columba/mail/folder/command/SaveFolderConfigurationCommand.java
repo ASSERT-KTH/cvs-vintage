@@ -16,16 +16,17 @@
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 
 /**
+ * Save folder configuration including MessageFolderInfo and
+ * headercache to disk.
+ * 
  * @author fdietz
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class SaveFolderConfigurationCommand extends FolderCommand {
 
@@ -43,8 +44,10 @@ public class SaveFolderConfigurationCommand extends FolderCommand {
 	 */
 	public void execute(Worker worker) throws Exception {
 		Folder folder = (Folder) ((FolderCommandReference)getReferences()[0]).getFolder();
-		
-		folder.save(worker);
+//		register for status events
+	 	((StatusObservableImpl)folder.getObservable()).setWorker(worker);
+	 
+		folder.save();
 
 	}
 

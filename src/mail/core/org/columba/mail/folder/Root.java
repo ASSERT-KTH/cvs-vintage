@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 
@@ -38,7 +37,7 @@ public class Root extends FolderTreeNode {
 		return null;
 	}
 
-	public void createChildren(WorkerStatusController c) {
+	public void createChildren() {
 	}
 
 

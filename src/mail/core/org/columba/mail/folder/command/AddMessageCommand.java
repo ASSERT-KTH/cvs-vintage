@@ -17,6 +17,7 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
@@ -27,12 +28,10 @@ import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.HeaderInterface;
 
 /**
- * @author freddy
+ * Add message to folder
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ *
+ * @author fdietz
  */
 public class AddMessageCommand extends Command {
 
@@ -67,14 +66,18 @@ public class AddMessageCommand extends Command {
 	public void execute(Worker worker) throws Exception {
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 		folder = (Folder) r[0].getFolder();
+		
+//		register for status events
+		((StatusObservableImpl)folder.getObservable()).setWorker(worker);
+		
 		AbstractMessage message = (AbstractMessage) r[0].getMessage();
 
-		Object uid = folder.addMessage(message, worker);
+		Object uid = folder.addMessage(message);
 
 		// we need this to reflect changes in table-widget
 		// -> this is cached in folder anyway, so actually
 		// -> we just get the HeaderInterface from a Hashtable
-		headerList[0] = folder.getMessageHeader(uid, worker);
+		headerList[0] = folder.getMessageHeader(uid);
 	}
 
 	/**

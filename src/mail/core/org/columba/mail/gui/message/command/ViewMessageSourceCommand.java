@@ -18,6 +18,7 @@ package org.columba.mail.gui.message.command;
 import java.io.File;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.io.DiskIO;
@@ -75,10 +76,12 @@ public class ViewMessageSourceCommand extends FolderCommand {
 		Object[] uids = r[0].getUids();
 
 		Folder folder = (Folder) r[0].getFolder();
+//		register for status events
+		((StatusObservableImpl)folder.getObservable()).setWorker(worker);
 
 		Object[] destUids = new Object[uids.length];
 		Object uid = uids[0];
-		source = folder.getMessageSource(uid, worker);
+		source = folder.getMessageSource(uid);
 
 		try {
 

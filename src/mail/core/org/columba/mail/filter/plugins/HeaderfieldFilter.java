@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.headercache.CachedFolder;
@@ -65,12 +64,11 @@ public class HeaderfieldFilter extends AbstractFilter{
 	public boolean process(
 		Object[] args,
 		Folder folder,
-		Object uid,
-		WorkerStatusController worker)
+		Object uid)
 		throws Exception {
 			
 		// get message header
-		HeaderInterface header = folder.getMessageHeader(uid, worker);
+		HeaderInterface header = folder.getMessageHeader(uid);
 		if ( header == null ) return false;
 		
 		// get headerfield to search in (for example: Subject)
@@ -88,7 +86,7 @@ public class HeaderfieldFilter extends AbstractFilter{
 				CachedFolder f = (CachedFolder) folder;
 				
 				// parse message
-				AbstractMessage m = f.getMessage(uid, worker);
+				AbstractMessage m = f.getMessage(uid);
 				HeaderInterface h = m.getHeader();
 				
 				headerItem = (String) h.get( (String) args[0]);

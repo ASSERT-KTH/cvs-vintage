@@ -168,7 +168,7 @@ public abstract class DefaultMailboxImporter {
 		WorkerStatusController worker,
 		Folder destFolder)
 		throws Exception {
-		destFolder.addMessage(rawString, worker);
+		destFolder.addMessage(rawString);
 
 		counter++;
 

@@ -18,7 +18,6 @@ package org.columba.mail.folder.search;
 
 import java.util.List;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.Folder;
 
@@ -61,8 +60,7 @@ public class DefaultSearchEngine extends AbstractSearchEngine {
 	 */
 	protected List queryEngine(
 		FilterRule filter,
-		Object[] uids,
-		WorkerStatusController worker)
+		Object[] uids)
 		throws Exception {
 		return null;
 	}
@@ -71,8 +69,7 @@ public class DefaultSearchEngine extends AbstractSearchEngine {
 	 * @see org.columba.mail.folder.AbstractSearchEngine#queryEngine(org.columba.mail.filter.FilterRule, org.columba.core.command.WorkerStatusController)
 	 */
 	protected List queryEngine(
-		FilterRule filter,
-		WorkerStatusController worker)
+		FilterRule filter)
 		throws Exception {
 		return null;
 	}
@@ -80,7 +77,7 @@ public class DefaultSearchEngine extends AbstractSearchEngine {
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.search.AbstractSearchEngine#sync(org.columba.core.command.WorkerStatusController)
 	 */
-	public void sync(WorkerStatusController wc)  throws Exception{
+	public void sync()  throws Exception{
 
 	}
 }

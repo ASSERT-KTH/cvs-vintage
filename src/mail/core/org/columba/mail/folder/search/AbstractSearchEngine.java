@@ -24,7 +24,7 @@ import java.util.ListIterator;
 
 import javax.swing.JOptionPane;
 
-import org.columba.core.command.WorkerStatusController;
+import org.columba.core.command.StatusObservable;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.ListTools;
@@ -64,19 +64,23 @@ public abstract class AbstractSearchEngine {
 		mode = RANDOM;
 	}
 
+	public StatusObservable getObservable() {
+		return folder.getObservable();
+	}
+
 	public void messageAdded(AbstractMessage message) throws Exception {
 	};
 
 	public void messageRemoved(Object uid) throws Exception {
 	};
 
-	public void reset(WorkerStatusController wc) throws Exception {
+	public void reset() throws Exception {
 	};
 
 	protected synchronized AbstractFilter getFilter(String type) {
 
 		ColumbaLogger.log.debug(
-				"trying to re-use cached instanciation =" + type);
+			"trying to re-use cached instanciation =" + type);
 
 		// try to re-use already instanciated class
 		if (filterCache.containsKey(type) == true)
@@ -109,7 +113,6 @@ public abstract class AbstractSearchEngine {
 
 	protected boolean processRule(
 		Object uid,
-		WorkerStatusController worker,
 		FilterCriteria criteria,
 		String type)
 		throws Exception {
@@ -134,13 +137,10 @@ public abstract class AbstractSearchEngine {
 			attributes[j] = criteria.get((String) args[j]);
 		}
 
-		return instance.process(attributes, folder, uid, worker);
+		return instance.process(attributes, folder, uid);
 	}
 
-	protected List processCriteria(
-		FilterRule rule,
-		List uids,
-		WorkerStatusController worker)
+	protected List processCriteria(FilterRule rule, List uids)
 		throws Exception {
 
 		LinkedList result = new LinkedList();
@@ -164,7 +164,7 @@ public abstract class AbstractSearchEngine {
 
 					String type = criteria.getType();
 
-					b &= processRule(uid, worker, criteria, type);
+					b &= processRule(uid, criteria, type);
 				}
 
 				if (b)
@@ -181,7 +181,7 @@ public abstract class AbstractSearchEngine {
 
 					String type = criteria.getType();
 
-					b = processRule(uid, worker, criteria, type);
+					b = processRule(uid, criteria, type);
 				}
 
 				if (b)
@@ -285,24 +285,15 @@ public abstract class AbstractSearchEngine {
 		}
 	}
 
-	protected abstract List queryEngine(
-		FilterRule filter,
-		WorkerStatusController worker)
-		throws Exception;
+	protected abstract List queryEngine(FilterRule filter) throws Exception;
 
-	protected abstract List queryEngine(
-		FilterRule filter,
-		Object[] uids,
-		WorkerStatusController worker)
+	protected abstract List queryEngine(FilterRule filter, Object[] uids)
 		throws Exception;
 
 	/**
 	 * @see org.columba.mail.folder.SearchEngineInterface#searchMessages(org.columba.mail.filter.Filter, java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public Object[] searchMessages(
-		Filter filter,
-		Object[] uids,
-		WorkerStatusController worker)
+	public Object[] searchMessages(Filter filter, Object[] uids)
 		throws Exception {
 
 		long startTime = System.currentTimeMillis();
@@ -319,9 +310,9 @@ public abstract class AbstractSearchEngine {
 
 		if (defaultEngine.count() > 0) {
 			if (uids != null)
-				defaultEngineResult = queryEngine(defaultEngine, uids, worker);
+				defaultEngineResult = queryEngine(defaultEngine, uids);
 			else
-				defaultEngineResult = queryEngine(defaultEngine, worker);
+				defaultEngineResult = queryEngine(defaultEngine);
 		}
 
 		if (notDefaultEngine.count() == 0) {
@@ -332,23 +323,18 @@ public abstract class AbstractSearchEngine {
 			if (filterRule.getConditionInt() == FilterRule.MATCH_ALL) {
 				if (defaultEngine.count() > 0)
 					notDefaultEngineResult =
-						processCriteria(
-							notDefaultEngine,
-							defaultEngineResult,
-							worker);
+						processCriteria(notDefaultEngine, defaultEngineResult);
 				else {
 					if (uids != null) {
 						notDefaultEngineResult =
 							processCriteria(
 								notDefaultEngine,
-								Arrays.asList(uids),
-								worker);
+								Arrays.asList(uids));
 					} else {
 						notDefaultEngineResult =
 							processCriteria(
 								notDefaultEngine,
-								Arrays.asList(folder.getUids(worker)),
-								worker);
+								Arrays.asList(folder.getUids()));
 					}
 				}
 			}
@@ -359,15 +345,14 @@ public abstract class AbstractSearchEngine {
 					ListTools.substract(uidList, defaultEngineResult);
 
 					notDefaultEngineResult =
-						processCriteria(notDefaultEngine, uidList, worker);
+						processCriteria(notDefaultEngine, uidList);
 
 					notDefaultEngineResult.addAll(defaultEngineResult);
 				} else {
 					notDefaultEngineResult =
 						processCriteria(
 							notDefaultEngine,
-							Arrays.asList(folder.getUids(worker)),
-							worker);
+							Arrays.asList(folder.getUids()));
 				}
 			}
 		}
@@ -380,25 +365,21 @@ public abstract class AbstractSearchEngine {
 				+ (System.currentTimeMillis() - startTime)
 				+ " ms");
 		*/
-		
+
 		return notDefaultEngineResult.toArray();
 	}
 
 	/**
 	 * @see org.columba.mail.folder.SearchEngineInterface#searchMessages(org.columba.mail.filter.Filter, org.columba.core.command.WorkerStatusController)
 	 */
-	public Object[] searchMessages(
-		Filter filter,
-		WorkerStatusController worker)
-		throws Exception {
+	public Object[] searchMessages(Filter filter) throws Exception {
 
-		worker.setDisplayText(MailResourceLoader.getString(
-                                "statusbar",
-                                "message",
-                                "search"));
-		
-		return searchMessages(filter, null, worker);
+		if (getObservable() != null)
+			getObservable().setMessage(
+				MailResourceLoader.getString("statusbar", "message", "search"));
+
+		return searchMessages(filter, null);
 	}
 
-	public abstract void sync(WorkerStatusController wc) throws Exception;
+	public abstract void sync() throws Exception;
 }

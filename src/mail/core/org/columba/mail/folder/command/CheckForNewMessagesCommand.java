@@ -1,14 +1,24 @@
-/*
- * Created on 14.04.2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
+//The contents of this file are subject to the Mozilla Public License Version 1.1
+//(the "License"); you may not use this file except in compliance with the 
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//for the specific language governing rights and
+//limitations under the License.
+//
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//
+//All Rights Reserved.
 package org.columba.mail.folder.command;
 
 import java.net.URL;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.logging.ColumbaLogger;
@@ -24,10 +34,10 @@ import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.TableChangedEvent;
 
 /**
- * @author frd
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * 
+ * Check for new messages in IMAPFolder.
+ * 
+ * @author fdietz
  */
 public class CheckForNewMessagesCommand extends FolderCommand {
 
@@ -65,7 +75,9 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 
 		// get IMAP rootfolder
 		IMAPRootFolder srcFolder = (IMAPRootFolder) r[0].getFolder();
-
+//		register for status events
+		((StatusObservableImpl)srcFolder.getObservable()).setWorker(worker);
+			 
         // we only check inbox
 		inboxFolder = (IMAPFolder) srcFolder.getChild("Inbox");
 
@@ -75,7 +87,7 @@ public class CheckForNewMessagesCommand extends FolderCommand {
         int unseen = inboxFolder.getMessageFolderInfo().getUnseen();
 
         // check for new headers
-		inboxFolder.getHeaderList(worker);
+		inboxFolder.getHeaderList();
 
         // Get the new numbers
 		int newTotal  = inboxFolder.getMessageFolderInfo().getExists();

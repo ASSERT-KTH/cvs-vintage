@@ -23,7 +23,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
 
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.BooleanCompressor;
 import org.columba.mail.message.ColumbaHeader;
@@ -130,11 +129,10 @@ public abstract class AbstractHeaderCache {
 
 	/** Get or (re)create the header cache file.
 	 *
-	 * @param worker
 	 * @return the HeaderList
 	 * @throws Exception
 	 */
-	public HeaderList getHeaderList(WorkerStatusController worker)
+	public HeaderList getHeaderList()
 		throws Exception {
 		boolean needToRelease = false;
 		// if there exists a ".header" cache-file
@@ -143,7 +141,7 @@ public abstract class AbstractHeaderCache {
 
 			if (headerFile.exists()) {
 				try {
-					load(worker);
+					load();
 				} catch (Exception e) {
 					e.printStackTrace();
 
@@ -161,16 +159,16 @@ public abstract class AbstractHeaderCache {
 	}
 
 	/**
-	 * @param worker
+
 	 * @throws Exception
 	 */
-	public abstract void load(WorkerStatusController worker) throws Exception;
+	public abstract void load() throws Exception;
 
 	/**
-	 * @param worker
+
 	 * @throws Exception
 	 */
-	public abstract void save(WorkerStatusController worker) throws Exception;
+	public abstract void save() throws Exception;
 	/**
 	 * @param p
 	 * @param h

@@ -16,6 +16,7 @@
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -26,12 +27,12 @@ import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.TableChangedEvent;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Move selected messages from source to destination folder.
+ * <p>
+ * A dialog asks the user the destination folder to use.
+ * 
+ * 
+ * @author fdietz
  */
 public class MoveMessageCommand extends CopyMessageCommand {
 
@@ -100,6 +101,9 @@ public class MoveMessageCommand extends CopyMessageCommand {
 			Object[] uids = r[i].getUids();
 
 			Folder srcFolder = (Folder) r[i].getFolder();
+			// register for status events
+		 	((StatusObservableImpl)srcFolder.getObservable()).setWorker(worker);
+		 
 			// setting lastSelection to null
 			srcFolder.setLastSelection(null);
 			uids = r[i].getUids();
@@ -112,10 +116,9 @@ public class MoveMessageCommand extends CopyMessageCommand {
 
 			srcFolder.markMessage(
 				uids,
-				MarkMessageCommand.MARK_AS_EXPUNGED,
-				worker);
+				MarkMessageCommand.MARK_AS_EXPUNGED);
 
-			srcFolder.expungeFolder(worker);
+			srcFolder.expungeFolder();
 
 		}
 

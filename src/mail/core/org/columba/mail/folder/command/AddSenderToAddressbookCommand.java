@@ -19,6 +19,7 @@ import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.main.MainInterface;
@@ -28,12 +29,11 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.message.HeaderInterface;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Add sender of the selected messages to addressbook.
+ * <p>
+ * A dialog asks the user the destination addressbook.
+ * 
+ * @author fdietz
  */
 public class AddSenderToAddressbookCommand extends FolderCommand {
 
@@ -66,7 +66,10 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
 
 		Object[] uids = r[0].getUids();
 		Folder folder = (Folder) r[0].getFolder();
-
+		
+//		register for status events
+		((StatusObservableImpl)folder.getObservable()).setWorker(worker);
+		
 		SelectAddressbookFolderDialog dialog =
 			MainInterface
 				.addressbookTreeModel
@@ -79,7 +82,7 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
 
 		for (int i = 0; i < uids.length; i++) {
 
-			HeaderInterface header = folder.getMessageHeader(uids[i], worker);
+			HeaderInterface header = folder.getMessageHeader(uids[i]);
 			String sender = (String) header.get("From");
 
 			addSender(sender);

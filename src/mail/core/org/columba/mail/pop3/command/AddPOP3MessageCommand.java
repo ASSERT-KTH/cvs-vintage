@@ -60,7 +60,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 		Message message = (Message) r[0].getMessage();
 
 		// add message to folder
-		Object uid = inboxFolder.addMessage(message, worker);
+		Object uid = inboxFolder.addMessage(message);
 		Object[] uids = new Object[1];
 		uids[0] = uid;
 
@@ -74,7 +74,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 		for (int j = 0; j < list.count(); j++) {
 			Filter filter = list.get(j);
 
-			Object[] result = inboxFolder.searchMessages(filter, uids, worker);
+			Object[] result = inboxFolder.searchMessages(filter, uids);
 			if (result.length != 0) {
 				CompoundCommand command =
 					filter.getCommand(inboxFolder, result);
