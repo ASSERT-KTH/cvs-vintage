@@ -1,4 +1,4 @@
-// $Id: StartBrowser.java,v 1.9 2005/01/04 19:39:50 bobtarling Exp $
+// $Id: StartBrowser.java,v 1.10 2005/01/05 15:39:18 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 
 import org.apache.log4j.Logger;
-import org.argouml.model.OsUtil;
 
 
 /**

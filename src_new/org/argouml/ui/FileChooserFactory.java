@@ -1,4 +1,4 @@
-// $Id: FileChooserFactory.java,v 1.1 2005/01/04 20:09:52 bobtarling Exp $
+// $Id: FileChooserFactory.java,v 1.2 2005/01/05 15:39:17 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.ui;
 
 import javax.swing.JFileChooser;
 
-import org.argouml.model.OsUtil;
+import org.argouml.util.osdep.OsUtil;
 import org.argouml.util.osdep.win32.Win32FileSystemView;
 
 /**

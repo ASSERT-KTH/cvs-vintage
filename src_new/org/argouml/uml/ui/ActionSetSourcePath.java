@@ -1,4 +1,4 @@
-// $Id: ActionSetSourcePath.java,v 1.21 2005/01/04 20:09:54 bobtarling Exp $
+// $Id: ActionSetSourcePath.java,v 1.22 2005/01/05 15:39:18 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,10 +33,10 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.OsUtil;
 import org.argouml.ui.FileChooserFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
+import org.argouml.util.osdep.OsUtil;
 
 
 /** Action to choose and set source path for model elements

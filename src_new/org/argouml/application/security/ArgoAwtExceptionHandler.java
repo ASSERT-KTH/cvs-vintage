@@ -1,4 +1,4 @@
-// $Id: ArgoAwtExceptionHandler.java,v 1.7 2004/12/28 13:59:17 bobtarling Exp $
+// $Id: ArgoAwtExceptionHandler.java,v 1.8 2005/01/05 15:39:16 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.application.security;
 
-import org.argouml.model.ExitSecurityException;
 
 /** 
  * Argo Awt Exception handler.

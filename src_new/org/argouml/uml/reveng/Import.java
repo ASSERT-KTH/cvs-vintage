@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.71 2005/01/04 20:09:51 bobtarling Exp $
+// $Id: Import.java,v 1.72 2005/01/05 15:39:18 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,7 +70,6 @@ import org.argouml.cognitive.Designer;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.OsUtil;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.FileChooserFactory;
 import org.argouml.ui.ProjectBrowser;
@@ -79,6 +78,7 @@ import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
 import org.argouml.uml.diagram.static_structure.layout.ClassdiagramLayouter;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.util.logging.SimpleTimer;
+import org.argouml.util.osdep.OsUtil;
 import org.tigris.gef.base.Globals;
 
 /**
