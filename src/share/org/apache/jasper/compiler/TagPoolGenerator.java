@@ -60,7 +60,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.servlet.jsp.tagext.TagInfo;
-
+import org.apache.jasper.Constants;
 
 /**
  * This class generates tag pooling related information.  Specifically,
@@ -168,7 +168,8 @@ public class TagPoolGenerator extends GeneratorBase
      */
     public void generate(ServletWriter writer, Class phase) {
         if (ClassDeclarationPhase.class.isAssignableFrom(phase)) {
-            writer.println("org.apache.jasper.runtime.TagHandlerPool " + poolVarName + " = null;");
+            writer.println(Constants.JSP_RUNTIME_PACKAGE +
+			   ".TagHandlerPool " + poolVarName + " = null;");
         } else if (InitMethodPhase.class.isAssignableFrom(phase)) {
             writer.println("if (" + TagPoolManagerGenerator.MANAGER_VARIABLE + " != null) {");
             writer.pushIndent();

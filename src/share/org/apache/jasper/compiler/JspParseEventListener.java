@@ -374,8 +374,12 @@ public class JspParseEventListener extends BaseJspListener {
 
 	// Use flush buffer ( which just empty JspWriterImpl buffer )
 	// instead of commiting the response.
-	writer.println("if (out instanceof org.apache.jasper.runtime.JspWriterImpl) { ");
-        writer.println("    ((org.apache.jasper.runtime.JspWriterImpl)out).flushBuffer();");
+	writer.println("if (out instanceof "
+		       + Constants.JSP_RUNTIME_PACKAGE +
+		       ".JspWriterImpl) { ");
+        writer.println("    ((" +
+		       Constants.JSP_RUNTIME_PACKAGE +
+		       ".JspWriterImpl)out).flushBuffer();");
 	writer.println("}");
 	writer.println("if (_jspxFactory != null) _jspxFactory.releasePageContext(pageContext);");
 	writer.popIndent();

@@ -56,6 +56,7 @@
 package org.apache.jasper.compiler;
 
 import org.apache.jasper.runtime.TagPoolManager;
+import org.apache.jasper.Constants;
 
 /**
  * This class generates code during the initilization phase that
@@ -80,10 +81,12 @@ public class TagPoolManagerGenerator extends GeneratorBase
      */
     public void generate(ServletWriter writer, Class phase) {
         if (InitMethodPhase.class.isAssignableFrom(phase)) {
-            writer.println("org.apache.jasper.runtime.TagPoolManager " + MANAGER_VARIABLE + " =");
+            writer.println(Constants.JSP_RUNTIME_PACKAGE +
+			   ".TagPoolManager " + MANAGER_VARIABLE + " =");
             writer.pushIndent();
             // writer.println("org.apache.jasper.runtime.TagPoolManager.getDefaultPoolManager();");
-            writer.println("(org.apache.jasper.runtime.TagPoolManager) getServletContext().getAttribute(\"" +
+            writer.println("(" + Constants.JSP_RUNTIME_PACKAGE
+			   + ".TagPoolManager) getServletContext().getAttribute(\"" +
                 TagPoolManager.CONTEXT_ATTRIBUTE_NAME + "\");");
             writer.popIndent();
         }

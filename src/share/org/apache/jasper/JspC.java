@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.21 2001/03/02 04:51:25 costin Exp $
- * $Revision: 1.21 $
- * $Date: 2001/03/02 04:51:25 $
- *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1
@@ -249,6 +245,13 @@ public class JspC implements Options { //, JspCompilationContext {
         dieLevel = NO_DIE_LEVEL;
         die = dieLevel;
 
+	// Hack for Runtime package
+	String rt=System.getProperty( "jsp.runtime.package" );
+	if( rt!=null ) {
+	    Constants.JSP_RUNTIME_PACKAGE=rt;
+	    Constants.JSP_SERVLET_BASE=rt+".HttpJspBase";
+	}
+	
         while ((tok = nextArg()) != null) {
             if (tok.equals(SWITCH_QUIET)) {
                 verbosityLevel = Log.WARNING;

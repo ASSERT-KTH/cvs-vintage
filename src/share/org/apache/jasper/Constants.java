@@ -71,11 +71,14 @@ import org.apache.tomcat.util.res.StringManager;
  * @author Harish Prabandham
  */
 public class Constants {
+    public static String JSP_RUNTIME_PACKAGE =
+	"org.apache.jasper.runtime";
+
     /**
      * The base class of the generated servlets. 
      */
-    public static final String JSP_SERVLET_BASE =
-	"org.apache.jasper.runtime.HttpJspBase";
+    public static String JSP_SERVLET_BASE =
+	JSP_RUNTIME_PACKAGE + ".HttpJspBase";
 
     /**
      * _jspService is the name of the method that is called by 
