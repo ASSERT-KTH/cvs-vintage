@@ -89,7 +89,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.72 2002/07/02 05:29:23 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.73 2002/07/09 16:05:24 jon Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -821,7 +821,7 @@ public class ScarabUserImpl
     }
 
     /**
-     * @see ScarabUser#addRMITsToCurrentMITList()
+     * @see ScarabUser#addRMITsToCurrentMITList(List)
      */
     public void addRMITsToCurrentMITList(List rmits)
         throws TorqueException
@@ -846,7 +846,7 @@ public class ScarabUserImpl
     }
 
     /**
-     * @see ScarabUser#removeItemsFromCurrentMITList()
+     * @see ScarabUser#removeItemsFromCurrentMITList(String[])
      */
     public void removeItemsFromCurrentMITList(String[] ids)
     {
