@@ -9,7 +9,7 @@ Contributors:
 	IBM - Initial implementation
 ************************************************************************/
 
-package org.eclipse.ui.internal.actions;
+package org.eclipse.ui.internal.commands;
 
 import java.util.List;
 import java.util.MissingResourceException;

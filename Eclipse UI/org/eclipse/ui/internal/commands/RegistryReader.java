@@ -9,7 +9,7 @@ Contributors:
 	IBM - Initial implementation
 ************************************************************************/
 
-package org.eclipse.ui.internal.actions;
+package org.eclipse.ui.internal.commands;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -24,7 +24,13 @@ final class RegistryReader extends org.eclipse.ui.internal.registry.RegistryRead
 	private final static String ATTRIBUTE_ICON = "icon"; //$NON-NLS-1$
 	private final static String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
 	private final static String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
+	private final static String ATTRIBUTE_PARENT = "parent"; //$NON-NLS-1$
 	private final static String ELEMENT_ACTION_DEFINITION = "actionDefinition"; //$NON-NLS-1$
+	private final static String ELEMENT_COMMAND = "command"; //$NON-NLS-1$
+	private final static String ELEMENT_GROUP = "group"; //$NON-NLS-1$
+	private final static String EXTENSION_POINT_ACTION_DEFINITIONS = IWorkbenchConstants.PL_ACTION_DEFINITIONS;
+	private final static String EXTENSION_POINT_COMMANDS = "commands"; //$NON-NLS-1$
+	private final static String EXTENSION_POINT_GROUPS = "groups"; //$NON-NLS-1$
 	private final static String ZERO_LENGTH_STRING = ""; //$NON-NLS-1$
 	
 	private Registry registry;
@@ -37,16 +43,24 @@ final class RegistryReader extends org.eclipse.ui.internal.registry.RegistryRead
 		this.registry = registry;
 
 		if (this.registry != null) {
-			readRegistry(pluginRegistry, PlatformUI.PLUGIN_ID, IWorkbenchConstants.PL_ACTION_DEFINITIONS);
+			readRegistry(pluginRegistry, PlatformUI.PLUGIN_ID, EXTENSION_POINT_ACTION_DEFINITIONS);
+			readRegistry(pluginRegistry, PlatformUI.PLUGIN_ID, EXTENSION_POINT_COMMANDS);
+			readRegistry(pluginRegistry, PlatformUI.PLUGIN_ID, EXTENSION_POINT_GROUPS);
 		}
 	}
 
 	protected boolean readElement(IConfigurationElement element) {
 		String name = element.getName();
-		
+
 		if (ELEMENT_ACTION_DEFINITION.equals(name))
-			return readActionDefinition(element);
-		
+			return readCommand(element);
+
+		if (ELEMENT_COMMAND.equals(name))
+			return readCommand(element);
+
+		if (ELEMENT_GROUP.equals(name))
+			return readGroup(element);
+	
 		return false;
 	}
 
@@ -67,26 +81,44 @@ final class RegistryReader extends org.eclipse.ui.internal.registry.RegistryRead
 		return plugin;
 	}
 
-	private boolean readActionDefinition(IConfigurationElement element) {
+	private boolean readCommand(IConfigurationElement element) {
+		Item item = readItem(element);
+		
+		if (item != null)
+			registry.addCommand(item);
+			
+		return true;
+	}
+
+
+	private boolean readGroup(IConfigurationElement element) {
+		Item item = readItem(element);
+		
+		if (item != null)
+			registry.addGroup(item);
+			
+		return true;
+	}
+		
+	private Item readItem(IConfigurationElement element) {
 		String description = element.getAttribute(ATTRIBUTE_DESCRIPTION);
 		String icon = element.getAttribute(ATTRIBUTE_ICON);
 		String id = element.getAttribute(ATTRIBUTE_ID);
 
 		if (id == null) {
 			logMissingAttribute(element, ATTRIBUTE_ID);
-			return true;
+			return null;
 		}
 
 		String name = element.getAttribute(ATTRIBUTE_NAME);
 		
 		if (name == null) {
 			logMissingAttribute(element, ATTRIBUTE_NAME);
-			return true;
+			return null;
 		}
-		
+
+		String parent = element.getAttribute(ATTRIBUTE_PARENT);		
 		String plugin = getPlugin(element);
-		Action action = Action.create(Label.create(description, icon, id, name), plugin);			
-		registry.addAction(action);
-		return true;
+		return Item.create(description, icon, id, name, parent, plugin);			
 	}
 }

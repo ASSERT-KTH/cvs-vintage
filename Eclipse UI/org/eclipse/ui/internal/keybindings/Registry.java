@@ -9,7 +9,7 @@ Contributors:
 	IBM - Initial implementation
 ************************************************************************/
 
-package org.eclipse.ui.internal.actions.keybindings;
+package org.eclipse.ui.internal.keybindings;
 
 import java.util.Collections;
 import java.util.SortedMap;
@@ -18,6 +18,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.ui.internal.commands.Item;
 
 public final class Registry {
 	
@@ -54,12 +55,12 @@ public final class Registry {
 		return Collections.unmodifiableSortedMap(scopeMap);			
 	}
 
-	void addConfiguration(Configuration configuration)
+	void addConfiguration(Item item)
 		throws IllegalArgumentException {
-		if (configuration == null)
+		if (item == null)
 			throw new IllegalArgumentException();
 		
-		configurationMap.put(configuration.getLabel().getId(), configuration);	
+		configurationMap.put(item.getId(), item);	
 	}
 
 	void addRegionalBinding(RegionalBinding regionalBinding)
@@ -70,11 +71,11 @@ public final class Registry {
 		regionalBindingSet.add(regionalBinding);
 	}
 
-	void addScope(Scope scope)
+	void addScope(Item item)
 		throws IllegalArgumentException {
-		if (scope == null)
+		if (item == null)
 			throw new IllegalArgumentException();
 		
-		scopeMap.put(scope.getLabel().getId(), scope);
+		scopeMap.put(item.getId(), item);
 	}
 }

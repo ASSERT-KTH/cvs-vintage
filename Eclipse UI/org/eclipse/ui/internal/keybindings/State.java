@@ -9,14 +9,14 @@ Contributors:
 	IBM - Initial implementation
 ************************************************************************/
 
-package org.eclipse.ui.internal.actions.keybindings;
+package org.eclipse.ui.internal.keybindings;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.ui.internal.actions.Util;
+import org.eclipse.ui.internal.commands.Util;
 
 public final class State implements Comparable {
 

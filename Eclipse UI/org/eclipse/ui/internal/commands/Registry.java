@@ -9,7 +9,7 @@ Contributors:
 	IBM - Initial implementation
 ************************************************************************/
 
-package org.eclipse.ui.internal.actions;
+package org.eclipse.ui.internal.commands;
 
 import java.util.Collections;
 import java.util.SortedMap;
@@ -28,23 +28,37 @@ public final class Registry {
 		return instance;
 	}
 	
-	private SortedMap actionMap;
+	private SortedMap commandMap;
+	private SortedMap groupMap;
 	
 	private Registry() {
 		super();
-		actionMap = new TreeMap();
+		commandMap = new TreeMap();
+		groupMap = new TreeMap();
 		(new RegistryReader()).read(Platform.getPluginRegistry(), this);		
 	}
 
-	public SortedMap getActionMap() {
-		return Collections.unmodifiableSortedMap(actionMap);			
+	public SortedMap getCommandMap() {
+		return Collections.unmodifiableSortedMap(commandMap);			
 	}
-	
-	void addAction(Action action)
+
+	public SortedMap getGroupMap() {
+		return Collections.unmodifiableSortedMap(groupMap);			
+	}
+
+	void addCommand(Item item)
 		throws IllegalArgumentException {
-		if (action == null)
+		if (item == null)
 			throw new IllegalArgumentException();
 		
-		actionMap.put(action.getLabel().getId(), action);	
+		commandMap.put(item.getId(), item);	
+	}
+
+	void addGroup(Item item)
+		throws IllegalArgumentException {
+		if (item == null)
+			throw new IllegalArgumentException();
+		
+		groupMap.put(item.getId(), item);	
 	}
 }

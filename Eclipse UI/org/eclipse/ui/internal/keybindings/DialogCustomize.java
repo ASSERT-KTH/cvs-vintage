@@ -10,7 +10,7 @@ Contributors:
 	Sebastian Davids <sdavids@gmx.de> - Fix for bug 19346
 ************************************************************************/
 
-package org.eclipse.ui.internal.actions.keybindings;
+package org.eclipse.ui.internal.keybindings;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -54,8 +54,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.internal.actions.Action;
-import org.eclipse.ui.internal.actions.Util;
+import org.eclipse.ui.internal.commands.Item;
+import org.eclipse.ui.internal.commands.Util;
 
 final class DialogCustomize extends Dialog {
 
@@ -192,38 +192,38 @@ final class DialogCustomize extends Dialog {
 		keyManager = KeyManager.getInstance();
 		keyMachine = keyManager.getKeyMachine();
 
-		registryActionMap = org.eclipse.ui.internal.actions.Registry.getInstance().getActionMap();
+		registryActionMap = org.eclipse.ui.internal.commands.Registry.getInstance().getCommandMap();
 		actions = new ArrayList();
 		actions.addAll(registryActionMap.values());
-		Collections.sort(actions, Action.nameComparator());				
+		Collections.sort(actions, Item.nameComparator());				
 	
 		registryBindingSet = keyManager.getRegistryBindingSet();
 		
 		registryConfigurationMap = keyManager.getRegistryConfigurationMap();
 		configurations = new ArrayList();
 		configurations.addAll(registryConfigurationMap.values());	
-		Collections.sort(configurations, Configuration.nameComparator());				
+		Collections.sort(configurations, Item.nameComparator());				
 		
 		registryScopeMap = keyManager.getRegistryScopeMap();	
 		scopes = new ArrayList();
 		scopes.addAll(registryScopeMap.values());	
-		Collections.sort(scopes, Scope.nameComparator());				
+		Collections.sort(scopes, Item.nameComparator());				
 
 		actionNames = new String[1 + actions.size()];
 		actionNames[0] = ACTION_UNDEFINED;
 		
 		for (int i = 0; i < actions.size(); i++)
-			actionNames[i + 1] = ((Action) actions.get(i)).getLabel().getName();
+			actionNames[i + 1] = ((Item) actions.get(i)).getName();
 
 		configurationNames = new String[configurations.size()];
 		
 		for (int i = 0; i < configurations.size(); i++)
-			configurationNames[i] = ((Configuration) configurations.get(i)).getLabel().getName();
+			configurationNames[i] = ((Item) configurations.get(i)).getName();
 
 		scopeNames = new String[scopes.size()];
 		
 		for (int i = 0; i < scopes.size(); i++)
-			scopeNames[i] = ((Scope) scopes.get(i)).getLabel().getName();
+			scopeNames[i] = ((Item) scopes.get(i)).getName();
 		
 		tree = new TreeMap();
 		SortedSet bindingSet = new TreeSet();
@@ -453,10 +453,10 @@ final class DialogCustomize extends Dialog {
 				if (alternateActionId == null) 
 					alternateActionName = ACTION_UNDEFINED;
 				else {
-					Action action = (Action) registryActionMap.get(alternateActionId);
+					Item action = (Item) registryActionMap.get(alternateActionId);
 					
 					if (action != null)
-						alternateActionName = action.getLabel().getName();
+						alternateActionName = action.getName();
 					else
 						alternateActionName = "[" + alternateActionId + "]";
 				}
@@ -475,10 +475,10 @@ final class DialogCustomize extends Dialog {
 				if (alternateActionId == null) 
 					alternateActionName = ACTION_UNDEFINED;
 				else {
-					Action action = (Action) registryActionMap.get(alternateActionId);
+					Item action = (Item) registryActionMap.get(alternateActionId);
 					
 					if (action != null)
-						alternateActionName = action.getLabel().getName();
+						alternateActionName = action.getName();
 					else
 						alternateActionName = "[" + alternateActionId + "]";
 				}
@@ -492,10 +492,10 @@ final class DialogCustomize extends Dialog {
 			}
 
 			tableItem.setText(1, stringBuffer.toString());				
-			Scope scope = (Scope) registryScopeMap.get(actionRecord.scopeId);
-			tableItem.setText(2, scope != null ? scope.getLabel().getName() : "[" + actionRecord.scopeId + "]");
-			Configuration configuration = (Configuration) registryConfigurationMap.get(actionRecord.configurationId);			
-			tableItem.setText(3, configuration != null ? configuration.getLabel().getName() : "[" + actionRecord.configurationId + "]");
+			Item scope = (Item) registryScopeMap.get(actionRecord.scopeId);
+			tableItem.setText(2, scope != null ? scope.getName() : "[" + actionRecord.scopeId + "]");
+			Item configuration = (Item) registryConfigurationMap.get(actionRecord.configurationId);			
+			tableItem.setText(3, configuration != null ? configuration.getName() : "[" + actionRecord.configurationId + "]");
 
 			if (difference == DIFFERENCE_MINUS) {
 				if (conflict)
@@ -560,10 +560,10 @@ final class DialogCustomize extends Dialog {
 			if (actionId == null) 
 				actionName = ACTION_UNDEFINED;
 			else {
-				Action action = (Action) registryActionMap.get(actionId);
+				Item action = (Item) registryActionMap.get(actionId);
 						
 				if (action != null)
-					actionName = action.getLabel().getName();
+					actionName = action.getName();
 				else
 					actionName = "[" + actionId + "]";
 			}
@@ -580,10 +580,10 @@ final class DialogCustomize extends Dialog {
 				if (alternateActionId == null) 
 					alternateActionName = ACTION_UNDEFINED;
 				else {
-					Action action = (Action) registryActionMap.get(alternateActionId);
+					Item action = (Item) registryActionMap.get(alternateActionId);
 						
 					if (action != null)
-						alternateActionName = action.getLabel().getName();
+						alternateActionName = action.getName();
 					else
 						alternateActionName = "[" + alternateActionId + "]";
 				}
@@ -597,10 +597,10 @@ final class DialogCustomize extends Dialog {
 			}
 	
 			tableItem.setText(1, stringBuffer.toString());
-			Scope scope = (Scope) registryScopeMap.get(keySequenceRecord.scopeId);
-			tableItem.setText(2, scope != null ? scope.getLabel().getName() : "[" + keySequenceRecord.scopeId + "]");
-			Configuration configuration = (Configuration) registryConfigurationMap.get(keySequenceRecord.configurationId);			
-			tableItem.setText(3, configuration != null ? configuration.getLabel().getName() : "[" + keySequenceRecord.configurationId + "]");
+			Item scope = (Item) registryScopeMap.get(keySequenceRecord.scopeId);
+			tableItem.setText(2, scope != null ? scope.getName() : "[" + keySequenceRecord.scopeId + "]");
+			Item configuration = (Item) registryConfigurationMap.get(keySequenceRecord.configurationId);			
+			tableItem.setText(3, configuration != null ? configuration.getName() : "[" + keySequenceRecord.configurationId + "]");
 
 			if (difference == DIFFERENCE_MINUS) {
 				if (conflict)
@@ -1083,8 +1083,8 @@ final class DialogCustomize extends Dialog {
 		int selection = comboScope.getSelectionIndex();
 		
 		if (selection >= 0 && selection < scopes.size()) {
-			Scope scope = (Scope) scopes.get(selection);
-			return scope.getLabel().getId();				
+			Item scope = (Item) scopes.get(selection);
+			return scope.getId();				
 		}
 		
 		return null;
@@ -1096,9 +1096,9 @@ final class DialogCustomize extends Dialog {
 		
 		if (scopeId != null)	
 			for (int i = 0; i < scopes.size(); i++) {
-				Scope scope = (Scope) scopes.get(i);		
+				Item scope = (Item) scopes.get(i);		
 				
-				if (scope.getLabel().getId().equals(scopeId)) {
+				if (scope.getId().equals(scopeId)) {
 					comboScope.select(i);
 					break;		
 				}
@@ -1109,8 +1109,8 @@ final class DialogCustomize extends Dialog {
 		int selection = comboConfiguration.getSelectionIndex();
 		
 		if (selection >= 0 && selection < configurations.size()) {
-			Configuration configuration = (Configuration) configurations.get(selection);
-			return configuration.getLabel().getId();				
+			Item configuration = (Item) configurations.get(selection);
+			return configuration.getId();				
 		}
 		
 		return null;
@@ -1122,9 +1122,9 @@ final class DialogCustomize extends Dialog {
 		
 		if (configurationId != null)	
 			for (int i = 0; i < configurations.size(); i++) {
-				Configuration configuration = (Configuration) configurations.get(i);		
+				Item configuration = (Item) configurations.get(i);		
 				
-				if (configuration.getLabel().getId().equals(configurationId)) {
+				if (configuration.getId().equals(configurationId)) {
 					comboConfiguration.select(i);
 					break;		
 				}
@@ -1157,10 +1157,10 @@ final class DialogCustomize extends Dialog {
 				textDefault.setText(ACTION_UNDEFINED);
 			else {
 				for (int j = 0; j < actions.size(); j++) {
-					Action action = (Action) actions.get(j);		
+					Item action = (Item) actions.get(j);		
 								
-					if (action.getLabel().getId().equals(defaultActionId)) {
-						textDefault.setText(action.getLabel().getName());
+					if (action.getId().equals(defaultActionId)) {
+						textDefault.setText(action.getName());
 						break;		
 					}
 				}
@@ -1179,9 +1179,9 @@ final class DialogCustomize extends Dialog {
 					comboCustom.select(0);
 				else
 					for (int i = 0; i < actions.size(); i++) {
-						Action action = (Action) actions.get(i);		
+						Item action = (Item) actions.get(i);		
 								
-						if (action.getLabel().getId().equals(customActionId)) {
+						if (action.getId().equals(customActionId)) {
 							comboCustom.select(i + 1);
 							break;		
 						}
@@ -1204,8 +1204,8 @@ final class DialogCustomize extends Dialog {
 			String actionId = null;				
 			
 			if (selection > 0) {
-				Action action = (Action) actions.get(selection - 1);
-				actionId = action.getLabel().getId();
+				Item action = (Item) actions.get(selection - 1);
+				actionId = action.getId();
 			}
 
 			buildActionRecords(tree, actionId, actionRecords);
@@ -1377,8 +1377,8 @@ final class DialogCustomize extends Dialog {
 				selection--;
 			
 				if (selection >= 0 && selection < actions.size()) {
-					Action action = (Action) actions.get(selection);
-					actionId = action.getLabel().getId();
+					Item action = (Item) actions.get(selection);
+					actionId = action.getId();
 				}				
 
 				set(tree, Binding.create(actionId, configurationId, keySequence, null, 0, scopeId), true);				

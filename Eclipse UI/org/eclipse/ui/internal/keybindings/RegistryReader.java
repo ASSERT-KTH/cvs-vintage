@@ -9,7 +9,7 @@ Contributors:
 	IBM - Initial implementation
 ************************************************************************/
 
-package org.eclipse.ui.internal.actions.keybindings;
+package org.eclipse.ui.internal.keybindings;
 
 import java.util.Iterator;
 import java.util.List;
@@ -20,21 +20,21 @@ import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.IPluginRegistry;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.IWorkbenchConstants;
-import org.eclipse.ui.internal.actions.Label;
+import org.eclipse.ui.internal.commands.Item;
 
 final class RegistryReader extends org.eclipse.ui.internal.registry.RegistryReader {
-	
+
 	private final static String ATTRIBUTE_CONFIGURATION_ID = "configurationId"; //$NON-NLS-1$		
 	private final static String ATTRIBUTE_DESCRIPTION = "description"; //$NON-NLS-1$
+	private final static String ATTRIBUTE_ICON = "icon"; //$NON-NLS-1$
 	private final static String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
 	private final static String ATTRIBUTE_KEY = "key"; //$NON-NLS-1$
 	private final static String ATTRIBUTE_LOCALE = "locale"; //$NON-NLS-1$
 	private final static String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
-	private final static String ATTRIBUTE_PARENT_CONFIGURATION = "parentConfiguration"; //$NON-NLS-1$
-	private final static String ATTRIBUTE_PARENT_SCOPE = "parentScope"; //$NON-NLS-1$
+	private final static String ATTRIBUTE_PARENT = "parent"; //$NON-NLS-1$
 	private final static String ATTRIBUTE_PLATFORM = "platform"; //$NON-NLS-1$
 	private final static String ATTRIBUTE_RANK = "rank"; //$NON-NLS-1$
-	private final static String ATTRIBUTE_SCOPE_ID = "scopeId"; //$NON-NLS-1$
+	private final static String ATTRIBUTE_SCOPE_ID = "scopeId"; //$NON-NLS-1$	
 	private final static String ELEMENT_ACCELERATOR = "accelerator"; //$NON-NLS-1$
 	private final static String ELEMENT_ACCELERATOR_CONFIGURATION = "acceleratorConfiguration"; //$NON-NLS-1$
 	private final static String ELEMENT_ACCELERATOR_SCOPE = "acceleratorScope"; //$NON-NLS-1$
@@ -66,10 +66,10 @@ final class RegistryReader extends org.eclipse.ui.internal.registry.RegistryRead
 			return readAccelerator(element);
 		
 		if (ELEMENT_ACCELERATOR_CONFIGURATION.equals(name))
-			return readAcceleratorConfiguration(element);
+			return readConfiguration(element);
 		
 		if (ELEMENT_ACCELERATOR_SCOPE.equals(name))
-			return readAcceleratorScope(element);
+			return readScope(element);
 		
 		if (ELEMENT_ACCELERATOR_SET.equals(name))
 			return readAcceleratorSet(element);
@@ -140,52 +140,6 @@ final class RegistryReader extends org.eclipse.ui.internal.registry.RegistryRead
 		return true;
 	}
 
-	private boolean readAcceleratorConfiguration(IConfigurationElement element) {
-		String description = element.getAttribute(ATTRIBUTE_DESCRIPTION);
-		String id = element.getAttribute(ATTRIBUTE_ID);
-		
-		if (id == null) {
-			logMissingAttribute(element, ATTRIBUTE_ID);
-			return true;
-		}
-		
-		String name = element.getAttribute(ATTRIBUTE_NAME);
-
-		if (name == null) {
-			logMissingAttribute(element, ATTRIBUTE_NAME);
-			return true;
-		}
-
-		String parent = element.getAttribute(ATTRIBUTE_PARENT_CONFIGURATION);
-		String plugin = getPlugin(element);
-		Configuration configuration = Configuration.create(Label.create(description, null, id, name), parent, plugin);
-		registry.addConfiguration(configuration);
-		return true;
-	}
-
-	private boolean readAcceleratorScope(IConfigurationElement element) {
-		String description = element.getAttribute(ATTRIBUTE_DESCRIPTION);
-		String id = element.getAttribute(ATTRIBUTE_ID);
-
-		if (id == null) {
-			logMissingAttribute(element, ATTRIBUTE_ID);
-			return true;
-		}
-
-		String name = element.getAttribute(ATTRIBUTE_NAME);
-
-		if (name == null) {
-			logMissingAttribute(element, ATTRIBUTE_NAME);
-			return true;
-		}
-			
-		String parent = element.getAttribute(ATTRIBUTE_PARENT_SCOPE);
-		String plugin = getPlugin(element);		
-		Scope scope = Scope.create(Label.create(description, null, id, name), parent, plugin);
-		registry.addScope(scope);
-		return true;		
-	}
-
 	private boolean readAcceleratorSet(IConfigurationElement element) {
 		configuration = element.getAttribute(ATTRIBUTE_CONFIGURATION_ID);
 		scope = element.getAttribute(ATTRIBUTE_SCOPE_ID);
@@ -205,4 +159,44 @@ final class RegistryReader extends org.eclipse.ui.internal.registry.RegistryRead
 		scope = null;
 		return true;	
 	}
+
+	private boolean readConfiguration(IConfigurationElement element) {
+		Item item = readItem(element);
+		
+		if (item != null)
+			registry.addConfiguration(item);
+			
+		return true;
+	}
+
+	private Item readItem(IConfigurationElement element) {
+		String description = element.getAttribute(ATTRIBUTE_DESCRIPTION);
+		String icon = element.getAttribute(ATTRIBUTE_ICON);
+		String id = element.getAttribute(ATTRIBUTE_ID);
+
+		if (id == null) {
+			logMissingAttribute(element, ATTRIBUTE_ID);
+			return null;
+		}
+
+		String name = element.getAttribute(ATTRIBUTE_NAME);
+		
+		if (name == null) {
+			logMissingAttribute(element, ATTRIBUTE_NAME);
+			return null;
+		}
+
+		String parent = element.getAttribute(ATTRIBUTE_PARENT);		
+		String plugin = getPlugin(element);
+		return Item.create(description, icon, id, name, parent, plugin);			
+	}
+	
+	private boolean readScope(IConfigurationElement element) {
+		Item item = readItem(element);
+		
+		if (item != null)
+			registry.addScope(item);
+			
+		return true;
+	}				
 }

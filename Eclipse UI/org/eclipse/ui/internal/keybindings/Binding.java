@@ -9,10 +9,10 @@ Contributors:
 	IBM - Initial implementation
 ************************************************************************/
 
-package org.eclipse.ui.internal.actions.keybindings;
+package org.eclipse.ui.internal.keybindings;
 
 import org.eclipse.ui.IMemento;
-import org.eclipse.ui.internal.actions.Util;
+import org.eclipse.ui.internal.commands.Util;
 
 public final class Binding implements Comparable {
 

@@ -9,7 +9,7 @@ Contributors:
 	IBM - Initial implementation
 ************************************************************************/
 
-package org.eclipse.ui.internal.actions.keybindings;
+package org.eclipse.ui.internal.commands;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,12 +28,10 @@ final class ImageFactory {
 	private static Map map = new HashMap();
 	
 	static {
-		put("change", "icons/full/keybindings/change.gif"); //$NON-NLS-1$//$NON-NLS-2$
-		put("exclamation", "icons/full/keybindings/exclamation.gif"); //$NON-NLS-1$//$NON-NLS-2$
-		put("key", "icons/full/keybindings/key.gif"); //$NON-NLS-1$//$NON-NLS-2$
-		put("minus", "icons/full/keybindings/minus.gif"); //$NON-NLS-1$//$NON-NLS-2$
-		put("pencil", "icons/full/keybindings/pencil.gif"); //$NON-NLS-1$//$NON-NLS-2$
-		put("plus", "icons/full/keybindings/plus.gif"); //$NON-NLS-1$//$NON-NLS-2$
+		put("change", "icons/full/commands/change.gif"); //$NON-NLS-1$//$NON-NLS-2$
+		put("exclamation", "icons/full/commands/exclamation.gif"); //$NON-NLS-1$//$NON-NLS-2$
+		put("minus", "icons/full/commands/minus.gif"); //$NON-NLS-1$//$NON-NLS-2$
+		put("plus", "icons/full/commands/plus.gif"); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 	private static ImageDescriptor create(String path) {

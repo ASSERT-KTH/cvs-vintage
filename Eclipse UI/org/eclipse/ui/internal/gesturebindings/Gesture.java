@@ -9,7 +9,7 @@ Contributors:
 	IBM - Initial implementation
 ************************************************************************/
 
-package org.eclipse.ui.internal.actions.gestures;
+package org.eclipse.ui.internal.gesturebindings;
 
 import java.util.Arrays;
 
@@ -53,7 +53,7 @@ public final class Gesture implements Comparable {
 			compareTo = pen - gesture.pen;
 
 			if (compareTo == 0)
-				compareTo = org.eclipse.ui.internal.actions.Util.compare(points, gesture.points);
+				compareTo = org.eclipse.ui.internal.commands.Util.compare(points, gesture.points);
 		}
 
 		return compareTo;

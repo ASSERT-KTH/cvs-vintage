@@ -9,7 +9,7 @@ Contributors:
 	IBM - Initial implementation
 ************************************************************************/
 
-package org.eclipse.ui.internal.actions.gestures;
+package org.eclipse.ui.internal.gesturebindings;
 
 public interface CaptureListener {
 

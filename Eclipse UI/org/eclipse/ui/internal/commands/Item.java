@@ -9,40 +9,42 @@ Contributors:
 	IBM - Initial implementation
 ************************************************************************/
 
-package org.eclipse.ui.internal.actions;
+package org.eclipse.ui.internal.commands;
 
 import java.text.Collator;
 import java.util.Comparator;
 
-public final class Label implements Comparable {
-
-	private final static int HASH_INITIAL = 21;
-	private final static int HASH_FACTOR = 31;
+public final class Item implements Comparable {
+	
+	private final static int HASH_INITIAL = 11;
+	private final static int HASH_FACTOR = 21;
 
 	private static Comparator nameComparator;
 	
-	public static Label create(String description, String icon, String id, String name)
+	public static Item create(String description, String icon, String id, String name, String parent, String plugin)
 		throws IllegalArgumentException {
-		return new Label(description, icon, id, name);
+		return new Item(description, icon, id, name, parent, plugin);
 	}
 
 	public static Comparator nameComparator() {
 		if (nameComparator == null)
 			nameComparator = new Comparator() {
 				public int compare(Object left, Object right) {
-					return Collator.getInstance().compare(((Label) left).getName(), ((Label) right).getName());
+					return Collator.getInstance().compare(((Item) left).getName(), ((Item) right).getName());
 				}	
 			};		
 		
-		return nameComparator;		
+		return nameComparator;
 	}
 	
 	private String description;
 	private String icon;
 	private String id;
 	private String name;
+	private String parent;
+	private String plugin;
 	
-	private Label(String description, String icon, String id, String name)
+	private Item(String description, String icon, String id, String name, String parent, String plugin)
 		throws IllegalArgumentException {
 		super();
 		
@@ -53,20 +55,30 @@ public final class Label implements Comparable {
 		this.icon = icon;
 		this.id = id;
 		this.name = name;
+		this.parent = parent;
+		this.plugin = plugin;
 	}
 	
 	public int compareTo(Object object) {
-		Label label = (Label) object;
-		int compareTo = id.compareTo(label.id);
+		Item item = (Item) object;
+		int compareTo = id.compareTo(item.id);
 		
 		if (compareTo == 0) {		
-			compareTo = name.compareTo(label.name);			
+			compareTo = name.compareTo(item.name);			
 		
 			if (compareTo == 0) {
-				Util.compare(description, label.description);
+				Util.compare(description, item.description);
 				
-				if (compareTo == 0)		
-					compareTo = Util.compare(icon, label.icon);
+				if (compareTo == 0) {		
+					compareTo = Util.compare(icon, item.icon);
+
+					if (compareTo == 0) {
+						compareTo = Util.compare(parent, item.parent);
+
+						if (compareTo == 0)
+							compareTo = Util.compare(plugin, item.plugin);
+					}										
+				}							
 			}
 		}
 		
@@ -74,11 +86,12 @@ public final class Label implements Comparable {
 	}
 	
 	public boolean equals(Object object) {
-		if (!(object instanceof Label))
+		if (!(object instanceof Item))
 			return false;
 
-		Label label = (Label) object;		
-		return Util.equals(description, label.description) && Util.equals(icon, label.icon) && id.equals(label.id) && name.equals(label.name);
+		Item item = (Item) object;	
+		return Util.equals(description, item.description) && Util.equals(icon, item.icon) && id.equals(item.id) && name.equals(item.name) && 
+			Util.equals(parent, item.parent) && Util.equals(plugin, item.plugin);
 	}
 
 	public String getDescription() {
@@ -97,12 +110,22 @@ public final class Label implements Comparable {
 		return name;
 	}	
 
+	public String getParent() {
+		return parent;
+	}
+
+	public String getPlugin() {
+		return plugin;
+	}
+
 	public int hashCode() {
 		int result = HASH_INITIAL;
 		result = result * HASH_FACTOR + Util.hashCode(description);
 		result = result * HASH_FACTOR + Util.hashCode(icon);
 		result = result * HASH_FACTOR + id.hashCode();
 		result = result * HASH_FACTOR + name.hashCode();
+		result = result * HASH_FACTOR + Util.hashCode(parent);
+		result = result * HASH_FACTOR + Util.hashCode(plugin);
 		return result;
 	}
 	

@@ -9,7 +9,7 @@ Contributors:
 	IBM - Initial implementation
 ************************************************************************/
 
-package org.eclipse.ui.internal.actions.keybindings;
+package org.eclipse.ui.internal.keybindings;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -32,6 +32,7 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.XMLMemento;
 import org.eclipse.ui.internal.WorkbenchPlugin;
+import org.eclipse.ui.internal.commands.Item;
 
 public class KeyManager {
 
@@ -108,7 +109,7 @@ public class KeyManager {
 				if (pathItems.contains(id))
 					return null;
 							
-				Configuration configuration = (Configuration) configurationMap.get(id);
+				Item configuration = (Item) configurationMap.get(id);
 				
 				if (configuration == null)
 					return null;
@@ -133,7 +134,7 @@ public class KeyManager {
 				if (pathItems.contains(id))
 					return null;
 							
-				Scope scope = (Scope) scopeMap.get(id);
+				Item scope = (Item) scopeMap.get(id);
 				
 				if (scope == null)
 					return null;
