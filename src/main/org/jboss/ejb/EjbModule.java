@@ -8,10 +8,12 @@
 package org.jboss.ejb;
 
 import java.lang.reflect.Constructor;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.rmi.RemoteException;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,23 +22,27 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
+
 import javax.ejb.EJBLocalHome;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.transaction.TransactionManager;
+
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.deployment.MainDeployerMBean;
-import org.jboss.ejb.BeanLockManager;
-import org.jboss.ejb.Container;
+
 import org.jboss.ejb.plugins.AbstractInstanceCache;
 import org.jboss.ejb.plugins.SecurityProxyInterceptor;
 import org.jboss.ejb.plugins.StatefulSessionInstancePool;
+
 import org.jboss.logging.Logger;
+
 import org.jboss.management.j2ee.EJB;
 import org.jboss.management.j2ee.EJBModule;
+
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.ConfigurationMetaData;
@@ -47,20 +53,28 @@ import org.jboss.metadata.MetaData;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.metadata.XmlLoadable;
+
 import org.jboss.mx.loading.UnifiedClassLoader;
+
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
+
 import org.jboss.system.Registry;
 import org.jboss.system.Service;
 import org.jboss.system.ServiceControllerMBean;
 import org.jboss.system.ServiceMBeanSupport;
+
+import org.jboss.util.NullArgumentException;
 import org.jboss.util.jmx.MBeanProxy;
 import org.jboss.util.jmx.ObjectNameFactory;
+
 import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
+
 import org.jboss.web.WebClassLoader;
 import org.jboss.web.WebServiceMBean;
+
 import org.w3c.dom.Element;
 
 /**
@@ -80,7 +94,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -88,7 +102,6 @@ public class EjbModule
    extends ServiceMBeanSupport
    implements EjbModuleMBean
 {
-
    public static final String BASE_EJB_MODULE_NAME ="jboss.j2ee:service=EjbModule";
 
    public static final ObjectName EJB_MODULE_QUERY_NAME = ObjectNameFactory.create(BASE_EJB_MODULE_NAME + ",*");
@@ -137,7 +150,9 @@ public class EjbModule
    
    // Static --------------------------------------------------------
    
-   /** Stores a map of DeploymentInfos to EjbModules. 
+   /**
+    * Stores a map of DeploymentInfos to EjbModules.
+    * 
     * @todo this is silly, do something else.
     */
    private static HashMap ejbModulesByDeploymentInfo = new HashMap();
@@ -288,18 +303,6 @@ public class EjbModule
    {
       this.classLoader = cl;
    }
-
-   /**
-    * Get the name of this deployment unit. 
-    *
-    * @return    The name of this application.
-    * @jmx:managed-attribute
-    */
-   public String getName()
-   {
-      return name;
-   }
-
    
    /**
     * Get the URL from which this deployment unit was deployed
@@ -310,20 +313,23 @@ public class EjbModule
    {
       return deploymentInfo.url;
    }
-
 	
    public ObjectName getModuleName() 
    {
       return moduleName;
    }
    
-   public void setModuleName(final ObjectName ModuleName) 
+   public void setModuleName(final ObjectName moduleName) 
    {
-      this.moduleName = ModuleName;
+      if (moduleName == null)
+         throw new NullArgumentException("moduleName");
+      
+      this.moduleName = moduleName;
    }
 	
    // Service implementation ----------------------------------------
-   public void createService() throws Exception 
+   
+   protected void createService() throws Exception 
    {
       // Keep track of which deployments are ejbModules
       synchronized(ejbModulesByDeploymentInfo)
@@ -339,20 +345,23 @@ public class EjbModule
       log.debug( "Application.start(), begin" );
   
       // Create JSR-77 EJB-Module
-      int sepPos = getName().lastIndexOf( "/" );
-      String lName = getName().substring(sepPos >= 0 ? sepPos + 1 : 0);
-      ObjectName lModule = 
-         EJBModule.create(
+      int sepPos = name.lastIndexOf( "/" );
+      String lName = name.substring(sepPos >= 0 ? sepPos + 1 : 0);
+      
+      ObjectName lModule = EJBModule.create(
             server,
             ( deploymentInfo.parent == null ? null : deploymentInfo.parent.shortName ),
             lName,
             deploymentInfo.localUrl,
             getServiceName()
             );
+      log.debug("Created module: " + lModule);
+      
       if( lModule != null ) 
       {
          setModuleName( lModule );
       }
+      
       //Set up the beans in this module.
       try 
       {
@@ -361,19 +370,11 @@ public class EjbModule
             BeanMetaData bean = (BeanMetaData) beans.next();
             
             log.info( "Deploying " + bean.getEjbName() );
-            //Container con = createContainer(bean, deploymentInfo);
-            //addContainer(con);
-            
-            try 
-            {
-               addContainer( createContainer( bean, deploymentInfo ) );
-            } 
-            catch (Exception e) 
-            {
-               log.error("error adding container to app.", e);
-               throw e;
-            } // end of try-catch
+
+            Container con = createContainer(bean, deploymentInfo);
+            addContainer(con);
          }
+         
          //only one iteration should be necessary, but we won't sweat it.   
          //2 iterations are needed by cmp...jdbc/bridge/JDBCCMRFieldBridge which 
          //assumes persistence managers are all set up for every
@@ -428,7 +429,7 @@ public class EjbModule
     *
     * @exception Exception if an error occurs
     */
-   public void startService() throws Exception
+   protected void startService() throws Exception
    {
       boolean debug = log.isDebugEnabled();
       
@@ -445,7 +446,7 @@ public class EjbModule
    /**
     * Stops all the containers of this application.
     */
-   public void stopService()
+   protected void stopService() throws Exception
    {
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
@@ -458,11 +459,10 @@ public class EjbModule
          {
             log.error("unexpected exception stopping Container: " + con.getJmxName(), e);
          } // end of try-catch
-         
       }
    }
 
-   public void destroyService()
+   protected void destroyService() throws Exception
    {
       WebServiceMBean webServer = 
          (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, 
@@ -493,7 +493,7 @@ public class EjbModule
          // Remove JSR-77 EJB-Wrapper
          if( con.mEJBObjectName != null )
          {
-            EJB.destroy( con.mbeanServer, con.mEJBObjectName );
+            EJB.destroy( con.getServer(), con.mEJBObjectName );
          }
          try 
          {
@@ -512,6 +512,7 @@ public class EjbModule
             log.error("unexpected exception destroying Container: " + jmxName, e);
          } // end of try-catch
       }
+      
       log.info( "Remove JSR-77 EJB Module: " + getModuleName() );
       if (getModuleName() != null) 
       {  
