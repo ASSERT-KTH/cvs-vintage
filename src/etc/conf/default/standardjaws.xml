@@ -789,6 +789,11 @@
               <sql-type>DECIMAL(20)</sql-type>
           </mapping>
           <mapping>
+              <java-type>java.math.BigDecimal</java-type>
+              <jdbc-type>VARCHAR</jdbc-type>
+              <sql-type>VARCHAR(256)</sql-type>
+          </mapping>
+          <mapping>
               <java-type>java.lang.String</java-type>
               <jdbc-type>VARCHAR</jdbc-type>
               <sql-type>VARCHAR(256)</sql-type>
