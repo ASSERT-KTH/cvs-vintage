@@ -1,3 +1,4 @@
+
 // $ANTLR 2.7.2a2 (20020112-1): "java.g" -> "JavaRecognizer.java"$
 
 package org.argouml.uml.reveng.java;
@@ -6,15 +7,15 @@ import java.util.*;
 
 import antlr.TokenBuffer;
 import antlr.TokenStreamException;
-import antlr.TokenStreamIOException;
-import antlr.ANTLRException;
+
+
 import antlr.LLkParser;
 import antlr.Token;
 import antlr.TokenStream;
 import antlr.RecognitionException;
 import antlr.NoViableAltException;
 import antlr.MismatchedTokenException;
-import antlr.SemanticException;
+
 import antlr.ParserSharedInputState;
 import antlr.collections.impl.BitSet;
 
@@ -39,7 +40,7 @@ import antlr.collections.impl.BitSet;
  * 
  * <p>Version tracking now done with following cvs ID:
  *
- * <p>$Id: JavaRecognizer.java,v 1.19 2003/06/17 10:59:40 lepekhine Exp $
+ * <p>$Id: JavaRecognizer.java,v 1.20 2003/08/25 23:57:45 bobtarling Exp $
  * 
  * --------- old notes: -------------------------------------------
  * <pre>

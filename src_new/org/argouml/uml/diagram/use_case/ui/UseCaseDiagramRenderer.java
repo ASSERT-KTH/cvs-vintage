@@ -1,5 +1,6 @@
 
-// $Id: UseCaseDiagramRenderer.java,v 1.10 2003/08/25 19:15:50 bobtarling Exp $
+
+// $Id: UseCaseDiagramRenderer.java,v 1.11 2003/08/25 23:57:43 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: UseCaseDiagramRenderer.java
 // Classes: UseCaseDiagramRenderer
 // Original Author: abonner@ics.uci.edu
-// $Id: UseCaseDiagramRenderer.java,v 1.10 2003/08/25 19:15:50 bobtarling Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.11 2003/08/25 23:57:43 bobtarling Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity.
@@ -44,7 +45,7 @@ import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.graph.GraphNodeRenderer;
 import org.tigris.gef.presentation.FigEdge;
 import org.tigris.gef.presentation.FigNode;
-import ru.novosoft.uml.behavior.use_cases.MActor;
+
 import ru.novosoft.uml.behavior.use_cases.MExtend;
 import ru.novosoft.uml.behavior.use_cases.MInclude;
 import ru.novosoft.uml.behavior.use_cases.MUseCase;

@@ -1,6 +1,7 @@
 
 
-// $Id: FigInterface.java,v 1.43 2003/08/25 19:15:56 bobtarling Exp $
+
+// $Id: FigInterface.java,v 1.44 2003/08/25 23:57:45 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,10 +77,10 @@ import ru.novosoft.uml.foundation.core.MInterface;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.core.MOperation;
-import ru.novosoft.uml.foundation.core.MParameter;
+
 import ru.novosoft.uml.foundation.data_types.MScopeKind;
 import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
-import ru.novosoft.uml.model_management.MPackage;
+
 
 /** Class to display graphics for a UML Interface in a diagram. */
 

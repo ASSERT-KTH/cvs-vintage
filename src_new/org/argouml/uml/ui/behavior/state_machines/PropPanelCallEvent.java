@@ -1,4 +1,5 @@
-// $Id: PropPanelCallEvent.java,v 1.14 2003/06/29 23:50:12 linus Exp $
+
+// $Id: PropPanelCallEvent.java,v 1.15 2003/08/25 23:57:43 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +37,7 @@ import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
 
-import org.argouml.uml.ui.UMLComboBoxNavigator;
+
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.util.ConfigLoader;
 
@@ -58,6 +59,5 @@ public class PropPanelCallEvent extends PropPanelEvent {
     }
 
 } /* end class PropPanelCallEvent */
-
 
 

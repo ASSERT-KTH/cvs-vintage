@@ -1,5 +1,6 @@
 
-// $Id: TabConstraints.java,v 1.26 2003/08/25 19:15:51 bobtarling Exp $
+
+// $Id: TabConstraints.java,v 1.27 2003/08/25 23:57:43 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +46,7 @@ import org.argouml.ui.targetmanager.TargetEvent;
 
 import org.tigris.gef.presentation.Fig;
 
-import ru.novosoft.uml.foundation.core.MClassifier;
+
 import ru.novosoft.uml.foundation.core.MConstraint;
 import ru.novosoft.uml.foundation.core.MModelElement;
 
@@ -63,7 +64,7 @@ import tudresden.ocl.OclException;
 /**
   * Tab for OCL constraint editing.
   *
-  * <p>$Id: TabConstraints.java,v 1.26 2003/08/25 19:15:51 bobtarling Exp $
+  * <p>$Id: TabConstraints.java,v 1.27 2003/08/25 23:57:43 bobtarling Exp $
   *
   * @author v1.0: Falk Finger
   * @author v2.0: Steffen Zschaler

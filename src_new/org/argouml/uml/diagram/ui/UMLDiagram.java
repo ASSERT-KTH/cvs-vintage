@@ -1,6 +1,7 @@
 
 
-// $Id: UMLDiagram.java,v 1.31 2003/08/25 19:15:55 bobtarling Exp $
+
+// $Id: UMLDiagram.java,v 1.32 2003/08/25 23:57:43 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +43,7 @@ import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.tigris.gef.base.*;
 import org.tigris.gef.presentation.Fig;
-import org.tigris.toolbar.ToolBar;
+
 import org.tigris.toolbar.ToolBarFactory;
 import org.tigris.toolbutton.ToolButton;
 

@@ -1,5 +1,6 @@
 
-// $Id: ActionSetSourcePath.java,v 1.7 2003/08/25 19:15:51 bobtarling Exp $
+
+// $Id: ActionSetSourcePath.java,v 1.8 2003/08/25 23:57:43 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,10 +37,10 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.util.osdep.OsUtil;
 
-import ru.novosoft.uml.foundation.core.MClass;
-import ru.novosoft.uml.foundation.core.MInterface;
+
+
 import ru.novosoft.uml.foundation.core.MModelElement;
-import ru.novosoft.uml.model_management.MPackage;
+
 
 /** Action to choose and set source path for model elements
  * @stereotype singleton

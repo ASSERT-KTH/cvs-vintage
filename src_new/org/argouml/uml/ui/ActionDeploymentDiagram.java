@@ -1,5 +1,6 @@
 
-// $Id: ActionDeploymentDiagram.java,v 1.14 2003/08/25 19:15:51 bobtarling Exp $
+
+// $Id: ActionDeploymentDiagram.java,v 1.15 2003/08/25 23:57:43 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +31,7 @@ import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
 import ru.novosoft.uml.foundation.core.MNamespace;
-import ru.novosoft.uml.model_management.MPackage;
+
 
 /** Action to trigger creation of a deployment diagram.
  *  @stereotype singleton

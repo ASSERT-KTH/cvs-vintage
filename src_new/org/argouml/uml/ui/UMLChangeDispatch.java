@@ -1,5 +1,6 @@
 
-// $Id: UMLChangeDispatch.java,v 1.17 2003/08/25 19:15:51 bobtarling Exp $
+
+// $Id: UMLChangeDispatch.java,v 1.18 2003/08/25 23:57:43 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: UMLChangeDispatch.java
 // Classes: UMLChangeDispatch
 // Original Author:
-// $Id: UMLChangeDispatch.java,v 1.17 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: UMLChangeDispatch.java,v 1.18 2003/08/25 23:57:43 bobtarling Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added named constants
 
@@ -50,7 +51,7 @@ import org.argouml.uml.ui.behavior.common_behavior.PropPanelComponentInstance;
 import org.argouml.uml.ui.behavior.common_behavior.PropPanelNodeInstance;
 import org.argouml.uml.ui.behavior.common_behavior.PropPanelObject;
 
-import ru.novosoft.uml.MBase;
+
 import ru.novosoft.uml.MElementEvent;
 
 /**

@@ -1,5 +1,6 @@
 
-// $Id: FigInitialState.java,v 1.9 2003/08/25 19:15:53 bobtarling Exp $
+
+// $Id: FigInitialState.java,v 1.10 2003/08/25 23:57:44 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: FigInitialState.java
 // Classes: FigInitialState
 // Original Author: abonner@ics.uci.edu
-// $Id: FigInitialState.java,v 1.9 2003/08/25 19:15:53 bobtarling Exp $
+// $Id: FigInitialState.java,v 1.10 2003/08/25 23:57:44 bobtarling Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -41,7 +42,7 @@ import org.argouml.uml.diagram.activity.ui.SelectionActionState;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigCircle;
-import ru.novosoft.uml.behavior.activity_graphs.MActivityGraph;
+
 import ru.novosoft.uml.behavior.state_machines.MPseudostate;
 import ru.novosoft.uml.behavior.state_machines.MStateVertex;
 

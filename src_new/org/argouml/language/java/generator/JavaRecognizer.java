@@ -1,3 +1,4 @@
+
 // $ANTLR 2.7.2a2 (20020112-1): "java.g" -> "JavaRecognizer.java"$
 
 	package org.argouml.language.java.generator;
@@ -6,15 +7,15 @@
 
 import antlr.TokenBuffer;
 import antlr.TokenStreamException;
-import antlr.TokenStreamIOException;
-import antlr.ANTLRException;
+
+
 import antlr.LLkParser;
 import antlr.Token;
 import antlr.TokenStream;
 import antlr.RecognitionException;
 import antlr.NoViableAltException;
-import antlr.MismatchedTokenException;
-import antlr.SemanticException;
+
+
 import antlr.ParserSharedInputState;
 import antlr.collections.impl.BitSet;
 
@@ -75,7 +76,7 @@ import antlr.collections.impl.BitSet;
  *
  * Version tracking now done with following ID:
  *
- * $Id: JavaRecognizer.java,v 1.10 2003/03/27 11:42:54 lepekhine Exp $
+ * $Id: JavaRecognizer.java,v 1.11 2003/08/25 23:57:44 bobtarling Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!

@@ -1,4 +1,5 @@
-// $Id: DnDNavigatorTree.java,v 1.5 2003/06/30 18:00:23 linus Exp $
+
+// $Id: DnDNavigatorTree.java,v 1.6 2003/08/25 23:57:44 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +32,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.awt.event.InputEvent;
+
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
@@ -46,7 +48,7 @@ import org.argouml.model.uml.UmlHelper;
 /**
  * This class extends the default Argo JTree with Drag and drop capabilities.
  *
- * <p>$Id: DnDNavigatorTree.java,v 1.5 2003/06/30 18:00:23 linus Exp $
+ * <p>$Id: DnDNavigatorTree.java,v 1.6 2003/08/25 23:57:44 bobtarling Exp $
  *
  * @author  alexb
  * @since Created on 16 April 2003

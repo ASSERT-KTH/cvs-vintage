@@ -1,4 +1,5 @@
-// $Id: UmlHelper.java,v 1.14 2003/08/20 22:27:31 alexb Exp $
+
+// $Id: UmlHelper.java,v 1.15 2003/08/25 23:57:43 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +42,7 @@ import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.model_management.MModel;
+
 
 /**
  * Helper class for UML metamodel.
@@ -238,4 +239,3 @@ public class UmlHelper {
     }
     
 }
-

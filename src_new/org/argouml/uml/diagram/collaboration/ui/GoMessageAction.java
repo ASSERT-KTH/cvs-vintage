@@ -1,5 +1,6 @@
 
-// $Id: GoMessageAction.java,v 1.6 2003/08/25 19:15:56 bobtarling Exp $
+
+// $Id: GoMessageAction.java,v 1.7 2003/08/25 23:57:45 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +32,7 @@ import java.util.Collection;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.AbstractGoRule;
 
-import ru.novosoft.uml.behavior.collaborations.MMessage;
+
 
 /**
  * Go rule to navigate from some message to it's corresponding action

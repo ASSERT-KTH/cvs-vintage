@@ -1,6 +1,7 @@
 
 
-// $Id: ActionSetStructuralFeatureType.java,v 1.5 2003/08/25 19:15:52 bobtarling Exp $
+
+// $Id: ActionSetStructuralFeatureType.java,v 1.6 2003/08/25 23:57:43 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +36,7 @@ import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLComboBox2;
 import ru.novosoft.uml.foundation.core.MAttribute;
 import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MStructuralFeature;
+
 
 /**
  * @since Nov 3, 2002

@@ -1,5 +1,6 @@
 
-// $Id: PropPanelGeneralization.java,v 1.26 2003/08/25 19:15:52 bobtarling Exp $
+
+// $Id: PropPanelGeneralization.java,v 1.27 2003/08/25 23:57:43 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +53,7 @@ import ru.novosoft.uml.foundation.core.MInterface;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
-import ru.novosoft.uml.model_management.MPackage;
+
 
 /**
  * TODO: this property panel needs refactoring to remove dependency on

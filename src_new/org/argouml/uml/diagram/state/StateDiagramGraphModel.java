@@ -1,6 +1,7 @@
 
 
-// $Id: StateDiagramGraphModel.java,v 1.22 2003/08/25 19:15:57 bobtarling Exp $
+
+// $Id: StateDiagramGraphModel.java,v 1.23 2003/08/25 23:57:44 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: StateDiagramGraphModel.java
 // Classes: StateDiagramGraphModel
 // Original Author: your email address here
-// $Id: StateDiagramGraphModel.java,v 1.22 2003/08/25 19:15:57 bobtarling Exp $
+// $Id: StateDiagramGraphModel.java,v 1.23 2003/08/25 23:57:44 bobtarling Exp $
 package org.argouml.uml.diagram.state;
 
 import java.beans.PropertyChangeEvent;
@@ -40,7 +41,7 @@ import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesFacto
 import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelper;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
 import ru.novosoft.uml.behavior.state_machines.MCompositeState;
-import ru.novosoft.uml.behavior.state_machines.MFinalState;
+
 import ru.novosoft.uml.behavior.state_machines.MPseudostate;
 import ru.novosoft.uml.behavior.state_machines.MState;
 import ru.novosoft.uml.behavior.state_machines.MStateMachine;

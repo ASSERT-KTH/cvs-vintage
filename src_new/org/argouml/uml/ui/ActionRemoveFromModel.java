@@ -1,5 +1,6 @@
 
-// $Id: ActionRemoveFromModel.java,v 1.28 2003/08/25 19:15:51 bobtarling Exp $
+
+// $Id: ActionRemoveFromModel.java,v 1.29 2003/08/25 23:57:43 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +47,7 @@ import org.tigris.gef.presentation.Fig;
 
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.foundation.core.MModelElement;
-import ru.novosoft.uml.model_management.MModel;
+
 
 /**
  * Action for removing (moving to trash) objects from the model. Objects can be:

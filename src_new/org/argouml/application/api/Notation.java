@@ -1,7 +1,8 @@
 
 
 
-// $Id: Notation.java,v 1.28 2003/08/25 19:15:59 bobtarling Exp $
+
+// $Id: Notation.java,v 1.29 2003/08/25 23:57:44 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +29,7 @@
 // File: Notation.java
 // Classes: Notation
 // Original Author: Thierry Lach
-// $Id: Notation.java,v 1.28 2003/08/25 19:15:59 bobtarling Exp $
+// $Id: Notation.java,v 1.29 2003/08/25 23:57:44 bobtarling Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -51,7 +52,7 @@ import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
 import ru.novosoft.uml.behavior.collaborations.MMessage;
-import ru.novosoft.uml.behavior.common_behavior.MCallAction;
+
 import ru.novosoft.uml.behavior.state_machines.MGuard;
 import ru.novosoft.uml.behavior.state_machines.MState;
 import ru.novosoft.uml.behavior.state_machines.MTransition;

@@ -1,5 +1,6 @@
 
-// $Id: UMLCollaborationRepresentedOperationListModel.java,v 1.7 2003/08/25 19:15:54 bobtarling Exp $
+
+// $Id: UMLCollaborationRepresentedOperationListModel.java,v 1.8 2003/08/25 23:57:43 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +30,7 @@ import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.behavior.collaborations.MCollaboration;
-import ru.novosoft.uml.foundation.core.MOperation;
+
 
 /**
  * The list of operations represented by some collaboration as shown on the 

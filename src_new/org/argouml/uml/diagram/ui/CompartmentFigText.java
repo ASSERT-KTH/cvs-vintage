@@ -1,4 +1,5 @@
-// $Id: CompartmentFigText.java,v 1.13 2003/08/17 22:17:00 linus Exp $
+
+// $Id: CompartmentFigText.java,v 1.14 2003/08/25 23:57:43 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +40,7 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigText;
 
-import ru.novosoft.uml.foundation.core.MFeature;
+
 import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
@@ -228,4 +229,3 @@ public class CompartmentFigText extends FigText
 
 
 } /* End of class CompartmentFigText */
-

@@ -1,6 +1,7 @@
 
 
-// $Id: StateDiagramRenderer.java,v 1.10 2003/08/25 19:15:53 bobtarling Exp $
+
+// $Id: StateDiagramRenderer.java,v 1.11 2003/08/25 23:57:44 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: StateDiagramRenderer.java
 // Classes: StateDiagramRenderer
 // Original Author: ics125b spring 1998
-// $Id: StateDiagramRenderer.java,v 1.10 2003/08/25 19:15:53 bobtarling Exp $
+// $Id: StateDiagramRenderer.java,v 1.11 2003/08/25 23:57:44 bobtarling Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -41,10 +42,10 @@ import org.tigris.gef.graph.GraphNodeRenderer;
 import org.tigris.gef.presentation.FigEdge;
 import org.tigris.gef.presentation.FigNode;
 
-import ru.novosoft.uml.behavior.state_machines.MCompositeState;
-import ru.novosoft.uml.behavior.state_machines.MFinalState;
+
+
 import ru.novosoft.uml.behavior.state_machines.MPseudostate;
-import ru.novosoft.uml.behavior.state_machines.MState;
+
 import ru.novosoft.uml.behavior.state_machines.MTransition;
 import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
 // could be singleton

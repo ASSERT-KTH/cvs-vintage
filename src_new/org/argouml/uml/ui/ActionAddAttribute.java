@@ -1,5 +1,6 @@
 
-// $Id: ActionAddAttribute.java,v 1.21 2003/08/25 19:15:51 bobtarling Exp $
+
+// $Id: ActionAddAttribute.java,v 1.22 2003/08/25 23:57:43 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +35,7 @@ import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 
 import ru.novosoft.uml.foundation.core.MAttribute;
-import ru.novosoft.uml.foundation.core.MClass;
+
 import ru.novosoft.uml.foundation.core.MClassifier;
 
 /** Action to add an attribute to a classifier.

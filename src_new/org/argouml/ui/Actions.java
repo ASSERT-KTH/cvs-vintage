@@ -1,4 +1,5 @@
-// $Id: Actions.java,v 1.53 2003/08/20 18:37:29 jjones Exp $
+
+// $Id: Actions.java,v 1.54 2003/08/25 23:57:44 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +34,7 @@ import java.util.Vector;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+
 
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.Poster;

@@ -1,4 +1,5 @@
-// $Id: ToDoPane.java,v 1.23 2003/08/22 17:37:30 bobtarling Exp $
+
+// $Id: ToDoPane.java,v 1.24 2003/08/25 23:57:42 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +42,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
+
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -90,7 +91,7 @@ import org.tigris.gef.util.VectorSet;
  *  ToDoPerspective skill = new ToDoBySkill();
  *</pre>
 
- * $Id: ToDoPane.java,v 1.23 2003/08/22 17:37:30 bobtarling Exp $
+ * $Id: ToDoPane.java,v 1.24 2003/08/25 23:57:42 bobtarling Exp $
  */
 public class ToDoPane extends JPanel
     implements ItemListener,
