@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.24 2005/01/22 16:41:16 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.25 2005/02/07 16:33:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -570,7 +570,8 @@ public class UmlFilePersister extends AbstractFilePersister
     private MemberFilePersister getMemberFilePersister(String tag) {
         MemberFilePersister persister = null;
         if (tag.equals("pgml")) {
-            persister = new DiagramMemberFilePersister();
+            persister = PersistenceManager.getInstance()
+                .getDiagramMemberFilePersister();
         } else if (tag.equals("todo")) {
             persister = new TodoListMemberFilePersister();
         } else if (tag.equals("xmi")) {
