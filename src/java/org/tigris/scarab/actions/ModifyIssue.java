@@ -93,7 +93,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.163 2003/05/14 21:43:55 elicia Exp $
+ * @version $Id: ModifyIssue.java,v 1.164 2003/05/22 00:45:03 elicia Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -884,7 +884,7 @@ public class ModifyIssue extends BaseModifyIssue
         {
             // Ignore this
         }
-        if (childIssue == null)
+        if (childIssue == null || childIssue.getDeleted())
         {
             childId.setMessage(l10n.get("EnterValidIssueId"));
             return false;
