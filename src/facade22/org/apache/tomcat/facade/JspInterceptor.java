@@ -606,6 +606,15 @@ final class JasperLiaison {
 		    return 0;
 	    }
 
+            // If unsafe path or JSP file doesn't exist, return "not found"
+            // Avoids creating work directories for non-existent JSP files
+            String path=mangler.getJspFilePath();
+            if( path == null )
+                return 404;
+            File f = new File( path );
+            if( !f.exists() )
+                return 404;
+
 	    //	    if( debug > 3) 
 	    ctx.log( "Compiling: " + jspFile + " to " +
 		     mangler.getServletClassName());
