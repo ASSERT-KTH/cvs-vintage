@@ -75,7 +75,7 @@ class Ajp12 {
     Socket socket;
     InputStream sin;
     BufferedInputStream ajpin;
-    private boolean TomcatAuthentication=true;
+    private boolean tomcatAuthentication=true;
     boolean shutdown=false;
     boolean isPing=false;
     boolean doLog;
@@ -370,11 +370,11 @@ class Ajp12 {
     }
 
     public boolean isTomcatAuthentication() {
-        return TomcatAuthentication;
+        return tomcatAuthentication;
     }
 
     public void setTomcatAuthentication(boolean newTomcatAuthentication) {
-        TomcatAuthentication = newTomcatAuthentication;
+        tomcatAuthentication = newTomcatAuthentication;
     }
 
     

@@ -76,7 +76,7 @@ import org.apache.tomcat.util.*;
  */
 public class Ajp12Interceptor extends PoolTcpConnector
     implements  TcpConnectionHandler{
-    private boolean TomcatAuthentication=true;
+    private boolean tomcatAuthentication=true;
     public Ajp12Interceptor() {
 	super();
     }
@@ -125,7 +125,7 @@ public class Ajp12Interceptor extends PoolTcpConnector
 		resA=(AJP12Response)thData[1];
 		if( reqA!=null ) reqA.recycle();
 		if( resA!=null ) resA.recycle();
-//XXX Need to revert the tomcat auth state? if yes put it into recycle and
+//XXX is needed to revert the tomcat auth state? if yes put it into recycle and
 //    and uncomment here                
 //                ((AJP12Request)reqA).setTomcatAuthentication(isTomcatAuthtentication());
 	    }
@@ -154,11 +154,11 @@ public class Ajp12Interceptor extends PoolTcpConnector
     }
 
     public boolean isTomcatAuthentication() {
-        return TomcatAuthentication;
+        return tomcatAuthentication;
     }
 
     public void setTomcatAuthentication(boolean newTomcatAuthentication) {
-        TomcatAuthentication = newTomcatAuthentication;
+        tomcatAuthentication = newTomcatAuthentication;
     }
 }
 
