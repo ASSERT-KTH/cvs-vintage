@@ -17,7 +17,7 @@
  */
 package org.jboss.jms.asf;
 
-import org.jboss.util.ServiceMBean;
+import org.jboss.system.ServiceMBean;
 
 /**
  * The management interface for the <tt>ServerSessionPoolLoader</tt>.
@@ -25,7 +25,7 @@ import org.jboss.util.ServiceMBean;
  * <p>Created: Wed Nov 29 16:20:17 2000
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface ServerSessionPoolLoaderMBean 
    extends ServiceMBean 

@@ -29,7 +29,7 @@ import javax.naming.NameNotFoundException;
 
 import org.apache.log4j.Category;
 
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 /**
  * A loader for <tt>ServerSessionPools</tt>.
@@ -38,7 +38,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class ServerSessionPoolLoader 
    extends ServiceMBeanSupport

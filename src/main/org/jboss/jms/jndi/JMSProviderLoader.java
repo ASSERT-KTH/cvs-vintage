@@ -29,7 +29,7 @@ import javax.naming.NameNotFoundException;
 import org.apache.log4j.Category;
 
 import org.jboss.configuration.ConfigurationException;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 /**
  * A JMX service to load a JMSProviderAdapter and register it.
@@ -40,7 +40,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JMSProviderLoader 
    extends ServiceMBeanSupport

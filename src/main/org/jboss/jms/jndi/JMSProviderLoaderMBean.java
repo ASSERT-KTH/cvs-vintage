@@ -17,7 +17,7 @@
  */
 package org.jboss.jms.jndi;
 
-import org.jboss.util.ServiceMBean;
+import org.jboss.system.ServiceMBean;
 
 /**
  * JMSProviderLoaderMBean.java
