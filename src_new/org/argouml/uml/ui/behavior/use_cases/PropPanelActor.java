@@ -24,7 +24,11 @@
 // File: PropPanelActor.java
 // Classes: PropPanelActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelActor.java,v 1.7 2001/07/10 11:53:21 1sturm Exp $
+// $Id: PropPanelActor.java,v 1.8 2002/03/21 17:42:45 jeremybennett Exp $
+
+// 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
+// labels "Generalizes:" and "Specializes:" for inheritance.
+
 
 package org.argouml.uml.ui.behavior.use_cases;
 
@@ -67,10 +71,10 @@ public class PropPanelActor extends PropPanelClassifier {
     modifiersPanel.add(new UMLCheckBox(localize("Root"),this,new UMLReflectionBooleanProperty("isRoot",mclass,"isRoot","setRoot")));
     addField(modifiersPanel,4,0,0);
 
-    addCaption("Derived:",0,1,0);
+    addCaption("Generalizes:",0,1,0);
     addField(derivedScroll,0,1,0);
 
-    addCaption("Extends:",1,1,0);
+    addCaption("Specializes:",1,1,0);
     addLinkField(extendsScroll,1,1,0);
 
     addCaption("Associations:",2,1,0.5);

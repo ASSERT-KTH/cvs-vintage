@@ -25,7 +25,11 @@
 // File: PropPanelComponent.java
 // Classes: PropPanelComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelComponent.java,v 1.7 2001/07/10 11:53:21 1sturm Exp $
+// $Id: PropPanelComponent.java,v 1.8 2002/03/21 17:42:46 jeremybennett Exp $
+
+// 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
+// labels "Generalizes:" and "Specializes:" for inheritance.
+
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -53,7 +57,7 @@ public class PropPanelComponent extends PropPanelClassifier {
     addCaption("Namespace:",3,0,0);
     addField(namespaceScroll,3,0,0);
 
-    addCaption("Extends:",4,0,0);
+    addCaption("Specializes:",4,0,0);
     addField(extendsScroll,4,0,0);
 
     addCaption("Modifiers:",5,0,1);
@@ -63,7 +67,7 @@ public class PropPanelComponent extends PropPanelClassifier {
     modifiersPanel.add(new UMLCheckBox(localize("root"),this,new UMLReflectionBooleanProperty("isRoot",mclass,"isRoot","setRoot")));
     addField(modifiersPanel,5,0,0);
 
-    addCaption("Derived:",0,1,1);
+    addCaption("Generalizes:",0,1,1);
     addField(derivedScroll,0,1,1);
 
     new PropPanelButton(this,buttonPanel,_navUpIcon,localize("Go up"),"navigateUp",null);
