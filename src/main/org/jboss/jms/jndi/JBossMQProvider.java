@@ -29,24 +29,43 @@ import javax.naming.NamingException;
  * Created: Fri Dec 22 09:34:04 2000
  * 6/22/01 - hchirino - The queue/topic jndi references are now configed via JMX
  *
- * @author Peter Antman
+ * @version <pre>$Revision: 1.5 $</pre>
+ * @author  <a href="mailto:peter.antman@dn.se">Peter Antman</a>
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
- * @version
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class JBossMQProvider 
    extends AbstractJMSProviderAdapter
 {
+    /** The initial context factory to use. */
+	public static final String INITIAL_CONTEXT_FACTORY =
+        "org.jnp.interfaces.NamingContextFactory";
 
+    /** The url package prefixes. */
+	public static final String URL_PKG_PREFIXES =
+        "org.jboss.naming";
 
-	public static final String INITIAL_CONTEXT_FACTORY = "org.jnp.interfaces.NamingContextFactory";
-	public static final String URL_PKG_PREFIXES = "org.jboss.naming";
-	private static final String SECURITY_MANAGER = "java.naming.rmi.security.manager";
+    /** The security manager to use. */
+	private static final String SECURITY_MANAGER =
+        "java.naming.rmi.security.manager";
 
+    /** Flag to enable JNDI security manager. */
 	private String hasJndiSecurityManager = "yes";
 
+    /**
+     * Default no-argument constructor.
+     */
 	public JBossMQProvider() {
+        // empty
 	}
 
+    /**
+     * Create a new InitialContext suitable for this JMS provider.
+     *
+     * @return  An InitialContext suitable for this JMS provider.
+     *
+     * @throws NamingException  Failed to construct context.
+     */
 	public Context getInitialContext() throws NamingException {
 		Context ctx = null;
 		if (providerURL == null) {
@@ -55,7 +74,8 @@ public class JBossMQProvider
 		} else {
 			// Try another location
 			Hashtable props = new Hashtable();
-			props.put(Context.INITIAL_CONTEXT_FACTORY, INITIAL_CONTEXT_FACTORY);
+			props.put(Context.INITIAL_CONTEXT_FACTORY,
+                      INITIAL_CONTEXT_FACTORY);
 			props.put(Context.PROVIDER_URL, providerURL);
 			props.put(SECURITY_MANAGER, hasJndiSecurityManager);
 			props.put(Context.URL_PKG_PREFIXES, URL_PKG_PREFIXES);
@@ -63,5 +83,4 @@ public class JBossMQProvider
 		}
 		return ctx;
 	}
-
 }

@@ -39,8 +39,8 @@ public interface JMSProviderAdapter {
 	public String getName();
 	public void setProviderUrl(String url);
 	public String getProviderUrl();
-	public java.lang.String getQueueFactoryRef();
-	public java.lang.String getTopicFactoryRef();
-	public void setQueueFactoryRef(java.lang.String newQueueFactoryRef);
-	public void setTopicFactoryRef(java.lang.String newTopicFactoryRef);
+	public String getQueueFactoryRef();
+	public String getTopicFactoryRef();
+	public void setQueueFactoryRef(String newQueueFactoryRef);
+	public void setTopicFactoryRef(String newTopicFactoryRef);
 }

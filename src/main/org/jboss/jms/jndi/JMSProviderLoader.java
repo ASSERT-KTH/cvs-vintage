@@ -26,6 +26,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.NameNotFoundException;
 
+import org.jboss.configuration.ConfigurationException;
 import org.jboss.util.ServiceMBeanSupport;
 import org.jboss.logging.Logger;
 
@@ -97,6 +98,15 @@ public class JMSProviderLoader
    public void initService() 
 	  throws Exception
    {
+      // validate the configuration
+      if (queueFactoryRef == null)
+          throw new ConfigurationException
+              ("missing required attribute: QueueFactoryRef");
+
+      if (topicFactoryRef == null)
+          throw new ConfigurationException
+              ("missing required attribute: TopicFactoryRef");
+       
 	  Class cls = Class.forName(providerAdapterClass);
 	  providerAdapter = (JMSProviderAdapter)cls.newInstance();
 	  providerAdapter.setName(providerName);
