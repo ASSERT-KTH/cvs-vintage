@@ -46,11 +46,9 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-
 // Turbine classes
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
-import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 
 import org.apache.fulcrum.cache.TurbineGlobalCacheService;
@@ -65,7 +63,7 @@ import org.tigris.scarab.util.ScarabException;
   * This class represents the SCARAB_R_OPTION_OPTION table.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ROptionOption.java,v 1.12 2003/03/25 16:57:53 jmcnally Exp $
+  * @version $Id: ROptionOption.java,v 1.13 2003/03/27 23:57:19 jon Exp $
   */
 public class ROptionOption 
     extends org.tigris.scarab.om.BaseROptionOption
@@ -74,7 +72,7 @@ public class ROptionOption
     private int level;
 
     /** the name of this class */
-    private static final String className = "ROptionOption";
+    private static final String CLASS_NAME = "ROptionOption";
 
     /**
      * Must call getInstance()
@@ -90,8 +88,8 @@ public class ROptionOption
     {
          String keyStringA = option1.toString();
          String keyStringB = option2.toString();
-         return new StringBuffer(className.length() + keyStringA.length() + keyStringB.length())
-             .append(className).append(keyStringA).append(keyStringB).toString();
+         return new StringBuffer(CLASS_NAME.length() + keyStringA.length() + keyStringB.length())
+             .append(CLASS_NAME).append(keyStringA).append(keyStringB).toString();
     }
 
     /**

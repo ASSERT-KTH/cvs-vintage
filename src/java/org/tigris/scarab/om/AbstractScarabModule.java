@@ -56,7 +56,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Locale;
 
-import org.apache.log4j.Category;
 import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
 import org.apache.regexp.RESyntaxException;
@@ -101,7 +100,6 @@ import org.tigris.scarab.om.RAttributeAttributeGroup;
 import org.tigris.scarab.om.RAttributeAttributeGroupPeer;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.Log;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.workflow.WorkflowFactory;
@@ -121,20 +119,16 @@ import org.tigris.scarab.reports.ReportBridge;
  * <p>This class is the base class for 
  * <code>org.tigris.scarab.om.ScarabModule</code>. BaseScarabModule extends
  * this class and that definition is defined in the scarab-schema.xml
- * which is used by Torque to generated BaseScarabModule.
+ * which is used by Torque to generated BaseScarabModule.</p>
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.86 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.87 2003/03/27 23:57:19 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
     implements Module, Comparable
 {
-
-    private static final Category log = 
-        Category.getInstance("org.tigris.scarab.om.AbstractScarabModule");
-
     // the following Strings are method names that are used in caching results
     protected static final String GET_R_MODULE_ATTRIBUTES = 
         "getRModuleAttributes";
@@ -250,7 +244,7 @@ public abstract class AbstractScarabModule
             catch (Exception e)
             {
                 e.printStackTrace();
-                log.error(e);
+                log().error(e);
                 return null;
             }
             Iterator itr = parents.iterator();
@@ -598,7 +592,7 @@ public abstract class AbstractScarabModule
                     }
                     catch (org.xml.sax.SAXException e)
                     {
-                        Log.get().warn("Could not parse the report id=" +
+                        log().warn("Could not parse the report id=" +
                                  torqueReport.getReportId() + 
                                  ", so it has been marked as deleted.");
                         torqueReport.setDeleted(true);
@@ -1066,8 +1060,8 @@ public abstract class AbstractScarabModule
             while (iter.hasNext())
             {
                 IssueType issueType = (IssueType)iter.next();
-                if (IssueTypePeer.ROOT_KEY.equals(issueType.getParentId())
-                    && !IssueTypePeer.ROOT_KEY.equals(issueType.getIssueTypeId())
+                if (IssueTypePeer.getRootKey().equals(issueType.getParentId())
+                    && !IssueTypePeer.getRootKey().equals(issueType.getIssueTypeId())
                     && !currentIssueTypes.contains(issueType))
                 {
                     availIssueTypes.add(issueType);

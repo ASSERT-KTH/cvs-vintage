@@ -65,7 +65,6 @@ import com.workingdogs.village.Record;
 import org.apache.commons.lang.ObjectUtils;
 // Turbine classes
 import org.apache.torque.TorqueException;
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.manager.MethodResultCache;
 import org.apache.torque.util.Criteria;
@@ -97,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.283 2003/03/25 16:57:53 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.284 2003/03/27 23:57:19 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -264,9 +263,9 @@ public class Issue
     public static class FederatedId
         implements Serializable
     {
-        String domainId;
-        String prefix;
-        int count;
+        private String domainId;
+        private String prefix;
+        private int count;
 
         public FederatedId(String id)
         {
@@ -284,7 +283,7 @@ public class Issue
 
         public FederatedId(String domain, String prefix, int count)
         {
-            domainId = domain;
+            this.domainId = domain;
             this.prefix = prefix;
             this.count = count;
         }
@@ -2517,7 +2516,7 @@ public class Issue
 
             AttributeValue status = getAttributeValue(attribute);
             if (status != null && status.getOptionId()
-                 .equals(AttributeOption.STATUS__CLOSED__PK)) 
+                 .equals(AttributeOption.getStatusClosedPK())) 
             {
                 // the issue is currently closed, we can get the date
                 Criteria crit = new Criteria()
@@ -2526,7 +2525,7 @@ public class Issue
                     .addJoin(ActivityPeer.TRANSACTION_ID, 
                              ActivitySetPeer.TRANSACTION_ID)
                     .add(ActivityPeer.NEW_OPTION_ID, 
-                      AttributeOption.STATUS__CLOSED__PK)
+                      AttributeOption.getStatusClosedPK())
                     .addDescendingOrderByColumn(ActivitySetPeer.CREATED_DATE);
                 
                 List activitySets = ActivitySetPeer.doSelect(crit);

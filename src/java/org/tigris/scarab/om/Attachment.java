@@ -58,7 +58,6 @@ import java.util.List;
 
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
-import org.apache.torque.om.NumberKey;
 
 import org.apache.turbine.Turbine;
 import org.apache.torque.util.Criteria;
@@ -83,7 +82,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.57 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: Attachment.java,v 1.58 2003/03/27 23:57:19 jon Exp $
  */
 public class Attachment 
     extends BaseAttachment

@@ -50,7 +50,6 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.HashMap;
 
-import org.apache.torque.om.NumberKey;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 
@@ -59,7 +58,7 @@ import org.apache.torque.om.Persistent;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivityManager.java,v 1.14 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: ActivityManager.java,v 1.15 2003/03/27 23:57:19 jon Exp $
  */
 public class ActivityManager
     extends BaseActivityManager

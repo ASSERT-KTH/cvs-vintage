@@ -53,8 +53,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Iterator;
 import org.apache.torque.TorqueException;
-import org.apache.torque.om.ObjectKey;
-import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.SimpleKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;

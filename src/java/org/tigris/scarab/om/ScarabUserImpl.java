@@ -46,7 +46,6 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +71,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.util.ScarabException;
 
 import org.apache.turbine.Turbine;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -82,14 +81,14 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.92 2003/03/25 16:57:54 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.93 2003/03/27 23:57:19 jon Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
     implements ScarabUser
 {
-    private static final Category torqueLog = 
-        Category.getInstance("org.apache.torque");
+    private static final Logger TORQUE_LOG = 
+        Logger.getLogger("org.apache.torque");
 
     public static final String PASSWORD_EXPIRE = "PASSWORD_EXPIRE";
     
@@ -309,10 +308,10 @@ public class ScarabUserImpl
     {
         boolean hasPermission = false;
         
-        if (torqueLog.isDebugEnabled()) 
+        if (TORQUE_LOG.isDebugEnabled()) 
         {
             String name = (module == null) ? null : module.getName();
-            torqueLog.debug("ScarabUserImpl.hasPermission(" + perm + ", " + 
+            TORQUE_LOG.debug("ScarabUserImpl.hasPermission(" + perm + ", " + 
                             name + ") started");
         }
         
@@ -361,10 +360,10 @@ public class ScarabUserImpl
             hasPermission = ((Boolean)obj).booleanValue();
         }
         
-        if (torqueLog.isDebugEnabled()) 
+        if (TORQUE_LOG.isDebugEnabled()) 
         {
             String name = (module == null) ? null : module.getName();
-            torqueLog.debug("ScarabUserImpl.hasPermission(" + perm + ", " + 
+            TORQUE_LOG.debug("ScarabUserImpl.hasPermission(" + perm + ", " + 
                             name + ") end\n");
         }
         return hasPermission;

@@ -55,9 +55,7 @@ import org.apache.turbine.Turbine;
 
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.Persistent;
-import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
@@ -72,9 +70,10 @@ import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 
 /** 
- * You should add additional methods to this class to meet the
- * application requirements.  This class will only be generated as
- * long as it does not already exist in the output directory.
+ * This class manages the Query table.
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: Query.java,v 1.56 2003/03/27 23:57:19 jon Exp $
  */
 public class Query 
     extends org.tigris.scarab.om.BaseQuery

@@ -56,36 +56,35 @@ import java.util.Collections;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
-import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 
 import org.tigris.scarab.services.cache.ScarabCache;
 
 /** 
-  * This class deals with AttributeOptions. For more details
-  * about the implementation of this class, read the documentation
-  * about how Scarab manages Attributes.
-  * <p>
-  * The implementation of this class is "smart" in that it will only
-  * touch the database when it absolutely needs to. For example, if
-  * you create a new AttributeOption, it will not query the database
-  * for the parent/child relationships until you ask it to. It will then
-  * cache the information locally.
-  * <p>
-  * All instances of AttributeOptions are cached using the 
-  * TurbineGlobalCache service.
-  *
-  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: AttributeOption.java,v 1.31 2003/03/25 16:57:53 jmcnally Exp $
-  */
+ * This class deals with AttributeOptions. For more details
+ * about the implementation of this class, read the documentation
+ * about how Scarab manages Attributes.
+ * <p>
+ * The implementation of this class is "smart" in that it will only
+ * touch the database when it absolutely needs to. For example, if
+ * you create a new AttributeOption, it will not query the database
+ * for the parent/child relationships until you ask it to. It will then
+ * cache the information locally.
+ * <p>
+ * All instances of AttributeOptions are cached using the 
+ * TurbineGlobalCache service.
+ *
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: AttributeOption.java,v 1.32 2003/03/27 23:57:19 jon Exp $
+ */
 public class AttributeOption 
     extends BaseAttributeOption
     implements Persistent
 {
-    public static NumberKey STATUS__CLOSED__PK = new NumberKey("7");
+    private static final Integer STATUS__CLOSED__PK = new Integer(7);
 
     /** the name of this class */
-    private static final String className = "AttributeOption";
+    private static final String CLASS_NAME = "AttributeOption";
 
     /** a local Attribute reference */
     private Attribute aAttribute;                 
@@ -117,20 +116,25 @@ public class AttributeOption
     {
     }
 
+    public static Integer getStatusClosedPK()
+    {
+        return STATUS__CLOSED__PK;
+    }
+
     /**
      * Creates a key for use in caching AttributeOptions
      */
     static String getCacheKey(ObjectKey key)
     {
          String keyString = key.getValue().toString();
-         return new StringBuffer(className.length() + keyString.length())
-             .append(className).append(keyString).toString();
+         return new StringBuffer(CLASS_NAME.length() + keyString.length())
+             .append(CLASS_NAME).append(keyString).toString();
     }
 
     /**
      * A comparator for this class. Compares on OPTION_NAME.
      */
-    private static final Comparator comparator = new Comparator()
+    private static final Comparator COMPARATOR = new Comparator()
         {
             public int compare(Object obj1, Object obj2)
             {
@@ -155,9 +159,9 @@ public class AttributeOption
      */
     public static Comparator getComparator()
     {
-        return comparator;
+        return COMPARATOR;
     }
-    
+
     /**
      * Get the Attribute associated with this Option
      */
@@ -360,7 +364,7 @@ public class AttributeOption
     {
         synchronized (this)
         {
-            Collections.sort(sortedParents, comparator);
+            Collections.sort(sortedParents, getComparator());
         }
     }
 
@@ -371,7 +375,7 @@ public class AttributeOption
     {
         synchronized (this)
         {
-            Collections.sort(sortedChildren, comparator);
+            Collections.sort(sortedChildren, getComparator());
         }
     }
 

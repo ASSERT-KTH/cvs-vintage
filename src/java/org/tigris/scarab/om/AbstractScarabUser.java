@@ -71,7 +71,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.68 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.69 2003/03/27 23:57:19 jon Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -86,7 +86,7 @@ public abstract class AbstractScarabUser
     private static final String GET_DEFAULT_QUERY_USER = 
         "getDefaultQueryUser";
 
-    private static final String[] homePageArray = {"home,EnterNew.vm", 
+    private static final String[] HOME_PAGES = {"home,EnterNew.vm", 
         "home,ModuleQuery.vm", "home,XModuleList.vm", "Index.vm"};
 
     private static final int MAX_INDEPENDENT_WINDOWS = 10;
@@ -811,7 +811,7 @@ public abstract class AbstractScarabUser
         {
             try
             {
-                homePage = homePageArray[i++];
+                homePage = HOME_PAGES[i++];
             }
             catch (Exception e)
             {

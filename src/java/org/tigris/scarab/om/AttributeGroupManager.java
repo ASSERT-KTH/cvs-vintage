@@ -51,7 +51,6 @@ import java.util.LinkedList;
 import java.util.HashMap;
 import java.io.Serializable;
 
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.manager.CacheListener;
@@ -62,7 +61,7 @@ import org.tigris.scarab.util.Log;
  * This class manages AttributeGroup objects.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AttributeGroupManager.java,v 1.8 2003/03/25 16:57:53 jmcnally Exp $
+ * @version $Id: AttributeGroupManager.java,v 1.9 2003/03/27 23:57:19 jon Exp $
  */
 public class AttributeGroupManager
     extends BaseAttributeGroupManager

@@ -47,7 +47,6 @@ package org.tigris.scarab.om;
  */ 
 
 import org.apache.torque.TorqueException;
-import org.apache.torque.om.NumberKey;
 import org.apache.fulcrum.intake.Retrievable;
 
 import org.apache.fulcrum.cache.TurbineGlobalCacheService;
@@ -64,13 +63,13 @@ import org.tigris.scarab.util.ScarabException;
   * to create combination of a ROptionOption and a AttributeOption
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ParentChildAttributeOption.java,v 1.13 2003/03/25 16:57:53 jmcnally Exp $
+  * @version $Id: ParentChildAttributeOption.java,v 1.14 2003/03/27 23:57:19 jon Exp $
   */
 public class ParentChildAttributeOption 
     implements Retrievable, java.io.Serializable
 {
     /** the name of this class */
-    private static final String className = "ParentChildAttributeOption";
+    private static final String CLASS_NAME = "ParentChildAttributeOption";
 
     private Integer attributeId = null;
     private Integer optionId = null;
@@ -94,9 +93,9 @@ public class ParentChildAttributeOption
     {
          String keyStringA = option1.toString();
          String keyStringB = option2.toString();
-         String output = new StringBuffer(className.length() + 
+         String output = new StringBuffer(CLASS_NAME.length() + 
                                 keyStringA.length() + keyStringB.length())
-                                .append(className).append(keyStringA)
+                                .append(CLASS_NAME).append(keyStringA)
                                 .append(keyStringB).toString();
          return output;
     }

@@ -48,7 +48,6 @@ package org.tigris.scarab.om;
 
 // Turbine classes
 import org.apache.torque.om.Persistent;
-import org.apache.torque.om.NumberKey;
 import org.apache.torque.TorqueException;
 
 import org.tigris.scarab.om.Module;
@@ -58,7 +57,7 @@ import org.tigris.scarab.om.ModuleManager;
  * This class represents a Report
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Report.java,v 1.30 2003/03/25 16:57:53 jmcnally Exp $
+ * @version $Id: Report.java,v 1.31 2003/03/27 23:57:19 jon Exp $
  */
 public  class Report 
     extends org.tigris.scarab.om.BaseReport
