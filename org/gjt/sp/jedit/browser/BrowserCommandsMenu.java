@@ -33,7 +33,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.20 2003/05/25 21:58:28 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.21 2003/09/03 05:09:26 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -189,11 +189,10 @@ public class BrowserCommandsMenu extends JPopupMenu
 
 		ButtonGroup grp = new ButtonGroup();
 
-		StringTokenizer st = new StringTokenizer(
-			jEdit.getProperty("encodings"));
-		while(st.hasMoreTokens())
+		String[] encodings = MiscUtilities.getEncodings();
+		for(int i = 0; i < encodings.length; i++)
 		{
-			String encoding = st.nextToken();
+			 String encoding = encodings[i];
 			JRadioButtonMenuItem mi = new JRadioButtonMenuItem(encoding);
 			mi.setActionCommand("encoding@" + encoding);
 			mi.addActionListener(actionHandler);

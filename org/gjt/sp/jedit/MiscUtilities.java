@@ -27,6 +27,7 @@ package org.gjt.sp.jedit;
 //{{{ Imports
 import javax.swing.text.Segment;
 import javax.swing.JMenuItem;
+import java.lang.reflect.Method;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -67,7 +68,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.60 2003/08/28 22:05:24 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.61 2003/09/03 05:09:26 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -1446,6 +1447,54 @@ loop:		for(;;)
 		}
 
 		return permissions;
+	} //}}}
+
+	//{{{ getEncodings() method
+	/**
+	 * Returns a list of supported character encodings.
+	 * On Java 1.3, returns a fixed list.
+	 * On Java 1.4, uses reflection to call an NIO API.
+	 * @since jEdit 4.2pre5
+	 */
+	public static String[] getEncodings()
+	{
+		List returnValue = new ArrayList();
+
+		if(OperatingSystem.hasJava14())
+		{
+			try
+			{
+				Class clazz = Class.forName(
+					"java.nio.charset.Charset");
+				Method method = clazz.getMethod(
+					"availableCharsets",
+					new Class[0]);
+				Map map = (Map)method.invoke(null,
+					new Object[0]);
+				Iterator iter = map.keySet().iterator();
+
+				while(iter.hasNext())
+				{
+					returnValue.add(iter.next());
+				}
+			}
+			catch(Exception e)
+			{
+				Log.log(Log.ERROR,MiscUtilities.class,e);
+			}
+		}
+		else
+		{
+			StringTokenizer st = new StringTokenizer(
+				jEdit.getProperty("encodings"));
+			while(st.hasMoreTokens())
+			{
+				returnValue.add(st.nextToken());
+			}
+		}
+
+		return (String[])returnValue.toArray(
+			new String[returnValue.size()]);
 	} //}}}
 
 	//{{{ Private members
