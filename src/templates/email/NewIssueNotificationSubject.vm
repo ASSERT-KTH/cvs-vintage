@@ -7,5 +7,3 @@
 #end
 #set ($formatArgs = [$issue.Module.RealName.toUpperCase(), $issue.UniqueId, $summary])
 #set ($emailSubject = $l10n.format("IssueAddedEmailSubject", $formatArgs))
-
-
