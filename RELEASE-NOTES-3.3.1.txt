@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.34 2002/02/11 12:41:00 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.35 2002/02/15 02:47:14 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -267,6 +267,8 @@ Bug No.  Description
 
 6137     Fix the admin webapp to be more careful when using the remove-context
 	 feature.  Also, the boxes were mis-labeled.
+
+6341	 Fix the "guess home" logic so that it can work on Mac OS
 
 Connectors:
 
