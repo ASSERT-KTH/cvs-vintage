@@ -7,14 +7,16 @@
 package org.jboss.ejb.plugins;
 
 // standard imports
-import java.util.Properties;
-
+import java.lang.reflect.Method;
 import java.security.Principal;
+import java.util.Properties;
+import java.util.List;
+import java.util.ArrayList;
 
+import javax.transaction.Transaction;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
 import javax.jms.DeliveryMode;
 import javax.jms.Topic;
 import javax.jms.TopicPublisher;
@@ -23,11 +25,10 @@ import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
 import javax.jms.Message;
 import javax.jms.Session;
+import javax.jms.Connection;
 import javax.jms.JMSException;
-
-import javax.transaction.Transaction;
-import javax.transaction.Status;
-
+import javax.jms.TransactionRolledBackException;
+import javax.jms.IllegalStateException;
 
 // jboss imports
 import org.jboss.ejb.Container;
@@ -35,33 +36,43 @@ import org.jboss.ejb.MethodInvocation;
 import org.jboss.monitor.MetricsConstants;
 
 /**
- * MetricsInterceptor is used for gathering data from the container for admin
- * interface.
+ * MetricsInterceptor collects data from the bean invocation call and publishes
+ * them on a JMS topic (bound to <tt>topic/metrics</tt> in the name service). <p>
+ *
  *
  * @since   jBoss 2.0
  *
  * @author  <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
  */
-public class MetricsInterceptor extends AbstractInterceptor 
-                                implements MetricsConstants {
+public class MetricsInterceptor extends AbstractInterceptor
+        implements MetricsConstants {
 
-    // Constants -----------------------------------------------------
-    
     // Attributes ----------------------------------------------------
+    /** The container for this interceptor.             */
     private Container container           = null;
-    private Context  namingContext        = null;
-    private TopicPublisher metricsPub     = null;
-    private TopicSession metricsSession   = null;
-    private Topic metricsTopic            = null;
     
+    /** Application name this bean belongs to.          */
     private String applicationName        = "<undefined>";
+    /** Bean name in the container.                     */ 
     private String beanName               = "<undefined>";
-    
-    // Static --------------------------------------------------------
 
-    // Constructors --------------------------------------------------
+    /**
+     * Message queue for the outgoing JMS messages. This list is accessed
+     * by the interceptor when adding new messages, and by the publisher
+     * thread when copying and clearing the contents of the queue. The list
+     * must be locked for access and locks should be kept down to minimum
+     * as they degrade the interceptor stack performance.
+     **/
+    private List msgQueue  =  new ArrayList(2000);
+    
    
     // Public --------------------------------------------------------
+    /**
+     * Stores the container reference and the application and bean JNDI
+     * names.
+     *
+     * @param   container   set by the container initialization code
+     */
     public void setContainer(Container container) {
         this.container  = container;
         
@@ -69,96 +80,104 @@ public class MetricsInterceptor extends AbstractInterceptor
         beanName        = container.getBeanMetaData().getJndiName();
     }
     
+    /**
+     * Returns the container reference.
+     *
+     * @return the container this interceptor belongs to
+     */
     public Container getContainer() {
         return container;
     }
 
     // Interceptor implementation ------------------------------------
-   public Object invokeHome(MethodInvocation mi) throws Exception {
+    public Object invokeHome(MethodInvocation mi) throws Exception {
      
-     try {
-        sendMessage(System.currentTimeMillis(), createMessage(mi, "START"));
-        return super.invokeHome(mi);
-     }
-     finally {
-         sendMessage(System.currentTimeMillis(), createMessage(mi, "STOP"));
-     }
+        long begin = System.currentTimeMillis();
+     
+        try {
+            return super.invokeHome(mi);
+        }
+        finally {
+            addEntry(mi, begin, System.currentTimeMillis());
+        }
    }
 
     public Object invoke(MethodInvocation mi) throws Exception {
 
+        long begin = System.currentTimeMillis();
+        
         try {
-            sendMessage(System.currentTimeMillis(), createMessage(mi, "START"));
             return super.invoke(mi);
         }
-      
         finally {
-            sendMessage(System.currentTimeMillis(), createMessage(mi, "STOP"));
+            addEntry(mi, begin, System.currentTimeMillis());
         }
    }
 
+   /**
+    * Starts the JMS publisher thread.
+    */
    public void init() {
-
-       try {
-           final boolean IS_TRANSACTED    = false;
-           final int     ACKNOWLEDGE_MODE = Session.DUPS_OK_ACKNOWLEDGE;
-           
-           namingContext = new InitialContext();
-           
-           TopicConnectionFactory factory = (TopicConnectionFactory)
-                namingContext.lookup("TopicConnectionFactory");
-
-           TopicConnection connection = factory.createTopicConnection();
-
-           metricsTopic     = (Topic)namingContext.lookup("topic/metrics");
-           metricsSession   = connection.createTopicSession(IS_TRANSACTED, ACKNOWLEDGE_MODE);
-           metricsPub       = metricsSession.createPublisher(metricsTopic);     
-           
-           connection.start();
-       }
-       catch (NamingException e) {
-           System.out.println(e);
-       }
-       catch (JMSException e) {
-           System.out.println(e);
-       }
        
+        /*
+         * looks like init() is called after setContainer().
+         * wonder if container method callback order is documented somewhere, it should be.. 
+         */
+         
+        Thread thread = new Thread(new Publisher());
+        thread.setName("Metrics Publisher Thread for " + beanName + ".");
+        thread.setDaemon(true);
+        thread.start();
    }
 
    
     // Private --------------------------------------------------------
+    
+    /**
+     * Store the required information from this invocation: principal,
+     * transaction, method, time.
+     *
+     * @param   begin   invocation begin time in ms
+     * @param   end     invocation end time in ms
+     */
+    private void addEntry(MethodInvocation mi, long begin, long end) {
+        
+        /* this gets called by the interceptor */
+        
+        Transaction tx  = mi.getTransaction();
+        Principal princ = mi.getPrincipal();
+        Method method   = mi.getMethod();
+        Entry start     = new Entry(princ, method, tx, begin, "START");
+        Entry stop      = new Entry(princ, method, tx, end, "STOP");
 
-    private void sendMessage(long time, Message msg) {        
-
-        try {
-            msg.setLongProperty(TIME,  time);
-            metricsPub.publish(msg, DeliveryMode.NON_PERSISTENT, 1, 10000);
-        }
-        catch (Exception e) {
-            // catch JMSExceptions, NPE's etc and prevent them from propagating
-            // up if the metrics fail
+        // add both entries, order is guaranteed, synchronized to prevent
+        // publisher from touching the queue while working on it
+        synchronized(msgQueue) {
+            
+            // Two entries for now, one should suffice but requires changes in
+            // the client.
+            msgQueue.add(start);
+            msgQueue.add(stop);
         }
     }
-    
-    private Message createMessage(MethodInvocation mi, String checkpoint) {
+        
+    private Message createMessage(Session session, String principal, int txID,
+                                  String method, String checkpoint, long time) {
         
         try {            
-            Message  msg    =  metricsSession.createMessage();
-            Transaction tx  =  mi.getTransaction();
-            Principal principal = mi.getPrincipal();
-            
+            Message  msg    =  session.createMessage();
+
             msg.setJMSType(INVOCATION_METRICS);
-           // msg.setJMSExpiration(1);
-            
             msg.setStringProperty(CHECKPOINT, checkpoint);
-            msg.setStringProperty(BEAN,   beanName);
-            msg.setObjectProperty(METHOD, mi.getMethod().getName());    
+            msg.setStringProperty(BEAN, beanName);
+            msg.setObjectProperty(METHOD, method);    
+            msg.setLongProperty(TIME, time);
             
-            if (tx != null) 
-                msg.setStringProperty("ID",  String.valueOf(tx.hashCode()));
+            if (txID != -1) 
+                msg.setStringProperty("ID",  String.valueOf(txID));
                         
             if (principal != null)
-                msg.setStringProperty("PRINCIPAL", principal.getName());
+                msg.setStringProperty("PRINCIPAL", principal);
                 
             return msg;
         }
@@ -168,6 +187,128 @@ public class MetricsInterceptor extends AbstractInterceptor
             return null;
         }
     }
+
+
+    /**
+     * JMS Publisher thread implementation.
+     */
+    private class Publisher implements Runnable {
+     
+        /** Thread keep-alive field. */
+        private boolean running = true;
+        /** Thread sleep delay. */
+        private int delay = 2000;
+        /** JMS Connection */
+        private TopicConnection connection = null;
+        
+        /**
+         * Thread implementation. <p>
+         *
+         * When started, looks up a topic connection factory from the name
+         * service, and attempts to create a publisher to <tt>topic/metrics</tt>
+         * topic. <p>
+         *
+         * While alive, locks the <tt>msgQueue</tt> every two seconds to make a
+         * copy of the contents and then clear it. <p>
+         *
+         * Interrupting this thread will kill it.
+         *
+         * @see #msgQueue
+         * @see java.lang.Thread#interrupt()
+         */
+        public void run() {
     
+            try {
+                final boolean IS_TRANSACTED    = false;
+                final int     ACKNOWLEDGE_MODE = Session.DUPS_OK_ACKNOWLEDGE;
+               
+                // lookup the connection factory and topic and create a JMS session
+                Context namingContext       = new InitialContext();
+                TopicConnectionFactory fact = (TopicConnectionFactory)namingContext.lookup("TopicConnectionFactory");
+                
+                connection  = fact.createTopicConnection();
+    
+                Topic topic          = (Topic)namingContext.lookup("topic/metrics");
+                TopicSession session = connection.createTopicSession(IS_TRANSACTED, ACKNOWLEDGE_MODE);
+                TopicPublisher pub   = session.createPublisher(topic);     
+               
+                pub.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+                pub.setPriority(Message.DEFAULT_PRIORITY);
+                pub.setTimeToLive(Message.DEFAULT_TIME_TO_LIVE);
+
+                // start the JMS connection
+                connection.start();
+               
+                // copy the message queue every x seconds, and publish the messages
+                while (running) {
+
+                    Object[] array;
+
+                    try {
+                        Thread.sleep(delay);
+                        
+                        // synchronized during the copy... the interceptor will
+                        // have to wait til done
+                        synchronized(msgQueue) {
+                            array = msgQueue.toArray();
+                            msgQueue.clear();    
+                        }
+                        
+                        // publish the messages
+                        for (int i = 0; i < array.length; ++i) {
+                            Message msg = createMessage(session,
+                                            ((Entry)array[i]).principal,
+                                            ((Entry)array[i]).id,
+                                            ((Entry)array[i]).method,
+                                            ((Entry)array[i]).checkpoint,
+                                            ((Entry)array[i]).time
+                                          );
+                                          
+                            pub.publish(msg);
+                        }                                          
+                    }
+                    catch (InterruptedException e) {
+                        // kill this thread
+                        running = false;
+                    }                          
+               }
+               
+               // thread cleanup
+               connection.close();
+                   
+           }
+           catch (NamingException e) {
+               System.out.println(e);
+           }
+           catch (JMSException e) {
+               System.out.println(e);
+           }
+        }
+    }
+        
+    /**
+     * Wrapper class for message queue entries.
+     *
+     * @see #msgQueue
+     */
+    private class Entry {
+     
+       int  id = -1;
+       long time;
+       String principal = null;
+       String checkpoint;
+       String method;
+       
+       Entry(Principal principal, Method method, Transaction tx, long time, String checkpoint) {
+           this.time = time;
+           this.checkpoint = checkpoint;
+           this.method = method.getName();
+           
+           if (tx != null)
+               this.id = tx.hashCode();
+           if (principal != null)
+               this.principal = principal.getName();
+       }
+    }
 }
 
