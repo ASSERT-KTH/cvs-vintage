@@ -22,7 +22,7 @@ import javax.swing.tree.DefaultTreeModel;
 import org.columba.addressbook.config.FolderItem;
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.folder.Root;
+import org.columba.addressbook.folder.Root;
 
 class TreeModel extends DefaultTreeModel {
 	//private AddressbookTreeNode rootNode;
@@ -32,14 +32,16 @@ class TreeModel extends DefaultTreeModel {
 
 	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
 
-	public TreeModel(DefaultXmlConfig xmlConfig) {
+	public TreeModel(XmlElement root) {
 		super(null);
 		//rootNode = root;
 
-		rootNode = new Root(xmlConfig.getRoot().getElement("tree"));
+		System.out.println("root="+root.getName());
+		
+		rootNode = new Root(root);
 		setRoot(rootNode);
 		//System.out.println("root-uid=" + rootNode.getUid());
-		this.folderXmlConfig = xmlConfig;
+		//this.folderXmlConfig = xmlConfig;
 
 		//System.out.println("root1=" + getRoot().toString());
 		createDirectories(

@@ -23,10 +23,12 @@ import javax.swing.JDialog;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
+import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.LocalSearchEngine;
 import org.columba.mail.gui.config.search.SearchFrame;
@@ -37,7 +39,6 @@ import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
-import org.columba.core.main.MainInterface;
 
 public class VirtualFolder extends Folder {
 
@@ -54,6 +55,16 @@ public class VirtualFolder extends Folder {
 		super(item);
 
 		headerList = new HeaderList();
+
+		XmlElement filterElement = node.getElement("filter");
+		if (filterElement == null) {
+			/*
+			filterElement = new XmlElement("filter");
+			*/
+			Filter filter = FilterList.createEmptyFilter();
+			
+			getFolderItem().getRoot().addElement(filter.getRoot());
+		}
 
 		//searchFilter = new Search(this);
 	}
@@ -123,8 +134,7 @@ public class VirtualFolder extends Folder {
 			getFolderItem().getRoot().addElement(filter);
 		}
 
-		Filter f =
-			new Filter(getFolderItem().getRoot().getElement("filter"));
+		Filter f = new Filter(getFolderItem().getRoot().getElement("filter"));
 
 		applySearch(srcFolder, f, worker);
 

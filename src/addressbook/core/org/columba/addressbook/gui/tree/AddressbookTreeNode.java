@@ -55,6 +55,12 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
 
 		this.name = name;
 	}
+	
+	public FolderItem getFolderItem()
+	{
+		return node;
+	
+	}
 
 	public final static FolderItem getDefaultItem(
 		String className,

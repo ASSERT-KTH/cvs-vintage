@@ -14,8 +14,6 @@
 
 package org.columba.addressbook.gui.tree;
 
-import java.util.Enumeration;
-
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -23,8 +21,6 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
 import org.columba.addressbook.config.AddressbookConfig;
-import org.columba.addressbook.config.FolderItem;
-
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.gui.tree.util.AddressbookTreeCellRenderer;
 import org.columba.addressbook.gui.tree.util.EditAddressbookFolderDialog;
@@ -50,8 +46,8 @@ public class AddressbookTree implements TreeSelectionListener
 		root = generateTree();
 
 		
-		// FIXME
-		//model = new TreeModel(root);
+		
+		model = new TreeModel( AddressbookConfig.get("tree").getElement("/tree") );
 
 		tree = new JTree(model);
 		//tree.setPreferredSize( new Dimension( 200,300 ) );
@@ -63,7 +59,9 @@ public class AddressbookTree implements TreeSelectionListener
 
 		AddressbookTreeCellRenderer renderer = new AddressbookTreeCellRenderer(true);
 
-		tree.setCellRenderer(renderer);
+		// FIXME
+		
+		//tree.setCellRenderer(renderer);
 
 		update();
 

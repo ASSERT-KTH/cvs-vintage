@@ -79,14 +79,7 @@ public abstract class Folder extends FolderTreeNode {
 
 		children = new Vector();
 
-		XmlElement filterListElement = node.getElement("filterlist");
-		if ( filterListElement == null )
-		{
-			filterListElement = new XmlElement("filterlist");
-			getFolderItem().getRoot().addElement(filterListElement);	
-		}
 		
-		filterList = new FilterList( filterListElement );
 
 		init();
 

@@ -14,10 +14,12 @@
 
 package org.columba.mail.folder;
 
-import org.columba.core.plugin.AbstractPluginHandler;
-import org.columba.mail.config.FolderItem;
-import org.columba.mail.plugin.RemoteFilterPluginHandler;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.AbstractPluginHandler;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.FolderItem;
+import org.columba.mail.filter.FilterList;
+import org.columba.mail.plugin.RemoteFilterPluginHandler;
 
 public abstract class RemoteFolder extends Folder {
 
@@ -25,6 +27,14 @@ public abstract class RemoteFolder extends Folder {
 
 	public RemoteFolder(FolderItem item) {
 		super(item);
+
+		XmlElement filterListElement = node.getElement("filterlist");
+		if (filterListElement == null) {
+			filterListElement = new XmlElement("filterlist");
+			getFolderItem().getRoot().addElement(filterListElement);
+		}
+
+		filterList = new FilterList(filterListElement);
 
 	}
 

@@ -21,7 +21,9 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.config.AdapterNode;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
@@ -45,9 +47,9 @@ import org.columba.mail.gui.config.filter.FilterDialog;
 import org.columba.mail.gui.message.command.ViewMessageSourceCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
+import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.Message;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.core.main.MainInterface;
 
 public class HeaderTableActionListener implements ActionListener {
 
@@ -1232,32 +1234,33 @@ public class HeaderTableActionListener implements ActionListener {
 
 		}
 		/*
-		else if (command.equals(filterSubjectAction.getActionCommand())) {
-		
+		  else if (command.equals(filterSubjectAction.getActionCommand())) {
+
 			try {
-		
+
 				Folder folder = getFolder();
 				Object[] uids = getUids();
-		
+
 				for (int i = 0; i < uids.length; i++) {
-		
-					Message message = folder.getMessage(uids[i]);
+
+					HeaderInterface header = folder.getMessageHeader(uids[i]);
 					String pattern =
-						(String) message.getHeader().get("Subject");
-					AdapterNode parentNode = folder.getNode();
+						(String) header.get("Subject");
+					
+					//AdapterNode parentNode = folder.getNode();
 					createFilter("Subject", pattern);
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-		
+
 		} else if (command.equals(filterFromAction.getActionCommand())) {
 			try {
 				Folder folder = getFolder();
 				Object[] uids = getUids();
-		
+
 				for (int i = 0; i < uids.length; i++) {
-		
+
 					Message message = folder.getMessage(uids[i]);
 					String pattern = (String) message.getHeader().get("From");
 					AdapterNode parentNode = folder.getNode();
@@ -1266,14 +1269,14 @@ public class HeaderTableActionListener implements ActionListener {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-		
+
 		} else if (command.equals(filterToAction.getActionCommand())) {
 			Folder folder = getFolder();
 			Object[] uids = getUids();
-		
+
 			try {
 				for (int i = 0; i < uids.length; i++) {
-		
+
 					Message message = folder.getMessage(uids[i]);
 					String pattern = (String) message.getHeader().get("To");
 					AdapterNode parentNode = folder.getNode();
@@ -1282,15 +1285,15 @@ public class HeaderTableActionListener implements ActionListener {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-		
+
 		} else if (command.equals(vFolderSubjectAction.getActionCommand())) {
 			Folder folder = getFolder();
 			Object uids[] = getUids();
-		
+
 			try {
 				for (int i = 0; i < uids.length; i++) {
 					Message message = folder.getMessage(uids[i]);
-		
+
 					createVFolder(message, "Subject");
 				}
 			} catch (Exception ex) {
@@ -1299,11 +1302,11 @@ public class HeaderTableActionListener implements ActionListener {
 		} else if (command.equals(vFolderFromAction.getActionCommand())) {
 			Folder folder = getFolder();
 			Object uids[] = getUids();
-		
+
 			try {
 				for (int i = 0; i < uids.length; i++) {
 					Message message = folder.getMessage(uids[i]);
-		
+
 					createVFolder(message, "From");
 				}
 			} catch (Exception ex) {
@@ -1312,21 +1315,19 @@ public class HeaderTableActionListener implements ActionListener {
 		} else if (command.equals(vFolderToAction.getActionCommand())) {
 			Folder folder = getFolder();
 			Object uids[] = getUids();
-		
+
 			try {
 				for (int i = 0; i < uids.length; i++) {
 					Message message = folder.getMessage(uids[i]);
-		
+
 					createVFolder(message, "To");
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-		
-		} 
-		*/
-
-		else if (command.equals(viewThreadedAction.getActionCommand())) {
+	
+		}*/
+		 else if (command.equals(viewThreadedAction.getActionCommand())) {
 
 			tableController
 				.getHeaderTableModel()
@@ -1364,7 +1365,9 @@ public class HeaderTableActionListener implements ActionListener {
 		Folder folder = getFolder();
 		FilterList list = folder.getFilterList();
 
-		Filter filter = list.addEmtpyFilter();
+		Filter filter = FilterList.createEmptyFilter();
+		list.add(filter);
+
 		FilterRule rule = filter.getFilterRule();
 
 		FilterCriteria criteria = rule.get(0);

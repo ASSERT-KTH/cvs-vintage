@@ -17,8 +17,10 @@ package org.columba.mail.folder;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
+import org.columba.mail.filter.FilterList;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
@@ -36,8 +38,15 @@ public abstract class LocalFolder extends Folder {
 	public LocalFolder(FolderItem item) {
 		super(item);
 
-	} // constructor
+		XmlElement filterListElement = node.getElement("filterlist");
+		if (filterListElement == null) {
+			filterListElement = new XmlElement("filterlist");
+			getFolderItem().getRoot().addElement(filterListElement);
+		}
 
+		filterList = new FilterList(filterListElement);
+
+	} // constructor
 
 	// use this constructor only with tempfolders
 	public LocalFolder(String name) {
@@ -125,7 +134,7 @@ public abstract class LocalFolder extends Folder {
 		//ColumbaHeader h = getMessageHeader(uid, worker);
 
 		AbstractMessage message =
-			new Rfc822Parser().parse(source, true, null , 0);
+			new Rfc822Parser().parse(source, true, null, 0);
 		message.setUID(uid);
 		message.setSource(source);
 		//message.setHeader(h);

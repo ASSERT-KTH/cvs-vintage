@@ -30,11 +30,12 @@ import org.columba.core.config.ViewItem;
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.gui.util.CMenuItem;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
+import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.action.BasicAction;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.core.main.MainInterface;
 
 public class MailMenu extends JMenuBar {
 
@@ -804,49 +805,49 @@ public class MailMenu extends JMenuBar {
 		utilitiesMenu.setActionCommand("UTILITIES");
 		add(utilitiesMenu);
 
-		/*
+		
 		subMenu =
 			new JMenu(GlobalResourceLoader.getString("menu","mainframe", "menu_message_filteronmessage"));
 		menuItem =
 			new CMenuItem(
-				MainInterface.headerTableViewer.getActionListener().filterSubjectAction);
+				frameController.tableController.getActionListener().filterSubjectAction);
 		menuItem.addMouseListener(handler);
 		subMenu.add(menuItem);
 		menuItem =
 			new CMenuItem(
-				MainInterface.headerTableViewer.getActionListener().filterFromAction);
+		frameController.tableController.getActionListener().filterFromAction);
 		menuItem.addMouseListener(handler);
 		subMenu.add(menuItem);
 		menuItem =
 			new CMenuItem(
-				MainInterface.headerTableViewer.getActionListener().filterToAction);
+		frameController.tableController.getActionListener().filterToAction);
 		menuItem.addMouseListener(handler);
 		subMenu.add(menuItem);
 		
-		menu.add(subMenu);
+		utilitiesMenu.add(subMenu);
 		
 		subMenu =
 			new JMenu(GlobalResourceLoader.getString("menu","mainframe", "menu_message_vfolderonmessage"));
 		menuItem =
 			new CMenuItem(
-				MainInterface.headerTableViewer.getActionListener().vFolderSubjectAction);
+		frameController.tableController.getActionListener().vFolderSubjectAction);
 		menuItem.addMouseListener(handler);
 		subMenu.add(menuItem);
 		menuItem =
 			new CMenuItem(
-				MainInterface.headerTableViewer.getActionListener().vFolderFromAction);
+		frameController.tableController.getActionListener().vFolderFromAction);
 		menuItem.addMouseListener(handler);
 		subMenu.add(menuItem);
 		menuItem =
 			new CMenuItem(
-				MainInterface.headerTableViewer.getActionListener().vFolderToAction);
+		frameController.tableController.getActionListener().vFolderToAction);
 		menuItem.addMouseListener(handler);
 		subMenu.add(menuItem);
 		
-		menu.add(subMenu);
+		utilitiesMenu.add(subMenu);
 		
-		menu.addSeparator();
-		*/
+		utilitiesMenu.addSeparator();
+		
 
 		menuItem =
 			new CMenuItem(

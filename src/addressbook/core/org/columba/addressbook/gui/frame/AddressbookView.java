@@ -22,6 +22,7 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 
+import org.columba.addressbook.gui.action.AddressbookActionListener;
 import org.columba.addressbook.gui.menu.AddressbookMenu;
 import org.columba.addressbook.gui.table.AddressbookTable;
 import org.columba.addressbook.gui.toolbar.AddressbookToolBar;
@@ -31,69 +32,68 @@ import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 
+public class AddressbookView extends JFrame {
+	private AddressbookInterface addressbookInterface;
+	private AddressbookTree tree;
+	private AddressbookTable table;
 
-public class AddressbookView extends JFrame
-{
-    private AddressbookInterface addressbookInterface;
-    private AddressbookTree tree;
-    private AddressbookTable table;
+	public AddressbookView() {
+		super("Columba v" + MainInterface.version + " - Addressbook");
+		this.setIconImage(
+			ImageLoader.getImageIcon("ColumbaIcon.png").getImage());
 
-    public AddressbookView()
-    {
-        super( "Columba v"+MainInterface.version+" - Addressbook" );
-	this.setIconImage( ImageLoader.getImageIcon("ColumbaIcon.png").getImage());
+		addressbookInterface = MainInterface.addressbookInterface;
+		addressbookInterface.frame = this;
+		// FIXME
 
-        addressbookInterface = MainInterface.addressbookInterface;
-        addressbookInterface.frame = this;
-        // FIXME
-        
-        //addressbookInterface.actionListener = new AddressbookActionListener( addressbookInterface );
-        addressbookInterface.menu = new AddressbookMenu( addressbookInterface );
+		addressbookInterface.actionListener =
+			new AddressbookActionListener(addressbookInterface);
+		addressbookInterface.menu = new AddressbookMenu(addressbookInterface);
 
-        init();
-    }
+		init();
+	}
 
-    public void init()
-    {
-        Container c = getContentPane();
+	public void init() {
+		Container c = getContentPane();
 
-        setJMenuBar( addressbookInterface.menu.getMenuBar() );
+		setJMenuBar(addressbookInterface.menu.getMenuBar());
 
-        AddressbookToolBar toolbar = new AddressbookToolBar( addressbookInterface );
+		AddressbookToolBar toolbar =
+			new AddressbookToolBar(addressbookInterface);
 
-        c.add( toolbar, BorderLayout.NORTH );
+		c.add(toolbar, BorderLayout.NORTH);
 
-        tree = createTree( addressbookInterface );
+		tree = createTree(addressbookInterface);
 
-        addressbookInterface.tree = tree;
-        table = new AddressbookTable( addressbookInterface );
-        table.setupRenderer();
-        addressbookInterface.table = table;
+		addressbookInterface.tree = tree;
+		table = new AddressbookTable(addressbookInterface);
+		table.setupRenderer();
+		addressbookInterface.table = table;
 
-        JSplitPane splitPane = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT, tree.scrollPane, table );
-        splitPane.setBorder( null );
+		JSplitPane splitPane =
+			new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tree.scrollPane, table);
+		splitPane.setBorder(null);
 
-        c.add( splitPane, BorderLayout.CENTER );
+		c.add(splitPane, BorderLayout.CENTER);
 
-        StatusBar statusbar = new StatusBar(addressbookInterface.taskManager);
-        addressbookInterface.statusbar = statusbar;
+		StatusBar statusbar = new StatusBar(addressbookInterface.taskManager);
+		addressbookInterface.statusbar = statusbar;
 
-        c.add( statusbar, BorderLayout.SOUTH );
+		c.add(statusbar, BorderLayout.SOUTH);
 
-        pack();
-	
-	Dimension size=getSize();
-	Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
-	setLocation((screenSize.width-size.width)/2,(screenSize.height-size.height)/2);
+		pack();
 
-        //setVisible(true);
-    }
+		Dimension size = getSize();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(
+			(screenSize.width - size.width) / 2,
+			(screenSize.height - size.height) / 2);
 
-    protected AddressbookTree createTree( AddressbookInterface addressbookInterface )
-    {
-    	AddressbookTree tree = new AddressbookTree( addressbookInterface );
-    	return tree;
-    }
+		//setVisible(true);
+	}
+
+	protected AddressbookTree createTree(AddressbookInterface addressbookInterface) {
+		AddressbookTree tree = new AddressbookTree(addressbookInterface);
+		return tree;
+	}
 }
-
-

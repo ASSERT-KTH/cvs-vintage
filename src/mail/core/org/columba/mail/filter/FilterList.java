@@ -14,13 +14,11 @@
 
 package org.columba.mail.filter;
 
-import java.util.Vector;
-
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
 public class FilterList extends DefaultItem {
-	private Vector list;
+	//private Vector list;
 	// private Folder folder;
 
 	public FilterList(XmlElement root) {
@@ -68,7 +66,7 @@ public class FilterList extends DefaultItem {
 	}
 	*/
 
-	public Filter addEmtpyFilter() {
+	public static Filter createEmptyFilter() {
 		XmlElement filter = new XmlElement("filter");
 		filter.addAttribute("description", "new filter");
 		filter.addAttribute("enabled","true");
@@ -95,9 +93,9 @@ public class FilterList extends DefaultItem {
 		actionList.addElement(action);
 		filter.addElement(actionList);
 
-		getRoot().addElement(filter);
 		
-		XmlElement.printNode(getRoot(),"");
+		
+		//XmlElement.printNode(getRoot(),"");
 		
 		return new Filter(filter);
 		/*
@@ -114,7 +112,9 @@ public class FilterList extends DefaultItem {
 	}
 
 	public void add(Filter f) {
-		list.add(f);
+		getRoot().addElement(f.getRoot());
+		
+		//list.add(f);
 	}
 
 	public int count() {

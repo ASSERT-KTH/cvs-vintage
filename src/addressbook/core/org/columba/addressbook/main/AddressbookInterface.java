@@ -14,12 +14,12 @@
 
 package org.columba.addressbook.main;
 
-import org.columba.core.command.TaskManager;
-
+import org.columba.addressbook.gui.action.AddressbookActionListener;
 import org.columba.addressbook.gui.frame.AddressbookView;
 import org.columba.addressbook.gui.menu.AddressbookMenu;
 import org.columba.addressbook.gui.table.AddressbookTable;
 import org.columba.addressbook.gui.tree.AddressbookTree;
+import org.columba.core.command.TaskManager;
 import org.columba.core.gui.statusbar.StatusBar;
 
 public class AddressbookInterface
@@ -32,6 +32,7 @@ public class AddressbookInterface
     //public AddressbookConfig config;
     public StatusBar statusbar;
 	public TaskManager taskManager;
+	public AddressbookActionListener actionListener;
 
     public AddressbookInterface()
     {

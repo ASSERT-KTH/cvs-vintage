@@ -27,6 +27,9 @@ import javax.swing.KeyStroke;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
 
+import org.columba.addressbook.config.AddressbookConfig;
+import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
@@ -162,7 +165,7 @@ public class Main {
 
 			public Object construct() {
 
-				//MainInterface.addressbookInterface = new AddressbookInterface();
+				MainInterface.addressbookInterface = new AddressbookInterface();
 
 				// enable logging 
 				new ColumbaLogger();
@@ -171,7 +174,7 @@ public class Main {
 
 				new MailConfig();
 
-				//new AddressbookConfig();
+				new AddressbookConfig();
 
 				Config.init();
 
@@ -212,7 +215,7 @@ public class Main {
 
 				frame.advance();
 
-				//AddressbookMain.main(null);
+				AddressbookMain.main(null);
 
 				doGuiInits();
 

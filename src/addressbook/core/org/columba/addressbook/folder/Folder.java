@@ -53,7 +53,7 @@ public abstract class Folder extends AddressbookTreeNode {
 	 * FolderItem keeps information about the folder
 	 * for example: name, accessrights, type
 	 */
-	protected FolderItem folderItem;
+	//protected FolderItem folderItem;
 
 	protected AddressbookInterface addressbookInterface;
 
@@ -137,12 +137,7 @@ public abstract class Folder extends AddressbookTreeNode {
 	public void createChildren(WorkerStatusController worker) {
 	}
 
-	/**
-	 * return FolderItem 
-	 */
-	public FolderItem getFolderItem() {
-		return folderItem;
-	}
+	
 
 	/**
 	 * return HeaderItemList

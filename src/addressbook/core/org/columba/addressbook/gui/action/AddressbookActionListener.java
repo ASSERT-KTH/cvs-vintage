@@ -14,9 +14,36 @@
 
 package org.columba.addressbook.gui.action;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+
+import javax.swing.JFileChooser;
+import javax.swing.KeyStroke;
+
+import org.columba.addressbook.config.AddressbookConfig;
+import org.columba.addressbook.config.FolderItem;
+import org.columba.addressbook.folder.AddressbookFolder;
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.folder.GroupListCard;
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.gui.dialog.contact.ContactDialog;
+import org.columba.addressbook.gui.dialog.importfilter.ImportWizard;
+import org.columba.addressbook.gui.util.AddAddressbookDialog;
+import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.addressbook.parser.VCardParser;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.gui.action.BasicAction;
 
 
-/*
+
+
 
 public class AddressbookActionListener implements ActionListener
 {
@@ -60,6 +87,7 @@ public class AddressbookActionListener implements ActionListener
 			propertiesAction.setEnabled(false);
 		}
 
+		/*
 		Folder folder = addressbookInterface.tree.getSelectedFolder();
 		FolderItem item = folder.getFolderItem();
 		if (item != null)
@@ -80,8 +108,10 @@ public class AddressbookActionListener implements ActionListener
 				addContactAction.setEnabled(false);
 				addGroupAction.setEnabled(false);
 				addvcardAction.setEnabled(false);
-			}
+		
+				}
 		}
+		*/
 	}
 
 	public void initAction()
@@ -96,7 +126,7 @@ public class AddressbookActionListener implements ActionListener
 				ImageLoader.getImageIcon("stock_cut.png"),
 				'T',
 				KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
-		cutAction.setEnabled(false);
+		cutAction.setEnabled(true);
 
 		copyAction =
 			new BasicAction(
@@ -107,7 +137,7 @@ public class AddressbookActionListener implements ActionListener
 				ImageLoader.getImageIcon("stock_copy.png"),
 				'C',
 				KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
-		copyAction.setEnabled(false);
+		copyAction.setEnabled(true);
 
 		pasteAction =
 			new BasicAction(
@@ -118,7 +148,7 @@ public class AddressbookActionListener implements ActionListener
 				ImageLoader.getImageIcon("stock_paste.png"),
 				'V',
 				KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
-		pasteAction.setEnabled(false);
+		pasteAction.setEnabled(true);
 
 		deleteAction =
 			new BasicAction(
@@ -129,7 +159,7 @@ public class AddressbookActionListener implements ActionListener
 				ImageLoader.getImageIcon("stock_paste.png"),
 				'D',
 				KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
-		deleteAction.setEnabled(false);
+		deleteAction.setEnabled(true);
 
 		selectAllAction =
 			new BasicAction(
@@ -140,7 +170,7 @@ public class AddressbookActionListener implements ActionListener
 				null,
 				'A',
 				KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
-		selectAllAction.setEnabled(false);
+		selectAllAction.setEnabled(true);
 
 		closeAction =
 			new BasicAction(
@@ -163,7 +193,7 @@ public class AddressbookActionListener implements ActionListener
 				ImageLoader.getImageIcon("contact.png"),
 				'0',
 				null);
-		addContactAction.setEnabled(false);
+		addContactAction.setEnabled(true);
 		addContactAction.addActionListener(this);
 
 		addGroupAction =
@@ -175,7 +205,7 @@ public class AddressbookActionListener implements ActionListener
 				ImageLoader.getImageIcon("group.png"),
 				'0',
 				null);
-		addGroupAction.setEnabled(false);
+		addGroupAction.setEnabled(true);
 		addGroupAction.addActionListener(this);
 
 		removeAction =
@@ -187,7 +217,7 @@ public class AddressbookActionListener implements ActionListener
 				ImageLoader.getImageIcon("stock_delete.png"),
 				'0',
 				null);
-		removeAction.setEnabled(false);
+		removeAction.setEnabled(true);
 		removeAction.addActionListener(this);
 
 		propertiesAction =
@@ -199,7 +229,7 @@ public class AddressbookActionListener implements ActionListener
 				ImageLoader.getImageIcon("stock_edit.png"),
 				'0',
 				null);
-		propertiesAction.setEnabled(false);
+		propertiesAction.setEnabled(true);
 		propertiesAction.addActionListener(this);
 
 		addAddressbookAction =
@@ -211,7 +241,7 @@ public class AddressbookActionListener implements ActionListener
 				ImageLoader.getImageIcon("stock_book.png"),
 				'0',
 				null);
-		addAddressbookAction.setEnabled(false);
+		addAddressbookAction.setEnabled(true);
 		addAddressbookAction.addActionListener(this);
 
 		addressbookImportAction =
@@ -235,7 +265,7 @@ public class AddressbookActionListener implements ActionListener
 				null,
 				'0',
 				null);
-		addvcardAction.setEnabled(false);
+		addvcardAction.setEnabled(true);
 		addvcardAction.addActionListener(this);
 
 	}
@@ -295,6 +325,8 @@ public class AddressbookActionListener implements ActionListener
 		}
 		else if (command.equals(addGroupAction.getActionCommand()))
 		{
+			// FIXME
+			/*
 			AddressbookXmlConfig config =
 				AddressbookConfig.getAddressbookConfig();
 			Folder folder =
@@ -323,7 +355,8 @@ public class AddressbookActionListener implements ActionListener
 			}
 
 			//dialog.showDialog();
-
+			*/
+			
 		}
 		else if (command.equals(removeAction.getActionCommand()))
 		{
@@ -340,6 +373,7 @@ public class AddressbookActionListener implements ActionListener
 		}
 		else if (command.equals(propertiesAction.getActionCommand()))
 		{
+			/*
 			Object uid = addressbookInterface.table.getSelectedUid();
 			HeaderItem item = addressbookInterface.table.getSelectedItem();
 			AddressbookXmlConfig config =
@@ -403,6 +437,7 @@ public class AddressbookActionListener implements ActionListener
 
 				}
 			}
+			*/
 
 		}
 		else if (command.equals(addressbookImportAction.getActionCommand()))
@@ -466,4 +501,3 @@ public class AddressbookActionListener implements ActionListener
 
 
 }
-*/

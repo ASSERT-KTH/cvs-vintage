@@ -50,11 +50,11 @@ import javax.swing.event.ListSelectionListener;
 import org.columba.core.config.Config;
 import org.columba.core.gui.button.CloseButton;
 import org.columba.core.gui.button.HelpButton;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.core.main.MainInterface;
 
 public class ConfigFrame extends JDialog implements ListSelectionListener, ActionListener {
 	
@@ -388,7 +388,8 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
 		} else if (action.equals("ADD")) {
 			System.out.println("add");
 
-			Filter filter = filterList.addEmtpyFilter();
+			Filter filter = FilterList.createEmptyFilter();
+			filterList.add(filter);
 
 			listView.update();
 
