@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- The JBoss service configuration file for the EJB deployer service.
-$Id: ejb-deployer.xml,v 1.3 2004/09/09 22:04:27 tdiesler Exp $
+$Id: ejb-deployer.xml,v 1.4 2004/09/10 07:33:56 starksm Exp $
 -->
 <server>
 
@@ -30,7 +30,7 @@ $Id: ejb-deployer.xml,v 1.3 2004/09/09 22:04:27 tdiesler Exp $
    <mbean code="org.jboss.ejb.txtimer.DatabasePersistencePolicy" name="jboss.ejb:service=EJBTimerService,persistencePolicy=database">
      <!-- DataSource JNDI name -->
      <depends optional-attribute-name="DataSourceTx">jboss.jca:service=DataSourceBinding,name=DefaultDS</depends>
-     <depends optional-attribute-name="DataSourceNoTx">jboss.jca:service=DataSourceBinding,name=DefaultDSNoTx</depends>
+     <depends optional-attribute-name="DataSourceNoTx">jboss.jca:service=DataSourceBinding,name=DefaultDS</depends>
      <!-- table name -->
      <attribute name="TableName">TIMERS</attribute>
      <!-- Column that contains the target component JMX name -->
