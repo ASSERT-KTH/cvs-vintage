@@ -160,7 +160,7 @@ in the catalina module.
 @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.60 $
+@version $Revision: 1.61 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -862,7 +862,7 @@ public abstract class AbstractWebContainer
          int prefix = webContext.lastIndexOf('/');
          if( prefix > 0 )
             webContext = webContext.substring(prefix+1);
-         int suffix = webContext.indexOf(".war");
+         int suffix = webContext.lastIndexOf(".war");
          if( suffix > 0 )
             webContext = webContext.substring(0, suffix);
           // Strip any '<int-value>.' prefix   
