@@ -56,7 +56,7 @@ import org.jboss.tm.TxManager;
 *    
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.4 $
+* @version $Revision: 1.5 $
 *
 * <p><b>Revisions:</b><br>
 * <p><b>2001/07/30: marcf</b>
@@ -64,6 +64,10 @@ import org.jboss.tm.TxManager;
 *   <li>Initial revision
 *   <li>Factorization of the lock out of the context in cache
 *   <li>The new locking is implement as "scheduling" in the lock which allows for pluggable locks
+* </ol>
+* <p><b>2001/08/07: billb</b>
+* <ol>
+*   <li>Removed while loop and moved it to SimplePessimisticEJBLock where it belongs.
 * </ol>
 */
 public class EntityLockInterceptor
@@ -125,21 +129,7 @@ public class EntityLockInterceptor
       {
          lock = (BeanLock)container.getLockManager().getLock(key);
    
-         while (!threadIsScheduled)
-         { 
-            if( trace ) log.trace("new while(threadNotScheduled) for key"+key);
-     
-    
-            /**
-             * schedule will implement the actual lock policy in the lock
-             * we provide a default "pessimistic lock" on the transaction
-             * as well as the default serialization required by the specification
-             * the method releases the sync if the thread isn't scheduled and goes to wait
-             * upon waking up it must go through the schedule again
-             * Also schedule must add a methodLock
-             */
-            threadIsScheduled = lock.schedule(mi);
-         }
+         lock.schedule(mi);
    
          try {
     

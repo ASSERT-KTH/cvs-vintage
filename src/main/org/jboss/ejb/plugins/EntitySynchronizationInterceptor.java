@@ -57,7 +57,7 @@ import org.jboss.util.Sync;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -95,6 +95,7 @@ import org.jboss.util.Sync;
  * <p><b>2001/08/07: billb</b>
  * <ol>
  *   <li>Moved storeEntity to EntityContainer.
+ *   <li>invokeHome is now scheduled
  * </ol>
  */
 public class EntitySynchronizationInterceptor
@@ -232,7 +233,20 @@ public class EntitySynchronizationInterceptor
             // Currently synched with underlying storage
             ctx.setValid(true);
     
-            if (tx!= null) register(ctx, tx); // Set tx
+            if (tx!= null)
+            {
+               BeanLock lock = container.getLockManager().getLock(ctx.getCacheKey());
+               try
+               {
+                  lock.schedule(mi);
+                  register(ctx, tx); // Set tx
+                  lock.releaseMethodLock();
+               }
+               finally
+               {
+                  container.getLockManager().removeLockRef(lock.getId());
+               }
+            }
          }
       }
    }

@@ -61,7 +61,7 @@ import org.jboss.tm.TxManager;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.42 $
+* @version $Revision: 1.43 $
 *
 * <p><b>Revisions:</b><br>
 * <p><b>2001/06/28: marcf</b>
@@ -164,11 +164,8 @@ public class EntityInstanceInterceptor
 				
             lock.sync(); // lock all access to BeanLock
 				
-            try {
-					
-               // Set the transaction on the lock it will protect the instance
-               lock.setTransaction(ctx.getTransaction());
-					
+            try 
+            {
                // marcf: possible race on creation and usage
                // insert instance in cache, 
                container.getInstanceCache().insert(ctx);
@@ -177,7 +174,6 @@ public class EntityInstanceInterceptor
             finally
             {
                lock.releaseSync();
-					
                container.getLockManager().removeLockRef(ctx.getCacheKey());
             }
          }
@@ -215,7 +211,8 @@ public class EntityInstanceInterceptor
       {
          exceptionThrown = true;
          throw e;
-      } catch (RuntimeException e)
+      } 
+      catch (RuntimeException e)
       {
          exceptionThrown = true;
          throw e;
