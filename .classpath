@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
     <classpathentry kind="src" path=""/>
-    <classpathentry kind="lib" path="/usr/java/j2sdk1.4.1/jre/lib/rt.jar"/>
     <classpathentry kind="lib" path="ext/log4j.jar"/>
-    <classpathentry kind="lib" path="/home/frd/apps/junit3.8.1/junit.jar"/>
     <classpathentry kind="lib" path="ext/jython.jar"/>
+    <classpathentry kind="var" path="JRE_SRC"/>
+    <classpathentry kind="var" path="JRE_LIB"/>
+    <classpathentry kind="lib" path="ext/junit.jar"/>
     <classpathentry kind="output" path=""/>
 </classpath>
