@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileOutputStream;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -38,13 +40,14 @@ import org.jboss.system.ServerConfigMBean;
 import org.jboss.util.jmx.MBeanServerLocator;
 
 /**
- *  This class is one of the passivating plugins for JBoss.
- *  It is fairly simple and can work from the file system from wich JBoss is operating
+ * This class is one of the passivating plugins for JBoss.
+ * It is fairly simple and can work from the file system from wich JBoss is operating.
+ * Passivates beans into the system data directory under the 'sessions' sub-directory.
  *
- *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *  @version $Revision: 1.31 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @version $Revision: 1.32 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -72,6 +75,8 @@ public class StatefulSessionFilePersistenceManager
       throws Exception
    {
       boolean debug = log.isDebugEnabled();
+
+      // FIXME: these never change, make them static and loaded on class init
 
       // Find methods
       ejbActivate = SessionBean.class.getMethod("ejbActivate", new Class[0]);
@@ -205,11 +210,16 @@ public class StatefulSessionFilePersistenceManager
    {
       try
       {
+         if (log.isDebugEnabled()) {
+            log.debug("Attempting to activate; ctx=" + ctx);
+         }
+         
          ObjectInputStream in;
             
-            
          // Load state
-         in = new SessionObjectInputStream(ctx, new FileInputStream(getFile(ctx.getId())));
+         in = new SessionObjectInputStream
+            (ctx, new BufferedInputStream
+             (new FileInputStream(getFile(ctx.getId()))));
             
          ctx.setInstance(in.readObject());
             
@@ -260,11 +270,18 @@ public class StatefulSessionFilePersistenceManager
    {
       try
       {
+         if (log.isDebugEnabled()) {
+            log.debug("Attempting to passivate; ctx=" + ctx);
+         }
+         
          // Call bean
          ejbPassivate.invoke(ctx.getInstance(), new Object[0]);
             
          // Store state
-         ObjectOutputStream out = new SessionObjectOutputStream(new FileOutputStream(getFile(ctx.getId())));
+         ObjectOutputStream out =
+            new SessionObjectOutputStream
+            (new BufferedOutputStream
+             (new FileOutputStream(getFile(ctx.getId()))));
             
          out.writeObject(ctx.getInstance());
             
