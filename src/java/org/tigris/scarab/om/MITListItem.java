@@ -49,6 +49,8 @@ package org.tigris.scarab.om;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.torque.om.Persistent;
 import org.tigris.scarab.util.word.IssueSearch;
+import org.tigris.scarab.util.word.IssueSearchFactory;
+import org.tigris.scarab.util.word.MaxConcurrentSearchException;
 
 /** 
  * A module and an issue type.  Wildcards are possible, so that a single
@@ -69,15 +71,30 @@ public  class MITListItem
      * a count should be given.  
      * @return an <code>int</code> the number of issues entered for the 
      * module unless the user does not have permission to
-     * search for issues in the given module, then a value of 0 
-     * will be returned.
+     * search for issues in the given module, then a value of 0 will be
+     * returned.  if resource limited, this method will return -1. 
      * @exception Exception if an error occurs
      */
     public int getIssueCount(ScarabUser user)
         throws Exception
     {
-        IssueSearch is = new IssueSearch(getModule(), getIssueType(), user);
-        return is.getIssueCount();
+        IssueSearch is = null;
+        int count = 0;
+        try 
+        {
+            is = IssueSearchFactory.INSTANCE
+                .getInstance(getModule(), getIssueType(), user);
+            count = is.getIssueCount();
+        }
+        catch (MaxConcurrentSearchException e)
+        {
+            count = -1;
+        }
+        finally
+        {
+            IssueSearchFactory.INSTANCE.notifyDone();
+        }
+        return count;
     }
 
     public boolean isSingleModuleIssueType()

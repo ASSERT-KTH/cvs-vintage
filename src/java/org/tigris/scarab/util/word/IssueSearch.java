@@ -116,7 +116,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.104 2003/07/14 10:22:41 venkatesh Exp $
+ * @version $Id: IssueSearch.java,v 1.105 2003/07/17 17:57:13 jmcnally Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -284,14 +284,14 @@ public class IssueSearch
 
     private boolean isSearchAllowed = true;
 
-    public IssueSearch(Issue issue, ScarabUser searcher)
+    IssueSearch(Issue issue, ScarabUser searcher)
         throws Exception
     {
         this(issue.getModule(), issue.getIssueType(), searcher);
         getAttributeValues().addAll(issue.getAttributeValues());
     }
 
-    public IssueSearch(Module module, IssueType issueType, ScarabUser searcher)
+    IssueSearch(Module module, IssueType issueType, ScarabUser searcher)
         throws Exception
     {
         super(module, issueType);
@@ -299,7 +299,7 @@ public class IssueSearch
             searcher.hasPermission(ScarabSecurity.ISSUE__SEARCH, module); 
     }
 
-    public IssueSearch(MITList mitList, ScarabUser searcher)
+    IssueSearch(MITList mitList, ScarabUser searcher)
         throws Exception
     {
         super();
@@ -2255,6 +2255,11 @@ public class IssueSearch
             {
                 Log.get(LOGGER)
                     .warn("Closing connection in " + this + " finalizer");
+                // if this object was left this state it is very likely that
+                // the IssueSearchFactory was not notified either.
+                // We error on the side of possibly increasing the available
+                // IssueSearch objects, over potentially freezing users out
+                IssueSearchFactory.INSTANCE.notifyDone();
             }
         }
         finally

@@ -61,7 +61,7 @@ import org.tigris.scarab.om.AttributeOption;
  * A Testing Suite for the om.IssueSearch class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearchTest.java,v 1.3 2003/05/13 16:50:18 jmcnally Exp $
+ * @version $Id: IssueSearchTest.java,v 1.4 2003/07/17 17:57:14 jmcnally Exp $
  */
 public class IssueSearchTest extends BaseTestCase
 {
@@ -95,11 +95,12 @@ public class IssueSearchTest extends BaseTestCase
     }
 
     private IssueSearch getSearch()
-        throws Exception
+        throws Exception, MaxConcurrentSearchException
     {
         Module module = getModule();
         IssueType it = getDefaultIssueType();
-        IssueSearch search = new IssueSearch(module, it, getUser1());
+        IssueSearch search = IssueSearchFactory.INSTANCE
+            .getInstance(module, it, getUser1());
         search.setIssueListAttributeColumns(
             module.getDefaultRModuleUserAttributes(it));
         return search;
@@ -117,6 +118,7 @@ public class IssueSearchTest extends BaseTestCase
         search.addAttributeValue(platformAV);
         List results = search.getQueryResults();
         assertTrue("Should be one result.", (results.size() == 1));
+        IssueSearchFactory.INSTANCE.notifyDone();
     }
 
     private void testWrongOptionAttribute()
@@ -131,6 +133,7 @@ public class IssueSearchTest extends BaseTestCase
         search.addAttributeValue(platformAV);
         List results = search.getQueryResults();
         assertTrue("Should be no result.", (results.size() == 0));
+        IssueSearchFactory.INSTANCE.notifyDone();
     }
 
     private void testUserWithAny()
@@ -141,6 +144,7 @@ public class IssueSearchTest extends BaseTestCase
                                IssueSearch.ANY_KEY);
         List results = search.getQueryResults();
         assertTrue("Should be one result.", (results.size() == 1));
+        IssueSearchFactory.INSTANCE.notifyDone();
     }
 
     private void testUserWithCreatedBy()
@@ -151,6 +155,7 @@ public class IssueSearchTest extends BaseTestCase
                                IssueSearch.CREATED_BY_KEY);
         List results = search.getQueryResults();
         assertTrue("Should be one result.", (results.size() == 1));
+        IssueSearchFactory.INSTANCE.notifyDone();
     }
 
     private void testUserWithAssignedTo()
@@ -161,6 +166,7 @@ public class IssueSearchTest extends BaseTestCase
             getAssignAttribute().getAttributeId().toString());
         List results = search.getQueryResults();
         assertTrue("Should be no results.", (results.size() == 0));
+        IssueSearchFactory.INSTANCE.notifyDone();
     }
 
     private void testUserWithAssignedToAndCreatedDate()
@@ -172,6 +178,7 @@ public class IssueSearchTest extends BaseTestCase
         search.setMinDate("01/01/2000");
         List results = search.getQueryResults();
         assertTrue("Should be no results.", (results.size() == 0));
+        IssueSearchFactory.INSTANCE.notifyDone();
     }
 
 
@@ -189,6 +196,7 @@ public class IssueSearchTest extends BaseTestCase
                                IssueSearch.ANY_KEY);
         List results = search.getQueryResults();
         assertTrue("Should be one result.", (results.size() == 1));
+        IssueSearchFactory.INSTANCE.notifyDone();
     }
 }
 

@@ -83,6 +83,8 @@ import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
+import org.tigris.scarab.util.word.IssueSearchFactory;
+import org.tigris.scarab.util.word.MaxConcurrentSearchException;
 import org.tigris.scarab.util.word.QueryResult;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
@@ -92,7 +94,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.174 2003/07/11 17:04:45 irk_tpt Exp $
+ * @version $Id: ReportIssue.java,v 1.175 2003/07/17 17:57:13 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -221,8 +223,13 @@ public class ReportIssue extends RequireLoginFirstAction
         }
 
         // search on the option attributes and keywords
-        IssueSearch search = 
-            new IssueSearch(issue, (ScarabUser)data.getUser());
+        IssueSearch search = null;
+        String template = null;
+        boolean dupThresholdExceeded = false;
+        try 
+        {
+            search = IssueSearchFactory.INSTANCE.getInstance(
+                issue, (ScarabUser)data.getUser());
         // remove special characters from the text attributes
         for (Iterator textAVs = search.getTextAttributeValues().iterator();
              textAVs.hasNext();)
@@ -248,8 +255,7 @@ public class ReportIssue extends RequireLoginFirstAction
 
         // set the template to dedupe unless none exist, then skip
         // to final entry screen
-        String template = null;
-        boolean dupThresholdExceeded = (queryResults.size() > threshold);
+        dupThresholdExceeded = (queryResults.size() > threshold);
         if (dupThresholdExceeded)
         {
             List matchingIssueIds = new ArrayList(maxResults);
@@ -266,6 +272,18 @@ public class ReportIssue extends RequireLoginFirstAction
         {
             template = nextTemplate;
         }
+        }
+        catch (MaxConcurrentSearchException e)
+        {
+            getScarabRequestTool(context).setInfoMessage(
+                getLocalizationTool(context)
+                .get("DupeCheckSkippedForLackOfResources"));            
+        }
+        finally
+        {
+            IssueSearchFactory.INSTANCE.notifyDone();
+        }
+        
         setTarget(data, template);
         return dupThresholdExceeded;
     }

@@ -72,7 +72,8 @@ $l10n.NoIssueTypeSelected
     </td>
     <td>$item.Module.Name</td>
     <td>$item.Module.getRModuleIssueType($item.IssueType).DisplayName</td>
-    <td>$item.getIssueCount($data.User)</td>
+    #set ($issuecount = $item.getIssueCount($data.User))
+    <td>#if ($issuecount >= 0)$issuecount #else $l10n.Unavailable</td>
     <td>$item.IssueType.Description</td>
   </tr>        
  #end

@@ -1,33 +1,33 @@
-package org.tigris.scarab.util;
+package org.tigris.scarab.util.word;
 
 /* ================================================================
- * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
- *
+ * Copyright (c) 2003 CollabNet.  All rights reserved.
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
+ * 
  * 2. Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
+ * 
  * 3. The end-user documentation included with the redistribution, if
  * any, must include the following acknowlegement: "This product includes
  * software developed by Collab.Net <http://www.Collab.Net/>."
  * Alternately, this acknowlegement may appear in the software itself, if
  * and wherever such third-party acknowlegements normally appear.
- *
+ * 
  * 4. The hosted project names must not be used to endorse or promote
  * products derived from this software without prior written
  * permission. For written permission, please contact info@collab.net.
- *
- * 5. Products derived from this software may not use the "Tigris" or
- * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without
+ * 
+ * 5. Products derived from this software may not use the "Tigris" or 
+ * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without 
  * prior written permission of Collab.Net.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
@@ -41,57 +41,40 @@ package org.tigris.scarab.util;
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * ====================================================================
- *
+ * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
- */
+ */ 
 
-import org.tigris.scarab.test.BaseTestCase;
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import org.tigris.scarab.util.word.IssueSearchTest;
-import org.tigris.scarab.util.word.IssueSearchFactoryTest;
-import org.tigris.scarab.util.xmlissues.ImportIssuesTest;
+import org.tigris.scarab.util.ScarabException;
 
 /**
- * Used for running all of the tests at once.
- *
- * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: AllTest.java,v 1.5 2003/07/17 17:57:13 jmcnally Exp $
- */
-public class AllTest extends BaseTestCase
+    This class extends ScarabException and does not change its
+    functionality.  It is thrown when the maximum number of concurrent
+    searches are in process and another is requested.
+    
+    @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
+    @version $Id: MaxConcurrentSearchException.java,v 1.1 2003/07/17 17:57:13 jmcnally Exp $
+*/
+public class MaxConcurrentSearchException extends ScarabException
 {
     /**
-     * @param name    Name of Object
+     * Constructs a new <code>MaxConcurrentSearchException</code> without
+     * specified detail message.
      */
-    public AllTest(String name)
+    public MaxConcurrentSearchException()
     {
-        super(name);
-    }
-
-    public AllTest()
-    {
-        super("AllTest");
-    }
-
-    public static Test suite()
-    {
-        TestSuite suite = new TestSuite();
-        suite.addTest(ScarabUtilTest.suite());
-        suite.addTest(IssueSearchFactoryTest.suite());
-        suite.addTest(IssueSearchTest.suite());
-        suite.addTest(ImportIssuesTest.suite());
-        suite.addTest(EmailLinkTest.suite());
-        return suite;
+        super();
     }
 
     /**
-     * Main method needed to make a self runnable class
+     * Constructs a new <code>MaxConcurrentSearchException</code> with 
+     * specified detail message.
      *
-     * @param args This is required for main method
+     * @param msg the error message.
      */
-    public static void main(String[] args)
+    public MaxConcurrentSearchException(String msg)
     {
-        junit.textui.TestRunner.run(new TestSuite(AllTest.class));
+        super(msg);
     }
 }

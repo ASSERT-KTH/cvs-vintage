@@ -129,6 +129,8 @@ import org.tigris.scarab.util.ScarabPaginatedList;
 import org.tigris.scarab.util.SnippetRenderer;  
 import org.tigris.scarab.util.SimpleSkipFiltering;  
 import org.tigris.scarab.util.word.IssueSearch;
+import org.tigris.scarab.util.word.IssueSearchFactory;
+import org.tigris.scarab.util.word.MaxConcurrentSearchException;
 import org.tigris.scarab.util.word.SearchIndex;
 import org.tigris.scarab.util.word.QueryResult;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
@@ -293,6 +295,7 @@ public class ScarabRequestTool
             // This must _always_ be called by dispose()
             Log.get().debug("IssueSearch object is disposed of properly.");
             issueSearch.close();
+            IssueSearchFactory.INSTANCE.notifyDone();
             issueSearch = null;
         }
         issueList = null;
@@ -1640,7 +1643,7 @@ e.printStackTrace();
      * @return a <code>Issue</code> value
      */
     public IssueSearch getNewSearch()
-        throws Exception
+        throws Exception, MaxConcurrentSearchException
     {
         if (issueSearch == null) 
         {
@@ -1650,11 +1653,13 @@ e.printStackTrace();
             {
                 IssueType it = getCurrentIssueType();
                 Module cum = getCurrentModule();
-                issueSearch = new IssueSearch(cum, it, user);
+                issueSearch = 
+                    IssueSearchFactory.INSTANCE.getInstance(cum, it, user);
             }
             else 
             {
-                issueSearch = new IssueSearch(mitList, user);
+                issueSearch = 
+                    IssueSearchFactory.INSTANCE.getInstance(mitList, user);
             }
         }
         return issueSearch; 
@@ -1837,6 +1842,11 @@ e.printStackTrace();
         try 
         {
             matchingIssueIds = getUnprotectedCurrentSearchResults();
+        }
+        catch (MaxConcurrentSearchException e)
+        {
+            setAlertMessage(getLocalizationTool()
+                .get("ResourceLimitationsPreventedSearch"));
         }
         catch (Exception e)
         {
