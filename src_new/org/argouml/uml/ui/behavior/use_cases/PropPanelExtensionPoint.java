@@ -1,4 +1,4 @@
-// $Id: PropPanelExtensionPoint.java,v 1.7 2002/12/27 10:08:02 linus Exp $
+// $Id: PropPanelExtensionPoint.java,v 1.8 2002/12/28 20:52:53 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,21 +28,23 @@
 
 package org.argouml.uml.ui.behavior.use_cases;
 
-import org.argouml.application.api.*;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+
+import org.argouml.application.api.Argo;
 import org.argouml.swingext.LabelledLayout;
-import org.argouml.uml.ui.*;
-import org.argouml.uml.ui.foundation.core.*;
+import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.UMLComboBoxNavigator;
+import org.argouml.uml.ui.UMLLinkedList;
+import org.argouml.uml.ui.UMLTextField2;
+import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
-import ru.novosoft.uml.behavior.use_cases.*;
-import ru.novosoft.uml.model_management.*;
+import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
+import ru.novosoft.uml.behavior.use_cases.MUseCase;
+import ru.novosoft.uml.foundation.core.MNamespace;
+import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
 
 /**
@@ -88,7 +90,7 @@ public class PropPanelExtensionPoint extends PropPanelModelElement {
         // NSUML associated with the NSUML type. Allow the location label to
         // expand vertically so we all float to the top.
 
-        JTextField locationField = new UMLTextField2(this, new UMLExtensionPointLocationDocument(this));
+        JTextField locationField = new UMLTextField2(this, new UMLExtensionPointLocationDocument());
         addField(Argo.localize("UMLMenu", "label.location"), locationField);
         
         add(LabelledLayout.getSeperator());

@@ -1,4 +1,4 @@
-// $Id: PropPanelComment.java,v 1.3 2002/12/27 10:08:02 linus Exp $
+// $Id: PropPanelComment.java,v 1.4 2002/12/28 20:52:53 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,12 +25,9 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import java.awt.Dimension;
-import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
-import org.argouml.swingext.Orientation;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLTextArea;
 import org.argouml.uml.ui.UMLTextProperty;
