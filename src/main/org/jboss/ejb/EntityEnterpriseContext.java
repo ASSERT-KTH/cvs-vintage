@@ -21,7 +21,7 @@ import javax.transaction.Transaction;
 *	@see EnterpriseContext
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.4 $
+*	@version $Revision: 1.5 $
 */
 public class EntityEnterpriseContext
 extends EnterpriseContext
@@ -66,6 +66,8 @@ extends EnterpriseContext
 	
 	public EJBObject getEJBObject() 
 	{ 
+		// Context can have no EJBObject (created by finds) in which case we need to wire it at call time
+		
 		return ejbObject; 
 	}
 	
@@ -126,6 +128,18 @@ extends EnterpriseContext
 	{
 		public EJBObject getEJBObject()
 		{
+			if (ejbObject == null) {
+			
+				try {
+					
+					ejbObject = ((EntityContainer)con).getContainerInvoker().getEntityEJBObject(id); 
+				}
+			 	catch (RemoteException re) {
+					// ...
+					throw new IllegalStateException();
+				}
+			}
+			
 			return ejbObject;
 		}
 		

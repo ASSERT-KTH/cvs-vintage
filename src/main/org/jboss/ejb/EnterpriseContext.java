@@ -34,7 +34,7 @@ import org.jboss.logging.Logger;
  *	@see EntityEnterpriseContext
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public abstract class EnterpriseContext
 {
@@ -56,7 +56,9 @@ public abstract class EnterpriseContext
    // The principal associated with the call
    Principal principal;
 	
-   Object id; // Not used for sessions
+	// Only StatelessSession beans have no Id, stateful and entity do
+   Object id; 
+   
    // Static --------------------------------------------------------
    
    // Constructors --------------------------------------------------
@@ -76,6 +78,8 @@ public abstract class EnterpriseContext
       throws RemoteException;
       
    public void setId(Object id) { 
+	   Exception e = new Exception();
+	   e.printStackTrace();
 		this.id = id; 
 	}
 	
@@ -126,10 +130,15 @@ public abstract class EnterpriseContext
 			if (con instanceof EntityContainer)
 			{
 				return ((EntityContainer)con).getContainerInvoker().getEJBHome(); 
-			} if (con instanceof StatelessSessionContainer)
+			} 
+			else if (con instanceof StatelessSessionContainer)
 			{
 				return ((StatelessSessionContainer)con).getContainerInvoker().getEJBHome(); 
-			} else
+			} 
+			else if (con instanceof StatefulSessionContainer) 
+			{
+			 	return ((StatefulSessionContainer)con).getContainerInvoker().getEJBHome();
+			}
 			{
 				// Should never get here
 				throw new EJBException("No EJBHome available (BUG!)");
