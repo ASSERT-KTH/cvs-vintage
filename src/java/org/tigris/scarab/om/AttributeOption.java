@@ -76,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * TurbineGlobalCache service.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AttributeOption.java,v 1.38 2003/08/08 18:35:25 jmcnally Exp $
+ * @version $Id: AttributeOption.java,v 1.39 2003/08/21 01:56:10 jmcnally Exp $
  */
 public class AttributeOption 
     extends BaseAttributeOption
@@ -196,7 +196,7 @@ public class AttributeOption
     }
 
     /**
-     * @see #getInstance(Attribute, String, Issue)
+     * @see #getInstance(Attribute, String, Module, IssueType)
      */
     public static AttributeOption getInstance(Attribute attribute, String name)
         throws Exception

@@ -76,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.72 2003/07/26 18:26:57 jmcnally Exp $
+  * @version $Id: Attribute.java,v 1.73 2003/08/21 01:56:10 jmcnally Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -748,7 +748,7 @@ public class Attribute
      * Refers to global issue types.
      *
      * @return Whether this attribute is mapped to any issue types.
-     * @see #hasMapping(IssueType)
+     * @see #hasGlobalMapping(IssueType)
      */
     public boolean hasGlobalIssueTypeMappings()
         throws Exception
