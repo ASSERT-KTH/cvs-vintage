@@ -1,4 +1,4 @@
-// $Id: PluggableImport.java,v 1.4 2004/10/06 05:44:16 linus Exp $
+// $Id: PluggableImport.java,v 1.5 2004/10/18 14:02:09 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: PluggableImport.java,v 1.4 2004/10/06 05:44:16 linus Exp $
+//$Id: PluggableImport.java,v 1.5 2004/10/18 14:02:09 mkl Exp $
 
 package org.argouml.application.api;
 
@@ -53,7 +53,7 @@ public interface PluggableImport extends Pluggable {
      * @param importElement The current import session.
      * @return The panel to show in import dialog.
      */
-    public JComponent getChooser(Import  importElement);
+    JComponent getChooser(Import  importElement);
     
     /** 
      * Provide pannel added to JTabbedPane after general panel.
@@ -61,7 +61,7 @@ public interface PluggableImport extends Pluggable {
      * @return the panel with configuration info for plugin
      *         or null if no parameters are needed.
      */
-    public JComponent getConfigPanel();
+    JComponent getConfigPanel();
     
     /**
      * This method returns a Vector with objects to import.
@@ -70,14 +70,14 @@ public interface PluggableImport extends Pluggable {
      * @param importElement - current import session
      * @return vector of objects, selected by chooser
      */
-    public Vector getList(Import importElement);
+    Vector getList(Import importElement);
 
     /**
      * Tells if the object is parseable or not.
      * @param f object to be tested.
      * @return true if parseable, false if not.
      */
-    public boolean isParseable(Object f);
+    boolean isParseable(Object f);
 	
     /**
      * One parseable object from the list will be parsed by this method.
@@ -89,7 +89,7 @@ public interface PluggableImport extends Pluggable {
      * common settings.
      * @throws Exception (all kinds)
      */
-    public void parseFile(Project p, Object o, 
+    void parseFile(Project p, Object o, 
 			  DiagramInterface diagram, Import importElement) 
 	throws Exception;
 
@@ -98,8 +98,7 @@ public interface PluggableImport extends Pluggable {
      * @param diagram to layout.
      * @return the layouter.
      */
-    public ClassdiagramLayouter getLayout(UMLDiagram diagram);
+    ClassdiagramLayouter getLayout(UMLDiagram diagram);
 
 
 }
-

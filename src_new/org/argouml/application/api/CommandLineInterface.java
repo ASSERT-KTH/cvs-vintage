@@ -1,4 +1,4 @@
-// $Id: CommandLineInterface.java,v 1.2 2003/11/10 12:13:13 jhraigniac Exp $
+// $Id: CommandLineInterface.java,v 1.3 2004/10/18 14:02:09 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,6 @@ public interface CommandLineInterface {
      * @param argument a string that is used to send arguments.
      * @return true if the command was performed successfully.
      */
-    public boolean doCommand(String argument);
+    boolean doCommand(String argument);
 }
 

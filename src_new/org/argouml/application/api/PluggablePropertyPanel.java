@@ -1,4 +1,4 @@
-// $Id: PluggablePropertyPanel.java,v 1.6 2003/09/16 23:58:01 thierrylach Exp $
+// $Id: PluggablePropertyPanel.java,v 1.7 2004/10/18 14:02:09 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,11 +42,11 @@ public interface PluggablePropertyPanel extends Pluggable {
     /** Returns the <code>Class</code> that the panel handles.
      * @return the <code>Class</code>.
      */
-    public Class getClassForPanel();
+    Class getClassForPanel();
 
     /** Returns an instance of the property panel.
      * @return the <code>PropPanel</code>.
      */
-    public PropPanel getPropertyPanel();
+    PropPanel getPropertyPanel();
 
 } /* End interface PluggablePropertyPanel */

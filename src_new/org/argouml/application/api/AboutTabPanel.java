@@ -1,4 +1,4 @@
-// $Id: AboutTabPanel.java,v 1.3 2004/03/06 09:15:17 mvw Exp $
+// $Id: AboutTabPanel.java,v 1.4 2004/10/18 14:02:09 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,17 +40,17 @@ public interface AboutTabPanel {
     /** 
      * @return the unlocalized settings tab name.
      */
-    public String getTabKey();
+    String getTabKey();
 
     /**
      * @return the name of the resource bundle to use.
      */
-    public String getTabResourceBundleKey();
+    String getTabResourceBundleKey();
 
     /** 
      * @return the JPanel which implements the tab.
      */
-    public JPanel getTabPanel();
+    JPanel getTabPanel();
 
 } /* End interface AboutTabPanel */
 

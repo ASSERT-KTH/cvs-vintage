@@ -1,4 +1,4 @@
-// $Id: PluggableAboutTab.java,v 1.4 2003/09/16 23:58:01 thierrylach Exp $
+// $Id: PluggableAboutTab.java,v 1.5 2004/10/18 14:02:09 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ public interface PluggableAboutTab extends Pluggable {
      * Returns the about tab panel for the plugin.
      * @return the provided tab panel.
      */
-    public AboutTabPanel getAboutTabPanel();
+    AboutTabPanel getAboutTabPanel();
 
 } /* End interface PluggableAboutTab */
 
