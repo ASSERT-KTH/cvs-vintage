@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.28 2002/06/12 09:40:37 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.29 2002/06/18 09:21:24 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -277,6 +277,9 @@ public class OffsetManager
 		if(foldLevel == 0)
 		{
 			newVirtualLineCount = lineCount;
+
+			for(int i = 0; i < lineCount; i++)
+				lineInfo[i] |= VISIBLE_MASK;
 		}
 		else
 		{

@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Buffer-specific options dialog.
  * @author Slava Pestov
- * @version $Id: BufferOptions.java,v 1.20 2002/06/18 06:55:59 spestov Exp $
+ * @version $Id: BufferOptions.java,v 1.21 2002/06/18 09:21:24 spestov Exp $
  */
 public class BufferOptions extends EnhancedDialog
 {
@@ -229,10 +229,7 @@ public class BufferOptions extends EnhancedDialog
 	//{{{ ok() method
 	public void ok()
 	{
-		int index = mode.getSelectedIndex();
-		buffer.setMode(modes[index]);
-
-		index = lineSeparator.getSelectedIndex();
+		int index = lineSeparator.getSelectedIndex();
 		String lineSep;
 		if(index == 0)
 			lineSep = "\n";
@@ -304,7 +301,8 @@ public class BufferOptions extends EnhancedDialog
 		buffer.setBooleanProperty("indentOnTajb",indentOnTab.isSelected());
 		buffer.setBooleanProperty("indentOnEnter",indentOnEnter.isSelected());
 
-		buffer.propertiesChanged();
+		index = mode.getSelectedIndex();
+		buffer.setMode(modes[index]);
 
 		dispose();
 	} //}}}
