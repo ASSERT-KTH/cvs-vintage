@@ -72,11 +72,11 @@ $page.setTitle("Identified as duplicate")
   #set ($issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString())
   #indexedRows($velocityCount)
   #set ($issueGroup = $intake.Issue.Default)
-  <td>
-  #if ($velocityCount == 1)
-    <input type="radio" name="$issueGroup.Id.Key" value="$issue.UniqueId" checked="checked" />
+  <td> $issueGroup.Ids.Key
+  #if ($issueList.size() == 1)
+    <input type="radio" name="$issueGroup.Ids.Key" value="$issue.IssueId" checked="checked" />
   #else
-    <input type="radio" name="$issueGroup.Id.Key" value="$issue.UniqueId" />
+    <input type="checkbox" name="$issueGroup.Ids.Key" value="$issue.IssueId" />
   #end
   </td>
   <td><strong>$issue.UniqueId</strong></td>
