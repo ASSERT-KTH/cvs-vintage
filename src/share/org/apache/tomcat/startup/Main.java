@@ -188,7 +188,7 @@ public class Main {
         try {
 	    if( ! base.endsWith( "/" ) )
 		base=base + "/";
-	    
+
 	    File f = new File(base + file);
 	    String path = f.getCanonicalPath();
 	    if( f.isDirectory() )
@@ -199,7 +199,7 @@ public class Main {
 	    return null;
         }
     }
-	
+
     public String getLibDir() {
 	if( libBase!=null ) return libBase;
 
@@ -224,19 +224,20 @@ public class Main {
     }
 	
     
-    String cpComp[]=new String[] { "../classes/", "jaxp.jar",
+/*    String cpComp[]=new String[] { "../classes/", "jaxp.jar",
 				   "parser.jar", "jasper.jar",
 				   "webserver.jar",
                                    "tomcat_core.jar", "tomcat_util.jar",
                                    "tomcat_modules.jar", "tomcat_config.jar",
 				   "facade.jar", "servlet.jar"};
-    
+*/
     void execute( String args[] ) throws Exception {
 
 	try {
-	    int jarCount=cpComp.length;
 	    Vector urlV=new Vector();
-
+            String cpComp[]=getJarFiles(getLibDir());
+	    int jarCount=cpComp.length;
+            urlV.addElement( getURL(  getLibDir() ,"../classes/" ));
 	    for( int i=0; i< jarCount ; i++ ) {
 		urlV.addElement( getURL(  getLibDir() , cpComp[i] ));
 	    }
@@ -283,7 +284,7 @@ public class Main {
 	    setAttribute( proxy, "parentClassLoader", parentL );
 	    setAttribute( proxy, "serverClassPath", urls );
 	    execute(  proxy, "execute" );
-	    return; 
+	    return;
 	} catch( Exception ex ) {
 	    ex.printStackTrace();
 	}
@@ -373,6 +374,22 @@ public class Main {
 	    }
 	}
     }
- 
+
+    public String[] getJarFiles(String ld) {
+	File dir = new File(ld);
+	String[] names = dir.list( new FilenameFilter(){
+            public boolean accept(File dir, String name) {
+                if (name.endsWith(".jar"))
+                {
+                    return true;
+                }
+                return false;
+            }
+        } );
+	return names;
+    }
+
 
 }
+
+
