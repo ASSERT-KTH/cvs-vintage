@@ -18,9 +18,9 @@ The optional defaults elements contains the default values for
 entities, and relationships.
 -->
 <!ELEMENT defaults ((datasource, datasource-mapping)?, create-table?, 
-         remove-table?, read-only?, time-out?, row-locking?, pk-constraint?, 
-         fk-constraint?, preferred-relation-mapping?, read-ahead?, 
-         list-cache-max?)>
+         remove-table?, read-only?, read-time-out?, row-locking?, 
+         pk-constraint?, fk-constraint?, preferred-relation-mapping?, 
+         read-ahead?, list-cache-max?)>
 
 
 <!--
@@ -72,7 +72,7 @@ The read-only element must be one of the two following:
 Specifies the ammount of time that a read-only field is considered
 valid (milliseconds).
 -->
-<!ELEMENT time-out (#PCDATA)>
+<!ELEMENT read-time-out (#PCDATA)>
 
 
 <!--
@@ -161,9 +161,10 @@ be configured.
 The entity element contains the configuration of an entity
 -->
 <!ELEMENT entity (ejb-name, (datasource, datasource-mapping)?, create-table?, 
-         remove-table?, read-only?, time-out?, row-locking?, pk-constraint?,
-         read-ahead?, list-cache-max?, table-name?, cmp-field*, load-groups?,
-         eager-load-group?, lazy-load-groups?, query*)>
+         remove-table?, read-only?, read-time-out?, row-locking?, 
+         pk-constraint?, read-ahead?, list-cache-max?, table-name?, 
+         cmp-field*, load-groups?, eager-load-group?, lazy-load-groups?, 
+         query*)>
 
 <!--
 Name of the entity being configured.  This must match an entity declared
@@ -182,7 +183,7 @@ Each entity instance will be stored in one row of this table.
 <!--
 The cmp-field element contains the configuration of a cmp-field.
 -->
-<!ELEMENT cmp-field (field-name, read-only?, time-out?, 
+<!ELEMENT cmp-field (field-name, read-only?, read-time-out?, 
          column-name?, not-null?, ((jdbc-type, sql-type) | (property+))? )>
 
 
@@ -246,7 +247,7 @@ Contains the named load groups.
 <!--
 A named group of fields that will be loaded together.
 -->
-<!ELEMENT load-group (load-group-name, description?, field-name+)>
+<!ELEMENT load-group (description?, load-group-name, field-name+)>
 
 <!--
 Contains the name of a load group.
@@ -384,7 +385,7 @@ be configured.
 The ejb-relation element contains the configuration of an
 ejb-relation.
 -->
-<!ELEMENT ejb-relation (ejb-relation-name, read-only?,
+<!ELEMENT ejb-relation (ejb-relation-name, read-only?, read-time-out?,
          (foreign-key-mapping | relation-table-mapping),
          (ejb-relationship-role, ejb-relationship-role)?)>
 
