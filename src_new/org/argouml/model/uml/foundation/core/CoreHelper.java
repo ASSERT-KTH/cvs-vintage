@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.59 2003/06/30 18:00:20 linus Exp $
+// $Id: CoreHelper.java,v 1.60 2003/07/19 09:59:42 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1383,7 +1383,22 @@ public class CoreHelper {
      * @return Collection
      */
     public Collection getAllRealizedInterfaces(Object o) {
-        Collection col = new ArrayList();
+        return internalGetAllRealizedInterfaces(
+						o,
+						new ArrayList(),
+						new HashSet());
+    }
+
+    /**
+     * Helper method for getAllRealizedInterfaces.
+     * @param o
+     * @param col
+     * @param visited
+     * @return Collection
+     */
+    private Collection internalGetAllRealizedInterfaces(
+				Object o, Collection col, Set visited) {
+        visited.add(o);
         if (o != null) {
             if (ModelFacade.isAClass(o)) {
                 MClass clazz = (MClass) o;
@@ -1402,7 +1417,10 @@ public class CoreHelper {
                 Collection superTypes = getSupertypes(o);
                 it = superTypes.iterator();
                 while (it.hasNext()) {
-                    col.addAll(getAllRealizedInterfaces(it.next()));
+		    Object obj = it.next();
+		    if (!visited.contains(obj)) {
+			internalGetAllRealizedInterfaces(obj, col, visited);
+		    }
                 }
             }
         }
