@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.10 2001/12/05 11:29:50 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.11 2001/12/07 05:36:39 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -41,6 +41,8 @@ Bug No.  Description
 	 Moved the setting of the default "*.jsp" mapping so that it is now 
 	 possible to entirely disable support for jsp files.
 
+	 Fixed problem with jsp_precompile parameter to JSP files.
+
          Context properties and ContextManager properties can now be set with
          <Property ... /> elements, i.e: 
              <Property name="propname" value="thevalue" />
@@ -51,6 +53,7 @@ Bug No.  Description
          variable substitution to be used in <Context ...></Context>
          declarations.
 
+	 Added support for PureTLS as an SSL option.
 
 Server:
 
