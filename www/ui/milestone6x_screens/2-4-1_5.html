@@ -3,7 +3,7 @@
 <html>
 
 <head>
-	<title>Define report (2.4.1) step1</title>
+	<title>Define report (2.4.1) step5</title>
 	<link rel="stylesheet" type="text/css" href="../csi/style/main.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
 	<link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
@@ -61,16 +61,17 @@
 			</tr>
 			<tr>
 			<td>
-			<div>&nbsp;&nbsp;<a href="#">Documents</a></div>
-			<div>&nbsp;&nbsp;Issue tracking</div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Enter issue</div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Reports</a></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Vote management</a></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Workflow options</a></div>
-			<div>&nbsp;&nbsp;<a href="#">Mailing lists</a></div> 
-			<div>&nbsp;&nbsp;<a href="#">Members</a></div>  
-			<div>&nbsp;&nbsp;<a href="#">News</a></div>
-			<div>&nbsp;&nbsp;<a href="#">Source code</a></div>
+			<div>&nbsp;&nbsp;+ <a href="#">Documents</a></div>
+			<div>&nbsp;&nbsp;- <strong>Issue tracking</strong></div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="enter issue, verbose and advanced">Enter issue</a></div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="queries, saved and custom">Queries</a></div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Reports</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="vote management panel">Vote mgmt.</a></div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="adjust your workflow options">Workflow optns.</a></div>
+			<div>&nbsp;&nbsp;+ <a href="#">Mailing lists</a></div> 
+			<div>&nbsp;&nbsp;+ <a href="#">Members</a></div>  
+			<div>&nbsp;&nbsp;+ <a href="#">News</a></div>
+			<div>&nbsp;&nbsp;+ <a href="#">Source code</a></div>
 			</td>
 			</tr>
 			<tr>
@@ -139,20 +140,20 @@
 	<!-- Scarab - App -->
 	
 	<!-- Scarab - App -->
-	<div class="app" id="div2-4-1-step1">
-		<h2>Define report (2.4.1) step 4</h2>
+	<div class="app" id="div2-4-1-step5">
+		<h2>Define report (2.4.1) step5</h2>
 		
 		<div id="tabs">
 			<table cellpadding="3" cellspacing="0" border="0">
 			<tr>
-			<td><small>1:</small> <a href="#" title="#">Summary info</td>
-			<td><small>2:</small> <a href="#" title="#">Primary filter attribute (PFA)</a></td>
-			<th><small>3:</small> Select row/column heading(s)</th>
+			<td>1: <a href="#" title="summary info">Summary info</a></td>
+			<td>2: <a href="#" title="primary filter attribute">Primary filter attribute (PFA)</a></td>
+			<th>3: Select row/column heading(s)</th>
 			</tr>
 			</table>
 		</div>
-		<p class="functnbar"><small>3a:</small><a href="#" title="#">Define Row/Column criteria</a> | <small>3b:</small> <strong>Select row/column content</strong></p>
-
+		
+		<p class="functnbar"><a href="#" title="define row/column criteria">3a: Define row/column criteria</a> | <strong>3b: Select row/column content</strong></p>
 		
 		<h3>Select row/column content</h3>	  
 		
@@ -161,10 +162,7 @@
 
 			<tr>
 			<th>Row content</th>
-			<td>
-
-
-			<select multiple size="15">
+			<td><select multiple="multiple" size="15">
 			<option>Attribute X</option>
 			<option>&nbsp;&nbsp;option X.1</option>
 			<option>&nbsp;&nbsp;option X.2</option>
@@ -199,16 +197,11 @@
 			<option>----------------------------------</option>
 			</select>			
 			</td>
-
 			</tr>
-
 
 			<tr>
 			<th>Column content</th>
-			<td>
-
-
-			<select multiple size="15">
+			<td><select multiple="multiple" size="15">
 			<option>Attribute X</option>
 			<option>&nbsp;&nbsp;option X.1</option>
 			<option>&nbsp;&nbsp;option X.2</option>
@@ -243,11 +236,8 @@
 			<option>----------------------------------</option>
 			</select>			
 			</td>
-
 			</tr>
-
 			</table>
-
 		</div>
 
 		<p class="functnbar"><input type="submit" value="Generate report" />&nbsp;<input type="submit" value="cancel" /></p>
