@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.57 2004/11/14 10:06:01 linus Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.58 2004/12/19 11:06:28 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -186,7 +186,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
     }
 
     /**
-     * After loading the diagram it?s necessary to connect
+     * After loading the diagram it is necessary to connect
      * every FigMessage to its FigAssociationRole.
      * This is done by adding the FigMessage
      * to the PathItems of its FigAssociationRole.
