@@ -43,8 +43,6 @@ import org.columba.mail.message.HeaderInterface;
  */
 public class BasicTableModelSorter extends TreeTableModelDecorator {
 
-	protected boolean dataSorting = false;
-
 	protected boolean ascending = true;
 	protected String sort = new String("In Order Received");
 
@@ -55,36 +53,6 @@ public class BasicTableModelSorter extends TreeTableModelDecorator {
 
 		collator = Collator.getInstance();
 
-		//            mc = tableModel.getMessageCollection();
-
-		//folder = tableModel.getFolder();
-
-	}
-
-	/*
-	public void setWindowItem( WindowItem item )
-	{
-	this.config = item;
-	
-	
-	sort = config.getSelectedHeader();
-	if ( sort == null )
-	    sort = new String("Status");
-	ascending = config.getHeaderAscending();
-	
-	
-	setSortingColumn( sort );
-	setSortingOrder( ascending );
-	
-	}
-	*/
-
-	public void setDataSorting(boolean b) {
-		dataSorting = b;
-	}
-
-	public boolean getDataSorting() {
-		return dataSorting;
 	}
 
 	public String getSortingColumn() {
@@ -97,66 +65,60 @@ public class BasicTableModelSorter extends TreeTableModelDecorator {
 
 	public void setSortingColumn(String str) {
 		sort = str;
-		//config.setSelectedHeader( sort );
 
 	}
 
 	public void setSortingOrder(boolean b) {
 		ascending = b;
-		//config.setHeaderAscending( ascending );
 
 	}
 
-	public void sortTable(String str) {
-		/*
-		    folder = getHeaderTableModel().getFolder();
-		    if ( folder == null ) return;
-		    if ( folder.count() < 2 ) return;
-		*/
+	/**
+	 * 
+	 * sort the table
+	 * 
+	 * use selected column and sorting order
+	 *
+	 */
+	public void sort() {
 
-		setSortingColumn(str);
+		String str = getSortingColumn();
 
 		if (str.equals("In Order Received")) {
-			//setDataSorting(true);
 
+			// do not sort the table, just use
 			MessageNode rootNode = getRootNode();
 
-			System.out.println("in order received");
-
-			//setDataSorting(false);
 		} else {
 
-			for (int i = 0; i < getColumnCount(); i++) {
-				if (str.equals(getColumnName(i))) {
+		
+			MessageNode rootNode = getRootNode();
+			
+			// get a list of MessageNode objects of the first
+			// hierachy level	
+			List v = rootNode.getVector();
+		
+			// do the sorting
+			Collections.sort(
+				v,
+				new MessageHeaderComparator(
+					getRealModel().getColumnNumber(getSortingColumn()),
+					getSortingOrder()));
 
-					//setDataSorting(true);
-
-					MessageNode rootNode = getRootNode();
-					List v = rootNode.getVector();
-
-					Collections.sort(
-						v,
-						new MessageHeaderComparator(
-							getRealModel().getColumnNumber(getSortingColumn()),
-							getSortingOrder()));
-
-					//System.out.println("finished sorting");
-
-					//tableModel.update();
-					//getHeaderTableModel().fireTreeNodesChanged();
-					//getHeaderTableModel().update();
-
-					//setDataSorting(false);
-
-				}
-			}
 		}
 
 	}
 
+	/**
+	 * sort the table 
+	 * 
+	 * @param column	index of column
+	 */
 	public void sort(int column) {
 		String c = getColumnName(column);
 
+		// if the same column is selected we change the sorting order
+		// between ascending/descending
 		if (getSortingColumn().equals(c)) {
 			if (getSortingOrder())
 				setSortingOrder(false);
@@ -165,70 +127,18 @@ public class BasicTableModelSorter extends TreeTableModelDecorator {
 		}
 
 		setSortingColumn(c);
-		sortTable(c);
+		sort();
 	}
 
-	public void setSortingColumn(int column) {
-		String c = getColumnName(column);
-
-		if (getSortingColumn().equals(c)) {
-			if (getSortingOrder())
-				setSortingOrder(false);
-			else
-				setSortingOrder(true);
-		}
-
-		setSortingColumn(c);
-	}
-
-	/*
-	public boolean manipulateModel(int mode) {
-		sortTable(getSortingColumn());
-		return true;
-	}
-	*/
+	/**
+	 * 
+	 * 
+	 * @return	index of selected column
+	 */
 	public int getSortInt() {
 		return getRealModel().getColumnNumber(getSortingColumn());
 	}
 
-	/*
-	public int getInsertionSortIndex(MessageNode newChild) {
-		MessageNode rootNode = getRootNode();
-		List v = rootNode.getVector();
-
-		if (getSortingColumn().equals("In Order Received")) {
-			return rootNode.getChildCount();
-		}
-
-		//System.out.println("column name: "+getSortingColumn() );
-		//System.out.println("column number: "+ getHeaderTableModel().getColumnNumber( getSortingColumn() ) );
-
-		MessageHeaderComparator comparator =
-			new MessageHeaderComparator(
-				getRealModel().getColumnNumber(getSortingColumn()),
-				getSortingOrder());
-
-		MessageNode child;
-		int compare;
-
-		// no children !
-		if (v == null)
-			return 0;
-		for (int i = 0; i < v.size(); i++) {
-			child = (MessageNode) v.get(i);
-			compare = comparator.compare(child, newChild);
-
-			if (compare == -1) {
-
-			} else if (compare == 1) {
-				return i;
-			}
-
-		}
-
-		return v.size();
-	}
-	*/
 	class MessageHeaderComparator implements Comparator {
 
 		protected int column;
@@ -241,24 +151,15 @@ public class BasicTableModelSorter extends TreeTableModelDecorator {
 		}
 
 		public int compare(Object o1, Object o2) {
-			//Integer int1 = (Integer) o1;
-			//Integer int2 = (Integer) o2;
-
+			
 			MessageNode node1 = (MessageNode) o1;
 			MessageNode node2 = (MessageNode) o2;
 
-			//Message message1 = folder.get( int1.intValue() );
 			HeaderInterface header1 = (HeaderInterface) node1.getUserObject();
-			//Message message2 = folder.get( int2.intValue() );
 			HeaderInterface header2 = (HeaderInterface) node2.getUserObject();
 
 			if ((header1 == null) || (header2 == null))
 				return 0;
-
-			/*
-			        Rfc822Header header1 = message1.getHeader();
-			        Rfc822Header header2 = message2.getHeader();
-			*/
 
 			int result = 0;
 
@@ -270,8 +171,7 @@ public class BasicTableModelSorter extends TreeTableModelDecorator {
 
 				if ((flags1 == null) || (flags2 == null))
 					result = 0;
-
-				if ((flags1.getSeen()) && (!flags2.getSeen())) {
+				else if ((flags1.getSeen()) && (!flags2.getSeen())) {
 					result = -1;
 				} else if ((!flags1.getSeen()) && (flags2.getSeen())) {
 					result = 1;
