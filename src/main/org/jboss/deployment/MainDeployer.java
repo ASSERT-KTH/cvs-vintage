@@ -45,7 +45,7 @@ import org.jboss.util.MBeanProxy;
  * Takes a series of URL to watch, detects changes and calls the appropriate Deployers 
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class MainDeployer
    extends ServiceMBeanSupport
@@ -75,6 +75,9 @@ public class MainDeployer
 
    /** The temporary directory for deployments. */
    private File tempDir;
+
+   /** The string naming the tempDir **/
+   private String tempDirString;
 
    /** The system home directory (for dealing with relative file names). */
    private File homeDir;
@@ -182,38 +185,34 @@ public class MainDeployer
       return name == null ? OBJECT_NAME : name;
    }
 
-   /**
-    * Get the local state data directory from the server configuration.
-    */
-   public ObjectName preRegister(MBeanServer server, ObjectName name)
-      throws Exception
-   {
-      name = super.preRegister(server, name);
-      
-      // get the temporary directory to use
-      tempDir = (File)
-         server.getAttribute(ServerConfigMBean.OBJECT_NAME, "TempDir");
-      tempDir = new File(tempDir, "deploy");
-
-      // get the system home directory
-      homeDir = (File)
-         server.getAttribute(ServerConfigMBean.OBJECT_NAME, "HomeDir");
-      
-      return name;
-   }
-   
-   protected void startService()
+   protected void createService()
       throws Exception
    {
       // watch the deploy directory, it is a set so multiple adds 
       // (start/stop) only one entry is present
+      // get the temporary directory to use
+      tempDir = new File((File)server.getAttribute(ServerConfigMBean.OBJECT_NAME, "TempDir"),
+                         "deploy");
 
-      // FIXME: Should pull this from ServerConfig
+      //used in isWatched
+      tempDirString = tempDir.toURL().toString(); 
+
+      // get the system home directory
+      homeDir = (File)server.getAttribute(ServerConfigMBean.OBJECT_NAME, "HomeDir");
+
+      //Watch in our standard directory.  This should be derived from configuration info.      
       addDirectory("deploy");
-      
-      // Do a first pass
+   }
+   
+   /**
+    * Get the local state data directory from the server configuration.
+    */
+   protected void startService()
+      throws Exception
+   {
+      //just so we can time startup...
       scan();
-      
+
       // Start auto deploy thread
       running = true;
       
@@ -244,7 +243,6 @@ public class MainDeployer
    {
       do
       {   
-         scan();
          // Sleep
          try
          {
@@ -254,6 +252,7 @@ public class MainDeployer
          {
             log.debug("interrupted");
          }
+         scan();
       } 
       while (running);
    }
@@ -472,8 +471,9 @@ public class MainDeployer
          //watch it, it will be picked up as modified below, deployments is a map duplicates are ok
          deployments.put(deployment.url, deployment);
          
-         // Do we watch it?
-         if (isWatched(deployment)) {
+         // Do we watch it? Watch only urls outside our copy directory.
+         if (!deployment.url.toString().startsWith(tempDirString)) 
+         {
             deploymentsList.add(deployment);
             if (debug)
             {
@@ -483,21 +483,6 @@ public class MainDeployer
       }
    }
 
-   private boolean isWatched(DeploymentInfo deployment) {
-      String tmp = null;
-      try {
-         tmp = tempDir.toURL().toString();
-      }
-      catch (java.net.MalformedURLException e) {
-         // this will never happen, yet must make the compiler happy
-         throw new Error("Failed to convert File to URL: " + e);
-      }
-      
-      if (deployment.url.toString().startsWith(tmp)) {
-         return true;
-      }
-      return false;
-   }
 
    public void findDeployer(DeploymentInfo sdi) 
    {
@@ -529,11 +514,6 @@ public class MainDeployer
       }
    }
 
-   public void preDeregister()
-      throws Exception
-   {
-      running = false;
-   }
    
    /**
     * ScanNew scans the directories that are given to it and returns a 
