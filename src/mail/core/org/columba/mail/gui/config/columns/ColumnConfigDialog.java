@@ -75,7 +75,7 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
     private MailFrameMediator mediator;
 
     public ColumnConfigDialog(MailFrameMediator mediator, XmlElement columns) {
-        super((JFrame) mediator.getView(), true);
+        super((JFrame) mediator.getView().getFrame(), true);
         setTitle("Configure Columns");
 
         this.mediator = mediator;
