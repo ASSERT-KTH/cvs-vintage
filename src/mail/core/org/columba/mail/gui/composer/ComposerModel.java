@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
-import java.util.Enumeration;
 import java.util.Vector;
 
 import org.columba.addressbook.folder.HeaderItem;
