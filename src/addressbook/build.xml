@@ -10,7 +10,7 @@
 	</target>
 
 	<target name="compile-classes">
-		<echo message="compile adressbook"/>
+		<echo message="compile addressbook"/>
 		<ant dir="./core" target="compile" inheritall="false">
 			<property name="dest" value="${dest}"/>
 			<property name="ownclasspath" value="${ownclasspath}"/>
