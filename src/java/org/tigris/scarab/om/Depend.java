@@ -25,6 +25,21 @@ public class Depend
     extends BaseDepend
     implements Persistent
 {
+
+    /**
+     * Delete the depend object.
+     * @acl AccessControlList for deleting user.
+     * TODO: permission
+     */
+    public void delete() throws Exception 
+    { 
+        //hasPermission(acl);
+        Criteria c = new Criteria()
+            .add(DependPeer.OBSERVED_ID, getObservedId())
+            .add(DependPeer.OBSERVER_ID, getObserverId());
+        DependPeer.doDelete(c);
+    }
+    
 }
 
 

@@ -76,6 +76,20 @@ public class Attachment
             setMimeType(v.getContentType());
         }
     }    
+ 
+    /**
+     * Delete the attachment.
+     * @acl AccessControlList for deleting user.
+     * TODO: permission
+     */
+    public void delete() throws Exception 
+    { 
+        //hasPermission(acl);
+        Criteria c = new Criteria()
+            .add(AttachmentPeer.ATTACHMENT_ID, getAttachmentId());
+        AttachmentPeer.doDelete(c);
+    }
+
 }
 
 
