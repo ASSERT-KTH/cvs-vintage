@@ -24,7 +24,7 @@
       CAROL allows to configure a remote (or local) Java server to be accessible by one,two or three of those RMI architectures, in the same time, through it's configuration.
     </para>
   </sect1>
-  <sect1>
+  <sect1 id="carol-conf-files">
     <title>CAROL configuration</title>
     <sect2>
       <title>General configuration files</title>

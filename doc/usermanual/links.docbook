@@ -1,7 +1,7 @@
 <chapter id="links">
   <title>Links and Reference</title>
   <para>Web site list and book reference</para>
-  <index>
+  <index id="web-sites-index">
     <title>Web sites index</title>
     <indexdiv>
       <title>ObjectWeb web sites</title>

@@ -25,7 +25,9 @@
 	;; Enable use of CSS (use of CLASS element)
 	#t)
 
-
+(define %use-id-as-filename%
+  ;; Use ID attributes as name for component HTML files?
+  #t)
 
 </style-specification-body>
 </style-specification>

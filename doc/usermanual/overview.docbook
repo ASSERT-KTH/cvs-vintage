@@ -6,7 +6,7 @@
       This section describes the general CAROL architecture and development rules. CAROL is based on an API/SPI mechanism for export and registering RMI objects. This section  describes which API are used by CAROL and how to develop a server using this API. This section is supposed to be used with the <ulink url="http://java.sun.com/j2se/1.4/docs/guide/rmi-iiop/tutorial.html">RMI IIOP tutorial</ulink> and the <ulink url="http://java.sun.com/products/jndi/tutorial">JNDI tutorial</ulink>.  
     </para>
   </sect1>
-  <sect1>
+  <sect1 id="carol-standard-architecture">
     <title>CAROL standard architecture</title>
     <sect2>
       <title>CAROL architecture</title>
@@ -51,7 +51,7 @@
 	</mediaobject> 
       </figure> 
     </sect2>
-    <sect2>
+    <sect2 id="RMI-IIOP-development-rules">
       <title id="rmidev">RMI IIOP development rules</title>
       <para>This section describes the basic rules of RMI IIOP development. For more information, see the Sun entry for <ulink url="http://java.sun.com/j2se/1.4/docs/guide/rmi-iiop/index.html"><citetitle>RMI IIOP Documentation</citetitle></ulink>. This RMI IIOP quick start guide is design for a 3 step development:
 	<itemizedlist>
@@ -93,7 +93,7 @@
 	  </para>
 	</note>
       </sect3>
-      <sect3>
+      <sect3 id="RMI-IIOP-server-development-step">
 	<title>RMI IIOP server development step</title>
 	<para>The RMI IIOP server has to manage remote objects. This section only describes the (un)export management of a RMI IIOP remote object. Please see the <link linkend="jndidev">JNDI development rules</link> section for the remote object (un)registering managment. One of the most important step in a remote object life cycle is the export step (and the opposite unexport step). To Exporte a remote object means to prepare this object to receive remote call. RMI IIOP abstracts the intricate CORBA implementation mechanism of this export with the API class <classname>PortableRemoteObject</classname>. To Export a remote object is mandatory for remote call. There is two way for this export:
 	  <itemizedlist>
@@ -124,12 +124,12 @@
 	  </itemizedlist>
 	</para>
       </sect3>
-      <sect3>
+      <sect3 id="CAROL-RMI-IIOP-compilation-step">
 	<title>CAROL RMI IIOP compilation step</title>
 	<para>The compilation step is designed by Java and RMI. There is no particular compilation step in order to use CAROL. Therefore, you need to compile Java classes and to compile stubs and skeletons with each RMI provider compiler for each RMI architecture (IIOP, JRMP, JEREMIE ...).
 	  </para>
 	</sect3>
-	<sect3>
+	<sect3 id="CAROL-RMI-IIOP-server-deployment-step">
 	  <title>CAROL RMI IIOP server deployment step</title>
 	  <para> The 3 points below are mandatory for CAROL server deploying on multi-RMI architecture:
 	    <itemizedlist>
@@ -251,7 +251,7 @@
       </sect3>
     </sect2>
   </sect1>
-    <sect1>
+    <sect1 id="non-standard-CAROL-tools-and-mechanisms">
       <title id="non-standard">Non standards CAROL tools and mechanisms</title>
       <sect2>
 	<title>Implicit context propagation with RMI JRMP</title>
@@ -293,7 +293,7 @@
 	</para>
       </sect2>
     </sect1>
-  <sect1> 
+  <sect1 id="Getting-started-conclusion"> 
     <title>Getting started conclusion</title>
     <para>
       CAROL is only configured by system properties and files. There is no intrusion of CAROL classes in a standard RMI IIOP server. The server is RMI architecture independent but work simultaneously on different RMI architectures. The next chapter explains the general rules for this configuration.

@@ -1,7 +1,7 @@
 <chapter id="requirements">
   <title>CAROL requirements</title>
   <para>This chapter describe the system requirements for CAROL.</para>
-  <index>
+  <index id="web-sites-index-carol-req">
     <title>Web sites index</title>
     <indexdiv>
       <title>General CAROL requirements</title>
