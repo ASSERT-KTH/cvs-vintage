@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.command;
 
 import java.awt.event.ActionEvent;
@@ -30,33 +31,22 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 public class UndoManager implements ActionListener, WorkerListChangeListener {
-
-	List undoQueue;
-	List redoQueue;
+	protected List undoQueue;
+	protected List redoQueue;
 	public BasicAction undoAction;
 	public BasicAction redoAction;
 
-	DefaultProcessor processor;
+	protected DefaultProcessor processor;
 
-	int runningTasks;
+	protected int runningTasks = 0;
 
 	public UndoManager(DefaultProcessor processor) {
 		undoQueue = new Vector();
 		redoQueue = new Vector();
 
 		this.processor = processor;
-		runningTasks = 0;
 
-		
-		try
-		{
-		
 		initActions();
-		}
-		catch ( Exception ex)
-		{
-			ex.printStackTrace();
-		}
 
 		processor.getTaskManager().addWorkerListChangeListener(this);
 	}
@@ -73,9 +63,7 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 		undoAction.setAcceleratorKey(
 				KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
 		undoAction.setMnemonic('T');
-
 		undoAction.setEnabled(false);
-
 		undoAction.addActionListener(this);
 
 		// Initialize redo
@@ -89,16 +77,12 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 		redoAction.setAcceleratorKey(
 				KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
 		redoAction.setMnemonic('T');
-
 		redoAction.setEnabled(false);
-
 		redoAction.addActionListener(this);
 	}
 
 	public void addToUndo(Command op) {
-
 		switch (op.getCommandType()) {
-
 			case Command.NO_UNDO_OPERATION :
 				undoQueue.clear();
 				redoQueue.clear();
@@ -111,7 +95,6 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 				redoQueue.clear();
 				redoAction.setEnabled(false);
 				updateActions();				
-				
 				break;
 
 			case Command.NORMAL_OPERATION :
@@ -121,7 +104,6 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 
 	/**
 	 * Method addCommand.
-	 * 
 	 * 
 	 * @param vec
 	 * @param command
@@ -188,7 +170,6 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
-
 		if (command.equals("UNDO")) {
 			undoLast();
 		} else if (command.equals("REDO")) {
@@ -223,5 +204,4 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 	public List getRedoQueue() {
 		return redoQueue;
 	}
-
 }

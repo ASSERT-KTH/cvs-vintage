@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.command;
 
 import java.lang.reflect.Array;
@@ -25,7 +26,6 @@ import org.columba.core.util.Lock;
  * to execute itself.
  * 
  * @author Timo Stich (tstich@users.sourceforge.net)
- * 
  */
 public abstract class Command {
 
@@ -152,7 +152,7 @@ public abstract class Command {
 
 		boolean success = true;
 
-		for (int i = 0;(i < size) && success; i++) {
+		for (int i = 0; (i < size) && success; i++) {
 			if (references[i] != null)
 				success &= references[i].tryToGetLock(this);
 		}
@@ -177,10 +177,11 @@ public abstract class Command {
 	/************* Methods for interacting with the Operator *************/
 
 	public DefaultCommandReference[] getReferences(int operationMode) {
-		if (operationMode == UNDO)
+		if (operationMode == UNDO) {
 			return getUndoReferences();
-		else
+                } else {
 			return getReferences();
+                }
 	}
 
 	public int getCommandType() {
@@ -224,16 +225,6 @@ public abstract class Command {
 	}
 
 	/**
-	 * Returns the frameController.
-	 * @return FrameController
-	 */
-	/*
-	public FrameController getFrameController() {
-		return frameController;
-	}
-	*/
-
-	/**
 	 * Sets the timeStamp.This method is for testing only!
 	 * @param timeStamp The timeStamp to set
 	 */
@@ -268,5 +259,4 @@ public abstract class Command {
 	public AbstractFrameController getFrameController() {
 		return frameController;
 	}
-
 }
