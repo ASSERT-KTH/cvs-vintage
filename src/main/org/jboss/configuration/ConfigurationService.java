@@ -41,7 +41,7 @@ lifecycle service.
  *   @see org.jboss.util.ServiceControl
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.21 $
+ *   @version $Revision: 1.22 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -331,12 +331,15 @@ public class ConfigurationService
                         // Create MBean
                         ObjectInstance instance = server.createMBean(code, objectName,
                             new ObjectName(server.getDefaultDomain(), "service", "MLet"));
+                        
                         info = server.getMBeanInfo(instance.getObjectName());
                      } catch (Throwable ex)
                      {
                         log.error("Could not create MBean "+name+"("+code+")");
                         if (ex instanceof RuntimeMBeanException)
                            ex = ((RuntimeMBeanException)ex).getTargetException();
+                        if (ex instanceof RuntimeOperationsException)
+                           ex = ((RuntimeOperationsException)ex).getTargetException();
                         else if (ex instanceof MBeanException)
                            ex = ((MBeanException)ex).getTargetException();
                         else if (ex instanceof ReflectionException)
