@@ -1,5 +1,16 @@
 #macro (viewIssue $currentIssue $module)
 
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+     <input type="submit" value="Move Issue" name="eventSubmit_doGotomoveissue" />
+     <input type="hidden" value="moveIssueTemplate" name="MoveIssue.vm" />
+  </td>
+ </tr>
+</table>
+</div>
+
 #set ($canEdit = $security.hasPermission("Issue | Edit", $module))
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 
@@ -422,6 +433,17 @@
     <p><a href="$historyLink">Show complete history</a></p>
   #end
 #end
+
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+     <input type="submit" value="Move Issue" name="eventSubmit_doGotomoveissue" />
+     <input type="hidden" value="moveIssueTemplate" name="MoveIssue.vm" />
+  </td>
+ </tr>
+</table>
+</div>
 
 #end
 #end

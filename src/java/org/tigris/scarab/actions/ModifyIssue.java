@@ -95,7 +95,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.39 2001/10/11 17:28:15 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.40 2001/10/14 20:24:15 jon Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -654,8 +654,8 @@ public class ModifyIssue extends RequireLoginFirstAction
     }
 
     /**
-        Redirects to AssignIssue page.
-    */
+     * Redirects to AssignIssue page.
+     */
     public void doEditassignees(RunData data, TemplateContext context)
          throws Exception
     {
@@ -668,6 +668,16 @@ public class ModifyIssue extends RequireLoginFirstAction
         setTarget(data, "AssignIssue.vm");            
     }
 
+    /**
+     * Redirects to MoveIssue page.
+     */
+    public void doGotomoveissue(RunData data, TemplateContext context)
+         throws Exception
+    {
+        setTarget(data, 
+            data.getParameters()
+                .getString("moveIssueTemplate", "MoveIssue.vm"));
+    }
 
     /**
         This manages clicking the Cancel button

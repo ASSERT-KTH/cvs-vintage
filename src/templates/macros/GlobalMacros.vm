@@ -127,6 +127,10 @@
 <input type="hidden" name="$booleanField.ValueIfAbsent" value="false" />
 #end
 
+#macro (checked $v1 $v2)
+#if ($v1.toString().equals($v2.toString()))checked="checked"#end
+#end
+
 #macro ( textField $field $size)
 #if ( $field.Validator.MaxLength && $field.Validator.MaxLength > 0)
 #set ($maxLength = $field.Validator.MaxLength)

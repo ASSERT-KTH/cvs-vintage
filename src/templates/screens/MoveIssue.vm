@@ -4,39 +4,45 @@ $page.setTitle("Copy/move issue")
 
 <h2>$page.Title</h2>
 
-#set ($action = $link.setPage("MoveIssue.vm").setAction("MoveIssue").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "MoveIssue2.vm").toString())
 #set ($user = $data.User)
 #set ($currentModule = $scarabR.CurrentModule)
 #set ($moduleId = $data.Parameters.getString("module_id"))
-#set ($issueId = $data.Parameters.getString("id"))
+#set ($issueId = $data.Parameters.getString("id", $data.Parameters.getString("issue_id","")))
 #set ($issue = $scarabR.getIssue($issueId))
 
-<form method="post" action="$action">
+#if (!$issueId || !$issue)
+
+<p><strong class="alert">Sorry, the requested issue could not be found.</strong></p>
+
+#else
+
+#set ($moveIssueGroup = $intake.MoveIssue.Default)
+
+<form method="post" action="$link.setPage("MoveIssue.vm").setAction("MoveIssue")">
+<input type="hidden" name="$moveIssueGroup.IssueId.key" value="$issueId" />
+## need to also pass id so that if we re-display this page, the right value is kept around
 <input type="hidden" name="id" value="$issueId" />
-<div class="functnbar">
- <table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-  <input type="submit" value="Next" name="eventSubmit_doMapattributes" />
-  </td>
- </tr>
-</table>
-</div>
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="MoveIssue2.vm" />
+
+#set ($attrValues = $issue.AllAttributeValuesMap)
+#set ($attVal = $attrValues.get("SUMMARY"))
+#set ($attrInput = $intake.AttributeValue.mapTo($attVal))
 
 <h3>Issue to be copied/moved</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
+#if ($attVal)
   <th>Summary</th>
+#end
   <th>Date committed</th>
   <th>Committed by</th>
  </tr>
  <tr class="a">
+#if ($attVal)
   <td>
-   #set ($AttrValues = $issue.AllAttributeValuesMap)
-   #set ($attVal =  $AttrValues.get("SUMMARY"))
-   #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
    $attVal.Value
   </td>
+#end
   <td>$format.getDate($scarabG.DateFormat, $issue.CreatedDate)</td>
   <td>
    #set ($createdUser = $issue.CreatedBy)
@@ -45,9 +51,14 @@ $page.setTitle("Copy/move issue")
  </tr>
 </table>
 
+<h3>Source module</h3>
+<p>
+$issue.ScarabModule.Name
+</p>
+
 <h3>Destination module</h3>
 <p>
-<select name="module_id">
+<select name="$moveIssueGroup.ModuleId.Key">
  <option>Select Module...</option>
  #foreach ($module in $security.getModules($user, "Issue | Enter"))
   #if ($module.ModuleId.equals($moduleId))
@@ -57,29 +68,35 @@ $page.setTitle("Copy/move issue")
   #end
  #end
 </select>
+#fieldErrorMsg($moveIssueGroup.ModuleId "")
 </p>
 
 <h3>Action</h3>
-#set ($checked = "")
-#if ($select_action.equals("copy"))
-  #set ($checked = 'checked="checked"')
+
+#set ($userAction = $moveIssueGroup.Action)
+#if (!$userAction || $userAction.toString().length() == 0)
+   #set ($userAction = 'copy')
 #end
-<p><input type="radio" name="select_action" value="copy" $checked /> Copy</p>
-#set ($checked = "")
-#if ($select_action.equals("move"))
-  #set ($checked = 'checked="checked"')
-#end
-<p><input type="radio" name="select_action" value="move" $checked /> Move</p>
+<p>
+<input type="radio" name="$moveIssueGroup.Action.Key" value="copy" 
+#checked($userAction 'copy') /> Copy
+<input type="radio" name="$moveIssueGroup.Action.Key" value="move" 
+#checked($userAction 'move') /> Move
+</p>
 
 <div class="functnbar2">
  <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
-  <input type="submit" value="Next" name="eventSubmit_doMapattributes" />
+  <input type="submit" value="Next" name="eventSubmit_doValidate" />
   </td>
  </tr>
 </table>
 </div>
 
+$intake.declareGroups()
 </form>
+
+#end
+
 </div>

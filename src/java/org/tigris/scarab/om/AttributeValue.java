@@ -168,7 +168,6 @@ public abstract class AttributeValue
         }
     }
 
-    
     /**
      * This method returns a flat List of all AttributeValues that might
      * be chained to this one. This AttributeValue will be first in the List.
@@ -559,8 +558,8 @@ public abstract class AttributeValue
             .append(className).append(keyString).toString();
     }
 
-
-    /** Creates, initializes and returns a new AttributeValue.
+    /**
+     * Creates, initializes and returns a new AttributeValue.
      * @return new Attribute instance
      * @param issue Issue object which this attribute is associated with
      * @param intId This Attribute's Id
@@ -571,7 +570,8 @@ public abstract class AttributeValue
         return getNewInstance(rma.getAttributeId(), issue);
     }
 
-    /** Creates, initializes and returns a new AttributeValue.
+    /**
+     * Creates, initializes and returns a new AttributeValue.
      * @return new AttributeValue instance
      * @param issue Issue object which this attributeValue is associated
      * @param attId the Attribute's Id
@@ -583,7 +583,8 @@ public abstract class AttributeValue
         return getNewInstance(attribute, issue);
     }
 
-    /** Creates, initializes and returns a new AttributeValue.
+    /**
+     * Creates, initializes and returns a new AttributeValue.
      * @return new AttributeValue instance
      * @param issue Issue object which this attributeValue is associated
      * @param attId the Attribute's Id

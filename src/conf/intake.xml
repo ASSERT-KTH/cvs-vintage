@@ -414,4 +414,16 @@
     <field name="Selected" key="sel" type="boolean"/>
 </group>
 
+<group name="MoveIssue" key="mv">
+    <field name="Action" key="rb" type="String">
+    	<rule name="validValues" value="copy|move">Action must be move or copy</rule>
+    </field>
+    <field name="ModuleId" key="modId" type="NumberKey">
+    	<rule name="mask" value="[0-9]+">Select a module from the List</rule>
+    </field>
+    <field name="IssueId" key="issId" type="NumberKey">
+    	<rule name="mask" value="[0-9]+">badIdMessage</rule>
+    </field>
+</group>
+
 </input-data>

@@ -56,6 +56,9 @@ import org.apache.turbine.Turbine;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
+import org.apache.turbine.tool.IntakeTool;
+
+import org.apache.fulcrum.intake.model.Group;
 
 import org.apache.torque.om.NumberKey; 
 import org.apache.torque.om.ObjectKey; 
@@ -65,6 +68,7 @@ import org.apache.torque.util.Criteria;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
+import org.tigris.scarab.services.user.UserManager;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.Attachment;
@@ -80,64 +84,65 @@ import org.tigris.scarab.om.Transaction;
 import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.attribute.OptionAttribute;
-
+import org.tigris.scarab.util.ScarabConstants;
 
 /**
-    This class is responsible for moving/copying an issue 
-    from one module to another.
-
-    FIXME: rewrite this class using intake.
-    
-    @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: MoveIssue.java,v 1.10 2001/10/11 17:28:15 jmcnally Exp $
-*/
+ * This class is responsible for moving/copying an issue 
+ * from one module to another.
+ *
+ * @author <a href="mailto:elicia@collab.net">Elicia David</a>
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: MoveIssue.java,v 1.11 2001/10/14 20:24:15 jon Exp $
+ */
 public class MoveIssue extends RequireLoginFirstAction
 {
 
-    public void doMapattributes( RunData data, TemplateContext context )
+    /**
+     * From MoveIssue.vm -> MoveIssue2.vm, we only need to validate the inputs.
+     * Intake + Pull is so friggen cool.
+     */
+    public void doValidate( RunData data, TemplateContext context )
         throws Exception
     {
-        String issueId = data.getParameters().getString("id");
-        String moduleId = data.getParameters().getString("module_id");
-        
-        if (moduleId == null || moduleId.length() == 0 
-            || moduleId.startsWith("Select Module"))
-        {
-            data.setMessage("Please select a Module.");
-            return;
-        }
-        
-        String selectAction = data.getParameters().getString("select_action");
+        String template = getCurrentTemplate(data, null);
+        String nextTemplate = getNextTemplate(data, template);
 
-        if (selectAction == null || selectAction.length() == 0)
+        IntakeTool intake = getIntakeTool(context);
+        if (intake.isAllValid())
         {
-            data.setMessage("Please make a move/copy selection.");
-            return;
+            setTarget(data, nextTemplate);
         }
-
-        Issue issue = (Issue)IssuePeer.retrieveByPK(new NumberKey(issueId));
-        
-        List matchingAttributes = getList(issue, moduleId, "matching");
-        List orphanAttributes = getList(issue, moduleId, "orphan");
-        
-        data.getParameters().add("issue_id", issueId); 
-        data.getParameters().add("new_module_id", moduleId); 
-        context.put("orphanAttributes", orphanAttributes);
-        context.put("matchingAttributes", matchingAttributes);
-        context.put("select_action", selectAction);
-        setTarget(data, "MoveIssue2.vm");            
     }
 
+    /**
+     * Deals with moving or copying an issue from one module to
+     * another module.
+     * FIXME: rewrite to be more method based so that outside
+     * processes can take advantage of this functionality.
+     */
     public void doSaveissue( RunData data, TemplateContext context )
         throws Exception
     {
-        String issueId = data.getParameters().getString("id");
-        String newModuleId = data.getParameters().getString("module_id");
-        String selectAction = data.getParameters().getString("select_action");
+        String template = getCurrentTemplate(data, null);
+        String nextTemplate = getNextTemplate(data, template);
 
-        Issue issue = (Issue)IssuePeer.retrieveByPK(new NumberKey(issueId));
+        IntakeTool intake = getIntakeTool(context);
+        if (!intake.isAllValid())
+        {
+            setTarget(data, template);
+            return;
+        }
+
+        Group moveIssue = intake.get("MoveIssue",
+                                IntakeTool.DEFAULT_KEY, false);
+        NumberKey issueId = ((NumberKey) moveIssue.get("IssueId").
+            getValue());
+        NumberKey newModuleId = ((NumberKey) moveIssue.get("ModuleId").
+            getValue());
+        String selectAction = moveIssue.get("Action").toString();
+
+        Issue issue = (Issue)IssuePeer.retrieveByPK(issueId);
         ModuleEntity oldModule = issue.getScarabModule();
         ScarabUser user = (ScarabUser)data.getUser();
 
@@ -147,8 +152,10 @@ public class MoveIssue extends RequireLoginFirstAction
         ModuleEntity newModule;
         Attachment attachment = new Attachment();
 
-        List matchingAttributes = getList(issue, newModuleId, "matching");
-        List orphanAttributes = getList(issue, newModuleId, "orphan");
+        List matchingAttributes = issue
+            .getMatchingAttributeValuesList(new NumberKey(newModuleId));
+        List orphanAttributes = issue
+            .getOrphanAttributeValuesList(new NumberKey(newModuleId));
         Transaction transaction = new Transaction();
 
         // Move issue to other module
@@ -161,7 +168,11 @@ public class MoveIssue extends RequireLoginFirstAction
             newIssue.setModuleId(new NumberKey(newModuleId)); 
             newIssue.save();
             newModule = newIssue.getScarabModule();
- 
+            
+            // change the Issue's id prefix to match the new modules code
+            newIssue.setIdPrefix(newModule.getCode());
+            newIssue.save();
+
             // Delete non-matching attributes.
             for (int i=0;i<orphanAttributes.size();i++)
             {
@@ -170,17 +181,18 @@ public class MoveIssue extends RequireLoginFirstAction
                attVal.startTransaction(transaction);
                attVal.save();
             }
-            descBuf = new StringBuffer(" moved from ");
+            descBuf = new StringBuffer("Moved from ");
             descBuf.append(oldModule.getName()).append(" to ");
             descBuf.append(newModule.getName());
         }
-        // Copy issue to other module
+        // Copy issue to other module 
+        // (no need to test, cause intake has already done that for us)
         else
         {
             // Save transaction record
             transaction.create(TransactionTypePeer.CREATE_ISSUE__PK,
                                user, null);
-            newIssue = new Issue();
+            newIssue = Issue.getInstance();
             newIssue.setModuleId(new NumberKey(newModuleId));
             newIssue.save();
             newModule = newIssue.getScarabModule();
@@ -206,7 +218,7 @@ public class MoveIssue extends RequireLoginFirstAction
                newActivity.setIssueId(newIssue.getIssueId());
                newActivity.save();
             }
-            descBuf = new StringBuffer(" copied from issue ");
+            descBuf = new StringBuffer("Copied from issue ");
             descBuf.append(issue.getUniqueId());
             descBuf.append(" in module ").append(oldModule.getName());
         }
@@ -214,7 +226,7 @@ public class MoveIssue extends RequireLoginFirstAction
         if (!orphanAttributes.isEmpty())
         {
             // Save comment
-            StringBuffer dataBuf = new StringBuffer("removed " + 
+            StringBuffer dataBuf = new StringBuffer("Removed " + 
                                                     "irrelevant attribute(s): ");
             for (int i=0;i<orphanAttributes.size();i++)
             {
@@ -229,14 +241,11 @@ public class MoveIssue extends RequireLoginFirstAction
                else if (attVal.getAttribute().getAttributeType()
                                              .getName().equals("user"))
                {
-                    // FIXME: Don't get a user object this way.
-                   ScarabUser assignedUser = (ScarabUser) ScarabUserImplPeer
-                                  .retrieveScarabUserImplByPK((ObjectKey)attVal
-                                  .getUserId());
+                   ScarabUser assignedUser = UserManager
+                            .getInstance((ObjectKey)attVal.getUserId());
                    field = assignedUser.getUserName();
                } 
             
-           
                dataBuf.append("=").append(field);
                if (i < orphanAttributes.size()-1 )
                {
@@ -248,10 +257,24 @@ public class MoveIssue extends RequireLoginFirstAction
         }
         else
         {
-            attachment.setDataAsString("all attributes were copied.");
+            if (selectAction.equals("move"))
+            {
+                attachment.setDataAsString("All attributes were moved.");
+            }
+            else
+            {
+                attachment.setDataAsString("All attributes were copied.");
+            }
         }
             
-        attachment.setName("Moved Issue Note");
+        if (selectAction.equals("move"))
+        {
+            attachment.setName("Moved Issue Note");
+        }
+        else
+        {
+            attachment.setName("Copied Issue Note");
+        }
         attachment.setTextFields(user, newIssue, Attachment.MODIFICATION__PK);
         attachment.save();
 
@@ -267,6 +290,7 @@ public class MoveIssue extends RequireLoginFirstAction
         activity.create(newIssue, zeroAttribute, desc, transaction, 
                         oldModule.getName(), newModule.getName());
 
+        // placed in the context for the email to be able to access them
         context.put("action", selectAction);
         context.put("oldModule", oldModule.getName());
         context.put("newModule", newModule.getName());
@@ -274,97 +298,31 @@ public class MoveIssue extends RequireLoginFirstAction
                               "issue " +  newIssue.getIssueId() + desc,
                               "email/MoveIssue.vm");
 
-        data.getParameters().add("id", newIssue.getIssueId().toString()); 
-        setTarget(data, "ViewIssue.vm");            
-
-    }
-
-    private List getList( Issue issue, String moduleId, String listToReturn )
-          throws Exception
-    {
-        AttributeValue aval = null;
-        String value = null;
-        List matchingAttributes = new ArrayList();
-        List orphanAttributes = new ArrayList();
-        List returnList = null;
-        ModuleEntity module = ModuleManager
-                                    .getInstance(new NumberKey(moduleId));
-
-        HashMap setMap = issue.getAttributeValuesMap();
-        Iterator iter = setMap.keySet().iterator();
-        while ( iter.hasNext() ) 
-        {
-            aval = (AttributeValue)setMap.get(iter.next());
-            RModuleAttribute modAttr = module.
-                                       getRModuleAttribute(aval.getAttribute());
-            
-            // If this attribute is not active for the destination module,
-            // Add to orphanAttributes list
-            if (!modAttr.getActive()) 
-            {
-                 orphanAttributes.add(aval);
-            } 
-            else
-            {
-                // If attribute is an option attribute,
-                // Check if attribute option is active for destination module.
-                if ( aval instanceof OptionAttribute ) 
-                {
-                    Criteria crit2 = new Criteria(1)
-                        .add(RModuleOptionPeer.ACTIVE, true);
-                    RModuleOption modOpt = (RModuleOption)RModuleOptionPeer
-                                            .doSelect(crit2).get(0);
-                    if (modOpt.getActive())
-                    {
-                        matchingAttributes.add(aval);
-                    } 
-                    else
-                    {
-                        orphanAttributes.add(aval);
-                    }
-                }
-                else
-                {
-                    matchingAttributes.add(aval);
-                }
-            }
-        }
-
-        //Return requested list
-        if ( listToReturn.equals("matching") )
-        {
-            returnList = matchingAttributes;
-        }
-        else
-        {
-            returnList = orphanAttributes;
-        }
-        return returnList;
+        setTarget(data, nextTemplate);
     }
 
     /**
-        This manages clicking the Back button on MoveIssue2.vm
-    */
+     * This manages clicking the Back button on MoveIssue2.vm
+     */
     public void doBacktoone( RunData data, TemplateContext context ) throws Exception
     {
-        // FIXME: this should be determined from template based parameters    
-        setTarget(data, "MoveIssue.vm");
+        setTarget(data, data.getParameters()
+            .getString(ScarabConstants.CANCEL_TEMPLATE, "MoveIssue.vm"));
     }
     
-
     /**
-        This manages clicking the Cancel button
-    */
+     * This manages clicking the Cancel button
+     */
     public void doCancel( RunData data, TemplateContext context ) throws Exception
     {
         String template = Turbine.getConfiguration()
-            .getString("template.homepage", "Start.vm");
+            .getString("template.homepage", "Index.vm");
         setTarget(data, template);
     }
     
     /**
-        calls doCancel()
-    */
+     * calls doCancel()
+     */
     public void doPerform( RunData data, TemplateContext context ) throws Exception
     {
         doCancel(data, context);

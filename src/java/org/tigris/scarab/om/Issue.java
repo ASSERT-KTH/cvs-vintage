@@ -66,10 +66,12 @@ import org.apache.torque.map.DatabaseMap;
 
 // Scarab classes
 import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.security.ScarabSecurity;
 import org.tigris.scarab.security.SecurityFactory;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.attribute.TotalVotesAttribute;
+import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.security.ScarabSecurity;
@@ -1028,7 +1030,115 @@ public class Issue
         voteValue.save();
     }
 
+    /**
+     * Gets a list of Matching AttributeValues which match a given Module.
+     * It is used in the MoveIssue2.vm template
+     */
+    public List getMatchingAttributeValuesList(String moduleId)
+          throws Exception
+    {
+        return getMatchingAttributeValuesList(new NumberKey(moduleId));
+    }
 
+    /**
+     * Gets a list of Matching AttributeValues which match a given Module.
+     * It is used in the MoveIssue2.vm template
+     */
+    public List getMatchingAttributeValuesList(NumberKey moduleId)
+          throws Exception
+    {
+        AttributeValue aval = null;
+        List matchingAttributes = new ArrayList();
+        ModuleEntity module = ModuleManager.getInstance(moduleId);
+
+        HashMap setMap = this.getAttributeValuesMap();
+        Iterator iter = setMap.keySet().iterator();
+        while ( iter.hasNext() ) 
+        {
+            aval = (AttributeValue)setMap.get(iter.next());
+            RModuleAttribute modAttr = module.
+                                       getRModuleAttribute(aval.getAttribute());
+            
+            // If this attribute is not active for the destination module,
+            // Add to orphanAttributes list
+            if (modAttr.getActive()) 
+            {
+                // If attribute is an option attribute,
+                // Check if attribute option is active for destination module.
+                if (aval instanceof OptionAttribute)
+                {
+                    Criteria crit2 = new Criteria(1)
+                        .add(RModuleOptionPeer.ACTIVE, true);
+                    RModuleOption modOpt = (RModuleOption)RModuleOptionPeer
+                                            .doSelect(crit2).get(0);
+                    if (modOpt.getActive())
+                    {
+                        matchingAttributes.add(aval);
+                    } 
+                }
+                else
+                {
+                    matchingAttributes.add(aval);
+                }
+            } 
+        }
+        return matchingAttributes;
+    }
+
+    /**
+     * Gets a list of Orphan AttributeValues which match a given Module.
+     * It is used in the MoveIssue2.vm template
+     */
+    public List getOrphanAttributeValuesList(String moduleId)
+          throws Exception
+    {
+        return getOrphanAttributeValuesList(new NumberKey(moduleId));
+    }
+    
+    /**
+     * Gets a list of Orphan AttributeValues which match a given Module.
+     * It is used in the MoveIssue2.vm template
+     */
+    public List getOrphanAttributeValuesList(NumberKey moduleId)
+          throws Exception
+    {
+        AttributeValue aval = null;
+        List orphanAttributes = new ArrayList();
+        ModuleEntity module = ModuleManager.getInstance(moduleId);
+
+        HashMap setMap = this.getAttributeValuesMap();
+        Iterator iter = setMap.keySet().iterator();
+        while ( iter.hasNext() ) 
+        {
+            aval = (AttributeValue)setMap.get(iter.next());
+            RModuleAttribute modAttr = module.
+                                       getRModuleAttribute(aval.getAttribute());
+            
+            // If this attribute is not active for the destination module,
+            // Add to orphanAttributes list
+            if (!modAttr.getActive()) 
+            {
+                 orphanAttributes.add(aval);
+            } 
+            else
+            {
+                // If attribute is an option attribute,
+                // Check if attribute option is active for destination module.
+                if (aval instanceof OptionAttribute) 
+                {
+                    Criteria crit2 = new Criteria(1)
+                        .add(RModuleOptionPeer.ACTIVE, true);
+                    RModuleOption modOpt = (RModuleOption)RModuleOptionPeer
+                                            .doSelect(crit2).get(0);
+                    if (!modOpt.getActive())
+                    {
+                        orphanAttributes.add(aval);
+                    } 
+                }
+            }
+        }
+        return orphanAttributes;
+    }
 
     /**
      * Brings the current list of users assigned to this issue in

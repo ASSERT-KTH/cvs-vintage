@@ -1,7 +1,7 @@
 $page.setTitle("Copy/move issue")
 
-#macro (moveOrCopy)
-#if ($select_action.equals("move") )
+#macro (moveOrCopyFunctionbar)
+#if ($selectAction.equals("move") )
  #set ($tmp = "Move")
 #else
  #set ($tmp = "Copy")
@@ -21,32 +21,44 @@ $page.setTitle("Copy/move issue")
 <div class="app" id="moveissue2">
 <h2>$page.Title</h2>
 
-#set ($action = $link.setPage("MoveIssue2.vm").setAction("MoveIssue").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "Links.vm").toString())
-#set ($issueId = $data.Parameters.getString("issue_id"))
-#set ($issue = $scarabR.getIssue($issueId))
-#set ($moduleId = $data.Parameters.getString("module_id"))
+#set ($moveIssueGroup = $intake.MoveIssue.Default)
+#set ($issueId = $moveIssueGroup.IssueId)
+#set ($issue = $scarabR.getIssue("$issueId"))
+#set ($selectAction = $moveIssueGroup.Action)
+#set ($moduleId = $moveIssueGroup.ModuleId)
 #set ($module = $scarabR.CurrentModule)
 
-<form method="post" action="$action">
-<input type="hidden" name="id" value="$issueId" />
-<input type="hidden" name="module_id" value="$moduleId" />
+#set ($matchingAttributes = $issue.getMatchingAttributeValuesList("$moduleId"))
+#set ($orphanAttributes = $issue.getOrphanAttributeValuesList("$moduleId"))
 
-#moveOrCopy()
+<form method="post" action="$link.setPage("MoveIssue2.vm").setAction("MoveIssue")">
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="MoveIssue.vm" />
+<input type="hidden" name="id" value="$issueId" />
+<input type="hidden" name="$moveIssueGroup.IssueId.key" value="$issueId" />
+<input type="hidden" name="$moveIssueGroup.ModuleId.key" value="$moduleId" />
+
+#moveOrCopyFunctionbar()
+
+#set ($attrValues = $issue.AllAttributeValuesMap)
+#set ($attVal = $attrValues.get("SUMMARY"))
+#set ($attrInput = $intake.AttributeValue.mapTo($attVal))
 
 <h3>Issue to be copied/moved</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
+#if ($attVal)
   <th>Summary</th>
+#end
   <th>Date committed</th>
   <th>Committed by</th>
  </tr>
  <tr class="a">
+#if ($attVal)
   <td>
-   #set ($attrValues = $issue.AllAttributeValuesMap)
-   #set( $attVal =  $attrValues.get("SUMMARY"))
-   #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
    $attVal.Value
   </td>
+#end
   <td>$format.getDate($scarabG.DateFormat, $issue.CreatedDate)</td>
   <td>
    #set ($createdUser = $issue.CreatedBy)
@@ -55,24 +67,26 @@ $page.setTitle("Copy/move issue")
  </tr>
 </table>
 
-<h3>Destination project</h3>
+<h3>Source module</h3>
 <p>
- #set($newModule = $scarabR.getModule($moduleId))
+$issue.ScarabModule.Name
+</p>
+
+<h3>Destination module</h3>
+<p>
+ #set($newModule = $scarabR.getModule("$moduleId"))
  $newModule.Name
 </p>
 
 <h3>Action</h3>
 
-#set ($checked = "")
-#if ($select_action.equals("copy"))
-  #set ($checked = 'checked="checked"')
-#end
-<p><input type="radio" name="select_action" value="copy" $checked /> Copy</p>
-#set ($checked = "")
-#if ($select_action.equals("move"))
-  #set ($checked = 'checked="checked"')
-#end
-<p><input type="radio" name="select_action" value="move" $checked /> Move</p>
+#set ($userAction = "$moveIssueGroup.Action")
+<p>
+<input type="radio" name="$moveIssueGroup.Action.Key" value="copy" 
+#checked($userAction.toString() 'copy') /> Copy
+<input type="radio" name="$moveIssueGroup.Action.Key" value="move" 
+#checked($userAction.toString() 'move') /> Move
+</p>
 
 <h3>Attribute mapping results</h3>
 <div class="sidebyside">
@@ -136,7 +150,7 @@ $page.setTitle("Copy/move issue")
    <th>Attribute name</th>
    <th>Option name</th>
   </tr>
-  #foreach( $attr in $orphanAttributes )
+  #foreach($attr in $orphanAttributes)
    #indexedRows($velocityCount)
    <td><input type="checkbox" name="x" value="x" checked="checked" /></td>
    <td><input type="text" name="x" value="$attr.Attribute.Name" /></td>
@@ -146,7 +160,8 @@ $page.setTitle("Copy/move issue")
  </table>
 #end
 
-#moveOrCopy()
+#moveOrCopyFunctionbar()
 
+$intake.declareGroups()
 </form>
 </div>

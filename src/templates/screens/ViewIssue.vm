@@ -2,8 +2,6 @@ $page.setTitle("View Issue")
 
 <div class="app" id="viewissue">
 
-#set ($action = $link.setPage("ViewIssue.vm").setAction("ModifyIssue").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "ViewIssue.vm").toString())
-
 #if ($data.Parameters.getString("issue_id"))
   #set ($currentIssueId = $data.Parameters.getString("issue_id"))
 #else
@@ -28,7 +26,9 @@ You are viewing an issue in a different Module than is currently selected.
 #if ($currentIssue)
 
  #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
- <form method="post" action="$action" >
+ <form method="post" action="$link.setPage("ViewIssue.vm").setAction("ModifyIssue")">
+   <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
+
  #if ($fullHistory)
    <input type="hidden" name="fullHistory" value="$fullHistory" />
  #end
