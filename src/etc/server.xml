@@ -23,12 +23,12 @@
 
         <ContextInterceptor  name="servlet_log" 
             className="org.apache.tomcat.modules.config.LogSetter"
-            verbosityLevel = "INFORMATION"
-            path="logs/servlet-${yyyyMMdd}.log" />
+            path="logs/servlet-${yyyyMMdd}.log"
+            verbosityLevel = "INFORMATION"  />
 
         <ContextInterceptor  name="JASPER_LOG" 
             className="org.apache.tomcat.modules.config.LogSetter"
-            path="logs/jasper-${yyyyMMdd}.log" />
+            path="logs/jasper-${yyyyMMdd}.log"
             verbosityLevel = "INFORMATION"  />
 
         <!-- 
