@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.31 2002/02/28 17:43:56 jon Exp $
+$Id: README.txt,v 1.32 2002/03/05 02:35:06 jon Exp $
 
 Welcome to Scarab!
 
@@ -23,7 +23,7 @@ system running.
 JDK 1.2 or higher       --> <http://java.sun.com/>
 Ant 1.4.1 or higher     --> <http://jakarta.apache.org/ant/>
 MySQL 3.23 or higher    --> <http://www.mysql.org/>
-Tomcat 4.0.2 or higher  --> <http://jakarta.apache.org/tomcat/>
+Tomcat 4.0.3 or higher  --> <http://jakarta.apache.org/tomcat/>
                             (Note: Tomcat is included with Scarab.)
 
 You must have the JAVA_HOME environment variable properly set to be the 
