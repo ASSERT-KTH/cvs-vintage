@@ -22,11 +22,18 @@ import org.apache.log4j.Category;
 import org.apache.log4j.NDC;
 import org.apache.log4j.PropertyConfigurator;
 
-/** This is a JMX MBean that provides two features.
+/** This is a JMX MBean that provides two features:
+1., It initalizes the log4j framework from the log4j properties format file
+    specified by the ConfigurationPath attribute to that the log4j may be
+    used by JBoss components.
+2., It collects JMX notification events fired by the "service=Log" mbean
+    and logs the msgs to the log4j root Category. This allows the Log4jService
+    to replace all other JBoss logging services like ConsoleLogging and
+    FileLogging.
 
 @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
 */
 public class Log4jService implements Log4jServiceMBean, NotificationListener,
     MBeanRegistration
