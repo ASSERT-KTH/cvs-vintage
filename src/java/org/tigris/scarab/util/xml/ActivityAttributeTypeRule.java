@@ -74,7 +74,7 @@ public class ActivityAttributeTypeRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") activity-attribute-type body: " + text);
+        log().debug("(" + getState() + ") activity attribute type body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     
@@ -85,7 +85,9 @@ public class ActivityAttributeTypeRule extends BaseRule
         throws Exception
     {
         AttributeType issueType = AttributeType.getInstance(attributeTypeName);
-        digester.push(issueType);
+        ActivityInfo activityInfo = (ActivityInfo)digester.pop();
+        activityInfo.setType(issueType);
+        digester.push(activityInfo);
     }
         
     /**

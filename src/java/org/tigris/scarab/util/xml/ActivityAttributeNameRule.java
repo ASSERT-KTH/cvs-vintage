@@ -63,7 +63,7 @@ public class ActivityAttributeNameRule extends BaseRule
     {
         super(digester, state);
     }
-
+    
     /**
      * This method is called when the body of a matching XML element
      * is encountered.  If the element has no body, this method is
@@ -74,6 +74,17 @@ public class ActivityAttributeNameRule extends BaseRule
     public void body(String text) throws Exception
     {
         log().debug("(" + getState() + ") activity attribute name body: " + text);
-        super.digesterPush(text);
+        super.doInsertionOrValidationAtBody(text);
+    }
+    
+    protected void doInsertionAtBody(String text)
+    {
+        ActivityInfo activityInfo = (ActivityInfo)digester.pop();
+        activityInfo.setName(text);
+        digester.push(activityInfo);
+    }
+    
+    protected void doValidationAtBody(String text)
+    {
     }
 }

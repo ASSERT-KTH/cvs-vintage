@@ -74,6 +74,17 @@ public class ActivityAttributeOldValueRule extends BaseRule
     public void body(String text) throws Exception
     {
         log().debug("(" + getState() + ") activity attribute old value body: " + text);
-        super.digesterPush(text);
+        super.doInsertionOrValidationAtBody(text);
+    }
+    
+    protected void doInsertionAtBody(String text)
+    {
+        ActivityInfo activityInfo = (ActivityInfo)digester.pop();
+        activityInfo.setOldValue(text);
+        digester.push(activityInfo);
+    }
+    
+    protected void doValidationAtBody(String text)
+    {
     }
 }
