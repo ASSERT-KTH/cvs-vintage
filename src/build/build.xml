@@ -44,7 +44,7 @@
     <property name="build.metadata.classes.dir" value="${build.dir}/metadata/classes"/>
     <property name="build.verifier.classes.dir" value="${build.dir}/verifier/classes"/>
     <property name="verifier.classpath"         value="${build.verifier.classes.dir};${lib.dir}/jaxp.jar;${src.lib.dir}/ejb.jar;${src.lib.dir}/jta-spec1_0_1.jar;${src.lib.dir}/jpl-util-0_5b.jar;${src.lib.dir}/jms.jar;${src.lib.dir}/jmxri.jar;${src.lib.dir}/parser.jar;${external.dir}/metadata.jar"/>
-    <property name="util.classpath"             value="${build.util.classes.dir};${lib.dir}/jmxri.jar"/>
+    <property name="util.classpath"             value="${build.util.classes.dir};${src.lib.dir}/ejb.jar;${lib.dir}/jmxri.jar"/>
     
     <available property="jdk1.3+" classname="java.lang.StrictMath" />
   </target>
@@ -398,6 +398,8 @@
            includes="org/jboss/util/Service.java,
                      org/jboss/util/ServiceMBean.java,
                      org/jboss/util/ServiceMBeanSupport.java,
+                     org/jboss/util/MBeanProxy.java,
+                     org/jboss/proxy/*.java,
                      org/jboss/logging/Log.java,
                      org/jboss/logging/LogWriter.java,
                      org/jboss/monitor/MetricsConstants.java"
