@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.34 2000/07/11 02:44:40 alex Exp $
- * $Revision: 1.34 $
- * $Date: 2000/07/11 02:44:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.35 2000/07/29 18:33:09 costin Exp $
+ * $Revision: 1.35 $
+ * $Date: 2000/07/29 18:33:09 $
  *
  * ====================================================================
  *
@@ -274,12 +274,12 @@ public class ResponseImpl implements Response {
 	return out; // out.getServletOutputStreamFacade();
     }
 
-    /** Either implement ServletOutputStream or return BufferedServletOutputStream(this)
-	and implement doWrite();
-     */
-    public BufferedServletOutputStream getBufferedOutputStream() {
-	return out;
-    }
+//     /** Either implement ServletOutputStream or return BufferedServletOutputStream(this)
+// 	and implement doWrite();
+//      */
+//     public BufferedServletOutputStream getBufferedOutputStream() {
+// 	return out;
+//     }
     
 
     // -------------------- Headers --------------------
@@ -555,8 +555,22 @@ public class ResponseImpl implements Response {
 	return body;
     }
 
+    static String st_200=null;
+    static String st_302=null;
+    
     // utility method - should be in a different class
     public static String getMessage( int status ) {
+	// hotspot, the whole thing must be rewritten.
+	// Does HTTP requires/allow international messages or
+	// are pre-defined? The user doesn't see them most of the time
+	switch( status ) {
+	case 200:
+	    if( st_200==null ) st_200=sm.getString( "sc.200");
+	    return st_200;
+	case 302:
+	    if( st_302==null ) st_302=sm.getString( "sc.302");
+	    return st_302;
+	}
 	return sm.getString("sc."+ status);
     }
 
