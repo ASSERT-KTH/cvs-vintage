@@ -111,7 +111,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.118 $
+ * @version $Revision: 1.119 $
  *
  * @todo convert all the deployment/service lifecycle stuff to an
  * aspect/interceptor.  Make this whole stack into a model mbean.
@@ -1765,6 +1765,10 @@ public abstract class Container extends ServiceMBeanSupport
          ApplicationMetaData amd = getBeanMetaData().getApplicationMetaData();
          InvokerProxyBindingMetaData imd = (InvokerProxyBindingMetaData)
             amd.getInvokerProxyBindingMetaDataByName(invoker);
+         if (imd == null)
+         {
+            throw new DeploymentException("<invoker-proxy-binding> " + invoker + " not found in configuration");
+         }
          Element proxyFactoryConfig = imd.getProxyFactoryConfig();
          String webCL = MetaData.getOptionalChildContent(proxyFactoryConfig,
                                                          "web-class-loader");
