@@ -14,14 +14,14 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.QueryMetaData;
 
-
 /**
- * Imutable class contains information about a declated query.
+ * This class contains information about a declated query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.12 $
+ *   @version $Revision: 1.13 $
  */
-public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
+public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData
+{
    /**
     * The method to which this query is bound.
     */
@@ -30,124 +30,99 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
    /**
     * The user specified from clause.
     */
-   private final String from;
+   private String from;
 
    /**
     * The user specified where clause.
     */
-   private final String where;
+   private String where;
 
    /**
     * The user specified order clause.
     */
-   private final String order;
+   private String order;
 
    /**
     * The other clause is appended to the end of the sql.  This is useful for
     * hints to the query engine.
     */
-   private final String other;
+   private String other;
 
    /**
     * Should the select be DISTINCT?
     */
-   private final boolean distinct;
+   private boolean distinct;
    
    /**
     * The name of the ejb from which the field will be selected.
     */
-   private final String ejbName;
+   private String ejbName;
 
    /**
     * The name of the cmp-field to be selected.
     */
-   private final String fieldName;
+   private String fieldName;
 
    /**
     * The aliase that is used for the main select table.
     */
-   private final String alias;
+   private String alias;
    /**
     * Read ahead meta data.
     */
-   private final JDBCReadAheadMetaData readAhead;
+   private JDBCReadAheadMetaData readAhead;
 
    /**
     * Should the query return Local or Remote beans.
     */
-   private final boolean resultTypeMappingLocal;
+   private boolean resultTypeMappingLocal;
 
    /**
-    * Constructs a JDBCDeclaredQueryMetaData which is defined by the 
-    * declared-sql xml element and is invoked by the specified method.
-    * @param queryElement the xml Element which contains the metadata about 
-    *       this query
-    */
-   public JDBCDeclaredQueryMetaData(
-         JDBCDeclaredQueryMetaData defaults,
-         JDBCReadAheadMetaData readAhead) throws DeploymentException {
-
-      this.method = defaults.getMethod();
-      this.readAhead = readAhead;
-
-      this.from = defaults.getFrom();
-      this.where = defaults.getWhere();
-      this.order = defaults.getOrder();
-      this.other = defaults.getOther();
-
-      this.resultTypeMappingLocal = defaults.isResultTypeMappingLocal();
-
-      this.distinct = defaults.isSelectDistinct();
-      this.ejbName = defaults.getEJBName();
-      this.fieldName = defaults.getFieldName();
-      this.alias = defaults.getAlias();
-   }
-
-
-   /**
-    * Constructs a JDBCDeclaredQueryMetaData which is defined by the 
-    * declared-sql xml element and is invoked by the specified method.
-    * @param queryElement the xml Element which contains the metadata about 
-    *       this query
+    * Constructs a JDBCDeclaredQueryMetaData which is invoked by the specified
+    * method.
     * @param method the method which invokes this query
     */
-   public JDBCDeclaredQueryMetaData(
-         JDBCQueryMetaData jdbcQueryMetaData,
-         Element queryElement,
-         Method method,
-         JDBCReadAheadMetaData readAhead) throws DeploymentException {
-
+   public JDBCDeclaredQueryMetaData(Method method)
+   {
       this.method = method;
-      this.readAhead = readAhead;
+      readAhead = JDBCReadAheadMetaData.DEFAULT;
+      resultTypeMappingLocal = true;
+   }   
 
+   public void loadXML(Element queryElement) throws DeploymentException
+   {
       from = MetaData.getOptionalChildContent(queryElement, "from");
       where = MetaData.getOptionalChildContent(queryElement, "where");
       order = MetaData.getOptionalChildContent(queryElement, "order");
       other = MetaData.getOptionalChildContent(queryElement, "other");
 
-      resultTypeMappingLocal = jdbcQueryMetaData.isResultTypeMappingLocal();
-
       // load ejbSelect info
       Element selectElement = 
             MetaData.getOptionalChild(queryElement, "select");
          
-      if(selectElement != null) {
+      if(selectElement != null)
+      {
          // should select use distinct?
          distinct = 
             (MetaData.getOptionalChild(selectElement, "distinct") != null);
          
-         if(method.getName().startsWith("ejbSelect")) {
+         if(method.getName().startsWith("ejbSelect"))
+         {
             ejbName = MetaData.getUniqueChildContent(selectElement, "ejb-name");
             fieldName = 
                   MetaData.getOptionalChildContent(selectElement, "field-name");
-         } else {
+         }
+         else
+         {
             // the ejb-name and field-name elements are not allowed for finders
-            if(MetaData.getOptionalChild(selectElement, "ejb-name") != null) {
+            if(MetaData.getOptionalChild(selectElement, "ejb-name") != null)
+            {
                throw new DeploymentException(
                      "The ejb-name element of declared-sql select is only " +
                      "allowed for ejbSelect queries.");
             }
-            if(MetaData.getOptionalChild(selectElement, "field-name") != null) {
+            if(MetaData.getOptionalChild(selectElement, "field-name") != null)
+            {
                throw new DeploymentException(
                      "The field-name element of declared-sql select is only " +
                      "allowed for ejbSelect queries.");
@@ -156,8 +131,11 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
             fieldName = null;
          }
          alias = MetaData.getOptionalChildContent(selectElement, "alias");
-      } else {
-         if(method.getName().startsWith("ejbSelect")) {
+      }
+      else
+      {
+         if(method.getName().startsWith("ejbSelect"))
+         {
             throw new DeploymentException("The select element of " +
                   "declared-sql is required for ejbSelect queries.");
          } 
@@ -169,90 +147,187 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
    }
 
    // javadoc in parent class
-   public Method getMethod() {
+   public Method getMethod()
+   {
       return method;
    }
 
-   // javadoc in parent class
-   public boolean isResultTypeMappingLocal() {
+   // javadoc in interface
+   public boolean isResultTypeMappingLocal()
+   {
       return resultTypeMappingLocal;
    }
 
-   /**
-    * Gets the read ahead metadata for the query.
-    * @return the read ahead metadata for the query.
-    */
-   public JDBCReadAheadMetaData getReadAhead() {
+   // javadoc in interface
+   public void setResultTypeMappingLocal(boolean resultTypeMappingLocal)
+   {
+      this.resultTypeMappingLocal = resultTypeMappingLocal;
+   }
+      
+   // javadoc in interface
+   public JDBCReadAheadMetaData getReadAhead()
+   {
       return readAhead;
+   }
+
+   // javadoc in interface
+   public void setReadAhead(JDBCReadAheadMetaData readAhead)
+   {
+      this.readAhead = readAhead;
    }
 
    /**
     * Gets the sql FROM clause of this query.
     * @return a String which contains the sql FROM clause
     */
-   public String getFrom() {
+   public String getFrom()
+   {
       return from;
+   }
+
+   /**
+    * Sets the sql FROM clause of this query.
+    * @param from the new sql FROM clause for this query
+    */
+   public void setFrom(String from)
+   {
+      this.from = from;
    }
 
    /**
     * Gets the sql WHERE clause of this query.
     * @return a String which contains the sql WHERE clause
     */
-   public String getWhere() {
+   public String getWhere()
+   {
       return where;
+   }
+
+   /**
+    * Sets the sql WHERE clause of this query.
+    * @param where the new sql WHERE clause for this query
+    */
+   public void setWhere(String where)
+   {
+      this.where = where;
    }
 
    /**
     * Gets the sql ORDER BY clause of this query.
     * @return a String which contains the sql ORDER BY clause
     */
-   public String getOrder() {
+   public String getOrder()
+   {
       return order;
+   }
+   
+   /**
+    * Sets the sql ORDER BY clause of this query.
+    * @param order the new sql ORDER BY clause for this query
+    */
+   public void setOrder(String order)
+   {
+      this.order = order;
    }
    
    /**
     * Gets other sql code which is appended to the end of the query.
     * This is userful for supplying hints to the query engine.
     * @return a String which contains additional sql code which is 
-    *         appended to the end of the query
+    * appended to the end of the query
     */
-   public String getOther() {
+   public String getOther()
+   {
       return other;
+   }
+
+   /**
+    * Sets other sql code which is appended to the end of the query.
+    * This is userful for supplying hints to the query engine.
+    * @param other the new additional sql code that will be appended to 
+    * the end of the query
+    */
+   public void setOther(String other)
+   {
+      this.other = other;
    }
 
    /**
     * Should the select be DISTINCT?
     * @return true if the select clause should contain distinct
     */
-   public boolean isSelectDistinct() {
+   public boolean isSelectDistinct()
+   {
       return distinct;
    }
 
    /**
-    * The name of the ejb from which the field will be selected.
-    * @return the name of the ejb from which a field will be selected, or null
-    * if returning a whole ejb
+    * Sets query to select DISTINCT or not.
+    * @param distinct if true, the select clause should contain distinct
     */
-   public String getEJBName() {
+   public void setSelectDistinct(boolean distinct)
+   {
+      this.distinct = distinct;
+   }
+
+   /**
+    * Gets the name of the ejb from which the field will be selected.
+    * @return the name of the ejb which will be selected or the name of
+    * the ejb from which a field will be selected
+    */
+   public String getEJBName()
+   {
       return ejbName;
    }
 
    /**
-    * The name of the cmp-field to be selected.
+    * Sets the name of the ejb from which the field will be selected.
+    * @param ejbName the name of the ejb which will be selected or the name of
+    * the ejb from which a field will be selected
+    */
+   public void setEJBName(String ejbName)
+   {
+      this.ejbName = ejbName;
+   }
+
+   /**
+    * Gets the name of the cmp-field to be selected.
     * @return the name of the cmp-field to be selected or null if returning a 
     * whole ejb
     */
-   public String getFieldName() {
+   public String getFieldName()
+   {
       return fieldName;
    }
    
    /**
-    * The alias that is used for the select table.
+    * Sets the name of the cmp-field to be selected.
+    * @param fieldName the name of the cmp-field to be selected or null if the
+    * entire ejb object is to be selected
+    */
+   public void setFieldName(String fieldName)
+   {
+      this.fieldName = fieldName;
+   }
+   
+   /**
+    * Gets the alias that is used for the select table.
     * @return the alias that is used for the table from which the entity or
     * field is selected.
     */
-   public String getAlias() {
+   public String getAlias()
+   {
       return alias;
+   }
+   
+   /**
+    * Sets the alias that is used for the select table.
+    * @param alias the alias that is used for the table from which the entity or
+    * field is selected.
+    */
+   public void setAlias(String alias)
+   {
+      this.alias = alias;
    }
    
    /**
@@ -263,9 +338,11 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
     * @return true if this object is the same as the object argument; false
     * otherwise
     */
-   public boolean equals(Object o) {
-      if(o instanceof JDBCDeclaredQueryMetaData) {
-         return ((JDBCDeclaredQueryMetaData)o).method.equals(method);
+   public boolean equals(Object o)
+   {
+      if(o instanceof JDBCDeclaredQueryMetaData)
+      {
+         return ((JDBCDeclaredQueryMetaData)o).method == method;
       }
       return false;
    }
@@ -275,9 +352,11 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
     * computed by the method which invokes this query.
     * @return a hash code value for this object
     */
-   public int hashCode() {
+   public int hashCode()
+   {
       return method.hashCode();
    }
+
    /**
     * Returns a string describing this JDBCDeclaredQueryMetaData. The exact 
     * details of the representation are unspecified and subject to change, 
@@ -288,7 +367,8 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
     *
     * @return a string representation of the object
     */
-   public String toString() {
+   public String toString()
+   {
       return "[JDBCDeclaredQueryMetaData : method=" + method + "]";
    }
 }

@@ -7,108 +7,103 @@
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.lang.reflect.Method;
+import org.w3c.dom.Element;
+import org.jboss.deployment.DeploymentException;
+import org.jboss.metadata.MetaData;
 import org.jboss.metadata.QueryMetaData;
 
 /**
- * Immutable class which contains information about an EJB QL query.
+ * This class which contains information about an EJB QL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
-public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
+public final class JDBCQlQueryMetaData implements JDBCQueryMetaData
+{
    /**
     * The method to which this query is bound.
     */
    private final Method method;
 
    /**
-    * The ejb-ql fro the query.
-    */
-   private final String ejbQl;
-
-   /**
     * Should the query return Local or Remote beans.
     */
-   private final boolean resultTypeMappingLocal;
+   private boolean resultTypeMappingLocal;
 
    /**
     * Read ahead meta data.
     */
-   private final JDBCReadAheadMetaData readAhead;
+   private JDBCReadAheadMetaData readAhead;
 
    /**
-    * Constructs a JDBCQlQueryMetaData which is defined by the queryMetaData
-    * and is invoked by the specified method.
-    * @param queryMetaData the metadata about this query which was loaded 
-    *    from the ejb-jar.xml file
+    * The ejb-ql fro the query.
+    */
+   private String ejbQl;
+
+   /**
+    * Constructs a JDBCQlQueryMetaData which is invoked by the specified method.
     * @param method the method which invokes this query
     */
-   public JDBCQlQueryMetaData(QueryMetaData queryMetaData, Method method) {
+   public JDBCQlQueryMetaData(Method method)
+   {
       this.method = method;
-      this.readAhead = JDBCReadAheadMetaData.DEFAULT;
-      ejbQl = queryMetaData.getEjbQl();
-      resultTypeMappingLocal = 
-            (queryMetaData.getResultTypeMapping() == QueryMetaData.LOCAL);
+      readAhead = JDBCReadAheadMetaData.DEFAULT;
+      resultTypeMappingLocal = true;
    }
 
-   /**
-    * Constructs a JDBCQlQueryMetaData with data from the jdbcQueryMetaData
-    * and additional data from the xml element
-    * @param queryMetaData the metadata about this query
-    */
-   public JDBCQlQueryMetaData(
-         JDBCQlQueryMetaData defaults,
-         JDBCReadAheadMetaData readAhead) {
-      
-      this.method = defaults.getMethod();
-      this.readAhead = readAhead;
-      this.ejbQl = defaults.getEjbQl();
-      this.resultTypeMappingLocal = defaults.resultTypeMappingLocal;
-   }
-
-
-   /**
-    * Constructs a JDBCQlQueryMetaData with data from the jdbcQueryMetaData
-    * and additional data from the xml element
-    * @param queryMetaData the metadata about this query
-    */
-   public JDBCQlQueryMetaData(
-         JDBCQlQueryMetaData jdbcQueryMetaData,
-         Method method,
-         JDBCReadAheadMetaData readAhead) {
-      
-      this.method = method;
-      this.readAhead = readAhead;
-      ejbQl = jdbcQueryMetaData.getEjbQl();
-      resultTypeMappingLocal = jdbcQueryMetaData.resultTypeMappingLocal;
+   public void loadXML(Element element) throws DeploymentException
+   {
+      ejbQl = MetaData.getElementContent(element);
    }
 
    // javadoc in parent class
-   public Method getMethod() {
+   public Method getMethod()
+   {
       return method;
+   }
+
+   // javadoc in interface
+   public boolean isResultTypeMappingLocal()
+   {
+      return resultTypeMappingLocal;
+   }
+
+   // javadoc in interface
+   public void setResultTypeMappingLocal(boolean resultTypeMappingLocal)
+   {
+      this.resultTypeMappingLocal = resultTypeMappingLocal;
+   }
+      
+   // javadoc in interface
+   public JDBCReadAheadMetaData getReadAhead()
+   {
+      return readAhead;
+   }
+
+   // javadoc in interface
+   public void setReadAhead(JDBCReadAheadMetaData readAhead)
+   {
+      this.readAhead = readAhead;
    }
 
    /**
     * Gets the EJB QL query which will be invoked.
     * @return the ejb ql String for this query
     */
-   public String getEjbQl() {
+   public String getEjbQl()
+   {
       return ejbQl;
    }
 
-   // javadoc in parent class
-   public boolean isResultTypeMappingLocal() {
-      return resultTypeMappingLocal;
-   }
-
    /**
-    * Gets the read ahead metadata for the query.
-    * @return the read ahead metadata for the query.
+    * Sets the EJB QL query which will be invoked.
+    * @param ejbQl the new ejb ql String for this query
     */
-   public JDBCReadAheadMetaData getReadAhead() {
-      return readAhead;
+   public void setEjbQl(String ejbQl)
+   {
+      this.ejbQl = ejbQl;
    }
-
+   
    /**
     * Compares this JDBCQlQueryMetaData against the specified object. Returns
     * true if the objects are the same. Two JDBCQlQueryMetaData are the same
@@ -117,9 +112,11 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
     * @return true if this object is the same as the object argument; 
     *    false otherwise
     */
-   public boolean equals(Object o) {
-      if(o instanceof JDBCQlQueryMetaData) {
-         return ((JDBCQlQueryMetaData)o).method.equals(method);
+   public boolean equals(Object o)
+   {
+      if(o instanceof JDBCQlQueryMetaData)
+      {
+         return ((JDBCQlQueryMetaData)o).method == method;
       }
       return false;
    }
@@ -129,7 +126,8 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
     * by the method which invokes this query.
     * @return a hash code value for this object
     */
-   public int hashCode() {
+   public int hashCode()
+   {
       return method.hashCode();
    }
    /**
@@ -142,7 +140,8 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
     *
     * @return a string representation of the object
     */
-   public String toString() {
+   public String toString()
+   {
       return "[JDBCQlQueryMetaData : method=" + method + "]";
    }
 }
