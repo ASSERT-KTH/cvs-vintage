@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.73 2003/06/30 18:00:18 linus Exp $
+// $Id: Project.java,v 1.74 2003/08/19 21:52:05 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -917,10 +917,17 @@ public class Project implements java.io.Serializable, TargetListener {
      */
     protected void removeDiagram(ArgoDiagram d) {
         _diagrams.removeElement(d);
+        // if the diagram is a statechart,
+        // remove its associated statemachine model elements
         if (d instanceof UMLStateDiagram) {
             UMLStateDiagram statediagram = (UMLStateDiagram) d;
+            // if the statemachine has already been deleted,
+            // and is now null,
+            // don't attempt to delete it!
+            if(statediagram.getStateMachine().getTop() != null){
             ProjectManager.getManager().getCurrentProject()
 		.moveToTrash(statediagram.getStateMachine());
+            }
         }
         d.removeChangeRegistryAsListener(_saveRegistry);
         setNeedsSave(true);
