@@ -50,6 +50,7 @@ package org.tigris.scarab.actions;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
+import org.apache.turbine.util.Log;
 import org.apache.fulcrum.security.TurbineSecurity;
 
 // Scarab Stuff
@@ -62,7 +63,7 @@ import org.tigris.scarab.util.ScarabConstants;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Register.java,v 1.9 2001/08/02 07:11:36 jon Exp $
+    @version $Id: Register.java,v 1.10 2001/08/09 02:14:30 jon Exp $
 */
 public class Register extends TemplateAction
 {
@@ -85,7 +86,9 @@ public class Register extends TemplateAction
 
             // check to see if the user already exists
             if(ScarabUserImplPeer.checkExists(su))
+            {
                 throw new Exception ( "Sorry, a user with that loginid already exists!" );
+            }
 
             // stick the user object into the session so that it can
             // be retrieved on the next invocation in action.RegisterConfirm
@@ -98,6 +101,7 @@ public class Register extends TemplateAction
         {
             setTarget(data, template );
             data.setMessage (e.getMessage());
+            Log.debug ("Register Error: ", e);
             return;
         }        
     }
