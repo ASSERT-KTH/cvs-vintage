@@ -6,7 +6,7 @@ $l10n.YouCanViewIssue
 
 $l10n.Type $l10n.Colon        $issue.RModuleIssueType.DisplayName
 $l10n.IssueId $l10n.Colon    $issue.UniqueId
-$l10n.ReportedBy #if($user.FirstName)$user.FirstName #end $user.LastName
+$l10n.ReportedBy $user.Name
              $user.UserName - ($user.Email)
 
 $l10n.Details
