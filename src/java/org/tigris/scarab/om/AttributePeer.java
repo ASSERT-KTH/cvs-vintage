@@ -69,10 +69,10 @@ import org.tigris.scarab.services.cache.ScarabCache;
 public class AttributePeer 
     extends org.tigris.scarab.om.BaseAttributePeer
 {
-    public static final Integer ASSIGNED_TO__PK = new Integer("2");
-    public static final Integer STATUS__PK = new Integer("3");
-    public static final Integer RESOLUTION__PK = new Integer("4");
-    public static final Integer TOTAL_VOTES__PK = new Integer("13");
+    public static final Integer ASSIGNED_TO__PK = new Integer(2);
+    public static final Integer STATUS__PK = new Integer(3);
+    public static final Integer RESOLUTION__PK = new Integer(4);
+    public static final Integer TOTAL_VOTES__PK = new Integer(13);
     public static final String EMAIL_TO = "to";
     public static final String CC_TO = "cc";
     public static final String USER = "user";
