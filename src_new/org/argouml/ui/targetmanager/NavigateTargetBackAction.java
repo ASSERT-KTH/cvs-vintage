@@ -1,4 +1,4 @@
-// $Id: NavigateTargetBackAction.java,v 1.2 2003/06/30 18:00:25 linus Exp $
+// $Id: NavigateTargetBackAction.java,v 1.3 2004/08/29 19:40:55 mvw Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,13 +33,16 @@ import org.argouml.uml.ui.UMLAction;
  * @author jaap.branderhorst@xs4all.nl
  */
 public class NavigateTargetBackAction extends UMLAction {
-    private static NavigateTargetBackAction _instance;
+    private static NavigateTargetBackAction instance;
 
+    /**
+     * @return the instance (singleton)
+     */
     public static NavigateTargetBackAction getInstance() {
-        if (_instance == null) {
-            _instance = new NavigateTargetBackAction();
+        if (instance == null) {
+            instance = new NavigateTargetBackAction();
         }
-        return _instance;
+        return instance;
     }
 
     private NavigateTargetBackAction() {
