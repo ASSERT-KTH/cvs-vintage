@@ -151,6 +151,7 @@ public class TrustedLoader extends BaseInterceptor {
 	    }
 	    cm.setNote(  "trustedLoader.currentContext", null );
 	    context.setClassLoader( null );
+            context.removeAttribute("org.apache.tomcat.classloader");
 	}
     }
 
