@@ -27,14 +27,14 @@ $page.setTitle("Login to Scarab")
 <table cellpadding="3" cellspacing="2" border="0">
  <tr>
   <th>Email address</th>
-  <td>
+  <td nowrap="nowrap">
   <input name="$loginGroup.Username.Key" value="$!loginGroup.Username.Value" size="25" type="text" />
   #fieldErrorMsg ($loginGroup.Username "")
   </td>
  </tr>
  <tr>
   <th>Password</th>
-  <td>
+  <td nowrap="nowrap">
   <input name="$loginGroup.Password.Key" value="" size="25" type="password" />
   #fieldErrorMsg ($loginGroup.Password "")
   </td>

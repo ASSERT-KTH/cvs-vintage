@@ -113,25 +113,34 @@
 #end
 #end
 
-#macro ( fieldErrorMsg $field $br)
+#macro (alert $text)
+	<p class="alert">
+	<strong>
+	<img src="/images/icon_alertsml.gif" width="16" height="14" alt="Alert notification" border="0" />&#160;Alert!
+	</strong>
+	<small>$text</small>
+	</p>
+#end
+
+#macro (fieldErrorMsg $field $br)
 #if ( !$field.isValid())
-<p><strong class="alert">$field.Message</strong></p>$br
+<p class="alert"><small><strong>Alert!</strong>&#160;$field.Message</small></p>$br
 #end
 #end
 
-#macro ( actionErrorMsg)
+#macro (actionErrorMsg)
 #if ($data.Message)
-<p><strong class="alert">$data.Message</strong></p>
+<p class="alert"><small><strong>Alert!</strong>&#160;$data.Message</small></p>
 #end
 #end
 
-#macro ( stdIntakeMsg)
+#macro (stdIntakeMsg)
 #if ( !$intake.isAllValid())
 <p><strong class="alert">Please check your form fields for errors and resubmit.</strong></p>
 #end
 #end
 
-#macro ( numericSelect $name $first $last $selected $size)
+#macro (numericSelect $name $first $last $selected $size)
 <select name="$name" size="$size">
 #foreach ( $i in [$first..$last])
 <option value="$i" #if ($i==$selected)selected="selected" #end>$i</option>
@@ -139,7 +148,7 @@
 </select>
 #end
 
-#macro ( booleanCheckbox $booleanField)
+#macro (booleanCheckbox $booleanField)
 #if ($booleanField.Value)
 <input type="checkbox" name="$booleanField.Key" value="true" checked="checked" />
 #else
@@ -152,7 +161,7 @@
 #if ($v1.toString().equals($v2.toString()))checked="checked"#end
 #end
 
-#macro ( textField $field $size)
+#macro (textField $field $size)
 #if ( $field.Validator.MaxLength && $field.Validator.MaxLength > 0)
 #set ($maxLength = $field.Validator.MaxLength)
 #end
@@ -260,17 +269,17 @@
 #end
 
 
-#macro ( datatitle $title)
+#macro (datatitle $title)
 <h3>$title</h3>
 #end
 
 
-#macro ( selected $boolean )
+#macro (selected $boolean)
 #if ($boolean) selected="selected"#end
 #end
 
 
-#macro ( option $optionModel )
+#macro (option $optionModel)
 <option #selected($optionModel.isSelected()) 
     value="$optionModel.Value">$optionModel.Name</option>
 #end
