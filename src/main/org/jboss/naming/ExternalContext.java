@@ -49,7 +49,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * 
  * @see org.jboss.naming.NonSerializableFactory
  * 
- * @version <tt>$Revision: 1.14 $</tt>
+ * @version <tt>$Revision: 1.15 $</tt>
  * @author  Scott.Stark@jboss.org
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -349,7 +349,7 @@ public class ExternalContext
 
       public SerializableInitialContext()
       {
-         this("SerializableInitialContext");
+         this("nns");
       }
       
       public SerializableInitialContext(String addrType)
