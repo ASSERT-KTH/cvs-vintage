@@ -57,7 +57,7 @@ import org.jboss.monitor.MetricsConstants;
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public abstract class AbstractInstanceCache
 	implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
@@ -565,8 +565,12 @@ public abstract class AbstractInstanceCache
 	protected abstract void setKey(Object id, EnterpriseContext ctx);
 	/**
 	 * Returns whether the given context can be passivated or not
+	 *
+	 * (Bill Burke> added key parameter so that canPassivate
+	 * can verify that the object being passivated is really the
+	 * same object and hasn't already been freed then re-used.
 	 */
-	protected abstract boolean canPassivate(EnterpriseContext ctx);
+	protected abstract boolean canPassivate(Object key, EnterpriseContext ctx);
 
 	// Private -------------------------------------------------------
 
@@ -602,14 +606,14 @@ public abstract class AbstractInstanceCache
 					public void execute() throws Exception
 					{
 						EnterpriseContext ctx = this.getEnterpriseContext();
-						Object id = this.getKey();
-
-						if (id == null)
+						if (ctx.getId() == null)
 						{
-							// If this happens, then a passivation request for this bean was issued
-							// but not yet executed, and in the meanwhile the bean has been removed.
-							return;
+						    // If this happens, then a passivation request for this bean was issued
+						    // but not yet executed, and in the meanwhile the bean has been removed.
+						    return;
 						}
+
+						Object id = this.getKey();
 
 						/**
 						 * Synchronization / Passivation explanations:
@@ -636,59 +640,59 @@ public abstract class AbstractInstanceCache
 
 							synchronized (getCacheLock())
 							{
-								// This is absolutely fundamental: the job must be removed from
-								// the map in every case. If it remains there, the call to
-								// PassivationHelper.unschedule() will cause the corrispondent
-								// context to be reinserted in the cache, and if then is passivated
-								// we have a context without meaning in the cache
-								m_passivationJobs.remove(id);
-
-								synchronized (this)
+							    // This is absolutely fundamental: the job must be removed from
+							    // the map in every case. If it remains there, the call to
+							    // PassivationHelper.unschedule() will cause the corrispondent
+							    // context to be reinserted in the cache, and if then is passivated
+							    // we have a context without meaning in the cache
+							    m_passivationJobs.remove(id);
+							    
+							    synchronized (this)
+							    {
+								if (!canPassivate(id, ctx))
 								{
-									if (!canPassivate(ctx))
-									{
-										// This check is done because there could have been
-										// a request for passivation of this bean, but before
-										// being passivated it got a request and has already
-										// been inserted in the cache by the cache
-										if (getCache().peek(id) == null)
-										{
-											getCache().insert(id, ctx);
-										}
-
-										logPassivationPostponed(id);
-
-										return;
-									}
-									else
-									{
-										if (!isCancelled())
-										{
-											try
-											{
-												// If the next call throws RemoteException we reinsert
-												// the bean in the cache; every successive passivation
-												// attempt will fail. The other policy would have been
-												// to remove it, but then clients unexpectedly won't
-												// find it anymore. On the other hand, on the server
-												// log it is possible to see that passivation for the
-												// bean failed, and fix it. See EJB 1.1, 6.4.1
-												passivate(ctx);
-												executed();
-												removeLock(id);
-												freeContext(ctx);
-
-												logPassivation(id);
-											}
-											catch (RemoteException x)
-											{
-												// Can't passivate this bean, reinsert it in the cache
-												getCache().insert(id, ctx);
-												throw x;
-											}
-										}
-									}
+								    // This check is done because there could have been
+								    // a request for passivation of this bean, but before
+								    // being passivated it got a request and has already
+								    // been inserted in the cache by the cache
+								    if (getCache().peek(id) == null)
+								    {
+									getCache().insert(id, ctx);
+								    }
+								    
+								    logPassivationPostponed(id);
+								    
+								    return;
 								}
+								else
+								{
+								    if (!isCancelled())
+								    {
+									try
+									{
+									    // If the next call throws RemoteException we reinsert
+									    // the bean in the cache; every successive passivation
+									    // attempt will fail. The other policy would have been
+									    // to remove it, but then clients unexpectedly won't
+									    // find it anymore. On the other hand, on the server
+									    // log it is possible to see that passivation for the
+									    // bean failed, and fix it. See EJB 1.1, 6.4.1
+									    passivate(ctx);
+									    executed();
+									    removeLock(id);
+									    freeContext(ctx);
+									    
+									    logPassivation(id);
+									}
+									catch (RemoteException x)
+									{
+									    // Can't passivate this bean, reinsert it in the cache
+									    getCache().insert(id, ctx);
+									    throw x;
+									}
+								    }
+								}
+							    }
 							}
 						}
 						catch (InterruptedException ignored) {}
@@ -729,7 +733,7 @@ public abstract class AbstractInstanceCache
 		 */
 		protected EnterpriseContext unschedule(Object id)
 		{
-			// I chose not to remove canceled job here because multiple
+			// I chose not to remove canceled job here becauses multiple
 			// unscheduling requests can arrive. This way all will be served
 
 			// Is the passivation job for id still to be executed ?
